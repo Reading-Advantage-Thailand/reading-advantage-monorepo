@@ -2,7 +2,12 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { APP_COLORS } from "@/lib/apps";
+import { APPS, APP_COLORS } from "@/lib/apps";
+import {
+  getMarketingAppName,
+  getMarketingMessage as t,
+  getMarketingStatusLabel,
+} from "@/lib/i18n";
 
 interface Campaign {
   id: string;
@@ -13,6 +18,10 @@ interface Campaign {
   createdAt: string;
 }
 
+/**
+ * Renders the Marketing campaigns page.
+ * @returns The campaigns list and creation interface.
+ */
 export default function CampaignsPage() {
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [showCreate, setShowCreate] = useState(false);
@@ -41,21 +50,21 @@ export default function CampaignsPage() {
         return;
       }
       if (res.status === 403) {
-        setError("You do not have access to Marketing campaigns.");
+        setError(t("campaigns.access"));
         return;
       }
       if (!res.ok) {
-        setError("Failed to load campaigns. Please try again.");
+        setError(t("campaigns.loadFailed"));
         return;
       }
       const data: unknown = await res.json();
       if (!Array.isArray(data)) {
-        setError("Campaigns returned an invalid response.");
+        setError(t("campaigns.invalidResponse"));
         return;
       }
       setCampaigns(data as Campaign[]);
     } catch {
-      setError("Failed to load campaigns. Please try again.");
+      setError(t("campaigns.loadFailed"));
     }
   };
 
@@ -73,26 +82,32 @@ export default function CampaignsPage() {
         return;
       }
       if (res.status === 403) {
-        setError("You do not have permission to create campaigns.");
+        setError(t("campaigns.createForbidden"));
         return;
       }
       if (!res.ok) {
-        setError("Failed to create campaign. Check the form and try again.");
+        setError(t("campaigns.createCheckFailed"));
         return;
       }
       setShowCreate(false);
       setNewCampaign({ type: "video", app: "reading-advantage", name: "" });
-      setMessage("Campaign created.");
+      setMessage(t("campaigns.created"));
       await fetchCampaigns();
     } catch {
-      setError("Failed to create campaign. Please try again.");
+      setError(t("campaigns.createFailed"));
     }
   };
 
   return (
     <div>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <h1>Campaigns</h1>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <h1>{t("campaigns.title")}</h1>
         <button
           onClick={() => setShowCreate(true)}
           style={{
@@ -104,7 +119,7 @@ export default function CampaignsPage() {
             cursor: "pointer",
           }}
         >
-          Create Campaign
+          {t("campaigns.createCampaign")}
         </button>
       </div>
 
@@ -129,42 +144,70 @@ export default function CampaignsPage() {
             boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
           }}
         >
-          <h2>New Campaign</h2>
+          <h2>{t("campaigns.newCampaign")}</h2>
           <div style={{ marginBottom: "16px" }}>
-            <label style={{ display: "block", marginBottom: "4px" }}>Type</label>
+            <label style={{ display: "block", marginBottom: "4px" }}>
+              {t("campaigns.type")}
+            </label>
             <select
               value={newCampaign.type}
               onChange={(e) =>
-                setNewCampaign({ ...newCampaign, type: e.target.value as "video" | "infocard" })
+                setNewCampaign({
+                  ...newCampaign,
+                  type: e.target.value as "video" | "infocard",
+                })
               }
-              style={{ width: "100%", padding: "8px", borderRadius: "4px", border: "1px solid #ccc" }}
+              style={{
+                width: "100%",
+                padding: "8px",
+                borderRadius: "4px",
+                border: "1px solid #ccc",
+              }}
             >
-              <option value="video">Video</option>
-              <option value="infocard">Infocard</option>
+              <option value="video">{t("campaigns.video")}</option>
+              <option value="infocard">{t("campaigns.infocard")}</option>
             </select>
           </div>
           <div style={{ marginBottom: "16px" }}>
-            <label style={{ display: "block", marginBottom: "4px" }}>App</label>
+            <label style={{ display: "block", marginBottom: "4px" }}>
+              {t("campaigns.app")}
+            </label>
             <select
               value={newCampaign.app}
-              onChange={(e) => setNewCampaign({ ...newCampaign, app: e.target.value })}
-              style={{ width: "100%", padding: "8px", borderRadius: "4px", border: "1px solid #ccc" }}
+              onChange={(e) =>
+                setNewCampaign({ ...newCampaign, app: e.target.value })
+              }
+              style={{
+                width: "100%",
+                padding: "8px",
+                borderRadius: "4px",
+                border: "1px solid #ccc",
+              }}
             >
-              {Object.keys(APP_COLORS).map((app) => (
+              {APPS.map((app) => (
                 <option key={app} value={app}>
-                  {app.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase())}
+                  {getMarketingAppName(app)}
                 </option>
               ))}
             </select>
           </div>
           <div style={{ marginBottom: "16px" }}>
-            <label style={{ display: "block", marginBottom: "4px" }}>Name</label>
+            <label style={{ display: "block", marginBottom: "4px" }}>
+              {t("campaigns.name")}
+            </label>
             <input
               type="text"
               value={newCampaign.name}
-              onChange={(e) => setNewCampaign({ ...newCampaign, name: e.target.value })}
-              placeholder="Campaign name"
-              style={{ width: "100%", padding: "8px", borderRadius: "4px", border: "1px solid #ccc" }}
+              onChange={(e) =>
+                setNewCampaign({ ...newCampaign, name: e.target.value })
+              }
+              placeholder={t("campaigns.namePlaceholder")}
+              style={{
+                width: "100%",
+                padding: "8px",
+                borderRadius: "4px",
+                border: "1px solid #ccc",
+              }}
             />
           </div>
           <div style={{ display: "flex", gap: "12px" }}>
@@ -179,7 +222,7 @@ export default function CampaignsPage() {
                 cursor: "pointer",
               }}
             >
-              Create
+              {t("campaigns.create")}
             </button>
             <button
               onClick={() => setShowCreate(false)}
@@ -191,7 +234,7 @@ export default function CampaignsPage() {
                 cursor: "pointer",
               }}
             >
-              Cancel
+              {t("campaigns.cancel")}
             </button>
           </div>
         </div>
@@ -216,20 +259,27 @@ export default function CampaignsPage() {
               }}
             >
               <div>
-                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                <div
+                  style={{ display: "flex", alignItems: "center", gap: "8px" }}
+                >
                   <span
                     style={{
                       width: "12px",
                       height: "12px",
                       borderRadius: "50%",
-                      backgroundColor: APP_COLORS[campaign.app as keyof typeof APP_COLORS] || "#ccc",
+                      backgroundColor:
+                        APP_COLORS[campaign.app as keyof typeof APP_COLORS] ||
+                        "#ccc",
                       display: "inline-block",
                     }}
                   />
                   <strong>{campaign.name}</strong>
                 </div>
                 <div style={{ color: "#666", marginTop: "4px" }}>
-                  {campaign.type} • {campaign.app.replace(/-/g, " ")}
+                  {campaign.type === "video"
+                    ? t("campaigns.video")
+                    : t("campaigns.infocard")}{" "}
+                  • {getMarketingAppName(campaign.app)}
                 </div>
               </div>
               <div
@@ -239,15 +289,15 @@ export default function CampaignsPage() {
                     campaign.status === "draft"
                       ? "#e0e0e0"
                       : campaign.status === "in-progress"
-                      ? "#fff3e0"
-                      : campaign.status === "complete"
-                      ? "#e8f5e9"
-                      : "#f3e5f5",
+                        ? "#fff3e0"
+                        : campaign.status === "complete"
+                          ? "#e8f5e9"
+                          : "#f3e5f5",
                   borderRadius: "4px",
                   fontSize: "12px",
                 }}
               >
-                {campaign.status}
+                {getMarketingStatusLabel(campaign.status)}
               </div>
             </div>
           </Link>

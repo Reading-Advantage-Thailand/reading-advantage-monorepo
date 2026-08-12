@@ -55,7 +55,7 @@
  */
 
 import { describe, expect, it, vi, type Mock } from "vitest";
-import { existsSync, readFileSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -147,7 +147,7 @@ describe("Phase 3: Settings Page — wiring invariants (tasks 1, 2, 5)", () => {
 
     it("settings page contains a heading identifying it as the Settings page", () => {
       const src = readText("app/settings/page.tsx");
-      expect(src).toMatch(/<h1[^>]*>\s*Settings\s*<\/h1>/);
+      expect(src).toMatch(/<h1[^>]*>\s*\{t\("settings\.title"\)\}\s*<\/h1>/);
     });
   });
 
@@ -155,13 +155,16 @@ describe("Phase 3: Settings Page — wiring invariants (tasks 1, 2, 5)", () => {
     it("provider dropdown exposes Google, OpenAI, and OpenRouter options", () => {
       const src = readText("app/settings/page.tsx");
       // Look for the complete set of supported Marketing providers.
-      // The current implementation uses raw strings — this asserts the contract
-      // is preserved through the encryption refactor.
-      expect(src).toMatch(/value="google"[^>]*>\s*Google/);
-      expect(src).toMatch(/value="openai"[^>]*>\s*OpenAI/);
-      expect(src).toMatch(/value="openrouter"[^>]*>\s*OpenRouter/);
+      // The current implementation uses the typed i18n accessor — this asserts
+      // the provider contract remains visible through the accessor boundary.
+      expect(src).toMatch(/value="google"/);
+      expect(src).toMatch(/t\("settings\.google"\)/);
+      expect(src).toMatch(/value="openai"/);
+      expect(src).toMatch(/t\("settings\.openai"\)/);
+      expect(src).toMatch(/value="openrouter"/);
+      expect(src).toMatch(/t\("settings\.openrouter"\)/);
       expect(src).toContain(
-        "const OPENROUTER_DEFAULT_MODEL = \"nvidia/nemotron-3-ultra-550b-a55b:free\"",
+        'const OPENROUTER_DEFAULT_MODEL = "nvidia/nemotron-3-ultra-550b-a55b:free"',
       );
     });
 
@@ -176,7 +179,7 @@ describe("Phase 3: Settings Page — wiring invariants (tasks 1, 2, 5)", () => {
   describe("mmx CLI path config (Phase 3 task 5)", () => {
     it("mmx CLI path input is rendered on the settings page", () => {
       const src = readText("app/settings/page.tsx");
-      expect(src).toMatch(/mmx CLI Path/);
+      expect(src).toMatch(/t\("settings\.mmxPath"\)/);
       // The mmx path field is part of the POST body as tools.mmxPath
       expect(src).toMatch(/tools\.mmxPath/);
     });
@@ -232,9 +235,10 @@ describe("Phase 3: Settings Page — encryption at rest (task 3, GREEN)", () => 
         "การเข้ารหัส",
         "นวัตกรรมใหม่ เพื่ออนาคต",
       ]) {
-        expect(decrypt(encrypt(plaintext)), `round-trip failed for ${JSON.stringify(plaintext)}`).toBe(
-          plaintext,
-        );
+        expect(
+          decrypt(encrypt(plaintext)),
+          `round-trip failed for ${JSON.stringify(plaintext)}`,
+        ).toBe(plaintext);
       }
     });
 
@@ -245,7 +249,9 @@ describe("Phase 3: Settings Page — encryption at rest (task 3, GREEN)", () => 
       // means the same module instance is returned, but getKey() is evaluated
       // at call time so the missing-key check still fires.
       const { encrypt } = await import("../lib/encryption.js");
-      expect(() => encrypt("secret")).toThrow("ENCRYPTION_KEY environment variable");
+      expect(() => encrypt("secret")).toThrow(
+        "ENCRYPTION_KEY environment variable",
+      );
       process.env.ENCRYPTION_KEY = originalKey;
     });
   });
@@ -315,8 +321,7 @@ describe("Phase 3: Settings Page — POST /api/settings encryption (tasks 3 + 6,
 
   it("encrypts the apiKey before passing it to ON CONFLICT DO UPDATE on re-save", async () => {
     const { db } = await import("@reading-advantage/db");
-    const { insertMock, valuesMock, onConflictDoUpdateMock } =
-      makeInsertChainMock();
+    const { insertMock, onConflictDoUpdateMock } = makeInsertChainMock();
     (db.insert as Mock).mockImplementation(insertMock);
 
     const { POST } = await import("@/api/settings/route");
@@ -340,8 +345,6 @@ describe("Phase 3: Settings Page — POST /api/settings encryption (tasks 3 + 6,
     };
     expect(updateConfig.set.value).not.toBe(plaintextApiKey);
     expect(updateConfig.set.value).not.toContain(plaintextApiKey);
-    // Suppress unused warning for valuesMock in this test.
-    expect(valuesMock).toBeDefined();
   });
 
   it("preserves an existing apiKey when the masked placeholder is submitted", async () => {
@@ -409,8 +412,7 @@ describe("Phase 3: Settings Page — POST /api/settings encryption (tasks 3 + 6,
 
   it("uses ON CONFLICT DO UPDATE on the settings.key for idempotent re-save", async () => {
     const { db } = await import("@reading-advantage/db");
-    const { insertMock, valuesMock, onConflictDoUpdateMock } =
-      makeInsertChainMock();
+    const { insertMock, onConflictDoUpdateMock } = makeInsertChainMock();
     (db.insert as Mock).mockImplementation(insertMock);
 
     const { POST } = await import("@/api/settings/route");
@@ -451,9 +453,7 @@ describe("Phase 3: Settings Page — POST /api/settings encryption (tasks 3 + 6,
     (db.select as Mock).mockImplementation(() => ({ from: selectFromMock }));
 
     const { GET } = await import("@/api/settings/route");
-    const response = await GET(
-      authedRequest("http://localhost/api/settings"),
-    );
+    const response = await GET(authedRequest("http://localhost/api/settings"));
     expect(response.status).toBe(200);
     const body = (await response.json()) as Record<string, string>;
 
@@ -477,11 +477,10 @@ describe("Phase 3: Settings Page — POST /api/settings encryption (tasks 3 + 6,
 
 describe("Phase 3: Settings Page — POST /api/settings/test-connection (task 4 + 6)", () => {
   it("returns 200 with success when the AI client returns text", async () => {
-    const { __fakeAIClient } = (await import(
-      "@reading-advantage/ai"
-    )) as unknown as {
-      __fakeAIClient: { generateText: Mock };
-    };
+    const { __fakeAIClient } =
+      (await import("@reading-advantage/ai")) as unknown as {
+        __fakeAIClient: { generateText: Mock };
+      };
     __fakeAIClient.generateText.mockResolvedValueOnce("เชื่อมต่อสำเร็จ");
 
     const { POST } = await import("@/api/settings/test-connection/route");
@@ -511,11 +510,10 @@ describe("Phase 3: Settings Page — POST /api/settings/test-connection (task 4 
   });
 
   it("returns 400 when the AI client throws (401-style unauthorized)", async () => {
-    const { __fakeAIClient } = (await import(
-      "@reading-advantage/ai"
-    )) as unknown as {
-      __fakeAIClient: { generateText: Mock };
-    };
+    const { __fakeAIClient } =
+      (await import("@reading-advantage/ai")) as unknown as {
+        __fakeAIClient: { generateText: Mock };
+      };
     __fakeAIClient.generateText.mockRejectedValueOnce(
       new Error("API key not valid"),
     );
@@ -543,11 +541,10 @@ describe("Phase 3: Settings Page — POST /api/settings/test-connection (task 4 
   });
 
   it("passes the validated OpenRouter model and credential through the shared AI adapter", async () => {
-    const { __fakeAIClient } = (await import(
-      "@reading-advantage/ai"
-    )) as unknown as {
-      __fakeAIClient: { generateText: Mock };
-    };
+    const { __fakeAIClient } =
+      (await import("@reading-advantage/ai")) as unknown as {
+        __fakeAIClient: { generateText: Mock };
+      };
     __fakeAIClient.generateText.mockResolvedValueOnce("เชื่อมต่อสำเร็จ");
 
     const { POST } = await import("@/api/settings/test-connection/route");

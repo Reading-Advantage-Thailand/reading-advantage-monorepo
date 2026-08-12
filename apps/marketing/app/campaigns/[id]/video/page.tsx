@@ -9,7 +9,8 @@ import {
   type Scene,
 } from "@/lib/scene-editor";
 import { scriptSchema } from "@/lib/script-schema";
-import { APP_NAMES } from "@/lib/apps";
+import { APPS, APP_NAMES } from "@/lib/apps";
+import { getMarketingAppName, getMarketingMessage as t } from "@/lib/i18n";
 
 interface Topic {
   id: string;
@@ -33,9 +34,13 @@ interface VideoProject {
 const emptyScene: Scene = {
   narration: "",
   imagePrompt: "",
-  motionDirection: "Static",
+  motionDirection: t("video.defaultMotionDirection"),
 };
 
+/**
+ * Renders the Marketing video-production workflow.
+ * @returns The topic, script, and scene editing interface.
+ */
 export default function VideoProductionPage() {
   const params = useParams();
   const [campaign, setCampaign] = useState<any>(null);
@@ -50,7 +55,9 @@ export default function VideoProductionPage() {
   const [savedProjectId, setSavedProjectId] = useState<string | null>(null);
   const [projects, setProjects] = useState<VideoProject[]>([]);
   const [projectsLoading, setProjectsLoading] = useState(false);
-  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
+  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(
+    null,
+  );
   const [projectMessage, setProjectMessage] = useState<string | null>(null);
   const [projectError, setProjectError] = useState<string | null>(null);
   const [workflowError, setWorkflowError] = useState<string | null>(null);
@@ -73,22 +80,26 @@ export default function VideoProductionPage() {
         return;
       }
       if (res.status === 403) {
-        setWorkflowError("You do not have access to this campaign.");
+        setWorkflowError(t("video.access"));
         return;
       }
       if (!res.ok) {
-        setWorkflowError("Failed to load campaign. Please try again.");
+        setWorkflowError(t("video.loadFailed"));
         return;
       }
       const data: unknown = await res.json();
-      if (!data || typeof data !== "object" || typeof (data as { app?: unknown }).app !== "string") {
-        setWorkflowError("Campaign returned an invalid response.");
+      if (
+        !data ||
+        typeof data !== "object" ||
+        typeof (data as { app?: unknown }).app !== "string"
+      ) {
+        setWorkflowError(t("video.invalidCampaign"));
         return;
       }
       setCampaign(data);
       setSelectedApp((data as { app: string }).app);
     } catch {
-      setWorkflowError("Failed to load campaign. Please try again.");
+      setWorkflowError(t("video.loadFailed"));
     }
   };
 
@@ -104,17 +115,17 @@ export default function VideoProductionPage() {
         return;
       }
       if (res.status === 403) {
-        setProjectError("You do not have access to this campaign's projects.");
+        setProjectError(t("video.projectsAccess"));
         return;
       }
       if (!res.ok) {
-        setProjectError("Failed to load saved projects. Please try again.");
+        setProjectError(t("video.projectsLoadFailed"));
         return;
       }
 
       const data: unknown = await res.json();
       if (!Array.isArray(data)) {
-        setProjectError("Saved projects returned an invalid response.");
+        setProjectError(t("video.projectsInvalid"));
         return;
       }
 
@@ -130,7 +141,7 @@ export default function VideoProductionPage() {
       });
       setProjects(validProjects);
     } catch {
-      setProjectError("Failed to load saved projects. Please try again.");
+      setProjectError(t("video.projectsLoadFailed"));
     } finally {
       setProjectsLoading(false);
     }
@@ -144,7 +155,7 @@ export default function VideoProductionPage() {
 
     const project = projects.find((candidate) => candidate.id === projectId);
     if (!project) {
-      setProjectError("The selected project is no longer available.");
+      setProjectError(t("video.projectUnavailable"));
       return;
     }
 
@@ -160,7 +171,7 @@ export default function VideoProductionPage() {
     setActiveTopicId(topicId);
     setScript(project.script.map((scene) => ({ ...scene })));
     setSavedProjectId(project.id);
-    setProjectMessage(`Loaded project ${project.id}`);
+    setProjectMessage(t("video.projectLoaded", { id: project.id }));
   };
 
   const handleResearchTopics = async () => {
@@ -178,21 +189,25 @@ export default function VideoProductionPage() {
         return;
       }
       if (res.status === 403) {
-        setWorkflowError("You do not have permission to research topics.");
+        setWorkflowError(t("video.researchForbidden"));
         return;
       }
       if (!res.ok) {
-        setWorkflowError("Topic research did not produce five new topics. Please try again.");
+        setWorkflowError(t("video.researchFailed"));
         return;
       }
       const data: unknown = await res.json();
-      if (!data || typeof data !== "object" || !Array.isArray((data as { topics?: unknown }).topics)) {
-        setWorkflowError("Topic research returned an invalid response.");
+      if (
+        !data ||
+        typeof data !== "object" ||
+        !Array.isArray((data as { topics?: unknown }).topics)
+      ) {
+        setWorkflowError(t("video.researchInvalid"));
         return;
       }
       const researchedTopics = (data as { topics: unknown[] }).topics;
       if (!researchedTopics.every((topic) => typeof topic === "string")) {
-        setWorkflowError("Topic research returned an invalid response.");
+        setWorkflowError(t("video.researchInvalid"));
         return;
       }
       setTopics(
@@ -204,16 +219,14 @@ export default function VideoProductionPage() {
         })),
       );
     } catch {
-      setWorkflowError("Failed to research topics. Please try again.");
+      setWorkflowError(t("video.researchRequestFailed"));
     } finally {
       setLoading(false);
     }
   };
 
   const handleApprove = (id: string) => {
-    setTopics(
-      topics.map((t) => (t.id === id ? { ...t, approved: true } : t))
-    );
+    setTopics(topics.map((t) => (t.id === id ? { ...t, approved: true } : t)));
   };
 
   const handleReject = (id: string) => {
@@ -221,16 +234,14 @@ export default function VideoProductionPage() {
   };
 
   const handleEdit = (id: string) => {
-    setTopics(
-      topics.map((t) => (t.id === id ? { ...t, editing: true } : t))
-    );
+    setTopics(topics.map((t) => (t.id === id ? { ...t, editing: true } : t)));
   };
 
   const handleSaveEdit = (id: string, newText: string) => {
     setTopics(
       topics.map((t) =>
-        t.id === id ? { ...t, text: newText, editing: false } : t
-      )
+        t.id === id ? { ...t, text: newText, editing: false } : t,
+      ),
     );
   };
 
@@ -252,16 +263,16 @@ export default function VideoProductionPage() {
         return;
       }
       if (res.status === 403) {
-        setWorkflowError("You do not have permission to save topics.");
+        setWorkflowError(t("video.saveTopicsForbidden"));
         return;
       }
       if (!res.ok) {
-        setWorkflowError("Failed to save approved topics. Please try again.");
+        setWorkflowError(t("video.saveTopicsFailed"));
         return;
       }
-      setWorkflowMessage("Approved topics saved.");
+      setWorkflowMessage(t("video.topicsSaved"));
     } catch {
-      setWorkflowError("Failed to save approved topics. Please try again.");
+      setWorkflowError(t("video.saveTopicsFailed"));
     }
   };
 
@@ -286,24 +297,26 @@ export default function VideoProductionPage() {
         return;
       }
       if (res.status === 403) {
-        setWorkflowError("You do not have permission to generate scripts.");
+        setWorkflowError(t("video.scriptForbidden"));
         return;
       }
       if (!res.ok) {
-        setWorkflowError("Script generation did not return a valid Thai script. Please try again.");
+        setWorkflowError(t("video.scriptInvalid"));
         return;
       }
       const data: unknown = await res.json();
       const parsedScript = scriptSchema.safeParse(
-        data && typeof data === "object" ? (data as { script?: unknown }).script : undefined,
+        data && typeof data === "object"
+          ? (data as { script?: unknown }).script
+          : undefined,
       );
       if (!parsedScript.success) {
-        setWorkflowError("Script generation returned an invalid response.");
+        setWorkflowError(t("video.scriptResponseInvalid"));
         return;
       }
       setScript(parsedScript.data);
     } catch {
-      setWorkflowError("Failed to generate a script. Please try again.");
+      setWorkflowError(t("video.scriptFailed"));
     } finally {
       setGenerating(false);
     }
@@ -311,7 +324,7 @@ export default function VideoProductionPage() {
 
   const handleSceneChange = (index: number, patch: Partial<Scene>) => {
     setScript((prev) =>
-      prev.map((scene, i) => (i === index ? { ...scene, ...patch } : scene))
+      prev.map((scene, i) => (i === index ? { ...scene, ...patch } : scene)),
     );
   };
 
@@ -353,21 +366,25 @@ export default function VideoProductionPage() {
         return;
       }
       if (res.status === 403) {
-        setProjectError("You do not have access to save this project.");
+        setProjectError(t("video.projectSaveForbidden"));
         return;
       }
       if (!res.ok) {
         setProjectError(
           method === "PATCH"
-            ? "Failed to update the project. Please try again."
-            : "Failed to save the project. Please try again.",
+            ? t("video.projectUpdateFailed")
+            : t("video.projectSaveFailed"),
         );
         return;
       }
 
       const data: unknown = await res.json();
-      if (!data || typeof data !== "object" || typeof (data as { id?: unknown }).id !== "string") {
-        setProjectError("The project was saved but returned an invalid response.");
+      if (
+        !data ||
+        typeof data !== "object" ||
+        typeof (data as { id?: unknown }).id !== "string"
+      ) {
+        setProjectError(t("video.projectResponseInvalid"));
         return;
       }
 
@@ -380,14 +397,14 @@ export default function VideoProductionPage() {
       });
       setProjectMessage(
         method === "PATCH"
-          ? `Updated project ${project.id}`
-          : `Saved as project ${project.id}`,
+          ? t("video.projectUpdated", { id: project.id })
+          : t("video.projectSaved", { id: project.id }),
       );
     } catch {
       setProjectError(
         method === "PATCH"
-          ? "Failed to update the project. Please try again."
-          : "Failed to save the project. Please try again.",
+          ? t("video.projectUpdateFailed")
+          : t("video.projectSaveFailed"),
       );
     } finally {
       setSaving(false);
@@ -398,7 +415,7 @@ export default function VideoProductionPage() {
     return workflowError ? (
       <p role="alert">{workflowError}</p>
     ) : (
-      <p role="status">Loading...</p>
+      <p role="status">{t("campaigns.loading")}</p>
     );
   }
 
@@ -407,7 +424,7 @@ export default function VideoProductionPage() {
 
   return (
     <div>
-      <h1>Video Production: {campaign.name}</h1>
+      <h1>{t("video.title", { name: campaign.name })}</h1>
       {workflowError && (
         <p role="alert" style={{ color: "#b91c1c", marginTop: "8px" }}>
           {workflowError}
@@ -429,9 +446,9 @@ export default function VideoProductionPage() {
           boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
         }}
       >
-        <h2 id="existing-projects-heading">Existing Projects</h2>
+        <h2 id="existing-projects-heading">{t("video.existingProjects")}</h2>
         <label htmlFor="existing-project-select" style={{ display: "block" }}>
-          Existing projects
+          {t("video.existingProjectsLabel")}
         </label>
         <select
           id="existing-project-select"
@@ -447,7 +464,9 @@ export default function VideoProductionPage() {
           }}
         >
           <option value="">
-            {projectsLoading ? "Loading projects..." : "Choose a saved project"}
+            {projectsLoading
+              ? t("video.loadingProjects")
+              : t("video.chooseProject")}
           </option>
           {projects.map((project) => (
             <option key={project.id} value={project.id}>
@@ -476,7 +495,7 @@ export default function VideoProductionPage() {
           boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
         }}
       >
-        <h2>Step 1: Select App</h2>
+        <h2>{t("video.stepSelectApp")}</h2>
         <select
           value={selectedApp}
           onChange={(e) => setSelectedApp(e.target.value)}
@@ -487,9 +506,9 @@ export default function VideoProductionPage() {
             marginTop: "8px",
           }}
         >
-          {Object.entries(APP_NAMES).map(([key, name]) => (
+          {APPS.map((key) => (
             <option key={key} value={key}>
-              {name}
+              {getMarketingAppName(key) || APP_NAMES[key]}
             </option>
           ))}
         </select>
@@ -504,8 +523,12 @@ export default function VideoProductionPage() {
           boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
         }}
       >
-        <h2>Step 2: Research Topics</h2>
-        <p>LLM will propose 5 topics relevant to {APP_NAMES[selectedApp as keyof typeof APP_NAMES]}.</p>
+        <h2>{t("video.stepResearch")}</h2>
+        <p>
+          {t("video.researchDescription", {
+            app: getMarketingAppName(selectedApp),
+          })}
+        </p>
         <button
           onClick={handleResearchTopics}
           disabled={loading}
@@ -519,12 +542,12 @@ export default function VideoProductionPage() {
             marginTop: "8px",
           }}
         >
-          {loading ? "Researching..." : "Research Topics"}
+          {loading ? t("video.researching") : t("video.researchTopics")}
         </button>
 
         {topics.length > 0 && (
           <div style={{ marginTop: "16px" }}>
-            <h3>Proposed Topics</h3>
+            <h3>{t("video.proposedTopics")}</h3>
             <div style={{ display: "grid", gap: "12px", marginTop: "8px" }}>
               {topics.map((topic) => (
                 <div
@@ -553,7 +576,9 @@ export default function VideoProductionPage() {
                   ) : (
                     <span>{topic.text}</span>
                   )}
-                  <div style={{ display: "flex", gap: "8px", marginLeft: "16px" }}>
+                  <div
+                    style={{ display: "flex", gap: "8px", marginLeft: "16px" }}
+                  >
                     {!topic.approved && (
                       <>
                         <button
@@ -567,7 +592,7 @@ export default function VideoProductionPage() {
                             cursor: "pointer",
                           }}
                         >
-                          Approve
+                          {t("video.approve")}
                         </button>
                         <button
                           onClick={() => handleEdit(topic.id)}
@@ -580,7 +605,7 @@ export default function VideoProductionPage() {
                             cursor: "pointer",
                           }}
                         >
-                          Edit
+                          {t("video.edit")}
                         </button>
                         <button
                           onClick={() => handleReject(topic.id)}
@@ -593,19 +618,23 @@ export default function VideoProductionPage() {
                             cursor: "pointer",
                           }}
                         >
-                          Reject
+                          {t("video.reject")}
                         </button>
                       </>
                     )}
                     {topic.approved && (
                       <>
-                        <span style={{ color: "#4CAF50" }}>✓ Approved</span>
+                        <span style={{ color: "#4CAF50" }}>
+                          {t("video.approved")}
+                        </span>
                         <button
                           onClick={() => setActiveTopicId(topic.id)}
                           style={{
                             padding: "4px 8px",
                             backgroundColor:
-                              activeTopicId === topic.id ? "#1a1a2e" : "#9E9E9E",
+                              activeTopicId === topic.id
+                                ? "#1a1a2e"
+                                : "#9E9E9E",
                             color: "#fff",
                             border: "none",
                             borderRadius: "4px",
@@ -613,8 +642,8 @@ export default function VideoProductionPage() {
                           }}
                         >
                           {activeTopicId === topic.id
-                            ? "Selected for Script"
-                            : "Use for Script"}
+                            ? t("video.selectedForScript")
+                            : t("video.useForScript")}
                         </button>
                       </>
                     )}
@@ -635,7 +664,7 @@ export default function VideoProductionPage() {
                   cursor: "pointer",
                 }}
               >
-                Save Approved Topics
+                {t("video.saveApprovedTopics")}
               </button>
             )}
           </div>
@@ -651,18 +680,15 @@ export default function VideoProductionPage() {
           boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
         }}
       >
-        <h2>Step 3: Generate Script</h2>
+        <h2>{t("video.stepGenerate")}</h2>
         {approvedTopics.length === 0 ? (
-          <p>Approve a topic in Step 2 first.</p>
+          <p>{t("video.approveTopicFirst")}</p>
         ) : (
           <>
-            <p>
-              Generating a Thai marketing script (5–7 scenes) for the selected
-              approved topic.
-            </p>
+            <p>{t("video.generateDescription")}</p>
             {activeTopic && (
               <p data-testid="selected-topic">
-                <strong>Selected topic:</strong> {activeTopic.text}
+                <strong>{t("video.selectedTopic")}</strong> {activeTopic.text}
               </p>
             )}
             <div style={{ display: "flex", gap: "8px", marginTop: "8px" }}>
@@ -678,7 +704,7 @@ export default function VideoProductionPage() {
                   cursor: generating ? "not-allowed" : "pointer",
                 }}
               >
-                {generating ? "Generating..." : "Generate Script"}
+                {generating ? t("video.generating") : t("video.generateScript")}
               </button>
               {script.length > 0 && (
                 <button
@@ -695,17 +721,17 @@ export default function VideoProductionPage() {
                 >
                   {saving
                     ? selectedProjectId
-                      ? "Updating..."
-                      : "Saving..."
+                      ? t("video.updating")
+                      : t("video.saving")
                     : selectedProjectId
-                      ? "Update Script"
-                      : "Save Script"}
+                      ? t("video.updateScript")
+                      : t("video.saveScript")}
                 </button>
               )}
             </div>
             {savedProjectId && !projectMessage && (
               <p style={{ color: "#4CAF50", marginTop: "8px" }}>
-                Project {savedProjectId} is ready to update.
+                {t("video.projectReady", { id: savedProjectId })}
               </p>
             )}
 
@@ -738,7 +764,7 @@ export default function VideoProductionPage() {
                         marginBottom: "8px",
                       }}
                     >
-                      <strong>Scene {index + 1}</strong>
+                      <strong>{t("video.scene", { number: index + 1 })}</strong>
                       <div style={{ display: "flex", gap: "4px" }}>
                         <button
                           onClick={() => handleMoveScene(index, index - 1)}
@@ -782,18 +808,20 @@ export default function VideoProductionPage() {
                             cursor: "pointer",
                           }}
                         >
-                          Delete
+                          {t("video.delete")}
                         </button>
                       </div>
                     </div>
                     <label style={{ display: "block", marginTop: "8px" }}>
                       <span style={{ fontSize: "12px", color: "#666" }}>
-                        Narration (Thai)
+                        {t("video.narration")}
                       </span>
                       <textarea
                         value={scene.narration}
                         onChange={(e) =>
-                          handleSceneChange(index, { narration: e.target.value })
+                          handleSceneChange(index, {
+                            narration: e.target.value,
+                          })
                         }
                         rows={2}
                         style={{
@@ -806,7 +834,7 @@ export default function VideoProductionPage() {
                     </label>
                     <label style={{ display: "block", marginTop: "8px" }}>
                       <span style={{ fontSize: "12px", color: "#666" }}>
-                        Image Prompt (English)
+                        {t("video.imagePrompt")}
                       </span>
                       <textarea
                         value={scene.imagePrompt}
@@ -826,7 +854,7 @@ export default function VideoProductionPage() {
                     </label>
                     <label style={{ display: "block", marginTop: "8px" }}>
                       <span style={{ fontSize: "12px", color: "#666" }}>
-                        Motion Direction
+                        {t("video.motionDirection")}
                       </span>
                       <input
                         type="text"
@@ -857,7 +885,7 @@ export default function VideoProductionPage() {
                     cursor: "pointer",
                   }}
                 >
-                  Add Scene
+                  {t("video.addScene")}
                 </button>
               </div>
             )}

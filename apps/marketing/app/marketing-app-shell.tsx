@@ -3,6 +3,7 @@
 import { useAuth } from "@reading-advantage/auth-client";
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { getMarketingMessage as t } from "@/lib/i18n";
 
 /** Properties accepted by the Marketing application shell. */
 export interface MarketingAppShellProps {
@@ -21,7 +22,9 @@ export function MarketingAppShell({ children }: MarketingAppShellProps) {
   if (isLoading) {
     return (
       <main style={{ padding: "24px" }}>
-        <p role="status" aria-live="polite">Checking Marketing access...</p>
+        <p role="status" aria-live="polite">
+          {t("shell.checkingAccess")}
+        </p>
       </main>
     );
   }
@@ -39,12 +42,8 @@ export function MarketingAppShell({ children }: MarketingAppShellProps) {
             padding: "24px",
           }}
         >
-          <h1 id="marketing-access-heading">Marketing access required</h1>
-          <p>
-            Your company account is signed in, but it does not currently have a
-            Marketing role. Ask an Accounts administrator to grant MEMBER or
-            ADMIN access.
-          </p>
+          <h1 id="marketing-access-heading">{t("shell.accessRequired")}</h1>
+          <p>{t("shell.accessDescription")}</p>
         </section>
       </main>
     );
@@ -63,10 +62,15 @@ export function MarketingAppShell({ children }: MarketingAppShellProps) {
           gap: "16px",
         }}
       >
-        <div style={{ fontSize: "18px", fontWeight: "bold", marginBottom: "20px" }}>
-          Marketing Platform
+        <div
+          style={{ fontSize: "18px", fontWeight: "bold", marginBottom: "20px" }}
+        >
+          {t("shell.platform")}
         </div>
-        <nav aria-label="Marketing" style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+        <nav
+          aria-label={t("shell.marketing")}
+          style={{ display: "flex", flexDirection: "column", gap: "8px" }}
+        >
           {user?.role === "ADMIN" && (
             <Link
               href="/settings"
@@ -78,7 +82,7 @@ export function MarketingAppShell({ children }: MarketingAppShellProps) {
                 backgroundColor: "rgba(255,255,255,0.1)",
               }}
             >
-              Settings
+              {t("shell.settings")}
             </Link>
           )}
           <Link
@@ -91,7 +95,7 @@ export function MarketingAppShell({ children }: MarketingAppShellProps) {
               backgroundColor: "rgba(255,255,255,0.1)",
             }}
           >
-            Campaigns
+            {t("shell.campaigns")}
           </Link>
         </nav>
       </aside>

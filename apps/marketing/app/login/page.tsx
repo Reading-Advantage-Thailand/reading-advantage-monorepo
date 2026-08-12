@@ -1,4 +1,9 @@
-/** Renders the single company-account handoff for Marketing. */
+import { getMarketingMessage as t } from "@/lib/i18n";
+
+/**
+ * Renders the single company-account handoff for Marketing.
+ * @returns The company-account handoff interface.
+ */
 export default function LoginPage() {
   return (
     <div
@@ -19,12 +24,16 @@ export default function LoginPage() {
           boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
         }}
       >
-        <p style={{ marginBottom: "8px", color: "#6b7280", textAlign: "center" }}>
-          READING ADVANTAGE / COMPANY ACCESS
+        <p
+          style={{ marginBottom: "8px", color: "#6b7280", textAlign: "center" }}
+        >
+          {t("login.companyAccess")}
         </p>
-        <h1 style={{ marginBottom: "12px", textAlign: "center" }}>Marketing sign in</h1>
+        <h1 style={{ marginBottom: "12px", textAlign: "center" }}>
+          {t("login.title")}
+        </h1>
         <p style={{ marginBottom: "24px", textAlign: "center" }}>
-          Continue to Accounts with your company username and password.
+          {t("login.description")}
         </p>
         <a
           href="/api/auth/company/start"
@@ -42,7 +51,7 @@ export default function LoginPage() {
             textDecoration: "none",
           }}
         >
-          CONTINUE WITH ACCOUNTS
+          {t("login.continue")}
         </a>
       </section>
     </div>

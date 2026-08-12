@@ -185,7 +185,7 @@ describe("Phase 6: Script Generation — wiring invariants (tasks 1-3)", () => {
 
   it("video production page exposes Step 3: Generate Script", () => {
     const src = readText("app/campaigns/[id]/video/page.tsx");
-    expect(src).toMatch(/Generate\s+Script/);
+    expect(src).toMatch(/t\("video\.generateScript"\)/);
     expect(src).toMatch(/handleGenerateScript/);
   });
 
@@ -221,35 +221,43 @@ describe("Phase 6: Script Generation — prompt builder (task 2, GREEN)", () => 
   });
 
   it("prompt names the app and topic", async () => {
-    const { buildScriptGenerationPrompt } = await import("../lib/script-generation.js");
-    const prompt = buildScriptGenerationPrompt("reading-advantage", "การอ่านนิทาน");
+    const { buildScriptGenerationPrompt } =
+      await import("../lib/script-generation.js");
+    const prompt = buildScriptGenerationPrompt(
+      "reading-advantage",
+      "การอ่านนิทาน",
+    );
     expect(prompt).toMatch(/reading advantage/i);
     expect(prompt).toContain("การอ่านนิทาน");
   });
 
   it("prompt requests 5–7 scenes", async () => {
-    const { buildScriptGenerationPrompt } = await import("../lib/script-generation.js");
+    const { buildScriptGenerationPrompt } =
+      await import("../lib/script-generation.js");
     const prompt = buildScriptGenerationPrompt("reading-advantage", "Topic");
     expect(prompt).toMatch(/5\s*[–-]\s*7/);
     expect(prompt).toMatch(/5\s+to\s+7/i);
   });
 
   it("prompt requests Thai narration", async () => {
-    const { buildScriptGenerationPrompt } = await import("../lib/script-generation.js");
+    const { buildScriptGenerationPrompt } =
+      await import("../lib/script-generation.js");
     const prompt = buildScriptGenerationPrompt("reading-advantage", "Topic");
     expect(prompt).toMatch(/Thai/);
     expect(prompt).toMatch(/narration|voiceover|คำบรรยาย/i);
   });
 
   it("prompt requests image prompt and motion direction per scene", async () => {
-    const { buildScriptGenerationPrompt } = await import("../lib/script-generation.js");
+    const { buildScriptGenerationPrompt } =
+      await import("../lib/script-generation.js");
     const prompt = buildScriptGenerationPrompt("reading-advantage", "Topic");
     expect(prompt).toMatch(/image\s+prompt/i);
     expect(prompt).toMatch(/motion\s+direction/i);
   });
 
   it("prompt requests JSON array output", async () => {
-    const { buildScriptGenerationPrompt } = await import("../lib/script-generation.js");
+    const { buildScriptGenerationPrompt } =
+      await import("../lib/script-generation.js");
     const prompt = buildScriptGenerationPrompt("reading-advantage", "Topic");
     expect(prompt).toMatch(/JSON\s+array/i);
   });
@@ -323,7 +331,9 @@ describe("Phase 6: Script Generation — scene editor (task 3, RED)", () => {
     expect(reordered[0]).toEqual(scriptFixture[1]);
     expect(reordered[1]).toEqual(scriptFixture[2]);
     // Original array must remain unchanged.
-    expect(scriptFixture[0].narration).toBe("ยินดีต้อนรับสู่แพลตฟอร์ม Reading Advantage สำหรับการเรียนรู้");
+    expect(scriptFixture[0].narration).toBe(
+      "ยินดีต้อนรับสู่แพลตฟอร์ม Reading Advantage สำหรับการเรียนรู้",
+    );
   });
 
   it("addScene appends a new scene to the script", async () => {
@@ -361,22 +371,28 @@ describe("Phase 6: Script Generation — scene editor (task 3, RED)", () => {
 describe("Phase 6: Script Generation — API integration (tasks 4-5: verify, RED)", () => {
   it("POST /api/video/generate-script returns a 5–7 scene script", async () => {
     const { db } = await import("@reading-advantage/db");
-    const { __fakeAIClient } = (await import("@reading-advantage/ai")) as unknown as {
-      __fakeAIClient: { generateText: Mock };
-    };
+    const { __fakeAIClient } =
+      (await import("@reading-advantage/ai")) as unknown as {
+        __fakeAIClient: { generateText: Mock };
+      };
 
     const { selectMock, whereMock } = makeSelectChainMock();
     whereMock.mockResolvedValueOnce(mockSettingsRows);
     (db.select as Mock).mockImplementation(selectMock);
 
-    __fakeAIClient.generateText.mockResolvedValueOnce(JSON.stringify(scriptFixture));
+    __fakeAIClient.generateText.mockResolvedValueOnce(
+      JSON.stringify(scriptFixture),
+    );
 
     const { POST } = await import("@/api/video/generate-script/route");
     const response = await POST(
       authedRequest("http://localhost/api/video/generate-script", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ app: "reading-advantage", topic: "การอ่านนิทาน" }),
+        body: JSON.stringify({
+          app: "reading-advantage",
+          topic: "การอ่านนิทาน",
+        }),
       }),
     );
 
@@ -392,22 +408,28 @@ describe("Phase 6: Script Generation — API integration (tasks 4-5: verify, RED
 
   it("POST /api/video/generate-script returns 500 for an LLM response that fails schema validation", async () => {
     const { db } = await import("@reading-advantage/db");
-    const { __fakeAIClient } = (await import("@reading-advantage/ai")) as unknown as {
-      __fakeAIClient: { generateText: Mock };
-    };
+    const { __fakeAIClient } =
+      (await import("@reading-advantage/ai")) as unknown as {
+        __fakeAIClient: { generateText: Mock };
+      };
 
     const { selectMock, whereMock } = makeSelectChainMock();
     whereMock.mockResolvedValueOnce(mockSettingsRows);
     (db.select as Mock).mockImplementation(selectMock);
 
-    __fakeAIClient.generateText.mockResolvedValueOnce(JSON.stringify([{ narration: "incomplete" }]));
+    __fakeAIClient.generateText.mockResolvedValueOnce(
+      JSON.stringify([{ narration: "incomplete" }]),
+    );
 
     const { POST } = await import("@/api/video/generate-script/route");
     const response = await POST(
       authedRequest("http://localhost/api/video/generate-script", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ app: "reading-advantage", topic: "การอ่านนิทาน" }),
+        body: JSON.stringify({
+          app: "reading-advantage",
+          topic: "การอ่านนิทาน",
+        }),
       }),
     );
 
@@ -423,7 +445,9 @@ describe("Phase 6: Script Generation — API integration (tasks 4-5: verify, RED
       script: scriptFixture,
       status: "draft",
     };
-    const { insertMock, valuesMock, returningMock } = makeInsertChainMock([mockProject]);
+    const { insertMock, valuesMock, returningMock } = makeInsertChainMock([
+      mockProject,
+    ]);
     (db.insert as Mock).mockImplementation(insertMock);
 
     const { POST } = await import("@/api/video/projects/route");
@@ -480,7 +504,9 @@ describe("Phase 6: Script Generation — API integration (tasks 4-5: verify, RED
 describe("Phase 6: Script Generation — Zod-backed schema edge cases (Phase 3, RED)", () => {
   it("exports a Zod-backed schema with a parse method", async () => {
     const mod = await import("../lib/script-schema.js");
-    expect(typeof (mod.scriptSchema as unknown as { parse?: unknown }).parse).toBe("function");
+    expect(
+      typeof (mod.scriptSchema as unknown as { parse?: unknown }).parse,
+    ).toBe("function");
   });
 
   it("safeParse failures return ZodError issues with path details", async () => {
@@ -488,10 +514,13 @@ describe("Phase 6: Script Generation — Zod-backed schema edge cases (Phase 3, 
     const result = scriptSchema.safeParse([{ narration: "Scene only" }]);
     expect(result.success).toBe(false);
     if (result.success) return;
-    const issues = (result.error as unknown as { issues?: unknown[] }).issues ?? [];
+    const issues =
+      (result.error as unknown as { issues?: unknown[] }).issues ?? [];
     expect(Array.isArray(issues)).toBe(true);
     expect(issues.length).toBeGreaterThanOrEqual(1);
-    const paths = issues.map((issue) => (issue as { path?: string[] }).path ?? []);
+    const paths = issues.map(
+      (issue) => (issue as { path?: string[] }).path ?? [],
+    );
     expect(
       paths.some(
         (path) =>
@@ -527,12 +556,21 @@ describe("Phase 6: Script Generation — Zod-backed schema edge cases (Phase 3, 
       imagePrompt: "",
       motionDirection: "",
     };
-    const result = scriptSchema.safeParse(Array.from({ length: 5 }, () => emptyScene));
+    const result = scriptSchema.safeParse(
+      Array.from({ length: 5 }, () => emptyScene),
+    );
     expect(result.success).toBe(false);
     if (result.success) return;
-    const issues = (result.error as unknown as { issues?: { message?: string; path?: string[] }[] }).issues ?? [];
+    const issues =
+      (
+        result.error as unknown as {
+          issues?: { message?: string; path?: string[] }[];
+        }
+      ).issues ?? [];
     const messages = issues.map((i) => i.message ?? "").join(" ");
-    expect(messages).toMatch(/narration|imagePrompt|motionDirection|empty|string/i);
+    expect(messages).toMatch(
+      /narration|imagePrompt|motionDirection|empty|string/i,
+    );
   });
 
   it("rejects non-string field types with structured issues", async () => {
@@ -550,7 +588,9 @@ describe("Phase 6: Script Generation — Zod-backed schema edge cases (Phase 3, 
   it("rejects scenes with extra unknown fields (strict scene contract)", async () => {
     const { scriptSchema } = await import("../lib/script-schema.js");
     const scene = { ...scriptFixture[0], extraField: "should not be allowed" };
-    const result = scriptSchema.safeParse(Array.from({ length: 5 }, () => scene));
+    const result = scriptSchema.safeParse(
+      Array.from({ length: 5 }, () => scene),
+    );
     expect(result.success).toBe(false);
   });
 

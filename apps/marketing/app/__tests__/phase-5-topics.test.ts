@@ -35,7 +35,7 @@
  */
 
 import { describe, expect, it, vi, type Mock } from "vitest";
-import { existsSync, readFileSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -121,7 +121,9 @@ function makeSelectChainMock() {
 function makeInsertChainMock() {
   const returningMock = vi.fn().mockResolvedValue([]);
   const onConflictDoNothingMock = vi.fn(() => ({ returning: returningMock }));
-  const valuesMock = vi.fn(() => ({ onConflictDoNothing: onConflictDoNothingMock }));
+  const valuesMock = vi.fn(() => ({
+    onConflictDoNothing: onConflictDoNothingMock,
+  }));
   const insertMock = vi.fn(() => ({ values: valuesMock }));
   return { insertMock, onConflictDoNothingMock, valuesMock };
 }
@@ -137,34 +139,27 @@ describe("Phase 5: Topic Research — wiring invariants (tasks 1-4)", () => {
 
   it("video production page renders the 8-product app selector", () => {
     const src = readText("app/campaigns/[id]/video/page.tsx");
-    expect(src).toMatch(/reading-advantage/);
-    expect(src).toMatch(/tutor-advantage/);
+    expect(src).toMatch(/\bAPPS\b[\s\S]*from\s+["']@\/lib\/apps["']/);
+    expect(src).toMatch(/APPS\.map/);
+    expect(src).toMatch(/getMarketingAppName/);
     expect(src).toMatch(/<select/);
   });
 
   it("video production page exposes a Research Topics button", () => {
     const src = readText("app/campaigns/[id]/video/page.tsx");
-    expect(src).toMatch(/Research\s+Topics/);
+    expect(src).toMatch(/t\("video\.researchTopics"\)/);
     expect(src).toMatch(/handleResearchTopics/);
   });
 
-  it(
-    "apps/marketing/app/api/video/research-topics/route.ts exports POST",
-    async () => {
-      const mod = await import("@/api/video/research-topics/route");
-      expect(typeof mod.POST).toBe("function");
-    },
-    30000,
-  );
+  it("apps/marketing/app/api/video/research-topics/route.ts exports POST", async () => {
+    const mod = await import("@/api/video/research-topics/route");
+    expect(typeof mod.POST).toBe("function");
+  }, 30000);
 
-  it(
-    "apps/marketing/app/api/video/save-topics/route.ts exports POST",
-    async () => {
-      const mod = await import("@/api/video/save-topics/route");
-      expect(typeof mod.POST).toBe("function");
-    },
-    30000,
-  );
+  it("apps/marketing/app/api/video/save-topics/route.ts exports POST", async () => {
+    const mod = await import("@/api/video/save-topics/route");
+    expect(typeof mod.POST).toBe("function");
+  }, 30000);
 });
 
 // ─────────────────────────────────────────────────────────────────────
@@ -181,7 +176,8 @@ describe("Phase 5: Topic Research — prompt builder (task 2, GREEN)", () => {
   });
 
   it("prompt names the app and target audience", async () => {
-    const { buildTopicResearchPrompt } = await import("../lib/topic-research.js");
+    const { buildTopicResearchPrompt } =
+      await import("../lib/topic-research.js");
     const prompt = buildTopicResearchPrompt("reading-advantage", []);
     expect(prompt).toMatch(/reading advantage/i);
     expect(prompt).toMatch(/Thai/);
@@ -189,7 +185,8 @@ describe("Phase 5: Topic Research — prompt builder (task 2, GREEN)", () => {
   });
 
   it("prompt includes past topics when provided", async () => {
-    const { buildTopicResearchPrompt } = await import("../lib/topic-research.js");
+    const { buildTopicResearchPrompt } =
+      await import("../lib/topic-research.js");
     const past = ["การอ่านนิทานภาษาอังกฤษ", "คณิตศาสตร์สนุก"];
     const prompt = buildTopicResearchPrompt("reading-advantage", past);
     expect(prompt).toContain(past[0]);
@@ -198,7 +195,8 @@ describe("Phase 5: Topic Research — prompt builder (task 2, GREEN)", () => {
   });
 
   it("prompt instructs the model to return exactly 5 topics", async () => {
-    const { buildTopicResearchPrompt } = await import("../lib/topic-research.js");
+    const { buildTopicResearchPrompt } =
+      await import("../lib/topic-research.js");
     const prompt = buildTopicResearchPrompt("reading-advantage", []);
     expect(prompt).toMatch(/5/);
     expect(prompt).toMatch(/JSON array/);
@@ -248,7 +246,10 @@ describe("Phase 5: Topic Research — dedup matcher (task 2, RED, phase-5-dedup-
 
   it("deduplicateTopics treats Thai/Latin whitespace variants as duplicates", async () => {
     const { deduplicateTopics } = await import("../lib/topic-dedup.js");
-    const proposed = ["Reading Advantage สำหรับเด็ก", "Reading Advantageสำหรับเด็ก"];
+    const proposed = [
+      "Reading Advantage สำหรับเด็ก",
+      "Reading Advantageสำหรับเด็ก",
+    ];
     const existing = ["reading advantage สำหรับเด็ก"];
     const result = deduplicateTopics(proposed, existing);
     expect(result).toHaveLength(0);
@@ -266,14 +267,13 @@ describe("Phase 5: Topic Research — dedup matcher (task 2, RED, phase-5-dedup-
 describe("Phase 5: Topic Research — API integration (task 6: verify, RED)", () => {
   it("POST /api/video/research-topics returns exactly 5 distinct topics", async () => {
     const { db } = await import("@reading-advantage/db");
-    const { __fakeAIClient } = (await import("@reading-advantage/ai")) as unknown as {
-      __fakeAIClient: { generateText: Mock };
-    };
+    const { __fakeAIClient } =
+      (await import("@reading-advantage/ai")) as unknown as {
+        __fakeAIClient: { generateText: Mock };
+      };
 
     const { selectMock, whereMock } = makeSelectChainMock();
-    whereMock
-      .mockResolvedValueOnce(mockSettingsRows)
-      .mockResolvedValueOnce([]);
+    whereMock.mockResolvedValueOnce(mockSettingsRows).mockResolvedValueOnce([]);
     (db.select as Mock).mockImplementation(selectMock);
 
     // Simulate an LLM that returns 6 topics — the route must cap/enforce 5.
@@ -298,9 +298,10 @@ describe("Phase 5: Topic Research — API integration (task 6: verify, RED)", ()
 
   it("POST /api/video/research-topics excludes topics already in past_topics", async () => {
     const { db } = await import("@reading-advantage/db");
-    const { __fakeAIClient } = (await import("@reading-advantage/ai")) as unknown as {
-      __fakeAIClient: { generateText: Mock };
-    };
+    const { __fakeAIClient } =
+      (await import("@reading-advantage/ai")) as unknown as {
+        __fakeAIClient: { generateText: Mock };
+      };
 
     const { selectMock, whereMock } = makeSelectChainMock();
     whereMock
@@ -361,7 +362,9 @@ describe("Phase 5: Topic Research — API integration (task 6: verify, RED)", ()
       (valuesMock as Mock).mock.calls[0][0] as Array<{ topic: string }>
     ).map((row) => row.topic);
     expect(insertedTopics).toContain("Unique Topic");
-    expect(insertedTopics.filter((t) => t === "Duplicate Topic")).toHaveLength(1);
+    expect(insertedTopics.filter((t) => t === "Duplicate Topic")).toHaveLength(
+      1,
+    );
   });
 
   it("POST /api/video/save-topics normalizes Thai/Latin duplicates", async () => {
@@ -380,7 +383,10 @@ describe("Phase 5: Topic Research — API integration (task 6: verify, RED)", ()
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
           app: "reading-advantage",
-          topics: ["Reading Advantage สำหรับเด็ก", "reading advantage สำหรับเด็ก"],
+          topics: [
+            "Reading Advantage สำหรับเด็ก",
+            "reading advantage สำหรับเด็ก",
+          ],
         }),
       }),
     );

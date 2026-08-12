@@ -7,6 +7,7 @@ import {
   prepareMarketingSettingsUpdate,
   preservesExistingMarketingSecret,
 } from "@/lib/settings-update";
+import { getMarketingMessage as t } from "@/lib/i18n";
 
 const OPENROUTER_DEFAULT_MODEL = "nvidia/nemotron-3-ultra-550b-a55b:free";
 
@@ -56,16 +57,16 @@ export default function SettingsPage() {
           return;
         }
         if (res.status === 403) {
-          setPageError("Administrator access is required to view Marketing settings.");
+          setPageError(t("settings.adminView"));
           return;
         }
         if (!res.ok) {
-          setPageError("Failed to load Marketing settings. Please try again.");
+          setPageError(t("settings.loadFailed"));
           return;
         }
         const data: unknown = await res.json();
         if (!data || typeof data !== "object" || Array.isArray(data)) {
-          setPageError("Settings returned an invalid response.");
+          setPageError(t("settings.invalidResponse"));
           return;
         }
         const settingValues = data as Record<string, unknown>;
@@ -77,10 +78,12 @@ export default function SettingsPage() {
         } else if (storedProvider === "openrouter") {
           setModelName(OPENROUTER_DEFAULT_MODEL);
         }
-        if (typeof settingValues["llm.apiKey"] === "string") setApiKey(settingValues["llm.apiKey"]);
-        if (typeof settingValues["tools.mmxPath"] === "string") setMmxPath(settingValues["tools.mmxPath"]);
+        if (typeof settingValues["llm.apiKey"] === "string")
+          setApiKey(settingValues["llm.apiKey"]);
+        if (typeof settingValues["tools.mmxPath"] === "string")
+          setMmxPath(settingValues["tools.mmxPath"]);
       } catch {
-        setPageError("Failed to load Marketing settings. Please try again.");
+        setPageError(t("settings.loadFailed"));
       } finally {
         setLoading(false);
       }
@@ -97,7 +100,7 @@ export default function SettingsPage() {
     if (requiresExplicitApiKey) {
       setTestResult({
         status: "error",
-        message: "Enter a new API key to test the connection.",
+        message: t("settings.enterNewApiKey"),
       });
       return;
     }
@@ -116,22 +119,26 @@ export default function SettingsPage() {
       if (res.status === 403) {
         setTestResult({
           status: "error",
-          message:
-            "Error: administrator access is required to test connections.",
+          message: t("settings.testForbidden"),
         });
         return;
       }
       if (!res.ok) {
         setTestResult({
           status: "error",
-          message:
-            "Error: connection test failed. Check the provider settings and try again.",
+          message: t("settings.testFailed"),
         });
         return;
       }
-      setTestResult({ status: "success", message: "Connection successful!" });
+      setTestResult({
+        status: "success",
+        message: t("settings.testSuccessful"),
+      });
     } catch {
-      setTestResult({ status: "error", message: "Connection failed" });
+      setTestResult({
+        status: "error",
+        message: t("settings.connectionFailed"),
+      });
     } finally {
       setTesting(false);
     }
@@ -157,23 +164,25 @@ export default function SettingsPage() {
         return;
       }
       if (res.status === 403) {
-        setPageError("Administrator access is required to save Marketing settings.");
+        setPageError(t("settings.adminSave"));
         return;
       }
       if (!res.ok) {
-        setPageError("Failed to save Marketing settings. Check the values and try again.");
+        setPageError(t("settings.saveCheckFailed"));
         return;
       }
-      setSaveMessage("Settings saved.");
+      setSaveMessage(t("settings.saved"));
     } catch {
-      setPageError("Failed to save Marketing settings. Please try again.");
+      setPageError(t("settings.saveFailed"));
     }
   };
 
   if (isAuthLoading) {
     return (
       <main style={{ padding: "24px", textAlign: "center" }}>
-        <p role="status" aria-live="polite">Checking administrator access...</p>
+        <p role="status" aria-live="polite">
+          {t("settings.checkingAccess")}
+        </p>
       </main>
     );
   }
@@ -181,7 +190,9 @@ export default function SettingsPage() {
   if (!isAuthenticated || !user) {
     return (
       <main style={{ padding: "24px", textAlign: "center" }}>
-        <p role="status" aria-live="polite">Redirecting to sign in...</p>
+        <p role="status" aria-live="polite">
+          {t("settings.redirecting")}
+        </p>
       </main>
     );
   }
@@ -199,11 +210,10 @@ export default function SettingsPage() {
             padding: "24px",
           }}
         >
-          <h1 id="marketing-settings-access-heading">Settings access required</h1>
-          <p>
-            Administrator access is required to view or change Marketing
-            settings.
-          </p>
+          <h1 id="marketing-settings-access-heading">
+            {t("settings.accessRequired")}
+          </h1>
+          <p>{t("settings.accessDescription")}</p>
         </section>
       </main>
     );
@@ -212,7 +222,7 @@ export default function SettingsPage() {
   if (loading) {
     return (
       <div style={{ padding: "24px", textAlign: "center" }}>
-        <p>Loading settings...</p>
+        <p>{t("settings.loading")}</p>
       </div>
     );
   }
@@ -225,13 +235,17 @@ export default function SettingsPage() {
 
   return (
     <div>
-      <h1>Settings</h1>
-      <p>Configure LLM provider, API keys, and tool paths.</p>
+      <h1>{t("settings.title")}</h1>
+      <p>{t("settings.description")}</p>
       {pageError && (
-        <p role="alert" style={{ color: "#b91c1c" }}>{pageError}</p>
+        <p role="alert" style={{ color: "#b91c1c" }}>
+          {pageError}
+        </p>
       )}
       {saveMessage && (
-        <p aria-live="polite" style={{ color: "#15803d" }}>{saveMessage}</p>
+        <p aria-live="polite" style={{ color: "#15803d" }}>
+          {saveMessage}
+        </p>
       )}
 
       <div
@@ -244,11 +258,13 @@ export default function SettingsPage() {
           maxWidth: "600px",
         }}
       >
-        <h2>LLM Configuration</h2>
+        <h2>{t("settings.configuration")}</h2>
 
         <div style={{ marginBottom: "16px" }}>
-          <label style={{ display: "block", marginBottom: "4px", fontWeight: "500" }}>
-            Provider
+          <label
+            style={{ display: "block", marginBottom: "4px", fontWeight: "500" }}
+          >
+            {t("settings.provider")}
           </label>
           <select
             value={provider}
@@ -266,21 +282,23 @@ export default function SettingsPage() {
               border: "1px solid #ccc",
             }}
           >
-            <option value="google">Google</option>
-            <option value="openai">OpenAI</option>
-            <option value="openrouter">OpenRouter</option>
+            <option value="google">{t("settings.google")}</option>
+            <option value="openai">{t("settings.openai")}</option>
+            <option value="openrouter">{t("settings.openrouter")}</option>
           </select>
         </div>
 
         <div style={{ marginBottom: "16px" }}>
-          <label style={{ display: "block", marginBottom: "4px", fontWeight: "500" }}>
-            Model Name
+          <label
+            style={{ display: "block", marginBottom: "4px", fontWeight: "500" }}
+          >
+            {t("settings.modelName")}
           </label>
           <input
             type="text"
             value={modelName}
             onChange={(e) => setModelName(e.target.value)}
-            placeholder="e.g., gemini-pro, gpt-4"
+            placeholder={t("settings.modelPlaceholder")}
             style={{
               width: "100%",
               padding: "8px",
@@ -291,10 +309,19 @@ export default function SettingsPage() {
         </div>
 
         <div style={{ marginBottom: "16px" }}>
-          <label style={{ display: "block", marginBottom: "4px", fontWeight: "500" }}>
-            API Key {isApiKeyMasked && (
-              <span style={{ fontSize: "12px", color: "#666", fontWeight: "normal" }}>
-                (configured \u2014 enter a new value to change)
+          <label
+            style={{ display: "block", marginBottom: "4px", fontWeight: "500" }}
+          >
+            {t("settings.apiKey")}{" "}
+            {isApiKeyMasked && (
+              <span
+                style={{
+                  fontSize: "12px",
+                  color: "#666",
+                  fontWeight: "normal",
+                }}
+              >
+                {t("settings.configured")}
               </span>
             )}
           </label>
@@ -303,7 +330,9 @@ export default function SettingsPage() {
             value={apiKey}
             onChange={(e) => setApiKey(e.target.value)}
             placeholder={
-              isApiKeyMasked ? MARKETING_MASKED_SECRET : "Enter API key"
+              isApiKeyMasked
+                ? MARKETING_MASKED_SECRET
+                : t("settings.enterApiKey")
             }
             style={{
               width: "100%",
@@ -314,20 +343,22 @@ export default function SettingsPage() {
           />
           {requiresExplicitApiKey && (
             <p style={{ margin: "6px 0 0", fontSize: "12px", color: "#666" }}>
-              Enter a new API key to test the connection.
+              {t("settings.enterNewApiKey")}
             </p>
           )}
         </div>
 
         <div style={{ marginBottom: "16px" }}>
-          <label style={{ display: "block", marginBottom: "4px", fontWeight: "500" }}>
-            mmx CLI Path
+          <label
+            style={{ display: "block", marginBottom: "4px", fontWeight: "500" }}
+          >
+            {t("settings.mmxPath")}
           </label>
           <input
             type="text"
             value={mmxPath}
             onChange={(e) => setMmxPath(e.target.value)}
-            placeholder="e.g., /usr/local/bin/mmx"
+            placeholder={t("settings.mmxPlaceholder")}
             style={{
               width: "100%",
               padding: "8px",
@@ -351,7 +382,7 @@ export default function SettingsPage() {
                 testing || requiresExplicitApiKey ? "not-allowed" : "pointer",
             }}
           >
-            {testing ? "Testing..." : "Test Connection"}
+            {testing ? t("settings.testing") : t("settings.testConnection")}
           </button>
           <button
             onClick={handleSave}
@@ -364,7 +395,7 @@ export default function SettingsPage() {
               cursor: "pointer",
             }}
           >
-            Save Settings
+            {t("settings.save")}
           </button>
         </div>
 

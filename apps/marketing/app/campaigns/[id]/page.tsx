@@ -3,6 +3,11 @@
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
+import {
+  getMarketingAppName,
+  getMarketingMessage as t,
+  getMarketingStatusLabel,
+} from "@/lib/i18n";
 
 interface Campaign {
   id: string;
@@ -21,6 +26,10 @@ const statusTransitions: Record<string, string[]> = {
   archived: [],
 };
 
+/**
+ * Renders the detail view for one Marketing campaign.
+ * @returns The campaign detail and status-management interface.
+ */
 export default function CampaignDetailPage() {
   const params = useParams();
   const [campaign, setCampaign] = useState<Campaign | null>(null);
@@ -42,21 +51,25 @@ export default function CampaignDetailPage() {
         return;
       }
       if (res.status === 403) {
-        setError("You do not have access to this campaign.");
+        setError(t("campaigns.detailAccess"));
         return;
       }
       if (!res.ok) {
-        setError("Failed to load campaign. Please return to Campaigns and try again.");
+        setError(t("campaigns.detailLoadFailed"));
         return;
       }
       const data: unknown = await res.json();
-      if (!data || typeof data !== "object" || typeof (data as { id?: unknown }).id !== "string") {
-        setError("Campaign returned an invalid response.");
+      if (
+        !data ||
+        typeof data !== "object" ||
+        typeof (data as { id?: unknown }).id !== "string"
+      ) {
+        setError(t("campaigns.detailInvalidResponse"));
         return;
       }
       setCampaign(data as Campaign);
     } catch {
-      setError("Failed to load campaign. Please return to Campaigns and try again.");
+      setError(t("campaigns.detailLoadFailed"));
     }
   };
 
@@ -75,35 +88,48 @@ export default function CampaignDetailPage() {
         return;
       }
       if (res.status === 403) {
-        setError("You do not have permission to update this campaign.");
+        setError(t("campaigns.updateForbidden"));
         return;
       }
       if (!res.ok) {
-        setError("Failed to update campaign status. Please try again.");
+        setError(t("campaigns.updateFailed"));
         return;
       }
       const data: unknown = await res.json();
-      if (!data || typeof data !== "object" || typeof (data as { id?: unknown }).id !== "string") {
-        setError("Campaign update returned an invalid response.");
+      if (
+        !data ||
+        typeof data !== "object" ||
+        typeof (data as { id?: unknown }).id !== "string"
+      ) {
+        setError(t("campaigns.updateInvalidResponse"));
         return;
       }
       setCampaign(data as Campaign);
-      setMessage(`Campaign moved to ${newStatus}.`);
+      setMessage(
+        t("campaigns.moved", { status: getMarketingStatusLabel(newStatus) }),
+      );
     } catch {
-      setError("Failed to update campaign status. Please try again.");
+      setError(t("campaigns.updateFailed"));
     }
   };
 
   if (!campaign) {
-    return error ? <p role="alert">{error}</p> : <p role="status">Loading...</p>;
+    return error ? (
+      <p role="alert">{error}</p>
+    ) : (
+      <p role="status">{t("campaigns.loading")}</p>
+    );
   }
 
   const availableTransitions = statusTransitions[campaign.status] || [];
 
   return (
     <div>
-      <Link href="/campaigns" style={{ color: "#1a1a2e", textDecoration: "none" }}>
-        ← Back to Campaigns
+      <Link
+        href="/campaigns"
+        style={{ color: "#1a1a2e", textDecoration: "none" }}
+      >
+        {t("campaigns.back")}
       </Link>
 
       <div
@@ -116,10 +142,22 @@ export default function CampaignDetailPage() {
         }}
       >
         <h1>{campaign.name}</h1>
-        {error && <p role="alert" style={{ color: "#b91c1c" }}>{error}</p>}
-        {message && <p aria-live="polite" style={{ color: "#15803d" }}>{message}</p>}
+        {error && (
+          <p role="alert" style={{ color: "#b91c1c" }}>
+            {error}
+          </p>
+        )}
+        {message && (
+          <p aria-live="polite" style={{ color: "#15803d" }}>
+            {message}
+          </p>
+        )}
         <div style={{ color: "#666", marginTop: "8px" }}>
-          Type: {campaign.type} • App: {campaign.app.replace(/-/g, " ")}
+          {t("campaigns.type")}:{" "}
+          {campaign.type === "video"
+            ? t("campaigns.video")
+            : t("campaigns.infocard")}{" "}
+          • {t("campaigns.app")}: {getMarketingAppName(campaign.app)}
         </div>
         <div style={{ marginTop: "16px" }}>
           <span
@@ -129,20 +167,20 @@ export default function CampaignDetailPage() {
                 campaign.status === "draft"
                   ? "#e0e0e0"
                   : campaign.status === "in-progress"
-                  ? "#fff3e0"
-                  : campaign.status === "complete"
-                  ? "#e8f5e9"
-                  : "#f3e5f5",
+                    ? "#fff3e0"
+                    : campaign.status === "complete"
+                      ? "#e8f5e9"
+                      : "#f3e5f5",
               borderRadius: "4px",
             }}
           >
-            {campaign.status}
+            {getMarketingStatusLabel(campaign.status)}
           </span>
         </div>
 
         {availableTransitions.length > 0 && (
           <div style={{ marginTop: "24px" }}>
-            <h3>Status Transitions</h3>
+            <h3>{t("campaigns.statusTransitions")}</h3>
             <div style={{ display: "flex", gap: "8px", marginTop: "8px" }}>
               {availableTransitions.map((status) => (
                 <button
@@ -157,7 +195,9 @@ export default function CampaignDetailPage() {
                     cursor: "pointer",
                   }}
                 >
-                  Move to {status}
+                  {t("campaigns.moveTo", {
+                    status: getMarketingStatusLabel(status),
+                  })}
                 </button>
               ))}
             </div>
@@ -177,7 +217,7 @@ export default function CampaignDetailPage() {
                 textDecoration: "none",
               }}
             >
-              Start Video Production
+              {t("campaigns.startVideo")}
             </Link>
           </div>
         )}
