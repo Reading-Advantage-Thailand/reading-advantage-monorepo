@@ -1,0 +1,4 @@
+Task: Define Sales Phase 0 runtime admission strategy
+Summary: Added a falsifiable one-shot Red/Green and closeout strategy, activated the Phase 0 admission task, and preserved Finance and later-phase dependency gates.
+Files: measure/tracks/sales_mastery_consumer_20260810/plan.md; measure/tracks/sales_mastery_consumer_20260810/test-strategy.md
+Why: Establish an immutable baseline before accepting the existing runtime-compat candidate.
