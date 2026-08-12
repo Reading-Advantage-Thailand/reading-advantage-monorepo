@@ -97,8 +97,6 @@ export function getPhaseACurriculumData() {
                 imagePath: "/images/diagrams/dev_toolchain_flow.png",
                 body: "The terminal is where you type commands to control your computer. Every Reading Advantage developer uses the terminal daily. Key commands: pwd (where am I?), ls (what's here?), cd (change directory), mkdir (make directory), cat (show file contents).",
                 code: "# Navigation\npwd                          # Where am I?\nls                           # What's here?\ncd Desktop                   # Go to Desktop\ncd ..                        # Go back up\nmkdir codecamp               # Create workspace folder\ncd codecamp\n\n# File operations\necho \"Hello, codecamp!\" > hello.txt\ncat hello.txt\nmkdir projects\nmv hello.txt projects/\nls projects/\nrm projects/hello.txt\nrmdir projects",
-                youtubeId: "Ke90Tje7VS0",
-                youtubeSource: "Legacy curated source (not independently verified)",
               },
               {
                 heading: "Install Node.js 20",
@@ -204,8 +202,6 @@ export function getPhaseACurriculumData() {
                 heading: "Create Your First Repo",
                 body: "Git is a version control system that tracks changes to your code. It lets you undo mistakes, collaborate with others, and see the history of every change.",
                 code: "mkdir personal-portfolio\ncd personal-portfolio\ngit init\n\n# Create a file and commit it\necho \"Hello\" > index.html\ngit add index.html\ngit status              # See what's staged\ngit commit -m \"feat: add initial portfolio page\"",
-                youtubeId: "hwP7WQgm_DE",
-                youtubeSource: "Legacy curated source (not independently verified)",
               },
               {
                 heading: "The Git Cycle",
@@ -232,8 +228,6 @@ export function getPhaseACurriculumData() {
                 heading: "Push to GitHub",
                 body: "GitHub is a hosting service for Git repositories. After creating a repo on GitHub, you connect your local repo and push your commits.",
                 code: "git remote add origin https://github.com/<username>/personal-portfolio.git\ngit branch -M main\ngit push -u origin main\n\n# Daily workflow\ngit add .\ngit commit -m \"feat: add about section\"\ngit push",
-                youtubeId: "RGOj5nlwkvY",
-                youtubeSource: "Dave Gray",
                 imagePath: "/images/diagrams/git_github_flow.jpg",
               },
               {
@@ -1255,8 +1249,6 @@ export function getPhaseBCurriculumData() {
                 heading: "What is React?",
                 body: "React is a library for building user interfaces with reusable components. Components are functions that return JSX (HTML-like syntax). React 19.2.5 is the version used in the Reading Advantage monorepo.",
                 code: "// A simple component\nfunction Greeting({ name }: { name: string }) {\n  return <h1>Hello, {name}!</h1>;\n}\n\n// Usage\n<Greeting name=\"Alice\" />",
-                youtubeId: "k5E265ksDSI",
-                youtubeSource: "Legacy curated source (not independently verified)",
                 imagePath: "/images/diagrams/react_render_lifecycle.jpg",
               },
               {
@@ -1757,8 +1749,6 @@ export function getPhaseBCurriculumData() {
                 heading: "Server Components (default)",
                 body: "Server Components run on the server by default. They can do async/await, direct database access, and keep secrets safe. They cannot use hooks, events, or browser APIs.",
                 code: "// Server Component — no \"use client\" needed\nexport default async function ModuleList() {\n  const modules = await fetchModules(); // Server-side fetch!\n\n  return (\n    <div className=\"grid gap-6 md:grid-cols-2 lg:grid-cols-3\">\n      {modules.map((mod) => (\n        <ModuleCard key={mod.id} module={mod} />\n      ))}\n    </div>\n  );\n}\n\n// ✅ Can do: async/await, DB access, env vars\n// ❌ Cannot do: useState, useEffect, onClick, localStorage",
-                youtubeId: "S0T0R9h1vHk",
-                youtubeSource: "Legacy curated source (not independently verified)",
                 imagePath: "/images/diagrams/nextjs_rsc_client.jpg",
               },
               {
