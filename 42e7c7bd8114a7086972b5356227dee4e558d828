@@ -1,0 +1,17 @@
+Measure track: wave5_public_surface_completion_20260628
+Phase: 7.4 i18n/lang Red
+
+Exact test-only scope:
+- apps/marketing/app/__tests__/phase-7-i18n-lang.red.test.tsx
+- apps/marketing/app/__tests__/helpers/phase-7-i18n-contract.ts
+
+Red evidence:
+- Direct Vitest: 23 tests, 3 intentional product Red failures, 20 analyzer/characterization passes.
+- The independent failures are locale mismatch, missing real message/accessor consumption, and transitive inline visible copy.
+- TypeScript, targeted ESLint, Prettier, and git diff --check exited 0.
+
+Anti-vacuity coverage includes transitive client safety, type-only import exclusion, imported/namespace locale aliases, default/namespace/hook accessors, nested locale dictionaries, nested-function pruning, imported constants, colocated JSX, array/map provenance, custom component props, intrinsic technical props, bare Node builtins, and ARIA text versus IDREF/state semantics.
+
+Independent final review: ACCEPT_RED, bound to test hash 4edb51ea6f89899223157eb8b7729bb235fbf71f1c4144fb81f4f455daa2c882 and helper hash 9c89e8518ce9f171629706c378055509d6a0063058cd27c94cf6617bd6506db2. Path-aware ARIA assertions were proven non-vacuous.
+
+No production, plan, strategy, lockfile, or other-track files included.
