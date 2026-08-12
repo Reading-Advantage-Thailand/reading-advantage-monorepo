@@ -69,9 +69,8 @@
 > UX/API review (res.ok, inline errors, row-shape change, lang), adversarial
 > testing (UNIQUE/script-shape/no-alert/no-plaintext refutation), browser review
 > (deferred to owner follow-up; vinext build is the closest gate).
-> **Canonical ordering:** Phase 7.1 and 7.2 are complete. Task 3 is now the
-> only executable task. Tasks 4 and 5 remain dependency-blocked on the prior
-> task's Green.
+> **Canonical ordering:** Phase 7.1 through 7.3 are complete. Task 4 is now the
+> only executable task. Task 5 remains dependency-blocked on Task 4's Green.
 
 - [x] Task: Write Red tests for `UNIQUE(app, topic)`, typed `videoProjects.script`, `updatedAt`/`createdBy` columns, and shared `APPS` tuple. Corrected Red `305ec411b`; independently reviewed schema Green `0bdaec0e1` passes the Phase 7, Phase 2, migration, tenant, auth/masking, ESM, type, lint, and Vinext-build gates.
   - Evidence refs: marketing_schema_integrity (LR-007-001..007, LR-004-005).
@@ -80,12 +79,14 @@
   - Independent ACCEPT: schema Green `0bdaec0e1` and settings encryption proof `eb7911b05`.
   - Focused evidence: the schema, migration, tenant, auth/masking, ESM, type, lint, and Vinext gates passed; the live PGlite property proof inspected raw persistence, verified ciphertext shape, and round-tripped through the production decrypt helper.
   - Sub-phase 7.2 complete. No production encryption source change was required.
-- [~] Task: Add `res.ok` checks + inline error states; replace `alert()`/substring error styling.
+- [x] Task: Add `res.ok` checks + inline error states; replace `alert()`/substring error styling.
   - Evidence refs: marketing_ux_error_handling (LR-004-007..010, LR-marketing-app-006-007).
-  - Sub-phase 7.3. Next executable Red; implementation subtasks remain unimplemented/Red-ready.
-- [b] Task: Add i18n layer / correct `lang`; externalize hardcoded English UI strings.
+  - Independent ACCEPT/review: Green `a7972835e` accepted against Red `470787d54`.
+  - Focused evidence: Phase 7.3 UX contract 9/9, relevant Wave 3 settings/auth/masking regressions 16/16, Marketing typecheck/lint, Vinext build, and runtime verification passed.
+  - Sub-phase 7.3 complete; no schema, encryption, or i18n scope was included.
+- [~] Task: Add i18n layer / correct `lang`; externalize hardcoded English UI strings.
   - Evidence refs: marketing_i18n (LR-marketing-app-006-004).
-  - deferred:phase7-task3-green (externalize the strings the UX task finalizes). Sub-phase 7.4.
+  - Sub-phase 7.4. Next executable Red; implementation remains unstarted/Red-ready.
 - [b] Task: Run marketing targeted tests/build.
   - deferred:phase7-task4-green. Sub-phase 7.5. Closeout.
 
