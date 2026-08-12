@@ -9,6 +9,7 @@ import {
   nonBlankStringSchema,
   privateEvidenceReferenceSchema,
 } from "./contracts.js";
+import type { HistoricalPrivateEvidenceBindingPort } from "./contracts.js";
 
 /** Provider-neutral decision returned by Company Identity for a finance operation. */
 export interface FinanceAuthorizationDecision {
@@ -356,6 +357,19 @@ export interface HistoricalPrivateEvidenceProjectionStore {
   findByOutboxEventId(
     outboxEventId: string,
   ): Promise<Readonly<HistoricalPrivateEvidenceProjectorReceipt> | undefined>;
+  /** Atomically claims a missing receipt binding or returns the first accepted receipt. */
+  claimReceipt?(input: Readonly<{
+    /** Persisted outbox event identity. */
+    readonly outboxEventId: string;
+    /** Canonical durable idempotency identity. */
+    readonly idempotencyKey: string;
+  }>): Promise<
+    | { readonly status: "claimed" }
+    | {
+        readonly status: "replay";
+        readonly receipt: Readonly<HistoricalPrivateEvidenceProjectorReceipt>;
+      }
+  >;
   /** Persists the immutable provider-neutral durable receipt binding. */
   bindReceipt(
     input: Readonly<HistoricalPrivateEvidenceProjectorReceipt>,
@@ -388,6 +402,60 @@ export interface HistoricalPrivateEvidenceOutboxProjector {
   project(
     intent: Readonly<HistoricalPrivateEvidenceOutboxIntent>,
   ): Promise<HistoricalPrivateEvidenceProjectorResult>;
+}
+
+/** Storage reader shape consumed by the Finance private-evidence binding adapter. */
+export interface AuthorizedPrivateEvidenceReader {
+  /** Reads one authorized private-evidence snapshot. */
+  readAuthorizedEvidence(input: Readonly<{
+    /** Exact immutable evidence reference. */
+    readonly evidenceReference: string;
+    /** Company-first and optional-school scope. */
+    readonly scope: { readonly companyId: string; readonly schoolId?: string };
+    /** Attestation evidence used for authorization. */
+    readonly authorization: Readonly<Record<string, unknown>>;
+    /** Expected payload digest. */
+    readonly expectedPayloadDigest: string;
+    /** Owner-controlled read limit. */
+    readonly maxBytes: number;
+  }>): Promise<Readonly<{
+    /** Verified immutable evidence reference. */
+    readonly evidenceReference: string;
+    /** Verified payload digest. */
+    readonly payloadDigest: string;
+  }>>;
+}
+
+/** Dependencies for the Finance adapter that binds an authorized storage read. */
+export interface HistoricalPrivateEvidenceBindingAdapterInput {
+  /** Authorized provider-neutral private-evidence reader. */
+  readonly reader: AuthorizedPrivateEvidenceReader;
+  /** Owner-controlled maximum packet size. */
+  readonly maxBytes: number;
+}
+
+/** Creates the Finance binding port over an authorized private-storage reader. */
+export function createHistoricalPrivateEvidenceBindingAdapter(
+  input: HistoricalPrivateEvidenceBindingAdapterInput,
+): HistoricalPrivateEvidenceBindingPort {
+  return Object.freeze({
+    async verify(
+      request: Parameters<HistoricalPrivateEvidenceBindingPort["verify"]>[0],
+    ) {
+      const result = await input.reader.readAuthorizedEvidence({
+        evidenceReference: request.evidenceReference,
+        scope: request.scope,
+        authorization: request.authorization,
+        expectedPayloadDigest: request.expectedPayloadDigest,
+        maxBytes: input.maxBytes,
+      });
+      return Object.freeze({
+        evidenceReference: result.evidenceReference,
+        scope: request.scope,
+        payloadDigest: result.payloadDigest,
+      });
+    },
+  });
 }
 
 const projectorJobSchema = z.strictObject({
@@ -429,6 +497,20 @@ function createIdempotencyKey(
     `source-identity=${encodeIdentity(intent.source.sourceIdentity)}`,
     `payload-digest=${encodeIdentity(intent.payloadDigest)}`,
   ].join("|");
+}
+
+/** Creates a bounded digest for oversized durable idempotency identities. */
+async function createBoundedIdempotencyKey(
+  intent: Readonly<HistoricalPrivateEvidenceOutboxIntent>,
+): Promise<string> {
+  const identity = createIdempotencyKey(intent);
+  if (identity.length <= 500) return identity;
+  const bytes = new TextEncoder().encode(identity);
+  const digest = await globalThis.crypto.subtle.digest("SHA-256", bytes);
+  const hexadecimal = Array.from(new Uint8Array(digest), (value) =>
+    value.toString(16).padStart(2, "0"),
+  ).join("");
+  return `historical-private-evidence-outbox-v1|sha256=${hexadecimal}`;
 }
 
 function receiptMatchesIntent(
@@ -493,7 +575,7 @@ export function createHistoricalPrivateEvidenceOutboxProjector(
         throw projectorError("FINANCE_OUTBOX_INTENT_INVALID");
       }
       const intent = freezeDeep(intentResult.data);
-      const idempotencyKey = createIdempotencyKey(intent);
+      const idempotencyKey = await createBoundedIdempotencyKey(intent);
       const storedReceipt = await input.projectionStore.findByOutboxEventId(
         intent.outboxEventId,
       );
@@ -515,6 +597,26 @@ export function createHistoricalPrivateEvidenceOutboxProjector(
           receipt,
           reason: "outbox-identity-mismatch" as const,
         });
+      }
+
+      if (typeof input.projectionStore.claimReceipt === "function") {
+        const claim = await input.projectionStore.claimReceipt({
+          outboxEventId: intent.outboxEventId,
+          idempotencyKey,
+        });
+        if (claim.status === "replay") {
+          const receipt = freezeDeep(
+            historicalPrivateEvidenceProjectorReceiptSchema.parse(claim.receipt),
+          );
+          if (receiptMatchesIntent(receipt, intent, idempotencyKey)) {
+            return freezeDeep({ status: "replay" as const, receipt });
+          }
+          return freezeDeep({
+            status: "conflict" as const,
+            receipt,
+            reason: "outbox-identity-mismatch" as const,
+          });
+        }
       }
 
       const enqueueRequest = createEnqueueRequest(intent, idempotencyKey, job);

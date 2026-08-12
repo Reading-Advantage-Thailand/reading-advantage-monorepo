@@ -75,6 +75,8 @@ function getScopeCompanyId(scope: unknown): string | undefined {
 export function createAuthorizedPrivateEvidenceReader(
   dependencies: AuthorizedPrivateEvidenceReaderDependencies,
 ): AuthorizedPrivateEvidenceReader {
+  const ownerMaxBytes = dependencies.maxBytes;
+
   return {
     async readAuthorizedEvidence(
       input: AuthorizedPrivateEvidenceReadInput,
@@ -82,6 +84,9 @@ export function createAuthorizedPrivateEvidenceReader(
       const evidenceCompanyId = parseEvidenceCompanyId(input.evidenceReference);
       assertExpectedDigest(input.expectedPayloadDigest);
       assertMaxBytes(input.maxBytes);
+      if (ownerMaxBytes !== undefined && input.maxBytes > ownerMaxBytes) {
+        fail("PRIVATE_EVIDENCE_MAX_BYTES_EXCEEDS_OWNER_CEILING");
+      }
 
       if (evidenceCompanyId !== getScopeCompanyId(input.scope)) {
         fail("PRIVATE_EVIDENCE_SCOPE_MISMATCH");
@@ -96,16 +101,33 @@ export function createAuthorizedPrivateEvidenceReader(
         fail("PRIVATE_EVIDENCE_AUTHORIZATION_DENIED");
       }
 
-      const result = await dependencies.driver.read({
-        evidenceReference: input.evidenceReference,
-        maxBytes: input.maxBytes,
-        signal: input.signal,
-      });
-      if (result.bytes.byteLength > input.maxBytes) {
+      let result: unknown;
+      try {
+        result = await dependencies.driver.read({
+          evidenceReference: input.evidenceReference,
+          maxBytes: input.maxBytes,
+          signal: input.signal,
+        });
+      } catch {
+        fail("PRIVATE_EVIDENCE_DRIVER_ERROR");
+      }
+      if (
+        typeof result !== "object" ||
+        result === null ||
+        !((result as { bytes?: unknown }).bytes instanceof Uint8Array) ||
+        typeof (result as { contentType?: unknown }).contentType !== "string"
+      ) {
+        fail("PRIVATE_EVIDENCE_DRIVER_RESULT_INVALID");
+      }
+      const driverResult = result as {
+        readonly bytes: Uint8Array;
+        readonly contentType: string;
+      };
+      if (driverResult.bytes.byteLength > input.maxBytes) {
         fail("PRIVATE_EVIDENCE_CONTENT_TOO_LARGE");
       }
 
-      const payloadDigest = await dependencies.digest(result.bytes);
+      const payloadDigest = await dependencies.digest(driverResult.bytes);
       if (payloadDigest !== input.expectedPayloadDigest) {
         fail("PRIVATE_EVIDENCE_DIGEST_MISMATCH");
       }
@@ -113,10 +135,10 @@ export function createAuthorizedPrivateEvidenceReader(
       return {
         evidenceReference: input.evidenceReference,
         payloadDigest,
-        bytes: new Uint8Array(result.bytes),
+        bytes: new Uint8Array(driverResult.bytes),
         metadata: {
-          contentLength: result.bytes.byteLength,
-          contentType: result.contentType,
+          contentLength: driverResult.bytes.byteLength,
+          contentType: driverResult.contentType,
         },
       };
     },

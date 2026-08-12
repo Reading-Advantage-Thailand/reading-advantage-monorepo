@@ -8,6 +8,17 @@ export * from "./postgres-repository.js";
 export * from "./postgres-idempotency.js";
 export * from "./postgres-rate-limit.js";
 export * from "./protocol.js";
-export * from "./repository.js";
+export type {
+  ApplicationSessionRevocation,
+  AuthorizationCodeInsert,
+  AuthorizationCodeRecord,
+  CompanyIdentityRepository,
+  EmployeeCredentialRecord,
+  IdentityAuditInput,
+  IdentityAuditMutation,
+  OidcClientRecord,
+  SsoSessionInsert,
+  SsoSessionRecord,
+} from "./repository.js";
 export * from "./service.js";
 export * from "./finance-attestation.js";

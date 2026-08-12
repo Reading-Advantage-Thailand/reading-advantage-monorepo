@@ -93,6 +93,24 @@ export interface FinanceAttestationAuditPort {
   append(event: Readonly<FinanceAttestationAuditEvent>): Promise<void>;
 }
 
+/** Trusted server-owned values for a Finance attestation audit event. */
+export interface FinanceAttestationTrustedAuditSources {
+  /** Creates one immutable audit event identifier. */
+  readonly createEventId: () => string;
+  /** Creates one request identifier. */
+  readonly createRequestId: () => string;
+  /** Creates one correlation identifier. */
+  readonly createCorrelationId: () => string;
+  /** Gets the trusted current time. */
+  readonly now: () => Date;
+}
+
+/** Minimal durable Company Identity audit repository used by the Finance adapter. */
+export interface CompanyIdentityFinanceAuditRepository {
+  /** Appends one immutable Company Identity audit event. */
+  appendAudit(input: Readonly<Record<string, unknown>>): Promise<void>;
+}
+
 /** Allowed or denied result from the Finance attestation boundary. */
 export type FinanceAttestationDecision =
   | {
@@ -104,6 +122,8 @@ export type FinanceAttestationDecision =
         readonly organizationId: string;
         readonly appRoleIds: readonly string[];
         readonly schoolIds?: readonly string[];
+        /** Version of the injected role policy. */
+        readonly policyVersion?: string;
       }>;
     }
   | {
@@ -136,6 +156,21 @@ function freezeDeep<T>(value: T): T {
   return value;
 }
 
+/** Adds a compatibility-visible but non-enumerable audit property. */
+function addHiddenProperty<T extends object>(
+  value: T,
+  key: string,
+  propertyValue: unknown,
+): T {
+  Object.defineProperty(value, key, {
+    value: propertyValue,
+    enumerable: false,
+    writable: false,
+    configurable: false,
+  });
+  return value;
+}
+
 /** Returns true when a value is a nonblank string. */
 function isNonBlankString(value: unknown): value is string {
   return typeof value === "string" && /\S/u.test(value);
@@ -155,6 +190,8 @@ export function createFinanceCompanyIdentityAttestor(input: {
   readonly rolePolicy: FinanceRolePolicy;
   /** Append-only audit boundary for each result. */
   readonly auditPort: FinanceAttestationAuditPort;
+  /** Trusted audit IDs and time used instead of caller values when supplied. */
+  readonly trustedAuditSources?: FinanceAttestationTrustedAuditSources;
 }): FinanceCompanyIdentityAttestor {
   if (
     typeof input?.authenticator?.authenticate !== "function" ||
@@ -167,10 +204,26 @@ export function createFinanceCompanyIdentityAttestor(input: {
 
   const acceptedRoleIds = copyStringArray(input.rolePolicy.acceptedRoleIds)!;
 
+  /** Builds an audit context with trusted server values when configured. */
+  function createAuditContext(
+    audit: Readonly<FinanceAttestationAuditContext>,
+  ): FinanceAttestationAuditContext {
+    const trusted = input.trustedAuditSources;
+    if (trusted === undefined) return audit;
+    return {
+      eventId: trusted.createEventId(),
+      objectId: audit.objectId,
+      occurredAt: trusted.now().toISOString(),
+      requestId: trusted.createRequestId(),
+      correlationId: trusted.createCorrelationId(),
+    };
+  }
+
   return Object.freeze({
     async attest(
       request: Parameters<FinanceCompanyIdentityAttestor["attest"]>[0],
     ) {
+      const audit = createAuditContext(request.audit);
       let claims: Readonly<FinanceAuthenticatedOwnerClaims> | undefined;
       try {
         claims = await input.authenticator.authenticate({
@@ -178,7 +231,7 @@ export function createFinanceCompanyIdentityAttestor(input: {
         });
       } catch {
         const event = freezeDeep({
-          ...request.audit,
+          ...audit,
           actor: { kind: "unauthenticated" as const },
           operation: request.operation,
           scope: { ...request.scope },
@@ -215,14 +268,19 @@ export function createFinanceCompanyIdentityAttestor(input: {
                   ? "school-attestation-missing"
                   : "role-policy-accepted";
       const allowed = reason === "role-policy-accepted";
-      const event = freezeDeep({
-        ...request.audit,
+      const event = {
+        ...audit,
         actor,
         operation: request.operation,
         scope: { ...request.scope },
         outcome: allowed ? ("allowed" as const) : ("denied" as const),
         reason,
-      });
+      };
+      addHiddenProperty(event, "policyVersion", input.rolePolicy.policyVersion);
+      if (claims !== undefined) {
+        addHiddenProperty(event, "claimsVersion", claims.claimsVersion);
+      }
+      freezeDeep(event);
       await input.auditPort.append(event);
 
       if (!allowed || claims === undefined || appRoleIds === undefined) {
@@ -235,16 +293,53 @@ export function createFinanceCompanyIdentityAttestor(input: {
         });
       }
 
+      const evidence = {
+        source: "company-identity" as const,
+        claimsVersion: claims.claimsVersion,
+        subjectId: claims.subjectId,
+        organizationId: claims.organizationId,
+        appRoleIds,
+        ...(schoolIds === undefined ? {} : { schoolIds }),
+      };
+      addHiddenProperty(evidence, "policyVersion", input.rolePolicy.policyVersion);
       return freezeDeep({
         decision: "allow" as const,
-        evidence: {
-          source: "company-identity" as const,
-          claimsVersion: claims.claimsVersion,
-          subjectId: claims.subjectId,
-          organizationId: claims.organizationId,
-          appRoleIds,
-          ...(schoolIds === undefined ? {} : { schoolIds }),
-        },
+        evidence,
+      });
+    },
+  });
+}
+
+/** Creates an append-only Company Identity audit port for Finance attestation events. */
+export function createCompanyIdentityFinanceAttestationAuditPort(input: {
+  /** Repository that owns durable Company Identity audit persistence. */
+  readonly repository: CompanyIdentityFinanceAuditRepository;
+}): FinanceAttestationAuditPort {
+  if (typeof input?.repository?.appendAudit !== "function") {
+    throw new Error("COMPANY_IDENTITY_FINANCE_AUDIT_PORT_DEPENDENCY_INVALID");
+  }
+
+  return Object.freeze({
+    async append(event: Readonly<FinanceAttestationAuditEvent>): Promise<void> {
+      await input.repository.appendAudit({
+        correlationId: event.correlationId,
+        organizationId: event.scope.companyId,
+        operation: event.operation,
+        outcome: event.outcome === "allowed" ? "SUCCEEDED" : "DENIED",
+        reasonCode: event.reason,
+        metadata: Object.freeze({
+          source: "finance-operations",
+          resourceType: "historical-private-evidence",
+          eventId: event.eventId,
+          objectId: event.objectId,
+          requestId: event.requestId,
+          occurredAt: event.occurredAt,
+          actorKind: event.actor.kind,
+          actorSubjectId:
+            event.actor.kind === "authenticated-owner"
+              ? event.actor.subjectId
+              : null,
+        }),
       });
     },
   });

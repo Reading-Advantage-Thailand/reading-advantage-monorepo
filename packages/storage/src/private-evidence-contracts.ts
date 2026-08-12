@@ -104,4 +104,6 @@ export interface AuthorizedPrivateEvidenceReaderDependencies {
   readonly driver: PrivateEvidenceDriver;
   /** Payload digest function supplied by the caller. */
   readonly digest: (bytes: Uint8Array) => Promise<string>;
+  /** Optional owner-controlled maximum byte ceiling for every read. */
+  readonly maxBytes?: number;
 }
