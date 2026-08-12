@@ -10,7 +10,7 @@
 
 | Phase | State | This strategy |
 |-------|-------|---------------|
-| Phase 0 - reconcile and admit the consumer | Task A accepted; Task B remains `[~]` | Shared-root closeout gates are globally blocked; Phase 0 is not closed |
+| Phase 0 - reconcile and admit the consumer | Task A accepted; Task B remains `[~]` | Focused package gates and graph/generated refresh are recorded; shared-root doctor and architecture gates are Red, so Phase 0 is not closed |
 | Phase 1 - bind the approved course to a knowledge graph | Accepted (`86a6503ac`) | Reference only; regression-guarded, not re-opened |
 | Phase 2 - company tenant mapping and durable projection | Docs-only strategy/contract design active | Finance ordering prerequisite accepted; all Red/source/migration execution stays `[b]` behind Phase 0 Task B closeout |
 | Phase 3 - project Sales evidence into KST/SRS | Blocked behind Phase 2 | No tests defined |
@@ -136,12 +136,32 @@ pnpm --filter @reading-advantage/mastery-runtime-compat exec vitest run \
 The Green gate is met only when the Red command exits zero AND all three
 contract-regression commands above exit zero.
 
-### Closeout gate (Task B; shared-root gate blocked)
+### Closeout gate (Task B; shared-root gates executed and Red)
 
-This is Phase 0 Task B. Task A is accepted, and Task B remains `[~]`; the broad
-shared-root doctor and generate/structural gates are currently blocked globally.
-It is not closed and does not claim doctor Green. Once those root gates are
-runnable, Task B must pass:
+This is Phase 0 Task B. Task A is accepted, and Task B remains `[~]`. The
+focused package gates are Green: runtime-compat passed 4 test files / 39 tests,
+sales-knowledge passed 3 test files / 19 tests, runtime build passed, the
+clean-consumer CLI returned `compatible: true` with no issues, and the
+phase-base diff guard was empty. The combined build-graph refresh succeeded for
+71 unique TS/TSX paths with canonical sorted path-list hash
+`40df25b062d742ccb715e301b4a2914a079473575e504733de7dae7d70a2fb0d`, Sales
+subset hash `f50b92dafd22f2a842b16abe2cf1f12f4398e8f8dbc7645b3f0405e5bfdebd7f`,
+and graph growth from 527 to 1360 nodes and 682 to 1538 edges. Generated facts
+freshness is independently evidenced by commit `390448dd2` (sourceRevision
+`b4b11a3057e3645e6ab29bff304c7a93a00d440b`, architecture hash
+`df81e0948c1f01b59b8be3ee5659075d4cba4de4fefe5f477d2a9b2a695a1555`, routes
+hash `a380a66544af846ba4057267c8023089b01fc83b7a6c0f97dc2ed69cf98fb1fb`),
+and the pre-commit rerun matched staged bytes; this freshness does not waive
+the shared-root closeout gates. `bash measure/doctor.sh` exited 1 at the marker
+guard after finding 80 deprecated `[ ]` markers across nine unrelated active
+plans, so its architecture stage did not run. The separate direct installed
+architecture checker exited 1 (`files=4247`, `findings=697`, `parseErrors=0`,
+debt additions 137, removals 0, renames 21). A whole-repository build-graph
+audit attempt emitted no output and was terminated after about four minutes
+with exit 130; it is not Green evidence. Phase 0 base remains exactly
+`8adc57cb0af0693c1b3420842b3a504939a36b2e`. Phase 0 is not closed and no
+doctor or architecture-audit Green claim is made. After the shared-root Red
+findings are remediated, Task B must pass:
 
 ```bash
 # Lint and type-check the two packages in scope.
@@ -337,7 +357,7 @@ is breaking and security-relevant.
 | A5 (false-claim text vs test reality) | The plan task text cites the exact focused commands above. No plan text may claim "all checks pass" unless the cited command exits zero. Falsification: run the cited command; a non-zero exit refutes the claim. |
 | A6 (registry-note overstatement) | The `tracks.md` entry and this strategy must not claim Sales is "admitted" or "accepted" until the Green gate and closeout gate pass. Falsification: a red Red command or a failing closeout guard refutes "admitted". |
 | A7 (over-broad filter swallowing real hits) | The gate uses `--filter @reading-advantage/mastery-runtime-compat` and `--filter @reading-advantage/sales-knowledge`, not `pnpm turbo run test`. Falsification: a Phase 0 regression fails the focused command even when the aggregate is already red. |
-| A10 (generated-facts drift) | If Green changes package structure, `measure/generated/` must be regenerated. The closeout gate runs `bash measure/doctor.sh` and treats Check 5 as advisory. Falsification: a stale generated fact fails the doctor. |
+| A10 (generated-facts drift) | The combined graph refresh covered 71 unique TS/TSX paths and generated-facts commit `390448dd2` embeds the recorded sourceRevision, architecture hash, and routes hash; the pre-commit rerun matched staged bytes. This freshness is independent evidence and does not waive the Red `measure/doctor.sh` marker guard or the separate Red architecture checker. Falsification: a stale generated fact or mismatched embedded hash fails the corresponding check. |
 | A14 (invalid ripgrep option) | Any audit detector in this strategy uses `rg -n '<regex>'`, never `rg -nE`. Falsification: `rg -nE` exits 2 and is treated as a failure, not a zero-hit result. |
 | A15 (stale role-receipt hashes) | If the closeout produces a role receipt that enumerates output SHA-256 values, a later Green fix must refresh the receipt. Falsification: `bash tests/orchestrator_role_receipt_integrity.sh` fails on a stale receipt. |
 
@@ -418,18 +438,12 @@ Phase 0.
 
 ## phase_base_sha capture point
 
-The orchestrator must capture the immutable `phase_base_sha` immediately after
-the commit that lands this strategy and the plan update. The capture command:
-
-```bash
-git rev-parse HEAD
-```
-
-Run this after the strategy+plan commit succeeds. The returned SHA is the
-Phase 0 base. The closeout no-shared-engine-changes guard diffs against this
-SHA. Do not embed a SHA that predates the committed strategy. If the strategy
-is later refreshed, capture a new `phase_base_sha` from the new strategy
-commit.
+The immutable Phase 0 base remains
+`8adc57cb0af0693c1b3420842b3a504939a36b2e`. The closeout no-shared-engine-
+changes guard diffs against this SHA; the current focused evidence reports an
+empty diff for the four engine packages plus `sales-knowledge`. A later
+strategy refresh must preserve this baseline unless a separately accepted
+closeout explicitly records a successor.
 
 ## Falsifiability summary
 

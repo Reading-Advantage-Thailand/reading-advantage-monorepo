@@ -42,10 +42,26 @@
   issues; and the phase-base diff guard for the four engine packages plus
   `sales-knowledge` was empty. The repository pnpm shim attempted a registry
   fetch for pnpm (`EAI_AGAIN`), so the equivalent installed local binaries were
-  used for evidence. The broad `measure/doctor.sh` and generate/structural
-  gates are currently blocked globally at the shared root. Task B remains `[~]`
-  pending those shared gates becoming runnable and final closeout acceptance;
-  this does not claim Phase 0 closeout or doctor Green.
+  used for evidence. The combined build-graph refresh succeeded for 71 unique
+  TS/TSX paths (canonical sorted path-list hash
+  `40df25b062d742ccb715e301b4a2914a079473575e504733de7dae7d70a2fb0d`; Sales
+  subset hash `f50b92dafd22f2a842b16abe2cf1f12f4398e8f8dbc7645b3f0405e5bfdebd7f`),
+  growing the graph from 527 to 1360 nodes and 682 to 1538 edges. Generated
+  facts freshness is independent evidence from commit `390448dd2`, embedding
+  sourceRevision `b4b11a3057e3645e6ab29bff304c7a93a00d440b`, architecture hash
+  `df81e0948c1f01b59b8be3ee5659075d4cba4de4fefe5f477d2a9b2a695a1555`, and
+  routes hash `a380a66544af846ba4057267c8023089b01fc83b7a6c0f97dc2ed69cf98fb1fb`;
+  its pre-commit rerun matched staged bytes. `bash measure/doctor.sh` was then
+  executed and exited 1 at the marker guard after finding 80 deprecated `[ ]`
+  markers across nine unrelated active plans, so its architecture stage did not
+  run. The separate direct installed architecture checker also exited 1
+  (`files=4247`, `findings=697`, `parseErrors=0`, debt additions 137,
+  removals 0, renames 21). A whole-repository build-graph audit attempt emitted
+  no output and was terminated after about four minutes with exit 130; it is
+  not Green evidence. Phase 0 base remains exactly
+  `8adc57cb0af0693c1b3420842b3a504939a36b2e`. Task B remains `[~]` pending
+  shared-root red-gate remediation and final closeout acceptance; this does not
+  claim Phase 0 closeout, doctor Green, or architecture-audit Green.
 
 ## Phase 1 — bind the approved course to a knowledge graph
 
