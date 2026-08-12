@@ -1,0 +1,11 @@
+track_id: codecamp_interactive_media_diagrams_20260709
+
+phase: Phase 4 Video Mapping and Seeding
+
+summary: added typed youtubeSource provenance, labeled five legacy IDs as not independently verified, and added five exact module/lesson/heading mappings across Web Dev Simplified, Fireship, Dave Gray, and Jack Herrington.
+
+file: packages/db/src/seed/codecamp-curriculum-data.ts
+
+Green evidence: media contract 3/3 passed; packages/db TypeScript check exited 0; dedicated lane reported combined DB media/data tests 30/30, LessonContent tests 13/13, and targeted lint green.
+
+scope truth: this accepts the bounded five additions only; it does not claim owner approval of the final video denominator or legacy sources.
