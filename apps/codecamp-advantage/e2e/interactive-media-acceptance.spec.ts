@@ -28,23 +28,23 @@ test.describe("Phase 5 interactive media browser acceptance", () => {
   test("renders a seeded diagram and YouTube embed on a lesson page", async ({ page }) => {
     test.setTimeout(90_000);
     await login(page);
-    await page.goto("/en/module/dev-environment", { waitUntil: "domcontentloaded" });
-    await page.getByRole("link", { name: /Terminal, Node\.js, and pnpm/ }).click();
+    await page.goto("/en/module/cloud-docker", { waitUntil: "domcontentloaded" });
+    await page.getByRole("link", { name: "Docker Basics" }).click();
 
-    const diagram = page.getByRole("img", { name: "Terminal Basics" });
+    const diagram = page.getByRole("img", { name: "Docker Concepts" });
     await expect(diagram).toBeVisible({ timeout: 30_000 });
     await expect.poll(async () => diagram.evaluate((image: HTMLImageElement) => image.complete && image.naturalWidth > 0)).toBe(true);
 
-    const video = page.locator('iframe[title="Terminal Basics"]');
+    const video = page.locator('iframe[title="Docker Concepts"]');
     await expect(video).toBeVisible({ timeout: 30_000 });
     await expect(video).toHaveAttribute(
       "src",
-      "https://www.youtube.com/embed/Ke90Tje7VS0",
+      "https://www.youtube.com/embed/Gjnup-PuquQ",
     );
     await expect
       .poll(() =>
         page.frames().some((frame) =>
-          frame.url().includes("youtube.com/embed/Ke90Tje7VS0"),
+          frame.url().includes("youtube.com/embed/Gjnup-PuquQ"),
         ),
       )
       .toBe(true);
