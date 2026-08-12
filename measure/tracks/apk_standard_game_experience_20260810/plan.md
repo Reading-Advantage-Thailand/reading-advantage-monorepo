@@ -209,11 +209,11 @@ is executable `[~]`; later tasks remain dependency-blocked `[b]`._
   S2.1/S2.2/S2.3 plus host command exited `0` with 6 files and 133 tests passing.
   Package type checking exited `0`. No production file changed.
 
-- [~] Task: Add tutorial testing and QC fixtures
-  - [~] Add deterministic clock, input, target, and action fixtures
-  - [~] Add worst-case Thai/English tutorial content
-  - [~] Add replay, interruption, and leak assertions
-  - [~] Add an independent tutorial preview state to APK QC
+- [x] Task: Add tutorial testing and QC fixtures `67d46769f`
+  - [x] Add deterministic clock, input, target, and action fixtures
+  - [x] Add worst-case Thai/English tutorial content
+  - [x] Add replay, interruption, and leak assertions
+  - [x] Add an independent tutorial preview state to APK QC
 
   **Mid-Red evidence (2026-08-12; phase base `6c8bd63937c69ca27d8c00973449cec396aafb69`; role base `6c8bd63937c69ca27d8c00973449cec396aafb69`):** Added package QC suites
   `src/presentation/__tests__/game-tutorial-qc-fixtures.test.ts` and
@@ -225,13 +225,27 @@ is executable `[~]`; later tasks remain dependency-blocked `[b]`._
   reduced motion, replay, interruption, timer/listener/input/Phaser cleanup, one
   canvas, and zero production effects. No production source changed.
 
-  The targeted Red command exited `1` with 1 expected failing assertion and 16
+   The targeted Red command exited `1` with 1 expected failing assertion and 16
   passing assertions. The failure requires the shared QC fixture factory that the
   Green implementation must publish. The package S2.1-S2.4 command remained green
   with 7 files and 146 tests passing. Package type checking exited `0`. The focused
   Advantage Games Jest command exited `1` because the independent QC preview state
-  and controls are not implemented. Browser tests are gated by
-  `APK_TUTORIAL_QC_BROWSER=1` and were not run.
+   and controls are not implemented. Browser tests are gated by
+   `APK_TUTORIAL_QC_BROWSER=1` and were not run.
+
+   **Green evidence (2026-08-12, implementation `67d46769f`):** Published the shared
+   deterministic `createGameTutorialQcFixture` factory. The factory validates the tutorial,
+   creates a deterministic queued clock and keyboard/pointer/touch input sequence, executes
+   the cartridge action-driver boundary, exposes semantic target/action IDs and resource
+   diagnostics, and preserves one canvas. The focused S2.5 package command exited 0 with
+   2 files and 17 tests passing. The S2.1-S2.5 package command exited 0 with 8 files and
+   150 tests passing. The focused Advantage Games Jest command exited 0 with 1 suite and
+   4 tests passing. It verifies the independent preview, Thai/English fixtures, compact/wide,
+   keyboard/pointer/touch, reduced motion, replay/interruption cleanup, one canvas, and zero
+   production completions. Focused package and app TypeScript checks, lint, and package build
+   exited 0. The browser spec remains opt-in and was not run because
+   `APK_TUTORIAL_QC_BROWSER` was not set. The next documentation task and the manual task
+   remain blocked by their declared owners.
 
 - [b] Task: Document the shared path and bespoke mechanic hook — deferred:s2-tutorial-qc
   - [ ] Document how an intern declares steps
