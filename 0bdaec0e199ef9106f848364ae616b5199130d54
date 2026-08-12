@@ -1,0 +1,7 @@
+track_id: wave5_public_surface_completion_20260628
+
+phase: Phase 7 schema integrity Green
+
+verification: Phase 7 and Phase 2 focused contracts, journal/snapshot chain, tenant coverage, auth/masking refutations, full Marketing and DB tests, ESM import, DB/Marketing type and lint, and Marketing Vinext build passed.
+
+independent review: accepted after client-safe constants subpath, legacy column guards, and VideoProject row type were repaired.
