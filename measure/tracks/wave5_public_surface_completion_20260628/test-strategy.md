@@ -31,6 +31,33 @@ third parallel Marketing lane.
   `ai.generateText()` adapter, and the `vinext` runtime build. Phase 7 adds
   schema, UX, and i18n contracts on top of that floor. It must not weaken it.
 
+## Phase 7 Closeout Status
+
+Phase 7.4 and 7.5 are complete in the canonical ordering. The accepted Green
+source commit is `7cbbafe3cd09f182b6ee73b162261367c1ed48e6`; the exact sorted
+15-path aggregate is
+`2f06fb4f08b432071888a7db2ac6a0a066534418f4c2494cec6f0d6ba7e0b365`.
+
+- Red chronology is preserved: the canonical Red filename remains
+  `apps/marketing/app/__tests__/phase-7-i18n-lang.red.test.tsx`.
+- The focused Phase 7 suite passed 158/158 under the default timeout in three
+  consecutive runs. Typecheck, targeted lint, Prettier, Vinext build, and
+  runtime verification are Green; dual final reviews ACCEPTed the result.
+- The visible UI and message dictionary are English, with `lang="en"` aligned
+  to that language. This is not a claim of Thai localization.
+- The Phase 3/5/6 diagnostic produced 182 passes and one unchanged Phase 3
+  timeout. That timeout remains an explicitly red diagnostic and is not a
+  P7.4 acceptance failure.
+- The broad diagnostic covered 35 files / 407 cases: 403 passed and four live
+  DB cases returned HTTP 500 because `DATABASE_URL` was unset (two
+  `phase-8-projects-live`, one `project-update-live`, and one
+  `topic-save-concurrency-live`). These are owner-labeled environment
+  diagnostics outside P7.4.
+- No global aggregate, `measure/doctor.sh`, or architecture Green is claimed.
+  Browser verification remains deferred to the owner follow-up.
+- This closeout changes no spec, metadata, registry, generated, or source
+  files.
+
 ## Source-Grounded Gaps (evidence from `measure/audit-reports/marketing-app_20260626`)
 
 | Gap | Evidence | Current state at HEAD |
@@ -47,17 +74,16 @@ third parallel Marketing lane.
 ## Phase 7 Sub-Phase Map
 
 The plan's Phase 7 has five tasks. This strategy maps them to sub-phases and
-sets canonical TDD ordering. Only the first Red is executable at commit time.
-The rest are dependency-blocked where the dependency is canonical (Green on
-Red, closeout on Green).
+sets canonical TDD ordering. The historical Red-first dependency order is
+preserved; at closeout, the current markers are:
 
 | Sub-phase | Plan task | Marker after this strategy | Canonical dependency |
 |-----------|-----------|----------------------------|----------------------|
-| 7.1 | Task 1: Red tests for schema integrity | `[~]` (executable) | none |
-| 7.2 | Task 2: migration + schema constraints + encryption invariant | `[b]` | 7.1 Red written |
-| 7.3 | Task 3: `res.ok` + inline errors + replace substring styling | `[b]` | 7.2 Green (pages render schema columns; avoid double rewrite) |
-| 7.4 | Task 4: i18n layer / `lang` / externalize strings | `[b]` | 7.3 Green (externalize the strings the UX task finalizes) |
-| 7.5 | Task 5: run marketing targeted tests/build | `[b]` | 7.4 Green |
+| 7.1 | Task 1: Red tests for schema integrity | `[x]` | none |
+| 7.2 | Task 2: migration + schema constraints + encryption invariant | `[x]` | 7.1 Red written |
+| 7.3 | Task 3: `res.ok` + inline errors + replace substring styling | `[x]` | 7.2 Green (pages render schema columns; avoid double rewrite) |
+| 7.4 | Task 4: i18n layer / `lang` / externalize strings | `[x]` | 7.3 Green (externalize the strings the UX task finalizes) |
+| 7.5 | Task 5: run marketing targeted tests/build | `[x]` | 7.4 Green |
 
 ---
 
@@ -329,7 +355,7 @@ CI=true pnpm turbo run check-types --filter=marketing
 **Risk classification:** low
 (verification only; no new production code.)
 
-### Targeted Red command (closeout verification)
+### Targeted closeout verification
 
 ```bash
 CI=true pnpm turbo run test --filter=marketing
@@ -346,21 +372,22 @@ CI=true pnpm turbo run build --filter=marketing
   remains green. The strategy must not change `vinext` versioning or the
   build script.
 
-### Intentionally-Red Aggregate-Suite Handling
+### Aggregate-Suite and Red-Origin Handling
 
-- The marketing app has no `.red.test.ts` files today. The aggregate
-  `pnpm turbo run test --filter=marketing` may carry pre-existing reds from
-  other lanes or flaky jsdom behavior.
-- Phase 7's Green gate is the **targeted** filter (file-name scoped), not the
-  aggregate. The aggregate is intentionally-red-allowed for pre-existing and
-  non-Phase-7 failures.
-- The closeout (7.5) is the only sub-phase that runs the aggregate. If the
-  aggregate is red from a pre-existing failure, the closeout records the
-  failure as owner-labeled and does not block Phase 7 acceptance, provided
-  every Phase 7 targeted test is green.
-- This prevents A4 (vacuous-pass) and the false-green aggregate trap: a green
-  aggregate must not be claimed unless every targeted Phase 7 file is also
-  green.
+- Phase 7 has committed Red-origin files, including the preserved
+  `phase-7-i18n-lang.red.test.tsx` filename. A Red-origin filename is evidence
+  of the contract chronology; it is not by itself a claim that the accepted
+  Green is still failing.
+- Phase 7 acceptance is based on the **targeted** file-scoped contracts and
+  their Green gates. The Marketing aggregate may still include Red-origin
+  tests, pre-existing failures from other lanes, or environment-dependent
+  live tests.
+- The 7.5 closeout records aggregate diagnostics as owner-labeled evidence and
+  does not convert environment failures into a P7.4 blocker when every Phase 7
+  targeted contract is Green.
+- This prevents A4 (vacuous-pass) and the false-green aggregate trap: neither a
+  Red-origin filename nor a broad aggregate result may replace the targeted
+  acceptance evidence.
 
 ---
 

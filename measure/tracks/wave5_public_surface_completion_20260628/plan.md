@@ -69,8 +69,9 @@
 > UX/API review (res.ok, inline errors, row-shape change, lang), adversarial
 > testing (UNIQUE/script-shape/no-alert/no-plaintext refutation), browser review
 > (deferred to owner follow-up; vinext build is the closest gate).
-> **Canonical ordering:** Phase 7.1 through 7.3 are complete. Task 4 is now the
-> only executable task. Task 5 remains dependency-blocked on Task 4's Green.
+> **Canonical ordering:** Phase 7.1 through 7.5 are complete. The Phase 7
+> canonical ordering is complete; the overall track remains active for its
+> other phases and the deferred browser owner follow-up.
 
 - [x] Task: Write Red tests for `UNIQUE(app, topic)`, typed `videoProjects.script`, `updatedAt`/`createdBy` columns, and shared `APPS` tuple. Corrected Red `305ec411b`; independently reviewed schema Green `0bdaec0e1` passes the Phase 7, Phase 2, migration, tenant, auth/masking, ESM, type, lint, and Vinext-build gates.
   - Evidence refs: marketing_schema_integrity (LR-007-001..007, LR-004-005).
@@ -84,11 +85,35 @@
   - Independent ACCEPT/review: Green `a7972835e` accepted against Red `470787d54`.
   - Focused evidence: Phase 7.3 UX contract 9/9, relevant Wave 3 settings/auth/masking regressions 16/16, Marketing typecheck/lint, Vinext build, and runtime verification passed.
   - Sub-phase 7.3 complete; no schema, encryption, or i18n scope was included.
-- [~] Task: Add i18n layer / correct `lang`; externalize hardcoded English UI strings.
+- [x] Task: Add i18n layer / correct `lang`; externalize hardcoded English UI strings.
   - Evidence refs: marketing_i18n (LR-marketing-app-006-004).
-  - Sub-phase 7.4. Next executable Red; implementation remains unstarted/Red-ready.
-- [b] Task: Run marketing targeted tests/build.
-  - deferred:phase7-task4-green. Sub-phase 7.5. Closeout.
+  - Red chronology preserved: `phase-7-i18n-lang.red.test.tsx` remained the
+    canonical Red filename; the accepted Green source commit is
+    `7cbbafe3cd09f182b6ee73b162261367c1ed48e6`.
+  - Final focused evidence: 158/158 passed under the default timeout in three
+    consecutive runs; exact 15-path aggregate
+    `2f06fb4f08b432071888a7db2ac6a0a066534418f4c2494cec6f0d6ba7e0b365`.
+  - The UI is English, the dictionary is English, and `lang="en"` is aligned
+    with that UI. This is not a claim of Thai localization.
+  - Typecheck, targeted lint, Prettier, Vinext build, and runtime verification
+    passed. Dual final reviews ACCEPTed the Green.
+  - Browser verification remains deferred to the owner follow-up.
+  - Sub-phase 7.4 complete.
+- [x] Task: Run marketing targeted tests/build.
+  - Sub-phase 7.5 closeout evidence: the focused Phase 7 suite and the
+    typecheck, lint, Prettier, Vinext build, and runtime gates passed.
+  - Phase 3/5/6 diagnostic: 182 passed, with one unchanged Phase 3 timeout;
+    this remains an explicitly red diagnostic and is not a P7.4 acceptance
+    failure.
+  - Broad diagnostic: 35 files / 407 cases produced 403 passes and four live
+    DB HTTP 500s because `DATABASE_URL` was unset: two in
+    `phase-8-projects-live`, one in `project-update-live`, and one in
+    `topic-save-concurrency-live`. These are owner-labeled environment
+    diagnostics outside P7.4.
+  - No global aggregate, `measure/doctor.sh`, or architecture Green is
+    claimed by this closeout.
+  - Sub-phase 7.5 complete. No spec, metadata, registry, generated, or source
+    changes were made by the closeout.
 
 ## Phase 8: Science Build/Deploy De-Prisma
 
