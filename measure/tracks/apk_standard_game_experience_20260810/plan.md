@@ -230,8 +230,8 @@ is executable `[~]`; later tasks remain dependency-blocked `[b]`._
   Green implementation must publish. The package S2.1-S2.4 command remained green
   with 7 files and 146 tests passing. Package type checking exited `0`. The focused
   Advantage Games Jest command exited `1` because the independent QC preview state
-   and controls are not implemented. Browser tests are gated by
-   `APK_TUTORIAL_QC_BROWSER=1` and were not run.
+  and controls were not implemented. Browser tests were gated by
+  `APK_TUTORIAL_QC_BROWSER=1` and were not run at that historical checkpoint.
 
    **Green evidence (2026-08-12, implementation `67d46769f`):** Published the shared
    deterministic `createGameTutorialQcFixture` factory. The factory validates the tutorial,
@@ -262,7 +262,37 @@ is executable `[~]`; later tasks remain dependency-blocked `[b]`._
   The shared graph/generate/doctor commands remain root-owned while concurrent
   lanes are active.
 
-- [b] Task: Measure - User Manual Verification 'Phase S2: Guided Gameplay Tutorial' (Protocol in workflow.md) — deferred:s2-tutorial-docs
+  **Independent browser acceptance evidence (2026-08-12, accepted at `7bab10b5f`):** The
+  opt-in guided-tutorial browser suite passed 2/2 in system Chrome with
+  `APK_TUTORIAL_QC_BROWSER=1`, covering the required compact `390x844` and wide `1440x900`
+  surfaces. It asserted compact state before switching, wide state after resizing, actual
+  tutorial-screen profile and reduced-motion attributes, keyboard `Enter`, pointer click,
+  touch-capable `touchscreen.tap`, worst-case Thai/English content, target/action visibility,
+  overflow and obstruction checks, and non-vacuous replay/interruption resource cleanup.
+  Browser evidence truthfully asserts one QC canvas host and one tutorial screen; actual Phaser
+  canvas, input-handler, and production-effect invariants remain paired with the focused
+  package runtime/QC slice, which exited 0 with 6 files and 104 tests passing. Independent
+  review status: **ACCEPT**. This does not satisfy the product-owner manual gate.
+
+  **Remaining root-owned S2.6 structural gates (2026-08-12):** The APK lane did not run these
+  shared-tree commands while concurrent lanes were active; root must run them in order:
+
+  ```bash
+  build-graph update ./graph.db \
+    packages/advantage-play-kit/src/presentation/game-tutorial-contract.ts \
+    packages/advantage-play-kit/src/presentation/game-tutorial-controller.ts \
+    packages/advantage-play-kit/src/presentation/game-tutorial-screen.tsx \
+    packages/advantage-play-kit/src/presentation/index.ts \
+    packages/advantage-play-kit/src/scaffolding/cartridge-manifest.ts
+  bash measure/generate.sh
+  bash measure/doctor.sh
+  git diff --exit-code -- measure/generated
+  ```
+
+- [b] Task: Measure - User Manual Verification 'Phase S2: Guided Gameplay Tutorial' (Protocol in workflow.md) — deferred:product-owner
+  **Current block (2026-08-12):** The product-owner manual verification event remains
+  outstanding. It is sequenced after root completes the S2.6 structural gates above; browser
+  acceptance is independent evidence and does not close the manual task or S2.
 
 ## Phase S3: Safe Demonstration Mode
 
