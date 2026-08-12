@@ -1,0 +1,9 @@
+track_id: codecamp_interactive_media_diagrams_20260709
+
+phase: Phase 4 Video Mapping and Seeding
+
+file: packages/db/src/__tests__/codecamp-curriculum-media.test.ts
+
+Red evidence: baseline had five video IDs, no youtubeSource field/provenance, and none of the five new source-bound module/lesson/heading mappings; the three media contract tests therefore failed before the seed Green.
+
+why: freeze ID format/uniqueness, provenance coverage, and exact curriculum placement for the bounded curated additions without claiming the owner-approved final denominator.
