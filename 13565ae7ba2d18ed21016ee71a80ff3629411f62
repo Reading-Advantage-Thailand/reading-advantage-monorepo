@@ -1,0 +1,9 @@
+Final shared structural facts refresh after Marketing, Sales, Finance, and APK plan evidence commits.
+
+Generated commit: 13565ae7b. Embedded sourceRevision: 05df9ec60ad3aab5a5c507d5bde110a9f906054b.
+
+Final generated hashes: architecture.json 9a5fa5a34ec593d532b518096247307a2ae88b1ffc64d831ed1dd844b3e59a2b; routes.md 85754cf58fa3fef1a81206f9a3391d104de523d2a9ac6f75f7f74dda0843cbdf. Deterministic pre-commit rerun matched staged bytes.
+
+Underlying combined graph receipt remains exact: 71 unique TS/TSX paths, path-list SHA-256 40df25b062d742ccb715e301b4a2914a079473575e504733de7dae7d70a2fb0d; update output 71 files, 527 to 1360 nodes, 682 to 1538 edges; final graph stats 31616 nodes, 56377 edges, 3483 files.
+
+Global structural status remains Red: whole-graph audit timed/was terminated exit130; doctor exit1 on 80 deprecated markers in nine unrelated active plans; separate architecture checker exit1 at 4247 files, 697 findings, 0 parse errors, 137 additions, 0 removals, 21 renames. Attribution review bound Sales/APK/Finance-after-maintenance/Marketing-P7.4 net delta to 0 additions and 0 renames. No global Green.
