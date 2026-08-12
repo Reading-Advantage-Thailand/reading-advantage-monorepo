@@ -1,0 +1,11 @@
+track_id: wave5_public_surface_completion_20260628
+
+phase: Phase 7 Marketing Schema, UX, and i18n — schema integrity Red
+
+files: apps/marketing/app/__tests__/phase-7-schema-integrity.red.test.ts; packages/db/src/__tests__/phase-7-marketing-schema-integrity.red.test.ts
+
+Red evidence: Marketing package 1 failed/5 passed; the sole genuine failure is the absent shared APPS module while duplicate-topic and route-validation characterizations pass. DB package 8 failed/0 passed for the missing JSON-array CHECK, updatedAt columns/triggers/live refresh, audit actor columns, and canonical APPS export/derivation.
+
+commands: direct installed Vitest package-local equivalents with CI=true and maxWorkers=1.
+
+why: freeze only strategy-backed invariants; raw app/topic uniqueness and existing route validation are explicitly characterization, not false Red demands.
