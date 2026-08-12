@@ -1,0 +1,7 @@
+track_id: apk_standard_game_experience_20260810
+
+task: S2 QC regression repair after guided tutorial controls
+
+summary: scoped compact/wide/input-mode queries to the existing Authoring controls complementary region; no production accessibility behavior changed.
+
+Green evidence: AdvantageGamesAuthoringQc 6/6, tutorial QC 4/4, app typecheck, targeted ESLint, and diff check passed in the dedicated APK lane.
