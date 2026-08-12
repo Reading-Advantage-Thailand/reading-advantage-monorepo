@@ -1,20 +1,15 @@
-import { pgTable, uuid, text, timestamp, jsonb, pgEnum, index, uniqueIndex } from "drizzle-orm/pg-core";
+import { sql } from "drizzle-orm";
+import { check, pgTable, uuid, text, timestamp, jsonb, pgEnum, index, uniqueIndex } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
+import { APPS } from "./marketing-constants.js";
 
 // ─── Enums ──────────────────────────────────────────────
 
 export const campaignTypeEnum = pgEnum("campaign_type", ["video", "infocard"]);
 export const campaignStatusEnum = pgEnum("campaign_status", ["draft", "in-progress", "complete", "archived"]);
-export const appEnum = pgEnum("app", [
-  "reading-advantage",
-  "primary-advantage",
-  "storytime",
-  "math-advantage",
-  "science-advantage",
-  "stem-advantage",
-  "zhongwen-advantage",
-  "tutor-advantage",
-]);
+export { APPS } from "./marketing-constants.js";
+
+export const appEnum = pgEnum("app", APPS);
 export const assetTypeEnum = pgEnum("asset_type", ["image", "voiceover", "clip"]);
 export const assetStatusEnum = pgEnum("asset_status", ["pending", "generated", "approved", "rejected"]);
 export const videoProjectStatusEnum = pgEnum("video_project_status", ["draft", "in-progress", "complete"]);
@@ -29,6 +24,8 @@ export const campaigns = pgTable("campaigns", {
   status: campaignStatusEnum("status").default("draft").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  createdBy: uuid("created_by"),
+  updatedBy: uuid("updated_by"),
 }, (table) => [
   index("campaigns_app_idx").on(table.app),
   index("campaigns_status_idx").on(table.status),
@@ -42,11 +39,18 @@ export const videoProjects = pgTable("video_projects", {
     .notNull()
     .references(() => campaigns.id, { onDelete: "cascade" }),
   topic: text("topic").notNull(),
-  script: jsonb("script"), // JSON array of scenes
+  script: jsonb("script").$type<MarketingVideoScript>(),
   status: videoProjectStatusEnum("status").default("draft").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  createdBy: uuid("created_by"),
+  updatedBy: uuid("updated_by"),
 }, (table) => [
   index("video_projects_campaign_idx").on(table.campaignId),
+  check(
+    "video_projects_script_array_check",
+    sql`jsonb_typeof("script") = 'array'`,
+  ),
 ]);
 
 // ─── Video Assets ───────────────────────────────────────
@@ -62,6 +66,9 @@ export const videoAssets = pgTable("video_assets", {
   prompt: text("prompt"),
   status: assetStatusEnum("status").default("pending").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  createdBy: uuid("created_by"),
+  updatedBy: uuid("updated_by"),
 }, (table) => [
   index("video_assets_project_idx").on(table.projectId),
 ]);
@@ -74,6 +81,7 @@ export const pastTopics = pgTable("past_topics", {
   topic: text("topic").notNull(),
   normalizedKey: text("normalized_key").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
+  createdBy: uuid("created_by"),
 }, (table) => [
   index("past_topics_app_idx").on(table.app),
   uniqueIndex("past_topics_app_normalized_key_unique").on(
@@ -81,6 +89,8 @@ export const pastTopics = pgTable("past_topics", {
     table.normalizedKey,
   ),
 ]);
+
+type MarketingVideoScript = Record<string, unknown>[];
 
 // ─── Settings ───────────────────────────────────────────
 

@@ -9,6 +9,7 @@ import {
   type Scene,
 } from "@/lib/scene-editor";
 import { scriptSchema } from "@/lib/script-schema";
+import { APP_NAMES } from "@/lib/apps";
 
 interface Topic {
   id: string;
@@ -24,18 +25,10 @@ interface VideoProject {
   script: Scene[];
   status: "draft" | "in-progress" | "complete";
   createdAt?: string;
+  updatedAt: string;
+  createdBy: string | null;
+  updatedBy: string | null;
 }
-
-const appNames: Record<string, string> = {
-  "reading-advantage": "Reading Advantage",
-  "primary-advantage": "Primary Advantage",
-  storytime: "Storytime",
-  "math-advantage": "Math Advantage",
-  "science-advantage": "Science Advantage",
-  "stem-advantage": "STEM Advantage",
-  "zhongwen-advantage": "Zhongwen Advantage",
-  "tutor-advantage": "Tutor Advantage",
-};
 
 const emptyScene: Scene = {
   narration: "",
@@ -494,7 +487,7 @@ export default function VideoProductionPage() {
             marginTop: "8px",
           }}
         >
-          {Object.entries(appNames).map(([key, name]) => (
+          {Object.entries(APP_NAMES).map(([key, name]) => (
             <option key={key} value={key}>
               {name}
             </option>
@@ -512,7 +505,7 @@ export default function VideoProductionPage() {
         }}
       >
         <h2>Step 2: Research Topics</h2>
-        <p>LLM will propose 5 topics relevant to {appNames[selectedApp]}.</p>
+        <p>LLM will propose 5 topics relevant to {APP_NAMES[selectedApp as keyof typeof APP_NAMES]}.</p>
         <button
           onClick={handleResearchTopics}
           disabled={loading}

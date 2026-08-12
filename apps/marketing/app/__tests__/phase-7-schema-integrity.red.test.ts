@@ -197,8 +197,10 @@ describe("Phase 7.1: shared APPS catalog", () => {
     const videoSource = appSource("campaigns/[id]/video/page.tsx");
 
     expect(sharedAppsSource).toMatch(
-      /(?:import|export)\s*\{[^}]*\bAPPS\b[^}]*\}\s*from\s*["']@reading-advantage\/db\/schema["']/,
+      /(?:import|export)\s*\{[^}]*\bAPPS\b[^}]*\}\s*from\s*["']@reading-advantage\/db\/marketing-constants["']/,
     );
+    expect(sharedAppsSource).not.toMatch(/@reading-advantage\/db\/schema/);
+    expect(sharedAppsSource).not.toMatch(/drizzle-orm/);
     expect(sharedAppsSource).not.toMatch(/(?:export\s+)?const\s+APPS\s*=\s*\[/);
     for (const mapName of ["APP_COLORS", "APP_NAMES"]) {
       const declaration = sharedAppsSource.match(
@@ -225,5 +227,12 @@ describe("Phase 7.1: shared APPS catalog", () => {
         /Object\.fromEntries\(\s*APPS\.map\(/,
       );
     }
+  });
+
+  it("keeps the VideoProject response audit fields aligned with the schema", () => {
+    const videoSource = appSource("campaigns/[id]/video/page.tsx");
+    expect(videoSource).toMatch(/interface\s+VideoProject[\s\S]*updatedAt:\s*string/);
+    expect(videoSource).toMatch(/interface\s+VideoProject[\s\S]*createdBy:\s*string\s*\|\s*null/);
+    expect(videoSource).toMatch(/interface\s+VideoProject[\s\S]*updatedBy:\s*string\s*\|\s*null/);
   });
 });

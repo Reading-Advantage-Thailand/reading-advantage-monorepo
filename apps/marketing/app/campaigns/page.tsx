@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { APP_COLORS } from "@/lib/apps";
 
 interface Campaign {
   id: string;
@@ -11,17 +12,6 @@ interface Campaign {
   status: string;
   createdAt: string;
 }
-
-const appColors: Record<string, string> = {
-  "reading-advantage": "#4CAF50",
-  "primary-advantage": "#2196F3",
-  storytime: "#9C27B0",
-  "math-advantage": "#FF9800",
-  "science-advantage": "#00BCD4",
-  "stem-advantage": "#E91E63",
-  "zhongwen-advantage": "#F44336",
-  "tutor-advantage": "#607D8B",
-};
 
 export default function CampaignsPage() {
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
@@ -160,7 +150,7 @@ export default function CampaignsPage() {
               onChange={(e) => setNewCampaign({ ...newCampaign, app: e.target.value })}
               style={{ width: "100%", padding: "8px", borderRadius: "4px", border: "1px solid #ccc" }}
             >
-              {Object.keys(appColors).map((app) => (
+              {Object.keys(APP_COLORS).map((app) => (
                 <option key={app} value={app}>
                   {app.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase())}
                 </option>
@@ -232,7 +222,7 @@ export default function CampaignsPage() {
                       width: "12px",
                       height: "12px",
                       borderRadius: "50%",
-                      backgroundColor: appColors[campaign.app] || "#ccc",
+                      backgroundColor: APP_COLORS[campaign.app as keyof typeof APP_COLORS] || "#ccc",
                       display: "inline-block",
                     }}
                   />

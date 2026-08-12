@@ -260,6 +260,8 @@ describe("Phase 2 marketing: Drizzle schema exports (packages/db/src/schema/mark
       "status",
       "createdAt",
       "updatedAt",
+      "createdBy",
+      "updatedBy",
     ]) {
       expect(cols, `campaigns missing column ${col}`).toContain(col);
     }
@@ -276,6 +278,9 @@ describe("Phase 2 marketing: Drizzle schema exports (packages/db/src/schema/mark
       "script",
       "status",
       "createdAt",
+      "updatedAt",
+      "createdBy",
+      "updatedBy",
     ]) {
       expect(cols, `videoProjects missing column ${col}`).toContain(col);
     }
@@ -294,6 +299,9 @@ describe("Phase 2 marketing: Drizzle schema exports (packages/db/src/schema/mark
       "prompt",
       "status",
       "createdAt",
+      "updatedAt",
+      "createdBy",
+      "updatedBy",
     ]) {
       expect(cols, `videoAssets missing column ${col}`).toContain(col);
     }
@@ -303,7 +311,14 @@ describe("Phase 2 marketing: Drizzle schema exports (packages/db/src/schema/mark
     const cols = Object.keys(schema.pastTopics).filter(
       (k) => !k.startsWith("_") && !k.startsWith("["),
     );
-    for (const col of ["id", "app", "topic", "normalizedKey", "createdAt"]) {
+    for (const col of [
+      "id",
+      "app",
+      "topic",
+      "normalizedKey",
+      "createdAt",
+      "createdBy",
+    ]) {
       expect(cols, `pastTopics missing column ${col}`).toContain(col);
     }
   });

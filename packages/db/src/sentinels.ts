@@ -344,4 +344,46 @@ export const sentinelProbes: Record<string, SentinelProbe> = {
       },
     ],
   },
+  "0051_marketing_phase7_audit_and_script": {
+    tag: "0051_marketing_phase7_audit_and_script",
+    kind: "all",
+    target: "marketing_schema_integrity",
+    allOf: [
+      {
+        tag: "0051_marketing_phase7_audit_and_script",
+        kind: "column",
+        target: "campaigns.created_by",
+      },
+      {
+        tag: "0051_marketing_phase7_audit_and_script",
+        kind: "trigger",
+        target: "video_projects_updated_at",
+        table: "video_projects",
+        triggerFunction: "marketing_touch_updated_at",
+        triggerTiming: "BEFORE",
+        triggerLevel: "ROW",
+        triggerEvents: ["UPDATE"],
+        triggerFunctionBodySha256:
+          "37a6687cead2e980d97b09ae3f5d5a35379f4db24d10b83768421803a8c29a8f",
+        triggerFunctionConfig: ["search_path=pg_catalog"],
+        triggerFunctionLanguage: "plpgsql",
+        triggerFunctionSecurityDefiner: false,
+      },
+      {
+        tag: "0051_marketing_phase7_audit_and_script",
+        kind: "trigger",
+        target: "video_assets_updated_at",
+        table: "video_assets",
+        triggerFunction: "marketing_touch_updated_at",
+        triggerTiming: "BEFORE",
+        triggerLevel: "ROW",
+        triggerEvents: ["UPDATE"],
+        triggerFunctionBodySha256:
+          "37a6687cead2e980d97b09ae3f5d5a35379f4db24d10b83768421803a8c29a8f",
+        triggerFunctionConfig: ["search_path=pg_catalog"],
+        triggerFunctionLanguage: "plpgsql",
+        triggerFunctionSecurityDefiner: false,
+      },
+    ],
+  },
 };
