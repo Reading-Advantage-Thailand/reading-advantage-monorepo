@@ -1,0 +1,5 @@
+track_id: codecamp_interactive_media_diagrams_20260709
+
+phase: Phase 4/5 owner and browser gates
+
+verification: Playwright fixture discovery found one test; authenticated attempt skipped because supported credential pairs were absent; no production remapping authorized.
