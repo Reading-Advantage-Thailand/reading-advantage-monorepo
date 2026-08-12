@@ -1,5 +1,6 @@
-import { auditMetadataSchema } from "@reading-advantage/db/company-identity";
 import { z } from "zod";
+
+import { projectSecretSafeAuditMetadata } from "./protocol.js";
 
 /** Opaque credential accepted by the Company Identity Finance attestation boundary. */
 export interface FinanceAttestationCredential {
@@ -196,7 +197,10 @@ const attestationCredentialValueSchema = z
   .refine((value) => {
     for (const character of value) {
       const codePoint = character.codePointAt(0);
-      if (codePoint !== undefined && (codePoint <= 0x1f || codePoint === 0x7f)) {
+      if (
+        codePoint !== undefined &&
+        (codePoint <= 0x1f || codePoint === 0x7f)
+      ) {
         return false;
       }
     }
@@ -376,7 +380,9 @@ function readOptionalProperty(
   value: Record<string, unknown>,
   key: string,
 ): unknown {
-  return Object.prototype.hasOwnProperty.call(value, key) ? value[key] : undefined;
+  return Object.prototype.hasOwnProperty.call(value, key)
+    ? value[key]
+    : undefined;
 }
 
 /** Captures and validates the complete Finance audit event before any await. */
@@ -512,9 +518,8 @@ export function createFinanceCompanyIdentityAttestor(input: {
   };
   const createEventId = createEventIdMethod.bind(trustedAuditSources);
   const createRequestId = createRequestIdMethod.bind(trustedAuditSources);
-  const createCorrelationId = createCorrelationIdMethod.bind(
-    trustedAuditSources,
-  );
+  const createCorrelationId =
+    createCorrelationIdMethod.bind(trustedAuditSources);
   const now = nowMethod.bind(trustedAuditSources);
 
   /** Builds an audit context with trusted server-owned values. */
@@ -526,7 +531,10 @@ export function createFinanceCompanyIdentityAttestor(input: {
       const requestId = createRequestId();
       const correlationId = createCorrelationId();
       const currentTime = now();
-      if (!(currentTime instanceof Date) || Number.isNaN(currentTime.getTime())) {
+      if (
+        !(currentTime instanceof Date) ||
+        Number.isNaN(currentTime.getTime())
+      ) {
         throw new Error("invalid trusted time");
       }
       if (
@@ -587,7 +595,10 @@ export function createFinanceCompanyIdentityAttestor(input: {
       const normalizedClaims = normalizeFinanceClaims(claims);
       const actor: FinanceAttestationAuditActor =
         normalizedClaims?.subjectId !== null && normalizedClaims !== undefined
-          ? { kind: "authenticated-owner", subjectId: normalizedClaims.subjectId }
+          ? {
+              kind: "authenticated-owner",
+              subjectId: normalizedClaims.subjectId,
+            }
           : { kind: "unauthenticated" };
       const appRoleIds = normalizedClaims?.appRoleIds;
       const schoolIds = normalizedClaims?.schoolIds;
@@ -689,32 +700,24 @@ export function createCompanyIdentityFinanceAttestationAuditPort(input: {
       if (snapshot === undefined) {
         throw new Error("COMPANY_IDENTITY_FINANCE_AUDIT_METADATA_INVALID");
       }
-      let metadataResult: ReturnType<typeof auditMetadataSchema.safeParse>;
-      try {
-        metadataResult = auditMetadataSchema.safeParse({
-          source: "finance-operations",
-          resourceType: "historical-private-evidence",
-          eventId: snapshot.eventId,
-          objectId: snapshot.objectId,
-          requestId: snapshot.requestId,
-          occurredAt: snapshot.occurredAt,
-          ...(snapshot.scope.schoolId === undefined
-            ? {}
-            : { schoolId: snapshot.scope.schoolId }),
-          actorKind: snapshot.actor.kind,
-          actorSubjectId:
-            snapshot.actor.kind === "authenticated-owner"
-              ? snapshot.actor.subjectId
-              : null,
-          claimsVersion: snapshot.claimsVersion,
-          policyVersion: snapshot.policyVersion,
-        });
-      } catch {
-        throw new Error("COMPANY_IDENTITY_FINANCE_AUDIT_METADATA_INVALID");
-      }
-      if (!metadataResult.success) {
-        throw new Error("COMPANY_IDENTITY_FINANCE_AUDIT_METADATA_INVALID");
-      }
+      const metadata = projectSecretSafeAuditMetadata({
+        source: "finance-operations",
+        resourceType: "historical-private-evidence",
+        eventId: snapshot.eventId,
+        objectId: snapshot.objectId,
+        requestId: snapshot.requestId,
+        occurredAt: snapshot.occurredAt,
+        ...(snapshot.scope.schoolId === undefined
+          ? {}
+          : { schoolId: snapshot.scope.schoolId }),
+        actorKind: snapshot.actor.kind,
+        actorSubjectId:
+          snapshot.actor.kind === "authenticated-owner"
+            ? snapshot.actor.subjectId
+            : null,
+        claimsVersion: snapshot.claimsVersion,
+        policyVersion: snapshot.policyVersion,
+      });
       try {
         await appendAudit(
           Object.freeze({
@@ -723,12 +726,12 @@ export function createCompanyIdentityFinanceAttestationAuditPort(input: {
             operation: snapshot.operation,
             outcome:
               snapshot.outcome === "allowed"
-              ? "SUCCEEDED"
-              : snapshot.outcome === "failed"
-                ? "FAILED"
-                : "DENIED",
+                ? "SUCCEEDED"
+                : snapshot.outcome === "failed"
+                  ? "FAILED"
+                  : "DENIED",
             reasonCode: snapshot.reason,
-            metadata: Object.freeze(metadataResult.data),
+            metadata,
           }),
         );
       } catch {

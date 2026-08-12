@@ -3,6 +3,10 @@ import { randomUUID } from "node:crypto";
 import postgres from "postgres";
 import { describe, expect, it } from "vitest";
 
+import {
+  createCompanyIdentityFinanceAttestationAuditPort,
+  createFinanceCompanyIdentityAttestor,
+} from "../finance-attestation.js";
 import { createPostgresCompanyIdentityRepository } from "../postgres-repository.js";
 import type { IdentityAuditInput } from "../repository.js";
 import {
@@ -13,36 +17,6 @@ import {
 const databaseUrl =
   process.env.COMPANY_IDENTITY_PG_TEST_URL ??
   process.env.COMPANY_IDENTITY_INTEGRATION_DATABASE_URL;
-
-interface FinanceAuditModule {
-  readonly createFinanceCompanyIdentityAttestor?: (input: {
-    readonly authenticator: {
-      authenticate(input: Readonly<Record<string, unknown>>): Promise<unknown>;
-    };
-    readonly rolePolicy: {
-      readonly policyVersion: string;
-      readonly acceptedRoleIds: readonly string[];
-    };
-    readonly auditPort: {
-      append(event: Readonly<Record<string, unknown>>): Promise<void>;
-    };
-    readonly trustedAuditSources: {
-      readonly createEventId: () => string;
-      readonly createRequestId: () => string;
-      readonly createCorrelationId: () => string;
-      readonly now: () => Date;
-    };
-  }) => {
-    attest(input: Readonly<Record<string, unknown>>): Promise<unknown>;
-  };
-  readonly createCompanyIdentityFinanceAttestationAuditPort?: (input: {
-    readonly repository: {
-      appendAudit(input: IdentityAuditInput): Promise<void>;
-    };
-  }) => {
-    append(event: Readonly<Record<string, unknown>>): Promise<void>;
-  };
-}
 
 /** Proves the durable Company Identity projection keeps the full Finance audit envelope. */
 describe.skipIf(!databaseUrl)(
@@ -58,11 +32,9 @@ describe.skipIf(!databaseUrl)(
         const sql = postgres(databaseUrl, { max: 2, prepare: false });
         try {
           const companyId = await ensureOneActiveInternalCompany(sql);
-          const subject =
-            (await import("../index.js")) as unknown as FinanceAuditModule;
-          const attestorFactory = subject.createFinanceCompanyIdentityAttestor;
+          const attestorFactory = createFinanceCompanyIdentityAttestor;
           const adapterFactory =
-            subject.createCompanyIdentityFinanceAttestationAuditPort;
+            createCompanyIdentityFinanceAttestationAuditPort;
           expect(attestorFactory).toBeTypeOf("function");
           expect(adapterFactory).toBeTypeOf("function");
           if (
@@ -80,8 +52,12 @@ describe.skipIf(!databaseUrl)(
           const policyVersion = "finance-role-policy-v11";
           const schoolId = "school-sensitive-scope";
           const secret = "authenticator-secret-must-not-reach-postgres";
+          const repository = createPostgresCompanyIdentityRepository(sql);
           const auditPort = adapterFactory({
-            repository: createPostgresCompanyIdentityRepository(sql),
+            repository: {
+              appendAudit: (input) =>
+                repository.appendAudit(input as unknown as IdentityAuditInput),
+            },
           });
           const attestor = attestorFactory({
             authenticator: {
