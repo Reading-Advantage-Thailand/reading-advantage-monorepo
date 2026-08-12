@@ -1,0 +1,13 @@
+Track: wave5_public_surface_completion_20260628
+
+P7.4 Green source: 7cbbafe3cd09f182b6ee73b162261367c1ed48e6
+
+Exact scope: 15 Marketing paths. Canonical aggregate: 2f06fb4f08b432071888a7db2ac6a0a066534418f4c2494cec6f0d6ba7e0b365. Red base: 42e7c7bd8.
+
+Verification: focused Phase 7/runtime 158/158 at the default timeout in three consecutive runs; production analysis built once and cloned per assertion; Phase 3/5/6 standalone 70/70; Marketing typecheck, scoped ESLint, Prettier, diff-check, Vinext build, and runtime verification passed.
+
+Independent final reviews: semantic/performance Review A ACCEPT and Security/Test Review B ACCEPT on the exact unchanged hash. Established render, environment, loader, unsafe sink, metadata, masking, prototype, and interpolation matrices passed.
+
+Diagnostic boundary: a separate Phase 3/5/6 aggregate recorded 182 passing and one unchanged Phase 3 timeout; broad aggregate 35 files / 407 tests recorded 403 passing and four live-database HTTP 500 failures with DATABASE_URL unset (phase-8-projects-live: 2; project-update-live: 1; topic-save-concurrency-live: 1). These are environment diagnostics, not P7 regressions, and no global Marketing, Measure doctor, or architecture Green is claimed.
+
+Boundary: no Finance, Sales, APK, Codecamp, Measure plan/generated, lockfile, or unrelated path included.
