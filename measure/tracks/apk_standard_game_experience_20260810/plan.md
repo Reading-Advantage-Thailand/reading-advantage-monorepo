@@ -248,9 +248,19 @@ is executable `[~]`; later tasks remain dependency-blocked `[b]`._
    remain blocked by their declared owners.
 
 - [~] Task: Document the shared path and bespoke mechanic hook
-  - [~] Document how an intern declares steps
-  - [~] Document how cartridge code demonstrates a mechanic without recreating UI
-  - [~] Run graph update, generation, and doctor checks
+  - [x] Document how an intern declares steps `b0bc6f7b6`
+  - [x] Document how cartridge code demonstrates a mechanic without recreating UI `b0bc6f7b6`
+  - [b] Run graph update, generation, and doctor checks — deferred:root-structural-gates
+
+  **APK lane evidence (2026-08-12, Green `b0bc6f7b6`):** Updated `docs/game-lifecycle.md` and
+  `docs/developer-kit.md` with the S2 shared path, strict semantic-ID intern
+  declaration, runtime-only `GameTutorialActionDriver` example, deterministic
+  seed/action guidance, and production-authority boundary. Added the focused
+  artifact test `src/presentation/__tests__/game-tutorial-documentation.test.ts`;
+  the full S2 focused package slice passes 155/155 tests. Package type check,
+  lint, and build pass; lint retains four pre-existing warnings outside S2.
+  The shared graph/generate/doctor commands remain root-owned while concurrent
+  lanes are active.
 
 - [b] Task: Measure - User Manual Verification 'Phase S2: Guided Gameplay Tutorial' (Protocol in workflow.md) — deferred:s2-tutorial-docs
 
