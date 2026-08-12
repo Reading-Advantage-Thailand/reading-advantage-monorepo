@@ -52,6 +52,12 @@ export { createGameTutorialRuntime } from "./game-tutorial-runtime.js";
 /** Public shared tutorial controller factory. */
 export { createGameTutorialController } from "./game-tutorial-controller.js";
 
+/** Public guided tutorial presentation component. */
+export { GameTutorialScreen } from "./game-tutorial-screen.js";
+
+/** Public guided tutorial presentation props. */
+export type { GameTutorialScreenProps } from "./game-tutorial-screen.js";
+
 /** Public deterministic tutorial runtime contracts. */
 export type {
   CreateGameTutorialRuntimeOptions,
