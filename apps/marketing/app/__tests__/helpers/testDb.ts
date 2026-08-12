@@ -73,9 +73,14 @@ CREATE TABLE IF NOT EXISTS past_topics (
 
 CREATE UNIQUE INDEX IF NOT EXISTS past_topics_app_normalized_key_unique
   ON past_topics (app, normalized_key);
+
+CREATE TABLE IF NOT EXISTS settings (
+  key text PRIMARY KEY,
+  value text NOT NULL
+);
 `;
 
-const TABLES = ["video_projects", "past_topics", "campaigns"];
+const TABLES = ["video_projects", "past_topics", "campaigns", "settings"];
 
 export interface TestDb {
   /** Drizzle instance bound to the in-process PGlite database. */
