@@ -24,7 +24,7 @@
 
 ## Phase 5: Verification and Cleanup
 
-- [~] Run dev server and manually verify multiple lessons render videos and images correctly. The owned authenticated Playwright fixture covers the seeded Docker Basics lesson with its diagram and verified Fireship embed; Chromium discovery passed, the authenticated attempt was skipped because supported credentials were unavailable, and an elevated non-credentialed system-Chrome check confirmed company auth mode plus the public Docker module route. The exact session architecture blocker is recorded in [browser-auth-architectural-blocker.md](browser-auth-architectural-blocker.md), so broader credentialed browser execution remains open.
+- [~] Run dev server and manually verify multiple lessons render videos and images correctly. The canonical authenticated Playwright fixture at `apps/codecamp-advantage/e2e/interactive-media-acceptance.spec.ts` was independently ACCEPTed and committed as `bf00083a7`; it covers the seeded Docker Basics lesson with its diagram and verified Fireship embed. Focused auth/media tests passed 13/13, app typecheck, targeted ESLint, and Prettier check passed, Playwright discovery passed, and the credential-free Playwright execution exited successfully with its intentional skip. The authenticated media gate remains blocked on an owner-provided valid company storage-state file (`CODECAMP_MEDIA_STORAGE_STATE`) or explicit legacy-mode credentials; company mode never posts legacy credentials. The exact session architecture blocker is recorded in [browser-auth-architectural-blocker.md](browser-auth-architectural-blocker.md), so broader credentialed browser execution remains open.
 - [x] Run Playwright or Vitest suites to verify no regressions in the codecamp application (media contract 3/3, combined DB media/data 30/30, LessonContent 13/13, DB/app type checks, targeted lint, and Playwright fixture discovery pass; `7f6c0f6d0`, `665e214e6`).
 - [x] Delete the draft `curriculum_enhancement_plan.md` artifact.
 
@@ -33,3 +33,8 @@
 - Media-capable lesson rendering shipped in Cloud Run revision `codecamp-advantage-00019-682` with 100% traffic.
 - Authenticated Chrome acceptance verified the Measure lifecycle diagram on a seeded production lesson.
 - This track remains active: all 16 specified diagrams are present and mapped, five independently verified video IDs are source-tracked, five rejected legacy embeds are removed, and broader video denominator and browser verification remain open. Deployment of the implemented slice does not satisfy the remaining content denominator.
+
+## Remaining executable gate — 2026-08-12
+
+- No further safe non-external implementation task remains in this bounded track. The remaining Phase 4 work requires owner decisions on the final video denominator and the documented placement/version caveats; production remapping is intentionally paused.
+- The remaining Phase 5 work requires an owner-provided valid company-mode Playwright storage state or explicit legacy-mode credentials (`PHASE5_MEDIA_TEST_USERNAME`/`PHASE5_MEDIA_TEST_PASSWORD` or the `CODECAMP_E2E_*` pair with legacy mode enabled). No credentials or session are available to mint or infer locally, so the browser/media owner gate stays in progress.
