@@ -10,12 +10,21 @@
   current release set pins `knowledge-space-synthetic-codecamp-proof-v1.0.0`;
   reusing that graph in a Sales descriptor would be a false cross-course claim.
   The attempted admission was stopped before production/runtime files changed.
-- [b] Task: Write Red runtime-compat tests and add the exact Sales consumer
-  descriptor/package admission without changing the shared engine. Depends on
-  the reviewed Sales graph release in Phase 1; do not use Codecamp's graph.
+- [~] Task: Execute the one-shot Red/Green Sales runtime admission defined in
+  `test-strategy.md`. Check in the exact Sales consumer descriptor and the
+  failing `sales-runtime-admission.red.test.ts`, then make the focused Green
+  gate pass by extending only `@reading-advantage/mastery-runtime-compat`
+  (manifest release set, descriptor schema, packed-consumer gate, clean-consumer
+  script). Do not change the four shared engine packages or the accepted
+  `sales-knowledge` package. Do not reuse the Codecamp graph. The current dirty
+  candidate under `packages/mastery-runtime-compat` is unaccepted and must be
+  re-derived against this strategy. Red command:
+  `pnpm --filter @reading-advantage/mastery-runtime-compat exec vitest run
+  src/__tests__/sales-runtime-admission.red.test.ts --maxWorkers=1`. Phase 1
+  dependency is satisfied by `86a6503ac`.
 - [b] Task: Run the runtime manifest, consumer, packed-consumer, lint, and type
-  gates; record independent review evidence. Depends on truthful Sales graph
-  admission.
+  gates; record independent review evidence. Depends on the Task A Green gate
+  being accepted. deferred:task-a-green-acceptance
 
 ## Phase 1 — bind the approved course to a knowledge graph
 
@@ -32,10 +41,10 @@
 
 ## Phase 2 — company tenant mapping and durable projection
 
-- [b] Task: Admit the reviewed Sales graph as an exact shared-runtime consumer,
-  then define and migrate the fail-closed Company Identity organization to
-  Mastery tenant mapping. Depends on Phase 1 and the preceding Finance migration
-  landing so migration identifiers remain serial and reviewable.
+- [b] Task: Define and migrate the fail-closed Company Identity organization to
+  Mastery tenant mapping after the Phase 0 Sales admission is accepted. Depends
+  on the preceding Finance migration landing so migration identifiers remain
+  serial and reviewable. deferred:finance-migration
 - [b] Task: Write Red authorization, cross-organization, replay, conflict,
   retry, concurrency, and append-only outbox tests.
 - [b] Task: Implement the tenant mapping and durable idempotent projection port
