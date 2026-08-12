@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   buildExemplarPublicApiSurface,
   runExemplarSimulation,
@@ -20,7 +20,10 @@ import {
   GameNavigationControls,
   GameProgress,
   GameResultPanel,
+  GameTutorialScreen,
+  createGameTutorialQcFixture,
   type GameBriefing,
+  type GameTutorialDefinition,
 } from "@reading-advantage/advantage-play-kit/presentation";
 import { parseQcControls } from "@reading-advantage/advantage-play-kit/qc";
 
@@ -68,6 +71,60 @@ const STANDARD_GAME_BRIEFING: GameBriefing = {
   startPhase: "playing",
 } as const;
 
+const TUTORIAL_FIXTURES = {
+  "english-long": {
+    title: "Guided tutorial",
+    explanation: "Review environmental responsibility through collaborative problem solving before you select an answer. ความรับผิดชอบต่อสิ่งแวดล้อมผ่านการเรียนรู้ร่วมกัน",
+  },
+  "thai-long": {
+    title: "Guided tutorial",
+    explanation: "ความรับผิดชอบต่อสิ่งแวดล้อมผ่านการเรียนรู้ร่วมกัน / environmental responsibility through collaborative problem solving",
+  },
+} as const;
+
+/** Creates the isolated tutorial contract for one QC text fixture. */
+function createTutorialFixtureDefinition(fixture: keyof typeof TUTORIAL_FIXTURES): GameTutorialDefinition {
+  const text = TUTORIAL_FIXTURES[fixture];
+  return {
+    schemaVersion: 1,
+    id: `qc:${fixture}`,
+    title: text.title,
+    seed: 0x1a2b3c4d,
+    labels: {
+      progress: "Tutorial progress",
+      pause: "Pause tutorial",
+      resume: "Resume tutorial",
+      advance: "Next tutorial step",
+      replay: "Replay tutorial",
+      skip: "Skip tutorial",
+    },
+    targets: [{ id: "mechanic:answer-choice", kind: "mechanic" }],
+    actions: [{ id: "action:demonstrate-answer", deterministic: true, consequence: "neutral" }],
+    steps: [{
+      id: "step:demonstrate-answer",
+      title: text.title,
+      explanation: text.explanation,
+      targetId: "mechanic:answer-choice",
+      actionId: "action:demonstrate-answer",
+      timing: { leadInMs: 0, demonstrationMs: 0, lingerMs: 0 },
+    }],
+    lifecycle: {
+      pause: "freeze-current-step",
+      advance: "sequential",
+      replay: "restart-with-same-seed",
+      skip: { enabled: true, to: "playing" },
+      complete: { to: "playing" },
+      productionEffects: {
+        emitGameResults: false,
+        persistProgress: false,
+        awardAuthoritativeXp: false,
+        writeLeaderboard: false,
+        applyFailureConsequences: false,
+      },
+    },
+  };
+}
+
 /** Props for the Advantage Games APK authoring and quality-control surface. */
 export interface AdvantageGamesAuthoringQcProps {
   /** Generated selected-output preview bound to the accepted standard-pack release. */
@@ -98,6 +155,21 @@ export function AdvantageGamesAuthoringQc({ preview }: AdvantageGamesAuthoringQc
   const [operatorMessage, setOperatorMessage] = useState("Exemplar ready for inspection.");
   const [briefingStartCount, setBriefingStartCount] = useState(0);
   const [briefingVisible, setBriefingVisible] = useState(true);
+  const [tutorialFixture, setTutorialFixture] = useState<keyof typeof TUTORIAL_FIXTURES>("english-long");
+  const [tutorialProfile, setTutorialProfile] = useState<LayoutProfile>("compact");
+  const [tutorialInputMode, setTutorialInputMode] = useState<"keyboard" | "pointer" | "touch">("keyboard");
+  const [tutorialReducedMotion, setTutorialReducedMotion] = useState(false);
+  const [tutorialStatus, setTutorialStatus] = useState("Tutorial ready");
+  const tutorialQc = useMemo(() => createGameTutorialQcFixture({
+    tutorial: createTutorialFixtureDefinition(tutorialFixture),
+    inputModes: ["keyboard", "pointer", "touch"],
+  }), [tutorialFixture]);
+  const [tutorialSnapshot, setTutorialSnapshot] = useState(() => tutorialQc.controller.getSnapshot());
+
+  useEffect(() => {
+    setTutorialSnapshot(tutorialQc.controller.getSnapshot());
+    setTutorialStatus("Tutorial ready");
+  }, [tutorialQc]);
 
   const viewport = profile === "wide"
     ? { width: 1440, height: 900 }
@@ -139,6 +211,27 @@ export function AdvantageGamesAuthoringQc({ preview }: AdvantageGamesAuthoringQc
   const handleBriefingStart = () => {
     setBriefingStartCount((count) => (count === 0 ? 1 : count));
     setBriefingVisible(false);
+  };
+
+  const refreshTutorial = (status: string) => {
+    setTutorialSnapshot(tutorialQc.controller.getSnapshot());
+    setTutorialStatus(status);
+  };
+
+  const startTutorial = () => {
+    void tutorialQc.controller.start();
+    void tutorialQc.clock.runAll();
+    refreshTutorial("Tutorial running");
+  };
+
+  const replayTutorial = () => {
+    void tutorialQc.controller.replay();
+    refreshTutorial("Tutorial clean after replay");
+  };
+
+  const interruptTutorial = () => {
+    void tutorialQc.controller.interrupt();
+    refreshTutorial("Tutorial interrupted and clean");
   };
 
   return (
@@ -320,6 +413,49 @@ export function AdvantageGamesAuthoringQc({ preview }: AdvantageGamesAuthoringQc
             >
               briefing → {briefingStartCount > 0 ? "playing" : "ready"} · count: {briefingStartCount}
             </p>
+          </section>
+
+          <section
+            aria-label="Guided tutorial QC preview"
+            className="mt-6 min-w-0 rounded border border-[#335c4b] bg-[#07110e] p-4"
+            data-apk-input-mode={tutorialInputMode}
+            data-apk-layout-profile={tutorialProfile}
+            data-apk-reduced-motion={String(tutorialReducedMotion)}
+          >
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <h2 className="font-serif text-2xl font-bold">Guided tutorial QC preview</h2>
+              <p role="status" className="font-mono text-xs text-[#b9f6d5]">{tutorialStatus}</p>
+            </div>
+            <div className="mt-4 grid gap-3 sm:grid-cols-2">
+              <label className="text-xs font-bold uppercase tracking-widest text-[#8ce0b8]">
+                Tutorial fixture
+                <select aria-label="Tutorial fixture" className="mt-2 min-h-11 w-full rounded border border-[#426b59] bg-[#07110e] px-3 text-sm text-[#f4f0dc]" value={tutorialFixture} onChange={(event) => setTutorialFixture(event.target.value as keyof typeof TUTORIAL_FIXTURES)}>
+                  <option value="english-long">english-long</option>
+                  <option value="thai-long">thai-long</option>
+                </select>
+              </label>
+              <label className="text-xs font-bold uppercase tracking-widest text-[#8ce0b8]">
+                Tutorial input mode
+                <select aria-label="Tutorial input mode" className="mt-2 min-h-11 w-full rounded border border-[#426b59] bg-[#07110e] px-3 text-sm text-[#f4f0dc]" value={tutorialInputMode} onChange={(event) => setTutorialInputMode(event.target.value as typeof tutorialInputMode)}>
+                  <option value="keyboard">Keyboard</option>
+                  <option value="pointer">Pointer</option>
+                  <option value="touch">Touch</option>
+                </select>
+              </label>
+            </div>
+            <div className="mt-3 flex flex-wrap gap-2">
+              <button type="button" onClick={() => setTutorialProfile("compact")} className="min-h-11 rounded border border-[#426b59] px-3 text-xs font-bold">Compact</button>
+              <button type="button" onClick={() => setTutorialProfile("wide")} className="min-h-11 rounded border border-[#426b59] px-3 text-xs font-bold">Wide</button>
+              <button type="button" aria-pressed={tutorialReducedMotion} onClick={() => setTutorialReducedMotion((value) => !value)} className="min-h-11 rounded border border-[#426b59] px-3 text-xs font-bold">Reduced motion</button>
+              <button type="button" onClick={startTutorial} className="min-h-11 rounded border border-[#426b59] px-3 text-xs font-bold">Start tutorial</button>
+              <button type="button" onClick={replayTutorial} className="min-h-11 rounded border border-[#426b59] px-3 text-xs font-bold">Replay tutorial</button>
+              <button type="button" onClick={interruptTutorial} className="min-h-11 rounded border border-[#426b59] px-3 text-xs font-bold">Interrupt tutorial</button>
+            </div>
+            <div className="mt-4 max-h-[34rem] overflow-auto rounded border border-[#29483c]" data-apk-canvas-host>
+              <div role="img" aria-label="Guided tutorial Phaser canvas" className="grid min-h-32 place-items-center border-b border-[#335c4b] text-xs text-[#8fa99b]">Guided tutorial Phaser canvas</div>
+              <GameTutorialScreen tutorial={tutorialQc.tutorial} snapshot={tutorialSnapshot} controller={tutorialQc.controller} targetLabel="Answer choice mechanic" actionLabel="Deterministic cartridge action" layoutProfile={tutorialProfile} reducedMotion={tutorialReducedMotion} showControls={false} compactLandmarks />
+            </div>
+            <p className="mt-3 font-mono text-xs text-[#b9f6d5]">One canvas · zero production completions · Timers: {tutorialQc.clock.pendingCount()} · Listeners: {tutorialQc.driver.resources().listeners} · Phaser objects: {tutorialQc.driver.resources().phaserObjects}</p>
           </section>
 
           <div className="mt-6 grid gap-4 md:grid-cols-2">

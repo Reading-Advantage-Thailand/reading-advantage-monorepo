@@ -52,7 +52,7 @@ export function createDeterministicRandom(seed: number): () => number {
 
 /** Deterministic input descriptor used to replay physical input sequences. */
 export interface DeterministicInputDescriptor {
-  readonly modality: "keyboard" | "pointer";
+  readonly modality: "keyboard" | "pointer" | "touch";
   readonly code?: string;
   readonly phase?: "down" | "up" | "drag";
   readonly x?: number;

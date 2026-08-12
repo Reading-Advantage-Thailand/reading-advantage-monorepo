@@ -30,6 +30,10 @@ export type GameTutorialScreenProps = Omit<ComponentProps<"section">, "children"
   readonly error?: string;
   /** Requests a host-owned retry after a renderer error. */
   readonly onRetry?: () => void;
+  /** Hides duplicate control buttons when a host provides equivalent controls. */
+  readonly showControls?: boolean;
+  /** Hides duplicate title and narration landmarks in a compact host preview. */
+  readonly compactLandmarks?: boolean;
 };
 
 const rootStyle: CSSProperties = {
@@ -72,6 +76,8 @@ export function GameTutorialScreen({
   reducedMotion = false,
   error,
   onRetry,
+  showControls = true,
+  compactLandmarks = false,
   style,
   ...sectionProps
 }: GameTutorialScreenProps) {
@@ -121,7 +127,7 @@ export function GameTutorialScreen({
       style={{ ...rootStyle, ...style }}
     >
       <header style={{ borderBlockEnd: "1px solid var(--apk-tutorial-border, #335c4b)", padding: "clamp(1rem, 3vw, 1.5rem)" }}>
-        <h1 style={{ fontSize: "clamp(1.25rem, 3vw, 2rem)", margin: 0, overflowWrap: "anywhere" }}>{tutorial.title}</h1>
+        {compactLandmarks ? null : <h1 style={{ fontSize: "clamp(1.25rem, 3vw, 2rem)", margin: 0, overflowWrap: "anywhere" }}>{tutorial.title}</h1>}
       </header>
       <div
         data-apk-tutorial-region="body"
@@ -144,16 +150,16 @@ export function GameTutorialScreen({
           {targetLabel ?? snapshot.currentTarget.id}
         </div>
         <div aria-label="Demonstrated tutorial action" role="region">{actionLabel ?? snapshot.currentAction.id}</div>
-        <div aria-live="polite" data-apk-tutorial-consequence={consequence} role="status">{narration}</div>
+        {compactLandmarks ? null : <div aria-live="polite" data-apk-tutorial-consequence={consequence} role="status">{narration}</div>}
       </div>
-      <footer style={{ display: "flex", flexWrap: "wrap", gap: "0.75rem", padding: "1rem", borderBlockStart: "1px solid var(--apk-tutorial-border, #335c4b)" }}>
+      {showControls ? <footer style={{ display: "flex", flexWrap: "wrap", gap: "0.75rem", padding: "1rem", borderBlockStart: "1px solid var(--apk-tutorial-border, #335c4b)" }}>
         {snapshot.status === "paused"
           ? <button type="button" onClick={controller.resume} style={actionStyle}>{tutorial.labels.resume}</button>
           : <button type="button" onClick={controller.pause} style={actionStyle}>{tutorial.labels.pause}</button>}
         <button type="button" aria-label="Next tutorial step" onClick={controller.advance} style={actionStyle}>{tutorial.labels.advance}</button>
         <button type="button" aria-label="Replay tutorial" onPointerUp={controller.replay} style={actionStyle}>{tutorial.labels.replay}</button>
         <button type="button" aria-label="Skip tutorial" onTouchEnd={controller.skip} style={actionStyle}>{tutorial.labels.skip}</button>
-      </footer>
+      </footer> : null}
     </section>
   );
 }

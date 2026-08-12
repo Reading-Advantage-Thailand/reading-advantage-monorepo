@@ -55,6 +55,9 @@ export { createGameTutorialController } from "./game-tutorial-controller.js";
 /** Public guided tutorial presentation component. */
 export { GameTutorialScreen } from "./game-tutorial-screen.js";
 
+/** Shared deterministic guided tutorial QC fixture factory. */
+export { createGameTutorialQcFixture } from "../testing/game-tutorial-qc-fixtures.js";
+
 /** Public guided tutorial presentation props. */
 export type { GameTutorialScreenProps } from "./game-tutorial-screen.js";
 
