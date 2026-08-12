@@ -1,0 +1,9 @@
+track_id: codecamp_interactive_media_diagrams_20260709
+
+phase: Phase 4 source-integrity Red
+
+Red evidence: focused media contract exited 1 with 3 failures: 10 embeds present vs 5 verified active mappings, legacy/unverified provenance rejected, and five extra legacy mappings outside the verified set.
+
+external audit: Ke90Tje7VS0 is an active React tutorial misfiled under Terminal; hwP7WQgm_DE, RGOj5nlwkvY, k5E265ksDSI, and S0T0R9h1vHk return YouTube public oEmbed 404.
+
+verification: package TypeScript, targeted ESLint, and diff check pass.
