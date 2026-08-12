@@ -1,0 +1,9 @@
+track_id: apk_standard_game_experience_20260810
+
+task: Phase S2.6 tutorial documentation artifact contract
+
+Red evidence: dedicated Luna lane ran the artifact contract before documentation changes and observed the expected failures because the baseline docs stopped at S1/generic bespoke guidance; the independent S2.5 QC registration assertion was already present.
+
+file: packages/advantage-play-kit/src/presentation/__tests__/game-tutorial-documentation.test.ts
+
+why: freeze semantic-ID authoring, deterministic action-driver, host-authority, lifecycle, and QC documentation requirements before accepting the docs.
