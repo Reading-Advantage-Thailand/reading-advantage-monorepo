@@ -64,8 +64,8 @@ Contract decisions, the recoverable RED checkpoint `fa01f9b30`, and the frozen c
 boundary are recorded in
 [s2-progress-handoff-20260811.md](./s2-progress-handoff-20260811.md). The canonical
 test strategy is [test-strategy.md](./test-strategy.md). S2.1 through S2.5 are
-evidenced complete; S2.6 remains root-owned and in progress, while S2.7 remains
-blocked on product-owner manual verification._
+evidenced complete; S2.6 remains in progress for repository-wide structural
+closure, while S2.7 remains blocked on product-owner manual verification._
 
 - [x] Task: Define the tutorial contracts `86a2a13ee`
   - [x] Define tutorial definitions, ordered steps, semantic targets, timing, labels, and progress
@@ -251,7 +251,11 @@ blocked on product-owner manual verification._
 - [~] Task: Document the shared path and bespoke mechanic hook
   - [x] Document how an intern declares steps `b0bc6f7b6`
   - [x] Document how cartridge code demonstrates a mechanic without recreating UI `b0bc6f7b6`
-  - [b] Run graph update, generation, and doctor checks — deferred:root-structural-gates
+  - [x] Run the combined graph update and generated-facts refresh `390448dd2`
+    - **Structural evidence (2026-08-13):** The committed graph update succeeded for exactly 71 unique TS/TSX paths. The canonical sorted, newline-terminated path-list hash is `40df25b062d742ccb715e301b4a2914a079473575e504733de7dae7d70a2fb0d`; the exact APK 24-path subset hash is `29080b546d629046ecd9e26a2b1af698bdba652d3b6558786a321768bc94f3f2`.
+    - `build-graph update` reported 71 files, growing the graph from 527 to 1360 nodes and from 682 to 1538 edges.
+    - Generated-facts commit `390448dd2` embeds source revision `b4b11a3057e3645e6ab29bff304c7a93a00d440b`, architecture hash `df81e0948c1f01b59b8be3ee5659075d4cba4de4fefe5f477d2a9b2a695a1555`, and routes hash `a380a66544af846ba4057267c8023089b01fc83b7a6c0f97dc2ed69cf98fb1fb`. The deterministic pre-commit rerun matched the staged bytes.
+  - [b] Complete repository-wide doctor, direct-checker, and whole-repository graph-audit gates — deferred:root-structural-gates
 
   **APK lane evidence (2026-08-12, Green `b0bc6f7b6`):** Updated `docs/game-lifecycle.md` and
   `docs/developer-kit.md` with the S2 shared path, strict semantic-ID intern
@@ -260,8 +264,9 @@ blocked on product-owner manual verification._
   artifact test `src/presentation/__tests__/game-tutorial-documentation.test.ts`;
   the full S2 focused package slice passes 155/155 tests. Package type check,
   lint, and build pass; lint retains four pre-existing warnings outside S2.
-  The shared graph/generate/doctor commands remain root-owned while concurrent
-  lanes are active.
+  The graph update and generated-facts refresh are complete as recorded above;
+  repository-wide doctor, direct-checker, and graph-audit closure remains
+  root-owned and deferred under `root-structural-gates`.
 
   **Independent browser acceptance evidence (2026-08-12, accepted at `7bab10b5f`):** The
   opt-in guided-tutorial browser suite passed 2/2 in system Chrome with
@@ -275,25 +280,13 @@ blocked on product-owner manual verification._
   package runtime/QC slice, which exited 0 with 6 files and 104 tests passing. Independent
   review status: **ACCEPT**. This does not satisfy the product-owner manual gate.
 
-  **Remaining root-owned S2.6 structural gates (2026-08-12):** The APK lane did not run these
-  shared-tree commands while concurrent lanes were active; root must run them in order:
-
-  ```bash
-  build-graph update ./graph.db \
-    packages/advantage-play-kit/src/presentation/game-tutorial-contract.ts \
-    packages/advantage-play-kit/src/presentation/game-tutorial-controller.ts \
-    packages/advantage-play-kit/src/presentation/game-tutorial-screen.tsx \
-    packages/advantage-play-kit/src/presentation/index.ts \
-    packages/advantage-play-kit/src/scaffolding/cartridge-manifest.ts
-  bash measure/generate.sh
-  bash measure/doctor.sh
-  git diff --exit-code -- measure/generated
-  ```
+  **Root structural-gate result (2026-08-13):** The whole-repository build-graph audit emitted no output and was terminated after approximately four minutes with exit 130; no audit Green is claimed. `measure/doctor.sh` exited 1 on 80 deprecated `[ ]` markers in nine unrelated plans, so its fail-fast path did not run architecture checks. The separate direct checker exited 1 with `files=4247`, `findings=697`, `parseErrors=0`, debt additions 137, debt removals 0, and renames 21. Repository-wide structural Green remains deferred to `root-structural-gates`; S2.6 and S2 are not complete.
 
 - [b] Task: Measure - User Manual Verification 'Phase S2: Guided Gameplay Tutorial' (Protocol in workflow.md) — deferred:product-owner
-  **Current block (2026-08-12):** The product-owner manual verification event remains
-  outstanding. It is sequenced after root completes the S2.6 structural gates above; browser
-  acceptance is independent evidence and does not close the manual task or S2.
+  **Current block (2026-08-13):** The product-owner manual verification event remains
+  outstanding and is sequenced after the deferred repository-wide S2.6 structural gate
+  reaches Green; browser acceptance is independent evidence and does not close the manual
+  task or S2.
 
 ## Phase S3: Safe Demonstration Mode
 
