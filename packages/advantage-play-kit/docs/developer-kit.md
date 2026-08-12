@@ -246,6 +246,180 @@ export function VocabularyGame({
 }
 ```
 
+## Guided gameplay tutorial
+
+The S2 tutorial is the shared path between briefing and normal gameplay. An
+intern declares one strict, serializable `GameTutorialDefinition` and places it
+in the cartridge manifest's optional `tutorial` field. Existing manifests may
+omit that field for backward compatibility; the S5 scaffold/readiness work will
+make it mandatory for new cartridges.
+
+Declare the step array in order. Each step names a semantic target and a
+deterministic action; the array position is the only ordering mechanism. Use
+already-resolved Thai or English strings at the boundary. The same seed
+produces the same demonstration, while `gameTutorialDefinitionSchema` rejects
+DOM selectors, physical key codes, screen coordinates, callbacks, locale maps,
+and unused or dangling declarations.
+
+### Intern declaration example
+
+```ts
+import {
+  gameTutorialDefinitionSchema,
+  validateGameTutorialDefinition,
+  type GameTutorialDefinition,
+} from "@reading-advantage/advantage-play-kit/presentation";
+
+const tutorial: GameTutorialDefinition = validateGameTutorialDefinition({
+  schemaVersion: 1,
+  id: "temple-word-quest:tutorial",
+  title: "Temple Word Quest tutorial",
+  seed: 271828,
+  labels: {
+    progress: "Tutorial progress",
+    pause: "Pause tutorial",
+    resume: "Resume tutorial",
+    advance: "Next tutorial step",
+    replay: "Replay tutorial",
+    skip: "Skip tutorial",
+  },
+  targets: [
+    { id: "mechanic:answer-choice", kind: "mechanic" },
+    { id: "feedback:correct", kind: "feedback" },
+  ],
+  actions: [
+    { id: "action:show-answer-choice", deterministic: true, consequence: "neutral" },
+    { id: "action:demonstrate-correct", deterministic: true, consequence: "correct" },
+  ],
+  steps: [
+    {
+      id: "step:show-answer",
+      title: "See the answer choice",
+      explanation: "Watch the same answer-choice mechanic used in gameplay.",
+      targetId: "mechanic:answer-choice",
+      actionId: "action:show-answer-choice",
+      timing: { leadInMs: 0, demonstrationMs: 1200, lingerMs: 400 },
+    },
+    {
+      id: "step:correct-feedback",
+      title: "See correct feedback",
+      explanation: "ดูผลลัพธ์ที่ถูกต้องก่อนเริ่มเล่นจริง",
+      targetId: "feedback:correct",
+      actionId: "action:demonstrate-correct",
+      timing: { leadInMs: 0, demonstrationMs: 800, lingerMs: 400 },
+    },
+  ],
+  lifecycle: {
+    pause: "freeze-current-step",
+    advance: "sequential",
+    replay: "restart-with-same-seed",
+    skip: { enabled: true, to: "playing" },
+    complete: { to: "countdown" },
+    productionEffects: {
+      emitGameResults: false,
+      persistProgress: false,
+      awardAuthoritativeXp: false,
+      writeLeaderboard: false,
+      applyFailureConsequences: false,
+    },
+  },
+});
+
+const manifestTutorial = gameTutorialDefinitionSchema.parse(tutorial);
+```
+
+The manifest validator remains the boundary for external configuration:
+
+```ts
+const manifest = validateCartridgeManifest({
+  ...cartridgeManifest,
+  tutorial: manifestTutorial,
+});
+```
+
+### Bespoke mechanic hook
+
+The shared controller owns timing, step order, pause/resume, replay, skip,
+progress, lifecycle events, and production-effect suppression. Cartridge code
+owns the mechanic. Implement a runtime-only `GameTutorialActionDriver` that
+calls the real Phaser mechanic through semantic IDs and the validated seed; it
+does not recreate tutorial cards or provide navigation, persistence, XP,
+leaderboard, or completion authority.
+
+```ts
+import type { GameTutorialActionDriver } from "@reading-advantage/advantage-play-kit/presentation";
+
+type AnswerChoiceMechanic = {
+  demonstrateTutorialAction(input: {
+    actionId: string;
+    targetId: string;
+    seed: number;
+  }): void;
+};
+
+function createAnswerChoiceTutorialDriver(
+  mechanic: AnswerChoiceMechanic,
+): GameTutorialActionDriver {
+  return {
+    execute({ step, seed, diagnostics }) {
+      if (
+        step.actionId !== "action:show-answer-choice" &&
+        step.actionId !== "action:demonstrate-correct"
+      ) {
+        throw new Error(`Unsupported tutorial action: ${step.actionId}`);
+      }
+
+      mechanic.demonstrateTutorialAction({
+        actionId: step.actionId,
+        targetId: step.targetId,
+        seed,
+      });
+      diagnostics.report(`Demonstrated ${step.actionId} on ${step.targetId}`);
+    },
+  };
+}
+```
+
+The `mechanic.demonstrateTutorialAction` hook is the bespoke seam: it should
+drive the same Phaser scene and rule code used by normal play. It should select
+targets by semantic ID and use the supplied seed for deterministic inputs, not
+by copying a screen position or querying a DOM element. Keep the driver
+runtime-only and outside the serializable manifest.
+
+Create the shared controller and presentation from the validated declaration;
+the screen receives semantic snapshots and renders the standard accessible
+cards around the cartridge canvas:
+
+```tsx
+import {
+  createGameTutorialController,
+  GameTutorialScreen,
+} from "@reading-advantage/advantage-play-kit/presentation";
+
+const controller = createGameTutorialController({
+  tutorial: manifestTutorial,
+  actionDriver: createAnswerChoiceTutorialDriver(answerChoiceMechanic),
+  clock,
+});
+
+<GameTutorialScreen
+  tutorial={manifestTutorial}
+  controller={controller}
+  snapshot={controller.getSnapshot()}
+  layoutProfile="compact"
+  reducedMotion={false}
+/>
+```
+
+Tutorial playback is never normal scoring authority. Tutorial mode emits no
+`GameResults`, persisted progress, authoritative XP, leaderboard write, or
+normal failure consequence, including after a complete or skipped tutorial. It
+creates no production completion, persistence, XP, or leaderboard effects. Use
+the independent [guided tutorial QC preview](/qc), backed by
+`createGameTutorialQcFixture`, to inspect deterministic English and Thai
+fixtures, compact/wide layouts, keyboard/pointer/touch inputs, reduced motion,
+replay, interruption, cleanup, and the one-canvas invariant.
+
 ## Selected-union materialization
 
 Cartridges materialize only their selected union of semantic keys. The
