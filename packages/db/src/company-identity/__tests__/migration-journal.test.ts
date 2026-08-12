@@ -17,6 +17,14 @@ const IDENTITY_SNAPSHOT_PATH = join(
   IDENTITY_DRIZZLE_DIR,
   "meta/0000_snapshot.json",
 );
+const IDENTITY_PREVIOUS_SNAPSHOT_PATH = join(
+  IDENTITY_DRIZZLE_DIR,
+  "meta/0002_snapshot.json",
+);
+const IDENTITY_FINANCE_SNAPSHOT_PATH = join(
+  IDENTITY_DRIZZLE_DIR,
+  "meta/0003_snapshot.json",
+);
 const PRODUCT_DRIZZLE_DIR = join(DB_ROOT, "drizzle");
 const PRODUCT_JOURNAL_PATH = join(PRODUCT_DRIZZLE_DIR, "meta/_journal.json");
 const PRODUCT_CONFIG_PATH = join(DB_ROOT, "drizzle.config.ts");
@@ -150,5 +158,39 @@ describe("company identity migration journal data", () => {
         `${tag} must resolve to exactly one identity SQL file`,
       ).toHaveLength(1);
     }
+  });
+
+  it("links the Finance migration to immutable 0002 metadata with a fresh current snapshot", () => {
+    const journal = loadIdentityJournal();
+    if (!journal) return;
+    const financeEntry = journal.entries.find(
+      ({ tag }) => tag === "0003_finance_attestation_audit_metadata",
+    );
+    expect(financeEntry).toMatchObject({ idx: 3, version: "7" });
+    expect(existsSync(IDENTITY_PREVIOUS_SNAPSHOT_PATH)).toBe(true);
+    expect(existsSync(IDENTITY_FINANCE_SNAPSHOT_PATH)).toBe(true);
+    if (
+      !financeEntry ||
+      !existsSync(IDENTITY_PREVIOUS_SNAPSHOT_PATH) ||
+      !existsSync(IDENTITY_FINANCE_SNAPSHOT_PATH)
+    ) {
+      return;
+    }
+
+    const previousSnapshot = JSON.parse(
+      readFileSync(IDENTITY_PREVIOUS_SNAPSHOT_PATH, "utf8"),
+    ) as { readonly id: string };
+    const financeSnapshot = JSON.parse(
+      readFileSync(IDENTITY_FINANCE_SNAPSHOT_PATH, "utf8"),
+    ) as {
+      readonly id: string;
+      readonly prevId: string;
+      readonly version: string;
+      readonly dialect: string;
+    };
+    expect(financeSnapshot.prevId).toBe(previousSnapshot.id);
+    expect(financeSnapshot.id).not.toBe(previousSnapshot.id);
+    expect(financeSnapshot.version).toBe(journal.version);
+    expect(financeSnapshot.dialect).toBe(journal.dialect);
   });
 });

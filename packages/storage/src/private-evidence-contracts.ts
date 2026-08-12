@@ -73,9 +73,13 @@ export interface AuthorizedPrivateEvidenceSnapshot {
   readonly evidenceReference: string;
   /** Exact lowercase SHA-256 digest verified for the returned bytes. */
   readonly payloadDigest: string;
-  /** Bounded private evidence payload bytes. */
+  /**
+   * Bounded private evidence payload bytes.
+   * Each access returns a fresh defensive Uint8Array copy; mutating one view
+   * cannot mutate the verified snapshot or a later view.
+   */
   readonly bytes: Uint8Array;
-  /** Minimal provider-neutral payload metadata. */
+  /** Frozen minimal provider-neutral payload metadata. */
   readonly metadata: {
     /** Number of bytes in the returned payload. */
     readonly contentLength: number;
@@ -104,6 +108,6 @@ export interface AuthorizedPrivateEvidenceReaderDependencies {
   readonly driver: PrivateEvidenceDriver;
   /** Payload digest function supplied by the caller. */
   readonly digest: (bytes: Uint8Array) => Promise<string>;
-  /** Optional owner-controlled maximum byte ceiling for every read. */
-  readonly maxBytes?: number;
+  /** Owner-controlled maximum byte ceiling for every read. */
+  readonly maxBytes: number;
 }

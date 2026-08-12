@@ -8,7 +8,7 @@ import { auditMetadataSchema } from "../contracts/index.js";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const DB_ROOT = resolve(HERE, "../../..");
-const EXPECTED_KEYS = [
+const ORIGINAL_KEYS = [
   "source",
   "previousStatus",
   "newStatus",
@@ -31,6 +31,24 @@ const EXPECTED_KEYS = [
   "idempotencyReplay",
   "expiresAt",
   "reasonCategory",
+] as const;
+
+const FINANCE_KEYS = [
+  "actorKind",
+  "actorSubjectId",
+  "objectId",
+  "requestId",
+  "eventId",
+  "occurredAt",
+  "schoolId",
+  "claimsVersion",
+  "policyVersion",
+] as const;
+
+const EXPECTED_KEYS = [
+  ...ORIGINAL_KEYS.slice(0, 9),
+  ...FINANCE_KEYS,
+  ...ORIGINAL_KEYS.slice(9),
 ] as const;
 
 /** Extracts the reviewed SQL array from a schema, migration, or snapshot source. */
@@ -63,9 +81,11 @@ describe("company-identity audit metadata allowlist", () => {
                       ? "next-http"
                       : key === "expiresAt"
                         ? "2026-07-15T12:05:00.000Z"
-                        : key === "sourceFingerprint"
-                          ? "a".repeat(64)
-                          : "safe-value",
+                        : key === "occurredAt"
+                          ? "2026-07-15T12:05:00.000Z"
+                          : key === "sourceFingerprint"
+                            ? "a".repeat(64)
+                            : "safe-value",
       ]),
     );
 
@@ -93,14 +113,27 @@ describe("company-identity audit metadata allowlist", () => {
       ),
       "utf8",
     );
+    const financeMigration = readFileSync(
+      join(
+        DB_ROOT,
+        "company-identity/drizzle/0003_finance_attestation_audit_metadata.sql",
+      ),
+      "utf8",
+    );
     const snapshot = readFileSync(
       join(DB_ROOT, "company-identity/drizzle/meta/0002_snapshot.json"),
       "utf8",
     );
+    const financeSnapshot = readFileSync(
+      join(DB_ROOT, "company-identity/drizzle/meta/0003_snapshot.json"),
+      "utf8",
+    );
 
     expect(extractSqlAllowlist(schemaSource)).toEqual([...EXPECTED_KEYS]);
-    expect(extractSqlAllowlist(migration)).toEqual([...EXPECTED_KEYS]);
-    expect(extractSqlAllowlist(snapshot)).toEqual([...EXPECTED_KEYS]);
+    expect(extractSqlAllowlist(migration)).toEqual([...ORIGINAL_KEYS]);
+    expect(extractSqlAllowlist(snapshot)).toEqual([...ORIGINAL_KEYS]);
+    expect(extractSqlAllowlist(financeMigration)).toEqual([...EXPECTED_KEYS]);
+    expect(extractSqlAllowlist(financeSnapshot)).toEqual([...EXPECTED_KEYS]);
     expect(schemaSource).not.toContain("targetAccountId'");
     expect(migration).not.toContain("targetAccountId'");
   });
@@ -112,5 +145,24 @@ describe("company-identity audit metadata allowlist", () => {
     });
 
     expect(result.success).toBe(false);
+  });
+
+  it("accepts explicit null actorSubjectId and claimsVersion for an unauthenticated failed Finance audit", () => {
+    const result = auditMetadataSchema.safeParse({
+      source: "finance-operations",
+      resourceType: "historical-private-evidence",
+      actorKind: "unauthenticated",
+      actorSubjectId: null,
+      objectId: "finance-historical-private-evidence-object-v1|sha256=" + "a".repeat(64),
+      requestId: "request-1",
+      eventId: "event-1",
+      occurredAt: "2026-08-11T05:00:00.000Z",
+      claimsVersion: null,
+      policyVersion: "finance-role-policy-v1",
+    });
+
+    expect(result.success).toBe(true);
+    expect(result.success && result.data.actorSubjectId).toBeNull();
+    expect(result.success && result.data.claimsVersion).toBeNull();
   });
 });

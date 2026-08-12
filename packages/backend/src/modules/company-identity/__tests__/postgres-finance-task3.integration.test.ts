@@ -87,6 +87,8 @@ describe.skipIf(!databaseUrl)(
             scope: { companyId: organizationId },
             outcome: "denied",
             reason: "unauthenticated",
+            claimsVersion: null,
+            policyVersion: "finance-historical-import-role-policy-v1",
           });
 
           const [stored] = await sql<
@@ -97,9 +99,14 @@ describe.skipIf(!databaseUrl)(
               readonly operation: string;
               readonly outcome: string;
               readonly reason_code: string | null;
+              readonly metadata: {
+                readonly claimsVersion?: string | null;
+                readonly policyVersion?: string;
+                readonly schoolId?: string;
+              };
             }>
           >`
-            select id, correlation_id, organization_id, operation, outcome, reason_code
+            select id, correlation_id, organization_id, operation, outcome, reason_code, metadata
               from company_identity_audit_events
              where correlation_id = ${correlationId}
           `;
@@ -109,7 +116,12 @@ describe.skipIf(!databaseUrl)(
             operation: "historical-private-evidence:import",
             outcome: "DENIED",
             reason_code: "unauthenticated",
+            metadata: {
+              claimsVersion: null,
+              policyVersion: "finance-historical-import-role-policy-v1",
+            },
           });
+          expect(stored?.metadata).not.toHaveProperty("schoolId");
           await expectImmutableAuditMutation(
             () => sql`
               update company_identity_audit_events

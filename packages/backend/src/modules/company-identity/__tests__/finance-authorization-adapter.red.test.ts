@@ -73,11 +73,22 @@ interface FinanceAttestationAuditEvent extends FinanceAttestationRequestAuditCon
   readonly outcome: "allowed" | "denied";
   /** Stable reason for the recorded outcome. */
   readonly reason: FinanceAttestationAuditReason;
+  /** Version of the authenticated claims, or null when unavailable. */
+  readonly claimsVersion: string | null;
+  /** Version of the injected role policy used for the decision. */
+  readonly policyVersion: string;
 }
 
 interface FinanceAttestationAuditPort {
   /** Appends an immutable decision record for a Finance authorization attempt. */
   append(event: Readonly<FinanceAttestationAuditEvent>): Promise<void>;
+}
+
+interface FinanceAttestationTrustedAuditSources {
+  readonly createEventId: () => string;
+  readonly createRequestId: () => string;
+  readonly createCorrelationId: () => string;
+  readonly now: () => Date;
 }
 
 type FinanceAttestationDecision =
@@ -86,6 +97,7 @@ type FinanceAttestationDecision =
       readonly evidence: {
         readonly source: "company-identity";
         readonly claimsVersion: string;
+        readonly policyVersion: string;
         readonly subjectId: string;
         readonly organizationId: string;
         readonly appRoleIds: readonly string[];
@@ -122,6 +134,7 @@ interface CompanyIdentityFinanceAdapterModule {
     readonly authenticator: CompanyIdentityAuthenticator;
     readonly rolePolicy: FinanceRolePolicy;
     readonly auditPort: FinanceAttestationAuditPort;
+    readonly trustedAuditSources: FinanceAttestationTrustedAuditSources;
   }): FinanceCompanyIdentityAttestor;
 }
 
@@ -208,17 +221,36 @@ function auditRequest(
   };
 }
 
+/** Creates trusted server sources that replay the caller audit values for this legacy contract suite. */
+function trustedAuditSources(
+  audits: readonly FinanceAttestationRequestAuditContext[],
+): FinanceAttestationTrustedAuditSources {
+  let index = 0;
+  let current = audits[0]!;
+  return {
+    createEventId: () => {
+      current = audits[Math.min(index, audits.length - 1)]!;
+      index += 1;
+      return current.eventId;
+    },
+    createRequestId: () => current.requestId,
+    createCorrelationId: () => current.correlationId,
+    now: () => new Date(current.occurredAt),
+  };
+}
+
 describe("Company Identity historical private-evidence attestation RED contract", () => {
   it("derives a school-scoped Finance attestation from an authenticated owner token and injected accepted-role policy", async () => {
     const subject = await loadCompanyIdentityFinanceAdapter();
     const createAttestor = requireAttestorFactory(subject);
     const fakes = createAttestorFakes();
+    const audit = auditRequest();
     const attestor = createAttestor({
       authenticator: fakes.authenticator,
       rolePolicy: rolePolicy(),
       auditPort: fakes.auditPort,
+      trustedAuditSources: trustedAuditSources([audit]),
     });
-    const audit = auditRequest();
 
     await expect(
       attestor.attest({
@@ -232,6 +264,7 @@ describe("Company Identity historical private-evidence attestation RED contract"
       evidence: {
         source: "company-identity",
         claimsVersion: "company-identity-claims-v1",
+        policyVersion: "finance-historical-import-role-policy-v1",
         subjectId: "employee-historical-importer",
         organizationId: scope.companyId,
         appRoleIds: [acceptedRoleId],
@@ -253,6 +286,8 @@ describe("Company Identity historical private-evidence attestation RED contract"
         scope,
         outcome: "allowed",
         reason: "role-policy-accepted",
+        claimsVersion: "company-identity-claims-v1",
+        policyVersion: "finance-historical-import-role-policy-v1",
       },
     ]);
   });
@@ -263,11 +298,6 @@ describe("Company Identity historical private-evidence attestation RED contract"
     const fakes = createAttestorFakes({
       claims: ownerClaims({ schoolIds: undefined }),
     });
-    const attestor = createAttestor({
-      authenticator: fakes.authenticator,
-      rolePolicy: rolePolicy(),
-      auditPort: fakes.auditPort,
-    });
     const companyAudit = auditRequest({
       eventId: "finance-attestation-event-company-001",
       objectId: "historical-private-evidence-packet-company-001",
@@ -275,6 +305,12 @@ describe("Company Identity historical private-evidence attestation RED contract"
     const schoolAudit = auditRequest({
       eventId: "finance-attestation-event-school-001",
       objectId: "historical-private-evidence-packet-school-001",
+    });
+    const attestor = createAttestor({
+      authenticator: fakes.authenticator,
+      rolePolicy: rolePolicy(),
+      auditPort: fakes.auditPort,
+      trustedAuditSources: trustedAuditSources([companyAudit, schoolAudit]),
     });
 
     await expect(
@@ -289,6 +325,7 @@ describe("Company Identity historical private-evidence attestation RED contract"
       evidence: {
         source: "company-identity",
         claimsVersion: "company-identity-claims-v1",
+        policyVersion: "finance-historical-import-role-policy-v1",
         subjectId: "employee-historical-importer",
         organizationId: scope.companyId,
         appRoleIds: [acceptedRoleId],
@@ -316,6 +353,8 @@ describe("Company Identity historical private-evidence attestation RED contract"
         scope: companyScope,
         outcome: "allowed",
         reason: "role-policy-accepted",
+        claimsVersion: "company-identity-claims-v1",
+        policyVersion: "finance-historical-import-role-policy-v1",
       },
       {
         ...schoolAudit,
@@ -327,6 +366,8 @@ describe("Company Identity historical private-evidence attestation RED contract"
         scope,
         outcome: "denied",
         reason: "school-attestation-missing",
+        claimsVersion: "company-identity-claims-v1",
+        policyVersion: "finance-historical-import-role-policy-v1",
       },
     ]);
   });
@@ -337,14 +378,15 @@ describe("Company Identity historical private-evidence attestation RED contract"
     const fakes = createAttestorFakes({
       claims: ownerClaims({ schoolIds: ["school-other", "school-another"] }),
     });
+    const audit = auditRequest({
+      eventId: "finance-attestation-event-nonmatching-school-001",
+      objectId: "historical-private-evidence-packet-nonmatching-school-001",
+    });
     const attestor = createAttestor({
       authenticator: fakes.authenticator,
       rolePolicy: rolePolicy(),
       auditPort: fakes.auditPort,
-    });
-    const audit = auditRequest({
-      eventId: "finance-attestation-event-nonmatching-school-001",
-      objectId: "historical-private-evidence-packet-nonmatching-school-001",
+      trustedAuditSources: trustedAuditSources([audit]),
     });
 
     await expect(
@@ -369,6 +411,8 @@ describe("Company Identity historical private-evidence attestation RED contract"
         scope,
         outcome: "denied",
         reason: "school-attestation-missing",
+        claimsVersion: "company-identity-claims-v1",
+        policyVersion: "finance-historical-import-role-policy-v1",
       },
     ]);
   });
@@ -404,13 +448,14 @@ describe("Company Identity historical private-evidence attestation RED contract"
       const subject = await loadCompanyIdentityFinanceAdapter();
       const createAttestor = requireAttestorFactory(subject);
       const fakes = createAttestorFakes(fakeInput);
+      const audit = auditRequest({
+        eventId: `finance-attestation-${expected}`,
+      });
       const attestor = createAttestor({
         authenticator: fakes.authenticator,
         rolePolicy: policy,
         auditPort: fakes.auditPort,
-      });
-      const audit = auditRequest({
-        eventId: `finance-attestation-${expected}`,
+        trustedAuditSources: trustedAuditSources([audit]),
       });
       const claims =
         fakeInput.authenticated === false
@@ -436,6 +481,11 @@ describe("Company Identity historical private-evidence attestation RED contract"
           scope,
           outcome: "denied",
           reason: expected,
+          claimsVersion:
+            claims === undefined || claims.claimsVersion.trim() === ""
+              ? null
+              : claims.claimsVersion,
+          policyVersion: policy.policyVersion,
         },
       ]);
     },

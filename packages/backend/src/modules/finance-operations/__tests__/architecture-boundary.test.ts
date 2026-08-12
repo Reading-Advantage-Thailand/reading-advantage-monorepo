@@ -49,6 +49,13 @@ function classifyImportSpecifier(
     return `forbidden provider or package import: ${specifier}`;
   }
 
+  if (
+    specifier === "../../jobs/contracts.js" ||
+    specifier === "../../jobs/ports.js"
+  ) {
+    return undefined;
+  }
+
   const target = resolve(dirname(importingFile), specifier);
   const pathFromModule = relative(moduleDirectory, target);
   if (

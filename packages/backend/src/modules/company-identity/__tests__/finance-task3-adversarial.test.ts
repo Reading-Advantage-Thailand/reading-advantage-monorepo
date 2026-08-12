@@ -88,6 +88,13 @@ interface AttestorAuditPort {
   append(event: Readonly<AttestorAuditEvent>): Promise<void>;
 }
 
+interface TrustedAuditSources {
+  readonly createEventId: () => string;
+  readonly createRequestId: () => string;
+  readonly createCorrelationId: () => string;
+  readonly now: () => Date;
+}
+
 /** Injected role policy. */
 interface AttestorRolePolicy {
   readonly policyVersion: string;
@@ -100,10 +107,14 @@ interface FinanceAttestorModule {
     readonly authenticator: AttestorAuthenticator;
     readonly rolePolicy: AttestorRolePolicy;
     readonly auditPort: AttestorAuditPort;
+    readonly trustedAuditSources: TrustedAuditSources;
   }) => {
     attest(input: {
       readonly operation: "historical-private-evidence:import";
-      readonly scope: { readonly companyId: string; readonly schoolId?: string };
+      readonly scope: {
+        readonly companyId: string;
+        readonly schoolId?: string;
+      };
       readonly credential: AttestationCredential;
       readonly audit: {
         readonly eventId: string;
@@ -156,6 +167,18 @@ function auditContext(
   };
 }
 
+/** Supplies deterministic trusted server values matching one test audit context. */
+function trustedAuditSources(
+  audit: ReturnType<typeof auditContext>,
+): TrustedAuditSources {
+  return {
+    createEventId: () => audit.eventId,
+    createRequestId: () => audit.requestId,
+    createCorrelationId: () => audit.correlationId,
+    now: () => new Date(audit.occurredAt),
+  };
+}
+
 /** Captures every event passed to the audit port, preserving the exact reference. */
 function createCapturingAudit(): {
   readonly port: AttestorAuditPort;
@@ -189,6 +212,7 @@ describe("Finance Task 3 A-boundary adversarial coverage", () => {
       }),
     };
     const audit = createCapturingAudit();
+    const ctx = auditContext();
     const attestor = createAttestor({
       authenticator,
       rolePolicy: {
@@ -196,8 +220,8 @@ describe("Finance Task 3 A-boundary adversarial coverage", () => {
         acceptedRoleIds: [acceptedRoleId],
       },
       auditPort: audit.port,
+      trustedAuditSources: trustedAuditSources(ctx),
     });
-    const ctx = auditContext();
 
     await expect(
       attestor.attest({
@@ -229,6 +253,7 @@ describe("Finance Task 3 A-boundary adversarial coverage", () => {
     const subject = await loadAttestor();
     const createAttestor = requireAttestorFactory(subject);
     const audit = createCapturingAudit();
+    const context = auditContext({ eventId: "event-single-001" });
     const attestor = createAttestor({
       authenticator: {
         authenticate: vi.fn(async () => undefined),
@@ -238,6 +263,7 @@ describe("Finance Task 3 A-boundary adversarial coverage", () => {
         acceptedRoleIds: [acceptedRoleId],
       },
       auditPort: audit.port,
+      trustedAuditSources: trustedAuditSources(context),
     });
 
     await expect(
@@ -245,7 +271,7 @@ describe("Finance Task 3 A-boundary adversarial coverage", () => {
         operation: "historical-private-evidence:import",
         scope: companyScope,
         credential: { kind: "session", value: "session-token" },
-        audit: auditContext({ eventId: "event-single-001" }),
+        audit: context,
       }),
     ).resolves.toEqual({ decision: "deny", reason: "unauthenticated" });
 
@@ -264,6 +290,7 @@ describe("Finance Task 3 A-boundary adversarial coverage", () => {
     const subject = await loadAttestor();
     const createAttestor = requireAttestorFactory(subject);
     const audit = createCapturingAudit();
+    const context = auditContext({ eventId: "event-empty-roles-001" });
     const attestor = createAttestor({
       authenticator: {
         authenticate: vi.fn(async () => ({
@@ -278,6 +305,7 @@ describe("Finance Task 3 A-boundary adversarial coverage", () => {
         acceptedRoleIds: [acceptedRoleId],
       },
       auditPort: audit.port,
+      trustedAuditSources: trustedAuditSources(context),
     });
 
     await expect(
@@ -285,7 +313,7 @@ describe("Finance Task 3 A-boundary adversarial coverage", () => {
         operation: "historical-private-evidence:import",
         scope: companyScope,
         credential: { kind: "token", value: "owner-token" },
-        audit: auditContext({ eventId: "event-empty-roles-001" }),
+        audit: context,
       }),
     ).resolves.toEqual({ decision: "deny", reason: "role-not-accepted" });
 
@@ -296,6 +324,34 @@ describe("Finance Task 3 A-boundary adversarial coverage", () => {
       subjectId: "employee-empty-roles",
     });
   });
+
+  it("rejects sparse acceptedRoleIds configuration before authentication or audit", async () => {
+    const subject = await loadAttestor();
+    const createAttestor = requireAttestorFactory(subject);
+    const audit = createCapturingAudit();
+    const authenticate = vi.fn(async () => ({
+      claimsVersion: "company-identity-claims-v1",
+      subjectId: "employee-sparse-role-policy",
+      organizationId: scope.companyId,
+      appRoleIds: [acceptedRoleId],
+    }));
+    const sparseRoleIds = new Array<string>(2);
+    sparseRoleIds[1] = acceptedRoleId;
+
+    expect(() =>
+      createAttestor({
+        authenticator: { authenticate },
+        rolePolicy: {
+          policyVersion: "finance-historical-import-role-policy-sparse",
+          acceptedRoleIds: sparseRoleIds,
+        },
+        auditPort: audit.port,
+        trustedAuditSources: trustedAuditSources(auditContext()),
+      }),
+    ).toThrow("COMPANY_IDENTITY_FINANCE_ATTESTOR_DEPENDENCY_INVALID");
+    expect(authenticate).not.toHaveBeenCalled();
+    expect(audit.events).toHaveLength(0);
+  });
 });
 
 /** Persisted outbox intent shape consumed by the durable projector. */
@@ -303,6 +359,7 @@ interface PersistedIntent {
   readonly outboxEventId: string;
   readonly auditEventId: string;
   readonly auditReceiptId: string;
+  readonly objectId: string;
   readonly operation: "historical-private-evidence:import";
   readonly scope: { readonly companyId: string; readonly schoolId?: string };
   readonly source: {
@@ -314,6 +371,15 @@ interface PersistedIntent {
     readonly packetVersion: "historical-private-evidence-packet.v1";
     readonly evidenceReference: string;
   };
+  readonly authorizationEvidence: {
+    readonly source: "company-identity";
+    readonly claimsVersion: string;
+    readonly policyVersion: string;
+    readonly subjectId: string;
+    readonly organizationId: string;
+    readonly appRoleIds: readonly string[];
+    readonly schoolIds?: readonly string[];
+  };
   readonly payloadDigest: string;
 }
 
@@ -322,6 +388,10 @@ interface ProjectorReceipt {
   readonly outboxEventId: string;
   readonly auditEventId: string;
   readonly auditReceiptId: string;
+  readonly objectId: string;
+  readonly scope: { readonly companyId: string; readonly schoolId?: string };
+  readonly authorizationEvidence: PersistedIntent["authorizationEvidence"];
+  readonly policyVersion: string;
   readonly idempotencyKey: string;
   readonly jobId: string;
 }
@@ -334,7 +404,26 @@ interface ProjectorModule {
       findByOutboxEventId(
         outboxEventId: string,
       ): Promise<Readonly<ProjectorReceipt> | undefined>;
-      bindReceipt(input: Readonly<ProjectorReceipt>): Promise<void>;
+      bindReceipt(input: Readonly<{ claimToken: string; receipt: ProjectorReceipt }>): Promise<unknown>;
+      claimReceipt(
+        input: Readonly<{
+          readonly outboxEventId: string;
+          readonly idempotencyKey: string;
+          readonly intent: Readonly<PersistedIntent>;
+        }>,
+      ): Promise<
+        | { readonly status: "claimed"; readonly claimToken: string }
+        | {
+            readonly status: "replay";
+            readonly receipt: Readonly<ProjectorReceipt>;
+          }
+        | {
+            readonly status: "reconcile";
+            readonly claimToken: string;
+            readonly receipt: Readonly<ProjectorReceipt>;
+          }
+      >;
+      releaseClaim(input: Readonly<Record<string, unknown>>): Promise<void>;
     };
     readonly job: {
       readonly jobName: string;
@@ -369,6 +458,8 @@ function persistedIntent(
     outboxEventId: "finance-outbox-event-adversarial-001",
     auditEventId: "finance-audit-event-adversarial-001",
     auditReceiptId: "finance-audit-receipt-adversarial-001",
+    objectId:
+      "finance-historical-private-evidence-object-v1|sha256=" + "d".repeat(64),
     operation: "historical-private-evidence:import",
     scope: { companyId: scope.companyId, schoolId: scope.schoolId },
     source: {
@@ -379,6 +470,15 @@ function persistedIntent(
     payload: {
       packetVersion: "historical-private-evidence-packet.v1",
       evidenceReference,
+    },
+    authorizationEvidence: {
+      source: "company-identity",
+      claimsVersion: "company-identity-claims-v1",
+      policyVersion: "finance-historical-import-role-policy-v1",
+      subjectId: "employee-historical-importer",
+      organizationId: scope.companyId,
+      appRoleIds: [acceptedRoleId],
+      schoolIds: [scope.schoolId],
     },
     payloadDigest,
     ...overrides,
@@ -404,21 +504,54 @@ function createStoreFake(
 ): {
   readonly find: ReturnType<typeof vi.fn>;
   readonly bind: ReturnType<typeof vi.fn>;
+  readonly claim: ReturnType<typeof vi.fn>;
+  readonly release: ReturnType<typeof vi.fn>;
   readonly store: {
     findByOutboxEventId(
       outboxEventId: string,
     ): Promise<Readonly<ProjectorReceipt> | undefined>;
-    bindReceipt(input: Readonly<ProjectorReceipt>): Promise<void>;
+    bindReceipt(input: Readonly<{ claimToken: string; receipt: ProjectorReceipt }>): Promise<unknown>;
+    claimReceipt(
+      input: Readonly<{
+        readonly outboxEventId: string;
+        readonly idempotencyKey: string;
+        readonly intent: Readonly<PersistedIntent>;
+      }>,
+    ): Promise<
+      | { readonly status: "claimed"; readonly claimToken: string }
+      | {
+          readonly status: "replay";
+          readonly receipt: Readonly<ProjectorReceipt>;
+        }
+      | {
+          readonly status: "reconcile";
+          readonly claimToken: string;
+          readonly receipt: Readonly<ProjectorReceipt>;
+        }
+    >;
+    releaseClaim(input: Readonly<Record<string, unknown>>): Promise<void>;
   };
 } {
   const find = vi.fn(async (outboxEventId: string) =>
     receipts.get(outboxEventId),
   );
-  const bind = vi.fn(async () => undefined);
+  const bind = vi.fn(async () => ({ status: "bound" as const }));
+  const claim = vi.fn(async () => ({
+    status: "claimed" as const,
+    claimToken: "claim-token-adversarial-001",
+  }));
+  const release = vi.fn(async () => undefined);
   return {
     find,
     bind,
-    store: { findByOutboxEventId: find, bindReceipt: bind },
+    claim,
+    release,
+    store: {
+      findByOutboxEventId: find,
+      bindReceipt: bind,
+      claimReceipt: claim,
+      releaseClaim: release,
+    },
   };
 }
 
@@ -508,9 +641,15 @@ describe("Finance Task 3 C-boundary adversarial coverage", () => {
       readonly idempotencyKey: string;
     };
     expect(
-      request.idempotencyKey.startsWith("historical-private-evidence-outbox-v1|"),
+      request.idempotencyKey.startsWith(
+        "historical-private-evidence-outbox-v1|",
+      ),
     ).toBe(true);
     const segments = request.idempotencyKey.split("|");
+    if (segments.length === 2 && segments[1]?.startsWith("sha256=")) {
+      expect(segments[1]).toMatch(/^sha256=[a-f0-9]{64}$/u);
+      return;
+    }
     // Every segment must be length-prefixed and never a bare
     // concatenation of fields without explicit boundaries. The school
     // segment uses the canonical `school=none` or `school=some:<len>:<id>`
@@ -549,9 +688,8 @@ describe("Finance Task 3 C-boundary adversarial coverage", () => {
       (result.receipt as { jobId: string }).jobId = "tampered";
     }).toThrow(TypeError);
     expect(() => {
-      (
-        result.receipt as unknown as { auditEventId: string }
-      ).auditEventId = "tampered";
+      (result.receipt as unknown as { auditEventId: string }).auditEventId =
+        "tampered";
     }).toThrow(TypeError);
   });
 });
@@ -568,6 +706,7 @@ const allowedAttestationResult = {
   evidence: {
     source: "company-identity" as const,
     claimsVersion: "company-identity-claims-v1",
+    policyVersion: "finance-historical-import-role-policy-v1",
     subjectId: "employee-historical-importer",
     organizationId: scope.companyId,
     appRoleIds: [acceptedRoleId],
@@ -607,10 +746,12 @@ interface BindingFake {
   readonly verify: ReturnType<typeof vi.fn>;
 }
 
-function makeFakes(input: {
-  readonly attestation?: unknown;
-  readonly evidence?: unknown;
-} = {}): {
+function makeFakes(
+  input: {
+    readonly attestation?: unknown;
+    readonly evidence?: unknown;
+  } = {},
+): {
   readonly attestor: { attest: AttestorFake["attest"] };
   readonly binding: { verify: BindingFake["verify"] };
 } {
@@ -721,14 +862,12 @@ describe("Finance Task 3 D-boundary adversarial coverage", () => {
       (result as { packet: unknown }).packet = "tampered";
     }).toThrow(TypeError);
     expect(() => {
-      (
-        result.authorizationEvidence as { subjectId: string }
-      ).subjectId = "tampered";
+      (result.authorizationEvidence as { subjectId: string }).subjectId =
+        "tampered";
     }).toThrow(TypeError);
     expect(() => {
-      (
-        result.evidence as { evidenceReference: string }
-      ).evidenceReference = "tampered";
+      (result.evidence as { evidenceReference: string }).evidenceReference =
+        "tampered";
     }).toThrow(TypeError);
   });
 
@@ -793,31 +932,38 @@ describe("Finance Task 3 D-boundary adversarial coverage", () => {
         }));
       },
     },
-  ])("rejects $name before attestation or binding verification", async ({ mutate }) => {
-    const subject = await loadCommand();
-    const createCommand = requireCommandFactory(subject);
-    const fakes = makeFakes();
-    const command = createCommand({
-      companyIdentityAttestor: fakes.attestor,
-      privateEvidenceBindingPort: fakes.binding,
-    });
-    const packetValue = packet();
-    mutate(packetValue);
+  ])(
+    "rejects $name before attestation or binding verification",
+    async ({ mutate }) => {
+      const subject = await loadCommand();
+      const createCommand = requireCommandFactory(subject);
+      const fakes = makeFakes();
+      const command = createCommand({
+        companyIdentityAttestor: fakes.attestor,
+        privateEvidenceBindingPort: fakes.binding,
+      });
+      const packetValue = packet();
+      mutate(packetValue);
 
-    if (packetValue.facts && (packetValue.facts as unknown[]).length >= 1 && (packetValue.facts as unknown[]).length <= 128) {
-      await expect(
-        command.prepare(commandRequest(packetValue)),
-      ).resolves.toBeDefined();
-      expect(fakes.attestor.attest).toHaveBeenCalledTimes(1);
-      expect(fakes.binding.verify).toHaveBeenCalledTimes(1);
-    } else {
-      await expect(
-        command.prepare(commandRequest(packetValue)),
-      ).rejects.toThrow("FINANCE_PACKET_INVALID");
-      expect(fakes.attestor.attest).not.toHaveBeenCalled();
-      expect(fakes.binding.verify).not.toHaveBeenCalled();
-    }
-  });
+      if (
+        packetValue.facts &&
+        (packetValue.facts as unknown[]).length >= 1 &&
+        (packetValue.facts as unknown[]).length <= 128
+      ) {
+        await expect(
+          command.prepare(commandRequest(packetValue)),
+        ).resolves.toBeDefined();
+        expect(fakes.attestor.attest).toHaveBeenCalledTimes(1);
+        expect(fakes.binding.verify).toHaveBeenCalledTimes(1);
+      } else {
+        await expect(
+          command.prepare(commandRequest(packetValue)),
+        ).rejects.toThrow("FINANCE_PACKET_INVALID");
+        expect(fakes.attestor.attest).not.toHaveBeenCalled();
+        expect(fakes.binding.verify).not.toHaveBeenCalled();
+      }
+    },
+  );
 
   it("rejects an attestor decision whose `evidence` violates the strictObject evidence schema (empty `appRoleIds`)", async () => {
     const subject = await loadCommand();

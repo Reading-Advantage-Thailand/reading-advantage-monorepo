@@ -293,6 +293,7 @@ describe("Storage historical private-evidence read RED contract", () => {
         authorizationPort: fakes.authorizationPort,
         driver: fakes.driver,
         digest: fakes.digest,
+        maxBytes: 1024,
       });
 
       await expect(

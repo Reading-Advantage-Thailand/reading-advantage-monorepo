@@ -460,6 +460,15 @@ export const auditMetadataSchema = z
       .refine((value) => isBoundedText(value, 128))
       .optional(),
     resourceType: auditTextSchema.optional(),
+    actorKind: auditTextSchema.optional(),
+    actorSubjectId: auditTextSchema.nullable().optional(),
+    objectId: auditTextSchema.optional(),
+    requestId: auditTextSchema.optional(),
+    eventId: auditTextSchema.optional(),
+    occurredAt: z.string().datetime({ offset: true }).optional(),
+    schoolId: auditTextSchema.optional(),
+    claimsVersion: auditTextSchema.nullable().optional(),
+    policyVersion: auditTextSchema.optional(),
     routeBindingId: auditTextSchema.optional(),
     routeMethod: z
       .enum(["GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"])

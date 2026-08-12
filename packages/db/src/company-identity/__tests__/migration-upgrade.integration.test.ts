@@ -22,11 +22,13 @@ interface CompanyIdentityMigrationModule {
 
 interface CompanyIdentityDoctorSentinel {
   readonly migrationTag: string;
-  readonly kind: "table" | "column" | "trigger";
+  readonly kind: "table" | "column" | "trigger" | "constraint";
   readonly schemaName: string;
   readonly tableName: string;
   readonly columnName?: string;
   readonly triggerName?: string;
+  readonly constraintName?: string;
+  readonly expectedAllowlistKeys?: readonly string[];
 }
 
 interface CompanyIdentityDoctorReport {
@@ -134,6 +136,13 @@ async function renameDoctorSentinel(
   if (sentinel.kind === "trigger") {
     await sql.unsafe(
       `ALTER TRIGGER ${sourceIdentifier} ON ${schemaName}.${tableName} RENAME TO ${targetIdentifier}`,
+    );
+    return;
+  }
+
+  if (sentinel.kind === "constraint") {
+    await sql.unsafe(
+      `ALTER TABLE ${schemaName}.${tableName} RENAME CONSTRAINT ${sourceIdentifier} TO ${targetIdentifier}`,
     );
     return;
   }
@@ -466,6 +475,14 @@ describe("company identity upgrade migration", () => {
             expect(cleanInspection.clean).toBe(true);
             expect(cleanInspection.issues).toEqual([]);
             expect(cleanInspection.sentinels.length).toBeGreaterThan(0);
+            expect(cleanInspection.sentinels.at(-1)).toMatchObject({
+              migrationTag: "0003_finance_attestation_audit_metadata",
+              kind: "constraint",
+              schemaName: "public",
+              tableName: "company_identity_audit_events",
+              constraintName:
+                "company_identity_audit_events_metadata_allowed_keys_check",
+            });
 
             const latestLedger = currentLedger[currentLedger.length - 1];
             if (!latestLedger) {
@@ -503,6 +520,61 @@ describe("company identity upgrade migration", () => {
               throw new Error(
                 "Identity doctor returned no migration sentinel.",
               );
+            }
+            if (
+              latestSentinel.kind === "constraint" &&
+              latestSentinel.constraintName !== undefined
+            ) {
+              const constraintName = quoteCatalogIdentifier(
+                latestSentinel.constraintName,
+              );
+              const tableName = quoteCatalogIdentifier(
+                latestSentinel.tableName,
+              );
+              const reviewedKeys = [
+                "actorKind",
+                "actorSubjectId",
+                "objectId",
+                "requestId",
+                "eventId",
+                "occurredAt",
+                "claimsVersion",
+                "policyVersion",
+              ];
+              const tautologicalConstraint = [
+                "true",
+                ...reviewedKeys.map((key) => `"metadata" ? '${key}'`),
+              ].join(" OR ");
+              await adminSql.unsafe(
+                `ALTER TABLE ${tableName} DROP CONSTRAINT ${constraintName}`,
+              );
+              await adminSql.unsafe(
+                `ALTER TABLE ${tableName} ADD CONSTRAINT ${constraintName} CHECK (${tautologicalConstraint})`,
+              );
+              try {
+                const alteredConstraintInspection =
+                  await doctor.inspectCompanyIdentityDatabase({
+                    directDatabaseUrl,
+                  });
+                expect(alteredConstraintInspection.clean).toBe(false);
+                expect(
+                  alteredConstraintInspection.issues.map(({ code }) => code),
+                ).toContain("MISSING_SENTINEL");
+              } finally {
+                const migrationSql = await readFile(
+                  join(
+                    MIGRATIONS_FOLDER,
+                    "0003_finance_attestation_audit_metadata.sql",
+                  ),
+                  "utf8",
+                );
+                for (const statement of migrationSql
+                  .split("--> statement-breakpoint")
+                  .map((value) => value.trim())
+                  .filter(Boolean)) {
+                  await adminSql.unsafe(statement);
+                }
+              }
             }
             if (latestSentinel.kind === "trigger") {
               await setDoctorTriggerEnabled(adminSql, latestSentinel, false);
@@ -551,7 +623,9 @@ describe("company identity upgrade migration", () => {
                 ? latestSentinel.tableName
                 : latestSentinel.kind === "trigger"
                   ? latestSentinel.triggerName
-                  : latestSentinel.columnName;
+                  : latestSentinel.kind === "column"
+                    ? latestSentinel.columnName
+                    : latestSentinel.constraintName;
             if (!originalSentinelName) {
               throw new Error(
                 "Identity doctor returned an incomplete catalog sentinel.",

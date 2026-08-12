@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { describe, expect, it, vi } from "vitest";
 
 import type { DurableJobEnqueuePort } from "../../../jobs/ports.js";
@@ -11,6 +12,8 @@ interface PersistedHistoricalPrivateEvidenceIntent {
   readonly auditEventId: string;
   /** Persisted audit receipt binding the intent to Finance's succeeded audit. */
   readonly auditReceiptId: string;
+  /** Opaque Finance object identity bound to the audit and worker intent. */
+  readonly objectId: string;
   /** Operation represented by the durable intent. */
   readonly operation: "historical-private-evidence:import";
   /** Company-first optional-school scope committed with the record. */
@@ -26,6 +29,16 @@ interface PersistedHistoricalPrivateEvidenceIntent {
     readonly packetVersion: "historical-private-evidence-packet.v1";
     readonly evidenceReference: string;
   };
+  /** Company Identity evidence retained by the outbox for worker authorization. */
+  readonly authorizationEvidence: {
+    readonly source: "company-identity";
+    readonly claimsVersion: string;
+    readonly policyVersion: string;
+    readonly subjectId: string;
+    readonly organizationId: string;
+    readonly appRoleIds: readonly string[];
+    readonly schoolIds?: readonly string[];
+  };
   /** Digest of the immutable private-evidence packet. */
   readonly payloadDigest: string;
 }
@@ -35,8 +48,29 @@ interface HistoricalProjectionStore {
   findByOutboxEventId(
     outboxEventId: string,
   ): Promise<Readonly<ProjectorReceipt> | undefined>;
-  /** Binds the accepted durable receipt to the persisted audit and outbox identities. */
-  bindReceipt(input: Readonly<ProjectorReceipt>): Promise<void>;
+  /** Binds the accepted durable receipt under the exact claim lease token. */
+  bindReceipt(input: Readonly<{ claimToken: string; receipt: ProjectorReceipt }>): Promise<unknown>;
+  /** Atomically claims the receipt identity before enqueueing. */
+  claimReceipt(
+    input: Readonly<{
+      readonly outboxEventId: string;
+      readonly idempotencyKey: string;
+      readonly intent: Readonly<PersistedHistoricalPrivateEvidenceIntent>;
+    }>,
+  ): Promise<
+    | { readonly status: "claimed"; readonly claimToken: string }
+    | {
+        readonly status: "replay";
+        readonly receipt: Readonly<ProjectorReceipt>;
+      }
+    | {
+        readonly status: "reconcile";
+        readonly claimToken: string;
+        readonly receipt: Readonly<ProjectorReceipt>;
+      }
+  >;
+  /** Returns a failed claim to pending or durable reconciliation. */
+  releaseClaim(input: Readonly<Record<string, unknown>>): Promise<void>;
 }
 
 interface ProjectorReceipt {
@@ -46,6 +80,14 @@ interface ProjectorReceipt {
   readonly auditEventId: string;
   /** Existing Finance audit receipt to which the durable outcome is bound. */
   readonly auditReceiptId: string;
+  /** Opaque Finance object identity bound to the audit and worker intent. */
+  readonly objectId: string;
+  /** Company and optional school scope retained by the receipt. */
+  readonly scope: { readonly companyId: string; readonly schoolId?: string };
+  /** Authorization evidence retained by the receipt. */
+  readonly authorizationEvidence: PersistedHistoricalPrivateEvidenceIntent["authorizationEvidence"];
+  /** Policy version retained by the receipt. */
+  readonly policyVersion: string;
   /** Collision-free durable idempotency identity. */
   readonly idempotencyKey: string;
   /** Durable job identifier returned by the provider-neutral queue port. */
@@ -122,10 +164,21 @@ function persistedIntent(
     outboxEventId: "finance-outbox-event-001",
     auditEventId: "finance-audit-event-001",
     auditReceiptId: "finance-audit-receipt-001",
+    objectId:
+      "finance-historical-private-evidence-object-v1|sha256=" + "b".repeat(64),
     operation: "historical-private-evidence:import",
     scope: Object.freeze({ ...defaultScope, ...overrides.scope }),
     source: Object.freeze({ ...defaultSource, ...overrides.source }),
     payload: Object.freeze({ ...defaultPayload, ...overrides.payload }),
+    authorizationEvidence: {
+      source: "company-identity",
+      claimsVersion: "company-identity-claims-v1",
+      policyVersion: "finance-historical-import-role-policy-v1",
+      subjectId: "employee-historical-importer",
+      organizationId: defaultScope.companyId,
+      appRoleIds: ["role-historical-private-evidence-import"],
+      schoolIds: [defaultScope.schoolId],
+    },
     payloadDigest,
     ...overrides,
   } satisfies PersistedHistoricalPrivateEvidenceIntent;
@@ -141,8 +194,34 @@ function persistedIntent(
 function expectedIdempotencyKey(
   intent: Readonly<PersistedHistoricalPrivateEvidenceIntent>,
 ): string {
-  const encode = (value: string): string => `${value.length}:${value}`;
-  return [
+  const encode = (value: string): string =>
+    `${new TextEncoder().encode(value).byteLength}:${value}`;
+  const sourceIdentityDomain = new TextEncoder().encode(
+    "reading-advantage.finance.historical-private-evidence.source-identity.v1",
+  );
+  const sourceIdentityBytes = new TextEncoder().encode(
+    intent.source.sourceIdentity,
+  );
+  const sourceIdentityFrame = new Uint8Array(
+    sourceIdentityDomain.byteLength + 4 + sourceIdentityBytes.byteLength,
+  );
+  sourceIdentityFrame.set(sourceIdentityDomain, 0);
+  new DataView(sourceIdentityFrame.buffer).setUint32(
+    sourceIdentityDomain.byteLength,
+    sourceIdentityBytes.byteLength,
+  );
+  sourceIdentityFrame.set(
+    sourceIdentityBytes,
+    sourceIdentityDomain.byteLength + 4,
+  );
+  const sourceIdentityDigest = createHash("sha256")
+    .update(sourceIdentityFrame)
+    .digest("hex");
+  const encodeList = (values: readonly string[] | undefined): string =>
+    values === undefined
+      ? "none"
+      : `some:${values.length}:${values.map(encode).join(",")}`;
+  const identity = [
     "historical-private-evidence-outbox-v1",
     `operation=${encode(intent.operation)}`,
     `company=${encode(intent.scope.companyId)}`,
@@ -151,9 +230,20 @@ function expectedIdempotencyKey(
       : `school=some:${encode(intent.scope.schoolId)}`,
     `source-system=${encode(intent.source.sourceSystem)}`,
     `source-version=${encode(intent.source.sourceVersion)}`,
-    `source-identity=${encode(intent.source.sourceIdentity)}`,
+    `source-identity=sha256:${sourceIdentityDigest}`,
     `payload-digest=${encode(intent.payloadDigest)}`,
+    `object-id=${encode(intent.objectId)}`,
+    `claims-version=${encode(intent.authorizationEvidence.claimsVersion)}`,
+    `policy-version=${encode(intent.authorizationEvidence.policyVersion)}`,
+    `subject-id=${encode(intent.authorizationEvidence.subjectId)}`,
+    `organization-id=${encode(intent.authorizationEvidence.organizationId)}`,
+    `app-role-ids=${encodeList(intent.authorizationEvidence.appRoleIds)}`,
+    `school-ids=${encodeList(intent.authorizationEvidence.schoolIds)}`,
   ].join("|");
+  if (identity.length <= 500) return identity;
+  return `historical-private-evidence-outbox-v1|sha256=${createHash("sha256")
+    .update(identity)
+    .digest("hex")}`;
 }
 
 /** Creates a concrete enqueue-port fake with a caller-selected durable outcome. */
@@ -178,15 +268,29 @@ function createProjectionStoreFake(
   readonly projectionStore: HistoricalProjectionStore;
   readonly findByOutboxEventId: ReturnType<typeof vi.fn>;
   readonly bindReceipt: ReturnType<typeof vi.fn>;
+  readonly claimReceipt: ReturnType<typeof vi.fn>;
+  readonly releaseClaim: ReturnType<typeof vi.fn>;
 } {
   const findByOutboxEventId = vi.fn(async (outboxEventId: string) =>
     receiptsByOutboxEventId.get(outboxEventId),
   );
-  const bindReceipt = vi.fn(async () => undefined);
+  const bindReceipt = vi.fn(async () => ({ status: "bound" as const }));
+  const claimReceipt = vi.fn(async () => ({
+    status: "claimed" as const,
+    claimToken: "claim-token-adapter-001",
+  }));
+  const releaseClaim = vi.fn(async () => undefined);
   return {
-    projectionStore: { findByOutboxEventId, bindReceipt },
+    projectionStore: {
+      findByOutboxEventId,
+      bindReceipt,
+      claimReceipt,
+      releaseClaim,
+    },
     findByOutboxEventId,
     bindReceipt,
+    claimReceipt,
+    releaseClaim,
   };
 }
 
@@ -199,6 +303,10 @@ function projectorReceipt(
     outboxEventId: intent.outboxEventId,
     auditEventId: intent.auditEventId,
     auditReceiptId: intent.auditReceiptId,
+    objectId: intent.objectId,
+    scope: intent.scope,
+    authorizationEvidence: intent.authorizationEvidence,
+    policyVersion: intent.authorizationEvidence.policyVersion,
     idempotencyKey: expectedIdempotencyKey(intent),
     jobId: "018f0d8f-31d1-7d50-9f4f-550d34295095",
     ...overrides,
@@ -235,6 +343,8 @@ function expectedEnqueueCall(
     payload: {
       outboxEventId: intent.outboxEventId,
       auditEventId: intent.auditEventId,
+      objectId: intent.objectId,
+      authorizationEvidence: intent.authorizationEvidence,
     },
     maxAttempts: jobDefinition.maxAttempts,
     availableAt: expect.any(String),
@@ -271,6 +381,10 @@ describe("Finance historical private-evidence durable outbox RED contract", () =
       outboxEventId: intent.outboxEventId,
       auditEventId: intent.auditEventId,
       auditReceiptId: intent.auditReceiptId,
+      objectId: intent.objectId,
+      scope: intent.scope,
+      authorizationEvidence: intent.authorizationEvidence,
+      policyVersion: intent.authorizationEvidence.policyVersion,
       idempotencyKey,
       jobId: "018f0d8f-31d1-7d50-9f4f-550d34295095",
     };
@@ -279,12 +393,15 @@ describe("Finance historical private-evidence durable outbox RED contract", () =
       intent.outboxEventId,
     );
     expect(durable.enqueue).toHaveBeenCalledTimes(1);
-    expect(store.bindReceipt).toHaveBeenCalledWith(expectedReceipt);
+    expect(store.bindReceipt).toHaveBeenCalledWith({
+      claimToken: "claim-token-adapter-001",
+      receipt: expectedReceipt,
+    });
     expect(store.bindReceipt).toHaveBeenCalledTimes(1);
     expect(result).toEqual({ status: "accepted", receipt: expectedReceipt });
     expectFrozenProjectorResult(result);
-    const storedReceipt = store.bindReceipt.mock
-      .calls[0]?.[0] as ProjectorReceipt;
+    const storedReceipt = store.bindReceipt.mock.calls[0]?.[0]
+      ?.receipt as ProjectorReceipt;
     expect(Object.isFrozen(storedReceipt)).toBe(true);
     expect(() => {
       (storedReceipt as { jobId: string }).jobId = "mutated";
@@ -340,6 +457,55 @@ describe("Finance historical private-evidence durable outbox RED contract", () =
     expect(replayStore.bindReceipt).not.toHaveBeenCalled();
   });
 
+  it("binds source identity into the key by digest without exposing it or duplicating object identity", async () => {
+    const subject = await loadHistoricalPrivateEvidenceProjector();
+    const createProjector = requireProjectorFactory(subject);
+    const sourceSecretA = "source-A-bearer-token-or-email";
+    const sourceSecretB = "source-B-bearer-token-or-email";
+
+    const projectWithSourceIdentity = async (
+      sourceIdentity: string,
+      outboxEventId: string,
+    ): Promise<string> => {
+      const durable = createDurableJobFake({
+        outcome: "enqueued",
+        jobId: "018f0d8f-31d1-7d50-9f4f-550d34295095",
+      });
+      const store = createProjectionStoreFake();
+      const projector = createProjector({
+        durableJobs: durable.durableJobs,
+        projectionStore: store.projectionStore,
+        job: jobDefinition,
+      });
+      await projector.project(
+        persistedIntent({
+          outboxEventId,
+          source: { ...persistedIntent().source, sourceIdentity },
+        }),
+      );
+      return durable.enqueue.mock.calls[0]?.[0]?.idempotencyKey as string;
+    };
+
+    const firstKey = await projectWithSourceIdentity(
+      sourceSecretA,
+      "finance-outbox-source-a",
+    );
+    const secondKey = await projectWithSourceIdentity(
+      sourceSecretB,
+      "finance-outbox-source-b",
+    );
+
+    expect(firstKey).not.toBe(secondKey);
+    expect(firstKey).toMatch(
+      /^historical-private-evidence-outbox-v1\|sha256=[a-f0-9]{64}$/u,
+    );
+    expect(secondKey).toMatch(
+      /^historical-private-evidence-outbox-v1\|sha256=[a-f0-9]{64}$/u,
+    );
+    expect(firstKey).not.toContain(sourceSecretA);
+    expect(secondKey).not.toContain(sourceSecretB);
+  });
+
   it("does not treat a receipt stored under another outbox key as a replay for this intent", async () => {
     const subject = await loadHistoricalPrivateEvidenceProjector();
     const createProjector = requireProjectorFactory(subject);
@@ -372,7 +538,10 @@ describe("Finance historical private-evidence durable outbox RED contract", () =
     expect(durable.enqueue).toHaveBeenCalledTimes(1);
     expect(durable.enqueue).toHaveBeenCalledWith(expectedEnqueueCall(intent));
     expect(store.bindReceipt).toHaveBeenCalledTimes(1);
-    expect(store.bindReceipt).toHaveBeenCalledWith(receipt);
+    expect(store.bindReceipt).toHaveBeenCalledWith({
+      claimToken: "claim-token-adapter-001",
+      receipt,
+    });
   });
 
   it.each([
@@ -404,6 +573,10 @@ describe("Finance historical private-evidence durable outbox RED contract", () =
         outboxEventId: acceptedIntent.outboxEventId,
         auditEventId: acceptedIntent.auditEventId,
         auditReceiptId: acceptedIntent.auditReceiptId,
+        objectId: acceptedIntent.objectId,
+        scope: acceptedIntent.scope,
+        authorizationEvidence: acceptedIntent.authorizationEvidence,
+        policyVersion: acceptedIntent.authorizationEvidence.policyVersion,
         idempotencyKey: expectedIdempotencyKey(acceptedIntent),
         jobId: "018f0d8f-31d1-7d50-9f4f-550d34295095",
       };

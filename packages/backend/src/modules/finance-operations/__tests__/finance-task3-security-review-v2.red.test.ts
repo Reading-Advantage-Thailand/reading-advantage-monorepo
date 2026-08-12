@@ -7,11 +7,16 @@ interface FinanceOperationsModule {
     };
     readonly projectionStore: {
       findByOutboxEventId(outboxEventId: string): Promise<unknown>;
-      bindReceipt(receipt: Readonly<Record<string, unknown>>): Promise<void>;
-      claimReceipt?: (input: Readonly<{
-        readonly outboxEventId: string;
-        readonly idempotencyKey: string;
-      }>) => Promise<unknown>;
+      bindReceipt(receipt: Readonly<Record<string, unknown>>): Promise<unknown>;
+      claimReceipt?: (
+        input: Readonly<{
+          readonly outboxEventId: string;
+          readonly idempotencyKey: string;
+        }>,
+      ) => Promise<unknown>;
+      releaseClaim?: (
+        input: Readonly<Record<string, unknown>>,
+      ) => Promise<void>;
     };
     readonly job: {
       readonly jobName: string;
@@ -21,7 +26,9 @@ interface FinanceOperationsModule {
   }) => unknown;
   readonly createHistoricalPrivateEvidenceBindingAdapter?: (input: {
     readonly reader: {
-      readAuthorizedEvidence(input: Readonly<Record<string, unknown>>): Promise<unknown>;
+      readAuthorizedEvidence(
+        input: Readonly<Record<string, unknown>>,
+      ): Promise<unknown>;
     };
     readonly maxBytes: number;
   }) => unknown;
@@ -49,7 +56,7 @@ describe("Finance Task 3 security Review A v2 RED contract", () => {
         },
         projectionStore: {
           findByOutboxEventId: vi.fn(async () => undefined),
-          bindReceipt: vi.fn(async () => undefined),
+          bindReceipt: vi.fn(async () => ({ status: "bound" as const })),
         },
         job: {
           jobName: "finance.historical-private-evidence.import",
@@ -57,7 +64,7 @@ describe("Finance Task 3 security Review A v2 RED contract", () => {
           maxAttempts: 3,
         },
       }),
-    ).toThrow("FINANCE_PROJECTOR_CLAIM_REQUIRED");
+    ).toThrow("FINANCE_PROJECTOR_DEPENDENCY_INVALID");
   });
 
   it("validates the binding reader and owner byte ceiling before composition", async () => {

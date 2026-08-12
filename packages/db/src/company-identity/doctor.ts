@@ -24,11 +24,13 @@ interface Journal {
 /** A catalog marker used to detect schema drift for a migration. */
 export interface CompanyIdentityDoctorSentinel {
   readonly migrationTag: string;
-  readonly kind: "table" | "column" | "trigger";
+  readonly kind: "table" | "column" | "trigger" | "constraint";
   readonly schemaName: string;
   readonly tableName: string;
   readonly columnName?: string;
   readonly triggerName?: string;
+  readonly constraintName?: string;
+  readonly expectedAllowlistKeys?: readonly string[];
 }
 
 /** One migration-ledger or catalog defect reported by the identity doctor. */
@@ -52,7 +54,7 @@ export interface CompanyIdentityDoctorReport {
 /**
  * Selects the catalog object whose absence proves a migration is incomplete.
  * @param entry The reviewed identity migration journal entry.
- * @returns The stable table, column, or trigger sentinel for the migration.
+ * @returns The stable catalog sentinel for the migration.
  */
 function sentinelFor(entry: JournalEntry): CompanyIdentityDoctorSentinel {
   switch (entry.tag) {
@@ -79,11 +81,251 @@ function sentinelFor(entry: JournalEntry): CompanyIdentityDoctorSentinel {
         tableName: "company_identity_audit_events",
         columnName: "metadata",
       };
+    case "0003_finance_attestation_audit_metadata":
+      return {
+        migrationTag: entry.tag,
+        kind: "constraint",
+        schemaName: "public",
+        tableName: "company_identity_audit_events",
+        constraintName:
+          "company_identity_audit_events_metadata_allowed_keys_check",
+        expectedAllowlistKeys: [
+          "source",
+          "previousStatus",
+          "newStatus",
+          "roleKey",
+          "clientId",
+          "requestedClientId",
+          "registeredClientId",
+          "applicationKey",
+          "resourceType",
+          "actorKind",
+          "actorSubjectId",
+          "objectId",
+          "requestId",
+          "eventId",
+          "occurredAt",
+          "schoolId",
+          "claimsVersion",
+          "policyVersion",
+          "routeBindingId",
+          "routeMethod",
+          "routePath",
+          "routeTransport",
+          "credentialAlgorithm",
+          "sessionCount",
+          "normalizationVersion",
+          "migrationRunId",
+          "sourcePrincipalId",
+          "sourceFingerprint",
+          "idempotencyReplay",
+          "expiresAt",
+          "reasonCategory",
+        ],
+      };
     default:
       throw new Error(
         `Company identity doctor has no reviewed sentinel for migration ${entry.tag}.`,
       );
   }
+}
+
+/** Removes one balanced pair of SQL parentheses from a normalized expression. */
+function unwrapSqlParentheses(value: string): string {
+  let result = value.trim();
+  while (result.startsWith("(") && result.endsWith(")")) {
+    let depth = 0;
+    let quoted = false;
+    let closesAtEnd = true;
+    for (let index = 0; index < result.length; index += 1) {
+      const character = result[index]!;
+      if (character === "'" && result[index + 1] === "'") {
+        index += 1;
+        continue;
+      }
+      if (character === "'") {
+        quoted = !quoted;
+        continue;
+      }
+      if (quoted) continue;
+      if (character === "(") depth += 1;
+      if (character === ")") {
+        depth -= 1;
+        if (depth === 0 && index !== result.length - 1) {
+          closesAtEnd = false;
+          break;
+        }
+      }
+    }
+    if (!closesAtEnd || depth !== 0) break;
+    result = result.slice(1, -1).trim();
+  }
+  return result;
+}
+
+/**
+ * Normalizes SQL keywords and whitespace without changing quoted string literals.
+ * @param value PostgreSQL's rendered SQL expression.
+ * @returns The expression with unquoted SQL spelling normalized for comparison.
+ */
+function normalizeSqlDefinition(value: string): string {
+  let normalized = "";
+  let quoted = false;
+  let pendingWhitespace = false;
+  for (let index = 0; index < value.length; index += 1) {
+    const character = value[index]!;
+    if (character === "'") {
+      if (pendingWhitespace && normalized.length > 0) {
+        normalized += " ";
+        pendingWhitespace = false;
+      }
+      normalized += character;
+      if (value[index + 1] === "'") {
+        normalized += "'";
+        index += 1;
+      } else {
+        quoted = !quoted;
+      }
+      continue;
+    }
+    if (!quoted && /\s/u.test(character)) {
+      pendingWhitespace = true;
+      continue;
+    }
+    if (pendingWhitespace && normalized.length > 0) {
+      normalized += " ";
+      pendingWhitespace = false;
+    }
+    normalized += quoted ? character : character.toLowerCase();
+  }
+  return normalized.trim();
+}
+
+/** Removes identifier quotes without changing any single-quoted SQL literal. */
+function stripIdentifierQuotesOutsideLiterals(value: string): string {
+  let result = "";
+  let quotedLiteral = false;
+  for (let index = 0; index < value.length; index += 1) {
+    const character = value[index]!;
+    if (character === "'") {
+      result += character;
+      if (value[index + 1] === "'") {
+        result += "'";
+        index += 1;
+      } else {
+        quotedLiteral = !quotedLiteral;
+      }
+      continue;
+    }
+    if (!quotedLiteral && character === '"') continue;
+    result += character;
+  }
+  return result;
+}
+
+/** Removes SQL whitespace outside quoted literals for structural parsing. */
+function compactSqlDefinition(value: string): string {
+  let compact = "";
+  let quoted = false;
+  for (let index = 0; index < value.length; index += 1) {
+    const character = value[index]!;
+    if (character === "'") {
+      compact += character;
+      if (value[index + 1] === "'") {
+        compact += "'";
+        index += 1;
+      } else {
+        quoted = !quoted;
+      }
+      continue;
+    }
+    if (quoted || !/\s/u.test(character)) compact += character;
+  }
+  return compact;
+}
+
+/** Splits a normalized SQL expression at its top-level AND operator. */
+function splitTopLevelAnd(value: string): readonly string[] {
+  const compact = compactSqlDefinition(value);
+  const parts: string[] = [];
+  let start = 0;
+  let parentheses = 0;
+  let brackets = 0;
+  let quoted = false;
+  for (let index = 0; index < compact.length; index += 1) {
+    const character = compact[index]!;
+    if (character === "'" && compact[index + 1] === "'") {
+      index += 1;
+      continue;
+    }
+    if (character === "'") {
+      quoted = !quoted;
+      continue;
+    }
+    if (quoted) continue;
+    if (character === "(") parentheses += 1;
+    else if (character === ")") parentheses -= 1;
+    else if (character === "[") brackets += 1;
+    else if (character === "]") brackets -= 1;
+    else if (
+      parentheses === 0 &&
+      brackets === 0 &&
+      compact.slice(index, index + 3) === "and"
+    ) {
+      parts.push(compact.slice(start, index));
+      start = index + 3;
+      index += 2;
+    }
+  }
+  parts.push(compact.slice(start));
+  return parts;
+}
+
+/** Validates the exact reviewed Finance metadata constraint semantics.
+ * @param definition PostgreSQL's rendered check-constraint definition.
+ * @param expectedKeys Ordered metadata keys approved by the Finance migration.
+ * @returns Whether the definition exactly matches the reviewed constraint.
+ */
+export function isExactCompanyIdentityFinanceMetadataConstraintDefinition(
+  definition: string,
+  expectedKeys: readonly string[],
+): boolean {
+  const normalized = normalizeSqlDefinition(
+    stripIdentifierQuotesOutsideLiterals(definition),
+  );
+  if (!normalized.startsWith("check")) return false;
+  const expression = unwrapSqlParentheses(normalized.slice("check".length));
+  const parts = splitTopLevelAnd(expression);
+  if (parts.length !== 2) return false;
+  const left = unwrapSqlParentheses(parts[0]!);
+  if (
+    left !== "jsonb_typeof(metadata)='object'::text" &&
+    left !== "jsonb_typeof(metadata)='object'"
+  ) {
+    return false;
+  }
+
+  let right = unwrapSqlParentheses(parts[1]!);
+  const groupedArrayPrefix = "(metadata-array[";
+  const groupedArrayMarker = "])='{}'::jsonb";
+  if (
+    right.startsWith(groupedArrayPrefix) &&
+    right.endsWith(groupedArrayMarker)
+  ) {
+    right = `metadata-array[${right.slice(
+      groupedArrayPrefix.length,
+      -groupedArrayMarker.length,
+    )}]='{}'::jsonb`;
+  }
+  const suffix = "]='{}'::jsonb";
+  if (!right.startsWith("metadata-array[") || !right.endsWith(suffix)) {
+    return false;
+  }
+  const encodedKeys = right.slice("metadata-array[".length, -suffix.length);
+  const expectedEncodedKeys = expectedKeys
+    .map((key) => `'${key}'::text`)
+    .join(",");
+  return encodedKeys === expectedEncodedKeys;
 }
 
 /**
@@ -171,7 +413,7 @@ export async function inspectCompanyIdentityDatabase(input: {
                and column_name = ${sentinel.columnName ?? ""}
           ) as exists
         `;
-      } else {
+      } else if (sentinel.kind === "trigger") {
         [present] = await sql<{ exists: boolean }[]>`
           select exists(
             select 1
@@ -199,6 +441,28 @@ export async function inspectCompanyIdentityDatabase(input: {
                    ) = ${IMMUTABLE_AUDIT_FUNCTION_BODY}
           ) as exists
         `;
+      } else {
+        const [constraint] = await sql<{ definition: string }[]>`
+          select pg_catalog.pg_get_constraintdef(constraint_row.oid, false) as definition
+            from pg_catalog.pg_constraint constraint_row
+            join pg_catalog.pg_class relation
+              on relation.oid = constraint_row.conrelid
+            join pg_catalog.pg_namespace namespace
+              on namespace.oid = relation.relnamespace
+           where namespace.nspname = ${sentinel.schemaName}
+             and relation.relname = ${sentinel.tableName}
+             and constraint_row.conname = ${sentinel.constraintName ?? ""}
+             and constraint_row.contype = 'c'
+        `;
+        present = {
+          exists:
+            constraint !== undefined &&
+            sentinel.expectedAllowlistKeys !== undefined &&
+            isExactCompanyIdentityFinanceMetadataConstraintDefinition(
+              constraint.definition,
+              sentinel.expectedAllowlistKeys,
+            ),
+        };
       }
       if (!present?.exists) {
         issues.push({

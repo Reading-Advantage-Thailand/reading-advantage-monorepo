@@ -64,6 +64,15 @@ describe("company identity protocol primitives", () => {
       "registeredClientId",
       "applicationKey",
       "resourceType",
+      "actorKind",
+      "actorSubjectId",
+      "objectId",
+      "requestId",
+      "eventId",
+      "occurredAt",
+      "schoolId",
+      "claimsVersion",
+      "policyVersion",
       "routeBindingId",
       "routeMethod",
       "routePath",
@@ -88,6 +97,7 @@ describe("company identity protocol primitives", () => {
         routeMethod: "POST",
         routePath: "/api/admin/employees",
         routeTransport: "next-http",
+        schoolId: "school-sensitive-scope",
         targetAccountId: "must-remain-top-level",
         accessToken: "must-not-survive",
       }),
@@ -100,6 +110,7 @@ describe("company identity protocol primitives", () => {
       routeMethod: "POST",
       routePath: "/api/admin/employees",
       routeTransport: "next-http",
+      schoolId: "school-sensitive-scope",
     });
   });
 

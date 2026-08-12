@@ -1,4 +1,12 @@
+import { Buffer } from "node:buffer";
+import { runInNewContext } from "node:vm";
+
 import { describe, expect, it, vi } from "vitest";
+
+import {
+  createCompanyIdentityFinanceAttestationAuditPort,
+  createFinanceCompanyIdentityAttestor,
+} from "../../company-identity/finance-attestation.js";
 
 const payloadDigest = "a".repeat(64);
 const maxSourceFieldLength = 256;
@@ -9,6 +17,48 @@ const scope = {
 } as const;
 const evidenceReference =
   "private-evidence://company-historical/historical/receipt-001.json";
+
+function invalidSha256DigestResults(): ReadonlyArray<{
+  readonly name: string;
+  readonly value: unknown;
+}> {
+  const results: Array<{ readonly name: string; readonly value: unknown }> = [
+    { name: "undefined", value: undefined },
+    {
+      name: "plain object",
+      value: { byteLength: 32, poison: "POISON_OBJECT_ID_DIGEST_RESULT" },
+    },
+    { name: "Uint8Array", value: new Uint8Array(32) },
+    { name: "DataView", value: new DataView(new ArrayBuffer(32)) },
+    { name: "Buffer", value: Buffer.alloc(32) },
+  ];
+  if (typeof SharedArrayBuffer !== "undefined") {
+    const shared = new SharedArrayBuffer(32);
+    results.push({ name: "SharedArrayBuffer", value: shared });
+    results.push({
+      name: "SharedArrayBuffer view",
+      value: new Uint8Array(shared),
+    });
+  }
+  return results;
+}
+
+function crossRealmSha256Digest(seed: number): {
+  readonly buffer: ArrayBuffer;
+  readonly hexadecimal: string;
+} {
+  const buffer = runInNewContext("new ArrayBuffer(32)") as ArrayBuffer;
+  const bytes = Uint8Array.from(
+    Array.from({ length: 32 }, (_, index) => (seed + index) & 0xff),
+  );
+  new Uint8Array(buffer).set(bytes);
+  return {
+    buffer,
+    hexadecimal: Array.from(bytes, (byte) =>
+      byte.toString(16).padStart(2, "0"),
+    ).join(""),
+  };
+}
 
 type RuntimeParseResult =
   | { readonly success: true; readonly data: unknown }
@@ -37,6 +87,8 @@ interface CompanyIdentityAuthorizationEvidence {
   readonly source: "company-identity";
   /** Version of the verified owner claims. */
   readonly claimsVersion: string;
+  /** Version of the reviewed Company Identity role policy. */
+  readonly policyVersion: string;
   /** Authenticated owner subject. */
   readonly subjectId: string;
   /** Authenticated owner organization. */
@@ -85,6 +137,7 @@ interface HistoricalPrivateEvidenceImportCommand {
   /** Prepares one packet only after owner authentication and private-evidence binding both agree. */
   prepare(input: unknown): Promise<{
     readonly packet: Record<string, unknown>;
+    readonly objectId: string;
     readonly authorizationEvidence: CompanyIdentityAuthorizationEvidence;
     readonly evidence: {
       readonly evidenceReference: string;
@@ -176,6 +229,7 @@ function allowedAttestation(
     evidence: {
       source: "company-identity",
       claimsVersion: "company-identity-claims-v1",
+      policyVersion: "finance-historical-import-role-policy-v1",
       subjectId: "employee-historical-importer",
       organizationId: scope.companyId,
       appRoleIds: ["role-historical-private-evidence-import"],
@@ -196,6 +250,21 @@ function auditContext(
     requestId: "finance-import-request-001",
     correlationId: "finance-import-correlation-001",
     ...overrides,
+  };
+}
+
+/** Creates deterministic trusted audit sources for the composed Company Identity boundary. */
+function trustedAuditSources(): {
+  readonly createEventId: () => string;
+  readonly createRequestId: () => string;
+  readonly createCorrelationId: () => string;
+  readonly now: () => Date;
+} {
+  return {
+    createEventId: vi.fn(() => "33333333-3333-4333-8333-333333333333"),
+    createRequestId: vi.fn(() => "44444444-4444-4444-8444-444444444444"),
+    createCorrelationId: vi.fn(() => "55555555-5555-4555-8555-555555555555"),
+    now: vi.fn(() => new Date("2026-08-11T05:00:00.000Z")),
   };
 }
 
@@ -266,6 +335,390 @@ describe("Finance historical private-evidence packet RED contract", () => {
       success: true,
       data: companyScopedInput,
     });
+  });
+
+  it("keeps a poisoned source identity out of composed real-command and durable audit serialization", async () => {
+    const subject = await loadHistoricalPacketContract();
+    const createCommand = requireImportCommandFactory(subject);
+    const persisted: Array<Readonly<Record<string, unknown>>> = [];
+    const poisonedIdentity =
+      "bearer-token=source-secret;email=employee@example.invalid";
+    const auditPort = createCompanyIdentityFinanceAttestationAuditPort({
+      repository: {
+        appendAudit: vi.fn(async (input: Readonly<Record<string, unknown>>) => {
+          persisted.push(input);
+        }),
+      },
+    });
+    const attestor = createFinanceCompanyIdentityAttestor({
+      authenticator: {
+        authenticate: vi.fn(async () => ({
+          claimsVersion: "company-identity-claims-v1",
+          subjectId: "employee-historical-importer",
+          organizationId: scope.companyId,
+          appRoleIds: ["role-historical-private-evidence-import"],
+          schoolIds: [scope.schoolId],
+        })),
+      },
+      rolePolicy: {
+        policyVersion: "finance-historical-import-role-policy-v1",
+        acceptedRoleIds: ["role-historical-private-evidence-import"],
+      },
+      auditPort,
+      trustedAuditSources: trustedAuditSources(),
+    });
+    const command = createCommand({
+      companyIdentityAttestor: attestor,
+      privateEvidenceBindingPort: {
+        verify: vi.fn(async () => ({
+          evidenceReference,
+          scope,
+          payloadDigest,
+        })),
+      },
+    });
+    const poisonedPacket = packet({
+      source: { ...packetSource(packet()), sourceIdentity: poisonedIdentity },
+    });
+
+    const first = await command.prepare(commandRequest(poisonedPacket));
+    const second = await command.prepare(commandRequest(poisonedPacket));
+    const firstMetadata = persisted[0]?.metadata as Record<string, unknown>;
+
+    expect(first.objectId).toMatch(
+      /^finance-historical-private-evidence-object-v1\|sha256=[a-f0-9]{64}$/u,
+    );
+    expect(second.objectId).toBe(first.objectId);
+    expect(firstMetadata.objectId).toBe(first.objectId);
+    expect(JSON.stringify(persisted)).not.toContain(poisonedIdentity);
+    expect(JSON.stringify(persisted)).not.toContain("source-secret");
+    expect(JSON.stringify(persisted)).not.toContain("employee@example.invalid");
+  });
+
+  it("snapshots the complete validated packet before a deferred attestor can mutate its caller alias", async () => {
+    const subject = await loadHistoricalPacketContract();
+    const createCommand = requireImportCommandFactory(subject);
+    let release!: () => void;
+    let started!: () => void;
+    const attestationStarted = new Promise<void>((resolve) => {
+      started = resolve;
+    });
+    const attestationRelease = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    const mutableScope: { companyId: string; schoolId?: string } = { ...scope };
+    const mutablePacket = packet({ scope: mutableScope });
+    const attest = vi.fn(async (
+      request: Parameters<CompanyIdentityFinanceAttestor["attest"]>[0],
+    ) => {
+      expect(request.scope).toEqual(scope);
+      try {
+        (request.scope as { companyId: string }).companyId = "company-b";
+      } catch {
+        // A frozen validated snapshot is the expected fail-closed behavior.
+      }
+      started();
+      await attestationRelease;
+      return allowedAttestation();
+    });
+    const verify = vi.fn(async () => ({
+      evidenceReference,
+      scope,
+      payloadDigest,
+    }));
+    const command = createCommand({
+      companyIdentityAttestor: { attest },
+      privateEvidenceBindingPort: { verify },
+    });
+    const preparation = command.prepare(commandRequest(mutablePacket));
+    await attestationStarted;
+    mutableScope.companyId = "company-b";
+    mutableScope.schoolId = "school-b";
+    (mutablePacket.source as Record<string, unknown>).evidenceReference =
+      "private-evidence://company-b/historical/replaced.json";
+    (mutablePacket.source as Record<string, unknown>).sourceIdentity =
+      "attacker-replaced-source";
+    release();
+
+    const prepared = await preparation;
+    expect(prepared.packet).toMatchObject({
+      scope,
+      source: {
+        evidenceReference,
+        sourceIdentity: "legacy-receipt-001",
+      },
+    });
+    expect(verify).toHaveBeenCalledWith(
+      expect.objectContaining({ evidenceReference, scope }),
+    );
+  });
+
+  it("maps attestor dependency failures to a stable public error without exposing the dependency cause", async () => {
+    const subject = await loadHistoricalPacketContract();
+    const createCommand = requireImportCommandFactory(subject);
+    const secret = "POISON_DEPENDENCY_SECRET_73f94";
+    const command = createCommand({
+      companyIdentityAttestor: {
+        attest: vi.fn(async () => {
+          throw new Error(secret);
+        }),
+      },
+      privateEvidenceBindingPort: {
+        verify: vi.fn(),
+      },
+    });
+
+    const failure = await command.prepare(commandRequest()).catch(
+      (error: unknown) => error,
+    );
+    expect(failure).toEqual(expect.objectContaining({
+      message: "FINANCE_ATTESTATION_FAILED",
+    }));
+    expect(JSON.stringify(failure)).not.toContain(secret);
+  });
+
+  it("maps a poisoned command-envelope getter to a stable input error", async () => {
+    const subject = await loadHistoricalPacketContract();
+    const createCommand = requireImportCommandFactory(subject);
+    const fakes = createCommandFakes();
+    const command = createCommand({
+      companyIdentityAttestor: fakes.companyIdentityAttestor,
+      privateEvidenceBindingPort: fakes.privateEvidenceBindingPort,
+    });
+    const secret = "FINANCE_ENVELOPE_GETTER_SECRET";
+    const poisoned: Record<string, unknown> = {
+      credential: { kind: "token", value: "opaque-owner-token" },
+      audit: auditContext(),
+    };
+    Object.defineProperty(poisoned, "packet", {
+      get: () => {
+        throw new Error(secret);
+      },
+    });
+
+    const failure = await command
+      .prepare(poisoned)
+      .catch((error: unknown) => error);
+    expect(failure).toEqual(
+      expect.objectContaining({ message: "FINANCE_COMMAND_INPUT_INVALID" }),
+    );
+    expect(JSON.stringify(failure)).not.toContain(secret);
+    expect(fakes.attest).not.toHaveBeenCalled();
+  });
+
+  it("maps a poisoned Finance packet getter to a stable packet error", async () => {
+    const subject = await loadHistoricalPacketContract();
+    const createCommand = requireImportCommandFactory(subject);
+    const fakes = createCommandFakes();
+    const command = createCommand({
+      companyIdentityAttestor: fakes.companyIdentityAttestor,
+      privateEvidenceBindingPort: fakes.privateEvidenceBindingPort,
+    });
+    const secret = "FINANCE_PACKET_GETTER_SECRET";
+    const poisonedPacket = packet();
+    Object.defineProperty(poisonedPacket, "scope", {
+      get: () => {
+        throw new Error(secret);
+      },
+    });
+
+    const failure = await command
+      .prepare(commandRequest(poisonedPacket))
+      .catch((error: unknown) => error);
+    expect(failure).toEqual(
+      expect.objectContaining({ message: "FINANCE_PACKET_INVALID" }),
+    );
+    expect(JSON.stringify(failure)).not.toContain(secret);
+    expect(fakes.attest).not.toHaveBeenCalled();
+  });
+
+  it("maps the opaque object-identity digest dependency failure without exposing its cause", async () => {
+    const subject = await loadHistoricalPacketContract();
+    const createCommand = requireImportCommandFactory(subject);
+    const secret = "POISON_DEPENDENCY_SECRET_73f94";
+    const attest = vi.fn();
+    const command = createCommand({
+      companyIdentityAttestor: { attest },
+      privateEvidenceBindingPort: { verify: vi.fn() },
+    });
+    const digestSpy = vi
+      .spyOn(globalThis.crypto.subtle, "digest")
+      .mockRejectedValue(new Error(secret));
+
+    let failure: unknown;
+    try {
+      failure = await command.prepare(commandRequest()).catch(
+        (error: unknown) => error,
+      );
+    } finally {
+      digestSpy.mockRestore();
+    }
+
+    expect(failure).toEqual(
+      expect.objectContaining({
+        message: "FINANCE_OBJECT_ID_DERIVATION_FAILED",
+      }),
+    );
+    expect(String(failure)).not.toContain(secret);
+    expect(JSON.stringify(failure)).not.toContain(secret);
+    expect(attest).not.toHaveBeenCalled();
+  });
+
+  it.each([0, 31, 33] as const)(
+    "rejects a %s-byte object-identity SHA-256 result before attestation",
+    async (byteLength) => {
+      const subject = await loadHistoricalPacketContract();
+      const createCommand = requireImportCommandFactory(subject);
+      const attest = vi.fn();
+      const verify = vi.fn();
+      const command = createCommand({
+        companyIdentityAttestor: { attest },
+        privateEvidenceBindingPort: { verify },
+      });
+      const digest = vi
+        .spyOn(globalThis.crypto.subtle, "digest")
+        .mockResolvedValue(new ArrayBuffer(byteLength));
+      try {
+        const failure = await command
+          .prepare(commandRequest())
+          .catch((error: unknown) => error);
+        expect(failure).toEqual(
+          expect.objectContaining({
+            message: "FINANCE_OBJECT_ID_DERIVATION_FAILED",
+          }),
+        );
+        expect(String(failure)).not.toContain("POISON");
+        expect(JSON.stringify(failure)).not.toContain("POISON");
+        expect(attest).not.toHaveBeenCalled();
+        expect(verify).not.toHaveBeenCalled();
+      } finally {
+        digest.mockRestore();
+      }
+    },
+  );
+
+  it.each(invalidSha256DigestResults())(
+    "rejects a non-ArrayBuffer object-identity digest result ($name) before attestation",
+    async ({ value: result }) => {
+      const subject = await loadHistoricalPacketContract();
+      const createCommand = requireImportCommandFactory(subject);
+      const attest = vi.fn();
+      const command = createCommand({
+        companyIdentityAttestor: { attest },
+        privateEvidenceBindingPort: { verify: vi.fn() },
+      });
+      const digest = vi
+        .spyOn(globalThis.crypto.subtle, "digest")
+        .mockResolvedValue(result as unknown as ArrayBuffer);
+      try {
+        const failure = await command
+          .prepare(commandRequest())
+          .catch((error: unknown) => error);
+        expect(failure).toEqual(
+          expect.objectContaining({
+            message: "FINANCE_OBJECT_ID_DERIVATION_FAILED",
+          }),
+        );
+        expect(JSON.stringify(failure)).not.toContain("POISON");
+        expect(attest).not.toHaveBeenCalled();
+      } finally {
+        digest.mockRestore();
+      }
+    },
+  );
+
+  it("accepts and copies a cross-realm object-identity digest before provider mutation", async () => {
+    const subject = await loadHistoricalPacketContract();
+    const createCommand = requireImportCommandFactory(subject);
+    const fakes = createCommandFakes();
+    const command = createCommand(fakes);
+    const digestValue = crossRealmSha256Digest(1);
+    expect(digestValue.buffer).not.toBeInstanceOf(ArrayBuffer);
+    const digest = vi
+      .spyOn(globalThis.crypto.subtle, "digest")
+      .mockResolvedValue(digestValue.buffer);
+    try {
+      const preparation = await command.prepare(commandRequest());
+      const expectedObjectId =
+        `finance-historical-private-evidence-object-v1|sha256=${digestValue.hexadecimal}`;
+      new Uint8Array(digestValue.buffer).fill(0xff);
+
+      expect(preparation.objectId).toBe(expectedObjectId);
+      expect(fakes.attest).toHaveBeenCalledWith(
+        expect.objectContaining({
+          audit: expect.objectContaining({ objectId: expectedObjectId }),
+        }),
+      );
+      expect(fakes.verify).toHaveBeenCalled();
+    } finally {
+      digest.mockRestore();
+    }
+  });
+
+  it.each([
+    {
+      name: "absent school versus the literal company-scope school",
+      first: { scope: { companyId: scope.companyId } },
+      second: { scope: { companyId: scope.companyId, schoolId: "company-scope" } },
+    },
+    {
+      name: "delimiter-adjacent source components",
+      first: { source: { sourceSystem: "a|b", sourceVersion: "c" } },
+      second: { source: { sourceSystem: "a", sourceVersion: "b|c" } },
+    },
+    {
+      name: "canonically distinct Unicode source identities",
+      first: { source: { sourceIdentity: "é" } },
+      second: { source: { sourceIdentity: "e\u0301" } },
+    },
+    {
+      name: "case-adjacent source identities",
+      first: { source: { sourceIdentity: "Case-sensitive" } },
+      second: { source: { sourceIdentity: "case-sensitive" } },
+    },
+  ] as const)("keeps $name in distinct opaque object identities", async ({ first, second }) => {
+    const subject = await loadHistoricalPacketContract();
+    const createCommand = requireImportCommandFactory(subject);
+    const prepareVariant = async (variant: {
+      readonly scope?: { readonly companyId: string; readonly schoolId?: string };
+      readonly source?: { readonly sourceSystem?: string; readonly sourceVersion?: string; readonly sourceIdentity?: string };
+    }) => {
+      const variantScope = variant.scope ?? scope;
+      const schoolIds = variantScope.schoolId === undefined
+        ? undefined
+        : [variantScope.schoolId];
+      const attestation = allowedAttestation({
+        organizationId: variantScope.companyId,
+        schoolIds,
+      });
+      const variantPacket = packet({
+        scope: variantScope,
+        source: {
+          ...packetSource(packet()),
+          ...variant.source,
+        },
+      });
+      const command = createCommand({
+        companyIdentityAttestor: { attest: vi.fn(async () => attestation) },
+        privateEvidenceBindingPort: {
+          verify: vi.fn(async () => ({
+            evidenceReference,
+            scope: variantScope,
+            payloadDigest,
+          })),
+        },
+      });
+      return command.prepare(commandRequest(variantPacket));
+    };
+    const firstPrepared = await prepareVariant(first);
+    const secondPrepared = await prepareVariant(second);
+    expect(firstPrepared.objectId).not.toBe(secondPrepared.objectId);
+    expect(firstPrepared.objectId).toMatch(
+      /^finance-historical-private-evidence-object-v1\|sha256=[a-f0-9]{64}$/u,
+    );
+    expect(secondPrepared.objectId).toMatch(
+      /^finance-historical-private-evidence-object-v1\|sha256=[a-f0-9]{64}$/u,
+    );
   });
 
   it.each([
@@ -471,6 +924,9 @@ describe("Finance historical private-evidence packet RED contract", () => {
 
     await expect(command.prepare(request)).resolves.toEqual({
       packet: packetValue,
+      objectId: expect.stringMatching(
+        /^finance-historical-private-evidence-object-v1\|sha256=[a-f0-9]{64}$/u,
+      ),
       authorizationEvidence: allowed.evidence,
       evidence,
     });
@@ -479,7 +935,12 @@ describe("Finance historical private-evidence packet RED contract", () => {
       operation: "historical-private-evidence:import",
       scope,
       credential,
-      audit,
+      audit: {
+        ...audit,
+        objectId: expect.stringMatching(
+          /^finance-historical-private-evidence-object-v1\|sha256=[a-f0-9]{64}$/u,
+        ),
+      },
     });
     expect(fakes.verify).toHaveBeenCalledTimes(1);
     expect(fakes.verify).toHaveBeenCalledWith({
@@ -487,6 +948,103 @@ describe("Finance historical private-evidence packet RED contract", () => {
       scope,
       expectedPayloadDigest: payloadDigest,
       authorization: allowed.evidence,
+    });
+  });
+
+  it("normalizes empty company-scoped school claims before the command schema and durable audit", async () => {
+    const subject = await loadHistoricalPacketContract();
+    const createCommand = requireImportCommandFactory(subject);
+    const persisted: Array<Readonly<Record<string, unknown>>> = [];
+    const auditPort = createCompanyIdentityFinanceAttestationAuditPort({
+      repository: {
+        appendAudit: vi.fn(async (input: Readonly<Record<string, unknown>>) => {
+          persisted.push(input);
+        }),
+      },
+    });
+    const attestor = createFinanceCompanyIdentityAttestor({
+      authenticator: {
+        authenticate: vi.fn(async () => ({
+          claimsVersion: "company-identity-claims-v1",
+          subjectId: "employee-historical-importer",
+          organizationId: scope.companyId,
+          appRoleIds: ["role-historical-private-evidence-import"],
+          schoolIds: [],
+        })),
+      },
+      rolePolicy: {
+        policyVersion: "finance-historical-import-role-policy-v1",
+        acceptedRoleIds: ["role-historical-private-evidence-import"],
+      },
+      auditPort,
+      trustedAuditSources: trustedAuditSources(),
+    });
+    const fakes = createCommandFakes({
+      evidence: {
+        evidenceReference,
+        scope: { companyId: scope.companyId },
+        payloadDigest,
+      },
+    });
+    const command = createCommand({
+      companyIdentityAttestor: attestor,
+      privateEvidenceBindingPort: fakes.privateEvidenceBindingPort,
+    });
+
+    const prepared = await command.prepare(
+      commandRequest(packet({ scope: { companyId: scope.companyId } })),
+    );
+    expect(prepared.authorizationEvidence).not.toHaveProperty("schoolIds");
+    expect(persisted).toHaveLength(1);
+    expect(persisted[0]).toMatchObject({
+      outcome: "SUCCEEDED",
+      metadata: { policyVersion: "finance-historical-import-role-policy-v1" },
+    });
+    expect(persisted[0]?.metadata).not.toHaveProperty("schoolId");
+  });
+
+  it("binds audit.objectId to a stable opaque projection of validated source identity and never persists a poisoned caller value", async () => {
+    const subject = await loadHistoricalPacketContract();
+    const createCommand = requireImportCommandFactory(subject);
+    const fakes = createCommandFakes();
+    const command = createCommand({
+      companyIdentityAttestor: fakes.companyIdentityAttestor,
+      privateEvidenceBindingPort: fakes.privateEvidenceBindingPort,
+    });
+    const poisonedObjectId =
+      "bearer-token=secret-token; email=employee@example.invalid";
+
+    await command.prepare({
+      ...commandRequest(),
+      audit: auditContext({ objectId: poisonedObjectId }),
+    });
+
+    const attestationInput = fakes.attest.mock.calls[0]?.[0];
+    expect(attestationInput?.audit.objectId).toMatch(
+      /^finance-historical-private-evidence-object-v1\|sha256=[a-f0-9]{64}$/u,
+    );
+    expect(attestationInput?.audit.objectId).not.toContain("legacy-receipt-001");
+    expect(JSON.stringify(attestationInput)).not.toContain(poisonedObjectId);
+    expect(JSON.stringify(attestationInput)).not.toContain("secret-token");
+  });
+
+  it("keeps policyVersion enumerable through preparation serialization", async () => {
+    const subject = await loadHistoricalPacketContract();
+    const createCommand = requireImportCommandFactory(subject);
+    const fakes = createCommandFakes();
+    const command = createCommand({
+      companyIdentityAttestor: fakes.companyIdentityAttestor,
+      privateEvidenceBindingPort: fakes.privateEvidenceBindingPort,
+    });
+
+    const prepared = await command.prepare(commandRequest());
+    expect(Object.keys(prepared.authorizationEvidence)).toContain(
+      "policyVersion",
+    );
+    expect(
+      JSON.parse(JSON.stringify(prepared.authorizationEvidence)),
+    ).toMatchObject({
+      policyVersion: "finance-historical-import-role-policy-v1",
     });
   });
 

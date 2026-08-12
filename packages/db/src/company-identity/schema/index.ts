@@ -851,7 +851,7 @@ export const companyIdentityAuditEvents = pgTable(
     ),
     check(
       "company_identity_audit_events_metadata_allowed_keys_check",
-      sql`jsonb_typeof(${table.metadata}) = 'object' AND (${table.metadata} - ARRAY['source', 'previousStatus', 'newStatus', 'roleKey', 'clientId', 'requestedClientId', 'registeredClientId', 'applicationKey', 'resourceType', 'routeBindingId', 'routeMethod', 'routePath', 'routeTransport', 'credentialAlgorithm', 'sessionCount', 'normalizationVersion', 'migrationRunId', 'sourcePrincipalId', 'sourceFingerprint', 'idempotencyReplay', 'expiresAt', 'reasonCategory']::text[]) = '{}'::jsonb`,
+      sql`jsonb_typeof(${table.metadata}) = 'object' AND (${table.metadata} - ARRAY['source', 'previousStatus', 'newStatus', 'roleKey', 'clientId', 'requestedClientId', 'registeredClientId', 'applicationKey', 'resourceType', 'actorKind', 'actorSubjectId', 'objectId', 'requestId', 'eventId', 'occurredAt', 'schoolId', 'claimsVersion', 'policyVersion', 'routeBindingId', 'routeMethod', 'routePath', 'routeTransport', 'credentialAlgorithm', 'sessionCount', 'normalizationVersion', 'migrationRunId', 'sourcePrincipalId', 'sourceFingerprint', 'idempotencyReplay', 'expiresAt', 'reasonCategory']::text[]) = '{}'::jsonb`,
     ),
     check(
       "company_identity_audit_events_operation_length_check",

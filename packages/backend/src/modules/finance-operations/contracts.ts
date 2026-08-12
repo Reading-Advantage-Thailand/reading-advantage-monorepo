@@ -178,6 +178,12 @@ const sourceFieldSchema = z
   .max(256)
   .regex(/\S/u)
   .refine(hasNoControlCharacters, "Control characters are not allowed");
+const auditFieldSchema = z
+  .string()
+  .min(1)
+  .max(255)
+  .regex(/\S/u)
+  .refine(hasNoControlCharacters, "Control characters are not allowed");
 const factTextSchema = z
   .string()
   .min(1)
@@ -350,6 +356,8 @@ export interface HistoricalPrivateEvidenceAuthorizationEvidence {
   readonly source: "company-identity";
   /** Version of the verified owner claims. */
   readonly claimsVersion: string;
+  /** Version of the reviewed Company Identity role policy. */
+  readonly policyVersion: string;
   /** Authenticated owner subject. */
   readonly subjectId: string;
   /** Authenticated owner organization. */
@@ -435,6 +443,8 @@ export interface HistoricalPrivateEvidenceBindingPort {
 export interface HistoricalPrivateEvidencePreparation {
   /** Exact validated packet values retained without normalization. */
   readonly packet: Readonly<HistoricalPrivateEvidencePacket>;
+  /** Opaque stable object identity used by the owner audit boundary. */
+  readonly objectId: string;
   /** Company Identity evidence used to authorize the packet. */
   readonly authorizationEvidence: Readonly<HistoricalPrivateEvidenceAuthorizationEvidence>;
   /** Storage-owner binding for the packet's private evidence. */
@@ -456,7 +466,6 @@ const credentialSchema = z.strictObject({
   value: sourceFieldSchema,
 });
 
-const auditFieldSchema = sourceFieldSchema;
 const attestationAuditSchema = z.strictObject({
   eventId: auditFieldSchema,
   objectId: auditFieldSchema,
@@ -465,25 +474,57 @@ const attestationAuditSchema = z.strictObject({
   correlationId: auditFieldSchema,
 });
 
+const HISTORICAL_PRIVATE_EVIDENCE_OBJECT_ID_PREFIX =
+  "finance-historical-private-evidence-object-v1";
+
+/** Runtime contract for the opaque, domain-separated historical evidence object identity. */
+export const historicalPrivateEvidenceObjectIdSchema = z
+  .string()
+  .regex(
+    /^finance-historical-private-evidence-object-v1\|sha256=[a-f0-9]{64}$/u,
+  );
+
+const arrayBufferByteLengthGetter =
+  Object.getOwnPropertyDescriptor(ArrayBuffer.prototype, "byteLength")?.get;
+
+/** Copies one genuine 32-byte WebCrypto ArrayBuffer into this realm without retaining provider memory. */
+function copySha256Digest(result: unknown): Uint8Array {
+  try {
+    if (typeof arrayBufferByteLengthGetter !== "function") {
+      throw new Error("invalid buffer");
+    }
+    const byteLength = Reflect.apply(arrayBufferByteLengthGetter, result, []);
+    if (byteLength !== 32) throw new Error("invalid SHA-256 result length");
+    const copied = new Uint8Array(byteLength);
+    copied.set(new Uint8Array(result as ArrayBuffer));
+    return copied;
+  } catch {
+    throw new Error("invalid SHA-256 result");
+  }
+}
+
 const commandEnvelopeSchema = z.strictObject({
   packet: requiredUnknownSchema,
   credential: credentialSchema,
   audit: attestationAuditSchema,
 });
 
-const authorizationEvidenceSchema = z.strictObject({
-  source: z.literal("company-identity"),
-  claimsVersion: sourceFieldSchema,
-  subjectId: sourceFieldSchema,
-  organizationId: sourceFieldSchema,
-  appRoleIds: z.array(sourceFieldSchema).min(1),
-  schoolIds: z.array(sourceFieldSchema).min(1).optional(),
-});
+/** Runtime contract for the complete, versioned Company Identity evidence. */
+export const historicalPrivateEvidenceAuthorizationEvidenceSchema =
+  z.strictObject({
+    source: z.literal("company-identity"),
+    claimsVersion: sourceFieldSchema,
+    policyVersion: sourceFieldSchema,
+    subjectId: sourceFieldSchema,
+    organizationId: sourceFieldSchema,
+    appRoleIds: z.array(sourceFieldSchema).min(1),
+    schoolIds: z.array(sourceFieldSchema).min(1).optional(),
+  });
 
 const attestationDecisionSchema = z.discriminatedUnion("decision", [
   z.strictObject({
     decision: z.literal("allow"),
-    evidence: authorizationEvidenceSchema,
+    evidence: historicalPrivateEvidenceAuthorizationEvidenceSchema,
   }),
   z.strictObject({
     decision: z.literal("deny"),
@@ -518,45 +559,143 @@ function scopesMatch(
   return left.companyId === right.companyId && left.schoolId === right.schoolId;
 }
 
-/** Creates the Finance command that composes authenticated owner and private-evidence boundaries. */
+/** Binds the attestation object identity to the validated source record. */
+async function historicalPrivateEvidenceObjectId(
+  packet: Readonly<HistoricalPrivateEvidencePacket>,
+): Promise<string> {
+  const encode = (value: string): string => {
+    const byteLength = new TextEncoder().encode(value).byteLength;
+    return `${byteLength}:${value}`;
+  };
+  const encodeOptional = (value: string | undefined): string =>
+    value === undefined ? "none" : `some:${encode(value)}`;
+  const identity = [
+    HISTORICAL_PRIVATE_EVIDENCE_OBJECT_ID_PREFIX,
+    `company=${encode(packet.scope.companyId)}`,
+    `school=${encodeOptional(packet.scope.schoolId)}`,
+    `source-system=${encode(packet.source.sourceSystem)}`,
+    `source-version=${encode(packet.source.sourceVersion)}`,
+    `source-identity=${encode(packet.source.sourceIdentity)}`,
+  ].join("|");
+  const digest = await globalThis.crypto.subtle.digest(
+    "SHA-256",
+    new TextEncoder().encode(identity),
+  );
+  const digestBytes = copySha256Digest(digest);
+  if (digestBytes.byteLength !== 32) {
+    throw new Error("invalid SHA-256 result length");
+  }
+  const hexadecimal = Array.from(digestBytes, (value) =>
+    value.toString(16).padStart(2, "0"),
+  ).join("");
+  const objectId = `${HISTORICAL_PRIVATE_EVIDENCE_OBJECT_ID_PREFIX}|sha256=${hexadecimal}`;
+  if (!historicalPrivateEvidenceObjectIdSchema.safeParse(objectId).success) {
+    throw new Error("invalid historical evidence object identity");
+  }
+  return objectId;
+}
+
+/**
+ * Creates the Finance command that composes authenticated owner and private-evidence boundaries.
+ * @param input Company Identity attestor and authorized private-evidence binding port.
+ * @returns A command that validates and prepares historical private-evidence imports.
+ */
 export function createHistoricalPrivateEvidenceImportCommand(input: {
   /** Actual Company Identity attestor supplied by the owner module. */
   readonly companyIdentityAttestor: CompanyIdentityFinanceAttestor;
   /** Authorized private-evidence binding supplied by the storage owner. */
   readonly privateEvidenceBindingPort: HistoricalPrivateEvidenceBindingPort;
 }): HistoricalPrivateEvidenceImportCommand {
+  let companyIdentityAttestor: CompanyIdentityFinanceAttestor | undefined;
+  let privateEvidenceBindingPort: HistoricalPrivateEvidenceBindingPort | undefined;
+  let attestMethod:
+    | CompanyIdentityFinanceAttestor["attest"]
+    | undefined;
+  let verifyMethod:
+    | HistoricalPrivateEvidenceBindingPort["verify"]
+    | undefined;
+  try {
+    companyIdentityAttestor = input?.companyIdentityAttestor;
+    privateEvidenceBindingPort = input?.privateEvidenceBindingPort;
+    attestMethod = companyIdentityAttestor?.attest;
+    verifyMethod = privateEvidenceBindingPort?.verify;
+  } catch {
+    throw commandError("FINANCE_COMMAND_DEPENDENCY_INVALID");
+  }
   if (
-    typeof input.companyIdentityAttestor?.attest !== "function" ||
-    typeof input.privateEvidenceBindingPort?.verify !== "function"
+    companyIdentityAttestor === undefined ||
+    privateEvidenceBindingPort === undefined ||
+    typeof attestMethod !== "function" ||
+    typeof verifyMethod !== "function"
   ) {
     throw commandError("FINANCE_COMMAND_DEPENDENCY_INVALID");
   }
+  const attest = attestMethod.bind(companyIdentityAttestor);
+  const verify = verifyMethod.bind(privateEvidenceBindingPort);
 
   return {
     async prepare(
       rawInput: unknown,
     ): Promise<HistoricalPrivateEvidencePreparation> {
-      const envelopeResult = commandEnvelopeSchema.safeParse(rawInput);
+      let envelopeResult: z.SafeParseReturnType<
+        unknown,
+        z.infer<typeof commandEnvelopeSchema>
+      >;
+      try {
+        envelopeResult = commandEnvelopeSchema.safeParse(rawInput);
+      } catch {
+        throw commandError("FINANCE_COMMAND_INPUT_INVALID");
+      }
       if (!envelopeResult.success) {
         throw commandError("FINANCE_COMMAND_INPUT_INVALID");
       }
 
-      const packetResult = historicalPrivateEvidencePacketSchema.safeParse(
-        envelopeResult.data.packet,
-      );
+      let packetResult: z.SafeParseReturnType<
+        unknown,
+        z.infer<typeof historicalPrivateEvidencePacketSchema>
+      >;
+      try {
+        packetResult = historicalPrivateEvidencePacketSchema.safeParse(
+          envelopeResult.data.packet,
+        );
+      } catch {
+        throw commandError("FINANCE_PACKET_INVALID");
+      }
       if (!packetResult.success) {
         throw commandError("FINANCE_PACKET_INVALID");
       }
 
-      const packet = packetResult.data;
-      const attestationResult = attestationDecisionSchema.safeParse(
-        await input.companyIdentityAttestor.attest({
+      const packet = freezeDeep(packetResult.data);
+      const credential = freezeDeep(envelopeResult.data.credential);
+      const audit = freezeDeep(envelopeResult.data.audit);
+      let objectId: string;
+      try {
+        objectId = await historicalPrivateEvidenceObjectId(packet);
+      } catch {
+        throw commandError("FINANCE_OBJECT_ID_DERIVATION_FAILED");
+      }
+      let attestationOutput: unknown;
+      try {
+        attestationOutput = await attest({
           operation: "historical-private-evidence:import",
           scope: packet.scope,
-          credential: envelopeResult.data.credential,
-          audit: envelopeResult.data.audit,
-        }),
-      );
+          credential,
+          audit: freezeDeep({ ...audit, objectId }),
+        });
+      } catch {
+        throw commandError("FINANCE_ATTESTATION_FAILED");
+      }
+      let attestationResult: z.SafeParseReturnType<
+        unknown,
+        z.infer<typeof attestationDecisionSchema>
+      >;
+      try {
+        attestationResult = attestationDecisionSchema.safeParse(
+          attestationOutput,
+        );
+      } catch {
+        throw commandError("FINANCE_ATTESTATION_INVALID");
+      }
       if (!attestationResult.success) {
         throw commandError("FINANCE_ATTESTATION_INVALID");
       }
@@ -564,7 +703,7 @@ export function createHistoricalPrivateEvidenceImportCommand(input: {
         throw commandError("FINANCE_ATTESTATION_DENIED");
       }
 
-      const authorizationEvidence = attestationResult.data.evidence;
+      const authorizationEvidence = freezeDeep(attestationResult.data.evidence);
       if (authorizationEvidence.organizationId !== packet.scope.companyId) {
         throw commandError("FINANCE_ATTESTATION_COMPANY_MISMATCH");
       }
@@ -575,14 +714,26 @@ export function createHistoricalPrivateEvidenceImportCommand(input: {
         throw commandError("FINANCE_ATTESTATION_SCHOOL_MISMATCH");
       }
 
-      const evidenceResult = evidenceBindingSchema.safeParse(
-        await input.privateEvidenceBindingPort.verify({
+      let evidenceOutput: unknown;
+      try {
+        evidenceOutput = await verify({
           evidenceReference: packet.source.evidenceReference,
           scope: packet.scope,
           expectedPayloadDigest: packet.source.payloadDigest,
           authorization: authorizationEvidence,
-        }),
-      );
+        });
+      } catch {
+        throw commandError("FINANCE_EVIDENCE_BINDING_FAILED");
+      }
+      let evidenceResult: z.SafeParseReturnType<
+        unknown,
+        z.infer<typeof evidenceBindingSchema>
+      >;
+      try {
+        evidenceResult = evidenceBindingSchema.safeParse(evidenceOutput);
+      } catch {
+        throw commandError("FINANCE_EVIDENCE_BINDING_INVALID");
+      }
       if (!evidenceResult.success) {
         throw commandError("FINANCE_EVIDENCE_BINDING_INVALID");
       }
@@ -600,6 +751,7 @@ export function createHistoricalPrivateEvidenceImportCommand(input: {
 
       return freezeDeep({
         packet,
+        objectId,
         authorizationEvidence,
         evidence,
       });
