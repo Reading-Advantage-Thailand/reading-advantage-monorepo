@@ -1,0 +1,7 @@
+track_id: apk_standard_game_experience_20260810
+
+task: Phase S2.6 shared tutorial-path documentation
+
+status: started only; no task or phase completion claimed
+
+verification: isolated plan diff; git diff --cached --check passed before commit
