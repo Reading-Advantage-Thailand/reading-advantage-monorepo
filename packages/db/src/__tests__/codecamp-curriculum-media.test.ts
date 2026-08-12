@@ -15,6 +15,38 @@ type CurriculumSection = {
   youtubeSource?: string;
 };
 
+const VERIFIED_VIDEO_MAPPINGS = [
+  {
+    key: "javascript:Functions and Scope:Scope and Closures",
+    youtubeId: "3a0I8ICR1Vg",
+    youtubeSource: "Web Dev Simplified",
+  },
+  {
+    key: "nextjs-basics:Dynamic Routes and Navigation:Dynamic Route Segments",
+    youtubeId: "Sklc_fQBmcs",
+    youtubeSource: "Fireship",
+  },
+  {
+    key: "nextjs-basics:Data Fetching in Server Components:Server-Side Data Fetching",
+    youtubeId: "843nec-IvW0",
+    youtubeSource: "Dave Gray",
+  },
+  {
+    key: "nextjs-basics:Server Components vs Client Components:Client Components",
+    youtubeId: "3Q2q2gs0nAI",
+    youtubeSource: "Jack Herrington",
+  },
+  {
+    key: "cloud-docker:Docker Basics:Docker Concepts",
+    youtubeId: "Gjnup-PuquQ",
+    youtubeSource: "Fireship",
+  },
+] as const;
+
+const VERIFIED_VIDEO_SOURCES: Set<string> = new Set(
+  VERIFIED_VIDEO_MAPPINGS.map(({ youtubeSource }) => youtubeSource),
+);
+
 function getAllModules(): CurriculumModule[] {
   return [
     ...getPhaseACurriculumData().modules,
@@ -48,23 +80,26 @@ describe("codecamp curated curriculum videos", () => {
   );
 
   it("keeps every embedded video ID in YouTube's 11-character format", () => {
-    expect(youtubeIds.length).toBe(10);
+    expect(youtubeIds.length).toBe(VERIFIED_VIDEO_MAPPINGS.length);
     expect(youtubeIds.every((youtubeId) => /^[A-Za-z0-9_-]{11}$/.test(youtubeId))).toBe(
       true,
     );
     expect(new Set(youtubeIds).size).toBe(youtubeIds.length);
+    expect(new Set(youtubeIds)).toEqual(
+      new Set(VERIFIED_VIDEO_MAPPINGS.map(({ youtubeId }) => youtubeId)),
+    );
   });
 
   it("requires provenance for every embedded video", () => {
-    expect(sections.every((section) => section.youtubeSource)).toBe(true);
+    expect(
+      sections.every(
+        (section) =>
+          section.youtubeSource !== undefined &&
+          VERIFIED_VIDEO_SOURCES.has(section.youtubeSource),
+      ),
+    ).toBe(true);
     expect(new Set(sections.map((section) => section.youtubeSource))).toEqual(
-      new Set([
-        "Legacy curated source (not independently verified)",
-        "Dave Gray",
-        "Fireship",
-        "Jack Herrington",
-        "Web Dev Simplified",
-      ]),
+      VERIFIED_VIDEO_SOURCES,
     );
   });
 
@@ -76,36 +111,17 @@ describe("codecamp curated curriculum videos", () => {
       ]),
     );
 
-    const expectedMappings = [
-      {
-        key: "javascript:Functions and Scope:Scope and Closures",
-        youtubeId: "3a0I8ICR1Vg",
-        youtubeSource: "Web Dev Simplified",
-      },
-      {
-        key: "nextjs-basics:Dynamic Routes and Navigation:Dynamic Route Segments",
-        youtubeId: "Sklc_fQBmcs",
-        youtubeSource: "Fireship",
-      },
-      {
-        key: "nextjs-basics:Data Fetching in Server Components:Server-Side Data Fetching",
-        youtubeId: "843nec-IvW0",
-        youtubeSource: "Dave Gray",
-      },
-      {
-        key: "nextjs-basics:Server Components vs Client Components:Client Components",
-        youtubeId: "3Q2q2gs0nAI",
-        youtubeSource: "Jack Herrington",
-      },
-      {
-        key: "cloud-docker:Docker Basics:Docker Concepts",
-        youtubeId: "Gjnup-PuquQ",
-        youtubeSource: "Fireship",
-      },
-    ];
-
-    expectedMappings.forEach(({ key, youtubeId, youtubeSource }) => {
+    VERIFIED_VIDEO_MAPPINGS.forEach(({ key, youtubeId, youtubeSource }) => {
       expect(sectionByKey.get(key)).toMatchObject({ youtubeId, youtubeSource });
     });
+
+    expect(
+      new Set(
+        sections.map(
+          ({ moduleSlug, lessonTitle, heading }) =>
+            `${moduleSlug}:${lessonTitle}:${heading}`,
+        ),
+      ),
+    ).toEqual(new Set(VERIFIED_VIDEO_MAPPINGS.map(({ key }) => key)));
   });
 });
