@@ -1,0 +1,11 @@
+track_id: apk_standard_game_experience_20260810
+
+task: Phase S2.6 document the shared path and bespoke mechanic hook
+
+summary: documented the S2 lifecycle, strict semantic-ID intern declaration, deterministic runtime-only GameTutorialActionDriver seam, authority boundaries, production-effect suppression, and independent QC path.
+
+files: packages/advantage-play-kit/docs/developer-kit.md; packages/advantage-play-kit/docs/game-lifecycle.md
+
+Green evidence: documentation artifact contract 5/5 passed; dedicated lane reported focused S2 slice 155/155, package typecheck/build/lint green (four pre-existing lint warnings), and tutorial QC app test 4/4.
+
+remaining: graph/generate/doctor structural subtask is root-owned and intentionally not claimed complete while concurrent lanes edit the shared tree.
