@@ -14,7 +14,7 @@
   from the preceding task. Accepted with evidence in
    `phase1-persistence-acceptance-20260811.md` in commit
    `c5ecf18b0830c8702602f9f5f33415c7b3e92d66`.
-- [x] Task: Add behavior-level contract tests and adapters for the Company (commit `2291d42138d704cd6d59a15c4b0b05d3b482c9d8`)
+- [~] Task: Add behavior-level contract tests and adapters for the Company (commit `2291d42138d704cd6d59a15c4b0b05d3b482c9d8`)
   Identity attestor, authorized private-evidence reads, and a scope/digest-bound
   durable outbox projector required by the historical private-evidence MVP.
   Depends on the completed foundation task and the documented candidate boundary in
@@ -154,7 +154,8 @@
     and storage tests. No production source changed. The task remains `[~]`
     because the Red failures identify missing implementation, not environment.
 
-    Green implementation evidence (2026-08-12): implementation commit
+    Prior candidate Green implementation evidence (2026-08-12; reopened by
+    final security Review A/B v2): implementation commit
     `2291d42138d704cd6d59a15c4b0b05d3b482c9d8` implements B1-B9. It adds
     trusted server audit sources and a durable Company Identity Finance audit
     adapter, a provider-neutral Storage-to-Finance binding adapter, CAS-aware
@@ -203,8 +204,60 @@
     Owned backend and Storage ESLint commands exited 0. `git diff --check`
     exited 0. The Red commit contains only the two reconciled Storage tests and
     this plan. Green must implement only the seven B1-B9 failures above, then
-    rerun the complete focused commands. Green must keep the Phase 2 aggregate
-    red and must not edit the unrelated dirty paths.
+     rerun the complete focused commands. Green must keep the Phase 2 aggregate
+     red and must not edit the unrelated dirty paths.
+
+    Final security Review A/B v2 retry Mid Red evidence (2026-08-12): Task 3
+    returned to `[~]` before work. The immutable phase scope is
+    `phase_base_sha=c93f3a84fcd72c3559e81fdbe7c9ac761d993f35`. The supplied
+    role base is `role_base_sha=aa9d4d651c442975abacdc46bbb8d11cb65d58d0`;
+    it resolves, is the starting HEAD, and is separate from the phase scope.
+
+    Dirty-path classification preserved unrelated user work. The owned paths
+    are this plan and these new Red tests:
+    `packages/backend/src/modules/company-identity/__tests__/finance-task3-security-review-v2.red.test.ts`,
+    `packages/backend/src/modules/company-identity/__tests__/postgres-finance-task3-security-review-v2.red.test.ts`,
+    `packages/backend/src/modules/finance-operations/__tests__/finance-task3-security-review-v2.red.test.ts`,
+    and `packages/storage/src/__tests__/finance-task3-security-review-v2.red.test.ts`.
+    `.opencode/goals/**` is generated or ignorable state. Mastery, APK, Sales,
+    lockfile, and other product paths are unrelated user work and remain
+    untouched.
+
+    The new Red contracts require mandatory trusted server audit sources,
+    durable metadata projection that preserves actor, object, request, event,
+    time, claims version, policy version, and `FAILED` outcome, a mandatory
+    durable claim/CAS seam, validated owner byte ceilings, sanitized
+    authorization and digest dependency errors, safe `contentType`, and
+    binding-adapter dependency validation. The live PostgreSQL test uses only
+    the disposable `company_identity_test_20260812_a1b2c3d4e5f60719` database.
+
+    The targeted Red commands were run after the tests were added:
+
+    - `CI=true pnpm --filter @reading-advantage/backend exec vitest run src/modules/company-identity/__tests__/finance-task3-security-review-v2.red.test.ts`
+      exits 1 with 2/2 tests failing because the attestor accepts missing and
+      partial trusted sources. These are missing implementation failures.
+    - `CI=true pnpm --filter @reading-advantage/backend exec vitest run src/modules/finance-operations/__tests__/finance-task3-security-review-v2.red.test.ts`
+      exits 1 with 2/2 tests failing because the projector accepts a missing
+      durable claim and the binding adapter accepts invalid dependencies.
+    - `CI=true pnpm --filter @reading-advantage/storage exec vitest run src/__tests__/finance-task3-security-review-v2.red.test.ts`
+      exits 1 with 4/4 tests failing because the owner ceiling is optional,
+      authorization and digest errors leak provider messages, and unsafe
+      `contentType` is accepted.
+    - `COMPANY_IDENTITY_PG_TEST_URL=postgresql://cid_review_a:test@127.0.0.1:5432/company_identity_test_20260812_a1b2c3d4e5f60719 CI=true pnpm --filter @reading-advantage/backend exec vitest run src/modules/company-identity/__tests__/postgres-finance-task3-security-review-v2.red.test.ts`
+      exits 1 with 1/1 test failing after real migration and durable insert.
+      The current adapter stores `DENIED` and drops the required durable
+      metadata instead of storing `FAILED` with the required fields. This is
+      a production implementation Red, not a PostgreSQL environment failure.
+
+    Existing focused Review B tests for concurrent claim behavior, binding
+    composition, owner-bound reads, malformed driver results, and provider
+    error sanitization pass at the supplied role base. The new tests tighten
+    the missing mandatory contracts and do not claim that those passing tests
+    are Red. No production source, migration, package, lockfile, or Phase 2
+    aggregate path changed. `git diff --check` and focused ESLint passed.
+    The task remains `[~]`; Green must implement only these final security
+    contracts, rerun the four Red commands, and retain real disposable-DB
+    evidence.
 - [b] Task: Add live CRM `CustomerBillingCatalogPort` and Tutor
   `TutorFinancialExportPort` owner contracts and adapters only after those
   source owners exist and accept source-native identities, versions, evidence,
