@@ -1,0 +1,13 @@
+Shared structural refresh for Sales, APK, Finance, and Marketing.
+
+Generated commit: 390448dd2f3a97371ad9a77d72507033633dccd8. Embedded sourceRevision: b4b11a3057e3645e6ab29bff304c7a93a00d440b.
+
+Combined build-graph update: exact 71 unique TS/TSX paths; canonical newline-terminated sorted path-list SHA-256 40df25b062d742ccb715e301b4a2914a079473575e504733de7dae7d70a2fb0d; output 71 files, 527 to 1360 nodes, 682 to 1538 edges. Subsets: Sales 3/f50b92da; APK 24/29080b54; Finance 29/29ff5a83; Marketing 15/cfac480d.
+
+Generated outputs: architecture.json df81e0948c1f01b59b8be3ee5659075d4cba4de4fefe5f477d2a9b2a695a1555; routes.md a380a66544af846ba4057267c8023089b01fc83b7a6c0f97dc2ed69cf98fb1fb. Pre-commit generator rerun matched staged bytes.
+
+Whole-repository build-graph audit emitted no output and was terminated after about four minutes, exit 130; no audit Green.
+
+measure/doctor.sh exited 1 at the fail-fast marker guard: 80 deprecated [ ] markers across nine unrelated active plans; architecture did not run inside doctor.
+
+Separate installed architecture checker exited 1: files=4247 findings=697 parseErrors=0; additions=137 removals=0 renames=21. Final attribution review ACCEPT: Sales 0/0, APK 0/0, Finance net 0/0 after da3ce2191 removed its prior three additions, Marketing P7.4 0/0. Residual 137/21 is shared-root debt unrelated to these audited lane changes. No global Green is claimed.
