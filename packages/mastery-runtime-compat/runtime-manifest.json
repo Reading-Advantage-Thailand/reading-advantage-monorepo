@@ -181,6 +181,122 @@
           "range": ">=1.0.0 <2.0.0"
         }
       ]
+    },
+    {
+      "id": "mastery-runtime-0.1.0-kst-srs-3.2-sales",
+      "normativeVersion": "kst-srs.v3.2",
+      "packages": [
+        {
+          "name": "@reading-advantage/knowledge-space-core",
+          "version": "0.1.0",
+          "exports": [
+            ".",
+            "./types",
+            "./schemas",
+            "./validation",
+            "./placement",
+            "./level-projection",
+            "./progress-trend",
+            "./adapters",
+            "./fixtures"
+          ]
+        },
+        {
+          "name": "@reading-advantage/knowledge-space-practice",
+          "version": "0.1.0",
+          "exports": [
+            ".",
+            "./misconception-loop",
+            "./blueprints",
+            "./planner/types",
+            "./planner/priority",
+            "./planner/unlock-value",
+            "./planner/recommended-next",
+            "./planner/domain-utility",
+            "./planner/review-load",
+            "./projections"
+          ]
+        },
+        {
+          "name": "@reading-advantage/practice-core",
+          "version": "0.1.0",
+          "exports": [
+            ".",
+            "./contract",
+            "./submission-schema",
+            "./timing",
+            "./timing-baseline",
+            "./srs-rating",
+            "./problem-family",
+            "./practice-item",
+            "./error-analysis",
+            "./generator-qa"
+          ]
+        },
+        {
+          "name": "@reading-advantage/srs-engine",
+          "version": "0.1.0",
+          "exports": [
+            ".",
+            "./contract",
+            "./scheduler",
+            "./review-processor",
+            "./queue",
+            "./adapters",
+            "./submission-adapter",
+            "./proficiency",
+            "./edge-calibration",
+            "./fsrs-calibration",
+            "./evaluation-harness",
+            "./session-composition"
+          ]
+        }
+      ],
+      "graph": {
+        "release": "knowledge-space-sales-mastery-v1.0.0",
+        "schema": "knowledge-space.v1"
+      },
+      "contracts": {
+        "practice": "practice.v1",
+        "srs": "srs.contract.v2",
+        "persistence": "mastery.persistence.v1"
+      },
+      "persistence": {
+        "schema": "mastery.persistence.v1",
+        "migrationHead": "0028_mastery_tenant_hardening"
+      },
+      "fixtures": {
+        "version": "mastery-fixtures.v3.2.0",
+        "sourceCommit": "34f9fb508c3e1751518aec335af3040c381d1d12"
+      },
+      "source": {
+        "commit": "34f9fb508c3e1751518aec335af3040c381d1d12"
+      },
+      "evidence": {
+        "graphCanonicalSha256": "5f2b35f7178f0fed9ca103959d59d5e75c0f4818eac355c14a1be270776a9808",
+        "bindingsCanonicalSha256": "e8843314e2f381a44143acb08c6ff6596bdeac4e9da32fbdb9a5851c8ed32197"
+      },
+      "salesKnowledge": {
+        "package": {
+          "name": "@reading-advantage/sales-knowledge",
+          "version": "0.1.0"
+        },
+        "verifierExport": "verifySalesReleaseEvidence",
+        "evidenceManifestExport": "salesReleaseEvidenceManifest",
+        "evidence": {
+          "releaseCandidateByteSha256": "723198653a09417f92b597a3faefe919e3d83504f3320f9d962ac0ea1f8b2168",
+          "approvalByteSha256": "8b058a5b66631bbffe662a131eed5330bb0c12fa10134a096378e9a4c8bff404",
+          "staticSeedByteSha256": "0519b43a6c1a177bcbd7f06fe4d9cf86225afedd5af1f0b76e2aa04c4f3d13ec",
+          "graphCanonicalSha256": "5f2b35f7178f0fed9ca103959d59d5e75c0f4818eac355c14a1be270776a9808",
+          "bindingsCanonicalSha256": "e8843314e2f381a44143acb08c6ff6596bdeac4e9da32fbdb9a5851c8ed32197"
+        }
+      },
+      "supportedConsumers": [
+        {
+          "name": "sales-advantage",
+          "range": ">=0.1.0 <0.2.0"
+        }
+      ]
     }
   ]
 }

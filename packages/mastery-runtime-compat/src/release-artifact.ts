@@ -1,8 +1,28 @@
 import { execFile } from "node:child_process";
-import { cp, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
-import { tmpdir } from "node:os";
-import { basename, resolve } from "node:path";
+import { randomUUID } from "node:crypto";
+import {
+  cp,
+  lstat,
+  mkdir,
+  mkdtemp,
+  readFile,
+  realpath,
+  rename,
+  rm,
+  writeFile,
+} from "node:fs/promises";
+import { createRequire } from "node:module";
+import {
+  basename,
+  dirname,
+  isAbsolute,
+  join,
+  relative,
+  resolve,
+  sep,
+} from "node:path";
 import { promisify } from "node:util";
+import { z } from "zod";
 
 const execute = promisify(execFile);
 const REPOSITORY_ROOT = resolve(import.meta.dirname, "../../..");
@@ -16,12 +36,47 @@ const ENGINE_DIRECTORIES = [
   "practice-core",
   "srs-engine",
 ] as const;
-const FORBIDDEN_LOCAL_DEPENDENCY_PROTOCOL = /^(?:workspace|file|link|portal):/;
+const PACKAGED_DIRECTORIES = [...ENGINE_DIRECTORIES, "sales-knowledge"] as const;
+const SALES_KNOWLEDGE_DIRECTORY = "sales-knowledge";
+const EXTERNAL_RUNTIME_PACKAGES = [
+  { name: "zod", sourceDirectory: "knowledge-space-core" },
+  { name: "ts-fsrs", sourceDirectory: "srs-engine" },
+] as const;
+const GATE_RUNTIME_PACKAGE = {
+  name: "zod",
+  sourceDirectory: "mastery-runtime-compat",
+} as const;
+const GATE_ZOD_VERSION = "3.25.76";
+const WORKSPACE_MANIFEST_PATH = resolve(REPOSITORY_ROOT, "pnpm-workspace.yaml");
+const TRUSTED_WORK_DIRECTORY = "trusted-work";
+const WORKSPACE_LEASE_DIRECTORY = ".workspace-build.lease";
+const FORBIDDEN_LOCAL_DEPENDENCY_PROTOCOL = /^(?:workspace|file|link|portal|catalog):/;
+const SALES_SHA256_PATTERN = /^[0-9a-f]{64}$/;
+const CLEANUP_RETRY_DELAYS_MS = [25, 50, 100, 200, 400] as const;
+const WORKSPACE_LEASE_RETRY_DELAYS_MS = [25, 50, 100, 200, 400, 800, 1_600] as const;
+const WORKSPACE_LEASE_STALE_AFTER_MS = 15 * 60 * 1_000;
+const WORKSPACE_LEASE_MAX_WAIT_MS = 5 * 60 * 1_000;
+const TEST_HOLD_LEASE_ENV = "RELEASE_ARTIFACT_TEST_HOLD_LEASE_MS";
+const TEST_DELAY_BEFORE_CONSUMER_ENV =
+  "RELEASE_ARTIFACT_TEST_DELAY_BEFORE_CONSUMER_MS";
+const RUNTIME_DIST_FILES = ["check-consumer.js", "index.js", "release-artifact.js"] as const;
+const NPM_OPERATION_CONCURRENCY = 2;
+const NPM_EMPTY_OUTPUT_RETRY_DELAYS_MS = [100, 250] as const;
+
+let workspaceBuildQueue: Promise<void> = Promise.resolve();
+let workspaceBuildReady = false;
+
+type PackageExport =
+  | string
+  | PackageExport[]
+  | { [condition: string]: PackageExport };
 
 interface PackageJson {
+  [key: string]: unknown;
   name: string;
   version: string;
-  exports: Record<string, string | { types?: string; import?: string; default?: string }>;
+  exports?: Record<string, PackageExport>;
+  files?: string[];
   dependencies?: Record<string, string>;
   devDependencies?: Record<string, string>;
   optionalDependencies?: Record<string, string>;
@@ -32,6 +87,109 @@ interface NpmPackEntry {
   filename: string;
   files: Array<{ path: string }>;
 }
+
+interface ValidatedArtifactRoot {
+  callerRoot: string;
+  cacheRoot: string;
+  cacheRealPath: string;
+}
+
+interface WorkspaceLeaseOwner {
+  pid: number;
+  token: string;
+  acquiredAt: number;
+}
+
+interface WorkspaceLease {
+  path: string;
+  token: string;
+}
+
+interface GateDependencyIdentity {
+  package: { name: string; version: string };
+  sourceRoot: string;
+}
+
+interface ResolvedRuntimeVersions {
+  gateZod: string;
+  engineZod: string;
+  tsFsrs: string;
+}
+
+/** Identifies the exact Sales package and public evidence exports checked in a clean consumer. */
+export interface ReleaseSalesKnowledgeIdentity {
+  /** Published package name bound to the Sales graph release. */
+  package: { name: string; version: string };
+  /** Public verifier export used for the packed evidence proof. */
+  verifierExport: string;
+  /** Public evidence-manifest export used for the packed evidence proof. */
+  evidenceManifestExport: string;
+  /** Immutable source and artifact digests bound by the descriptor. */
+  evidence: {
+    releaseCandidateByteSha256: string;
+    approvalByteSha256: string;
+    staticSeedByteSha256: string;
+    graphCanonicalSha256: string;
+    bindingsCanonicalSha256: string;
+  };
+}
+
+/** Options controlling a repository-local release-artifact proof. */
+export interface ReleaseArtifactCheckOptions {
+  /** Absolute caller-owned root beneath the repository `.cache` directory. */
+  temporaryRoot: string;
+  /** Checked-in consumer descriptors to copy into and verify from the clean consumer. */
+  consumerDescriptorPaths: string[];
+}
+
+const SalesRuntimeAttestationSchema = z
+  .object({
+    schemaVersion: z.literal("sales-runtime-attestation.v1"),
+    consumer: z
+      .object({
+        name: z.string().regex(/^[a-z0-9-]+$/),
+        version: z.string().regex(/^\d+\.\d+\.\d+$/),
+      })
+      .strict(),
+    salesKnowledge: z
+      .object({
+        package: z
+          .object({
+            name: z.literal("@reading-advantage/sales-knowledge"),
+            version: z.literal("0.1.0"),
+          })
+          .strict(),
+        verifierExport: z.literal("verifySalesReleaseEvidence"),
+        evidenceManifestExport: z.literal("salesReleaseEvidenceManifest"),
+        releaseId: z.string().regex(/^knowledge-space-[a-z0-9.-]+$/),
+        evidence: z
+          .object({
+            releaseCandidateByteSha256: z.string().regex(SALES_SHA256_PATTERN),
+            approvalByteSha256: z.string().regex(SALES_SHA256_PATTERN),
+            staticSeedByteSha256: z.string().regex(SALES_SHA256_PATTERN),
+            graphCanonicalSha256: z.string().regex(SALES_SHA256_PATTERN),
+            bindingsCanonicalSha256: z.string().regex(SALES_SHA256_PATTERN),
+          })
+          .strict(),
+      })
+      .strict(),
+    verification: z
+      .object({ valid: z.literal(true), issues: z.array(z.unknown()) })
+      .strict(),
+    compatibility: z
+      .object({ compatible: z.literal(true), issues: z.array(z.unknown()) })
+      .strict(),
+    resolvedVersions: z
+      .object({
+        gateZod: z.string().regex(/^\d+\.\d+\.\d+$/),
+        engineZod: z.string().regex(/^\d+\.\d+\.\d+$/),
+        tsFsrs: z.string().regex(/^\d+\.\d+\.\d+$/),
+      })
+      .strict(),
+  })
+  .strict();
+
+type SalesRuntimeAttestation = z.infer<typeof SalesRuntimeAttestationSchema>;
 
 /** Auditable result returned by the safe local release-artifact gate. */
 export interface ReleaseArtifactCheckResult {
@@ -45,13 +203,27 @@ export interface ReleaseArtifactCheckResult {
   workspaceDependencies: string[];
   /** Confirms the offline clean consumer installed and ran the shared gate. */
   cleanConsumer: true;
+  /** Consumer names whose copied descriptors passed the clean-consumer gate. */
+  checkedConsumers: string[];
+  /** Sales knowledge identity verified from the packed public package, when present. */
+  verifiedSalesKnowledge: ReleaseSalesKnowledgeIdentity;
+  /** Dependency versions resolved inside the clean consumer for gate and engines. */
+  resolvedVersions: ResolvedRuntimeVersions;
 }
 
 async function executeLocal(
   file: string,
   args: string[],
   cwd: string,
+  packageStateRoot?: string,
 ): Promise<{ stdout: string; stderr: string }> {
+  const packageState = packageStateRoot == null
+    ? {}
+    : {
+        npm_config_cache: resolve(packageStateRoot, "npm-cache"),
+        npm_config_globalconfig: resolve(packageStateRoot, "npm-globalrc"),
+        npm_config_userconfig: resolve(packageStateRoot, "npmrc"),
+      };
   return execute(file, args, {
     cwd,
     encoding: "utf8",
@@ -62,22 +234,841 @@ async function executeLocal(
       npm_config_fund: "false",
       npm_config_ignore_scripts: "true",
       npm_config_offline: "true",
+      ...packageState,
     },
     maxBuffer: 20 * 1024 * 1024,
   });
+}
+
+/** Serializes builds and reads from shared package dist directories across concurrent proofs. */
+async function withWorkspaceBuildLock<T>(operation: () => Promise<T>): Promise<T> {
+  const previous = workspaceBuildQueue;
+  let release!: () => void;
+  workspaceBuildQueue = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  await previous;
+  try {
+    return await operation();
+  } finally {
+    release();
+  }
+}
+
+interface FifoSemaphoreObserver {
+  onStart: () => void;
+  onFinish: () => void;
+}
+
+/** Creates a FIFO semaphore whose released tokens are handed directly to queued waiters. */
+function createFifoSemaphore(
+  concurrency: number,
+  observer?: FifoSemaphoreObserver,
+): { run: <T>(operation: () => Promise<T>) => Promise<T> } {
+  if (!Number.isInteger(concurrency) || concurrency < 1) {
+    throw new Error("Semaphore concurrency must be a positive integer");
+  }
+  let active = 0;
+  const waiters: Array<() => void> = [];
+  return {
+    async run<T>(operation: () => Promise<T>): Promise<T> {
+      const hasImmediateToken = active < concurrency;
+      if (!hasImmediateToken) {
+        await new Promise<void>((resolveWaiter) => waiters.push(resolveWaiter));
+      } else {
+        active += 1;
+      }
+      observer?.onStart();
+      try {
+        return await operation();
+      } finally {
+        observer?.onFinish();
+        const next = waiters.shift();
+        if (next) {
+          next();
+        } else {
+          active -= 1;
+        }
+      }
+    },
+  };
+}
+
+/** Limits concurrent npm pack subprocesses so their JSON output remains reliable. */
+const npmOperationSemaphore = createFifoSemaphore(NPM_OPERATION_CONCURRENCY);
+
+/** Runs a deterministic probe against the production FIFO npm-operation scheduler. */
+export interface NpmOperationSchedulerProbe {
+  /** Starts one named operation through the bounded scheduler. */
+  run<T>(label: string, operation: () => Promise<T>): Promise<T>;
+  /** Returns operation labels in the order the scheduler granted tokens. */
+  startOrder(): string[];
+  /** Returns the greatest number of operations active at once. */
+  maxActive(): number;
+}
+
+/** Creates an instrumented FIFO scheduler probe for deterministic concurrency tests. */
+export function createNpmOperationSchedulerForTest(
+  concurrency = NPM_OPERATION_CONCURRENCY,
+): NpmOperationSchedulerProbe {
+  const startOrder: string[] = [];
+  let active = 0;
+  let maxActive = 0;
+  const semaphore = createFifoSemaphore(concurrency, {
+    onStart: () => {
+      active += 1;
+      maxActive = Math.max(maxActive, active);
+    },
+    onFinish: () => {
+      active -= 1;
+    },
+  });
+  return {
+    run<T>(label: string, operation: () => Promise<T>): Promise<T> {
+      return semaphore.run(async () => {
+        startOrder.push(label);
+        return operation();
+      });
+    },
+    startOrder: () => [...startOrder],
+    maxActive: () => maxActive,
+  };
+}
+
+async function withNpmOperationSlot<T>(operation: () => Promise<T>): Promise<T> {
+  return npmOperationSemaphore.run(operation);
+}
+
+/** Confirms two regular-file observations refer to the same unchanged inode. */
+function sameRegularFile(
+  before: { dev: number; ino: number; size: number; mtimeMs: number; isFile: () => boolean },
+  after: { dev: number; ino: number; size: number; mtimeMs: number; isFile: () => boolean },
+): boolean {
+  return before.isFile() &&
+    after.isFile() &&
+    before.dev === after.dev &&
+    before.ino === after.ino &&
+    before.size === after.size &&
+    before.mtimeMs === after.mtimeMs;
+}
+
+/** Reads only validated regular-file bytes and rejects symlink or replacement races. */
+async function readRegularFileBytes(path: string, label: string): Promise<Buffer> {
+  const before = await lstat(path);
+  if (!before.isFile()) {
+    throw new Error(`${label} must be a regular file, not a symlink or directory`);
+  }
+  const bytes = await readFile(path);
+  const after = await lstat(path);
+  if (!sameRegularFile(before, after)) {
+    throw new Error(`${label} changed while it was being read`);
+  }
+  return bytes;
+}
+
+/** Creates a new regular target from validated bytes without following a target symlink. */
+async function writeNewRegularFile(
+  path: string,
+  bytes: Uint8Array,
+  label: string,
+): Promise<void> {
+  await writeFile(path, bytes, { flag: "wx", mode: 0o600 });
+  const written = await lstat(path);
+  if (!written.isFile()) {
+    throw new Error(`${label} was not written as a regular file`);
+  }
+}
+
+/** Parses the final JSON line emitted by the in-consumer packed proof. */
+function parseSalesRuntimeAttestation(stdout: string): SalesRuntimeAttestation {
+  const line = stdout
+    .split(/\r?\n/)
+    .map((candidate) => candidate.trim())
+    .filter(Boolean)
+    .at(-1);
+  if (!line) throw new Error("Packed Sales consumer emitted no attestation");
+  let raw: unknown;
+  try {
+    raw = JSON.parse(line) as unknown;
+  } catch (error) {
+    throw new Error(
+      `Packed Sales consumer emitted invalid attestation JSON: ${error instanceof Error ? error.message : String(error)}`,
+    );
+  }
+  const parsed = SalesRuntimeAttestationSchema.safeParse(raw);
+  if (!parsed.success) {
+    throw new Error(
+      `Packed Sales consumer emitted an invalid attestation: ${parsed.error.message}`,
+    );
+  }
+  return parsed.data;
+}
+
+/** Returns whether a candidate path is a strict descendant of a parent path. */
+function isStrictlyInside(parent: string, candidate: string): boolean {
+  const child = relative(parent, candidate);
+  return child !== "" && child !== ".." && !child.startsWith(`..${sep}`) && !isAbsolute(child);
+}
+
+/** Finds the nearest existing ancestor without creating or modifying any path. */
+async function nearestExistingAncestor(path: string): Promise<string> {
+  let candidate = path;
+  while (true) {
+    try {
+      await lstat(candidate);
+      return candidate;
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
+      const parent = resolve(candidate, "..");
+      if (parent === candidate) return candidate;
+      candidate = parent;
+    }
+  }
+}
+
+/** Rejects symlink path components below a trusted directory boundary. */
+async function assertNoSymlinkComponents(
+  trustedParent: string,
+  candidate: string,
+  label: string,
+): Promise<void> {
+  const child = relative(trustedParent, candidate);
+  if (child === "" || child === ".." || child.startsWith(`..${sep}`) || isAbsolute(child)) {
+    throw new Error(`${label} must remain inside its trusted parent`);
+  }
+  let current = trustedParent;
+  for (const component of child.split(sep).filter(Boolean)) {
+    current = resolve(current, component);
+    try {
+      const entry = await lstat(current);
+      if (entry.isSymbolicLink()) {
+        throw new Error(`${label} cannot contain symlink path components`);
+      }
+      if (!entry.isDirectory() && current !== candidate) {
+        throw new Error(`${label} contains a non-directory path component`);
+      }
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code === "ENOENT") return;
+      throw error;
+    }
+  }
+}
+
+/** Resolves and validates the repository cache boundary used by all trusted work. */
+async function validateCacheBoundary(): Promise<{
+  cacheRoot: string;
+  cacheRealPath: string;
+}> {
+  const repositoryRealPath = await realpath(REPOSITORY_ROOT);
+  const cacheRoot = resolve(REPOSITORY_ROOT, ".cache");
+  const cacheEntry = await lstat(cacheRoot);
+  if (!cacheEntry.isDirectory() || cacheEntry.isSymbolicLink()) {
+    throw new Error("repository .cache must be a non-symlink directory");
+  }
+  const cacheRealPath = await realpath(cacheRoot);
+  if (!isStrictlyInside(repositoryRealPath, cacheRealPath)) {
+    throw new Error("repository .cache must resolve strictly inside the repository");
+  }
+  return { cacheRoot, cacheRealPath };
+}
+
+/** Validates a caller root before any release-artifact writes are attempted. */
+async function validateTemporaryRoot(temporaryRoot: string): Promise<ValidatedArtifactRoot> {
+  if (!isAbsolute(temporaryRoot)) {
+    throw new Error("temporaryRoot must be an absolute path beneath the repository .cache directory");
+  }
+
+  const { cacheRoot, cacheRealPath } = await validateCacheBoundary();
+  const candidate = resolve(temporaryRoot);
+  if (!isStrictlyInside(cacheRoot, candidate)) {
+    throw new Error("temporaryRoot must be strictly beneath the repository .cache directory");
+  }
+
+  await assertNoSymlinkComponents(cacheRoot, candidate, "temporaryRoot");
+  const existingAncestor = await nearestExistingAncestor(candidate);
+  const ancestorRealPath = await realpath(existingAncestor);
+  if (
+    ancestorRealPath !== cacheRealPath &&
+    !isStrictlyInside(cacheRealPath, ancestorRealPath)
+  ) {
+    throw new Error("temporaryRoot resolves outside the repository .cache directory");
+  }
+
+  try {
+    const candidateEntry = await lstat(candidate);
+    if (candidateEntry.isSymbolicLink() || !candidateEntry.isDirectory()) {
+      throw new Error("temporaryRoot must be a non-symlink directory");
+    }
+    const candidateRealPath = await realpath(candidate);
+    if (
+      candidateRealPath !== cacheRealPath &&
+      !isStrictlyInside(cacheRealPath, candidateRealPath)
+    ) {
+      throw new Error("temporaryRoot resolves outside the repository .cache directory");
+    }
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
+  }
+  return { callerRoot: candidate, cacheRoot, cacheRealPath };
+}
+
+/** Creates the caller namespace without placing release artifacts beneath its mutable path. */
+async function ensureCallerRootNamespace(root: ValidatedArtifactRoot): Promise<void> {
+  try {
+    const entry = await lstat(root.callerRoot);
+    if (entry.isSymbolicLink() || !entry.isDirectory()) {
+      throw new Error("temporaryRoot must be a non-symlink directory");
+    }
+    return;
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
+  }
+  await mkdir(root.callerRoot, { recursive: true });
+  const created = await lstat(root.callerRoot);
+  if (created.isSymbolicLink() || !created.isDirectory()) {
+    throw new Error("temporaryRoot namespace was not created as a directory");
+  }
+}
+
+/** Creates the trusted work directory that owns actual release artifacts and cleanup. */
+async function ensureTrustedWorkRoot(root: ValidatedArtifactRoot): Promise<string> {
+  const parent = resolve(root.cacheRealPath, "mastery-runtime-compat");
+  await assertNoSymlinkComponents(
+    root.cacheRealPath,
+    parent,
+    "trusted mastery-runtime-compat cache directory",
+  );
+  await mkdir(parent, { recursive: true });
+  const parentEntry = await lstat(parent);
+  if (parentEntry.isSymbolicLink() || !parentEntry.isDirectory()) {
+    throw new Error("trusted mastery-runtime-compat cache directory is unsafe");
+  }
+  const trustedRoot = resolve(parent, TRUSTED_WORK_DIRECTORY);
+  await assertNoSymlinkComponents(
+    root.cacheRealPath,
+    trustedRoot,
+    "trusted release work directory",
+  );
+  await mkdir(trustedRoot, { recursive: true });
+  const trustedEntry = await lstat(trustedRoot);
+  if (trustedEntry.isSymbolicLink() || !trustedEntry.isDirectory()) {
+    throw new Error("trusted release work directory is unsafe");
+  }
+  const trustedRealPath = await realpath(trustedRoot);
+  if (!isStrictlyInside(root.cacheRealPath, trustedRealPath)) {
+    throw new Error("trusted release work directory escaped repository .cache");
+  }
+  return trustedRealPath;
+}
+
+/** Returns whether a process identifier still names a live process. */
+function isProcessAlive(pid: number): boolean {
+  if (!Number.isInteger(pid) || pid <= 0) return false;
+  try {
+    process.kill(pid, 0);
+    return true;
+  } catch (error) {
+    return (error as NodeJS.ErrnoException).code === "EPERM";
+  }
+}
+
+/** Reads a valid lease owner, returning null for missing or malformed metadata. */
+async function readWorkspaceLeaseOwner(
+  leasePath: string,
+  leaseIsDirectory = true,
+): Promise<WorkspaceLeaseOwner | null> {
+  const ownerPath = leaseIsDirectory ? resolve(leasePath, "owner.json") : leasePath;
+  try {
+    const ownerEntry = await lstat(ownerPath);
+    if (ownerEntry.isSymbolicLink() || !ownerEntry.isFile()) return null;
+    const owner = JSON.parse(await readFile(ownerPath, "utf8")) as WorkspaceLeaseOwner;
+    if (
+      !Number.isInteger(owner.pid) ||
+      owner.pid <= 0 ||
+      typeof owner.token !== "string" ||
+      owner.token.length === 0 ||
+      !Number.isFinite(owner.acquiredAt)
+    ) {
+      return null;
+    }
+    return owner;
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") return null;
+    return null;
+  }
+}
+
+/** Removes a stale exclusive reclaim marker without disturbing an active reclaimer. */
+async function clearStaleWorkspaceReclaimMarker(markerPath: string): Promise<void> {
+  try {
+    const markerEntry = await lstat(markerPath);
+    if (markerEntry.isSymbolicLink() || !markerEntry.isFile()) return;
+    let marker: WorkspaceLeaseOwner | null = null;
+    try {
+      marker = JSON.parse(await readFile(markerPath, "utf8")) as WorkspaceLeaseOwner;
+    } catch {
+      // A truncated marker is reclaimable only after its own mtime is stale.
+    }
+    const stale = marker == null
+      ? Date.now() - markerEntry.mtimeMs >= WORKSPACE_LEASE_STALE_AFTER_MS
+      : Date.now() - marker.acquiredAt >= WORKSPACE_LEASE_STALE_AFTER_MS &&
+        !isProcessAlive(marker.pid);
+    if (stale) await rm(markerPath, { force: false }).catch(() => undefined);
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
+  }
+}
+
+/** Attempts to reclaim a stale lease without deleting a live valid owner. */
+async function reclaimStaleWorkspaceLease(leasePath: string): Promise<boolean> {
+  let leaseEntry;
+  try {
+    leaseEntry = await lstat(leasePath);
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") return false;
+    throw error;
+  }
+  if (
+    leaseEntry.isSymbolicLink() ||
+    (!leaseEntry.isDirectory() && !leaseEntry.isFile())
+  ) return false;
+  const leaseIsDirectory = leaseEntry.isDirectory();
+  const owner = await readWorkspaceLeaseOwner(leasePath, leaseIsDirectory);
+  const leaseIsStale = owner == null
+    ? Date.now() - leaseEntry.mtimeMs >= WORKSPACE_LEASE_STALE_AFTER_MS
+    : Date.now() - owner.acquiredAt >= WORKSPACE_LEASE_STALE_AFTER_MS &&
+      !isProcessAlive(owner.pid);
+  if (!leaseIsStale) return false;
+
+  const reclaimPath = `${leasePath}.reclaim`;
+  try {
+    await writeFile(
+      reclaimPath,
+      `${JSON.stringify({
+        pid: process.pid,
+        token: `${process.pid}-${randomUUID()}`,
+        acquiredAt: Date.now(),
+      })}\n`,
+      { flag: "wx", mode: 0o600 },
+    );
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === "EEXIST") {
+      await clearStaleWorkspaceReclaimMarker(reclaimPath);
+      return false;
+    }
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") return false;
+    throw error;
+  }
+  try {
+    const currentEntry = await lstat(leasePath);
+    if (
+      currentEntry.isSymbolicLink() ||
+      (!currentEntry.isDirectory() && !currentEntry.isFile())
+    ) return false;
+    const currentOwner = await readWorkspaceLeaseOwner(
+      leasePath,
+      currentEntry.isDirectory(),
+    );
+    if (currentOwner != null) {
+      if (isProcessAlive(currentOwner.pid)) return false;
+      if (
+        owner != null &&
+        (currentOwner.pid !== owner.pid ||
+          currentOwner.token !== owner.token ||
+          currentOwner.acquiredAt !== owner.acquiredAt)
+      ) {
+        return false;
+      }
+    } else if (!leaseIsStale) {
+      return false;
+    }
+    await rm(leasePath, {
+      recursive: currentEntry.isDirectory(),
+      force: false,
+    });
+    return true;
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") return true;
+    throw error;
+  } finally {
+    await rm(reclaimPath, { force: true }).catch(() => undefined);
+  }
+}
+
+/** Acquires a cross-process filesystem lease with atomic owner publication and stale recovery. */
+async function acquireWorkspaceLease(trustedWorkRoot: string): Promise<WorkspaceLease> {
+  const leasePath = resolve(trustedWorkRoot, WORKSPACE_LEASE_DIRECTORY);
+  const token = `${process.pid}-${randomUUID()}`;
+  const startedAt = Date.now();
+  for (let attempt = 0; ; attempt += 1) {
+    try {
+      await mkdir(leasePath);
+      const ownerTempPath = resolve(leasePath, `.owner-${token}.tmp`);
+      await writeFile(
+        ownerTempPath,
+        `${JSON.stringify({ pid: process.pid, token, acquiredAt: Date.now() })}\n`,
+        { flag: "wx", mode: 0o600 },
+      );
+      await rename(ownerTempPath, resolve(leasePath, "owner.json"));
+      return { path: leasePath, token };
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code !== "EEXIST") throw error;
+      await reclaimStaleWorkspaceLease(leasePath);
+      if (Date.now() - startedAt >= WORKSPACE_LEASE_MAX_WAIT_MS) {
+        throw new Error("Timed out waiting for the shared workspace lease");
+      }
+      const delay = WORKSPACE_LEASE_RETRY_DELAYS_MS[
+        Math.min(attempt, WORKSPACE_LEASE_RETRY_DELAYS_MS.length - 1)
+      ];
+      await new Promise((resolveDelay) => setTimeout(resolveDelay, delay));
+    }
+  }
+}
+
+/** Releases a cross-process workspace lease only when its owner token still matches. */
+async function releaseWorkspaceLease(lease: WorkspaceLease): Promise<void> {
+  try {
+    const leaseEntry = await lstat(lease.path);
+    if (leaseEntry.isSymbolicLink() || !leaseEntry.isDirectory()) return;
+    const owner = await readWorkspaceLeaseOwner(lease.path);
+    if (owner?.token !== lease.token) return;
+    await rm(lease.path, { recursive: true, force: false });
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
+  }
+}
+
+/** Creates a unique child beneath the canonical trusted work root. */
+async function createArtifactChild(trustedWorkRoot: string): Promise<string> {
+  return mkdtemp(join(trustedWorkRoot, ".release-artifact-"));
+}
+
+/** Removes only a validated release child beneath the canonical trusted work root. */
+async function removeArtifactChild(
+  trustedWorkRoot: string,
+  childPath: string,
+): Promise<void> {
+  for (let attempt = 0; ; attempt += 1) {
+    const rootEntry = await lstat(trustedWorkRoot);
+    if (rootEntry.isSymbolicLink() || !rootEntry.isDirectory()) {
+      throw new Error("trusted release work directory is unsafe during cleanup");
+    }
+    const rootRealPath = await realpath(trustedWorkRoot);
+    if (!isStrictlyInside((await validateCacheBoundary()).cacheRealPath, rootRealPath)) {
+      throw new Error("trusted release work directory escaped repository .cache");
+    }
+    let childBefore;
+    try {
+      childBefore = await lstat(childPath);
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code === "ENOENT") return;
+      throw error;
+    }
+    if (childBefore.isSymbolicLink() || !childBefore.isDirectory()) {
+      throw new Error("release artifact child is no longer a regular directory");
+    }
+    const childRealPath = await realpath(childPath);
+    if (!isStrictlyInside(rootRealPath, childRealPath)) {
+      throw new Error("release artifact child resolves outside the caller root");
+    }
+    try {
+      await rm(childPath, { recursive: true, force: true });
+      return;
+    } catch (error) {
+      const code = (error as NodeJS.ErrnoException).code;
+      const retryDelay = CLEANUP_RETRY_DELAYS_MS[attempt];
+      if (code !== "ENOTEMPTY" || retryDelay == null) throw error;
+      await new Promise((resolveDelay) => setTimeout(resolveDelay, retryDelay));
+    }
+  }
 }
 
 async function readPackageJson(path: string): Promise<PackageJson> {
   return JSON.parse(await readFile(path, "utf8")) as PackageJson;
 }
 
-function exportTargets(manifest: PackageJson): string[] {
-  return Object.values(manifest.exports).flatMap((entry) => {
-    if (typeof entry === "string") return [entry];
-    return [entry.types, entry.import, entry.default].filter(
-      (value): value is string => typeof value === "string",
+/** Reads the repository catalog values needed to normalize publishable manifests. */
+async function readWorkspaceCatalogVersions(): Promise<Record<string, string>> {
+  const lines = (await readFile(WORKSPACE_MANIFEST_PATH, "utf8")).split(/\r?\n/);
+  const catalog: Record<string, string> = {};
+  let inCatalog = false;
+  for (const line of lines) {
+    if (/^catalog:\s*$/.test(line)) {
+      inCatalog = true;
+      continue;
+    }
+    if (inCatalog && line.length > 0 && !/^\s/.test(line)) {
+      break;
+    }
+    if (!inCatalog) continue;
+    const match = line.match(/^\s{2}(?:"([^"]+)"|'([^']+)'|([^:]+)):\s*(\S+)\s*$/);
+    if (!match) continue;
+    const name = match[1] ?? match[2] ?? match[3];
+    if (!name) continue;
+    catalog[name.trim()] = match[4].replace(/^['"]|['"]$/g, "");
+  }
+  return catalog;
+}
+
+/** Resolves a dependency protocol to a publishable exact or catalog version. */
+function resolvePublishDependencyVersion(
+  dependencyName: string,
+  requestedVersion: string,
+  localPackageVersions: ReadonlyMap<string, string>,
+  catalogVersions: Readonly<Record<string, string>>,
+  packedPackageVersions: ReadonlyMap<string, string> = localPackageVersions,
+): string {
+  const packedVersion = packedPackageVersions.get(dependencyName);
+  if (packedVersion) return packedVersion;
+  if (requestedVersion.startsWith("workspace:")) {
+    const localVersion = localPackageVersions.get(dependencyName);
+    if (!localVersion) {
+      throw new Error(
+        `Cannot publish-normalize ${dependencyName}@${requestedVersion}: local package is not staged`,
+      );
+    }
+    return localVersion;
+  }
+  if (requestedVersion.startsWith("catalog:")) {
+    const catalogVersion = catalogVersions[dependencyName];
+    if (!catalogVersion) {
+      throw new Error(`Workspace catalog has no entry for ${dependencyName}`);
+    }
+    return catalogVersion;
+  }
+  if (FORBIDDEN_LOCAL_DEPENDENCY_PROTOCOL.test(requestedVersion)) {
+    throw new Error(
+      `Cannot publish-normalize unsupported dependency protocol ${dependencyName}@${requestedVersion}`,
     );
+  }
+  return requestedVersion;
+}
+
+/** Creates a publishable manifest with exact local runtime dependencies and no development metadata.
+ * @param manifest Source package metadata.
+ * @param localPackageVersions Exact versions for staged workspace packages.
+ * @param catalogVersions Versions read from the repository workspace catalog.
+ * @param packedPackageVersions Exact versions for every package staged into release artifacts.
+ * @returns A publish-normalized package manifest suitable for npm packing.
+ */
+export function normalizePublishManifestForRelease(
+  manifest: PackageJson,
+  localPackageVersions: ReadonlyMap<string, string>,
+  catalogVersions: Readonly<Record<string, string>>,
+  packedPackageVersions: ReadonlyMap<string, string> = localPackageVersions,
+): PackageJson {
+  const normalized = JSON.parse(JSON.stringify(manifest)) as PackageJson;
+  delete normalized.private;
+  delete normalized.scripts;
+  delete normalized.devDependencies;
+  delete normalized.publishConfig;
+  for (const section of ["dependencies", "optionalDependencies", "peerDependencies"] as const) {
+    const dependencies = normalized[section];
+    if (!dependencies || typeof dependencies !== "object") continue;
+    normalized[section] = Object.fromEntries(
+      Object.entries(dependencies as Record<string, string>).map(([name, version]) => [
+        name,
+        resolvePublishDependencyVersion(
+          name,
+          version,
+          localPackageVersions,
+          catalogVersions,
+          packedPackageVersions,
+        ),
+      ]),
+    );
+  }
+  return normalized;
+}
+
+interface StagedPackage {
+  directory: string;
+  packageRoot: string;
+  manifest: PackageJson;
+}
+
+interface ExternalPackageSource {
+  spec: { name: string; sourceDirectory: string };
+  sourceRoot: string;
+  manifest: PackageJson;
+}
+
+/** Finds an installed package root by walking upward from its resolved entrypoint. */
+async function findPackageRootFromEntry(
+  entryPath: string,
+  packageName: string,
+): Promise<string> {
+  let candidate = dirname(entryPath);
+  while (true) {
+    try {
+      const manifest = await readPackageJson(resolve(candidate, "package.json"));
+      if (manifest.name === packageName) return realpath(candidate);
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
+    }
+    const parent = resolve(candidate, "..");
+    if (parent === candidate) break;
+    candidate = parent;
+  }
+  throw new Error(`Resolved ${packageName} entrypoint has no matching package root`);
+}
+
+/** Stages a built local package with only publishable files and normalized metadata. */
+async function stagePublishPackage(
+  sourceRoot: string,
+  directory: string,
+  manifest: PackageJson,
+  stageRoot: string,
+  localPackageVersions: ReadonlyMap<string, string>,
+  catalogVersions: Readonly<Record<string, string>>,
+  packedPackageVersions: ReadonlyMap<string, string>,
+): Promise<StagedPackage> {
+  const packageRoot = resolve(stageRoot, directory);
+  await mkdir(packageRoot, { recursive: true });
+  await cp(resolve(sourceRoot, "dist"), resolve(packageRoot, "dist"), {
+    recursive: true,
   });
+  const normalizedManifest = normalizePublishManifestForRelease(
+    manifest,
+    localPackageVersions,
+    catalogVersions,
+    packedPackageVersions,
+  );
+  await writeFile(
+    resolve(packageRoot, "package.json"),
+    `${JSON.stringify(normalizedManifest, null, 2)}\n`,
+    "utf8",
+  );
+  return { directory, packageRoot, manifest: normalizedManifest };
+}
+
+/** Resolves an external runtime dependency from its package-local installed graph. */
+async function readExternalPackageSource(
+  spec: { name: string; sourceDirectory: string },
+): Promise<ExternalPackageSource> {
+  const anchorRoot = resolve(REPOSITORY_ROOT, "packages", spec.sourceDirectory);
+  let sourceRoot: string;
+  try {
+    sourceRoot = await realpath(resolve(anchorRoot, "node_modules", spec.name));
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
+    const requireFromAnchor = createRequire(resolve(anchorRoot, "package.json"));
+    sourceRoot = await findPackageRootFromEntry(
+      requireFromAnchor.resolve(spec.name),
+      spec.name,
+    );
+  }
+  const manifest = await readPackageJson(resolve(sourceRoot, "package.json"));
+  if (manifest.name !== spec.name) {
+    throw new Error(
+      `External package anchor ${spec.name} resolved to ${manifest.name}`,
+    );
+  }
+  return { spec, sourceRoot, manifest };
+}
+
+/** Stages the compatibility gate's actual Zod 3 resolution beside its copied dist. */
+async function stageGateDependency(
+  source: ExternalPackageSource,
+  stageRoot: string,
+  catalogVersions: Readonly<Record<string, string>>,
+): Promise<GateDependencyIdentity> {
+  if (source.spec.name !== GATE_RUNTIME_PACKAGE.name) {
+    throw new Error(`Compatibility gate dependency must be ${GATE_RUNTIME_PACKAGE.name}`);
+  }
+  if (catalogVersions.zod !== "^3.25.76") {
+    throw new Error(
+      `Compatibility gate catalog must resolve zod from ^3.25.76, found ${catalogVersions.zod ?? "missing"}`,
+    );
+  }
+  if (source.manifest.version !== GATE_ZOD_VERSION) {
+    throw new Error(
+      `Compatibility gate resolved zod ${source.manifest.version}, expected ${GATE_ZOD_VERSION}`,
+    );
+  }
+  const packageRoot = resolve(stageRoot, "zod");
+  await mkdir(stageRoot, { recursive: true });
+  await cp(source.sourceRoot, packageRoot, { recursive: true, dereference: true });
+  const normalizedManifest = normalizePublishManifestForRelease(
+    source.manifest,
+    new Map(),
+    catalogVersions,
+    new Map([[source.manifest.name, source.manifest.version]]),
+  );
+  await writeFile(
+    resolve(packageRoot, "package.json"),
+    `${JSON.stringify(normalizedManifest, null, 2)}\n`,
+    "utf8",
+  );
+  const stagedManifest = await readPackageJson(resolve(packageRoot, "package.json"));
+  if (
+    stagedManifest.name !== GATE_RUNTIME_PACKAGE.name ||
+    stagedManifest.version !== GATE_ZOD_VERSION
+  ) {
+    throw new Error("Staged compatibility gate dependency metadata is not Zod 3.25.76");
+  }
+  return {
+    package: { name: stagedManifest.name, version: stagedManifest.version },
+    sourceRoot: packageRoot,
+  };
+}
+
+/** Stages an anchored external runtime dependency for an offline local npm archive. */
+async function stageExternalPackage(
+  source: ExternalPackageSource,
+  stageRoot: string,
+  catalogVersions: Readonly<Record<string, string>>,
+  packedPackageVersions: ReadonlyMap<string, string>,
+): Promise<StagedPackage> {
+  const { spec, sourceRoot, manifest: sourceManifest } = source;
+  const directory = spec.name.replace(/^@/, "").replace(/[\\/]/g, "-");
+  const packageRoot = resolve(stageRoot, directory);
+  await mkdir(stageRoot, { recursive: true });
+  await cp(sourceRoot, packageRoot, { recursive: true, dereference: true });
+  const normalizedManifest = normalizePublishManifestForRelease(
+    sourceManifest,
+    new Map(),
+    catalogVersions,
+    packedPackageVersions,
+  );
+  await writeFile(
+    resolve(packageRoot, "package.json"),
+    `${JSON.stringify(normalizedManifest, null, 2)}\n`,
+    "utf8",
+  );
+  return { directory, packageRoot, manifest: normalizedManifest };
+}
+
+function exportTargets(manifest: PackageJson): string[] {
+  const flatten = (entry: PackageExport): string[] => {
+    if (typeof entry === "string") return [entry];
+    if (Array.isArray(entry)) return entry.flatMap(flatten);
+    return Object.values(entry).flatMap(flatten);
+  };
+  return Object.values(manifest.exports ?? {}).flatMap(flatten);
+}
+
+/** Rejects local protocols and verifies exact versions for every staged runtime dependency. */
+function assertPackedDependencyVersions(
+  manifest: PackageJson,
+  localPackageVersions: ReadonlyMap<string, string>,
+): string[] {
+  const references = nonPublishableDependencyReferences(manifest);
+  for (const section of [
+    manifest.dependencies,
+    manifest.optionalDependencies,
+    manifest.peerDependencies,
+  ]) {
+    for (const [name, version] of Object.entries(section ?? {})) {
+      const expectedVersion = localPackageVersions.get(name);
+      if (expectedVersion && version !== expectedVersion) {
+        throw new Error(
+          `${manifest.name} packed dependency ${name} resolved to ${version}, expected ${expectedVersion}`,
+        );
+      }
+    }
+  }
+  return references;
 }
 
 function nonPublishableDependencyReferences(manifest: PackageJson): string[] {
@@ -94,13 +1085,31 @@ function nonPublishableDependencyReferences(manifest: PackageJson): string[] {
   );
 }
 
-function assertExportTargets(
+/** Verifies exact and wildcard export targets against a packed artifact listing.
+ * @param manifest Publishable package metadata containing export targets.
+ * @param packedPaths Tar entries emitted by the package archive.
+ * @throws When any conditional export target is absent from the archive.
+ */
+export function assertExportTargets(
   manifest: PackageJson,
   packedPaths: ReadonlySet<string>,
 ): void {
   for (const target of exportTargets(manifest)) {
     const packedTarget = `package/${target.replace(/^\.\//, "")}`;
-    if (!packedPaths.has(packedTarget)) {
+    const wildcardIndex = packedTarget.indexOf("*");
+    const present = wildcardIndex < 0
+      ? packedPaths.has(packedTarget)
+      : [...packedPaths].some((path) => {
+          if (!path.startsWith(packedTarget.slice(0, wildcardIndex))) return false;
+          const suffix = packedTarget.slice(wildcardIndex + 1);
+          if (!path.endsWith(suffix)) return false;
+          const wildcardValue = path.slice(
+            wildcardIndex,
+            suffix.length > 0 ? path.length - suffix.length : undefined,
+          );
+          return wildcardValue.length > 0 && !path.endsWith("/");
+        });
+    if (!present) {
       throw new Error(
         `${manifest.name} export target ${target} is absent from its release artifact`,
       );
@@ -116,16 +1125,134 @@ async function buildPackage(packageRoot: string): Promise<void> {
   );
 }
 
+/** Builds Sales knowledge and copies its immutable JSON/evidence assets into dist for packing. */
+async function buildSalesKnowledgePackage(packageRoot: string): Promise<void> {
+  await buildPackage(packageRoot);
+  await executeLocal(
+    process.execPath,
+    [resolve(packageRoot, "scripts/copy-data.mjs")],
+    REPOSITORY_ROOT,
+  );
+}
+
+/** Builds every shared package whose dist output is consumed by the release proof. */
+async function buildWorkspacePackages(
+  packageMetadata: ReadonlyArray<{ directory: string; packageRoot: string }>,
+): Promise<void> {
+  await Promise.all(
+    packageMetadata
+      .filter(
+        ({ directory }) =>
+          directory === "knowledge-space-core" || directory === "practice-core",
+      )
+      .map(({ packageRoot }) => buildPackage(packageRoot)),
+  );
+  await Promise.all(
+    packageMetadata
+      .filter(
+        ({ directory }) =>
+          directory === "knowledge-space-practice" || directory === "srs-engine",
+      )
+      .map(({ packageRoot }) => buildPackage(packageRoot)),
+  );
+  const salesPackage = packageMetadata.find(
+    ({ directory }) => directory === SALES_KNOWLEDGE_DIRECTORY,
+  );
+  if (!salesPackage) throw new Error("Sales knowledge package metadata is missing");
+  await buildSalesKnowledgePackage(salesPackage.packageRoot);
+  await buildPackage(resolve(REPOSITORY_ROOT, "packages/mastery-runtime-compat"));
+}
+
+/** Copies the shared compatibility entrypoints into the private artifact child while the lease is held. */
+async function snapshotRuntimeDist(temporaryRoot: string): Promise<string> {
+  const snapshotRoot = resolve(temporaryRoot, "runtime-dist-snapshot");
+  await mkdir(snapshotRoot, { recursive: true });
+  await Promise.all(
+    RUNTIME_DIST_FILES.map(async (file) => {
+      const sourcePath = resolve(
+        REPOSITORY_ROOT,
+        "packages/mastery-runtime-compat/dist",
+        file,
+      );
+      const bytes = await readRegularFileBytes(sourcePath, `Shared runtime ${file}`);
+      await writeNewRegularFile(
+        resolve(snapshotRoot, file),
+        bytes,
+        `Private runtime snapshot ${file}`,
+      );
+    }),
+  );
+  return snapshotRoot;
+}
+
+/** Applies a bounded test-only delay used to force cross-process lease overlap proofs. */
+async function waitForTestHook(environmentName: string): Promise<void> {
+  const rawDelay = process.env[environmentName];
+  if (rawDelay == null) return;
+  const delay = Number(rawDelay);
+  if (!Number.isFinite(delay) || delay <= 0) return;
+  await new Promise((resolveDelay) => setTimeout(resolveDelay, Math.min(delay, 120_000)));
+}
+
+/** Executes one isolated npm pack command and retries only missing JSON output. */
+async function executeNpmPack(
+  args: string[],
+  packageRoot: string,
+  packageStateRoot: string,
+  label: string,
+): Promise<{ stdout: string; stderr: string }> {
+  return withNpmOperationSlot(async () => {
+    for (let attempt = 0; ; attempt += 1) {
+      const result = await executeLocal(
+        "npm",
+        args,
+        packageRoot,
+        packageStateRoot,
+      );
+      if (result.stdout.trim().length > 0) return result;
+      const retryDelay = NPM_EMPTY_OUTPUT_RETRY_DELAYS_MS[attempt];
+      if (retryDelay == null) {
+        const diagnostic = result.stderr.trim();
+        throw new Error(
+          `${label} npm pack produced empty stdout${
+            diagnostic.length > 0 ? `; stderr: ${diagnostic.slice(0, 1000)}` : ""
+          }`,
+        );
+      }
+      await new Promise((resolveDelay) => setTimeout(resolveDelay, retryDelay));
+    }
+  });
+}
+
 async function dryRunPack(
   packageRoot: string,
   manifest: PackageJson,
+  packageStateRoot: string,
 ): Promise<void> {
-  const { stdout } = await executeLocal(
-    "npm",
+  const isolatedStateRoot = resolve(
+    packageStateRoot,
+    "npm-dry-run",
+    basename(packageRoot),
+  );
+  await mkdir(isolatedStateRoot, { recursive: true });
+  const { stdout } = await executeNpmPack(
     ["pack", "--dry-run", "--json", "--ignore-scripts"],
     packageRoot,
+    isolatedStateRoot,
+    manifest.name,
   );
-  const entries = JSON.parse(stdout) as NpmPackEntry[];
+  const output = stdout.trim();
+  if (output.length === 0) throw new Error(`${manifest.name} npm dry-run produced empty stdout`);
+  let entries: NpmPackEntry[];
+  try {
+    entries = JSON.parse(output) as NpmPackEntry[];
+  } catch (error) {
+    throw new Error(
+      `${manifest.name} npm dry-run produced invalid JSON: ${
+        error instanceof Error ? error.message : String(error)
+      }`,
+    );
+  }
   const entry = entries[0];
   if (!entry || !entry.filename.endsWith(".tgz")) {
     throw new Error(`${manifest.name} did not produce an npm dry-run manifest`);
@@ -134,24 +1261,68 @@ async function dryRunPack(
   assertExportTargets(manifest, dryRunPaths);
 }
 
+/** Parses npm JSON output while reporting empty or malformed pack responses precisely. */
+function parseNpmPackEntries(
+  stdout: string,
+  stderr: string,
+  label: string,
+): NpmPackEntry[] {
+  const output = stdout.trim();
+  if (output.length === 0) {
+    const diagnostic = stderr.trim();
+    throw new Error(
+      `${label} npm pack produced empty stdout${
+        diagnostic.length > 0 ? `; stderr: ${diagnostic.slice(0, 1000)}` : ""
+      }`,
+    );
+  }
+  try {
+    const entries = JSON.parse(output) as unknown;
+    if (!Array.isArray(entries)) throw new Error("expected a JSON array");
+    return entries as NpmPackEntry[];
+  } catch (error) {
+    throw new Error(
+      `${label} npm pack produced invalid JSON: ${
+        error instanceof Error ? error.message : String(error)
+      }`,
+    );
+  }
+}
+
 async function createPackedArtifact(
   packageRoot: string,
   destination: string,
+  packageStateRoot: string,
 ): Promise<string> {
-  const { stdout } = await executeLocal(
-    "pnpm",
-    ["pack", "--pack-destination", destination],
+  const isolatedStateRoot = resolve(
+    packageStateRoot,
+    "npm-pack",
+    basename(packageRoot),
+  );
+  await mkdir(isolatedStateRoot, { recursive: true });
+  const archiveDestination = resolve(
+    destination,
+    "npm-artifacts",
+    basename(packageRoot),
+  );
+  await mkdir(archiveDestination, { recursive: true });
+  const { stdout, stderr } = await executeNpmPack(
+    [
+      "pack",
+      "--json",
+      "--ignore-scripts",
+      "--pack-destination",
+      archiveDestination,
+    ],
+    packageRoot,
+    isolatedStateRoot,
     packageRoot,
   );
-  const archiveName = stdout
-    .split(/\r?\n/)
-    .map((line) => line.trim())
-    .filter((line) => line.endsWith(".tgz"))
-    .at(-1);
-  if (!archiveName) {
-    throw new Error(`pnpm pack produced no artifact for ${packageRoot}`);
+  const entry = parseNpmPackEntries(stdout, stderr, packageRoot)[0];
+  if (!entry || !entry.filename.endsWith(".tgz")) {
+    throw new Error(`npm pack produced no artifact for ${packageRoot}`);
   }
-  return resolve(destination, basename(archiveName));
+  return resolve(archiveDestination, basename(entry.filename));
 }
 
 async function inspectPackedArtifact(
@@ -176,7 +1347,14 @@ async function inspectPackedArtifact(
 async function runCleanConsumer(
   temporaryRoot: string,
   archives: ReadonlyMap<string, string>,
-): Promise<void> {
+  gateDependency: GateDependencyIdentity,
+  runtimeDistSnapshotRoot: string,
+  consumerDescriptorPaths: ReadonlyArray<string>,
+): Promise<{
+  checkedConsumers: string[];
+  verifiedSalesKnowledge: ReleaseSalesKnowledgeIdentity;
+  resolvedVersions: ResolvedRuntimeVersions;
+}> {
   const consumerRoot = resolve(temporaryRoot, "consumer");
   await cp(FIXTURE_ROOT, consumerRoot, { recursive: true });
   const manifestPath = resolve(consumerRoot, "package.json");
@@ -188,87 +1366,277 @@ async function runCleanConsumer(
   );
   manifest.dependencies = localArtifacts;
   await writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`, "utf8");
-  const overrides = Object.entries(localArtifacts)
-    .map(([name, artifact]) => `  ${JSON.stringify(name)}: ${JSON.stringify(artifact)}`)
-    .join("\n");
-  await writeFile(
-    resolve(consumerRoot, "pnpm-workspace.yaml"),
-    `packages:\n  - .\noverrides:\n${overrides}\n`,
-    "utf8",
+
+  const runtimeDistRoot = resolve(consumerRoot, "dist");
+  await mkdir(runtimeDistRoot, { recursive: true });
+  await Promise.all(
+    RUNTIME_DIST_FILES.map((file) =>
+      cp(
+        resolve(runtimeDistSnapshotRoot, file),
+        resolve(runtimeDistRoot, file),
+      ),
+    ),
+  );
+  await cp(
+    gateDependency.sourceRoot,
+    resolve(runtimeDistRoot, "node_modules/zod"),
+    { recursive: true, dereference: true },
+  );
+  await cp(
+    resolve(REPOSITORY_ROOT, "packages/mastery-runtime-compat/runtime-manifest.json"),
+    resolve(consumerRoot, "runtime-manifest.json"),
+  );
+
+  const descriptorRoot = resolve(consumerRoot, "descriptors");
+  await mkdir(descriptorRoot, { recursive: true });
+  const copiedDescriptors = await Promise.all(
+    consumerDescriptorPaths.map(async (descriptorPath, index) => {
+      const descriptorBytes = await readRegularFileBytes(
+        descriptorPath,
+        "Consumer descriptor source",
+      );
+      const descriptor = JSON.parse(descriptorBytes.toString("utf8")) as {
+        name?: unknown;
+        version?: unknown;
+        graph?: { release?: unknown };
+      };
+      if (
+        typeof descriptor.name !== "string" ||
+        descriptor.name.length === 0 ||
+        typeof descriptor.version !== "string" ||
+        typeof descriptor.graph?.release !== "string"
+      ) {
+        throw new Error(`Consumer descriptor ${descriptorPath} must declare a name`);
+      }
+      const target = resolve(
+        descriptorRoot,
+        `${index}-${basename(descriptorPath)}`,
+      );
+      await writeNewRegularFile(target, descriptorBytes, "Consumer descriptor target");
+      return {
+        descriptor: {
+          name: descriptor.name,
+          version: descriptor.version,
+          graphRelease: descriptor.graph.release,
+        },
+        target,
+      };
+    }),
   );
 
   await executeLocal(
-    "pnpm",
-    ["install", "--offline", "--ignore-scripts", "--frozen-lockfile=false"],
-    consumerRoot,
-  );
-  await executeLocal(
-    process.execPath,
+    "npm",
     [
-      "check-consumer.mjs",
-      resolve(REPOSITORY_ROOT, "packages/mastery-runtime-compat/dist/check-consumer.js"),
-      resolve(consumerRoot, "consumer.json"),
+      "install",
+      "--offline",
+      "--ignore-scripts",
+      "--no-audit",
+      "--no-fund",
+      "--package-lock=false",
     ],
     consumerRoot,
+    temporaryRoot,
   );
+  const checkedConsumers: string[] = [];
+  let verifiedSalesKnowledge: ReleaseSalesKnowledgeIdentity | undefined;
+  let resolvedVersions: ResolvedRuntimeVersions | undefined;
+  for (const { descriptor, target } of copiedDescriptors) {
+    const check = await executeLocal(
+      process.execPath,
+      [
+        "check-consumer.mjs",
+        resolve(consumerRoot, "dist/check-consumer.js"),
+        target,
+      ],
+      consumerRoot,
+    );
+    const attestation = parseSalesRuntimeAttestation(check.stdout);
+    if (
+      attestation.consumer.name !== descriptor.name ||
+      attestation.consumer.version !== descriptor.version ||
+      attestation.salesKnowledge.releaseId !== descriptor.graphRelease
+    ) {
+      throw new Error("Packed consumer attestation does not match its copied descriptor");
+    }
+    checkedConsumers.push(attestation.consumer.name);
+    resolvedVersions = attestation.resolvedVersions;
+    if (attestation.consumer.name === "sales-advantage") {
+      verifiedSalesKnowledge = {
+        package: attestation.salesKnowledge.package,
+        verifierExport: attestation.salesKnowledge.verifierExport,
+        evidenceManifestExport: attestation.salesKnowledge.evidenceManifestExport,
+        evidence: attestation.salesKnowledge.evidence,
+      };
+    }
+  }
+  if (verifiedSalesKnowledge == null) {
+    throw new Error("Packed consumer proof did not verify a Sales knowledge identity");
+  }
+  if (resolvedVersions == null) {
+    throw new Error("Packed consumer proof did not attest resolved runtime versions");
+  }
+  return { checkedConsumers, verifiedSalesKnowledge, resolvedVersions };
 }
 
 /**
- * Builds, dry-run packs, inspects, and offline-installs the four engine packages.
+ * Builds, packs, and offline-installs the shared engines and Sales knowledge package in a clean consumer.
+ * @param options Caller-owned cache root and descriptors to verify from the isolated consumer.
  * @returns Deterministic release evidence with no registry publication or network use.
- * @throws When build, pack metadata, exports, workspace rewriting, or clean consumption fails.
+ * @throws When the root, build, pack metadata, exports, workspace rewriting, or clean consumption fails.
  */
-export async function runReleaseArtifactCheck(): Promise<ReleaseArtifactCheckResult> {
-  const temporaryRoot = await mkdtemp(resolve(tmpdir(), "mastery-release-artifact-"));
+export async function runReleaseArtifactCheck(
+  options: ReleaseArtifactCheckOptions,
+): Promise<ReleaseArtifactCheckResult> {
+  if (options.consumerDescriptorPaths.length === 0) {
+    throw new Error("consumerDescriptorPaths must contain at least one descriptor");
+  }
+  const callerRoot = await validateTemporaryRoot(options.temporaryRoot);
+  await ensureCallerRootNamespace(callerRoot);
+  const trustedWorkRoot = await ensureTrustedWorkRoot(callerRoot);
+  const temporaryRoot = await createArtifactChild(trustedWorkRoot);
   try {
     const packageMetadata = await Promise.all(
-      ENGINE_DIRECTORIES.map(async (directory) => {
+      PACKAGED_DIRECTORIES.map(async (directory) => {
         const packageRoot = resolve(REPOSITORY_ROOT, "packages", directory);
         const manifest = await readPackageJson(resolve(packageRoot, "package.json"));
         return { directory, packageRoot, manifest };
       }),
     );
 
-    await Promise.all(packageMetadata.map(({ packageRoot }) => buildPackage(packageRoot)));
-    await buildPackage(resolve(REPOSITORY_ROOT, "packages/mastery-runtime-compat"));
+    const catalogVersions = await readWorkspaceCatalogVersions();
+    const localPackageVersions = new Map(
+      packageMetadata.map(({ manifest }) => [manifest.name, manifest.version]),
+    );
+    const workspaceLease = await acquireWorkspaceLease(trustedWorkRoot);
+    let stagedMetadata: StagedPackage[];
+    let allPackedVersions: Map<string, string>;
+    let gateDependency: GateDependencyIdentity;
+    let runtimeDistSnapshotRoot: string;
+    try {
+      ({
+        stagedMetadata,
+        allPackedVersions,
+        gateDependency,
+        runtimeDistSnapshotRoot,
+      } =
+        await withWorkspaceBuildLock(async () => {
+          const externalSources = await Promise.all(
+            EXTERNAL_RUNTIME_PACKAGES.map((spec) => readExternalPackageSource(spec)),
+          );
+          const gateSource = await readExternalPackageSource(GATE_RUNTIME_PACKAGE);
+          const externalPackageVersions = new Map(
+            externalSources.map(({ manifest }) => [manifest.name, manifest.version]),
+          );
+          allPackedVersions = new Map([
+            ...localPackageVersions,
+            ...externalPackageVersions,
+          ]);
+          if (!workspaceBuildReady) {
+            await buildWorkspacePackages(packageMetadata);
+            workspaceBuildReady = true;
+          }
+          const stagedExternalMetadata = await Promise.all(
+            externalSources.map((source) =>
+              stageExternalPackage(
+                source,
+                resolve(temporaryRoot, "external-staging"),
+                catalogVersions,
+                allPackedVersions,
+              ),
+            ),
+          );
+          gateDependency = await stageGateDependency(
+            gateSource,
+            resolve(temporaryRoot, "gate-staging"),
+            catalogVersions,
+          );
+          const stagedPackageMetadata = await Promise.all(
+            packageMetadata.map(({ directory, packageRoot, manifest }) =>
+              stagePublishPackage(
+                packageRoot,
+                directory,
+                manifest,
+                resolve(temporaryRoot, "publish-staging"),
+                localPackageVersions,
+                catalogVersions,
+                allPackedVersions,
+              ),
+            ),
+          );
+          runtimeDistSnapshotRoot = await snapshotRuntimeDist(temporaryRoot);
+          await waitForTestHook(TEST_HOLD_LEASE_ENV);
+          return {
+            stagedMetadata: [...stagedPackageMetadata, ...stagedExternalMetadata],
+            allPackedVersions,
+            gateDependency,
+            runtimeDistSnapshotRoot,
+          };
+        }));
+    } finally {
+      await releaseWorkspaceLease(workspaceLease);
+    }
     await Promise.all(
-      packageMetadata.map(({ packageRoot, manifest }) =>
-        dryRunPack(packageRoot, manifest),
+      stagedMetadata.map(({ packageRoot, manifest }) =>
+        dryRunPack(packageRoot, manifest, temporaryRoot),
       ),
     );
 
-    const archives = new Map<string, string>();
-    const workspaceDependencies: string[] = [];
-    for (const { packageRoot, manifest } of packageMetadata) {
-      const archivePath = await createPackedArtifact(packageRoot, temporaryRoot);
-      const packed = await inspectPackedArtifact(archivePath);
-      if (
-        packed.manifest.name !== manifest.name ||
-        packed.manifest.version !== manifest.version
-      ) {
-        throw new Error(`${manifest.name} packed metadata changed name or version`);
-      }
-      assertExportTargets(packed.manifest, packed.paths);
-      workspaceDependencies.push(
-        ...nonPublishableDependencyReferences(packed.manifest),
-      );
-      archives.set(manifest.name, archivePath);
-    }
+    const packedArtifacts = await Promise.all(
+      stagedMetadata.map(async ({ packageRoot, manifest }) => {
+        const archivePath = await createPackedArtifact(
+          packageRoot,
+          temporaryRoot,
+          temporaryRoot,
+        );
+        const packed = await inspectPackedArtifact(archivePath);
+        if (
+          packed.manifest.name !== manifest.name ||
+          packed.manifest.version !== manifest.version
+        ) {
+          throw new Error(`${manifest.name} packed metadata changed name or version`);
+        }
+        if (localPackageVersions.has(manifest.name)) {
+          assertExportTargets(packed.manifest, packed.paths);
+        }
+        return {
+          name: manifest.name,
+          archivePath,
+          workspaceDependencies: assertPackedDependencyVersions(
+            packed.manifest,
+            allPackedVersions,
+          ),
+        };
+      }),
+    );
+    const archives = new Map(
+      packedArtifacts.map(({ name, archivePath }) => [name, archivePath]),
+    );
+    const workspaceDependencies = packedArtifacts.flatMap(
+      ({ workspaceDependencies: references }) => references,
+    );
     if (workspaceDependencies.length > 0) {
       throw new Error(
         `Packed artifacts retain non-publishable local dependencies: ${workspaceDependencies.join(", ")}`,
       );
     }
 
-    await runCleanConsumer(temporaryRoot, archives);
+    await waitForTestHook(TEST_DELAY_BEFORE_CONSUMER_ENV);
+    const cleanConsumer = await runCleanConsumer(
+      temporaryRoot,
+      archives,
+      gateDependency,
+      runtimeDistSnapshotRoot,
+      options.consumerDescriptorPaths,
+    );
     return {
       packages: packageMetadata.map(({ manifest }) => manifest.name),
       dryRun: true,
       exportsVerified: true,
       workspaceDependencies,
       cleanConsumer: true,
+      ...cleanConsumer,
     };
   } finally {
-    await rm(temporaryRoot, { recursive: true, force: true });
+    await removeArtifactChild(trustedWorkRoot, temporaryRoot);
   }
 }

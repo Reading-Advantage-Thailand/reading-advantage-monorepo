@@ -8,12 +8,51 @@ const CONSUMER_RANGE_PATTERN = /^(?:>=|>)\d+\.\d+\.\d+ (?:<=|<)\d+\.\d+\.\d+$/;
 
 const SemVerSchema = z.string().regex(SEMVER_PATTERN, "must be an exact semantic version");
 const CommitSchema = z.string().regex(COMMIT_PATTERN, "must be a full lowercase Git commit");
+const Sha256Schema = z
+  .string()
+  .regex(/^[0-9a-f]{64}$/, "must be a lowercase SHA-256 digest");
 const VersionedContractSchema = z
   .string()
   .regex(
     /^[a-z][a-z0-9.-]*\.v\d+(?:\.\d+)*$/,
     "must be an explicitly versioned contract",
   );
+
+const SALES_GRAPH_RELEASE = "knowledge-space-sales-mastery-v1.0.0";
+const CODECAMP_RELEASE_SET_ID = "mastery-runtime-0.1.0-kst-srs-3.2";
+const SALES_KNOWLEDGE_PACKAGE_NAME = "@reading-advantage/sales-knowledge";
+const SALES_KNOWLEDGE_PACKAGE_VERSION = "0.1.0";
+
+/** Validates the canonical graph and binding digests attached to a runtime release. */
+const RuntimeEvidenceBindingSchema = z
+  .object({
+    graphCanonicalSha256: Sha256Schema,
+    bindingsCanonicalSha256: Sha256Schema,
+  })
+  .strict();
+
+/** Validates the immutable public Sales knowledge package identity attached to a release. */
+export const SalesKnowledgeIdentitySchema = z
+  .object({
+    package: z
+      .object({
+        name: z.literal(SALES_KNOWLEDGE_PACKAGE_NAME),
+        version: z.literal(SALES_KNOWLEDGE_PACKAGE_VERSION),
+      })
+      .strict(),
+    verifierExport: z.literal("verifySalesReleaseEvidence"),
+    evidenceManifestExport: z.literal("salesReleaseEvidenceManifest"),
+    evidence: z
+      .object({
+        releaseCandidateByteSha256: Sha256Schema,
+        approvalByteSha256: Sha256Schema,
+        staticSeedByteSha256: Sha256Schema,
+        graphCanonicalSha256: Sha256Schema,
+        bindingsCanonicalSha256: Sha256Schema,
+      })
+      .strict(),
+  })
+  .strict();
 
 /** Validates one authority for an independently versioned runtime axis. */
 export const RuntimeAuthoritySchema = z
@@ -101,6 +140,8 @@ export const RuntimeReleaseSetSchema = z
       })
       .strict(),
     source: z.object({ commit: CommitSchema }).strict(),
+    evidence: RuntimeEvidenceBindingSchema.optional(),
+    salesKnowledge: SalesKnowledgeIdentitySchema.optional(),
     supportedConsumers: z
       .array(
         z
@@ -126,6 +167,78 @@ export const RuntimeReleaseSetSchema = z
         message: "supported consumers must be unique",
       });
     }
+
+    const isSalesRelease = release.graph.release === SALES_GRAPH_RELEASE;
+    if (isSalesRelease) {
+      if (release.id === CODECAMP_RELEASE_SET_ID) {
+        context.addIssue({
+          code: "custom",
+          path: ["id"],
+          message: "Sales must use a distinct runtime release-set ID",
+        });
+      }
+      if (release.evidence == null) {
+        context.addIssue({
+          code: "custom",
+          path: ["evidence"],
+          message: "Sales releases require canonical graph and binding evidence",
+        });
+      }
+      if (release.salesKnowledge == null) {
+        context.addIssue({
+          code: "custom",
+          path: ["salesKnowledge"],
+          message: "Sales releases require an immutable knowledge-package identity",
+        });
+      }
+      if (
+        release.evidence != null &&
+        release.salesKnowledge != null &&
+        (release.evidence.graphCanonicalSha256 !==
+          release.salesKnowledge.evidence.graphCanonicalSha256 ||
+          release.evidence.bindingsCanonicalSha256 !==
+            release.salesKnowledge.evidence.bindingsCanonicalSha256)
+      ) {
+        context.addIssue({
+          code: "custom",
+          path: ["salesKnowledge", "evidence"],
+          message: "Sales graph and binding digests must agree across release evidence bindings",
+        });
+      }
+      if (
+        release.supportedConsumers.length !== 1 ||
+        release.supportedConsumers[0]?.name !== "sales-advantage" ||
+        release.supportedConsumers[0]?.range !== ">=0.1.0 <0.2.0"
+      ) {
+        context.addIssue({
+          code: "custom",
+          path: ["supportedConsumers"],
+          message: "Sales releases must have exactly one bounded Sales consumer allowance",
+        });
+      }
+      const expectedEnginePackages = new Set([
+        "@reading-advantage/knowledge-space-core",
+        "@reading-advantage/knowledge-space-practice",
+        "@reading-advantage/practice-core",
+        "@reading-advantage/srs-engine",
+      ]);
+      if (
+        packageNames.length !== expectedEnginePackages.size ||
+        packageNames.some((name) => !expectedEnginePackages.has(name))
+      ) {
+        context.addIssue({
+          code: "custom",
+          path: ["packages"],
+          message: "Sales runtime releases must pin exactly the four shared engine packages",
+        });
+      }
+    } else if (release.evidence != null || release.salesKnowledge != null) {
+      context.addIssue({
+        code: "custom",
+        path: ["evidence"],
+        message: "Sales knowledge evidence cannot be assigned to another graph release",
+      });
+    }
   });
 
 /** Validates the complete runtime ownership and release governance manifest. */
@@ -149,6 +262,16 @@ export const RuntimeManifestSchema = z
     const releaseIds = manifest.releaseSets.map((entry) => entry.id);
     if (new Set(releaseIds).size !== releaseIds.length) {
       context.addIssue({ code: "custom", path: ["releaseSets"], message: "release-set IDs must be unique" });
+    }
+    const salesReleaseCount = manifest.releaseSets.filter(
+      (entry) => entry.graph.release === SALES_GRAPH_RELEASE,
+    ).length;
+    if (salesReleaseCount !== 1) {
+      context.addIssue({
+        code: "custom",
+        path: ["releaseSets"],
+        message: "the authoritative manifest must contain exactly one Sales graph release set",
+      });
     }
   });
 
@@ -179,6 +302,8 @@ export const ConsumerDescriptorSchema = z
       .strict(),
     fixtures: z.object({ version: z.string().min(1), sourceCommit: CommitSchema }).strict(),
     source: z.object({ commit: CommitSchema }).strict(),
+    evidence: RuntimeEvidenceBindingSchema.optional(),
+    salesKnowledge: SalesKnowledgeIdentitySchema.optional(),
     imports: z
       .array(
         z
@@ -304,6 +429,68 @@ export function evaluateRuntimeCompatibility(
       `Release set ${consumer.releaseSet} is not declared by the runtime manifest`,
     );
     return { compatible: false, issues };
+  }
+
+  const isSalesRelease = release.graph.release === SALES_GRAPH_RELEASE;
+  if (isSalesRelease) {
+    if (consumer.evidence == null) {
+      addIssue(
+        issues,
+        "MISSING_RELEASE_EVIDENCE",
+        "evidence",
+        "Sales consumers must bind the reviewed graph and curriculum-binding digests",
+      );
+    } else if (release.evidence != null) {
+      if (
+        consumer.evidence.graphCanonicalSha256 !==
+        release.evidence.graphCanonicalSha256
+      ) {
+        addIssue(
+          issues,
+          "GRAPH_EVIDENCE_DIGEST_MISMATCH",
+          "evidence.graphCanonicalSha256",
+          `Expected reviewed Sales graph digest ${release.evidence.graphCanonicalSha256}`,
+        );
+      }
+      if (
+        consumer.evidence.bindingsCanonicalSha256 !==
+        release.evidence.bindingsCanonicalSha256
+      ) {
+        addIssue(
+          issues,
+          "BINDINGS_EVIDENCE_DIGEST_MISMATCH",
+          "evidence.bindingsCanonicalSha256",
+          `Expected reviewed Sales bindings digest ${release.evidence.bindingsCanonicalSha256}`,
+        );
+      }
+    }
+
+    if (consumer.salesKnowledge == null) {
+      addIssue(
+        issues,
+        "MISSING_SALES_KNOWLEDGE_IDENTITY",
+        "salesKnowledge",
+        "Sales consumers must bind the immutable public knowledge verifier and evidence manifest",
+      );
+    } else if (
+      release.salesKnowledge == null ||
+      JSON.stringify(consumer.salesKnowledge) !==
+        JSON.stringify(release.salesKnowledge)
+    ) {
+      addIssue(
+        issues,
+        "SALES_KNOWLEDGE_EVIDENCE_MISMATCH",
+        "salesKnowledge",
+        "Sales knowledge package, verifier, and source-evidence digests must match the admitted release",
+      );
+    }
+  } else if (consumer.evidence != null || consumer.salesKnowledge != null) {
+    addIssue(
+      issues,
+      "UNEXPECTED_RELEASE_EVIDENCE",
+      "evidence",
+      "Sales release evidence cannot be assigned to a non-Sales runtime release",
+    );
   }
 
   const consumerAllowance = release.supportedConsumers.find(
@@ -452,9 +639,17 @@ export {
   runConsumerCompatibilityGateFromPath,
 } from "./check-consumer.js";
 export {
-  runSyntheticCodecampProof,
   type SyntheticCodecampProofResult,
 } from "./codecamp-proof.js";
+
+/** Runs the synthetic Codecamp proof without loading application-only persistence in compatibility consumers.
+ * @returns The deterministic Codecamp runtime proof result.
+ * @throws When the synthetic proof's runtime or persistence contract fails.
+ */
+export async function runSyntheticCodecampProof(): Promise<import("./codecamp-proof.js").SyntheticCodecampProofResult> {
+  const proof = await import("./codecamp-proof.js");
+  return proof.runSyntheticCodecampProof();
+}
 export {
   runReleaseArtifactCheck,
   type ReleaseArtifactCheckResult,
