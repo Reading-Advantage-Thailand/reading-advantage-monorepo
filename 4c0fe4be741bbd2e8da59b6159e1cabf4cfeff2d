@@ -1,0 +1,5 @@
+Task: Add Sales Phase 0 Red runtime-admission contracts
+Summary: Added the exact Sales consumer descriptor and 11-test admission, containment, and packed-consumer contract suite.
+Files: packages/mastery-runtime-compat/fixtures/consumer/sales-advantage.json; packages/mastery-runtime-compat/src/__tests__/sales-runtime-admission.red.test.ts
+Red evidence: reconstructed at strategy baseline 8adc57cb0af0693c1b3420842b3a504939a36b2e; direct Vitest equivalent exited 1 with 8 failed and 3 passed. Substantive failures included zero Sales release sets, missing Sales release identity, strict descriptor rejection, and incompatible admission. Some later packed cases also hit isolated-copy tsc linkage limitations.
+Why: Freeze falsifiable contracts before accepting the pre-existing Green candidate.
