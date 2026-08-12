@@ -17,6 +17,15 @@
   - Historical `0002` SQL and snapshot remain byte-immutable with exact SHA-256 hashes `f0535ed5dd6eab2d74818cc0fca6fa964338f5d3fe3bd0ed392810b09a0d913a` and `567a39b4adad21847a64d020e2fb8c64bd33b5407cd29c2bd68430588aa10e14`. The additive/journaled `0003_finance_attestation_audit_metadata` migration and `meta/0003_snapshot.json` carry the exact doctor sentinel, which was validated.
   - The Phase 2 aggregate stayed intentionally Red and was excluded from Task 3 acceptance. No Phase 1 checkpoint is recorded because the CRM/Tutor source-owner task remains blocked.
 
+  Maintenance evidence (2026-08-13; post-acceptance, no status change):
+
+  - Maintenance source commit `da3ce21916a170ea9029efe1c449ea39395a36ba` contains the exact 3-path portable audit-boundary repair; its canonical committed-content aggregate is `90a9e3251d83f2f67b2f407b50e2b63e6dfc814198aac48be94cd18be1c38854`. Final correctness Review A and Security Review B are both ACCEPT, bound to these stable hashes; the loader/shadow matrix passed 40/40.
+  - Maintenance evidence passed Backend 127 tests with 1 live-PostgreSQL environment skip, DB 31/31, Storage 48/48, and the architecture guard 7/7. Production typechecks, exact strict typecheck, targeted lint, Prettier, `git diff --check`, and metadata/repository parity passed.
+  - Immutable `0002` hashes and additive/journaled `0003_finance_attestation_audit_metadata` linkage are unchanged; no migration changed.
+  - Finance maintenance removed the exact 3 architecture additions attributable to original Task 3. The current separate checker remains globally Red: `files=4247`, `findings=697`, `parseErrors=0`, additions 137, removals 0, renames 21. No global architecture or doctor Green claim is made.
+  - Shared graph/generated refresh commit `390448dd2` is post-maintenance freshness evidence: 71-path hash `40df25b062d742ccb715e301b4a2914a079473575e504733de7dae7d70a2fb0d` and Finance subset hash `29ff5a83a30df7917e088b2257eed22f3fd6d64692c2efd14a0fe18da5150dc6`. The whole-graph audit timed out/was terminated with exit 130, and `measure/doctor.sh` remains Red on 80 deprecated `[ ]` markers across nine unrelated plans; this is not structural Green evidence.
+  - Task 3 remains `[x]`. CRM/Tutor and Phase 2/3 blockers are unchanged, and no phase checkpoint is recorded.
+
 - [b] Task: Add live CRM `CustomerBillingCatalogPort` and Tutor `TutorFinancialExportPort` owner contracts and adapters only after those source owners exist and accept source-native identities, versions, evidence, and payload schemas. Finance normalization must remain downstream.
 
 ## Phase 2 — controlled operational imports
