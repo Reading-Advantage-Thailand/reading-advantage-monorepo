@@ -8,32 +8,82 @@
   "role_base_sha": "2c0295af41a5ede1067bebea158c3c8cf1115d18",
   "audited_head_sha": "2c0295af41a5ede1067bebea158c3c8cf1115d18",
   "audited_head_current": true,
-  "summary": "The adversarial route-provenance contract passes. A dirty scoped production file prevents a clean-tree acceptance claim.",
+  "summary": "The adversarial route-provenance contract passes. A dirty scoped production barrel prevents a clean-tree acceptance claim.",
   "blocking_findings": [
+    "packages/backend/src/modules/company-identity/index.ts has an uncommitted explicit-export change. The owner must identify the owner, then commit it in its owning track or revert it before the four-command Phase 0 gate can bind to one clean tree."
+  ],
+  "nonblocking_findings": [
+    "The new AST provenance contract binds each explicit route method to one named operation and one capability ID across the 17 primary operations and 39 effective route methods.",
+    "The paired operation and capability swap fixture under apps/accounts/lib/server/__fixtures__/company-identity-route-denominator/paired-swap-route.ts exercises the bypass that the previous generic-identifier test could not detect.",
+    "The framework HEAD and OPTIONS behavior still reports its true runtime exposure and keeps explicit context isolation."
+  ],
+  "evidence": [
+    "apps/accounts/lib/server/company-identity-route-bindings.test.ts uses the TypeScript AST to match each route method declaration to one companyIdentityRouteHandlers operation and one companyIdentityCapabilityIds capability identifier.",
+    "apps/accounts/lib/server/__fixtures__/company-identity-route-denominator/paired-swap-route.ts calls employeeCompanyRoles with companyIdentityCapabilityIds.setCompanyRoles, which the new test rejects as the wrong status-route binding.",
+    "apps/accounts/lib/server/company-identity-route-bindings.test.ts keeps the framework HEAD and OPTIONS exposure checks intact.",
+    "git status --short reported M packages/backend/src/modules/company-identity/index.ts before the role commit.",
+    "Commit 9153cc38e captured the test, fixture, and adversarial result under the shared flock."
+  ],
+  "commands": [
     {
-      "id": "MA-G1",
-      "severity": "gate",
-      "category": "provenance",
-      "title": "The scoped company identity production file is dirty",
-      "description": "packages/backend/src/modules/company-identity/index.ts has an uncommitted change. The owner must identify its owner and commit or revert it before the four-command gate can bind to one clean tree.",
-      "route_to": "Green"
+      "command": "CI=true pnpm --filter accounts test",
+      "exit_code": 0,
+      "result": "11 files passed, 1 skipped; 50 tests passed, 1 skipped"
+    },
+    {
+      "command": "CI=true pnpm --filter accounts check-types",
+      "exit_code": 0,
+      "result": "Type checks passed"
     }
   ],
-  "adversarial_checks": {
-    "exact_source_method_operation_capability": "pass",
-    "paired_operation_capability_swap": "pass",
-    "head_options_truth": "pass"
+  "command_environment": {
+    "workspace_local_paths": [
+      ".cache/tmp",
+      ".cache/node-compile-cache",
+      ".cache/xdg-cache",
+      ".cache/pnpm-home",
+      ".cache/pnpm-store"
+    ],
+    "audited_head": "2c0295af41a5ede1067bebea158c3c8cf1115d18"
   },
-  "commands": [
-    { "command": "CI=true pnpm --filter accounts test", "exit_code": 0, "result": "11 files passed, 1 skipped; 50 tests passed, 1 skipped" },
-    { "command": "CI=true pnpm --filter accounts check-types", "exit_code": 0, "result": "Type checks passed" }
+  "command_failure_classification": {
+    "accounts_test": "pass",
+    "accounts_check_types": "pass",
+    "candidate_failures": [],
+    "unrelated_failures": [],
+    "infrastructure_failures": []
+  },
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [
+    "Command provenance includes a dirty packages/backend/src/modules/company-identity/index.ts path."
   ],
-  "dirty_scope": [
-    { "path": "packages/backend/src/modules/company-identity/index.ts", "owner": "Green or track owner", "remediation": "Review the explicit export change, then commit it in its owning track or revert it before rerunning the gate." }
-  ],
+  "route_parity_violations": [],
+  "anti_pattern_assessment": {
+    "A4_vacuous_pass": {
+      "status": "pass",
+      "reason": "The new provenance test fails when the operation and capability do not match the expected binding.",
+      "path_evidence": [
+        "apps/accounts/lib/server/company-identity-route-bindings.test.ts rejects mismatched pairs in the swap fixture."
+      ]
+    },
+    "A7_over_broad_filter": {
+      "status": "not_applicable",
+      "reason": "The new test does not filter out banned terms or coverage keywords."
+    }
+  },
+  "retry_recommendation": "retry_implementation",
+  "confidence": "high",
   "changed_files": [
     "apps/accounts/lib/server/company-identity-route-bindings.test.ts",
     "apps/accounts/lib/server/__fixtures__/company-identity-route-denominator/paired-swap-route.ts",
     "measure/runs/20260811-admin-phase0-route-adversarial.json"
-  ]
+  ],
+  "commit": "9153cc38e",
+  "handoff": {
+    "route_to": "Green",
+    "blockers": [
+      "Provide a clean scoped tree at the same committed candidate and rerun the four commands."
+    ]
+  }
 }
