@@ -9,7 +9,7 @@ import {
   type FinanceOperationScope,
 } from "./contracts.js";
 import type { DurableJobInput } from "./port-contracts.js";
-import type { CompanyIdentityAuthorizationPort } from "./ports.js";
+import type * as FinancePorts from "./ports.js";
 import { financeRecordSchema, type FinanceRecord } from "./records.js";
 
 const normalVersion = "finance-controlled-import-normalization-v1" as const;
@@ -112,7 +112,7 @@ export interface ControlledImportAtomicRepository {
 export interface AcceptControlledImportBatchRequest {
   readonly plan: Extract<PreparedControlledImportBatch, { status: "ready" }>;
   readonly authorizationInput: FinanceOperationAuthorizationInput;
-  readonly authorizationPort: CompanyIdentityAuthorizationPort;
+  readonly authorizationPort: FinancePorts.CompanyIdentityAuthorizationPort;
   readonly auditPort: FinanceAuditPort;
   readonly repository: ControlledImportAtomicRepository;
   readonly requestId: string;
