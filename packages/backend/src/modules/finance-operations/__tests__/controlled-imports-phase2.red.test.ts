@@ -267,8 +267,8 @@ interface ControlledImportsModule {
   acceptControlledImportBatch(
     request: AcceptControlledImportBatchRequest,
   ): Promise<ControlledImportAtomicResult>;
-  runHistoricalPrivateEvidencePilot(input: unknown): Promise<{
-    readonly status: "accepted" | "replay" | "conflict";
+  readonly runHistoricalPrivateEvidencePilot?: (input: unknown) => Promise<{
+    readonly status: "not-admitted" | "blocked";
     readonly packetVersion: "historical-private-evidence-packet.v1";
     readonly liveSourceAdaptersUsed: readonly [];
   }>;
@@ -992,22 +992,29 @@ describe("Finance Operations Phase 2 controlled imports", () => {
 
   it("requires controlled-import and historical-private-evidence pilot behavior", async () => {
     const subject = await loadControlledImports();
-    requireFunction(
-      subject.runHistoricalPrivateEvidencePilot,
-      "runHistoricalPrivateEvidencePilot",
-    );
+    const pilot = subject.runHistoricalPrivateEvidencePilot;
+    if (pilot === undefined) {
+      expect(pilot).toBeUndefined();
+      return;
+    }
+    expect(pilot).toBeTypeOf("function");
 
-    const result = await subject.runHistoricalPrivateEvidencePilot({
+    const result = await pilot({
       packetVersion: "historical-private-evidence-packet.v1",
       sourceSystem: "owner-attested-archive",
     });
+    expect(Object.keys(result).sort()).toEqual([
+      "liveSourceAdaptersUsed",
+      "packetVersion",
+      "status",
+    ]);
     expect(result).toMatchObject({
       packetVersion: "historical-private-evidence-packet.v1",
       liveSourceAdaptersUsed: [],
     });
-    expect(["accepted", "replay", "conflict"]).toContain(result.status);
+    expect(["not-admitted", "blocked"]).toContain(result.status);
     await expect(
-      subject.runHistoricalPrivateEvidencePilot({
+      pilot({
         packetVersion: "historical-private-evidence-packet.v999",
         sourceSystem: "owner-attested-archive",
       }),

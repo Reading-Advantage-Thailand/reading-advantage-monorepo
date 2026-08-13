@@ -1,0 +1,102 @@
+Measure Mid Red role log - Phase 2 pilot contract correction
+Track: company_finance_operations_20260810
+Phase: Phase 2 — controlled operational imports
+Role: measure-mid-red
+Date: 2026-08-13
+phase_base_sha: 7ef48d2d2929c67dfd70c899a4710b77808637b9
+role_base_sha: 2d7f6c8e9fc2ae4a2cf6de287c6c915070f1c02a
+resulting_head: pending commit
+
+## Preflight
+
+- Both supplied SHAs resolve to commits.
+- `phase_base_sha` is an ancestor of `role_base_sha`.
+- The checkout is `master`, and exactly one worktree exists.
+- Existing dirty paths are unrelated user work: `.opencode/**`, Codecamp
+  Playwright and test-result reports, `pnpm-lock.yaml`, Advantage Games test
+  results, and Sales review output. I preserved these paths and did not stage
+  them.
+- Phase 2 Task 1 was already marked `[~]` at role start. Task 2 remains `[b]`
+  with `deferred:phase2`.
+- I edited only the existing Phase 2 test contract, the Phase 2 plan, this role
+  log, and the invalid Green role receipt.
+- I did not edit production source or the 26 Review B tests.
+
+## Contract correction
+
+The old Phase 2 test treated the public pilot helper as an accepted operational
+pilot. That contract contradicted the blocked Task 2 marker and Review B.
+
+The corrected test now permits the public helper to be absent. When the helper
+exists, it requires an exact result shape with packet version
+`historical-private-evidence-packet.v1`, an empty `liveSourceAdaptersUsed`
+array, and only `not-admitted` or `blocked` status. It preserves rejection of
+an invalid packet version.
+
+The Review B test remains unchanged. The blocked Green role receipt now has the
+required role-result fields and the `END_MEASURE_AGENT_RESULT` marker.
+
+## Tests run
+
+1. Corrected Phase 2 Red command:
+   `../../node_modules/.bin/vitest run src/modules/finance-operations/__tests__/controlled-imports-phase2.red.test.ts --pool=threads --maxWorkers=1`
+   - Exit 1.
+   - Collection succeeded.
+   - 24 tests ran: 23 passed and 1 failed.
+   - The only failure is the current production pilot result: it returns
+     `accepted`, but the corrected contract allows only `not-admitted` or
+     `blocked`.
+
+2. Review B Red command:
+   `../../node_modules/.bin/vitest run src/modules/finance-operations/__tests__/controlled-imports-phase2-review-b.red.test.ts --pool=threads --maxWorkers=1`
+   - Exit 1.
+   - Collection succeeded.
+   - 26 tests ran: 0 passed and 26 failed.
+   - The suite remains Red for the unresolved Review B security findings.
+   - The pilot assertion is aligned with the blocked contract and remains a
+     direct failure while production returns `accepted`.
+
+3. Phase 1 Finance Operations baseline:
+   `../../node_modules/.bin/vitest run src/modules/finance-operations/__tests__/architecture-boundary.test.ts src/modules/finance-operations/__tests__/port-boundaries.test.ts src/modules/finance-operations/__tests__/authorization-audit.test.ts src/modules/finance-operations/__tests__/money-history.test.ts src/modules/finance-operations/__tests__/contracts.test.ts src/modules/finance-operations/__tests__/independent-review-blockers.red.test.ts src/modules/finance-operations/__tests__/postgres-record-repository.red.test.ts src/modules/finance-operations/__tests__/provenance-whitespace.red.test.ts src/modules/finance-operations/__tests__/historical-private-evidence-packet.red.test.ts src/modules/finance-operations/__tests__/durable-job-adapter.red.test.ts src/modules/finance-operations/__tests__/historical-private-evidence-binding-adapter.red.test.ts --pool=threads --maxWorkers=1`
+   - Exit 0.
+   - 11 files and 135 tests passed.
+
+4. `git diff --check` passed. Prettier passed for the new role log, the
+   corrected plan, and the repaired Green role log. The existing Phase 2 test
+   retains pre-existing formatting differences outside this contract change.
+
+## Plan updates
+
+`plan.md` records the bounded pilot-contract correction, the exact Phase 2
+23-pass/1-fail result, the Review B Red result, and the 135/135 Phase 1
+baseline. Task 1 remains `[~]`. Task 2 remains `[b]` with `deferred:phase2`.
+
+## Known failures
+
+- The corrected Phase 2 suite has one expected failure because current
+  production returns `accepted` pilot authority.
+- Review B remains Red on the unresolved security findings.
+- No production source changed.
+
+## Handoff
+
+Jr Green must remove the accepted pilot authority or return the strict
+`blocked`/`not-admitted` result. The invalid packet rejection and all other
+Phase 2 assertions now provide the bounded Task 1 contract.
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+status: complete
+track: company_finance_operations_20260810
+phase: Phase 2 — controlled operational imports
+baseline_sha: 7ef48d2d2929c67dfd70c899a4710b77808637b9
+phase_base_sha: 7ef48d2d2929c67dfd70c899a4710b77808637b9
+role_base_sha: 2d7f6c8e9fc2ae4a2cf6de287c6c915070f1c02a
+commits: pending commit of the corrected Phase 2 test, plan, and role receipts
+resulting_head: pending commit
+tests_run: corrected Phase 2 exit 1 (24 collected, 23 passed, 1 expected pilot failure); Review B exit 1 (26 collected, 0 passed, 26 failed); Phase 1 Finance exit 0 (135/135)
+files_changed: packages/backend/src/modules/finance-operations/__tests__/controlled-imports-phase2.red.test.ts; measure/tracks/company_finance_operations_20260810/plan.md; measure/tracks/company_finance_operations_20260810/orchestration/phase2-pilot-contract-mid-red-role.log; measure/tracks/company_finance_operations_20260810/orchestration/phase2-review-b-jr-green-role.log
+plan_updates: recorded the bounded pilot contract and exact test counts; Task 1 remains [~]; Task 2 remains [b] with deferred:phase2
+known_failures: current production returns accepted pilot authority; Review B security findings remain unresolved
+handoff: Jr Green must implement no pilot authority while preserving the corrected Phase 2 and Review B contracts.
+END_MEASURE_AGENT_RESULT
