@@ -1,0 +1,34 @@
+Measure Mid Red receipt - Phase 2 Review B
+Track: company_finance_operations_20260810
+Phase: Phase 2 — controlled operational imports
+Role: measure-mid-red
+Date: 2026-08-13
+phase_base_sha: 7ef48d2d2929c67dfd70c899a4710b77808637b9
+role_base_sha: 22b4959dedb0462a7e0a0ffb912cec3d2a59125c
+
+Preflight: both SHAs resolve; phase base and role base are ancestors of the current HEAD. Existing dirty paths outside the four owned paths are unrelated user work and remain untouched. No production source changed.
+
+Review B Red command:
+`../../node_modules/.bin/vitest run src/modules/finance-operations/__tests__/controlled-imports-phase2-review-b.red.test.ts --pool=threads --maxWorkers=1`
+from `packages/backend` exited 1. Collection succeeded. The suite ran 33 tests: 26 passed and 7 failed.
+
+The seven remaining failures are trusted packet fact binding, preparation-symbol forgery, frozen caller-built plans, unknown repository fields, malformed repository status, sanitized authorization-failure audit, and the bounded decimal limit.
+
+`git diff --check` on the three dirty files exited 0. The Phase 2 Task 1 marker already had no accidental leading space. The marker remains `[~]`. The pilot remains `[b]` with `deferred:phase2`.
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+status: complete
+track: company_finance_operations_20260810
+phase: Phase 2 — controlled operational imports
+baseline_sha: 7ef48d2d2929c67dfd70c899a4710b77808637b9
+phase_base_sha: 7ef48d2d2929c67dfd70c899a4710b77808637b9
+role_base_sha: 22b4959dedb0462a7e0a0ffb912cec3d2a59125c
+commits: this receipt commit
+resulting_head: resolved by this receipt commit
+tests_run: Review B Red exit 1; 33 tests collected; 26 passed; 7 failed; git diff --check exit 0
+files_changed: packages/backend/src/modules/finance-operations/__tests__/controlled-imports-phase2-review-b.red.test.ts; packages/backend/src/modules/finance-operations/__tests__/controlled-imports-phase2.red.test.ts; measure/tracks/company_finance_operations_20260810/plan.md; measure/tracks/company_finance_operations_20260810/orchestration/phase2-review-v2-mid-red-role.log
+plan_updates: recorded the exact 33-test Review B Red receipt and preserved Task 1 `[~]` and pilot `[b]` markers
+known_failures: seven named Review B remediation behaviors remain Red; no production source changed
+handoff: Green must remediate the seven named failures without changing the Phase 2 source boundary
+END_MEASURE_AGENT_RESULT

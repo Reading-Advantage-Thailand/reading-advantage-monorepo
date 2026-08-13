@@ -1647,8 +1647,13 @@ describe("Finance Operations Phase 2 controlled imports", () => {
       document: unknown,
     ): Promise<PreparedControlledImportBatch> => {
       const envelope = privateEvidenceEnvelope({
-        ...strictEnvelope,
         document: document as ControlledSourceDocumentInput,
+        sourceSystem: strictEnvelope.sourceSystem,
+        sourceVersion: strictEnvelope.sourceVersion,
+        sourceRecordId: strictEnvelope.sourceRecordId,
+        payloadDigest: strictEnvelope.evidenceAuthorization.payloadDigest,
+        evidenceReference:
+          strictEnvelope.evidenceAuthorization.evidenceReference,
       });
       return subject.prepareControlledImportBatch(
         await trustedNormalizationInput(

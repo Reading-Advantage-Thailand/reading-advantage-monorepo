@@ -126,6 +126,7 @@ async function trustedPreparationFor(
   options: {
     readonly sourceIdentity?: string;
     readonly payloadDigest?: string;
+    readonly factValue?: string;
   } = {},
 ): Promise<unknown> {
   const sourceIdentity = options.sourceIdentity ?? "receipt-001";
@@ -157,7 +158,7 @@ async function trustedPreparationFor(
       })),
     },
   });
-  return command.prepare({
+  const preparation = await command.prepare({
     packet: {
       packetVersion: PACKET_VERSION,
       scope,
@@ -174,7 +175,7 @@ async function trustedPreparationFor(
           factId: "document-total:receipt-total",
           kind: "source-stated-value",
           label: "Receipt total as stated",
-          value: "100.00",
+          value: options.factValue ?? "100.00",
         },
       ],
     },
@@ -187,6 +188,40 @@ async function trustedPreparationFor(
       correlationId: "finance-import-correlation-001",
     },
   });
+  const prepared = preparation as {
+    readonly packet: {
+      readonly source: {
+        readonly payloadDigest: string;
+        readonly evidenceReference: string;
+      };
+      readonly facts: readonly Record<string, unknown>[];
+    };
+    readonly evidence: {
+      readonly payloadDigest: string;
+      readonly evidenceReference: string;
+    };
+  };
+  expect(prepared.packet.source.payloadDigest).toBe(payloadDigest);
+  expect(prepared.packet.source.evidenceReference).toBe(evidenceReference);
+  expect(prepared.evidence.payloadDigest).toBe(payloadDigest);
+  expect(prepared.evidence.evidenceReference).toBe(evidenceReference);
+  expect(prepared.packet.facts).toEqual(
+    expect.arrayContaining([
+      expect.objectContaining({
+        value: options.factValue ?? "100.00",
+      }),
+    ]),
+  );
+  return preparation;
+}
+
+/** Recursively freezes a caller-built fixture for capability-bypass tests. */
+function deepFreeze<T>(value: T): T {
+  if (value !== null && typeof value === "object" && !Object.isFrozen(value)) {
+    for (const child of Object.values(value as object)) deepFreeze(child);
+    Object.freeze(value);
+  }
+  return value;
 }
 
 /** Adds real owner-boundary preparations to a normalization request. */
@@ -282,6 +317,89 @@ async function preparedPlan(
 }
 
 describe("Finance Operations Phase 2 Review B remediation RED contract", () => {
+  it("rejects document facts that differ from the trusted packet preparation", async () => {
+    const subject = await loadControlledImports();
+    const cleanEnvelope = callerEnvelope();
+    const genuinePreparation = await trustedPreparationFor(
+      subject,
+      requestedScope,
+      validEvidenceReference,
+    );
+    const cleanResult = subject.prepareControlledImportBatch(
+      normalizationRequest({
+        batchId: "trusted-fact-control-batch",
+        envelopes: [cleanEnvelope],
+        trustedPreparation: genuinePreparation,
+      }),
+    );
+    expect(cleanResult).toMatchObject({ status: "ready" });
+
+    const tamperedEnvelope = callerEnvelope({
+      document: paymentReceiptDocument({
+        facts: [
+          {
+            factId: "payment-total",
+            kind: "money",
+            amountDecimal: "999.00",
+          },
+        ],
+      }),
+    });
+    const tamperedRequest = normalizationRequest({
+      batchId: "trusted-fact-tamper-batch",
+      envelopes: [tamperedEnvelope],
+      trustedPreparation: genuinePreparation,
+    });
+
+    let result: unknown;
+    try {
+      result = subject.prepareControlledImportBatch(tamperedRequest);
+    } catch (error) {
+      expect(error).toBeInstanceOf(Error);
+      return;
+    }
+
+    expect(result).toMatchObject({ status: "ready" });
+    const snapshot = (result as { readonly snapshots: readonly unknown[] })
+      .snapshots[0] as { readonly facts: readonly Record<string, unknown>[] };
+    expect(snapshot.facts).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ amountMinor: "10000" }),
+      ]),
+    );
+    expect(snapshot.facts).not.toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ amountMinor: "99900" }),
+      ]),
+    );
+  });
+
+  it("rejects a Proxy that reports true for every preparation symbol", async () => {
+    const subject = await loadControlledImports();
+    const envelope = callerEnvelope();
+    const genuinePreparation = await trustedPreparationFor(
+      subject,
+      requestedScope,
+      validEvidenceReference,
+    );
+    const forgedPreparation = new Proxy(genuinePreparation as object, {
+      get(target, property, receiver) {
+        if (typeof property === "symbol") return true;
+        return Reflect.get(target, property, receiver);
+      },
+    });
+
+    expect(() =>
+      subject.prepareControlledImportBatch(
+        normalizationRequest({
+          batchId: "proxy-preparation-forgery-batch",
+          envelopes: [envelope],
+          trustedPreparation: forgedPreparation,
+        }),
+      ),
+    ).toThrow();
+  });
+
   it("rejects a caller-fabricated accepted envelope without trusted preparation evidence", async () => {
     const subject = await loadControlledImports();
 
@@ -440,6 +558,155 @@ describe("Finance Operations Phase 2 Review B remediation RED contract", () => {
       }),
     ).rejects.toThrow();
     expect(fakes.repository.applyBatchAtomically).not.toHaveBeenCalled();
+  });
+
+  it("rejects a deeply frozen caller-built ready plan before repository access", async () => {
+    const subject = await loadControlledImports();
+    const prepared = await preparedPlan(subject);
+    const fakes = commandFakes();
+    const callerBuiltPlan = deepFreeze({
+      status: prepared.status,
+      normalizationVersion: prepared.normalizationVersion,
+      scope: structuredClone(prepared.scope),
+      batchId: prepared.batchId,
+      batchDigest: prepared.batchDigest,
+      snapshots: structuredClone(prepared.snapshots),
+      records: structuredClone(prepared.records),
+    });
+
+    const callerBuiltRecords = callerBuiltPlan.records as readonly unknown[];
+    expect(Object.isFrozen(callerBuiltPlan)).toBe(true);
+    expect(Object.isFrozen(callerBuiltRecords[0])).toBe(true);
+    await expect(
+      subject.acceptControlledImportBatch({
+        plan: callerBuiltPlan,
+        authorizationInput: authorizationInput(),
+        authorizationPort: {
+          authorizeFinanceOperation: vi.fn(async () => ({
+            decision: "allow" as const,
+          })),
+        },
+        auditPort: fakes.auditPort,
+        repository: fakes.repository,
+        requestId: "request-deep-frozen-caller-plan-001",
+        correlationId: "correlation-deep-frozen-caller-plan-001",
+        occurredAt: "2026-08-13T01:02:03.000Z",
+      }),
+    ).rejects.toThrow();
+    expect(fakes.repository.applyBatchAtomically).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    [
+      "unknown repository field",
+      {
+        status: "accepted",
+        recordIds: ["record-001"],
+        secret: "repository-secret",
+      },
+    ],
+    [
+      "malformed repository status",
+      { status: "pending", recordIds: ["record-001"] },
+    ],
+  ] as const)(
+    "strictly parses the repository result for %s",
+    async (_name, repositoryResult) => {
+      const subject = await loadControlledImports();
+      const audit = commandFakes();
+      const repository = {
+        applyBatchAtomically: vi.fn(async () => repositoryResult as never),
+      };
+
+      const failure = await subject
+        .acceptControlledImportBatch({
+          plan: await preparedPlan(subject),
+          authorizationInput: authorizationInput(),
+          authorizationPort: {
+            authorizeFinanceOperation: vi.fn(async () => ({
+              decision: "allow" as const,
+            })),
+          },
+          auditPort: audit.auditPort,
+          repository,
+          requestId: "request-strict-repository-result-001",
+          correlationId: "correlation-strict-repository-result-001",
+          occurredAt: "2026-08-13T01:02:03.000Z",
+        })
+        .then(
+          () => undefined,
+          (error: unknown) => error,
+        );
+
+      expect(failure).toBeInstanceOf(Error);
+      expect(JSON.stringify(failure)).not.toContain("repository-secret");
+      expect(repository.applyBatchAtomically).toHaveBeenCalledTimes(1);
+    },
+  );
+
+  it("appends a sanitized failed audit when authorization evaluation fails", async () => {
+    const subject = await loadControlledImports();
+    const audit = commandFakes();
+    const repository = commandFakes().repository;
+    const secret = "authorization-provider-secret";
+
+    const failure = await subject
+      .acceptControlledImportBatch({
+        plan: await preparedPlan(subject),
+        authorizationInput: authorizationInput(),
+        authorizationPort: {
+          authorizeFinanceOperation: vi.fn(async () => {
+            throw new Error(`authorization dependency failed: ${secret}`);
+          }),
+        },
+        auditPort: audit.auditPort,
+        repository,
+        requestId: "request-authorization-failure-001",
+        correlationId: "correlation-authorization-failure-001",
+        occurredAt: "2026-08-13T01:02:03.000Z",
+      })
+      .then(
+        () => undefined,
+        (error: unknown) => error,
+      );
+
+    expect(failure).toBeInstanceOf(Error);
+    expect(audit.auditPort.append).toHaveBeenCalledWith(
+      expect.objectContaining({ outcome: "failed" }),
+    );
+    expect(JSON.stringify(audit.auditPort.append.mock.calls)).not.toContain(
+      secret,
+    );
+    expect(repository.applyBatchAtomically).not.toHaveBeenCalled();
+  });
+
+  it("rejects decimal amounts beyond the bounded 38-digit integer limit", async () => {
+    const subject = await loadControlledImports();
+    const run = async (amountDecimal: string): Promise<unknown> => {
+      const envelope = callerEnvelope({
+        document: paymentReceiptDocument({
+          facts: [{ factId: "payment-total", kind: "money", amountDecimal }],
+        }),
+      });
+      const preparation = await trustedPreparationFor(
+        subject,
+        requestedScope,
+        validEvidenceReference,
+        { factValue: amountDecimal },
+      );
+      return subject.prepareControlledImportBatch(
+        normalizationRequest({
+          batchId: `decimal-limit-${amountDecimal.length}`,
+          envelopes: [envelope],
+          trustedPreparation: preparation,
+        }),
+      );
+    };
+
+    await expect(run(`${"9".repeat(38)}.99`)).resolves.toMatchObject({
+      status: "ready",
+    });
+    await expect(run(`${"1".repeat(39)}.00`)).rejects.toThrow();
   });
 
   it.each([
