@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { z } from "zod";
 
+import type { DurableJobWorkerPort, JobEnvelope } from "../../../../packages/backend/src/jobs/index.js";
 import { createWorkerHealthState } from "../health.js";
 
 type WorkerHandler = {
@@ -45,7 +46,12 @@ type WorkerCompositionModule = {
   ) => WorkerComposition;
 };
 
-type WorkerJob = Record<string, unknown>;
+type WorkerLifecyclePort = Pick<
+  DurableJobWorkerPort,
+  "claim" | "heartbeat" | "settle" | "fail" | "reclaimExpired"
+>;
+
+type WorkerJob = Extract<JobEnvelope, { state: "running" }>;
 
 const workerCompositionSource = fileURLToPath(
   new URL("../worker-composition.ts", import.meta.url),
@@ -131,8 +137,10 @@ const createJob = (index: number, secret = `secret-${index}`): WorkerJob => ({
 const createWorkerPort = (jobs: readonly WorkerJob[]) => {
   let pendingJobs = [...jobs];
 
-  return {
-    claim: vi.fn(async (request: Readonly<Record<string, unknown>>) => {
+  const port = {
+    claim: vi.fn(async (
+      request: Parameters<DurableJobWorkerPort["claim"]>[0],
+    ): ReturnType<DurableJobWorkerPort["claim"]> => {
       void request;
       const claimedJobs = pendingJobs;
       pendingJobs = [];
@@ -140,25 +148,50 @@ const createWorkerPort = (jobs: readonly WorkerJob[]) => {
         ? { outcome: "claimed", jobs: claimedJobs }
         : { outcome: "empty" };
     }),
-    heartbeat: vi.fn(async (request: Readonly<Record<string, unknown>>) => {
+    heartbeat: vi.fn(async (
+      request: Parameters<DurableJobWorkerPort["heartbeat"]>[0],
+    ): ReturnType<DurableJobWorkerPort["heartbeat"]> => {
       void request;
       return { outcome: "extended", expiresAt: "2026-08-13T00:01:00.000Z" };
     }),
-    settle: vi.fn(async (request: Readonly<Record<string, unknown>>) => {
+    settle: vi.fn(async (
+      request: Parameters<DurableJobWorkerPort["settle"]>[0],
+    ): ReturnType<DurableJobWorkerPort["settle"]> => {
       void request;
       return { outcome: "settled", state: "succeeded" };
     }),
-    fail: vi.fn(async (request: Readonly<Record<string, unknown>>) => {
+    fail: vi.fn(async (
+      request: Parameters<DurableJobWorkerPort["fail"]>[0],
+    ): ReturnType<DurableJobWorkerPort["fail"]> => {
       void request;
       return { outcome: "dead" };
     }),
     reclaimExpired: vi.fn(
-      async (request: Readonly<Record<string, unknown>>) => {
+      async (
+        request: Parameters<DurableJobWorkerPort["reclaimExpired"]>[0],
+      ): ReturnType<DurableJobWorkerPort["reclaimExpired"]> => {
         void request;
         return { outcome: "no-op" };
       },
     ),
   };
+
+  const lifecyclePort: WorkerLifecyclePort = port;
+  void lifecyclePort;
+  return port;
+};
+
+const forbiddenAdministrativeMethods = ["enqueue", "listDead", "replay"] as const;
+
+const trapForbiddenAdministrativeMethods = (port: WorkerLifecyclePort): void => {
+  for (const forbiddenMethod of forbiddenAdministrativeMethods) {
+    Object.defineProperty(port, forbiddenMethod, {
+      configurable: true,
+      get: () => {
+        throw new Error(`Worker accessed forbidden job-port method: ${forbiddenMethod}`);
+      },
+    });
+  }
 };
 
 const loadWorkerComposition = async (): Promise<WorkerCompositionModule> => {
@@ -188,6 +221,7 @@ const createComposition = async (
   jobs: readonly WorkerJob[],
   handler = createHandler(),
   overrides: Readonly<Record<string, unknown>> = {},
+  preparePort: (port: WorkerLifecyclePort) => void = () => undefined,
 ): Promise<{
   composition: WorkerComposition;
   health: ReturnType<typeof createWorkerHealthState>;
@@ -203,6 +237,7 @@ const createComposition = async (
     clock: () => new Date(fixedNow),
     serviceName: "worker-red-test",
   });
+  preparePort(port);
   const registry = createRegistry([handler]);
   const config = parseConfig(validEnvironment);
   const composition = createWorkerComposition({
@@ -383,19 +418,61 @@ describe("durable worker lifecycle Red contract", () => {
     expect(JSON.stringify(persistedError)).not.toContain(providerSecret);
   });
 
-  it("uses only the worker lifecycle job port and never reaches enqueue, replay, or dead-letter administration", async () => {
-    const { composition, port } = await createComposition([createJob(1)]);
-    for (const forbiddenMethod of ["enqueue", "listDead", "replay"]) {
-      Object.defineProperty(port, forbiddenMethod, {
-        configurable: true,
-        get: () => {
-          throw new Error(`Worker accessed forbidden job-port method: ${forbiddenMethod}`);
-        },
-      });
-    }
+  it("uses only the worker lifecycle job port across every lifecycle path", async () => {
+    const jobStarted = createDeferred();
+    const releaseJob = createDeferred();
+    const startCase = await createComposition(
+      [createJob(1)],
+      createHandler(async () => {
+        jobStarted.resolve();
+        await releaseJob.promise;
+        return { ok: true };
+      }),
+      {},
+      trapForbiddenAdministrativeMethods,
+    );
 
-    await composition.pollOnce();
-    expect(port.claim).toHaveBeenCalledTimes(1);
-    expect(port.settle).toHaveBeenCalledTimes(1);
+    const startPromise = startCase.composition.start();
+    await jobStarted.promise;
+    await waitFor(() => startCase.health.snapshot().ready, "worker readiness");
+    const stopPromise = startCase.composition.stop("SIGTERM");
+    expect(startCase.health.snapshot()).toMatchObject({
+      ready: false,
+      status: "draining",
+    });
+    releaseJob.resolve();
+    await expect(stopPromise).resolves.toBeUndefined();
+    await expect(startPromise).resolves.toBeUndefined();
+    expect(startCase.port.claim).toHaveBeenCalled();
+    expect(startCase.port.settle).toHaveBeenCalledTimes(1);
+
+    const successCase = await createComposition(
+      [createJob(2)],
+      createHandler(),
+      {},
+      trapForbiddenAdministrativeMethods,
+    );
+    await successCase.composition.pollOnce();
+    expect(successCase.port.settle).toHaveBeenCalledTimes(1);
+
+    const failureCase = await createComposition(
+      [createJob(3)],
+      createHandler(async () => {
+        throw new Error("provider failure");
+      }),
+      {},
+      trapForbiddenAdministrativeMethods,
+    );
+    await expect(failureCase.composition.pollOnce()).resolves.toBeUndefined();
+    expect(failureCase.port.fail).toHaveBeenCalledTimes(1);
+
+    const reclaimCase = await createComposition(
+      [],
+      createHandler(),
+      {},
+      trapForbiddenAdministrativeMethods,
+    );
+    await reclaimCase.composition.pollOnce();
+    expect(reclaimCase.port.reclaimExpired).toHaveBeenCalledTimes(1);
   });
 });
