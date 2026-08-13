@@ -5,6 +5,7 @@ export * from "./audit.js";
 export * from "./money.js";
 export * from "./records.js";
 export * from "./ports.js";
+export * from "./controlled-imports.js";
 export {
   classifyDurableJobReplay,
   customerBillingCatalogInputSchema,
