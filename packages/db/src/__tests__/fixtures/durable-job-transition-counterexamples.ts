@@ -23,6 +23,159 @@ export interface DurableJobInvalidRowFixture {
   readonly rationale: string;
 }
 
+/** Column names present in every canonical durable-job row. */
+export const durableJobCanonicalColumns = [
+  "id",
+  "job_name",
+  "queue_name",
+  "tenant_mode",
+  "tenant_id",
+  "idempotency_key",
+  "payload_json",
+  "payload_fingerprint",
+  "state",
+  "attempt",
+  "max_attempts",
+  "available_at",
+  "lease_token_hash",
+  "lease_owner",
+  "lease_expires_at",
+  "redeliver_current_attempt",
+  "rerun_requested",
+  "rerun_queue_name",
+  "rerun_payload_json",
+  "rerun_payload_fingerprint",
+  "rerun_max_attempts",
+  "rerun_available_at",
+  "result_json",
+  "last_error_code",
+  "last_error_summary",
+  "completed_at",
+  "generation",
+  "created_at",
+  "updated_at",
+] as const;
+
+/** Complete row shape used as the valid starting point for every fixture. */
+export type DurableJobCanonicalRow = Readonly<Record<string, unknown>>;
+
+const CANONICAL_LEASE_VALUES = {
+  lease_token_hash: "5d964f1f0c009bc5d62e14cee19b81f1c61a082e249a9a6c6e4974808e0883a5",
+  lease_owner: "worker-alpha",
+  lease_expires_at: "2030-01-01T01:00:00.000Z",
+} as const;
+
+const CANONICAL_RERUN_VALUES = {
+  rerun_queue_name: "review.follow-up",
+  rerun_payload_json: { kind: "review-follow-up", pullRequest: 1 },
+  rerun_payload_fingerprint:
+    "3079e310e4a99ccc2e5b8a480913164d2fbd0392c51266647aa95c06ddb9bf54",
+  rerun_max_attempts: 3,
+  rerun_available_at: "2030-01-01T00:10:00.000Z",
+} as const;
+
+const CANONICAL_RERUN_OVERRIDES = {
+  rerun_requested: true,
+  ...CANONICAL_RERUN_VALUES,
+} as const;
+
+const canonicalBaseRow = {
+  id: "00000000-0000-4000-8000-000000000001",
+  job_name: "codecamp.review-pr",
+  queue_name: "review.main",
+  tenant_mode: "global",
+  tenant_id: null,
+  idempotency_key: "openai/example#1",
+  payload_json: { kind: "review", pullRequest: 1 },
+  payload_fingerprint:
+    "b8059c7148c55b633353ad557b046fb7bdd6cddba44e3deef04b3032df453cde",
+  max_attempts: 3,
+  available_at: "2030-01-01T00:00:00.000Z",
+  lease_token_hash: null,
+  lease_owner: null,
+  lease_expires_at: null,
+  redeliver_current_attempt: false,
+  rerun_requested: false,
+  rerun_queue_name: null,
+  rerun_payload_json: null,
+  rerun_payload_fingerprint: null,
+  rerun_max_attempts: null,
+  rerun_available_at: null,
+  result_json: null,
+  last_error_code: null,
+  last_error_summary: null,
+  completed_at: null,
+  generation: 1,
+  created_at: "2029-12-31T23:00:00.000Z",
+  updated_at: "2030-01-01T00:00:00.000Z",
+} as const;
+
+/** Canonical valid durable-job rows keyed by each persisted state. */
+export const durableJobCanonicalRows: Readonly<
+  Record<DurableJobInvalidRowFixture["state"], DurableJobCanonicalRow>
+> = {
+  pending: {
+    ...canonicalBaseRow,
+    state: "pending",
+    attempt: 0,
+  },
+  running: {
+    ...canonicalBaseRow,
+    ...CANONICAL_LEASE_VALUES,
+    ...CANONICAL_RERUN_OVERRIDES,
+    state: "running",
+    attempt: 1,
+  },
+  succeeded: {
+    ...canonicalBaseRow,
+    state: "succeeded",
+    attempt: 1,
+    result_json: { accepted: true },
+    completed_at: "2030-01-01T00:05:00.000Z",
+  },
+  dead: {
+    ...canonicalBaseRow,
+    state: "dead",
+    attempt: 1,
+    last_error_code: "PERMANENT",
+    last_error_summary: "Permanent failure.",
+    completed_at: "2030-01-01T00:05:00.000Z",
+  },
+  "legacy-failed": {
+    ...canonicalBaseRow,
+    state: "legacy-failed",
+    attempt: 0,
+    last_error_code: "LEGACY_FAILURE",
+    last_error_summary: "Legacy failure.",
+    completed_at: "2030-01-01T00:05:00.000Z",
+  },
+};
+
+/** Applies one fixture's targeted cell changes to its canonical state row.
+ * @param fixture Invalid fixture whose overrides must be applied.
+ * @returns The row with the fixture's targeted changes.
+ */
+export function durableJobRowFromFixture(
+  fixture: DurableJobInvalidRowFixture,
+): DurableJobCanonicalRow {
+  return { ...durableJobCanonicalRows[fixture.state], ...fixture.overrides };
+}
+
+/** Restores every targeted cell to prove the fixture starts from a valid row.
+ * @param fixture Invalid fixture whose overrides must be removed.
+ * @returns The canonical row for the fixture state.
+ */
+export function durableJobRowWithoutFixtureOverrides(
+  fixture: DurableJobInvalidRowFixture,
+): DurableJobCanonicalRow {
+  const canonicalRow = durableJobCanonicalRows[fixture.state];
+  const restoredRow: Record<string, unknown> = { ...durableJobRowFromFixture(fixture) };
+  for (const column of Object.keys(fixture.overrides)) {
+    restoredRow[column] = canonicalRow[column];
+  }
+  return restoredRow;
+}
+
 /** One accepted transition scenario frozen for later adapter race tests. */
 export interface DurableJobTransitionScenarioFixture {
   /** Stable scenario identifier. */
@@ -52,19 +205,26 @@ const RERUN_COLUMNS = [
 /**
  * Builds every non-empty proper subset of a column tuple.
  * @param columns Ordered nullable columns participating in an all-or-none check.
- * @param populatedValue Value assigned to selected columns.
+ * @param populatedValues Canonical values for every tuple column.
  * @returns Every partial tuple in deterministic bit-mask order.
  */
 function partialTuples(
   columns: readonly string[],
-  populatedValue: unknown,
+  populatedValues: Readonly<Record<string, unknown>>,
 ): ReadonlyArray<Readonly<Record<string, unknown>>> {
   const tuples: Array<Readonly<Record<string, unknown>>> = [];
   const finalMask = (1 << columns.length) - 1;
   for (let mask = 1; mask < finalMask; mask += 1) {
     const tuple: Record<string, unknown> = {};
     for (const [index, column] of columns.entries()) {
-      tuple[column] = (mask & (1 << index)) === 0 ? null : populatedValue;
+      if (populatedValues[column] === undefined) {
+        throw new Error(`Missing canonical value for ${column}.`);
+      }
+      if ((mask & (1 << index)) === 0) {
+        tuple[column] = null;
+      } else {
+        tuple[column] = populatedValues[column];
+      }
     }
     tuples.push(tuple);
   }
@@ -73,7 +233,7 @@ function partialTuples(
 
 const leasePartialFixtures: readonly DurableJobInvalidRowFixture[] = partialTuples(
   LEASE_COLUMNS,
-  "present",
+  CANONICAL_LEASE_VALUES,
 ).map((overrides, index) => ({
   id: `lease-partial-${String(index + 1).padStart(2, "0")}`,
   finding: "T5-H2",
@@ -85,12 +245,12 @@ const leasePartialFixtures: readonly DurableJobInvalidRowFixture[] = partialTupl
 
 const rerunPartialFixtures: readonly DurableJobInvalidRowFixture[] = partialTuples(
   RERUN_COLUMNS,
-  "present",
+  CANONICAL_RERUN_VALUES,
 ).map((overrides, index) => ({
   id: `rerun-partial-${String(index + 1).padStart(2, "0")}`,
   finding: "T5-H2",
   state: "running",
-  overrides: { rerun_requested: true, ...overrides },
+  overrides,
   expectedConstraint: "durable_jobs_rerun_tuple_check",
   rationale: "A coalesced rerun must persist the complete five-field request snapshot.",
 }));
@@ -104,7 +264,7 @@ export const durableJobInvalidRowFixtures: readonly DurableJobInvalidRowFixture[
     id: "global-with-tenant-id",
     finding: "T5-H2",
     state: "pending",
-    overrides: { tenant_mode: "global", tenant_id: "school-1" },
+    overrides: { tenant_id: "school-1" },
     expectedConstraint: "durable_jobs_tenant_scope_check",
     rationale: "Global identities cannot carry a tenant key.",
   },
@@ -112,7 +272,7 @@ export const durableJobInvalidRowFixtures: readonly DurableJobInvalidRowFixture[
     id: "tenant-with-null-id",
     finding: "T5-H2",
     state: "pending",
-    overrides: { tenant_mode: "tenant", tenant_id: null },
+    overrides: { tenant_mode: "tenant" },
     expectedConstraint: "durable_jobs_tenant_scope_check",
     rationale: "Tenant identities require a trusted tenant key.",
   },
@@ -177,7 +337,7 @@ export const durableJobInvalidRowFixtures: readonly DurableJobInvalidRowFixture[
     id: "safe-error-code-only",
     finding: "T5-H2",
     state: "pending",
-    overrides: { last_error_code: "RETRYABLE", last_error_summary: null },
+    overrides: { last_error_code: "RETRYABLE" },
     expectedConstraint: "durable_jobs_safe_error_tuple_check",
     rationale: "Safe error code and summary are persisted together.",
   },
@@ -185,7 +345,7 @@ export const durableJobInvalidRowFixtures: readonly DurableJobInvalidRowFixture[
     id: "safe-error-summary-only",
     finding: "T5-H2",
     state: "pending",
-    overrides: { last_error_code: null, last_error_summary: "Retry later." },
+    overrides: { last_error_summary: "Retry later." },
     expectedConstraint: "durable_jobs_safe_error_tuple_check",
     rationale: "Safe error code and summary are persisted together.",
   },
@@ -194,14 +354,7 @@ export const durableJobInvalidRowFixtures: readonly DurableJobInvalidRowFixture[
     id: "rerun-columns-with-flag-false",
     finding: "T5-H2",
     state: "running",
-    overrides: {
-      rerun_requested: false,
-      rerun_queue_name: "review.follow-up",
-      rerun_payload_json: {},
-      rerun_payload_fingerprint: "a".repeat(64),
-      rerun_max_attempts: 3,
-      rerun_available_at: "2030-01-01T00:00:00.000Z",
-    },
+    overrides: { rerun_requested: false },
     expectedConstraint: "durable_jobs_rerun_tuple_check",
     rationale: "The flag is equivalent to the complete snapshot being present.",
   },
@@ -209,7 +362,13 @@ export const durableJobInvalidRowFixtures: readonly DurableJobInvalidRowFixture[
     id: "rerun-flag-with-null-columns",
     finding: "T5-H2",
     state: "running",
-    overrides: { rerun_requested: true },
+    overrides: {
+      rerun_queue_name: null,
+      rerun_payload_json: null,
+      rerun_payload_fingerprint: null,
+      rerun_max_attempts: null,
+      rerun_available_at: null,
+    },
     expectedConstraint: "durable_jobs_rerun_tuple_check",
     rationale: "A true rerun flag cannot stand in for a lost request snapshot.",
   },
@@ -217,7 +376,7 @@ export const durableJobInvalidRowFixtures: readonly DurableJobInvalidRowFixture[
     id: "rerun-maximum-under-bound",
     finding: "T5-H3",
     state: "running",
-    overrides: { rerun_requested: true, rerun_max_attempts: 0 },
+    overrides: { rerun_max_attempts: 0 },
     expectedConstraint: "durable_jobs_rerun_tuple_check",
     rationale: "Follow-up maximum attempts repeat the current-generation bound.",
   },
@@ -225,7 +384,7 @@ export const durableJobInvalidRowFixtures: readonly DurableJobInvalidRowFixture[
     id: "rerun-maximum-over-bound",
     finding: "T5-H3",
     state: "running",
-    overrides: { rerun_requested: true, rerun_max_attempts: 1_001 },
+    overrides: { rerun_max_attempts: 1_001 },
     expectedConstraint: "durable_jobs_rerun_tuple_check",
     rationale: "Follow-up maximum attempts repeat the current-generation bound.",
   },
@@ -233,7 +392,7 @@ export const durableJobInvalidRowFixtures: readonly DurableJobInvalidRowFixture[
     id: "pending-at-maximum-without-redelivery",
     finding: "T5-H1",
     state: "pending",
-    overrides: { attempt: 3, max_attempts: 3, redeliver_current_attempt: false },
+    overrides: { attempt: 3 },
     expectedConstraint: "durable_jobs_redelivery_state_check",
     rationale: "An ordinary pending row at max would be permanently unclaimable.",
   },
@@ -241,7 +400,7 @@ export const durableJobInvalidRowFixtures: readonly DurableJobInvalidRowFixture[
     id: "pending-zero-with-redelivery",
     finding: "T5-H1",
     state: "pending",
-    overrides: { attempt: 0, redeliver_current_attempt: true },
+    overrides: { redeliver_current_attempt: true },
     expectedConstraint: "durable_jobs_redelivery_state_check",
     rationale: "Only an already-started ordinal may be redelivered.",
   },
@@ -249,7 +408,7 @@ export const durableJobInvalidRowFixtures: readonly DurableJobInvalidRowFixture[
     id: "pending-with-lease",
     finding: "T5-H2",
     state: "pending",
-    overrides: { lease_token_hash: "a".repeat(64), lease_owner: "worker", lease_expires_at: "2030-01-01T00:00:00.000Z" },
+    overrides: CANONICAL_LEASE_VALUES,
     expectedConstraint: "durable_jobs_state_truth_table_check",
     rationale: "Pending work owns no active lease.",
   },
@@ -273,7 +432,7 @@ export const durableJobInvalidRowFixtures: readonly DurableJobInvalidRowFixture[
     id: "pending-with-rerun",
     finding: "T5-H2",
     state: "pending",
-    overrides: { rerun_requested: true },
+    overrides: CANONICAL_RERUN_OVERRIDES,
     expectedConstraint: "durable_jobs_rerun_state_check",
     rationale: "Only a running generation may hold a follow-up snapshot.",
   },
@@ -345,7 +504,7 @@ export const durableJobInvalidRowFixtures: readonly DurableJobInvalidRowFixture[
     id: "succeeded-with-lease",
     finding: "T5-H2",
     state: "succeeded",
-    overrides: { lease_token_hash: "a".repeat(64), lease_owner: "worker", lease_expires_at: "2030-01-01T00:00:00.000Z" },
+    overrides: CANONICAL_LEASE_VALUES,
     expectedConstraint: "durable_jobs_state_truth_table_check",
     rationale: "Terminal state clears lease ownership.",
   },
@@ -353,7 +512,7 @@ export const durableJobInvalidRowFixtures: readonly DurableJobInvalidRowFixture[
     id: "succeeded-with-rerun",
     finding: "T5-H2",
     state: "succeeded",
-    overrides: { rerun_requested: true },
+    overrides: CANONICAL_RERUN_OVERRIDES,
     expectedConstraint: "durable_jobs_rerun_state_check",
     rationale: "Terminal state cannot retain an unpromoted follow-up snapshot.",
   },
@@ -402,7 +561,7 @@ export const durableJobInvalidRowFixtures: readonly DurableJobInvalidRowFixture[
       id: `${state}-with-lease`,
       finding: "T5-H2" as const,
       state,
-      overrides: { lease_token_hash: "a".repeat(64), lease_owner: "worker", lease_expires_at: "2030-01-01T00:00:00.000Z" },
+      overrides: CANONICAL_LEASE_VALUES,
       expectedConstraint: "durable_jobs_state_truth_table_check",
       rationale: "Terminal state clears lease ownership.",
     },
@@ -410,7 +569,7 @@ export const durableJobInvalidRowFixtures: readonly DurableJobInvalidRowFixture[
       id: `${state}-with-rerun`,
       finding: "T5-H2" as const,
       state,
-      overrides: { rerun_requested: true },
+      overrides: CANONICAL_RERUN_OVERRIDES,
       expectedConstraint: "durable_jobs_rerun_state_check",
       rationale: "Terminal state cannot retain a follow-up snapshot.",
     },
