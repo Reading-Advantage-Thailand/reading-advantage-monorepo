@@ -7,8 +7,7 @@ export const DURABLE_JOB_PG16_ADMIN_URL_ENV =
   "DURABLE_JOB_PG16_TEST_ADMIN_DATABASE_URL";
 
 /** Explicit opt-in key for live Task 7 PostgreSQL integration tests. */
-export const DURABLE_JOB_PG16_OPT_IN_ENV =
-  "DURABLE_JOB_PG16_TEST_OPT_IN";
+export const DURABLE_JOB_PG16_OPT_IN_ENV = "DURABLE_JOB_PG16_TEST_OPT_IN";
 
 const GENERIC_DATABASE_ENVIRONMENT_KEYS = [
   "DATABASE_URL",
@@ -86,8 +85,62 @@ export interface DurableJobPostgres16HarnessHooks {
   ) => Promise<void> | void;
 }
 
+/**
+ * Rejects a PostgreSQL server version outside the required PostgreSQL 16 range.
+ * @param serverVersion PostgreSQL numeric server version.
+ * @returns Nothing.
+ * @throws When the version is not a PostgreSQL 16 version.
+ */
+export function assertDurableJobPostgres16ServerVersion(
+  serverVersion: number,
+): void {
+  if (
+    !Number.isInteger(serverVersion) ||
+    serverVersion < POSTGRES_16_MINIMUM ||
+    serverVersion >= POSTGRES_17_MINIMUM
+  ) {
+    throw new Error("Durable-job integration tests require PostgreSQL 16.");
+  }
+}
+
+/**
+ * Rejects two backend sessions that do not prove independent PostgreSQL connections.
+ * @param firstBackendPid Backend PID from the first session.
+ * @param secondBackendPid Backend PID from the second session.
+ * @returns Nothing.
+ * @throws When either PID is invalid or both PIDs are equal.
+ */
+export function assertDurableJobPostgres16IndependentSessions(
+  firstBackendPid: number,
+  secondBackendPid: number,
+): void {
+  if (
+    !Number.isInteger(firstBackendPid) ||
+    firstBackendPid <= 0 ||
+    !Number.isInteger(secondBackendPid) ||
+    secondBackendPid <= 0 ||
+    firstBackendPid === secondBackendPid
+  ) {
+    throw new Error(
+      "Durable-job PostgreSQL harness requires two independent sessions.",
+    );
+  }
+}
+
 function isNonEmptyEnvironmentValue(value: string | undefined): boolean {
   return value !== undefined && value.trim().length > 0;
+}
+
+function assertGenericDatabaseEnvironmentUnset(
+  environment: NodeJS.ProcessEnv,
+): void {
+  for (const key of GENERIC_DATABASE_ENVIRONMENT_KEYS) {
+    if (isNonEmptyEnvironmentValue(environment[key])) {
+      throw new Error(
+        `${key} must be unset for durable-job PostgreSQL 16 integration tests.`,
+      );
+    }
+  }
 }
 
 function parseDatabaseName(parsed: URL): string {
@@ -115,13 +168,7 @@ function parseDatabaseName(parsed: URL): string {
 export function resolveDurableJobPostgres16AdminUrl(
   environment: NodeJS.ProcessEnv,
 ): URL {
-  for (const key of GENERIC_DATABASE_ENVIRONMENT_KEYS) {
-    if (isNonEmptyEnvironmentValue(environment[key])) {
-      throw new Error(
-        `${key} must be unset for durable-job PostgreSQL 16 integration tests.`,
-      );
-    }
-  }
+  assertGenericDatabaseEnvironmentUnset(environment);
 
   const rawValue = environment[DURABLE_JOB_PG16_ADMIN_URL_ENV];
   if (rawValue === undefined || rawValue.trim().length === 0) {
@@ -179,6 +226,7 @@ export function resolveDurableJobPostgres16AdminUrl(
 export function isDurableJobPostgres16IntegrationEnabled(
   environment: NodeJS.ProcessEnv,
 ): boolean {
+  assertGenericDatabaseEnvironmentUnset(environment);
   const optIn = environment[DURABLE_JOB_PG16_OPT_IN_ENV];
   if (optIn === undefined || optIn === "") {
     return false;
@@ -238,13 +286,7 @@ async function assertPostgres16(
   if (probe?.database_name !== expectedDatabaseName) {
     throw new Error("Durable-job PostgreSQL database identity check failed.");
   }
-  if (
-    !Number.isInteger(serverVersion) ||
-    serverVersion < POSTGRES_16_MINIMUM ||
-    serverVersion >= POSTGRES_17_MINIMUM
-  ) {
-    throw new Error("Durable-job integration tests require PostgreSQL 16.");
-  }
+  assertDurableJobPostgres16ServerVersion(serverVersion);
   if (!Number.isInteger(probe.backend_pid) || probe.backend_pid <= 0) {
     throw new Error("Durable-job PostgreSQL backend identity check failed.");
   }
@@ -270,9 +312,7 @@ async function runValidationHooks(
  */
 export async function withDurableJobPostgres16Harness<T>(
   hooks: DurableJobPostgres16HarnessHooks,
-  testBody: (
-    context: DurableJobPostgres16HarnessContext,
-  ) => Promise<T> | T,
+  testBody: (context: DurableJobPostgres16HarnessContext) => Promise<T> | T,
 ): Promise<T> {
   const adminUrl = resolveDurableJobPostgres16AdminUrl(process.env);
   const adminDatabaseName = parseDatabaseName(adminUrl);
@@ -284,10 +324,12 @@ export async function withDurableJobPostgres16Harness<T>(
   let connectionOne: DurableJobTestSql | undefined;
   let connectionTwo: DurableJobTestSql | undefined;
   const additionalConnections: DurableJobTestSql[] = [];
-  let databaseCreated = false;
+  let databaseMayExist = false;
   let lifecycleLockHeld = false;
   let cleanupPromise: Promise<void> | undefined;
   let context: DurableJobPostgres16HarnessContext | undefined;
+  let signalHandlersInstalled = false;
+  let signalHandled = false;
 
   const acquireLifecycleLock = async (): Promise<void> => {
     if (!lifecycleLockHeld) {
@@ -308,6 +350,12 @@ export async function withDurableJobPostgres16Harness<T>(
     }
     cleanupPromise = (async () => {
       const errors: unknown[] = [];
+
+      try {
+        await acquireLifecycleLock();
+      } catch (error) {
+        errors.push(error);
+      }
 
       if (context) {
         try {
@@ -334,13 +382,7 @@ export async function withDurableJobPostgres16Harness<T>(
         }
       }
 
-      try {
-        await acquireLifecycleLock();
-      } catch (error) {
-        errors.push(error);
-      }
-
-      if (databaseCreated) {
+      if (databaseMayExist && lifecycleLockHeld) {
         try {
           await adminSql`
             SELECT pg_terminate_backend(pid)
@@ -351,10 +393,16 @@ export async function withDurableJobPostgres16Harness<T>(
           await adminSql.unsafe(
             `DROP DATABASE IF EXISTS ${quoteIdentifier(databaseName)}`,
           );
-          databaseCreated = false;
+          databaseMayExist = false;
         } catch (error) {
           errors.push(error);
         }
+      } else if (databaseMayExist) {
+        errors.push(
+          new Error(
+            "Durable-job PostgreSQL scratch cleanup could not acquire its lifecycle lock.",
+          ),
+        );
       }
 
       try {
@@ -379,18 +427,43 @@ export async function withDurableJobPostgres16Harness<T>(
   };
 
   const handleSignal = (signal: NodeJS.Signals): void => {
-    void cleanup().finally(() => {
-      process.exit(signal === "SIGINT" ? 130 : 143);
-    });
+    if (signalHandled) {
+      return;
+    }
+    signalHandled = true;
+    void cleanup().then(
+      () => process.exit(signal === "SIGINT" ? 130 : 143),
+      () => process.exit(signal === "SIGINT" ? 130 : 143),
+    );
   };
   const handleSigint = (): void => handleSignal("SIGINT");
   const handleSigterm = (): void => handleSignal("SIGTERM");
 
+  const installSignalHandlers = (): void => {
+    if (signalHandlersInstalled) {
+      return;
+    }
+    process.once("SIGINT", handleSigint);
+    process.once("SIGTERM", handleSigterm);
+    signalHandlersInstalled = true;
+  };
+  const removeSignalHandlers = (): void => {
+    if (!signalHandlersInstalled) {
+      return;
+    }
+    process.off("SIGINT", handleSigint);
+    process.off("SIGTERM", handleSigterm);
+    signalHandlersInstalled = false;
+  };
+
   let result: T | undefined;
   let executionError: unknown;
   let cleanupError: unknown;
+  let executionFailed = false;
+  let cleanupFailed = false;
 
   try {
+    installSignalHandlers();
     await assertPostgres16(adminSql, adminDatabaseName);
     await acquireLifecycleLock();
 
@@ -412,27 +485,17 @@ export async function withDurableJobPostgres16Harness<T>(
       );
     }
 
+    databaseMayExist = true;
     await adminSql.unsafe(`CREATE DATABASE ${quoteIdentifier(databaseName)}`);
-    databaseCreated = true;
-    await releaseLifecycleLock();
 
     const scratchUrl = deriveScratchDatabaseUrl(adminUrl, databaseName);
     connectionOne = postgres(scratchUrl, { max: 1, prepare: false });
     connectionTwo = postgres(scratchUrl, { max: 1, prepare: false });
-    const firstBackendPid = await assertPostgres16(
-      connectionOne,
-      databaseName,
-    );
+    const firstBackendPid = await assertPostgres16(connectionOne, databaseName);
     const secondBackendPid = await assertPostgres16(
       connectionTwo,
       databaseName,
     );
-    if (firstBackendPid === secondBackendPid) {
-      throw new Error(
-        "Durable-job PostgreSQL harness requires two independent sessions.",
-      );
-    }
-
     context = {
       databaseName,
       connectionOne,
@@ -448,26 +511,31 @@ export async function withDurableJobPostgres16Harness<T>(
       },
     };
 
-    process.once("SIGINT", handleSigint);
-    process.once("SIGTERM", handleSigterm);
+    assertDurableJobPostgres16IndependentSessions(
+      firstBackendPid,
+      secondBackendPid,
+    );
+    await releaseLifecycleLock();
 
     await hooks.migrate(context);
     await hooks.setup?.(context);
     await runValidationHooks(hooks.validations, context);
     result = await testBody(context);
   } catch (error) {
+    executionFailed = true;
     executionError = error;
   } finally {
-    process.off("SIGINT", handleSigint);
-    process.off("SIGTERM", handleSigterm);
     try {
       await cleanup();
     } catch (error) {
+      cleanupFailed = true;
       cleanupError = error;
+    } finally {
+      removeSignalHandlers();
     }
   }
 
-  if (executionError !== undefined && cleanupError !== undefined) {
+  if (executionFailed && cleanupFailed) {
     throw new AggregateError(
       [executionError, cleanupError],
       "Durable-job PostgreSQL test and cleanup both failed.",

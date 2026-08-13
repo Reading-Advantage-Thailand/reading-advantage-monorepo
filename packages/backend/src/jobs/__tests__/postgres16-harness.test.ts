@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  assertDurableJobPostgres16IndependentSessions,
+  assertDurableJobPostgres16ServerVersion,
   DURABLE_JOB_PG16_ADMIN_URL_ENV,
   DURABLE_JOB_PG16_OPT_IN_ENV,
   isDurableJobPostgres16IntegrationEnabled,
@@ -18,6 +20,9 @@ describe("durable job PostgreSQL 16 harness URL guard", () => {
 
     expect(parsed.hostname).toBe("127.0.0.1");
     expect(parsed.pathname).toBe("/durable_job_test_admin_local");
+    expect(() =>
+      assertDurableJobPostgres16ServerVersion(160_000),
+    ).not.toThrow();
   });
 
   it("accepts postgres aliases, IPv6 loopback, and empty generic variables", () => {
@@ -73,8 +78,7 @@ describe("durable job PostgreSQL 16 harness URL guard", () => {
   ])("rejects shared or non-dedicated database name %s", (databaseName) => {
     expect(() =>
       resolveDurableJobPostgres16AdminUrl({
-        [DURABLE_JOB_PG16_ADMIN_URL_ENV]:
-          `postgresql://durable_test:secret@localhost:5432/${databaseName}`,
+        [DURABLE_JOB_PG16_ADMIN_URL_ENV]: `postgresql://durable_test:secret@localhost:5432/${databaseName}`,
       }),
     ).toThrow("dedicated durable_job_test_admin_ database");
   });
@@ -150,5 +154,20 @@ describe("durable job PostgreSQL 16 integration opt-in", () => {
         [DURABLE_JOB_PG16_ADMIN_URL_ENV]: SAFE_URL,
       }),
     ).toBe(true);
+    expect(() => assertDurableJobPostgres16ServerVersion(150_000)).toThrow(
+      "require PostgreSQL 16",
+    );
+    expect(() => assertDurableJobPostgres16ServerVersion(170_000)).toThrow(
+      "require PostgreSQL 16",
+    );
+    expect(() => assertDurableJobPostgres16IndependentSessions(41, 41)).toThrow(
+      "two independent sessions",
+    );
+    expect(() => assertDurableJobPostgres16IndependentSessions(0, 42)).toThrow(
+      "two independent sessions",
+    );
+    expect(() =>
+      assertDurableJobPostgres16IndependentSessions(41, 42),
+    ).not.toThrow();
   });
 });
