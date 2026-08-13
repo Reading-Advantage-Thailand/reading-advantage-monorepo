@@ -3,9 +3,9 @@
   "type": "feature",
   "status": "in_progress",
   "created_at": "2026-07-13T00:00:00Z",
-  "updated_at": "2026-07-18T00:41:38Z",
+  "updated_at": "2026-08-13T18:12:47Z",
   "description": "Build the portable capability descriptor, policy executor, deterministic catalog, and generated transport binding kernel, then prove it on a bounded small/new-app slice.",
   "estimated_tasks": 19,
   "actual_tasks": null,
-  "deviation_notes": ""
+  "deviation_notes": "Phase 3 reconciliation: kernel PG16 proof is cwd-independent and coverage is measured. Package aggregate type, db, domain, architecture, baseline, and doctor gates remain outside-lease or environment/registry blockers. See phase-3-acceptance-evidence.md."
 }
