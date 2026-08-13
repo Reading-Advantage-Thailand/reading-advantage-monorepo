@@ -628,14 +628,20 @@ export async function acceptControlledImportBatch(
     throw new Error("prepared plan capability is invalid");
   }
   const auth = financeOperationAuthorizationInputSchema.parse({
-      ...request.authorizationInput,
-      operation: "controlled-import:accept-batch",
-    }),
+    ...request.authorizationInput,
+    operation: "controlled-import:accept-batch",
+  });
+  let decision: z.infer<typeof authorizationDecisionSchema>;
+  try {
     decision = authorizationDecisionSchema.parse(
       await request.authorizationPort.authorizeFinanceOperation(
         freeze(copy(auth)),
       ),
     );
+  } catch {
+    await request.auditPort.append(audit(request, "failed"));
+    throw new Error("authorization evaluation failed");
+  }
   if (decision.decision === "deny") {
     await request.auditPort.append(audit(request, "denied"));
     throw new ControlledImportOperationError("authorization-denied");
