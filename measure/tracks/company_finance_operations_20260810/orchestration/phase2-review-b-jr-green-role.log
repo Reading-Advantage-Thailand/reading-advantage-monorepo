@@ -38,6 +38,6 @@ tests_run: Review B Red exit 1 (26/26); no Green commit because the existing Pha
 files_changed: measure/tracks/company_finance_operations_20260810/orchestration/phase2-review-b-jr-green-role.log
 plan_updates: none; Task 1 stays [~], pilot stays [b]
 known_failures: existing Phase 2 Red test requires accepted/replay/conflict pilot authority; Review B and Task 2 require blocked/not-admitted or absent pilot behavior
-final_head: pending role-log commit
+final_head: 849cef7b48da566d01d0fad179090b0d5c0c1e1d
 handoff: Mid Red retry required for the contradictory pilot contract.
 END_MEASURE_AGENT_RESULT

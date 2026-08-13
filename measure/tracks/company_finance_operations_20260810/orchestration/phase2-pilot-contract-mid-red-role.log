@@ -5,7 +5,7 @@ Role: measure-mid-red
 Date: 2026-08-13
 phase_base_sha: 7ef48d2d2929c67dfd70c899a4710b77808637b9
 role_base_sha: 2d7f6c8e9fc2ae4a2cf6de287c6c915070f1c02a
-resulting_head: pending commit
+resulting_head: 849cef7b48da566d01d0fad179090b0d5c0c1e1d
 
 ## Preflight
 
@@ -92,8 +92,8 @@ phase: Phase 2 — controlled operational imports
 baseline_sha: 7ef48d2d2929c67dfd70c899a4710b77808637b9
 phase_base_sha: 7ef48d2d2929c67dfd70c899a4710b77808637b9
 role_base_sha: 2d7f6c8e9fc2ae4a2cf6de287c6c915070f1c02a
-commits: pending commit of the corrected Phase 2 test, plan, and role receipts
-resulting_head: pending commit
+commits: 849cef7b4 (corrected Phase 2 test contract, plan, and role receipts)
+resulting_head: 849cef7b48da566d01d0fad179090b0d5c0c1e1d
 tests_run: corrected Phase 2 exit 1 (24 collected, 23 passed, 1 expected pilot failure); Review B exit 1 (26 collected, 0 passed, 26 failed); Phase 1 Finance exit 0 (135/135)
 files_changed: packages/backend/src/modules/finance-operations/__tests__/controlled-imports-phase2.red.test.ts; measure/tracks/company_finance_operations_20260810/plan.md; measure/tracks/company_finance_operations_20260810/orchestration/phase2-pilot-contract-mid-red-role.log; measure/tracks/company_finance_operations_20260810/orchestration/phase2-review-b-jr-green-role.log
 plan_updates: recorded the bounded pilot contract and exact test counts; Task 1 remains [~]; Task 2 remains [b] with deferred:phase2
