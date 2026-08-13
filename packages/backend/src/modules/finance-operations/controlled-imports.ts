@@ -418,24 +418,27 @@ export function prepareControlledImportBatch(
     };
     if (d.sourceDocumentKind === "payroll-summary") {
       const voucherRecordIds = new Set<string>();
-      for (const v of d.vouchers) {
+      if (trustedFactValues.length !== d.vouchers.length * 3) {
+        throw new Error("invalid trusted payroll fact count");
+      }
+      for (const [voucherIndex, v] of d.vouchers.entries()) {
         const q = v;
         if (voucherRecordIds.has(q.voucherNumberText)) {
           throw new Error("duplicate voucher identity");
         }
         voucherRecordIds.add(q.voucherNumberText);
         add(
-          { ...q, amountDecimal: q.grossDecimal },
+          { ...q, amountDecimal: trustedFactValues[voucherIndex * 3] },
           `${text(q.voucherNumberText)}:gross`,
           "gross",
         );
         add(
-          { ...q, amountDecimal: q.sourceStatedWhtDecimal },
+          { ...q, amountDecimal: trustedFactValues[voucherIndex * 3 + 1] },
           `${text(q.voucherNumberText)}:source-stated-wht`,
           "source-stated-wht",
         );
         add(
-          { ...q, amountDecimal: q.netDecimal },
+          { ...q, amountDecimal: trustedFactValues[voucherIndex * 3 + 2] },
           `${text(q.voucherNumberText)}:net`,
           "net",
         );
