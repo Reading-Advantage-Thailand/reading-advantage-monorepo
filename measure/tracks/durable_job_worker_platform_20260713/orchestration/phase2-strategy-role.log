@@ -1,0 +1,98 @@
+Measure Strategy role log - Phase 2 Red Concurrency and Failure Tests
+Track: durable_job_worker_platform_20260713
+Phase: Phase 2: Red Concurrency and Failure Tests
+Date: 2026-08-13
+Role: measure-strategy
+role_base_sha: 1129427fbdb17c214fd55c086d60e62c7a4e1b7f
+
+## Scope
+
+Authored the canonical Phase 2 test strategy around the accepted Phase 1
+baseline, the Task 6 Red schema/counterexample suites, the Task 7 PG16 harness,
+and the independent FAIL recorded at review commit b32cc7f2f. No product
+source, test source, fixture, migration, registry, graph, lockfile, or other
+track file was touched. The parallel lease was limited to
+measure/tracks/durable_job_worker_platform_20260713/** and was respected.
+
+## Inputs read
+
+- measure/index.md, measure/tracks.md, measure/anti-patterns.md (A1-A16)
+- spec.md, plan.md, metadata.json, verification.md, index.md of this track
+- task-6-red-schema-counterexamples-20260722.md
+- task-7-postgresql16-harness-20260722.md
+- task-6-task-7-independent-review-20260722.md (FAIL; findings DWP-T6-H1/H2/L1,
+  DWP-T7-H1/H2/L1; review commit b32cc7f2f)
+- Existing strategy precedent: sales_mastery_consumer_20260810/test-strategy.md
+- Mechanical gate source: measure_interphase_checks.py (strategy role gate)
+- git state: one worktree on master at role_base_sha; unrelated dirty paths
+  owned by other agents were left untouched (A16)
+
+## Work performed
+
+1. Authored test-strategy.md with:
+   - Exact remediation for DWP-T6-H1 (canonical-row fixtures with
+     column-aware values), DWP-T6-H2 (executable PG16 assertions plus catalog
+     metadata inspection, source checks demoted to supplement), DWP-T6-L1
+     (literal diff-check paths), DWP-T7-H1 (lock held until both tracked
+     sessions plus a two-invocation concurrency test), DWP-T7-H2 (signal
+     handlers before the first destructive operation plus failure-injection
+     and subprocess signal cases), and DWP-T7-L1 (26 passed/1 skipped with the
+     exact env-clearing command).
+   - Sequence: Task 7 harness API freeze before Task 6 PG16 tests; Task 10
+     Red authorized in parallel after the strategy commit; Tasks 8/9 blocked
+     until a fresh independent re-review PASS.
+   - Exact per-role leases, disposable PG16 environment safety contract,
+     targeted Red commands, Green and closeout gates per task and per phase,
+     risk classification per phase (Phase 2 high; Phases 3/4 critical;
+     Phase 5 high), review applicability, intentionally-red aggregate
+     handling, artifact vs live behavior distinction, per-phase anti-pattern
+     defenses with falsifiers, and the phase_base_sha capture point.
+2. Added a truthful Phase 2 strategy checkpoint note to plan.md. Task markers
+   are unchanged: Tasks 6/7 stay [~], Tasks 8/9 stay [b], Task 10 stays [~].
+   No product task was completed by this role.
+
+## Commits
+
+- Strategy commit: 8ca1f09bf4775bc9ca054c660fb3998d1bde5c85
+  (test-strategy.md only).
+- Evidence commit: this commit (plan.md checkpoint note plus this role log).
+  The phase_base_sha capture point is the HEAD of this evidence commit, per
+  the strategy capture-point section. role_base_sha is not a valid phase base.
+
+## Known failures / non-claims
+
+- Tasks 6 and 7 remain FAIL under the b32cc7f2f review until remediation and
+  a fresh independent re-review PASS. This strategy does not close any
+  finding.
+- The repository aggregate lint/test suites remain intentionally red from
+  pre-existing failures outside this track (A7 handling defined in the
+  strategy).
+- No test was executed by this role; it is a documentation role. The strategy
+  cites only reproduced counts from the independent review.
+- Working tree contains unrelated dirty paths owned by other agents
+  (codecamp test results, pnpm-lock.yaml, other tracks). This role staged
+  only its two leased files.
+
+## Handoff
+
+The orchestrator should:
+1. Capture phase_base_sha = git rev-parse HEAD at this evidence commit, after
+   confirming master and no dirty track-owned path. Do not use role_base_sha.
+2. Dispatch Task 7 remediation (harness API freeze) before Task 6 PG16
+   remediation work.
+3. Authorize the Task 10 Red producer in parallel under its exact lease.
+4. Keep Tasks 8/9 [b] until a fresh independent re-review PASS closes
+   DWP-T6-H1/H2/L1 and DWP-T7-H1/H2/L1.
+
+MEASURE_AGENT_RESULT
+role: measure-strategy
+status: complete
+track: durable_job_worker_platform_20260713
+phase: Phase 2: Red Concurrency and Failure Tests
+commits: 8ca1f09bf4775bc9ca054c660fb3998d1bde5c85 (strategy); this commit (evidence: plan.md checkpoint + role log)
+tests_run: none (docs-only role); mechanical strategy role gate run against this log
+files_changed: test-strategy.md (new), plan.md (Phase 2 strategy checkpoint note), orchestration/phase2-strategy-role.log (new)
+plan_updates: Phase 2 checkpoint note added; markers unchanged (Tasks 6/7 [~], Tasks 8/9 [b], Task 10 [~]); no product task completed
+known_failures: Tasks 6/7 remain FAIL under independent review b32cc7f2f pending remediation and fresh re-review; aggregate lint/test intentionally red (A7)
+handoff: Orchestrator captures phase_base_sha at this evidence commit HEAD (not role_base_sha); sequence Task 7 harness API freeze before Task 6 PG16 tests; Task 10 Red authorized in parallel; Tasks 8/9 stay blocked until fresh re-review PASS
+END_MEASURE_AGENT_RESULT

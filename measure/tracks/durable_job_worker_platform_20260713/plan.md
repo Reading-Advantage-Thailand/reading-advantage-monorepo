@@ -50,6 +50,17 @@ the design preserves every matrix row and architecture baseline does not grow.
 
 ## Phase 2: Red Concurrency and Failure Tests
 
+Strategy checkpoint (2026-08-13): the canonical Phase 2 test strategy is
+committed at `8ca1f09bf4775bc9ca054c660fb3998d1bde5c85` as
+`test-strategy.md`. It fixes the remediation contract for the independent FAIL
+at review commit `b32cc7f2f` (`DWP-T6-H1/H2/L1`, `DWP-T7-H1/H2/L1`), sequences
+the Task 7 harness API freeze before the Task 6 executable PG16 assertions,
+authorizes Task 10 Red in parallel, and keeps Tasks 8/9 blocked until a fresh
+independent re-review returns PASS for the exact remediated Task 6/7 artifact
+set. The orchestrator captures the immutable `phase_base_sha` at the evidence
+commit that adds this note and the strategy role log, per the strategy's
+capture-point section; `role_base_sha` values are not valid phase bases.
+
 - [~] Task 6: Add Red schema/migration/tenant-registry tests and invalid-transition counterexample fixtures.
 - [~] Task 7: Build a deterministic isolated PostgreSQL 16 harness using two independent connections, exact migration setup and teardown, an explicit test-only URL, and fail-closed guards forbidding production/default URL fallback.
 - [b] Task 8: Add Red concurrent claim, lease-token CAS, stale heartbeat/settle/fail, visibility reclaim, and restart tests on the PG16 harness. (deferred:durable_job_worker_platform_20260713-task7-pg16-harness)
