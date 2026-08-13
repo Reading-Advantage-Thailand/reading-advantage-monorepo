@@ -46,3 +46,13 @@ export type {
   AttributionSnapshot,
   CompletionLatchSnapshot,
 } from "./assertions.js";
+
+/** Public test-only canonical ingestion receipt fixture factory. */
+export {
+  createCanonicalIngestionReceiptFixture,
+} from "../assets/standard-pack-suitability-ingestion-negative-fixtures.test-support.js";
+
+/** Public test-only legacy ingestion-required suitability fixture. */
+export {
+  LEGACY_INGESTION_REQUIRED_FIXTURE,
+} from "../assets/standard-pack-suitability-test-fixtures.test-support.js";
