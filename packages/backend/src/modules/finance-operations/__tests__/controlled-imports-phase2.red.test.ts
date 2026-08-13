@@ -414,6 +414,49 @@ function privateEvidenceEnvelope(input: {
   };
 }
 
+/** Maps each accepted document fixture to source-ordered owner-packet facts. */
+function ownerPacketFactsForDocument(
+  document: ControlledSourceDocumentInput,
+): readonly Record<string, string>[] {
+  if (document.sourceDocumentKind === "payroll-summary") {
+    return document.vouchers.flatMap((voucher) => [
+      {
+        factCategory: "payroll-summary",
+        factId: "payroll-summary:gross-total",
+        kind: "source-stated-value",
+        label: `${voucher.voucherNumberText} gross as stated`,
+        value: voucher.grossDecimal,
+      },
+      {
+        factCategory: "payroll-summary",
+        factId: "payroll-summary:withholding-total",
+        kind: "source-stated-value",
+        label: `${voucher.voucherNumberText} withholding as stated`,
+        value: voucher.sourceStatedWhtDecimal,
+      },
+      {
+        factCategory: "payroll-summary",
+        factId: "payroll-summary:net-total",
+        kind: "source-stated-value",
+        label: `${voucher.voucherNumberText} net as stated`,
+        value: voucher.netDecimal,
+      },
+    ]);
+  }
+
+  return document.facts.map((fact) => ({
+    factCategory:
+      fact.kind === "count" ? "document-reference" : "document-total",
+    factId:
+      fact.kind === "count"
+        ? "document-reference:source-record"
+        : "document-total:receipt-total",
+    kind: "source-stated-value",
+    label: `${fact.factId} as stated`,
+    value: fact.kind === "count" ? fact.countText : fact.amountDecimal,
+  }));
+}
+
 /** Creates trusted preparation through the real Phase 1 command boundary. */
 async function trustedPreparationForEnvelope(
   subject: ControlledImportsModule,
@@ -455,15 +498,7 @@ async function trustedPreparationForEnvelope(
         payloadDigest: envelope.evidenceAuthorization.payloadDigest,
         evidenceReference: envelope.evidenceAuthorization.evidenceReference,
       },
-      facts: [
-        {
-          factCategory: "document-total",
-          factId: "document-total:receipt-total",
-          kind: "source-stated-value",
-          label: "Receipt total as stated",
-          value: "100.00",
-        },
-      ],
+      facts: ownerPacketFactsForDocument(envelope.document),
     },
     credential: { kind: "token", value: "owner-token" },
     audit: {
@@ -554,44 +589,45 @@ async function trustedNormalizationInput(
   );
 }
 
-/** Produces one deeply frozen valid prepared plan for command tests. */
-function readyPlan(
+/** Produces one module-issued ready plan for command tests. */
+async function preparedPlan(
+  subject: ControlledImportsModule,
   overrides: {
-    readonly scope?: Readonly<FinanceOperationScope>;
-    readonly batchId?: string;
     readonly batchDigest?: string;
-    readonly recordId?: string;
-    readonly amountMinor?: string;
+    readonly amountMinor?: "13230000" | "13220000";
   } = {},
-): Extract<PreparedControlledImportBatch, { status: "ready" }> {
-  const planScope = overrides.scope ?? scope;
-  const batchId = overrides.batchId ?? "controlled-import-batch-001";
-  const record: FinanceRecord = {
-    scope: planScope,
-    recordId: overrides.recordId ?? "controlled-import-record-001",
-    money: {
-      amountMinor: overrides.amountMinor ?? "13230000",
+): Promise<Extract<PreparedControlledImportBatch, { status: "ready" }>> {
+  const sourceAmountDecimal =
+    {
+      "13230000": "132300.00",
+      "13220000": "132200.00",
+    }[overrides.amountMinor ?? "13230000"];
+  const envelope = privateEvidenceEnvelope({
+    sourceSystem: "owner-attested-archive",
+    sourceVersion: "archive-v1",
+    payloadDigest: overrides.batchDigest ?? "b".repeat(64),
+    evidenceReference:
+      "private-evidence://company-sanitized/finance/sanitized/pa-inv-2026-001",
+    document: {
+      sourceDocumentId: "PA-INV-2026-001",
+      logicalDocumentId: "PA-INV-2026-001",
+      sourceDocumentKind: "school-billing-invoice",
+      thaiTaxDocumentStatus: "unresolved",
       currency: "THB",
+      facts: [
+        { factId: "net", kind: "money", amountDecimal: sourceAmountDecimal },
+      ],
     },
-    provenance: {
-      sourceSystem: "owner-attested-archive",
-      sourceVersion: "archive-v1",
-      sourceRecordId: "PA-INV-2026-001#net",
-      importBatchId: batchId,
-      payloadDigest: "a".repeat(64),
-      evidenceReference:
-        "private-evidence://company-sanitized/finance/sanitized/pa-inv-2026-001",
-    },
-  };
-  return deepFreeze({
-    status: "ready" as const,
-    normalizationVersion: NORMALIZATION_VERSION,
-    scope: planScope,
-    batchId,
-    batchDigest: overrides.batchDigest ?? "b".repeat(64),
-    snapshots: [],
-    records: [record],
   });
+  const result = subject.prepareControlledImportBatch(
+    await trustedNormalizationInput(subject, "controlled-import-batch-001", [
+      envelope,
+    ]),
+  );
+  if (result.status !== "ready") {
+    throw new Error("Expected a ready controlled-import plan.");
+  }
+  return result;
 }
 
 /** Creates an audit port double that retains appended command evidence. */
@@ -2093,7 +2129,7 @@ describe("Finance Operations Phase 2 controlled imports", () => {
       subject.prepareControlledImportCorrection,
       "prepareControlledImportCorrection",
     );
-    const acceptedRecord = readyPlan().records[0];
+    const acceptedRecord = (await preparedPlan(subject)).records[0];
     if (acceptedRecord === undefined)
       throw new Error("Missing accepted fixture.");
     const before = structuredClone(acceptedRecord);
@@ -2142,7 +2178,7 @@ describe("Finance Operations Phase 2 controlled imports", () => {
 
     await expect(
       subject.acceptControlledImportBatch({
-        plan: readyPlan(),
+        plan: await preparedPlan(subject),
         authorizationInput,
         authorizationPort: {
           authorizeFinanceOperation: vi.fn(async () => ({
@@ -2198,7 +2234,7 @@ describe("Finance Operations Phase 2 controlled imports", () => {
     for (const [index, mismatchedAuthorization] of mismatches.entries()) {
       await expect(
         subject.acceptControlledImportBatch({
-          plan: readyPlan(),
+          plan: await preparedPlan(subject),
           authorizationInput: mismatchedAuthorization,
           authorizationPort: allowingAuthorizationPort(),
           auditPort: audit.port,
@@ -2262,7 +2298,7 @@ describe("Finance Operations Phase 2 controlled imports", () => {
       "acceptControlledImportBatch",
     );
     const audit = auditPortDouble();
-    const plan = readyPlan();
+    const plan = await preparedPlan(subject);
     const before = structuredClone(plan);
     const repositoryResults: ControlledImportAtomicResult[] = [
       { status: "accepted", recordIds: ["controlled-import-record-001"] },
@@ -2371,7 +2407,7 @@ describe("Finance Operations Phase 2 controlled imports", () => {
 
       await expect(
         subject.acceptControlledImportBatch({
-          plan: readyPlan(),
+          plan: await preparedPlan(subject),
           authorizationInput,
           authorizationPort: allowingAuthorizationPort(),
           auditPort: decisionAudit.port,
@@ -2400,7 +2436,7 @@ describe("Finance Operations Phase 2 controlled imports", () => {
     );
     const atomic = createAtomicRepositoryFake({ barrier: createBarrier(2) });
     const audit = auditPortDouble();
-    const plan = readyPlan();
+    const plan = await preparedPlan(subject);
     const execute = (suffix: string) =>
       subject.acceptControlledImportBatch({
         plan,
@@ -2448,10 +2484,16 @@ describe("Finance Operations Phase 2 controlled imports", () => {
     );
     const atomic = createAtomicRepositoryFake({ barrier: createBarrier(2) });
     const audit = auditPortDouble();
-    const plans = [
-      readyPlan({ batchDigest: "1".repeat(64), amountMinor: "13230000" }),
-      readyPlan({ batchDigest: "2".repeat(64), amountMinor: "13220000" }),
-    ];
+    const plans = await Promise.all([
+      preparedPlan(subject, {
+        batchDigest: "1".repeat(64),
+        amountMinor: "13230000",
+      }),
+      preparedPlan(subject, {
+        batchDigest: "2".repeat(64),
+        amountMinor: "13220000",
+      }),
+    ]);
     const results = await Promise.all(
       plans.map((plan, index) =>
         subject.acceptControlledImportBatch({
