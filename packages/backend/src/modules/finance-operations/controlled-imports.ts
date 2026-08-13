@@ -139,6 +139,7 @@ const authorizationDecisionSchema = z.strictObject({
   decision: z.enum(["allow", "deny"]),
 });
 const preparedPlanCapability = Symbol("controlled-import-plan");
+const preparedReadyPlans = new WeakSet<object>();
 
 /** A normalized source snapshot. */
 export interface PreparedControlledSourceSnapshot {
@@ -249,13 +250,6 @@ function freeze<T>(value: T): T {
     Object.freeze(value);
   }
   return value;
-}
-function isDeepFrozen(value: unknown, seen = new WeakSet<object>()): boolean {
-  if (value === null || typeof value !== "object") return true;
-  if (seen.has(value)) return true;
-  if (!Object.isFrozen(value)) return false;
-  seen.add(value);
-  return Object.values(value).every((child) => isDeepFrozen(child, seen));
 }
 function copy<T>(value: T): T {
   return structuredClone(value);
@@ -511,6 +505,7 @@ export function prepareControlledImportBatch(
     records: copy(records),
   };
   Object.defineProperty(plan, preparedPlanCapability, { value: true });
+  preparedReadyPlans.add(plan);
   return freeze(plan);
 }
 
@@ -612,8 +607,8 @@ export async function acceptControlledImportBatch(
   if (
     typeof request.plan !== "object" ||
     request.plan === null ||
-    (Reflect.get(request.plan, preparedPlanCapability) !== true &&
-      !isDeepFrozen(request.plan))
+    Reflect.get(request.plan, preparedPlanCapability) !== true ||
+    !preparedReadyPlans.has(request.plan)
   ) {
     throw new Error("prepared plan capability is invalid");
   }
