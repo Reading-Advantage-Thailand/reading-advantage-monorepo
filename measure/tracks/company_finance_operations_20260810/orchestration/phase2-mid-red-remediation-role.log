@@ -77,8 +77,8 @@ phase: Phase 2 — controlled operational imports
 baseline_sha: 7ef48d2d2929c67dfd70c899a4710b77808637b9
 phase_base_sha: 7ef48d2d2929c67dfd70c899a4710b77808637b9
 role_base_sha: 042dd8887f986d08d8f5c71ddfe752dd91b0e2c3
-commits: pending commit of architecture test, plan, and remediation log
-resulting_head: pending commit
+commits: `48b4c3dd4` architecture test, plan, and remediation log
+resulting_head: `48b4c3dd47d3623fcaa33450489cfb41d4646f95`
 tests_run: architecture boundary exit 0 (8/8); canonical Red exit 1 (24 collected, 20 failed, 4 passed); git diff --check exit 0
 files_changed: packages/backend/src/modules/finance-operations/__tests__/architecture-boundary.test.ts; measure/tracks/company_finance_operations_20260810/plan.md; measure/tracks/company_finance_operations_20260810/orchestration/phase2-mid-red-remediation-role.log
 plan_updates: recorded reviewed-foundation admission, architecture result, canonical Red result, and remaining task markers; Task 1 remains [~]
