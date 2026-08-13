@@ -44,8 +44,9 @@ deleted automatically.
 
 - Red: the focused two-file Vitest command failed both suites before collection
   because `./postgres16-harness.js` did not exist.
-- Safe default Green: 1 file passed, 1 live file skipped; **26 passed and 1
-  skipped**. The exact command was:
+- Current safe default Green after dedicated-role Red/Green: 1 file passed, 1
+  live file skipped; **28 passed and 1 skipped**. The canonical exact command
+  was:
 
   ```bash
   env -u DURABLE_JOB_PG16_TEST_OPT_IN \
