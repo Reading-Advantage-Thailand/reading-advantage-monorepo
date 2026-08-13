@@ -1,0 +1,33 @@
+Measure Jr Green remediation role log
+
+Track: company_finance_operations_20260810
+Phase: Phase 2 — controlled operational imports
+Role: Measure Jr Green security remediation
+phase_base_sha: 7ef48d2d2929c67dfd70c899a4710b77808637b9
+role_base_sha: 05d86070ce46a38bece22d1f3d4c2470c016309a
+Initial HEAD: 05d86070ce46a38bece22d1f3d4c2470c016309a
+
+Preflight:
+- `git status --short` showed unrelated dirty Codecamp, lockfile, OpenCode, Advantage Games, and audit-result paths.
+- `git worktree list` showed one shared master worktree.
+- The committed Red changes are inside `phase_base_sha..HEAD`, including `849cef7b48da566d01d0fad179090b0d5c0c1e1d` and `05d86070ce46a38bece22d1f3d4c2470c016309a`.
+
+Block:
+- The immutable existing Phase 2 test accepts caller-built accepted-source envelopes without a trusted preparation. It calls `prepareControlledImportBatch(normalizationInput(...))` at line 1067, and `normalizationInput` contains only `normalizationVersion`, `scope`, `batchId`, and `acceptedSourceEnvelopes`.
+- The immutable Review B test requires the same caller-built envelope shape to throw without a genuine Company Identity attestation and private-evidence preparation. See lines 285 through 296.
+- A production implementation cannot accept and reject the same untrusted envelope contract. Scope-specific behavior would be a caller-data heuristic and would violate the trusted-preparation requirement.
+- The Mid Red pilot correction resolved the pilot contradiction. It did not resolve the trusted-preparation contradiction.
+- No production, test, plan, or audit-result file changed. Task 1 remains `[~]`. Task 2 remains `[b]` with `deferred:phase2`.
+- Prior Review A and Review B results are stale after a valid future remediation commit. Fresh Review A and Review B are mandatory at that final remediation HEAD.
+
+Handoff:
+- Request a Mid Red retry. Update the existing Phase 2 suite so every successful normalization fixture obtains and passes a genuine trusted preparation from `createHistoricalPrivateEvidenceImportCommand`. Preserve the Review B caller-fabrication rejection test. The corrected contract must make the trusted preparation mandatory for all accepted envelopes.
+
+MEASURE_AGENT_RESULT
+status: blocked
+track: company_finance_operations_20260810
+phase: Phase 2 — controlled operational imports
+phase_base_sha: 7ef48d2d2929c67dfd70c899a4710b77808637b9
+role_base_sha: 05d86070ce46a38bece22d1f3d4c2470c016309a
+final_head: role-log evidence commit pending
+handoff: Mid Red retry required for the trusted-preparation contract contradiction.
