@@ -1,5 +1,4 @@
 import { readFile } from "node:fs/promises";
-import { resolve } from "node:path";
 
 import postgres from "postgres";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
@@ -50,7 +49,7 @@ isolatedSuite("PostgreSQL durable idempotency adapter", () => {
     first = postgres(databaseUrl, { max: 1 });
     second = postgres(databaseUrl, { max: 1 });
     const migration = await readFile(
-      resolve(process.cwd(), "../../packages/db/drizzle/0038_capability_idempotency_records.sql"),
+      new URL("../../../../db/drizzle/0038_capability_idempotency_records.sql", import.meta.url),
       "utf8",
     );
     for (const statement of migration.split("--> statement-breakpoint")) {
