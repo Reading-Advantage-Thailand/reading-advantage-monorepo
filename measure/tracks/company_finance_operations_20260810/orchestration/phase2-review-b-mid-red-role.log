@@ -5,7 +5,7 @@ Role: measure-mid-red
 Date: 2026-08-13
 phase_base_sha: 7ef48d2d2929c67dfd70c899a4710b77808637b9
 role_base_sha: be84ff474fa872dd0eab0b64038869e67e2c1e34
-resulting_head: pending commit
+resulting_head: d099761c4ae8eb6da03e2188b742053b8be2cb7b
 
 ## Preflight
 
@@ -97,14 +97,14 @@ identities, and keep the blocked pilot from returning `accepted`.
 
 MEASURE_AGENT_RESULT
 role: measure-mid-red
-status: partial
+status: complete
 track: company_finance_operations_20260810
 phase: Phase 2 — controlled operational imports
 baseline_sha: 7ef48d2d2929c67dfd70c899a4710b77808637b9
 phase_base_sha: 7ef48d2d2929c67dfd70c899a4710b77808637b9
 role_base_sha: be84ff474fa872dd0eab0b64038869e67e2c1e34
-commits: pending commit of Review B Red test, plan, and role log
-resulting_head: pending commit
+commits: d099761c4 (Review B Red test, plan, and role log)
+resulting_head: d099761c4ae8eb6da03e2188b742053b8be2cb7b
 tests_run: Review B Red exit 1 (26 collected, 0 passed, 26 failed); Phase 2 baseline exit 0 (24/24); Phase 1 Finance exit 0 (135/135); Company Identity exit 0 (20/20); Storage exit 0 (25/25)
 files_changed: packages/backend/src/modules/finance-operations/__tests__/controlled-imports-phase2-review-b.red.test.ts; measure/tracks/company_finance_operations_20260810/plan.md; measure/tracks/company_finance_operations_20260810/orchestration/phase2-review-b-mid-red-role.log
 plan_updates: recorded Review B Red failure evidence, regression baselines, and remaining task markers; Task 1 remains [~]
