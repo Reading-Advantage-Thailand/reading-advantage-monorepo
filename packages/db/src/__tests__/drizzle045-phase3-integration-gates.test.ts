@@ -41,11 +41,9 @@
  * Red rationale (per describe block):
  *
  *   1. "drizzle-kit version (Task 1)" — the installed drizzle-kit
- *      must be at the 0.32+ line that ships the drizzle-orm 0.45
- *      companion. test-strategy.md §3 (Cross-Phase Edge Cases) and
- *      Phase 4 "pnpm outdated -r" gate both call for drizzle-kit
- *      0.32+. packages/db currently declares ^0.31.0 and the
- *      lockfile resolves to 0.31.10. Phase 3 must bump.
+ *      must satisfy the >=0.31.7 policy for the drizzle-orm 0.45
+ *      companion. packages/db declares ^0.31.7 and the installed
+ *      version is 0.31.10.
  *
  *   2. "drizzle-kit generate command path (Task 5)" — packages/db
  *      must expose a `generate` script that invokes `drizzle-kit
@@ -131,8 +129,8 @@ interface Journal {
 }
 
 // ---------------------------------------------------------------------------
-// Task 1 — drizzle-kit is at the 0.31.7+ line that ships the drizzle-orm 0.45
-// companion. (No stable 0.32.x exists; latest stable is 0.31.10.)
+// Task 1 — drizzle-kit satisfies the >=0.31.7 policy for the drizzle-orm 0.45
+// companion. The installed version is 0.31.10.
 // ---------------------------------------------------------------------------
 
 describe("drizzle045-phase3-integration-gates — drizzle-kit version (Task 1)", () => {
@@ -313,6 +311,32 @@ const EXPECTED_JOURNAL_TAGS = [
   "0023_cultured_sunspot",
   "0024_futuristic_vulture",
   "0025_review_jobs",
+  "0026_game_completions",
+  "0027_mastery_persistence",
+  "0028_mastery_tenant_hardening",
+  "0029_activity_sessions",
+  "0030_activity_tutorial_reporting",
+  "0031_tutorial_claim_fencing",
+  "0032_tutorial_snapshot_submission_binding",
+  "0033_codecamp_curriculum_assignments",
+  "0034_codecamp_pr_rubric_evaluation",
+  "0035_activity_tutorial_capture_leases",
+  "0036_codecamp_mastery_evidence",
+  "0037_sales_roleplay_attempt_number_unique",
+  "0038_capability_idempotency_records",
+  "0039_sales_progress_activity_timestamp",
+  "0040_company_product_principals",
+  "0041_marketing_past_topic_normalized_key",
+  "0042_company_product_principal_local_unique",
+  "0043_codecamp_company_principal_sync",
+  "0044_standard_pack_successor_commitments",
+  "0045_standard_pack_successor_admission_receipts",
+  "0046_standard_pack_successor_admission_receipt_integrity",
+  "0047_fluffy_joshua_kane",
+  "0048_workbook_publishing",
+  "0049_codecamp_exercise_quiz_repair",
+  "0050_finance_operations_records",
+  "0051_marketing_phase7_audit_and_script",
 ] as const;
 
 describe("drizzle045-phase3-integration-gates — Journal entries for full migration apply (Task 5)", () => {
