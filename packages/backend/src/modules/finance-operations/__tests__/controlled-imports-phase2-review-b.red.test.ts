@@ -127,6 +127,13 @@ async function trustedPreparationFor(
     readonly sourceIdentity?: string;
     readonly payloadDigest?: string;
     readonly factValue?: string;
+    readonly packetFact?: {
+      readonly factCategory: "document-total" | "document-reference";
+      readonly factId:
+        | "document-total:receipt-total"
+        | "document-reference:source-record";
+      readonly label: string;
+    };
   } = {},
 ): Promise<unknown> {
   const sourceIdentity = options.sourceIdentity ?? "receipt-001";
@@ -171,10 +178,11 @@ async function trustedPreparationFor(
       },
       facts: [
         {
-          factCategory: "document-total",
-          factId: "document-total:receipt-total",
+          factCategory: options.packetFact?.factCategory ?? "document-total",
+          factId:
+            options.packetFact?.factId ?? "document-total:receipt-total",
           kind: "source-stated-value",
-          label: "Receipt total as stated",
+          label: options.packetFact?.label ?? "Receipt total as stated",
           value: options.factValue ?? "100.00",
         },
       ],
@@ -371,6 +379,69 @@ describe("Finance Operations Phase 2 Review B remediation RED contract", () => {
       expect.arrayContaining([
         expect.objectContaining({ amountMinor: "99900" }),
       ]),
+    );
+  });
+
+  it("rejects or derives a changed school-billing count from the trusted packet", async () => {
+    const subject = await loadControlledImports();
+    const genuinePreparation = await trustedPreparationFor(
+      subject,
+      requestedScope,
+      "private-evidence://company-a/finance/sanitized/school-billing-count",
+      {
+        sourceIdentity: "school-billing-count-001",
+        factValue: "147",
+        packetFact: {
+          factCategory: "document-reference",
+          factId: "document-reference:source-record",
+          label: "Student count as stated",
+        },
+      },
+    );
+    expect(genuinePreparation).toMatchObject({
+      packet: {
+        facts: [expect.objectContaining({ value: "147" })],
+      },
+    });
+
+    const tamperedRequest = normalizationRequest({
+      batchId: "trusted-school-count-tamper-batch",
+      envelopes: [
+        callerEnvelope({
+          evidenceReference:
+            "private-evidence://company-a/finance/sanitized/school-billing-count",
+          document: {
+            ...paymentReceiptDocument({
+              sourceDocumentId: "school-billing-count-001",
+              logicalDocumentId: "school-billing-count-001",
+              sourceDocumentKind: "school-billing-invoice",
+              thaiTaxDocumentStatus: "unresolved",
+            }),
+            facts: [
+              { factId: "student-count", kind: "count", countText: "999" },
+            ],
+          },
+        }),
+      ],
+      trustedPreparation: genuinePreparation,
+    });
+
+    let result: unknown;
+    try {
+      result = subject.prepareControlledImportBatch(tamperedRequest);
+    } catch (error) {
+      expect(error).toBeInstanceOf(Error);
+      return;
+    }
+
+    expect(result).toMatchObject({ status: "ready" });
+    const facts = (result as { readonly snapshots: readonly unknown[] })
+      .snapshots[0] as { readonly facts: readonly Record<string, unknown>[] };
+    expect(facts.facts).toEqual(
+      expect.arrayContaining([expect.objectContaining({ count: "147" })]),
+    );
+    expect(facts.facts).not.toEqual(
+      expect.arrayContaining([expect.objectContaining({ count: "999" })]),
     );
   });
 
