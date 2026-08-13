@@ -2317,7 +2317,7 @@ describe("Finance Operations Phase 2 controlled imports", () => {
       ["new XMLHttpRequest();", "runtime-access"],
       ["const secret = process.env.DATABASE_URL;", "runtime-global"],
       ["const secret = Bun.env.DATABASE_URL;", "runtime-global"],
-      ["const file = Deno.readFile(\"source\");", "runtime-global"],
+      ['const file = Deno.readFile("source");', "runtime-global"],
       ["await database.select().from(table);", "database-call"],
       ['await database["insert"](row);', "database-call"],
       ["await database.update(table).set(row);", "database-call"],

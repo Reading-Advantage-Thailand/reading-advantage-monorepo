@@ -1,0 +1,113 @@
+Measure Mid Red role log - Phase 2 Review B security remediation
+Track: company_finance_operations_20260810
+Phase: Phase 2 — controlled operational imports
+Role: measure-mid-red
+Date: 2026-08-13
+phase_base_sha: 7ef48d2d2929c67dfd70c899a4710b77808637b9
+role_base_sha: be84ff474fa872dd0eab0b64038869e67e2c1e34
+resulting_head: pending commit
+
+## Preflight
+
+- Both supplied SHAs resolve to commits.
+- `phase_base_sha` is an ancestor of `role_base_sha`.
+- The checkout is `master`, and exactly one worktree exists.
+- Existing dirty paths are unrelated user work: `.opencode/**`, Codecamp
+  Playwright and test-result reports, `pnpm-lock.yaml`, Advantage Games test
+  results, and Sales review output. I preserved these paths and did not stage
+  them.
+- The owned Review B Red test was untracked at role start. The existing Phase 2
+  Red test and plan had prior role-owned changes. I preserved both files and
+  updated only the Phase 2 plan evidence.
+- No production source changed.
+
+## Red work
+
+I added `controlled-imports-phase2-review-b.red.test.ts` for the five blocking
+Review B findings. The tests use injected Company Identity and private-evidence
+preparation fakes. They do not use live CRM, Tutor, database, storage, or
+provider adapters.
+
+The tests cover fabricated and foreign evidence, company and school scope
+binding, malformed authorization decisions, caller-built and mutated plans,
+unknown nested fields and kinds, ambiguity-group counterexamples, duplicate
+payroll voucher identities, and the blocked pilot contract.
+
+## Tests run
+
+1. Review B Red command:
+   `CI=true pnpm --filter @reading-advantage/backend exec vitest run src/modules/finance-operations/__tests__/controlled-imports-phase2-review-b.red.test.ts --pool=threads --maxWorkers=1`
+   - Exit 1.
+   - Collection succeeded.
+   - 26 tests ran: 0 passed and 26 failed.
+   - Failures are behavior-level mismatches at the reviewed implementation:
+     caller-controlled evidence was accepted; malformed authorization results
+     and caller-built plans reached the repository; unreviewed keys and kinds
+     were accepted; ambiguity-group cases returned the wrong status; duplicate
+     voucher identities were accepted; and the blocked pilot returned
+     `accepted`.
+
+2. Existing Phase 2 behavior baseline:
+   `CI=true pnpm --filter @reading-advantage/backend exec vitest run src/modules/finance-operations/__tests__/controlled-imports-phase2.red.test.ts --pool=threads --maxWorkers=1`
+   - Exit 0.
+   - 1 file and 24 tests passed.
+   - This passing implementation suite does not clear the separate Review B
+     security-remediation Red gate.
+
+3. Phase 1 Finance Operations baseline:
+   `CI=true pnpm --filter @reading-advantage/backend exec vitest run src/modules/finance-operations/__tests__/architecture-boundary.test.ts src/modules/finance-operations/__tests__/port-boundaries.test.ts src/modules/finance-operations/__tests__/authorization-audit.test.ts src/modules/finance-operations/__tests__/money-history.test.ts src/modules/finance-operations/__tests__/contracts.test.ts src/modules/finance-operations/__tests__/independent-review-blockers.red.test.ts src/modules/finance-operations/__tests__/postgres-record-repository.red.test.ts src/modules/finance-operations/__tests__/provenance-whitespace.red.test.ts src/modules/finance-operations/__tests__/historical-private-evidence-packet.red.test.ts src/modules/finance-operations/__tests__/durable-job-adapter.red.test.ts src/modules/finance-operations/__tests__/historical-private-evidence-binding-adapter.red.test.ts --pool=threads --maxWorkers=1`
+   - Exit 0.
+   - 11 files and 135 tests passed.
+
+4. Company Identity baseline:
+   `CI=true pnpm --filter @reading-advantage/backend exec vitest run src/modules/company-identity/__tests__/finance-authorization-adapter.red.test.ts src/modules/company-identity/__tests__/protocol-safety.red.test.ts --pool=threads --maxWorkers=1`
+   - Exit 0.
+   - 2 files and 20 tests passed.
+
+5. Storage baseline:
+   `CI=true pnpm --filter @reading-advantage/storage exec vitest run src/__tests__/finance-private-evidence-read.red.test.ts --pool=threads --maxWorkers=1`
+   - Exit 0.
+   - 1 file and 25 tests passed.
+
+6. The new Review B test and the plan pass the repository Prettier check.
+   The pre-existing Phase 2 Red test still has unrelated existing formatting
+   differences outside this Red remediation.
+
+## Plan updates
+
+`plan.md` records the Review B Red command, exact failure counts, behavior-level
+failure classes, and the Phase 1 regression baselines. Task 1 remains `[~]`.
+The pilot task remains `[b]` with `deferred:phase2`.
+
+## Known failures
+
+- Review B remediation Red: 26/26 tests fail against `role_base_sha`.
+- Review B remains blocking until Green fixes all five findings.
+- The existing Phase 2 behavior suite passes 24/24, but it does not cover all
+  Review B security counterexamples.
+- No production source changed.
+
+## Handoff
+
+Jr Green must fix the five Review B findings without weakening the accepted
+Phase 1 owner boundaries. Green must bind normalization to trusted preparation,
+parse authorization results strictly, reject caller-built plans, enforce the
+nested source grammar, use `ambiguityGroupId`, reject duplicate voucher record
+identities, and keep the blocked pilot from returning `accepted`.
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+status: partial
+track: company_finance_operations_20260810
+phase: Phase 2 — controlled operational imports
+baseline_sha: 7ef48d2d2929c67dfd70c899a4710b77808637b9
+phase_base_sha: 7ef48d2d2929c67dfd70c899a4710b77808637b9
+role_base_sha: be84ff474fa872dd0eab0b64038869e67e2c1e34
+commits: pending commit of Review B Red test, plan, and role log
+resulting_head: pending commit
+tests_run: Review B Red exit 1 (26 collected, 0 passed, 26 failed); Phase 2 baseline exit 0 (24/24); Phase 1 Finance exit 0 (135/135); Company Identity exit 0 (20/20); Storage exit 0 (25/25)
+files_changed: packages/backend/src/modules/finance-operations/__tests__/controlled-imports-phase2-review-b.red.test.ts; measure/tracks/company_finance_operations_20260810/plan.md; measure/tracks/company_finance_operations_20260810/orchestration/phase2-review-b-mid-red-role.log
+plan_updates: recorded Review B Red failure evidence, regression baselines, and remaining task markers; Task 1 remains [~]
+known_failures: five Review B security findings remain; Review B Red is 26/26 failed; existing Phase 2 behavior suite passes but does not clear the security gate
+handoff: Jr Green must remediate all five Review B findings, then rerun the Review B suite and the focused Phase 2 and Phase 1 gates
+END_MEASURE_AGENT_RESULT
