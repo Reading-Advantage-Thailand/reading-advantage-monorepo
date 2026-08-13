@@ -14,6 +14,7 @@ const GENERIC_DATABASE_ENVIRONMENT_KEYS = [
   "DIRECT_DATABASE_URL",
 ] as const;
 const ADMIN_DATABASE_PATTERN = /^durable_job_test_admin_[a-z0-9_]+$/;
+const TEST_ROLE_USERNAME_PATTERN = /^durable_test(?:_[a-z0-9_]+)?$/;
 const SCRATCH_DATABASE_PREFIX = "durable_job_pg16_test_";
 const LOOPBACK_HOSTNAMES = new Set(["localhost", "127.0.0.1", "[::1]"]);
 const POSTGRES_16_MINIMUM = 160_000;
@@ -199,6 +200,11 @@ export function resolveDurableJobPostgres16AdminUrl(
   if (!parsed.username) {
     throw new Error(
       `${DURABLE_JOB_PG16_ADMIN_URL_ENV} must include an explicit test role.`,
+    );
+  }
+  if (!TEST_ROLE_USERNAME_PATTERN.test(parsed.username)) {
+    throw new Error(
+      `${DURABLE_JOB_PG16_ADMIN_URL_ENV} must use a dedicated durable_test role.`,
     );
   }
   if (parsed.search || parsed.hash) {
