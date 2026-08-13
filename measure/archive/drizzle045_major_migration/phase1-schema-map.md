@@ -2,214 +2,229 @@
 
 > **Track:** `drizzle045_major_migration`
 > **Phase:** 1 (Contract & Schema Definition)
-> **Source of truth:** live filesystem under `packages/db/src/schema/`
-> and `packages/db/drizzle/`.
-> **Build-graph baseline:** `graph.db` mtime 2026-06-17 13:17,
-> 2177 nodes / 3104 edges / 298 files.
+> **Current source:** committed files under `packages/db/src/schema/` and
+> `packages/db/drizzle/`; size totals use the current filesystem.
 
-This map is the deliverable for Phase 1 Task 2 of the
-`drizzle045_major_migration` track. It enumerates every file in
-`packages/db/src/schema/` (18 files including `marketing.ts`, `auth.ts`,
-`primary.ts`, and `sales.ts`) and every migration SQL file in
-`packages/db/drizzle/` (25 files: 0000 through 0024 inclusive), plus
-the meta sidecars (`_journal.json`, per-idx `*_snapshot.json`) that
-the journal-integrity invariant relies on. It also surfaces
-`packages/db/src/client.ts` and `_journal.json` as Phase 3 risk
-surfaces per `test-strategy.md` §3.3 and §3.6.
+This map records the current Phase 1 audit surface. The schema directory has
+**27 TypeScript files**. The migration directory has **52 SQL files**, indexed
+from `0000` through `0051`. The journal has **52 entries**, indexed from 0
+through 51. The current meta snapshot set has **24 snapshot files**.
+
+The Phase 1 contract and adversarial tests are historical tests for this
+archived track. Their fixed expectations predate the current 27-file and
+52-migration surface. This document records the current committed surface.
 
 ---
 
-## 1. Schema files (18)
+## 1. Schema files (27)
 
-`packages/db/src/schema/` contains **18** TypeScript files. Every name
-below is referenced in this artifact so the live-surface guardrail test
-can verify the map is current.
+`packages/db/src/schema/` contains **27** committed TypeScript files. The
+table lists every file and its filesystem line count.
 
-| # | File | Lines | Tables / Enums | Role |
-|---|------|-------|----------------|------|
-| 1 | `analytics.ts` | 127 | analytics-side tables | Event/aggregation schema |
-| 2 | `audit.ts` | 43 | audit events | Security audit log table |
-| 3 | `auth.ts` | current | auth infrastructure tables such as `loginAttempts` | Shared auth/rate-limit schema |
-| 4 | `classrooms.ts` | 58 | classrooms, classroom-students junction | Multi-tenant classroom model |
-| 5 | `codecamp.ts` | 164 | codecamp tables (curriculum, repos, etc.) | CodeCamp Advantage app |
-| 6 | `content.ts` | 86 | content (articles, lessons, modules) | Reading Advantage core content |
-| 7 | `flashcards.ts` | 43 | flashcard decks + cards | Spaced-repetition schema |
-| 8 | `index.ts` | current | barrel re-exporting schema files | Barrel |
-| 9 | `licenses.ts` | 32 | license + license-tier tables | Subscription / licensing |
-| 10 | `marketing.ts` | 106 | `campaigns`, `videoProjects`, `videoAssets`, `pastTopics`, `settings`, plus 6 `pgEnum` (`campaignTypeEnum`, `campaignStatusEnum`, `appEnum`, `assetTypeEnum`, `assetStatusEnum`, `videoProjectStatusEnum`) | Marketing video/campaign workflow |
-| 11 | `primary.ts` | current | Primary Advantage migrated tables | Primary Advantage app |
-| 12 | `progress.ts` | 97 | user progress records | Per-user lesson progress |
-| 13 | `questions.ts` | 69 | question bank + answers | Quiz / assessment |
-| 14 | `sales.ts` | current | Sales Advantage curriculum and roleplay tables | Sales Advantage app |
-| 15 | `science.ts` | 385 | science-domain tables (largest schema file) | Science Advantage app |
-| 16 | `stories.ts` | 189 | story-assignment tables | Storytime app |
-| 17 | `taxonomy.ts` | 24 | taxonomy (subjects, topics) | Shared taxonomy |
-| 18 | `users.ts` | 93 | `schools`, `users`, `accounts`, `sessions`, `usersRelations`, `accountsRelations`, `sessionsRelations`, `roleEnum` | Auth + tenancy primitives |
+| # | File | Lines | Current role |
+|---:|---|---:|---|
+| 1 | `activity.ts` | 147 | Activity sessions, tutorials, and reporting |
+| 2 | `analytics.ts` | 217 | Analytics and event aggregation |
+| 3 | `audit.ts` | 43 | Security audit events |
+| 4 | `auth.ts` | 25 | Authentication and login-attempt support |
+| 5 | `capability-idempotency.ts` | 63 | Capability idempotency records |
+| 6 | `classrooms.ts` | 60 | Classrooms and classroom membership |
+| 7 | `codecamp.ts` | 360 | CodeCamp curriculum, repositories, reviews, and exercises |
+| 8 | `company-product-principals.ts` | 54 | Company and product principals |
+| 9 | `content.ts` | 94 | Reading content, lessons, and modules |
+| 10 | `finance-operations.ts` | 177 | Finance and operations records |
+| 11 | `flashcards.ts` | 45 | Flashcard decks and cards |
+| 12 | `index.ts` | 25 | Schema barrel exports |
+| 13 | `licenses.ts` | 43 | Licenses and license tiers |
+| 14 | `marketing-constants.ts` | 11 | Marketing schema constants |
+| 15 | `marketing.ts` | 121 | Marketing campaigns, assets, and video projects |
+| 16 | `mastery.ts` | 438 | Mastery learning records; **largest schema file** |
+| 17 | `primary.ts` | 232 | Primary Advantage schema |
+| 18 | `progress.ts` | 106 | User lesson progress |
+| 19 | `questions.ts` | 69 | Questions and answers |
+| 20 | `sales.ts` | 183 | Sales Advantage curriculum and roleplay |
+| 21 | `science.ts` | 385 | Science Advantage schema |
+| 22 | `standard-pack-successor-admission-receipts.ts` | 91 | Standard-pack successor admission receipts |
+| 23 | `standard-pack-successor-commitments.ts` | 97 | Standard-pack successor commitments |
+| 24 | `stories.ts` | 189 | Story assignments |
+| 25 | `taxonomy.ts` | 24 | Subjects and topics |
+| 26 | `users.ts` | 108 | Schools, users, accounts, sessions, and roles |
+| 27 | `workbooks.ts` | 107 | Workbook publishing |
 
-**Total schema lines:** 1,529.
+**Total schema lines:** **3,514**.
 
-### 1.1 marketing.ts (dirty-worktree addition)
-
-`marketing.ts` is present on disk and is part of the schema surface.
-Its tables and enums are re-exported from `packages/db/src/schema/index.ts`.
-
-### 1.2 Barrel drift note
-
-`packages/db/src/schema/index.ts` currently re-exports the current schema
-surface, including marketing and newer app/auth schema files.
-
----
-
-## 2. Migration SQL files (25)
-
-`packages/db/drizzle/` contains **25** SQL migration files indexed
-0000 through 0024 inclusive. Every index below is referenced in this
-artifact so the migration-surface guardrail test can verify the map
-covers the full set.
-
-| # | Index | Filename | Size | Era | Notes |
-|---|-------|----------|------|-----|-------|
-| 0 | 0000 | `0000_wide_vengeance.sql` | 9,815 B | Pre-production ceiling | Initial schema |
-| 1 | 0001 | `0001_thick_santa_claus.sql` | 6,861 B | Pre-production ceiling | Schema extension |
-| 2 | 0002 | `0002_quick_skreet.sql` | 533 B | Pre-production ceiling | Small change (asserted by `migration-sql.test.ts`) |
-| 3 | 0003 | `0003_slow_firebrand.sql` | 2,924 B | Pre-production ceiling | Re-stamped entry (old `when` 1746288000000 → new 1777880524315) |
-| 4 | 0004 | `0004_sturdy_forge.sql` | 718 B | Pre-production ceiling | Small change |
-| 5 | 0005 | `0005_codecamp_schema.sql` | 5,336 B | Pre-production ceiling | CodeCamp schema |
-| 6 | 0006 | `0006_codecamp_indexes.sql` | 816 B | Pre-production ceiling | CodeCamp indexes |
-| 7 | 0007 | `0007_codecamp_repos_reviews.sql` | 1,518 B | Pre-production ceiling | CodeCamp repos + reviews |
-| 8 | 0008 | `0008_codecamp_phase.sql` | 197 B | Pre-production ceiling | CodeCamp phase |
-| 9 | 0009 | `0009_add_github_username.sql` | 227 B | Pre-production ceiling | users.github_username |
-| 10 | 0010 | `0010_codecamp_uniqueness.sql` | 497 B | Pre-production ceiling | CodeCamp uniqueness |
-| 11 | 0011 | `0011_codecamp_webhook_events.sql` | 369 B | Pre-production ceiling | CodeCamp webhook events |
-| 12 | 0012 | `0012_codecamp_intern_role.sql` | 52 B | Pre-production ceiling | roleEnum INTERN addition |
-| 13 | 0013 | `0013_prisma_drizzle_schema_unification.sql` | 34,111 B | Pre-production ceiling | Largest migration (Prisma → Drizzle slice unification) |
-| 14 | 0014 | `0014_users_license_expired_date.sql` | 367 B | Pre-production ceiling | users.license_id + expiredDate |
-| 15 | 0015 | `0015_science_junction_tables.sql` | 1,767 B | Pre-production ceiling | 4 explicit science junctions (replaces Prisma implicit M:N) |
-| 16 | 0016 | `0016_users_grade_level.sql` | 435 B | **Production ceiling** (`when: 1779120000000`) | users.grade_level |
-| 17 | 0017 | `0017_science_school_id.sql` | 4,737 B | Post-production ceiling | science tables gain schoolId |
-| 18 | 0018 | `0018_audit_events.sql` | 1,932 B | Post-production ceiling | audit_events table |
-| 19 | 0019 | `0019_session_token_hash.sql` | 349 B | Post-production ceiling | sessions.tokenHash |
-| 20 | 0020 | `0020_sessions_indexes.sql` | 146 B | Post-production ceiling | sessions indexes |
-| 21 | 0021 | `0021_sales_advantage.sql` | current | Post-production ceiling | Sales Advantage and marketing campaign tables; adds Sales roles |
-| 22 | 0022 | `0022_flowery_black_tarantula.sql` | current | Post-production ceiling | Reading/Primary legacy activity, flashcard, and subscription tables |
-| 23 | 0023 | `0023_cultured_sunspot.sql` | current | Post-production ceiling | Allows nullable Sales roleplay `audio_storage_key` |
-| 24 | 0024 | `0024_futuristic_vulture.sql` | current | Post-production ceiling | Durable login-attempt tracking for production rate limiter |
-| 25 | 0025 | `0025_review_jobs.sql` | current | Post-production ceiling | Postgres-backed PR review job queue for webhook reliability |
-
-**Total migration SQL bytes:** current live surface across 26 files.
-
-### 2.1 Re-stamp invariant
-
-Per `packages/db/drizzle/MIGRATION_LEDGER.md` and
-`packages/db/src/__tests__/journal-integrity.test.ts` (229 lines):
-
-- `idx 0–16` MUST have `when <= 1779120000000` (production ceiling).
-- `idx 17+` MUST have `when > 1779120000000`.
-- The strict-`<` comparison in the migrator (`pg-core/dialect.js:62`)
-  silently skips any entry whose `when` is `<=` the highest applied
-  value, so monotonicity is required.
-
-Phase 3 must preserve this invariant when re-running `drizzle-kit
-generate`. If 0.45 changes the journal `version` field (currently
-`"version": "7"`), the `journal-integrity.test.ts` assertion must be
-updated to match the new value, but the **re-stamp invariant must
-survive**.
-
-### 2.2 Meta sidecars
-
-`packages/db/drizzle/meta/` contains per-idx `*_snapshot.json` files
-plus the journal. The contract test does NOT enumerate them (it only
-asserts SQL file presence in `packages/db/drizzle/`), but Phase 3 must
-not break them.
-
-| File | Role |
-|------|------|
-| `_journal.json` | Migration journal (26 entries, see §3) |
-| `0000_snapshot.json` … `0025_snapshot.json` | Per-migration schema snapshots |
-| `README.md` | Drizzle-kit auto-generated readme |
+`mastery.ts` is the largest current schema file at **438 lines**. The schema
+barrel in `packages/db/src/schema/index.ts` re-exports the current application
+schema, including `marketing.ts`, `mastery.ts`, and the newer operational files.
 
 ---
 
-## 3. Journal file (`_journal.json`)
+## 2. Migration SQL files (52)
 
-`packages/db/drizzle/meta/_journal.json` is the **risk surface**
-called out by `test-strategy.md` §3.3. Phase 3 must preserve the
-re-stamp invariant (§2.1) and the `version: "7"` field, OR
-`journal-integrity.test.ts` must be updated to accept the new version.
+`packages/db/drizzle/` contains **52** SQL migration files. The table records
+the filename, filesystem byte size, and matching journal `when` value.
 
-The journal's `entries[]` is 25 rows, indexed 0 through 24. Every
-entry pairs a tag (matching the `*.sql` filename in `packages/db/drizzle/`)
-with a `when` timestamp and a `breakpoints` flag.
+| # | Index | Filename | Size | Journal `when` |
+|---:|---|---|---:|---:|
+| 0 | 0000 | `0000_wide_vengeance.sql` | 9,892 B | 1777693836597 |
+| 1 | 0001 | `0001_thick_santa_claus.sql` | 6,945 B | 1777706107275 |
+| 2 | 0002 | `0002_quick_skreet.sql` | 533 B | 1777729846648 |
+| 3 | 0003 | `0003_slow_firebrand.sql` | 3,849 B | 1777880524315 |
+| 4 | 0004 | `0004_sturdy_forge.sql` | 818 B | 1778031201982 |
+| 5 | 0005 | `0005_codecamp_schema.sql` | 5,811 B | 1778181879649 |
+| 6 | 0006 | `0006_codecamp_indexes.sql` | 960 B | 1778332557316 |
+| 7 | 0007 | `0007_codecamp_repos_reviews.sql` | 1,668 B | 1778483234983 |
+| 8 | 0008 | `0008_codecamp_phase.sql` | 197 B | 1778633912650 |
+| 9 | 0009 | `0009_add_github_username.sql` | 251 B | 1778784590315 |
+| 10 | 0010 | `0010_codecamp_uniqueness.sql` | 520 B | 1779075476967 |
+| 11 | 0011 | `0011_codecamp_webhook_events.sql` | 475 B | 1779077988484 |
+| 12 | 0012 | `0012_codecamp_intern_role.sql` | 154 B | 1779080500000 |
+| 13 | 0013 | `0013_prisma_drizzle_schema_unification.sql` | 39,161 B | 1779090375000 |
+| 14 | 0014 | `0014_users_license_expired_date.sql` | 391 B | 1779100250000 |
+| 15 | 0015 | `0015_science_junction_tables.sql` | 1,867 B | 1779110125000 |
+| 16 | 0016 | `0016_users_grade_level.sql` | 435 B | 1779120000000 |
+| 17 | 0017 | `0017_science_school_id.sql` | 5,587 B | 1779120001000 |
+| 18 | 0018 | `0018_audit_events.sql` | 2,107 B | 1779120002000 |
+| 19 | 0019 | `0019_session_token_hash.sql` | 571 B | 1779120003000 |
+| 20 | 0020 | `0020_sessions_indexes.sql` | 170 B | 1779120004000 |
+| 21 | 0021 | `0021_sales_advantage.sql` | 9,547 B | 1782131020389 |
+| 22 | 0022 | `0022_flowery_black_tarantula.sql` | 8,456 B | 1782208439534 |
+| 23 | 0023 | `0023_cultured_sunspot.sql` | 85 B | 1782299938361 |
+| 24 | 0024 | `0024_futuristic_vulture.sql` | 652 B | 1782627369208 |
+| 25 | 0025 | `0025_review_jobs.sql` | 1,580 B | 1782700000000 |
+| 26 | 0026 | `0026_game_completions.sql` | 2,937 B | 1782700000001 |
+| 27 | 0027 | `0027_mastery_persistence.sql` | 10,516 B | 1782700000002 |
+| 28 | 0028 | `0028_mastery_tenant_hardening.sql` | 6,229 B | 1783689951727 |
+| 29 | 0029 | `0029_activity_sessions.sql` | 7,474 B | 1783750000000 |
+| 30 | 0030 | `0030_activity_tutorial_reporting.sql` | 2,150 B | 1783755000000 |
+| 31 | 0031 | `0031_tutorial_claim_fencing.sql` | 1,177 B | 1783758000000 |
+| 32 | 0032 | `0032_tutorial_snapshot_submission_binding.sql` | 790 B | 1783760000000 |
+| 33 | 0033 | `0033_codecamp_curriculum_assignments.sql` | 412 B | 1783762000000 |
+| 34 | 0034 | `0034_codecamp_pr_rubric_evaluation.sql` | 93 B | 1783764000000 |
+| 35 | 0035 | `0035_activity_tutorial_capture_leases.sql` | 610 B | 1783766000000 |
+| 36 | 0036 | `0036_codecamp_mastery_evidence.sql` | 7,033 B | 1783817114207 |
+| 37 | 0037 | `0037_sales_roleplay_attempt_number_unique.sql` | 550 B | 1784361600000 |
+| 38 | 0038 | `0038_capability_idempotency_records.sql` | 1,761 B | 1784365200000 |
+| 39 | 0039 | `0039_sales_progress_activity_timestamp.sql` | 87 B | 1784368800000 |
+| 40 | 0040 | `0040_company_product_principals.sql` | 1,206 B | 1784372400000 |
+| 41 | 0041 | `0041_marketing_past_topic_normalized_key.sql` | 1,641 B | 1784389963563 |
+| 42 | 0042 | `0042_company_product_principal_local_unique.sql` | 7,717 B | 1784392115850 |
+| 43 | 0043 | `0043_codecamp_company_principal_sync.sql` | 4,323 B | 1784446059725 |
+| 44 | 0044 | `0044_standard_pack_successor_commitments.sql` | 7,572 B | 1785424051922 |
+| 45 | 0045 | `0045_standard_pack_successor_admission_receipts.sql` | 6,433 B | 1785429127726 |
+| 46 | 0046 | `0046_standard_pack_successor_admission_receipt_integrity.sql` | 12,909 B | 1785432407419 |
+| 47 | 0047 | `0047_fluffy_joshua_kane.sql` | 1,149 B | 1785580312598 |
+| 48 | 0048 | `0048_workbook_publishing.sql` | 2,877 B | 1785672462951 |
+| 49 | 0049 | `0049_codecamp_exercise_quiz_repair.sql` | 12,215 B | 1785758864000 |
+| 50 | 0050 | `0050_finance_operations_records.sql` | 7,232 B | 1785758865000 |
+| 51 | 0051 | `0051_marketing_phase7_audit_and_script.sql` | 1,451 B | 1786537947030 |
+
+**Total SQL bytes:** **211,226** across the 52 current migration files.
 
 ---
 
-## 4. Client construction risk surface
+## 3. Migration journal (`_journal.json`)
 
-`packages/db/src/client.ts` is the **risk surface** called out by
-`test-strategy.md` §3.6. It is the single point of failure for the
-`drizzle(client, { schema })` factory call. The file is 29 lines and
-exports `db`, `client`, and the `DB` type alias. The factory call is
-on line 26:
+`packages/db/drizzle/meta/_journal.json` contains **52 entries**, with `idx`
+values 0 through 51. The first tag is `0000_wide_vengeance`; the last tag is
+`0051_marketing_phase7_audit_and_script`. The journal uses version `"7"` and
+the `postgresql` dialect.
+
+Each journal entry has a matching SQL file in section 2. The table in section
+2 records all 52 tags through their filenames and all 52 journal timestamps.
+
+### 3.1 Re-stamp invariant
+
+The committed journal preserves the migration ordering invariant:
+
+- Entries 0–16 have `when <= 1779120000000`.
+- Entries 17–51 have `when > 1779120000000`.
+- Journal timestamps increase with `idx`.
+
+This invariant is historical migration context that Phase 3 must preserve when
+changing Drizzle versions. The strict-`<` migrator comparison can skip entries
+whose `when` value is not above the highest applied value.
+
+---
+
+## 4. Current meta snapshot set (24)
+
+`packages/db/drizzle/meta/` currently contains `_journal.json` and these **24**
+snapshot files:
+
+| # | Snapshot |
+|---:|---|
+| 1 | `0000_snapshot.json` |
+| 2 | `0001_snapshot.json` |
+| 3 | `0002_snapshot.json` |
+| 4 | `0009_snapshot.json` |
+| 5 | `0020_snapshot.json` |
+| 6 | `0021_snapshot.json` |
+| 7 | `0022_snapshot.json` |
+| 8 | `0023_snapshot.json` |
+| 9 | `0024_snapshot.json` |
+| 10 | `0025_snapshot.json` |
+| 11 | `0026_snapshot.json` |
+| 12 | `0027_snapshot.json` |
+| 13 | `0028_snapshot.json` |
+| 14 | `0041_snapshot.json` |
+| 15 | `0042_snapshot.json` |
+| 16 | `0043_snapshot.json` |
+| 17 | `0044_snapshot.json` |
+| 18 | `0045_snapshot.json` |
+| 19 | `0046_snapshot.json` |
+| 20 | `0047_snapshot.json` |
+| 21 | `0048_snapshot.json` |
+| 22 | `0049_snapshot.json` |
+| 23 | `0050_snapshot.json` |
+| 24 | `0051_snapshot.json` |
+
+The snapshot set is sparse. Snapshot presence does not change the 52-file SQL
+migration count or the 52-entry journal count.
+
+---
+
+## 5. Client construction risk surface
+
+`packages/db/src/client.ts` remains the Drizzle factory risk surface. It
+exports `db`, `client`, and the `DB` type alias. The factory call is:
 
 ```ts
 export const db = drizzle(client, { schema });
 ```
 
-If Drizzle 0.45 changes the factory signature, `client.ts` is the only
-file Phase 3 must update. Build-graph confirms the call site is
-isolated to this file (no other `drizzle(` import exists outside the
-test fixtures in `packages/db/src/__tests__/`).
+Phase 3 must re-check this call if Drizzle 0.45 changes the factory signature.
+The file also wires the `postgres` driver and the connection-option helpers.
 
-The `client.ts` file also wires `postgres(connectionString, options)`
-from the `postgres` driver and pulls in `buildPostgresOptions` /
-`normalizePostgresConnectionString` from `./connection-options.js`.
-Phase 3 should re-run `connection-options.test.ts` after the bump to
-verify the connection-pooling config still compiles.
+The journal risk surface is `packages/db/drizzle/meta/_journal.json`, described
+in section 3. Phase 3 must preserve its version, tags, timestamps, and ordering.
 
 ---
 
-## 5. Live-surface guardrail (asserted by contract test)
+## 6. Historical context (not current counts)
 
-The Phase 1 contract test
-(`packages/db/src/__tests__/drizzle045-phase1-contracts.test.ts`)
-asserts:
+The earlier Phase 1 artifact recorded an older surface: **18 schema files** and
+**26 migration SQL files**. Those counts are superseded by the current 27-file
+and 52-file surfaces in sections 1 and 2.
 
-1. `packages/db/src/schema/` contains every expected schema file
-   (18 names, including `marketing.ts`, `auth.ts`, `primary.ts`, and `sales.ts`).
-2. `packages/db/drizzle/` contains every expected migration SQL file
-   (26 indices, 0000_ through 0025_).
-3. This artifact mentions every schema file name above (proving the
-   artifact was generated against the live surface, not a snapshot).
-4. This artifact references every migration index (proving no
-   migration is dropped from the audit).
-5. This artifact mentions `client.ts` (§4 above) — Phase 3 risk surface.
-6. This artifact mentions `_journal.json` (§3 above) — Phase 3 risk surface.
+The earlier artifact described `marketing.ts` as a dirty-worktree addition and
+described `science.ts` as the largest file at 385 lines. Both statements belong
+to that earlier baseline. `marketing.ts` is now committed, and `mastery.ts` is
+now the largest file at 438 lines.
 
-If the on-disk surface changes between Phase 1 and Phase 3, the
-guardrail will fail and force Phase 3 to re-baseline the artifact.
-
----
-
-## 6. Files NOT part of this map (Phase 1 out of scope)
-
-| Path | Reason |
-|------|--------|
-| `packages/db/src/seed/` | Seed data (codecamp, curriculum, etc.) — Phase 3 verification, not Phase 1 surface |
-| `packages/db/scripts/` | Doctor scripts (`migration-ledger-doctor.ts`, `sentinels.ts`) — Phase 3 verification |
-| `packages/db/src/index.ts` | Package entry point, re-exports from `client.ts` and `schema/index.ts` |
-| `packages/db/src/connection-options.ts` | Postgres connection-pooling config — Phase 3 verification via `connection-options.test.ts` |
-| `packages/db/src/privileged.ts` | Privileged DB client (cross-tenant) — Phase 3 verification |
-| `packages/db/src/shutdown.ts` | Connection-pool shutdown hook — Phase 3 verification |
-| `packages/db/src/sentinels.ts` | Test-time sentinels — Phase 3 verification |
+The earlier contract used fixed file lists. The current map instead records the
+committed filesystem and journal surface requested for this refresh.
 
 ---
 
 ## 7. Provenance
 
-- Schema file list: `ls packages/db/src/schema/` (18 files).
+- Schema file list: `git ls-tree -r --name-only HEAD -- packages/db/src/schema`.
 - Schema line counts: `wc -l packages/db/src/schema/*.ts`.
-- Migration SQL list: `ls packages/db/drizzle/*.sql` (25 files).
-- Migration SQL sizes: `ls -la packages/db/drizzle/`.
-- Journal entries: `cat packages/db/drizzle/meta/_journal.json`.
-- `client.ts` call site: `grep -n 'drizzle(' packages/db/src/client.ts` (line 26).
-- Build-graph: `build-graph stats ./graph.db` (2177 nodes / 3104 edges / 298 files).
+- Schema total: **3,514 lines** from the current filesystem.
+- Migration SQL list: `git ls-tree -r --name-only HEAD -- packages/db/drizzle`.
+- Migration SQL sizes and total: `wc -c packages/db/drizzle/*.sql`.
+- SQL total: **211,226 bytes** from the current filesystem.
+- Journal entries and tags: `packages/db/drizzle/meta/_journal.json`.
+- Snapshot set: `packages/db/drizzle/meta/*_snapshot.json`.
+- Client factory risk surface: `packages/db/src/client.ts`.
