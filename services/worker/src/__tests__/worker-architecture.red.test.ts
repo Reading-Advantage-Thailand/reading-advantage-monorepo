@@ -54,6 +54,41 @@ const extractImportSpecifiers = (source: string): string[] =>
     (specifier): specifier is string => typeof specifier === "string",
   );
 
+const backendJobsNamedImportPattern =
+  /\bimport\s*\{\s*([^}]+?)\s*\}\s*from\s*["']@reading-advantage\/backend\/jobs["']/g;
+
+const extractForbiddenBackendJobsNames = (source: string): string[] =>
+  Array.from(source.matchAll(backendJobsNamedImportPattern), (match) => match[1])
+    .flatMap((bindings) => bindings.split(","))
+    .map((binding) => binding.trim().split(/\s+as\s+/u)[0]?.trim())
+    .filter(
+      (name): name is "reviewJobs" | "durableJobs" =>
+        name === "reviewJobs" || name === "durableJobs",
+    );
+
+const camelCaseBackendJobsImportFixtures = [
+  {
+    label: "named reviewJobs",
+    source: `import { reviewJobs } from "@reading-advantage/backend/jobs";`,
+    expected: ["reviewJobs"],
+  },
+  {
+    label: "named durableJobs",
+    source: `import { durableJobs } from "@reading-advantage/backend/jobs";`,
+    expected: ["durableJobs"],
+  },
+  {
+    label: "aliased reviewJobs",
+    source: `import { reviewJobs as reviewJobsPort } from "@reading-advantage/backend/jobs";`,
+    expected: ["reviewJobs"],
+  },
+  {
+    label: "aliased durableJobs",
+    source: `import { durableJobs as durableJobsPort } from "@reading-advantage/backend/jobs";`,
+    expected: ["durableJobs"],
+  },
+] as const;
+
 describe("durable worker architecture Red contract", () => {
   it("provides the named worker composition root before lifecycle behavior is wired", () => {
     expect(
@@ -118,6 +153,26 @@ describe("durable worker architecture Red contract", () => {
     }
 
     expect(disallowedBackendImports).toEqual([]);
+  });
+
+  it("rejects camelCase reviewJobs and durableJobs bindings from the allowed jobs port", async () => {
+    for (const fixture of camelCaseBackendJobsImportFixtures) {
+      expect(
+        extractForbiddenBackendJobsNames(fixture.source),
+        `Counterexample was not detected: ${fixture.label}`,
+      ).toEqual(fixture.expected);
+    }
+
+    const sources = await readProductionSources();
+    const forbiddenBackendJobsNames: string[] = [];
+
+    for (const { path, source } of sources) {
+      for (const name of extractForbiddenBackendJobsNames(source)) {
+        forbiddenBackendJobsNames.push(`${relative(repositoryRoot, path)} -> ${name}`);
+      }
+    }
+
+    expect(forbiddenBackendJobsNames).toEqual([]);
   });
 
   it("confines queue persistence signals to the exact backend PostgreSQL adapter root", async () => {
