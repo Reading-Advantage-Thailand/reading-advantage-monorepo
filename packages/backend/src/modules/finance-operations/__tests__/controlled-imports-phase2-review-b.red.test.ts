@@ -119,6 +119,13 @@ function normalizationRequest(input: {
 }
 
 /** Creates a genuine Phase 1 preparation artifact with injected owner-boundary fakes. */
+type TrustedPacketFact = Readonly<{
+  readonly factCategory: string;
+  readonly factId: string;
+  readonly label: string;
+  readonly value: string;
+}>;
+
 async function trustedPreparationFor(
   subject: ControlledImportsReviewModule,
   scope: FinanceOperationScope,
@@ -128,21 +135,11 @@ async function trustedPreparationFor(
     readonly payloadDigest?: string;
     readonly factValue?: string;
     readonly packetFact?: {
-      readonly factCategory: "document-total" | "document-reference";
-      readonly factId:
-        | "document-total:receipt-total"
-        | "document-reference:source-record";
+      readonly factCategory: string;
+      readonly factId: string;
       readonly label: string;
     };
-    readonly packetFacts?: readonly {
-      readonly factCategory: "payroll-summary";
-      readonly factId:
-        | "payroll-summary:gross-total"
-        | "payroll-summary:withholding-total"
-        | "payroll-summary:net-total";
-      readonly label: string;
-      readonly value: string;
-    }[];
+    readonly packetFacts?: readonly TrustedPacketFact[];
   } = {},
 ): Promise<unknown> {
   const sourceIdentity = options.sourceIdentity ?? "receipt-001";
@@ -392,6 +389,94 @@ describe("Finance Operations Phase 2 Review B remediation RED contract", () => {
         expect.objectContaining({ amountMinor: "99900" }),
       ]),
     );
+  });
+
+  it("rejects caller identity that contradicts trusted document identity facts", async () => {
+    const subject = await loadControlledImports();
+    const genuinePreparation = await trustedPreparationFor(
+      subject,
+      requestedScope,
+      validEvidenceReference,
+      {
+        packetFacts: [
+          {
+            factCategory: "document-class",
+            factId: "document-class:receipt",
+            label: "Document class as stated",
+            value: "receipt",
+          },
+          {
+            factCategory: "document-reference",
+            factId: "document-reference:source-record",
+            label: "Source record as stated",
+            value: "receipt-001",
+          },
+        ],
+      },
+    );
+    expect(genuinePreparation).toMatchObject({
+      packet: {
+        facts: expect.arrayContaining([
+          expect.objectContaining({
+            factId: "document-class:receipt",
+            value: "receipt",
+          }),
+          expect.objectContaining({
+            factId: "document-reference:source-record",
+            value: "receipt-001",
+          }),
+        ]),
+      },
+    });
+
+    const contradictoryEnvelope = callerEnvelope({
+      document: {
+        sourceDocumentId: "receipt-001",
+        logicalDocumentId: "caller-controlled-logical-id",
+        sourceDocumentKind: "school-billing-invoice",
+        thaiTaxDocumentStatus: "unresolved",
+        currency: "THB",
+        facts: [
+          { factId: "caller-fact-class", kind: "count", countText: "1" },
+          {
+            factId: "caller-fact-reference",
+            kind: "count",
+            countText: "2",
+          },
+        ],
+      },
+    });
+
+    let result: unknown;
+    try {
+      result = subject.prepareControlledImportBatch(
+        normalizationRequest({
+          batchId: "caller-identity-contradiction-batch",
+          envelopes: [contradictoryEnvelope],
+          trustedPreparation: genuinePreparation,
+        }),
+      );
+    } catch (error) {
+      expect(error).toBeInstanceOf(Error);
+      return;
+    }
+
+    const output = result as {
+      readonly status: "ready" | "unresolved";
+      readonly snapshots?: readonly Record<string, unknown>[];
+      readonly variants?: readonly Record<string, unknown>[];
+    };
+    const snapshots =
+      output.status === "ready"
+        ? output.snapshots
+        : output.status === "unresolved"
+          ? output.variants
+          : undefined;
+    expect(snapshots).toHaveLength(1);
+    expect(snapshots?.[0]).toMatchObject({
+      sourceDocumentKind: "receipt",
+      logicalDocumentId: "receipt-001",
+    });
   });
 
   it("rejects or derives a changed school-billing count from the trusted packet", async () => {
