@@ -47,6 +47,7 @@ setup; handler non-execution is asserted for every failed precondition.
 - [~] Task 11: Implement executor context creation plus input/auth/tenant/authorization ordering using existing adapters.
 - [~] Task 12: Implement transaction, output validation, typed error normalization, and secret-safe observability.
 - [~] Task 13: Implement audit and durable idempotency orchestration; add the reviewed Drizzle capability-idempotency schema/migration, tenant-registry classification, PostgreSQL adapter, and isolated two-connection atomic acquisition/settlement/rollback evidence; then make all Phase 2 tests Green.
+- [x] Task 13-D (docs/provenance checkpoint): Canonical Phase 3 provenance/adoption test strategy published; Phase 3 reframed as provenance reconciliation and live-proof adoption, not a new Red phase. Implementation tasks 10-13 remain `[~]` pending remediation items R1-R7 in the strategy. [evidence: test-strategy.md, strategy commit 184c81c83d38aaec3436a355f39c3e426b031e38]
 
 **Verification:** `CI=true pnpm vitest run packages/backend/src/kernel/__tests__ && pnpm --filter @reading-advantage/backend check-types && pnpm --filter @reading-advantage/db test && pnpm --filter @reading-advantage/domain test`
 

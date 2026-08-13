@@ -1,0 +1,104 @@
+Measure Strategy role log - Phase 3 provenance and adoption reconciliation
+Track: backend_capability_kernel_20260713
+Phase: Phase 3: Kernel Implementation
+Date: 2026-08-13
+Role: measure-strategy
+role_base_sha: 1129427fbdb17c214fd55c086d60e62c7a4e1b7f
+
+## Scope
+
+Docs-only Phase 3 strategy. Phase 3 is reframed as provenance, adoption, and
+live-proof reconciliation. It is not a new Red phase: the Phase 2 Red suites
+now pass because the implementation landed under company_identity_sso_20260715
+(commit 2ec48b0f2 plus five follow-ups) and small_company_admin_privileges_20260722
+(commit 9355abf62). The parallel lease was limited to
+measure/tracks/backend_capability_kernel_20260713/** and was respected. No
+product source, test source, migration, registry, graph, lockfile, or other
+track was edited.
+
+## Inputs read
+
+- measure/index.md, measure/tracks.md, measure/anti-patterns.md (A1-A16)
+- spec.md, plan.md, metadata.json, index.md, review-2026-07-19.md,
+  phase-1-contract-verification.md, phase-2-red-verification.md,
+  scaffold-verification.md
+- Kernel source and tests under packages/backend/src/kernel (read-only)
+- packages/db/src/schema/capability-idempotency.ts,
+  packages/domain/src/tenant-registry.ts (EXEMPT at line 186)
+- packages/backend/src/modules/company-identity/postgres-idempotency.ts,
+  internal-route-adapter.ts, public-route-adapter.ts, backend package exports map
+- build-graph symbol search for idempotency ports (graph.db present)
+- Mechanical strategy gate definition in
+  measure-orchestrator/scripts/measure_interphase_checks.py (role-gate, strategy)
+
+## Live evidence gathered (read-only gates, no file modifications)
+
+- E1: root focused kernel gate: 9 files, 156 passed, 7 skipped.
+- E2: full kernel gate with PG_TEST_URL from packages/backend: 163 passed, 0 skipped.
+- E3: PG16 two-connection proof: 8/8 on PostgreSQL 16.14 (measure-audit-pg,
+  postgres:16). Throwaway database, two isolated connections, owner/conflict,
+  replay, input conflict, retryable reacquisition, terminal preservation.
+- E4: PG proof fails from repo root (cwd-dependent migration path). The proof
+  command must run with packages/backend as cwd.
+- E5: tsc --noEmit (source) passes; tsconfig.test.json has 18 TS6059 errors,
+  all in non-kernel paths (advantage-play-kit, finance, planned-game-intake,
+  standard-pack-ingestion).
+- E6: db aggregate red (65 failed / 1080 passed); failures are company-identity
+  podman spawn errors (pasta). capability-idempotency-schema.test.ts 2/2 green.
+- E7: domain aggregate red (74 failed / 691 passed); live-DB integration
+  suites. tenant-coverage.test.ts 12/12 green.
+- E8: kernel coverage never measured; no coverage provider in the package.
+
+## Work performed
+
+1. Authored test-strategy.md: acceptance of existing implementation versus
+   remediation items R1-R7, exact PG16 proof contract, API/caller audit
+   requirements, duplicate Company Identity adapter decision (D1 stores, D2
+   route-adapter factories), coverage gate, db/domain/backend gates with
+   current state, architecture baseline gate, intentionally-red aggregate
+   handling, per-phase risk classification, review applicability, per-phase
+   anti-pattern defenses with falsification conditions, and the
+   phase3_base_sha capture point.
+2. Annotated plan.md with Task 13-D [x] docs/provenance checkpoint citing the
+   strategy commit. Tasks 10-13 remain [~]; this docs role does not mark them
+   complete because R1-R7 remain open.
+
+## Commits
+
+- Strategy commit: 184c81c83d38aaec3436a355f39c3e426b031e38
+  (test-strategy.md only).
+- Evidence commit: this commit (plan.md Task 13-D plus this role log). The
+  phase3_base_sha capture point is the HEAD of this evidence commit.
+
+## Known failures / non-claims
+
+- Phase 3 is not accepted. R1-R7 remain open: coverage unmeasured, check-types
+  red (non-kernel), db/domain aggregates red (environment-gated), architecture
+  baseline gate not run, adapter decision record absent, deviation_notes empty.
+- Aggregate lint/test suites remain intentionally red from pre-existing
+  failures outside this track (A7 handling defined in the strategy).
+- Working tree contains unrelated dirty paths owned by other agents
+  (codecamp test results, pnpm-lock.yaml, other tracks' result files). This
+  role staged only its leased files.
+
+## Handoff
+
+The orchestrator should:
+1. Capture phase3_base_sha = git rev-parse HEAD at this evidence commit (per
+   the strategy capture-point section); do not use role_base_sha.
+2. Keep Tasks 10-13 [~] until a phase-acceptance role closes R1-R7 with the
+   Green and closeout gates in test-strategy.md.
+3. Verify exactly one worktree on master before any future phase action (A16).
+
+MEASURE_AGENT_RESULT
+role: measure-strategy
+status: complete
+track: backend_capability_kernel_20260713
+phase: Phase 3: Kernel Implementation
+commits: 184c81c83d38aaec3436a355f39c3e426b031e38 (strategy); this commit (evidence: plan.md + role log)
+tests_run: read-only gates only: kernel suite 156 passed/7 skipped (root), 163 passed/0 skipped with PG_TEST_URL (packages/backend), PG16 two-connection proof 8/8 on PostgreSQL 16.14, backend tsc source pass / tsconfig.test.json 18 pre-existing TS6059 (non-kernel), db aggregate 65 failed/1080 passed (podman pasta environment), db capability-idempotency-schema 2/2, domain aggregate 74 failed/691 passed (live-DB environment), domain tenant-coverage 12/12
+files_changed: test-strategy.md (new), plan.md (Task 13-D docs checkpoint [x] with strategy commit evidence), orchestration/phase3-strategy-role.log (new)
+plan_updates: added Task 13-D [x] docs/provenance checkpoint; Tasks 10-13 retained [~] pending remediation items R1-R7
+known_failures: check-types red via 18 non-kernel TS6059 errors; db/domain aggregates red for environment reasons (podman pasta, live product DBs); kernel coverage unmeasured; architecture baseline gate not run by this role; aggregate lint/test intentionally red (A7)
+handoff: Orchestrator captures phase3_base_sha at this evidence commit HEAD (not role_base_sha); Phase 3 acceptance requires closing R1-R7 per test-strategy.md; no Phase 3 acceptance, task completion, or aggregate Green claimed
+END_MEASURE_AGENT_RESULT
