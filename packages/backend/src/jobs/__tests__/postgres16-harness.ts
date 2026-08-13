@@ -20,6 +20,99 @@ const LOOPBACK_HOSTNAMES = new Set(["localhost", "127.0.0.1", "[::1]"]);
 const POSTGRES_16_MINIMUM = 160_000;
 const POSTGRES_17_MINIMUM = 170_000;
 const LIFECYCLE_ADVISORY_LOCK_KEY = 1_947_071_507;
+const SIGNAL_SHUTDOWN_GRACE_MS = 5_000;
+
+interface ActiveDurableJobPostgres16Harness {
+  readonly cleanup: () => Promise<void>;
+  readonly forceCleanup: () => Promise<void>;
+  readonly lifecycleComplete: Promise<void>;
+  readonly requestShutdown: (signal: NodeJS.Signals) => void;
+}
+
+const activeHarnesses = new Set<ActiveDurableJobPostgres16Harness>();
+let coordinatedSignal: NodeJS.Signals | undefined;
+let coordinatedSignalCleanup: Promise<void> | undefined;
+let globalSignalHandlersInstalled = false;
+const globalSigintHandler = (): void => handleProcessSignal("SIGINT");
+const globalSigtermHandler = (): void => handleProcessSignal("SIGTERM");
+
+function signalExitCode(signal: NodeJS.Signals): number {
+  return signal === "SIGINT" ? 130 : 143;
+}
+
+async function cleanActiveHarnessesAfterSignal(): Promise<void> {
+  const activeHarnessSnapshot = [...activeHarnesses];
+  const lifecycleSettled = Promise.allSettled(
+    activeHarnessSnapshot.map((harness) => harness.lifecycleComplete),
+  );
+  const shutdownDeadline = new Promise<"deadline">((resolve) => {
+    setTimeout(() => resolve("deadline"), SIGNAL_SHUTDOWN_GRACE_MS);
+  });
+  const shutdownState = await Promise.race([
+    lifecycleSettled.then(() => "settled" as const),
+    shutdownDeadline,
+  ]);
+
+  if (shutdownState === "settled") {
+    await Promise.allSettled(
+      activeHarnessSnapshot.map((harness) => harness.cleanup()),
+    );
+    return;
+  }
+
+  await Promise.allSettled(
+    activeHarnessSnapshot.map((harness) => harness.forceCleanup()),
+  );
+}
+
+function handleProcessSignal(signal: NodeJS.Signals): void {
+  if (coordinatedSignalCleanup) {
+    return;
+  }
+
+  coordinatedSignal = signal;
+  for (const harness of activeHarnesses) {
+    harness.requestShutdown(signal);
+  }
+  coordinatedSignalCleanup = cleanActiveHarnessesAfterSignal().then(() => {
+    process.exit(signalExitCode(signal));
+  });
+}
+
+function installGlobalSignalHandlers(): void {
+  if (globalSignalHandlersInstalled) {
+    return;
+  }
+  process.once("SIGINT", globalSigintHandler);
+  process.once("SIGTERM", globalSigtermHandler);
+  globalSignalHandlersInstalled = true;
+}
+
+function removeGlobalSignalHandlers(): void {
+  if (!globalSignalHandlersInstalled || coordinatedSignal) {
+    return;
+  }
+  process.off("SIGINT", globalSigintHandler);
+  process.off("SIGTERM", globalSigtermHandler);
+  globalSignalHandlersInstalled = false;
+}
+
+function registerActiveHarness(harness: ActiveDurableJobPostgres16Harness): void {
+  activeHarnesses.add(harness);
+  installGlobalSignalHandlers();
+  if (coordinatedSignal) {
+    harness.requestShutdown(coordinatedSignal);
+  }
+}
+
+function unregisterActiveHarness(
+  harness: ActiveDurableJobPostgres16Harness,
+): void {
+  activeHarnesses.delete(harness);
+  if (activeHarnesses.size === 0) {
+    removeGlobalSignalHandlers();
+  }
+}
 
 /** PostgreSQL client type used only by durable-job integration tests. */
 export type DurableJobTestSql = ReturnType<typeof postgres>;
@@ -42,6 +135,8 @@ export interface DurableJobPostgres16HarnessContext {
   readonly connectionTwo: DurableJobTestSql;
   /** Connection reserved as the exact migration entry point. */
   readonly migrationConnection: DurableJobTestSql;
+  /** Signals that graceful shutdown has started. */
+  readonly abortSignal: AbortSignal;
   /** Opens a tracked scratch-database connection for a test-created role. */
   readonly openConnection: (
     credentials: DurableJobHarnessConnectionCredentials,
@@ -84,6 +179,23 @@ export interface DurableJobPostgres16HarnessHooks {
   readonly teardown?: (
     context: DurableJobPostgres16HarnessContext,
   ) => Promise<void> | void;
+}
+
+/** Test-only controls for deterministic lifecycle regression coverage. */
+export interface DurableJobPostgres16HarnessTestControls {
+  /** Uses one generated scratch-database name for a collision test. */
+  readonly databaseName?: string;
+  /** Pauses after owned database creation and before scratch connections open. */
+  readonly afterDatabaseCreated?: (input: {
+    readonly abortSignal: AbortSignal;
+    readonly databaseName: string;
+  }) => Promise<void> | void;
+}
+
+/** Optional controls reserved for Task 7 harness regression tests. */
+export interface DurableJobPostgres16HarnessOptions {
+  /** Provides test-only deterministic lifecycle controls. */
+  readonly testControls?: DurableJobPostgres16HarnessTestControls;
 }
 
 /**
@@ -251,6 +363,21 @@ function assertGeneratedIdentifier(identifier: string): void {
   }
 }
 
+function createScratchDatabaseName(
+  testControls: DurableJobPostgres16HarnessTestControls | undefined,
+): string {
+  const generatedDatabaseName =
+    testControls?.databaseName ??
+    `${SCRATCH_DATABASE_PREFIX}${process.pid}_${randomBytes(6).toString("hex")}`;
+  assertGeneratedIdentifier(generatedDatabaseName);
+  if (!generatedDatabaseName.startsWith(SCRATCH_DATABASE_PREFIX)) {
+    throw new Error(
+      "Durable-job PostgreSQL test controls require a scratch database name.",
+    );
+  }
+  return generatedDatabaseName;
+}
+
 function quoteIdentifier(identifier: string): string {
   assertGeneratedIdentifier(identifier);
   return `"${identifier}"`;
@@ -319,23 +446,39 @@ async function runValidationHooks(
 export async function withDurableJobPostgres16Harness<T>(
   hooks: DurableJobPostgres16HarnessHooks,
   testBody: (context: DurableJobPostgres16HarnessContext) => Promise<T> | T,
+  options: DurableJobPostgres16HarnessOptions = {},
 ): Promise<T> {
+  if (!isDurableJobPostgres16IntegrationEnabled(process.env)) {
+    throw new Error(
+      `${DURABLE_JOB_PG16_OPT_IN_ENV} must be exactly 1 before durable-job PostgreSQL 16 harness execution.`,
+    );
+  }
   const adminUrl = resolveDurableJobPostgres16AdminUrl(process.env);
   const adminDatabaseName = parseDatabaseName(adminUrl);
-  const suffix = `${process.pid}_${randomBytes(6).toString("hex")}`;
-  const databaseName = `${SCRATCH_DATABASE_PREFIX}${suffix}`;
-  assertGeneratedIdentifier(databaseName);
+  const databaseName = createScratchDatabaseName(options.testControls);
 
   const adminSql = postgres(adminUrl.toString(), { max: 1, prepare: false });
   let connectionOne: DurableJobTestSql | undefined;
   let connectionTwo: DurableJobTestSql | undefined;
   const additionalConnections: DurableJobTestSql[] = [];
-  let databaseMayExist = false;
+  let databaseCreated = false;
   let lifecycleLockHeld = false;
   let cleanupPromise: Promise<void> | undefined;
   let context: DurableJobPostgres16HarnessContext | undefined;
-  let signalHandlersInstalled = false;
-  let signalHandled = false;
+  let requestedSignal: NodeJS.Signals | undefined;
+  const abortController = new AbortController();
+  let resolveLifecycleComplete: (() => void) | undefined;
+  const lifecycleComplete = new Promise<void>((resolve) => {
+    resolveLifecycleComplete = resolve;
+  });
+
+  const throwIfShutdownRequested = (): void => {
+    if (requestedSignal) {
+      throw new Error(
+        `Durable-job PostgreSQL harness received ${requestedSignal} before lifecycle completion.`,
+      );
+    }
+  };
 
   const acquireLifecycleLock = async (): Promise<void> => {
     if (!lifecycleLockHeld) {
@@ -350,7 +493,7 @@ export async function withDurableJobPostgres16Harness<T>(
     }
   };
 
-  const cleanup = (): Promise<void> => {
+  const cleanup = (runTeardown: boolean): Promise<void> => {
     if (cleanupPromise) {
       return cleanupPromise;
     }
@@ -363,7 +506,7 @@ export async function withDurableJobPostgres16Harness<T>(
         errors.push(error);
       }
 
-      if (context) {
+      if (context && runTeardown) {
         try {
           await hooks.teardown?.(context);
         } catch (error) {
@@ -388,7 +531,7 @@ export async function withDurableJobPostgres16Harness<T>(
         }
       }
 
-      if (databaseMayExist && lifecycleLockHeld) {
+      if (databaseCreated && lifecycleLockHeld) {
         try {
           await adminSql`
             SELECT pg_terminate_backend(pid)
@@ -399,11 +542,11 @@ export async function withDurableJobPostgres16Harness<T>(
           await adminSql.unsafe(
             `DROP DATABASE IF EXISTS ${quoteIdentifier(databaseName)}`,
           );
-          databaseMayExist = false;
+          databaseCreated = false;
         } catch (error) {
           errors.push(error);
         }
-      } else if (databaseMayExist) {
+      } else if (databaseCreated) {
         errors.push(
           new Error(
             "Durable-job PostgreSQL scratch cleanup could not acquire its lifecycle lock.",
@@ -432,34 +575,16 @@ export async function withDurableJobPostgres16Harness<T>(
     return cleanupPromise;
   };
 
-  const handleSignal = (signal: NodeJS.Signals): void => {
-    if (signalHandled) {
-      return;
-    }
-    signalHandled = true;
-    void cleanup().then(
-      () => process.exit(signal === "SIGINT" ? 130 : 143),
-      () => process.exit(signal === "SIGINT" ? 130 : 143),
-    );
-  };
-  const handleSigint = (): void => handleSignal("SIGINT");
-  const handleSigterm = (): void => handleSignal("SIGTERM");
-
-  const installSignalHandlers = (): void => {
-    if (signalHandlersInstalled) {
-      return;
-    }
-    process.once("SIGINT", handleSigint);
-    process.once("SIGTERM", handleSigterm);
-    signalHandlersInstalled = true;
-  };
-  const removeSignalHandlers = (): void => {
-    if (!signalHandlersInstalled) {
-      return;
-    }
-    process.off("SIGINT", handleSigint);
-    process.off("SIGTERM", handleSigterm);
-    signalHandlersInstalled = false;
+  const activeHarness: ActiveDurableJobPostgres16Harness = {
+    cleanup: () => cleanup(true),
+    forceCleanup: () => cleanup(false),
+    lifecycleComplete,
+    requestShutdown(signal) {
+      if (!requestedSignal) {
+        requestedSignal = signal;
+        abortController.abort(signal);
+      }
+    },
   };
 
   let result: T | undefined;
@@ -468,10 +593,13 @@ export async function withDurableJobPostgres16Harness<T>(
   let executionFailed = false;
   let cleanupFailed = false;
 
+  registerActiveHarness(activeHarness);
   try {
-    installSignalHandlers();
+    throwIfShutdownRequested();
     await assertPostgres16(adminSql, adminDatabaseName);
+    throwIfShutdownRequested();
     await acquireLifecycleLock();
+    throwIfShutdownRequested();
 
     const staleDatabases = await adminSql<{ database_name: string }[]>`
       SELECT database.datname AS database_name
@@ -485,24 +613,34 @@ export async function withDurableJobPostgres16Harness<T>(
         )
       ORDER BY database.datname
     `;
+    throwIfShutdownRequested();
     if (staleDatabases.length > 0) {
       throw new Error(
         "Stale durable-job scratch databases require explicit operator review; the harness will not delete them automatically.",
       );
     }
 
-    databaseMayExist = true;
     await adminSql.unsafe(`CREATE DATABASE ${quoteIdentifier(databaseName)}`);
+    databaseCreated = true;
+    await options.testControls?.afterDatabaseCreated?.({
+      abortSignal: abortController.signal,
+      databaseName,
+    });
+    throwIfShutdownRequested();
 
     const scratchUrl = deriveScratchDatabaseUrl(adminUrl, databaseName);
     connectionOne = postgres(scratchUrl, { max: 1, prepare: false });
+    throwIfShutdownRequested();
     connectionTwo = postgres(scratchUrl, { max: 1, prepare: false });
     const firstBackendPid = await assertPostgres16(connectionOne, databaseName);
+    throwIfShutdownRequested();
     const secondBackendPid = await assertPostgres16(
       connectionTwo,
       databaseName,
     );
+    throwIfShutdownRequested();
     context = {
+      abortSignal: abortController.signal,
       databaseName,
       connectionOne,
       connectionTwo,
@@ -521,23 +659,30 @@ export async function withDurableJobPostgres16Harness<T>(
       firstBackendPid,
       secondBackendPid,
     );
+    throwIfShutdownRequested();
     await releaseLifecycleLock();
+    throwIfShutdownRequested();
 
     await hooks.migrate(context);
+    throwIfShutdownRequested();
     await hooks.setup?.(context);
+    throwIfShutdownRequested();
     await runValidationHooks(hooks.validations, context);
+    throwIfShutdownRequested();
     result = await testBody(context);
+    throwIfShutdownRequested();
   } catch (error) {
     executionFailed = true;
     executionError = error;
   } finally {
+    resolveLifecycleComplete?.();
     try {
-      await cleanup();
+      await cleanup(true);
     } catch (error) {
       cleanupFailed = true;
       cleanupError = error;
     } finally {
-      removeSignalHandlers();
+      unregisterActiveHarness(activeHarness);
     }
   }
 

@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import {
   assertDurableJobPostgres16IndependentSessions,
@@ -7,10 +7,15 @@ import {
   DURABLE_JOB_PG16_OPT_IN_ENV,
   isDurableJobPostgres16IntegrationEnabled,
   resolveDurableJobPostgres16AdminUrl,
+  withDurableJobPostgres16Harness,
 } from "./postgres16-harness.js";
 
 const SAFE_URL =
   "postgresql://durable_test:secret@127.0.0.1:55432/durable_job_test_admin_local";
+
+afterEach(() => {
+  vi.unstubAllEnvs();
+});
 
 describe("durable job PostgreSQL 16 harness URL guard", () => {
   it("accepts only the dedicated test URL key and namespace", () => {
@@ -181,5 +186,25 @@ describe("durable job PostgreSQL 16 integration opt-in", () => {
     expect(() =>
       assertDurableJobPostgres16IndependentSessions(41, 42),
     ).not.toThrow();
+  });
+
+  it("rejects harness execution without opt-in before PostgreSQL access", async () => {
+    vi.stubEnv(DURABLE_JOB_PG16_OPT_IN_ENV, undefined);
+    vi.stubEnv(DURABLE_JOB_PG16_ADMIN_URL_ENV, SAFE_URL);
+    vi.stubEnv("DATABASE_URL", "");
+    vi.stubEnv("DIRECT_DATABASE_URL", "");
+
+    await expect(
+      withDurableJobPostgres16Harness(
+        {
+          async migrate() {
+            throw new Error("migrate must not run without explicit opt-in");
+          },
+        },
+        async () => undefined,
+      ),
+    ).rejects.toThrow(
+      `${DURABLE_JOB_PG16_OPT_IN_ENV} must be exactly 1 before durable-job PostgreSQL 16 harness execution.`,
+    );
   });
 });

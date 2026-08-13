@@ -43,6 +43,12 @@ function openAdminConnection(): AdminSql {
   });
 }
 
+function openScratchConnection(databaseName: string): AdminSql {
+  const scratchUrl = resolveDurableJobPostgres16AdminUrl(process.env);
+  scratchUrl.pathname = `/${databaseName}`;
+  return postgres(scratchUrl.toString(), { max: 1, prepare: false });
+}
+
 async function listScratchDatabases(sql: AdminSql): Promise<string[]> {
   const rows = await sql<{ database_name: string }[]>`
     SELECT datname AS database_name
@@ -83,19 +89,24 @@ async function expectInjectedFailure(
 
 async function waitForChildReady(
   child: ReturnType<typeof spawn>,
-): Promise<string> {
+  marker: string,
+  outputReference: { value: string },
+): Promise<void> {
   return new Promise((resolve, reject) => {
-    let output = "";
     const timeout = setTimeout(() => {
-      reject(new Error(`Signal child did not become ready. Output: ${output}`));
+      reject(
+        new Error(
+          `Signal child did not become ready. Output: ${outputReference.value}`,
+        ),
+      );
     }, 15_000);
     child.stdout?.setEncoding("utf8");
     child.stderr?.resume();
     child.stdout?.on("data", (chunk: string) => {
-      output += chunk;
-      if (output.includes("TASK7_SIGNAL_READY")) {
+      outputReference.value += chunk;
+      if (outputReference.value.includes(marker)) {
         clearTimeout(timeout);
-        resolve(output);
+        resolve();
       }
     });
     child.once("error", (error) => {
@@ -103,11 +114,11 @@ async function waitForChildReady(
       reject(error);
     });
     child.once("exit", (code, signal) => {
-      if (!output.includes("TASK7_SIGNAL_READY")) {
+      if (!outputReference.value.includes(marker)) {
         clearTimeout(timeout);
         reject(
           new Error(
-            `Signal child exited before readiness: code=${code}, signal=${signal}, output=${output}`,
+            `Signal child exited before readiness: code=${code}, signal=${signal}, output=${outputReference.value}`,
           ),
         );
       }
@@ -120,7 +131,7 @@ async function waitForChildExit(
 ): Promise<{ code: number | null; signal: NodeJS.Signals | null }> {
   const [code, signal] = (await new Promise<unknown[]>((resolve, reject) => {
     child.once("error", reject);
-    child.once("exit", (...args) => resolve(args));
+    child.once("close", (...args) => resolve(args));
   })) as [number | null, NodeJS.Signals | null];
   return { code, signal };
 }
@@ -153,6 +164,7 @@ describe.skipIf(!integrationEnabled)(
         if (!adminSql) {
           throw new Error("The PG16 admin connection was not established.");
         }
+        const connectedAdminSql = adminSql;
 
         const events: string[] = [];
         let firstBackendPid = 0;
@@ -299,6 +311,39 @@ describe.skipIf(!integrationEnabled)(
         expect(new Set(concurrentDatabaseNames).size).toBe(2);
         await expectNoScratchDatabases(adminSql);
 
+        const collisionDatabaseName = `${SCRATCH_DATABASE_PREFIX}collision_${randomBytes(5).toString("hex")}`;
+        await adminSql.unsafe(
+          `CREATE DATABASE ${quoteGeneratedIdentifier(collisionDatabaseName)}`,
+        );
+        const collisionSql = openScratchConnection(collisionDatabaseName);
+        try {
+          await collisionSql`SELECT 1`;
+          await expectInjectedFailure(
+            () =>
+              withDurableJobPostgres16Harness(
+                {
+                  async migrate() {
+                    throw new Error("collision must fail before migration");
+                  },
+                },
+                async () => undefined,
+                {
+                  testControls: { databaseName: collisionDatabaseName },
+                },
+              ),
+            "already exists",
+          );
+          expect(await listScratchDatabases(adminSql)).toContain(
+            collisionDatabaseName,
+          );
+        } finally {
+          await collisionSql.end({ timeout: 5 });
+          await adminSql.unsafe(
+            `DROP DATABASE IF EXISTS ${quoteGeneratedIdentifier(collisionDatabaseName)}`,
+          );
+        }
+        await expectNoScratchDatabases(adminSql);
+
         const failureStages = [
           "migrate",
           "setup",
@@ -348,7 +393,7 @@ describe.skipIf(!integrationEnabled)(
               ),
             `injected ${stage} failure`,
           );
-          await expectNoScratchDatabases(adminSql);
+          await expectNoScratchDatabases(connectedAdminSql);
         }
 
         let aggregateFailure: unknown;
@@ -465,40 +510,146 @@ describe.skipIf(!integrationEnabled)(
           assertDurableJobPostgres16IndependentSessions(77, 77),
         ).toThrow("two independent sessions");
 
-        const childEnvironment = { ...process.env };
-        childEnvironment[DURABLE_JOB_PG16_ADMIN_URL_ENV] =
-          process.env[DURABLE_JOB_PG16_ADMIN_URL_ENV] ?? "";
-        childEnvironment.DURABLE_JOB_PG16_TEST_OPT_IN = "1";
-        childEnvironment.DATABASE_URL = "";
-        childEnvironment.DIRECT_DATABASE_URL = "";
         const childScript = `
         const { withDurableJobPostgres16Harness } = await import(${JSON.stringify(HARNESS_MODULE_URL)});
-        await withDurableJobPostgres16Harness(
-          {
-            async migrate({ migrationConnection }) {
-              await migrationConnection\`SELECT 1\`;
-              console.log("TASK7_SIGNAL_READY");
-              await new Promise((resolve) => setTimeout(resolve, 30_000));
+        const stage = process.env.TASK7_SIGNAL_STAGE;
+        const waitForAbort = async (abortSignal) => {
+          if (abortSignal.aborted) return;
+          await new Promise((resolve) => {
+            abortSignal.addEventListener("abort", resolve, { once: true });
+          });
+        };
+        const runSetupLifecycle = async (label) => {
+          await withDurableJobPostgres16Harness(
+            {
+              async migrate({ migrationConnection }) {
+                await migrationConnection\`SELECT 1\`;
+                console.log(\`TASK7_\${label}_MIGRATE\`);
+              },
+              async setup({ abortSignal }) {
+                console.log(\`TASK7_\${label}_SETUP_READY\`);
+                await waitForAbort(abortSignal);
+                console.log(\`TASK7_\${label}_SETUP_STOPPED\`);
+              },
+              async teardown() {
+                console.log(\`TASK7_\${label}_TEARDOWN\`);
+              },
             },
-          },
-          async () => undefined,
-        );
+            async () => undefined,
+          );
+        };
+        try {
+          if (stage === "create") {
+            await withDurableJobPostgres16Harness(
+              {
+                async migrate() {
+                  throw new Error("create-window signal must stop before migrate");
+                },
+              },
+              async () => undefined,
+              {
+                testControls: {
+                  async afterDatabaseCreated({ abortSignal }) {
+                    console.log("TASK7_CREATE_READY");
+                    await waitForAbort(abortSignal);
+                    console.log("TASK7_CREATE_STOPPED");
+                  },
+                },
+              },
+            );
+          } else if (stage === "setup") {
+            await runSetupLifecycle("SETUP");
+          } else if (stage === "uncooperative") {
+            await withDurableJobPostgres16Harness(
+              {
+                async migrate({ migrationConnection }) {
+                  await migrationConnection\`SELECT 1\`;
+                },
+                async setup() {
+                  console.log("TASK7_UNCOOPERATIVE_READY");
+                  await new Promise(() => undefined);
+                },
+              },
+              async () => undefined,
+            );
+          } else {
+            await Promise.all([
+              runSetupLifecycle("MULTI_ONE"),
+              runSetupLifecycle("MULTI_TWO"),
+            ]);
+          }
+        } catch (error) {
+          if (!(error instanceof Error) || !error.message.includes("received SIG")) {
+            throw error;
+          }
+        }
         `;
-        const child = spawn(
-          process.execPath,
-          ["--import", TSX_LOADER, "--input-type=module", "-e", childScript],
-          {
-            cwd: REPOSITORY_ROOT,
-            env: childEnvironment,
-            stdio: ["ignore", "pipe", "pipe"],
-          },
+        const runSignalChild = async (
+          stage: "create" | "setup" | "multi" | "uncooperative",
+          marker: string,
+          signal: NodeJS.Signals,
+          exitCode: number,
+        ): Promise<string> => {
+          const childEnvironment = { ...process.env };
+          childEnvironment[DURABLE_JOB_PG16_ADMIN_URL_ENV] =
+            process.env[DURABLE_JOB_PG16_ADMIN_URL_ENV] ?? "";
+          childEnvironment.DURABLE_JOB_PG16_TEST_OPT_IN = "1";
+          childEnvironment.DATABASE_URL = "";
+          childEnvironment.DIRECT_DATABASE_URL = "";
+          childEnvironment.TASK7_SIGNAL_STAGE = stage;
+          const child = spawn(
+            process.execPath,
+            ["--import", TSX_LOADER, "--input-type=module", "-e", childScript],
+            {
+              cwd: REPOSITORY_ROOT,
+              env: childEnvironment,
+              stdio: ["ignore", "pipe", "pipe"],
+            },
+          );
+          const childOutput = { value: "" };
+          await waitForChildReady(child, marker, childOutput);
+          child.kill(signal);
+          const childExit = await waitForChildExit(child);
+          expect(childExit.code).toBe(exitCode);
+          expect(childExit.signal).toBeNull();
+          await expectNoScratchDatabases(connectedAdminSql);
+          return childOutput.value;
+        };
+
+        const createOutput = await runSignalChild(
+          "create",
+          "TASK7_CREATE_READY",
+          "SIGINT",
+          130,
         );
-        await waitForChildReady(child);
-        child.kill("SIGTERM");
-        const childExit = await waitForChildExit(child);
-        expect(childExit.code).toBe(143);
-        expect(childExit.signal).toBeNull();
-        await expectNoScratchDatabases(adminSql);
+        expect(createOutput).toContain("TASK7_CREATE_STOPPED");
+        expect(createOutput).not.toContain("TASK7_CREATE_MIGRATE");
+
+        const setupOutput = await runSignalChild(
+          "setup",
+          "TASK7_SETUP_SETUP_READY",
+          "SIGTERM",
+          143,
+        );
+        expect(setupOutput.indexOf("TASK7_SETUP_SETUP_STOPPED")).toBeLessThan(
+          setupOutput.indexOf("TASK7_SETUP_TEARDOWN"),
+        );
+
+        const multiOutput = await runSignalChild(
+          "multi",
+          "TASK7_MULTI_TWO_SETUP_READY",
+          "SIGTERM",
+          143,
+        );
+        expect(multiOutput).toContain("TASK7_MULTI_ONE_TEARDOWN");
+        expect(multiOutput).toContain("TASK7_MULTI_TWO_TEARDOWN");
+
+        await runSignalChild(
+          "uncooperative",
+          "TASK7_UNCOOPERATIVE_READY",
+          "SIGTERM",
+          143,
+        );
       },
     );
   },

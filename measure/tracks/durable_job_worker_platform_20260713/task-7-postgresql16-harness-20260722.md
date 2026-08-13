@@ -45,7 +45,7 @@ deleted automatically.
 - Red: the focused two-file Vitest command failed both suites before collection
   because `./postgres16-harness.js` did not exist.
 - Current safe default Green after dedicated-role Red/Green: 1 file passed, 1
-  live file skipped; **28 passed and 1 skipped**. The canonical exact command
+  live file skipped; **29 passed and 1 skipped**. The canonical exact command
   was:
 
   ```bash
@@ -62,31 +62,43 @@ deleted automatically.
 
 - Live PG16: a fresh disposable `docker.io/library/postgres:16-alpine`
   container used the dedicated database `durable_job_test_admin_local` on
-  loopback port `51255`. The image ID was
+  loopback port `55439`. The image ID was
   `de3a4eab8fdfa507ea92aac488b916b08089e515db49b055fe71dfa271ba3a28`.
   The exact command was:
 
   ```bash
   DURABLE_JOB_PG16_TEST_OPT_IN=1 \
-  DURABLE_JOB_PG16_TEST_ADMIN_DATABASE_URL=postgres://durable_test@127.0.0.1:51255/durable_job_test_admin_local \
+  DURABLE_JOB_PG16_TEST_ADMIN_DATABASE_URL=postgresql://durable_test@127.0.0.1:55439/durable_job_test_admin_local \
     CI=true pnpm --filter @reading-advantage/backend exec vitest run \
       src/jobs/__tests__/postgres16-harness.test.ts \
       src/jobs/__tests__/postgres16-harness.integration.test.ts
   ```
 
-  Exit status was `0`; 2 files passed with **27 passed and 0 skipped**.
+  Exit status was `0`; 2 files passed with **30 passed and 0 skipped**.
   The live test proved unique concurrent databases, ordered hooks, failure
-  cleanup, additional-role cleanup, stale refusal, version and PID guards,
-  cleanup aggregation, and subprocess SIGTERM cleanup.
+  cleanup, additional-role cleanup, stale refusal, collision ownership safety,
+  version and PID guards, cleanup aggregation, and subprocess signal cleanup.
+  The signal proofs cover the initial create window, cooperative setup, two
+  concurrent harnesses, and an uncooperative setup hook after a bounded grace
+  period.
 
 - Cleanup: the pre-run and post-run queries returned `0` databases matching
   `durable_job_pg16_test_%`. The disposable container was stopped and removed.
   The final container inventory retained only the pre-existing containers.
-- Static checks: focused ESLint passed. Backend production and test TypeScript
-  was run and retained unrelated pre-existing failures. The harness files had no
-  TypeScript diagnostics in that output.
-- Isolated live coverage was not rerun for this remediation. The focused live
-  suite is the authoritative lifecycle evidence for this task.
+- Static checks: focused ESLint passed. The production TypeScript no-emit check
+  passed with incremental state disabled. An isolated Task 7 test no-emit check
+  also passed. The full no-incremental test check reports only an unrelated
+  finance test diagnostic at `controlled-imports-phase2-review-b.red.test.ts:186`.
+
+  ```bash
+  ../../node_modules/.bin/tsc --noEmit --strict --skipLibCheck \
+    --isolatedModules --moduleResolution bundler --target ES2022 \
+    --module ESNext --lib dom,dom.iterable,ES2022 --esModuleInterop \
+    --types node \
+    src/jobs/__tests__/postgres16-harness.ts \
+    src/jobs/__tests__/postgres16-harness.test.ts \
+    src/jobs/__tests__/postgres16-harness.integration.test.ts
+  ```
 
 No existing database, server, container, or environment URL was reused or
 modified. No browser check applies to this backend-only harness task.
