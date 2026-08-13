@@ -167,7 +167,7 @@ const validRequest = {
     ],
     suitabilityAndIngestion: {
       status: "blocked-pending-separate-suitability" as const,
-      dependencyTrackId: "apk_standard_pack_suitability_ingestion_20260728",
+      dependencyTrackId: "apk_standard_pack_suitability_ingestion_20260728" as const,
       evidenceDigest: digest("5"),
       assetAdoptionAuthorized: false as const,
       ingestionAuthorized: false as const,
@@ -437,15 +437,23 @@ describe("planned-game intake contract", () => {
       }).success).toBe(false);
     }
 
-    expect(() => proposePlannedGameChildTrack({
+    const unauthorizedRequest = {
       ...validRequest,
       intake: {
         ...validRequest.intake,
         authority: {
           ...authority,
-          deploymentAuthorized: true,
         },
       },
-    })).toThrow();
+    };
+
+    Object.defineProperty(unauthorizedRequest.intake.authority, "deploymentAuthorized", {
+      configurable: true,
+      enumerable: true,
+      value: true,
+      writable: true,
+    });
+
+    expect(() => proposePlannedGameChildTrack(unauthorizedRequest)).toThrow();
   });
 });
