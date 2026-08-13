@@ -5,9 +5,10 @@
 **Producer evidence only; independent review is still required.** Task 6 adds
 deterministic Red source-contract tests and counterexample fixtures for the
 accepted Task 5 schema/adoption design. It adds no production Drizzle schema,
-migration, PostgreSQL role/trigger, adapter, worker behavior, credential, or
-PG16 harness. Task 6 remains in progress until a fresh reviewer accepts this
-exact artifact set.
+migration, PostgreSQL role/trigger, adapter, worker behavior, or credential.
+It consumes the frozen Task 7 harness through a test-only runtime import. It
+does not modify the harness. Task 6 remains in progress until a fresh reviewer
+accepts this exact artifact set.
 
 ## Red contract surface
 
@@ -31,6 +32,27 @@ The source-contract suite requires:
 - the exact queue-SQL root
   `packages/backend/src/jobs/adapters/postgres/` and no broader backend root.
 
+## PG16 executable contract
+
+The opt-in PG16 test applies the legacy `0025_review_jobs.sql` prerequisite and
+the exact Task 11 durable-jobs migration in one scratch database. It accepts
+the canonical row for each state. It rejects every invalid fixture with SQLSTATE
+`23514` and the fixture's `expectedConstraint` name.
+
+The test queries PostgreSQL catalog data. It verifies durable row types,
+nullability, enum labels, keys, index predicates, check definitions, and audit
+column minimization. It verifies support-table types and nullability. It also
+verifies each ordered key, singleton rule, required uniqueness, and length
+bound. It rejects flattened or separate keys that imitate a composite key. It
+requires an audit-table runtime `INSERT` grant. It permits only `INSERT` and
+scoped `SELECT`. It verifies `PUBLIC` grants, owners, and trigger ownership
+through `information_schema.table_privileges` and `pg_catalog`.
+
+The safe default clears all database URL variables. It runs two environment
+guards and skips the live assertion. A non-empty `DATABASE_URL` or
+`DIRECT_DATABASE_URL` fails before the live assertion can skip. The test loads
+the Task 7 harness only after an explicit opt-in.
+
 The invalid-row fixture inventory enumerates every partial lease tuple (6),
 every partial five-column rerun tuple (30), both partial safe-error tuples, and
 every forbidden state cell for lease/result/error/completion/rerun/redelivery
@@ -53,8 +75,34 @@ Green fixture integrity:
 ```text
 CI=true pnpm --filter @reading-advantage/db exec vitest run \
   src/__tests__/durable-jobs-transition-fixtures.test.ts
-Test Files 1 passed (1); Tests 4 passed (4)
+Test Files 1 passed (1); Tests 6 passed (6)
 ```
+
+PG16 safe-default gate:
+
+```text
+env -u DURABLE_JOB_PG16_TEST_OPT_IN \
+    -u DURABLE_JOB_PG16_TEST_ADMIN_DATABASE_URL \
+    -u DATABASE_URL \
+    -u DIRECT_DATABASE_URL \
+  CI=true pnpm --filter @reading-advantage/db exec vitest run \
+    src/__tests__/durable-jobs-schema-pg16.red.test.ts
+Test Files 1 passed (1); Tests 2 passed | 1 skipped (3)
+```
+
+Authorized PG16 Red gate:
+
+```text
+DURABLE_JOB_PG16_TEST_OPT_IN=1 \
+DURABLE_JOB_PG16_TEST_ADMIN_DATABASE_URL=postgresql://durable_test@127.0.0.1:55439/durable_job_test_admin_local \
+  CI=true ../../node_modules/.bin/vitest run \
+    src/__tests__/durable-jobs-schema-pg16.red.test.ts
+Test Files 1 failed (1); Tests 1 failed | 2 passed (3)
+```
+
+The live suite loaded the Task 7 harness and connected to PostgreSQL 16. Its
+only failure reported the absent Task 11 migration. The post-run catalog query
+found zero `durable_job_pg16_test_%` databases.
 
 Intentional Red schema contract:
 
@@ -74,16 +122,23 @@ There was no import, transform, TypeScript, setup, or unrelated runtime failure.
 Meaningful non-Red gates:
 
 ```text
-pnpm --filter @reading-advantage/db check-types
+../../node_modules/.bin/tsc --noEmit --incremental false \
+  -p tsconfig.json --pretty false
 PASS
 
 pnpm exec eslint \
+  src/__tests__/durable-jobs-schema-pg16.red.test.ts \
   src/__tests__/durable-jobs-schema-migration.red.test.ts \
   src/__tests__/durable-jobs-transition-fixtures.test.ts \
   src/__tests__/fixtures/durable-job-transition-counterexamples.ts
 PASS (from packages/db)
 
-git diff --check -- <three Task 6 test paths>
+git diff --check -- \
+  packages/db/src/__tests__/durable-jobs-schema-pg16.red.test.ts \
+  packages/db/src/__tests__/durable-jobs-schema-migration.red.test.ts \
+  packages/db/src/__tests__/durable-jobs-transition-fixtures.test.ts \
+  packages/db/src/__tests__/fixtures/durable-job-transition-counterexamples.ts \
+  measure/tracks/durable_job_worker_platform_20260713/task-6-red-schema-counterexamples-20260722.md
 PASS
 ```
 

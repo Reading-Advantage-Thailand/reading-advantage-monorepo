@@ -161,9 +161,26 @@ describe("durable job invalid-transition counterexample fixtures", () => {
     expect(required.filter((id) => !ids.has(id)), "Missing truth-table fixture IDs.").toEqual([]);
   });
 
-  it("covers tenant, bounds, tuple equivalence, and max-attempt redelivery exclusions", () => {
+  it("covers value bounds, tenant scope, tuple equivalence, and redelivery exclusions", () => {
     const ids = new Set(durableJobInvalidRowFixtures.map(({ id }) => id));
     const required = [
+      "job-name-under-bound",
+      "job-name-over-bound",
+      "job-name-invalid-format",
+      "queue-name-under-bound",
+      "queue-name-over-bound",
+      "queue-name-invalid-format",
+      "idempotency-key-under-bound",
+      "idempotency-key-over-bound",
+      "worker-id-under-bound",
+      "worker-id-over-bound",
+      "safe-error-code-invalid-format",
+      "safe-error-summary-under-bound",
+      "safe-error-summary-over-bound",
+      "payload-fingerprint-invalid-format",
+      "payload-fingerprint-under-bound",
+      "lease-token-hash-invalid-format",
+      "rerun-payload-fingerprint-invalid-format",
       "global-with-tenant-id",
       "tenant-with-null-id",
       "tenant-with-empty-id",

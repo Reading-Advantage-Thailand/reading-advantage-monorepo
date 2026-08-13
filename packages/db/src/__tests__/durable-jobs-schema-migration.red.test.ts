@@ -138,30 +138,28 @@ describe("Task 6 Red durable-jobs schema and migration contract", () => {
     const fixtureConstraintNames = [
       ...new Set(durableJobInvalidRowFixtures.map(({ expectedConstraint }) => expectedConstraint)),
     ].sort();
-    const requiredBounds = [
-      "durable_jobs_job_name_check",
-      "durable_jobs_queue_name_check",
-      "durable_jobs_idempotency_key_check",
-      "durable_jobs_worker_id_check",
-      "durable_jobs_safe_error_check",
-      "durable_jobs_hash_format_check",
-    ];
 
     expect(
       fixtureConstraintNames,
-      "Fixture coverage must remain non-vacuous.",
+      "Fixtures must execute every required durable-jobs check.",
     ).toEqual([
       "durable_jobs_attempt_bounds_check",
       "durable_jobs_generation_check",
+      "durable_jobs_hash_format_check",
+      "durable_jobs_idempotency_key_check",
+      "durable_jobs_job_name_check",
       "durable_jobs_lease_tuple_check",
+      "durable_jobs_queue_name_check",
       "durable_jobs_redelivery_state_check",
       "durable_jobs_rerun_state_check",
       "durable_jobs_rerun_tuple_check",
+      "durable_jobs_safe_error_check",
       "durable_jobs_safe_error_tuple_check",
       "durable_jobs_state_truth_table_check",
       "durable_jobs_tenant_scope_check",
+      "durable_jobs_worker_id_check",
     ]);
-    for (const constraint of [...fixtureConstraintNames, ...requiredBounds]) {
+    for (const constraint of fixtureConstraintNames) {
       expect(
         migrationSql,
         `Intentional Red: migration is missing named check ${constraint}.`,
