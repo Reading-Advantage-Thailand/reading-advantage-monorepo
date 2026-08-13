@@ -1,0 +1,48 @@
+Measure Jr Green remediation role log - Phase 2 controlled operational imports
+Track: company_finance_operations_20260810
+Phase: Phase 2 — controlled operational imports
+Role: measure-jr-green
+phase_base_sha: 7ef48d2d2929c67dfd70c899a4710b77808637b9
+role_base_sha: 11662dd4ed71e65e76019ed42e66072f3fb0de27
+
+The Mid Red remediation admitted and scans `controlled-imports.ts`. The
+committed Red change is inside `phase_base_sha..HEAD`. The checkout is master
+with one worktree. Unrelated dirty paths stayed unstaged.
+
+Implementation commit: `18bdc5dd1d4e7912ab4fb70f152959693a3559c6`.
+It adds the policy-neutral controlled-import module and barrel export. It uses
+accepted private-evidence envelopes and injected ports. It contains no live
+source adapter, provider SDK, database access, or pilot evidence.
+
+Tests passed before this evidence commit:
+
+- Phase 2 controlled imports: 24/24.
+- Finance Phase 1 baseline: 11 files, 135/135, including architecture 8/8.
+- Company Identity baseline: 20/20.
+- Storage baseline: 25/25.
+- Backend production typecheck and build: exit 0.
+- Backend ESLint and Prettier check: exit 0.
+- Storage production typecheck and lint: exit 0. Lint reported three unchanged
+  warnings and zero errors.
+- `git diff --check`: exit 0.
+- Mechanical Jr Green role gate: PASS.
+
+The backend test TypeScript configuration exits 2 only for unchanged Standard
+Pack cross-root TS6059 errors, three Finance Task 3 review-B literal fixtures,
+and two Planned Game Intake errors. It reports no diagnostic for
+`controlled-imports.ts`, `index.ts`, or the Phase 2 Red test. The canonical
+strategy requires package `check-types` to exit 0. This unchanged test-config
+baseline blocks phase acceptance.
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+status: partial
+track: company_finance_operations_20260810
+phase: Phase 2 — controlled operational imports
+commits: 18bdc5dd1
+tests_run: Phase 2 24/24; Finance Phase 1 135/135; Identity 20/20; Storage 25/25; backend production typecheck and build exit 0; backend ESLint and Prettier exit 0; git diff --check exit 0; backend test TypeScript config exit 2 on unchanged files only
+files_changed: controlled-imports.ts; index.ts; plan.md; phase2-jr-green-remediation-role.log
+plan_updates: Task 1 marked [x] with source commit evidence; Task 2 remains [b]
+known_failures: backend tsconfig.test.json exits 2 on unchanged Standard Pack TS6059 errors, Finance Task 3 review-B literal fixtures, and Planned Game Intake errors; canonical strategy therefore blocks phase acceptance
+handoff: Task 1 implementation is complete in 18bdc5dd1. Phase acceptance must keep the unchanged package test-type baseline as an external gate blocker. Task 2 remains [b].
+END_MEASURE_AGENT_RESULT
