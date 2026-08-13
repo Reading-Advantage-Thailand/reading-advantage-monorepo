@@ -1,4 +1,4 @@
-import { readFileSync, statSync } from "node:fs";
+import { existsSync, readFileSync, statSync } from "node:fs";
 import { dirname, isAbsolute, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import { runInNewContext } from "node:vm";
@@ -14,10 +14,16 @@ const foundationFileNames = [
   "records.ts",
   "ports.ts",
   "port-contracts.ts",
+  "controlled-imports.ts",
   "index.ts",
 ] as const;
 const foundationFilePaths = new Set(
   foundationFileNames.map((fileName) => resolve(moduleDirectory, fileName)),
+);
+const foundationFileNamesToScan = foundationFileNames.filter(
+  (fileName) =>
+    fileName !== "controlled-imports.ts" ||
+    existsSync(resolve(moduleDirectory, fileName)),
 );
 const financeTask3CompanyIdentityFiles = [
   resolve(moduleDirectory, "../company-identity/finance-attestation.ts"),
@@ -724,8 +730,17 @@ function collectFinanceTask3CompanyIdentityViolations(
 }
 
 describe("Finance Operations policy-neutral architecture boundary", () => {
+  it("admits controlled imports as a reviewed foundation source", () => {
+    expect(
+      collectBoundaryViolations(
+        resolve(moduleDirectory, "index.ts"),
+        'export * from "./controlled-imports.js";',
+      ),
+    ).toEqual([]);
+  });
+
   it("permits only zod and imports that remain inside the foundation module", () => {
-    const violations = foundationFileNames.flatMap((fileName) => {
+    const violations = foundationFileNamesToScan.flatMap((fileName) => {
       const filePath = resolve(moduleDirectory, fileName);
       return collectBoundaryViolations(
         filePath,

@@ -45,6 +45,13 @@
   - Phase 1 focused baseline: backend 134/134 tests across 11 files, Company Identity 20/20 tests across 2 files, and Storage 25/25 tests across 1 file.
   - The backend typecheck and focused lint commands were not used as Mid-Red gates. A later attempt started a workspace install and timed out on unavailable registry downloads; no role-owned test failure came from that attempt.
 
+  Mid-Red remediation evidence (2026-08-13; phase base `7ef48d2d2929c67dfd70c899a4710b77808637b9`; role base `042dd8887f986d08d8f5c71ddfe752dd91b0e2c3`): the Phase 1 architecture contract now lists `controlled-imports.ts` as a reviewed foundation source and scans it when the Green implementation creates it. The contract retains the provider, database, filesystem, network, process, dynamic-loading, cross-package, and source-owner guards. The Red behavior contract remains unchanged and remains genuinely Red because the six required exports do not exist.
+
+  - Architecture boundary remediation test: `CI=true pnpm --filter @reading-advantage/backend exec vitest run src/modules/finance-operations/__tests__/architecture-boundary.test.ts` — exit 0; 8/8 tests passed.
+  - Canonical Red command: `CI=true pnpm --filter @reading-advantage/backend exec vitest run src/modules/finance-operations/__tests__/controlled-imports-phase2.red.test.ts` — exit 1; collection succeeded; 24 tests ran; 20 expected behavior tests failed and 4 source guards passed.
+  - The architecture test passes at the phase base because the production module is absent and the admission assertion checks only the reviewed allowlist. It does not provide Phase 2 implementation evidence.
+  - No production source changed. Task 1 remains `[~]`; the pilot task remains `[b]` with `deferred:phase2`.
+
 ## Phase 3 — close and accountant exchange
 
 - [b] Task: Implement close-period controls and versioned accountant export packs only after written decisions for Thai invoice/tax/VAT/WHT, classification, close, retention, correction, and pack policy (system-map R7). Depends on the pilot, accountant acceptance, and all relevant source contracts.

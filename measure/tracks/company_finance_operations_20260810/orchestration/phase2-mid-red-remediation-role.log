@@ -1,0 +1,87 @@
+Measure Mid Red remediation role log - Phase 2 controlled operational imports
+Track: company_finance_operations_20260810
+Phase: Phase 2 — controlled operational imports
+Role: measure-mid-red
+Date: 2026-08-13
+phase_base_sha: 7ef48d2d2929c67dfd70c899a4710b77808637b9
+role_base_sha: 042dd8887f986d08d8f5c71ddfe752dd91b0e2c3
+
+## Preflight
+
+- Both supplied SHAs resolve to commits.
+- `phase_base_sha` is an ancestor of the role base and current HEAD.
+- `role_base_sha` is the current HEAD at role start.
+- The checkout is `master`, and exactly one worktree exists.
+- Existing dirty paths are unrelated user work: `.opencode/**`, Codecamp
+  Playwright and test-result reports, `pnpm-lock.yaml`, Advantage Games test
+  results, and Sales review output. I preserved these paths and did not stage
+  them.
+- The owned architecture test and Measure-owned Phase 2 files were clean at
+  role start. I did not edit production source.
+
+## Remediation
+
+I added `controlled-imports.ts` to the explicit reviewed Finance foundation list.
+The architecture test now scans that file when it exists. The test also admits
+the required `index.ts` re-export through the same reviewed foundation policy.
+All existing provider, database, filesystem, network, process, dynamic-loading,
+cross-package, and Task 3 source-owner checks remain in place.
+
+The test uses `existsSync` only for the deferred pre-Green state. This keeps the
+Phase 1 baseline green before the Green role creates `controlled-imports.ts`.
+After Green creates the file, the same full source scan runs against it.
+
+## Tests run
+
+1. Architecture boundary remediation:
+   `CI=true pnpm --filter @reading-advantage/backend exec vitest run src/modules/finance-operations/__tests__/architecture-boundary.test.ts`
+   - Exit 0.
+   - 1 file and 8 tests passed.
+   - The new admission assertion passed at the phase base because the source
+     file is still absent. The full scan remains ready for Green.
+
+2. Canonical Red command:
+   `CI=true pnpm --filter @reading-advantage/backend exec vitest run src/modules/finance-operations/__tests__/controlled-imports-phase2.red.test.ts`
+   - Exit 1.
+   - Collection succeeded.
+   - 24 tests ran: 20 expected behavior failures and 4 source-guard passes.
+   - The failures remain the six missing `ControlledImportsModule` exports.
+
+3. `git diff --check` passed.
+
+## Plan updates
+
+`plan.md` records the reviewed-foundation admission, the architecture test
+result, the canonical Red result, and the remaining task markers. Task 1 stays
+`[~]`. The pilot task stays `[b]` with `deferred:phase2`.
+
+## Known failures
+
+- Expected Red: 20 behavior tests fail because `controlled-imports.ts` and its
+  six required exports do not exist.
+- Phase 2 is not Green.
+- No production source or unrelated user work changed.
+
+## Handoff
+
+Jr Green must implement the six required exports in
+`controlled-imports.ts`. The architecture boundary now admits and scans this
+file. Green must satisfy the active source-isolation and source-owner guards,
+preserve policy neutrality, and leave the blocked pilot task unchanged.
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+status: complete
+track: company_finance_operations_20260810
+phase: Phase 2 — controlled operational imports
+baseline_sha: 7ef48d2d2929c67dfd70c899a4710b77808637b9
+phase_base_sha: 7ef48d2d2929c67dfd70c899a4710b77808637b9
+role_base_sha: 042dd8887f986d08d8f5c71ddfe752dd91b0e2c3
+commits: pending commit of architecture test, plan, and remediation log
+resulting_head: pending commit
+tests_run: architecture boundary exit 0 (8/8); canonical Red exit 1 (24 collected, 20 failed, 4 passed); git diff --check exit 0
+files_changed: packages/backend/src/modules/finance-operations/__tests__/architecture-boundary.test.ts; measure/tracks/company_finance_operations_20260810/plan.md; measure/tracks/company_finance_operations_20260810/orchestration/phase2-mid-red-remediation-role.log
+plan_updates: recorded reviewed-foundation admission, architecture result, canonical Red result, and remaining task markers; Task 1 remains [~]
+known_failures: expected 20 behavior failures from six missing exports; Phase 2 remains Red
+handoff: Jr Green must implement six exports in controlled-imports.ts, then rerun the Phase 2 Green gates and focused Phase 1 baselines
+END_MEASURE_AGENT_RESULT
