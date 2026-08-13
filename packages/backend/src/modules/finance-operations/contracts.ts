@@ -451,6 +451,21 @@ export interface HistoricalPrivateEvidencePreparation {
   readonly evidence: Readonly<HistoricalPrivateEvidenceBinding>;
 }
 
+const historicalPrivateEvidencePreparationCapability = Symbol(
+  "historical-private-evidence-preparation",
+);
+
+/** Tests whether a preparation was produced by the accepted historical evidence command. */
+export function isHistoricalPrivateEvidencePreparation(
+  value: unknown,
+): value is HistoricalPrivateEvidencePreparation {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    Reflect.get(value, historicalPrivateEvidencePreparationCapability) === true
+  );
+}
+
 /** Finance command that composes owner attestation and private-evidence verification. */
 export interface HistoricalPrivateEvidenceImportCommand {
   /** Prepares one packet after validating it and obtaining both owner bindings. */
@@ -484,8 +499,10 @@ export const historicalPrivateEvidenceObjectIdSchema = z
     /^finance-historical-private-evidence-object-v1\|sha256=[a-f0-9]{64}$/u,
   );
 
-const arrayBufferByteLengthGetter =
-  Object.getOwnPropertyDescriptor(ArrayBuffer.prototype, "byteLength")?.get;
+const arrayBufferByteLengthGetter = Object.getOwnPropertyDescriptor(
+  ArrayBuffer.prototype,
+  "byteLength",
+)?.get;
 
 /** Copies one genuine 32-byte WebCrypto ArrayBuffer into this realm without retaining provider memory. */
 function copySha256Digest(result: unknown): Uint8Array {
@@ -607,13 +624,11 @@ export function createHistoricalPrivateEvidenceImportCommand(input: {
   readonly privateEvidenceBindingPort: HistoricalPrivateEvidenceBindingPort;
 }): HistoricalPrivateEvidenceImportCommand {
   let companyIdentityAttestor: CompanyIdentityFinanceAttestor | undefined;
-  let privateEvidenceBindingPort: HistoricalPrivateEvidenceBindingPort | undefined;
-  let attestMethod:
-    | CompanyIdentityFinanceAttestor["attest"]
+  let privateEvidenceBindingPort:
+    | HistoricalPrivateEvidenceBindingPort
     | undefined;
-  let verifyMethod:
-    | HistoricalPrivateEvidenceBindingPort["verify"]
-    | undefined;
+  let attestMethod: CompanyIdentityFinanceAttestor["attest"] | undefined;
+  let verifyMethod: HistoricalPrivateEvidenceBindingPort["verify"] | undefined;
   try {
     companyIdentityAttestor = input?.companyIdentityAttestor;
     privateEvidenceBindingPort = input?.privateEvidenceBindingPort;
@@ -690,9 +705,8 @@ export function createHistoricalPrivateEvidenceImportCommand(input: {
         z.infer<typeof attestationDecisionSchema>
       >;
       try {
-        attestationResult = attestationDecisionSchema.safeParse(
-          attestationOutput,
-        );
+        attestationResult =
+          attestationDecisionSchema.safeParse(attestationOutput);
       } catch {
         throw commandError("FINANCE_ATTESTATION_INVALID");
       }
@@ -749,12 +763,18 @@ export function createHistoricalPrivateEvidenceImportCommand(input: {
         throw commandError("FINANCE_EVIDENCE_DIGEST_MISMATCH");
       }
 
-      return freezeDeep({
+      const preparation = {
         packet,
         objectId,
         authorizationEvidence,
         evidence,
-      });
+      };
+      Object.defineProperty(
+        preparation,
+        historicalPrivateEvidencePreparationCapability,
+        { value: true },
+      );
+      return freezeDeep(preparation);
     },
   };
 }

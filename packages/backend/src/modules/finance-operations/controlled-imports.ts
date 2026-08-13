@@ -5,6 +5,7 @@ import {
   financeOperationAuthorizationInputSchema,
   financeOperationScopeSchema,
   financeSourceProvenanceSchema,
+  isHistoricalPrivateEvidencePreparation,
   type FinanceOperationAuthorizationInput,
   type FinanceOperationScope,
 } from "./contracts.js";
@@ -15,19 +16,129 @@ import { financeRecordSchema, type FinanceRecord } from "./records.js";
 const normalVersion = "finance-controlled-import-normalization-v1" as const;
 const jobVersion = "finance-controlled-import-job-v1" as const;
 const digest = z.string().regex(/^[a-f0-9]{64}$/u);
-const forbidden = new Set([
-  "vatRate",
-  "taxAmount",
-  "accountCode",
-  "ledgerAccount",
-  "deductible",
-  "name",
-  "email",
-  "bankAccount",
-  "accountNumber",
-  "taxId",
-  "rawPayload",
+const safeTextSchema = z
+  .string()
+  .min(1)
+  .max(128)
+  .refine(
+    (value) =>
+      Array.from(value).every((character) => {
+        const codePoint = character.codePointAt(0) ?? 0;
+        return codePoint > 0x1f && codePoint !== 0x7f;
+      }) && !/<script|@|[{}]/iu.test(value),
+    "Unsafe source text",
+  );
+const decimalSchema = z
+  .string()
+  .regex(/^-?(?:0|[1-9][0-9]*)(?:\.[0-9]{1,2})?$/u);
+const moneyFactSchema = z.strictObject({
+  factId: safeTextSchema,
+  kind: z.literal("money"),
+  amountDecimal: decimalSchema,
+  sourceText: safeTextSchema.optional(),
+});
+const countFactSchema = z.strictObject({
+  factId: safeTextSchema,
+  kind: z.literal("count"),
+  countText: safeTextSchema,
+});
+const voucherSchema = z.strictObject({
+  voucherNumberText: safeTextSchema,
+  sourceDateText: safeTextSchema,
+  grossDecimal: decimalSchema,
+  sourceStatedWhtDecimal: decimalSchema,
+  netDecimal: decimalSchema,
+});
+const sourceTaxSchema = z.strictObject({
+  label: safeTextSchema,
+  rateText: safeTextSchema,
+});
+const documentSchema = z.discriminatedUnion("sourceDocumentKind", [
+  z.strictObject({
+    sourceDocumentId: safeTextSchema,
+    logicalDocumentId: safeTextSchema,
+    sourceDocumentKind: z.literal("school-billing-invoice"),
+    variantId: safeTextSchema.optional(),
+    ambiguityGroupId: safeTextSchema.optional(),
+    thaiTaxDocumentStatus: z.literal("unresolved"),
+    currency: z.string().regex(/^[A-Z]{3}$/u),
+    facts: z.array(z.union([moneyFactSchema, countFactSchema])).min(1),
+  }),
+  z.strictObject({
+    sourceDocumentId: safeTextSchema,
+    logicalDocumentId: safeTextSchema,
+    sourceDocumentKind: z.literal("payroll-summary"),
+    thaiTaxDocumentStatus: z.literal("unresolved"),
+    currency: z.string().regex(/^[A-Z]{3}$/u),
+    vouchers: z.array(voucherSchema).min(1),
+  }),
+  z.strictObject({
+    sourceDocumentId: safeTextSchema,
+    logicalDocumentId: safeTextSchema,
+    sourceDocumentKind: z.literal("payment-receipt"),
+    thaiTaxDocumentStatus: z.enum(["not-source-asserted", "unresolved"]),
+    currency: z.string().regex(/^[A-Z]{3}$/u),
+    facts: z.array(moneyFactSchema).min(1),
+  }),
+  z.strictObject({
+    sourceDocumentId: safeTextSchema,
+    logicalDocumentId: safeTextSchema,
+    sourceDocumentKind: z.literal("foreign-workspace-invoice"),
+    thaiTaxDocumentStatus: z.literal("not-source-asserted"),
+    sourceStatedTax: sourceTaxSchema,
+    currency: z.string().regex(/^[A-Z]{3}$/u),
+    facts: z.array(moneyFactSchema).min(1),
+  }),
 ]);
+const envelopeSchema = z.strictObject({
+  envelopeVersion: z.literal("finance-controlled-source-envelope-v1"),
+  scope: financeOperationScopeSchema,
+  sourceSystem: safeTextSchema,
+  sourceVersion: safeTextSchema,
+  sourceRecordId: safeTextSchema,
+  sourceAcceptance: z.strictObject({
+    port: z.literal("private-evidence-storage"),
+    snapshot: z.strictObject({
+      evidenceReference: z.string(),
+      payloadDigest: digest,
+    }),
+  }),
+  evidenceAuthorization: z.strictObject({
+    evidenceReference: z.string(),
+    payloadDigest: digest,
+  }),
+  document: documentSchema,
+});
+const normalizationSchema = z
+  .strictObject({
+    normalizationVersion: z.literal(normalVersion),
+    scope: financeOperationScopeSchema,
+    batchId: safeTextSchema,
+    acceptedSourceEnvelopes: z.array(envelopeSchema).min(1),
+    trustedPreparation: z.unknown().optional(),
+    trustedPreparations: z.array(z.unknown()).optional(),
+  })
+  .superRefine((value, context) => {
+    const preparations =
+      value.trustedPreparation === undefined
+        ? value.trustedPreparations
+        : value.trustedPreparations === undefined
+          ? [value.trustedPreparation]
+          : undefined;
+    if (
+      preparations === undefined ||
+      preparations.length !== value.acceptedSourceEnvelopes.length
+    ) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Trusted preparation count is invalid",
+      });
+    }
+  });
+const authorizationDecisionSchema = z.strictObject({
+  decision: z.enum(["allow", "deny"]),
+});
+const preparedPlanCapability = Symbol("controlled-import-plan");
 
 /** A normalized source snapshot. */
 export interface PreparedControlledSourceSnapshot {
@@ -139,6 +250,13 @@ function freeze<T>(value: T): T {
   }
   return value;
 }
+function isDeepFrozen(value: unknown, seen = new WeakSet<object>()): boolean {
+  if (value === null || typeof value !== "object") return true;
+  if (seen.has(value)) return true;
+  if (!Object.isFrozen(value)) return false;
+  seen.add(value);
+  return Object.values(value).every((child) => isDeepFrozen(child, seen));
+}
 function copy<T>(value: T): T {
   return structuredClone(value);
 }
@@ -178,13 +296,6 @@ function minor(value: unknown): string {
   ).toString();
   return neg && r !== "0" ? `-${r}` : r;
 }
-function scan(value: unknown): void {
-  if (!value || typeof value !== "object") return;
-  for (const [k, v] of Object.entries(value)) {
-    if (forbidden.has(k)) throw new Error("forbidden field");
-    scan(v);
-  }
-}
 function prov(e: Record<string, unknown>, batch: string, id: string) {
   const a = object(e.sourceAcceptance),
     s = object(a.snapshot),
@@ -209,28 +320,40 @@ function prov(e: Record<string, unknown>, batch: string, id: string) {
 export function prepareControlledImportBatch(
   input: unknown,
 ): PreparedControlledImportBatch {
-  scan(input);
-  const raw = object(input);
-  if (
-    raw.normalizationVersion !== normalVersion ||
-    !Array.isArray(raw.acceptedSourceEnvelopes)
-  )
-    throw new Error("invalid envelope");
-  const scope = financeOperationScopeSchema.parse(raw.scope),
-    batchId = text(raw.batchId),
+  const raw = normalizationSchema.parse(input);
+  const preparations =
+    raw.trustedPreparation === undefined
+      ? raw.trustedPreparations
+      : [raw.trustedPreparation];
+  if (preparations === undefined)
+    throw new Error("trusted preparation is required");
+  const scope = raw.scope,
+    batchId = raw.batchId,
     snaps: PreparedControlledSourceSnapshot[] = [],
     records: FinanceRecord[] = [],
     ds: string[] = [];
-  for (const x of raw.acceptedSourceEnvelopes) {
-    const e = object(x),
-      d = object(e.document);
+  for (const [index, rawEnvelope] of raw.acceptedSourceEnvelopes.entries()) {
+    const preparation = preparations[index];
+    if (!isHistoricalPrivateEvidencePreparation(preparation)) {
+      throw new Error("trusted preparation is required");
+    }
+    const e = rawEnvelope,
+      d = e.document;
     if (
-      e.envelopeVersion !== "finance-controlled-source-envelope-v1" ||
-      !scopeEqual(scope, financeOperationScopeSchema.parse(e.scope)) ||
-      typeof e.sourceSystem !== "string" ||
-      typeof e.sourceVersion !== "string" ||
-      typeof e.sourceRecordId !== "string" ||
-      d.thaiTaxDocumentStatus === "tax-invoice"
+      !scopeEqual(scope, e.scope) ||
+      !scopeEqual(scope, preparation.packet.scope) ||
+      !scopeEqual(scope, preparation.evidence.scope) ||
+      preparation.packet.source.sourceSystem !== e.sourceSystem ||
+      preparation.packet.source.sourceVersion !== e.sourceVersion ||
+      preparation.packet.source.sourceIdentity !== e.sourceRecordId ||
+      preparation.packet.source.payloadDigest !==
+        e.evidenceAuthorization.payloadDigest ||
+      preparation.packet.source.evidenceReference !==
+        e.evidenceAuthorization.evidenceReference ||
+      preparation.evidence.evidenceReference !==
+        e.evidenceAuthorization.evidenceReference ||
+      preparation.evidence.payloadDigest !==
+        e.evidenceAuthorization.payloadDigest
     )
       throw new Error("invalid envelope");
     if (
@@ -245,12 +368,10 @@ export function prepareControlledImportBatch(
     )
       throw new Error("invalid source");
     const base = {
-        sourceDocumentId: text(d.sourceDocumentId),
-        logicalDocumentId: text(d.logicalDocumentId),
-        sourceDocumentKind: text(d.sourceDocumentKind),
-        thaiTaxDocumentStatus: z
-          .enum(["not-source-asserted", "unresolved"])
-          .parse(d.thaiTaxDocumentStatus),
+        sourceDocumentId: d.sourceDocumentId,
+        logicalDocumentId: d.logicalDocumentId,
+        sourceDocumentKind: d.sourceDocumentKind,
+        thaiTaxDocumentStatus: d.thaiTaxDocumentStatus,
       },
       currency = text(d.currency),
       facts: Record<string, unknown>[] = [];
@@ -285,9 +406,13 @@ export function prepareControlledImportBatch(
       );
     };
     if (d.sourceDocumentKind === "payroll-summary") {
-      if (!Array.isArray(d.vouchers)) throw new Error("invalid vouchers");
+      const voucherRecordIds = new Set<string>();
       for (const v of d.vouchers) {
-        const q = object(v);
+        const q = v;
+        if (voucherRecordIds.has(q.voucherNumberText)) {
+          throw new Error("duplicate voucher identity");
+        }
+        voucherRecordIds.add(q.voucherNumberText);
         add(
           { ...q, amountDecimal: q.grossDecimal },
           `${text(q.voucherNumberText)}:gross`,
@@ -305,9 +430,8 @@ export function prepareControlledImportBatch(
         );
       }
     } else {
-      if (!Array.isArray(d.facts)) throw new Error("invalid facts");
       for (const f of d.facts) {
-        const q = object(f);
+        const q = f;
         if (q.kind === "count")
           facts.push({
             factId: text(q.factId),
@@ -324,10 +448,16 @@ export function prepareControlledImportBatch(
       }
     }
     const tax =
-      d.sourceStatedTax === undefined ? undefined : object(d.sourceStatedTax);
+      d.sourceDocumentKind === "foreign-workspace-invoice"
+        ? d.sourceStatedTax
+        : undefined;
+    const variantId =
+      d.sourceDocumentKind === "school-billing-invoice"
+        ? d.variantId
+        : undefined;
     snaps.push({
       ...base,
-      ...(d.variantId === undefined ? {} : { variantId: text(d.variantId) }),
+      ...(variantId === undefined ? {} : { variantId: text(variantId) }),
       ...(tax
         ? {
             sourceStatedTax: {
@@ -338,15 +468,21 @@ export function prepareControlledImportBatch(
         : {}),
       facts,
     });
-    ds.push(object(e.evidenceAuthorization).payloadDigest as string);
+    ds.push(e.evidenceAuthorization.payloadDigest);
   }
   if (!ds.every((x) => digest.safeParse(x).success))
     throw new Error("invalid digest");
-  if (
-    snaps.length > 1 &&
-    snaps.every((x) => x.variantId) &&
-    new Set(snaps.map((x) => x.logicalDocumentId)).size === 1
-  )
+  const ambiguityGroups = raw.acceptedSourceEnvelopes
+    .map((envelope) => envelope.document)
+    .filter(
+      (
+        document,
+      ): document is Extract<typeof document, { ambiguityGroupId?: string }> =>
+        document.sourceDocumentKind === "school-billing-invoice" &&
+        document.ambiguityGroupId !== undefined,
+    )
+    .map((document) => document.ambiguityGroupId);
+  if (new Set(ambiguityGroups).size !== ambiguityGroups.length)
     return freeze({
       status: "unresolved",
       normalizationVersion: normalVersion,
@@ -356,15 +492,17 @@ export function prepareControlledImportBatch(
       variants: copy(snaps),
       records: [] as const,
     });
-  return freeze({
-    status: "ready",
+  const plan = {
+    status: "ready" as const,
     normalizationVersion: normalVersion,
     scope: copy(scope),
     batchId,
     batchDigest: ds.length === 1 ? (ds[0] as string) : ds.join(""),
     snapshots: copy(snaps),
     records: copy(records),
-  });
+  };
+  Object.defineProperty(plan, preparedPlanCapability, { value: true });
+  return freeze(plan);
 }
 
 /** Classifies batch replay. @param input Existing and incoming identities. @returns A frozen classification. */
@@ -462,12 +600,22 @@ function audit(
 export async function acceptControlledImportBatch(
   request: AcceptControlledImportBatchRequest,
 ): Promise<ControlledImportAtomicResult> {
+  if (
+    typeof request.plan !== "object" ||
+    request.plan === null ||
+    (Reflect.get(request.plan, preparedPlanCapability) !== true &&
+      !isDeepFrozen(request.plan))
+  ) {
+    throw new Error("prepared plan capability is invalid");
+  }
   const auth = financeOperationAuthorizationInputSchema.parse({
       ...request.authorizationInput,
       operation: "controlled-import:accept-batch",
     }),
-    decision = await request.authorizationPort.authorizeFinanceOperation(
-      freeze(copy(auth)),
+    decision = authorizationDecisionSchema.parse(
+      await request.authorizationPort.authorizeFinanceOperation(
+        freeze(copy(auth)),
+      ),
     );
   if (decision.decision === "deny") {
     await request.auditPort.append(audit(request, "denied"));
@@ -510,7 +658,7 @@ export async function acceptControlledImportBatch(
 export async function runHistoricalPrivateEvidencePilot(
   input: unknown,
 ): Promise<{
-  readonly status: "accepted";
+  readonly status: "not-admitted";
   readonly packetVersion: "historical-private-evidence-packet.v1";
   readonly liveSourceAdaptersUsed: readonly [];
 }> {
@@ -521,7 +669,7 @@ export async function runHistoricalPrivateEvidencePilot(
   )
     throw new Error("invalid packet");
   return freeze({
-    status: "accepted" as const,
+    status: "not-admitted" as const,
     packetVersion: "historical-private-evidence-packet.v1" as const,
     liveSourceAdaptersUsed: [] as const,
   });
