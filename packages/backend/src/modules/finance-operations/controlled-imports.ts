@@ -443,18 +443,19 @@ export function prepareControlledImportBatch(
     } else {
       for (const [factIndex, f] of d.facts.entries()) {
         const q = f;
-        if (q.kind === "count")
+        if (q.kind === "count") {
+          const trustedValue = trustedFactValues[factIndex];
           facts.push({
             factId: text(q.factId),
             kind: "count",
-            count: text(q.countText),
+            count: text(trustedValue),
             provenance: prov(
               e,
               batchId,
               `${base.sourceDocumentId}#${text(q.factId)}`,
             ),
           });
-        else if (q.kind === "money") {
+        } else if (q.kind === "money") {
           const trustedValue = trustedFactValues[factIndex];
           add(
             trustedValue === undefined
