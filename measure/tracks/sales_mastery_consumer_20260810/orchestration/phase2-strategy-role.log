@@ -1,0 +1,106 @@
+Measure Strategy role log - Phase 2 docs-only strategy and contract design
+Track: sales_mastery_consumer_20260810
+Phase: Phase 2 — company tenant mapping and durable projection
+Date: 2026-08-13
+Role: measure-strategy
+role_base_sha: 08c63e9fdc5fe7823cb50709532876e70f3d26a7
+
+## Scope
+
+Docs-only Phase 2 strategy and contract design, as authorized by the active
+first Phase 2 plan task. No production source, tests, fixtures, migrations, or
+phase execution were produced. The parallel path lease was limited to
+measure/tracks/sales_mastery_consumer_20260810/** and was respected.
+
+## Inputs read
+
+- measure/index.md, measure/tracks.md (portfolio priority: Sales consumes the
+  shared KST/SRS system; it is not a CRM), measure/anti-patterns.md (A1-A16)
+- spec.md, plan.md, metadata.json, test-strategy.md (accepted Phase 0
+  semantics), phase1-sales-graph-acceptance-20260811.md
+- Finance acceptance context: company_finance_operations_20260810 Phase 1
+  persistence acceptance and Task 3 commit 48470311d4f6b06b7e9ebcce7ba1f380444f0a79
+  (0003_finance_attestation_audit_metadata, ordering prerequisite)
+- Company Identity contracts: packages/backend/src/modules/company-identity/contracts.ts,
+  packages/domain/src/company-identity-principal.ts, packages/domain/src/sales/schema.ts
+- Mastery runtime accepted boundaries: packages/mastery-runtime-compat/runtime-manifest.json,
+  packages/domain/src/mastery/persistence-contracts.ts,
+  packages/domain/src/mastery/drizzle-mastery-persistence.ts,
+  packages/db/src/schema/mastery.ts,
+  packages/db/drizzle/0028_mastery_tenant_hardening.sql (migration head 0051)
+- graph.db symbol inspection: createDrizzleMasteryPersistence (blast radius
+  checked before referencing the adapter contract)
+
+## Work performed
+
+1. Created test-strategy-phase2.md as the isolated canonical Phase 2
+   strategy/contract file. It defines:
+   - Contract C1: fail-closed mapping from the verified Company Identity tuple
+     (applicationKey=sales, organizationId, organizationKey) to one dedicated
+     Mastery tenant; no caller tenant selection; Codecamp namespace exclusion.
+   - Contract C2: durable idempotent projection command binding organization,
+     learner principal, source application, graph release, source-attempt
+     identity, idempotency key, and payload digest; equal replay returns the
+     original receipt; conflicting replay fails closed.
+   - Authorization/tenant isolation, append-only outbox (Finance-proven atomic
+     pattern), retry/concurrency semantics, strict source provenance, and
+     migration ownership (serial after head 0051, additive, journaled).
+   - Risk decomposition with CRITICAL classification, fixtures/mocks/live-proof
+     expectations, future Red/Green/closeout command shapes, review
+     applicability, anti-pattern defenses (A2, A3, A4, A5, A6, A7, A10, A11,
+     A14, A15), intentionally-red aggregate handling, and artifact vs live
+     behavior test distinction.
+   - The exact phase2_base_sha capture point (section 12): after the strategy
+     commit AND this follow-up evidence commit, with no track-owned dirty
+     paths, via git rev-parse HEAD. No SHA is captured now; role_base_sha
+     predates the strategy and is invalid for that purpose.
+2. Marked only the active docs-only plan task [x] with strategy commit
+   evidence 457ed7b7d20e1dd110b33ea4f8dd2b8251e5ff0f. All three Phase 2
+   execution tasks (migration, Red tests, implementation) remain
+   [b] deferred:phase0-task-b-closeout behind Phase 0 Task B shared-root
+   closeout and final acceptance.
+3. test-strategy.md accepted Phase 0 semantics were not modified.
+
+## Commits
+
+- Strategy commit: 457ed7b7d20e1dd110b33ea4f8dd2b8251e5ff0f
+  (test-strategy-phase2.md only).
+- Evidence commit: this commit (plan.md [x] marking plus this role log). The
+  phase2_base_sha capture point is the HEAD of this evidence commit.
+
+## Known failures / non-claims
+
+- Phase 0 Task B remains [~]: shared-root doctor marker guard and the direct
+  architecture checker are Red for pre-existing reasons outside this track.
+  This role does not claim Phase 0 closeout, doctor Green, or
+  architecture-audit Green.
+- Phase 2 is not admitted. No Red command for Phase 2 was run, because no
+  Phase 2 tests exist; creating them is a blocked execution task.
+- The repository aggregate lint/test suites remain intentionally red from
+  pre-existing failures (A7 handling defined in the strategy).
+- Working tree contains unrelated dirty paths owned by other agents
+  (company_finance_operations sources, codecamp test results, pnpm-lock.yaml).
+  This role staged only its leased files.
+
+## Handoff
+
+The orchestrator should:
+1. Capture phase2_base_sha = git rev-parse HEAD at this evidence commit (per
+   test-strategy-phase2.md section 12); do not use role_base_sha.
+2. Keep every Phase 2 execution task [b] until Phase 0 Task B shared-root
+   closeout and final acceptance land.
+3. Verify exactly one worktree on master before any future Phase 2 action
+   (A16).
+
+MEASURE_AGENT_RESULT
+role: measure-strategy
+status: complete
+track: sales_mastery_consumer_20260810
+phase: Phase 2 — company tenant mapping and durable projection
+commits: 457ed7b7d20e1dd110b33ea4f8dd2b8251e5ff0f (strategy); this commit (evidence: plan.md + role log)
+tests_run: none (docs-only role; Phase 2 Red suites do not exist and remain blocked)
+files_changed: test-strategy-phase2.md (new), plan.md (docs-only task [~]->[x] with strategy commit evidence), orchestration/phase2-strategy-role.log (new)
+plan_updates: active docs-only Phase 2 task marked [x] with strategy commit evidence; all Phase 2 Red/source/migration tasks retained [b] deferred:phase0-task-b-closeout
+known_failures: Phase 0 Task B shared-root doctor/architecture gates remain Red (pre-existing, outside this track); aggregate lint/test intentionally red (A7)
+handoff: Orchestrator captures phase2_base_sha at this evidence commit HEAD (not role_base_sha); Phase 2 execution stays blocked behind Phase 0 Task B closeout; no Phase 0 closeout or Phase 2 admission claimed
+END_MEASURE_AGENT_RESULT

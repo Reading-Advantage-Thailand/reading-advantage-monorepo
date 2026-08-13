@@ -78,13 +78,18 @@
 
 ## Phase 2 — company tenant mapping and durable projection
 
-- [~] Task: Produce the bounded, docs-only Phase 2 strategy and contract design
+- [x] Task: Produce the bounded, docs-only Phase 2 strategy and contract design
   for the fail-closed Company Identity organization-to-Mastery tenant mapping
   and durable projection. The Finance ordering prerequisite is satisfied: the
   accepted additive/journaled `0003_finance_attestation_audit_metadata`
   migration and `meta/0003_snapshot.json` landed in
-  `48470311d4f6b06b7e9ebcce7ba1f380444f0a79`. This active task must not change
-  source, tests, or migrations, and it must not capture `phase2_base_sha`.
+  `48470311d4f6b06b7e9ebcce7ba1f380444f0a79`. Completed as docs-only strategy
+  `test-strategy-phase2.md` in strategy commit
+  `457ed7b7d20e1dd110b33ea4f8dd2b8251e5ff0f` with role evidence in
+  `orchestration/phase2-strategy-role.log`. The task changed no source, tests,
+  or migrations, and it did not capture `phase2_base_sha`; the capture point is
+  defined in `test-strategy-phase2.md` section 12. This does not claim Phase 0
+  closeout or Phase 2 admission.
 - [b] Task: After Phase 0 Task B shared-root closeout and final acceptance,
   migrate the fail-closed Company Identity organization-to-Mastery tenant
   mapping. Migration identifiers must remain serial and reviewable.
