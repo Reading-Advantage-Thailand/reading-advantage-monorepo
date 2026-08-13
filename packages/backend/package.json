@@ -45,6 +45,7 @@
   },
   "devDependencies": {
     "@reading-advantage/config": "workspace:*",
+    "@reading-advantage/advantage-play-kit": "workspace:*",
     "@types/node": "catalog:",
     "typescript": "5.9.3",
     "vitest": "4.1.8"

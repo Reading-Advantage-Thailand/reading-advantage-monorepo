@@ -2484,6 +2484,9 @@ importers:
         specifier: 'catalog:'
         version: 3.25.76
     devDependencies:
+      '@reading-advantage/advantage-play-kit':
+        specifier: workspace:*
+        version: link:../advantage-play-kit
       '@reading-advantage/config':
         specifier: workspace:*
         version: link:../config
