@@ -1,0 +1,39 @@
+Measure Jr Green final remediation role log
+
+Track: company_finance_operations_20260810
+Phase: Phase 2 — controlled operational imports
+phase_base_sha: 7ef48d2d2929c67dfd70c899a4710b77808637b9
+role_base_sha: 08c63e9fdc5fe7823cb50709532876e70f3d26a7
+Production remediation commit: 47cb034cf818209bf5a787a5856e118cdf2180a7
+
+Red and Green gates:
+- Review B: 26/26 passed.
+- Existing Phase 2: 24/24 passed.
+- Finance Operations: 135/135 passed.
+- Company Identity: 20/20 passed.
+- Storage: 25/25 passed.
+
+Implementation:
+- Trusted preparation now requires a genuine Phase 1 command result and binds packet, evidence, scope, source identity, digest, and evidence reference.
+- Strict nested schemas reject unknown keys and document kinds.
+- Authorization results parse strictly before repository access.
+- A private capability seals production plans. Deeply frozen legacy plans retain tested command compatibility.
+- Ambiguity uses `ambiguityGroupId`. Duplicate payroll voucher identities reject. Pilot status is `not-admitted`.
+
+Other gates:
+- Backend production build, Finance lint, Prettier, and `git diff --check` passed.
+- The architecture checker exited 1 for existing global debt, with findings=697 and additions=137. It reported no production Finance finding.
+- Backend test TypeScript exited 2 for unchanged Standard Pack, Company Identity, Planned Game Intake, and immutable test-fixture diagnostics. It reported no changed Finance diagnostic.
+- Prior Review A and Review B results are stale. Fresh Review A and Review B are mandatory at the final remediation HEAD.
+
+MEASURE_AGENT_RESULT
+status: complete
+track: company_finance_operations_20260810
+phase: Phase 2 — controlled operational imports
+phase_base_sha: 7ef48d2d2929c67dfd70c899a4710b77808637b9
+role_base_sha: 08c63e9fdc5fe7823cb50709532876e70f3d26a7
+production_commit: 47cb034cf818209bf5a787a5856e118cdf2180a7
+final_head: pending evidence commit
+task_1: [x]
+task_2: [b] (deferred:phase2)
+handoff: Fresh Review A and Review B are mandatory at the final remediation HEAD.
