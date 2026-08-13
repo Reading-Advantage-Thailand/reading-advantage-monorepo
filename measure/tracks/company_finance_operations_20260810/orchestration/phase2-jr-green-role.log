@@ -1,0 +1,78 @@
+Measure Jr Green role log - Phase 2 controlled operational imports
+Track: company_finance_operations_20260810
+Phase: Phase 2 — controlled operational imports
+Role: measure-jr-green
+Date: 2026-08-13
+phase_base_sha: 7ef48d2d2929c67dfd70c899a4710b77808637b9
+role_base_sha: d413113b8e5a726d547e92ad4832f5ffa2639ac2
+
+## Preflight
+
+- `phase_base_sha` is an ancestor of the Red resulting HEAD.
+- The Red test change is in `7ef48d2d..d413113b`.
+- The checkout is `master`, and `git worktree list` reported one worktree.
+- Existing dirty paths are unrelated Opencode state, Codecamp reports, Advantage
+  Games output, Sales review output, and `pnpm-lock.yaml`. I preserved them.
+- I did not edit the committed Red test.
+
+## Red verification
+
+Command:
+
+`CI=true pnpm --filter @reading-advantage/backend exec vitest run src/modules/finance-operations/__tests__/controlled-imports-phase2.red.test.ts`
+
+Result: exit 1. The suite collected 24 tests. It reported 20 expected missing
+export failures and 4 passing source guards. This is the stated Red condition.
+
+## Green attempt and block
+
+I implemented a minimal `controlled-imports.ts` and Finance barrel export only
+in the allowed production directory. The focused Red suite then passed 24/24.
+The implementation used only injected internal ports and did not use a live
+source adapter, a provider SDK, a database read, a shared credential, or a
+policy interpretation.
+
+The required Phase 1 Finance baseline then failed at the committed immutable
+test `architecture-boundary.test.ts`. Its `foundationFileNames` allowlist does
+not contain `controlled-imports.ts`. It rejects the required barrel export with
+this exact result:
+
+`index.ts: relative import leaves the reviewed foundation: ./controlled-imports.js`
+
+The Phase 2 strategy requires `controlled-imports.ts` and requires six exports
+from `index.ts`. The same strategy also requires the Phase 1 architecture
+baseline to exit 0. These two committed test contracts conflict. I removed the
+uncommitted implementation and barrel export. I left no production changes.
+
+This needs a Mid Red retry. Mid Red must extend the immutable architecture
+boundary allowlist to include `controlled-imports.ts` and its local relative
+imports, while preserving the existing source-isolation checks. This is a Red
+test contract change. Green cannot make it.
+
+## Other commands
+
+- Phase 1 Company Identity baseline: exit 0, 20/20 tests.
+- Phase 1 Storage baseline: exit 0, 25/25 tests.
+- Backend `check-types`: exit 2 due pre-existing cross-root Standard Pack and
+  Planned Game Intake errors. It also ran a workspace install without changing
+  role-owned paths. The shared dirty `pnpm-lock.yaml` remains unstaged.
+- Targeted ESLint passed before the architecture block.
+- Targeted Prettier identified format changes before it formatted the removed
+  uncommitted source.
+
+## Plan updates
+
+No task marker changed. Task 1 remains `[~]`. The pilot remains `[b]`.
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+status: blocked
+track: company_finance_operations_20260810
+phase: Phase 2 — controlled operational imports
+commits: none
+tests_run: canonical Red exit 1 before implementation (24 tests, 20 failed, 4 passed); provisional focused Green 24/24; required Phase 1 Finance baseline exit 1 (133 passed, 1 failed); Company Identity 20/20; Storage 25/25; backend check-types exit 2 from pre-existing unrelated errors; targeted ESLint exit 0
+files_changed: measure/tracks/company_finance_operations_20260810/orchestration/phase2-jr-green-role.log
+plan_updates: none; Task 1 stays [~], pilot stays [b]
+known_failures: immutable architecture-boundary test rejects the required barrel export because controlled-imports.ts is absent from its foundation allowlist; backend check-types has pre-existing cross-root Standard Pack and Planned Game Intake errors
+handoff: Mid Red retry required. Update the committed architecture boundary contract to admit controlled-imports.ts and preserve its compiler source-isolation guard. Then rerun Green from the same phase base. No historical pilot or Phase 3 policy was implemented.
+END_MEASURE_AGENT_RESULT
