@@ -34,20 +34,20 @@ and two Planned Game Intake errors. It reports no diagnostic for
 strategy requires package `check-types` to exit 0. This unchanged test-config
 baseline blocks phase acceptance.
 
+Architecture repair evidence: fix commit `e54122971` removed the new checker
+finding. The direct checker at that commit had files=4248, findings=697,
+parseErrors=0, additions=137, removals=0, renames=21, and no
+controlled-imports.ts finding. Status remains partial.
+
 MEASURE_AGENT_RESULT
 role: measure-jr-green
 status: partial
 track: company_finance_operations_20260810
 phase: Phase 2 — controlled operational imports
-commits: 18bdc5dd1, 9655d7dcc, e54122971
-tests_run: Phase 2 24/24; Finance Phase 1 135/135; Identity 20/20; Storage 25/25; backend production typecheck and build exit 0; backend ESLint and Prettier exit 0; git diff --check exit 0; backend test TypeScript config exit 2 on unchanged files only
+commits: 18bdc5dd1, 9655d7dcc, e54122971, eb8e3a743
+tests_run: Phase 2 24/24; Finance Phase 1 135/135; Identity 20/20; Storage 25/25; backend production typecheck and build exit 0; backend ESLint and Prettier exit 0; git diff --check exit 0; direct checker restored findings=697 and additions=137 with no controlled-imports.ts finding; backend test TypeScript config exit 2 on unchanged files only
 files_changed: controlled-imports.ts; index.ts; plan.md; phase2-jr-green-remediation-role.log
 plan_updates: Task 1 marked [x] with source commit evidence; Task 2 remains [b]
 known_failures: backend tsconfig.test.json exits 2 on unchanged Standard Pack TS6059 errors, Finance Task 3 review-B literal fixtures, and Planned Game Intake errors; canonical strategy therefore blocks phase acceptance
 handoff: Task 1 implementation is complete in 18bdc5dd1. Phase acceptance must keep the unchanged package test-type baseline as an external gate blocker. Task 2 remains [b].
 END_MEASURE_AGENT_RESULT
-
-Architecture repair evidence: fix commit `e54122971` removed the new checker
-finding. The direct checker at that commit had files=4248, findings=697,
-parseErrors=0, additions=137, removals=0, renames=21, and no
-controlled-imports.ts finding. Status remains partial.
