@@ -25,6 +25,18 @@ describe("durable job PostgreSQL 16 harness URL guard", () => {
     ).not.toThrow();
   });
 
+  it.each(["postgres", "app_user"])(
+    "rejects non-dedicated test role username %s",
+    (username) => {
+      expect(() =>
+        resolveDurableJobPostgres16AdminUrl({
+          [DURABLE_JOB_PG16_ADMIN_URL_ENV]:
+            `postgresql://${username}:secret@127.0.0.1:55432/durable_job_test_admin_local`,
+        }),
+      ).toThrow();
+    },
+  );
+
   it("accepts postgres aliases, IPv6 loopback, and empty generic variables", () => {
     const parsed = resolveDurableJobPostgres16AdminUrl({
       [DURABLE_JOB_PG16_ADMIN_URL_ENV]:
