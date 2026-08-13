@@ -299,6 +299,7 @@ function minor(value: unknown): string {
     throw new Error("invalid decimal");
   const neg = value[0] === "-",
     [n, f = ""] = (neg ? value.slice(1) : value).split(".");
+  if ((n as string).length > 38) throw new Error("decimal integer limit exceeded");
   const r = (
     BigInt(n as string) * 100n +
     BigInt((f + "00").slice(0, 2))
