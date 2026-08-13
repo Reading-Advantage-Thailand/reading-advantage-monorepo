@@ -67,27 +67,36 @@ const SCHEMA_DIR = join(PACKAGE_ROOT, "src/schema");
 const DRIZZLE_DIR = join(PACKAGE_ROOT, "drizzle");
 
 const EXPECTED_SCHEMA_FILES = [
+  "activity.ts",
   "analytics.ts",
   "audit.ts",
   "auth.ts",
+  "capability-idempotency.ts",
   "classrooms.ts",
   "codecamp.ts",
+  "company-product-principals.ts",
   "content.ts",
+  "finance-operations.ts",
   "flashcards.ts",
   "index.ts",
   "licenses.ts",
+  "marketing-constants.ts",
   "marketing.ts",
+  "mastery.ts",
   "primary.ts",
   "progress.ts",
   "questions.ts",
   "sales.ts",
   "science.ts",
+  "standard-pack-successor-admission-receipts.ts",
+  "standard-pack-successor-commitments.ts",
   "stories.ts",
   "taxonomy.ts",
   "users.ts",
+  "workbooks.ts",
 ] as const;
 
-const EXPECTED_MIGRATION_INDICES = Array.from({ length: 26 }, (_, i) =>
+const EXPECTED_MIGRATION_INDICES = Array.from({ length: 52 }, (_, i) =>
   i.toString().padStart(4, "0"),
 );
 
@@ -184,9 +193,9 @@ describe("Adversarial: phase1-breaking-changes.md — negated-context traps", ()
 
   it("cross-references the highest-risk schema files (not just one)", () => {
     // The Red contract uses `EXPECTED_SCHEMA_FILES.find(...)` which
-    // passes if any one of the 15 files is mentioned. The audit
+    // passes if any one of the schema files is mentioned. The audit
     // claims to cover the FULL schema surface, so it must mention
-    // the highest-risk files. We require at least 5 of the 15 to be
+    // the highest-risk files. We require at least 5 schema files to be
     // mentioned, and at least one of {science.ts, marketing.ts} (the
     // two largest/newest files).
     const text = readFileSync(BREAKING_CHANGES_PATH, "utf8");
@@ -195,7 +204,7 @@ describe("Adversarial: phase1-breaking-changes.md — negated-context traps", ()
     );
     expect(
       mentioned.length,
-      `at least 5 of 15 schema files must be cross-referenced; saw ${mentioned.length} (${mentioned.join(", ")}).`,
+      `at least 5 of ${EXPECTED_SCHEMA_FILES.length} schema files must be cross-referenced; saw ${mentioned.length} (${mentioned.join(", ")}).`,
     ).toBeGreaterThanOrEqual(5);
     const hasHighRisk =
       text.includes("science.ts") || text.includes("marketing.ts");
@@ -309,16 +318,16 @@ describe("Adversarial: phase1-schema-map.md — coverage and integrity traps", (
     ).toEqual([]);
   });
 
-  it("mentions science.ts as the largest schema file (385 lines)", () => {
-    // The schema map should rank schema files by risk; science.ts is
-    // the largest at 385 lines and should be flagged.
+  it("mentions mastery.ts as the largest schema file (438 lines)", () => {
+    // The schema map should rank schema files by risk; mastery.ts is
+    // the largest at 438 lines and should be flagged.
     const text = readFileSync(SCHEMA_MAP_PATH, "utf8");
-    const scienceContext =
-      /science\.ts[\s\S]{0,200}(largest|385|biggest)/i.test(text) ||
-      /(largest|biggest)[\s\S]{0,200}science\.ts/i.test(text);
+    const masteryContext =
+      /mastery\.ts[\s\S]{0,200}(largest|438|biggest)/i.test(text) ||
+      /(largest|biggest)[\s\S]{0,200}mastery\.ts/i.test(text);
     expect(
-      scienceContext,
-      "schema map must flag science.ts as the largest schema file.",
+      masteryContext,
+      "schema map must flag mastery.ts as the largest schema file.",
     ).toBe(true);
   });
 
@@ -386,30 +395,6 @@ describe("Adversarial: phase1-schema-map.md — coverage and integrity traps", (
       `migration SQL filesystem surface (${onDisk.length} files) must match doc surface (${docNames.length} files).`,
     ).toBe(true);
   });
-});
-
-it("DEBUG: see what file content is", () => {
-  const text = readFileSync(PRISMA7_REJECTION_PATH, "utf8");
-  console.log("=== FILE CONTENT FIRST 1000 CHARS ===");
-  console.log(text.slice(0, 1000));
-  console.log("=== 'rejected' count:", text.split("rejected").length - 1);
-  console.log(
-    "=== 'NOT rejected' count:",
-    text.split("NOT rejected").length - 1,
-  );
-  console.log(
-    "=== hasPositiveRejection:",
-    appearsInPositiveContext(text, "rejected"),
-  );
-  console.log(
-    "=== hasPositiveAdopt:",
-    appearsInPositiveContext(text, "not adopt"),
-  );
-  console.log(
-    "=== hasPositiveDecline:",
-    appearsInPositiveContext(text, "declined"),
-  );
-  expect(true).toBe(true);
 });
 
 describe("Adversarial: phase1-prisma-7-rejection.md — decision-strength traps", () => {
@@ -496,14 +481,22 @@ describe("Adversarial: phase1-prisma-7-rejection.md — decision-strength traps"
 
 describe("Adversarial: cross-artifact consistency (between the 3 documents)", () => {
   it("the schema-file count is consistent between the schema map and the live filesystem", () => {
-    // The schema map claims 15 schema files. Verify the count and
-    // that 15 is what the filesystem actually has.
+    // The schema map claims the exact schema-file count. Verify the count
+    // and that it matches the filesystem.
     const text = readFileSync(SCHEMA_MAP_PATH, "utf8");
     const onDisk = readdirSync(SCHEMA_DIR).filter((f) => f.endsWith(".ts"));
-    const claims15 =
-      /\b15\b[\s\S]{0,200}(schema|files)/i.test(text) ||
-      /(schema|files)[\s\S]{0,200}\b15\b/i.test(text);
-    expect(claims15, "schema map must claim 15 schema files").toBe(true);
+    const expectedSchemaCount = EXPECTED_SCHEMA_FILES.length;
+    const claimsExpectedSchemaCount =
+      new RegExp(`\\b${expectedSchemaCount}\\b[\\s\\S]{0,200}(schema|files)`, "i").test(
+        text,
+      ) ||
+      new RegExp(`(schema|files)[\\s\\S]{0,200}\\b${expectedSchemaCount}\\b`, "i").test(
+        text,
+      );
+    expect(
+      claimsExpectedSchemaCount,
+      `schema map must claim ${expectedSchemaCount} schema files`,
+    ).toBe(true);
     expect(
       onDisk.length,
       `filesystem must have ${EXPECTED_SCHEMA_FILES.length} schema files; saw ${onDisk.length}.`,
@@ -513,10 +506,20 @@ describe("Adversarial: cross-artifact consistency (between the 3 documents)", ()
   it("the migration count is consistent between the schema map and the live filesystem", () => {
     const text = readFileSync(SCHEMA_MAP_PATH, "utf8");
     const onDisk = readdirSync(DRIZZLE_DIR).filter((f) => f.endsWith(".sql"));
-    const claims22 =
-      /\b22\b[\s\S]{0,200}(migration|sql|files)/i.test(text) ||
-      /(migration|sql|files)[\s\S]{0,200}\b22\b/i.test(text);
-    expect(claims22, "schema map must claim 22 migration files").toBe(true);
+    const expectedMigrationCount = EXPECTED_MIGRATION_INDICES.length;
+    const claimsExpectedMigrationCount =
+      new RegExp(
+        `\\b${expectedMigrationCount}\\b[\\s\\S]{0,200}(migration|sql|files)`,
+        "i",
+      ).test(text) ||
+      new RegExp(
+        `(migration|sql|files)[\\s\\S]{0,200}\\b${expectedMigrationCount}\\b`,
+        "i",
+      ).test(text);
+    expect(
+      claimsExpectedMigrationCount,
+      `schema map must claim ${expectedMigrationCount} migration files`,
+    ).toBe(true);
     expect(
       onDisk.length,
       `filesystem must have ${EXPECTED_MIGRATION_INDICES.length} migration SQL files; saw ${onDisk.length}.`,
