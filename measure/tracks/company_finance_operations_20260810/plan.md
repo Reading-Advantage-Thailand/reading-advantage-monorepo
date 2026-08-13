@@ -35,7 +35,15 @@
 
   Historical Red chronology (2026-08-12): the Phase 2 aggregate remained intentionally Red because `controlled-imports.ts` and the historical import operations do not exist. Its compiler AST fixture, source-owner guard, and missing-source boundary guard passed; the remaining expected failures were excluded from Phase 1 Task 3 acceptance.
 
-  Phase 2 admission (2026-08-13): the Red contract was re-verified against `13565ae7`. 20 behavior tests fail because the six required `ControlledImportsModule` exports do not exist; 4 guard tests pass (AST fixtures and deferred-source checks). The Phase 1 baseline (98 tests across 6 finance-operations files, 20 company-identity tests, 25 storage tests) is green. No real external blocker exists for Task 1. The `phase_base_sha` is captured at the strategy commit per `test-strategy-phase2.md`.
+  Phase 2 admission (2026-08-13): the Red contract was re-verified against `13565ae7`. 20 behavior tests fail because the six required `ControlledImportsModule` exports do not exist; 4 guard tests pass (AST fixtures and deferred-source checks). The Phase 1 baseline (98 tests across 6 finance-operations files, 20 company-identity tests, 25 storage tests) is green. No real external blocker exists for Task 1. The `phase_base_sha` is captured at the post-strategy repair commit per `test-strategy-phase2.md`.
+
+  Mid-Red evidence (2026-08-13; phase base `7ef48d2d2929c67dfd70c899a4710b77808637b9`): the two source guards now skip only when `controlled-imports.ts` is absent and inspect the real source when it exists. The Red test retains all six required exports, envelope lookalike rejection, forbidden policy fields, source-isolation AST fixtures, replay/conflict, immutable correction, durable identity, atomic acceptance/rollback, and historical pilot boundaries. It adds falsifiers for the forbidden `tax-invoice` status, invalid pilot packet versions, retained correction scope, and the full provider/database/runtime boundary matrix.
+
+  - Canonical Red command: `CI=true pnpm --filter @reading-advantage/backend exec vitest run src/modules/finance-operations/__tests__/controlled-imports-phase2.red.test.ts` — exit 1; collection succeeded; 24 tests ran; 20 failed and 4 passed.
+  - Expected behavior failures: `prepareControlledImportBatch` was undefined in 8 tests; `runHistoricalPrivateEvidencePilot` was undefined in 1; `classifyControlledImportBatchReplay` was undefined in 1; `prepareControlledImportCorrection` was undefined in 1; `createControlledImportJobIdentity` was undefined in 1; `acceptControlledImportBatch` was undefined in 8 tests, including 3 parameterized rollback cases.
+  - Passing guards: the provider/database/runtime/raw-SQL AST matrix, the absent-source deferred-owner guard, the synthetic deferred-owner marker matrix, and the absent-source compiler-boundary guard.
+  - Phase 1 focused baseline: backend 134/134 tests across 11 files, Company Identity 20/20 tests across 2 files, and Storage 25/25 tests across 1 file.
+  - The backend typecheck and focused lint commands were not used as Mid-Red gates. A later attempt started a workspace install and timed out on unavailable registry downloads; no role-owned test failure came from that attempt.
 
 ## Phase 3 — close and accountant exchange
 

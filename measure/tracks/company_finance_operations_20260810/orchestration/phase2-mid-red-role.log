@@ -1,0 +1,104 @@
+Measure Mid Red role log - Phase 2 controlled operational imports
+Track: company_finance_operations_20260810
+Phase: Phase 2 — controlled operational imports
+Role: measure-mid-red
+Date: 2026-08-13
+phase_base_sha: 7ef48d2d2929c67dfd70c899a4710b77808637b9
+role_base_sha: 7ef48d2d2929c67dfd70c899a4710b77808637b9
+HEAD at role start: 7ef48d2d2929c67dfd70c899a4710b77808637b9
+
+## Preflight
+
+- The phase base and role base resolve to the same immutable commit.
+- The checkout is `master`.
+- Exactly one worktree exists.
+- Existing dirty paths are unrelated user work: `.opencode/**`, Codecamp
+  Playwright and test-result reports, `pnpm-lock.yaml`, Advantage Games test
+  results, and Sales review output. I preserved these paths and did not stage
+  them.
+- The owned test file was clean at the role start. No production source,
+  specification, metadata, registry, generated facts, current Phase 1
+  strategy, or other track was edited.
+
+## Red work
+
+The Phase 2 task marker was already `[~]` before this role and remains `[~]`.
+I refined the two source guards so they inspect `controlled-imports.ts` when it
+exists and remain valid when the source is absent. I kept all six required
+exports and all existing behavior, isolation, idempotency, correction,
+authorization, atomicity, rollback, concurrency, and pilot tests.
+
+I added falsifiable checks for the forbidden `tax-invoice` status, invalid pilot
+packet versions, retained correction scope, and every listed provider,
+database, runtime, and dynamic boundary fixture.
+
+## Tests run
+
+1. Canonical Red command:
+   `CI=true pnpm --filter @reading-advantage/backend exec vitest run src/modules/finance-operations/__tests__/controlled-imports-phase2.red.test.ts`
+   - Exit 1.
+   - Collection succeeded.
+   - 24 tests ran: 20 failed, 4 passed.
+   - The failures are expected behavior failures because the six required
+     exports are absent from the Finance Operations barrel.
+   - The four passing tests are the source AST matrix, absent-source
+     deferred-owner guard, synthetic deferred-owner marker matrix, and
+     absent-source compiler-boundary guard.
+
+2. Phase 1 focused backend baseline:
+   `CI=true pnpm --filter @reading-advantage/backend exec vitest run src/modules/finance-operations/__tests__/architecture-boundary.test.ts src/modules/finance-operations/__tests__/port-boundaries.test.ts src/modules/finance-operations/__tests__/authorization-audit.test.ts src/modules/finance-operations/__tests__/money-history.test.ts src/modules/finance-operations/__tests__/contracts.test.ts src/modules/finance-operations/__tests__/independent-review-blockers.red.test.ts src/modules/finance-operations/__tests__/postgres-record-repository.red.test.ts src/modules/finance-operations/__tests__/provenance-whitespace.red.test.ts src/modules/finance-operations/__tests__/historical-private-evidence-packet.red.test.ts src/modules/finance-operations/__tests__/durable-job-adapter.red.test.ts src/modules/finance-operations/__tests__/historical-private-evidence-binding-adapter.red.test.ts`
+   - Exit 0.
+   - 11 files and 134 tests passed.
+
+3. Phase 1 Company Identity baseline:
+   `CI=true pnpm --filter @reading-advantage/backend exec vitest run src/modules/company-identity/__tests__/finance-authorization-adapter.red.test.ts src/modules/company-identity/__tests__/protocol-safety.red.test.ts`
+   - Exit 0.
+   - 2 files and 20 tests passed.
+
+4. Phase 1 Storage baseline:
+   `CI=true pnpm --filter @reading-advantage/storage exec vitest run src/__tests__/finance-private-evidence-read.red.test.ts`
+   - Exit 0.
+   - 1 file and 25 tests passed.
+
+5. `git diff --check` passed.
+
+An attempted backend typecheck and focused lint invocation started a workspace
+install and timed out during unavailable registry downloads. This infrastructure
+attempt did not change role-owned files or produce a test failure.
+
+## Plan updates
+
+`plan.md` records the Mid-Red guard changes, the exact Red command and counts,
+the expected missing-export failures, the four passing guards, and the Phase 1
+baseline counts. The Phase 2 implementation task stays `[~]`. The pilot task
+stays blocked.
+
+## Known failures
+
+- Expected Red: 20 behavior tests fail because `controlled-imports.ts` and the
+  six required exports do not exist.
+- Phase 2 is not Green.
+- Typecheck/lint were not completed because the workspace install timed out on
+  registry downloads. This is not a Phase 2 behavior failure.
+
+## Handoff
+
+Jr Green must implement the six required exports and `controlled-imports.ts`
+  against the existing behavior contract. The implementation must keep the
+  source file inside the Finance Operations module, pass the activated source
+  guards, accept only historical private-evidence envelopes, reject Finance CRM
+  and Tutor lookalikes, preserve policy neutrality, and satisfy all 20 Red
+  behavior tests. Jr Green must not implement the blocked pilot task.
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+status: complete
+track: company_finance_operations_20260810
+phase: Phase 2 — controlled operational imports
+commits: source-and-evidence commit (SHA unavailable before commit)
+tests_run: canonical Red command exit 1 (24 collected, 20 failed, 4 passed); Phase 1 backend baseline exit 0 (134/134); Company Identity baseline exit 0 (20/20); Storage baseline exit 0 (25/25); git diff --check exit 0; typecheck/lint attempt timed out during workspace install
+files_changed: packages/backend/src/modules/finance-operations/__tests__/controlled-imports-phase2.red.test.ts; measure/tracks/company_finance_operations_20260810/plan.md; measure/tracks/company_finance_operations_20260810/orchestration/phase2-mid-red-role.log
+plan_updates: recorded activated source guards, added falsifiers, exact Red failures and counts, passing Phase 1 baselines, and the install timeout limitation; Task 1 remains [~]
+known_failures: expected 20 behavior failures from six missing exports; typecheck/lint not completed because registry downloads timed out
+handoff: Jr Green must implement six exports and controlled-imports.ts without production-boundary violations, while preserving all Red contracts and leaving the pilot task blocked
+END_MEASURE_AGENT_RESULT

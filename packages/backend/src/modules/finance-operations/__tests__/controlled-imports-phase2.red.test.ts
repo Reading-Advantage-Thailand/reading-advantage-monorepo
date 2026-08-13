@@ -1005,6 +1005,13 @@ describe("Finance Operations Phase 2 controlled imports", () => {
       packetVersion: "historical-private-evidence-packet.v1",
       liveSourceAdaptersUsed: [],
     });
+    expect(["accepted", "replay", "conflict"]).toContain(result.status);
+    await expect(
+      subject.runHistoricalPrivateEvidencePilot({
+        packetVersion: "historical-private-evidence-packet.v999",
+        sourceSystem: "owner-attested-archive",
+      }),
+    ).rejects.toThrow();
   });
 
   it("prepares PA-INV-2026-001 exactly, deeply frozen, and without input aliases or policy inference", async () => {
@@ -1484,6 +1491,15 @@ describe("Finance Operations Phase 2 controlled imports", () => {
       });
 
     expect(() =>
+      prepareAcceptedEnvelope({
+        ...strictEnvelope,
+        document: {
+          ...baseDocument,
+          thaiTaxDocumentStatus: "tax-invoice",
+        },
+      }),
+    ).toThrow();
+    expect(() =>
       prepare({
         ...baseDocument,
         facts: [{ factId: "total", kind: "money", amountDecimal: 9270.79 }],
@@ -1906,6 +1922,7 @@ describe("Finance Operations Phase 2 controlled imports", () => {
       money: { amountMinor: "13220000", currency: "THB" },
     });
     expect(correction).not.toBe(acceptedRecord);
+    expect(correction.scope).toEqual(acceptedRecord.scope);
     expect(correction.scope).not.toBe(acceptedRecord.scope);
     expect(correction.money).not.toBe(money);
     expect(correction.provenance).not.toBe(provenance);
@@ -2276,10 +2293,15 @@ describe("Finance Operations Phase 2 controlled imports", () => {
     for (const result of results) expectDeepFrozen(result);
   });
 
-  it("detects provider, database, runtime, raw SQL, and nonliteral dynamic access with compiler AST", () => {
+  it("detects every provider, database, runtime, raw SQL, and dynamic boundary with compiler AST", () => {
     const fixtures: ReadonlyArray<readonly [string, string]> = [
       ['import { google } from "googleapis";', "import"],
       ['import { financeRecords } from "@reading-advantage/db";', "import"],
+      ['import { drizzle } from "drizzle-orm";', "import"],
+      ['import postgres from "postgres";', "import"],
+      ['import { S3Client } from "@aws-sdk/client-s3";', "import"],
+      ['import { Storage } from "@google-cloud/storage";', "import"],
+      ['import admin from "firebase-admin";', "import"],
       [
         'import type { CompanyIdentityService } from "../company-identity/index.js";',
         "import-escape",
@@ -2290,9 +2312,19 @@ describe("Finance Operations Phase 2 controlled imports", () => {
       ],
       ["const provider = await import(providerName);", "dynamic-import"],
       ['await fetch("https://provider.invalid");', "runtime-access"],
+      ['require("provider");', "runtime-access"],
+      ['new WebSocket("wss://provider.invalid");', "runtime-access"],
+      ["new XMLHttpRequest();", "runtime-access"],
       ["const secret = process.env.DATABASE_URL;", "runtime-global"],
+      ["const secret = Bun.env.DATABASE_URL;", "runtime-global"],
+      ["const file = Deno.readFile(\"source\");", "runtime-global"],
       ["await database.select().from(table);", "database-call"],
       ['await database["insert"](row);', "database-call"],
+      ["await database.update(table).set(row);", "database-call"],
+      ["await database.delete(table);", "database-call"],
+      ['await database.query("statement");', "database-call"],
+      ["await database.execute(query);", "database-call"],
+      ["await database.transaction(callback);", "database-call"],
       ['await globalThis.fetch("https://provider.invalid");', "runtime-access"],
       ["const query = sql`SELECT * FROM finance_records`;", "raw-sql"],
     ];
@@ -2318,12 +2350,7 @@ describe("Finance Operations Phase 2 controlled imports", () => {
   });
 
   it("keeps deferred CRM and Tutor adapters and envelopes out of the Finance Phase 2 source", async () => {
-    const sourceExists = existsSync(CONTROLLED_IMPORTS_PATH);
-    expect(
-      sourceExists,
-      "Phase 2 keeps the controlled-import production module deferred.",
-    ).toBe(false);
-    if (!sourceExists) return;
+    if (!existsSync(CONTROLLED_IMPORTS_PATH)) return;
     const source = await readFile(CONTROLLED_IMPORTS_PATH, "utf8");
     const lookalikes = collectDeferredSourceOwnerLookalikes(source);
     expect(lookalikes).toEqual([]);
@@ -2339,12 +2366,7 @@ describe("Finance Operations Phase 2 controlled imports", () => {
   });
 
   it("keeps controlled-import production code behind compiler-checked internal boundaries", async () => {
-    const sourceExists = existsSync(CONTROLLED_IMPORTS_PATH);
-    expect(
-      sourceExists,
-      "Phase 2 keeps the controlled-import production module deferred.",
-    ).toBe(false);
-    if (!sourceExists) return;
+    if (!existsSync(CONTROLLED_IMPORTS_PATH)) return;
     const source = await readFile(CONTROLLED_IMPORTS_PATH, "utf8");
     expect(
       collectControlledImportBoundaryViolations(
