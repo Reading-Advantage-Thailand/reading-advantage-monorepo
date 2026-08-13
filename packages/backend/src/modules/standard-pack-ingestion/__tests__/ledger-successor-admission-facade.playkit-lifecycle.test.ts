@@ -5,31 +5,21 @@ import { resolve } from "node:path";
 import { describe, expect, it, vi } from "vitest";
 
 import {
-  serializeAssetContractV2PhysicalDescriptorPayload,
-} from "../../../../../advantage-play-kit/src/assets/asset-contract-v2.js";
-import {
   createStandardPackIngestionLedgerPredecessorIndex,
   serializeStandardPackIngestionLedgerPayload,
   validateStandardPackIngestionLedger,
-} from "../../../../../advantage-play-kit/src/assets/standard-pack-ingestion-ledger.js";
-import {
   serializeStandardPackLegacySourcePacketPayload,
-} from "../../../../../advantage-play-kit/src/assets/standard-pack-legacy-source-packet.js";
-import {
   serializeStandardPackSuitabilityAcceptedDecisionManifestPayload,
   serializeStandardPackSuitabilityDecisionPayload,
   serializeStandardPackSuitabilityDossierPayload,
   serializeStandardPackCanonicalIngestionReceiptPayload,
-} from "../../../../../advantage-play-kit/src/assets/standard-pack-suitability.js";
+  serializeAssetContractV2PhysicalDescriptorPayload,
+  type StandardAssetCatalog,
+} from "@reading-advantage/advantage-play-kit/assets";
 import {
   createCanonicalIngestionReceiptFixture,
-} from "../../../../../advantage-play-kit/src/assets/standard-pack-suitability-ingestion-negative-fixtures.test-support.js";
-import {
   LEGACY_INGESTION_REQUIRED_FIXTURE,
-} from "../../../../../advantage-play-kit/src/assets/standard-pack-suitability-test-fixtures.test-support.js";
-import type {
-  StandardAssetCatalog,
-} from "../../../../../advantage-play-kit/src/assets/standard-pack-release.js";
+} from "@reading-advantage/advantage-play-kit/testing";
 import {
   createStandardPackIngestionLedgerSuccessorAdmissionFacade,
   type StandardPackSuccessorAdmissionCommand,
