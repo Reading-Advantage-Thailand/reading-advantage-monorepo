@@ -313,13 +313,17 @@ describe("Finance Task 3 Review B Company Identity remediation RED contract", ()
       occurredAt: "2026-08-11T05:01:00.000Z",
       requestId: "99999999-9999-4999-8999-999999999999",
       correlationId: "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
-      actorKind: "authenticated-owner" as const,
+      actorKind: "authenticated-owner" as
+        | "authenticated-owner"
+        | "unauthenticated",
       actorSubjectId: subjectId,
       companyId,
       schoolId: "school-alpha",
       operation,
-      outcome: "allowed" as const,
-      reason: "role-policy-accepted" as const,
+      outcome: "allowed" as "allowed" | "denied",
+      reason: "role-policy-accepted" as
+        | "role-policy-accepted"
+        | "organization-mismatch",
       claimsVersion: "company-identity-claims-v8",
       policyVersion: "finance-role-policy-v10",
     };
