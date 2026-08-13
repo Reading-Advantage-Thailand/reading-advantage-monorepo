@@ -375,6 +375,7 @@ export function prepareControlledImportBatch(
       },
       currency = text(d.currency),
       facts: Record<string, unknown>[] = [];
+    const trustedFactValues = preparation.packet.facts.map((fact) => fact.value);
     const add = (f: Record<string, unknown>, id: string, kind?: string) => {
       const amountMinor = minor(f.amountDecimal),
         p = prov(e, batchId, `${base.sourceDocumentId}#${id}`),
@@ -430,7 +431,7 @@ export function prepareControlledImportBatch(
         );
       }
     } else {
-      for (const f of d.facts) {
+      for (const [factIndex, f] of d.facts.entries()) {
         const q = f;
         if (q.kind === "count")
           facts.push({
@@ -443,7 +444,15 @@ export function prepareControlledImportBatch(
               `${base.sourceDocumentId}#${text(q.factId)}`,
             ),
           });
-        else if (q.kind === "money") add(q, text(q.factId));
+        else if (q.kind === "money") {
+          const trustedValue = trustedFactValues[factIndex];
+          add(
+            trustedValue === undefined
+              ? q
+              : { ...q, amountDecimal: trustedValue },
+            text(q.factId),
+          );
+        }
         else throw new Error("invalid fact");
       }
     }

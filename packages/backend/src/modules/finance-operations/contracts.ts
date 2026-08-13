@@ -451,9 +451,7 @@ export interface HistoricalPrivateEvidencePreparation {
   readonly evidence: Readonly<HistoricalPrivateEvidenceBinding>;
 }
 
-const historicalPrivateEvidencePreparationCapability = Symbol(
-  "historical-private-evidence-preparation",
-);
+const historicalPrivateEvidencePreparations = new WeakSet<object>();
 
 /** Tests whether a preparation was produced by the accepted historical evidence command. */
 export function isHistoricalPrivateEvidencePreparation(
@@ -462,7 +460,7 @@ export function isHistoricalPrivateEvidencePreparation(
   return (
     typeof value === "object" &&
     value !== null &&
-    Reflect.get(value, historicalPrivateEvidencePreparationCapability) === true
+    historicalPrivateEvidencePreparations.has(value)
   );
 }
 
@@ -769,12 +767,9 @@ export function createHistoricalPrivateEvidenceImportCommand(input: {
         authorizationEvidence,
         evidence,
       };
-      Object.defineProperty(
-        preparation,
-        historicalPrivateEvidencePreparationCapability,
-        { value: true },
-      );
-      return freezeDeep(preparation);
+      const frozenPreparation = freezeDeep(preparation);
+      historicalPrivateEvidencePreparations.add(frozenPreparation);
+      return frozenPreparation;
     },
   };
 }

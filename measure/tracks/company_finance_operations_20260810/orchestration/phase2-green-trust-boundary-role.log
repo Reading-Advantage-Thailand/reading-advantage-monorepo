@@ -1,0 +1,18 @@
+MEASURE_AGENT_RESULT
+role: phase2-green-trust-boundary
+status: complete
+track: company_finance_operations_20260810
+phase: 2
+phase_base_sha: 7ef48d2d2929c67dfd70c899a4710b77808637b9
+role_base_sha: 1a69ae0f709bde20c0bbd959e36207739e70d286
+red_receipt: controlled-imports-phase2-review-b.red.test.ts is committed in phase_base_sha..role_base_sha
+implementation: Preparation identity uses a module-private WeakSet. Receipt fact values derive from the trusted preparation.
+targeted_test: 2 passed, 31 skipped
+production_tsc: passed
+diff_check: pending before commit
+files:
+  - packages/backend/src/modules/finance-operations/contracts.ts
+  - packages/backend/src/modules/finance-operations/controlled-imports.ts
+  - measure/tracks/company_finance_operations_20260810/orchestration/phase2-green-trust-boundary-role.log
+handoff: Review only the first two Review B trust-boundary fixes. The other Review B failures remain out of scope.
+END_MEASURE_AGENT_RESULT
