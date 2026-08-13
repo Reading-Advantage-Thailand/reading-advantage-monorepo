@@ -108,8 +108,8 @@ role: measure-mid-red
 status: complete
 track: company_finance_operations_20260810
 phase: Phase 2 — controlled operational imports
-commits: pending commit of the owned Red test and Measure evidence
-resulting_head: pending commit of the owned Red test and Measure evidence
+commits: 225c9376f (owned Red test and Measure evidence)
+resulting_head: 225c9376ffb591380b1bf9678d9bb527e9b372e7 (owned Red work commit)
 tests_run: Phase 2 Red exit 1 (24 collected, 23 passed, 1 failed); Review B Red exit 1 (26 collected, 0 passed, 26 failed); Finance baseline exit 0 (135/135); Company Identity baseline exit 0 (20/20); Storage baseline exit 0 (25/25); targeted Prettier exit 0; git diff --check exit 0
 files_changed: packages/backend/src/modules/finance-operations/__tests__/controlled-imports-phase2.red.test.ts; measure/tracks/company_finance_operations_20260810/plan.md; measure/tracks/company_finance_operations_20260810/orchestration/phase2-trusted-preparation-mid-red-role.log; repaired prior blocked Green role log
 plan_updates: recorded genuine Phase 1 trusted-preparation fixtures, exact Red results, and remaining markers; Task 1 remains [~]; Task 2 remains [b] deferred:phase2
