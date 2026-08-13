@@ -4,6 +4,7 @@ Phase: Phase 2 — controlled operational imports
 Role: measure-mid-red
 Date: 2026-08-13
 phase_base_sha: 7ef48d2d2929c67dfd70c899a4710b77808637b9
+baseline_sha: 7ef48d2d2929c67dfd70c899a4710b77808637b9
 role_base_sha: 7ef48d2d2929c67dfd70c899a4710b77808637b9
 HEAD at role start: 7ef48d2d2929c67dfd70c899a4710b77808637b9
 
@@ -95,7 +96,8 @@ role: measure-mid-red
 status: complete
 track: company_finance_operations_20260810
 phase: Phase 2 — controlled operational imports
-commits: source-and-evidence commit (SHA unavailable before commit)
+commits: `d764d077e` primary Red source-and-evidence commit; follow-up role-evidence commit (SHA unavailable before commit)
+resulting_head: follow-up role-evidence commit (SHA unavailable before commit)
 tests_run: canonical Red command exit 1 (24 collected, 20 failed, 4 passed); Phase 1 backend baseline exit 0 (134/134); Company Identity baseline exit 0 (20/20); Storage baseline exit 0 (25/25); git diff --check exit 0; typecheck/lint attempt timed out during workspace install
 files_changed: packages/backend/src/modules/finance-operations/__tests__/controlled-imports-phase2.red.test.ts; measure/tracks/company_finance_operations_20260810/plan.md; measure/tracks/company_finance_operations_20260810/orchestration/phase2-mid-red-role.log
 plan_updates: recorded activated source guards, added falsifiers, exact Red failures and counts, passing Phase 1 baselines, and the install timeout limitation; Task 1 remains [~]
