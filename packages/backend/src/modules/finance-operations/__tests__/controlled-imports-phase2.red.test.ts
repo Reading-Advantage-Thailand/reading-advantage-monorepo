@@ -163,11 +163,27 @@ type ControlledSourceDocumentInput =
     };
 
 /** Receipt proving which existing provider-neutral source port accepted a snapshot. */
-type AcceptedSourcePortReceipt =
-  {
-    readonly port: "private-evidence-storage";
-    readonly snapshot: Readonly<PrivateEvidenceSnapshot>;
-  };
+type AcceptedSourcePortReceipt = {
+  readonly port: "private-evidence-storage";
+  readonly snapshot: Readonly<PrivateEvidenceSnapshot>;
+};
+
+/** Real Phase 1 command boundary used to obtain trusted preparation evidence. */
+interface TrustedPreparationCommand {
+  prepare(input: unknown): Promise<unknown>;
+}
+
+/** Minimum Company Identity request observed by the trusted-preparation fake. */
+interface TrustedAttestationRequest {
+  readonly scope: FinanceOperationScope;
+}
+
+/** Minimum private-evidence binding request observed by the trusted fake. */
+interface TrustedEvidenceBindingRequest {
+  readonly evidenceReference: string;
+  readonly scope: FinanceOperationScope;
+  readonly expectedPayloadDigest: string;
+}
 
 /** Versioned envelope accepted before provider-neutral source data is normalized. */
 interface AcceptedControlledSourceEnvelope {
@@ -249,6 +265,9 @@ interface AcceptControlledImportBatchRequest {
 /** Future production exports required by the Phase 2 RED contract. */
 interface ControlledImportsModule {
   prepareControlledImportBatch(input: unknown): PreparedControlledImportBatch;
+  createHistoricalPrivateEvidenceImportCommand(
+    input: unknown,
+  ): TrustedPreparationCommand;
   classifyControlledImportBatchReplay(input: {
     readonly existing: AcceptedControlledImportBatch;
     readonly incoming: Omit<AcceptedControlledImportBatch, "acceptedRecordIds">;
@@ -395,23 +414,144 @@ function privateEvidenceEnvelope(input: {
   };
 }
 
-/** Creates one normalized input using accepted, versioned source envelopes only. */
+/** Creates trusted preparation through the real Phase 1 command boundary. */
+async function trustedPreparationForEnvelope(
+  subject: ControlledImportsModule,
+  envelope: AcceptedControlledSourceEnvelope,
+): Promise<unknown> {
+  const createCommand = subject.createHistoricalPrivateEvidenceImportCommand;
+  expect(createCommand).toBeTypeOf("function");
+  const attest = vi.fn(async (input: TrustedAttestationRequest) => ({
+    decision: "allow" as const,
+    evidence: {
+      source: "company-identity" as const,
+      claimsVersion: "company-identity-claims-v1",
+      policyVersion: "finance-historical-import-role-policy-v1",
+      subjectId: "employee-importer",
+      organizationId: input.scope.companyId,
+      appRoleIds: ["role-historical-private-evidence-import"],
+      ...(input.scope.schoolId === undefined
+        ? {}
+        : { schoolIds: [input.scope.schoolId] }),
+    },
+  }));
+  const verify = vi.fn(async (input: TrustedEvidenceBindingRequest) => ({
+    evidenceReference: input.evidenceReference,
+    scope: input.scope,
+    payloadDigest: input.expectedPayloadDigest,
+  }));
+  const command = createCommand({
+    companyIdentityAttestor: { attest },
+    privateEvidenceBindingPort: { verify },
+  });
+  const preparation = await command.prepare({
+    packet: {
+      packetVersion: "historical-private-evidence-packet.v1",
+      scope: envelope.scope,
+      source: {
+        sourceSystem: envelope.sourceSystem,
+        sourceVersion: envelope.sourceVersion,
+        sourceIdentity: envelope.sourceRecordId,
+        payloadDigest: envelope.evidenceAuthorization.payloadDigest,
+        evidenceReference: envelope.evidenceAuthorization.evidenceReference,
+      },
+      facts: [
+        {
+          factCategory: "document-total",
+          factId: "document-total:receipt-total",
+          kind: "source-stated-value",
+          label: "Receipt total as stated",
+          value: "100.00",
+        },
+      ],
+    },
+    credential: { kind: "token", value: "owner-token" },
+    audit: {
+      eventId: "finance-attestation-event-001",
+      objectId: "historical-private-evidence-packet-001",
+      occurredAt: "2026-08-13T01:02:03.000Z",
+      requestId: "finance-import-request-001",
+      correlationId: "finance-import-correlation-001",
+    },
+  });
+  expect(attest).toHaveBeenCalledTimes(1);
+  expect(verify).toHaveBeenCalledTimes(1);
+  expect(preparation).toMatchObject({
+    packet: {
+      packetVersion: "historical-private-evidence-packet.v1",
+      scope: envelope.scope,
+      source: {
+        sourceSystem: envelope.sourceSystem,
+        sourceVersion: envelope.sourceVersion,
+        sourceIdentity: envelope.sourceRecordId,
+        payloadDigest: envelope.evidenceAuthorization.payloadDigest,
+        evidenceReference: envelope.evidenceAuthorization.evidenceReference,
+      },
+    },
+    evidence: {
+      evidenceReference: envelope.evidenceAuthorization.evidenceReference,
+      scope: envelope.scope,
+      payloadDigest: envelope.evidenceAuthorization.payloadDigest,
+    },
+  });
+  return preparation;
+}
+
+/** Creates one normalized input with accepted envelopes and genuine preparation artifacts. */
 function normalizationInput(
   batchId: string,
   acceptedSourceEnvelopes: readonly AcceptedControlledSourceEnvelope[],
   inputScope: Readonly<FinanceOperationScope> = scope,
+  trustedPreparations: readonly unknown[] = [],
 ): Readonly<{
   normalizationVersion: typeof NORMALIZATION_VERSION;
   scope: Readonly<FinanceOperationScope>;
   batchId: string;
   acceptedSourceEnvelopes: readonly AcceptedControlledSourceEnvelope[];
+  readonly trustedPreparation?: unknown;
+  readonly trustedPreparations?: readonly unknown[];
 }> {
   return {
     normalizationVersion: NORMALIZATION_VERSION,
     scope: inputScope,
     batchId,
     acceptedSourceEnvelopes,
+    ...(trustedPreparations.length === 1
+      ? { trustedPreparation: trustedPreparations[0] }
+      : trustedPreparations.length > 1
+        ? { trustedPreparations }
+        : {}),
   };
+}
+
+/** Creates a normalization request from real Phase 1 preparations. */
+async function trustedNormalizationInput(
+  subject: ControlledImportsModule,
+  batchId: string,
+  acceptedSourceEnvelopes: readonly AcceptedControlledSourceEnvelope[],
+  inputScope: Readonly<FinanceOperationScope> = scope,
+  preparationEnvelopes: readonly AcceptedControlledSourceEnvelope[] = acceptedSourceEnvelopes,
+): Promise<
+  Readonly<{
+    normalizationVersion: typeof NORMALIZATION_VERSION;
+    scope: Readonly<FinanceOperationScope>;
+    batchId: string;
+    acceptedSourceEnvelopes: readonly AcceptedControlledSourceEnvelope[];
+    readonly trustedPreparation?: unknown;
+    readonly trustedPreparations?: readonly unknown[];
+  }>
+> {
+  const trustedPreparations = await Promise.all(
+    preparationEnvelopes.map((envelope) =>
+      trustedPreparationForEnvelope(subject, envelope),
+    ),
+  );
+  return normalizationInput(
+    batchId,
+    acceptedSourceEnvelopes,
+    inputScope,
+    trustedPreparations,
+  );
 }
 
 /** Produces one deeply frozen valid prepared plan for command tests. */
@@ -942,7 +1082,11 @@ describe("Finance Operations Phase 2 controlled imports", () => {
 
     expect(
       subject.prepareControlledImportBatch(
-        normalizationInput("accepted-envelope-batch", envelopes),
+        await trustedNormalizationInput(
+          subject,
+          "accepted-envelope-batch",
+          envelopes,
+        ),
       ),
     ).toMatchObject({
       status: "ready",
@@ -956,36 +1100,47 @@ describe("Finance Operations Phase 2 controlled imports", () => {
         documents: [sourceDocument],
       }),
     ).toThrow();
+    const unknownEnvelopeVersion = {
+      ...envelopes[0],
+      envelopeVersion: "unregistered-envelope-v999",
+    } as unknown as AcceptedControlledSourceEnvelope;
+    const unknownEnvelopeRequest = await trustedNormalizationInput(
+      subject,
+      "unknown-envelope-version",
+      [unknownEnvelopeVersion],
+      scope,
+      [envelopes[0]],
+    );
     expect(() =>
-      subject.prepareControlledImportBatch({
-        ...normalizationInput("unknown-envelope-version", envelopes),
-        acceptedSourceEnvelopes: [
-          { ...envelopes[0], envelopeVersion: "unregistered-envelope-v999" },
-        ],
-      }),
+      subject.prepareControlledImportBatch(unknownEnvelopeRequest),
     ).toThrow();
 
     for (const port of [
       "crm-customer-billing-catalog",
       "tutor-financial-export",
     ] as const) {
+      const legitimateEnvelope = privateEvidenceEnvelope({
+        document: sourceDocument,
+        sourceSystem: "owner-attested-archive",
+        sourceVersion: "archive-v1",
+        payloadDigest: "f".repeat(64),
+        evidenceReference,
+      });
       const lookalikeEnvelope = {
-        ...privateEvidenceEnvelope({
-          document: sourceDocument,
-          sourceSystem: "owner-attested-archive",
-          sourceVersion: "archive-v1",
-          payloadDigest: "f".repeat(64),
-          evidenceReference,
-        }),
+        ...legitimateEnvelope,
         sourceAcceptance: {
           port,
           snapshot: evidenceSnapshot(evidenceReference, "f".repeat(64)),
         },
       } as unknown as AcceptedControlledSourceEnvelope;
+      const lookalikeRequest = normalizationInput(
+        `deferred-${port}`,
+        [lookalikeEnvelope],
+        scope,
+        [await trustedPreparationForEnvelope(subject, legitimateEnvelope)],
+      );
       expect(() =>
-        subject.prepareControlledImportBatch(
-          normalizationInput(`deferred-${port}`, [lookalikeEnvelope]),
-        ),
+        subject.prepareControlledImportBatch(lookalikeRequest),
       ).toThrow();
     }
   });
@@ -1068,9 +1223,11 @@ describe("Finance Operations Phase 2 controlled imports", () => {
       evidenceReference:
         "private-evidence://company-sanitized/finance/sanitized/pa-inv-2026-001",
     });
-    const input = normalizationInput("school-billing-pa-inv-2026-001", [
-      envelope,
-    ]);
+    const input = await trustedNormalizationInput(
+      subject,
+      "school-billing-pa-inv-2026-001",
+      [envelope],
+    );
     const result = subject.prepareControlledImportBatch(input);
 
     expect(result.status).toBe("ready");
@@ -1196,7 +1353,11 @@ describe("Finance Operations Phase 2 controlled imports", () => {
       });
     const envelopes = [variant("Term1", "5"), variant("Term2", "6")];
     const result = subject.prepareControlledImportBatch(
-      normalizationInput("school-billing-term-variants", envelopes),
+      await trustedNormalizationInput(
+        subject,
+        "school-billing-term-variants",
+        envelopes,
+      ),
     );
 
     expect(result).toMatchObject({
@@ -1250,45 +1411,48 @@ describe("Finance Operations Phase 2 controlled imports", () => {
       subject.prepareControlledImportBatch,
       "prepareControlledImportBatch",
     );
-    const result = subject.prepareControlledImportBatch(
-      normalizationInput("payroll-sanitized-buddhist-dates", [
-        privateEvidenceEnvelope({
-          sourceSystem: "sanitized-payroll-summary",
-          payloadDigest: "7".repeat(64),
-          evidenceReference:
-            "private-evidence://company-sanitized/finance/sanitized/payroll-summary",
-          document: {
-            sourceDocumentId: "payroll-summary-sanitized-001",
-            logicalDocumentId: "payroll-summary-sanitized-001",
-            sourceDocumentKind: "payroll-summary",
-            thaiTaxDocumentStatus: "unresolved",
-            currency: "THB",
-            vouchers: [
-              {
-                voucherNumberText: "7",
-                sourceDateText: "08/07/2569",
-                grossDecimal: "12345.67",
-                sourceStatedWhtDecimal: "370.37",
-                netDecimal: "11975.30",
-              },
-              {
-                voucherNumberText: "PV-2026/071",
-                sourceDateText: "15/07/2569",
-                grossDecimal: "8000.00",
-                sourceStatedWhtDecimal: "0.00",
-                netDecimal: "8000.00",
-              },
-              {
-                voucherNumberText: "ZERO-GROSS-SANITIZED",
-                sourceDateText: "31/07/2569",
-                grossDecimal: "0.00",
-                sourceStatedWhtDecimal: "0.00",
-                netDecimal: "0.00",
-              },
-            ],
+    const payrollEnvelope = privateEvidenceEnvelope({
+      sourceSystem: "sanitized-payroll-summary",
+      payloadDigest: "7".repeat(64),
+      evidenceReference:
+        "private-evidence://company-sanitized/finance/sanitized/payroll-summary",
+      document: {
+        sourceDocumentId: "payroll-summary-sanitized-001",
+        logicalDocumentId: "payroll-summary-sanitized-001",
+        sourceDocumentKind: "payroll-summary",
+        thaiTaxDocumentStatus: "unresolved",
+        currency: "THB",
+        vouchers: [
+          {
+            voucherNumberText: "7",
+            sourceDateText: "08/07/2569",
+            grossDecimal: "12345.67",
+            sourceStatedWhtDecimal: "370.37",
+            netDecimal: "11975.30",
           },
-        }),
-      ]),
+          {
+            voucherNumberText: "PV-2026/071",
+            sourceDateText: "15/07/2569",
+            grossDecimal: "8000.00",
+            sourceStatedWhtDecimal: "0.00",
+            netDecimal: "8000.00",
+          },
+          {
+            voucherNumberText: "ZERO-GROSS-SANITIZED",
+            sourceDateText: "31/07/2569",
+            grossDecimal: "0.00",
+            sourceStatedWhtDecimal: "0.00",
+            netDecimal: "0.00",
+          },
+        ],
+      },
+    });
+    const result = subject.prepareControlledImportBatch(
+      await trustedNormalizationInput(
+        subject,
+        "payroll-sanitized-buddhist-dates",
+        [payrollEnvelope],
+      ),
     );
 
     expect(result.status).toBe("ready");
@@ -1348,28 +1512,29 @@ describe("Finance Operations Phase 2 controlled imports", () => {
       subject.prepareControlledImportBatch,
       "prepareControlledImportBatch",
     );
-    const result = subject.prepareControlledImportBatch(
-      normalizationInput("gcp-july-2026-receipt", [
-        privateEvidenceEnvelope({
-          sourceSystem: "sanitized-gcp-billing",
-          payloadDigest: "8".repeat(64),
-          evidenceReference:
-            "private-evidence://company-sanitized/finance/sanitized/gcp-july-2026-receipt",
-          document: {
-            sourceDocumentId: "gcp-july-2026-payment-receipt",
-            logicalDocumentId: "gcp-july-2026-payment-receipt",
-            sourceDocumentKind: "payment-receipt",
-            thaiTaxDocumentStatus: "not-source-asserted",
-            currency: "THB",
-            facts: [
-              {
-                factId: "payment-total",
-                kind: "money",
-                amountDecimal: "9270.79",
-              },
-            ],
+    const gcpEnvelope = privateEvidenceEnvelope({
+      sourceSystem: "sanitized-gcp-billing",
+      payloadDigest: "8".repeat(64),
+      evidenceReference:
+        "private-evidence://company-sanitized/finance/sanitized/gcp-july-2026-receipt",
+      document: {
+        sourceDocumentId: "gcp-july-2026-payment-receipt",
+        logicalDocumentId: "gcp-july-2026-payment-receipt",
+        sourceDocumentKind: "payment-receipt",
+        thaiTaxDocumentStatus: "not-source-asserted",
+        currency: "THB",
+        facts: [
+          {
+            factId: "payment-total",
+            kind: "money",
+            amountDecimal: "9270.79",
           },
-        }),
+        ],
+      },
+    });
+    const result = subject.prepareControlledImportBatch(
+      await trustedNormalizationInput(subject, "gcp-july-2026-receipt", [
+        gcpEnvelope,
       ]),
     );
 
@@ -1398,29 +1563,30 @@ describe("Finance Operations Phase 2 controlled imports", () => {
       subject.prepareControlledImportBatch,
       "prepareControlledImportBatch",
     );
-    const result = subject.prepareControlledImportBatch(
-      normalizationInput("workspace-foreign-invoice", [
-        privateEvidenceEnvelope({
-          sourceSystem: "sanitized-workspace-billing",
-          payloadDigest: "9".repeat(64),
-          evidenceReference:
-            "private-evidence://company-sanitized/finance/sanitized/workspace-invoice",
-          document: {
-            sourceDocumentId: "workspace-foreign-invoice-sanitized",
-            logicalDocumentId: "workspace-foreign-invoice-sanitized",
-            sourceDocumentKind: "foreign-workspace-invoice",
-            thaiTaxDocumentStatus: "not-source-asserted",
-            sourceStatedTax: { label: "GST", rateText: "0%" },
-            currency: "THB",
-            facts: [
-              {
-                factId: "invoice-total",
-                kind: "money",
-                amountDecimal: "1300.00",
-              },
-            ],
+    const workspaceEnvelope = privateEvidenceEnvelope({
+      sourceSystem: "sanitized-workspace-billing",
+      payloadDigest: "9".repeat(64),
+      evidenceReference:
+        "private-evidence://company-sanitized/finance/sanitized/workspace-invoice",
+      document: {
+        sourceDocumentId: "workspace-foreign-invoice-sanitized",
+        logicalDocumentId: "workspace-foreign-invoice-sanitized",
+        sourceDocumentKind: "foreign-workspace-invoice",
+        thaiTaxDocumentStatus: "not-source-asserted",
+        sourceStatedTax: { label: "GST", rateText: "0%" },
+        currency: "THB",
+        facts: [
+          {
+            factId: "invoice-total",
+            kind: "money",
+            amountDecimal: "1300.00",
           },
-        }),
+        ],
+      },
+    });
+    const result = subject.prepareControlledImportBatch(
+      await trustedNormalizationInput(subject, "workspace-foreign-invoice", [
+        workspaceEnvelope,
       ]),
     );
 
@@ -1470,18 +1636,6 @@ describe("Finance Operations Phase 2 controlled imports", () => {
         { factId: "total", kind: "money" as const, amountDecimal: "100.00" },
       ],
     };
-    const prepare = (document: unknown): PreparedControlledImportBatch =>
-      subject.prepareControlledImportBatch(
-        normalizationInput("strict-normalized-batch", [
-          privateEvidenceEnvelope({
-            document: document as ControlledSourceDocumentInput,
-            sourceSystem: "sanitized-test-source",
-            payloadDigest: "a".repeat(64),
-            evidenceReference:
-              "private-evidence://company-sanitized/finance/sanitized/strict-source",
-          }),
-        ]),
-      );
     const strictEnvelope = privateEvidenceEnvelope({
       document: baseDocument,
       sourceSystem: "sanitized-test-source",
@@ -1489,29 +1643,54 @@ describe("Finance Operations Phase 2 controlled imports", () => {
       evidenceReference:
         "private-evidence://company-sanitized/finance/sanitized/strict-source",
     });
-    const prepareAcceptedEnvelope = (envelope: unknown) =>
+    const prepare = async (
+      document: unknown,
+    ): Promise<PreparedControlledImportBatch> => {
+      const envelope = privateEvidenceEnvelope({
+        ...strictEnvelope,
+        document: document as ControlledSourceDocumentInput,
+      });
+      return subject.prepareControlledImportBatch(
+        await trustedNormalizationInput(
+          subject,
+          "strict-normalized-batch",
+          [envelope],
+          scope,
+          [strictEnvelope],
+        ),
+      );
+    };
+    const trustedStrictPreparation = await trustedPreparationForEnvelope(
+      subject,
+      strictEnvelope,
+    );
+    const prepareAcceptedEnvelope = async (envelope: unknown) =>
       subject.prepareControlledImportBatch({
         normalizationVersion: NORMALIZATION_VERSION,
         scope,
         batchId: "strict-accepted-envelope-batch",
         acceptedSourceEnvelopes: [envelope],
+        trustedPreparation: trustedStrictPreparation,
       });
+    const prepareAcceptedEnvelopeExpectingError = async (
+      envelope: unknown,
+    ): Promise<void> => {
+      await expect(prepareAcceptedEnvelope(envelope)).rejects.toThrow();
+    };
 
-    expect(() =>
-      prepareAcceptedEnvelope({
-        ...strictEnvelope,
-        document: {
-          ...baseDocument,
-          thaiTaxDocumentStatus: "tax-invoice",
-        },
-      }),
-    ).toThrow();
-    expect(() =>
+    await prepareAcceptedEnvelopeExpectingError({
+      ...strictEnvelope,
+      document: {
+        ...baseDocument,
+        thaiTaxDocumentStatus: "tax-invoice",
+      },
+    });
+    await expect(
       prepare({
         ...baseDocument,
         facts: [{ factId: "total", kind: "money", amountDecimal: 9270.79 }],
       }),
-    ).toThrow();
+    ).rejects.toThrow();
     for (const [key, value] of [
       ["vatRate", "7%"],
       ["taxAmount", "7.00"],
@@ -1525,40 +1704,28 @@ describe("Finance Operations Phase 2 controlled imports", () => {
       ["taxId", "0000000000000"],
       ["rawPayload", "unredacted-source-body"],
     ] as const) {
-      expect(() => prepare({ ...baseDocument, [key]: value }), key).toThrow();
-      expect(
-        () =>
-          prepare({
-            ...baseDocument,
-            facts: [{ ...baseDocument.facts[0], [key]: value }],
-          }),
+      await expect(
+        prepare({ ...baseDocument, [key]: value }),
+        key,
+      ).rejects.toThrow();
+      await expect(
+        prepare({
+          ...baseDocument,
+          facts: [{ ...baseDocument.facts[0], [key]: value }],
+        }),
         `normalized fact field ${key}`,
-      ).toThrow();
+      ).rejects.toThrow();
     }
+    const rawPayloadEnvelope = {
+      ...strictEnvelope,
+      rawPayload: "unredacted-source-body",
+    };
     expect(() =>
-      subject.prepareControlledImportBatch({
-        ...normalizationInput("raw-envelope-batch", [
-          privateEvidenceEnvelope({
-            document: baseDocument,
-            sourceSystem: "sanitized-test-source",
-            payloadDigest: "a".repeat(64),
-            evidenceReference:
-              "private-evidence://company-sanitized/finance/sanitized/strict-source",
-          }),
+      subject.prepareControlledImportBatch(
+        normalizationInput("raw-envelope-batch", [rawPayloadEnvelope], scope, [
+          trustedStrictPreparation,
         ]),
-        acceptedSourceEnvelopes: [
-          {
-            ...privateEvidenceEnvelope({
-              document: baseDocument,
-              sourceSystem: "sanitized-test-source",
-              payloadDigest: "a".repeat(64),
-              evidenceReference:
-                "private-evidence://company-sanitized/finance/sanitized/strict-source",
-            }),
-            rawPayload: "unredacted-source-body",
-          },
-        ],
-      }),
+      ),
     ).toThrow();
     for (const [key, value] of [
       ["name", "Sensitive Person"],
@@ -1568,72 +1735,60 @@ describe("Finance Operations Phase 2 controlled imports", () => {
       ["taxId", "0000000000000"],
       ["rawPayload", "unredacted-source-body"],
     ] as const) {
-      expect(
-        () =>
-          prepareAcceptedEnvelope({
-            ...strictEnvelope,
-            evidenceAuthorization: {
-              ...strictEnvelope.evidenceAuthorization,
-              [key]: value,
-            },
-          }),
-        `private evidence metadata field ${key}`,
-      ).toThrow();
-      expect(
-        () =>
-          prepareAcceptedEnvelope({
-            ...strictEnvelope,
-            sourceAcceptance: {
-              ...strictEnvelope.sourceAcceptance,
-              snapshot: {
-                ...strictEnvelope.sourceAcceptance.snapshot,
-                [key]: value,
-              },
-            },
-          }),
-        `accepted source snapshot field ${key}`,
-      ).toThrow();
-    }
-    expect(() =>
-      prepareAcceptedEnvelope({
+      await prepareAcceptedEnvelopeExpectingError({
         ...strictEnvelope,
-        document: {
-          sourceDocumentId: "strict-workspace-source",
-          logicalDocumentId: "strict-workspace-source",
-          sourceDocumentKind: "foreign-workspace-invoice",
-          thaiTaxDocumentStatus: "not-source-asserted",
-          sourceStatedTax: {
-            label: "GST",
-            rateText: "0%",
-            rawPayload: "unredacted-source-body",
+        evidenceAuthorization: {
+          ...strictEnvelope.evidenceAuthorization,
+          [key]: value,
+        },
+      });
+      await prepareAcceptedEnvelopeExpectingError({
+        ...strictEnvelope,
+        sourceAcceptance: {
+          ...strictEnvelope.sourceAcceptance,
+          snapshot: {
+            ...strictEnvelope.sourceAcceptance.snapshot,
+            [key]: value,
           },
-          currency: "THB",
-          facts: [{ factId: "total", kind: "money", amountDecimal: "100.00" }],
         },
-      }),
-    ).toThrow();
-    expect(() =>
-      prepareAcceptedEnvelope({
-        ...strictEnvelope,
-        document: {
-          sourceDocumentId: "strict-payroll-source",
-          logicalDocumentId: "strict-payroll-source",
-          sourceDocumentKind: "payroll-summary",
-          thaiTaxDocumentStatus: "unresolved",
-          currency: "THB",
-          vouchers: [
-            {
-              voucherNumberText: "PV-1",
-              sourceDateText: "01/07/2569",
-              grossDecimal: "100.00",
-              sourceStatedWhtDecimal: "0.00",
-              netDecimal: "100.00",
-              bankAccount: "000-000-0000",
-            },
-          ],
+      });
+    }
+    await prepareAcceptedEnvelopeExpectingError({
+      ...strictEnvelope,
+      document: {
+        sourceDocumentId: "strict-workspace-source",
+        logicalDocumentId: "strict-workspace-source",
+        sourceDocumentKind: "foreign-workspace-invoice",
+        thaiTaxDocumentStatus: "not-source-asserted",
+        sourceStatedTax: {
+          label: "GST",
+          rateText: "0%",
+          rawPayload: "unredacted-source-body",
         },
-      }),
-    ).toThrow();
+        currency: "THB",
+        facts: [{ factId: "total", kind: "money", amountDecimal: "100.00" }],
+      },
+    });
+    await prepareAcceptedEnvelopeExpectingError({
+      ...strictEnvelope,
+      document: {
+        sourceDocumentId: "strict-payroll-source",
+        logicalDocumentId: "strict-payroll-source",
+        sourceDocumentKind: "payroll-summary",
+        thaiTaxDocumentStatus: "unresolved",
+        currency: "THB",
+        vouchers: [
+          {
+            voucherNumberText: "PV-1",
+            sourceDateText: "01/07/2569",
+            grossDecimal: "100.00",
+            sourceStatedWhtDecimal: "0.00",
+            netDecimal: "100.00",
+            bankAccount: "000-000-0000",
+          },
+        ],
+      },
+    });
     for (const unsafeText of [
       "<script>",
       "line\nbreak",
@@ -1642,60 +1797,49 @@ describe("Finance Operations Phase 2 controlled imports", () => {
       "sensitive@example.invalid",
       "x".repeat(129),
     ]) {
-      expect(
-        () =>
-          prepare({
-            ...baseDocument,
-            facts: [
-              {
-                ...baseDocument.facts[0],
-                sourceText: unsafeText,
-              },
-            ],
-          }),
+      await expect(
+        prepare({
+          ...baseDocument,
+          facts: [
+            {
+              ...baseDocument.facts[0],
+              sourceText: unsafeText,
+            },
+          ],
+        }),
         `unsafe fact sourceText ${JSON.stringify(unsafeText)}`,
-      ).toThrow();
-      expect(
-        () =>
-          prepareAcceptedEnvelope({
-            ...strictEnvelope,
-            document: {
-              sourceDocumentId: "unsafe-workspace-source",
-              logicalDocumentId: "unsafe-workspace-source",
-              sourceDocumentKind: "foreign-workspace-invoice",
-              thaiTaxDocumentStatus: "not-source-asserted",
-              sourceStatedTax: { label: unsafeText, rateText: "0%" },
-              currency: "THB",
-              facts: [
-                { factId: "total", kind: "money", amountDecimal: "100.00" },
-              ],
+      ).rejects.toThrow();
+      await prepareAcceptedEnvelopeExpectingError({
+        ...strictEnvelope,
+        document: {
+          sourceDocumentId: "unsafe-workspace-source",
+          logicalDocumentId: "unsafe-workspace-source",
+          sourceDocumentKind: "foreign-workspace-invoice",
+          thaiTaxDocumentStatus: "not-source-asserted",
+          sourceStatedTax: { label: unsafeText, rateText: "0%" },
+          currency: "THB",
+          facts: [{ factId: "total", kind: "money", amountDecimal: "100.00" }],
+        },
+      });
+      await prepareAcceptedEnvelopeExpectingError({
+        ...strictEnvelope,
+        document: {
+          sourceDocumentId: "unsafe-payroll-source",
+          logicalDocumentId: "unsafe-payroll-source",
+          sourceDocumentKind: "payroll-summary",
+          thaiTaxDocumentStatus: "unresolved",
+          currency: "THB",
+          vouchers: [
+            {
+              voucherNumberText: unsafeText,
+              sourceDateText: "01/07/2569",
+              grossDecimal: "100.00",
+              sourceStatedWhtDecimal: "0.00",
+              netDecimal: "100.00",
             },
-          }),
-        `unsafe source-stated tax label ${JSON.stringify(unsafeText)}`,
-      ).toThrow();
-      expect(
-        () =>
-          prepareAcceptedEnvelope({
-            ...strictEnvelope,
-            document: {
-              sourceDocumentId: "unsafe-payroll-source",
-              logicalDocumentId: "unsafe-payroll-source",
-              sourceDocumentKind: "payroll-summary",
-              thaiTaxDocumentStatus: "unresolved",
-              currency: "THB",
-              vouchers: [
-                {
-                  voucherNumberText: unsafeText,
-                  sourceDateText: "01/07/2569",
-                  grossDecimal: "100.00",
-                  sourceStatedWhtDecimal: "0.00",
-                  netDecimal: "100.00",
-                },
-              ],
-            },
-          }),
-        `unsafe voucher text ${JSON.stringify(unsafeText)}`,
-      ).toThrow();
+          ],
+        },
+      });
     }
   });
 
@@ -1720,58 +1864,82 @@ describe("Finance Operations Phase 2 controlled imports", () => {
       evidenceReference:
         "private-evidence://company-sanitized/finance/sanitized/valid-source",
     });
+    const validPreparation = await trustedPreparationForEnvelope(
+      subject,
+      valid,
+    );
 
     expect(() =>
       subject.prepareControlledImportBatch(
-        normalizationInput("invalid-digest", [
-          {
-            ...valid,
-            sourceAcceptance: {
-              port: "private-evidence-storage",
-              snapshot: {
-                ...valid.evidenceAuthorization,
-                payloadDigest: "not-a-digest",
+        normalizationInput(
+          "invalid-digest",
+          [
+            {
+              ...valid,
+              sourceAcceptance: {
+                port: "private-evidence-storage",
+                snapshot: {
+                  ...valid.evidenceAuthorization,
+                  payloadDigest: "not-a-digest",
+                },
               },
             },
-          },
-        ]),
+          ],
+          scope,
+          [validPreparation],
+        ),
       ),
     ).toThrow();
     expect(() =>
       subject.prepareControlledImportBatch(
-        normalizationInput("cross-company-evidence", [
-          {
-            ...valid,
-            evidenceAuthorization: {
-              ...valid.evidenceAuthorization,
-              evidenceReference:
-                "private-evidence://another-company/finance/sanitized/source",
+        normalizationInput(
+          "cross-company-evidence",
+          [
+            {
+              ...valid,
+              evidenceAuthorization: {
+                ...valid.evidenceAuthorization,
+                evidenceReference:
+                  "private-evidence://another-company/finance/sanitized/source",
+              },
             },
-          },
-        ]),
+          ],
+          scope,
+          [validPreparation],
+        ),
       ),
     ).toThrow();
     expect(() =>
       subject.prepareControlledImportBatch(
-        normalizationInput("receipt-digest-mismatch", [
-          {
-            ...valid,
-            evidenceAuthorization: {
-              ...valid.evidenceAuthorization,
-              payloadDigest: "c".repeat(64),
+        normalizationInput(
+          "receipt-digest-mismatch",
+          [
+            {
+              ...valid,
+              evidenceAuthorization: {
+                ...valid.evidenceAuthorization,
+                payloadDigest: "c".repeat(64),
+              },
             },
-          },
-        ]),
+          ],
+          scope,
+          [validPreparation],
+        ),
       ),
     ).toThrow();
     expect(() =>
       subject.prepareControlledImportBatch(
-        normalizationInput("envelope-scope-mismatch", [
-          {
-            ...valid,
-            scope: { companyId: scope.companyId, schoolId: "another-school" },
-          },
-        ]),
+        normalizationInput(
+          "envelope-scope-mismatch",
+          [
+            {
+              ...valid,
+              scope: { companyId: scope.companyId, schoolId: "another-school" },
+            },
+          ],
+          scope,
+          [validPreparation],
+        ),
       ),
     ).toThrow();
     const acceptedSource = privateEvidenceEnvelope({
@@ -1782,11 +1950,18 @@ describe("Finance Operations Phase 2 controlled imports", () => {
       evidenceReference:
         "private-evidence://company-sanitized/finance/sanitized/archive-version",
     });
+    const acceptedSourcePreparation = await trustedPreparationForEnvelope(
+      subject,
+      acceptedSource,
+    );
     expect(() =>
       subject.prepareControlledImportBatch(
-        normalizationInput("source-version-mismatch", [
-          { ...acceptedSource, sourceVersion: "archive-v2" },
-        ]),
+        normalizationInput(
+          "source-version-mismatch",
+          [{ ...acceptedSource, sourceVersion: "archive-v2" }],
+          scope,
+          [acceptedSourcePreparation],
+        ),
       ),
     ).toThrow();
     const acceptedPrivateSource = privateEvidenceEnvelope({
@@ -1798,14 +1973,21 @@ describe("Finance Operations Phase 2 controlled imports", () => {
       evidenceReference:
         "private-evidence://company-sanitized/finance/sanitized/payroll-identity",
     });
+    const acceptedPrivateSourcePreparation =
+      await trustedPreparationForEnvelope(subject, acceptedPrivateSource);
     expect(() =>
       subject.prepareControlledImportBatch(
-        normalizationInput("source-record-mismatch", [
-          {
-            ...acceptedPrivateSource,
-            sourceRecordId: "different-archive-record",
-          },
-        ]),
+        normalizationInput(
+          "source-record-mismatch",
+          [
+            {
+              ...acceptedPrivateSource,
+              sourceRecordId: "different-archive-record",
+            },
+          ],
+          scope,
+          [acceptedPrivateSourcePreparation],
+        ),
       ),
     ).toThrow();
   });
@@ -1865,7 +2047,10 @@ describe("Finance Operations Phase 2 controlled imports", () => {
         reason: "scope-mismatch",
       },
       {
-        incoming: { ...baseIncoming, sourceSystem: "sanitized-payroll-summary" },
+        incoming: {
+          ...baseIncoming,
+          sourceSystem: "sanitized-payroll-summary",
+        },
         reason: "source-system-mismatch",
       },
       {
@@ -2365,11 +2550,12 @@ describe("Finance Operations Phase 2 controlled imports", () => {
 
   it("detects every deferred source-owner marker in the guard AST", () => {
     const syntheticSource = DEFERRED_SOURCE_OWNER_MARKERS.map(
-      (marker, index) => `const deferredMarker${index} = ${JSON.stringify(marker)};`,
+      (marker, index) =>
+        `const deferredMarker${index} = ${JSON.stringify(marker)};`,
     ).join("\n");
-    expect(collectDeferredSourceOwnerLookalikes(syntheticSource)).toEqual(
-      [...DEFERRED_SOURCE_OWNER_MARKERS],
-    );
+    expect(collectDeferredSourceOwnerLookalikes(syntheticSource)).toEqual([
+      ...DEFERRED_SOURCE_OWNER_MARKERS,
+    ]);
   });
 
   it("keeps controlled-import production code behind compiler-checked internal boundaries", async () => {

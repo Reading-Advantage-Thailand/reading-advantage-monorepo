@@ -68,6 +68,12 @@
   - Phase 1 Finance Operations baseline: 11 files and 135/135 tests passed with the local Vitest binary and `--pool=threads --maxWorkers=1`.
   - The blocked Green role log now has a valid `MEASURE_AGENT_RESULT` block with role, status, track, phase, commits, tests, files, plan updates, known failures, handoff, and end marker. No production source changed.
 
+  Mid-Red trusted-preparation fixture correction (2026-08-13; phase base `7ef48d2d2929c67dfd70c899a4710b77808637b9`; role base `8761194cb8e80eb26c58bd88cbcf75c3160e9fb1`): every accepted normalization fixture now obtains a genuine preparation from the real Phase 1 `createHistoricalPrivateEvidenceImportCommand` with injected Company Identity and private-evidence binding fakes. The helper verifies both boundary calls and the returned packet/evidence bindings. Remaining direct `normalizationInput(...)` uses are intentional rejection fixtures for lookalikes, raw payloads, and envelope or evidence mismatches. The Review B caller-fabrication test remains unchanged and remains a separate security Red gate.
+
+  - Phase 2 Red command: `../../node_modules/.bin/vitest run src/modules/finance-operations/__tests__/controlled-imports-phase2.red.test.ts --pool=threads --maxWorkers=1` from `packages/backend` — exit 1; collection succeeded; 24 tests ran, 23 passed, and 1 failed. The only failure is the expected blocked-pilot assertion because the current production helper returns `accepted`.
+  - Review B Red command: `../../node_modules/.bin/vitest run src/modules/finance-operations/__tests__/controlled-imports-phase2-review-b.red.test.ts --pool=threads --maxWorkers=1` from `packages/backend` — exit 1; collection succeeded; 26 tests ran, 0 passed, and 26 failed. Failures remain behavior-level trusted-preparation, grammar, authorization, ambiguity, duplicate-identity, and blocked-pilot findings.
+  - No production source changed. Task 1 remains `[~]`; Task 2 remains `[b]` with `deferred:phase2`.
+
 ## Phase 3 — close and accountant exchange
 
 - [b] Task: Implement close-period controls and versioned accountant export packs only after written decisions for Thai invoice/tax/VAT/WHT, classification, close, retention, correction, and pack policy (system-map R7). Depends on the pilot, accountant acceptance, and all relevant source contracts.

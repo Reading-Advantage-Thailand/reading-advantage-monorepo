@@ -1,0 +1,118 @@
+Measure Mid Red role log - Phase 2 trusted-preparation fixture correction
+
+Track: company_finance_operations_20260810
+Phase: Phase 2 — controlled operational imports
+Role: measure-mid-red
+Date: 2026-08-13
+baseline_sha: 7ef48d2d2929c67dfd70c899a4710b77808637b9
+phase_base_sha: 7ef48d2d2929c67dfd70c899a4710b77808637b9
+role_base_sha: 8761194cb8e80eb26c58bd88cbcf75c3160e9fb1
+
+## Preflight
+
+- Both supplied SHAs resolve to immutable commits.
+- `phase_base_sha` is an ancestor of `role_base_sha`.
+- The checkout is `master`, and exactly one worktree exists.
+- Existing dirty paths are unrelated user work: `.opencode/**`, Codecamp
+  Playwright and test-result reports, `pnpm-lock.yaml`, Advantage Games test
+  results, and review-result JSON files. I preserved these paths and did not
+  stage them.
+- The Phase 2 test, plan, and orchestration logs are relevant owned paths. The
+  production controlled-import module and Review B test remain unchanged by
+  this role.
+
+## Red work
+
+Task 1 was already `[~]` before this role. I kept that marker before the work.
+
+I updated `controlled-imports-phase2.red.test.ts` so every accepted
+normalization fixture obtains preparation through the real Phase 1
+`createHistoricalPrivateEvidenceImportCommand`. The fixture injects Company
+Identity attestation and private-evidence binding fakes, then verifies both
+calls and the returned packet/evidence bindings.
+
+The remaining direct `normalizationInput(...)` calls are rejection fixtures.
+They cover Finance lookalikes, raw payloads, and envelope or evidence
+mismatches. The Review B caller-fabrication test remains unchanged.
+
+No production source changed. The pilot task remains `[b]` with
+`deferred:phase2`.
+
+## Tests run
+
+1. Phase 2 Red command:
+   `../../node_modules/.bin/vitest run src/modules/finance-operations/__tests__/controlled-imports-phase2.red.test.ts --pool=threads --maxWorkers=1`
+   from `packages/backend`.
+   - Exit 1.
+   - Collection succeeded.
+   - 24 tests ran: 23 passed and 1 failed.
+   - The only failure is the expected blocked-pilot assertion because the
+     current production helper returns `accepted`.
+
+2. Review B Red command:
+   `../../node_modules/.bin/vitest run src/modules/finance-operations/__tests__/controlled-imports-phase2-review-b.red.test.ts --pool=threads --maxWorkers=1`
+   from `packages/backend`.
+   - Exit 1.
+   - Collection succeeded.
+   - 26 tests ran: 0 passed and 26 failed.
+   - The failures are behavior-level findings. They cover trusted-preparation
+     binding, strict authorization results, caller-built plans, nested source
+     grammar, ambiguity groups, duplicate voucher identities, and the blocked
+     pilot.
+
+3. Phase 1 Finance Operations baseline:
+   `../../node_modules/.bin/vitest run src/modules/finance-operations/__tests__/architecture-boundary.test.ts src/modules/finance-operations/__tests__/port-boundaries.test.ts src/modules/finance-operations/__tests__/authorization-audit.test.ts src/modules/finance-operations/__tests__/money-history.test.ts src/modules/finance-operations/__tests__/contracts.test.ts src/modules/finance-operations/__tests__/independent-review-blockers.red.test.ts src/modules/finance-operations/__tests__/postgres-record-repository.red.test.ts src/modules/finance-operations/__tests__/provenance-whitespace.red.test.ts src/modules/finance-operations/__tests__/historical-private-evidence-packet.red.test.ts src/modules/finance-operations/__tests__/durable-job-adapter.red.test.ts src/modules/finance-operations/__tests__/historical-private-evidence-binding-adapter.red.test.ts --pool=threads --maxWorkers=1`
+   from `packages/backend`.
+   - Exit 0.
+   - 11 files ran: 135 tests passed.
+
+4. Company Identity baseline:
+   `../../node_modules/.bin/vitest run src/modules/company-identity/__tests__/finance-authorization-adapter.red.test.ts src/modules/company-identity/__tests__/protocol-safety.red.test.ts --pool=threads --maxWorkers=1`
+   from `packages/backend`.
+   - Exit 0.
+   - 2 files ran: 20 tests passed.
+
+5. Storage baseline:
+   `../../node_modules/.bin/vitest run src/__tests__/finance-private-evidence-read.red.test.ts --pool=threads --maxWorkers=1`
+   from `packages/storage`.
+   - Exit 0.
+   - 1 file ran: 25 tests passed.
+
+6. `../../node_modules/.bin/prettier --check
+   src/modules/finance-operations/__tests__/controlled-imports-phase2.red.test.ts`
+   from `packages/backend` exited 0.
+
+7. `git diff --check` exited 0.
+
+## Plan updates
+
+`plan.md` records the trusted-preparation fixture correction, exact Red command
+results, and remaining task markers.
+
+## Known failures
+
+- The Phase 2 pilot helper returns `accepted`; the contract requires
+  `blocked` or `not-admitted`.
+- Review B remains Red with 26 behavior failures.
+- Task 1 has no Green remediation from this role.
+- Task 2 remains blocked with `deferred:phase2`.
+
+## Handoff
+
+Jr Green must repair the production trusted-preparation binding and the Review
+B findings. The Green role must preserve the Phase 1 owner boundaries and keep
+the pilot task blocked.
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+status: complete
+track: company_finance_operations_20260810
+phase: Phase 2 — controlled operational imports
+commits: pending commit of the owned Red test and Measure evidence
+resulting_head: pending commit of the owned Red test and Measure evidence
+tests_run: Phase 2 Red exit 1 (24 collected, 23 passed, 1 failed); Review B Red exit 1 (26 collected, 0 passed, 26 failed); Finance baseline exit 0 (135/135); Company Identity baseline exit 0 (20/20); Storage baseline exit 0 (25/25); targeted Prettier exit 0; git diff --check exit 0
+files_changed: packages/backend/src/modules/finance-operations/__tests__/controlled-imports-phase2.red.test.ts; measure/tracks/company_finance_operations_20260810/plan.md; measure/tracks/company_finance_operations_20260810/orchestration/phase2-trusted-preparation-mid-red-role.log; repaired prior blocked Green role log
+plan_updates: recorded genuine Phase 1 trusted-preparation fixtures, exact Red results, and remaining markers; Task 1 remains [~]; Task 2 remains [b] deferred:phase2
+known_failures: the production pilot returns accepted instead of blocked or not-admitted; Review B has 26 behavior failures; no Green implementation ran
+handoff: Jr Green must repair trusted-preparation binding and the remaining Review B findings without changing production boundaries outside the owned implementation.
+END_MEASURE_AGENT_RESULT
