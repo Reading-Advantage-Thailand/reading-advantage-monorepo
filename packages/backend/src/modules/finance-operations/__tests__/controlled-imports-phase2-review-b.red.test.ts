@@ -134,10 +134,29 @@ async function trustedPreparationFor(
         | "document-reference:source-record";
       readonly label: string;
     };
+    readonly packetFacts?: readonly {
+      readonly factCategory: "payroll-summary";
+      readonly factId:
+        | "payroll-summary:gross-total"
+        | "payroll-summary:withholding-total"
+        | "payroll-summary:net-total";
+      readonly label: string;
+      readonly value: string;
+    }[];
   } = {},
 ): Promise<unknown> {
   const sourceIdentity = options.sourceIdentity ?? "receipt-001";
   const payloadDigest = options.payloadDigest ?? "a".repeat(64);
+  const packetFacts =
+    options.packetFacts ??
+    [
+      {
+        factCategory: options.packetFact?.factCategory ?? "document-total",
+        factId: options.packetFact?.factId ?? "document-total:receipt-total",
+        label: options.packetFact?.label ?? "Receipt total as stated",
+        value: options.factValue ?? "100.00",
+      },
+    ];
   const createCommand = subject.createHistoricalPrivateEvidenceImportCommand;
   expect(createCommand).toBeTypeOf("function");
   const command = createCommand({
@@ -176,16 +195,10 @@ async function trustedPreparationFor(
         payloadDigest,
         evidenceReference,
       },
-      facts: [
-        {
-          factCategory: options.packetFact?.factCategory ?? "document-total",
-          factId:
-            options.packetFact?.factId ?? "document-total:receipt-total",
-          kind: "source-stated-value",
-          label: options.packetFact?.label ?? "Receipt total as stated",
-          value: options.factValue ?? "100.00",
-        },
-      ],
+       facts: packetFacts.map((fact) => ({
+         ...fact,
+         kind: "source-stated-value" as const,
+       })),
     },
     credential: { kind: "token", value: "owner-token" },
     audit: {
@@ -213,13 +226,12 @@ async function trustedPreparationFor(
   expect(prepared.packet.source.evidenceReference).toBe(evidenceReference);
   expect(prepared.evidence.payloadDigest).toBe(payloadDigest);
   expect(prepared.evidence.evidenceReference).toBe(evidenceReference);
-  expect(prepared.packet.facts).toEqual(
-    expect.arrayContaining([
-      expect.objectContaining({
-        value: options.factValue ?? "100.00",
-      }),
-    ]),
-  );
+   expect(prepared.packet.facts).toHaveLength(packetFacts.length);
+   for (const fact of packetFacts) {
+     expect(prepared.packet.facts).toEqual(
+       expect.arrayContaining([expect.objectContaining({ value: fact.value })]),
+     );
+   }
   return preparation;
 }
 
@@ -443,6 +455,90 @@ describe("Finance Operations Phase 2 Review B remediation RED contract", () => {
     expect(facts.facts).not.toEqual(
       expect.arrayContaining([expect.objectContaining({ count: "999" })]),
     );
+  });
+
+  it("rejects caller payroll voucher money overrides for gross, source-stated WHT, and net", async () => {
+    const subject = await loadControlledImports();
+    const genuinePreparation = await trustedPreparationFor(
+      subject,
+      requestedScope,
+      validEvidenceReference,
+      {
+        sourceIdentity: "payroll-voucher-001",
+        packetFacts: [
+          {
+            factCategory: "payroll-summary",
+            factId: "payroll-summary:gross-total",
+            label: "PV-2026/071 gross as stated",
+            value: "12345.67",
+          },
+          {
+            factCategory: "payroll-summary",
+            factId: "payroll-summary:withholding-total",
+            label: "PV-2026/071 withholding as stated",
+            value: "370.37",
+          },
+          {
+            factCategory: "payroll-summary",
+            factId: "payroll-summary:net-total",
+            label: "PV-2026/071 net as stated",
+            value: "11975.30",
+          },
+        ],
+      },
+    );
+    const callerModifiedEnvelope = callerEnvelope({
+      document: {
+        sourceDocumentId: "payroll-voucher-001",
+        logicalDocumentId: "payroll-voucher-001",
+        sourceDocumentKind: "payroll-summary",
+        thaiTaxDocumentStatus: "unresolved",
+        currency: "THB",
+        vouchers: [
+          {
+            voucherNumberText: "PV-2026/071",
+            sourceDateText: "08/07/2569",
+            grossDecimal: "99999.99",
+            sourceStatedWhtDecimal: "0.01",
+            netDecimal: "1.00",
+          },
+        ],
+      },
+    });
+
+    let result: unknown;
+    try {
+      result = subject.prepareControlledImportBatch(
+        normalizationRequest({
+          batchId: "trusted-payroll-money-tamper-batch",
+          envelopes: [callerModifiedEnvelope],
+          trustedPreparation: genuinePreparation,
+        }),
+      );
+    } catch (error) {
+      expect(error).toBeInstanceOf(Error);
+      return;
+    }
+
+    expect(result).toMatchObject({ status: "ready" });
+    const ready = result as {
+      readonly snapshots: readonly {
+        readonly facts: readonly Record<string, unknown>[];
+      }[];
+      readonly records: readonly {
+        readonly money: { readonly amountMinor: string };
+      }[];
+    };
+    expect(ready.snapshots[0]?.facts.map((fact) => fact.amountMinor)).toEqual([
+      "1234567",
+      "37037",
+      "1197530",
+    ]);
+    expect(ready.records.map((record) => record.money.amountMinor)).toEqual([
+      "1234567",
+      "37037",
+      "1197530",
+    ]);
   });
 
   it("rejects a Proxy that reports true for every preparation symbol", async () => {
