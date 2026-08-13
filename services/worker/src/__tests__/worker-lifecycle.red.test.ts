@@ -364,12 +364,23 @@ describe("durable worker lifecycle Red contract", () => {
     expect(serializedLogs).not.toContain(payloadSecret);
     expect(serializedLogs).not.toContain(providerSecret);
 
-    const serializedFailure = JSON.stringify(port.fail.mock.calls);
-    expect(serializedFailure).toContain("safeSummary");
-    expect(serializedFailure).toContain("code");
-    expect(serializedFailure).not.toContain(payloadSecret);
-    expect(serializedFailure).not.toContain(providerSecret);
-    expect(serializedFailure).not.toContain('"message"');
+    const persistedError = port.fail.mock.calls[0]?.[0]?.error;
+    expect(persistedError).toStrictEqual({
+      code: expect.any(String),
+      safeSummary: expect.any(String),
+    });
+    for (const forbiddenField of [
+      "rawError",
+      "stack",
+      "providerResponse",
+      "payload",
+      "message",
+      "unknownField",
+    ]) {
+      expect(persistedError).not.toHaveProperty(forbiddenField);
+    }
+    expect(JSON.stringify(persistedError)).not.toContain(payloadSecret);
+    expect(JSON.stringify(persistedError)).not.toContain(providerSecret);
   });
 
   it("uses only the worker lifecycle job port and never reaches enqueue, replay, or dead-letter administration", async () => {
