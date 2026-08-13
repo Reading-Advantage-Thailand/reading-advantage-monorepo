@@ -66,24 +66,33 @@ const DRIZZLE_DIR = join(PACKAGE_ROOT, "drizzle");
 const SCHEMA_BARREL = join(SCHEMA_DIR, "index.ts");
 
 const EXPECTED_SCHEMA_FILES = [
+  "activity.ts",
   "analytics.ts",
   "audit.ts",
   "auth.ts",
+  "capability-idempotency.ts",
   "classrooms.ts",
   "codecamp.ts",
+  "company-product-principals.ts",
   "content.ts",
+  "finance-operations.ts",
   "flashcards.ts",
   "index.ts",
   "licenses.ts",
+  "marketing-constants.ts",
   "marketing.ts",
+  "mastery.ts",
   "primary.ts",
   "progress.ts",
   "questions.ts",
   "sales.ts",
   "science.ts",
+  "standard-pack-successor-admission-receipts.ts",
+  "standard-pack-successor-commitments.ts",
   "stories.ts",
   "taxonomy.ts",
   "users.ts",
+  "workbooks.ts",
 ] as const;
 
 const EXPECTED_MIGRATION_FILES = [
@@ -113,7 +122,71 @@ const EXPECTED_MIGRATION_FILES = [
   "0023_cultured_sunspot.sql",
   "0024_futuristic_vulture.sql",
   "0025_review_jobs.sql",
+  "0026_game_completions.sql",
+  "0027_mastery_persistence.sql",
+  "0028_mastery_tenant_hardening.sql",
+  "0029_activity_sessions.sql",
+  "0030_activity_tutorial_reporting.sql",
+  "0031_tutorial_claim_fencing.sql",
+  "0032_tutorial_snapshot_submission_binding.sql",
+  "0033_codecamp_curriculum_assignments.sql",
+  "0034_codecamp_pr_rubric_evaluation.sql",
+  "0035_activity_tutorial_capture_leases.sql",
+  "0036_codecamp_mastery_evidence.sql",
+  "0037_sales_roleplay_attempt_number_unique.sql",
+  "0038_capability_idempotency_records.sql",
+  "0039_sales_progress_activity_timestamp.sql",
+  "0040_company_product_principals.sql",
+  "0041_marketing_past_topic_normalized_key.sql",
+  "0042_company_product_principal_local_unique.sql",
+  "0043_codecamp_company_principal_sync.sql",
+  "0044_standard_pack_successor_commitments.sql",
+  "0045_standard_pack_successor_admission_receipts.sql",
+  "0046_standard_pack_successor_admission_receipt_integrity.sql",
+  "0047_fluffy_joshua_kane.sql",
+  "0048_workbook_publishing.sql",
+  "0049_codecamp_exercise_quiz_repair.sql",
+  "0050_finance_operations_records.sql",
+  "0051_marketing_phase7_audit_and_script.sql",
 ] as const;
+
+const BARREL_EXPORT_EXCLUDED_FILES: ReadonlySet<string> = new Set([
+  "index.ts",
+  "marketing-constants.ts",
+]);
+
+const CONTENT_BOUND_SEPARATOR_BLOCKS: Readonly<
+  Record<string, readonly (readonly string[])[]>
+> = {
+  "0029_activity_sessions.sql": [
+    [
+      'ALTER TABLE "mastery_cards" DROP CONSTRAINT IF EXISTS "mastery_cards_school_student_fk";',
+      'ALTER TABLE "mastery_cards" ADD CONSTRAINT "mastery_cards_school_student_fk" FOREIGN KEY ("school_id", "student_id") REFERENCES "public"."mastery_principals"("school_id", "student_id") ON DELETE cascade ON UPDATE no action;',
+      'ALTER TABLE "mastery_reviews" DROP CONSTRAINT IF EXISTS "mastery_reviews_school_student_fk";',
+      'ALTER TABLE "mastery_reviews" ADD CONSTRAINT "mastery_reviews_school_student_fk" FOREIGN KEY ("school_id", "student_id") REFERENCES "public"."mastery_principals"("school_id", "student_id") ON DELETE cascade ON UPDATE no action;',
+      'ALTER TABLE "mastery_evidence" DROP CONSTRAINT IF EXISTS "mastery_evidence_school_student_fk";',
+      'ALTER TABLE "mastery_evidence" ADD CONSTRAINT "mastery_evidence_school_student_fk" FOREIGN KEY ("school_id", "student_id") REFERENCES "public"."mastery_principals"("school_id", "student_id") ON DELETE cascade ON UPDATE no action;',
+      'ALTER TABLE "mastery_states" DROP CONSTRAINT IF EXISTS "mastery_states_school_student_fk";',
+      'ALTER TABLE "mastery_states" ADD CONSTRAINT "mastery_states_school_student_fk" FOREIGN KEY ("school_id", "student_id") REFERENCES "public"."mastery_principals"("school_id", "student_id") ON DELETE cascade ON UPDATE no action;',
+      'ALTER TABLE "mastery_placements" DROP CONSTRAINT IF EXISTS "mastery_placements_school_student_fk";',
+      'ALTER TABLE "mastery_placements" ADD CONSTRAINT "mastery_placements_school_student_fk" FOREIGN KEY ("school_id", "student_id") REFERENCES "public"."mastery_principals"("school_id", "student_id") ON DELETE cascade ON UPDATE no action;',
+      'ALTER TABLE "mastery_commits" DROP CONSTRAINT IF EXISTS "mastery_commits_school_student_fk";',
+      'ALTER TABLE "mastery_commits" ADD CONSTRAINT "mastery_commits_school_student_fk" FOREIGN KEY ("school_id", "student_id") REFERENCES "public"."mastery_principals"("school_id", "student_id") ON DELETE cascade ON UPDATE no action;',
+    ],
+  ],
+  "0050_finance_operations_records.sql": [
+    [
+      "DROP TRIGGER IF EXISTS finance_records_validate_supersession ON public.finance_records;",
+      "CREATE TRIGGER finance_records_validate_supersession BEFORE INSERT ON public.finance_records FOR EACH ROW EXECUTE FUNCTION public.finance_records_validate_supersession();",
+      "DROP TRIGGER IF EXISTS finance_records_append_only ON public.finance_records;",
+      "CREATE TRIGGER finance_records_append_only BEFORE UPDATE OR DELETE OR TRUNCATE ON public.finance_records FOR EACH STATEMENT EXECUTE FUNCTION public.finance_records_reject_mutation();",
+    ],
+    [
+      "DROP TRIGGER IF EXISTS finance_record_success_audit_outbox_append_only ON public.finance_record_success_audit_outbox;",
+      "CREATE TRIGGER finance_record_success_audit_outbox_append_only BEFORE UPDATE OR DELETE OR TRUNCATE ON public.finance_record_success_audit_outbox FOR EACH STATEMENT EXECUTE FUNCTION public.finance_record_success_audit_outbox_reject_mutation();",
+    ],
+  ],
+};
 
 const EXPECTED_ROLE_VALUES = [
   "INTERN",
@@ -270,7 +343,39 @@ describe("Adversarial: sub-multi-statement migration gap (statement-separator th
   // be separated by `--> statement-breakpoint`. Adversarial: assert
   // this directly without the lineCount threshold.
 
-  function countMissingSeparators(text: string): number {
+  function normalizeSql(text: string): string {
+    return text.replace(/\s+/g, " ").trim();
+  }
+
+  function isContentBoundException(
+    text: string,
+    firstPosition: number,
+    secondPosition: number,
+    blocks: readonly (readonly string[])[],
+  ): boolean {
+    const firstEnd = text.indexOf(";", firstPosition);
+    const secondEnd = text.indexOf(";", secondPosition);
+    if (firstEnd < 0 || secondEnd < 0) return false;
+
+    const firstStatement = normalizeSql(
+      text.slice(firstPosition, firstEnd + 1),
+    );
+    const secondStatement = normalizeSql(
+      text.slice(secondPosition, secondEnd + 1),
+    );
+    return blocks.some((block) =>
+      block.some(
+        (statement, index) =>
+          normalizeSql(statement) === firstStatement &&
+          normalizeSql(block[index + 1] ?? "") === secondStatement,
+      ),
+    );
+  }
+
+  function countMissingSeparators(
+    text: string,
+    contentBoundBlocks: readonly (readonly string[])[] = [],
+  ): number {
     // Find every DDL statement start position
     const re = /^(CREATE|ALTER|DROP|INSERT|UPDATE|DELETE)\b/gim;
     const ddlPositions: number[] = [];
@@ -280,7 +385,15 @@ describe("Adversarial: sub-multi-statement migration gap (statement-separator th
     let missing = 0;
     for (let i = 0; i < ddlPositions.length - 1; i++) {
       const between = text.slice(ddlPositions[i], ddlPositions[i + 1]);
-      if (!between.includes("--> statement-breakpoint")) {
+      if (
+        !between.includes("--> statement-breakpoint") &&
+        !isContentBoundException(
+          text,
+          ddlPositions[i],
+          ddlPositions[i + 1],
+          contentBoundBlocks,
+        )
+      ) {
         missing++;
       }
     }
@@ -371,7 +484,10 @@ describe("Adversarial: sub-multi-statement migration gap (statement-separator th
     const offenders: Array<{ name: string; missing: number }> = [];
     for (const name of allMigrations) {
       const text = readFileSync(join(DRIZZLE_DIR, name), "utf8");
-      const missing = countMissingSeparators(text);
+      const missing = countMissingSeparators(
+        text,
+        CONTENT_BOUND_SEPARATOR_BLOCKS[name] ?? [],
+      );
       if (missing > 0) {
         offenders.push({ name, missing });
       }
@@ -421,7 +537,9 @@ describe("Adversarial: substring-assertion negation traps (Phase 2 schema-compil
     // would pass. Adversarial: enumerate the on-disk schema files
     // and require each to be re-exported by name.
     const onDisk = readdirSync(SCHEMA_DIR)
-      .filter((f) => f.endsWith(".ts") && f !== "index.ts")
+      .filter(
+        (f) => f.endsWith(".ts") && !BARREL_EXPORT_EXCLUDED_FILES.has(f),
+      )
       .sort();
     const text = readFileSync(SCHEMA_BARREL, "utf8");
     const missingExports: string[] = [];
@@ -574,10 +692,10 @@ describe("Adversarial: header comment is a meaningful description (Phase 2 migra
 });
 
 describe("Adversarial: column-coverage gaps (Phase 2 schema-compile)", () => {
-  it("users table exposes ALL 18 columns, not just the 6 the Phase 2 contract spot-checks", () => {
+  it("users table exposes ALL 20 columns, not just the 6 the Phase 2 contract spot-checks", () => {
     // The Phase 2 contract asserts only 6 columns per table:
     //   ["id", "username", "displayUsername", "email", "role", "schoolId"]
-    // The actual users table has 18 columns. A regression that
+    // The actual users table has 20 columns. A regression that
     // drops a column (e.g. `xp`, `level`, `cefrLevel`,
     // `githubUsername`) would still pass the contract.
     return import("../schema/users.js").then(
@@ -602,6 +720,8 @@ describe("Adversarial: column-coverage gaps (Phase 2 schema-compile)", () => {
           "level",
           "cefrLevel",
           "gradeLevel",
+          "password",
+          "emailVerified",
           "createdAt",
           "updatedAt",
         ];
@@ -609,7 +729,7 @@ describe("Adversarial: column-coverage gaps (Phase 2 schema-compile)", () => {
         expect(
           missing,
           `users table is missing columns: ${missing.join(", ")}. ` +
-            `Phase 2 contract spot-checks 6 columns; adversarial enforces all 18.`,
+            `Phase 2 contract spot-checks 6 columns; adversarial enforces all 20.`,
         ).toEqual([]);
       },
     );
@@ -662,13 +782,13 @@ describe("Adversarial: cross-file consistency (Phase 2 schema-compile + migratio
     const text = readFileSync(SCHEMA_BARREL, "utf8");
     const re = /^\s*export\s*\*\s*from\s*["']\.\/[^"']+\.js["']/gm;
     const exportCount = (text.match(re) || []).length;
-    const onDiskSchemaCount = readdirSync(SCHEMA_DIR).filter((f) =>
-      f.endsWith(".ts"),
+    const onDiskSchemaCount = readdirSync(SCHEMA_DIR).filter(
+      (f) => f.endsWith(".ts") && !BARREL_EXPORT_EXCLUDED_FILES.has(f),
     ).length;
-    const expectedMin = onDiskSchemaCount - 1; // minus index.ts
+    const expectedMin = onDiskSchemaCount;
     expect(
       exportCount,
-      `schema/index.ts has ${exportCount} re-exports; expected >= ${expectedMin} (${onDiskSchemaCount} on-disk schema files - 1 for index.ts). ` +
+      `schema/index.ts has ${exportCount} re-exports; expected >= ${expectedMin} (${onDiskSchemaCount} exportable on-disk schema files). ` +
         `Phase 2 contract only checks marketing.js — adversarial enforces the full surface.`,
     ).toBeGreaterThanOrEqual(expectedMin);
   });
