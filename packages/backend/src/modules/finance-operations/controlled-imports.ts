@@ -212,6 +212,21 @@ export type ControlledImportAtomicResult =
       readonly recordIds: readonly string[];
       readonly reason: "payload-digest-mismatch";
     };
+const controlledImportAtomicResultSchema = z.discriminatedUnion("status", [
+  z.strictObject({
+    status: z.literal("accepted"),
+    recordIds: z.array(z.string()),
+  }),
+  z.strictObject({
+    status: z.literal("replay"),
+    recordIds: z.array(z.string()),
+  }),
+  z.strictObject({
+    status: z.literal("conflict"),
+    recordIds: z.array(z.string()),
+    reason: z.literal("payload-digest-mismatch"),
+  }),
+]);
 /** The injected persistence seam. */
 export interface ControlledImportAtomicRepository {
   applyBatchAtomically(input: {
@@ -644,12 +659,14 @@ export async function acceptControlledImportBatch(
   try {
     return freeze(
       copy(
-        await request.repository.applyBatchAtomically(
+        controlledImportAtomicResultSchema.parse(
+          await request.repository.applyBatchAtomically(
           freeze({
             plan: copy(request.plan),
             durableJob,
             audit: audit(request, "succeeded"),
           }),
+          ),
         ),
       ),
     );
