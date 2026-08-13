@@ -61,10 +61,15 @@ set. The orchestrator captures the immutable `phase_base_sha` at the evidence
 commit that adds this note and the strategy role log, per the strategy's
 capture-point section; `role_base_sha` values are not valid phase bases.
 
-- [~] Task 6: Add Red schema/migration/tenant-registry tests and invalid-transition counterexample fixtures.
-- [~] Task 7: Build a deterministic isolated PostgreSQL 16 harness using two independent connections, exact migration setup and teardown, an explicit test-only URL, and fail-closed guards forbidding production/default URL fallback.
-- [b] Task 8: Add Red concurrent claim, lease-token CAS, stale heartbeat/settle/fail, visibility reclaim, and restart tests on the PG16 harness. (deferred:durable_job_worker_platform_20260713-task7-pg16-harness)
-- [b] Task 9: Add Red idempotent enqueue, bounded deterministic-backoff, exhaustion/DLQ, authorization/audit, and active-lease replay-rejection tests. (deferred:durable_job_worker_platform_20260713-task6-and-task7-red-foundations)
+Acceptance checkpoint (2026-08-14): the fresh joint review returned PASS for
+Tasks 6 and 7. It found no open severity-ranked finding. The review is
+`task-6-task-7-independent-rereview-20260814.md`. Tasks 8 and 9 are now
+unlocked. They remain unimplemented and start from their planned Red state.
+
+- [x] Task 6: Add Red schema/migration/tenant-registry tests and invalid-transition counterexample fixtures. (`caf095c`)
+- [x] Task 7: Build a deterministic isolated PostgreSQL 16 harness using two independent connections, exact migration setup and teardown, an explicit test-only URL, and fail-closed guards forbidding production/default URL fallback. (`897abfe`)
+- [~] Task 8: Add Red concurrent claim, lease-token CAS, stale heartbeat/settle/fail, visibility reclaim, and restart tests on the PG16 harness.
+- [~] Task 9: Add Red idempotent enqueue, bounded deterministic-backoff, exhaustion/DLQ, authorization/audit, and active-lease replay-rejection tests.
 - [~] Task 10: Add Red worker lifecycle and architecture tests for registration, bounded concurrency, startup env, health/readiness, signals, safe logs, job-port-only access, and zero direct DB/job-table imports; record expected failures.
 
 **Verification:** `CI=true pnpm vitest run packages/backend/src/jobs/__tests__ services/worker/src/__tests__`

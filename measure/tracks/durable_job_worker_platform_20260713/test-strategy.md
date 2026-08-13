@@ -1,18 +1,17 @@
 # Test strategy: Durable Job Worker Platform
 
 > Canonical strategy for Phase 2 (Red Concurrency and Failure Tests) of
-> `durable_job_worker_platform_20260713`. Phase 1 is accepted. Tasks 6 and 7
-> carry an independent **FAIL** recorded at review commit `b32cc7f2f`. This
-> strategy fixes the remediation contract for `DWP-T6-H1/H2/L1` and
-> `DWP-T7-H1/H2/L1`, freezes the execution sequence, and authorizes Task 10
-> Red in parallel. This role owns no product source and no test source.
+> `durable_job_worker_platform_20260713`. Phase 1 is accepted. The original
+> Task 6 and Task 7 review failed at `b32cc7f2f`. The 2026-08-14 re-review
+> accepted both remediated tasks. Tasks 8 and 9 are now unlocked. This role
+> owns no product source and no test source.
 
 ## Phase scope and hard boundaries
 
 | Phase | State | Risk | This strategy |
 |-------|-------|------|---------------|
 | Phase 1 - existing behavior contract and generic schema | Accepted (Tasks 1-5; design PASS at `fb8c0d99`) | high (historical) | Reference and regression baseline only; not reopened |
-| Phase 2 - Red concurrency and failure tests | Active; Tasks 6/7 `[~]` under FAIL `b32cc7f2f`; Task 10 `[~]`; Tasks 8/9 `[b]` | high | Full strategy below |
+| Phase 2 - Red concurrency and failure tests | Active; Tasks 6/7 `[x]`; Tasks 8/9/10 `[~]` | high | Full strategy below |
 | Phase 3 - PostgreSQL adapter implementation | `[b]` behind Phase 2 acceptance | critical | Future Red/Green shape only |
 | Phase 4 - worker service and `review_jobs` adoption | `[b]` behind Phase 3 acceptance | critical | Future Red/Green shape only |
 | Phase 5 - capability integration, docs, doctor | `[b]` behind Phase 4 and kernel acceptance | high | Future Red/Green shape only |
@@ -104,11 +103,10 @@ tasks. Each finding has one exact remediation and one falsifier.
 3. Task 10 Red is authorized in parallel after this strategy commit. Task 10
    tests worker lifecycle and architecture boundaries. It does not consume the
    PG16 harness and does not wait for Tasks 6/7.
-4. Tasks 8 and 9 remain `[b]` blocked. They unlock only after a fresh
-   independent re-review returns PASS for the exact remediated Task 6 and Task 7
-   artifact set. Producer evidence alone does not unlock them.
-5. Tasks 6 and 7 stay `[~]` until that fresh re-review PASS. Neither task is
-   marked complete by remediation alone.
+4. The fresh independent re-review passed on 2026-08-14. It accepted the exact
+   Task 6 and Task 7 artifacts.
+5. Tasks 6 and 7 are complete. Tasks 8 and 9 are unlocked for separate Red
+   contract work.
 
 ## Leases
 
@@ -157,12 +155,12 @@ env -u DURABLE_JOB_PG16_TEST_OPT_IN \
     src/jobs/__tests__/postgres16-harness.integration.test.ts
 ```
 
-Expected at safe default: 26 passed, 1 skipped, exit 0, and no PostgreSQL
+Expected at safe default: 29 passed, 1 skipped, exit 0, and no PostgreSQL
 contact. A different count or any database contact falsifies the safe default.
 
 ## Phase 2 tasks
 
-### Task 6 - Red schema/migration/tenant-registry tests and counterexamples (in progress)
+### Task 6 - Red schema/migration/tenant-registry tests and counterexamples (accepted)
 
 Targeted Red commands:
 
@@ -193,12 +191,12 @@ Closeout gate for Task 6: a fresh independent re-review over the exact
 remediated artifact set returns PASS with DWP-T6-H1, DWP-T6-H2, and DWP-T6-L1
 closed and no new Critical/High finding.
 
-### Task 7 - deterministic isolated PG16 harness (in progress)
+### Task 7 - deterministic isolated PG16 harness (accepted)
 
 Targeted Red/live commands:
 
 ```bash
-# Safe default (see the exact env-clearing command above): 26 passed/1 skipped.
+# Safe default (see the exact env-clearing command above): 29 passed/1 skipped.
 # Live PG16 against the disposable container:
 DURABLE_JOB_PG16_TEST_OPT_IN=1 \
 DURABLE_JOB_PG16_TEST_ADMIN_DATABASE_URL=postgres://<test-role>@127.0.0.1:<port>/durable_job_test_admin_local \
@@ -214,7 +212,7 @@ Green gate for Task 7:
 - Cleanup-aware signal handlers are installed before the first destructive
   operation (DWP-T7-H2 remediation). Every lifecycle failure-injection case and
   the subprocess signal case pass with zero remaining scratch databases.
-- The safe-default count is 26 passed/1 skipped and the evidence document
+- The safe-default count is 29 passed/1 skipped and the evidence document
   records the same count and the exact env-clearing command (DWP-T7-L1).
 - Live evidence names the disposable image, the unique database, and the zero
   remaining scratch databases query result.
@@ -223,10 +221,10 @@ Closeout gate for Task 7: a fresh independent re-review returns PASS over URL
 safety, cleanup under failure and signal, exact hook order, two-session
 independence, PG16 enforcement, and secret-safe errors.
 
-### Task 8 - Red concurrency and reclaim tests (blocked)
+### Task 8 - Red concurrency and reclaim tests (unlocked)
 
-Task 8 stays `[b]` until the Task 6/7 re-review PASS. When unblocked, its
-targeted Red command runs on the frozen harness:
+Task 8 is `[~]` after the Task 6/7 re-review PASS. Its targeted Red command
+runs on the frozen harness:
 
 ```bash
 DURABLE_JOB_PG16_TEST_OPT_IN=1 \
@@ -242,9 +240,9 @@ restart preserves durable progress. Expected failure mode at Red: the adapter
 root does not exist, so suites fail on missing platform behavior, not on
 harness defects.
 
-### Task 9 - Red enqueue/retry/DLQ/replay tests (blocked)
+### Task 9 - Red enqueue/retry/DLQ/replay tests (unlocked)
 
-Task 9 stays `[b]` until the Task 6/7 re-review PASS. Required Red assertions:
+Task 9 is `[~]` after the Task 6/7 re-review PASS. Required Red assertions:
 duplicate enqueue returns the same durable identity within declared scope;
 retry timing is bounded and deterministic under test control; exhausted jobs
 dead-letter; replay requires authorization evidence, rejects an active lease,
@@ -421,12 +419,12 @@ Phase 2 defenses (every defense has a falsifier):
 
 | Anti-pattern | Defense | Falsifier |
 |--------------|---------|-----------|
-| A3 digit-only count | Every test-count claim is a labeled count bound to an exact command (26 passed/1 skipped; 10 failed/1 passed). | The recorded command prints a different count. |
+| A3 digit-only count | Every test-count claim is a labeled count bound to an exact command (29 passed/1 skipped; 10 failed/1 passed). | The recorded command prints a different count. |
 | A4 vacuous pass | Each Red suite must fail on named missing platform objects. An all-pass Red phase is a failure. | A Red suite exits zero before Task 11 lands. |
 | A5 false claim vs test reality | Evidence notes cite literal commands with terminal results (DWP-T6-L1, DWP-T7-L1 remediations). | Rerunning the cited command exits differently. |
-| A6 registry overstatement | `tracks.md` and plan notes must not call Tasks 6/7 complete before the fresh re-review PASS. | The re-review file records FAIL while the plan shows `[x]`. |
+| A6 registry overstatement | `tracks.md` and plan notes call Tasks 6/7 complete only after the fresh re-review PASS. | The re-review file records FAIL while the plan shows `[x]`. |
 | A7 over-broad filter | Focused package filters only; no aggregate turbo gate for this phase. | A Phase 2 regression hides inside pre-existing aggregate red. |
-| A8 marker ambiguity | Plan uses only `[x]`, `[~]`, `[b]` markers; Tasks 8/9 keep structured `deferred:` owners. | `tests/orchestrator_marker_vocabulary.sh` fails. |
+| A8 marker ambiguity | Plan uses only `[x]`, `[~]`, `[b]` markers; Tasks 8/9 remove obsolete deferrals after PASS. | `tests/orchestrator_marker_vocabulary.sh` fails. |
 | A10 generated-facts drift | This strategy changes no structural source; no generated-facts refresh is claimed. | `measure/doctor.sh` Check 5 attributes drift to this track. |
 | A14 invalid ripgrep option | Audit recipes use `rg -n`, never `rg -nE`. | A detector exits 2 and is reported as failure, not zero hits. |
 | A15 stale role receipts | Remediation commits require fresh receipts with current output hashes. | `tests/orchestrator_role_receipt_integrity.sh` fails. |
