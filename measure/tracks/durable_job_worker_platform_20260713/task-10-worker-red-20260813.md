@@ -15,9 +15,12 @@ The Red tests own these contracts:
 - startup parsing validates queue, worker, concurrency, polling, lease, and drain settings;
 - one poll uses a bounded claim and handler concurrency;
 - readiness opens after start and closes during SIGTERM drain;
-- liveness remains available while active jobs drain;
 - structured logs include correlation data without payload or provider secrets;
 - persisted failures include only `code` and `safeSummary`;
+- one declared polling scope binds claim and reclaim requests;
+- each accepted envelope matches the declared polling scope;
+- handler, heartbeat, settlement, and failure requests use the accepted envelope scope;
+- a scope mismatch fails before handler execution;
 - worker composition uses only the lifecycle job port;
 - worker production source has no DB, schema, SQL, or job-table access;
 - queue persistence signals stay under `packages/backend/src/jobs/adapters/postgres/`.
@@ -41,6 +44,27 @@ reported 1 expected failure and 4 passing static guards.
 Every failure names the absent `services/worker/src/worker-composition.ts`
 module. No failure names a database, harness, import transform, or unrelated
 runtime defect.
+
+## Tenant-scope amendment — 2026-08-14
+
+The original 11-test result remains historical evidence for its exact source.
+The later amendment corrects the polling-scope fixture.
+
+The default Codecamp path now uses a global job and a global polling scope.
+A separate tenant case supplies an explicit tenant polling scope.
+It uses the accepted envelope scope for each lifecycle request.
+A mismatch fails before handler execution.
+
+The amended two-file suite collected 14 tests.
+Nine tests failed only because `worker-composition.ts` is absent.
+Five static architecture guards passed.
+
+The installed TypeScript compiler and scoped ESLint check passed.
+The exact worker-test diff check passed.
+Task 10 remains `[~]` until Green and a fresh independent review pass.
+
+The file `task-10-independent-review-result-20260813.json` reviews the earlier
+11-test source at `22b4959`. It is historical and does not accept this amendment.
 
 ## Supporting gates
 

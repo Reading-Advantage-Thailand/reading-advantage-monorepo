@@ -70,7 +70,9 @@ unlocked. They remain unimplemented and start from their planned Red state.
 - [x] Task 7: Build a deterministic isolated PostgreSQL 16 harness using two independent connections, exact migration setup and teardown, an explicit test-only URL, and fail-closed guards forbidding production/default URL fallback. (`897abfe`)
 - [~] Task 8: Add Red concurrent claim, lease-token CAS, stale heartbeat/settle/fail, visibility reclaim, and restart tests on the PG16 harness.
 - [~] Task 9: Add Red idempotent enqueue, bounded deterministic-backoff, exhaustion/DLQ, authorization/audit, and active-lease replay-rejection tests.
-- [~] Task 10: Add Red worker lifecycle and architecture tests for registration, bounded concurrency, startup env, health/readiness, signals, safe logs, job-port-only access, and zero direct DB/job-table imports; record expected failures.
+- [~] Task 10: Add Red worker lifecycle and architecture tests for registration, bounded polling, startup configuration, health, signals, and safe logs. Prove trusted tenant propagation, lifecycle-only port access, and zero direct persistence access. Record named missing-composition failures.
+
+  Tenant-scope amendment (2026-08-14): one declared polling scope binds claim and reclaim requests. Each accepted envelope must match that scope. Handler and lifecycle requests use the accepted envelope scope. A mismatch fails before handler execution. The two-file suite collected 14 tests. Nine tests failed only because `worker-composition.ts` is absent, and five static guards passed. Task 10 remains `[~]` until Green and fresh independent review evidence exist.
 
 **Verification:** `CI=true pnpm vitest run packages/backend/src/jobs/__tests__ services/worker/src/__tests__`
 

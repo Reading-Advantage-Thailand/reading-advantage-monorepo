@@ -58,6 +58,8 @@ const workerCompositionSource = fileURLToPath(
 );
 
 const fixedNow = "2026-08-13T00:00:00.000Z";
+const globalScope = { mode: "global" } as const;
+const tenantScope = { mode: "tenant", tenantId: "school-1" } as const;
 
 const validEnvironment = {
   NODE_ENV: "test",
@@ -103,9 +105,10 @@ const createHandler = (
     context: Readonly<Record<string, unknown>>,
     payload: unknown,
   ) => Promise<unknown> = async () => ({ ok: true }),
+  tenantMode: WorkerHandler["tenantMode"] = "global",
 ): WorkerHandler => ({
-  jobName: "review.process",
-  tenantMode: "tenant",
+  jobName: "codecamp.review-pr",
+  tenantMode,
   payload: z.object({
     secret: z.string().optional(),
     value: z.string(),
@@ -114,11 +117,15 @@ const createHandler = (
   handle: vi.fn(handle),
 });
 
-const createJob = (index: number, secret = `secret-${index}`): WorkerJob => ({
+const createJob = (
+  index: number,
+  secret = `secret-${index}`,
+  tenant: WorkerJob["tenant"] = globalScope,
+): WorkerJob => ({
   id: `00000000-0000-4000-8000-${index.toString().padStart(12, "0")}`,
-  jobName: "review.process",
+  jobName: "codecamp.review-pr",
   queueName: "review",
-  tenant: { mode: "tenant", tenantId: "school-1" },
+  tenant,
   idempotencyKey: `review-${index}`,
   payload: { secret, value: `value-${index}` },
   state: "running",
@@ -222,6 +229,7 @@ const createComposition = async (
   handler = createHandler(),
   overrides: Readonly<Record<string, unknown>> = {},
   preparePort: (port: WorkerLifecyclePort) => void = () => undefined,
+  pollingScope: WorkerJob["tenant"] = globalScope,
 ): Promise<{
   composition: WorkerComposition;
   health: ReturnType<typeof createWorkerHealthState>;
@@ -244,6 +252,7 @@ const createComposition = async (
     config,
     health,
     logger,
+    pollingScope,
     port,
     registry,
     sleep: async () => undefined,
@@ -474,5 +483,117 @@ describe("durable worker lifecycle Red contract", () => {
     );
     await reclaimCase.composition.pollOnce();
     expect(reclaimCase.port.reclaimExpired).toHaveBeenCalledTimes(1);
+  });
+
+  it("uses the declared tenant polling scope for accepted jobs and lifecycle requests", async () => {
+    const handledTenants: unknown[] = [];
+    const releaseJob = createDeferred();
+    const tenantJob = createJob(8, undefined, tenantScope);
+    const handler = createHandler(async (context) => {
+      handledTenants.push(context.tenant);
+      await releaseJob.promise;
+      return { ok: true };
+    }, "tenant");
+    const heartbeatCase = await createComposition([tenantJob], handler, {
+      config: {
+        queueName: "review",
+        workerId: "worker-red-1",
+        concurrency: 2,
+        pollIntervalMs: 1,
+        leaseSeconds: 1,
+        shutdownGraceMs: 1_000,
+      },
+      sleep: async (milliseconds: number): Promise<void> => {
+        await new Promise<void>((resolve) => setTimeout(resolve, milliseconds));
+      },
+    }, () => undefined, tenantScope);
+
+    const startPromise = heartbeatCase.composition.start();
+    await waitFor(() => handledTenants.length === 1, "tenant handler context");
+    await waitFor(
+      () => heartbeatCase.port.heartbeat.mock.calls.length >= 1,
+      "tenant heartbeat request",
+    );
+    const stopPromise = heartbeatCase.composition.stop("SIGTERM");
+    releaseJob.resolve();
+    await expect(stopPromise).resolves.toBeUndefined();
+    await expect(startPromise).resolves.toBeUndefined();
+
+    expect(handledTenants).toEqual([tenantScope]);
+    expect(heartbeatCase.port.claim.mock.calls[0]?.[0].tenant).toStrictEqual(
+      tenantScope,
+    );
+    expect(heartbeatCase.port.settle).toHaveBeenCalledTimes(1);
+    for (const [request] of heartbeatCase.port.heartbeat.mock.calls) {
+      expect(request.tenant).toStrictEqual(tenantScope);
+    }
+    for (const [request] of heartbeatCase.port.settle.mock.calls) {
+      expect(request.tenant).toStrictEqual(tenantScope);
+    }
+    for (const [request] of heartbeatCase.port.reclaimExpired.mock.calls) {
+      expect(request.tenant).toStrictEqual(tenantScope);
+    }
+
+    const failureTenants: unknown[] = [];
+    const failureCase = await createComposition(
+      [createJob(9, undefined, tenantScope)],
+      createHandler(async (context) => {
+        failureTenants.push(context.tenant);
+        throw new Error("provider failure");
+      }, "tenant"),
+      {},
+      () => undefined,
+      tenantScope,
+    );
+    await expect(failureCase.composition.pollOnce()).resolves.toBeUndefined();
+    expect(failureTenants).toEqual([tenantScope]);
+    expect(failureCase.port.claim.mock.calls[0]?.[0].tenant).toStrictEqual(
+      tenantScope,
+    );
+    expect(failureCase.port.fail).toHaveBeenCalledTimes(1);
+    for (const [request] of failureCase.port.fail.mock.calls) {
+      expect(request.tenant).toStrictEqual(tenantScope);
+    }
+    for (const [request] of failureCase.port.reclaimExpired.mock.calls) {
+      expect(request.tenant).toStrictEqual(tenantScope);
+    }
+
+    const reclaimCase = await createComposition(
+      [],
+      createHandler(undefined, "tenant"),
+      {},
+      () => undefined,
+      tenantScope,
+    );
+    await reclaimCase.composition.pollOnce();
+    expect(reclaimCase.port.claim.mock.calls[0]?.[0].tenant).toStrictEqual(
+      tenantScope,
+    );
+    expect(reclaimCase.port.reclaimExpired).toHaveBeenCalledTimes(1);
+    for (const [request] of reclaimCase.port.reclaimExpired.mock.calls) {
+      expect(request.tenant).toStrictEqual(tenantScope);
+    }
+  });
+
+  it("rejects an envelope outside the declared polling scope before the handler", async () => {
+    const handler = createHandler(undefined, "tenant");
+    const { composition, port } = await createComposition(
+      [createJob(10, undefined, globalScope)],
+      handler,
+      {},
+      () => undefined,
+      tenantScope,
+    );
+
+    await expect(composition.pollOnce()).rejects.toThrow(/tenant|scope|mismatch/i);
+    expect(port.claim).toHaveBeenCalledTimes(1);
+    expect(port.claim.mock.calls[0]?.[0].tenant).toStrictEqual(tenantScope);
+    expect(handler.handle).not.toHaveBeenCalled();
+    expect(port.heartbeat).not.toHaveBeenCalled();
+    expect(port.settle).not.toHaveBeenCalled();
+    expect(port.fail).not.toHaveBeenCalled();
+    for (const [request] of port.reclaimExpired.mock.calls) {
+      expect(request.tenant).toStrictEqual(tenantScope);
+    }
   });
 });

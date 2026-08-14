@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "track": "durable_job_worker_platform_20260713",
+  "phase": "Phase 2: Red Concurrency and Failure Tests",
+  "scope": "Phase 2 Task 10 only",
+  "phase_base_sha": "33d44fc81b84559c2ab7a48acfaf86554bf017a5",
+  "role_base_sha": "2e476d76e419eb9d2b31c3298ba3f98d79c5a061",
+  "audited_head_sha": "22b4959dedb0462a7e0a0ffb912cec3d2a59125c",
+  "summary": "Audit of role diff 2e476d76e..22b4959de (HEAD == audited_head 22b4959de). The diff contains exactly the four Task 10 files: two worker Red tests, the Task 10 evidence note, and the mid-red role log. Commits 43f210539..22b4959de change only the receipt log. Reproduced Red command exits 1 with 11 tests, 7 failed and 4 passed, matching the recorded evidence. All 7 failures name the missing services/worker/src/worker-composition.ts module. The 4 static architecture guards pass. The tests cover every required Red assertion in test-strategy.md lines 254-270. No DB, schema, SQL, or job-table import bypass exists in the tests. The source scans read real files and are not vacuous. Task 10 remains [~], which matches the Red state.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "Evidence over-claim, low severity: the Task 10 note and role log say liveness remains available while active jobs drain. The lifecycle test asserts ready:false and status:draining during SIGTERM drain, but no assertion pins the alive field. The strategy requires health/readiness transitions, which the test covers. The liveness sentence is not backed by an executable assertion.",
+    "Import-guard breadth, low severity: the worker architecture guard flags any import specifier containing /schema. A legitimate local module such as ./schema would also fail the guard. No such import exists in worker production source today. The strictness is acceptable for a guard, but Green should keep the pattern when adding worker-composition.ts.",
+    "Least-privilege port test depth, low severity: the job-port test detects forbidden enqueue/listDead/replay access only through getter traps during pollOnce. Code paths that pollOnce does not exercise are not covered. This matches the Red contract shape and is acceptable at this stage.",
+    "A4 check (clean): the worker-composition presence check fails when the module is missing; reproduced. The static guards scan 5 real worker production files and 4 real backend jobs files; empty-source vacuous pass is not possible because readdir on a missing root throws. The persistence-root guard passes because no file under packages/backend/src/jobs currently carries persistence signals; a violation fixture (pg import, SQL keyword, or review_jobs/durable_jobs reference outside adapters/postgres) would fail it."
+  ],
+  "evidence": [
+    "HEAD equals audited_head_sha 22b4959dedb0462a7e0a0ffb912cec3d2a59125c; verified with git rev-parse HEAD. phase_base_sha 33d44fc81 and role_base_sha 2e476d76e come from the track plan note and the mid-red role log; both resolve to commits.",
+    "Role diff 2e476d76e..22b4959de contains exactly 4 files: services/worker/src/__tests__/worker-lifecycle.red.test.ts (390 lines), services/worker/src/__tests__/worker-architecture.red.test.ts (143 lines), measure/tracks/durable_job_worker_platform_20260713/task-10-worker-red-20260813.md, and orchestration/phase2-task10-mid-red-role.log. Follow-up diff 43f210539..22b4959de changes only the role log (receipt text and result block). Commit 22b4959de alone changes only the role log.",
+    "Reproduced the focused Task 10 command: CI=true pnpm --filter @reading-advantage/worker exec vitest run src/__tests__/worker-lifecycle.red.test.ts src/__tests__/worker-architecture.red.test.ts. Exit 1. Result: 2 files, 11 tests, 7 failed and 4 passed. Every failure message names the missing module services/worker/src/worker-composition.ts. The 4 architecture static guards passed. This matches the evidence note and role log exactly (A5 clean).",
+    "Test-meaning review against test-strategy.md lines 254-270: typed handler registration (lifecycle test 1), startup env validation for queue/concurrency/polling/lease/drain (test 2), bounded claim and handler concurrency limit 2 (test 3), readiness open after start and SIGTERM drain before stopping claims (test 4), structured logs with correlationId and no payload or provider secrets plus code/safeSummary-only persisted failure (test 5), lifecycle-port-only access with forbidden enqueue/listDead/replay traps (test 6), zero direct DB/schema imports (architecture test 2), zero SQL and job-table references (architecture test 3), backend imports limited to @reading-advantage/backend/jobs (architecture test 4), and queue persistence signals confined to the exact root packages/backend/src/jobs/adapters/postgres (architecture test 5). Each expected failure is recorded as the named missing composition module, as the strategy requires.",
+    "A3 check (clean): no assertion uses bare-digit matching for counts. Concurrency assertions use labeled values (limit: 2, leaseSeconds: 30) and a measured maximum-active counter.",
+    "No DB/schema/SQL/job-table import bypass: the Red tests import node builtins, vitest, zod, and ../health.js only. createWorkerHealthState exists at services/worker/src/health.ts line 130. No production file under services/worker was added or changed.",
+    "No vacuous source scan: readProductionSources collects real .ts files under services/worker/src (health.ts, index.ts, main.ts, oci-contract.ts, startup-config.ts) excluding __tests__; the persistence guard collects real files under packages/backend/src/jobs (contracts.ts, dead-letter-contracts.ts, index.ts, ports.ts) excluding __tests__. The adapter root packages/backend/src/jobs/adapters/postgres does not exist yet, which is consistent with the Red state.",
+    "Plan claim verification: plan.md marks Task 10 [~], consistent with an open Red task. The note records that plan.md was not edited because the lease excluded it. Task 10 did not touch the PG16 harness, packages/db, or the Task 6/7 files, as the strategy requires.",
+    "Framework-wide anti-pattern checks not triggered: the diff contains no supervisor, orchestration-script, contract-test-infrastructure, or registry changes.",
+    "git diff --check on the four leased paths exits 0. Pre-existing unrelated dirty paths in other tracks were preserved. No commits were made."
+  ],
+  "commands": [
+    "git rev-parse HEAD -- exit 0: HEAD 22b4959dedb0462a7e0a0ffb912cec3d2a59125c equals audited_head_sha",
+    "git diff --stat 2e476d76e..22b4959de -- exit 0: exactly the four Task 10 files, 720 insertions",
+    "git diff 43f210539..22b4959de -- exit 0: only orchestration/phase2-task10-mid-red-role.log changed (receipt-only follow-ups)",
+    "CI=true pnpm --filter @reading-advantage/worker exec vitest run src/__tests__/worker-lifecycle.red.test.ts src/__tests__/worker-architecture.red.test.ts -- exit 1: 11 tests, 7 failed and 4 passed; all failures name missing services/worker/src/worker-composition.ts; 4 static guards pass",
+    "git diff --check -- <four leased paths> -- exit 0: no whitespace errors"
+  ],
+  "changed_files": [
+    "services/worker/src/__tests__/worker-lifecycle.red.test.ts",
+    "services/worker/src/__tests__/worker-architecture.red.test.ts",
+    "measure/tracks/durable_job_worker_platform_20260713/task-10-worker-red-20260813.md",
+    "measure/tracks/durable_job_worker_platform_20260713/orchestration/phase2-task10-mid-red-role.log"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high"
+}
