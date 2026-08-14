@@ -522,7 +522,7 @@ class ExistingCoreTask5HostProofEvidenceTests(unittest.TestCase):
             next(line for line in plan.splitlines() if "Delete only each title's exact replaced legacy paths" in line).startswith("- [~]")
         )
         self.assertTrue(
-            next(line for line in plan.splitlines() if "Obtain independent review and product-owner acceptance" in line).startswith("- [ ]")
+            next(line for line in plan.splitlines() if "Obtain independent review and product-owner acceptance" in line).startswith("- [b]")
         )
 
     def test_primary_host_matrix_binding_is_current_and_task5_lifecycle_is_ordered(self) -> None:
@@ -538,7 +538,7 @@ class ExistingCoreTask5HostProofEvidenceTests(unittest.TestCase):
         self.assertTrue(next(line for line in plan.splitlines() if "Source identity inventory" in line).startswith("  - [x]"))
         self.assertTrue(next(line for line in plan.splitlines() if "Prove Reading and Primary load" in line).startswith("- [x]"))
         self.assertTrue(next(line for line in plan.splitlines() if "Delete only each title's exact replaced legacy paths" in line).startswith("- [~]"))
-        self.assertTrue(next(line for line in plan.splitlines() if "Obtain independent review and product-owner acceptance" in line).startswith("- [ ]"))
+        self.assertTrue(next(line for line in plan.splitlines() if "Obtain independent review and product-owner acceptance" in line).startswith("- [b]"))
 
 
 if __name__ == "__main__":

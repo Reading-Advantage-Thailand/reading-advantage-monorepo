@@ -200,7 +200,7 @@ class ExistingCoreTask5Task6AcceptanceTests(unittest.TestCase):
         self.assertTrue(next(line for line in core_plan.splitlines() if "Gate Task 5 acceptance on asset adoption" in line).startswith("- [x]"))
         self.assertTrue(next(line for line in core_plan.splitlines() if "Prove Reading and Primary load" in line).startswith("- [x]"))
         self.assertTrue(next(line for line in core_plan.splitlines() if "Delete only each title's exact replaced legacy paths" in line).startswith("- [~]"))
-        self.assertTrue(next(line for line in core_plan.splitlines() if "Obtain independent review and product-owner acceptance" in line).startswith("- [ ]"))
+        self.assertTrue(next(line for line in core_plan.splitlines() if "Obtain independent review and product-owner acceptance" in line).startswith("- [b]"))
 
         suitability_plan = (SUITABILITY_TRACK / "plan.md").read_text(encoding="utf-8")
         self.assertTrue(suitability_plan.startswith("# Implementation Plan"))

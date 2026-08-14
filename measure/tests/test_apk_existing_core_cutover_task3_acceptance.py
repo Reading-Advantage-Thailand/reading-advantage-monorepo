@@ -343,7 +343,7 @@ class ExistingCoreTask3AcceptanceTests(unittest.TestCase):
             (line for line in plan.splitlines() if "Obtain independent review and product-owner acceptance" in line),
             "",
         )
-        self.assertTrue(task7_line.startswith("- [ ]"))
+        self.assertTrue(task7_line.startswith("- [b]"))
 
         self.assertEqual(task_acceptance["task_number"], 3)
         self.assertEqual(task_acceptance["approval_message_exact"], "Approved. Continue")

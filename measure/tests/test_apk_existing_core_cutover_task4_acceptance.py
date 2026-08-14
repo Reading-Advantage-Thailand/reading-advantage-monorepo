@@ -210,7 +210,7 @@ class ExistingCoreTask4AcceptanceTests(unittest.TestCase):
         self.assertTrue(task4_line.startswith("- [x]"))
         self.assertTrue(task5_line.startswith("- [x]"))
         self.assertTrue(next(line for line in plan.splitlines() if "Delete only each title's exact replaced legacy paths" in line).startswith("- [~]"))
-        self.assertTrue(next(line for line in plan.splitlines() if "Obtain independent review and product-owner acceptance" in line).startswith("- [ ]"))
+        self.assertTrue(next(line for line in plan.splitlines() if "Obtain independent review and product-owner acceptance" in line).startswith("- [b]"))
 
         task4_acceptance = next(item for item in metadata["task_acceptances"] if item["task_number"] == 4)
         self.assertEqual(task4_acceptance["approval_message_exact"], EXPECTED_APPROVAL_MESSAGE)

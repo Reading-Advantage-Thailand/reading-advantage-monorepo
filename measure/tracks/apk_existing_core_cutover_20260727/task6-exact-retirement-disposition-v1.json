@@ -1,0 +1,119 @@
+{
+  "schema_version": "apk-existing-core-task6-exact-retirement-disposition.v1",
+  "status": "blocked-no-approved-retirement-candidates",
+  "recorded_at": "2026-08-14",
+  "authorization": {
+    "task6_begin_authorized": true,
+    "retirement_completed": false,
+    "deletion_performed": false,
+    "production_catalog_exposure_authorized": false,
+    "cutover_authorized": false,
+    "deployment_authorized": false
+  },
+  "bound_inputs": {
+    "task5_task6_owner_acceptance": {
+      "path": "measure/tracks/apk_existing_core_cutover_20260727/task5-task6-product-owner-acceptance-v1.json",
+      "sha256": "4ca0b6983a285ea998399ea2ed6a2e97864db0e62686aca32643932c9e598eda"
+    },
+    "canonical_reuse_dossiers": {
+      "path": "measure/tracks/apk_existing_core_cutover_20260727/task5-canonical-reuse-dossiers-v1.json",
+      "sha256": "da78c02003654ca777c5ac2486c1a8b04a380460fb51e258a9f4557b35d85c79"
+    },
+    "canonical_reuse_disposition_matrix": {
+      "path": "measure/tracks/apk_existing_core_cutover_20260727/task5-canonical-reuse-disposition-matrix-v1.json",
+      "sha256": "e6ac0a592840eff4d3664c23c5c11e70e404f0f787b419e9f6f9a3c066b86489"
+    },
+    "legacy_source_inventory": {
+      "path": "measure/tracks/apk_existing_core_cutover_20260727/task5-legacy-source-inventory-v1.json",
+      "sha256": "34feb2a6894aedd31cf99ceac873fcaf4636415f6b3b531429a23d7d55d13432",
+      "authority": "source-inventory-only"
+    },
+    "reading_primary_host_proof_evidence": {
+      "path": "measure/tracks/apk_existing_core_cutover_20260727/task5-reading-primary-host-proof-evidence-v1.json",
+      "sha256": "0c80f1a187657817bf657bed8f50181e4307499525f904d70ec2dbfa808edd83",
+      "authority": "execution-recorded-only"
+    },
+    "reading_host_proof": {
+      "path": "measure/tracks/apk_existing_core_cutover_20260727/task5-reading-host-proof-playwright-report-v2.json",
+      "sha256": "4e1f69c24ad36717077cfde04c8db0a80f708464ae2d877c5383083c85876c80"
+    },
+    "primary_host_proof": {
+      "path": "measure/tracks/apk_existing_core_cutover_20260727/task5-primary-host-proof-playwright-report-v1.json",
+      "sha256": "8e851a62a7c1ed2ef41ab6b9ddc3ed6ef293ede575408f4695bb4093432d9fae"
+    }
+  },
+  "resolution": {
+    "approved_title_count": 5,
+    "approved_role_count": 17,
+    "dossier_retirement_candidate_count": 0,
+    "matrix_retirement_candidate_count": 0,
+    "resolved_proposed_legacy_paths": [],
+    "deleted_paths": [],
+    "preserved_inventory_path_count": 32,
+    "preservation_reason": "The accepted dossier and matrix contain no exact legacy-retirement candidate. The source inventory remains unreviewed planning evidence."
+  },
+  "preserved_paths": [
+    { "title_id": "dragon-flight", "host": "advantage-games", "path": "apps/advantage-games/public/games/vocabulary/dragon-flight/boss-3x3-sheet-facing-up.png", "disposition": "preserve-no-accepted-replacement" },
+    { "title_id": "dragon-flight", "host": "advantage-games", "path": "apps/advantage-games/public/games/vocabulary/dragon-flight/dragon-army-3x3-sheet-facing-up.png", "disposition": "preserve-no-accepted-replacement" },
+    { "title_id": "dragon-flight", "host": "advantage-games", "path": "apps/advantage-games/public/games/vocabulary/dragon-flight/gates-3x3-sheet-facing-up.png", "disposition": "preserve-no-accepted-replacement" },
+    { "title_id": "dragon-flight", "host": "advantage-games", "path": "apps/advantage-games/public/games/vocabulary/dragon-flight/loading-screen-background.png", "disposition": "preserve-no-accepted-replacement" },
+    { "title_id": "dragon-flight", "host": "advantage-games", "path": "apps/advantage-games/public/games/vocabulary/dragon-flight/parallax-bottom-tiling.png", "disposition": "preserve-no-accepted-replacement" },
+    { "title_id": "dragon-flight", "host": "advantage-games", "path": "apps/advantage-games/public/games/vocabulary/dragon-flight/parallax-middle-tiling.png", "disposition": "preserve-no-accepted-replacement" },
+    { "title_id": "dragon-flight", "host": "advantage-games", "path": "apps/advantage-games/public/games/vocabulary/dragon-flight/parallax-top-tiling.png", "disposition": "preserve-no-accepted-replacement" },
+    { "title_id": "dragon-flight", "host": "advantage-games", "path": "apps/advantage-games/public/games/vocabulary/dragon-flight/player-3x3-sheet-facing-camera.png", "disposition": "preserve-no-accepted-replacement" },
+    { "title_id": "dragon-flight", "host": "advantage-games", "path": "apps/advantage-games/public/games/vocabulary/dragon-flight/player-3x3-sheet-facing-down.png", "disposition": "preserve-no-accepted-replacement" },
+    { "title_id": "dragon-flight", "host": "advantage-games", "path": "apps/advantage-games/public/games/vocabulary/dragon-flight/projectile-boss.png", "disposition": "preserve-no-accepted-replacement" },
+    { "title_id": "dragon-flight", "host": "advantage-games", "path": "apps/advantage-games/public/games/vocabulary/dragon-flight/projectile-fireball.png", "disposition": "preserve-no-accepted-replacement" },
+    { "title_id": "magic-defense", "host": "advantage-games", "path": "apps/advantage-games/public/games/magic-defense/background.png", "disposition": "preserve-no-accepted-replacement" },
+    { "title_id": "magic-defense", "host": "advantage-games", "path": "apps/advantage-games/public/games/magic-defense/castles_3x2_sheet.png", "disposition": "preserve-no-accepted-replacement" },
+    { "title_id": "magic-defense", "host": "advantage-games", "path": "apps/advantage-games/public/games/magic-defense/skeletons_3x3_pose_sheet.png", "disposition": "preserve-no-accepted-replacement" },
+    { "title_id": "dungeon-liberator", "host": "advantage-games", "path": "apps/advantage-games/public/games/sentence/dungeon-liberator/background.png", "disposition": "preserve-no-accepted-replacement" },
+    { "title_id": "dungeon-liberator", "host": "advantage-games", "path": "apps/advantage-games/public/games/sentence/dungeon-liberator/player-sheet.png", "disposition": "preserve-no-accepted-replacement" },
+    { "title_id": "dungeon-liberator", "host": "advantage-games", "path": "apps/advantage-games/public/games/sentence/dungeon-liberator/prisoner-sheet.png", "disposition": "preserve-no-accepted-replacement" },
+    { "title_id": "dungeon-liberator", "host": "advantage-games", "path": "apps/advantage-games/public/games/sentence/dungeon-liberator/slime-sheet.png", "disposition": "preserve-no-accepted-replacement" },
+    { "title_id": "dragon-flight", "host": "reading-advantage", "path": "apps/reading-advantage/public/games/vocabulary/dragon-flight/boss-3x3-sheet-facing-up.png", "disposition": "preserve-no-accepted-replacement" },
+    { "title_id": "dragon-flight", "host": "reading-advantage", "path": "apps/reading-advantage/public/games/vocabulary/dragon-flight/dragon-army-3x3-sheet-facing-up.png", "disposition": "preserve-no-accepted-replacement" },
+    { "title_id": "dragon-flight", "host": "reading-advantage", "path": "apps/reading-advantage/public/games/vocabulary/dragon-flight/gates-3x3-sheet-facing-up.png", "disposition": "preserve-no-accepted-replacement" },
+    { "title_id": "dragon-flight", "host": "reading-advantage", "path": "apps/reading-advantage/public/games/vocabulary/dragon-flight/loading-screen-background.png", "disposition": "preserve-no-accepted-replacement" },
+    { "title_id": "dragon-flight", "host": "reading-advantage", "path": "apps/reading-advantage/public/games/vocabulary/dragon-flight/parallax-bottom-tiling.png", "disposition": "preserve-no-accepted-replacement" },
+    { "title_id": "dragon-flight", "host": "reading-advantage", "path": "apps/reading-advantage/public/games/vocabulary/dragon-flight/parallax-middle-tiling.png", "disposition": "preserve-no-accepted-replacement" },
+    { "title_id": "dragon-flight", "host": "reading-advantage", "path": "apps/reading-advantage/public/games/vocabulary/dragon-flight/parallax-top-tiling.png", "disposition": "preserve-no-accepted-replacement" },
+    { "title_id": "dragon-flight", "host": "reading-advantage", "path": "apps/reading-advantage/public/games/vocabulary/dragon-flight/player-3x3-sheet-facing-camera.png", "disposition": "preserve-no-accepted-replacement" },
+    { "title_id": "dragon-flight", "host": "reading-advantage", "path": "apps/reading-advantage/public/games/vocabulary/dragon-flight/player-3x3-sheet-facing-down.png", "disposition": "preserve-no-accepted-replacement" },
+    { "title_id": "dragon-flight", "host": "reading-advantage", "path": "apps/reading-advantage/public/games/vocabulary/dragon-flight/projectile-boss.png", "disposition": "preserve-no-accepted-replacement" },
+    { "title_id": "dragon-flight", "host": "reading-advantage", "path": "apps/reading-advantage/public/games/vocabulary/dragon-flight/projectile-fireball.png", "disposition": "preserve-no-accepted-replacement" },
+    { "title_id": "magic-defense", "host": "reading-advantage", "path": "apps/reading-advantage/public/games/vocabulary/magic-defense/background.png", "disposition": "preserve-no-accepted-replacement" },
+    { "title_id": "magic-defense", "host": "reading-advantage", "path": "apps/reading-advantage/public/games/vocabulary/magic-defense/castles_3x2_sheet.png", "disposition": "preserve-no-accepted-replacement" },
+    { "title_id": "magic-defense", "host": "reading-advantage", "path": "apps/reading-advantage/public/games/vocabulary/magic-defense/skeletons_3x3_pose_sheet.png", "disposition": "preserve-no-accepted-replacement" }
+  ],
+  "host_proof": {
+    "status": "execution-only-observation",
+    "title_ids": ["dragon-flight", "magic-defense", "dungeon-liberator", "sorcerer-ziggurat", "astral-mage"],
+    "reading": { "expected": 41, "unexpected": 0, "skipped": 0 },
+    "primary": { "expected": 41, "unexpected": 0, "skipped": 0 }
+  },
+  "caller_guard": {
+    "status": "not-clearance",
+    "reason": "Graph callers returned ambiguous duplicate host symbols or no indexed caller. No deletion clearance was issued.",
+    "queried_symbols": ["DragonFlightGame", "MagicDefensePage", "DungeonLiberatorGame", "MagicDefenseGame"]
+  },
+  "asset_guard": {
+    "status": "preservation-confirmed",
+    "guard": "measure/tests/test_apk_existing_core_legacy_source_inventory.py",
+    "scope": "The guard verifies all 32 inventory paths, hashes, dimensions, and source-only authority."
+  },
+  "claims": {
+    "asset_adoption_claimed": false,
+    "migration_claimed": false,
+    "cutover_claimed": false,
+    "retirement_claimed": false,
+    "deployment_claimed": false,
+    "cohort_closeout_claimed": false
+  },
+  "next_required_evidence": [
+    "An owner-reviewed exact replacement disposition for each path.",
+    "A non-ambiguous caller result for each affected host.",
+    "Current Reading and Primary host proofs after each replacement.",
+    "Independent review and product-owner acceptance of retirement evidence."
+  ]
+}
