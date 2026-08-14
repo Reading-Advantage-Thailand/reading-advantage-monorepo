@@ -21,21 +21,49 @@
 - [b] Task: Write Red tests proving waitlist + contact forms post to the chosen backend/adapter and validate input. — superseded:www_crm_lead_intake_20260722 (deferred:www_crm_lead_intake_20260722-acceptance)
   - Evidence refs: www T1 (LRF-008/009).
 - [b] Task: Implement form submission + validation + analytics. — superseded:www_crm_lead_intake_20260722 (deferred:www_crm_lead_intake_20260722-acceptance)
-- [~] Task: Remove or implement empty/dead layout components flagged by import-usage audit.
+- [x] Task: Remove or implement empty/dead layout components flagged by import-usage audit.
   - Evidence refs: www T2 (LRF-010).
+  - Red failed with all three empty files detected: `fade-in.tsx`, `page-transition.tsx`, and `scroll-fade.tsx`.
+  - Green removed the three unimported zero-byte files. The focused suite passes 1/1.
+  - The exact combined command `CI=true ../../node_modules/.bin/vitest run src/components/layout/layout-components.test.ts src/__tests__/phase-2-seo-assets.red.test.ts --maxWorkers=1` passes 5/5.
 - [~] Task: Run www targeted tests.
+  - The focused T2 suite passes. The direct full Vitest command stopped with exit 130 after more than four minutes without output.
 
 ## Phase 2: SEO Metadata and Static Assets
 
-- [~] Task: Write Red tests for missing page metadata exports and unresolved OG/static assets.
+- [x] Task: Write Red tests for missing page metadata exports and unresolved OG/static assets.
   - Evidence refs: www T3 (LRF-005/006/007/036), T6 (LRF-011).
+  - Red failed 3/3: eight routes lacked metadata exports, `grid-pattern.svg` and the referenced OG asset were absent, and Reading Advantage began with `use client`.
 - [~] Task: Add metadata (title, OG, hreflang, canonical, locale-aware) and restore assets; fix client-render SEO split.
+  - The candidate covers 11 of the 23 marketing routes with the shared locale-aware metadata helper.
+  - About, features, and pricing now derive title and description from their locale dictionaries.
+  - The helper maps `en`, `th`, and `zh` to `en_US`, `th_TH`, and `zh_CN` Open Graph values.
+  - The helper emits absolute canonical and alternate URLs and uses the valid PNG `public/images/teacher-at-board.png` for Open Graph images.
+  - The Reading Advantage page remains server-rendered and uses the server i18n accessor.
+  - The focused behavior test validates the shared helper, invokes all 11 completed route metadata exports, and checks PNG magic bytes. It does not cover the 12 remaining route files.
+  - The exact remaining route files are:
+    - `src/app/[locale]/(marketing)/blog/[slug]/page.tsx`
+    - `src/app/[locale]/(marketing)/blog/page.tsx`
+    - `src/app/[locale]/(marketing)/blog/page/[page]/page.tsx`
+    - `src/app/[locale]/(marketing)/mastery-advantage/page.tsx`
+    - `src/app/[locale]/(marketing)/products/page.tsx`
+    - `src/app/[locale]/(marketing)/products/codecamp-advantage/page.tsx`
+    - `src/app/[locale]/(marketing)/products/math-advantage/page.tsx`
+    - `src/app/[locale]/(marketing)/products/science-advantage/page.tsx`
+    - `src/app/[locale]/(marketing)/products/stem-advantage/page.tsx`
+    - `src/app/[locale]/(marketing)/products/storytime-advantage/page.tsx`
+    - `src/app/[locale]/(marketing)/products/tutor-advantage/page.tsx`
+    - `src/app/[locale]/(marketing)/products/zhongwen-advantage/page.tsx`
+  - The Phase 3 i18n Red remains a separate candidate. This candidate includes no Thai wording change.
 - [~] Task: Run www targeted tests/build.
+  - `CI=true ../../node_modules/.bin/vitest run src/__tests__/phase-2-seo-assets.red.test.ts --maxWorkers=1` passes 4/4 after the metadata, asset, and route-export repair. The combined T2/T3 command above passes 5/5.
+  - `CI=true ../../node_modules/.bin/next build` from `apps/www-reading-advantage` exits 1 because Turbopack cannot bind a port in this environment (`Operation not permitted`). This is an environment-owned diagnostic, not a build Green.
 
 ## Phase 3: i18n Completeness and Typed Locale Access
 
-- [~] Task: Write Red tests for hardcoded strings, missing zh fallback, and unsafe locale key casts.
+- [x] Task: Write Red tests for hardcoded strings, missing zh fallback, and unsafe locale key casts.
   - Evidence refs: www T8 (LRF-021/022/023/024/016), T15 (LRF-027).
+  - Red `phase-3-i18n.red.test.ts` fails 3/3 for reviewed CTA/accessibility copy, `as never` locale casts, and known Thai typo forms.
 - [~] Task: Externalize strings, add zh fallback, fix Thai typos, replace `as never` with typed accessors.
 - [~] Task: Run www targeted tests.
 
