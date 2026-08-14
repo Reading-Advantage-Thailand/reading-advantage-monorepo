@@ -11,6 +11,8 @@ on:
       - 'packages/**'
       - 'services/**'
       - 'test-fixtures/architecture-enforcement/**'
+      - 'measure/tracks/backend_architecture_enforcement_20260713'
+      - 'measure/archive/backend_architecture_enforcement_20260713/**'
       - '.github/workflows/**'
       - 'measure/doctor.sh'
       - 'package.json'
@@ -54,6 +56,11 @@ jobs:
 
       - name: Config drift check
         run: pnpm config-drift
+
+      - name: Architecture archive evidence compatibility
+        run: >-
+          CI=true pnpm exec vitest run
+          packages/architecture-enforcement/src/__tests__/archive-evidence-path-compatibility.test.ts
 
       - name: Architecture boundary check
         run: pnpm architecture:check
