@@ -3,18 +3,19 @@
 > Canonical strategy for Phase 2 (Red Concurrency and Failure Tests) of
 > `durable_job_worker_platform_20260713`. Phase 1 is accepted. The original
 > Task 6 and Task 7 review failed at `b32cc7f2f`. The 2026-08-14 re-review
-> accepted both remediated tasks. Tasks 8 and 9 are now unlocked. This role
-> owns no product source and no test source.
+> accepted both remediated tasks. Task 8 has an assigned Red owner. Task 9
+> remains blocked until its owner creates accepted Red evidence. This role owns
+> no product source and no test source.
 
 ## Phase scope and hard boundaries
 
-| Phase | State | Risk | This strategy |
-|-------|-------|------|---------------|
-| Phase 1 - existing behavior contract and generic schema | Accepted (Tasks 1-5; design PASS at `fb8c0d99`) | high (historical) | Reference and regression baseline only; not reopened |
-| Phase 2 - Red concurrency and failure tests | Active; Tasks 6/7 `[x]`; Tasks 8/9/10 `[~]` | high | Full strategy below |
-| Phase 3 - PostgreSQL adapter implementation | `[b]` behind Phase 2 acceptance | critical | Future Red/Green shape only |
-| Phase 4 - worker service and `review_jobs` adoption | `[b]` behind Phase 3 acceptance | critical | Future Red/Green shape only |
-| Phase 5 - capability integration, docs, doctor | `[b]` behind Phase 4 and kernel acceptance | high | Future Red/Green shape only |
+| Phase                                                   | State                                                              | Risk              | This strategy                                        |
+| ------------------------------------------------------- | ------------------------------------------------------------------ | ----------------- | ---------------------------------------------------- |
+| Phase 1 - existing behavior contract and generic schema | Accepted (Tasks 1-5; design PASS at `fb8c0d99`)                    | high (historical) | Reference and regression baseline only; not reopened |
+| Phase 2 - Red concurrency and failure tests             | Active; Tasks 6/7 `[x]`; Task 8 `[~]`; Task 9 `[b]`; Task 10 `[~]` | high              | Full strategy below                                  |
+| Phase 3 - PostgreSQL adapter implementation             | `[b]` behind Phase 2 acceptance                                    | critical          | Future Red/Green shape only                          |
+| Phase 4 - worker service and `review_jobs` adoption     | `[b]` behind Phase 3 acceptance                                    | critical          | Future Red/Green shape only                          |
+| Phase 5 - capability integration, docs, doctor          | `[b]` behind Phase 4 and kernel acceptance                         | high              | Future Red/Green shape only                          |
 
 Hard boundaries for Phase 2:
 
@@ -105,18 +106,18 @@ tasks. Each finding has one exact remediation and one falsifier.
    PG16 harness and does not wait for Tasks 6/7.
 4. The fresh independent re-review passed on 2026-08-14. It accepted the exact
    Task 6 and Task 7 artifacts.
-5. Tasks 6 and 7 are complete. Tasks 8 and 9 are unlocked for separate Red
-   contract work.
+5. Tasks 6 and 7 are complete. Task 8 has an assigned Red owner. Task 9
+   remains blocked until its owner creates accepted Red evidence.
 
 ## Leases
 
-| Role | Exact lease |
-|------|-------------|
-| Task 7 remediation producer | `packages/backend/src/jobs/__tests__/postgres16-harness.ts`, `postgres16-harness.test.ts`, `postgres16-harness.integration.test.ts`, and `measure/tracks/durable_job_worker_platform_20260713/task-7-postgresql16-harness-20260722.md` |
+| Role                        | Exact lease                                                                                                                                                                                                                                                                                                                          |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Task 7 remediation producer | `packages/backend/src/jobs/__tests__/postgres16-harness.ts`, `postgres16-harness.test.ts`, `postgres16-harness.integration.test.ts`, and `measure/tracks/durable_job_worker_platform_20260713/task-7-postgresql16-harness-20260722.md`                                                                                               |
 | Task 6 remediation producer | `packages/db/src/__tests__/durable-jobs-schema-migration.red.test.ts`, `durable-jobs-transition-fixtures.test.ts`, `fixtures/durable-job-transition-counterexamples.ts`, any new `packages/db/src/__tests__/*pg16*.test.ts`, and `measure/tracks/durable_job_worker_platform_20260713/task-6-red-schema-counterexamples-20260722.md` |
-| Task 10 Red producer | new Red files under `services/worker/src/__tests__/`, plus one new evidence note under the track directory |
-| Independent re-reviewer | read-only on all source; writes one new review note under the track directory |
-| Strategy/orchestrator | `measure/tracks/durable_job_worker_platform_20260713/**` only |
+| Task 10 Red producer        | new Red files under `services/worker/src/__tests__/`, plus one new evidence note under the track directory                                                                                                                                                                                                                           |
+| Independent re-reviewer     | read-only on all source; writes one new review note under the track directory                                                                                                                                                                                                                                                        |
+| Strategy/orchestrator       | `measure/tracks/durable_job_worker_platform_20260713/**` only                                                                                                                                                                                                                                                                        |
 
 No role touches the pnpm lockfile, root files, the tenant registry, generated
 facts, `graph.db`, or any other track. Shared harness edits by the Task 6
@@ -221,7 +222,7 @@ Closeout gate for Task 7: a fresh independent re-review returns PASS over URL
 safety, cleanup under failure and signal, exact hook order, two-session
 independence, PG16 enforcement, and secret-safe errors.
 
-### Task 8 - Red concurrency and reclaim tests (unlocked)
+### Task 8 - Red concurrency and reclaim tests (owned; Red in progress)
 
 Task 8 is `[~]` after the Task 6/7 re-review PASS. Its targeted Red command
 runs on the frozen harness:
@@ -234,20 +235,25 @@ DURABLE_JOB_PG16_TEST_ADMIN_DATABASE_URL=<guarded-url> \
 ```
 
 Required Red assertions: concurrent `FOR UPDATE SKIP LOCKED` claims never own
-the same active lease; stale heartbeat, settle, and fail are rejected by
-lease-token CAS; visibility reclaim transfers ownership exactly once; worker
-restart preserves durable progress. Expected failure mode at Red: the adapter
-root does not exist, so suites fail on missing platform behavior, not on
-harness defects.
+the same active lease; a fresh worker captures token, expiry, state, result, and
+error before heartbeat, settle, and fail reject the first worker's exact stale
+token without mutation; a fresh verifier SQL session compares the persisted
+token digest, expiry, state, result, and error, with result and error absent;
+global, company, and school scopes cannot claim or
+mutate another tenant's job, including reverse tenant access to global jobs;
+concurrent reclaim across independent sessions has one winner; and a fresh
+adapter and session preserve restart progress. Expected failure mode at Red:
+the adapter root does not exist, so suites fail on missing platform behavior,
+not on harness defects.
 
-### Task 9 - Red enqueue/retry/DLQ/replay tests (unlocked)
+### Task 9 - Red enqueue/retry/DLQ/replay tests (blocked)
 
-Task 9 is `[~]` after the Task 6/7 re-review PASS. Required Red assertions:
-duplicate enqueue returns the same durable identity within declared scope;
-retry timing is bounded and deterministic under test control; exhausted jobs
-dead-letter; replay requires authorization evidence, rejects an active lease,
-and emits one safe audit event. Expected failure mode: missing adapter
-behavior only.
+Task 9 remains `[b]` until its owner creates accepted Red evidence. Required
+Red assertions: duplicate enqueue returns the same durable identity within
+declared scope; retry timing is bounded and deterministic under test control;
+exhausted jobs dead-letter; replay requires authorization evidence, rejects an
+active lease, and emits one safe audit event. Expected failure mode: missing
+adapter behavior only.
 
 ### Task 10 - Red worker lifecycle and architecture tests (authorized in parallel)
 
@@ -403,13 +409,13 @@ a real Phase 2 regression visible inside pre-existing red noise.
 
 ## Review applicability
 
-| Phase | Security review | UX/API review | Adversarial testing | Browser review |
-|-------|-----------------|---------------|---------------------|----------------|
-| 1 (reference) | Regression baseline only | No | No | No |
-| 2 | Yes: fail-closed URL guards, secret-safe errors, audit-column minimization, append-only triggers | Partial: the frozen harness API and the job-port boundary are the API surface | Yes: URL injection, false-stale races, signal cleanup leaks, wrong-reason fixture rejections, partial-tuple bypass | No: backend and test infrastructure only |
-| 3 | Yes: lease CAS, claim locking, privilege and trigger enforcement | Partial: adapter port contract | Yes: concurrent claim, stale token, replay race, retry exhaustion | No |
-| 4 | Yes: adoption fencing, rollback, replay authorization and audit | Partial: admin replay contract | Yes: dual-run divergence, restart loss, old-path removal | No |
-| 5 | Yes: capability policy, tenancy, audit | Partial: catalog entries | Yes: executor bypass attempts | No |
+| Phase         | Security review                                                                                  | UX/API review                                                                 | Adversarial testing                                                                                                | Browser review                           |
+| ------------- | ------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ | ---------------------------------------- |
+| 1 (reference) | Regression baseline only                                                                         | No                                                                            | No                                                                                                                 | No                                       |
+| 2             | Yes: fail-closed URL guards, secret-safe errors, audit-column minimization, append-only triggers | Partial: the frozen harness API and the job-port boundary are the API surface | Yes: URL injection, false-stale races, signal cleanup leaks, wrong-reason fixture rejections, partial-tuple bypass | No: backend and test infrastructure only |
+| 3             | Yes: lease CAS, claim locking, privilege and trigger enforcement                                 | Partial: adapter port contract                                                | Yes: concurrent claim, stale token, replay race, retry exhaustion                                                  | No                                       |
+| 4             | Yes: adoption fencing, rollback, replay authorization and audit                                  | Partial: admin replay contract                                                | Yes: dual-run divergence, restart loss, old-path removal                                                           | No                                       |
+| 5             | Yes: capability policy, tenancy, audit                                                           | Partial: catalog entries                                                      | Yes: executor bypass attempts                                                                                      | No                                       |
 
 Any later browser check uses Kimi WebBridge only.
 
@@ -417,18 +423,18 @@ Any later browser check uses Kimi WebBridge only.
 
 Phase 2 defenses (every defense has a falsifier):
 
-| Anti-pattern | Defense | Falsifier |
-|--------------|---------|-----------|
-| A3 digit-only count | Every test-count claim is a labeled count bound to an exact command (29 passed/1 skipped; 10 failed/1 passed). | The recorded command prints a different count. |
-| A4 vacuous pass | Each Red suite must fail on named missing platform objects. An all-pass Red phase is a failure. | A Red suite exits zero before Task 11 lands. |
-| A5 false claim vs test reality | Evidence notes cite literal commands with terminal results (DWP-T6-L1, DWP-T7-L1 remediations). | Rerunning the cited command exits differently. |
-| A6 registry overstatement | `tracks.md` and plan notes call Tasks 6/7 complete only after the fresh re-review PASS. | The re-review file records FAIL while the plan shows `[x]`. |
-| A7 over-broad filter | Focused package filters only; no aggregate turbo gate for this phase. | A Phase 2 regression hides inside pre-existing aggregate red. |
-| A8 marker ambiguity | Plan uses only `[x]`, `[~]`, `[b]` markers; Tasks 8/9 remove obsolete deferrals after PASS. | `tests/orchestrator_marker_vocabulary.sh` fails. |
-| A10 generated-facts drift | This strategy changes no structural source; no generated-facts refresh is claimed. | `measure/doctor.sh` Check 5 attributes drift to this track. |
-| A14 invalid ripgrep option | Audit recipes use `rg -n`, never `rg -nE`. | A detector exits 2 and is reported as failure, not zero hits. |
-| A15 stale role receipts | Remediation commits require fresh receipts with current output hashes. | `tests/orchestrator_role_receipt_integrity.sh` fails. |
-| A16 one worktree | All roles work in the single master checkout and stage leased files only. | `git worktree list` shows more than one worktree. |
+| Anti-pattern                   | Defense                                                                                                        | Falsifier                                                     |
+| ------------------------------ | -------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
+| A3 digit-only count            | Every test-count claim is a labeled count bound to an exact command (29 passed/1 skipped; 10 failed/1 passed). | The recorded command prints a different count.                |
+| A4 vacuous pass                | Each Red suite must fail on named missing platform objects. An all-pass Red phase is a failure.                | A Red suite exits zero before Task 11 lands.                  |
+| A5 false claim vs test reality | Evidence notes cite literal commands with terminal results (DWP-T6-L1, DWP-T7-L1 remediations).                | Rerunning the cited command exits differently.                |
+| A6 registry overstatement      | `tracks.md` and plan notes call Tasks 6/7 complete only after the fresh re-review PASS.                        | The re-review file records FAIL while the plan shows `[x]`.   |
+| A7 over-broad filter           | Focused package filters only; no aggregate turbo gate for this phase.                                          | A Phase 2 regression hides inside pre-existing aggregate red. |
+| A8 marker ambiguity            | Plan uses only `[x]`, `[~]`, `[b]` markers; Tasks 8/9 remove obsolete deferrals after PASS.                    | `tests/orchestrator_marker_vocabulary.sh` fails.              |
+| A10 generated-facts drift      | This strategy changes no structural source; no generated-facts refresh is claimed.                             | `measure/doctor.sh` Check 5 attributes drift to this track.   |
+| A14 invalid ripgrep option     | Audit recipes use `rg -n`, never `rg -nE`.                                                                     | A detector exits 2 and is reported as failure, not zero hits. |
+| A15 stale role receipts        | Remediation commits require fresh receipts with current output hashes.                                         | `tests/orchestrator_role_receipt_integrity.sh` fails.         |
+| A16 one worktree               | All roles work in the single master checkout and stage leased files only.                                      | `git worktree list` shows more than one worktree.             |
 
 Phase 1 reference: A5/A6 guards keep the accepted Phase 1 evidence immutable;
 this strategy cites it without restating live claims.

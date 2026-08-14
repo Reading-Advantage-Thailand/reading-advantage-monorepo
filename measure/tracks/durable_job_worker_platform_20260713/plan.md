@@ -63,14 +63,14 @@ capture-point section; `role_base_sha` values are not valid phase bases.
 
 Acceptance checkpoint (2026-08-14): the fresh joint review returned PASS for
 Tasks 6 and 7. It found no open severity-ranked finding. The review is
-`task-6-task-7-independent-rereview-20260814.md`. Tasks 8 and 9 are now
-deferred because no owner has supplied their Red contracts or live evidence.
-This foundation review does not close Phase 2.
+`task-6-task-7-independent-rereview-20260814.md`. Task 8 now has an explicit
+Red owner. Task 9 remains deferred because no owner has supplied its Red
+contract or live evidence. This foundation review does not close Phase 2.
 
 - [x] Task 6: Add Red schema/migration/tenant-registry tests and invalid-transition counterexample fixtures. (`caf095c`)
 - [x] Task 7: Build a deterministic isolated PostgreSQL 16 harness using two independent connections, exact migration setup and teardown, an explicit test-only URL, and fail-closed guards forbidding production/default URL fallback. (`897abfe`)
-- [b] Task 8: Add Red concurrent claim, lease-token CAS, stale heartbeat/settle/fail, visibility reclaim, and restart tests on the PG16 harness. (deferred:durable-job-backend-red-owner)
-  - Blocked evidence (2026-08-14): no source commit, Red file, explicit PostgreSQL 16 environment evidence, or independent receipt exists.
+- [~] Task 8: Add Red concurrent claim, lease-token CAS, stale heartbeat/settle/fail, visibility reclaim, and restart tests on the PG16 harness. (owner:durable-job-backend-red-owner)
+  - Red owner evidence (2026-08-14): /home/daniebo/Desktop/reading-advantage-monorepo/packages/backend/src/jobs/**tests**/postgres16-concurrency.red.test.ts defines two-session claims, a fresh-lease field snapshot with exact real-token stale mutation rejection, an authoritative fresh SQL row comparison for token digest, expiry, state, result, and error, concurrent one-time reclaim, reverse global/company/school tenant isolation, a fresh adapter/session restart boundary, fail-closed opt-in, and scratch-cleanup contracts. The safe-default run passed 3 controls, skipped 5 live tests, and failed once only on the absent approved adapter root. The live gate remains opt-in and has no configured credentials or evidence.
 - [b] Task 9: Add Red idempotent enqueue, bounded deterministic-backoff, exhaustion/DLQ, authorization/audit, and active-lease replay-rejection tests. (deferred:durable-job-backend-red-owner)
   - Blocked evidence (2026-08-14): no source commit, Red file, explicit PostgreSQL 16 environment evidence, or independent receipt exists.
 - [x] Task 10: Add Red worker lifecycle and architecture tests for registration, bounded polling, startup configuration, health, signals, and safe logs. Prove trusted tenant propagation, lifecycle-only port access, and zero direct persistence access. Record named missing-composition failures.
