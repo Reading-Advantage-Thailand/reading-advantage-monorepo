@@ -5,22 +5,31 @@ import { PricingTable } from "@/components/pricing/pricing-table";
 import HeroSection from "@/components/marketing/hero-section";
 import { Button } from "@/components/ui/button";
 import { getScopedI18n } from "@/locales/server";
+import { buildMarketingMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Reading Advantage Feature Matrix",
-  description:
-    "Compare Reading Advantage pricing tiers and features across different packages",
-  keywords:
-    "reading advantage pricing, reading program features, AI learning, language learning pricing",
-  openGraph: {
-    title: "Reading Advantage Price Tier Comparison",
-    description:
-      "Compare features and pricing across Reading Advantage subscription tiers",
-    images: ["/images/og-image.jpg"],
-    url: "https://reading-advantage.com/pricing",
-  },
-};
+/**
+ * Builds metadata for the public pricing route.
+ * @param props The locale route parameters.
+ * @returns The pricing route metadata.
+ */
+export async function generateMetadata(props: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await props.params;
+  const t = await getScopedI18n("pages.pricing");
 
+  return buildMarketingMetadata({
+    description: t("hero.description"),
+    locale,
+    path: "/pricing",
+    title: t("hero.title"),
+  });
+}
+
+/**
+ * Renders the public pricing page for the requested locale.
+ * @returns The rendered pricing page.
+ */
 export default async function PricingPage() {
   const t = await getScopedI18n("pages.pricing");
   return (
@@ -49,22 +58,34 @@ export default async function PricingPage() {
               <div className="w-14 h-14 bg-gradient-to-br from-sky-400 to-sky-600 rounded-2xl flex items-center justify-center mx-auto mb-4 text-white shadow-lg">
                 <Shield className="w-7 h-7" />
               </div>
-              <h3 className="text-lg font-bold text-slate-900 mb-2">{t("trustSignals.noHiddenFees.title")}</h3>
-              <p className="text-slate-600 text-sm">{t("trustSignals.noHiddenFees.description")}</p>
+              <h3 className="text-lg font-bold text-slate-900 mb-2">
+                {t("trustSignals.noHiddenFees.title")}
+              </h3>
+              <p className="text-slate-600 text-sm">
+                {t("trustSignals.noHiddenFees.description")}
+              </p>
             </div>
             <div className="bg-white rounded-3xl p-8 shadow-lg text-center hover:-translate-y-1 hover:shadow-xl transition-all duration-300">
               <div className="w-14 h-14 bg-gradient-to-br from-amber-400 to-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-4 text-white shadow-lg">
                 <Zap className="w-7 h-7" />
               </div>
-              <h3 className="text-lg font-bold text-slate-900 mb-2">{t("trustSignals.instantSetup.title")}</h3>
-              <p className="text-slate-600 text-sm">{t("trustSignals.instantSetup.description")}</p>
+              <h3 className="text-lg font-bold text-slate-900 mb-2">
+                {t("trustSignals.instantSetup.title")}
+              </h3>
+              <p className="text-slate-600 text-sm">
+                {t("trustSignals.instantSetup.description")}
+              </p>
             </div>
             <div className="bg-white rounded-3xl p-8 shadow-lg text-center hover:-translate-y-1 hover:shadow-xl transition-all duration-300">
               <div className="w-14 h-14 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-4 text-white shadow-lg">
                 <Users className="w-7 h-7" />
               </div>
-              <h3 className="text-lg font-bold text-slate-900 mb-2">{t("trustSignals.dedicatedSupport.title")}</h3>
-              <p className="text-slate-600 text-sm">{t("trustSignals.dedicatedSupport.description")}</p>
+              <h3 className="text-lg font-bold text-slate-900 mb-2">
+                {t("trustSignals.dedicatedSupport.title")}
+              </h3>
+              <p className="text-slate-600 text-sm">
+                {t("trustSignals.dedicatedSupport.description")}
+              </p>
             </div>
           </div>
         </div>

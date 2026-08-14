@@ -3,6 +3,35 @@ import { ArrowRight, Mail, GitBranch, Clock, Target } from "lucide-react";
 import { getScopedI18n } from "@/locales/server";
 import { Button } from "@/components/ui/button";
 import { MasteryAdvantageGraph } from "@/components/marketing/mastery-advantage-graph";
+import { buildMarketingMetadata } from "@/lib/seo";
+import type { Metadata } from "next";
+
+/**
+ * Builds metadata for the public home route.
+ * @param props The locale route parameters.
+ * @returns The home route metadata.
+ */
+export async function generateMetadata(props: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await props.params;
+  const t = await getScopedI18n("pages.home");
+  const title = t("hero.title");
+  const description = t("hero.description");
+
+  return buildMarketingMetadata({
+    description,
+    locale,
+    path: "/",
+    title,
+  });
+}
+
+/**
+ * Renders the public home page for the requested locale.
+ * @param props The locale route parameters.
+ * @returns The rendered home page.
+ */
 export default async function Home({
   params,
 }: {
@@ -27,15 +56,51 @@ export default async function Home({
   ];
 
   const products = [
-    { key: "reading-advantage", name: "Reading Advantage", color: "bg-sky-100 text-sky-800 border-sky-200" },
-    { key: "primary-advantage", name: "Primary Advantage", color: "bg-sky-50 text-sky-700 border-sky-100" },
-    { key: "storytime-advantage", name: "Storytime Advantage", color: "bg-amber-50 text-amber-700 border-amber-100" },
-    { key: "math-advantage", name: "Math Advantage", color: "bg-orange-50 text-orange-700 border-orange-100" },
-    { key: "science-advantage", name: "Science Advantage", color: "bg-rose-50 text-rose-700 border-rose-100" },
-    { key: "stem-advantage", name: "STEM Advantage", color: "bg-indigo-50 text-indigo-700 border-indigo-100" },
-    { key: "zhongwen-advantage", name: "Zhongwen Advantage", color: "bg-fuchsia-50 text-fuchsia-700 border-fuchsia-100" },
-    { key: "tutor-advantage", name: "Tutor Advantage", color: "bg-violet-50 text-violet-700 border-violet-100" },
-    { key: "codecamp-advantage", name: "CodeCamp Advantage", color: "bg-purple-50 text-purple-700 border-purple-100" },
+    {
+      key: "reading-advantage",
+      name: "Reading Advantage",
+      color: "bg-sky-100 text-sky-800 border-sky-200",
+    },
+    {
+      key: "primary-advantage",
+      name: "Primary Advantage",
+      color: "bg-sky-50 text-sky-700 border-sky-100",
+    },
+    {
+      key: "storytime-advantage",
+      name: "Storytime Advantage",
+      color: "bg-amber-50 text-amber-700 border-amber-100",
+    },
+    {
+      key: "math-advantage",
+      name: "Math Advantage",
+      color: "bg-orange-50 text-orange-700 border-orange-100",
+    },
+    {
+      key: "science-advantage",
+      name: "Science Advantage",
+      color: "bg-rose-50 text-rose-700 border-rose-100",
+    },
+    {
+      key: "stem-advantage",
+      name: "STEM Advantage",
+      color: "bg-indigo-50 text-indigo-700 border-indigo-100",
+    },
+    {
+      key: "zhongwen-advantage",
+      name: "Zhongwen Advantage",
+      color: "bg-fuchsia-50 text-fuchsia-700 border-fuchsia-100",
+    },
+    {
+      key: "tutor-advantage",
+      name: "Tutor Advantage",
+      color: "bg-violet-50 text-violet-700 border-violet-100",
+    },
+    {
+      key: "codecamp-advantage",
+      name: "CodeCamp Advantage",
+      color: "bg-purple-50 text-purple-700 border-purple-100",
+    },
   ];
 
   return (
@@ -174,7 +239,10 @@ export default async function Home({
       {/* ─────────────────────────────────────────────────────────────
           THE SUITE — all live products today
          ───────────────────────────────────────────────────────────── */}
-      <section id="products" className="py-24 md:py-32 border-t border-[#dad4c8]">
+      <section
+        id="products"
+        className="py-24 md:py-32 border-t border-[#dad4c8]"
+      >
         <div className="container mx-auto px-4 max-w-6xl">
           <header className="max-w-2xl mb-16">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-sky-700 mb-6">

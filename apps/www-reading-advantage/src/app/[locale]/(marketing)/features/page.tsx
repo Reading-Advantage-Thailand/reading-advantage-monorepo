@@ -1,30 +1,47 @@
 import type { Metadata } from "next";
 import { Link } from "@/locales/navigation";
 import Image from "next/image";
-import { ArrowRight, Bot, User, Pencil, BarChart3, Smartphone, Globe } from "lucide-react";
+import {
+  ArrowRight,
+  Bot,
+  User,
+  Pencil,
+  BarChart3,
+  Smartphone,
+  Globe,
+} from "lucide-react";
 import { ComparisonTable } from "@/components/features/comparison-table";
 import HeroSection from "@/components/marketing/hero-section";
 import { Button } from "@/components/ui/button";
 import { getScopedI18n } from "@/locales/server";
+import { buildMarketingMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Features - Reading Advantage Thailand",
-  description:
-    "Compare Reading Advantage features with other leading reading programs. See how our AI-powered platform stands out.",
-  keywords:
-    "reading program comparison, reading advantage features, educational technology comparison",
-  openGraph: {
-    title: "Features - Reading Advantage Thailand",
-    description:
-      "Compare Reading Advantage features with other leading reading programs",
-    images: ["/images/og-image.jpg"],
-    url: "https://reading-advantage.com/features",
-  },
-};
+/**
+ * Builds metadata for the public features route.
+ * @param props The locale route parameters.
+ * @returns The features route metadata.
+ */
+export async function generateMetadata(props: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await props.params;
+  const t = await getScopedI18n("pages.feature");
+
+  return buildMarketingMetadata({
+    description: t("hero.description"),
+    locale,
+    path: "/features",
+    title: t("hero.title"),
+  });
+}
 
 type IndexRange = 0 | 1 | 2 | 3 | 4 | 5;
 const featureIcons = [Bot, User, Pencil, BarChart3, Smartphone, Globe];
 
+/**
+ * Renders the public features page for the requested locale.
+ * @returns The rendered features page.
+ */
 export default async function FeaturesPage() {
   const t = await getScopedI18n("pages.feature");
   return (
@@ -65,7 +82,10 @@ export default async function FeaturesPage() {
             </div>
             <div className="lg:col-span-5">
               <div className="relative">
-                <div className="absolute inset-0 bg-white/20 rounded-3xl blur-2xl -translate-y-4 translate-x-4" aria-hidden="true" />
+                <div
+                  className="absolute inset-0 bg-white/20 rounded-3xl blur-2xl -translate-y-4 translate-x-4"
+                  aria-hidden="true"
+                />
                 <div className="relative bg-white/10 backdrop-blur-md border border-white/20 rounded-3xl p-6">
                   <Image
                     src="/images/students-with-app.png"

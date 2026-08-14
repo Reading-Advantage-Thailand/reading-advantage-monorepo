@@ -14,7 +14,34 @@ import {
 import { getScopedI18n } from "@/locales/server";
 import HeroSection from "@/components/marketing/hero-section";
 import { Button } from "@/components/ui/button";
+import { buildMarketingMetadata } from "@/lib/seo";
+import type { Metadata } from "next";
 
+/**
+ * Builds metadata for the public blended learning route.
+ * @param props The locale route parameters.
+ * @returns The blended learning route metadata.
+ */
+export async function generateMetadata(props: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await props.params;
+  const t = await getScopedI18n("pages.blendedLearning");
+  const title = t("hero.title");
+  const description = t("hero.description");
+
+  return buildMarketingMetadata({
+    description,
+    locale,
+    path: "/services/blended-learning",
+    title,
+  });
+}
+
+/**
+ * Renders the public blended learning page.
+ * @returns The rendered blended learning page.
+ */
 export default async function BlendedLearning() {
   const t = await getScopedI18n("pages.blendedLearning");
   const featureIndexes = [0, 1, 2, 3, 4, 5] as const;

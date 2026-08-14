@@ -4,7 +4,34 @@ import { ArrowRight, Calendar, CheckCircle, Zap } from "lucide-react";
 import { getScopedI18n } from "@/locales/server";
 import HeroSection from "@/components/marketing/hero-section";
 import { Button } from "@/components/ui/button";
+import { buildMarketingMetadata } from "@/lib/seo";
+import type { Metadata } from "next";
 
+/**
+ * Builds metadata for the public services route.
+ * @param props The locale route parameters.
+ * @returns The services route metadata.
+ */
+export async function generateMetadata(props: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await props.params;
+  const t = await getScopedI18n("pages.services");
+  const title = t("hero.title");
+  const description = t("hero.description");
+
+  return buildMarketingMetadata({
+    description,
+    locale,
+    path: "/services",
+    title,
+  });
+}
+
+/**
+ * Renders the public services page.
+ * @returns The rendered services page.
+ */
 export default async function Services() {
   const t = await getScopedI18n("pages.services");
   const serviceConfigs = [

@@ -1,9 +1,45 @@
 import { Link } from "@/locales/navigation";
 import Image from "next/image";
-import { ArrowRight, TrendingUp, BookOpen, Target, CheckCircle, Users, BarChart3, GraduationCap } from "lucide-react";
+import {
+  ArrowRight,
+  TrendingUp,
+  BookOpen,
+  Target,
+  CheckCircle,
+  Users,
+  BarChart3,
+  GraduationCap,
+} from "lucide-react";
 import { getScopedI18n } from "@/locales/server";
 import HeroSection from "@/components/marketing/hero-section";
+import { buildMarketingMetadata } from "@/lib/seo";
+import type { Metadata } from "next";
 
+/**
+ * Builds metadata for the public case studies route.
+ * @param props The locale route parameters.
+ * @returns The case studies route metadata.
+ */
+export async function generateMetadata(props: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await props.params;
+  const t = await getScopedI18n("pages.caseStudies");
+  const title = t("hero.title");
+  const description = t("hero.description");
+
+  return buildMarketingMetadata({
+    description,
+    locale,
+    path: "/case-studies",
+    title,
+  });
+}
+
+/**
+ * Renders the public case studies page.
+ * @returns The rendered case studies page.
+ */
 export default async function CaseStudies() {
   const t = await getScopedI18n("pages.caseStudies");
   const schoolIndexes = [0, 1] as const;
@@ -17,12 +53,16 @@ export default async function CaseStudies() {
       heading: t(`schools.${schoolIndex}.outcomes.heading`),
       readingImprovement: {
         title: t(`schools.${schoolIndex}.outcomes.readingImprovement.title`),
-        description: t(`schools.${schoolIndex}.outcomes.readingImprovement.description`),
+        description: t(
+          `schools.${schoolIndex}.outcomes.readingImprovement.description`,
+        ),
         delta: t(`schools.${schoolIndex}.outcomes.readingImprovement.delta`),
       },
       readingVolume: {
         title: t(`schools.${schoolIndex}.outcomes.readingVolume.title`),
-        description: t(`schools.${schoolIndex}.outcomes.readingVolume.description`),
+        description: t(
+          `schools.${schoolIndex}.outcomes.readingVolume.description`,
+        ),
         metric: t(`schools.${schoolIndex}.outcomes.readingVolume.metric`),
       },
       fidelity: {
@@ -38,7 +78,7 @@ export default async function CaseStudies() {
       school: t(`schools.${schoolIndex}.testimonial.school`),
     },
     highlights: highlightIndexes.map((highlightIndex) =>
-      t(`schools.${schoolIndex}.highlights.${highlightIndex}`)
+      t(`schools.${schoolIndex}.highlights.${highlightIndex}`),
     ),
   }));
   const methods = methodIndexes.map((methodIndex) => ({
@@ -85,7 +125,8 @@ export default async function CaseStudies() {
                     {school.name}
                   </h2>
                   <p className="text-lg text-slate-600">
-                    {t("implementationPeriod")}{school.duration}
+                    {t("implementationPeriod")}
+                    {school.duration}
                   </p>
                 </div>
 
@@ -93,7 +134,11 @@ export default async function CaseStudies() {
                 <div className="grid md:grid-cols-3 gap-4 mb-12">
                   <div className="relative aspect-video rounded-2xl overflow-hidden shadow-xl">
                     <Image
-                      src={index === 0 ? "/images/students-engaging-with-app.png" : "/images/students-with-app.png"}
+                      src={
+                        index === 0
+                          ? "/images/students-engaging-with-app.png"
+                          : "/images/students-with-app.png"
+                      }
                       alt={t("altTexts.studentsEngaged")}
                       fill
                       sizes="(max-width: 768px) 100vw, 33vw"
@@ -111,7 +156,11 @@ export default async function CaseStudies() {
                   </div>
                   <div className="relative aspect-video rounded-2xl overflow-hidden shadow-xl">
                     <Image
-                      src={index === 0 ? "/images/small-group.png" : "/images/teacher-at-board.png"}
+                      src={
+                        index === 0
+                          ? "/images/small-group.png"
+                          : "/images/teacher-at-board.png"
+                      }
                       alt={t("altTexts.collaborativeGroup")}
                       fill
                       sizes="(max-width: 768px) 100vw, 33vw"
@@ -186,7 +235,9 @@ export default async function CaseStudies() {
                 {/* Highlights */}
                 <div className="grid md:grid-cols-2 gap-6 mb-12">
                   <div>
-                    <h4 className="text-xl font-bold text-slate-900 mb-4">{t("highlights")}</h4>
+                    <h4 className="text-xl font-bold text-slate-900 mb-4">
+                      {t("highlights")}
+                    </h4>
                     <ul className="space-y-3">
                       {school.highlights.map((highlight, i) => (
                         <li key={i} className="flex items-start gap-3">
@@ -204,15 +255,23 @@ export default async function CaseStudies() {
                         <Users className="w-6 h-6 text-white" />
                       </div>
                       <div>
-                        <div className="font-bold text-lg text-slate-900">{school.testimonial.author}</div>
-                        <div className="text-sm text-slate-600">{school.testimonial.role}</div>
+                        <div className="font-bold text-lg text-slate-900">
+                          {school.testimonial.author}
+                        </div>
+                        <div className="text-sm text-slate-600">
+                          {school.testimonial.role}
+                        </div>
                       </div>
                     </div>
                     <p className="text-slate-700 leading-relaxed italic">
-                      {t("testimonial.quote", { quote: school.testimonial.quote })}
+                      {t("testimonial.quote", {
+                        quote: school.testimonial.quote,
+                      })}
                     </p>
                     <div className="mt-4 text-sm text-slate-600">
-                      {t("testimonial.attribution", { school: school.testimonial.school })}
+                      {t("testimonial.attribution", {
+                        school: school.testimonial.school,
+                      })}
                     </div>
                   </div>
                 </div>
@@ -247,8 +306,14 @@ export default async function CaseStudies() {
       {/* Methodology Section */}
       <section className="relative py-24 bg-slate-900 text-white overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-sky-900/50 via-amber-900/50 to-slate-900" />
-      <div className="absolute top-20 right-20 w-[500px] h-[500px] bg-sky-500/10 rounded-full blur-[150px]" aria-hidden="true" />
-      <div className="absolute bottom-20 left-20 w-[400px] h-[400px] bg-amber-500/10 rounded-full blur-[120px]" aria-hidden="true" />
+        <div
+          className="absolute top-20 right-20 w-[500px] h-[500px] bg-sky-500/10 rounded-full blur-[150px]"
+          aria-hidden="true"
+        />
+        <div
+          className="absolute bottom-20 left-20 w-[400px] h-[400px] bg-amber-500/10 rounded-full blur-[120px]"
+          aria-hidden="true"
+        />
 
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-6xl mx-auto">
@@ -271,8 +336,12 @@ export default async function CaseStudies() {
                   <div className="w-16 h-16 bg-gradient-to-br from-sky-400 to-amber-400 rounded-2xl flex items-center justify-center mb-6 shadow-xl">
                     <BarChart3 className="w-8 h-8 text-white" />
                   </div>
-                  <h3 className="text-2xl font-bold text-white mb-4">{method.title}</h3>
-                  <p className="text-slate-300 leading-relaxed">{method.description}</p>
+                  <h3 className="text-2xl font-bold text-white mb-4">
+                    {method.title}
+                  </h3>
+                  <p className="text-slate-300 leading-relaxed">
+                    {method.description}
+                  </p>
                 </div>
               ))}
             </div>
@@ -282,8 +351,14 @@ export default async function CaseStudies() {
 
       {/* CTA Section */}
       <section className="relative py-24 bg-gradient-to-br from-sky-500 via-blue-600 to-sky-700 text-white overflow-hidden">
-      <div className="absolute top-20 left-20 w-[500px] h-[500px] bg-sky-400/30 rounded-full blur-[150px]" aria-hidden="true" />
-      <div className="absolute bottom-20 right-20 w-[400px] h-[400px] bg-blue-400/30 rounded-full blur-[120px]" aria-hidden="true" />
+        <div
+          className="absolute top-20 left-20 w-[500px] h-[500px] bg-sky-400/30 rounded-full blur-[150px]"
+          aria-hidden="true"
+        />
+        <div
+          className="absolute bottom-20 right-20 w-[400px] h-[400px] bg-blue-400/30 rounded-full blur-[120px]"
+          aria-hidden="true"
+        />
 
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-4xl mx-auto text-center animate-in fade-in slide-in-from-bottom-8 duration-700">

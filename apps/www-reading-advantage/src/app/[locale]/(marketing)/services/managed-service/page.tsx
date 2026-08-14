@@ -11,7 +11,34 @@ import {
 import { getScopedI18n } from "@/locales/server";
 import HeroSection from "@/components/marketing/hero-section";
 import { Button } from "@/components/ui/button";
+import { buildMarketingMetadata } from "@/lib/seo";
+import type { Metadata } from "next";
 
+/**
+ * Builds metadata for the public managed service route.
+ * @param props The locale route parameters.
+ * @returns The managed service route metadata.
+ */
+export async function generateMetadata(props: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await props.params;
+  const t = await getScopedI18n("pages.managedService");
+  const title = t("hero.title");
+  const description = t("hero.description");
+
+  return buildMarketingMetadata({
+    description,
+    locale,
+    path: "/services/managed-service",
+    title,
+  });
+}
+
+/**
+ * Renders the public managed service page.
+ * @returns The rendered managed service page.
+ */
 export default async function ManagedService() {
   const t = await getScopedI18n("pages.managedService");
 
@@ -100,19 +127,27 @@ export default async function ManagedService() {
               <ul className="space-y-3">
                 <li className="flex items-start gap-3">
                   <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-slate-700">{t("overview.items.0")}</span>
+                  <span className="text-slate-700">
+                    {t("overview.items.0")}
+                  </span>
                 </li>
                 <li className="flex items-start gap-3">
                   <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-slate-700">{t("overview.items.1")}</span>
+                  <span className="text-slate-700">
+                    {t("overview.items.1")}
+                  </span>
                 </li>
                 <li className="flex items-start gap-3">
                   <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-slate-700">{t("overview.items.2")}</span>
+                  <span className="text-slate-700">
+                    {t("overview.items.2")}
+                  </span>
                 </li>
                 <li className="flex items-start gap-3">
                   <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-slate-700">{t("overview.items.3")}</span>
+                  <span className="text-slate-700">
+                    {t("overview.items.3")}
+                  </span>
                 </li>
               </ul>
             </div>
@@ -135,7 +170,9 @@ export default async function ManagedService() {
                     <div className="w-12 h-12 bg-gradient-to-br from-sky-400 to-blue-500 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
                       <Users className="w-6 h-6 text-white" />
                     </div>
-                    <h4 className="text-lg font-bold text-slate-900">{feature}</h4>
+                    <h4 className="text-lg font-bold text-slate-900">
+                      {feature}
+                    </h4>
                   </div>
                 ))}
               </div>
@@ -197,20 +234,34 @@ export default async function ManagedService() {
           <div className="inline-flex items-center gap-4 bg-white/10 border border-white/30 rounded-3xl px-8 py-6 mb-12">
             <Calendar className="w-8 h-8 text-amber-400" />
             <div className="text-left">
-              <div className="text-sm text-sky-100">{t("roadmap.targetLabel")}</div>
-              <div className="text-2xl font-bold">{t("roadmap.targetDate")}</div>
+              <div className="text-sm text-sky-100">
+                {t("roadmap.targetLabel")}
+              </div>
+              <div className="text-2xl font-bold">
+                {t("roadmap.targetDate")}
+              </div>
             </div>
           </div>
 
           <div className="flex flex-wrap justify-center gap-6">
-            <Button variant="white" size="lg" className="text-xl px-14 py-6 rounded-3xl font-bold" asChild>
+            <Button
+              variant="white"
+              size="lg"
+              className="text-xl px-14 py-6 rounded-3xl font-bold"
+              asChild
+            >
               <Link href="/services">
                 <BookOpen className="w-8 h-8" />
                 {t("cta.button1")}
                 <ArrowRight className="w-8 h-8" />
               </Link>
             </Button>
-            <Button variant="ghost" size="lg" className="text-xl px-14 py-6 rounded-3xl border-2 border-white text-white hover:bg-white hover:text-slate-900 font-bold" asChild>
+            <Button
+              variant="ghost"
+              size="lg"
+              className="text-xl px-14 py-6 rounded-3xl border-2 border-white text-white hover:bg-white hover:text-slate-900 font-bold"
+              asChild
+            >
               <Link href="/contact">
                 <Zap className="w-8 h-8" />
                 {t("cta.button2")}

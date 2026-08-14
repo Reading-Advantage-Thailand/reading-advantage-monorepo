@@ -11,7 +11,34 @@ import {
 } from "lucide-react";
 import HeroSection from "@/components/marketing/hero-section";
 import { Button } from "@/components/ui/button";
+import { buildMarketingMetadata } from "@/lib/seo";
+import type { Metadata } from "next";
 
+/**
+ * Builds metadata for the public contact route.
+ * @param props The locale route parameters.
+ * @returns The contact route metadata.
+ */
+export async function generateMetadata(props: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await props.params;
+  const t = await getScopedI18n("pages.contact");
+  const title = t("title");
+  const description = t("description");
+
+  return buildMarketingMetadata({
+    description,
+    locale,
+    path: "/contact",
+    title,
+  });
+}
+
+/**
+ * Renders the public contact page.
+ * @returns The rendered contact page.
+ */
 export default async function ContactPage() {
   const t = await getScopedI18n("pages.contact");
 
@@ -75,7 +102,11 @@ export default async function ContactPage() {
                 {t("phone.title")}
               </h3>
               <p className="text-slate-600 mb-6">{t("phone.description")}</p>
-              <Button variant="outline" className="border-amber-500 text-amber-700 hover:bg-amber-50" asChild>
+              <Button
+                variant="outline"
+                className="border-amber-500 text-amber-700 hover:bg-amber-50"
+                asChild
+              >
                 <a href="tel:+660990058038">
                   {t("phone.number")}
                   <ArrowRight className="w-4 h-4" />
@@ -92,9 +123,7 @@ export default async function ContactPage() {
                 {t("location.title")}
               </h3>
               <p className="text-slate-600 mb-6">{t("location.description")}</p>
-              <p className="text-sky-700 font-semibold">
-                {t("location.city")}
-              </p>
+              <p className="text-sky-700 font-semibold">{t("location.city")}</p>
             </div>
           </div>
         </div>
@@ -154,11 +183,7 @@ export default async function ContactPage() {
                 </p>
               </div>
 
-              <Button
-                variant="white"
-                className="mt-6 w-full"
-                asChild
-              >
+              <Button variant="white" className="mt-6 w-full" asChild>
                 <a
                   href="https://www.tiktok.com/@reading.advantage"
                   target="_blank"

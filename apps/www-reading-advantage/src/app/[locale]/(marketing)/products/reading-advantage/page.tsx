@@ -1,5 +1,3 @@
-"use client";
-
 import Image from "next/image";
 import { Link } from "@/locales/navigation";
 import {
@@ -14,15 +12,42 @@ import {
   GraduationCap,
   FileText,
 } from "lucide-react";
-import { useScopedI18n } from "@/locales/client";
+import { getScopedI18n } from "@/locales/server";
 import HeroSection from "@/components/marketing/hero-section";
 import { OverlappingSection } from "@/components/ui/overlapping-section";
 import { FloatingPill } from "@/components/ui/floating-pill";
 import { HorizontalStrip } from "@/components/ui/horizontal-strip";
 import { MarketingSvgClient } from "@/components/marketing/marketing-svg-client";
+import { buildMarketingMetadata } from "@/lib/seo";
+import type { Metadata } from "next";
 
-export default function ReadingAdvantage() {
-  const t = useScopedI18n("pages.products.readingAdvantage");
+/**
+ * Builds metadata for the public Reading Advantage route.
+ * @param props The locale route parameters.
+ * @returns The Reading Advantage route metadata.
+ */
+export async function generateMetadata(props: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await props.params;
+  const t = await getScopedI18n("pages.products.readingAdvantage");
+  const title = t("hero.title");
+  const description = t("hero.description");
+
+  return buildMarketingMetadata({
+    description,
+    locale,
+    path: "/products/reading-advantage",
+    title,
+  });
+}
+
+/**
+ * Renders the public Reading Advantage page on the server.
+ * @returns The rendered Reading Advantage page.
+ */
+export default async function ReadingAdvantage() {
+  const t = await getScopedI18n("pages.products.readingAdvantage");
 
   const games = [
     {
@@ -96,7 +121,7 @@ export default function ReadingAdvantage() {
                 <MarketingSvgClient
                   baseName="ra-marketing-reading-advantage"
                   className="w-full h-auto"
-                   alt={t("adaptiveEngine.alt")}
+                  alt={t("adaptiveEngine.alt")}
                 />
               </div>
             </div>
@@ -137,12 +162,14 @@ export default function ReadingAdvantage() {
                     <div className="mb-6">
                       <div className="flex items-center gap-3 mb-3">
                         <Monitor className="w-6 h-6 text-sky-300" />
-                         <h3 className="text-xl font-bold text-white">{t("devices.desktop")}</h3>
+                        <h3 className="text-xl font-bold text-white">
+                          {t("devices.desktop")}
+                        </h3>
                       </div>
                       <div className="relative aspect-video rounded-xl overflow-hidden">
                         <Image
                           src="/images/app-on-desktop.png"
-                           alt={t("altText.desktop")}
+                          alt={t("altText.desktop")}
                           fill
                           sizes="(max-width: 1024px) 100vw, 60vw"
                           className="object-cover"
@@ -153,12 +180,14 @@ export default function ReadingAdvantage() {
                       <div>
                         <div className="flex items-center gap-3 mb-3">
                           <Tablet className="w-5 h-5 text-sky-300" />
-                           <h3 className="text-lg font-bold text-white">{t("devices.tablet")}</h3>
+                          <h3 className="text-lg font-bold text-white">
+                            {t("devices.tablet")}
+                          </h3>
                         </div>
                         <div className="relative aspect-[3/4] rounded-xl overflow-hidden">
                           <Image
                             src="/images/reading-advantage-demo.png"
-                             alt={t("altText.tablet")}
+                            alt={t("altText.tablet")}
                             fill
                             sizes="(max-width: 768px) 50vw, 30vw"
                             className="object-contain"
@@ -168,12 +197,14 @@ export default function ReadingAdvantage() {
                       <div>
                         <div className="flex items-center gap-3 mb-3">
                           <Smartphone className="w-5 h-5 text-sky-300" />
-                           <h3 className="text-lg font-bold text-white">{t("devices.mobile")}</h3>
+                          <h3 className="text-lg font-bold text-white">
+                            {t("devices.mobile")}
+                          </h3>
                         </div>
                         <div className="relative aspect-[3/4] rounded-xl overflow-hidden">
                           <Image
                             src="/images/app-on-phone.png"
-                             alt={t("altText.mobile")}
+                            alt={t("altText.mobile")}
                             fill
                             sizes="(max-width: 768px) 50vw, 30vw"
                             className="object-cover"
@@ -302,7 +333,7 @@ export default function ReadingAdvantage() {
                     <div className="relative aspect-[3/4] rounded-2xl overflow-hidden shadow-lg">
                       <Image
                         src="/images/blended-learning.png"
-                         alt={t("altText.blendedLearningTeacher")}
+                        alt={t("altText.blendedLearningTeacher")}
                         fill
                         sizes="(max-width: 1024px) 100vw, 50vw"
                         className="object-cover"
@@ -311,7 +342,7 @@ export default function ReadingAdvantage() {
                     <div className="relative aspect-[3/4] rounded-2xl overflow-hidden shadow-lg">
                       <Image
                         src="/images/workbook-cover.png"
-                         alt={t("altText.blendedLearningWorkbook")}
+                        alt={t("altText.blendedLearningWorkbook")}
                         fill
                         sizes="(max-width: 1024px) 100vw, 50vw"
                         className="object-cover"
@@ -341,7 +372,10 @@ export default function ReadingAdvantage() {
                     t("teacherTools.tools.0.items.1"),
                     t("teacherTools.tools.0.items.2"),
                   ].map((item, index) => (
-                    <li key={index} className="flex items-start gap-2 text-slate-600">
+                    <li
+                      key={index}
+                      className="flex items-start gap-2 text-slate-600"
+                    >
                       <div className="w-1.5 h-1.5 bg-sky-500 rounded-full mt-2 flex-shrink-0" />
                       {item}
                     </li>
@@ -359,7 +393,10 @@ export default function ReadingAdvantage() {
                     t("teacherTools.tools.1.items.1"),
                     t("teacherTools.tools.1.items.2"),
                   ].map((item, index) => (
-                    <li key={index} className="flex items-start gap-2 text-slate-600">
+                    <li
+                      key={index}
+                      className="flex items-start gap-2 text-slate-600"
+                    >
                       <div className="w-1.5 h-1.5 bg-sky-500 rounded-full mt-2 flex-shrink-0" />
                       {item}
                     </li>
@@ -372,7 +409,11 @@ export default function ReadingAdvantage() {
       </OverlappingSection>
 
       {/* Horizontal Strip — Educational Games */}
-      <HorizontalStrip background="bg-white" padding="py-16" data-testid="games-strip">
+      <HorizontalStrip
+        background="bg-white"
+        padding="py-16"
+        data-testid="games-strip"
+      >
         <div className="container mx-auto px-4 mb-8 w-full">
           <span className="uppercase tracking-widest text-xs font-semibold text-sky-600 mb-2 block">
             {t("eyebrows.educationalGames")}
@@ -499,7 +540,7 @@ export default function ReadingAdvantage() {
                   <div className="relative aspect-[4/3] rounded-2xl overflow-hidden">
                     <Image
                       src="/images/students-at-board.png"
-                       alt={t("altText.studentsAtBoard")}
+                      alt={t("altText.studentsAtBoard")}
                       fill
                       sizes="(max-width: 1024px) 100vw, 40vw"
                       className="object-cover"

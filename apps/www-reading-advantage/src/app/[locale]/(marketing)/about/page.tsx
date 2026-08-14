@@ -5,22 +5,31 @@ import { ArrowRight, Target, Lightbulb, Heart, Shield } from "lucide-react";
 import HeroSection from "@/components/marketing/hero-section";
 import { Button } from "@/components/ui/button";
 import { getScopedI18n } from "@/locales/server";
+import { buildMarketingMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "About Us - Reading Advantage (Thailand)",
-  description:
-    "Learn about Reading Advantage Thailand's mission to transform education through AI innovation and our commitment to accessible, high-quality learning solutions.",
-  keywords:
-    "education technology, AI learning, Thailand education, EdTech, Reading Advantage Thailand",
-  openGraph: {
-    title: "About Us - Reading Advantage Thailand",
-    description:
-      "Discover how Reading Advantage Thailand is revolutionizing education through AI-powered learning solutions in Southeast Asia.",
-    images: ["/images/og-image.jpg"],
-    url: "https://reading-advantage.com/about",
-  },
-};
+/**
+ * Builds metadata for the public about route.
+ * @param props The locale route parameters.
+ * @returns The about route metadata.
+ */
+export async function generateMetadata(props: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await props.params;
+  const t = await getScopedI18n("pages.about");
 
+  return buildMarketingMetadata({
+    description: t("hero.description"),
+    locale,
+    path: "/about",
+    title: t("hero.title"),
+  });
+}
+
+/**
+ * Renders the public about page for the requested locale.
+ * @returns The rendered about page.
+ */
 export default async function AboutPage() {
   const t = await getScopedI18n("pages.about");
   return (
@@ -102,7 +111,10 @@ export default async function AboutPage() {
             </div>
             <div className="lg:col-span-5">
               <div className="relative">
-                <div className="absolute inset-0 bg-sky-200/50 rounded-3xl blur-2xl -translate-y-4 translate-x-4" aria-hidden="true" />
+                <div
+                  className="absolute inset-0 bg-sky-200/50 rounded-3xl blur-2xl -translate-y-4 translate-x-4"
+                  aria-hidden="true"
+                />
                 <div className="relative rounded-3xl overflow-hidden shadow-xl">
                   <Image
                     src="/images/about-team.jpg"
@@ -137,7 +149,10 @@ export default async function AboutPage() {
                 </h3>
                 <ul className="space-y-3">
                   {([0, 1, 2, 3, 4] as const).map((i) => (
-                    <li key={i} className="flex items-start gap-3 text-slate-600">
+                    <li
+                      key={i}
+                      className="flex items-start gap-3 text-slate-600"
+                    >
                       <span className="w-2 h-2 bg-sky-500 rounded-full mt-2 flex-shrink-0" />
                       {t(`sections.technology.list.${i}`)}
                     </li>
@@ -150,7 +165,10 @@ export default async function AboutPage() {
                 </h3>
                 <ul className="space-y-3">
                   {([0, 1, 2, 3, 4] as const).map((i) => (
-                    <li key={i} className="flex items-start gap-3 text-slate-600">
+                    <li
+                      key={i}
+                      className="flex items-start gap-3 text-slate-600"
+                    >
                       <span className="w-2 h-2 bg-amber-500 rounded-full mt-2 flex-shrink-0" />
                       {t(`sections.impact.list.${i}`)}
                     </li>
@@ -184,7 +202,9 @@ export default async function AboutPage() {
                   key={i}
                   className="p-8 bg-sky-50 rounded-3xl border border-sky-100 hover:-translate-y-1 hover:shadow-xl transition-all duration-300"
                 >
-                  <div className={`w-14 h-14 bg-gradient-to-br ${item.color} rounded-2xl flex items-center justify-center mb-6 text-white shadow-lg`}>
+                  <div
+                    className={`w-14 h-14 bg-gradient-to-br ${item.color} rounded-2xl flex items-center justify-center mb-6 text-white shadow-lg`}
+                  >
                     <item.icon className="w-7 h-7" />
                   </div>
                   <h3 className="font-bold text-xl mb-3 text-slate-900">

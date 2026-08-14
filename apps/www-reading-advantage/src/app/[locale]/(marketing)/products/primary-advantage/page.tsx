@@ -9,7 +9,35 @@ import { getScopedI18n } from "@/locales/server";
 import { Mail, BookOpen, Target, Zap } from "lucide-react";
 import { MarketingSvg } from "@/components/marketing/marketing-svg";
 import type { Locale } from "@/config/locale-config";
+import { buildMarketingMetadata } from "@/lib/seo";
+import type { Metadata } from "next";
 
+/**
+ * Builds metadata for the public Primary Advantage route.
+ * @param props The locale route parameters.
+ * @returns The Primary Advantage route metadata.
+ */
+export async function generateMetadata(props: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await props.params;
+  const t = await getScopedI18n("pages.products.primaryAdvantage");
+  const title = t("hero.title");
+  const description = t("hero.description");
+
+  return buildMarketingMetadata({
+    description,
+    locale,
+    path: "/products/primary-advantage",
+    title,
+  });
+}
+
+/**
+ * Renders the public Primary Advantage page.
+ * @param props The locale route parameters.
+ * @returns The rendered Primary Advantage page.
+ */
 export default async function PrimaryAdvantage({
   params,
 }: {
@@ -182,7 +210,10 @@ export default async function PrimaryAdvantage({
       {/* Key Features — Asymmetric 5/7 Reversed */}
       <section className="py-24 bg-sky-50">
         <div className="container mx-auto px-4">
-          <div data-testid="reversed-split" className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center max-w-7xl mx-auto">
+          <div
+            data-testid="reversed-split"
+            className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center max-w-7xl mx-auto"
+          >
             {/* Image LEFT (5 cols) */}
             <div className="lg:col-span-5 relative">
               <div className="relative aspect-[4/3] rounded-[40px] overflow-hidden shadow-xl">
@@ -196,10 +227,20 @@ export default async function PrimaryAdvantage({
               </div>
               {/* Floating feature badges */}
               <div className="absolute -top-4 -right-4 animate-in fade-in zoom-in duration-700">
-                <FloatingPill value="3-6" label={t("cefrLevels.grades")} variant="cyan" size="sm" />
+                <FloatingPill
+                  value="3-6"
+                  label={t("cefrLevels.grades")}
+                  variant="cyan"
+                  size="sm"
+                />
               </div>
               <div className="absolute -bottom-4 -left-4 animate-in fade-in zoom-in duration-700 delay-150">
-                <FloatingPill value="CEFR" label={t("cefrLevels.aligned")} variant="sky" size="sm" />
+                <FloatingPill
+                  value="CEFR"
+                  label={t("cefrLevels.aligned")}
+                  variant="sky"
+                  size="sm"
+                />
               </div>
             </div>
 
@@ -223,7 +264,10 @@ export default async function PrimaryAdvantage({
                       </h3>
                       <ul className="space-y-1">
                         {feature.items.map((item) => (
-                          <li key={item} className="flex items-start gap-2 text-slate-600">
+                          <li
+                            key={item}
+                            className="flex items-start gap-2 text-slate-600"
+                          >
                             <div className="w-1.5 h-1.5 bg-cyan-500 rounded-full mt-2 flex-shrink-0" />
                             <span>{item}</span>
                           </li>
@@ -345,7 +389,12 @@ export default async function PrimaryAdvantage({
           <FloatingPill value="AI" label="Powered" variant="sky" size="sm" />
         </div>
         <div className="absolute bottom-10 right-10 animate-bounce duration-[4000ms]">
-          <FloatingPill value="AI" label={t("support")} variant="cyan" size="sm" />
+          <FloatingPill
+            value="AI"
+            label={t("support")}
+            variant="cyan"
+            size="sm"
+          />
         </div>
         <div className="container mx-auto px-4 text-center relative z-10">
           <h2 className="text-4xl md:text-5xl font-bold mb-6">
