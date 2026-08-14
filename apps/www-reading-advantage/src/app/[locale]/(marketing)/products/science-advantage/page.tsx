@@ -13,23 +13,41 @@ import {
   Sparkles,
 } from "lucide-react";
 import { getScopedI18n } from "@/locales/server";
+import { buildMarketingMetadata } from "@/lib/seo";
 import { OverlappingSection } from "@/components/ui/overlapping-section";
 import { LargeImageBreak } from "@/components/ui/large-image-break";
 import { Card } from "@/components/ui/card";
 import { MarketingSvg } from "@/components/marketing/marketing-svg";
 import type { Locale } from "@/config/locale-config";
 
-export const metadata: Metadata = {
-  title: "Science Advantage - Reading Advantage Thailand",
-  description:
-    "Comprehensive K-12 science education platform aligned with NGSS standards. Interactive learning, adaptive curriculum, and teacher support tools.",
-  openGraph: {
-    title: "Science Advantage - Reading Advantage Thailand",
-    description:
-      "Transform K-12 science education with our comprehensive, NGSS-aligned platform for interactive learning and adaptive curriculum.",
-  },
-};
+/**
+ * Builds metadata for the localized Science Advantage route.
+ * @param params The locale route parameters.
+ * @returns The localized route metadata.
+ */
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getScopedI18n("pages.products.scienceAdvantage");
+  const title = t("hero.title");
+  const description = t("hero.description");
 
+  return buildMarketingMetadata({
+    description,
+    locale,
+    path: "/products/science-advantage",
+    title,
+  });
+}
+
+/**
+ * Renders the localized Science Advantage marketing page.
+ * @param params The locale route parameters.
+ * @returns The localized Science Advantage page.
+ */
 export default async function ScienceAdvantage({
   params,
 }: {

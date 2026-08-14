@@ -12,23 +12,40 @@ import {
   Sparkles,
 } from "lucide-react";
 import { getScopedI18n } from "@/locales/server";
+import { buildMarketingMetadata } from "@/lib/seo";
 import { OverlappingSection } from "@/components/ui/overlapping-section";
 import { FAQAccordion } from "@/components/ui/faq-accordion";
 import { MarketingSvg } from "@/components/marketing/marketing-svg";
 import type { Locale } from "@/config/locale-config";
 
-export const metadata: Metadata = {
-  title:
-    "Storytime Advantage - On Our Roadmap | Reading Advantage Thailand",
-  description:
-    "Storytime Advantage is on the Reading Advantage product roadmap — planned K-3 early literacy curriculum combining digital innovation with hands-on learning. No launch date confirmed.",
-  openGraph: {
-    title: "Storytime Advantage - On Our Roadmap",
-    description:
-      "Storytime Advantage is on the Reading Advantage product roadmap — planned K-3 early literacy curriculum combining digital innovation with hands-on learning.",
-  },
-};
+/**
+ * Builds metadata for the localized Storytime Advantage route.
+ * @param params The locale route parameters.
+ * @returns The localized route metadata.
+ */
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getScopedI18n("pages.products.storytimeAdvantage");
+  const title = t("hero.title");
+  const description = t("hero.description");
 
+  return buildMarketingMetadata({
+    description,
+    locale,
+    path: "/products/storytime-advantage",
+    title,
+  });
+}
+
+/**
+ * Renders the localized Storytime Advantage marketing page.
+ * @param params The locale route parameters.
+ * @returns The localized Storytime Advantage page.
+ */
 export default async function StorytimeAdvantage({
   params,
 }: {
@@ -258,7 +275,10 @@ export default async function StorytimeAdvantage({
                   ].map((item) => (
                     <div key={item.title} className="flex gap-4">
                       <div className="w-12 h-12 bg-gradient-to-br from-amber-500 to-amber-600 rounded-xl flex items-center justify-center flex-shrink-0 shadow-md">
-                        <item.icon className="w-6 h-6 text-white" strokeWidth={2} />
+                        <item.icon
+                          className="w-6 h-6 text-white"
+                          strokeWidth={2}
+                        />
                       </div>
                       <div>
                         <h3 className="text-xl font-bold mb-2 text-slate-900">

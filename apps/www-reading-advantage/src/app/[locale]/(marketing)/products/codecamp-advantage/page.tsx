@@ -15,18 +15,30 @@ import {
   Target,
 } from "lucide-react";
 import { getScopedI18n } from "@/locales/server";
+import { buildMarketingMetadata } from "@/lib/seo";
 
-/** Metadata describing the live Codecamp Advantage product page. */
-export const metadata: Metadata = {
-  title: "Codecamp Advantage | Full-Stack Internship with Mastery Advantage",
-  description:
-    "Explore the live 20-module Codecamp Advantage internship—the first Advantage app to implement Mastery Advantage end to end.",
-  openGraph: {
-    title: "Codecamp Advantage | Mastery-Driven Full-Stack Internship",
-    description:
-      "A live 20-module, 106-lesson development pathway with verified mastery evidence, targeted tutoring, and production projects.",
-  },
-};
+/**
+ * Builds metadata for the localized Codecamp Advantage route.
+ * @param params The locale route parameters.
+ * @returns The localized route metadata.
+ */
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getScopedI18n("pages.products.codecampAdvantage");
+  const title = t("hero.title");
+  const description = t("hero.description");
+
+  return buildMarketingMetadata({
+    description,
+    locale,
+    path: "/products/codecamp-advantage",
+    title,
+  });
+}
 
 const PHASES = [
   { key: "A", moduleCount: 6 },

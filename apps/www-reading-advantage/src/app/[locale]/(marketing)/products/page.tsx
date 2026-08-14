@@ -2,17 +2,39 @@ import B2BSolutions from "@/components/products/b2b-solutions";
 import B2CSolutions from "@/components/products/b2c-solutions";
 import TutorAdvantage from "@/components/products/tutor-advantage";
 import HeroSection from "@/components/marketing/hero-section";
+import { buildMarketingMetadata } from "@/lib/seo";
 import { getScopedI18n } from "@/locales/server";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import { Link } from "@/locales/navigation";
 import { ArrowRight, BookMarked, GraduationCap, BookOpen } from "lucide-react";
 
-export const metadata: Metadata = {
-  title: "Our Products - Reading Advantage Thailand",
-  description:
-    "Comprehensive curriculum solutions for schools and specialized programs for individual learners, powered by advanced AI technology.",
-};
+/**
+ * Builds metadata for the localized Products route.
+ * @param params The locale route parameters.
+ * @returns The localized route metadata.
+ */
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getScopedI18n("pages.products.overview");
+  const title = t("hero.title");
+  const description = t("hero.description");
 
+  return buildMarketingMetadata({
+    description,
+    locale,
+    path: "/products",
+    title,
+  });
+}
+
+/**
+ * Renders the localized Products marketing page.
+ * @returns The localized Products page.
+ */
 export default async function ProductsPage() {
   const t = await getScopedI18n("pages.products.overview");
 

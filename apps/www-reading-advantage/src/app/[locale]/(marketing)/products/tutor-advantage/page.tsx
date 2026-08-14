@@ -13,6 +13,7 @@ import {
   TrendingUp,
 } from "lucide-react";
 import { getScopedI18n } from "@/locales/server";
+import { buildMarketingMetadata } from "@/lib/seo";
 import { StepFlow } from "@/components/ui/step-flow";
 import { OverlappingSection } from "@/components/ui/overlapping-section";
 import { Card } from "@/components/ui/card";
@@ -20,17 +21,34 @@ import { Button } from "@/components/ui/button";
 import { MarketingSvg } from "@/components/marketing/marketing-svg";
 import type { Locale } from "@/config/locale-config";
 
-export const metadata: Metadata = {
-  title: "Tutor Advantage - On Our Roadmap | Reading Advantage Thailand",
-  description:
-    "Tutor Advantage is on the Reading Advantage product roadmap — planned AI-powered English tutoring experience. No launch date confirmed.",
-  openGraph: {
-    title: "Tutor Advantage - On Our Roadmap | Reading Advantage Thailand",
-    description:
-      "Tutor Advantage is on the Reading Advantage product roadmap — planned AI-powered English tutoring experience.",
-  },
-};
+/**
+ * Builds metadata for the localized Tutor Advantage route.
+ * @param params The locale route parameters.
+ * @returns The localized route metadata.
+ */
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getScopedI18n("pages.products.tutorAdvantage");
+  const title = t("hero.title");
+  const description = t("hero.description");
 
+  return buildMarketingMetadata({
+    description,
+    locale,
+    path: "/products/tutor-advantage",
+    title,
+  });
+}
+
+/**
+ * Renders the localized Tutor Advantage marketing page.
+ * @param params The locale route parameters.
+ * @returns The localized Tutor Advantage page.
+ */
 export default async function TutorAdvantage({
   params,
 }: {
@@ -403,7 +421,10 @@ export default async function TutorAdvantage({
                 variant="white"
                 className="px-10 py-5 rounded-2xl font-bold text-lg"
               >
-                <Link href="/contact" className="inline-flex items-center gap-2">
+                <Link
+                  href="/contact"
+                  className="inline-flex items-center gap-2"
+                >
                   {t("cta.buttons.register")}
                   <ArrowRight className="w-5 h-5" />
                 </Link>
@@ -413,9 +434,7 @@ export default async function TutorAdvantage({
                 variant="outline"
                 className="px-10 py-5 rounded-2xl font-bold text-lg border-2 border-white text-white hover:bg-white hover:text-emerald-700"
               >
-                <Link href="/contact">
-                  {t("cta.buttons.apply")}
-                </Link>
+                <Link href="/contact">{t("cta.buttons.apply")}</Link>
               </Button>
             </div>
           </div>

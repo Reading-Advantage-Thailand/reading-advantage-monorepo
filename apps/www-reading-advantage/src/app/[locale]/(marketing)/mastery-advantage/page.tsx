@@ -3,9 +3,15 @@ import { Mail } from "lucide-react";
 import { getScopedI18n } from "@/locales/server";
 import { Button } from "@/components/ui/button";
 import { MarketingSvg } from "@/components/marketing/marketing-svg";
+import { buildMarketingMetadata } from "@/lib/seo";
 import type { Locale } from "@/config/locale-config";
 import type { Metadata } from "next";
 
+/**
+ * Builds metadata for the localized Mastery Advantage route.
+ * @param params The locale route parameters.
+ * @returns The localized route metadata.
+ */
 export async function generateMetadata({
   params,
 }: {
@@ -13,18 +19,22 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getScopedI18n("pages.masteryAdvantage");
+  const title = t("hero.title");
+  const description = t("hero.description");
 
-  return {
-    title: "Mastery Advantage — The Adaptive Engine",
-    description: t("hero.description"),
-    openGraph: {
-      title: "Mastery Advantage — The Adaptive Engine",
-      description: t("hero.description"),
-      locale,
-    },
-  };
+  return buildMarketingMetadata({
+    description,
+    locale,
+    path: "/mastery-advantage",
+    title,
+  });
 }
 
+/**
+ * Renders the localized Mastery Advantage marketing page.
+ * @param params The locale route parameters.
+ * @returns The localized Mastery Advantage page.
+ */
 export default async function MasteryAdvantagePage({
   params,
 }: {
@@ -34,15 +44,51 @@ export default async function MasteryAdvantagePage({
   const t = await getScopedI18n("pages.masteryAdvantage");
 
   const products = [
-    { key: "reading-advantage", name: "Reading Advantage", color: "bg-sky-100 text-sky-800 border-sky-200" },
-    { key: "primary-advantage", name: "Primary Advantage", color: "bg-sky-50 text-sky-700 border-sky-100" },
-    { key: "storytime-advantage", name: "Storytime Advantage", color: "bg-amber-50 text-amber-700 border-amber-100" },
-    { key: "math-advantage", name: "Math Advantage", color: "bg-orange-50 text-orange-700 border-orange-100" },
-    { key: "science-advantage", name: "Science Advantage", color: "bg-rose-50 text-rose-700 border-rose-100" },
-    { key: "stem-advantage", name: "STEM Advantage", color: "bg-indigo-50 text-indigo-700 border-indigo-100" },
-    { key: "zhongwen-advantage", name: "Zhongwen Advantage", color: "bg-fuchsia-50 text-fuchsia-700 border-fuchsia-100" },
-    { key: "tutor-advantage", name: "Tutor Advantage", color: "bg-violet-50 text-violet-700 border-violet-100" },
-    { key: "codecamp-advantage", name: "CodeCamp Advantage", color: "bg-purple-50 text-purple-700 border-purple-100" },
+    {
+      key: "reading-advantage",
+      name: "Reading Advantage",
+      color: "bg-sky-100 text-sky-800 border-sky-200",
+    },
+    {
+      key: "primary-advantage",
+      name: "Primary Advantage",
+      color: "bg-sky-50 text-sky-700 border-sky-100",
+    },
+    {
+      key: "storytime-advantage",
+      name: "Storytime Advantage",
+      color: "bg-amber-50 text-amber-700 border-amber-100",
+    },
+    {
+      key: "math-advantage",
+      name: "Math Advantage",
+      color: "bg-orange-50 text-orange-700 border-orange-100",
+    },
+    {
+      key: "science-advantage",
+      name: "Science Advantage",
+      color: "bg-rose-50 text-rose-700 border-rose-100",
+    },
+    {
+      key: "stem-advantage",
+      name: "STEM Advantage",
+      color: "bg-indigo-50 text-indigo-700 border-indigo-100",
+    },
+    {
+      key: "zhongwen-advantage",
+      name: "Zhongwen Advantage",
+      color: "bg-fuchsia-50 text-fuchsia-700 border-fuchsia-100",
+    },
+    {
+      key: "tutor-advantage",
+      name: "Tutor Advantage",
+      color: "bg-violet-50 text-violet-700 border-violet-100",
+    },
+    {
+      key: "codecamp-advantage",
+      name: "CodeCamp Advantage",
+      color: "bg-purple-50 text-purple-700 border-purple-100",
+    },
   ];
 
   const pillars = [
@@ -185,10 +231,7 @@ export default async function MasteryAdvantagePage({
 
           <ol className="grid md:grid-cols-2 lg:grid-cols-3 gap-px bg-[#dad4c8] border border-[#dad4c8] rounded-2xl overflow-hidden">
             {pillars.map((item, i) => (
-              <li
-                key={item.title}
-                className="bg-white p-8 flex flex-col gap-4"
-              >
+              <li key={item.title} className="bg-white p-8 flex flex-col gap-4">
                 <span className="text-xs font-semibold uppercase tracking-[0.18em] text-sky-700">
                   0{i + 1}
                 </span>
@@ -252,7 +295,12 @@ export default async function MasteryAdvantagePage({
             {t("cta.description")}
           </p>
 
-          <Button size="lg" variant="default" asChild className="bg-white text-sky-900 hover:bg-sky-50">
+          <Button
+            size="lg"
+            variant="default"
+            asChild
+            className="bg-white text-sky-900 hover:bg-sky-50"
+          >
             <Link href="/contact">
               <Mail className="w-5 h-5" />
               {t("cta.button")}

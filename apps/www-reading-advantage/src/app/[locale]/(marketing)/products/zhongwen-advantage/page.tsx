@@ -16,25 +16,40 @@ import {
   Mail,
 } from "lucide-react";
 import { getScopedI18n } from "@/locales/server";
+import { buildMarketingMetadata } from "@/lib/seo";
 import { LargeImageBreak } from "@/components/ui/large-image-break";
 import { FAQAccordion } from "@/components/ui/faq-accordion";
 import { MarketingSvg } from "@/components/marketing/marketing-svg";
 import type { Locale } from "@/config/locale-config";
 
-export async function generateMetadata(): Promise<Metadata> {
+/**
+ * Builds metadata for the localized Zhongwen Advantage route.
+ * @param params The locale route parameters.
+ * @returns The localized route metadata.
+ */
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
   const t = await getScopedI18n("pages.products.zhongwenAdvantage");
+  const title = t("hero.title");
+  const description = t("hero.description");
 
-  return {
-    title:
-      "Zhongwen Advantage - The Future of Chinese Learning | Reading Advantage Thailand",
-    description: t("hero.description"),
-    openGraph: {
-      title: "Zhongwen Advantage - The Future of Chinese Learning",
-      description: t("hero.description"),
-    },
-  };
+  return buildMarketingMetadata({
+    description,
+    locale,
+    path: "/products/zhongwen-advantage",
+    title,
+  });
 }
 
+/**
+ * Renders the localized Zhongwen Advantage marketing page.
+ * @param params The locale route parameters.
+ * @returns The localized Zhongwen Advantage page.
+ */
 export default async function ZhongwenAdvantage({
   params,
 }: {
@@ -68,7 +83,8 @@ export default async function ZhongwenAdvantage({
     {
       icon: BarChart3,
       title: "Progress Tracking",
-      description: "Detailed analytics and performance insights for every student.",
+      description:
+        "Detailed analytics and performance insights for every student.",
     },
     {
       icon: FileText,
@@ -253,7 +269,9 @@ export default async function ZhongwenAdvantage({
                   <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
                     <BookMarked className="w-5 h-5 text-white" />
                   </div>
-                  <h3 className="text-xl font-bold text-white">{t("levelMapping.hskLevels")}</h3>
+                  <h3 className="text-xl font-bold text-white">
+                    {t("levelMapping.hskLevels")}
+                  </h3>
                 </div>
                 <div className="space-y-3">
                   {[1, 2, 3, 4, 5, 6].map((level) => (
@@ -334,7 +352,9 @@ export default async function ZhongwenAdvantage({
                   ].map((point, i) => (
                     <div key={i} className="flex items-start gap-3">
                       <div className="w-2 h-2 bg-fuchsia-500 rounded-full mt-2 flex-shrink-0" />
-                      <span className="text-slate-600 leading-relaxed">{point}</span>
+                      <span className="text-slate-600 leading-relaxed">
+                        {point}
+                      </span>
                     </div>
                   ))}
                 </div>

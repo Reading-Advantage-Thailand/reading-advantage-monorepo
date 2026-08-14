@@ -10,23 +10,41 @@ import {
   Check,
 } from "lucide-react";
 import { getScopedI18n } from "@/locales/server";
+import { buildMarketingMetadata } from "@/lib/seo";
 import { OverlappingSection } from "@/components/ui/overlapping-section";
 import { FloatingPill } from "@/components/ui/floating-pill";
 import { Card, CardContent } from "@/components/ui/card";
 import { MarketingSvg } from "@/components/marketing/marketing-svg";
 import type { Locale } from "@/config/locale-config";
 
-export const metadata: Metadata = {
-  title: "Math Advantage - On Our Roadmap | Reading Advantage Thailand",
-  description:
-    "Math Advantage is on the Reading Advantage product roadmap. Planned adaptive tutoring experience for grades 7-12 — no launch date confirmed.",
-  openGraph: {
-    title: "Math Advantage - On Our Roadmap | Reading Advantage Thailand",
-    description:
-      "Math Advantage is on the Reading Advantage product roadmap — planned adaptive tutoring experience for grades 7-12.",
-  },
-};
+/**
+ * Builds metadata for the localized Math Advantage route.
+ * @param params The locale route parameters.
+ * @returns The localized route metadata.
+ */
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getScopedI18n("pages.products.mathAdvantage");
+  const title = t("hero.title");
+  const description = t("hero.description");
 
+  return buildMarketingMetadata({
+    description,
+    locale,
+    path: "/products/math-advantage",
+    title,
+  });
+}
+
+/**
+ * Renders the localized Math Advantage marketing page.
+ * @param params The locale route parameters.
+ * @returns The localized Math Advantage page.
+ */
 export default async function MathAdvantage({
   params,
 }: {
@@ -169,8 +187,19 @@ export default async function MathAdvantage({
             className="flex flex-wrap justify-center items-center gap-4 max-w-4xl mx-auto"
           >
             {subjects.map((subject, index) => {
-              const sizes = ["px-8 py-5 text-lg", "px-10 py-6 text-xl", "px-6 py-4 text-base"];
-              const offsets = ["-translate-y-2", "translate-y-2", "-translate-y-1", "translate-y-1", "-translate-y-3", "translate-y-0"];
+              const sizes = [
+                "px-8 py-5 text-lg",
+                "px-10 py-6 text-xl",
+                "px-6 py-4 text-base",
+              ];
+              const offsets = [
+                "-translate-y-2",
+                "translate-y-2",
+                "-translate-y-1",
+                "translate-y-1",
+                "-translate-y-3",
+                "translate-y-0",
+              ];
               return (
                 <div
                   key={subject}
@@ -187,7 +216,10 @@ export default async function MathAdvantage({
       {/* Smart Problem Generation — Asymmetric 7/5 */}
       <section className="py-24 bg-white">
         <div className="container mx-auto px-4">
-          <div data-testid="deep-dive" className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center max-w-7xl mx-auto">
+          <div
+            data-testid="deep-dive"
+            className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center max-w-7xl mx-auto"
+          >
             {/* Text LEFT (7 cols) */}
             <div className="lg:col-span-7">
               <span className="uppercase tracking-widest text-xs font-semibold text-orange-600 mb-4 block">
@@ -220,7 +252,12 @@ export default async function MathAdvantage({
                 />
               </div>
               <div className="absolute -top-4 -right-4">
-                <FloatingPill value="AI" label="Powered" variant="orange" size="sm" />
+                <FloatingPill
+                  value="AI"
+                  label="Powered"
+                  variant="orange"
+                  size="sm"
+                />
               </div>
             </div>
           </div>
@@ -254,7 +291,10 @@ export default async function MathAdvantage({
               >
                 <CardContent className="p-0 flex items-start gap-4">
                   <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-orange-400 to-amber-500 flex items-center justify-center flex-shrink-0">
-                    <benefit.icon className="w-7 h-7 text-white" strokeWidth={2} />
+                    <benefit.icon
+                      className="w-7 h-7 text-white"
+                      strokeWidth={2}
+                    />
                   </div>
                   <div>
                     <h3 className="text-xl font-bold text-white mb-2">
@@ -309,7 +349,9 @@ export default async function MathAdvantage({
             </div>
           </div>
           <p className="mt-12 text-center text-sm text-slate-600 max-w-2xl mx-auto">
-            Math Advantage is on our product roadmap. Specific efficacy stats will be published when the product is generally available and has verified evidence.
+            Math Advantage is on our product roadmap. Specific efficacy stats
+            will be published when the product is generally available and has
+            verified evidence.
           </p>
         </div>
       </section>

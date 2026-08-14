@@ -11,23 +11,41 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { getScopedI18n } from "@/locales/server";
+import { buildMarketingMetadata } from "@/lib/seo";
 import { OverlappingSection } from "@/components/ui/overlapping-section";
 import { StepFlow } from "@/components/ui/step-flow";
 import { Card } from "@/components/ui/card";
 import { MarketingSvg } from "@/components/marketing/marketing-svg";
 import type { Locale } from "@/config/locale-config";
 
-export const metadata: Metadata = {
-  title: "STEM Advantage - On Our Roadmap | Reading Advantage Thailand",
-  description:
-    "STEM Advantage is on the Reading Advantage product roadmap — planned K-12 coding + STEM integration experience. No launch date confirmed.",
-  openGraph: {
-    title: "STEM Advantage - On Our Roadmap | Reading Advantage Thailand",
-    description:
-      "STEM Advantage is on the Reading Advantage product roadmap — planned K-12 coding + STEM integration experience.",
-  },
-};
+/**
+ * Builds metadata for the localized STEM Advantage route.
+ * @param params The locale route parameters.
+ * @returns The localized route metadata.
+ */
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getScopedI18n("pages.products.stemAdvantage");
+  const title = t("hero.title");
+  const description = t("hero.description");
 
+  return buildMarketingMetadata({
+    description,
+    locale,
+    path: "/products/stem-advantage",
+    title,
+  });
+}
+
+/**
+ * Renders the localized STEM Advantage marketing page.
+ * @param params The locale route parameters.
+ * @returns The localized STEM Advantage page.
+ */
 export default async function StemAdvantage({
   params,
 }: {
@@ -214,10 +232,7 @@ export default async function StemAdvantage({
                       ],
                     },
                   ].map((feature) => (
-                    <div
-                      key={feature.title}
-                      className="flex items-start gap-4"
-                    >
+                    <div key={feature.title} className="flex items-start gap-4">
                       <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-md flex-shrink-0">
                         <feature.icon
                           className="w-6 h-6 text-white"
