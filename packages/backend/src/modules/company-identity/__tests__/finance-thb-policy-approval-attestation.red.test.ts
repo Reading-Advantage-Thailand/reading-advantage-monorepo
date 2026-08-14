@@ -1,3 +1,5 @@
+import { createHash } from "node:crypto";
+
 import { describe, expect, it, vi } from "vitest";
 
 import { projectSecretSafeAuditMetadata } from "../protocol.js";
@@ -11,8 +13,10 @@ const POISON = "POISON_FINANCE_THB_DEPENDENCY_91";
 const COMPANY_ID = "company-thb-red";
 const SCHOOL_ID = "school-thb-red";
 const DECISION_ID = "decision-thb-red-001";
-const CONTENT_DIGEST = "a".repeat(64);
-const REPLAY_IDENTITY = "b".repeat(64);
+const CONTENT_DIGEST =
+  "1606bd5b7b241d0d0f8b0b7f31e599371cfc2774d0ed27b57e587225b67ee0eb";
+const REPLAY_IDENTITY =
+  "79f65c8ad2ecba62445a6cf2f7cf9221afb25fb049b2b860c72049806ca966fd";
 const CLAIMS_VERSION = "company-identity-claims-v1";
 const POLICY_VERSION = "finance-thb-role-policy-v1";
 const ROLE_ID = "finance-thb-policy-approver";
@@ -24,7 +28,7 @@ interface Scope {
 
 interface Signer {
   readonly source: "company-identity";
-  readonly actorKind: "authenticated-owner";
+  readonly actorKind: "authenticated-owner" | "unauthenticated";
   readonly subjectId: string;
   readonly organizationId: string;
   readonly appRoleIds: readonly string[];
@@ -70,6 +74,115 @@ interface DecisionReceipt {
   readonly contentDigest: string;
   readonly replayIdentity: string;
   readonly audit: ReceiptAuditContext;
+}
+
+function appendFramedText(parts: Buffer[], value: string): void {
+  const bytes = Buffer.from(value, "utf8");
+  const length = Buffer.allocUnsafe(4);
+  length.writeUInt32BE(bytes.byteLength, 0);
+  parts.push(length, bytes);
+}
+
+function appendField(parts: Buffer[], name: string, value: string): void {
+  appendFramedText(parts, name);
+  appendFramedText(parts, value);
+}
+
+function appendOptionalField(
+  parts: Buffer[],
+  name: string,
+  value: string | undefined,
+): void {
+  appendFramedText(parts, name);
+  parts.push(Buffer.from([value === undefined ? 0 : 1]));
+  if (value !== undefined) {
+    appendFramedText(parts, value);
+  }
+}
+
+function appendListField(
+  parts: Buffer[],
+  name: string,
+  values: readonly string[] | undefined,
+): void {
+  appendFramedText(parts, name);
+  parts.push(Buffer.from([values === undefined ? 0 : 1]));
+  if (values === undefined) {
+    return;
+  }
+  const length = Buffer.allocUnsafe(4);
+  length.writeUInt32BE(values.length, 0);
+  parts.push(length);
+  for (const value of values) {
+    appendFramedText(parts, value);
+  }
+}
+
+function canonicalDigestFor(receipt: DecisionReceipt, domain: string): string {
+  const parts: Buffer[] = [];
+  appendFramedText(parts, domain);
+  appendField(parts, "receiptVersion", receipt.receiptVersion);
+  appendField(
+    parts,
+    "canonicalizationVersion",
+    receipt.canonicalizationVersion,
+  );
+  appendField(parts, "operation", receipt.operation);
+  appendField(parts, "decisionId", receipt.decisionId);
+  appendField(parts, "scope.companyId", receipt.scope.companyId);
+  appendOptionalField(parts, "scope.schoolId", receipt.scope.schoolId);
+  appendField(parts, "signer.source", receipt.signer.source);
+  appendField(parts, "signer.actorKind", receipt.signer.actorKind);
+  appendField(parts, "signer.subjectId", receipt.signer.subjectId);
+  appendField(parts, "signer.organizationId", receipt.signer.organizationId);
+  appendField(parts, "signer.claimsVersion", receipt.signer.claimsVersion);
+  appendField(parts, "signer.policyVersion", receipt.signer.policyVersion);
+  appendListField(parts, "signer.appRoleIds", receipt.signer.appRoleIds);
+  appendListField(parts, "signer.schoolIds", receipt.signer.schoolIds);
+  appendField(
+    parts,
+    "decisionEvidence.source",
+    receipt.decisionEvidence.source,
+  );
+  appendField(
+    parts,
+    "decisionEvidence.operation",
+    receipt.decisionEvidence.operation,
+  );
+  appendField(
+    parts,
+    "decisionEvidence.decisionId",
+    receipt.decisionEvidence.decisionId,
+  );
+  appendField(
+    parts,
+    "decisionEvidence.attestationId",
+    receipt.decisionEvidence.attestationId,
+  );
+  appendField(
+    parts,
+    "decisionEvidence.signature",
+    receipt.decisionEvidence.signature,
+  );
+  appendField(parts, "rules.rateSourceId", receipt.rules.rateSourceId);
+  appendField(
+    parts,
+    "rules.effectiveDateRuleId",
+    receipt.rules.effectiveDateRuleId,
+  );
+  appendField(parts, "rules.roundingRuleId", receipt.rules.roundingRuleId);
+  appendField(parts, "validFrom", receipt.validFrom);
+  appendField(parts, "expiresAt", receipt.expiresAt);
+  appendOptionalField(
+    parts,
+    "supersededByDecisionId",
+    receipt.supersededByDecisionId,
+  );
+  appendField(parts, "audit.eventId", receipt.audit.eventId);
+  appendField(parts, "audit.requestId", receipt.audit.requestId);
+  appendField(parts, "audit.correlationId", receipt.audit.correlationId);
+  appendField(parts, "audit.occurredAt", receipt.audit.occurredAt);
+  return createHash("sha256").update(Buffer.concat(parts)).digest("hex");
 }
 
 interface AuthorityInput {
@@ -256,30 +369,61 @@ function baseReceipt(
   const decisionId = overrides.decisionId ?? DECISION_ID;
   const decisionEvidence =
     overrides.decisionEvidence ?? baseEvidence({ decisionId });
-  return {
+  const receiptWithoutDigests: DecisionReceipt = {
     receiptVersion: RECEIPT_VERSION,
     canonicalizationVersion: CANONICALIZATION_VERSION,
     operation: "finance-thb-valuation",
     decisionId,
-    scope: baseScope(),
-    signer: baseSigner(),
+    scope: overrides.scope ?? baseScope(),
+    signer: overrides.signer ?? baseSigner(),
     decisionEvidence,
-    rules: {
+    rules: overrides.rules ?? {
       rateSourceId: "opaque-rate-source-id",
       effectiveDateRuleId: "opaque-effective-date-rule-id",
       roundingRuleId: "opaque-rounding-rule-id",
     },
-    validFrom: "2026-08-13T00:00:00.000Z",
-    expiresAt: "2026-08-15T00:00:00.000Z",
+    validFrom: overrides.validFrom ?? "2026-08-13T00:00:00.000Z",
+    expiresAt: overrides.expiresAt ?? "2026-08-15T00:00:00.000Z",
+    ...(overrides.supersededByDecisionId === undefined
+      ? {}
+      : { supersededByDecisionId: overrides.supersededByDecisionId }),
     contentDigest: CONTENT_DIGEST,
     replayIdentity: REPLAY_IDENTITY,
-    audit: {
+    audit: overrides.audit ?? {
       eventId: "finance-thb-audit-event-001",
       requestId: "finance-thb-request-001",
       correlationId: "finance-thb-correlation-001",
       occurredAt: "2026-08-14T00:00:00.000Z",
     },
-    ...overrides,
+  };
+  const contentDigest =
+    overrides.contentDigest ??
+    canonicalDigestFor(
+      receiptWithoutDigests,
+      "finance-thb-policy-content-digest-v1",
+    );
+  const evidenceContentDigest =
+    overrides.decisionEvidence?.contentDigest !== undefined &&
+    overrides.decisionEvidence.contentDigest !== CONTENT_DIGEST
+      ? overrides.decisionEvidence.contentDigest
+      : contentDigest;
+  const receiptWithContentDigest: DecisionReceipt = {
+    ...receiptWithoutDigests,
+    decisionEvidence: {
+      ...decisionEvidence,
+      contentDigest: evidenceContentDigest,
+    },
+    contentDigest,
+    replayIdentity: REPLAY_IDENTITY,
+  };
+  return {
+    ...receiptWithContentDigest,
+    replayIdentity:
+      overrides.replayIdentity ??
+      canonicalDigestFor(
+        receiptWithContentDigest,
+        "finance-thb-policy-replay-identity-v1",
+      ),
   };
 }
 
@@ -462,10 +606,14 @@ function expectOneTerminalAudit(
     expect(metadata.policyVersion).toBe(expected.receipt.signer.policyVersion);
     expect(metadata.sourceFingerprint).toBe(expected.receipt.contentDigest);
     expect(event.scope).toEqual(expected.receipt.scope);
-    expect(event.actor).toEqual({
-      kind: expected.receipt.signer.actorKind,
-      subjectId: expected.receipt.signer.subjectId,
-    });
+    if (expected.receipt.signer.actorKind === "authenticated-owner") {
+      expect(event.actor).toEqual({
+        kind: "authenticated-owner",
+        subjectId: expected.receipt.signer.subjectId,
+      });
+    } else {
+      expect(event.actor).toEqual({ kind: "unauthenticated" });
+    }
     if (expected.receipt.scope.schoolId === undefined) {
       expect(metadata).not.toHaveProperty("schoolId");
     } else {
@@ -690,7 +838,7 @@ describe("Company Identity finance-thb-policy-approval authority RED contract", 
     expect(harness.ledgerLookup).not.toHaveBeenCalled();
     expectOneTerminalAudit(harness.events, {
       reasonCode: "security-field-mismatch",
-      receipt: baseReceipt(),
+      receipt: detachedReceipt,
       outcomes: ["DENIED", "FAILED"],
       scope: baseScope(),
       idempotencyReplay: false,
@@ -847,9 +995,13 @@ describe("Company Identity finance-thb-policy-approval authority RED contract", 
         expect(result).not.toMatchObject({ decision: "allow" });
       }
       expect(harness.ledgerLookup).not.toHaveBeenCalled();
+      const expectedAuditReceipt =
+        _label === "signer actor kind" && authorityResult.decision === "allow"
+          ? (authorityResult as unknown as DecisionReceipt)
+          : baseReceipt();
       expectOneTerminalAudit(harness.events, {
         reasonCode: "security-field-mismatch",
-        receipt: baseReceipt(),
+        receipt: expectedAuditReceipt,
         outcomes: ["DENIED", "FAILED"],
         scope: baseScope(),
         idempotencyReplay: false,
@@ -994,7 +1146,16 @@ describe("Company Identity finance-thb-policy-approval authority RED contract", 
     ],
     [
       "receipt content digest",
-      { ledgerReceipt: baseReceipt({ contentDigest: "e".repeat(64) }) },
+      {
+        ledgerReceipt: baseReceipt({
+          audit: {
+            eventId: "finance-thb-audit-event-001",
+            requestId: "ledger-request-other",
+            correlationId: "finance-thb-correlation-001",
+            occurredAt: "2026-08-14T00:00:00.000Z",
+          },
+        }),
+      },
     ],
     [
       "authoritative receipt identity",
@@ -1024,6 +1185,10 @@ describe("Company Identity finance-thb-policy-approval authority RED contract", 
       } else {
         expect(result).not.toMatchObject({ decision: "allow" });
       }
+      const expectedAuditReceipt =
+        _label === "signer actor kind" && "ledgerReceipt" in mismatch
+          ? mismatch.ledgerReceipt
+          : baseReceipt();
       if ("ledgerReceipt" in mismatch) {
         expect(harness.ledgerLookup).toHaveBeenCalledTimes(1);
       } else {
@@ -1031,7 +1196,7 @@ describe("Company Identity finance-thb-policy-approval authority RED contract", 
       }
       expectOneTerminalAudit(harness.events, {
         reasonCode: "security-field-mismatch",
-        receipt: baseReceipt(),
+        receipt: expectedAuditReceipt,
         outcomes: ["DENIED", "FAILED"],
         scope: baseScope(),
         idempotencyReplay: false,
@@ -1254,8 +1419,18 @@ describe("Company Identity finance-thb-policy-approval authority RED contract", 
       "invalid-digest",
     ],
     [
+      "arbitrary content digest",
+      { contentDigest: "c".repeat(64) },
+      "invalid-digest",
+    ],
+    [
       "replay identity",
       { replayIdentity: "forged-replay-identity" },
+      "invalid-replay-identity",
+    ],
+    [
+      "arbitrary replay identity",
+      { replayIdentity: "d".repeat(64) },
       "invalid-replay-identity",
     ],
   ] as const)(
@@ -1323,7 +1498,7 @@ describe("Company Identity finance-thb-policy-approval authority RED contract", 
     expect(JSON.stringify(harness.events)).not.toContain("company-attacker");
   });
 
-  it("reads accessor-backed decision identity once and uses the validated value", async () => {
+  it("rejects accessor-backed decision identity before dependency calls", async () => {
     const candidate = baseReceipt();
     let reads = 0;
     Object.defineProperty(candidate, "decisionId", {
@@ -1335,18 +1510,15 @@ describe("Company Identity finance-thb-policy-approval authority RED contract", 
       },
     });
     const harness = await createHarness();
-    const result = await harness.attestor.verify(verificationInput(candidate));
+    await expectStableFailure(
+      harness.attestor.verify(verificationInput(candidate)),
+      "COMPANY_IDENTITY_FINANCE_THB_POLICY_APPROVAL_INVALID",
+    );
 
-    expect(result).toEqual({ decision: "allow", receipt: baseReceipt() });
-    expect(reads).toBe(1);
-    expectOneTerminalAudit(harness.events, {
-      reasonCode: "authority-accepted",
-      receipt: baseReceipt(),
-      outcome: "SUCCEEDED",
-      scope: baseScope(),
-      idempotencyReplay: false,
-    });
-    expect(JSON.stringify(harness.events)).not.toContain("decision-attacker");
+    expect(reads).toBe(0);
+    expect(harness.authorityVerify).not.toHaveBeenCalled();
+    expect(harness.ledgerLookup).not.toHaveBeenCalled();
+    expect(harness.events).toHaveLength(0);
   });
 
   it("maps getter and Proxy poison to a stable invalid error with no dependency text", async () => {
@@ -1362,8 +1534,17 @@ describe("Company Identity finance-thb-policy-approval authority RED contract", 
         throw new Error(POISON);
       },
     });
+    const transparentProxy = new Proxy(baseReceipt(), {});
+    const nestedTransparentProxy = baseReceipt({
+      scope: new Proxy(baseScope(), {}),
+    });
 
-    for (const candidate of [getterPoison, proxyPoison]) {
+    for (const candidate of [
+      getterPoison,
+      proxyPoison,
+      transparentProxy,
+      nestedTransparentProxy,
+    ]) {
       const harness = await createHarness();
       await expectStableFailure(
         harness.attestor.verify(verificationInput(candidate)),
@@ -1373,6 +1554,90 @@ describe("Company Identity finance-thb-policy-approval authority RED contract", 
       expect(harness.ledgerLookup).not.toHaveBeenCalled();
       expect(harness.events).toHaveLength(0);
     }
+  });
+
+  it("rejects a bound-field mutation when the caller keeps the old digest", async () => {
+    const candidate = baseReceipt();
+    (candidate.rules as { rateSourceId: string }).rateSourceId =
+      "attacker-rate-source";
+    const harness = await createHarness();
+    const result = await harness.attestor.verify(verificationInput(candidate));
+
+    expect(result).toEqual({ decision: "deny", reason: "invalid-digest" });
+    expect(harness.authorityVerify).not.toHaveBeenCalled();
+    expect(harness.ledgerLookup).not.toHaveBeenCalled();
+    expectOneTerminalAudit(harness.events, {
+      reasonCode: "invalid-digest",
+      receipt: baseReceipt(),
+      outcome: "DENIED",
+      scope: baseScope(),
+      idempotencyReplay: false,
+    });
+  });
+
+  it.each([
+    [
+      "unapproved signer role",
+      baseReceipt({ signer: baseSigner({ appRoleIds: ["role-other"] }) }),
+      "security-field-mismatch",
+    ],
+    [
+      "unauthenticated actor",
+      baseReceipt({
+        signer: baseSigner({ actorKind: "unauthenticated" }),
+      }),
+      "security-field-mismatch",
+    ],
+  ] as const)(
+    "rejects synchronized caller authority data for %s",
+    async (_label, candidate, reason) => {
+      const harness = await createHarness({
+        authorityResult: authorityAllow(candidate),
+        ledgerReceipt: candidate,
+      });
+      const result = await harness.attestor.verify(
+        verificationInput(candidate),
+      );
+
+      expect(result).toEqual({ decision: "deny", reason });
+      expect(harness.authorityVerify).not.toHaveBeenCalled();
+      expect(harness.ledgerLookup).not.toHaveBeenCalled();
+      const event = expectOneTerminalAudit(harness.events, {
+        reasonCode: reason,
+        receipt: candidate,
+        outcome: "DENIED",
+        scope: candidate.scope,
+        idempotencyReplay: false,
+      });
+      if (candidate.signer.actorKind === "unauthenticated") {
+        expect(event.actor).toEqual({ kind: "unauthenticated" });
+        expect(event.metadata.actorKind).toBe("unauthenticated");
+      }
+    },
+  );
+
+  it("records malformed actor data as unauthenticated", async () => {
+    const candidate = Object.assign(baseReceipt(), {
+      signer: {
+        ...baseSigner(),
+        actorKind: "malformed",
+      },
+    });
+    const harness = await createHarness();
+    const result = await harness.attestor.verify(verificationInput(candidate));
+
+    expect(result).toEqual({ decision: "deny", reason: "malformed-receipt" });
+    expect(harness.authorityVerify).not.toHaveBeenCalled();
+    expect(harness.ledgerLookup).not.toHaveBeenCalled();
+    const event = expectOneTerminalAudit(harness.events, {
+      reasonCode: "malformed-receipt",
+      outcome: "DENIED",
+      scope: baseScope(),
+      idempotencyReplay: false,
+    });
+    expect(event.actor).toEqual({ kind: "unauthenticated" });
+    expect(event.metadata.actorKind).toBe("unauthenticated");
+    expect(event.metadata.actorSubjectId).toBeNull();
   });
 
   it.each([
