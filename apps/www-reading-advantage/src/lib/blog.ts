@@ -15,10 +15,90 @@ const postsBaseDirectory = path.join(
   "src/app/[locale]/(marketing)/blog/posts",
 );
 
-type SupportedLocale = "en" | "th" | "zh";
+/** A locale with a blog content directory. */
+export type SupportedLocale = "en" | "th" | "zh";
 
+const SUPPORTED_LOCALES = [
+  "en",
+  "th",
+  "zh",
+] as const satisfies readonly SupportedLocale[];
+
+/**
+ * Resolves an unknown blog locale to the English fallback.
+ * @param locale The requested blog locale.
+ * @returns The supported locale used for blog content.
+ */
+export function normalizeBlogLocale(locale: string): SupportedLocale {
+  return SUPPORTED_LOCALES.includes(locale as SupportedLocale)
+    ? (locale as SupportedLocale)
+    : "en";
+}
+
+/**
+ * Checks whether a slug can safely address a Markdown file.
+ * @param slug The requested blog slug.
+ * @returns True when the slug uses the supported URL-safe format.
+ */
+export function isSafeBlogSlug(slug: string): boolean {
+  return /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug);
+}
+
+/**
+ * Lists locales with an on-disk Markdown post or blog content.
+ * @param slug An optional slug to inspect across locale directories.
+ * @returns The locales that contain the requested content.
+ */
+export function getBlogPostLocales(slug?: string): SupportedLocale[] {
+  if (slug !== undefined && !isSafeBlogSlug(slug)) return [];
+
+  return SUPPORTED_LOCALES.filter((locale) => {
+    const directory = postsDirectory(locale);
+    if (slug !== undefined) {
+      return fs.existsSync(path.join(directory, `${slug}.md`));
+    }
+
+    try {
+      return fs.readdirSync(directory).some((file) => file.endsWith(".md"));
+    } catch {
+      return false;
+    }
+  });
+}
+
+/**
+ * Returns the Markdown directory for a supported blog locale.
+ * @param locale The locale directory to resolve.
+ * @returns The absolute blog content directory.
+ */
 export function postsDirectory(locale: SupportedLocale = "en"): string {
   return path.join(postsBaseDirectory, locale);
+}
+
+function markdownSlugs(locale: SupportedLocale): Set<string> {
+  try {
+    return new Set(
+      fs
+        .readdirSync(postsDirectory(locale))
+        .filter((file) => file.endsWith(".md"))
+        .map((file) => file.replace(/\.md$/, "")),
+    );
+  } catch {
+    return new Set();
+  }
+}
+
+function allBlogSlugs(locale: SupportedLocale): string[] {
+  const resolvedLocale = normalizeBlogLocale(locale);
+  const allSlugs = markdownSlugs("en");
+
+  if (resolvedLocale !== "en") {
+    for (const slug of markdownSlugs(resolvedLocale)) {
+      allSlugs.add(slug);
+    }
+  }
+
+  return [...allSlugs];
 }
 
 interface BlogFrontmatter {
@@ -66,7 +146,10 @@ function validateFrontmatter(data: unknown): BlogFrontmatter {
   };
 }
 
-async function parseBlogFile(fullPath: string, slug: string): Promise<BlogPost> {
+async function parseBlogFile(
+  fullPath: string,
+  slug: string,
+): Promise<BlogPost> {
   const fileContents = fs.readFileSync(fullPath, "utf8");
   const { data, content } = matter(fileContents);
 
@@ -97,19 +180,46 @@ async function parseBlogFile(fullPath: string, slug: string): Promise<BlogPost> 
   };
 }
 
+const parsedPostCache = new Map<string, Promise<BlogPost>>();
+
+function parseCachedBlogFile(
+  fullPath: string,
+  slug: string,
+): Promise<BlogPost> {
+  const cached = parsedPostCache.get(fullPath);
+  if (cached) return cached;
+
+  const parsed = parseBlogFile(fullPath, slug).catch((error: unknown) => {
+    parsedPostCache.delete(fullPath);
+    throw error;
+  });
+  parsedPostCache.set(fullPath, parsed);
+  return parsed;
+}
+
+/**
+ * Loads a localized blog post with an English fallback.
+ * @param slug The URL-safe post slug.
+ * @param locale The requested locale.
+ * @returns The parsed post or null when no post exists.
+ */
 export async function getBlogPost(
   slug: string,
   locale: SupportedLocale = "en",
 ): Promise<BlogPost | null> {
+  if (!isSafeBlogSlug(slug)) return null;
+
+  const resolvedLocale = normalizeBlogLocale(locale);
+
   try {
-    const localePath = path.join(postsDirectory(locale), `${slug}.md`);
+    const localePath = path.join(postsDirectory(resolvedLocale), `${slug}.md`);
     try {
       fs.readFileSync(localePath);
-      return await parseBlogFile(localePath, slug);
+      return await parseCachedBlogFile(localePath, slug);
     } catch {
-      if (locale === "en") return null;
+      if (resolvedLocale === "en") return null;
       const enPath = path.join(postsDirectory("en"), `${slug}.md`);
-      return await parseBlogFile(enPath, slug);
+      return await parseCachedBlogFile(enPath, slug);
     }
   } catch (error) {
     console.error(`Error getting blog post ${slug}:`, error);
@@ -117,36 +227,40 @@ export async function getBlogPost(
   }
 }
 
+/**
+ * Loads all blog posts for a locale with English slugs as the canonical set.
+ * @param locale The requested locale.
+ * @returns The sorted blog list items.
+ */
 export async function getAllBlogPosts(
   locale: SupportedLocale = "en",
 ): Promise<BlogListItem[]> {
-  // Build a deduplicated slug set: canonical en/ list + any locale-only extras
-  const enFiles = fs.readdirSync(postsDirectory("en")).filter((f) => f.endsWith(".md"));
-  const enSlugs = new Set(enFiles.map((f) => f.replace(/\.md$/, "")));
-
-  let localeOnlySlugs: Set<string> = new Set();
-  if (locale !== "en") {
-    try {
-      const localeFiles = fs.readdirSync(postsDirectory(locale)).filter((f) => f.endsWith(".md"));
-      localeOnlySlugs = new Set(
-        localeFiles.map((f) => f.replace(/\.md$/, "")).filter((s) => !enSlugs.has(s)),
-      );
-    } catch {
-      // locale directory doesn't exist — only en/ posts will be shown
-    }
-  }
-
-  const allSlugs = [...enSlugs, ...localeOnlySlugs];
+  const resolvedLocale = normalizeBlogLocale(locale);
+  const allSlugs = allBlogSlugs(resolvedLocale);
 
   const allPostsData = await Promise.all(
     allSlugs.map(async (slug) => {
-      const post = await getBlogPost(slug, locale);
+      const post = await getBlogPost(slug, resolvedLocale);
       if (!post) throw new Error(`Failed to load post ${slug}`);
       return post;
     }),
   );
 
   return allPostsData.sort((a, b) => (a.date < b.date ? 1 : -1));
+}
+
+/**
+ * Counts the available blog pages without parsing Markdown content.
+ * @param locale The requested locale.
+ * @param perPage The number of posts shown on each page.
+ * @returns The number of available pages.
+ */
+export function getBlogPostTotalPages(
+  locale: SupportedLocale = "en",
+  perPage: number = 9,
+): number {
+  if (!Number.isInteger(perPage) || perPage < 1) return 0;
+  return Math.ceil(allBlogSlugs(locale).length / perPage);
 }
 
 export async function getAllBlogTags(

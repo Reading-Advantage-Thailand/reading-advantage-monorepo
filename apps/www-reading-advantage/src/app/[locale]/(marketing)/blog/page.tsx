@@ -1,35 +1,46 @@
-import { Metadata } from "next";
-import { getAllPosts, getPaginatedPosts } from "@/lib/blog";
+import type { Metadata } from "next";
+import {
+  getAllPosts,
+  getBlogPostLocales,
+  getPaginatedPosts,
+  normalizeBlogLocale,
+} from "@/lib/blog";
 import { BlogCard } from "@/components/blog/blog-card";
 import { BlogListItem } from "@/types/blog";
 import HeroSection from "@/components/marketing/hero-section";
 import { getScopedI18n } from "@/locales/server";
+import { buildMarketingMetadata } from "@/lib/seo";
 
 interface PageProps {
   params: Promise<{ locale: string }>;
 }
 
-export const metadata: Metadata = {
-  title: "Blog | Reading Advantage",
-  description:
-    "Educational insights, learning strategies, and updates from Reading Advantage. Explore our articles about education technology, learning methods, and teaching tips.",
-  openGraph: {
-    title: "Reading Advantage Blog",
-    description:
-      "Educational insights, learning strategies, and updates from Reading Advantage",
-    type: "website",
-    images: ["/images/reading-advantage-demo.png"],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Reading Advantage Blog",
-    description:
-      "Educational insights, learning strategies, and updates from Reading Advantage",
-    images: ["/images/reading-advantage-demo.png"],
-  },
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"),
-};
+/**
+ * Builds locale-aware metadata for the blog index.
+ * @param props The locale route parameters.
+ * @returns The blog index metadata.
+ */
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
+  const { locale } = await params;
+  const effectiveLocale = normalizeBlogLocale(locale);
+  const t = await getScopedI18n("pages.blog");
 
+  return buildMarketingMetadata({
+    alternateLocales: getBlogPostLocales(),
+    description: t("description"),
+    locale: effectiveLocale,
+    path: "/blog",
+    title: t("title"),
+  });
+}
+
+/**
+ * Renders the localized blog index.
+ * @param props The locale route parameters.
+ * @returns The rendered blog index.
+ */
 export default async function BlogPage({ params }: PageProps) {
   const { locale } = await params;
   const t = await getScopedI18n("pages.blog");
