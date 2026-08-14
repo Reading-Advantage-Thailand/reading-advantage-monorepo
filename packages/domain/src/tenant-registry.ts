@@ -220,6 +220,12 @@ import {
   codecampPrReviewObjectiveEvidence,
   codecampWebhookEvents,
   reviewJobs,
+  durableJobs,
+  durableJobAuditEvents,
+  reviewJobAdoptionAuditEvents,
+  reviewJobDurableBindings,
+  reviewJobDurableAdoption,
+  reviewJobMigrationIssues,
   articles,
   lessons,
   assignments,
@@ -305,6 +311,12 @@ register(codecampWebhookEvents, "REFERENTIAL");
 // is single-tenant/global; review_jobs has no `schoolId`. Accessed via
 // `tenantDb.unscoped("review_jobs has no schoolId; codecamp is global")`.
 register(reviewJobs, "REFERENTIAL");
+register(durableJobs, "REFERENTIAL");
+register(durableJobAuditEvents, "REFERENTIAL");
+register(reviewJobAdoptionAuditEvents, "REFERENTIAL");
+register(reviewJobDurableBindings, "REFERENTIAL");
+register(reviewJobDurableAdoption, "REFERENTIAL");
+register(reviewJobMigrationIssues, "REFERENTIAL");
 register(articles, "REFERENTIAL");
 register(lessons, "REFERENTIAL");
 register(assignments, "REFERENTIAL");

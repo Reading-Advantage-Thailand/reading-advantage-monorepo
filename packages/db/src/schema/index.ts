@@ -23,3 +23,4 @@ export * from "./standard-pack-successor-commitments.js";
 export * from "./standard-pack-successor-admission-receipts.js";
 export * from "./workbooks.js";
 export * from "./finance-operations.js";
+export * from "./jobs.js";
