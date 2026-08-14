@@ -1,0 +1,5 @@
+Track: wave5_public_surface_completion_20260628
+Group: A, dead layout removal.
+Independent review: ACCEPT.
+Scope: Three zero-byte components and one focused test.
+Evidence: No source or graph callers exist. The focused test passed 1/1.
