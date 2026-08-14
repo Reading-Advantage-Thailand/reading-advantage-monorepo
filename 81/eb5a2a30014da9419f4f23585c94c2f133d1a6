@@ -1,0 +1,11 @@
+Track: durable_job_worker_platform_20260713
+
+Scope: Task 8 PostgreSQL 16 concurrency Red, plan state, and test strategy.
+
+Hashes: test 3b1e59ae786e2798c9c6bee6d3e551aba8615860a8038bc1743247b5309342cc; plan 97e67320303214fb45625d7166a4507ccb8c5e64670f9d6a4823eaa5cc05f823; strategy c7c474843ce4f2ceacee4b155fa94fffcbb8092250a0d2e1f91acaa6a0a6718d.
+
+Safe evidence: one intentional missing-adapter failure, three passing controls, and five live skips. Typecheck, ESLint, Prettier, and diff checks passed.
+
+Independent Red review: ACCEPT. The contract covers real stale-token CAS, persisted-row verification, tenant isolation, independent-session reclaim, and fresh-session restart.
+
+Boundary: no adapter, schema, migration, worker, lockfile, container, or live PostgreSQL change. Task 9 remains blocked. The live PostgreSQL 16 gate remains required.
