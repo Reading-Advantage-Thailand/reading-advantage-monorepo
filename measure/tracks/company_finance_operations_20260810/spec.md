@@ -57,6 +57,26 @@ and publish accepted source-native contracts. Phase 2 must use only the
 historical private-evidence packet and must reject Finance-owned CRM or Tutor
 lookalike envelopes.
 
+## Multi-currency bills and THB valuation
+
+Finance must accept bills in any source-stated three-letter currency. It must
+preserve each exact original amount and its original currency.
+
+Each accepted bill must also expose a separate exact THB-equivalent amount. The
+THB value must never replace or alter the original amount.
+
+The verified packet must bind the THB conversion evidence. The evidence must
+identify the exact rate, effective date, and rate source. Caller input cannot
+become the authoritative conversion source.
+
+Finance must use decimal arithmetic. It must not use binary floating point,
+an undocumented live rate, an implicit conversion, or an unrecorded rounding
+rule. A THB-denominated bill uses an exact identity conversion.
+
+The conversion rate source and rounding policy require an explicit owner or
+accountant decision before production use. Until that decision exists, the
+controlled import must fail when verified conversion evidence is incomplete.
+
 ## First executable phase: policy-neutral foundation
 
 Define bounded contracts, ports, and schema, then write Red tests covering:

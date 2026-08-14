@@ -45,6 +45,21 @@
   - Reject or replace caller values that contradict each trusted fact.
   - Run fresh correctness and security reviews against the final remediation HEAD.
 
+- [ ] Task: Add exact THB-equivalent valuation for bills in every source currency. Preserve each original amount and currency. The verified packet must bind the THB amount, rate, effective date, and rate source.
+
+  Next-session scope (2026-08-14):
+
+  - Start with Red tests for non-THB bills, THB bills, and multiple currencies.
+  - Preserve every exact original amount and its source currency.
+  - Add a separate exact THB-equivalent field for each accepted bill.
+  - Bind the THB value and conversion evidence to the verified packet.
+  - Reject missing, duplicate, contradictory, or caller-only conversion data.
+  - Use decimal arithmetic and an explicit rounding policy.
+  - Keep rate-provider access behind an internal port if a provider is required.
+  - Run fresh correctness and security reviews against the final implementation.
+
+  Handoff: `phase2-multi-currency-thb-handoff-20260814.md`. The completed trust-binding source commit is `1d0ffd568`.
+
 - [b] Task: Pilot one reconciled historical month and one historical billing packet with authorization, audit, rollback, and duplicate/conflict evidence through owner-attested private-evidence packets only. (deferred:phase2; blocked until Task 1 implementation evidence permits it)
 
   Historical Red chronology (2026-08-12): the Phase 2 aggregate remained intentionally Red because `controlled-imports.ts` and the historical import operations do not exist. Its compiler AST fixture, source-owner guard, and missing-source boundary guard passed; the remaining expected failures were excluded from Phase 1 Task 3 acceptance.
