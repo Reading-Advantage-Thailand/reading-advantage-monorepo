@@ -42,6 +42,23 @@ The owner-decision receipt Red sub-slice adds these missing runtime exports:
 The new test uses dynamic loading and local structural types. Every initial
 failure must name only one missing receipt export.
 
+The Company Identity authority-extension Red sub-slice runs this additional
+test:
+
+```bash
+../../node_modules/.bin/vitest run \
+  src/modules/company-identity/__tests__/finance-thb-policy-approval-attestation.red.test.ts \
+  --pool=threads --maxWorkers=1
+```
+
+It requires one missing Company Identity export:
+
+- `createFinanceThbPolicyApprovalAttestor`
+
+The test loads the public Company Identity barrel through a dynamic import.
+It uses local structural types and does not import the database package.
+Every initial failure must name only this missing Company Identity export.
+
 ## Contract under test
 
 The future contract must expose strict conversion evidence with these fields:
@@ -89,13 +106,13 @@ The smallest verifier boundary accepts:
 
 Caller-supplied signer fields never authorize a receipt. The authority port
 must independently bind the server-issued decision identity to an attestation
-or receipt-ledger lookup, signature verification, signer policy, trusted
+or receipt-ledger lookup. It must verify the signature, signer policy, trusted
 scope, and the `finance-thb-policy-approval` operation.
 
 The authority result must return the reviewed decision identity, decision
-evidence, signer, trusted scope, content digest, and a verified signature
-marker. A mismatch or dependency failure must return a stable error without
-the dependency message, cause, or stack.
+evidence, and signer. It must return the trusted scope, content digest, and
+verified signature marker. A mismatch or dependency failure must return a
+stable error without the dependency message, cause, or stack.
 
 The receipt must contain these bounded fields:
 
@@ -173,6 +190,71 @@ The owner-decision receipt test must also cover:
 35. Length, delimiter, Unicode, case, list-order, duplicate, and absent-versus
     literal-sentinel canonical collisions.
 36. Exact audit projection through `projectSecretSafeAuditMetadata`.
+
+## Company Identity authority-extension Red contract
+
+The Company Identity extension must expose the exact operation discriminator
+`finance-thb-policy-approval` through `createFinanceThbPolicyApprovalAttestor`.
+
+The attestor must verify a server-issued decision identity. Caller-provided
+signer fields, scope, signature, or attestation values must never authorize.
+The authority boundary must verify the operation, signature, decision digest,
+signer policy, claims version, role-policy version, and trusted scope.
+The receipt-ledger port must look up the authoritative decision by operation
+and decision identity. It must do so before an allow result.
+The authority result and ledger receipt must agree on every security field.
+The fields include company scope, optional school scope, signer identity, and
+signer authority. They also include claims and role-policy versions.
+They include decision evidence, content digest, signature verification, and
+the authoritative receipt identity.
+Any mismatch must fail closed before an allow result or downstream write.
+
+The contract must support these terminal results:
+
+- Allow after authority and ledger agreement.
+- Deny after authority rejection, malformed evidence, scope mismatch, or
+  missing authority data.
+- Replay for an unchanged authoritative receipt.
+- Conflict for changed replay evidence or trusted scope.
+- Deny for expired, not-yet-valid, or superseded authority.
+
+The receipt and every nested object must reject unknown keys. This applies to
+the scope, signer, decision evidence, policy-rule object, and audit context.
+The boundary must snapshot untrusted values before awaits and reject getter,
+Proxy, post-call mutation, and deferred mutation attacks.
+
+Dependency failures must map to stable errors without dependency text, cause,
+stack, or secret values. A terminal decision must append exactly one compact
+secret-safe audit event. Validation denial and authority denial must perform
+zero receipt-ledger or other domain writes. Audit metadata must pass through
+`projectSecretSafeAuditMetadata` and contain only reviewed identity, scope,
+version, digest, and replay fields.
+Every terminal outcome must use the exact approved projection. This includes
+allow, deny, replay, expired, superseded, conflict, and malformed dependency
+results when the contract requires an audit. The projection must contain only
+approved own keys. It must bind operation, authoritative decision identity,
+outcome, and reason. It must also bind versions, scope, and signer authority.
+
+The audit reason codes are exact and stable:
+
+- `authority-accepted` for allow.
+- `authority-denied`, `role-denied`, `scope-denied`, and `signature-invalid`
+  for the matching authority denials.
+- `replay` for unchanged replay.
+- `replay-conflict` for changed replay evidence or trusted scope.
+- `expired`, `not-yet-valid`, and `superseded` for lifecycle denial.
+- `malformed-receipt` for malformed input.
+- `malformed-dependency-result` for malformed authority or ledger results.
+- `operation-mismatch` for an unsupported operation discriminator.
+- `decision-identity-mismatch` for caller and server identity disagreement.
+- `receipt-not-found`, `scope-mismatch`, `invalid-digest`, and
+  `invalid-replay-identity` for their matching terminal denials.
+- `security-field-mismatch` for any other authority or ledger field mismatch.
+- `dependency-failure` for sanitized dependency failures.
+
+The Red contract keeps rate-source, effective-date, and rounding identifiers
+opaque. It selects no provider, date rule, rounding rule, or accounting policy.
+The full decision receipt and signature remain outside audit metadata.
 
 The exact receipt remains in Finance private evidence or a Finance-owned
 receipt ledger. Audit metadata may retain only compact identifiers and digests:
