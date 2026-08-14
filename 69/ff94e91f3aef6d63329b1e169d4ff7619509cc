@@ -1,0 +1,7 @@
+Track: wave5_public_surface_completion_20260628
+Group: D, plan evidence.
+Independent review: ACCEPT for groups A, B, C, and D.
+Related commits: ada1ef2c8c93a8c5be342f4226c1aa61d23cb032, c312eb71942715a0d12b2df037ac9527323b31c7, 86f0611cf418632d5767a588d8fe15a4272973b1.
+Plan SHA-256: 787b391e69c145ac545daf489295a332fec945798aaa1e5bb98c0f61227663d9.
+Evidence: Phase 2 passed 4/4. Combined T2/T3 passed 5/5. Phase 3 produced three intentional Red failures.
+Boundary: T3 implementation remains active. Twelve metadata routes remain.
