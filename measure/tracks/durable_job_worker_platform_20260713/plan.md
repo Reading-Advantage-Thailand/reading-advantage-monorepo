@@ -64,15 +64,19 @@ capture-point section; `role_base_sha` values are not valid phase bases.
 Acceptance checkpoint (2026-08-14): the fresh joint review returned PASS for
 Tasks 6 and 7. It found no open severity-ranked finding. The review is
 `task-6-task-7-independent-rereview-20260814.md`. Tasks 8 and 9 are now
-unlocked. They remain unimplemented and start from their planned Red state.
+deferred because no owner has supplied their Red contracts or live evidence.
+This foundation review does not close Phase 2.
 
 - [x] Task 6: Add Red schema/migration/tenant-registry tests and invalid-transition counterexample fixtures. (`caf095c`)
 - [x] Task 7: Build a deterministic isolated PostgreSQL 16 harness using two independent connections, exact migration setup and teardown, an explicit test-only URL, and fail-closed guards forbidding production/default URL fallback. (`897abfe`)
-- [~] Task 8: Add Red concurrent claim, lease-token CAS, stale heartbeat/settle/fail, visibility reclaim, and restart tests on the PG16 harness.
-- [~] Task 9: Add Red idempotent enqueue, bounded deterministic-backoff, exhaustion/DLQ, authorization/audit, and active-lease replay-rejection tests.
-- [~] Task 10: Add Red worker lifecycle and architecture tests for registration, bounded polling, startup configuration, health, signals, and safe logs. Prove trusted tenant propagation, lifecycle-only port access, and zero direct persistence access. Record named missing-composition failures.
+- [b] Task 8: Add Red concurrent claim, lease-token CAS, stale heartbeat/settle/fail, visibility reclaim, and restart tests on the PG16 harness. (deferred:durable-job-backend-red-owner)
+  - Blocked evidence (2026-08-14): no source commit, Red file, explicit PostgreSQL 16 environment evidence, or independent receipt exists.
+- [b] Task 9: Add Red idempotent enqueue, bounded deterministic-backoff, exhaustion/DLQ, authorization/audit, and active-lease replay-rejection tests. (deferred:durable-job-backend-red-owner)
+  - Blocked evidence (2026-08-14): no source commit, Red file, explicit PostgreSQL 16 environment evidence, or independent receipt exists.
+- [x] Task 10: Add Red worker lifecycle and architecture tests for registration, bounded polling, startup configuration, health, signals, and safe logs. Prove trusted tenant propagation, lifecycle-only port access, and zero direct persistence access. Record named missing-composition failures.
+  - Green evidence (2026-08-14; source commit `287f89fad4aa49849a307e4973037ee8bd567a6a`): independent Green acceptance passed. The focused worker suite passed 17/17, and the full worker suite passed 48/48. Worker typecheck, build, scoped lint, format, diff, graph update, and exact lock-scope checks passed. Shutdown, bounded concurrency, and global and tenant scope propagation passed.
 
-  Tenant-scope amendment (2026-08-14): one declared polling scope binds claim and reclaim requests. Each accepted envelope must match that scope. Handler and lifecycle requests use the accepted envelope scope. A mismatch fails before handler execution. The two-file suite collected 14 tests. Nine tests failed only because `worker-composition.ts` is absent, and five static guards passed. Task 10 remains `[~]` until Green and fresh independent review evidence exist.
+  Tenant-scope amendment (2026-08-14): one declared polling scope binds claim and reclaim requests. Each accepted envelope must match that scope. Handler and lifecycle requests use the accepted envelope scope. A mismatch fails before handler execution. The two-file Red suite collected 14 tests. Nine tests failed only because `worker-composition.ts` was absent, and five static guards passed. Task 10 is complete after the Green acceptance above.
 
 **Verification:** `CI=true pnpm vitest run packages/backend/src/jobs/__tests__ services/worker/src/__tests__`
 
