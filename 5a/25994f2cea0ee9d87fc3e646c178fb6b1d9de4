@@ -1,1 +1,0 @@
-Worker Task 8 evidence receipt. Source commit: a7031a613. Accepted manifest: f201ece9fb24360e3d5662bd3ad6bba7034207a45067730751683dd04230955f. The fake adapter contract passed 4/4. Backend jobs passed 62 tests with 6 live skips. Database suites passed 95 tests with 1 live skip. Live PostgreSQL proof remains open.
