@@ -34,30 +34,18 @@
 - [x] Task: Write Red tests for missing page metadata exports and unresolved OG/static assets.
   - Evidence refs: www T3 (LRF-005/006/007/036), T6 (LRF-011).
   - Red failed 3/3: eight routes lacked metadata exports, `grid-pattern.svg` and the referenced OG asset were absent, and Reading Advantage began with `use client`.
-- [~] Task: Add metadata (title, OG, hreflang, canonical, locale-aware) and restore assets; fix client-render SEO split.
-  - The candidate covers 11 of the 23 marketing routes with the shared locale-aware metadata helper.
-  - About, features, and pricing now derive title and description from their locale dictionaries.
-  - The helper maps `en`, `th`, and `zh` to `en_US`, `th_TH`, and `zh_CN` Open Graph values.
-  - The helper emits absolute canonical and alternate URLs and uses the valid PNG `public/images/teacher-at-board.png` for Open Graph images.
-  - The Reading Advantage page remains server-rendered and uses the server i18n accessor.
-  - The focused behavior test validates the shared helper, invokes all 11 completed route metadata exports, and checks PNG magic bytes. It does not cover the 12 remaining route files.
-  - The exact remaining route files are:
-    - `src/app/[locale]/(marketing)/blog/[slug]/page.tsx`
-    - `src/app/[locale]/(marketing)/blog/page.tsx`
-    - `src/app/[locale]/(marketing)/blog/page/[page]/page.tsx`
-    - `src/app/[locale]/(marketing)/mastery-advantage/page.tsx`
-    - `src/app/[locale]/(marketing)/products/page.tsx`
-    - `src/app/[locale]/(marketing)/products/codecamp-advantage/page.tsx`
-    - `src/app/[locale]/(marketing)/products/math-advantage/page.tsx`
-    - `src/app/[locale]/(marketing)/products/science-advantage/page.tsx`
-    - `src/app/[locale]/(marketing)/products/stem-advantage/page.tsx`
-    - `src/app/[locale]/(marketing)/products/storytime-advantage/page.tsx`
-    - `src/app/[locale]/(marketing)/products/tutor-advantage/page.tsx`
-    - `src/app/[locale]/(marketing)/products/zhongwen-advantage/page.tsx`
-  - The Phase 3 i18n Red remains a separate candidate. This candidate includes no Thai wording change.
+- [x] Task: Add metadata (title, OG, hreflang, canonical, locale-aware) and restore assets; fix client-render SEO split.
+  - Static metadata Green `64e7a3f39` covers the nine remaining static routes.
+  - Dynamic blog metadata Green `426631dec6b6007a684a5684ceb7063ee217f4ab` completes all 23 marketing routes.
+  - The six-path dynamic blog manifest is `6442531e9439bca1871487b34508c08ba43a0b2a8b4f8f3f32524304d054a8fe`.
+  - Blog metadata tests pass 10/10. The combined Phase 2 baseline passes 5/5.
+  - Typecheck, targeted lint, format, diff, and graph checks pass for the completed work.
+  - The preserved blog Red hash is `716c5a38b644a938374e367f4ff4d0fb9a12b7cc9f36cffb7251466de7e4afee`.
+  - The Phase 3 i18n Red remains a separate candidate. This task includes no Thai wording change.
 - [~] Task: Run www targeted tests/build.
   - `CI=true ../../node_modules/.bin/vitest run src/__tests__/phase-2-seo-assets.red.test.ts --maxWorkers=1` passes 4/4 after the metadata, asset, and route-export repair. The combined T2/T3 command above passes 5/5.
   - `CI=true ../../node_modules/.bin/next build` from `apps/www-reading-advantage` exits 1 because Turbopack cannot bind a port in this environment (`Operation not permitted`). This is an environment-owned diagnostic, not a build Green.
+  - Build and browser verification remain unclaimed.
 
 ## Phase 3: i18n Completeness and Typed Locale Access
 
