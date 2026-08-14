@@ -44,12 +44,12 @@
   - They record 20 Company Identity tests and 25 private-storage tests passed.
   - The recorded type, build, lint, format, diff, and graph checks passed.
 
-- [b] Task: Add exact THB valuations for bills in each source currency. Preserve every source amount and currency. — deferred:finance-owner
+- [~] Task: Add exact THB valuations for bills in each source currency. Preserve every source amount and currency. Red work is active; owner decisions remain required for Green production use.
 
   The verified packet must bind the THB amount, rate, effective date, and rate source.
   The owner or accountant must select the rate source and rounding policy.
 
-  Next-session scope (2026-08-14):
+  Current Red scope (2026-08-14):
 
   - Start with Red tests for non-THB bills, THB bills, and multiple currencies.
   - Preserve every exact original amount and its source currency.
@@ -59,6 +59,9 @@
   - Use decimal arithmetic and an explicit rounding policy.
   - Keep rate-provider access behind an internal port if a provider is required.
   - Run fresh correctness and security reviews against the final implementation.
+
+  Red strategy: `test-strategy-phase2-thb.md`. Red command:
+  `../../node_modules/.bin/vitest run src/modules/finance-operations/__tests__/multi-currency-thb-phase2.red.test.ts --pool=threads --maxWorkers=1` from `packages/backend`. Initial Red failures must name only missing THB contract or implementation exports.
 
   Handoff: `phase2-multi-currency-thb-handoff-20260814.md`. The completed trust-binding source commit is `1d0ffd568`.
 
