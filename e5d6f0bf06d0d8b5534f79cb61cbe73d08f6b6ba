@@ -1,0 +1,6 @@
+Track: apk_existing_core_cutover_20260727
+Phase: Task 6 exact retirement disposition
+Source: e5d6f0bf06d0d8b5534f79cb61cbe73d08f6b6ba
+Review: Independent correctness and post-commit reviews accepted the exact eight-path set.
+Evidence: Task 3 and Task 5 guards passed 11 tests. Task 5/6 guards passed 4 tests. Task 6 positive controls passed 4 tests. Cartridge parity passed 13 tests. Suitability passed 5 tests. TypeScript, JSON, Python, inventory hash, mutation, and diff checks passed.
+Boundary: No asset was deleted. Task 6 remains active. Final owner acceptance remains blocked.
