@@ -65,6 +65,15 @@
 
   Handoff: `phase2-multi-currency-thb-handoff-20260814.md`. The completed trust-binding source commit is `1d0ffd568`.
 
+  Attestor evidence (2026-08-14):
+
+  - Red commit `273ef311f` defined authority, ledger, audit, digest, replay, proxy, signer, and mutation controls.
+  - Green commit `08acca162` passed the 83-case THB suite.
+  - Company Identity passed 20/20. The database allowlist passed 4/4. The security batch passed 11/11.
+  - Correctness Review A and Security Review B accepted manifest `86663871501a8fd3ff492244c933b5015c90e0703433ac9886a98602e0018d2c`.
+  - This evidence completes only the policy-approval attestor boundary.
+  - Rate-source selection, rounding policy, and exact THB valuation remain owner-gated.
+
 - [b] Task: Pilot one reconciled month and one billing packet through owner-attested private-evidence packets. — deferred:finance-owner-data
 
   The pilot must prove authorization, audit, rollback, replay, and conflict behavior.
