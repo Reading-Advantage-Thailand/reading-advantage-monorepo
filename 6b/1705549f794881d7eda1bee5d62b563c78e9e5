@@ -1,0 +1,11 @@
+Track: wave5_public_surface_completion_20260628
+
+Scope: one Phase 2 remaining-static SEO Red test.
+
+File SHA-256: f051ab0a760bc9119c6fa896c1a534585807059222f953d23f46d8ab224f2c9d.
+
+Evidence: focused Red produced nine intentional route failures and one PNG control pass. Typecheck, ESLint, Prettier, and diff checks passed.
+
+Independent Red review: ACCEPT. The test binds nine route exports, en/th/zh/xx behavior, exact alternates, dictionary copy, canonical URLs, OG locale and image, helper use, and fallback behavior.
+
+Boundary: no production route, helper, dictionary, asset, plan, build, or generated file changed.
