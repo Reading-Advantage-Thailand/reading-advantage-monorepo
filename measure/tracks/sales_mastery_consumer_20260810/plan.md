@@ -63,6 +63,22 @@
   shared-root red-gate remediation and final closeout acceptance; this does not
   claim Phase 0 closeout, doctor Green, or architecture-audit Green.
 
+  Bounded environment diagnosis (2026-08-14): the five accepted Green source
+  hashes were recomputed and match the Green commit note exactly. The five-path
+  diff from `324d81a838ccab07907720a7c3f79482dd1205e0` is empty. The earlier
+  nested-Node control explains the sandbox empty `stdout` and `stderr`
+  observation. Sandbox PID isolation prevents a host-level liveness claim. The
+  two outside-sandbox stale-lease runs timed out at 240 seconds before `npm
+  pack`. Independent lease review attributes both waits to a recent foreign
+  lease: reclaim requires 15 minutes of staleness, while acquisition waits 300
+  seconds. These timeout results do not prove a source regression, and this
+  note does not claim that every timeout reached `npm pack`. The accepted Green
+  remains valid, and no production source changed. Sales-owned closeout
+  evidence still includes focused package gates, the consumer CLI,
+  immutable-source parity, and the independent receipt. The root-owned doctor
+  and architecture gates remain blockers, so this note does not claim Phase 0
+  closeout or Phase 2 admission.
+
 ## Phase 1 — bind the approved course to a knowledge graph
 
 - [x] Task: Define the versioned Sales objective graph, activity variants,
