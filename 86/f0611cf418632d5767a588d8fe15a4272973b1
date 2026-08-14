@@ -1,0 +1,5 @@
+Track: wave5_public_surface_completion_20260628
+Group: C, Phase 3 i18n Red.
+Independent review: ACCEPT.
+Evidence: The focused suite failed exactly three declared cases.
+Boundary: This commit defines Red only. It does not claim Phase 3 implementation Green.
