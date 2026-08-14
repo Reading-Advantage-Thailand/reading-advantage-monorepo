@@ -21,6 +21,7 @@ Run from `packages/backend`:
 ```bash
 ../../node_modules/.bin/vitest run \
   src/modules/finance-operations/__tests__/multi-currency-thb-phase2.red.test.ts \
+  src/modules/finance-operations/__tests__/thb-owner-decision-receipt.red.test.ts \
   --pool=threads --maxWorkers=1
 ```
 
@@ -32,6 +33,14 @@ The expected missing exports are:
 - `financeThbConversionEvidenceSchema`
 - `createFinanceThbValuationPreparer`
 - `classifyFinanceThbValuationReplay`
+
+The owner-decision receipt Red sub-slice adds these missing runtime exports:
+
+- `financeThbOwnerDecisionReceiptSchema`
+- `verifyFinanceThbOwnerDecisionReceipt`
+
+The new test uses dynamic loading and local structural types. Every initial
+failure must name only one missing receipt export.
 
 ## Contract under test
 
@@ -62,6 +71,63 @@ a provider directly.
 `classifyFinanceThbValuationReplay` must return replay for unchanged evidence.
 It must return conflict for changed conversion evidence.
 
+## Owner-decision receipt Red sub-slice
+
+The future receipt must use a strict root and strict nested objects. It must
+bind one authenticated Company Identity signer to one company-first scope.
+
+The smallest verifier boundary accepts:
+
+- An unknown receipt value.
+- An expected company and optional school scope.
+- An injected reviewed Company Identity authority port for
+  `finance-thb-policy-approval`.
+- An injected Company Identity authorization port.
+- An injected audit append port.
+- An injected clock.
+- An optional existing receipt for replay and supersession checks.
+
+Caller-supplied signer fields never authorize a receipt. The authority port
+must independently bind the server-issued decision identity to an attestation
+or receipt-ledger lookup, signature verification, signer policy, trusted
+scope, and the `finance-thb-policy-approval` operation.
+
+The authority result must return the reviewed decision identity, decision
+evidence, signer, trusted scope, content digest, and a verified signature
+marker. A mismatch or dependency failure must return a stable error without
+the dependency message, cause, or stack.
+
+The receipt must contain these bounded fields:
+
+- Receipt and canonicalization versions.
+- The Finance THB valuation operation.
+- A server-bound decision identity.
+- Company and optional school scope.
+- Company Identity signer, claims version, and role-policy version.
+- Company Identity decision evidence with the
+  `finance-thb-policy-approval` operation, attestation identity, and opaque
+  signature.
+- Opaque rate-source, effective-date-rule, and rounding-rule identifiers.
+- Valid-from and expiry instants.
+- Optional superseded decision identity.
+- Canonical replay and content digests.
+- Event, request, correlation, and occurrence identities.
+
+The supported receipt version is
+`finance-thb-owner-decision-receipt.v1`. The supported canonicalization
+version is `finance-thb-owner-decision-canonical.v1`.
+
+Canonical content and replay identities use separate domain separators. Each
+field uses UTF-8 byte-length framing and a fixed field order. Optional values
+use explicit presence tags. Lists encode presence, length, order, and
+duplicates. Canonicalization does not fold case or Unicode.
+
+The schema rejects unknown keys in the root, scope, signer, decision evidence,
+rate-source, effective-date-rule, rounding-rule, and audit objects.
+
+The Red slice must not select a rate source, date rule, or rounding rule. Its
+fixtures use opaque identifiers only.
+
 ## Required Red cases
 
 The Red suite must cover:
@@ -82,6 +148,52 @@ The Red suite must cover:
 14. Defensive output behavior after evidence mutation.
 15. Stable replay for unchanged evidence.
 16. Conflict for changed rate, effective date, THB amount, or rate source.
+
+The owner-decision receipt test must also cover:
+
+17. Authenticated signer authority and denied role decisions.
+18. Company scope and optional school membership.
+19. Claims and role-policy version binding.
+20. Strict root and nested keys.
+21. Canonical digest ordering and length framing.
+22. Optional, delimiter, Unicode, case, list-order, and duplicate collisions.
+23. Replay with the authoritative existing receipt.
+24. Conflicts for changed receipt policy identity or trusted scope.
+25. Valid successor, self-supersession, and unknown supersession.
+26. Expired and not-yet-valid receipts.
+27. Compact audit projection through the existing reviewed metadata keys.
+28. Zero audit and domain writes after authorization denial.
+29. Getter, proxy, deferred-await, and post-call mutation poison.
+30. Stable errors without dependency text, causes, stacks, or secrets.
+31. Unsupported receipt and canonicalization versions.
+32. Invalid content digests and forged replay identities.
+33. Independent authority mismatch, denial, signature failure, and dependency
+    stack failure.
+34. Changed trusted scope in the replay conflict matrix.
+35. Length, delimiter, Unicode, case, list-order, duplicate, and absent-versus
+    literal-sentinel canonical collisions.
+36. Exact audit projection through `projectSecretSafeAuditMetadata`.
+
+The exact receipt remains in Finance private evidence or a Finance-owned
+receipt ledger. Audit metadata may retain only compact identifiers and digests:
+
+- `source`, `resourceType`, `objectId`, `requestId`, `eventId`, and `occurredAt`.
+- `schoolId`, `actorKind`, `actorSubjectId`, `claimsVersion`, and `policyVersion`.
+- `sourceFingerprint` and `idempotencyReplay`.
+
+The full rate-source record, effective-date rule, rounding rule, validity,
+supersession, signer lists, and receipt envelope stay outside audit metadata.
+Credentials, provider payloads, and dependency errors must never be stored.
+
+The full decision evidence remains private. Compact audit metadata may retain
+only reviewed identity, scope, claims, policy, digest, and replay fields.
+The verifier must project audit data through the existing Company Identity
+allowlist boundary. It must not import the database package directly.
+
+The existing `packages/db/src/company-identity/__tests__/metadata-allowlist.test.ts`
+must remain the migration gate. It already proves the current schema, 0002
+original key set, and additive 0003 Finance key set stay aligned. This slice
+adds no migration and does not change 0002.
 
 The cases use exact decimal strings. They do not encode a provider, rate rule,
 rounding rule, or effective-date policy.
