@@ -1,0 +1,9 @@
+Track: wave5_public_surface_completion_20260628
+Task: Dynamic blog SEO Red
+Source: 0f88580e3
+Parent: 64e7a3f39
+Scope: One blog route metadata Red test
+File SHA-256: 716c5a38b644a938374e367f4ff4d0fb9a12b7cc9f36cffb7251466de7e4afee
+Evidence: The focused suite reported eight intentional failures and two passing controls. The accepted Phase 2 baseline passed 5/5. Typecheck, lint, Prettier, and diff checks passed.
+Review: Independent Red review accepted the stable candidate.
+Boundary: Production blog metadata Green remains unimplemented.
