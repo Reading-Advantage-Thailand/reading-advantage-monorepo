@@ -271,8 +271,8 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
     Accepted exact owner message `approved`; receipt `d371fc5d…f1720` preserves all reviewed hashes, restrictions, disclosures, and child authorization boundaries.
 - [~] **Track: APK Existing Core Cartridge Revalidation and Cutover** *Link: [./tracks/apk_existing_core_cutover_20260727/](./tracks/apk_existing_core_cutover_20260727/)*
     Vertically revalidates Dragon Flight, Magic Defense, Dungeon Liberator, The Sorcerer's Ziggurat, and Astral Mage. **Task 4 accepted:** exact hash-bound Advantage Games QC and compact/wide real-input proof is accepted; authorization is limited to beginning Task 5 Reading/Primary host proof. New title-acceptance evidence additionally requires Asset Contract v2 and accepted suitability/ingestion dossiers. No production catalog exposure, Task-5 success, retirement, cutover, or cohort acceptance is claimed.
-  - [ ] **Track: APK Existing Action Cartridge Revalidation and Cutover** *Link: [./tracks/apk_existing_action_cutover_20260727/](./tracks/apk_existing_action_cutover_20260727/)*
-    Vertically revalidates Archer's Revenge, Paladin's Twin-Soul, Griffin Sky-Joust, Gryphon Patrol, and Realm Carver.
+  - [b] **Track: APK Existing Action Cartridge Revalidation and Cutover** *Link: [./tracks/apk_existing_action_cutover_20260727/](./tracks/apk_existing_action_cutover_20260727/)*
+    Vertically revalidates Archer's Revenge, Paladin's Twin-Soul, Griffin Sky-Joust, Gryphon Patrol, and Realm Carver. **Blocked:** Asset Contract v2 needs a current-byte independent review and product-owner receipt.
   - [ ] **Track: APK Legacy Defense Rebuild and Cutover** *Link: [./tracks/apk_legacy_defense_cutover_20260727/](./tracks/apk_legacy_defense_cutover_20260727/)*
     Vertically rebuilds Castle Defense, Wizard vs Zombie, Village Guardian, and Storm the Castle Tower.
   - [ ] **Track: APK Legacy Traversal Rebuild and Cutover** *Link: [./tracks/apk_legacy_traversal_cutover_20260727/](./tracks/apk_legacy_traversal_cutover_20260727/)*
