@@ -1,0 +1,7 @@
+Task: Finance controlled-import trust binding.
+
+Bound document identity, tax, currency, status, metadata, values, and payroll vouchers to verified packet facts.
+
+Added adversarial tests and preserved failed and passing independent review artifacts.
+
+Validation: 304 Finance tests, 20 Identity tests, 25 Storage tests, typechecks, build, lint, formatting, and diff checks passed.
