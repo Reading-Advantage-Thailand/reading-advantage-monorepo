@@ -1,0 +1,8 @@
+Track: sales_mastery_consumer_20260810
+Scope: Phase 0 lease-isolation Red contract.
+Test SHA-256: 58795c9c6d54c8e3a622064e39d6330306eb60cd5591fb6135fa88aa5a350e07.
+Strategy SHA-256: 5fd29b7b55d39896ec5afe4afc79e70a5d8cefc1ed26ea22db13b165c41dd990.
+Production source SHA-256: 7ead9d382b4211f8822e3615541f515b81b231579d51cf3e82e5c21769deeeab.
+Independent review: ACCEPT.
+Evidence: Nine intentional seam failures, three guards passed, and eight packed tests skipped.
+Boundary: No build, pack, canonical lease, cache, or production source operation ran.
