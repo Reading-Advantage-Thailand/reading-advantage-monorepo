@@ -273,11 +273,10 @@ describe("POST /api/roleplay-attempts — FR-4 grounding + storage integrity", (
 
   it("FR-4: persists audioStorageKey=<key> when storage.put succeeds", async () => {
     mockGetRoleplayEvaluationContext.mockResolvedValue(makeEvaluationCtx([]));
-    mockGetStorageClient.mockReturnValue({
-      put: vi
-        .fn()
-        .mockResolvedValue({ key: "sales-advantage/attempts/rep-1/123.webm" }),
-    });
+    const storagePut = vi
+      .fn()
+      .mockResolvedValue({ key: "sales-advantage/attempts/rep-1/123.webm" });
+    mockGetStorageClient.mockReturnValue({ put: storagePut });
 
     let persistedKey: string | null | undefined;
     mockSubmitRoleplayAttempt.mockImplementation(
@@ -294,6 +293,19 @@ describe("POST /api/roleplay-attempts — FR-4 grounding + storage integrity", (
     const request = makeRequest(form);
     const response = await POST(request);
     expect(response.status).toBe(200);
+    expect(storagePut).toHaveBeenCalledTimes(1);
+    expect(storagePut).toHaveBeenCalledWith(
+      expect.stringMatching(/^sales-advantage\/attempts\/rep-1\/.+\.webm$/),
+      expect.any(Buffer),
+      expect.objectContaining({
+        contentType: "audio/webm",
+        public: false,
+      }),
+    );
+    await expect(response.json()).resolves.toEqual({
+      attemptId: "attempt-1",
+      evaluation: { overallScore: 0, passed: false },
+    });
 
     expect(
       persistedKey,

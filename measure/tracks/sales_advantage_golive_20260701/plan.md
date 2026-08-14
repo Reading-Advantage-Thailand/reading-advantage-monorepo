@@ -178,7 +178,8 @@ Do not start Phase 2 until the security gate is green.
   - [ ] Admin: cohort overview and per-rep detail; verify the release-owner
         curriculum approval boundary rather than a local credential workflow
   - [ ] i18n toggle EN↔TH; rate-limit: 11th submission/hour → 429
-- [~] Task: Verify audio storage is private (signed URL only) and no orphaned keys on failure
+- [x] Task: Verify audio storage is private (signed URL only) and no orphaned keys on failure
+  Evidence (2026-08-14): the installed package-local Vitest gate passed 2 files / 12 tests with one worker. The route test asserts `public: false` and an exact response without a public URL. It also proves null persistence after upload failure and exact-key deletion after a later failure.
 - [~] Task: Measure — User Manual Verification 'Deploy + QA'
 
 ---
