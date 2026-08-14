@@ -1,0 +1,6 @@
+Track: company_finance_operations_20260810
+Phase: Phase 2 THB valuation Red
+Source: 4f0cbe5caa377c1fe7cbfddc40055758f2a634a2
+Review: Independent Red and post-commit reviews accepted the exact three-path snapshot.
+Evidence: The Red suite produced 22 expected failures limited to three missing THB exports. The accepted Finance baseline passed 155 tests. Source and test typechecks, ESLint, Prettier, and diff checks passed.
+Boundary: No production file changed. Green remains gated by owner decisions for the rate source, effective date, and rounding policy.
