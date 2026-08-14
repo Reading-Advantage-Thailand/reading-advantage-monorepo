@@ -1,0 +1,43 @@
+Measure Review B security role log v2
+
+Track: company_finance_operations_20260810
+Phase: Phase 2 — controlled operational imports
+Role: Review B security
+Date: 2026-08-13
+phase_base_sha: 7ef48d2d2929c67dfd70c899a4710b77808637b9
+role_base_sha: 1129427fbdb17c214fd55c086d60e62c7a4e1b7f
+audited_head_sha: 1129427fbdb17c214fd55c086d60e62c7a4e1b7f
+security_applicability: applicable
+
+The immutable audited HEAD matched the supplied role base. The phase base is an ancestor of this HEAD.
+
+The focused gates passed. Review B passed 26/26. Phase 2 passed 24/24. Phase 1 Finance passed 135/135.
+
+Company Identity passed 20/20. Storage passed 25/25. Finance lint and backend production TypeScript passed.
+
+The remediation closed strict nested grammar, authorization parsing, ambiguity groups, duplicate voucher identity, and blocked pilot behavior.
+
+The audit found three new blocking bypasses. A genuine preparation does not bind the caller document facts to the packet facts.
+
+A Proxy can forge the preparation symbol check. A deeply frozen caller-built plan can use the compatibility fallback.
+
+The repository result has no strict runtime parse. A safe probe exposed an unknown repository field through the public command.
+
+The source isolation gates found no provider SDK, database access, live CRM adapter, or live Tutor adapter. The phase has no migration.
+
+A2 does not apply because the diff has no publish transition. A6 is not triggered because the registry claims no resolved Finance security state.
+
+The result is FAIL. Green must bind normalized facts, remove forgeable trust checks, and parse repository results strictly.
+
+MEASURE_AGENT_RESULT
+role: Review B security
+status: complete
+track: company_finance_operations_20260810
+phase: Phase 2 — controlled operational imports
+commits: none
+tests_run: Review B 26/26; Phase 2 24/24; Phase 1 Finance 135/135; Company Identity 20/20; Storage 25/25; Finance lint passed; backend production TypeScript passed; safe adversarial probes confirmed three bypasses
+files_changed: measure/tracks/company_finance_operations_20260810/phase2-review-b-security-result-v2.json; measure/tracks/company_finance_operations_20260810/orchestration/phase2-review-b-v2-role.log
+plan_updates: none
+known_failures: trusted facts are not bound; Proxy preparation forgery succeeds; frozen caller plans reach persistence; repository results are not parsed strictly
+handoff: Green must remediate P2-RB-V2-001 through P2-RB-V2-003 and add exact adversarial tests.
+END_MEASURE_AGENT_RESULT

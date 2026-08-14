@@ -1,0 +1,34 @@
+Measure Review B security role log
+Track: company_finance_operations_20260810
+Phase: Phase 2 — controlled operational imports
+Role: Review B security
+Date: 2026-08-13
+phase_base_sha: 7ef48d2d2929c67dfd70c899a4710b77808637b9
+role_base_sha: be84ff474fa872dd0eab0b64038869e67e2c1e34
+audited_head_sha: be84ff474fa872dd0eab0b64038869e67e2c1e34
+security_applicability: applicable
+
+Preflight confirmed the immutable HEAD and one master worktree. I preserved all unrelated dirty paths.
+
+Focused suites passed: Phase 2 24/24, Phase 1 Finance 135/135, Company Identity and security 92/92, and Storage 25/25. Production TypeScript passed. The unchanged test TypeScript baseline exited 2 on files outside this phase.
+
+Adversarial probes found five blocking defects. A fabricated accepted envelope imported another company evidence reference. A malformed authorization result reached the repository and returned accepted. The grammar accepted five unreviewed fields and an unknown document kind. Ambiguity ignored ambiguityGroupId. The public pilot returned accepted without a trusted pilot flow.
+
+The diff contains no live CRM or Tutor adapter, cross-database read, credential, provider SDK, raw SQL, environment read, network call, dynamic loader, or migration.
+
+A2 does not apply because no publish transition exists. A6 is not triggered because the Finance registry entry claims no resolved security state.
+
+The result is FAIL. Green must remediate all five blocking findings.
+
+MEASURE_AGENT_RESULT
+role: Review B security
+status: complete
+track: company_finance_operations_20260810
+phase: Phase 2 — controlled operational imports
+commits: none
+tests_run: Phase 2 24/24; Phase 1 Finance 135/135; Company Identity and security 92/92; Storage 25/25; production TypeScript exit 0; unchanged test TypeScript baseline exit 2; four adversarial probes confirmed bypasses
+files_changed: phase2-review-b-security-result.json; orchestration/phase2-review-b-role.log
+plan_updates: none
+known_failures: critical fabricated-envelope and authorization bypasses; high strict-grammar and pilot-authority defects; medium ambiguity defect
+handoff: Green must preserve the attestor, private-reader, company, school, audit, and blocked-pilot boundaries while remediating all findings.
+END_MEASURE_AGENT_RESULT

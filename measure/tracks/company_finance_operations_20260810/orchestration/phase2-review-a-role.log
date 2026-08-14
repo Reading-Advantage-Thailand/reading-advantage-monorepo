@@ -1,0 +1,94 @@
+Measure Review A correctness and architecture role log - Phase 2 controlled operational imports
+Track: company_finance_operations_20260810
+Phase: Phase 2 — controlled operational imports
+Role: measure-review-a (correctness and architecture, audit only)
+Date: 2026-08-13
+phase_base_sha: 7ef48d2d2929c67dfd70c899a4710b77808637b9
+role_base_sha / audited_head_sha: be84ff474fa872dd0eab0b64038869e67e2c1e34
+
+## Preflight
+
+- HEAD equals audited_head be84ff474fa872dd0eab0b64038869e67e2c1e34.
+- `git worktree list` reports exactly one worktree on master.
+- Unrelated dirty paths (opencode goals, codecamp reports, pnpm-lock.yaml,
+  advantage-games output, sales review output, Review B result) are preserved.
+- I wrote only the result JSON and this role log. I made no commits and no
+  production, test, plan, strategy, metadata, registry, or generated edits.
+
+## Scope of the audited diff
+
+The range 7ef48d2d..be84ff474 changes exactly 9 files: the new production
+module controlled-imports.ts, the barrel line in index.ts, the two test
+contracts, plan.md, and four orchestration role logs. The supervisor,
+orchestration scripts, and registry did not change. Framework-wide
+anti-pattern checks are not triggered.
+
+## Reproduced gates at audited_head
+
+- Phase 2 controlled-imports suite: exit 0, 24/24 tests.
+- Phase 1 Finance baseline (11 strategy files): exit 0, 135/135 tests.
+- Company Identity Task 3 suites: exit 0, 20/20 tests.
+- Storage private-evidence read: exit 0, 25/25 tests.
+- Backend production typecheck: exit 0. Backend build: exit 0.
+- Targeted ESLint on finance-operations: exit 0.
+- git diff --check on the audited range: exit 0.
+- Backend test typecheck: exit 2, diagnostics only in unchanged files
+  (advantage-play-kit TS6059 chain, 3 finance-task3-review-b fixtures,
+  2 planned-game-intake errors). This is the known external gate.
+- Direct architecture checker: exit 1 at files=4248, findings=697,
+  parseErrors=0, additions=137, removals=0, renames=21. This matches the
+  documented baseline. No finding names the production controlled-imports.ts.
+  The five finance-operations findings pre-exist at phase_base at identical
+  lines and sit inside the documented 137 additions.
+
+## Contract findings
+
+All strategy closeout gates 2.A through 2.G hold at audited_head. The
+implementation is policy-neutral, uses exact BigInt decimal conversion,
+minimizes data through a fixed output grammar, binds receipts to evidence
+authorization, authorizes before any repository call, audits denial and
+scope failures without repository calls, rolls back staged state on failure,
+and resolves concurrent commands as accepted+replay or accepted+conflict.
+The pilot contract returns liveSourceAdaptersUsed: [] and rejects unknown
+packet versions. No real pilot is claimed. Phase 1 production is unchanged.
+
+## Anti-pattern checks
+
+- A4: the two source guards skip only when the module is absent, per the
+  strategy. The 20 behavior tests fail without the module, so the suite
+  cannot pass without the deliverable. At audited_head the guards inspect
+  the real source and return [].
+- A3: all count and concurrency assertions are labeled structural checks.
+  No digit-only matching exists.
+- A5: no plan test claim contradicts a reproduced exit. One format note:
+  the changed red test file fails prettier --check at HEAD and at base;
+  the diff added one new unformatted fixture line. Recorded as nonblocking.
+
+## Nonblocking observations
+
+1. Duplicate voucherNumberText values in one payroll document produce
+   duplicate recordIds; no test or guard covers this.
+2. Cross-company evidence rejection is tested only as a receipt mismatch;
+   a consistent both-sides foreign reference passes normalization by design
+   delegation to the Phase 1 authorized reader.
+3. Prettier nonconformance in the red test file (pre-existing plus one new
+   line).
+
+## Result
+
+Result JSON written at
+measure/tracks/company_finance_operations_20260810/phase2-review-a-correctness-result.json
+with status pass, empty blocking findings, and empty violation arrays.
+
+MEASURE_AGENT_RESULT
+role: measure-review-a
+status: complete
+track: company_finance_operations_20260810
+phase: Phase 2 — controlled operational imports
+commits: none
+tests_run: Phase 2 controlled-imports 24/24 exit 0; Phase 1 Finance 135/135 exit 0; Company Identity 20/20 exit 0; Storage 25/25 exit 0; backend production typecheck exit 0; backend build exit 0; targeted ESLint exit 0; git diff --check exit 0; backend test typecheck exit 2 on unchanged files only (known external gate); direct architecture checker exit 1 at files=4248 findings=697 parseErrors=0 additions=137 removals=0 renames=21 with no production controlled-imports.ts finding
+files_changed: measure/tracks/company_finance_operations_20260810/phase2-review-a-correctness-result.json; measure/tracks/company_finance_operations_20260810/orchestration/phase2-review-a-role.log
+plan_updates: none
+known_failures: backend test-TypeScript baseline exit 2 remains the documented external gate for phase acceptance; nonblocking format and edge-case notes are in the result JSON
+handoff: Review A passes the audited head be84ff474. Task 1 [x] is supported by reproduced evidence. Phase acceptance remains open on the unchanged test-TypeScript gate and the remaining review roles. Nonblocking follow-ups: duplicate voucher recordId guard, both-sides cross-company reference coverage, and the new unformatted test fixture line.
+END_MEASURE_AGENT_RESULT

@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "phase_base_sha": "7ef48d2d2929c67dfd70c899a4710b77808637b9",
+  "role_base_sha": "1129427fbdb17c214fd55c086d60e62c7a4e1b7f",
+  "audited_head_sha": "1129427fbdb17c214fd55c086d60e62c7a4e1b7f",
+  "security_applicability": "applicable",
+  "status": "fail",
+  "summary": "The remediation closed several prior findings, but trusted preparation and private plan sealing remain bypassable at the immutable audited HEAD.",
+  "blocking_findings": [
+    "ID: P2-RB-V2-001. Severity: critical. Title: Trusted preparation does not bind normalized document facts. Evidence: packages/backend/src/modules/finance-operations/controlled-imports.ts:335-358 compares scope, source identity, digest, and evidence reference. It never compares the envelope document with preparation.packet.facts. Lines 370-471 then normalize the caller envelope. A safe runtime probe used a genuine preparation with source value 100.00 and an envelope value 999.00. The function returned amountMinor 99900. Impact: A caller can replace owner-attested financial facts while retaining genuine preparation branding. Recommendation: Derive normalized facts from the validated packet, or bind the exact document to verified evidence.",
+    "ID: P2-RB-V2-002. Severity: critical. Title: Symbol checks and deep freezing do not provide private capability sealing. Evidence: packages/backend/src/modules/finance-operations/contracts.ts:454-466 exports isHistoricalPrivateEvidencePreparation and uses Reflect.get with a module-local symbol. A Proxy can return true for every symbol and supply caller data. The probe produced status ready from this forged preparation. packages/backend/src/modules/finance-operations/controlled-imports.ts:603-609 also accepts any deeply frozen caller-built plan as an alternative to the private symbol. The probe reached the repository and returned accepted. Impact: Callers can forge trusted preparations and acceptance plans. Recommendation: Use module-private WeakSet or WeakMap identity checks. Remove the deep-freeze bypass. Do not export a trust predicate that reads attacker-controlled objects.",
+    "ID: P2-RB-V2-003. Severity: high. Title: Repository results cross the command boundary without runtime validation. Evidence: packages/backend/src/modules/finance-operations/controlled-imports.ts:641-651 clones and returns the repository value directly. A safe probe returned an accepted result with secret: leak, and the command exposed that field. Impact: A faulty adapter can return unknown fields or malformed status data. Recommendation: Parse the repository result with a strict discriminated union before return."
+  ],
+  "nonblocking_findings": [
+    "ID: P2-RB-V2-004. Severity: low. Title: Authorization dependency failures do not create failed audit events. Evidence: packages/backend/src/modules/finance-operations/controlled-imports.ts:611-619 parses the authorization result outside the repository try block. A throw or malformed result exits before a failed event. Impact: The audit trail omits authorization infrastructure failures. Recommendation: Append a sanitized failed event when authorization evaluation fails.",
+    "ID: P2-RB-V2-005. Severity: low. Title: Decimal input has no digit limit. Evidence: packages/backend/src/modules/finance-operations/controlled-imports.ts:31-33 and 285-297 accept an unbounded decimal string before BigInt conversion. Impact: A large value can consume excessive CPU and memory. Recommendation: Set an explicit decimal digit limit."
+  ],
+  "evidence": [
+    "HEAD matched role_base_sha and audited_head_sha 1129427fbdb17c214fd55c086d60e62c7a4e1b7f during the final check.",
+    "The phase_base_sha is an ancestor of audited_head_sha.",
+    "The phase diff changes Finance import data, authorization, audit, replay, and evidence flows. Security review is applicable.",
+    "The 26 Review B tests passed, but they do not compare packet facts with normalized document facts.",
+    "The caller-plan test uses a mutable object. It does not reject a deeply frozen caller-built plan.",
+    "The strict nested schemas reject the reviewed unknown keys and document kinds.",
+    "Authorization decisions use a strict schema before repository access.",
+    "Company and school scope checks passed the focused tests.",
+    "Ambiguity groups, duplicate payroll voucher identity, and blocked pilot behavior passed the focused tests.",
+    "The source guards found no provider SDK, database import, runtime access, live CRM adapter, or live Tutor adapter in controlled-imports.ts.",
+    "No migration is present in phase_base_sha..audited_head_sha.",
+    "A2 is not applicable because the audited Finance diff has no draft-to-published transition.",
+    "A6 is not triggered because measure/tracks.md does not claim that this Finance security state is resolved.",
+    "The working tree had unrelated dirty paths before this audit. This audit did not use them as evidence."
+  ],
+  "commands": [
+    "Command: git rev-parse HEAD and git status --short. Result: HEAD matched 1129427fbdb17c214fd55c086d60e62c7a4e1b7f; unrelated dirty paths existed.",
+    "Command: git diff --name-status and --stat for phase_base_sha..audited_head_sha. Result: the controlled import production, contracts, tests, and Measure evidence were in scope.",
+    "Command: local Vitest controlled-imports-phase2-review-b.red.test.ts. Exit: 0. Result: 26/26 passed.",
+    "Command: local Vitest controlled-imports-phase2.red.test.ts. Exit: 0. Result: 24/24 passed.",
+    "Command: local Vitest Phase 1 Finance focused files. Exit: 0. Result: 135/135 passed.",
+    "Command: local Vitest Company Identity focused files. Exit: 0. Result: 20/20 passed.",
+    "Command: local Vitest Storage private evidence file. Exit: 0. Result: 25/25 passed.",
+    "Command: local ESLint src/modules/finance-operations. Exit: 0.",
+    "Command: local tsc --noEmit in packages/backend. Exit: 0.",
+    "Command: git diff --check for phase_base_sha..audited_head_sha. Exit: 0.",
+    "Command: safe tsx trust and plan probe. Exit: 0. Result: genuine packet value 100.00 normalized as caller value 99900; Proxy preparation returned ready; frozen caller plan returned accepted; repository extra field secret was exposed.",
+    "Command: safe tsx inherited-symbol prototype probe. Exit: 0. Result: the specific inherited-symbol object was rejected."
+  ],
+  "changed_files": [
+    "measure/tracks/company_finance_operations_20260810/phase2-review-b-security-result-v2.json",
+    "measure/tracks/company_finance_operations_20260810/orchestration/phase2-review-b-v2-role.log"
+  ],
+  "test_strategy_violations": [
+    "The trusted preparation tests bind metadata, but they do not bind normalized document facts to packet facts or immutable evidence bytes.",
+    "The caller-plan test uses a mutable object. It does not refute the documented deep-freeze fallback.",
+    "The security suite does not test a Proxy that returns true for unknown symbols.",
+    "The security suite does not test strict repository result parsing."
+  ],
+  "live_contract_violations": [
+    "Owner-attested packet facts can differ from the normalized financial facts.",
+    "A Proxy can forge the trusted preparation predicate.",
+    "A deeply frozen caller-built plan can reach atomic repository acceptance.",
+    "Unknown repository result fields can cross the public command boundary."
+  ],
+  "prod_wiring_violations": [
+    "The public Finance barrel exports prepareControlledImportBatch, acceptControlledImportBatch, and isHistoricalPrivateEvidencePreparation.",
+    "The acceptance command has a deep-freeze alternative to its private capability.",
+    "The normalization command consumes caller document facts instead of deriving them from the trusted preparation."
+  ],
+  "route_parity_violations": [],
+  "retry_recommendation": "retry_implementation",
+  "confidence": "high"
+}

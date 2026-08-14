@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "Audit of 7ef48d2d2929c67dfd70c899a4710b77808637b9..be84ff474fa872dd0eab0b64038869e67e2c1e34 (HEAD == audited_head be84ff474, one worktree). Phase 2 controlled imports satisfy the canonical strategy: Phase 2 suite 24/24, Phase 1 Finance 135/135, Company Identity 20/20, Storage 25/25, backend production typecheck and build exit 0, targeted ESLint exit 0, git diff --check exit 0, and the direct architecture checker exits 1 only at the documented baseline (files=4248, findings=697, parseErrors=0, additions=137, removals=0, renames=21) with no finding on the production controlled-imports.ts. The backend test-TypeScript config exits 2 only on unchanged files (known external gate). Task 1 [x] matches reproduced implementation evidence; phase acceptance remains open per the plan.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "Format: the phase diff added one Prettier-nonconformant line in packages/backend/src/modules/finance-operations/__tests__/controlled-imports-phase2.red.test.ts (the double-quoted Deno.readFile fixture line). The same file already failed `prettier --check` at phase_base, so the plan text 'format ... gates passed' is accurate only for the changed production files (controlled-imports.ts and index.ts are Prettier-clean). Cosmetic, in a test file; no behavior impact.",
+    "Missing edge case: a payroll-summary document with two vouchers sharing the same voucherNumberText produces duplicate factIds and duplicate FinanceRecord recordIds inside one batch. Neither the Red contract nor the implementation guards against it. Record-identity collision risk is internal to one batch only.",
+    "Edge case: cross-company evidence rejection is tested only as a receipt/authorization mismatch. An envelope whose sourceAcceptance snapshot and evidenceAuthorization consistently carry another company's reference passes normalization; company binding of the reference is delegated to the accepted Phase 1 authorized reader, not re-checked here.",
+    "A4 note (accepted by strategy design): the two source-guard tests return early when controlled-imports.ts is absent. This matches test-strategy-phase2.md; the 20 behavior tests fail without the module, so the suite cannot report green without the deliverable. At audited_head the guards read the real source and return []."
+  ],
+  "evidence": [
+    "HEAD equals audited_head be84ff474fa872dd0eab0b64038869e67e2c1e34; `git worktree list` reports exactly one worktree on master; all pre-existing unrelated dirty paths preserved; no commits made.",
+    "Diff range contains exactly 9 files: production controlled-imports.ts (new) and index.ts barrel line; tests controlled-imports-phase2.red.test.ts and architecture-boundary.test.ts; plan.md; four orchestration role logs. No supervisor, orchestration-script, registry, or generated-file changes, so framework-wide anti-pattern checks are not triggered.",
+    "Phase 2 suite at audited_head: exit 0, 1 file, 24/24 tests. Phase 1 Finance baseline (11 files listed in strategy 2.H): exit 0, 135/135. Company Identity Task 3 suites: exit 0, 20/20. Storage private-evidence read: exit 0, 25/25. Phase 1 behavior unchanged (no Phase 1 production file in the diff).",
+    "Backend production typecheck `tsc --noEmit` exit 0; build `tsc` exit 0 with no worktree changes. Targeted `eslint src/modules/finance-operations` exit 0. `git diff --check 7ef48d2d..be84ff474` exit 0.",
+    "Backend test typecheck `tsc --noEmit -p tsconfig.test.json` exit 2 with diagnostics only in unchanged files: advantage-play-kit cross-root TS6059 chain, three finance-task3-review-b.red.test.ts literal fixtures, two planned-game-intake contract errors. Zero diagnostics reference controlled-imports.ts, index.ts, or controlled-imports-phase2.red.test.ts. This is the documented external gate; phase acceptance stays blocked by it as the plan states.",
+    "Direct architecture checker (`tsx src/architecture-check-cli.ts --format json`) exit 1 with files=4248, findings=697, parseErrors=0, additions=137, removals=0, renames=21, matching the documented 697/137 baseline. No finding names the production controlled-imports.ts. The five finance-operations findings (including the red test's ports.js type import at line 18) exist at phase_base at identical lines and are part of the documented 137 additions; additions did not grow.",
+    "Contract verification against strategy closeout gates: 2.A accepted-envelope-only normalization with exact BigInt decimal-to-minor conversion, forbidden-key scan, unsafe-text rejection, receipt digest/reference binding, scope matching, thaiTaxDocumentStatus restriction, unresolved-variant path, deep freeze without input aliasing. 2.B replay/conflict with exact reasons and copied acceptedRecordIds. 2.C immutable correction retaining accepted scope with supersedesRecordId and correctionReason. 2.D length-prefixed collision-free durable-job identity shared with 2.E. 2.E authorization first, denial audits without repository calls, scope-mismatch audits without repository calls, atomic plan+job+audit through the injected repository, rollback on staging failure with allowed+failed audit, concurrent accepted+replay and accepted+conflict semantics, no aliasing of caller or repository objects. 2.F pilot contract returns liveSourceAdaptersUsed: [] and rejects unknown packet versions; no real pilot is claimed anywhere. 2.G source-isolation guards are active against the real source.",
+    "Test-meaning review: behavior tests assert exact amounts, exact key sets, deep-frozen graphs, and non-aliasing, and include mutation falsifiers; concurrency assertions are labeled structural checks, not digit-only counts (A3 clean); the student-count fact asserts the labeled string \"147\"; no plan text claims a test green state that contradicts a reproduced command exit (A5 clean for test claims; see the nonblocking format note).",
+    "Plan marker check: Phase 2 Task 1 [x] binds implementation commit 18bdc5dd1 and fix commit e54122971; the reproduced gates support the marker. The plan keeps phase acceptance open on the unchanged backend test-TypeScript baseline, which this audit reproduced (exit 2, unchanged files only). Task 2 remains [b].",
+    "Blast radius: the new barrel exports are consumed only by the Phase 2 red test and a Task 3 adversarial test via dynamic import casts; no production caller exists (internal ports only, matching the strategy). No export-name collision is introduced by controlled-imports.ts; production typecheck and build pass. build-graph graph.db is stale for the new module (no nodes), so caller verification used direct import search."
+  ],
+  "commands": [
+    "git rev-parse HEAD && git worktree list -- exit 0: HEAD be84ff474fa872dd0eab0b64038869e67e2c1e34 equals audited_head; exactly one worktree on master",
+    "git diff --check 7ef48d2d2929c67dfd70c899a4710b77808637b9..be84ff474fa872dd0eab0b64038869e67e2c1e34 -- exit 0: no whitespace errors",
+    "CI=true ../../node_modules/.bin/vitest run src/modules/finance-operations/__tests__/controlled-imports-phase2.red.test.ts (cwd packages/backend) -- exit 0: 1 file, 24/24 tests passed",
+    "CI=true ../../node_modules/.bin/vitest run <11 Phase 1 finance-operations files from strategy 2.H> (cwd packages/backend) -- exit 0: 11 files, 135/135 tests passed",
+    "CI=true ../../node_modules/.bin/vitest run src/modules/company-identity/__tests__/finance-authorization-adapter.red.test.ts src/modules/company-identity/__tests__/protocol-safety.red.test.ts (cwd packages/backend) -- exit 0: 2 files, 20/20 tests passed",
+    "CI=true ../../node_modules/.bin/vitest run src/__tests__/finance-private-evidence-read.red.test.ts (cwd packages/storage) -- exit 0: 1 file, 25/25 tests passed",
+    "../../node_modules/.bin/tsc --noEmit (cwd packages/backend) -- exit 0: backend production typecheck clean",
+    "../../node_modules/.bin/tsc (cwd packages/backend) -- exit 0: backend build clean; no tracked worktree changes",
+    "../../node_modules/.bin/eslint src/modules/finance-operations (cwd packages/backend) -- exit 0: targeted lint clean",
+    "../../node_modules/.bin/prettier --check controlled-imports.ts index.ts controlled-imports-phase2.red.test.ts architecture-boundary.test.ts (cwd packages/backend) -- exit 1: only controlled-imports-phase2.red.test.ts fails; the same file also fails at phase_base (pre-existing) plus one new unformatted fixture line from this diff; production files clean",
+    "../../node_modules/.bin/tsc --noEmit -p tsconfig.test.json (cwd packages/backend) -- exit 2: known external gate; diagnostics only in unchanged files (advantage-play-kit TS6059 chain, 3 finance-task3-review-b fixtures, 2 planned-game-intake errors); none in changed files",
+    "../../node_modules/.bin/tsx src/architecture-check-cli.ts --format json --repo-root <repo> (cwd packages/architecture-enforcement) -- exit 1: files=4248, findings=697, parseErrors=0, additions=137, removals=0, renames=21; matches documented baseline; no production controlled-imports.ts finding"
+  ],
+  "changed_files": [
+    "packages/backend/src/modules/finance-operations/controlled-imports.ts",
+    "packages/backend/src/modules/finance-operations/index.ts",
+    "packages/backend/src/modules/finance-operations/__tests__/controlled-imports-phase2.red.test.ts",
+    "packages/backend/src/modules/finance-operations/__tests__/architecture-boundary.test.ts",
+    "measure/tracks/company_finance_operations_20260810/plan.md",
+    "measure/tracks/company_finance_operations_20260810/orchestration/phase2-jr-green-role.log",
+    "measure/tracks/company_finance_operations_20260810/orchestration/phase2-jr-green-remediation-role.log",
+    "measure/tracks/company_finance_operations_20260810/orchestration/phase2-mid-red-role.log",
+    "measure/tracks/company_finance_operations_20260810/orchestration/phase2-mid-red-remediation-role.log"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high"
+}
