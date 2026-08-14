@@ -1,0 +1,6 @@
+Track: sales_mastery_consumer_20260810
+Phase: Phase 0 structural closeout hold
+Source: d87e68111778829d15713c07c212e10a831b413e
+Review: Independent plan and post-commit reviews accepted the exact one-path snapshot.
+Evidence: The accepted runtime hashes and five-path empty diff remain unchanged. The plan separates nested Node stream suppression from two pre-pack lease timeouts. It records the 240-second test timeout, 300-second acquisition wait, 15-minute reclaim age, and PID-namespace uncertainty.
+Boundary: Phase 0 remains open. Task B, doctor, architecture, and the packed-gate rerun remain unresolved.
