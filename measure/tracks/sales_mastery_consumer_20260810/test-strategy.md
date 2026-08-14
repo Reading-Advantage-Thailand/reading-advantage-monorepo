@@ -3,18 +3,18 @@
 > Bounded to Phase 0 closeout and Phase 2 docs-only strategy/contract design of
 > `sales_mastery_consumer_20260810`. Phase 1 is accepted (commit `86a6503ac`);
 > Phase 2 Red/source/migration execution and Phases 3 to 4 remain blocked. This
-> strategy owns no production or test source; it only directs the Phase 0
-> Red/Green/closeout gates and records the bounded Phase 2 design boundary.
+> strategy records the bounded Phase 0 lease Red contract and the Phase 0
+> Red/Green/closeout gates. It records the bounded Phase 2 design boundary.
 
 ## Phase scope and hard boundaries
 
-| Phase | State | This strategy |
-|-------|-------|---------------|
-| Phase 0 - reconcile and admit the consumer | Task A accepted; Task B remains `[~]` | Focused package gates and graph/generated refresh are recorded; shared-root doctor and architecture gates are Red, so Phase 0 is not closed |
-| Phase 1 - bind the approved course to a knowledge graph | Accepted (`86a6503ac`) | Reference only; regression-guarded, not re-opened |
-| Phase 2 - company tenant mapping and durable projection | Docs-only strategy/contract design active | Finance ordering prerequisite accepted; all Red/source/migration execution stays `[b]` behind Phase 0 Task B closeout |
-| Phase 3 - project Sales evidence into KST/SRS | Blocked behind Phase 2 | No tests defined |
-| Phase 4 - verification and release | Blocked behind Phase 3 | No tests defined |
+| Phase                                                   | State                                     | This strategy                                                                                                                               |
+| ------------------------------------------------------- | ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| Phase 0 - reconcile and admit the consumer              | Task A accepted; Task B remains `[~]`     | Focused package gates and graph/generated refresh are recorded; shared-root doctor and architecture gates are Red, so Phase 0 is not closed |
+| Phase 1 - bind the approved course to a knowledge graph | Accepted (`86a6503ac`)                    | Reference only; regression-guarded, not re-opened                                                                                           |
+| Phase 2 - company tenant mapping and durable projection | Docs-only strategy/contract design active | Finance ordering prerequisite accepted; all Red/source/migration execution stays `[b]` behind Phase 0 Task B closeout                       |
+| Phase 3 - project Sales evidence into KST/SRS           | Blocked behind Phase 2                    | No tests defined                                                                                                                            |
+| Phase 4 - verification and release                      | Blocked behind Phase 3                    | No tests defined                                                                                                                            |
 
 Hard boundaries for Phase 0:
 
@@ -29,6 +29,46 @@ Hard boundaries for Phase 0:
 - No changes to the Phase 1 accepted `@reading-advantage/sales-knowledge`
   package. It is consumed as an immutable, already-reviewed release.
 - No browser, deploy, or production-QA behavior. Those are Phase 4.
+
+## Phase 0 lease-isolation Red contract (current)
+
+The accepted release-artifact source keeps one canonical workspace lease. The
+current stale-lease test writes that shared path before it runs the packed gate.
+This Red contract defines an internal test seam without changing production
+locking or the public release-consumer surface.
+
+Red scope:
+
+- `packages/mastery-runtime-compat/src/__tests__/release-artifact.test.ts`
+  defines the `WorkspaceLeaseRuntime` contract.
+- The seam accepts only a validated `leasePath`, a `now` clock, and a bounded
+  `maxWaitMs` value.
+- The seam returns acquire and token-checked release operations.
+- The seam remains absent from `packages/mastery-runtime-compat/src/index.ts`.
+- Production stale age, retry delays, maximum wait, atomic acquisition,
+  reclaim markers, owner rechecks, and release-token checks remain unchanged.
+
+The Red tests cover stale malformed owners, stale dead owners, live-owner byte
+identity, bounded secret-safe timeout, wrong-token release, canonical-lease
+separation, default-path cross-process proof, traversal, symlink, cross-volume,
+and outside-cache rejection.
+
+Run only this focused Red command:
+
+```bash
+pnpm --filter @reading-advantage/mastery-runtime-compat exec vitest run \
+  src/__tests__/release-artifact.test.ts --maxWorkers=1 \
+  -t "WorkspaceLeaseRuntime Red contract"
+```
+
+At the current source, the command must fail with only the missing internal
+`WorkspaceLeaseRuntime` seam. It must not enter `runReleaseArtifactCheck`,
+shared package builds, `npm pack`, or the canonical lease.
+
+This Red task does not authorize a production change. It does not close Phase 0
+Task B, activate Phase 2, or change the existing default-path concurrency proof.
+The future Green task must add the smallest internal dependency seam and keep it
+unavailable through the package public export.
 
 ## Phase 0 - reconcile and admit the consumer (one-shot Red/Green)
 
@@ -341,25 +381,25 @@ is breaking and security-relevant.
 
 ### Applicability
 
-| Review type | Applicable | Notes |
-|-------------|-----------|-------|
-| Security review | Yes | Containment guards (symlink rejection, outside-`.cache`/outside-repo rejection), offline-only install, descriptor tampering rejection, provenance binding, fail-closed schema. |
-| UX/API review | Partial | No UI. The API surface is the compatibility gate contract. The `runReleaseArtifactCheck` signature change and the new issue codes are the API review points. |
-| Adversarial testing | Yes | Tampered digests, missing evidence, Codecamp graph reuse, Codecamp release-set reuse, symlinked descriptor/gate/root, outside-repo root, outside-`.cache` root, concurrent cleanup. |
-| Browser review | No | Phase 0 is runtime-compat only. No browser behavior. Phase 4 owns browser QA. |
+| Review type         | Applicable | Notes                                                                                                                                                                               |
+| ------------------- | ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Security review     | Yes        | Containment guards (symlink rejection, outside-`.cache`/outside-repo rejection), offline-only install, descriptor tampering rejection, provenance binding, fail-closed schema.      |
+| UX/API review       | Partial    | No UI. The API surface is the compatibility gate contract. The `runReleaseArtifactCheck` signature change and the new issue codes are the API review points.                        |
+| Adversarial testing | Yes        | Tampered digests, missing evidence, Codecamp graph reuse, Codecamp release-set reuse, symlinked descriptor/gate/root, outside-repo root, outside-`.cache` root, concurrent cleanup. |
+| Browser review      | No         | Phase 0 is runtime-compat only. No browser behavior. Phase 4 owns browser QA.                                                                                                       |
 
 ### Anti-pattern coverage for Phase 0
 
-| Anti-pattern | Defense in Phase 0 |
-|---|---|
-| A3 (digit-only as a labeled count) | The Red suite asserts labeled package maps (`ENGINE_PACKAGE_VERSIONS` with named keys) and explicit SHA-256 strings. No assertion matches a bare digit. Falsification: a wrong version key or digest fails the equality. |
-| A4 (vacuous-pass on nothing-done) | The Red command must exit non-zero at Red and zero at Green. The Red suite has at least eight substantive assertion groups. An empty implementation cannot pass. Falsification: the gate with no Sales release set fails the first assertion. |
-| A5 (false-claim text vs test reality) | The plan task text cites the exact focused commands above. No plan text may claim "all checks pass" unless the cited command exits zero. Falsification: run the cited command; a non-zero exit refutes the claim. |
-| A6 (registry-note overstatement) | The `tracks.md` entry and this strategy must not claim Sales is "admitted" or "accepted" until the Green gate and closeout gate pass. Falsification: a red Red command or a failing closeout guard refutes "admitted". |
-| A7 (over-broad filter swallowing real hits) | The gate uses `--filter @reading-advantage/mastery-runtime-compat` and `--filter @reading-advantage/sales-knowledge`, not `pnpm turbo run test`. Falsification: a Phase 0 regression fails the focused command even when the aggregate is already red. |
-| A10 (generated-facts drift) | The combined graph refresh covered 71 unique TS/TSX paths and generated-facts commit `390448dd2` embeds the recorded sourceRevision, architecture hash, and routes hash; the pre-commit rerun matched staged bytes. This freshness is independent evidence and does not waive the Red `measure/doctor.sh` marker guard or the separate Red architecture checker. Falsification: a stale generated fact or mismatched embedded hash fails the corresponding check. |
-| A14 (invalid ripgrep option) | Any audit detector in this strategy uses `rg -n '<regex>'`, never `rg -nE`. Falsification: `rg -nE` exits 2 and is treated as a failure, not a zero-hit result. |
-| A15 (stale role-receipt hashes) | If the closeout produces a role receipt that enumerates output SHA-256 values, a later Green fix must refresh the receipt. Falsification: `bash tests/orchestrator_role_receipt_integrity.sh` fails on a stale receipt. |
+| Anti-pattern                                | Defense in Phase 0                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| ------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| A3 (digit-only as a labeled count)          | The Red suite asserts labeled package maps (`ENGINE_PACKAGE_VERSIONS` with named keys) and explicit SHA-256 strings. No assertion matches a bare digit. Falsification: a wrong version key or digest fails the equality.                                                                                                                                                                                                                                          |
+| A4 (vacuous-pass on nothing-done)           | The Red command must exit non-zero at Red and zero at Green. The Red suite has at least eight substantive assertion groups. An empty implementation cannot pass. Falsification: the gate with no Sales release set fails the first assertion.                                                                                                                                                                                                                     |
+| A5 (false-claim text vs test reality)       | The plan task text cites the exact focused commands above. No plan text may claim "all checks pass" unless the cited command exits zero. Falsification: run the cited command; a non-zero exit refutes the claim.                                                                                                                                                                                                                                                 |
+| A6 (registry-note overstatement)            | The `tracks.md` entry and this strategy must not claim Sales is "admitted" or "accepted" until the Green gate and closeout gate pass. Falsification: a red Red command or a failing closeout guard refutes "admitted".                                                                                                                                                                                                                                            |
+| A7 (over-broad filter swallowing real hits) | The gate uses `--filter @reading-advantage/mastery-runtime-compat` and `--filter @reading-advantage/sales-knowledge`, not `pnpm turbo run test`. Falsification: a Phase 0 regression fails the focused command even when the aggregate is already red.                                                                                                                                                                                                            |
+| A10 (generated-facts drift)                 | The combined graph refresh covered 71 unique TS/TSX paths and generated-facts commit `390448dd2` embeds the recorded sourceRevision, architecture hash, and routes hash; the pre-commit rerun matched staged bytes. This freshness is independent evidence and does not waive the Red `measure/doctor.sh` marker guard or the separate Red architecture checker. Falsification: a stale generated fact or mismatched embedded hash fails the corresponding check. |
+| A14 (invalid ripgrep option)                | Any audit detector in this strategy uses `rg -n '<regex>'`, never `rg -nE`. Falsification: `rg -nE` exits 2 and is treated as a failure, not a zero-hit result.                                                                                                                                                                                                                                                                                                   |
+| A15 (stale role-receipt hashes)             | If the closeout produces a role receipt that enumerates output SHA-256 values, a later Green fix must refresh the receipt. Falsification: `bash tests/orchestrator_role_receipt_integrity.sh` fails on a stale receipt.                                                                                                                                                                                                                                           |
 
 ## Phase 1 - accepted reference (no active tests)
 
