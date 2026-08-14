@@ -4,7 +4,10 @@ import { fileURLToPath } from "node:url";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { z } from "zod";
 
-import type { DurableJobWorkerPort, JobEnvelope } from "../../../../packages/backend/src/jobs/index.js";
+import type {
+  DurableJobWorkerPort,
+  JobEnvelope,
+} from "@reading-advantage/backend/jobs";
 import { createWorkerHealthState } from "../health.js";
 
 type WorkerHandler = {
@@ -72,8 +75,13 @@ const validEnvironment = {
 };
 
 const logger = {
-  info: vi.fn<(event: string, details: Readonly<Record<string, unknown>>) => void>(),
-  error: vi.fn<(event: string, details: Readonly<Record<string, unknown>>) => void>(),
+  info: vi.fn<
+    (event: string, details: Readonly<Record<string, unknown>>) => void
+  >(),
+  error:
+    vi.fn<
+      (event: string, details: Readonly<Record<string, unknown>>) => void
+    >(),
 };
 
 const createDeferred = (): {
@@ -145,34 +153,41 @@ const createWorkerPort = (jobs: readonly WorkerJob[]) => {
   let pendingJobs = [...jobs];
 
   const port = {
-    claim: vi.fn(async (
-      request: Parameters<DurableJobWorkerPort["claim"]>[0],
-    ): ReturnType<DurableJobWorkerPort["claim"]> => {
-      void request;
-      const claimedJobs = pendingJobs;
-      pendingJobs = [];
-      return claimedJobs.length > 0
-        ? { outcome: "claimed", jobs: claimedJobs }
-        : { outcome: "empty" };
-    }),
-    heartbeat: vi.fn(async (
-      request: Parameters<DurableJobWorkerPort["heartbeat"]>[0],
-    ): ReturnType<DurableJobWorkerPort["heartbeat"]> => {
-      void request;
-      return { outcome: "extended", expiresAt: "2026-08-13T00:01:00.000Z" };
-    }),
-    settle: vi.fn(async (
-      request: Parameters<DurableJobWorkerPort["settle"]>[0],
-    ): ReturnType<DurableJobWorkerPort["settle"]> => {
-      void request;
-      return { outcome: "settled", state: "succeeded" };
-    }),
-    fail: vi.fn(async (
-      request: Parameters<DurableJobWorkerPort["fail"]>[0],
-    ): ReturnType<DurableJobWorkerPort["fail"]> => {
-      void request;
-      return { outcome: "dead" };
-    }),
+    claim: vi.fn(
+      async (
+        request: Parameters<DurableJobWorkerPort["claim"]>[0],
+      ): ReturnType<DurableJobWorkerPort["claim"]> => {
+        const claimedJobs = pendingJobs.slice(0, request.limit);
+        pendingJobs = pendingJobs.slice(claimedJobs.length);
+        return claimedJobs.length > 0
+          ? { outcome: "claimed", jobs: claimedJobs }
+          : { outcome: "empty" };
+      },
+    ),
+    heartbeat: vi.fn(
+      async (
+        request: Parameters<DurableJobWorkerPort["heartbeat"]>[0],
+      ): ReturnType<DurableJobWorkerPort["heartbeat"]> => {
+        void request;
+        return { outcome: "extended", expiresAt: "2026-08-13T00:01:00.000Z" };
+      },
+    ),
+    settle: vi.fn(
+      async (
+        request: Parameters<DurableJobWorkerPort["settle"]>[0],
+      ): ReturnType<DurableJobWorkerPort["settle"]> => {
+        void request;
+        return { outcome: "settled", state: "succeeded" };
+      },
+    ),
+    fail: vi.fn(
+      async (
+        request: Parameters<DurableJobWorkerPort["fail"]>[0],
+      ): ReturnType<DurableJobWorkerPort["fail"]> => {
+        void request;
+        return { outcome: "dead" };
+      },
+    ),
     reclaimExpired: vi.fn(
       async (
         request: Parameters<DurableJobWorkerPort["reclaimExpired"]>[0],
@@ -188,14 +203,22 @@ const createWorkerPort = (jobs: readonly WorkerJob[]) => {
   return port;
 };
 
-const forbiddenAdministrativeMethods = ["enqueue", "listDead", "replay"] as const;
+const forbiddenAdministrativeMethods = [
+  "enqueue",
+  "listDead",
+  "replay",
+] as const;
 
-const trapForbiddenAdministrativeMethods = (port: WorkerLifecyclePort): void => {
+const trapForbiddenAdministrativeMethods = (
+  port: WorkerLifecyclePort,
+): void => {
   for (const forbiddenMethod of forbiddenAdministrativeMethods) {
     Object.defineProperty(port, forbiddenMethod, {
       configurable: true,
       get: () => {
-        throw new Error(`Worker accessed forbidden job-port method: ${forbiddenMethod}`);
+        throw new Error(
+          `Worker accessed forbidden job-port method: ${forbiddenMethod}`,
+        );
       },
     });
   }
@@ -230,6 +253,7 @@ const createComposition = async (
   overrides: Readonly<Record<string, unknown>> = {},
   preparePort: (port: WorkerLifecyclePort) => void = () => undefined,
   pollingScope: WorkerJob["tenant"] = globalScope,
+  portOverride: ReturnType<typeof createWorkerPort> | undefined = undefined,
 ): Promise<{
   composition: WorkerComposition;
   health: ReturnType<typeof createWorkerHealthState>;
@@ -238,9 +262,12 @@ const createComposition = async (
 }> => {
   const module = await loadWorkerComposition();
   const createRegistry = requireExport(module, "createWorkerHandlerRegistry");
-  const createWorkerComposition = requireExport(module, "createWorkerComposition");
+  const createWorkerComposition = requireExport(
+    module,
+    "createWorkerComposition",
+  );
   const parseConfig = requireExport(module, "parseWorkerRuntimeConfig");
-  const port = createWorkerPort(jobs);
+  const port = portOverride ?? createWorkerPort(jobs);
   const health = createWorkerHealthState({
     clock: () => new Date(fixedNow),
     serviceName: "worker-red-test",
@@ -277,14 +304,12 @@ describe("durable worker lifecycle Red contract", () => {
     const registry = createRegistry([handler]) as {
       get: (jobName: string) => WorkerHandler | undefined;
     };
-    expect(registry.get("review.process")).toBe(handler);
+    expect(registry.get(handler.jobName)).toBe(handler);
     expect(() => createRegistry([handler, { ...handler }])).toThrow(
       /duplicate|unique/i,
     );
     expect(() =>
-      createRegistry([
-        { ...handler, payload: {} } as unknown as WorkerHandler,
-      ]),
+      createRegistry([{ ...handler, payload: {} } as unknown as WorkerHandler]),
     ).toThrow(/payload|schema|Zod/i);
   });
 
@@ -309,19 +334,22 @@ describe("durable worker lifecycle Red contract", () => {
       ["WORKER_LEASE_SECONDS", "0"],
       ["WORKER_SHUTDOWN_GRACE_MS", "0"],
     ] as const) {
-      expect(() => parseConfig({ ...validEnvironment, [field]: value })).toThrow(
-        field,
-      );
+      expect(() =>
+        parseConfig({ ...validEnvironment, [field]: value }),
+      ).toThrow(field);
     }
   });
 
   it("claims one bounded poll and never exceeds configured handler concurrency", async () => {
     let activeHandlers = 0;
     let maximumActiveHandlers = 0;
+    let startedHandlers = 0;
+    const releaseHandlers = createDeferred();
     const handler = createHandler(async () => {
+      startedHandlers += 1;
       activeHandlers += 1;
       maximumActiveHandlers = Math.max(maximumActiveHandlers, activeHandlers);
-      await new Promise<void>((resolve) => setTimeout(resolve, 5));
+      await releaseHandlers.promise;
       activeHandlers -= 1;
       return { ok: true };
     });
@@ -330,7 +358,8 @@ describe("durable worker lifecycle Red contract", () => {
       handler,
     );
 
-    await composition.pollOnce();
+    const pollPromise = composition.pollOnce();
+    await waitFor(() => startedHandlers === 2, "two bounded handlers");
 
     expect(port.claim).toHaveBeenCalledTimes(1);
     expect(port.claim.mock.calls[0]?.[0]).toMatchObject({
@@ -340,8 +369,37 @@ describe("durable worker lifecycle Red contract", () => {
       tenant: { mode: "global" },
       workerId: "worker-red-1",
     });
+    expect(startedHandlers).toBe(2);
+    expect(handler.handle).toHaveBeenCalledTimes(2);
     expect(maximumActiveHandlers).toBeLessThanOrEqual(2);
-    expect(port.settle).toHaveBeenCalledTimes(5);
+    releaseHandlers.resolve();
+    await pollPromise;
+    expect(port.settle).toHaveBeenCalledTimes(2);
+  });
+
+  it("rejects an oversized provider batch before handler execution", async () => {
+    const providerPort = createWorkerPort(
+      Array.from({ length: 5 }, (_, index) => createJob(index)),
+    );
+    const providerClaim = providerPort.claim;
+    providerPort.claim = vi.fn(async (request) =>
+      providerClaim({ ...request, limit: 100 }),
+    );
+    const handler = createHandler();
+    const { composition, port } = await createComposition(
+      [],
+      handler,
+      {},
+      () => undefined,
+      globalScope,
+      providerPort,
+    );
+
+    await expect(composition.pollOnce()).rejects.toThrow(/poll limit/i);
+    expect(port.claim.mock.calls[0]?.[0].limit).toBe(2);
+    expect(handler.handle).not.toHaveBeenCalled();
+    expect(port.settle).not.toHaveBeenCalled();
+    expect(port.fail).not.toHaveBeenCalled();
   });
 
   it("opens readiness after start and drains active work on SIGTERM before stopping claims", async () => {
@@ -370,7 +428,10 @@ describe("durable worker lifecycle Red contract", () => {
     expect(health.snapshot()).toMatchObject({ ready: true, status: "ready" });
 
     const stopPromise = composition.stop("SIGTERM");
-    expect(health.snapshot()).toMatchObject({ ready: false, status: "draining" });
+    expect(health.snapshot()).toMatchObject({
+      ready: false,
+      status: "draining",
+    });
     const claimsWhileDraining = port.claim.mock.calls.length;
     await composition.pollOnce();
     expect(port.claim).toHaveBeenCalledTimes(claimsWhileDraining);
@@ -384,6 +445,93 @@ describe("durable worker lifecycle Red contract", () => {
       ready: false,
       status: "stopped",
     });
+  });
+
+  it("bounds shutdown when a handler ignores abort", async () => {
+    const jobStarted = createDeferred();
+    const releaseJob = createDeferred();
+    const handler = createHandler(async () => {
+      jobStarted.resolve();
+      await releaseJob.promise;
+      return { ok: true };
+    });
+    const { composition } = await createComposition([createJob(11)], handler, {
+      config: {
+        queueName: "review",
+        workerId: "worker-red-1",
+        concurrency: 2,
+        pollIntervalMs: 25,
+        leaseSeconds: 30,
+        shutdownGraceMs: 25,
+      },
+    });
+
+    const startPromise = composition.start();
+    await jobStarted.promise;
+    const shutdownStartedAt = Date.now();
+    await expect(composition.stop("SIGTERM")).resolves.toBeUndefined();
+    expect(Date.now() - shutdownStartedAt).toBeLessThan(250);
+    expect(composition.snapshot()).toMatchObject({
+      activeJobs: 1,
+      ready: false,
+      status: "stopped",
+    });
+
+    releaseJob.resolve();
+    await expect(startPromise).resolves.toBeUndefined();
+  });
+
+  it("observes late job rejection after the shutdown deadline", async () => {
+    vi.useFakeTimers();
+    const unhandledRejection = vi.fn();
+    process.on("unhandledRejection", unhandledRejection);
+    let rejectLateJob!: (error: Error) => void;
+    const lateJob = new Promise<never>((_resolve, reject) => {
+      rejectLateJob = reject;
+    });
+    const jobStarted = createDeferred();
+    const handler = createHandler(async () => {
+      jobStarted.resolve();
+      return await lateJob;
+    });
+
+    try {
+      const { composition, port } = await createComposition(
+        [createJob(12)],
+        handler,
+        {
+          config: {
+            queueName: "review",
+            workerId: "worker-red-1",
+            concurrency: 2,
+            pollIntervalMs: 25,
+            leaseSeconds: 30,
+            shutdownGraceMs: 25,
+          },
+        },
+      );
+      const startPromise = composition.start();
+      await jobStarted.promise;
+
+      const stopPromise = composition.stop("SIGTERM");
+      await vi.advanceTimersByTimeAsync(25);
+      await expect(stopPromise).resolves.toBeUndefined();
+      expect(composition.snapshot()).toMatchObject({
+        activeJobs: 1,
+        ready: false,
+        status: "stopped",
+      });
+
+      rejectLateJob(new Error("late provider failure"));
+      await vi.runAllTimersAsync();
+      await expect(startPromise).resolves.toBeUndefined();
+      expect(composition.snapshot()).toMatchObject({ activeJobs: 0 });
+      expect(port.fail).toHaveBeenCalledTimes(1);
+      expect(unhandledRejection).not.toHaveBeenCalled();
+    } finally {
+      process.off("unhandledRejection", unhandledRejection);
+      vi.useRealTimers();
+    }
   });
 
   it("emits correlation-safe structured logs and persists only classified safe errors", async () => {
@@ -494,19 +642,27 @@ describe("durable worker lifecycle Red contract", () => {
       await releaseJob.promise;
       return { ok: true };
     }, "tenant");
-    const heartbeatCase = await createComposition([tenantJob], handler, {
-      config: {
-        queueName: "review",
-        workerId: "worker-red-1",
-        concurrency: 2,
-        pollIntervalMs: 1,
-        leaseSeconds: 1,
-        shutdownGraceMs: 1_000,
+    const heartbeatCase = await createComposition(
+      [tenantJob],
+      handler,
+      {
+        config: {
+          queueName: "review",
+          workerId: "worker-red-1",
+          concurrency: 2,
+          pollIntervalMs: 1,
+          leaseSeconds: 1,
+          shutdownGraceMs: 1_000,
+        },
+        sleep: async (milliseconds: number): Promise<void> => {
+          await new Promise<void>((resolve) =>
+            setTimeout(resolve, milliseconds),
+          );
+        },
       },
-      sleep: async (milliseconds: number): Promise<void> => {
-        await new Promise<void>((resolve) => setTimeout(resolve, milliseconds));
-      },
-    }, () => undefined, tenantScope);
+      () => undefined,
+      tenantScope,
+    );
 
     const startPromise = heartbeatCase.composition.start();
     await waitFor(() => handledTenants.length === 1, "tenant handler context");
@@ -585,7 +741,9 @@ describe("durable worker lifecycle Red contract", () => {
       tenantScope,
     );
 
-    await expect(composition.pollOnce()).rejects.toThrow(/tenant|scope|mismatch/i);
+    await expect(composition.pollOnce()).rejects.toThrow(
+      /tenant|scope|mismatch/i,
+    );
     expect(port.claim).toHaveBeenCalledTimes(1);
     expect(port.claim.mock.calls[0]?.[0].tenant).toStrictEqual(tenantScope);
     expect(handler.handle).not.toHaveBeenCalled();

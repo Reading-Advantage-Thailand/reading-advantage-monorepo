@@ -1,7 +1,13 @@
 {
   "extends": "../../packages/config/tsconfig/base.json",
   "compilerOptions": {
+    "baseUrl": ".",
     "noEmit": true,
+    "paths": {
+      "@reading-advantage/backend/jobs": [
+        "../../packages/backend/dist/jobs/index.d.ts"
+      ]
+    },
     "types": ["node", "vitest/globals"]
   },
   "include": ["src/**/*.ts", "scripts/**/*.ts"],

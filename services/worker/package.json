@@ -42,6 +42,7 @@
     "validate:oci": "tsx scripts/validate-oci.ts"
   },
   "dependencies": {
+    "@reading-advantage/backend": "workspace:*",
     "zod": "catalog:"
   },
   "devDependencies": {

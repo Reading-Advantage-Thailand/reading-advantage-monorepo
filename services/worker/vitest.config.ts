@@ -1,6 +1,17 @@
+import { fileURLToPath } from "node:url";
+
 import { defineConfig } from "vitest/config";
 
+const backendJobsEntry = fileURLToPath(
+  new URL("../../packages/backend/src/jobs/index.ts", import.meta.url),
+);
+
 export default defineConfig({
+  resolve: {
+    alias: {
+      "@reading-advantage/backend/jobs": backendJobsEntry,
+    },
+  },
   test: {
     coverage: {
       include: [
