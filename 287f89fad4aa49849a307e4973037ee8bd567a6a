@@ -1,0 +1,6 @@
+Track: durable_job_worker_platform_20260713
+Phase: Phase 2 Task 10 worker lifecycle Green
+Source: 287f89fad4aa49849a307e4973037ee8bd567a6a
+Review: Independent Green and post-commit reviews accepted the exact six-path snapshot.
+Evidence: Focused lifecycle and architecture tests passed 17 tests. The full worker suite passed 48 tests outside the port sandbox. Typecheck, declared build, ESLint, Prettier, graph, lock importer, and diff checks passed.
+Boundary: The composition uses lifecycle job ports only. It has no direct database, schema, SQL, or job-table access. The lockfile changes only the worker importer.
