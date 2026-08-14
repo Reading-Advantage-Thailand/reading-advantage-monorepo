@@ -26,26 +26,28 @@
   - Shared graph/generated refresh commit `390448dd2` is post-maintenance freshness evidence: 71-path hash `40df25b062d742ccb715e301b4a2914a079473575e504733de7dae7d70a2fb0d` and Finance subset hash `29ff5a83a30df7917e088b2257eed22f3fd6d64692c2efd14a0fe18da5150dc6`. The whole-graph audit timed out/was terminated with exit 130, and `measure/doctor.sh` remains Red on 80 deprecated `[ ]` markers across nine unrelated plans; this is not structural Green evidence.
   - Task 3 remains `[x]`. CRM/Tutor and Phase 2/3 blockers are unchanged, and no phase checkpoint is recorded.
 
-- [b] Task: Add live CRM `CustomerBillingCatalogPort` and Tutor `TutorFinancialExportPort` owner contracts and adapters only after those source owners exist and accept source-native identities, versions, evidence, and payload schemas. Finance normalization must remain downstream.
+- [b] Task: Add live CRM and Tutor owner contracts after their source owners accept the source-native contracts. — deferred:crm-tutor-source-owners
 
 ## Phase 2 — controlled operational imports
 
-- [~] Task: Implement idempotent historical private-evidence packets, payroll-summary imports, historical school-billing snapshots, evidence references, and correction/supersession flow. Depends on the accepted Company Identity, private-read, and durable-outbox boundaries above; it must use only the approved historical-private-evidence MVP and must not use live CRM or Tutor adapters or Finance-owned lookalike envelopes. Admitted 2026-08-13: the Phase 1 Task 3 boundaries (Company Identity attestor, private-evidence reader, durable outbox projector, packet contract) are accepted, and the existing `controlled-imports-phase2.red.test.ts` Red contract is genuinely red using only `historical-private-evidence-packet.v1` and injected fakes. The CRM/Tutor source-owner blocker does not apply to Phase 2 (spec: "Phase 2 must use only the historical private-evidence packet and must reject Finance-owned CRM or Tutor lookalike envelopes"). Canonical falsifiable test strategy: `test-strategy-phase2.md`. Historical implementation commit `18bdc5dd1d4e7912ab4fb70f152959693a3559c6`; Review B at audited HEAD `be84ff474fa872dd0eab0b64038869e67e2c1e34` failed with five security findings. Security remediation source commit `47cb034cf818209bf5a787a5856e118cdf2180a7` passed the 26/26 Review B gate, 24/24 Phase 2 gate, Finance 135/135, Identity 20/20, and Storage 25/25. The backend production build, Finance lint, Prettier, and diff check passed. Fresh Review A found a changed-test TS2345 at line 1649 and a corrupted strict-grammar helper; this Mid-Red repair records and rechecks both defects. The direct architecture checker remained at findings=697 and additions=137 with no production Finance finding. Prior Review A/B results are stale; fresh Review A and Review B are mandatory at the final remediation HEAD.
-- [~] Task: Implement idempotent historical private-evidence packets, payroll-summary imports, historical school-billing snapshots, evidence references, and correction/supersession flow. Depends on the accepted Company Identity, private-read, and durable-outbox boundaries above; it must use only the approved historical-private-evidence MVP and must not use live CRM or Tutor adapters or Finance-owned lookalike envelopes. Admitted 2026-08-13: the Phase 1 Task 3 boundaries (Company Identity attestor, private-evidence reader, durable outbox projector, packet contract) are accepted, and the existing `controlled-imports-phase2.red.test.ts` Red contract is genuinely red using only `historical-private-evidence-packet.v1` and injected fakes. The CRM/Tutor source-owner blocker does not apply to Phase 2 (spec: "Phase 2 must use only the historical private-evidence packet and must reject Finance-owned CRM or Tutor lookalike envelopes"). Canonical falsifiable test strategy: `test-strategy-phase2.md`. Historical implementation commit `18bdc5dd1d4e7912ab4fb70f152959693a3559c6`; Review B at audited HEAD `be84ff474fa872dd0eab0b64038869e67e2c1e34` failed with five security findings. Security remediation source commit `47cb034cf818209bf5a787a5856e118cdf2180a7` passed the 26/26 Review B gate, 24/24 Phase 2 gate, Finance 135/135, Identity 20/20, and Storage 25/25. The backend production build, Finance lint, Prettier, and diff check passed. Fresh Review A found a changed-test TS2345 at line 1649 and a corrupted strict-grammar helper; this Mid-Red repair records and rechecks both defects. The direct architecture checker remained at findings=697 and additions=137 with no production Finance finding. Prior Review A/B results are stale; fresh Review A and Review B are mandatory at the final remediation HEAD.
-  Fix commit `e54122971` removed the new checker finding. The direct checker at `e54122971` had files=4248, findings=697, parseErrors=0, additions=137, removals=0, renames=21, and no controlled-imports.ts finding.
+- [x] Task: Implement controlled imports through owner-attested historical private-evidence packets. Source commit `1d0ffd568`.
 
-  Final trust-binding remediation scope (2026-08-14):
+  Final Task 1 evidence (2026-08-14):
 
-  - Correct the identity Red test to expect the approved `payment-receipt` value.
-  - Bind normalized document identity to source-stated packet facts.
-  - Bind normalized tax labels and rate text to source-stated packet facts.
-  - Add source-stated currency to the trusted packet contract.
-  - Bind school variant identifiers and ambiguity groups to trusted packet facts.
-  - Bind Thai tax document status to a trusted packet fact.
-  - Reject or replace caller values that contradict each trusted fact.
-  - Run fresh correctness and security reviews against the final remediation HEAD.
+  - Initial Review A passed at `be84ff474`. Its receipt is `phase2-review-a-correctness-result.json`.
+  - Initial Review B failed at `be84ff474`. Its receipt is `phase2-review-b-security-result.json`.
+  - Review B v2 failed at `1129427`. Its receipt is `phase2-review-b-security-result-v2.json`.
+  - Commit `0b29d8bf3` preserves these superseded receipts and their role logs.
+  - Final Review A v2 and Review B v2 passed against manifest `0d16c57d`.
+  - Commit `1d0ffd568` contains the reviewed source and test bytes.
+  - The final artifacts record 304 Finance tests and 170 focused tests passed.
+  - They record 20 Company Identity tests and 25 private-storage tests passed.
+  - The recorded type, build, lint, format, diff, and graph checks passed.
 
-- [ ] Task: Add exact THB-equivalent valuation for bills in every source currency. Preserve each original amount and currency. The verified packet must bind the THB amount, rate, effective date, and rate source.
+- [b] Task: Add exact THB valuations for bills in each source currency. Preserve every source amount and currency. — deferred:finance-owner
+
+  The verified packet must bind the THB amount, rate, effective date, and rate source.
+  The owner or accountant must select the rate source and rounding policy.
 
   Next-session scope (2026-08-14):
 
@@ -60,7 +62,10 @@
 
   Handoff: `phase2-multi-currency-thb-handoff-20260814.md`. The completed trust-binding source commit is `1d0ffd568`.
 
-- [b] Task: Pilot one reconciled historical month and one historical billing packet with authorization, audit, rollback, and duplicate/conflict evidence through owner-attested private-evidence packets only. (deferred:phase2; blocked until Task 1 implementation evidence permits it)
+- [b] Task: Pilot one reconciled month and one billing packet through owner-attested private-evidence packets. — deferred:finance-owner-data
+
+  The pilot must prove authorization, audit, rollback, replay, and conflict behavior.
+  An authorized owner must supply the pilot month and packet.
 
   Historical Red chronology (2026-08-12): the Phase 2 aggregate remained intentionally Red because `controlled-imports.ts` and the historical import operations do not exist. Its compiler AST fixture, source-owner guard, and missing-source boundary guard passed; the remaining expected failures were excluded from Phase 1 Task 3 acceptance.
 
@@ -111,5 +116,5 @@
 
 ## Phase 3 — close and accountant exchange
 
-- [b] Task: Implement close-period controls and versioned accountant export packs only after written decisions for Thai invoice/tax/VAT/WHT, classification, close, retention, correction, and pack policy (system-map R7). Depends on the pilot, accountant acceptance, and all relevant source contracts.
-- [b] Task: Release Finance Operations access only after Company Admin role mapping, revocation, audit evidence, and the finalization gate are accepted. Depends on system-map R2, the completed policy decisions, and review evidence for every integration boundary.
+- [b] Task: Implement close controls and accountant packs after the required written policy decisions and pilot acceptance. — deferred:accountant-owner-decisions
+- [b] Task: Release Finance Operations after Company Admin access and all integration reviews pass. — deferred:company-admin-owner

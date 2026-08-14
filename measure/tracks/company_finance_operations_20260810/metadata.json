@@ -5,9 +5,9 @@
   "created_at": "2026-08-10T00:00:00Z",
   "updated_at": "2026-08-14T00:00:00Z",
   "description": "Create the policy-neutral foundation for the distinct apps/accounting Finance Operations product without claiming ownership of statutory books or tax filings.",
-  "estimated_tasks": 8,
+  "estimated_tasks": 9,
   "actual_tasks": null,
-  "deviation_notes": "Opened as a P0 company priority. Finance Operations is separate from Company Admin identity, CRM, Sales Advantage, and the Thai accountant's accepted books and filings. The estimate increased from seven to eight when the live CRM CustomerBillingCatalogPort and Tutor TutorFinancialExportPort owner-contract task was added; that task remains blocked until its source owners exist.",
+  "deviation_notes": "Finance Operations remains separate from Company Admin, CRM, Sales Advantage, and statutory accounting. The estimate increased from seven to eight for the CRM and Tutor contract task. That task awaits its source owners. The estimate increased to nine for exact THB valuation.",
   "sprint": {
     "goal": "Establish bounded, provider-neutral Finance Operations contracts and Red tests for operational financial records, evidence, and source-system integrations.",
     "stories": [
@@ -23,7 +23,7 @@
         "title": "Import and reconcile operational facts",
         "size": "L",
         "priority": "Must",
-        "status": "pending"
+        "status": "in_progress"
       },
       {
         "id": "F3",

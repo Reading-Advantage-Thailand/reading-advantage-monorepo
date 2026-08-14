@@ -1,24 +1,28 @@
 # Finance Operations Phase 2 test strategy - controlled operational imports
 
-> Canonical, falsifiable test strategy for Phase 2 of
+> Canonical, falsifiable Task 1 strategy for Phase 2 of
 > `company_finance_operations_20260810`. Owned by the Measure Strategy
 > subagent. The orchestrator, Mid-red, Jr-green, phase-acceptance,
 > final-acceptance, and adversarial-testing roles consume this document. It is
-> the single source of truth for what Red, Green, and closeout mean for Phase 2.
+> the single source of truth for Task 1 Red, Green, and closeout behavior.
+
+## Disposition — 2026-08-14
+
+Task 1 passed final Review A and Review B against manifest `0d16c57d`.
+The reviewed source commit is `1d0ffd568`.
+
+The remaining THB valuation and pilot tasks need separate strategies.
+This document preserves the Task 1 Red and remediation chronology.
 
 ## Scope and revision
 
 - **Track:** `company_finance_operations_20260810`
 - **Phase:** Phase 2 - controlled operational imports
 - **Tasks in scope:**
-  - Task 1 (admitted `[~]`): "Implement idempotent historical private-evidence
-    packets, payroll-summary imports, historical school-billing snapshots,
-    evidence references, and correction/supersession flow."
-  - Task 2 (remains `[b]`): "Pilot one reconciled historical month and one
-    historical billing packet with authorization, audit, rollback, and
-    duplicate/conflict evidence through owner-attested private-evidence packets
-    only." Blocked until Task 1 implementation evidence permits it.
-- **role_base_sha / current HEAD:** `13565ae7ba2d18ed21016ee71a80ff3629411f62`
+  - Task 1 is accepted `[x]` at source commit `1d0ffd568`.
+  - The THB task remains `[b] deferred:finance-owner`.
+  - The pilot remains `[b] deferred:finance-owner-data`.
+- **Historical role base:** `13565ae7ba2d18ed21016ee71a80ff3629411f62`
 - **Phase 1 accepted baselines (dependencies now satisfied):**
   - Task 1 foundation: `3b3a128ea381f8fff0c6e1136894fd39228eaff9`
   - Task 2 persistence: `c5ecf18b0830c8702602f9f5f33415c7b3e92d66`
@@ -31,7 +35,7 @@
   No production, test, spec, decision, metadata, registry, DB, storage, or
   lockfile edits.
 
-## Reconciliation: why `deferred:phase2` is lifted for Task 1
+## Historical reconciliation: why `deferred:phase2` was lifted for Task 1
 
 Both Phase 2 tasks were marked `[b] deferred:phase2` when the plan was written.
 The marker conflated two separate concerns:
@@ -61,7 +65,7 @@ The marker conflated two separate concerns:
    The CRM/Tutor source-owner task is a separate `[b]` task in Phase 1. It does
    not gate Phase 2.
 
-**Determination: Phase 2 Task 1 is executable using only
+**Historical determination: Phase 2 Task 1 was executable using only
 `historical-private-evidence-packet.v1`.** No live CRM/Tutor adapters, no
 guessed Thai policy, no source lookalike envelopes, and no cross-database
 credentials are required. The Red test already exists
@@ -69,10 +73,8 @@ credentials are required. The Red test already exists
 tests fail because the six required functions do not exist; 4 guard tests pass
 because they test the AST walker or assert the module is still deferred.
 
-**No real external blocker exists for Task 1.** The pilot task (Task 2) remains
-`[b]` because it requires Task 1 implementation evidence (the six functions must
-exist and pass) before a reconciled historical month and billing packet can be
-piloted.
+**No external blocker applied to Task 1.** Task 1 now has accepted evidence.
+The pilot needs an authorized owner month and billing packet.
 
 ## phase_base_sha capture point (authoritative)
 
@@ -544,7 +546,7 @@ CI=true pnpm --filter @reading-advantage/backend exec vitest run \
   -t "requires controlled-import and historical-private-evidence pilot behavior"
 ```
 
-Expected red failure: `subject.runHistoricalPrivateEvidencePilot` is
+Historical Red failure: `subject.runHistoricalPrivateEvidencePilot` was
 `undefined`.
 
 **Green gate:**
@@ -554,12 +556,12 @@ Expected red failure: `subject.runHistoricalPrivateEvidencePilot` is
 **Closeout gate (2.F):**
 - `runHistoricalPrivateEvidencePilot` accepts a
   `{packetVersion: "historical-private-evidence-packet.v1", sourceSystem}`
-  input and returns `{status: "accepted" | "replay" | "conflict",
-  packetVersion: "historical-private-evidence-packet.v1",
-  liveSourceAdaptersUsed: []}`.
+  input and returns `{status: "not-admitted", packetVersion:
+  "historical-private-evidence-packet.v1", liveSourceAdaptersUsed: []}`.
 - The empty `liveSourceAdaptersUsed` array is the executable proof that no live
   CRM or Tutor adapter is used. This is the spec's "must not use live CRM or
   Tutor adapters" boundary made testable.
+- An `accepted`, `replay`, or `conflict` result fails the blocked-pilot contract.
 
 **Fixtures and mocks:** plain-object pilot input. No live adapters.
 
@@ -578,8 +580,7 @@ The full reconciled-month pilot belongs to Task 2 (blocked).
 - **A1 / A4** - The test asserts `liveSourceAdaptersUsed` is `[]` via
   `toMatchObject`. Falsifier: returning a non-empty array or a live adapter
   name fails.
-- **A5 / A6** - No "pilot green" or "no live adapters" claim unless this test
-  passes and the lookalike guard is clean.
+- **A5 / A6** - No admitted-pilot claim is valid while Task 2 remains blocked.
 
 **Review applicability:** security review **required** (live-adapter exclusion);
 adversarial testing **required** (the lookalike-envelope rejection in 2.A is the
