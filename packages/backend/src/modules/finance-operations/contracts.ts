@@ -190,6 +190,20 @@ const factTextSchema = z
   .max(512)
   .regex(/\S/u)
   .refine(hasNoControlCharacters, "Control characters are not allowed");
+const controlledNormalizationTextSchema = z
+  .string()
+  .min(1)
+  .max(128)
+  .regex(/\S/u)
+  .refine(hasNoControlCharacters, "Control characters are not allowed")
+  .refine((value) => !/<script|@|[{}]/iu.test(value), "Unsafe source text");
+const controlledVoucherTextSchema = z
+  .string()
+  .min(1)
+  .max(110)
+  .regex(/\S/u)
+  .refine(hasNoControlCharacters, "Control characters are not allowed")
+  .refine((value) => !/<script|@|[{}]/iu.test(value), "Unsafe source text");
 const identifierSchema = z
   .string()
   .min(1)
@@ -220,17 +234,23 @@ const historicalFactIdentifierAllowlist = {
     "billing-statement",
     "credit-note",
     "debit-note",
+    "foreign-workspace-invoice",
     "invoice",
+    "payment-receipt",
     "payroll-summary",
     "receipt",
+    "school-billing-invoice",
   ],
   "document-reference": [
+    "ambiguity-group-id",
     "billing-period",
     "document-number",
     "invoice-number",
     "receipt-number",
     "source-record",
+    "variant-id",
   ],
+  "document-status": ["thai-tax-document-status"],
   "tax-label": [
     "goods-and-services-tax",
     "gst",
@@ -251,6 +271,7 @@ const historicalFactIdentifierAllowlist = {
     "billing-period",
     "invoice-total",
   ],
+  currency: ["document-currency"],
 } as const;
 
 const historicalFactCategorySchema = z.enum([
@@ -258,9 +279,11 @@ const historicalFactCategorySchema = z.enum([
   "document-date",
   "document-class",
   "document-reference",
+  "document-status",
   "tax-label",
   "payroll-summary",
   "billing-summary",
+  "currency",
 ]);
 
 const historicalPrivateEvidenceScopeSchema = z.strictObject({
@@ -276,6 +299,42 @@ const historicalPrivateEvidenceSourceSchema = z.strictObject({
   evidenceReference: privateEvidenceReferenceSchema,
 });
 
+const historicalNormalizationBindingSchema = z.discriminatedUnion(
+  "bindingKind",
+  [
+    z.strictObject({
+      bindingKind: z.literal("document-money"),
+      normalizedFactId: controlledNormalizationTextSchema,
+      sourceText: controlledNormalizationTextSchema.optional(),
+    }),
+    z.strictObject({
+      bindingKind: z.literal("document-count"),
+      normalizedFactId: controlledNormalizationTextSchema,
+    }),
+    z.strictObject({
+      bindingKind: z.literal("payroll-money"),
+      voucherNumberText: controlledVoucherTextSchema,
+      sourceDateText: controlledNormalizationTextSchema,
+      moneyKind: z.enum(["gross", "source-stated-wht", "net"]),
+    }),
+  ],
+);
+
+const normalizationMetadataFactIds = new Set([
+  "document-reference:source-record",
+  "document-reference:receipt-number",
+  "document-reference:invoice-number",
+  "document-reference:document-number",
+  "document-reference:variant-id",
+  "document-reference:ambiguity-group-id",
+]);
+
+const payrollFactIdByMoneyKind = {
+  gross: "payroll-summary:gross-total",
+  "source-stated-wht": "payroll-summary:withholding-total",
+  net: "payroll-summary:net-total",
+} as const;
+
 const historicalPrivateEvidenceFactSchema = z
   .strictObject({
     factCategory: historicalFactCategorySchema,
@@ -283,6 +342,7 @@ const historicalPrivateEvidenceFactSchema = z
     kind: z.literal("source-stated-value"),
     label: factTextSchema,
     value: factTextSchema,
+    normalizationBinding: historicalNormalizationBindingSchema.optional(),
   })
   .superRefine((fact, context) => {
     const expectedPrefix = `${fact.factCategory}:`;
@@ -306,6 +366,67 @@ const historicalPrivateEvidenceFactSchema = z
         message: "The fact identifier is not allow-listed",
       });
     }
+
+    if (
+      fact.factCategory === "currency" &&
+      !currencySchema.safeParse(fact.value).success
+    ) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["value"],
+        message: "The document currency must use three uppercase letters",
+      });
+    }
+
+    if (
+      fact.factCategory === "document-status" &&
+      fact.value !== "unresolved" &&
+      fact.value !== "not-source-asserted"
+    ) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["value"],
+        message: "The Thai tax document status is not supported",
+      });
+    }
+
+    if (
+      (fact.factId === "document-reference:variant-id" ||
+        fact.factId === "document-reference:ambiguity-group-id") &&
+      !controlledNormalizationTextSchema.safeParse(fact.value).success
+    ) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["value"],
+        message: "The school billing metadata contains unsafe text",
+      });
+    }
+
+    const isMetadataFact =
+      fact.factCategory === "document-class" ||
+      fact.factCategory === "document-status" ||
+      fact.factCategory === "currency" ||
+      fact.factCategory === "tax-label" ||
+      normalizationMetadataFactIds.has(fact.factId);
+    if (isMetadataFact && fact.normalizationBinding !== undefined) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["normalizationBinding"],
+        message: "Metadata facts cannot have normalization bindings",
+      });
+    }
+
+    if (fact.normalizationBinding?.bindingKind === "payroll-money") {
+      const expectedFactId =
+        payrollFactIdByMoneyKind[fact.normalizationBinding.moneyKind];
+      if (fact.factId !== expectedFactId) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["factId"],
+          message: "The payroll fact identifier must match its money kind",
+        });
+      }
+    }
   });
 
 function evidenceCompanyId(reference: string): string {
@@ -323,6 +444,37 @@ export const historicalPrivateEvidencePacketSchema = z
     facts: z.array(historicalPrivateEvidenceFactSchema).min(1).max(128),
   })
   .superRefine((packet, context) => {
+    const singletonFacts = [
+      {
+        factId: "currency:document-currency",
+        message: "The document currency fact must be unique",
+      },
+      {
+        factId: "document-status:thai-tax-document-status",
+        message: "The Thai tax document status fact must be unique",
+      },
+      {
+        factId: "document-reference:variant-id",
+        message: "The school billing variant fact must be unique",
+      },
+      {
+        factId: "document-reference:ambiguity-group-id",
+        message: "The school billing ambiguity group fact must be unique",
+      },
+    ] as const;
+    for (const singleton of singletonFacts) {
+      if (
+        packet.facts.filter((fact) => fact.factId === singleton.factId).length >
+        1
+      ) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["facts"],
+          message: singleton.message,
+        });
+      }
+    }
+
     if (
       evidenceCompanyId(packet.source.evidenceReference) !==
       packet.scope.companyId

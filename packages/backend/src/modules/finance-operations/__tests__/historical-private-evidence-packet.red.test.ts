@@ -323,10 +323,13 @@ function packetSource(
 }
 
 describe("Finance historical private-evidence packet RED contract", () => {
-  it("parses a versioned packet without transforming any source identity, digest, label, or source-stated value", async () => {
+  it("parses a generic legacy packet without a normalization binding", async () => {
     const schema = requirePacketSchema(await loadHistoricalPacketContract());
     const input = packet();
 
+    expect((input.facts as readonly unknown[])[0]).not.toHaveProperty(
+      "normalizationBinding",
+    );
     expect(schema.safeParse(input)).toEqual({ success: true, data: input });
     const companyScopedInput = packet({
       scope: { companyId: scope.companyId },
@@ -335,6 +338,238 @@ describe("Finance historical private-evidence packet RED contract", () => {
       success: true,
       data: companyScopedInput,
     });
+  });
+
+  it.each([
+    {
+      name: "a document money binding",
+      fact: sourceStatedFact({
+        normalizationBinding: {
+          bindingKind: "document-money",
+          normalizedFactId: "receipt-total",
+          sourceText: "Receipt total as stated",
+        },
+      }),
+    },
+    {
+      name: "a document count binding",
+      fact: sourceStatedFact({
+        factCategory: "billing-summary",
+        factId: "billing-summary:billing-period",
+        label: "Student count as stated",
+        value: "147",
+        normalizationBinding: {
+          bindingKind: "document-count",
+          normalizedFactId: "student-count",
+        },
+      }),
+    },
+    {
+      name: "a payroll money binding",
+      fact: sourceStatedFact({
+        factCategory: "payroll-summary",
+        factId: "payroll-summary:gross-total",
+        label: "Gross pay as stated",
+        value: "100.00",
+        normalizationBinding: {
+          bindingKind: "payroll-money",
+          voucherNumberText: "PV-2026/071",
+          sourceDateText: "08/07/2569",
+          moneyKind: "gross",
+        },
+      }),
+    },
+  ] as const)("parses $name", async ({ fact }) => {
+    const schema = requirePacketSchema(await loadHistoricalPacketContract());
+    const input = packet({ facts: [fact] });
+
+    expect(schema.safeParse(input)).toEqual({ success: true, data: input });
+  });
+
+  it.each([
+    sourceStatedFact({
+      factCategory: "document-class",
+      factId: "document-class:payment-receipt",
+      label: "Document class as stated",
+      value: "payment-receipt",
+    }),
+    sourceStatedFact({
+      factCategory: "currency",
+      factId: "currency:document-currency",
+      label: "Document currency as stated",
+      value: "THB",
+    }),
+    sourceStatedFact({
+      factCategory: "tax-label",
+      factId: "tax-label:gst",
+      label: "GST as stated",
+      value: "7%",
+    }),
+    sourceStatedFact({
+      factCategory: "document-reference",
+      factId: "document-reference:source-record",
+      label: "Source record as stated",
+      value: "legacy-receipt-001",
+    }),
+    sourceStatedFact({
+      factCategory: "document-status",
+      factId: "document-status:thai-tax-document-status",
+      label: "Thai tax document status as stated",
+      value: "unresolved",
+    }),
+    sourceStatedFact({
+      factCategory: "document-reference",
+      factId: "document-reference:variant-id",
+      label: "School billing variant as stated",
+      value: "term-1",
+    }),
+    sourceStatedFact({
+      factCategory: "document-reference",
+      factId: "document-reference:ambiguity-group-id",
+      label: "School billing ambiguity group as stated",
+      value: "school-group-1",
+    }),
+  ])("rejects a normalization binding on a metadata fact", async (fact) => {
+    const schema = requirePacketSchema(await loadHistoricalPacketContract());
+    const input = packet({
+      facts: [
+        {
+          ...fact,
+          normalizationBinding: {
+            bindingKind: "document-money",
+            normalizedFactId: "receipt-total",
+          },
+        },
+      ],
+    });
+
+    expect(schema.safeParse(input).success).toBe(false);
+  });
+
+  it.each([
+    {
+      name: "an unsupported Thai tax document status",
+      fact: sourceStatedFact({
+        factCategory: "document-status",
+        factId: "document-status:thai-tax-document-status",
+        label: "Thai tax document status as stated",
+        value: "tax-invoice",
+      }),
+    },
+    {
+      name: "an unsafe school variant ID",
+      fact: sourceStatedFact({
+        factCategory: "document-reference",
+        factId: "document-reference:variant-id",
+        label: "School billing variant as stated",
+        value: "<script>alert(1)</script>",
+      }),
+    },
+    {
+      name: "an oversized school ambiguity group ID",
+      fact: sourceStatedFact({
+        factCategory: "document-reference",
+        factId: "document-reference:ambiguity-group-id",
+        label: "School billing ambiguity group as stated",
+        value: "x".repeat(129),
+      }),
+    },
+  ] as const)("rejects $name", async ({ fact }) => {
+    const schema = requirePacketSchema(await loadHistoricalPacketContract());
+
+    expect(schema.safeParse(packet({ facts: [fact] })).success).toBe(false);
+  });
+
+  it("rejects a payroll binding whose outer fact ID conflicts with moneyKind", async () => {
+    const schema = requirePacketSchema(await loadHistoricalPacketContract());
+    const input = packet({
+      facts: [
+        sourceStatedFact({
+          factCategory: "payroll-summary",
+          factId: "payroll-summary:net-total",
+          label: "Gross pay as stated",
+          value: "100.00",
+          normalizationBinding: {
+            bindingKind: "payroll-money",
+            voucherNumberText: "PV-2026/071",
+            sourceDateText: "08/07/2569",
+            moneyKind: "gross",
+          },
+        }),
+      ],
+    });
+
+    expect(schema.safeParse(input).success).toBe(false);
+  });
+
+  it.each(["THB", "USD"] as const)(
+    "accepts the allow-listed source-stated %s document currency fact",
+    async (currency) => {
+      const schema = requirePacketSchema(await loadHistoricalPacketContract());
+      const input = packet({
+        facts: [
+          sourceStatedFact({
+            factCategory: "currency",
+            factId: "currency:document-currency",
+            label: "Document currency as stated",
+            value: currency,
+          }),
+        ],
+      });
+
+      expect(schema.safeParse(input)).toEqual({ success: true, data: input });
+    },
+  );
+
+  it.each([
+    {
+      name: "an unapproved currency fact identifier",
+      fact: sourceStatedFact({
+        factCategory: "currency",
+        factId: "currency:unreviewed-currency",
+        label: "Document currency as stated",
+        value: "USD",
+      }),
+    },
+    {
+      name: "a lowercase currency value",
+      fact: sourceStatedFact({
+        factCategory: "currency",
+        factId: "currency:document-currency",
+        label: "Document currency as stated",
+        value: "thb",
+      }),
+    },
+    {
+      name: "a short currency value",
+      fact: sourceStatedFact({
+        factCategory: "currency",
+        factId: "currency:document-currency",
+        label: "Document currency as stated",
+        value: "TH",
+      }),
+    },
+  ] as const)(
+    "rejects $name from the strict source-stated currency fact grammar",
+    async ({ fact }) => {
+      const schema = requirePacketSchema(await loadHistoricalPacketContract());
+
+      expect(schema.safeParse(packet({ facts: [fact] })).success).toBe(false);
+    },
+  );
+
+  it("rejects duplicate source-stated document currency facts", async () => {
+    const schema = requirePacketSchema(await loadHistoricalPacketContract());
+    const currencyFact = sourceStatedFact({
+      factCategory: "currency",
+      factId: "currency:document-currency",
+      label: "Document currency as stated",
+      value: "THB",
+    });
+
+    expect(
+      schema.safeParse(packet({ facts: [currencyFact, currencyFact] })).success,
+    ).toBe(false);
   });
 
   it("keeps a poisoned source identity out of composed real-command and durable audit serialization", async () => {
@@ -408,19 +643,21 @@ describe("Finance historical private-evidence packet RED contract", () => {
     });
     const mutableScope: { companyId: string; schoolId?: string } = { ...scope };
     const mutablePacket = packet({ scope: mutableScope });
-    const attest = vi.fn(async (
-      request: Parameters<CompanyIdentityFinanceAttestor["attest"]>[0],
-    ) => {
-      expect(request.scope).toEqual(scope);
-      try {
-        (request.scope as { companyId: string }).companyId = "company-b";
-      } catch {
-        // A frozen validated snapshot is the expected fail-closed behavior.
-      }
-      started();
-      await attestationRelease;
-      return allowedAttestation();
-    });
+    const attest = vi.fn(
+      async (
+        request: Parameters<CompanyIdentityFinanceAttestor["attest"]>[0],
+      ) => {
+        expect(request.scope).toEqual(scope);
+        try {
+          (request.scope as { companyId: string }).companyId = "company-b";
+        } catch {
+          // A frozen validated snapshot is the expected fail-closed behavior.
+        }
+        started();
+        await attestationRelease;
+        return allowedAttestation();
+      },
+    );
     const verify = vi.fn(async () => ({
       evidenceReference,
       scope,
@@ -468,12 +705,14 @@ describe("Finance historical private-evidence packet RED contract", () => {
       },
     });
 
-    const failure = await command.prepare(commandRequest()).catch(
-      (error: unknown) => error,
+    const failure = await command
+      .prepare(commandRequest())
+      .catch((error: unknown) => error);
+    expect(failure).toEqual(
+      expect.objectContaining({
+        message: "FINANCE_ATTESTATION_FAILED",
+      }),
     );
-    expect(failure).toEqual(expect.objectContaining({
-      message: "FINANCE_ATTESTATION_FAILED",
-    }));
     expect(JSON.stringify(failure)).not.toContain(secret);
   });
 
@@ -547,9 +786,9 @@ describe("Finance historical private-evidence packet RED contract", () => {
 
     let failure: unknown;
     try {
-      failure = await command.prepare(commandRequest()).catch(
-        (error: unknown) => error,
-      );
+      failure = await command
+        .prepare(commandRequest())
+        .catch((error: unknown) => error);
     } finally {
       digestSpy.mockRestore();
     }
@@ -639,8 +878,7 @@ describe("Finance historical private-evidence packet RED contract", () => {
       .mockResolvedValue(digestValue.buffer);
     try {
       const preparation = await command.prepare(commandRequest());
-      const expectedObjectId =
-        `finance-historical-private-evidence-object-v1|sha256=${digestValue.hexadecimal}`;
+      const expectedObjectId = `finance-historical-private-evidence-object-v1|sha256=${digestValue.hexadecimal}`;
       new Uint8Array(digestValue.buffer).fill(0xff);
 
       expect(preparation.objectId).toBe(expectedObjectId);
@@ -659,7 +897,9 @@ describe("Finance historical private-evidence packet RED contract", () => {
     {
       name: "absent school versus the literal company-scope school",
       first: { scope: { companyId: scope.companyId } },
-      second: { scope: { companyId: scope.companyId, schoolId: "company-scope" } },
+      second: {
+        scope: { companyId: scope.companyId, schoolId: "company-scope" },
+      },
     },
     {
       name: "delimiter-adjacent source components",
@@ -676,50 +916,61 @@ describe("Finance historical private-evidence packet RED contract", () => {
       first: { source: { sourceIdentity: "Case-sensitive" } },
       second: { source: { sourceIdentity: "case-sensitive" } },
     },
-  ] as const)("keeps $name in distinct opaque object identities", async ({ first, second }) => {
-    const subject = await loadHistoricalPacketContract();
-    const createCommand = requireImportCommandFactory(subject);
-    const prepareVariant = async (variant: {
-      readonly scope?: { readonly companyId: string; readonly schoolId?: string };
-      readonly source?: { readonly sourceSystem?: string; readonly sourceVersion?: string; readonly sourceIdentity?: string };
-    }) => {
-      const variantScope = variant.scope ?? scope;
-      const schoolIds = variantScope.schoolId === undefined
-        ? undefined
-        : [variantScope.schoolId];
-      const attestation = allowedAttestation({
-        organizationId: variantScope.companyId,
-        schoolIds,
-      });
-      const variantPacket = packet({
-        scope: variantScope,
-        source: {
-          ...packetSource(packet()),
-          ...variant.source,
-        },
-      });
-      const command = createCommand({
-        companyIdentityAttestor: { attest: vi.fn(async () => attestation) },
-        privateEvidenceBindingPort: {
-          verify: vi.fn(async () => ({
-            evidenceReference,
-            scope: variantScope,
-            payloadDigest,
-          })),
-        },
-      });
-      return command.prepare(commandRequest(variantPacket));
-    };
-    const firstPrepared = await prepareVariant(first);
-    const secondPrepared = await prepareVariant(second);
-    expect(firstPrepared.objectId).not.toBe(secondPrepared.objectId);
-    expect(firstPrepared.objectId).toMatch(
-      /^finance-historical-private-evidence-object-v1\|sha256=[a-f0-9]{64}$/u,
-    );
-    expect(secondPrepared.objectId).toMatch(
-      /^finance-historical-private-evidence-object-v1\|sha256=[a-f0-9]{64}$/u,
-    );
-  });
+  ] as const)(
+    "keeps $name in distinct opaque object identities",
+    async ({ first, second }) => {
+      const subject = await loadHistoricalPacketContract();
+      const createCommand = requireImportCommandFactory(subject);
+      const prepareVariant = async (variant: {
+        readonly scope?: {
+          readonly companyId: string;
+          readonly schoolId?: string;
+        };
+        readonly source?: {
+          readonly sourceSystem?: string;
+          readonly sourceVersion?: string;
+          readonly sourceIdentity?: string;
+        };
+      }) => {
+        const variantScope = variant.scope ?? scope;
+        const schoolIds =
+          variantScope.schoolId === undefined
+            ? undefined
+            : [variantScope.schoolId];
+        const attestation = allowedAttestation({
+          organizationId: variantScope.companyId,
+          schoolIds,
+        });
+        const variantPacket = packet({
+          scope: variantScope,
+          source: {
+            ...packetSource(packet()),
+            ...variant.source,
+          },
+        });
+        const command = createCommand({
+          companyIdentityAttestor: { attest: vi.fn(async () => attestation) },
+          privateEvidenceBindingPort: {
+            verify: vi.fn(async () => ({
+              evidenceReference,
+              scope: variantScope,
+              payloadDigest,
+            })),
+          },
+        });
+        return command.prepare(commandRequest(variantPacket));
+      };
+      const firstPrepared = await prepareVariant(first);
+      const secondPrepared = await prepareVariant(second);
+      expect(firstPrepared.objectId).not.toBe(secondPrepared.objectId);
+      expect(firstPrepared.objectId).toMatch(
+        /^finance-historical-private-evidence-object-v1\|sha256=[a-f0-9]{64}$/u,
+      );
+      expect(secondPrepared.objectId).toMatch(
+        /^finance-historical-private-evidence-object-v1\|sha256=[a-f0-9]{64}$/u,
+      );
+    },
+  );
 
   it.each([
     {
@@ -1023,7 +1274,9 @@ describe("Finance historical private-evidence packet RED contract", () => {
     expect(attestationInput?.audit.objectId).toMatch(
       /^finance-historical-private-evidence-object-v1\|sha256=[a-f0-9]{64}$/u,
     );
-    expect(attestationInput?.audit.objectId).not.toContain("legacy-receipt-001");
+    expect(attestationInput?.audit.objectId).not.toContain(
+      "legacy-receipt-001",
+    );
     expect(JSON.stringify(attestationInput)).not.toContain(poisonedObjectId);
     expect(JSON.stringify(attestationInput)).not.toContain("secret-token");
   });

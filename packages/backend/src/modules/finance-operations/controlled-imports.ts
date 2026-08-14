@@ -8,6 +8,7 @@ import {
   isHistoricalPrivateEvidencePreparation,
   type FinanceOperationAuthorizationInput,
   type FinanceOperationScope,
+  type HistoricalPrivateEvidenceFact,
 } from "./contracts.js";
 import type { DurableJobInput } from "./port-contracts.js";
 import type * as FinancePorts from "./ports.js";
@@ -299,13 +300,487 @@ function minor(value: unknown): string {
     throw new Error("invalid decimal");
   const neg = value[0] === "-",
     [n, f = ""] = (neg ? value.slice(1) : value).split(".");
-  if ((n as string).length > 38) throw new Error("decimal integer limit exceeded");
+  if ((n as string).length > 38)
+    throw new Error("decimal integer limit exceeded");
   const r = (
     BigInt(n as string) * 100n +
     BigInt((f + "00").slice(0, 2))
   ).toString();
   return neg && r !== "0" ? `-${r}` : r;
 }
+
+const trustedDocumentMetadata = {
+  "payment-receipt": {
+    classFactId: "document-class:payment-receipt",
+    logicalReferenceFactId: "document-reference:receipt-number",
+  },
+  "school-billing-invoice": {
+    classFactId: "document-class:school-billing-invoice",
+    logicalReferenceFactId: "document-reference:invoice-number",
+  },
+  "payroll-summary": {
+    classFactId: "document-class:payroll-summary",
+    logicalReferenceFactId: "document-reference:document-number",
+  },
+  "foreign-workspace-invoice": {
+    classFactId: "document-class:foreign-workspace-invoice",
+    logicalReferenceFactId: "document-reference:invoice-number",
+  },
+} as const;
+
+type ControlledDocumentKind = keyof typeof trustedDocumentMetadata;
+
+const logicalDocumentReferenceFactIds = new Set([
+  "document-reference:receipt-number",
+  "document-reference:invoice-number",
+  "document-reference:document-number",
+]);
+
+function requireSingletonFact(
+  facts: readonly HistoricalPrivateEvidenceFact[],
+  predicate: (fact: HistoricalPrivateEvidenceFact) => boolean,
+  description: string,
+): HistoricalPrivateEvidenceFact {
+  const matches = facts.filter(predicate);
+  if (matches.length !== 1) {
+    throw new Error(`exactly one ${description} fact is required`);
+  }
+  return matches[0] as HistoricalPrivateEvidenceFact;
+}
+
+function readTrustedDocumentMetadata(input: {
+  readonly documentKind: ControlledDocumentKind;
+  readonly sourceDocumentId: string;
+  readonly logicalDocumentId: string;
+  readonly thaiTaxDocumentStatus: "not-source-asserted" | "unresolved";
+  readonly variantId?: string;
+  readonly ambiguityGroupId?: string;
+  readonly sourceIdentity: string;
+  readonly sourceRecordId: string;
+  readonly facts: readonly HistoricalPrivateEvidenceFact[];
+}): {
+  readonly sourceDocumentId: string;
+  readonly logicalDocumentId: string;
+  readonly sourceDocumentKind: ControlledDocumentKind;
+  readonly currency: string;
+  readonly thaiTaxDocumentStatus: "not-source-asserted" | "unresolved";
+  readonly variantId?: string;
+  readonly ambiguityGroupId?: string;
+  readonly sourceStatedTax?: Readonly<{
+    readonly label: string;
+    readonly rateText: string;
+  }>;
+  readonly valueFacts: readonly HistoricalPrivateEvidenceFact[];
+} {
+  const expected = trustedDocumentMetadata[input.documentKind];
+  const classFact = requireSingletonFact(
+    input.facts,
+    (fact) => fact.factCategory === "document-class",
+    "document class",
+  );
+  if (
+    classFact.factId !== expected.classFactId ||
+    classFact.value !== input.documentKind
+  ) {
+    throw new Error("trusted document class does not match the document kind");
+  }
+
+  const sourceRecordFact = requireSingletonFact(
+    input.facts,
+    (fact) =>
+      fact.factCategory === "document-reference" &&
+      fact.factId === "document-reference:source-record",
+    "source record",
+  );
+  if (
+    sourceRecordFact.value !== input.sourceIdentity ||
+    sourceRecordFact.value !== input.sourceRecordId ||
+    sourceRecordFact.value !== input.sourceDocumentId
+  ) {
+    throw new Error(
+      "trusted source record does not match the document identity",
+    );
+  }
+
+  const currencyFact = requireSingletonFact(
+    input.facts,
+    (fact) =>
+      fact.factCategory === "currency" &&
+      fact.factId === "currency:document-currency",
+    "document currency",
+  );
+
+  const statusFacts = input.facts.filter(
+    (fact) =>
+      fact.factCategory === "document-status" &&
+      fact.factId === "document-status:thai-tax-document-status",
+  );
+  if (statusFacts.length === 0) {
+    throw new Error("trusted Thai tax document status fact is required");
+  }
+  if (statusFacts.length > 1) {
+    throw new Error("duplicate trusted Thai tax document status fact");
+  }
+  const thaiTaxDocumentStatus = statusFacts[0]?.value;
+  if (
+    thaiTaxDocumentStatus !== "unresolved" &&
+    thaiTaxDocumentStatus !== "not-source-asserted"
+  ) {
+    throw new Error("trusted Thai tax document status is invalid");
+  }
+  if (
+    ((input.documentKind === "school-billing-invoice" ||
+      input.documentKind === "payroll-summary") &&
+      thaiTaxDocumentStatus !== "unresolved") ||
+    (input.documentKind === "foreign-workspace-invoice" &&
+      thaiTaxDocumentStatus !== "not-source-asserted")
+  ) {
+    throw new Error("trusted Thai tax document status is invalid");
+  }
+  if (thaiTaxDocumentStatus !== input.thaiTaxDocumentStatus) {
+    throw new Error("trusted Thai tax document status does not match");
+  }
+
+  const variantFacts = input.facts.filter(
+    (fact) =>
+      fact.factCategory === "document-reference" &&
+      fact.factId === "document-reference:variant-id",
+  );
+  const ambiguityGroupFacts = input.facts.filter(
+    (fact) =>
+      fact.factCategory === "document-reference" &&
+      fact.factId === "document-reference:ambiguity-group-id",
+  );
+  if (variantFacts.length > 1 || ambiguityGroupFacts.length > 1) {
+    throw new Error("duplicate trusted school billing metadata fact");
+  }
+  if (
+    input.documentKind !== "school-billing-invoice" &&
+    (variantFacts.length !== 0 || ambiguityGroupFacts.length !== 0)
+  ) {
+    throw new Error(
+      "school billing metadata requires a school-billing invoice",
+    );
+  }
+  const variantId = variantFacts[0]?.value;
+  const ambiguityGroupId = ambiguityGroupFacts[0]?.value;
+  if (
+    input.documentKind === "school-billing-invoice" &&
+    ((variantId === undefined) !== (input.variantId === undefined) ||
+      (ambiguityGroupId === undefined) !==
+        (input.ambiguityGroupId === undefined))
+  ) {
+    throw new Error("trusted school billing metadata is incomplete");
+  }
+  if (
+    input.documentKind === "school-billing-invoice" &&
+    (variantId !== input.variantId ||
+      ambiguityGroupId !== input.ambiguityGroupId)
+  ) {
+    throw new Error("trusted school billing metadata does not match");
+  }
+
+  const logicalReferenceFacts = input.facts.filter((fact) =>
+    logicalDocumentReferenceFactIds.has(fact.factId),
+  );
+  if (
+    logicalReferenceFacts.length > 1 ||
+    (logicalReferenceFacts[0] !== undefined &&
+      logicalReferenceFacts[0].factId !== expected.logicalReferenceFactId)
+  ) {
+    throw new Error("trusted logical document reference is invalid");
+  }
+  const logicalDocumentId =
+    logicalReferenceFacts[0]?.value ?? sourceRecordFact.value;
+  if (logicalDocumentId !== input.logicalDocumentId) {
+    throw new Error("trusted logical document reference does not match");
+  }
+
+  const taxFacts = input.facts.filter(
+    (fact) => fact.factCategory === "tax-label",
+  );
+  let sourceStatedTax:
+    | Readonly<{ readonly label: string; readonly rateText: string }>
+    | undefined;
+  if (input.documentKind === "foreign-workspace-invoice") {
+    if (taxFacts.length !== 1 || taxFacts[0]?.factId !== "tax-label:gst") {
+      throw new Error("exactly one trusted GST fact is required");
+    }
+    sourceStatedTax = {
+      label: text(taxFacts[0].label),
+      rateText: text(taxFacts[0].value),
+    };
+  } else if (taxFacts.length !== 0) {
+    throw new Error("tax facts are not allowed for this document kind");
+  }
+
+  const valueFacts = input.facts.filter(
+    (fact) =>
+      fact.factCategory !== "document-class" &&
+      fact.factCategory !== "document-status" &&
+      fact.factCategory !== "currency" &&
+      fact.factCategory !== "tax-label" &&
+      fact.factId !== "document-reference:source-record" &&
+      fact.factId !== "document-reference:variant-id" &&
+      fact.factId !== "document-reference:ambiguity-group-id" &&
+      !logicalDocumentReferenceFactIds.has(fact.factId),
+  );
+
+  return {
+    sourceDocumentId: sourceRecordFact.value,
+    logicalDocumentId,
+    sourceDocumentKind: input.documentKind,
+    currency: currencyFact.value,
+    thaiTaxDocumentStatus,
+    ...(variantId === undefined ? {} : { variantId }),
+    ...(ambiguityGroupId === undefined ? {} : { ambiguityGroupId }),
+    ...(sourceStatedTax === undefined ? {} : { sourceStatedTax }),
+    valueFacts,
+  };
+}
+
+type HistoricalNormalizationBinding = NonNullable<
+  HistoricalPrivateEvidenceFact["normalizationBinding"]
+>;
+type DocumentMoneyBinding = Extract<
+  HistoricalNormalizationBinding,
+  { readonly bindingKind: "document-money" }
+>;
+type DocumentCountBinding = Extract<
+  HistoricalNormalizationBinding,
+  { readonly bindingKind: "document-count" }
+>;
+type PayrollMoneyBinding = Extract<
+  HistoricalNormalizationBinding,
+  { readonly bindingKind: "payroll-money" }
+>;
+type PayrollMoneyKind = PayrollMoneyBinding["moneyKind"];
+
+type CallerDocumentFact =
+  | Readonly<{
+      readonly factId: string;
+      readonly kind: "money";
+      readonly amountDecimal: string;
+      readonly sourceText?: string;
+    }>
+  | Readonly<{
+      readonly factId: string;
+      readonly kind: "count";
+      readonly countText: string;
+    }>;
+
+interface CallerPayrollVoucher {
+  readonly voucherNumberText: string;
+  readonly sourceDateText: string;
+  readonly grossDecimal: string;
+  readonly sourceStatedWhtDecimal: string;
+  readonly netDecimal: string;
+}
+
+type TrustedNormalizedFact =
+  | Readonly<{
+      readonly kind: "money";
+      readonly factId: string;
+      readonly amountDecimal: string;
+      readonly sourceText?: string;
+      readonly payroll?: Readonly<{
+        readonly voucherNumberText: string;
+        readonly sourceDateText: string;
+        readonly moneyKind: PayrollMoneyKind;
+      }>;
+    }>
+  | Readonly<{
+      readonly kind: "count";
+      readonly factId: string;
+      readonly countText: string;
+    }>;
+
+const payrollFactIdByMoneyKind: Readonly<Record<PayrollMoneyKind, string>> = {
+  gross: "payroll-summary:gross-total",
+  "source-stated-wht": "payroll-summary:withholding-total",
+  net: "payroll-summary:net-total",
+};
+
+const payrollMoneyKinds = [
+  "gross",
+  "source-stated-wht",
+  "net",
+] as const satisfies readonly PayrollMoneyKind[];
+
+function requiredNormalizationBinding(
+  fact: HistoricalPrivateEvidenceFact,
+): HistoricalNormalizationBinding {
+  if (fact.normalizationBinding === undefined) {
+    throw new Error("trusted normalized fact binding is required");
+  }
+  return fact.normalizationBinding;
+}
+
+function bindTrustedDocumentFacts(input: {
+  readonly trustedFacts: readonly HistoricalPrivateEvidenceFact[];
+  readonly callerFacts: readonly CallerDocumentFact[];
+}): readonly TrustedNormalizedFact[] {
+  if (input.trustedFacts.length !== input.callerFacts.length) {
+    throw new Error("trusted and caller document fact counts differ");
+  }
+
+  const callerFacts = new Map<string, CallerDocumentFact>();
+  for (const callerFact of input.callerFacts) {
+    if (callerFacts.has(callerFact.factId)) {
+      throw new Error("duplicate caller document fact identity");
+    }
+    callerFacts.set(callerFact.factId, callerFact);
+  }
+
+  const trustedFactIds = new Set<string>();
+  const matchedCallerFactIds = new Set<string>();
+  const normalized: TrustedNormalizedFact[] = [];
+  for (const trustedFact of input.trustedFacts) {
+    const binding = requiredNormalizationBinding(trustedFact);
+    if (binding.bindingKind === "payroll-money") {
+      throw new Error("payroll binding is invalid for a document fact");
+    }
+    if (trustedFactIds.has(binding.normalizedFactId)) {
+      throw new Error("duplicate trusted document fact identity");
+    }
+    trustedFactIds.add(binding.normalizedFactId);
+
+    const callerFact = callerFacts.get(binding.normalizedFactId);
+    if (callerFact === undefined) {
+      throw new Error("trusted document fact has no caller match");
+    }
+    matchedCallerFactIds.add(binding.normalizedFactId);
+
+    if (binding.bindingKind === "document-money") {
+      const moneyBinding = binding as DocumentMoneyBinding;
+      if (
+        callerFact.kind !== "money" ||
+        callerFact.amountDecimal !== trustedFact.value ||
+        callerFact.sourceText !== moneyBinding.sourceText
+      ) {
+        throw new Error("caller money fact does not match its trusted binding");
+      }
+      normalized.push({
+        kind: "money",
+        factId: moneyBinding.normalizedFactId,
+        amountDecimal: trustedFact.value,
+        ...(moneyBinding.sourceText === undefined
+          ? {}
+          : { sourceText: moneyBinding.sourceText }),
+      });
+      continue;
+    }
+
+    const countBinding = binding as DocumentCountBinding;
+    if (
+      callerFact.kind !== "count" ||
+      callerFact.countText !== trustedFact.value
+    ) {
+      throw new Error("caller count fact does not match its trusted binding");
+    }
+    normalized.push({
+      kind: "count",
+      factId: countBinding.normalizedFactId,
+      countText: trustedFact.value,
+    });
+  }
+
+  if (matchedCallerFactIds.size !== callerFacts.size) {
+    throw new Error("caller document has unbound facts");
+  }
+  return normalized;
+}
+
+function bindTrustedPayrollFacts(input: {
+  readonly trustedFacts: readonly HistoricalPrivateEvidenceFact[];
+  readonly callerVouchers: readonly CallerPayrollVoucher[];
+}): readonly TrustedNormalizedFact[] {
+  const trustedVouchers = new Map<
+    string,
+    {
+      readonly sourceDateText: string;
+      readonly values: Partial<Record<PayrollMoneyKind, string>>;
+    }
+  >();
+
+  for (const trustedFact of input.trustedFacts) {
+    const binding = requiredNormalizationBinding(trustedFact);
+    if (binding.bindingKind !== "payroll-money") {
+      throw new Error("document binding is invalid for a payroll fact");
+    }
+    if (trustedFact.factId !== payrollFactIdByMoneyKind[binding.moneyKind]) {
+      throw new Error("payroll fact identifier does not match its money kind");
+    }
+
+    const existing = trustedVouchers.get(binding.voucherNumberText);
+    const voucher = existing ?? {
+      sourceDateText: binding.sourceDateText,
+      values: {},
+    };
+    if (voucher.sourceDateText !== binding.sourceDateText) {
+      throw new Error("trusted payroll voucher dates conflict");
+    }
+    if (voucher.values[binding.moneyKind] !== undefined) {
+      throw new Error("duplicate trusted payroll money binding");
+    }
+    voucher.values[binding.moneyKind] = trustedFact.value;
+    if (existing === undefined) {
+      trustedVouchers.set(binding.voucherNumberText, voucher);
+    }
+  }
+
+  const callerVouchers = new Map<string, CallerPayrollVoucher>();
+  for (const callerVoucher of input.callerVouchers) {
+    if (callerVouchers.has(callerVoucher.voucherNumberText)) {
+      throw new Error("duplicate caller payroll voucher identity");
+    }
+    callerVouchers.set(callerVoucher.voucherNumberText, callerVoucher);
+  }
+  if (callerVouchers.size !== trustedVouchers.size) {
+    throw new Error("trusted and caller payroll voucher counts differ");
+  }
+
+  const normalized: TrustedNormalizedFact[] = [];
+  const matchedCallerVoucherIds = new Set<string>();
+  for (const [voucherNumberText, trustedVoucher] of trustedVouchers) {
+    const callerVoucher = callerVouchers.get(voucherNumberText);
+    if (callerVoucher === undefined) {
+      throw new Error("trusted payroll voucher has no caller match");
+    }
+    matchedCallerVoucherIds.add(voucherNumberText);
+    if (
+      trustedVoucher.sourceDateText !== callerVoucher.sourceDateText ||
+      trustedVoucher.values.gross === undefined ||
+      trustedVoucher.values["source-stated-wht"] === undefined ||
+      trustedVoucher.values.net === undefined ||
+      trustedVoucher.values.gross !== callerVoucher.grossDecimal ||
+      trustedVoucher.values["source-stated-wht"] !==
+        callerVoucher.sourceStatedWhtDecimal ||
+      trustedVoucher.values.net !== callerVoucher.netDecimal
+    ) {
+      throw new Error("caller payroll voucher does not match trusted bindings");
+    }
+
+    for (const moneyKind of payrollMoneyKinds) {
+      normalized.push({
+        kind: "money",
+        factId: `${voucherNumberText}:${moneyKind}`,
+        amountDecimal: trustedVoucher.values[moneyKind] as string,
+        payroll: {
+          voucherNumberText,
+          sourceDateText: trustedVoucher.sourceDateText,
+          moneyKind,
+        },
+      });
+    }
+  }
+
+  if (matchedCallerVoucherIds.size !== callerVouchers.size) {
+    throw new Error("caller payroll has unbound vouchers");
+  }
+  return normalized;
+}
+
 function prov(e: Record<string, unknown>, batch: string, id: string) {
   const a = object(e.sourceAcceptance),
     s = object(a.snapshot),
@@ -341,6 +816,7 @@ export function prepareControlledImportBatch(
     batchId = raw.batchId,
     snaps: PreparedControlledSourceSnapshot[] = [],
     records: FinanceRecord[] = [],
+    ambiguityGroups: string[] = [],
     ds: string[] = [];
   for (const [index, rawEnvelope] of raw.acceptedSourceEnvelopes.entries()) {
     const preparation = preparations[index];
@@ -377,33 +853,50 @@ export function prepareControlledImportBatch(
       e.sourceRecordId !== d.sourceDocumentId
     )
       throw new Error("invalid source");
-    const base = {
+    const trustedMetadata = readTrustedDocumentMetadata({
+        documentKind: d.sourceDocumentKind,
         sourceDocumentId: d.sourceDocumentId,
         logicalDocumentId: d.logicalDocumentId,
-        sourceDocumentKind: d.sourceDocumentKind,
         thaiTaxDocumentStatus: d.thaiTaxDocumentStatus,
+        ...(d.sourceDocumentKind === "school-billing-invoice"
+          ? {
+              variantId: d.variantId,
+              ambiguityGroupId: d.ambiguityGroupId,
+            }
+          : {}),
+        sourceIdentity: preparation.packet.source.sourceIdentity,
+        sourceRecordId: e.sourceRecordId,
+        facts: preparation.packet.facts,
+      }),
+      base = {
+        sourceDocumentId: trustedMetadata.sourceDocumentId,
+        logicalDocumentId: trustedMetadata.logicalDocumentId,
+        sourceDocumentKind: trustedMetadata.sourceDocumentKind,
+        thaiTaxDocumentStatus: trustedMetadata.thaiTaxDocumentStatus,
       },
-      currency = text(d.currency),
+      currency = text(trustedMetadata.currency),
       facts: Record<string, unknown>[] = [];
-    const trustedFactValues = preparation.packet.facts.map((fact) => fact.value);
-    const add = (f: Record<string, unknown>, id: string, kind?: string) => {
-      const amountMinor = minor(f.amountDecimal),
+    const addMoney = (
+      trustedFact: Extract<TrustedNormalizedFact, { readonly kind: "money" }>,
+    ) => {
+      const id = text(trustedFact.factId),
+        amountMinor = minor(trustedFact.amountDecimal),
         p = prov(e, batchId, `${base.sourceDocumentId}#${id}`),
         fact = {
-          factId: text(id),
+          factId: id,
           kind: "money",
           amountMinor,
           currency,
-          ...(f.sourceText === undefined
+          ...(trustedFact.sourceText === undefined
             ? {}
-            : { sourceText: text(f.sourceText) }),
-          ...(kind
-            ? {
-                moneyKind: kind,
-                voucherNumberText: text(f.voucherNumberText),
-                sourceDateText: text(f.sourceDateText),
-              }
-            : {}),
+            : { sourceText: text(trustedFact.sourceText) }),
+          ...(trustedFact.payroll === undefined
+            ? {}
+            : {
+                moneyKind: trustedFact.payroll.moneyKind,
+                voucherNumberText: text(trustedFact.payroll.voucherNumberText),
+                sourceDateText: text(trustedFact.payroll.sourceDateText),
+              }),
           provenance: p,
         };
       facts.push(fact);
@@ -416,68 +909,34 @@ export function prepareControlledImportBatch(
         }),
       );
     };
-    if (d.sourceDocumentKind === "payroll-summary") {
-      const voucherRecordIds = new Set<string>();
-      if (trustedFactValues.length !== d.vouchers.length * 3) {
-        throw new Error("invalid trusted payroll fact count");
-      }
-      for (const [voucherIndex, v] of d.vouchers.entries()) {
-        const q = v;
-        if (voucherRecordIds.has(q.voucherNumberText)) {
-          throw new Error("duplicate voucher identity");
-        }
-        voucherRecordIds.add(q.voucherNumberText);
-        add(
-          { ...q, amountDecimal: trustedFactValues[voucherIndex * 3] },
-          `${text(q.voucherNumberText)}:gross`,
-          "gross",
-        );
-        add(
-          { ...q, amountDecimal: trustedFactValues[voucherIndex * 3 + 1] },
-          `${text(q.voucherNumberText)}:source-stated-wht`,
-          "source-stated-wht",
-        );
-        add(
-          { ...q, amountDecimal: trustedFactValues[voucherIndex * 3 + 2] },
-          `${text(q.voucherNumberText)}:net`,
-          "net",
-        );
-      }
-    } else {
-      for (const [factIndex, f] of d.facts.entries()) {
-        const q = f;
-        if (q.kind === "count") {
-          const trustedValue = trustedFactValues[factIndex];
-          facts.push({
-            factId: text(q.factId),
-            kind: "count",
-            count: text(trustedValue),
-            provenance: prov(
-              e,
-              batchId,
-              `${base.sourceDocumentId}#${text(q.factId)}`,
-            ),
+    const normalizedFacts =
+      d.sourceDocumentKind === "payroll-summary"
+        ? bindTrustedPayrollFacts({
+            trustedFacts: trustedMetadata.valueFacts,
+            callerVouchers: d.vouchers,
+          })
+        : bindTrustedDocumentFacts({
+            trustedFacts: trustedMetadata.valueFacts,
+            callerFacts: d.facts,
           });
-        } else if (q.kind === "money") {
-          const trustedValue = trustedFactValues[factIndex];
-          add(
-            trustedValue === undefined
-              ? q
-              : { ...q, amountDecimal: trustedValue },
-            text(q.factId),
-          );
-        }
-        else throw new Error("invalid fact");
+    for (const normalizedFact of normalizedFacts) {
+      if (normalizedFact.kind === "money") {
+        addMoney(normalizedFact);
+        continue;
       }
+      const factId = text(normalizedFact.factId);
+      facts.push({
+        factId,
+        kind: "count",
+        count: text(normalizedFact.countText),
+        provenance: prov(e, batchId, `${base.sourceDocumentId}#${factId}`),
+      });
     }
-    const tax =
-      d.sourceDocumentKind === "foreign-workspace-invoice"
-        ? d.sourceStatedTax
-        : undefined;
-    const variantId =
-      d.sourceDocumentKind === "school-billing-invoice"
-        ? d.variantId
-        : undefined;
+    const tax = trustedMetadata.sourceStatedTax;
+    const variantId = trustedMetadata.variantId;
+    if (trustedMetadata.ambiguityGroupId !== undefined) {
+      ambiguityGroups.push(trustedMetadata.ambiguityGroupId);
+    }
     snaps.push({
       ...base,
       ...(variantId === undefined ? {} : { variantId: text(variantId) }),
@@ -495,16 +954,6 @@ export function prepareControlledImportBatch(
   }
   if (!ds.every((x) => digest.safeParse(x).success))
     throw new Error("invalid digest");
-  const ambiguityGroups = raw.acceptedSourceEnvelopes
-    .map((envelope) => envelope.document)
-    .filter(
-      (
-        document,
-      ): document is Extract<typeof document, { ambiguityGroupId?: string }> =>
-        document.sourceDocumentKind === "school-billing-invoice" &&
-        document.ambiguityGroupId !== undefined,
-    )
-    .map((document) => document.ambiguityGroupId);
   if (new Set(ambiguityGroups).size !== ambiguityGroups.length)
     return freeze({
       status: "unresolved",
@@ -672,11 +1121,11 @@ export async function acceptControlledImportBatch(
       copy(
         controlledImportAtomicResultSchema.parse(
           await request.repository.applyBatchAtomically(
-          freeze({
-            plan: copy(request.plan),
-            durableJob,
-            audit: audit(request, "succeeded"),
-          }),
+            freeze({
+              plan: copy(request.plan),
+              durableJob,
+              audit: audit(request, "succeeded"),
+            }),
           ),
         ),
       ),

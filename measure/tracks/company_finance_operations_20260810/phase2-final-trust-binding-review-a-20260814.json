@@ -1,0 +1,140 @@
+{
+  "schema_version": "1.0",
+  "status": "fail",
+  "summary": "The value, identity, tax label, tax rate, and currency bindings pass. Three caller fields still change trusted output or acceptance state.",
+  "reviewed_manifest_sha256": "0c086b39efaa812938c5ec68f2002109675f749814dbef918e01461973328276",
+  "reviewed_files": [
+    "measure/tracks/company_finance_operations_20260810/plan.md",
+    "packages/backend/src/modules/finance-operations/__tests__/controlled-imports-phase2-review-b.red.test.ts",
+    "packages/backend/src/modules/finance-operations/__tests__/controlled-imports-phase2-tax-binding.red.test.ts",
+    "packages/backend/src/modules/finance-operations/__tests__/controlled-imports-phase2.red.test.ts",
+    "packages/backend/src/modules/finance-operations/__tests__/historical-private-evidence-packet.red.test.ts",
+    "packages/backend/src/modules/finance-operations/contracts.ts",
+    "packages/backend/src/modules/finance-operations/controlled-imports.ts"
+  ],
+  "blocking_findings": [
+    {
+      "id": "CORRECTNESS-01",
+      "severity": "high",
+      "title": "Caller school variant metadata changes trusted output and batch classification",
+      "file": "packages/backend/src/modules/finance-operations/controlled-imports.ts",
+      "lines": [
+        "846-852",
+        "867-886"
+      ],
+      "details": "The normalizer copies variantId from the caller. It also uses caller ambiguityGroupId values to select ready or unresolved status.",
+      "impact": "A caller can change a source variant identifier. A caller can also release an ambiguous batch as ready.",
+      "evidence": "One genuine preparation produced Term1 or FORGED-VARIANT when only variantId changed. Two genuine preparations changed from unresolved to ready when only group IDs changed.",
+      "remediation": "Add source-stated variant and ambiguity identifiers to the trusted packet. Derive both fields and the ambiguity decision only from those facts."
+    },
+    {
+      "id": "CORRECTNESS-02",
+      "severity": "high",
+      "title": "Caller payment-receipt tax status remains unbound",
+      "file": "packages/backend/src/modules/finance-operations/controlled-imports.ts",
+      "lines": [
+        "79-82",
+        "781-785"
+      ],
+      "details": "The payment receipt schema permits two tax statuses. The normalizer copies that caller value into the trusted snapshot.",
+      "impact": "One verified receipt packet can produce not-source-asserted or unresolved tax status. The packet contains no fact that selects either result.",
+      "evidence": "A genuine preparation produced both status values when only the caller tax status changed.",
+      "remediation": "Bind the tax status to a packet fact. A fixed approved status is also safe when the packet cannot state this fact."
+    }
+  ],
+  "nonblocking_findings": [
+    {
+      "id": "CORRECTNESS-N01",
+      "severity": "low",
+      "title": "The reviewed plan fails the formatting check",
+      "file": "measure/tracks/company_finance_operations_20260810/plan.md",
+      "details": "Prettier reported this file only. All reviewed TypeScript files passed the same check."
+    }
+  ],
+  "evidence": {
+    "manifest_initial": "The ordered manifest matched the required SHA-256 aggregate before evidence collection.",
+    "document_identity": "The source class, source record, and optional logical reference use singleton packet facts. Contradictory caller values fail closed.",
+    "tax_and_currency": "The GST label, GST rate text, and currency come from singleton packet facts. Caller contradictions do not reach output.",
+    "value_identity": "Document values use trusted binding IDs. Caller order does not control money or count identity.",
+    "payroll_identity": "Payroll values use trusted voucher number, date, money kind, and value bindings. Caller order does not control output.",
+    "duplicates_and_completeness": "The normalizer rejects missing bindings, duplicate identities, missing values, extra values, and incomplete payroll vouchers.",
+    "generic_packet_compatibility": "The packet schema still accepts a generic legacy packet without normalization bindings.",
+    "receipt_normalization": "The reviewed tests and schema use payment-receipt. A receipt value does not satisfy the controlled document schema.",
+    "focused_tests": "Four changed suites passed 147 of 147 tests.",
+    "finance_tests": "All 18 Finance suites passed 281 of 281 tests.",
+    "owner_boundary_tests": "The Company Identity suites passed 20 of 20 tests. The Storage suite passed 25 of 25 tests.",
+    "static_checks": "The backend production typecheck, test typecheck, build, targeted lint, and diff check passed.",
+    "formatting": "The six reviewed TypeScript files passed Prettier. The reviewed plan failed Prettier.",
+    "browser": "Skipped because the candidate has no frontend changes.",
+    "graph_caller_check": "No caller result was available for the changed exports. One type name was ambiguous in the graph."
+  },
+  "commands": [
+    {
+      "command": "sha256sum <ordered seven-file manifest> | sha256sum",
+      "exit_code": 0,
+      "result": "0c086b39efaa812938c5ec68f2002109675f749814dbef918e01461973328276"
+    },
+    {
+      "command": "CI=true ../../node_modules/.bin/vitest run <four changed suites> --pool=threads --maxWorkers=1 --testTimeout=15000",
+      "exit_code": 0,
+      "result": "4 files passed; 147 tests passed"
+    },
+    {
+      "command": "CI=true ../../node_modules/.bin/vitest run src/modules/finance-operations/__tests__ --pool=threads --maxWorkers=1 --testTimeout=15000",
+      "exit_code": 0,
+      "result": "18 files passed; 281 tests passed"
+    },
+    {
+      "command": "CI=true ../../node_modules/.bin/vitest run <two Company Identity suites> --pool=threads --maxWorkers=1 --testTimeout=15000",
+      "exit_code": 0,
+      "result": "2 files passed; 20 tests passed"
+    },
+    {
+      "command": "CI=true ../../node_modules/.bin/vitest run src/__tests__/finance-private-evidence-read.red.test.ts --pool=threads --maxWorkers=1 --testTimeout=15000",
+      "exit_code": 0,
+      "result": "1 file passed; 25 tests passed"
+    },
+    {
+      "command": "../../node_modules/.bin/tsc --noEmit -p tsconfig.json",
+      "exit_code": 0,
+      "result": "passed"
+    },
+    {
+      "command": "../../node_modules/.bin/tsc --noEmit -p tsconfig.test.json",
+      "exit_code": 0,
+      "result": "passed"
+    },
+    {
+      "command": "../../node_modules/.bin/tsc -p tsconfig.json",
+      "exit_code": 0,
+      "result": "passed"
+    },
+    {
+      "command": "../../node_modules/.bin/eslint <six reviewed TypeScript files>",
+      "exit_code": 0,
+      "result": "passed"
+    },
+    {
+      "command": "node_modules/.bin/prettier --check <seven reviewed files>",
+      "exit_code": 1,
+      "result": "The plan failed. All reviewed TypeScript files passed."
+    },
+    {
+      "command": "git diff --check -- <seven reviewed files>",
+      "exit_code": 0,
+      "result": "passed"
+    },
+    {
+      "command": "read-only TypeScript variant and ambiguity probe",
+      "exit_code": 0,
+      "result": "Term1 changed to FORGED-VARIANT. Same-group unresolved changed to distinct-group ready."
+    },
+    {
+      "command": "read-only TypeScript payment-receipt tax-status probe",
+      "exit_code": 0,
+      "result": "The same genuine preparation produced both permitted tax statuses."
+    }
+  ],
+  "current_head": "82cfbd321baf8fb727f64ec323e5613dca0e31f2",
+  "confidence": "high"
+}

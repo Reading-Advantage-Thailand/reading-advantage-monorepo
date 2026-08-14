@@ -1,0 +1,186 @@
+{
+  "schema_version": "1.0",
+  "security_applicability": "required",
+  "status": "fail",
+  "summary": "The candidate keeps two normalized metadata fields under caller control. Both issues break the trusted packet boundary.",
+  "reviewed_manifest_sha256": "0c086b39efaa812938c5ec68f2002109675f749814dbef918e01461973328276",
+  "reviewed_files": [
+    "measure/tracks/company_finance_operations_20260810/plan.md",
+    "packages/backend/src/modules/finance-operations/__tests__/controlled-imports-phase2-review-b.red.test.ts",
+    "packages/backend/src/modules/finance-operations/__tests__/controlled-imports-phase2-tax-binding.red.test.ts",
+    "packages/backend/src/modules/finance-operations/__tests__/controlled-imports-phase2.red.test.ts",
+    "packages/backend/src/modules/finance-operations/__tests__/historical-private-evidence-packet.red.test.ts",
+    "packages/backend/src/modules/finance-operations/contracts.ts",
+    "packages/backend/src/modules/finance-operations/controlled-imports.ts"
+  ],
+  "blocking_findings": [
+    {
+      "severity": "high",
+      "title": "Caller-controlled school identifiers alter normalized output and acceptance classification",
+      "file": "packages/backend/src/modules/finance-operations/controlled-imports.ts",
+      "lines": "846-876",
+      "context": "The code copies variantId and groups ambiguity from the caller document. The trusted packet has no facts for either value.",
+      "impact": "A caller reused unchanged genuine preparations, injected two variant IDs, and changed a ready batch to unresolved.",
+      "scope_decision": "variantId is a document identifier. ambiguityGroupId is metadata that controls the ready or unresolved decision. Both require trust binding.",
+      "recommendation": "Add source-stated packet facts for both values. Require exact singleton bindings, derive the output and grouping, and reject caller contradictions."
+    },
+    {
+      "severity": "high",
+      "title": "Caller-controlled receipt tax status changes trusted normalized output",
+      "file": "packages/backend/src/modules/finance-operations/controlled-imports.ts",
+      "lines": "781-786",
+      "context": "The code copies thaiTaxDocumentStatus from the caller. The trusted packet has no matching fact or deterministic derivation.",
+      "impact": "The same genuine receipt preparation produced not-source-asserted or unresolved after changing only the caller field.",
+      "recommendation": "Derive this status from trusted source facts or a fixed document-kind rule. Reject every caller contradiction."
+    }
+  ],
+  "nonblocking_findings": [],
+  "evidence": [
+    {
+      "name": "manifest_precheck",
+      "result": "pass",
+      "detail": "The ordered seven-file aggregate matched the required SHA-256 before evidence collection."
+    },
+    {
+      "name": "manifest_decision_check",
+      "result": "pass",
+      "detail": "The ordered seven-file aggregate matched again immediately before the decision."
+    },
+    {
+      "name": "focused_trust_tests",
+      "result": "pass",
+      "detail": "Four files passed 147 tests. They covered identity, tax, currency, value bindings, payroll bindings, and the legacy packet contract."
+    },
+    {
+      "name": "finance_regression_tests",
+      "result": "pass",
+      "detail": "Ten Finance files passed 72 tests, including the architecture and port boundaries."
+    },
+    {
+      "name": "owner_boundary_tests",
+      "result": "pass",
+      "detail": "Company Identity passed 20 tests. Private storage passed 25 tests."
+    },
+    {
+      "name": "normalization_binding_audit",
+      "result": "pass",
+      "detail": "The source rejects missing, duplicate, extra, relabeled, kind-changed, and value-changed bindings. Ordering does not select trusted values."
+    },
+    {
+      "name": "payroll_binding_audit",
+      "result": "pass",
+      "detail": "The source binds voucher identity, date, and all three money kinds. It rejects missing kinds, duplicate kinds, and conflicting dates."
+    },
+    {
+      "name": "packet_compatibility_audit",
+      "result": "pass",
+      "detail": "The generic packet accepts legacy facts without bindings. Controlled normalization requires every value binding and complete document metadata."
+    },
+    {
+      "name": "metadata_binding_audit",
+      "result": "pass",
+      "detail": "The packet rejects metadata bindings. It also rejects payroll outer fact IDs that conflict with the bound money kind."
+    },
+    {
+      "name": "preparation_capability_audit",
+      "result": "pass",
+      "detail": "Normalization checks a private WeakSet capability. Only the accepted preparation command adds objects to that set."
+    },
+    {
+      "name": "school_metadata_probe",
+      "result": "fail",
+      "detail": "An unchanged trusted pair was ready. Caller group and variant changes made it unresolved and injected both variant IDs."
+    },
+    {
+      "name": "receipt_tax_status_probe",
+      "result": "fail",
+      "detail": "One unchanged trusted receipt produced both allowed tax-status values after caller-only changes."
+    },
+    {
+      "name": "production_typecheck_and_build",
+      "result": "pass",
+      "detail": "The backend production typecheck and build passed."
+    },
+    {
+      "name": "changed_test_typecheck",
+      "result": "pass",
+      "detail": "The strict changed-test typecheck passed."
+    },
+    {
+      "name": "targeted_lint",
+      "result": "pass",
+      "detail": "ESLint passed for the changed Finance source and tests."
+    },
+    {
+      "name": "diff_check",
+      "result": "pass",
+      "detail": "git diff --check passed for the reviewed manifest."
+    },
+    {
+      "name": "graph_caller_check",
+      "result": "pass",
+      "detail": "The fresh graph reported no callers for prepareControlledImportBatch."
+    },
+    {
+      "name": "browser_review",
+      "result": "not_applicable",
+      "detail": "The candidate changes no browser behavior."
+    }
+  ],
+  "commands": [
+    {
+      "command": "sha256sum <ordered seven-file manifest> | sha256sum",
+      "result": "0c086b39efaa812938c5ec68f2002109675f749814dbef918e01461973328276"
+    },
+    {
+      "command": "CI=true ../../node_modules/.bin/vitest run <four changed trust suites> --pool=threads --maxWorkers=1 --testTimeout=15000",
+      "result": "pass: 4 files, 147 tests"
+    },
+    {
+      "command": "CI=true ../../node_modules/.bin/vitest run <ten Finance regression suites> --pool=threads --maxWorkers=1 --testTimeout=15000",
+      "result": "pass: 10 files, 72 tests"
+    },
+    {
+      "command": "CI=true ../../node_modules/.bin/vitest run <two Company Identity suites> --pool=threads --maxWorkers=1 --testTimeout=15000",
+      "result": "pass: 2 files, 20 tests"
+    },
+    {
+      "command": "CI=true ../../node_modules/.bin/vitest run src/__tests__/finance-private-evidence-read.red.test.ts --pool=threads --maxWorkers=1 --testTimeout=15000",
+      "result": "pass: 1 file, 25 tests"
+    },
+    {
+      "command": "../../node_modules/.bin/tsc --noEmit",
+      "result": "pass"
+    },
+    {
+      "command": "../../node_modules/.bin/tsc",
+      "result": "pass"
+    },
+    {
+      "command": "../../node_modules/.bin/tsc --noEmit --strict --skipLibCheck --module NodeNext --moduleResolution NodeNext --target ES2022 --lib ES2022,DOM --types node,vitest/globals <four changed tests>",
+      "result": "pass"
+    },
+    {
+      "command": "../../node_modules/.bin/eslint <six changed Finance source and test files>",
+      "result": "pass"
+    },
+    {
+      "command": "git diff --check -- <ordered seven-file manifest>",
+      "result": "pass"
+    },
+    {
+      "command": "../../node_modules/.bin/tsc -p tsconfig.build.json --noEmit",
+      "result": "invalid review command: packages/backend has no tsconfig.build.json"
+    },
+    {
+      "command": "read-only genuine-preparation school metadata probe",
+      "result": "fail: ready changed to unresolved and caller variant IDs reached output"
+    },
+    {
+      "command": "read-only genuine-preparation receipt tax-status probe",
+      "result": "fail: caller changed the normalized tax status"
+    }
+  ],
+  "current_head": "82cfbd321baf8fb727f64ec323e5613dca0e31f2",
+  "confidence": "high"
+}

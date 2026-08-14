@@ -417,15 +417,97 @@ function privateEvidenceEnvelope(input: {
 /** Maps each accepted document fixture to source-ordered owner-packet facts. */
 function ownerPacketFactsForDocument(
   document: ControlledSourceDocumentInput,
-): readonly Record<string, string>[] {
+): readonly Record<string, unknown>[] {
+  const classFactId = `document-class:${document.sourceDocumentKind}` as const;
+  const logicalReferenceFactId = {
+    "payment-receipt": "document-reference:receipt-number",
+    "school-billing-invoice": "document-reference:invoice-number",
+    "payroll-summary": "document-reference:document-number",
+    "foreign-workspace-invoice": "document-reference:invoice-number",
+  }[document.sourceDocumentKind];
+  const metadataFacts: Record<string, string>[] = [
+    {
+      factCategory: "document-class",
+      factId: classFactId,
+      kind: "source-stated-value",
+      label: "Document class as stated",
+      value: document.sourceDocumentKind,
+    },
+    {
+      factCategory: "document-reference",
+      factId: "document-reference:source-record",
+      kind: "source-stated-value",
+      label: "Source record as stated",
+      value: document.sourceDocumentId,
+    },
+    {
+      factCategory: "currency",
+      factId: "currency:document-currency",
+      kind: "source-stated-value",
+      label: "Document currency as stated",
+      value: document.currency,
+    },
+    {
+      factCategory: "document-status",
+      factId: "document-status:thai-tax-document-status",
+      kind: "source-stated-value",
+      label: "Thai tax document status as stated",
+      value: document.thaiTaxDocumentStatus,
+    },
+  ];
+  if (document.logicalDocumentId !== document.sourceDocumentId) {
+    metadataFacts.push({
+      factCategory: "document-reference",
+      factId: logicalReferenceFactId,
+      kind: "source-stated-value",
+      label: "Logical document reference as stated",
+      value: document.logicalDocumentId,
+    });
+  }
+  if (document.sourceDocumentKind === "foreign-workspace-invoice") {
+    metadataFacts.push({
+      factCategory: "tax-label",
+      factId: "tax-label:gst",
+      kind: "source-stated-value",
+      label: document.sourceStatedTax.label,
+      value: document.sourceStatedTax.rateText,
+    });
+  }
+  if (document.sourceDocumentKind === "school-billing-invoice") {
+    if (document.variantId !== undefined) {
+      metadataFacts.push({
+        factCategory: "document-reference",
+        factId: "document-reference:variant-id",
+        kind: "source-stated-value",
+        label: "School billing variant as stated",
+        value: document.variantId,
+      });
+    }
+    if (document.ambiguityGroupId !== undefined) {
+      metadataFacts.push({
+        factCategory: "document-reference",
+        factId: "document-reference:ambiguity-group-id",
+        kind: "source-stated-value",
+        label: "School billing ambiguity group as stated",
+        value: document.ambiguityGroupId,
+      });
+    }
+  }
+
   if (document.sourceDocumentKind === "payroll-summary") {
-    return document.vouchers.flatMap((voucher) => [
+    const valueFacts = document.vouchers.flatMap((voucher) => [
       {
         factCategory: "payroll-summary",
         factId: "payroll-summary:gross-total",
         kind: "source-stated-value",
         label: `${voucher.voucherNumberText} gross as stated`,
         value: voucher.grossDecimal,
+        normalizationBinding: {
+          bindingKind: "payroll-money",
+          voucherNumberText: voucher.voucherNumberText,
+          sourceDateText: voucher.sourceDateText,
+          moneyKind: "gross",
+        },
       },
       {
         factCategory: "payroll-summary",
@@ -433,6 +515,12 @@ function ownerPacketFactsForDocument(
         kind: "source-stated-value",
         label: `${voucher.voucherNumberText} withholding as stated`,
         value: voucher.sourceStatedWhtDecimal,
+        normalizationBinding: {
+          bindingKind: "payroll-money",
+          voucherNumberText: voucher.voucherNumberText,
+          sourceDateText: voucher.sourceDateText,
+          moneyKind: "source-stated-wht",
+        },
       },
       {
         factCategory: "payroll-summary",
@@ -440,21 +528,62 @@ function ownerPacketFactsForDocument(
         kind: "source-stated-value",
         label: `${voucher.voucherNumberText} net as stated`,
         value: voucher.netDecimal,
+        normalizationBinding: {
+          bindingKind: "payroll-money",
+          voucherNumberText: voucher.voucherNumberText,
+          sourceDateText: voucher.sourceDateText,
+          moneyKind: "net",
+        },
       },
     ]);
+    return [...valueFacts, ...metadataFacts];
   }
 
-  return document.facts.map((fact) => ({
-    factCategory:
-      fact.kind === "count" ? "document-reference" : "document-total",
-    factId:
-      fact.kind === "count"
-        ? "document-reference:source-record"
-        : "document-total:receipt-total",
-    kind: "source-stated-value",
-    label: `${fact.factId} as stated`,
-    value: fact.kind === "count" ? fact.countText : fact.amountDecimal,
-  }));
+  const moneyFactIds = [
+    "document-total:amount-due",
+    "document-total:amount-paid",
+    "document-total:gross-total",
+    "document-total:invoice-total",
+    "document-total:net-total",
+    "document-total:receipt-total",
+    "document-total:subtotal",
+    "document-total:tax-total",
+    "document-total:withholding-total",
+  ] as const;
+  let moneyIndex = 0;
+  const valueFacts = document.facts.map((fact) => {
+    if (fact.kind === "count") {
+      return {
+        factCategory: "billing-summary",
+        factId: "billing-summary:billing-period",
+        kind: "source-stated-value",
+        label: `${fact.factId} as stated`,
+        value: fact.countText,
+        normalizationBinding: {
+          bindingKind: "document-count",
+          normalizedFactId: fact.factId,
+        },
+      };
+    }
+    const factId = moneyFactIds[moneyIndex];
+    moneyIndex += 1;
+    if (factId === undefined) throw new Error("Missing money fact slot.");
+    return {
+      factCategory: "document-total",
+      factId,
+      kind: "source-stated-value",
+      label: `${fact.factId} as stated`,
+      value: fact.amountDecimal,
+      normalizationBinding: {
+        bindingKind: "document-money",
+        normalizedFactId: fact.factId,
+        ...(fact.sourceText === undefined
+          ? {}
+          : { sourceText: fact.sourceText }),
+      },
+    };
+  });
+  return [...valueFacts, ...metadataFacts];
 }
 
 /** Creates trusted preparation through the real Phase 1 command boundary. */
@@ -597,11 +726,10 @@ async function preparedPlan(
     readonly amountMinor?: "13230000" | "13220000";
   } = {},
 ): Promise<Extract<PreparedControlledImportBatch, { status: "ready" }>> {
-  const sourceAmountDecimal =
-    {
-      "13230000": "132300.00",
-      "13220000": "132200.00",
-    }[overrides.amountMinor ?? "13230000"];
+  const sourceAmountDecimal = {
+    "13230000": "132300.00",
+    "13220000": "132200.00",
+  }[overrides.amountMinor ?? "13230000"];
   const envelope = privateEvidenceEnvelope({
     sourceSystem: "owner-attested-archive",
     sourceVersion: "archive-v1",
@@ -1097,7 +1225,8 @@ describe("Finance Operations Phase 2 controlled imports", () => {
       privateEvidenceEnvelope({
         document: {
           ...sourceDocument,
-          sourceDocumentId: "archive-payroll-envelope-test",
+          sourceDocumentId: "archive-payroll-record-sanitized",
+          logicalDocumentId: "archive-payroll-record-sanitized",
         },
         sourceSystem: "sanitized-payroll-summary",
         sourceVersion: "archive-v1",
@@ -1540,6 +1669,109 @@ describe("Finance Operations Phase 2 controlled imports", () => {
     expect(collectForbiddenKeys(result)).toEqual([]);
     expectStrictPolicyNeutralOutput(result);
     expectDeepFrozen(result);
+  });
+
+  it("prepares and normalizes four payroll vouchers with repeated source fact identifiers", async () => {
+    const subject = await loadControlledImports();
+    requireFunction(
+      subject.prepareControlledImportBatch,
+      "prepareControlledImportBatch",
+    );
+    const payrollEnvelope = privateEvidenceEnvelope({
+      sourceSystem: "sanitized-payroll-summary",
+      payloadDigest: "d".repeat(64),
+      evidenceReference:
+        "private-evidence://company-sanitized/finance/sanitized/payroll-four-vouchers",
+      document: {
+        sourceDocumentId: "payroll-four-vouchers-001",
+        logicalDocumentId: "payroll-four-vouchers-001",
+        sourceDocumentKind: "payroll-summary",
+        thaiTaxDocumentStatus: "unresolved",
+        currency: "THB",
+        vouchers: [
+          {
+            voucherNumberText: "PV-001",
+            sourceDateText: "01/08/2569",
+            grossDecimal: "100.00",
+            sourceStatedWhtDecimal: "3.00",
+            netDecimal: "97.00",
+          },
+          {
+            voucherNumberText: "PV-002",
+            sourceDateText: "02/08/2569",
+            grossDecimal: "200.00",
+            sourceStatedWhtDecimal: "6.00",
+            netDecimal: "194.00",
+          },
+          {
+            voucherNumberText: "PV-003",
+            sourceDateText: "03/08/2569",
+            grossDecimal: "300.00",
+            sourceStatedWhtDecimal: "9.00",
+            netDecimal: "291.00",
+          },
+          {
+            voucherNumberText: "PV-004",
+            sourceDateText: "04/08/2569",
+            grossDecimal: "400.00",
+            sourceStatedWhtDecimal: "12.00",
+            netDecimal: "388.00",
+          },
+        ],
+      },
+    });
+    const preparation = await trustedPreparationForEnvelope(
+      subject,
+      payrollEnvelope,
+    );
+    const packetFacts = (
+      preparation as {
+        readonly packet: {
+          readonly facts: readonly { readonly factId: string }[];
+        };
+      }
+    ).packet.facts;
+
+    expect(
+      packetFacts.filter(
+        (fact) => fact.factId === "payroll-summary:gross-total",
+      ),
+    ).toHaveLength(4);
+    expect(
+      packetFacts.filter(
+        (fact) => fact.factId === "payroll-summary:withholding-total",
+      ),
+    ).toHaveLength(4);
+    expect(
+      packetFacts.filter((fact) => fact.factId === "payroll-summary:net-total"),
+    ).toHaveLength(4);
+
+    const result = subject.prepareControlledImportBatch(
+      normalizationInput(
+        "payroll-four-vouchers-batch",
+        [payrollEnvelope],
+        scope,
+        [preparation],
+      ),
+    );
+
+    expect(result).toMatchObject({ status: "ready" });
+    if (result.status !== "ready") return;
+    expect(result.records).toHaveLength(12);
+    expect(result.records.map((record) => record.money.amountMinor)).toEqual([
+      "10000",
+      "300",
+      "9700",
+      "20000",
+      "600",
+      "19400",
+      "30000",
+      "900",
+      "29100",
+      "40000",
+      "1200",
+      "38800",
+    ]);
   });
 
   it("classifies the July 2026 GCP PDF only as a THB 9,270.79 payment receipt", async () => {

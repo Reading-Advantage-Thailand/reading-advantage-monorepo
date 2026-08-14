@@ -1,0 +1,150 @@
+{
+  "schema_version": "1.0",
+  "status": "PASS",
+  "summary": "The candidate binds each normalized Finance field to a trusted packet fact. No blocking correctness finding remains.",
+  "reviewed_manifest_sha256": "0d16c57db7ef5c6019b2f5f4a5a4ebf56773487dcb85338117b740ecbc59d540",
+  "reviewed_files": [
+    "measure/tracks/company_finance_operations_20260810/plan.md",
+    "packages/backend/src/modules/finance-operations/__tests__/controlled-imports-phase2-review-b.red.test.ts",
+    "packages/backend/src/modules/finance-operations/__tests__/controlled-imports-phase2-tax-binding.red.test.ts",
+    "packages/backend/src/modules/finance-operations/__tests__/controlled-imports-phase2.red.test.ts",
+    "packages/backend/src/modules/finance-operations/__tests__/historical-private-evidence-packet.red.test.ts",
+    "packages/backend/src/modules/finance-operations/contracts.ts",
+    "packages/backend/src/modules/finance-operations/controlled-imports.ts"
+  ],
+  "blocking_findings": [],
+  "nonblocking_findings": [],
+  "evidence": {
+    "manifest": [
+      "The initial and final manifest checks matched the assigned SHA-256 value.",
+      "The reviewed HEAD stayed at 82cfbd321baf8fb727f64ec323e5613dca0e31f2."
+    ],
+    "contract_review": [
+      "The packet defines explicit document and payroll bindings at contracts.ts:302.",
+      "The packet rejects invalid binding combinations at contracts.ts:338.",
+      "The packet validates currency and Thai status at contracts.ts:370.",
+      "The packet rejects duplicate currency, Thai status, variant, and group facts at contracts.ts:438.",
+      "The generic packet keeps normalizationBinding optional at contracts.ts:338."
+    ],
+    "normalization_review": [
+      "The metadata reader validates class, source identity, logical identity, currency, Thai status, school metadata, and tax at controlled-imports.ts:343.",
+      "The document binder matches trusted and caller facts by normalizedFactId at controlled-imports.ts:626.",
+      "The payroll binder matches vouchers by voucherNumberText and validates dates and three money kinds at controlled-imports.ts:694.",
+      "The batch builder maps only trusted metadata and bound facts at controlled-imports.ts:805.",
+      "Missing, extra, duplicate, contradictory, and reordered inputs fail closed or retain trusted output."
+    ],
+    "attack_reproduction": [
+      "The receipt-status attack passed its rejection test at controlled-imports-phase2-review-b.red.test.ts:944.",
+      "The variant attack passed its rejection test at controlled-imports-phase2-review-b.red.test.ts:1055.",
+      "The ambiguity-group classification attack passed its rejection test at controlled-imports-phase2-review-b.red.test.ts:1192.",
+      "All four school metadata presence combinations passed at controlled-imports-phase2-review-b.red.test.ts:1130.",
+      "The GST and currency contradiction probes passed at controlled-imports-phase2-tax-binding.red.test.ts:203 and :233."
+    ],
+    "mutation_falsifiers": [
+      "The nonpayroll reorder test would fail if normalization paired trusted and caller facts by array position.",
+      "That falsifier starts at controlled-imports-phase2-review-b.red.test.ts:1813.",
+      "The payroll reorder test would fail if normalization paired trusted values and caller vouchers by array position.",
+      "That falsifier starts at controlled-imports-phase2-review-b.red.test.ts:2057.",
+      "The exact receipt assertion rejects sourceDocumentKind receipt at controlled-imports-phase2.red.test.ts:1811."
+    ],
+    "coverage": [
+      "The changed suites passed 170 tests across four files.",
+      "All Finance tests passed 304 tests across 18 files.",
+      "The targeted attack command passed 12 tests and covered all four school metadata combinations.",
+      "Payment receipt, school invoice, payroll summary, and foreign invoice behavior passed.",
+      "Generic packet compatibility passed within the changed packet suite."
+    ],
+    "boundaries": [
+      "Company Identity boundary tests passed 20 tests.",
+      "The private storage boundary passed 25 tests.",
+      "The backend production typecheck, test typecheck, build, and Finance lint passed.",
+      "The storage typecheck passed. Storage lint had zero errors and three unrelated warnings.",
+      "Prettier and git diff checks passed for the complete reviewed manifest.",
+      "The fresh graph contained the changed Finance files and no external caller edge for the changed exported function."
+    ]
+  },
+  "commands": [
+    {
+      "command": "sha256sum <ordered-seven-file-manifest> | sha256sum",
+      "exit_code": 0,
+      "result": "0d16c57db7ef5c6019b2f5f4a5a4ebf56773487dcb85338117b740ecbc59d540"
+    },
+    {
+      "command": "CI=true ../../node_modules/.bin/vitest run <four-changed-finance-tests> --pool=threads --maxWorkers=1",
+      "exit_code": 0,
+      "result": "4 files and 170 tests passed"
+    },
+    {
+      "command": "CI=true ../../node_modules/.bin/vitest run src/modules/finance-operations/__tests__ --pool=threads --maxWorkers=1 --testTimeout=15000",
+      "exit_code": 0,
+      "result": "18 files and 304 tests passed"
+    },
+    {
+      "command": "CI=true ../../node_modules/.bin/vitest run src/modules/company-identity/__tests__/finance-authorization-adapter.red.test.ts src/modules/company-identity/__tests__/protocol-safety.red.test.ts --pool=threads --maxWorkers=1",
+      "exit_code": 0,
+      "result": "2 files and 20 tests passed"
+    },
+    {
+      "command": "CI=true ../../node_modules/.bin/vitest run src/__tests__/finance-private-evidence-read.red.test.ts --pool=threads --maxWorkers=1",
+      "exit_code": 0,
+      "result": "1 file and 25 tests passed"
+    },
+    {
+      "command": "CI=true ../../node_modules/.bin/vitest run <three-attack-tests> --pool=threads --maxWorkers=1 -t <attack-pattern>",
+      "exit_code": 0,
+      "result": "12 tests passed and 75 tests were skipped"
+    },
+    {
+      "command": "../../node_modules/.bin/tsc --noEmit",
+      "exit_code": 0,
+      "result": "Backend production typecheck passed"
+    },
+    {
+      "command": "../../node_modules/.bin/tsc --noEmit -p tsconfig.test.json",
+      "exit_code": 0,
+      "result": "Backend test typecheck passed"
+    },
+    {
+      "command": "../../node_modules/.bin/tsc",
+      "exit_code": 0,
+      "result": "Backend build passed"
+    },
+    {
+      "command": "../../node_modules/.bin/eslint src/modules/finance-operations",
+      "exit_code": 0,
+      "result": "Finance lint passed"
+    },
+    {
+      "command": "../../node_modules/.bin/tsc --noEmit",
+      "exit_code": 0,
+      "result": "Storage typecheck passed"
+    },
+    {
+      "command": "../../node_modules/.bin/eslint .",
+      "exit_code": 0,
+      "result": "Storage lint passed with three unrelated warnings"
+    },
+    {
+      "command": "./node_modules/.bin/prettier --check <ordered-seven-file-manifest>",
+      "exit_code": 0,
+      "result": "All reviewed files use Prettier formatting"
+    },
+    {
+      "command": "git diff --check -- <ordered-seven-file-manifest>",
+      "exit_code": 0,
+      "result": "No whitespace error was found"
+    },
+    {
+      "command": "build-graph stats ./graph.db",
+      "exit_code": 0,
+      "result": "The fresh graph reported 31809 nodes, 56581 edges, and 3487 files"
+    },
+    {
+      "command": "build-graph query ./graph.db <exact-node-and-caller-queries>",
+      "exit_code": 0,
+      "result": "The exact changed nodes were present and had no external caller edge"
+    }
+  ],
+  "current_head": "82cfbd321baf8fb727f64ec323e5613dca0e31f2",
+  "confidence": "high"
+}

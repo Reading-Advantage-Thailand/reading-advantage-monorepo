@@ -1,0 +1,177 @@
+{
+  "schema_version": "1.0",
+  "security_applicability": {
+    "required": true,
+    "browser_review": "not-applicable",
+    "live_database_review": "not-required",
+    "review_scope": [
+      "document identity",
+      "Thai tax document status",
+      "source-stated GST",
+      "source-stated currency",
+      "school variant metadata",
+      "normalized value bindings",
+      "payroll voucher bindings",
+      "trusted preparation capability"
+    ]
+  },
+  "status": "PASS",
+  "summary": "The candidate binds normalized identity, tax, currency, school metadata, counts, money, and payroll values to genuine packet preparations.",
+  "reviewed_manifest_sha256": "0d16c57db7ef5c6019b2f5f4a5a4ebf56773487dcb85338117b740ecbc59d540",
+  "reviewed_files": [
+    {
+      "path": "measure/tracks/company_finance_operations_20260810/plan.md",
+      "sha256": "405c0ff15904848a1e1798b424f76f9eead7aabab9f692f37483093e2cb9d5b3"
+    },
+    {
+      "path": "packages/backend/src/modules/finance-operations/__tests__/controlled-imports-phase2-review-b.red.test.ts",
+      "sha256": "3f0dc980240a36305b6a2ec8039706c636b7fa7c1a08a243f78a827fb6347c89"
+    },
+    {
+      "path": "packages/backend/src/modules/finance-operations/__tests__/controlled-imports-phase2-tax-binding.red.test.ts",
+      "sha256": "d2a83771ad460e84057e19dd0dc43666e60e4a3e573f65db0aaae91ada22fef5"
+    },
+    {
+      "path": "packages/backend/src/modules/finance-operations/__tests__/controlled-imports-phase2.red.test.ts",
+      "sha256": "f7cd03ca34b851cd27009e03745ae91dd3d6ab85906051f21effdec89bc0725e"
+    },
+    {
+      "path": "packages/backend/src/modules/finance-operations/__tests__/historical-private-evidence-packet.red.test.ts",
+      "sha256": "d74d05f4d876e511d619364c89d77f334f119181405c2002233ac785a2a7c08d"
+    },
+    {
+      "path": "packages/backend/src/modules/finance-operations/contracts.ts",
+      "sha256": "8b5af8da0e05acf0277fab9e7fdaeb212f271b2cebfc4d67d9342550d2ff97d5"
+    },
+    {
+      "path": "packages/backend/src/modules/finance-operations/controlled-imports.ts",
+      "sha256": "7ce8a1c40091708a8ad62e3f3c75e3d3b6ac37805be5bbfc025945d7e34a7430"
+    }
+  ],
+  "blocking_findings": [],
+  "nonblocking_findings": [],
+  "evidence": [
+    {
+      "kind": "manifest",
+      "result": "The ordered manifest matched before evidence collection and immediately before this decision."
+    },
+    {
+      "kind": "source-audit",
+      "location": "packages/backend/src/modules/finance-operations/controlled-imports.ts:339",
+      "result": "Singleton checks bind the document class, source record, logical reference, currency, status, school metadata, and GST facts."
+    },
+    {
+      "kind": "source-audit",
+      "location": "packages/backend/src/modules/finance-operations/controlled-imports.ts:619",
+      "result": "Document values bind by packet-owned normalized fact IDs. Reordered caller facts cannot relabel a trusted value."
+    },
+    {
+      "kind": "source-audit",
+      "location": "packages/backend/src/modules/finance-operations/controlled-imports.ts:694",
+      "result": "Payroll values bind by trusted voucher identity, date, money kind, and outer packet fact ID."
+    },
+    {
+      "kind": "source-audit",
+      "location": "packages/backend/src/modules/finance-operations/contracts.ts:302",
+      "result": "Strict binding schemas reject unknown keys, unsafe text, oversized values, metadata bindings, and payroll outer-ID conflicts."
+    },
+    {
+      "kind": "source-audit",
+      "location": "packages/backend/src/modules/finance-operations/contracts.ts:439",
+      "result": "The generic packet stays compatible while controlled metadata facts remain bounded and duplicate singleton facts fail."
+    },
+    {
+      "kind": "source-audit",
+      "location": "packages/backend/src/modules/finance-operations/controlled-imports.ts:821",
+      "result": "Normalization requires a genuine preparation capability and checks every envelope against packet and evidence bindings."
+    },
+    {
+      "kind": "adversarial-probe",
+      "result": "An in-memory direct probe passed 13 checks for metadata combinations, status switching, variant injection, ambiguity switching, GST, currency, reordering, and capability forgery."
+    },
+    {
+      "kind": "tests",
+      "result": "The focused trust-binding suites passed 170 of 170 tests. All Finance Operations tests passed 304 of 304 tests."
+    },
+    {
+      "kind": "owner-boundary-tests",
+      "result": "Company Identity passed 20 of 20 tests. Private storage passed 25 of 25 tests."
+    },
+    {
+      "kind": "static-gates",
+      "result": "Backend production and test typechecks passed. Backend and Storage builds passed. Finance lint passed."
+    },
+    {
+      "kind": "static-gates",
+      "result": "Storage lint had zero errors and three warnings in unchanged tests. Prettier and git diff checks passed."
+    },
+    {
+      "kind": "graph",
+      "result": "The fresh graph contained 31,809 nodes and 56,581 edges. No prepareControlledImportBatch caller was reported."
+    }
+  ],
+  "commands": [
+    {
+      "command": "CI=true ../../node_modules/.bin/vitest run src/modules/finance-operations/__tests__ --pool=threads --maxWorkers=1 --testTimeout=15000",
+      "status": 0,
+      "result": "18 files passed; 304 tests passed"
+    },
+    {
+      "command": "CI=true ../../node_modules/.bin/vitest run src/modules/finance-operations/__tests__/controlled-imports-phase2-review-b.red.test.ts src/modules/finance-operations/__tests__/controlled-imports-phase2-tax-binding.red.test.ts src/modules/finance-operations/__tests__/controlled-imports-phase2.red.test.ts src/modules/finance-operations/__tests__/historical-private-evidence-packet.red.test.ts --pool=threads --maxWorkers=1 --testTimeout=15000",
+      "status": 0,
+      "result": "4 files passed; 170 tests passed"
+    },
+    {
+      "command": "CI=true ../../node_modules/.bin/vitest run src/modules/company-identity/__tests__/finance-authorization-adapter.red.test.ts src/modules/company-identity/__tests__/protocol-safety.red.test.ts --pool=threads --maxWorkers=1 --testTimeout=15000",
+      "status": 0,
+      "result": "2 files passed; 20 tests passed"
+    },
+    {
+      "command": "CI=true ../../node_modules/.bin/vitest run src/__tests__/finance-private-evidence-read.red.test.ts --pool=threads --maxWorkers=1 --testTimeout=15000",
+      "status": 0,
+      "result": "1 file passed; 25 tests passed"
+    },
+    {
+      "command": "../../node_modules/.bin/tsc --noEmit",
+      "status": 0,
+      "result": "Backend production typecheck passed"
+    },
+    {
+      "command": "../../node_modules/.bin/tsc --noEmit -p tsconfig.test.json",
+      "status": 0,
+      "result": "Backend test typecheck passed"
+    },
+    {
+      "command": "../../node_modules/.bin/tsc",
+      "status": 0,
+      "result": "Backend and Storage builds passed"
+    },
+    {
+      "command": "../../node_modules/.bin/eslint src/modules/finance-operations",
+      "status": 0,
+      "result": "Finance Operations lint passed"
+    },
+    {
+      "command": "../../node_modules/.bin/eslint .",
+      "status": 0,
+      "result": "Storage lint had zero errors and three unchanged-test warnings"
+    },
+    {
+      "command": "node_modules/.bin/prettier --check <seven reviewed paths>",
+      "status": 0,
+      "result": "All reviewed files matched Prettier"
+    },
+    {
+      "command": "git diff --check",
+      "status": 0,
+      "result": "Passed"
+    },
+    {
+      "command": "build-graph stats ./graph.db; build-graph inspect ./graph.db prepareControlledImportBatch; build-graph callers ./graph.db prepareControlledImportBatch",
+      "status": 0,
+      "result": "Graph checks passed; no caller was reported"
+    }
+  ],
+  "current_head": "82cfbd321baf8fb727f64ec323e5613dca0e31f2",
+  "confidence": "high"
+}
