@@ -1,6 +1,7 @@
 # Implementation Plan: Legacy Traversal Cutover
 
-- [ ] Confirm accepted crosswalk/readiness coverage and publish exact legacy manifests for five titles.
+- [~] Confirm accepted crosswalk/readiness coverage and publish exact legacy manifests for five titles.
+  Evidence-only Task 1 Red starts here. Task 2 remains blocked by the Asset Contract v2 product-owner receipt and suitability evidence.
 - [ ] Consume accepted Asset Contract v2 and suitability/ingestion records; freeze each title's semantic roles, physical behavior descriptors, legacy source manifests, and reuse/ingest/block decisions before implementation.
 - [ ] Write failing mechanic, responsive composition, and educational-invariant tests per title.
 - [ ] Build each cartridge using current public APK APIs and approved semantic bindings.
