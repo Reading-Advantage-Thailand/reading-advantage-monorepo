@@ -1,0 +1,8 @@
+Track: apk_existing_action_cutover_20260727
+Task: Task 3 blocker clarification
+Source: a6b2784af
+Parent: 0f88580e3
+Scope: One APK plan line
+Plan SHA-256: 8bcb23f9afe7bcfcaaeb564142090c235ec2604dbad4bcc8fe3cb7c5611200f0
+Evidence: The cited technical receipt exists and matches SHA-256 88bb3f98fd96ac394bb086add856304011a48b058f8dd2b2af1678c33f5e8ba8. Boundary commit 2d3eefcd1 exists. Independent review accepted the correction.
+Boundary: Task 3 stays blocked. Product-owner receipt and five title decisions remain absent.
