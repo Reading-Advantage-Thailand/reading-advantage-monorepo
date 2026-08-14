@@ -45,42 +45,41 @@ rejection paths.
 ## R2 disposition: backend type gate
 
 `pnpm --filter @reading-advantage/backend exec tsc --noEmit` passed.
-`tsc --noEmit -p tsconfig.test.json` failed outside kernel scope.
-
-The exact non-kernel source groups are:
-
-- `src/modules/standard-pack-ingestion/__tests__/ledger-successor-admission-facade.playkit-lifecycle.test.ts`
-  and 11 imported `packages/advantage-play-kit/src/assets/*` files: TS6059 rootDir.
-- `src/modules/company-identity/__tests__/finance-task3-review-b.red.test.ts`:
-  three TS2322 errors.
-- `src/modules/finance-operations/__tests__/controlled-imports-phase2.red.test.ts`:
-  one TS2345 error.
-- `src/modules/planned-game-intake/__tests__/contracts.test.ts`:
-  two TS2345/TS2322 errors.
-
-These paths are outside the lease. The backend package owner must resolve them.
+`tsc --noEmit -p tsconfig.test.json` also passed on 2026-08-14.
+R2 is closed.
 
 ## R3 and R4 dispositions
 
-`pnpm --filter @reading-advantage/db test` did not finish inside the first
-120-second command limit. Before termination it showed unrelated migration,
-Company Identity integration, durable-job, and schema-drift failures.
-The kernel schema subset passed.
+The complete database run passed 1,142 tests and failed 39 tests.
+The classification assigns zero failures to the kernel and zero failures to an unknown cause.
 
-`pnpm --filter @reading-advantage/domain test` exited 1. Its failures include
-`src/activity/__tests__/activity-drizzle-integration.test.ts`, its duplicate
-`dist/activity` output, mastery persistence suites, and
-`src/__tests__/phase-4-adversarial.test.ts`. The output reports live database
-state collisions and the Finance append-only truncate guard. The kernel tenant
-subset passed.
+The complete domain run passed 682 tests and failed 74 tests.
+The classification assigns zero failures to the kernel and zero failures to an unknown cause.
+
+The focused database and domain subsets passed.
+The available summary records counts and failure classes.
+It does not name every failing file.
+
+The referenced temporary reports are not available in the repository.
+R3 and R4 remain open until the track records each failing file.
+The complete repository package gates remain red.
+
+See `phase-3-repository-verification-20260814.md` for commands, hashes, and classifications.
 
 ## R5 architecture disposition
 
-`pnpm architecture:check` exited 1 with 137 new architecture debt additions.
-The listed additions are outside the kernel lease.
-`pnpm architecture:baseline:validate` exited 1 because
-`measure/tracks/backend_architecture_enforcement_20260713/reconciliation-denominator-diff-audit.md`
-is absent. The baseline tool cannot compare this phase.
+The immutable phase-base and current reports contain the same 697 findings.
+They also contain the same 137 additions, zero removals, and 21 renames.
+
+The kernel architecture delta is zero. Commit `a084bb4a9` restores the five frozen evidence paths without changing their accepted bytes.
+
+Frozen evidence and hash validation pass.
+The live baseline checker exits 1 with `debt-change`.
+The existing 137 additions still require their owning tracks.
+
+The phase-base and current debt records are equal. R5 is closed for kernel acceptance.
+
+See `phase-3-repository-verification-20260814.md` for the comparison hashes.
 
 ## Doctor disposition
 
@@ -89,6 +88,6 @@ other active tracks. This track did not add those markers.
 
 ## Acceptance status
 
-R1 is closed by the recorded coverage proof.
-R6 and R7 records now exist, but R6 awaits owner acceptance.
-R2, R3, R4, and R5 remain open. Phase 3 is not accepted.
+R1, R2, R5, and R7 are closed for kernel acceptance.
+R3 and R4 need exact failing-file dispositions.
+R6 awaits owner acceptance. Phase 3 is not accepted.
