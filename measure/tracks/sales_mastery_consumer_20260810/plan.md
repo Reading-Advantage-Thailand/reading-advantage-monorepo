@@ -79,6 +79,20 @@
   and architecture gates remain blockers, so this note does not claim Phase 0
   closeout or Phase 2 admission.
 
+  Sales lease Green source receipt (2026-08-14): accepted commit
+  `d4ea61c92e554c85b3122b5977c8d5f1c105ca72`; final independent review:
+  `ACCEPT`. The focused seam gate passed 17 tests with 8 skipped; installed
+  typecheck, lint, and `git diff --check` passed. The accepted three-path
+  SHA-256 values are `release-artifact.ts`
+  `894bf1c979e1c352158b6db18fc36a8693954af13a631a253b7330834258d8cb`,
+  `release-artifact.test.ts`
+  `509876483a470a124ce70ff1136ed7647a601598a541c802525aa973d64859a0`, and
+  `test-strategy.md`
+  `c141bd99f2126937b08d8aebce7cc2b63b8215d5cefcada929ed52ce0f72d4d2`.
+  The review ran no packed, install, or canonical-lease gates. Task B remains
+  `[~]`; this receipt does not claim Phase 0 closeout, shared-root Green, or
+  unblock later work.
+
 ## Phase 1 — bind the approved course to a knowledge graph
 
 - [x] Task: Define the versioned Sales objective graph, activity variants,
