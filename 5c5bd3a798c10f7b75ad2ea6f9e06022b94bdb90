@@ -1,0 +1,5 @@
+Track: apk_existing_action_cutover_20260727
+Scope: shared registry status only.
+Registry SHA-256: cf631850d54da7b533f708bca0667097e62bd622392a513ba69dab11f4c778bb.
+Independent review: ACCEPT.
+Boundary: The track remains blocked until Asset Contract v2 gets a current-byte independent review and a product-owner receipt.
