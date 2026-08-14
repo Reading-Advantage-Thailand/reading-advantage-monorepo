@@ -21,7 +21,7 @@
 | B04 | 2 | 4 | 5 | 5 |
 | B05 | 2 | 6 (incl. -017 test) | 10 | 4 |
 
-138 distinct IDs total. After de-duplication, the recurring themes collapse into the clusters below.
+139 distinct IDs total. After de-duplication, the recurring themes collapse into the clusters below.
 
 ---
 

@@ -137,9 +137,11 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 - [ ] **Track: CodeCamp Advantage Review** *Link: [./tracks/codecamp_advantage_review_20260626/](./tracks/codecamp_advantage_review_20260626/)*
   Reviews intern training, curriculum progression, GitHub workflows, webhooks, AI PR review,
   admin reporting, and production readiness. *Planning output complete for roadmap purposes; remediation ownership is now assigned through Waves 0-6.*
-- [ ] **Track: Sales Advantage Review** *Link: [./tracks/sales_advantage_review_20260626/](./tracks/sales_advantage_review_20260626/)*
-  Reviews sales coaching, audio roleplay, storage, multimodal AI evaluation/fallbacks,
-  progress, admin flows, and sales-domain contracts. *Planning output complete for roadmap purposes; remediation ownership is now assigned through Waves 0-6.*
+- [b] **Track: Sales Advantage Review** *Link: [./tracks/sales_advantage_review_20260626/](./tracks/sales_advantage_review_20260626/)*
+  Published review artifacts cover 110 files through six batches and define 139
+  finding IDs. Graph freshness, targeted quality gates, and phase acceptance remain
+  blocked. Successor waves own product remediation. This row makes no Sales app
+  readiness claim.
 - [ ] **Track: Advantage Games Review** *Link: [./tracks/advantage_games_review_20260626/](./tracks/advantage_games_review_20260626/)*
   Reviews the reusable game inventory, shared runtime, scoring/XP/leaderboards,
   mobile/accessibility, and import readiness for Reading/Primary. *Planning output complete for roadmap purposes; remediation ownership is now assigned through Waves 0-6.*

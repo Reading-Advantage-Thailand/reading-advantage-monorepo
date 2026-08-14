@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "role": "orchestrator-audit",
+  "track": "sales_advantage_review_20260626",
+  "phase": "Phase 3: Auth, Contracts, Gates",
+  "track_base_sha": "7ad89ac39b6b871da0907c6b873329c75d6dc3b9",
+  "role_base_sha": "d16165dc1928b85bf968f651f2f8d1370c554627",
+  "baseline_sha": "7ad89ac39b6b871da0907c6b873329c75d6dc3b9",
+  "audited_head_sha": "d16165dc1928b85bf968f651f2f8d1370c554627",
+  "diff_binding": "7ad89ac39b6b871da0907c6b873329c75d6dc3b9..d16165dc1928b85bf968f651f2f8d1370c554627",
+  "applicability": "applicable",
+  "status": "fail",
+  "summary": "At immutable HEAD d16165dc, A11 truthfulness fails. The 110-file review and its 11 report entries exist. The registry states that planning output is complete. Every plan task remains [b] deferred:review-execution. Phase 3 acceptance and targeted quality gates remain pending. This audit makes no Sales app readiness claim.",
+  "blocking_findings": [
+    "A11: measure/tracks/sales_advantage_review_20260626/plan.md:10-31 leaves all 13 tasks [b] deferred:review-execution although the complete report set and six line-review batches exist; the plan is not truthful current state.",
+    "Phase 3 acceptance is absent: checklist.md:50-54 and executive-summary.md:91-98 explicitly state acceptance PENDING and targeted lint/type/test/build gates NOT run. Planning-output completeness cannot substitute for phase acceptance or app readiness.",
+    "The A11 guard exists but misses this regression: tests/orchestrator_review_execution_truthfulness.sh:12-15 only activates for review-*-result.json inside the track directory, while these artifacts live under measure/audit-reports/sales-advantage_20260626; it returned PASS falsely."
+  ],
+  "nonblocking_findings": [
+    "Artifact completeness is supported. The manifest binds 110 files to six batches. The synthesis reconciles 1,675 report lines and 139 finding IDs. Ten top-level report files exist. The line-review directory contains six batch reports.",
+    "Roadmap consumption is supported without remediation-completeness overstatement: medium-plus-coverage-matrix.md:99-113 assigns Sales T1-T11 across Waves 1, 2, 4, and 6; Wave 4 plan.md:113-118 and Wave 6 plan.md:28-52 consume T5/T8/T9 and T10/T11; archived Wave 1 evidence consumes T1/T2/T3/T7.",
+    "A10: .git/hooks/pre-commit is absent, so generated-facts drift remains a catalogued infrastructure risk.",
+    "A14/tooling: rg is unavailable; orchestrator_detector_syntax.sh printed rg command not found but returned PASS because rg is used in an if condition. The guard result is vacuous.",
+    "AGENTS.md uses the required peer-reviewed supervisor rule, not the retired blanket do-not-modify form.",
+    "Unrelated dirty work was observed and preserved; it is excluded from changed_files."
+  ],
+  "evidence": [
+    "measure/tracks.md:140-142: registry says planning output complete and remediation ownership assigned through Waves 0-6.",
+    "measure/tracks/sales_advantage_review_20260626/plan.md:27-31: all Phase 3 tasks remain [b] deferred:review-execution.",
+    "measure/audit-reports/sales-advantage_20260626/line-review-coverage.md:3-8,14-152: baseline, 110-file denominator, six batch manifests.",
+    "measure/audit-reports/sales-advantage_20260626/line-review-synthesis.md:15-31,44-71: six batches, 1,675 lines, 139 findings, artifact inventory, and traceability.",
+    "measure/audit-reports/sales-advantage_20260626/executive-summary.md:91-100: acceptance and Phase 3 gates pending; no closeout/remediation claim.",
+    "measure/audit-reports/sales-advantage_20260626/checklist.md:33-54: artifact checklist complete but acceptance pending.",
+    "measure/audit-reports/monorepo-review-roadmap_20260626/medium-plus-coverage-matrix.md:99-113: Sales T1-T11 wave ownership.",
+    "tests/orchestrator_review_execution_truthfulness.sh:12-15: guard only recognizes track-local review result JSON.",
+    "git log scoped to report path: a0d8c899b committed the review/roadmap artifact publication.",
+    "git rev-parse HEAD: d16165dc1928b85bf968f651f2f8d1370c554627."
+  ],
+  "commands": [
+    "git rev-parse HEAD; git status --porcelain; git log --diff-filter=A -- plan \u2014 HEAD matched; dirty work preserved.",
+    "measure_interphase_checks.py status --repo . \u2014 exit 0; lists this track as a closeout candidate because every task is structurally blocked.",
+    "bash tests/orchestrator_supervisor_invariants.sh \u2014 PASS.",
+    "bash tests/orchestrator_marker_vocabulary.sh --track sales_advantage_review_20260626 \u2014 PASS vocabulary only.",
+    "bash tests/orchestrator_review_execution_truthfulness.sh \u2014 false PASS; artifact discovery gap.",
+    "bash tests/orchestrator_catalog.sh \u2014 PASS.",
+    "bash tests/orchestrator_detector_syntax.sh \u2014 vacuous PASS after rg missing.",
+    "bash tests/orchestrator_role_receipt_integrity.sh \u2014 repository-wide PASS; no Sales-review-specific phase acceptance receipt exists.",
+    "Python AST A1 detector \u2014 0 occurrences; structural helper present and used.",
+    "git diff --name-only 7ad89ac..d16165dc scoped to Sales report, roadmap, and registry \u2014 report set, roadmap artifacts, and tracks.md are in the bound diff."
+  ],
+  "changed_files": [
+    "measure/tracks/sales_advantage_review_20260626/status-reconciliation-audit-result.json"
+  ],
+  "test_strategy_violations": [
+    "A11 guard does not cover review artifacts stored under measure/audit-reports review directories.",
+    "Detector-syntax guard can pass when rg is unavailable."
+  ],
+  "live_contract_violations": [
+    "Plan truth contract violated: completed review work remains fully blocked deferred:review-execution.",
+    "Phase 3 lacks targeted gate execution and phase-acceptance evidence."
+  ],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "remediation_route": [
+    "First route to the Measure plan-update/status-reconciliation owner: reconcile each task against existing artifact evidence, mark evidenced work [x] with immutable provenance, and leave only genuinely unexecuted work [~] or [b] with a real external owner. Audit role must not change markers.",
+    "Then route Phase 3 to owning execution roles to run exact targeted Sales app/domain/API lint, type, test, and build gates; failures route to owning implementation tracks.",
+    "Then run measure-phase-acceptance against the reconciled plan, report set, exact gate outputs, and immutable SHAs; remain fail/inconclusive until evidence exists.",
+    "Separately create a dedicated Measure/orchestrator remediation track for A11 artifact discovery and A14 fail-closed behavior when rg is missing.",
+    "Only afterward may metadata/registry/closeout roles assess review-track completion. Never infer Sales app readiness; product remediation remains successor-wave owned."
+  ],
+  "retry_recommendation": "create_remediation_track",
+  "confidence": "high"
+}

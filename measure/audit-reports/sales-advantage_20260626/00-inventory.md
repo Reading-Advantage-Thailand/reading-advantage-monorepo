@@ -14,7 +14,7 @@
 | Batches | 6 (`sales-batch-00` … `sales-batch-05`) |
 | Batch reports | 6 |
 | Total batch-report lines | 1,675 (384 + 228 + 214 + 272 + 409 + 168) |
-| Distinct finding IDs catalogued | 138 (`F-SALES-B00-001`…`B05-022`) |
+| Distinct finding IDs catalogued | 139 (`F-SALES-B00-001`…`B05-022`) |
 | Source code edited during review | none |
 
 Batch line counts: B00=384, B01=228, B02=214, B03=272, B04=409, B05=168.

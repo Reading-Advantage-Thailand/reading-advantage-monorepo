@@ -26,7 +26,7 @@ edited to produce it.
 | Batch reports | **6** |
 | Total batch-report lines | **1,675** |
 | Per-batch report lines | B00=384, B01=228, B02=214, B03=272, B04=409, B05=168 |
-| Distinct finding IDs | 138 (`F-SALES-B00-001`…`F-SALES-B05-022`) |
+| Distinct finding IDs | 139 (`F-SALES-B00-001`…`F-SALES-B05-022`) |
 | Source code edited | none |
 | Code executed | only batch-05's 2 domain test files (10 passed, mock-DB) |
 

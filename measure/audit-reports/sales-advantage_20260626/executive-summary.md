@@ -19,7 +19,7 @@ support.
 | Batches | 6 |
 | Batch reports | 6 |
 | Total report lines | 1,675 |
-| Distinct findings catalogued | 138 (`F-SALES-B00-001`…`B05-022`) |
+| Distinct findings catalogued | 139 (`F-SALES-B00-001`…`B05-022`) |
 | Source code edited | none |
 | Code executed | only the 2 batch-05 domain test files (10 tests passed, mock-DB) |
 
