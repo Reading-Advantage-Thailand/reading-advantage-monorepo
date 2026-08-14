@@ -1,0 +1,9 @@
+Track: sales_mastery_consumer_20260810
+Task: Workspace lease capability Green
+Source: d4ea61c92
+Parent: a6b2784af
+Scope: Three Sales lease and strategy paths
+Hashes: release 894bf1c979e1c352158b6db18fc36a8693954af13a631a253b7330834258d8cb; test 509876483a470a124ce70ff1136ed7647a601598a541c802525aa973d64859a0; strategy c141bd99f2126937b08d8aebce7cc2b63b8215d5cefcada929ed52ce0f72d4d2.
+Evidence: Focused capability tests passed 17 with 8 skipped. TypeScript, ESLint, and diff checks passed.
+Review: Independent Green review accepted retained-parent acquisition and safe same-string release.
+Boundary: Packed, install, and canonical lease gates did not run. Shared-root Green remains unclaimed.
