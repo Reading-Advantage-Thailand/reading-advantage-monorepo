@@ -1,0 +1,229 @@
+{
+  "schema_version": "apk-current-byte-independent-review.v3",
+  "record_id": "apk_asset_contract_v2_20260728_current_byte_independent_review_v3",
+  "track_id": "apk_asset_contract_v2_20260728",
+  "status": "accepted-technical-review-owner-decision-required",
+  "reviewed_at": "2026-08-14",
+  "reviewer": {
+    "agent": "terra_current_release",
+    "role": "independent-release-reviewer",
+    "independence": {
+      "did_not_author_current_bytes": true,
+      "did_not_author_historical_receipts": true,
+      "did_not_author_this_review": true,
+      "has_no_product_owner_authority": true
+    }
+  },
+  "source_revision": {
+    "repository": "reading-advantage-monorepo",
+    "branch": "master",
+    "commit": "69ff94e91f3aef6d63329b1e169d4ff7619509cc",
+    "parent": "86f0611cf418632d5767a588d8fe15a4272973b1",
+    "bound_paths_are_clean": true
+  },
+  "predecessors": {
+    "outer_receipt": {
+      "path": "measure/archive/apk_asset_contract_v2_20260728/v2-owner-acceptance-v1.json",
+      "sha256": "98f6c6d3b98d615d3b30b0eaa4581eb5b5e2636705e25cb87f9fe3e5d3b958b3"
+    },
+    "historical_review_v2": {
+      "path": "measure/archive/apk_asset_contract_v2_20260728/current-byte-independent-review-v2.json",
+      "sha256": "8e43541af1adb4023204039540d2ca97677df2bf50088425605e06518c378826",
+      "reusable_for_current_acceptance": false
+    }
+  },
+  "current_bindings": {
+    "contract": {
+      "path": "packages/advantage-play-kit/src/assets/asset-contract-v2.ts",
+      "sha256": "96f745479559ae35b918204738073eec183d05b2e9c79556b00217bd07fb2da2",
+      "git_blob_sha1": "72c991a72a9bf0dbc16d4a19a6353637eba4e876"
+    },
+    "resolver": {
+      "path": "packages/advantage-play-kit/src/assets/semantic-product-bindings.ts",
+      "sha256": "0c5aa44959c9c91af4aa64d3531457ef5c073d2182c0a4fb5d3aa31161ac43df",
+      "git_blob_sha1": "04030347afc0724473ee6feb1b144f11358ed8cf"
+    },
+    "browser_qc_host": {
+      "path": "apps/advantage-games/src/components/apk/AdvantageGamesAuthoringQc.tsx",
+      "sha256": "2e5e26ae5b3a1879ef3adddd8e3facc69d3f53575c07252d96565952d15ea058",
+      "git_blob_sha1": "d39d8871554b06e0c77e52ceae2d203fb78ecaa4"
+    }
+  },
+  "supporting_bindings": {
+    "provenance": {
+      "path": "packages/advantage-play-kit/src/assets/asset-contract-v2-provenance.ts",
+      "sha256": "dfc4d571d9d92bab31200ab33ca984a403babbd65dad6485312ad1e3b1a5b8df"
+    },
+    "accepted_resolver": {
+      "path": "packages/advantage-play-kit/src/assets/accepted-standard-pack-release.ts",
+      "sha256": "9a931e5ebde9d328697f00129ac803a7d56ca106ed46cb4940445f94c81a4584"
+    },
+    "consumer_check": {
+      "path": "packages/advantage-play-kit/scripts/verify-assets-consumer-entrypoint.mjs",
+      "sha256": "485be649a271c0433d65859df908edfefd9dde748b7176882cdd1d21224cccce"
+    },
+    "qc_fixture": {
+      "path": "apps/advantage-games/src/components/apk/AssetContractV2Qc.tsx",
+      "sha256": "9611cdfe5646b3e316dcfd0461fe947a3d2c6cac84497042a742d019e7edf997"
+    }
+  },
+  "reviewed_test_bindings": {
+    "asset_contract_v2": {
+      "path": "packages/advantage-play-kit/src/assets/asset-contract-v2.test.ts",
+      "sha256": "b3335afd3d332cbae81ab1841497475ba6f023c5281ef8b5757d5142cab9af26"
+    },
+    "asset_contract_v2_adversarial": {
+      "path": "packages/advantage-play-kit/src/assets/asset-contract-v2-adversarial.test.ts",
+      "sha256": "61fef33b980be03b2e40bd6ec1dadac42e1a173b0454e36ff2dcdf5c76a342f3"
+    },
+    "semantic_product_bindings_v2": {
+      "path": "packages/advantage-play-kit/src/assets/semantic-product-bindings-v2.test.ts",
+      "sha256": "59277483feceae15edbe11a56d65c7682ea38e940f1b71fa970b1c800378ef88"
+    },
+    "semantic_product_bindings": {
+      "path": "packages/advantage-play-kit/src/assets/semantic-product-bindings.test.ts",
+      "sha256": "c1360bd882ae9f03b737a36e6d90c623cc253087e6428fb2cd823d18d0bd6bfb"
+    },
+    "assets_public_api": {
+      "path": "packages/advantage-play-kit/src/assets/assets-public-api.test.ts",
+      "sha256": "6ae0cec8b5a29afc855cdfc79a3dd0275a36d059fc0b7c6d2f1a37620bb26cb5"
+    },
+    "standard_pack_ingestion_ledger": {
+      "path": "packages/advantage-play-kit/src/assets/standard-pack-ingestion-ledger.test.ts",
+      "sha256": "d306889ae97559d8f731574559ec65ab48d3b2536c7baf71e1fe1c486b568e4c"
+    },
+    "standard_pack_additive_release": {
+      "path": "packages/advantage-play-kit/src/assets/standard-pack-additive-release.test.ts",
+      "sha256": "7c23ea1ed0bc7dd2ea8e3d76225c9c45351e5416939ec0ed598431a1e22bfe8a"
+    },
+    "asset_contract_v2_qc": {
+      "path": "apps/advantage-games/src/components/apk/AssetContractV2Qc.test.tsx",
+      "sha256": "85249d9cc1bb8d68d98332eb236bccb3f74288420b71d9f5c84f8ed07269c3cb"
+    },
+    "authoring_qc": {
+      "path": "apps/advantage-games/src/components/apk/AdvantageGamesAuthoringQc.test.tsx",
+      "sha256": "f1f7d7bcb2433752663ddebf5d5c4352f379e3380cb57fb2a313d9a1c645ab08"
+    },
+    "authoring_qc_tutorial": {
+      "path": "apps/advantage-games/src/components/apk/AdvantageGamesAuthoringQc.tutorial.test.tsx",
+      "sha256": "38c56be11d2d35ff5d2c44d7a9838b5a546ee47a2df67e7886fbfdade9181d6d"
+    },
+    "authoring_qc_browser": {
+      "path": "apps/advantage-games/tests/e2e/qc/authoring-qc.spec.ts",
+      "sha256": "902c795f8cf13dd43faed6d2c8e27ba09165a809e5f0f741a55aafc172974e52"
+    }
+  },
+  "verification": {
+    "focused_v2_tests": {
+      "contract": {
+        "command": "CI=true pnpm --filter @reading-advantage/advantage-play-kit exec vitest run --maxWorkers=1 --fileParallelism=false src/assets/asset-contract-v2.test.ts src/assets/asset-contract-v2-adversarial.test.ts",
+        "result": "passed",
+        "files": 2,
+        "tests": 14
+      },
+      "resolver_and_public_api": {
+        "command": "CI=true pnpm --filter @reading-advantage/advantage-play-kit exec vitest run --maxWorkers=1 --fileParallelism=false src/assets/semantic-product-bindings-v2.test.ts src/assets/semantic-product-bindings.test.ts src/assets/assets-public-api.test.ts",
+        "result": "passed",
+        "files": 3,
+        "tests": 13
+      },
+      "ledger_and_additive_receipt": {
+        "command": "CI=true pnpm --filter @reading-advantage/advantage-play-kit exec vitest run --maxWorkers=1 --fileParallelism=false src/assets/standard-pack-ingestion-ledger.test.ts src/assets/standard-pack-additive-release.test.ts",
+        "result": "passed",
+        "files": 2,
+        "tests": 17
+      }
+    },
+    "play_kit_typecheck": {
+      "command": "CI=true pnpm --filter @reading-advantage/advantage-play-kit run check-types",
+      "result": "passed"
+    },
+    "play_kit_lint": {
+      "command": "CI=true pnpm --filter @reading-advantage/advantage-play-kit run lint",
+      "result": "passed-with-3-warnings",
+      "warnings": 3
+    },
+    "host_typecheck": {
+      "command": "CI=true pnpm --filter vocabulary-games run check-types",
+      "result": "passed"
+    },
+    "host_lint": {
+      "command": "CI=true pnpm --filter vocabulary-games run lint",
+      "result": "passed"
+    },
+    "scoped_diff_check": {
+      "command": "git diff --check -- packages/advantage-play-kit/src/assets apps/advantage-games/src/components/apk",
+      "result": "passed"
+    },
+    "browser_qc": {
+      "command": "CI=true pnpm --filter vocabulary-games exec playwright test tests/e2e/qc/authoring-qc.spec.ts --project=chromium",
+      "result": "not-run",
+      "reason": "Browser execution was outside this technical review."
+    },
+    "prettier": {
+      "command": "pnpm exec prettier --check packages/advantage-play-kit/src/assets/asset-contract-v2.ts packages/advantage-play-kit/src/assets/asset-contract-v2-provenance.ts packages/advantage-play-kit/src/assets/asset-contract-v2.test.ts packages/advantage-play-kit/src/assets/asset-contract-v2-adversarial.test.ts packages/advantage-play-kit/src/assets/semantic-product-bindings.ts packages/advantage-play-kit/src/assets/semantic-product-bindings-v2.test.ts packages/advantage-play-kit/src/assets/semantic-product-bindings.test.ts packages/advantage-play-kit/src/assets/assets-public-api.test.ts packages/advantage-play-kit/src/assets/standard-pack-ingestion-ledger.test.ts packages/advantage-play-kit/src/assets/standard-pack-additive-release.test.ts apps/advantage-games/src/components/apk/AdvantageGamesAuthoringQc.tsx apps/advantage-games/src/components/apk/AdvantageGamesAuthoringQc.test.tsx apps/advantage-games/src/components/apk/AdvantageGamesAuthoringQc.tutorial.test.tsx apps/advantage-games/tests/e2e/qc/authoring-qc.spec.ts",
+      "result": "failed-nonblocking",
+      "blocking": false,
+      "play_kit_files": [
+        "packages/advantage-play-kit/src/assets/asset-contract-v2.ts",
+        "packages/advantage-play-kit/src/assets/asset-contract-v2-provenance.ts",
+        "packages/advantage-play-kit/src/assets/asset-contract-v2.test.ts",
+        "packages/advantage-play-kit/src/assets/asset-contract-v2-adversarial.test.ts",
+        "packages/advantage-play-kit/src/assets/semantic-product-bindings.ts",
+        "packages/advantage-play-kit/src/assets/semantic-product-bindings-v2.test.ts",
+        "packages/advantage-play-kit/src/assets/semantic-product-bindings.test.ts",
+        "packages/advantage-play-kit/src/assets/assets-public-api.test.ts",
+        "packages/advantage-play-kit/src/assets/standard-pack-ingestion-ledger.test.ts",
+        "packages/advantage-play-kit/src/assets/standard-pack-additive-release.test.ts"
+      ],
+      "qc_files": [
+        "apps/advantage-games/src/components/apk/AdvantageGamesAuthoringQc.tsx",
+        "apps/advantage-games/src/components/apk/AdvantageGamesAuthoringQc.test.tsx",
+        "apps/advantage-games/src/components/apk/AdvantageGamesAuthoringQc.tutorial.test.tsx",
+        "apps/advantage-games/tests/e2e/qc/authoring-qc.spec.ts"
+      ],
+      "finding": "Prettier reports failures in ten Play Kit files and four QC files. Formatting is not Green."
+    }
+  },
+  "scope": {
+    "accepted": [
+      "current Asset Contract v2 contract bytes",
+      "current resolver bytes",
+      "current descriptor-driven QC host bytes",
+      "focused technical verification"
+    ],
+    "excluded": [
+      "title suitability",
+      "title adoption",
+      "asset ingestion",
+      "cartridge migration",
+      "catalog or loader exposure",
+      "Reading or Primary host proof",
+      "legacy retirement",
+      "cutover",
+      "production use",
+      "deployment"
+    ]
+  },
+  "findings": [
+    {
+      "id": "APK-CURRENT-BYTE-V3-001",
+      "severity": "nonblocking-source-style",
+      "finding": "Prettier reports failures in ten Play Kit files and four QC files.",
+      "required_disposition": "Do not mark formatting Green."
+    }
+  ],
+  "authorization": {
+    "title_suitability_authorized": false,
+    "title_adoption_authorized": false,
+    "asset_ingestion_authorized": false,
+    "migration_authorized": false,
+    "catalog_exposure_authorized": false,
+    "host_proof_claimed": false,
+    "retirement_authorized": false,
+    "cutover_authorized": false,
+    "deployment_authorized": false,
+    "production_use_authorized": false
+  },
+  "verdict": "current-byte-audit-complete-owner-decision-required"
+}

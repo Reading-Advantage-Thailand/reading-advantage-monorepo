@@ -2,7 +2,7 @@
   "schema_version": "apk-existing-action-task2-suitability-disposition.v1",
   "track_id": "apk_existing_action_cutover_20260727",
   "task": "Task 2: suitability disposition before implementation",
-  "status": "blocked-stale-asset-contract-v2-acceptance",
+  "status": "blocked-reviewed-asset-contract-v2-owner-receipt",
   "bound_inputs": {
     "task1_source_readiness_manifest": {
       "path": "measure/tracks/apk_existing_action_cutover_20260727/task1-source-readiness-manifest-v1.json",
@@ -11,11 +11,15 @@
     "asset_contract_v2_outer_receipt": {
       "path": "measure/archive/apk_asset_contract_v2_20260728/v2-owner-acceptance-v1.json",
       "sha256": "98f6c6d3b98d615d3b30b0eaa4581eb5b5e2636705e25cb87f9fe3e5d3b958b3"
+    },
+    "asset_contract_v2_current_byte_independent_review": {
+      "path": "measure/archive/apk_asset_contract_v2_20260728/current-byte-independent-review-v3.json",
+      "sha256": "88bb3f98fd96ac394bb086add856304011a48b058f8dd2b2af1678c33f5e8ba8"
     }
   },
   "asset_contract_v2_reacceptance": {
     "outer_receipt_status": "stale-acceptance-revoked-by-implementation-drift",
-    "current_byte_independent_review_accepted": false,
+    "current_byte_independent_review_accepted": true,
     "product_owner_successor_receipt_present": false,
     "recursive_binding_mismatches": [
       {
@@ -127,5 +131,5 @@
     "deletion_count": 0,
     "deletion_authorized": false
   },
-  "red_boundary": "The disposition remains non-consumable until a current-byte Asset Contract v2 independent review and product-owner receipt accept the current contract, resolver, and QC host bytes."
+  "red_boundary": "The disposition remains non-consumable because reviewed Asset Contract v2 bytes lack a product-owner successor receipt."
 }
