@@ -1,0 +1,7 @@
+Task: Record the next multi-currency THB requirement.
+
+Updated the specification, plan, metadata, and session handoff.
+
+The next task preserves original currency and amount, then adds trusted THB conversion evidence.
+
+No THB-equivalent implementation is claimed by this documentation commit.
