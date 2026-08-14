@@ -1,0 +1,8 @@
+Track: company_finance_operations_20260810
+Scope: THB owner-decision receipt Red contract.
+Strategy SHA-256: 136c8f76efb08977616b7204bf7fb8758a2c45d57f93e269dfe57f1e1224ba05.
+Test SHA-256: b43f22efc57f3e801d167abbbf7bc17b97c266a12dd8d25017e9b1e5a8f5dac5.
+Ordered aggregate: 122744110b0b4a2eb989331c6f9dbd83b1ceb9a474b3677df23bbb36c507d2b4.
+Independent review: ACCEPT.
+Evidence: 49 intentional failures name only five missing exports. Fifteen backend checks and four metadata checks passed.
+Boundary: Rate source, effective-date, and rounding policies remain owner decisions. No production, database, or migration change exists.
