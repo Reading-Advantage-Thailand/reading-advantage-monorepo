@@ -30,12 +30,12 @@ Hard boundaries for Phase 0:
   package. It is consumed as an immutable, already-reviewed release.
 - No browser, deploy, or production-QA behavior. Those are Phase 4.
 
-## Phase 0 lease-isolation Red contract (current)
+## Phase 0 lease-isolation Red/Green contract (current)
 
 The accepted release-artifact source keeps one canonical workspace lease. The
 current stale-lease test writes that shared path before it runs the packed gate.
-This Red contract defines an internal test seam without changing production
-locking or the public release-consumer surface.
+This contract defines an internal test seam without changing production locking
+or the public release-consumer surface.
 
 Red scope:
 
@@ -45,15 +45,23 @@ Red scope:
   `maxWaitMs` value.
 - The seam returns acquire and token-checked release operations.
 - The seam remains absent from `packages/mastery-runtime-compat/src/index.ts`.
+- The Green implementation validates cache containment, path components, device
+  identity, and separation from the canonical trusted work directory.
+- The Green implementation binds the parent inode and device before acquire.
+- It retains the parent capability and performs lease operations through its
+  descriptor-relative path.
+- It revalidates the capability before each attempt and after lease creation.
 - Production stale age, retry delays, maximum wait, atomic acquisition,
   reclaim markers, owner rechecks, and release-token checks remain unchanged.
 
 The Red tests cover stale malformed owners, stale dead owners, live-owner byte
 identity, bounded secret-safe timeout, wrong-token release, canonical-lease
-separation, default-path cross-process proof, traversal, symlink, cross-volume,
-and outside-cache rejection.
+separation, altered-path release, parent replacement during validation-to-mkdir,
+same-string release redirection, exact canonical-path rejection, default-path
+cross-process proof, traversal, symlink, cross-volume, and outside-cache
+rejection.
 
-Run only this focused Red command:
+Run only this focused seam command:
 
 ```bash
 pnpm --filter @reading-advantage/mastery-runtime-compat exec vitest run \
@@ -61,14 +69,13 @@ pnpm --filter @reading-advantage/mastery-runtime-compat exec vitest run \
   -t "WorkspaceLeaseRuntime Red contract"
 ```
 
-At the current source, the command must fail with only the missing internal
-`WorkspaceLeaseRuntime` seam. It must not enter `runReleaseArtifactCheck`,
-shared package builds, `npm pack`, or the canonical lease.
+At the current source, the command passes the isolated seam tests. It must not
+enter `runReleaseArtifactCheck`, shared package builds, `npm pack`, or the
+canonical lease.
 
-This Red task does not authorize a production change. It does not close Phase 0
-Task B, activate Phase 2, or change the existing default-path concurrency proof.
-The future Green task must add the smallest internal dependency seam and keep it
-unavailable through the package public export.
+The Green slice does not close Phase 0 Task B or activate Phase 2. It keeps the
+existing default-path concurrency proof on the canonical lease and keeps the
+test seam unavailable through the package public export.
 
 ## Phase 0 - reconcile and admit the consumer (one-shot Red/Green)
 

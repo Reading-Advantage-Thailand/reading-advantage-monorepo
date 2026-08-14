@@ -5,12 +5,15 @@ import {
   lstat,
   mkdir,
   mkdtemp,
+  open,
   readFile,
   realpath,
+  stat,
   rename,
   rm,
   writeFile,
 } from "node:fs/promises";
+import type { FileHandle } from "node:fs/promises";
 import { createRequire } from "node:module";
 import {
   basename,
@@ -103,6 +106,39 @@ interface WorkspaceLeaseOwner {
 interface WorkspaceLease {
   path: string;
   token: string;
+  capability?: WorkspaceLeaseCapability;
+}
+
+interface WorkspaceLeaseCapability {
+  parentHandle: FileHandle;
+  operationLeasePath: string;
+}
+
+interface WorkspaceLeaseRuntimeOptions {
+  leasePath: string;
+  now: () => number;
+  maxWaitMs: number;
+}
+
+interface WorkspaceLeaseRuntime {
+  acquire: () => Promise<WorkspaceLease>;
+  release: (lease: WorkspaceLease) => Promise<void>;
+}
+
+interface ValidatedWorkspaceLeasePath {
+  leasePath: string;
+  parentPath: string;
+  parentRealPath: string;
+  parentDev: number;
+  parentIno: number;
+  cacheRoot: string;
+  cacheRealPath: string;
+  cacheDev: number;
+}
+
+interface WorkspaceLeaseRuntimeContext extends ValidatedWorkspaceLeasePath {
+  now: () => number;
+  maxWaitMs: number;
 }
 
 interface GateDependencyIdentity {
@@ -561,6 +597,161 @@ async function ensureTrustedWorkRoot(root: ValidatedArtifactRoot): Promise<strin
   return trustedRealPath;
 }
 
+/** Validates an isolated test lease path without creating any filesystem entry. */
+async function validateTestWorkspaceLeasePath(
+  leasePath: string,
+): Promise<ValidatedWorkspaceLeasePath> {
+  if (!isAbsolute(leasePath)) {
+    throw new Error(
+      "leasePath must be an absolute path beneath the repository .cache directory",
+    );
+  }
+  const { cacheRoot, cacheRealPath } = await validateCacheBoundary();
+  const candidate = resolve(leasePath);
+  if (!isStrictlyInside(cacheRoot, candidate)) {
+    throw new Error(
+      "leasePath must be strictly beneath the repository .cache directory",
+    );
+  }
+  await assertNoSymlinkComponents(cacheRoot, candidate, "leasePath");
+  const canonicalTrustedRoot = resolve(
+    cacheRealPath,
+    "mastery-runtime-compat",
+    TRUSTED_WORK_DIRECTORY,
+  );
+  if (
+    candidate === canonicalTrustedRoot ||
+    isStrictlyInside(canonicalTrustedRoot, candidate)
+  ) {
+    throw new Error(
+      "leasePath cannot target the canonical trusted work directory",
+    );
+  }
+
+  const parentPath = dirname(candidate);
+  const parentEntry = await lstat(parentPath);
+  if (parentEntry.isSymbolicLink() || !parentEntry.isDirectory()) {
+    throw new Error("leasePath parent must be an existing directory");
+  }
+  const parentRealPath = await realpath(parentPath);
+  if (
+    parentRealPath !== cacheRealPath &&
+    !isStrictlyInside(cacheRealPath, parentRealPath)
+  ) {
+    throw new Error("leasePath parent resolves outside the repository .cache");
+  }
+
+  try {
+    const candidateEntry = await lstat(candidate);
+    if (candidateEntry.isSymbolicLink() || !candidateEntry.isDirectory()) {
+      throw new Error(
+        "leasePath must be a non-symlink directory when it exists",
+      );
+    }
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
+  }
+
+  const [cacheEntry, parentStat] = await Promise.all([
+    stat(cacheRealPath),
+    stat(parentPath),
+  ]);
+  if (cacheEntry.dev !== parentStat.dev) {
+    throw new Error("leasePath must remain on the repository .cache device");
+  }
+  return {
+    leasePath: candidate,
+    parentPath,
+    parentRealPath,
+    parentDev: parentStat.dev,
+    parentIno: parentStat.ino,
+    cacheRoot,
+    cacheRealPath,
+    cacheDev: cacheEntry.dev,
+  };
+}
+
+/** Opens the retained parent capability used by one isolated lease acquisition. */
+async function createWorkspaceLeaseCapability(
+  runtime: WorkspaceLeaseRuntimeContext,
+): Promise<WorkspaceLeaseCapability> {
+  const descriptorRoot =
+    process.platform === "linux"
+      ? "/proc/self/fd"
+      : process.platform === "darwin"
+        ? "/dev/fd"
+        : null;
+  if (descriptorRoot == null) {
+    throw new Error("isolated workspace lease capability is unsupported");
+  }
+  const parentHandle = await open(runtime.parentPath, "r");
+  try {
+    const [openedParentStat, openedParentRealPath] = await Promise.all([
+      parentHandle.stat(),
+      realpath(runtime.parentPath),
+    ]);
+    if (
+      openedParentRealPath !== runtime.parentRealPath ||
+      !openedParentStat.isDirectory() ||
+      openedParentStat.dev !== runtime.parentDev ||
+      openedParentStat.ino !== runtime.parentIno
+    ) {
+      throw new Error("leasePath parent changed before capability creation");
+    }
+    return {
+      parentHandle,
+      operationLeasePath: resolve(
+        descriptorRoot,
+        String(parentHandle.fd),
+        basename(runtime.leasePath),
+      ),
+    };
+  } catch (error) {
+    await parentHandle.close().catch(() => undefined);
+    throw error;
+  }
+}
+
+/** Revalidates the test lease parent before an acquisition attempt. */
+async function assertTestWorkspaceLeaseParent(
+  runtime: WorkspaceLeaseRuntimeContext,
+  capability: WorkspaceLeaseCapability,
+): Promise<void> {
+  const parentStat = await capability.parentHandle.stat();
+  if (
+    !parentStat.isDirectory() ||
+    parentStat.dev !== runtime.parentDev ||
+    parentStat.ino !== runtime.parentIno
+  ) {
+    throw new Error("leasePath parent capability changed before acquisition");
+  }
+  const capabilityParentRealPath = await realpath(
+    dirname(capability.operationLeasePath),
+  );
+  if (
+    capabilityParentRealPath !== runtime.cacheRealPath &&
+    !isStrictlyInside(runtime.cacheRealPath, capabilityParentRealPath)
+  ) {
+    throw new Error("leasePath parent capability escaped the repository .cache");
+  }
+}
+
+/** Rechecks a test lease after acquisition before returning it. */
+async function assertTestWorkspaceLeaseAfterAcquire(
+  runtime: WorkspaceLeaseRuntimeContext,
+  capability: WorkspaceLeaseCapability,
+): Promise<void> {
+  await assertTestWorkspaceLeaseParent(runtime, capability);
+  const leaseEntry = await lstat(capability.operationLeasePath);
+  if (leaseEntry.isSymbolicLink() || !leaseEntry.isDirectory()) {
+    throw new Error("acquired test lease is not a regular directory");
+  }
+  const leaseStat = await stat(capability.operationLeasePath);
+  if (leaseStat.dev !== runtime.parentDev) {
+    throw new Error("acquired test lease changed device");
+  }
+}
+
 /** Returns whether a process identifier still names a live process. */
 function isProcessAlive(pid: number): boolean {
   if (!Number.isInteger(pid) || pid <= 0) return false;
@@ -599,7 +790,10 @@ async function readWorkspaceLeaseOwner(
 }
 
 /** Removes a stale exclusive reclaim marker without disturbing an active reclaimer. */
-async function clearStaleWorkspaceReclaimMarker(markerPath: string): Promise<void> {
+async function clearStaleWorkspaceReclaimMarker(
+  markerPath: string,
+  now: () => number = Date.now,
+): Promise<void> {
   try {
     const markerEntry = await lstat(markerPath);
     if (markerEntry.isSymbolicLink() || !markerEntry.isFile()) return;
@@ -610,8 +804,8 @@ async function clearStaleWorkspaceReclaimMarker(markerPath: string): Promise<voi
       // A truncated marker is reclaimable only after its own mtime is stale.
     }
     const stale = marker == null
-      ? Date.now() - markerEntry.mtimeMs >= WORKSPACE_LEASE_STALE_AFTER_MS
-      : Date.now() - marker.acquiredAt >= WORKSPACE_LEASE_STALE_AFTER_MS &&
+      ? now() - markerEntry.mtimeMs >= WORKSPACE_LEASE_STALE_AFTER_MS
+      : now() - marker.acquiredAt >= WORKSPACE_LEASE_STALE_AFTER_MS &&
         !isProcessAlive(marker.pid);
     if (stale) await rm(markerPath, { force: false }).catch(() => undefined);
   } catch (error) {
@@ -620,7 +814,10 @@ async function clearStaleWorkspaceReclaimMarker(markerPath: string): Promise<voi
 }
 
 /** Attempts to reclaim a stale lease without deleting a live valid owner. */
-async function reclaimStaleWorkspaceLease(leasePath: string): Promise<boolean> {
+async function reclaimStaleWorkspaceLease(
+  leasePath: string,
+  now: () => number = Date.now,
+): Promise<boolean> {
   let leaseEntry;
   try {
     leaseEntry = await lstat(leasePath);
@@ -635,8 +832,8 @@ async function reclaimStaleWorkspaceLease(leasePath: string): Promise<boolean> {
   const leaseIsDirectory = leaseEntry.isDirectory();
   const owner = await readWorkspaceLeaseOwner(leasePath, leaseIsDirectory);
   const leaseIsStale = owner == null
-    ? Date.now() - leaseEntry.mtimeMs >= WORKSPACE_LEASE_STALE_AFTER_MS
-    : Date.now() - owner.acquiredAt >= WORKSPACE_LEASE_STALE_AFTER_MS &&
+    ? now() - leaseEntry.mtimeMs >= WORKSPACE_LEASE_STALE_AFTER_MS
+    : now() - owner.acquiredAt >= WORKSPACE_LEASE_STALE_AFTER_MS &&
       !isProcessAlive(owner.pid);
   if (!leaseIsStale) return false;
 
@@ -647,13 +844,13 @@ async function reclaimStaleWorkspaceLease(leasePath: string): Promise<boolean> {
       `${JSON.stringify({
         pid: process.pid,
         token: `${process.pid}-${randomUUID()}`,
-        acquiredAt: Date.now(),
+        acquiredAt: now(),
       })}\n`,
       { flag: "wx", mode: 0o600 },
     );
   } catch (error) {
     if ((error as NodeJS.ErrnoException).code === "EEXIST") {
-      await clearStaleWorkspaceReclaimMarker(reclaimPath);
+      await clearStaleWorkspaceReclaimMarker(reclaimPath, now);
       return false;
     }
     if ((error as NodeJS.ErrnoException).code === "ENOENT") return false;
@@ -696,46 +893,134 @@ async function reclaimStaleWorkspaceLease(leasePath: string): Promise<boolean> {
 }
 
 /** Acquires a cross-process filesystem lease with atomic owner publication and stale recovery. */
-async function acquireWorkspaceLease(trustedWorkRoot: string): Promise<WorkspaceLease> {
-  const leasePath = resolve(trustedWorkRoot, WORKSPACE_LEASE_DIRECTORY);
+async function acquireWorkspaceLease(
+  trustedWorkRoot: string,
+  runtime?: WorkspaceLeaseRuntimeContext,
+): Promise<WorkspaceLease> {
+  const publicLeasePath =
+    runtime?.leasePath ?? resolve(trustedWorkRoot, WORKSPACE_LEASE_DIRECTORY);
+  const now = runtime?.now ?? Date.now;
+  const maxWaitMs = runtime?.maxWaitMs ?? WORKSPACE_LEASE_MAX_WAIT_MS;
+  const capability = runtime
+    ? await createWorkspaceLeaseCapability(runtime)
+    : undefined;
+  const leasePath = capability?.operationLeasePath ?? publicLeasePath;
   const token = `${process.pid}-${randomUUID()}`;
-  const startedAt = Date.now();
-  for (let attempt = 0; ; attempt += 1) {
-    try {
-      await mkdir(leasePath);
-      const ownerTempPath = resolve(leasePath, `.owner-${token}.tmp`);
-      await writeFile(
-        ownerTempPath,
-        `${JSON.stringify({ pid: process.pid, token, acquiredAt: Date.now() })}\n`,
-        { flag: "wx", mode: 0o600 },
-      );
-      await rename(ownerTempPath, resolve(leasePath, "owner.json"));
-      return { path: leasePath, token };
-    } catch (error) {
-      if ((error as NodeJS.ErrnoException).code !== "EEXIST") throw error;
-      await reclaimStaleWorkspaceLease(leasePath);
-      if (Date.now() - startedAt >= WORKSPACE_LEASE_MAX_WAIT_MS) {
-        throw new Error("Timed out waiting for the shared workspace lease");
+  const startedAt = now();
+  let retainCapability = false;
+  try {
+    for (let attempt = 0; ; attempt += 1) {
+      if (runtime) await assertTestWorkspaceLeaseParent(runtime, capability!);
+      try {
+        await mkdir(leasePath);
+        if (runtime) {
+          await assertTestWorkspaceLeaseAfterAcquire(runtime, capability!);
+        }
+        const ownerTempPath = resolve(leasePath, `.owner-${token}.tmp`);
+        await writeFile(
+          ownerTempPath,
+          `${JSON.stringify({ pid: process.pid, token, acquiredAt: now() })}\n`,
+          { flag: "wx", mode: 0o600 },
+        );
+        await rename(ownerTempPath, resolve(leasePath, "owner.json"));
+        if (runtime) {
+          await assertTestWorkspaceLeaseAfterAcquire(runtime, capability!);
+        }
+        retainCapability = capability != null;
+        return { path: publicLeasePath, token, capability };
+      } catch (error) {
+        if ((error as NodeJS.ErrnoException).code !== "EEXIST") throw error;
+        await reclaimStaleWorkspaceLease(leasePath, now);
+        if (now() - startedAt >= maxWaitMs) {
+          throw new Error("Timed out waiting for the shared workspace lease");
+        }
+        const delay = WORKSPACE_LEASE_RETRY_DELAYS_MS[
+          Math.min(attempt, WORKSPACE_LEASE_RETRY_DELAYS_MS.length - 1)
+        ];
+        await new Promise((resolveDelay) => setTimeout(resolveDelay, delay));
       }
-      const delay = WORKSPACE_LEASE_RETRY_DELAYS_MS[
-        Math.min(attempt, WORKSPACE_LEASE_RETRY_DELAYS_MS.length - 1)
-      ];
-      await new Promise((resolveDelay) => setTimeout(resolveDelay, delay));
+    }
+  } finally {
+    if (capability != null && !retainCapability) {
+      await capability.parentHandle.close().catch(() => undefined);
     }
   }
 }
 
 /** Releases a cross-process workspace lease only when its owner token still matches. */
-async function releaseWorkspaceLease(lease: WorkspaceLease): Promise<void> {
+async function releaseWorkspaceLease(
+  lease: WorkspaceLease,
+  operationLeasePath = lease.path,
+): Promise<boolean> {
   try {
-    const leaseEntry = await lstat(lease.path);
-    if (leaseEntry.isSymbolicLink() || !leaseEntry.isDirectory()) return;
-    const owner = await readWorkspaceLeaseOwner(lease.path);
-    if (owner?.token !== lease.token) return;
-    await rm(lease.path, { recursive: true, force: false });
+    const leaseEntry = await lstat(operationLeasePath);
+    if (leaseEntry.isSymbolicLink() || !leaseEntry.isDirectory()) return false;
+    const owner = await readWorkspaceLeaseOwner(operationLeasePath);
+    if (owner?.token !== lease.token) return false;
+    await rm(operationLeasePath, { recursive: true, force: false });
+    return true;
   } catch (error) {
     if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
+    return true;
   }
+}
+
+/**
+ * Creates an internal workspace lease runtime for isolated tests.
+ * @param options Validated test lease path, clock, and acquisition wait limit.
+ * @returns An isolated acquire and token-checked release runtime.
+ * @throws When options target an unsafe path or contain an invalid wait setting.
+ */
+export async function createWorkspaceLeaseRuntimeForTest(
+  options: WorkspaceLeaseRuntimeOptions,
+): Promise<WorkspaceLeaseRuntime> {
+  if (typeof options.now !== "function") {
+    throw new Error("workspace lease test clock must be a function");
+  }
+  if (!Number.isFinite(options.maxWaitMs) || options.maxWaitMs <= 0) {
+    throw new Error(
+      "workspace lease test wait must be a positive finite number",
+    );
+  }
+  const validated = await validateTestWorkspaceLeasePath(options.leasePath);
+  const runtime: WorkspaceLeaseRuntimeContext = {
+    ...validated,
+    now: options.now,
+    maxWaitMs: options.maxWaitMs,
+  };
+  const activeCapabilities = new Set<WorkspaceLeaseCapability>();
+  return {
+    acquire: async () => {
+      const lease = await acquireWorkspaceLease("", runtime);
+      if (lease.capability) activeCapabilities.add(lease.capability);
+      return lease;
+    },
+    release: async (lease) => {
+      const capability = lease.capability;
+      if (
+        lease.path !== runtime.leasePath ||
+        capability == null ||
+        !activeCapabilities.has(capability)
+      ) {
+        return;
+      }
+      try {
+        await assertTestWorkspaceLeaseParent(runtime, capability);
+      } catch {
+        activeCapabilities.delete(capability);
+        await capability.parentHandle.close().catch(() => undefined);
+        return;
+      }
+      const released = await releaseWorkspaceLease(
+        lease,
+        capability.operationLeasePath,
+      );
+      if (released) {
+        activeCapabilities.delete(capability);
+        await capability.parentHandle.close().catch(() => undefined);
+      }
+    },
+  };
 }
 
 /** Creates a unique child beneath the canonical trusted work root. */

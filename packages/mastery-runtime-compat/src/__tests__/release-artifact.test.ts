@@ -6,6 +6,7 @@ import {
   mkdtemp,
   readFile,
   readdir,
+  rename,
   rm,
   stat,
   symlink,
@@ -15,7 +16,16 @@ import {
 import { join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import { promisify } from "node:util";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+
+vi.mock("node:fs/promises", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("node:fs/promises")>();
+  return {
+    ...actual,
+    mkdir: vi.fn(actual.mkdir),
+    stat: vi.fn(actual.stat),
+  };
+});
 
 const execute = promisify(execFile);
 
@@ -68,6 +78,7 @@ type ReleaseModule = {
 type WorkspaceLease = {
   path: string;
   token: string;
+  capability?: unknown;
 };
 
 type WorkspaceLeaseRuntimeOptions = {
@@ -429,6 +440,107 @@ describe("WorkspaceLeaseRuntime Red contract", () => {
     });
   });
 
+  it("keeps the lease inside the retained parent when it changes before mkdir", async () => {
+    const createRuntime = await loadWorkspaceLeaseRuntimeFactory();
+    if (!createRuntime) return;
+    await withIsolatedLeaseRoot(async (root, leasePath) => {
+      const runtime = await createRuntime({
+        leasePath,
+        now: Date.now,
+        maxWaitMs: 1_000,
+      });
+      const mkdirMock = vi.mocked(mkdir);
+      const realMkdir = mkdirMock.getMockImplementation();
+      expect(realMkdir).toBeDefined();
+      if (!realMkdir) return;
+      let outsideRoot = "";
+      let preservedRoot = "";
+      try {
+        mkdirMock.mockImplementationOnce(async (path, options) => {
+          expect(String(path)).toMatch(/\/(?:proc\/self|dev)\/fd\//);
+          outsideRoot = await mkdtemp(join(RED_LEASE_PARENT, "outside-"));
+          preservedRoot = resolve(
+            RED_LEASE_PARENT,
+            `preserved-${randomUUID()}`,
+          );
+          await rename(root, preservedRoot);
+          await symlink(outsideRoot, root);
+          return realMkdir(path, options);
+        });
+        const lease = await runtime.acquire();
+        await expect(
+          lstat(resolve(outsideRoot, ".workspace-build.lease")),
+        ).rejects.toMatchObject({ code: "ENOENT" });
+        await expect(
+          lstat(resolve(preservedRoot, ".workspace-build.lease")),
+        ).resolves.toBeTruthy();
+        await runtime.release(lease);
+        await expect(
+          lstat(resolve(preservedRoot, ".workspace-build.lease")),
+        ).rejects.toMatchObject({ code: "ENOENT" });
+      } finally {
+        mkdirMock.mockClear();
+        mkdirMock.mockImplementation(realMkdir);
+        if (outsideRoot) {
+          await rm(outsideRoot, { recursive: true, force: true });
+        }
+        if (preservedRoot) {
+          await rm(preservedRoot, { recursive: true, force: true });
+        }
+      }
+    });
+  });
+
+  it("does not release a copied-token lease after same-string parent redirection", async () => {
+    const createRuntime = await loadWorkspaceLeaseRuntimeFactory();
+    if (!createRuntime) return;
+    await withIsolatedLeaseRoot(async (root, leasePath) => {
+      const runtime = await createRuntime({
+        leasePath,
+        now: Date.now,
+        maxWaitMs: 1_000,
+      });
+      const lease = await runtime.acquire();
+      const ownerBytes = await readFile(
+        resolve(leasePath, "owner.json"),
+        "utf8",
+      );
+      await rm(root, { recursive: true, force: false });
+      await mkdir(root, { recursive: true });
+      await mkdir(leasePath);
+      await writeFile(resolve(leasePath, "owner.json"), ownerBytes, {
+        flag: "wx",
+      });
+      await runtime.release(lease);
+      expect(await readFile(resolve(leasePath, "owner.json"), "utf8")).toBe(
+        ownerBytes,
+      );
+    });
+  });
+
+  it("rejects a parent replaced by a symlink before isolated acquisition", async () => {
+    const createRuntime = await loadWorkspaceLeaseRuntimeFactory();
+    if (!createRuntime) return;
+    await withIsolatedLeaseRoot(async (root, leasePath) => {
+      const outsideRoot = await mkdtemp(join(RED_LEASE_PARENT, "outside-"));
+      try {
+        const runtime = await createRuntime({
+          leasePath,
+          now: Date.now,
+          maxWaitMs: 1_000,
+        });
+        await rm(root, { recursive: true, force: false });
+        await symlink(outsideRoot, root);
+        await expect(runtime.acquire()).rejects.toThrow(/symlink|parent/i);
+        await expect(
+          lstat(resolve(outsideRoot, ".workspace-build.lease")),
+        ).rejects.toMatchObject({ code: "ENOENT" });
+      } finally {
+        await rm(outsideRoot, { recursive: true, force: true });
+      }
+    });
+  });
+
   it("refuses a wrong token and leaves the isolated owner unchanged", async () => {
     const createRuntime = await loadWorkspaceLeaseRuntimeFactory();
     if (!createRuntime) return;
@@ -444,7 +556,34 @@ describe("WorkspaceLeaseRuntime Red contract", () => {
         resolve(leasePath, "owner.json"),
         "utf8",
       );
-      await runtime.release({ path: lease.path, token: "wrong-token" });
+      await runtime.release({ ...lease, token: "wrong-token" });
+      expect(await readFile(resolve(leasePath, "owner.json"), "utf8")).toBe(
+        ownerBefore,
+      );
+      await expect(lstat(leasePath)).resolves.toBeTruthy();
+      await runtime.release(lease);
+      await expect(lstat(leasePath)).rejects.toMatchObject({ code: "ENOENT" });
+    });
+  });
+
+  it("refuses a correct token for an altered path and leaves the real lease unchanged", async () => {
+    const createRuntime = await loadWorkspaceLeaseRuntimeFactory();
+    if (!createRuntime) return;
+    await withIsolatedLeaseRoot(async (_root, leasePath) => {
+      const runtime = await createRuntime({
+        leasePath,
+        now: Date.now,
+        maxWaitMs: 1_000,
+      });
+      const lease = await runtime.acquire();
+      const ownerBefore = await readFile(
+        resolve(leasePath, "owner.json"),
+        "utf8",
+      );
+      await runtime.release({
+        ...lease,
+        path: resolve(leasePath, "..", "altered-lease"),
+      });
       expect(await readFile(resolve(leasePath, "owner.json"), "utf8")).toBe(
         ownerBefore,
       );
@@ -468,6 +607,18 @@ describe("WorkspaceLeaseRuntime Red contract", () => {
       expect(lease.path).toBe(leasePath);
       await runtime.release(lease);
     });
+  });
+
+  it("rejects the exact canonical trusted-work lease path", async () => {
+    const createRuntime = await loadWorkspaceLeaseRuntimeFactory();
+    if (!createRuntime) return;
+    await expect(
+      createRuntime({
+        leasePath: WORKSPACE_LEASE_ROOT,
+        now: Date.now,
+        maxWaitMs: 1_000,
+      }),
+    ).rejects.toThrow(/canonical|trusted work/i);
   });
 
   it("keeps the existing cross-process packed proof on the default lease path", async () => {
@@ -532,20 +683,25 @@ describe("WorkspaceLeaseRuntime Red contract", () => {
   it("rejects a cross-volume lease override", async () => {
     const createRuntime = await loadWorkspaceLeaseRuntimeFactory();
     if (!createRuntime) return;
-    const cacheDevice = (await lstat(resolve(ROOT, ".cache"))).dev;
-    const crossVolumeRoot = "/proc";
-    const crossVolumeDevice = (await stat(crossVolumeRoot)).dev;
-    expect(crossVolumeDevice).not.toBe(cacheDevice);
-    await expect(
-      createRuntime({
-        leasePath: resolve(
-          crossVolumeRoot,
-          "reading-advantage-workspace-build.lease",
-        ),
-        now: Date.now,
-        maxWaitMs: 1_000,
-      }),
-    ).rejects.toThrow(/volume|cache|trusted|lease path/i);
+    await withIsolatedLeaseRoot(async (root, leasePath) => {
+      const cacheStat = await stat(resolve(ROOT, ".cache"));
+      const parentStat = await stat(root);
+      const statMock = vi
+        .mocked(stat)
+        .mockResolvedValueOnce(cacheStat)
+        .mockResolvedValueOnce({ ...parentStat, dev: parentStat.dev + 1 });
+      try {
+        await expect(
+          createRuntime({
+            leasePath,
+            now: Date.now,
+            maxWaitMs: 1_000,
+          }),
+        ).rejects.toThrow(/device|volume/i);
+      } finally {
+        statMock.mockClear();
+      }
+    });
   });
 });
 
