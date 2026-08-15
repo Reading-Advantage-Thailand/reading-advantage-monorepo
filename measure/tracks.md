@@ -340,7 +340,7 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 > These own build/deploy/QA only; they **consume** the security remediation waves as hard
 > preconditions and do not duplicate them (see `medium-plus-coverage-matrix.md`).
 
-- [ ] **Track: Sales Advantage Go-Live** *Link: [./tracks/sales_advantage_golive_20260701/](./tracks/sales_advantage_golive_20260701/)*
+- [~] **Track: Sales Advantage Go-Live** *Link: [./tracks/sales_advantage_golive_20260701/](./tracks/sales_advantage_golive_20260701/)*
   Take `apps/sales-advantage` from code-complete to a deployed MVP. Feature surface (domain,
   router, audio-upload route, rep/admin UI, chat, quiz, seed script) already exists on HEAD;
   `sales_advantage_mvp_20260622` Phases 3–7 are implemented (checkboxes stale). This track
