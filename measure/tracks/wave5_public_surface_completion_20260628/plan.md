@@ -58,7 +58,7 @@
   - Final Review A and Security Review B both returned ACCEPT for Group B.
   - Group B proves exact en/th/zh contracts, AST assertion rejection, and exact translator key sequences.
    - Groups A and C remain intentional Red. This Phase 3 task stays `[~]`.
-   - Group A and C Green `1ac4e1b3e80bf4b5eddf33b6b82e1747084f1b39` adds typed en/th/zh CTA and Sheet messages and corrects only the reviewed Thai typo forms.
+   - Group A and C Green `1ac4e1b3ed80db90f7797bf68aefce04ad6b2768` adds typed en/th/zh CTA and Sheet messages and corrects only the reviewed Thai typo forms.
 - [x] Task: Run www targeted tests.
   - Group B focused tests pass 5/5. Rendered sentinels reach visible text, links, image sources, and image alt text.
   - The Phase 2 baseline passes 5/5. Typecheck, targeted lint, Prettier, and diff checks pass.
