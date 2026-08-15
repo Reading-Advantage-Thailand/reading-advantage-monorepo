@@ -7,6 +7,13 @@ import { Button } from "@/components/ui/button";
 import { buildMarketingMetadata } from "@/lib/seo";
 import type { Metadata } from "next";
 
+type ServiceConfigList = readonly [
+  { serviceIndex: 0; featureIndexes: readonly [0, 1, 2, 3, 4, 5] },
+  { serviceIndex: 1; featureIndexes: readonly [0, 1, 2, 3, 4, 5] },
+  { serviceIndex: 2; featureIndexes: readonly [0, 1, 2, 3, 4, 5] },
+  { serviceIndex: 3; featureIndexes: readonly [0, 1, 2, 3] },
+];
+
 /**
  * Builds metadata for the public services route.
  * @param props The locale route parameters.
@@ -34,23 +41,23 @@ export async function generateMetadata(props: {
  */
 export default async function Services() {
   const t = await getScopedI18n("pages.services");
-  const serviceConfigs = [
-    { featureIndexes: [0, 1, 2, 3, 4, 5] },
-    { featureIndexes: [0, 1, 2, 3, 4, 5] },
-    { featureIndexes: [0, 1, 2, 3, 4, 5] },
-    { featureIndexes: [0, 1, 2, 3] },
-  ] as const;
-  const services = serviceConfigs.map((serviceConfig, serviceIndex) => ({
-    name: t(`services.${serviceIndex}.name` as never),
-    status: t(`services.${serviceIndex}.status` as never),
-    statusBadge: t(`services.${serviceIndex}.statusBadge` as never),
-    description: t(`services.${serviceIndex}.description` as never),
+  const serviceConfigs: ServiceConfigList = [
+    { serviceIndex: 0, featureIndexes: [0, 1, 2, 3, 4, 5] },
+    { serviceIndex: 1, featureIndexes: [0, 1, 2, 3, 4, 5] },
+    { serviceIndex: 2, featureIndexes: [0, 1, 2, 3, 4, 5] },
+    { serviceIndex: 3, featureIndexes: [0, 1, 2, 3] },
+  ];
+  const services = serviceConfigs.map((serviceConfig) => ({
+    name: t(`services.${serviceConfig.serviceIndex}.name`),
+    status: t(`services.${serviceConfig.serviceIndex}.status`),
+    statusBadge: t(`services.${serviceConfig.serviceIndex}.statusBadge`),
+    description: t(`services.${serviceConfig.serviceIndex}.description`),
     features: serviceConfig.featureIndexes.map((featureIndex) =>
-      t(`services.${serviceIndex}.features.${featureIndex}` as never),
+      t(`services.${serviceConfig.serviceIndex}.features.${featureIndex}`),
     ),
-    cta: t(`services.${serviceIndex}.cta` as never),
-    href: t(`services.${serviceIndex}.href` as never),
-    image: t(`services.${serviceIndex}.image` as never),
+    cta: t(`services.${serviceConfig.serviceIndex}.cta`),
+    href: t(`services.${serviceConfig.serviceIndex}.href`),
+    image: t(`services.${serviceConfig.serviceIndex}.image`),
   }));
 
   return (

@@ -29,6 +29,11 @@ describe("Wave 5 T8 and T15 i18n contracts", () => {
     ].join("\n");
 
     expect(reviewedSources).not.toContain("as never");
+    expect(reviewedSources).not.toContain("as any");
+    expect(reviewedSources).not.toMatch(
+      /\bas\s+(?:any|never|string|unknown|Record)\b/,
+    );
+    expect(reviewedSources).not.toMatch(/\[[^\]\n]+:\s*string\]/);
   });
 
   it("keeps reviewed Thai service translations free from known typo forms", () => {

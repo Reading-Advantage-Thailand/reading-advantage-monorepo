@@ -39,9 +39,20 @@ interface ProductConfig {
   accentColor: string;
 }
 
+type ProductConfigList = readonly [
+  ProductConfig & { key: "readingAdvantage" },
+  ProductConfig & { key: "primaryAdvantage" },
+  ProductConfig & { key: "scienceAdvantage" },
+  ProductConfig & { key: "mathAdvantage" },
+  ProductConfig & { key: "zhongwenAdvantage" },
+  ProductConfig & { key: "storytimeAdvantage" },
+  ProductConfig & { key: "stemAdvantage" },
+  ProductConfig & { key: "codecampAdvantage" },
+];
+
 const FEATURE_INDEXES = [0, 1, 2, 3] as const;
 
-const productConfigs = [
+const productConfigs: ProductConfigList = [
   {
     key: "readingAdvantage",
     href: "/products/reading-advantage",
@@ -130,36 +141,38 @@ const productConfigs = [
     gradientTo: "to-indigo-500",
     accentColor: "text-fuchsia-700",
   },
-] as const satisfies readonly ProductConfig[];
+];
 
+/**
+ * Renders the product solution cards for the public products route.
+ * @returns The rendered product solution cards.
+ */
 export default async function B2BSolutions() {
   const t = await getScopedI18n("components.products.b2bSolutions");
 
-  const products = (productConfigs as readonly ProductConfig[]).map(
-    (config) => {
-      const title = t(`products.${config.key}.title` as never);
-      const features = FEATURE_INDEXES.map((featureIndex) =>
-        t(`products.${config.key}.features.${featureIndex}` as never),
-      );
-      const gradeRange = t(`products.${config.key}.gradeRange` as never);
+  const products = productConfigs.map((config) => {
+    const title = t(`products.${config.key}.title`);
+    const features = FEATURE_INDEXES.map((featureIndex) =>
+      t(`products.${config.key}.features.${featureIndex}`),
+    );
+    const gradeRange = t(`products.${config.key}.gradeRange`);
 
-      const badgeLabel = config.badgeKey
-        ? t(config.badgeKey)
-        : config.badgeType === "flagship"
-          ? t("mostPopular")
-          : config.badgeType === "new"
-            ? t(`products.${config.key}.badge` as never)
-            : undefined;
+    const badgeLabel = config.badgeKey
+      ? t(config.badgeKey)
+      : config.badgeType === "flagship"
+        ? t("mostPopular")
+        : config.badgeType === "new"
+          ? t(`products.${config.key}.badge`)
+          : undefined;
 
-      return {
-        ...config,
-        title,
-        features,
-        gradeRange,
-        badgeLabel,
-      };
-    },
-  );
+    return {
+      ...config,
+      title,
+      features,
+      gradeRange,
+      badgeLabel,
+    };
+  });
 
   return (
     <section className="bg-white py-16 md:py-24 overflow-hidden">
