@@ -1,0 +1,15 @@
+Track: durable_job_worker_platform_20260713
+
+Scope: Task 8 PostgreSQL adapter repair and live concurrency proof.
+
+Source commit: b8b0dce713f4d3f2d17ad0e922ff65a5c1f20b3e
+
+Ordered manifest: 4ccd73cb870e4570fb31806947f73ee052048a6c02e98910f8e723a375f84135
+
+Correctness Review A: ACCEPT. Security Review B: ACCEPT.
+
+Safe suite: 6 passed and 7 live tests skipped. Fresh PostgreSQL 16 suite: 13 of 13 passed.
+
+Cleanup: zero scratch databases, zero test-owned roles, and verified container removal.
+
+The claim and reclaim barriers reject plain blocking FOR UPDATE behavior.
