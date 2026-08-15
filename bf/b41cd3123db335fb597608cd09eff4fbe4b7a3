@@ -1,0 +1,15 @@
+Track: durable_job_worker_platform_20260713
+
+Scope: Task 8 plan and test-strategy closeout.
+
+Docs commit: bfb41cd3123db335fb597608cd09eff4fbe4b7a3
+
+Source commit: b8b0dce713f4d3f2d17ad0e922ff65a5c1f20b3e
+
+Plan SHA-256: 643ad64d0988ef8a00792cd3105b03fd1672207960bb451e6017e5683f4d0ac0
+
+Strategy SHA-256: a88464f590de1d5efac48b591f4fa13c431fe172243f11edaebe555854f5e65f
+
+Independent docs review: ACCEPT.
+
+Boundary: Task 9 and Phases 2 through 5 remain open or blocked.
