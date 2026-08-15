@@ -53,7 +53,15 @@
   - Evidence refs: www T8 (LRF-021/022/023/024/016), T15 (LRF-027).
   - Red `phase-3-i18n.red.test.ts` fails 3/3 for reviewed CTA/accessibility copy, `as never` locale casts, and known Thai typo forms.
 - [~] Task: Externalize strings, add zh fallback, fix Thai typos, replace `as never` with typed accessors.
+  - Group B typed locale access is accepted in source commit `ee2d7c238db07f2b77646a79a9ce0bc3b5c35916`.
+  - The content-bound five-path aggregate is `e4bf355b8b416a8ad014d37cda790e7c193b7a45866fdb3108c0f9786a0c461f`.
+  - Final Review A and Security Review B both returned ACCEPT for Group B.
+  - Group B proves exact en/th/zh contracts, AST assertion rejection, and exact translator key sequences.
+  - Groups A and C remain intentional Red. This Phase 3 task stays `[~]`.
 - [~] Task: Run www targeted tests.
+  - Group B focused tests pass 5/5. Rendered sentinels reach visible text, links, image sources, and image alt text.
+  - The Phase 2 baseline passes 5/5. Typecheck, targeted lint, Prettier, and diff checks pass.
+  - The Phase 3 implementation and targeted-test tasks stay `[~]`. This evidence does not claim Phase 3 completion.
 
 ## Phase 4: Accessibility, Navigation, and Contact
 
