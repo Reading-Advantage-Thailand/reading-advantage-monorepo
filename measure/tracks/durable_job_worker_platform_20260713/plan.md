@@ -74,7 +74,7 @@ its Red contract or live evidence. This foundation review does not close Phase 2
   - Final security ACCEPT (2026-08-15; source commit `b8b0dce713f4d3f2d17ad0e922ff65a5c1f20b3e`): migration `0052` cleanup removed only test-owned roles after scratch databases were gone. The fixture proved zero scratch databases, zero test-owned roles, fail-closed cleanup, and deterministic claim and reclaim lock barriers.
   - The safe gate passed 6 tests and recorded 7 intentional skips. The fresh PostgreSQL 16 gate passed 13/13 tests. The migration order was `0000 → 0005 → 0007 → 0025 → 0052`. Container removal was verified.
   - Typecheck, build, lint, format, and diff checks passed. Task 8 is complete. Phase 2 remains open because Task 9 remains blocked.
-- [x] Task 9: Add Red idempotent enqueue, bounded deterministic-backoff, exhaustion/DLQ, authorization/audit, and active-lease replay-rejection tests. (source: `d82c44e0cd3240e73f7bd6ce0c1bc65d8ff24303`)
+- [x] Task 9: Add Red idempotent enqueue, bounded deterministic-backoff, exhaustion/DLQ, authorization/audit, and active-lease replay-rejection tests. (source: `92f13c06c`)
   - Red evidence (2026-08-15; role `measure-mid-red`; phase base `33d44fc81b84559c2ab7a48acfaf86554bf017a5`; role base `ee8b0bf03f915b17e63edb4cc3b26a710e67b3af`): `packages/backend/src/jobs/__tests__/postgres16-enqueue-retry-replay.red.test.ts` covers scoped duplicate enqueue, conflicting payloads, deterministic bounded retry delay, exhaustion/DLQ, authorized replay audit, and active-lease replay rejection.
   - Safe-default command:
     ```bash
@@ -143,10 +143,16 @@ packages/backend/tsconfig.test.json` passed.
     returned JSON text instead of the original string, number, array, or
     object. The jitter case produced one delay value across unrelated job
     IDs. Each denial case received no error before the write/audit check.
-  - Security Red cleanup: the post-run queries returned
-    `CLEANUP_SCRATCH_DATABASES=0` and `CLEANUP_TASK9_ROLES=0`. The disposable
-    container was removed. Task 9 remains `[~]` for Green remediation of the
-    twelve named failures.
+   - Security Red cleanup: the post-run queries returned
+     `CLEANUP_SCRATCH_DATABASES=0` and `CLEANUP_TASK9_ROLES=0`. The disposable
+     container was removed. Task 9 remains `[~]` for Green remediation of the
+     twelve named failures.
+   - Post-review Green evidence (2026-08-16; source commit `92f13c06c`): the
+     focused suite passed 7/7. The safe gate passed 1 and skipped 18. The live
+     PostgreSQL 16 gate passed 19/19. Cleanup found zero scratch databases, and
+     the disposable container was removed. Package lint was network-blocked.
+     Doctor has unrelated deprecated-marker failures. A serialized graph refresh
+     remains pending. See `task-9-postreview-green-evidence-20260816.md`.
 - [x] Task 10: Add Red worker lifecycle and architecture tests for registration, bounded polling, startup configuration, health, signals, and safe logs. Prove trusted tenant propagation, lifecycle-only port access, and zero direct persistence access. Record named missing-composition failures. (source: `287f89fad4aa49849a307e4973037ee8bd567a6a`)
   - Green evidence (2026-08-14; source commit `287f89fad4aa49849a307e4973037ee8bd567a6a`): independent Green acceptance passed. The focused worker suite passed 17/17, and the full worker suite passed 48/48. Worker typecheck, build, scoped lint, format, diff, graph update, and exact lock-scope checks passed. Shutdown, bounded concurrency, and global and tenant scope propagation passed.
 
