@@ -1,0 +1,112 @@
+{
+  "track_id": "apk_legacy_traversal_cutover_20260727",
+  "title_id": "spellweavers-run",
+  "title": "Spellweaver's Run",
+  "source_identity_id": "catalog/spellweavers-run",
+  "assignment_index": 13,
+  "identity_record_index": 8,
+  "evidence_binding": "accepted_traversal_batch_a",
+  "status": "evidence-only",
+  "legacy_source_paths_status": "observation-only-not-adoption-or-approval",
+  "legacy_source_paths": [
+    {
+      "path": "apps/advantage-games/src/components/games/sentence/spellweavers-run/SpellweaversRunGame.tsx",
+      "presence": "missing-at-head",
+      "role": "responsive",
+      "classification": "history",
+      "evidence_locator": {
+        "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/claim-evidence-ledger-v2.json",
+        "json_pointer": "/23",
+        "claim_id": "SW-RESP-001"
+      },
+      "disposition": "evidence-only"
+    },
+    {
+      "path": "apps/advantage-games/src/lib/gameCards.ts",
+      "presence": "tracked-at-head",
+      "role": "identity",
+      "classification": "current-source",
+      "evidence_locator": {
+        "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/claim-evidence-ledger-v2.json",
+        "json_pointer": "/2",
+        "claim_id": "SW-CUR-001"
+      },
+      "disposition": "evidence-only",
+      "sha256": "2cc12f5e4c64d33d63ed84a97df35bfe137822726e1a1875b1fea31fdce4690e"
+    },
+    {
+      "path": "apps/advantage-games/src/lib/games/spellweaversRun.ts",
+      "presence": "missing-at-head",
+      "role": "scene-state",
+      "classification": "history",
+      "evidence_locator": {
+        "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/claim-evidence-ledger-v2.json",
+        "json_pointer": "/11",
+        "claim_id": "SW-STATE-001"
+      },
+      "disposition": "evidence-only"
+    },
+    {
+      "path": "apps/advantage-games/src/lib/games/spellweaversRunConfig.ts",
+      "presence": "missing-at-head",
+      "role": "world",
+      "classification": "history",
+      "evidence_locator": {
+        "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/claim-evidence-ledger-v2.json",
+        "json_pointer": "/21",
+        "claim_id": "SW-WORLD-001"
+      },
+      "disposition": "evidence-only"
+    },
+    {
+      "path": "apps/advantage-games/tests/e2e/games/sentence/spellweavers-run.spec.ts",
+      "presence": "tracked-at-head",
+      "role": "test",
+      "classification": "test",
+      "evidence_locator": {
+        "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/claim-evidence-ledger-v2.json",
+        "json_pointer": "/5",
+        "claim_id": "SW-CUR-004"
+      },
+      "disposition": "evidence-only",
+      "sha256": "76c6c6252a74b4be612af7a20aefb371f71d06cc82a9bb8f47f83020ee32fa95"
+    },
+    {
+      "path": "packages/game-cartridges/src/cartridges/spellweavers-run/scene.ts",
+      "presence": "missing-at-head",
+      "role": "asset",
+      "classification": "history",
+      "evidence_locator": {
+        "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/claim-evidence-ledger-v2.json",
+        "json_pointer": "/37",
+        "claim_id": "SW-CART-001"
+      },
+      "disposition": "evidence-only"
+    },
+    {
+      "path": "packages/game-cartridges/src/cartridges/spellweavers-run/systems.ts",
+      "presence": "missing-at-head",
+      "role": "transition",
+      "classification": "history",
+      "evidence_locator": {
+        "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/claim-evidence-ledger-v2.json",
+        "json_pointer": "/43",
+        "claim_id": "SW-CART-013"
+      },
+      "disposition": "evidence-only"
+    }
+  ],
+  "claims": {
+    "semantic_adoption_claimed": false,
+    "asset_selection_claimed": false,
+    "asset_suitability_claimed": false,
+    "asset_adoption_claimed": false,
+    "implementation_claimed": false,
+    "advantage_games_qc_claimed": false,
+    "reading_host_proof_claimed": false,
+    "primary_host_proof_claimed": false,
+    "retirement_claimed": false,
+    "cutover_claimed": false,
+    "release_authority_granted": false
+  }
+}

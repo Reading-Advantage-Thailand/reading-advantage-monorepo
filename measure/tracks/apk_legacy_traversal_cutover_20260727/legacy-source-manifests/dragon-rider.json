@@ -1,0 +1,78 @@
+{
+  "track_id": "apk_legacy_traversal_cutover_20260727",
+  "title_id": "dragon-rider",
+  "title": "Dragon Rider",
+  "source_identity_id": "vocabulary/dragon-rider",
+  "assignment_index": 11,
+  "identity_record_index": 21,
+  "evidence_binding": "accepted_traversal_batch_a",
+  "status": "evidence-only",
+  "legacy_source_paths_status": "observation-only-not-adoption-or-approval",
+  "legacy_source_paths": [
+    {
+      "path": "apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.test.tsx",
+      "presence": "tracked-at-head",
+      "role": "fixture-test",
+      "classification": "test-source",
+      "evidence_locator": {
+        "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/claim-evidence-ledger-v3.json",
+        "json_pointer": "/claim_atoms/7",
+        "claim_id": "DR-TEST-001B"
+      },
+      "disposition": "evidence-only",
+      "sha256": "a588f4494a3403aacb1ae2a84f97f52de546fdec1631cbddc3e423c87b35b4fc"
+    },
+    {
+      "path": "apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx",
+      "presence": "tracked-at-head",
+      "role": "state",
+      "classification": "current-source",
+      "evidence_locator": {
+        "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/claim-evidence-ledger-v3.json",
+        "json_pointer": "/claim_atoms/1",
+        "claim_id": "DR-STATE-001B"
+      },
+      "disposition": "evidence-only",
+      "sha256": "62f3ee98f007b4a29b063c391f26d8484564776aa257d670698060043d951f78"
+    },
+    {
+      "path": "apps/reading-advantage/lib/games/dragonRider.test.ts",
+      "presence": "tracked-at-head",
+      "role": "fixture-test",
+      "classification": "test-source",
+      "evidence_locator": {
+        "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/claim-evidence-ledger-v3.json",
+        "json_pointer": "/claim_atoms/6",
+        "claim_id": "DR-TEST-001A"
+      },
+      "disposition": "evidence-only",
+      "sha256": "8fe8fb62c1f662a99ac17a3905c3c8e43cc451095c16259a1270d24e99df36e0"
+    },
+    {
+      "path": "apps/reading-advantage/lib/games/dragonRider.ts",
+      "presence": "tracked-at-head",
+      "role": "state",
+      "classification": "current-source",
+      "evidence_locator": {
+        "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/claim-evidence-ledger-v3.json",
+        "json_pointer": "/claim_atoms/0",
+        "claim_id": "DR-STATE-001A"
+      },
+      "disposition": "evidence-only",
+      "sha256": "433dceda75615b9cf8954225748bdb39ccb897a644a6d672b95df517d60bfae7"
+    }
+  ],
+  "claims": {
+    "semantic_adoption_claimed": false,
+    "asset_selection_claimed": false,
+    "asset_suitability_claimed": false,
+    "asset_adoption_claimed": false,
+    "implementation_claimed": false,
+    "advantage_games_qc_claimed": false,
+    "reading_host_proof_claimed": false,
+    "primary_host_proof_claimed": false,
+    "retirement_claimed": false,
+    "cutover_claimed": false,
+    "release_authority_granted": false
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "track_id": "apk_legacy_traversal_cutover_20260727",
+  "title_id": "griffin-riders-escape",
+  "title": "Griffin Rider's Escape",
+  "source_identity_id": "catalog/griffin-riders-escape",
+  "assignment_index": 16,
+  "identity_record_index": 2,
+  "evidence_binding": "accepted_traversal_batch_b",
+  "status": "evidence-only",
+  "legacy_source_paths_status": "observation-only-not-adoption-or-approval",
+  "legacy_source_paths": [
+    {
+      "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/griffin-riders-escape/page.tsx",
+      "presence": "missing-at-head",
+      "role": "route",
+      "classification": "history",
+      "evidence_locator": {
+        "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/griffin-riders-escape/claim-evidence-ledger-v2.json",
+        "json_pointer": "/claims/9",
+        "claim_id": "GRF-ROUTE-001"
+      },
+      "disposition": "evidence-only"
+    },
+    {
+      "path": "apps/advantage-games/src/components/games/sentence/griffin-riders-escape/GriffinRidersEscapeGame.tsx",
+      "presence": "missing-at-head",
+      "role": "responsive",
+      "classification": "history",
+      "evidence_locator": {
+        "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/griffin-riders-escape/claim-evidence-ledger-v2.json",
+        "json_pointer": "/claims/7",
+        "claim_id": "GRF-RESP-001"
+      },
+      "disposition": "evidence-only"
+    },
+    {
+      "path": "apps/advantage-games/src/lib/games/griffinRidersEscape.ts",
+      "presence": "missing-at-head",
+      "role": "scene-state",
+      "classification": "history",
+      "evidence_locator": {
+        "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/griffin-riders-escape/claim-evidence-ledger-v2.json",
+        "json_pointer": "/claims/1",
+        "claim_id": "GRF-STATE-001"
+      },
+      "disposition": "evidence-only"
+    },
+    {
+      "path": "apps/advantage-games/src/lib/games/griffinRidersEscapeConfig.ts",
+      "presence": "missing-at-head",
+      "role": "world",
+      "classification": "history",
+      "evidence_locator": {
+        "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/griffin-riders-escape/claim-evidence-ledger-v2.json",
+        "json_pointer": "/claims/0",
+        "claim_id": "GRF-WORLD-001"
+      },
+      "disposition": "evidence-only"
+    },
+    {
+      "path": "packages/game-cartridges/src/cartridges/griffin-riders-escape/scene.ts",
+      "presence": "missing-at-head",
+      "role": "asset",
+      "classification": "history",
+      "evidence_locator": {
+        "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/griffin-riders-escape/claim-evidence-ledger-v2.json",
+        "json_pointer": "/claims/10",
+        "claim_id": "GRF-CART-001"
+      },
+      "disposition": "evidence-only"
+    }
+  ],
+  "claims": {
+    "semantic_adoption_claimed": false,
+    "asset_selection_claimed": false,
+    "asset_suitability_claimed": false,
+    "asset_adoption_claimed": false,
+    "implementation_claimed": false,
+    "advantage_games_qc_claimed": false,
+    "reading_host_proof_claimed": false,
+    "primary_host_proof_claimed": false,
+    "retirement_claimed": false,
+    "cutover_claimed": false,
+    "release_authority_granted": false
+  }
+}

@@ -1,0 +1,91 @@
+{
+  "track_id": "apk_legacy_traversal_cutover_20260727",
+  "title_id": "shadow-gate-dungeon",
+  "title": "Shadow Gate Dungeon",
+  "source_identity_id": "sentence/shadow-gate-dungeon",
+  "assignment_index": 14,
+  "identity_record_index": 17,
+  "evidence_binding": "accepted_traversal_batch_b",
+  "status": "evidence-only",
+  "legacy_source_paths_status": "observation-only-not-adoption-or-approval",
+  "legacy_source_paths": [
+    {
+      "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/shadow-gate-dungeon/page.tsx",
+      "presence": "tracked-at-head",
+      "role": "route-data",
+      "classification": "current-source",
+      "evidence_locator": {
+        "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/shadow-gate-dungeon/claim-evidence-ledger-v2.json",
+        "json_pointer": "/claims/15",
+        "claim_id": "SGD-ROUTE-001"
+      },
+      "disposition": "evidence-only",
+      "sha256": "759a587f3409885a32d418ee8c46763b204361f84569b47ec0012d7275f09ac6"
+    },
+    {
+      "path": "apps/advantage-games/src/app/api/v1/games/shadow-gate-dungeon/sentences/route.ts",
+      "presence": "tracked-at-head",
+      "role": "sentences-api",
+      "classification": "current-source",
+      "evidence_locator": {
+        "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/shadow-gate-dungeon/claim-evidence-ledger-v2.json",
+        "json_pointer": "/claims/17",
+        "claim_id": "SGD-API-001"
+      },
+      "disposition": "evidence-only",
+      "sha256": "c1cdfaf1a7918a8a99d53c833bd138a006b4c51b0f8b623ae914c65172e9ddfa"
+    },
+    {
+      "path": "apps/advantage-games/src/components/games/sentence/shadow-gate-dungeon/ShadowGateDungeonGame.tsx",
+      "presence": "tracked-at-head",
+      "role": "component-state",
+      "classification": "current-source",
+      "evidence_locator": {
+        "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/shadow-gate-dungeon/claim-evidence-ledger-v2.json",
+        "json_pointer": "/claims/0",
+        "claim_id": "SGD-STATE-001"
+      },
+      "disposition": "evidence-only",
+      "sha256": "730b5cc3d5d97ac2d64e26a68078b827b1ecc1a913cbf548b037dfdc78befc2b"
+    },
+    {
+      "path": "apps/advantage-games/src/lib/games/shadowGateDungeon.ts",
+      "presence": "tracked-at-head",
+      "role": "movement-bounds",
+      "classification": "current-source",
+      "evidence_locator": {
+        "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/shadow-gate-dungeon/claim-evidence-ledger-v2.json",
+        "json_pointer": "/claims/6",
+        "claim_id": "SGD-MOVE-001"
+      },
+      "disposition": "evidence-only",
+      "sha256": "47d3d4a0b10224591950a348d3ac4bcca82f9f5862a4932f590fa39edbc8f513"
+    },
+    {
+      "path": "apps/advantage-games/src/lib/games/shadowGateDungeonConfig.ts",
+      "presence": "tracked-at-head",
+      "role": "world-dimensions",
+      "classification": "current-source",
+      "evidence_locator": {
+        "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/shadow-gate-dungeon/claim-evidence-ledger-v2.json",
+        "json_pointer": "/claims/2",
+        "claim_id": "SGD-WORLD-001"
+      },
+      "disposition": "evidence-only",
+      "sha256": "04ecf073fd565364071d8c7dc10774fc59aedc5c1f94ecd9d448854e0bbb33f9"
+    }
+  ],
+  "claims": {
+    "semantic_adoption_claimed": false,
+    "asset_selection_claimed": false,
+    "asset_suitability_claimed": false,
+    "asset_adoption_claimed": false,
+    "implementation_claimed": false,
+    "advantage_games_qc_claimed": false,
+    "reading_host_proof_claimed": false,
+    "primary_host_proof_claimed": false,
+    "retirement_claimed": false,
+    "cutover_claimed": false,
+    "release_authority_granted": false
+  }
+}
