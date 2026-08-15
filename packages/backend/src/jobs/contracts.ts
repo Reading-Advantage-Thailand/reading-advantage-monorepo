@@ -73,6 +73,106 @@ const requiredUnknownSchema = z
   .unknown()
   .refine((value) => value !== undefined, "A durable value is required.");
 
+/** A recursively JSON-safe value that can retain its exact persisted shape. */
+export type JsonSafeValue =
+  | null
+  | boolean
+  | number
+  | string
+  | readonly JsonSafeValue[]
+  | { readonly [key: string]: JsonSafeValue };
+
+/**
+ * Checks whether a value is a finite, plain JSON value without lossy coercion.
+ * @param value Candidate durable payload or result.
+ * @param ancestors Values on the active traversal path.
+ * @returns True when the value is safe to persist as JSON unchanged.
+ */
+function isJsonSafeValue(
+  value: unknown,
+  ancestors = new WeakSet<object>(),
+): boolean {
+  if (
+    value === null ||
+    typeof value === "string" ||
+    typeof value === "boolean"
+  ) {
+    return true;
+  }
+  if (typeof value === "number") {
+    return Number.isFinite(value);
+  }
+  if (typeof value !== "object") {
+    return false;
+  }
+
+  try {
+    if (ancestors.has(value)) {
+      return false;
+    }
+    if (Array.isArray(value)) {
+      if (Object.getPrototypeOf(value) !== Array.prototype) {
+        return false;
+      }
+      const keys = Reflect.ownKeys(value);
+      if (
+        keys.length !== value.length + 1 ||
+        keys.some(
+          (key) =>
+            key !== "length" &&
+            (typeof key !== "string" || !/^(0|[1-9][0-9]*)$/.test(key)),
+        )
+      ) {
+        return false;
+      }
+      ancestors.add(value);
+      for (let index = 0; index < value.length; index += 1) {
+        if (
+          !Object.hasOwn(value, index) ||
+          !isJsonSafeValue(value[index], ancestors)
+        ) {
+          ancestors.delete(value);
+          return false;
+        }
+      }
+      ancestors.delete(value);
+      return true;
+    }
+    const prototype = Object.getPrototypeOf(value);
+    if (prototype !== Object.prototype && prototype !== null) {
+      return false;
+    }
+    const descriptors = Object.getOwnPropertyDescriptors(value);
+    if (
+      Reflect.ownKeys(descriptors).some(
+        (key) =>
+          typeof key !== "string" ||
+          !descriptors[key]?.enumerable ||
+          !Object.hasOwn(descriptors[key]!, "value"),
+      )
+    ) {
+      return false;
+    }
+    ancestors.add(value);
+    for (const descriptor of Object.values(descriptors)) {
+      if (!isJsonSafeValue(descriptor.value, ancestors)) {
+        ancestors.delete(value);
+        return false;
+      }
+    }
+    ancestors.delete(value);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/** Runtime contract for a JSON-safe durable payload or result. */
+export const jsonSafeValueSchema = z.custom<JsonSafeValue>(
+  (value) => isJsonSafeValue(value),
+  "A durable value must be a JSON-safe value.",
+);
+
 const envelopeFields = {
   id: jobIdSchema,
   jobName: jobNameSchema,
@@ -160,7 +260,7 @@ export const enqueueJobRequestSchema = z.strictObject({
   queueName: jobQueueNameSchema,
   tenant: jobTenantSchema,
   idempotencyKey: z.string().min(1).max(500),
-  payload: requiredUnknownSchema,
+  payload: jsonSafeValueSchema,
   maxAttempts: z.number().int().min(1).max(1_000),
   availableAt: jobTimestampSchema,
 });
@@ -273,7 +373,7 @@ export type HeartbeatJobResult = z.infer<typeof heartbeatJobResultSchema>;
 /** Runtime contract for successful lease-token settlement. */
 export const settleJobRequestSchema = z.strictObject({
   ...leaseMutationFields,
-  result: requiredUnknownSchema,
+  result: jsonSafeValueSchema,
 });
 
 /** Request to settle one matching live lease with a validated result. */
@@ -377,12 +477,12 @@ export interface ReplayAuthorizationVerifier {
   /**
    * Verifies receipt authenticity, scope, correlation, and freshness.
    * @param input Bound replay request data.
-   * @returns The verified authorization evidence.
+   * @returns Untrusted verifier output that the adapter validates.
    * @throws When the receipt is invalid or cannot authorize the replay.
    */
   verify(
     input: Readonly<ReplayAuthorizationVerificationInput>,
-  ): Promise<ReplayAuthorizationEvidence>;
+  ): Promise<unknown>;
 }
 
 /** Runtime contract for an authorized, auditable replay request. */

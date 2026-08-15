@@ -23,6 +23,7 @@ type TransactionCallback<TResult> = (transaction: Query) => Promise<TResult>;
 
 interface FakeSql extends Query {
   begin<TResult>(callback: TransactionCallback<TResult>): Promise<TResult>;
+  json(value: unknown): string;
 }
 
 interface FakeJobRow {
@@ -182,6 +183,8 @@ class FakePostgres {
       return this.execute(text, values);
     };
     const sql = query as FakeSql;
+    // postgres.js json() is required to preserve JSONB primitives after Task 9.
+    sql.json = (value) => JSON.stringify(value);
     sql.begin = async <TResult>(callback: TransactionCallback<TResult>) => {
       const snapshot = clone(this.rows);
       try {
@@ -226,7 +229,11 @@ class FakePostgres {
     if (text.includes('SET "rerun_requested" = true')) {
       return this.requestRerun(values);
     }
-    if (text.includes('SELECT "attempt", "state", "lease_expires_at"')) {
+    if (
+      text.includes(
+        'SELECT "attempt", "job_name", "queue_name", "state", "lease_expires_at"',
+      )
+    ) {
       return this.selectLease(values);
     }
     if (
@@ -364,6 +371,8 @@ class FakePostgres {
     return [
       {
         attempt: row.attempt,
+        job_name: row.job_name,
+        queue_name: row.queue_name,
         state: row.state,
         lease_expires_at: row.lease_expires_at,
       },
@@ -380,7 +389,8 @@ class FakePostgres {
       '"queue_name" = CASE',
       'WHEN "rerun_requested" THEN "rerun_queue_name"',
       '"state" = CASE',
-      "WHEN \"rerun_requested\" THEN 'pending'",
+      // The adapter casts enum CASE arms for PostgreSQL type resolution.
+      'WHEN "rerun_requested" THEN CAST(\'pending\' AS "durable_job_state")',
       '"attempt" = CASE WHEN "rerun_requested" THEN 0',
       '"lease_token_hash" = NULL',
       '"lease_owner" = NULL',
@@ -431,7 +441,8 @@ class FakePostgres {
       '"queue_name" = CASE',
       'WHEN "rerun_requested" THEN "rerun_queue_name"',
       '"state" = CASE',
-      "WHEN \"rerun_requested\" THEN 'pending'",
+      // The adapter casts enum CASE arms for PostgreSQL type resolution.
+      'WHEN "rerun_requested" THEN CAST(\'pending\' AS "durable_job_state")',
       '"attempt" = CASE WHEN "rerun_requested" THEN 0',
       '"available_at" = CASE',
       'WHEN "rerun_requested" THEN "rerun_available_at"',

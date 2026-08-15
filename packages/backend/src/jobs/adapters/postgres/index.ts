@@ -10,6 +10,7 @@ import {
   jobIdSchema,
   jobTimestampSchema,
   reclaimExpiredJobsRequestSchema,
+  replayAuthorizationEvidenceSchema,
   replayJobRequestSchema,
   settleJobRequestSchema,
   type ClaimJobsRequest,
@@ -100,11 +101,7 @@ function opaqueLeaseToken(): string {
 }
 
 function jsonText(value: unknown): string {
-  const encoded = JSON.stringify(value);
-  if (encoded === undefined) {
-    throw new TypeError("Durable job JSON values cannot be undefined.");
-  }
-  return encoded;
+  return JSON.stringify(value);
 }
 
 /**
@@ -113,7 +110,6 @@ function jsonText(value: unknown): string {
  * @returns The validated value with the driver's JSON type.
  */
 function jsonValue(value: unknown): postgres.JSONValue {
-  jsonText(value);
   return value as postgres.JSONValue;
 }
 
@@ -815,14 +811,15 @@ export function createDurableJobQueuePort(input: {
     if (input.replayAuthorizationVerifier === undefined) {
       throw new Error("Replay requires a configured authorization verifier.");
     }
-    const verifiedAuthorization =
+    const verifiedAuthorization = replayAuthorizationEvidenceSchema.parse(
       await input.replayAuthorizationVerifier.verify({
         jobId: parsed.jobId,
         tenant: parsed.tenant,
         authorization: parsed.authorization,
         correlationId: parsed.correlationId,
         now: parsed.now,
-      });
+      }),
+    );
     const scopeId = tenantId(parsed.tenant);
     return input.sql.begin(async (transaction) => {
       const rows = await transaction<readonly DurableJobRow[]>`
