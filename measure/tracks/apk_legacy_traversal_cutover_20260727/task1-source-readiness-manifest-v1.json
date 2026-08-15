@@ -1,0 +1,177 @@
+{
+  "schema_version": "apk-legacy-traversal-task1-source-readiness-manifest.v1",
+  "track_id": "apk_legacy_traversal_cutover_20260727",
+  "task": "Task 1: source/readiness manifest preparation",
+  "status": "evidence-only",
+  "archive_resolution_rule": "For each predecessor, archive_preferred_path is the only consumable local path after archival. receipt_declared_path is retained solely to reconcile the immutable receipt text and is not a fallback.",
+  "source_bindings": {
+    "accepted_readiness_receipt": {
+      "archive_preferred_path": "measure/archive/apk_denominator_readiness_t11_integrity_20260727/accepted-readiness-receipt-v1.json",
+      "receipt_declared_path": "measure/tracks/apk_denominator_readiness_t11_integrity_20260727/accepted-readiness-receipt-v1.json",
+      "sha256": "d371fc5df05922d5f1bbb50b837c0fd5314d8f136e2c699510c84186447f1720"
+    },
+    "phase1_crosswalk": {
+      "archive_preferred_path": "measure/archive/apk_denominator_readiness_t11_integrity_20260727/phase1-denominator-crosswalk.json",
+      "receipt_declared_path": "measure/tracks/apk_denominator_readiness_t11_integrity_20260727/phase1-denominator-crosswalk.json",
+      "sha256": "eb395d3d365115696fc31359406a4e9f126604ca159ea8358a0eb8931c8c5f57"
+    },
+    "identity_ledger": {
+      "archive_preferred_path": "measure/archive/apk_source_denominator_inventory_20260712/game-identity-ledger.json",
+      "sha256": "a31c99650bf1abd6623e64b2e9a23c4c481ce970036b52cfbe08c74b1c09c407"
+    },
+    "accepted_traversal_batch_a": {
+      "archive_preferred_path": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/accepted-cohort-manifest-batch-a-v6.json",
+      "sha256": "f5a215f44815c79025e86e97a3217d7a85c4a33db86f80db2909f30dd3a9caa3"
+    },
+    "accepted_traversal_batch_b": {
+      "archive_preferred_path": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/accepted-cohort-manifest-batch-b-v2.json",
+      "sha256": "41243b620fb02c413bd7ed2887d59905a02036299ce763b11f70499d63ea99af"
+    }
+  },
+  "readiness_boundary": {
+    "receipt_status": "accepted-active",
+    "authorized_child_work_only": true,
+    "cohort_currently_ready": false,
+    "cartridge_cutover_authorized": false,
+    "meaning": "The receipt removes only the denominator/readiness predecessor block for this five-title child track. It does not satisfy Task 1 or any downstream task."
+  },
+  "titles": [
+    {
+      "title_id": "dragon-rider",
+      "title": "Dragon Rider",
+      "assignment_index": 11,
+      "source_identity_id": "vocabulary/dragon-rider",
+      "identity_record_index": 21,
+      "evidence_binding": "accepted_traversal_batch_a",
+      "crosswalk_locator": {
+        "assignment_index": 11,
+        "assignment_locator": {
+          "artifact": "accepted_partition",
+          "json_pointer": "/assignments/11"
+        },
+        "source_locator": {
+          "artifact": "identity_ledger",
+          "json_pointer": "/identity_records/21"
+        }
+      },
+      "identity_ledger_locator": {
+        "artifact": "identity_ledger",
+        "json_pointer": "/identity_records/21"
+      }
+    },
+    {
+      "title_id": "spellweavers-run",
+      "title": "Spellweaver's Run",
+      "assignment_index": 13,
+      "source_identity_id": "catalog/spellweavers-run",
+      "identity_record_index": 8,
+      "evidence_binding": "accepted_traversal_batch_a",
+      "crosswalk_locator": {
+        "assignment_index": 13,
+        "assignment_locator": {
+          "artifact": "accepted_partition",
+          "json_pointer": "/assignments/13"
+        },
+        "source_locator": {
+          "artifact": "identity_ledger",
+          "json_pointer": "/identity_records/8"
+        }
+      },
+      "identity_ledger_locator": {
+        "artifact": "identity_ledger",
+        "json_pointer": "/identity_records/8"
+      }
+    },
+    {
+      "title_id": "shadow-gate-dungeon",
+      "title": "Shadow Gate Dungeon",
+      "assignment_index": 14,
+      "source_identity_id": "sentence/shadow-gate-dungeon",
+      "identity_record_index": 17,
+      "evidence_binding": "accepted_traversal_batch_b",
+      "crosswalk_locator": {
+        "assignment_index": 14,
+        "assignment_locator": {
+          "artifact": "accepted_partition",
+          "json_pointer": "/assignments/14"
+        },
+        "source_locator": {
+          "artifact": "identity_ledger",
+          "json_pointer": "/identity_records/17"
+        }
+      },
+      "identity_ledger_locator": {
+        "artifact": "identity_ledger",
+        "json_pointer": "/identity_records/17"
+      }
+    },
+    {
+      "title_id": "labyrinth-goblin-king",
+      "title": "Labyrinth of the Goblin King",
+      "assignment_index": 15,
+      "source_identity_id": "sentence/labyrinth-goblin-king",
+      "identity_record_index": 14,
+      "evidence_binding": "accepted_traversal_batch_b",
+      "crosswalk_locator": {
+        "assignment_index": 15,
+        "assignment_locator": {
+          "artifact": "accepted_partition",
+          "json_pointer": "/assignments/15"
+        },
+        "source_locator": {
+          "artifact": "identity_ledger",
+          "json_pointer": "/identity_records/14"
+        }
+      },
+      "identity_ledger_locator": {
+        "artifact": "identity_ledger",
+        "json_pointer": "/identity_records/14"
+      }
+    },
+    {
+      "title_id": "griffin-riders-escape",
+      "title": "Griffin Rider's Escape",
+      "assignment_index": 16,
+      "source_identity_id": "catalog/griffin-riders-escape",
+      "identity_record_index": 2,
+      "evidence_binding": "accepted_traversal_batch_b",
+      "crosswalk_locator": {
+        "assignment_index": 16,
+        "assignment_locator": {
+          "artifact": "accepted_partition",
+          "json_pointer": "/assignments/16"
+        },
+        "source_locator": {
+          "artifact": "identity_ledger",
+          "json_pointer": "/identity_records/2"
+        }
+      },
+      "identity_ledger_locator": {
+        "artifact": "identity_ledger",
+        "json_pointer": "/identity_records/2"
+      }
+    }
+  ],
+  "claims": {
+    "semantic_adoption_claimed": false,
+    "asset_selection_claimed": false,
+    "asset_suitability_claimed": false,
+    "asset_adoption_claimed": false,
+    "implementation_claimed": false,
+    "advantage_games_qc_claimed": false,
+    "reading_host_proof_claimed": false,
+    "primary_host_proof_claimed": false,
+    "retirement_claimed": false,
+    "cutover_claimed": false,
+    "release_authority_granted": false
+  },
+  "required_before_any_adoption_or_cutover": [
+    "accepted Asset Contract v2 output",
+    "accepted per-title/per-role suitability and canonical-ingestion dossier",
+    "accepted semantic adoption binding",
+    "deterministic traversal cartridge revalidation and selected-output proof",
+    "Advantage Games, Reading, and Primary host proof with authoritative completion persistence",
+    "exact legacy retirement disposition plus independent review and product-owner acceptance"
+  ],
+  "revocation_rule": "Any bound-byte drift or revoked predecessor invalidates this evidence-only manifest."
+}

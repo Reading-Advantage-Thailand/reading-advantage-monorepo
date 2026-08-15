@@ -5,6 +5,7 @@ from __future__ import annotations
 import copy
 import hashlib
 import json
+import re
 import unittest
 from pathlib import Path
 from typing import Any
@@ -16,6 +17,9 @@ MANIFEST_PATH = TRACK_ROOT / "task1-source-readiness-manifest-v1.json"
 PLAN_PATH = TRACK_ROOT / "plan.md"
 TRACK_ID = "apk_legacy_traversal_cutover_20260727"
 TASK1_MARKER = "- [~] Confirm accepted crosswalk/readiness coverage and publish exact legacy manifests for five titles."
+TASK1_TEXT = TASK1_MARKER.split("] ", 1)[1]
+TASK1_RED_BOUNDARY_TEXT = "Evidence-only Task 1 Red starts here."
+TASK2_BLOCKER_TEXT = "Task 2 remains blocked by the Asset Contract v2 product-owner receipt and suitability evidence."
 EXPECTED_PENDING_TASK_MARKERS = (
     "- [ ] Consume accepted Asset Contract v2 and suitability/ingestion records; freeze each title's semantic roles, physical behavior descriptors, legacy source manifests, and reuse/ingest/block decisions before implementation.",
     "- [ ] Write failing mechanic, responsive composition, and educational-invariant tests per title.",
@@ -25,6 +29,12 @@ EXPECTED_PENDING_TASK_MARKERS = (
     "- [ ] Retire only exact proven legacy paths and validate callers, selected outputs, and copied-asset guards.",
     "- [ ] Obtain independent review and product-owner acceptance.",
 )
+EXPECTED_PLAN_TASK_STATUSES = {TASK1_TEXT: "~"}
+EXPECTED_PLAN_TASK_STATUSES.update(
+    {marker.split("] ", 1)[1]: " " for marker in EXPECTED_PENDING_TASK_MARKERS}
+)
+CHECKLIST_LINE_RE = re.compile(r"^-\s+\[(?P<status>[ x~b])\]\s+(?P<text>.+?)\s*$")
+FENCE_LINE_RE = re.compile(r"^\s*(?P<fence>`{3,}|~{3,})(?P<rest>.*)$")
 
 EXPECTED_BINDINGS = {
     "accepted_readiness_receipt": {
@@ -245,6 +255,8 @@ def _validate_manifest(manifest: object) -> None:
         or manifest.get("status") != "evidence-only"
     ):
         raise AssertionError("FORBIDDEN_STATUS_OR_AUTHORITY: task scope")
+    if manifest.get("task") != "Task 1: source/readiness manifest preparation":
+        raise AssertionError("MANIFEST_SCHEMA_INVALID: task value")
     if manifest.get("archive_resolution_rule") != EXPECTED_ARCHIVE_RULE:
         raise AssertionError("ARCHIVE_RULE_DRIFT: archive-only resolution changed")
     if manifest.get("source_bindings") != EXPECTED_BINDINGS:
@@ -280,28 +292,95 @@ def _validate_manifest(manifest: object) -> None:
             raise AssertionError("ROSTER_OR_LOCATOR_DRIFT: title binding changed")
 
 
-def _validate_plan_text(plan_text: str) -> None:
-    """Requires the active Task 1 marker and evidence-only dependency boundary."""
-    if TASK1_MARKER not in plan_text:
-        raise AssertionError("PLAN_MARKER_DRIFT: Task 1 must remain active")
-    if "- [ ] Confirm accepted crosswalk/readiness coverage" in plan_text:
-        raise AssertionError("PLAN_MARKER_DRIFT: Task 1 cannot remain pending")
-    if "Evidence-only Task 1 Red starts here." not in plan_text:
-        raise AssertionError("PLAN_EVIDENCE_MISSING: Red boundary is required")
-    if (
-        "Task 2 remains blocked by the Asset Contract v2 product-owner receipt and suitability evidence."
-        not in plan_text
-    ):
-        raise AssertionError("PLAN_BOUNDARY_DRIFT: Task 2 blocker changed")
-    for task_number, marker in enumerate(EXPECTED_PENDING_TASK_MARKERS, start=2):
-        if plan_text.count(marker) != 1:
-            raise AssertionError(
-                f"PLAN_MARKER_DRIFT: Task {task_number} must remain exactly pending"
+def _normalize_visible_markdown(markdown_text: str) -> str:
+    """Removes hidden and indented code from Markdown text fail-closed."""
+    visible_lines = []
+    fence_character = None
+    fence_length = 0
+    for line in markdown_text.splitlines(keepends=True):
+        indent_columns = 0
+        for character in line:
+            if character == " ":
+                indent_columns += 1
+            elif character == "\t":
+                indent_columns += 4 - indent_columns % 4
+            else:
+                break
+        if indent_columns >= 4:
+            continue
+        fence_match = FENCE_LINE_RE.match(line.rstrip("\r\n"))
+        if fence_character is not None:
+            if (
+                fence_match
+                and fence_match.group("fence")[0] == fence_character
+                and len(fence_match.group("fence")) >= fence_length
+                and not fence_match.group("rest").strip()
+            ):
+                fence_character = None
+                fence_length = 0
+            continue
+        if fence_match:
+            fence_character = fence_match.group("fence")[0]
+            fence_length = len(fence_match.group("fence"))
+            continue
+        visible_lines.append(line)
+    if fence_character is not None:
+        raise AssertionError("PLAN_SYNTAX_DRIFT: unmatched fenced code delimiter")
+
+    visible_markdown = "".join(visible_lines)
+    uncommented = []
+    cursor = 0
+    while cursor < len(visible_markdown):
+        opening = visible_markdown.find("<!--", cursor)
+        closing = visible_markdown.find("-->", cursor)
+        if closing != -1 and (opening == -1 or closing < opening):
+            raise AssertionError("PLAN_SYNTAX_DRIFT: unmatched HTML comment delimiter")
+        if opening == -1:
+            uncommented.append(visible_markdown[cursor:])
+            break
+        uncommented.append(visible_markdown[cursor:opening])
+        closing = visible_markdown.find("-->", opening + len("<!--"))
+        if closing == -1:
+            raise AssertionError("PLAN_SYNTAX_DRIFT: unmatched HTML comment delimiter")
+        cursor = closing + len("-->")
+    return "".join(uncommented)
+
+
+def _active_checklist_lines(visible_markdown: str) -> list[tuple[int, str, str]]:
+    """Parses active checklist lines from visible Markdown."""
+    parsed_lines = []
+    for line_number, line in enumerate(visible_markdown.splitlines(), start=1):
+        match = CHECKLIST_LINE_RE.match(line)
+        if match:
+            parsed_lines.append(
+                (line_number, match.group("status"), match.group("text"))
             )
-        active_marker = marker.replace("- [ ]", "- [~]", 1)
-        if active_marker in plan_text:
+    return parsed_lines
+
+
+def _validate_plan_text(plan_text: str) -> None:
+    """Requires exact active and pending markers for Tasks 1 through 8."""
+    visible_markdown = _normalize_visible_markdown(plan_text)
+    if TASK1_RED_BOUNDARY_TEXT not in visible_markdown:
+        raise AssertionError("PLAN_EVIDENCE_MISSING: Red boundary is required")
+    if TASK2_BLOCKER_TEXT not in visible_markdown:
+        raise AssertionError("PLAN_BOUNDARY_DRIFT: Task 2 blocker changed")
+    checklist_lines = _active_checklist_lines(visible_markdown)
+    for task_number, (task_text, expected_status) in enumerate(
+        EXPECTED_PLAN_TASK_STATUSES.items(), start=1
+    ):
+        matches = [
+            (line_number, status)
+            for line_number, status, text in checklist_lines
+            if text == task_text
+        ]
+        if len(matches) != 1:
             raise AssertionError(
-                f"PLAN_MARKER_DRIFT: Task {task_number} cannot become active"
+                f"PLAN_MARKER_DRIFT: Task {task_number} requires exactly one active marker"
+            )
+        if matches[0][1] != expected_status:
+            raise AssertionError(
+                f"PLAN_MARKER_DRIFT: Task {task_number} has an invalid status"
             )
 
 
@@ -420,23 +499,144 @@ class LegacyTraversalSourceReadinessManifestTests(unittest.TestCase):
         plan_text = PLAN_PATH.read_text(encoding="utf-8")
         _validate_plan_text(plan_text)
 
-        pending_plan = plan_text.replace(
-            "- [~] Confirm accepted crosswalk/readiness",
-            "- [ ] Confirm accepted crosswalk/readiness",
-            1,
-        )
-        with self.assertRaisesRegex(AssertionError, "PLAN_MARKER_DRIFT"):
-            _validate_plan_text(pending_plan)
-
-        for task_number, marker in enumerate(EXPECTED_PENDING_TASK_MARKERS, start=2):
+        for task_number, (task_text, expected_status) in enumerate(
+            EXPECTED_PLAN_TASK_STATUSES.items(), start=1
+        ):
+            marker = f"- [{expected_status}] {task_text}"
             promoted_plan = plan_text.replace(
                 marker,
-                marker.replace("- [ ]", "- [~]", 1),
+                f"- [{' ' if expected_status == '~' else '~'}] {task_text}",
                 1,
             )
             with self.subTest(task_number=task_number):
                 with self.assertRaisesRegex(AssertionError, "PLAN_MARKER_DRIFT"):
                     _validate_plan_text(promoted_plan)
+
+    def test_security_counterexample_matrix(self) -> None:
+        """Rejects duplicate, hidden, conflicting, and substituted task markers."""
+        plan_text = PLAN_PATH.read_text(encoding="utf-8")
+        task2_text = list(EXPECTED_PLAN_TASK_STATUSES.keys())[1]
+
+        duplicate_task1 = f"{plan_text}\n{TASK1_MARKER}\n"
+        with self.assertRaisesRegex(AssertionError, "PLAN_MARKER_DRIFT"):
+            _validate_plan_text(duplicate_task1)
+
+        comment_fake_marker = (
+            plan_text.replace(
+                TASK1_MARKER,
+                f"- [ ] {TASK1_TEXT}",
+                1,
+            )
+            + f"\n<!-- {TASK1_MARKER} -->\n"
+        )
+        with self.assertRaisesRegex(AssertionError, "PLAN_MARKER_DRIFT"):
+            _validate_plan_text(comment_fake_marker)
+
+        fenced_fake_marker = (
+            plan_text.replace(
+                TASK1_MARKER,
+                f"- [ ] {TASK1_TEXT}",
+                1,
+            )
+            + f"\n```markdown\n{TASK1_MARKER}\n```\n"
+        )
+        with self.assertRaisesRegex(AssertionError, "PLAN_MARKER_DRIFT"):
+            _validate_plan_text(fenced_fake_marker)
+
+        unmatched_fence = f"{plan_text}\n```markdown\n"
+        with self.assertRaisesRegex(AssertionError, "PLAN_SYNTAX_DRIFT"):
+            _validate_plan_text(unmatched_fence)
+
+        unmatched_comment = plan_text.replace(
+            TASK1_MARKER,
+            f"<!-- {TASK1_MARKER}",
+            1,
+        )
+        with self.assertRaisesRegex(AssertionError, "PLAN_SYNTAX_DRIFT"):
+            _validate_plan_text(unmatched_comment)
+
+        four_space_task1 = plan_text.replace(
+            TASK1_MARKER,
+            f"    - [~] {TASK1_TEXT}",
+            1,
+        )
+        with self.assertRaisesRegex(AssertionError, "PLAN_MARKER_DRIFT"):
+            _validate_plan_text(four_space_task1)
+
+        tab_task1 = plan_text.replace(
+            TASK1_MARKER,
+            f"\t- [~] {TASK1_TEXT}",
+            1,
+        )
+        with self.assertRaisesRegex(AssertionError, "PLAN_MARKER_DRIFT"):
+            _validate_plan_text(tab_task1)
+
+        comment_only_blocker = (
+            plan_text.replace(
+                TASK2_BLOCKER_TEXT,
+                "Task 2 blocker text removed.",
+                1,
+            )
+            + f"\n<!-- {TASK2_BLOCKER_TEXT} -->\n"
+        )
+        with self.assertRaisesRegex(AssertionError, "PLAN_BOUNDARY_DRIFT"):
+            _validate_plan_text(comment_only_blocker)
+
+        four_space_blocker = plan_text.replace(
+            f"  {TASK1_RED_BOUNDARY_TEXT} {TASK2_BLOCKER_TEXT}",
+            f"  {TASK1_RED_BOUNDARY_TEXT}\n    {TASK2_BLOCKER_TEXT}",
+            1,
+        )
+        with self.assertRaisesRegex(AssertionError, "PLAN_BOUNDARY_DRIFT"):
+            _validate_plan_text(four_space_blocker)
+
+        for indent_prefix in (" \t", "  \t", "   \t"):
+            tab_blocker = plan_text.replace(
+                f"  {TASK1_RED_BOUNDARY_TEXT} {TASK2_BLOCKER_TEXT}",
+                f"  {TASK1_RED_BOUNDARY_TEXT}\n{indent_prefix}{TASK2_BLOCKER_TEXT}",
+                1,
+            )
+            with self.subTest(tab_blocker_indent=repr(indent_prefix)):
+                with self.assertRaisesRegex(AssertionError, "PLAN_BOUNDARY_DRIFT"):
+                    _validate_plan_text(tab_blocker)
+
+        comment_only_red_boundary = (
+            plan_text.replace(
+                TASK1_RED_BOUNDARY_TEXT,
+                "Task 1 Red boundary text removed.",
+                1,
+            )
+            + f"\n<!-- {TASK1_RED_BOUNDARY_TEXT} -->\n"
+        )
+        with self.assertRaisesRegex(AssertionError, "PLAN_EVIDENCE_MISSING"):
+            _validate_plan_text(comment_only_red_boundary)
+
+        four_space_red_boundary = plan_text.replace(
+            f"  {TASK1_RED_BOUNDARY_TEXT} {TASK2_BLOCKER_TEXT}",
+            f"    {TASK1_RED_BOUNDARY_TEXT}\n  {TASK2_BLOCKER_TEXT}",
+            1,
+        )
+        with self.assertRaisesRegex(AssertionError, "PLAN_EVIDENCE_MISSING"):
+            _validate_plan_text(four_space_red_boundary)
+
+        for indent_prefix in (" \t", "  \t", "   \t"):
+            tab_red_boundary = plan_text.replace(
+                f"  {TASK1_RED_BOUNDARY_TEXT} {TASK2_BLOCKER_TEXT}",
+                f"{indent_prefix}{TASK1_RED_BOUNDARY_TEXT}\n  {TASK2_BLOCKER_TEXT}",
+                1,
+            )
+            with self.subTest(tab_red_boundary_indent=repr(indent_prefix)):
+                with self.assertRaisesRegex(AssertionError, "PLAN_EVIDENCE_MISSING"):
+                    _validate_plan_text(tab_red_boundary)
+
+        conflicting_task2 = f"{plan_text}\n- [x] {task2_text}\n"
+        with self.assertRaisesRegex(AssertionError, "PLAN_MARKER_DRIFT"):
+            _validate_plan_text(conflicting_task2)
+
+        substituted_manifest = _valid_manifest()
+        substituted_manifest["task"] = "Task 2: source/readiness manifest preparation"
+        with self.assertRaisesRegex(AssertionError, "MANIFEST_SCHEMA_INVALID"):
+            _validate_manifest(substituted_manifest)
 
     def test_valid_manifest_fixture_passes(self) -> None:
         """Verifies the complete five-title evidence-only contract fixture."""
