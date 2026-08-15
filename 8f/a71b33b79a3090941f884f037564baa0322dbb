@@ -1,0 +1,6 @@
+Track: sales_advantage_golive_20260701
+Scope: plan-only QA evidence reconciliation
+Reviewed plan SHA-256: 2214759b57ea472a0460bb2ee86f6ec7a9c5508daf3d7fe3b85e05ba11c48bc4
+Independent review: ACCEPT
+Checks: Measure marker guard, Prettier, git diff --check
+Boundary: historical deployment evidence only; SALES_REP browser QA remains open; 7330697b is automated audio evidence only.
