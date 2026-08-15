@@ -49,23 +49,21 @@
 
 ## Phase 3: i18n Completeness and Typed Locale Access
 
-- [x] Task: Write Red tests for hardcoded strings, missing zh fallback, and unsafe locale key casts.
+- [x] Task: Write Red tests for hardcoded strings, missing zh fallback, and unsafe locale key casts. Source SHA evidence: `86f0611cf418632d5767a588d8fe15a4272973b1`.
   - Source SHA evidence: `1ac4e1b3ed80db90f7797bf68aefce04ad6b2768`.
   - Evidence refs: www T8 (LRF-021/022/023/024/016), T15 (LRF-027).
   - Red `phase-3-i18n.red.test.ts` fails 3/3 for reviewed CTA/accessibility copy, `as never` locale casts, and known Thai typo forms.
-- [x] Task: Externalize strings, add zh fallback, fix Thai typos, replace `as never` with typed accessors.
+- [x] Task: Externalize strings, add zh fallback, fix Thai typos, replace `as never` with typed accessors. Source SHA evidence: `ee2d7c238db07f2b77646a79a9ce0bc3b5c35916`, `1ac4e1b3ed80db90f7797bf68aefce04ad6b2768`.
   - Source SHA evidence: `1ac4e1b3ed80db90f7797bf68aefce04ad6b2768`.
   - Group B typed locale access is accepted in source commit `ee2d7c238db07f2b77646a79a9ce0bc3b5c35916`.
   - The content-bound five-path aggregate is `e4bf355b8b416a8ad014d37cda790e7c193b7a45866fdb3108c0f9786a0c461f`.
   - Final Review A and Security Review B both returned ACCEPT for Group B.
   - Group B proves exact en/th/zh contracts, AST assertion rejection, and exact translator key sequences.
-   - Groups A and C remain intentional Red. This Phase 3 task stays `[~]`.
    - Group A and C Green `1ac4e1b3ed80db90f7797bf68aefce04ad6b2768` adds typed en/th/zh CTA and Sheet messages and corrects only the reviewed Thai typo forms.
-- [x] Task: Run www targeted tests.
+- [x] Task: Run www targeted tests. Source SHA evidence: `1ac4e1b3ed80db90f7797bf68aefce04ad6b2768`.
   - Source SHA evidence: `1ac4e1b3ed80db90f7797bf68aefce04ad6b2768`.
   - Group B focused tests pass 5/5. Rendered sentinels reach visible text, links, image sources, and image alt text.
   - The Phase 2 baseline passes 5/5. Typecheck, targeted lint, Prettier, and diff checks pass.
-   - The Phase 3 implementation and targeted-test tasks stay `[~]`. This evidence does not claim Phase 3 completion.
    - `CI=true pnpm vitest run apps/www-reading-advantage/src/__tests__/phase-3-i18n.red.test.ts --maxWorkers=1` passes 3/3 after Groups A-C Green.
    - The Phase 2 baseline passes 5/5. Targeted lint exits 0. Scoped Prettier and diff checks pass.
    - www typecheck remains blocked by unrelated Science Advantage locale-key errors. The Turbo typecheck also encountered registry DNS retries. Build was not run in this Green role.
