@@ -1,19 +1,14 @@
-role=measure-jr-green
-track=sales_mastery_consumer_20260810
-phase=0
-phase_base_sha=8adc57cb0af0693c1b3420842b3a504939a36b2e
-role_base_sha=5ac0cbfc9342204a368c51f54a5522f1180ebc28
-implementation_commit=b3578c678
-owned_file=packages/mastery-runtime-compat/src/__tests__/phase0-security-remediation.test.ts
-change=Replaced a formatting-sensitive source assertion with lease identity behavior proof.
-targeted_gate=pnpm --filter @reading-advantage/mastery-runtime-compat exec vitest run src/__tests__/phase0-security-remediation.test.ts --maxWorkers=1
-targeted_result=PASS: 3 passed
-format_gate=pnpm exec prettier --check packages/mastery-runtime-compat/src/__tests__/phase0-security-remediation.test.ts
-format_result=PASS
-diff_gate=git diff --check
-diff_result=PASS
-immutable_gate=git diff --name-only 8adc57cb0af0693c1b3420842b3a504939a36b2e -- packages/knowledge-space-core packages/knowledge-space-practice packages/practice-core packages/srs-engine packages/sales-knowledge
-immutable_result=PASS: empty output
-focused_gates=lease 17 passed and 8 skipped; admission 11 passed; packed 25 passed; runtime manifest 18 passed; Codecamp 2 passed; Sales knowledge 19 passed; type, lint, build, and clean CLI passed.
-aggregate_runtime_compat_test=NOT_GREEN_EVIDENCE: command timed out at 360 seconds after the packed suite passed.
-task_state=Task B remains [~]; shared-root doctor and architecture gates remain open.
+MEASURE_AGENT_RESULT
+role: jr-green
+status: complete
+track: sales_mastery_consumer_20260810
+phase: Phase 0 — reconcile and admit the consumer
+phase_base_sha: 8adc57cb0af0693c1b3420842b3a504939a36b2e
+role_base_sha: 5ac0cbfc9342204a368c51f54a5522f1180ebc28
+commits: source `b3578c678`; evidence `91aa90a70`
+tests_run: targeted lease identity test exited 0; 3 passed. Packed and focused gates passed. The 360-second aggregate timeout is non-authoritative.
+files_changed: measure/tracks/sales_mastery_consumer_20260810/plan.md; measure/tracks/sales_mastery_consumer_20260810/orchestration/phase0-jr-green-test-correction-role.log
+plan_updates: Tasks 1, 2, 3, and B have same-line SHA evidence. Task B is `[x]` with source and evidence commits.
+known_failures: The aggregate runtime-compat command timed out after 360 seconds. It is not Green evidence.
+handoff: Review the focused gates and the scoped evidence repair. No production source changed in this repair.
+END_MEASURE_AGENT_RESULT

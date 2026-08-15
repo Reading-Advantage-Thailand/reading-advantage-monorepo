@@ -2,15 +2,15 @@
 
 ## Phase 0 — reconcile and admit the consumer
 
-- [x] Task: Reconcile Sales go-live documentation with the current production
+- [x] Task: Evidence: `a4be6a73c`. Reconcile Sales go-live documentation with the current production
   truth, replace obsolete local-rep provisioning acceptance with Accounts SSO,
   and register this successor track without closing the still-open authenticated
   QA gate. Completed in `a4be6a73c`.
-- [x] Task: Inspect the runtime compatibility boundary before admission. The
+- [x] Task: Evidence: `6be4ef9be`. Inspect the runtime compatibility boundary before admission. The
   current release set pins `knowledge-space-synthetic-codecamp-proof-v1.0.0`;
   reusing that graph in a Sales descriptor would be a false cross-course claim.
   The attempted admission was stopped before production/runtime files changed.
-- [x] Task: Execute the one-shot Red/Green Sales runtime admission defined in
+- [x] Task: Evidence: `324d81a838ccab07907720a7c3f79482dd1205e0`. Execute the one-shot Red/Green Sales runtime admission defined in
   `test-strategy.md`, extending only `@reading-advantage/mastery-runtime-compat`
   for the admitted Sales release set, descriptor schema, packed-consumer gate,
   and clean-consumer script. The accepted Green commit is
@@ -32,7 +32,7 @@
   A ACCEPT and Security Review B ACCEPT both bind the committed Green and these
   final hashes; their receipts are recorded in the commit note. The architecture
   audit recorded zero findings introduced by `324d81a83`.
-- [~] Task: Run and record the runtime manifest, consumer, packed-consumer,
+- [x] Task: Source: `b3578c678`; evidence: `91aa90a70`. Run and record the runtime manifest, consumer, packed-consumer,
   lint, type, build, and immutable-source closeout gates after Task A Green
   acceptance. Local installed ESLint and TypeScript binaries passed for both
   `mastery-runtime-compat` and `sales-knowledge`; runtime-compat passed 4 test
@@ -59,7 +59,7 @@
   removals 0, renames 21). A whole-repository build-graph audit attempt emitted
   no output and was terminated after about four minutes with exit 130; it is
   not Green evidence. Phase 0 base remains exactly
-  `8adc57cb0af0693c1b3420842b3a504939a36b2e`. Task B remains `[~]` pending
+  `8adc57cb0af0693c1b3420842b3a504939a36b2e`. Task B was in progress pending
   shared-root red-gate remediation and final closeout acceptance; this does not
   claim Phase 0 closeout, doctor Green, or architecture-audit Green.
 
@@ -89,16 +89,16 @@
    `509876483a470a124ce70ff1136ed7647a601598a541c802525aa973d64859a0`, and
   `test-strategy.md`
   `c141bd99f2126937b08d8aebce7cc2b63b8215d5cefcada929ed52ce0f72d4d2`.
-  The review ran no packed, install, or canonical-lease gates. Task B remains
-   `[~]`; this receipt does not claim Phase 0 closeout, shared-root Green, or
+  The review ran no packed, install, or canonical-lease gates. Task B was in
+   progress; this receipt does not claim Phase 0 closeout, shared-root Green, or
    unblock later work.
 
    Security remediation receipt (2026-08-15): implementation commit
    `5ac0cbfc9342204a368c51f54a5522f1180ebc28` retains the production lease
    capability and checks process-start identity. It enforces exact Sales imports,
    uses descriptor-driven packed imports, snapshots inputs, and returns audited
-   HEAD, source, and archive digests. Focused gates exited zero. Task B remains
-   `[~]` because the shared-root doctor and architecture gates remain open.
+   HEAD, source, and archive digests. Focused gates exited zero. Task B was in
+   progress because the shared-root doctor and architecture gates remained open.
 
    Security remediation receipt (2026-08-15): implementation commit
    `5ac0cbfc9342204a368c51f54a5522f1180ebc28` retains the production lease
@@ -107,8 +107,7 @@
    lease, admission, packed-consumer, Codecamp, type, lint, build, format, clean
    CLI, immutable-diff, and diff checks exited zero. The source digest was
    `590d2d3dd7081f0152563f07b4ae86b4ceca5bdb2dd728b9c64342b2e6c5bf1e`.
-   Task B remains `[~]` because shared-root doctor and architecture gates remain
-   outside this remediation.
+   Task B is complete with source `b3578c678` and evidence `91aa90a70`.
 
    Green test-correction receipt (2026-08-15): implementation commit
    `b3578c678` replaces a formatting-sensitive source assertion with a live Linux
@@ -119,8 +118,8 @@
    packed-consumer, Codecamp, Sales-knowledge, type, lint, build, and clean CLI
    gates passed. The aggregate runtime-compat test was stopped by the 360-second
    command timeout after its packed suite passed. It is not Green evidence.
-   Task B remains `[~]` because shared-root doctor and architecture gates remain
-   outside this remediation.
+   This receipt preceded Task B completion. The shared-root doctor and
+   architecture gates remain outside this remediation.
 
 ## Phase 1 — bind the approved course to a knowledge graph
 
