@@ -33,19 +33,14 @@ format deviations remain in `contracts.ts` and `ports.ts`.
 ## Result
 
 MEASURE_AGENT_RESULT
-role: measure-jr-green
+role: jr-green
 status: complete
 track: durable_job_worker_platform_20260713
 phase: Phase 2: Red Concurrency and Failure Tests
-phase_base_sha: 33d44fc81b84559c2ab7a48acfaf86554bf017a5
-role_base_sha: 2930b213ef8560abe7b54d1806c975ea58e6aaff
-red_commit: fff3fdf0f620cafa81bc69a69e0a24a3c87c10a2
-source_commit: 103497df2
-resulting_head: pending plan-evidence commit
-tasks_flipped_x: Task 9, pending plan-evidence commit
-tasks_flipped_b: none
-targeted_red_command: safe default exit 0; 1 passed and 6 skipped
-live_gate: disposable PostgreSQL 16 exit 0; 7 passed; 0 scratch databases; 0 Task 9 roles
-new_files: task-9-green-evidence-20260815.md; orchestration/phase2-task9-green-role.log
-handoff: Review the Task 9 source commit and this evidence commit. The committed Red test remains immutable.
+commits: 103497df2, 8e30e6bf3
+tests_run: safe default exit 0 with 1 passed and 6 skipped; live PostgreSQL 16 exit 0 with 7 passed
+files_changed: plan.md; orchestration/phase2-task9-green-role.log
+plan_updates: Task 10 now has same-line source SHA evidence.
+known_failures: none
+handoff: Review the Task 9 source and evidence commits. The committed Red test remains immutable.
 END_MEASURE_AGENT_RESULT
