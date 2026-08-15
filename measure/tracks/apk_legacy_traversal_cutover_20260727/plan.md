@@ -3,7 +3,12 @@
 ## Phase 1: Source/readiness manifests
 
 - [~] Confirm accepted crosswalk/readiness coverage and publish exact legacy manifests for five titles.
-  Evidence-only Task 1 Red starts here. The contract passes accepted readiness checks and fails only on five missing exact per-title legacy source manifests. Task 2 remains blocked by the Asset Contract v2 product-owner receipt and suitability evidence. See `task1-source-manifest-red-evidence-20260815.md`.
+  Evidence-only Task 1 Red starts here. The contract requires exact accepted source-path sets, normalized Git-tracked paths, current-byte SHA-256 hashes, roles, classifications, locators, and evidence-only dispositions.
+  The focused Red run passes seven support and mutation checks, and fails only on five missing exact per-title legacy source manifests.
+  Task 2 remains blocked by the Asset Contract v2 product-owner receipt and suitability evidence. See `task1-source-manifest-red-evidence-20260815.md`.
+  Red command: `./node_modules/.bin/vitest run packages/game-cartridges/src/legacy-traversal-source-manifest.test.ts` — exit 1; 12 tests, 7 passed, 5 missing-manifest failures.
+  Strict-set coverage rejects empty, duplicate, extra, omitted, wrong-hash, generated, and unbound paths, plus role, classification, locator, and disposition drift.
+  Static checks passed: direct TypeScript, ESLint, Prettier, and the exact staged-path diff check.
 
 ## Phase 2: Binding freeze and Red cartridge contracts
 

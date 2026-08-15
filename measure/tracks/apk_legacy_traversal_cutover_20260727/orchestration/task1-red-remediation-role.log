@@ -1,0 +1,46 @@
+# Mid Red Remediation Role Log — apk_legacy_traversal_cutover_20260727
+
+- 2026-08-15 measure-mid-red remediation role run.
+- Phase: Phase 1 — Source/readiness manifests, Task 1.
+- phase_base_sha: `c2e28e9e4f326fc056415abfe2d1876f16d48675`.
+- role_base_sha: `58f82e936dc95796ded9158492e98999f487fe1d`.
+- Both supplied base commits resolve. Phase scope uses `phase_base_sha`. The role receipt uses `role_base_sha` only to prove new Red work.
+
+Scope classification before editing:
+- Relevant: `packages/game-cartridges/src/legacy-traversal-source-manifest.test.ts`, this track's `plan.md`, and this requested role log.
+- Generated or ignorable: `.opencode/goals/**`, Codecamp Playwright reports, Codecamp test results, and Advantage Games test results.
+- Unrelated user work: the durable-job plan and evidence, the Sales Mastery plan and evidence, and the backend job test.
+
+Changed files:
+- `packages/game-cartridges/src/legacy-traversal-source-manifest.test.ts`
+- `measure/tracks/apk_legacy_traversal_cutover_20260727/plan.md`
+- `measure/tracks/apk_legacy_traversal_cutover_20260727/task1-source-manifest-red-evidence-20260815.md`
+- `measure/tracks/apk_legacy_traversal_cutover_20260727/orchestration/task1-red-remediation-role.log`
+
+Red contract:
+- Each title uses the accepted evidence ledger as its exact source-path denominator.
+- Each path must be normalized, Git-tracked, current-byte hash-bound, role-bound, classification-bound, locator-bound, and evidence-only.
+- The test rejects empty, duplicate, omitted, extra, generated, wrong-hash, and unbound paths.
+- The test rejects role, classification, evidence-locator, and disposition drift.
+
+Verification:
+- `./node_modules/.bin/vitest run packages/game-cartridges/src/legacy-traversal-source-manifest.test.ts` — exit 1; 12 tests, 7 passed, and 5 failed only for named missing manifests.
+- `./node_modules/.bin/tsc --noEmit -p packages/game-cartridges/tsconfig.json` — passed.
+- `./node_modules/.bin/eslint --config packages/game-cartridges/eslint.config.mjs packages/game-cartridges/src/legacy-traversal-source-manifest.test.ts` — passed.
+- `./node_modules/.bin/prettier --check packages/game-cartridges/src/legacy-traversal-source-manifest.test.ts` — passed.
+- `git diff --cached --check -- packages/game-cartridges/src/legacy-traversal-source-manifest.test.ts measure/tracks/apk_legacy_traversal_cutover_20260727/plan.md measure/tracks/apk_legacy_traversal_cutover_20260727/task1-source-manifest-red-evidence-20260815.md measure/tracks/apk_legacy_traversal_cutover_20260727/orchestration/task1-red-remediation-role.log` — passed.
+
+Disposition: Red remains. The five exact per-title source manifests are still absent.
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+status: complete
+track: apk_legacy_traversal_cutover_20260727
+phase: Phase 1 — Source/readiness manifests, Task 1
+commits: this remediation commit
+tests_run: direct focused Vitest Red exited 1 as expected with 7 passed and 5 missing-manifest failures; direct TypeScript, ESLint, Prettier, and exact staged-path diff checks passed
+files_changed: packages/game-cartridges/src/legacy-traversal-source-manifest.test.ts; measure/tracks/apk_legacy_traversal_cutover_20260727/plan.md; measure/tracks/apk_legacy_traversal_cutover_20260727/task1-source-manifest-red-evidence-20260815.md; measure/tracks/apk_legacy_traversal_cutover_20260727/orchestration/task1-red-remediation-role.log
+plan_updates: recorded strict source-set coverage, expected Red counts, static-check evidence, and preserved Task 1 as [~]
+known_failures: five exact per-title legacy source manifests are missing: dragon-rider, spellweavers-run, shadow-gate-dungeon, labyrinth-goblin-king, and griffin-riders-escape
+handoff: Green must add only the five exact evidence manifests and rerun the focused contract. Preserve all false authority claims and accepted archive bindings.
+END_MEASURE_AGENT_RESULT

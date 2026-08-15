@@ -1,18 +1,56 @@
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
-import { dirname, resolve } from "node:path";
+import { dirname, posix, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { isDeepStrictEqual } from "node:util";
+import { execFileSync } from "node:child_process";
 
 import { describe, expect, it } from "vitest";
 
 type JsonObject = Record<string, unknown>;
 type ArchiveReader = (relativePath: string) => Uint8Array;
+type ExpectedLegacySource = {
+  path: string;
+  role: string;
+  classification: string;
+  evidence_locator: JsonObject;
+};
+
+const LEGACY_SOURCE_EVIDENCE = Object.freeze({
+  "dragon-rider":
+    "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/claim-evidence-ledger-v3.json",
+  "spellweavers-run":
+    "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/claim-evidence-ledger-v2.json",
+  "shadow-gate-dungeon":
+    "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/shadow-gate-dungeon/claim-evidence-ledger-v2.json",
+  "labyrinth-goblin-king":
+    "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/labyrinth-goblin-king/claim-evidence-ledger-batch-b-v2.json",
+  "griffin-riders-escape":
+    "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/griffin-riders-escape/claim-evidence-ledger-v2.json",
+});
+
+const LEGACY_SOURCE_PATH_PREFIXES = [
+  "apps/advantage-games/src/",
+  "apps/advantage-games/tests/",
+  "apps/reading-advantage/",
+  "packages/game-cartridges/src/cartridges/",
+];
+const GENERATED_SOURCE_PATH_RE =
+  /(?:^|\/)(?:\.next|build|coverage|dist|generated|node_modules|playwright-report|test-results)(?:\/|$)|\.(?:map|tsbuildinfo)$/i;
 
 const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "../../..");
 const TRACK_ID = "apk_legacy_traversal_cutover_20260727";
 const TRACK_ROOT = `measure/tracks/${TRACK_ID}`;
 const PER_TITLE_MANIFEST_ROOT = `${TRACK_ROOT}/legacy-source-manifests`;
+const GIT_TRACKED_PATHS = new Set(
+  execFileSync("git", ["ls-files", "-z"], {
+    cwd: REPO_ROOT,
+    maxBuffer: 64 * 1024 * 1024,
+  })
+    .toString("utf8")
+    .split("\0")
+    .filter(Boolean),
+);
 
 const EXPECTED_SOURCE_BINDINGS = Object.freeze({
   accepted_readiness_receipt: {
@@ -144,13 +182,14 @@ function requireEqual(actual: unknown, expected: unknown, code: string): void {
   if (!isDeepStrictEqual(actual, expected)) throw new Error(code);
 }
 
+function loadJsonValue(relativePath: string): unknown {
+  return JSON.parse(
+    readFileSync(resolve(REPO_ROOT, relativePath), "utf8"),
+  ) as unknown;
+}
+
 function loadJson(relativePath: string): JsonObject {
-  return jsonObject(
-    JSON.parse(
-      readFileSync(resolve(REPO_ROOT, relativePath), "utf8"),
-    ) as unknown,
-    relativePath,
-  );
+  return jsonObject(loadJsonValue(relativePath), relativePath);
 }
 
 function sha256(bytes: Uint8Array): string {
@@ -159,6 +198,300 @@ function sha256(bytes: Uint8Array): string {
 
 function defaultArchiveReader(relativePath: string): Uint8Array {
   return readFileSync(resolve(REPO_ROOT, relativePath));
+}
+
+function escapeJsonPointerSegment(segment: string): string {
+  return segment.replaceAll("~", "~0").replaceAll("/", "~1");
+}
+
+function jsonPointerValue(value: unknown, pointer: string): unknown {
+  if (pointer === "") return value;
+  return pointer
+    .slice(1)
+    .split("/")
+    .map((segment) => segment.replaceAll("~1", "/").replaceAll("~0", "~"))
+    .reduce((current, segment) => {
+      if (Array.isArray(current)) return current[Number(segment)];
+      if (isJsonObject(current)) return current[segment];
+      return undefined;
+    }, value as unknown);
+}
+
+function sourcePathFromClaim(value: JsonObject): string | undefined {
+  if (typeof value.file_path === "string") return value.file_path;
+  if (typeof value.relative_path === "string") return value.relative_path;
+  const citation = isJsonObject(value.citation) ? value.citation : undefined;
+  return citation && typeof citation.path === "string"
+    ? citation.path
+    : undefined;
+}
+
+function isLegacySourcePath(path: string): boolean {
+  return (
+    !GENERATED_SOURCE_PATH_RE.test(path) &&
+    LEGACY_SOURCE_PATH_PREFIXES.some((prefix) => path.startsWith(prefix))
+  );
+}
+
+function collectLegacySourceEvidence(
+  value: unknown,
+  artifact: string,
+  pointer: string,
+  output: ExpectedLegacySource[],
+): void {
+  if (Array.isArray(value)) {
+    value.forEach((child, index) =>
+      collectLegacySourceEvidence(
+        child,
+        artifact,
+        `${pointer}/${index}`,
+        output,
+      ),
+    );
+    return;
+  }
+  if (!isJsonObject(value)) return;
+
+  const claimId = typeof value.claim_id === "string" ? value.claim_id : null;
+  const sourcePath = sourcePathFromClaim(value);
+  const role =
+    typeof value.category === "string"
+      ? value.category
+      : typeof value.role === "string"
+        ? value.role
+        : null;
+  const classification =
+    typeof value.evidence_class === "string"
+      ? value.evidence_class
+      : typeof value.source_class === "string"
+        ? value.source_class
+        : null;
+
+  if (
+    claimId &&
+    sourcePath &&
+    role &&
+    classification &&
+    isLegacySourcePath(sourcePath)
+  ) {
+    output.push({
+      path: sourcePath,
+      role,
+      classification,
+      evidence_locator: {
+        artifact,
+        json_pointer: pointer,
+        claim_id: claimId,
+      },
+    });
+  }
+
+  for (const [key, child] of Object.entries(value)) {
+    collectLegacySourceEvidence(
+      child,
+      artifact,
+      `${pointer}/${escapeJsonPointerSegment(key)}`,
+      output,
+    );
+  }
+}
+
+function expectedLegacySourcesForTitle(
+  title: (typeof EXPECTED_TITLES)[number],
+): ExpectedLegacySource[] {
+  const artifact =
+    LEGACY_SOURCE_EVIDENCE[
+      title.title_id as keyof typeof LEGACY_SOURCE_EVIDENCE
+    ];
+  const candidates: ExpectedLegacySource[] = [];
+  collectLegacySourceEvidence(
+    loadJsonValue(artifact),
+    artifact,
+    "",
+    candidates,
+  );
+
+  const unique = new Map<string, ExpectedLegacySource>();
+  for (const candidate of candidates) {
+    if (!unique.has(candidate.path)) unique.set(candidate.path, candidate);
+  }
+  const sources = [...unique.values()].sort((left, right) =>
+    left.path.localeCompare(right.path),
+  );
+  if (sources.length === 0) {
+    throw new Error(`ACCEPTED_LEGACY_SOURCE_SET_EMPTY: ${title.title_id}`);
+  }
+  return sources;
+}
+
+function normalizeGitPath(value: unknown, label: string): string {
+  if (typeof value !== "string" || value.length === 0) {
+    throw new Error(`EMPTY_LEGACY_SOURCE_PATH: ${label}`);
+  }
+  const slashPath = value.replaceAll("\\", "/");
+  const normalized = posix.normalize(slashPath);
+  if (
+    value !== slashPath ||
+    normalized !== value ||
+    normalized === "." ||
+    normalized.startsWith("/") ||
+    normalized === ".." ||
+    normalized.startsWith("../")
+  ) {
+    throw new Error(`UNNORMALIZED_LEGACY_SOURCE_PATH: ${label}`);
+  }
+  return normalized;
+}
+
+function assertSourceEvidenceLocator(
+  record: JsonObject,
+  expected: ExpectedLegacySource,
+  label: string,
+): void {
+  requireEqual(
+    record.evidence_locator,
+    expected.evidence_locator,
+    `LEGACY_SOURCE_EVIDENCE_LOCATOR_DRIFT: ${label}`,
+  );
+  const locator = jsonObject(
+    record.evidence_locator,
+    `${label}: evidence_locator`,
+  );
+  const artifact = String(locator.artifact);
+  const pointed = jsonPointerValue(
+    loadJsonValue(artifact),
+    String(locator.json_pointer),
+  );
+  const claim = jsonObject(pointed, `${label}: evidence claim`);
+  requireEqual(
+    sourcePathFromClaim(claim),
+    expected.path,
+    `UNBOUND_LEGACY_SOURCE_PATH: ${label}`,
+  );
+  requireEqual(
+    claim.claim_id,
+    jsonObject(expected.evidence_locator, `${label}: expected locator`)
+      .claim_id,
+    `LEGACY_SOURCE_CLAIM_LOCATOR_DRIFT: ${label}`,
+  );
+}
+
+function assertLegacySourcePaths(
+  manifest: JsonObject,
+  title: (typeof EXPECTED_TITLES)[number],
+  label: string,
+): void {
+  requireEqual(
+    manifest.legacy_source_paths_status,
+    "observation-only-not-adoption-or-approval",
+    `LEGACY_SOURCE_DISPOSITION_DRIFT: ${label}`,
+  );
+  const rawSources = jsonArray(
+    manifest.legacy_source_paths,
+    `${label}: legacy_source_paths`,
+  );
+  if (rawSources.length === 0) {
+    throw new Error(`EMPTY_LEGACY_SOURCE_PATHS: ${label}`);
+  }
+
+  const expectedSources = expectedLegacySourcesForTitle(title);
+  const expectedByPath = new Map(
+    expectedSources.map((source) => [source.path, source]),
+  );
+  const actualPaths = new Set<string>();
+
+  for (const rawSource of rawSources) {
+    const source = jsonObject(rawSource, `${label}: source path`);
+    requireEqual(
+      Object.keys(source).sort(),
+      [
+        "classification",
+        "disposition",
+        "evidence_locator",
+        "path",
+        "role",
+        "sha256",
+      ],
+      `LEGACY_SOURCE_SCHEMA_INVALID: ${label}`,
+    );
+    const path = normalizeGitPath(source.path, label);
+    if (GENERATED_SOURCE_PATH_RE.test(path)) {
+      throw new Error(`GENERATED_LEGACY_SOURCE_PATH: ${path}`);
+    }
+    if (actualPaths.has(path)) {
+      throw new Error(`DUPLICATE_LEGACY_SOURCE_PATH: ${path}`);
+    }
+    actualPaths.add(path);
+    if (!GIT_TRACKED_PATHS.has(path)) {
+      throw new Error(`LEGACY_SOURCE_PATH_NOT_GIT_TRACKED: ${path}`);
+    }
+    const currentHash = sha256(readFileSync(resolve(REPO_ROOT, path)));
+    if (source.sha256 !== currentHash) {
+      throw new Error(`CURRENT_BYTE_HASH_DRIFT: ${path}`);
+    }
+    requireEqual(
+      source.disposition,
+      "evidence-only",
+      `EVIDENCE_ONLY_SOURCE_DISPOSITION_DRIFT: ${path}`,
+    );
+
+    const expected = expectedByPath.get(path);
+    if (!expected) {
+      throw new Error(`UNBOUND_LEGACY_SOURCE_PATH: ${path}`);
+    }
+    requireEqual(
+      source.role,
+      expected.role,
+      `LEGACY_SOURCE_ROLE_DRIFT: ${path}`,
+    );
+    requireEqual(
+      source.classification,
+      expected.classification,
+      `LEGACY_SOURCE_CLASSIFICATION_DRIFT: ${path}`,
+    );
+    assertSourceEvidenceLocator(source, expected, path);
+  }
+
+  const expectedPaths = expectedSources.map((source) => source.path);
+  const actualPathList = [...actualPaths].sort();
+  const missingPaths = expectedPaths.filter((path) => !actualPaths.has(path));
+  if (missingPaths.length > 0) {
+    throw new Error(`OMITTED_LEGACY_SOURCE_PATH: ${missingPaths.join(",")}`);
+  }
+  const extraPaths = actualPathList.filter((path) => !expectedByPath.has(path));
+  if (extraPaths.length > 0) {
+    throw new Error(`EXTRA_LEGACY_SOURCE_PATH: ${extraPaths.join(",")}`);
+  }
+  requireEqual(
+    actualPathList,
+    expectedPaths,
+    `LEGACY_SOURCE_PATH_SET_DRIFT: ${label}`,
+  );
+}
+
+function createValidPerTitleManifest(
+  title: (typeof EXPECTED_TITLES)[number],
+): JsonObject {
+  return {
+    track_id: TRACK_ID,
+    title_id: title.title_id,
+    title: title.title,
+    source_identity_id: title.source_identity_id,
+    assignment_index: title.assignment_index,
+    identity_record_index: title.identity_record_index,
+    evidence_binding: title.evidence_binding,
+    status: "evidence-only",
+    legacy_source_paths_status: "observation-only-not-adoption-or-approval",
+    legacy_source_paths: expectedLegacySourcesForTitle(title).map((source) => ({
+      path: source.path,
+      sha256: sha256(readFileSync(resolve(REPO_ROOT, source.path))),
+      role: source.role,
+      classification: source.classification,
+      evidence_locator: cloneJson(source.evidence_locator),
+      disposition: "evidence-only",
+    })),
+    claims: cloneJson(EXPECTED_CLAIMS),
+  };
 }
 
 function expectedTitleBinding(
@@ -445,7 +778,6 @@ function assertPerTitleLegacySourceManifest(
   title: (typeof EXPECTED_TITLES)[number],
 ): void {
   const relativePath = `${PER_TITLE_MANIFEST_ROOT}/${title.title_id}.json`;
-  const absolutePath = resolve(REPO_ROOT, relativePath);
   let manifest: JsonObject;
   try {
     manifest = loadJson(relativePath);
@@ -488,14 +820,33 @@ function assertPerTitleLegacySourceManifest(
     `TITLE_MANIFEST_EVIDENCE_DRIFT: ${relativePath}`,
   );
   requireEqual(
+    Object.keys(manifest).sort(),
+    [
+      "assignment_index",
+      "claims",
+      "evidence_binding",
+      "identity_record_index",
+      "legacy_source_paths",
+      "legacy_source_paths_status",
+      "source_identity_id",
+      "status",
+      "title",
+      "title_id",
+      "track_id",
+    ],
+    `TITLE_MANIFEST_SCHEMA_INVALID: ${relativePath}`,
+  );
+  requireEqual(
     manifest.status,
     "evidence-only",
     `TITLE_MANIFEST_STATUS_DRIFT: ${relativePath}`,
   );
-  const claims = jsonObject(manifest.claims, `${absolutePath}: claims`);
-  if (Object.values(claims).some((claim) => claim === true)) {
-    throw new Error(`EVIDENCE_ONLY_MANIFEST_OVERCLAIM: ${relativePath}`);
-  }
+  requireEqual(
+    manifest.claims,
+    EXPECTED_CLAIMS,
+    `EVIDENCE_ONLY_MANIFEST_OVERCLAIM: ${relativePath}`,
+  );
+  assertLegacySourcePaths(manifest, title, relativePath);
 }
 
 function cloneJson<T>(value: T): T {
@@ -528,6 +879,156 @@ describe("legacy traversal Task 1 source/readiness manifest", () => {
       assertPerTitleLegacySourceManifest(title);
     },
   );
+
+  it("rejects empty, duplicate, extra, omitted, wrong-hash, generated, and unbound paths", () => {
+    const title = EXPECTED_TITLES[0];
+    const valid = createValidPerTitleManifest(title);
+    const validPaths = jsonArray(valid.legacy_source_paths, "valid paths");
+
+    const empty = cloneJson(valid);
+    empty.legacy_source_paths = [];
+    expect(() =>
+      assertLegacySourcePaths(empty, title, "empty fixture"),
+    ).toThrow("EMPTY_LEGACY_SOURCE_PATHS");
+
+    const emptyPath = cloneJson(valid);
+    const emptyPathRecords = jsonArray(
+      emptyPath.legacy_source_paths,
+      "empty path records",
+    ).map((path) => jsonObject(path, "empty path record"));
+    emptyPathRecords[0] = { ...emptyPathRecords[0], path: "" };
+    emptyPath.legacy_source_paths = emptyPathRecords;
+    expect(() =>
+      assertLegacySourcePaths(emptyPath, title, "empty path fixture"),
+    ).toThrow("EMPTY_LEGACY_SOURCE_PATH");
+
+    const duplicate = cloneJson(valid);
+    duplicate.legacy_source_paths = [...validPaths, cloneJson(validPaths[0])];
+    expect(() =>
+      assertLegacySourcePaths(duplicate, title, "duplicate fixture"),
+    ).toThrow("DUPLICATE_LEGACY_SOURCE_PATH");
+
+    const omitted = cloneJson(valid);
+    omitted.legacy_source_paths = validPaths.slice(0, -1);
+    expect(() =>
+      assertLegacySourcePaths(omitted, title, "omitted fixture"),
+    ).toThrow("OMITTED_LEGACY_SOURCE_PATH");
+
+    const wrongHash = cloneJson(valid);
+    const wrongHashPaths = jsonArray(
+      wrongHash.legacy_source_paths,
+      "wrong hash paths",
+    ).map((path) => jsonObject(path, "wrong hash path"));
+    wrongHashPaths[0] = {
+      ...wrongHashPaths[0],
+      sha256: "0".repeat(64),
+    };
+    wrongHash.legacy_source_paths = wrongHashPaths;
+    expect(() =>
+      assertLegacySourcePaths(wrongHash, title, "wrong hash fixture"),
+    ).toThrow("CURRENT_BYTE_HASH_DRIFT");
+
+    const generated = cloneJson(valid);
+    const generatedPaths = jsonArray(
+      generated.legacy_source_paths,
+      "generated paths",
+    ).map((path) => jsonObject(path, "generated path"));
+    generatedPaths[0] = {
+      ...generatedPaths[0],
+      path: "dist/generated-legacy-source.ts",
+    };
+    generated.legacy_source_paths = generatedPaths;
+    expect(() =>
+      assertLegacySourcePaths(generated, title, "generated fixture"),
+    ).toThrow("GENERATED_LEGACY_SOURCE_PATH");
+
+    const unbound = cloneJson(valid);
+    const unboundPaths = jsonArray(
+      unbound.legacy_source_paths,
+      "unbound paths",
+    ).map((path) => jsonObject(path, "unbound path"));
+    unboundPaths[0] = {
+      ...unboundPaths[0],
+      path: "packages/game-cartridges/src/legacy-traversal-source-manifest.test.ts",
+      sha256: sha256(
+        readFileSync(
+          resolve(
+            REPO_ROOT,
+            "packages/game-cartridges/src/legacy-traversal-source-manifest.test.ts",
+          ),
+        ),
+      ),
+    };
+    unbound.legacy_source_paths = unboundPaths;
+    expect(() =>
+      assertLegacySourcePaths(unbound, title, "unbound fixture"),
+    ).toThrow("UNBOUND_LEGACY_SOURCE_PATH");
+  });
+
+  it("rejects role, classification, locator, and non-evidence-only disposition drift", () => {
+    const title = EXPECTED_TITLES[0];
+    const mutations = [
+      {
+        code: "LEGACY_SOURCE_ROLE_DRIFT",
+        mutate: (manifest: JsonObject) => {
+          const paths = jsonArray(
+            manifest.legacy_source_paths,
+            "role paths",
+          ).map((path) => jsonObject(path, "role path"));
+          paths[0] = { ...paths[0], role: "wrong-role" };
+          manifest.legacy_source_paths = paths;
+        },
+      },
+      {
+        code: "LEGACY_SOURCE_CLASSIFICATION_DRIFT",
+        mutate: (manifest: JsonObject) => {
+          const paths = jsonArray(
+            manifest.legacy_source_paths,
+            "classification paths",
+          ).map((path) => jsonObject(path, "classification path"));
+          paths[0] = { ...paths[0], classification: "generated" };
+          manifest.legacy_source_paths = paths;
+        },
+      },
+      {
+        code: "LEGACY_SOURCE_EVIDENCE_LOCATOR_DRIFT",
+        mutate: (manifest: JsonObject) => {
+          const paths = jsonArray(
+            manifest.legacy_source_paths,
+            "locator paths",
+          ).map((path) => jsonObject(path, "locator path"));
+          paths[0] = {
+            ...paths[0],
+            evidence_locator: {
+              artifact: "measure/forged-evidence.json",
+              json_pointer: "/claims/0",
+              claim_id: "forged-claim",
+            },
+          };
+          manifest.legacy_source_paths = paths;
+        },
+      },
+      {
+        code: "EVIDENCE_ONLY_SOURCE_DISPOSITION_DRIFT",
+        mutate: (manifest: JsonObject) => {
+          const paths = jsonArray(
+            manifest.legacy_source_paths,
+            "disposition paths",
+          ).map((path) => jsonObject(path, "disposition path"));
+          paths[0] = { ...paths[0], disposition: "adopted" };
+          manifest.legacy_source_paths = paths;
+        },
+      },
+    ] as const;
+
+    for (const mutation of mutations) {
+      const manifest = createValidPerTitleManifest(title);
+      mutation.mutate(manifest);
+      expect(() =>
+        assertLegacySourcePaths(manifest, title, `${mutation.code} fixture`),
+      ).toThrow(mutation.code);
+    }
+  });
 
   it("rejects bound-byte drift and a missing archive input", () => {
     const driftedPath =
