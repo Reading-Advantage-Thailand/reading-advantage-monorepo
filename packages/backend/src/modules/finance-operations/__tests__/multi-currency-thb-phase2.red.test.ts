@@ -10,12 +10,44 @@ type FinanceThbConversionEvidence = {
   readonly rateSourceId: string;
 };
 
+type FinanceThbPolicyApprovalScope = {
+  readonly companyId: string;
+  readonly schoolId?: string;
+};
+
+type FinanceThbApprovalReceipt = {
+  readonly decisionId: string;
+  readonly contentDigest: string;
+  readonly scope: FinanceThbPolicyApprovalScope;
+};
+
+type FinanceThbPolicyApprovalAttestor = {
+  readonly verify: (input: {
+    readonly operation: "finance-thb-policy-approval";
+    readonly receipt: unknown;
+    readonly expectedScope: FinanceThbPolicyApprovalScope;
+    readonly existingReceipt?: unknown;
+  }) => Promise<unknown>;
+};
+
 type FinanceThbEvidencePort = {
   readonly getEvidence: (input: {
     readonly billId: string;
     readonly sourceAmountDecimal: string;
     readonly sourceCurrency: string;
   }) => Promise<unknown>;
+};
+
+type FinanceThbBill = {
+  readonly billId: string;
+  readonly sourceAmountDecimal: string;
+  readonly sourceCurrency: string;
+};
+
+type FinanceThbValuationRequest = {
+  readonly bill: FinanceThbBill;
+  readonly approvalReceipt: unknown;
+  readonly expectedScope: FinanceThbPolicyApprovalScope;
 };
 
 type FinanceThbValuationPreparer = {
@@ -27,6 +59,7 @@ type FinanceThbModule = {
     readonly safeParse: (input: unknown) => { readonly success: boolean };
   };
   readonly createFinanceThbValuationPreparer?: (input: {
+    readonly attestor: FinanceThbPolicyApprovalAttestor;
     readonly evidencePort: FinanceThbEvidencePort;
   }) => FinanceThbValuationPreparer;
   readonly classifyFinanceThbValuationReplay?: (input: {
@@ -35,14 +68,21 @@ type FinanceThbModule = {
   }) => unknown;
 };
 
-type FinanceThbBill = {
-  readonly billId: string;
-  readonly sourceAmountDecimal: string;
-  readonly sourceCurrency: string;
-};
-
 const RATE_SOURCE_ID = "owner-selected-source-identity";
 const EFFECTIVE_DATE = "2026-08-01";
+const EXPECTED_SCOPE: FinanceThbPolicyApprovalScope = {
+  companyId: "company-a",
+};
+const CALLER_RECEIPT: FinanceThbApprovalReceipt = {
+  decisionId: "caller-decision-001",
+  contentDigest: "c".repeat(64),
+  scope: EXPECTED_SCOPE,
+};
+const AUTHORITY_RECEIPT: FinanceThbApprovalReceipt = {
+  decisionId: "server-decision-001",
+  contentDigest: "a".repeat(64),
+  scope: EXPECTED_SCOPE,
+};
 
 /** Loads the future THB contract without requiring a production implementation. */
 async function loadFinanceThbModule(): Promise<FinanceThbModule> {
@@ -91,6 +131,19 @@ function evidence(
   };
 }
 
+/** Creates a future valuation request with an untrusted caller receipt. */
+function valuationInput(
+  sourceBill: FinanceThbBill,
+  approvalReceipt: unknown = CALLER_RECEIPT,
+  expectedScope: FinanceThbPolicyApprovalScope = EXPECTED_SCOPE,
+): FinanceThbValuationRequest {
+  return {
+    bill: sourceBill,
+    approvalReceipt,
+    expectedScope: { ...expectedScope },
+  };
+}
+
 /** Creates a provider-neutral evidence port fake for the Red contract. */
 function evidencePort(result: unknown): FinanceThbEvidencePort & {
   readonly getEvidence: ReturnType<typeof vi.fn>;
@@ -100,11 +153,33 @@ function evidencePort(result: unknown): FinanceThbEvidencePort & {
   };
 }
 
-/** Creates the expected future THB preparer over an injected internal port. */
-async function createPreparer(result: unknown): Promise<{
+/** Creates the accepted Company Identity attestor shape for integration tests. */
+function approvalAttestor(
+  result: unknown = { decision: "allow", receipt: AUTHORITY_RECEIPT },
+): FinanceThbPolicyApprovalAttestor & {
+  readonly verify: ReturnType<typeof vi.fn>;
+} {
+  return {
+    verify: vi.fn(async () => result),
+  };
+}
+
+/** Creates the future THB preparer over the accepted attestor and evidence port. */
+async function createPreparer(
+  result: unknown,
+  input: {
+    readonly attestor?: FinanceThbPolicyApprovalAttestor & {
+      readonly verify: ReturnType<typeof vi.fn>;
+    };
+    readonly attestorResult?: unknown;
+  } = {},
+): Promise<{
   readonly preparer: FinanceThbValuationPreparer;
   readonly port: FinanceThbEvidencePort & {
     readonly getEvidence: ReturnType<typeof vi.fn>;
+  };
+  readonly attestor: FinanceThbPolicyApprovalAttestor & {
+    readonly verify: ReturnType<typeof vi.fn>;
   };
 }> {
   const subject = await loadFinanceThbModule();
@@ -113,7 +188,12 @@ async function createPreparer(result: unknown): Promise<{
     "createFinanceThbValuationPreparer",
   );
   const port = evidencePort(result);
-  return { preparer: factory({ evidencePort: port }), port };
+  const attestor = input.attestor ?? approvalAttestor(input.attestorResult);
+  return {
+    preparer: factory({ attestor, evidencePort: port }),
+    port,
+    attestor,
+  };
 }
 
 const nonThbCases = [
@@ -182,6 +262,43 @@ describe("Finance multi-currency THB Red contract", () => {
     }
   });
 
+  it("calls the accepted attestor before evidence access", async () => {
+    const sourceBill = bill({
+      sourceAmountDecimal: "10.00",
+      sourceCurrency: "USD",
+    });
+    const trustedEvidence = evidence(sourceBill, {
+      thbAmountDecimal: "350.00",
+      conversionRateDecimal: "35.00",
+    });
+    let evidenceReads = 0;
+    const attestor = approvalAttestor();
+    attestor.verify.mockImplementation(async (input) => {
+      expect(evidenceReads).toBe(0);
+      expect(input.operation).toBe("finance-thb-policy-approval");
+      return { decision: "allow", receipt: AUTHORITY_RECEIPT };
+    });
+    const port = evidencePort(trustedEvidence);
+    port.getEvidence.mockImplementation(async () => {
+      evidenceReads += 1;
+      return trustedEvidence;
+    });
+    const subject = await loadFinanceThbModule();
+    const factory = requireThbExport(
+      subject.createFinanceThbValuationPreparer,
+      "createFinanceThbValuationPreparer",
+    );
+    const preparer = factory({ attestor, evidencePort: port });
+
+    await preparer.prepare(valuationInput(sourceBill));
+    expect(attestor.verify).toHaveBeenCalledWith({
+      operation: "finance-thb-policy-approval",
+      receipt: CALLER_RECEIPT,
+      expectedScope: EXPECTED_SCOPE,
+    });
+    expect(evidenceReads).toBe(1);
+  });
+
   it.each(nonThbCases)(
     "preserves exact $name source amount and currency",
     async ({
@@ -199,7 +316,7 @@ describe("Finance multi-currency THB Red contract", () => {
         thbAmountDecimal,
       });
       const { preparer, port } = await createPreparer(trustedEvidence);
-      const result = await preparer.prepare(sourceBill);
+      const result = await preparer.prepare(valuationInput(sourceBill));
       const valuation = result as Record<string, unknown>;
 
       expect(valuation).toMatchObject({
@@ -210,8 +327,14 @@ describe("Finance multi-currency THB Red contract", () => {
         conversionRateDecimal,
         rateEffectiveDate: EFFECTIVE_DATE,
         rateSourceId: RATE_SOURCE_ID,
+        decisionId: AUTHORITY_RECEIPT.decisionId,
+        contentDigest: AUTHORITY_RECEIPT.contentDigest,
       });
-      expect(port.getEvidence).toHaveBeenCalledWith(sourceBill);
+      expect(port.getEvidence).toHaveBeenCalledWith({
+        billId: sourceBill.billId,
+        sourceAmountDecimal,
+        sourceCurrency: name,
+      });
     },
   );
 
@@ -225,10 +348,9 @@ describe("Finance multi-currency THB Red contract", () => {
       thbAmountDecimal: sourceBill.sourceAmountDecimal,
     });
     const { preparer } = await createPreparer(trustedEvidence);
-    const result = (await preparer.prepare(sourceBill)) as Record<
-      string,
-      unknown
-    >;
+    const result = (await preparer.prepare(
+      valuationInput(sourceBill),
+    )) as Record<string, unknown>;
 
     expect(result).toMatchObject({
       sourceAmountDecimal: "98765432101234567890.123",
@@ -249,7 +371,9 @@ describe("Finance multi-currency THB Red contract", () => {
     });
     const { preparer } = await createPreparer(trustedEvidence);
 
-    await expect(preparer.prepare(sourceBill)).rejects.toMatchObject({
+    await expect(
+      preparer.prepare(valuationInput(sourceBill)),
+    ).rejects.toMatchObject({
       code: "FINANCE_THB_CONVERSION_EVIDENCE_CONFLICT",
     });
   });
@@ -259,17 +383,18 @@ describe("Finance multi-currency THB Red contract", () => {
       sourceAmountDecimal: "10.00",
       sourceCurrency: "USD",
     });
-    const { preparer, port } = await createPreparer(undefined);
+    const { preparer, port, attestor } = await createPreparer(undefined);
 
     await expect(
       preparer.prepare({
-        ...sourceBill,
+        ...valuationInput(sourceBill),
         thbAmountDecimal: "350.00",
         conversionRateDecimal: "35.00",
         rateEffectiveDate: EFFECTIVE_DATE,
         rateSourceId: RATE_SOURCE_ID,
       }),
     ).rejects.toMatchObject({ code: "FINANCE_THB_INPUT_INVALID" });
+    expect(attestor.verify).toHaveBeenCalledTimes(1);
     expect(port.getEvidence).not.toHaveBeenCalled();
   });
 
@@ -294,7 +419,9 @@ describe("Finance multi-currency THB Red contract", () => {
     delete incompleteEvidence[missingField];
     const { preparer } = await createPreparer(incompleteEvidence);
 
-    await expect(preparer.prepare(sourceBill)).rejects.toMatchObject({
+    await expect(
+      preparer.prepare(valuationInput(sourceBill)),
+    ).rejects.toMatchObject({
       code: "FINANCE_THB_CONVERSION_EVIDENCE_INVALID",
     });
   });
@@ -313,7 +440,9 @@ describe("Finance multi-currency THB Red contract", () => {
     };
     const { preparer } = await createPreparer(contradictoryEvidence);
 
-    await expect(preparer.prepare(sourceBill)).rejects.toMatchObject({
+    await expect(
+      preparer.prepare(valuationInput(sourceBill)),
+    ).rejects.toMatchObject({
       code: "FINANCE_THB_CONVERSION_EVIDENCE_CONFLICT",
     });
   });
@@ -332,7 +461,9 @@ describe("Finance multi-currency THB Red contract", () => {
     };
     const { preparer } = await createPreparer(mismatchedEvidence);
 
-    await expect(preparer.prepare(sourceBill)).rejects.toMatchObject({
+    await expect(
+      preparer.prepare(valuationInput(sourceBill)),
+    ).rejects.toMatchObject({
       code: "FINANCE_THB_CONVERSION_EVIDENCE_CONFLICT",
     });
   });
@@ -351,7 +482,9 @@ describe("Finance multi-currency THB Red contract", () => {
       trustedEvidence,
     ]);
 
-    await expect(preparer.prepare(sourceBill)).rejects.toMatchObject({
+    await expect(
+      preparer.prepare(valuationInput(sourceBill)),
+    ).rejects.toMatchObject({
       code: "FINANCE_THB_CONVERSION_EVIDENCE_INVALID",
     });
   });
@@ -377,8 +510,11 @@ describe("Finance multi-currency THB Red contract", () => {
     const port = {
       getEvidence: vi.fn(() => pendingEvidence),
     };
-    const preparer = factory({ evidencePort: port });
-    const operation = preparer.prepare(sourceBill);
+    const preparer = factory({
+      attestor: approvalAttestor(),
+      evidencePort: port,
+    });
+    const operation = preparer.prepare(valuationInput(sourceBill));
 
     (trustedEvidence as { thbAmountDecimal: string }).thbAmountDecimal =
       "999.00";
@@ -399,14 +535,50 @@ describe("Finance multi-currency THB Red contract", () => {
       conversionRateDecimal: "35.00",
     });
     const { preparer } = await createPreparer(trustedEvidence);
-    const result = (await preparer.prepare(sourceBill)) as Record<
-      string,
-      unknown
-    >;
+    const result = (await preparer.prepare(
+      valuationInput(sourceBill),
+    )) as Record<string, unknown>;
 
     (trustedEvidence as { thbAmountDecimal: string }).thbAmountDecimal =
       "999.00";
     expect(result.thbAmountDecimal).toBe("350.00");
+  });
+
+  it("uses the attestor receipt instead of caller receipt fields", async () => {
+    const sourceBill = bill({
+      sourceAmountDecimal: "10.00",
+      sourceCurrency: "USD",
+    });
+    const trustedEvidence = evidence(sourceBill, {
+      thbAmountDecimal: "350.00",
+      conversionRateDecimal: "35.00",
+    });
+    const { preparer } = await createPreparer(trustedEvidence);
+    const result = (await preparer.prepare(
+      valuationInput(sourceBill, CALLER_RECEIPT),
+    )) as Record<string, unknown>;
+
+    expect(result).toMatchObject({
+      decisionId: AUTHORITY_RECEIPT.decisionId,
+      contentDigest: AUTHORITY_RECEIPT.contentDigest,
+    });
+    expect(JSON.stringify(result)).not.toContain(CALLER_RECEIPT.decisionId);
+    expect(JSON.stringify(result)).not.toContain(CALLER_RECEIPT.contentDigest);
+  });
+
+  it("blocks evidence after attestor denial", async () => {
+    const sourceBill = bill({
+      sourceAmountDecimal: "10.00",
+      sourceCurrency: "USD",
+    });
+    const { preparer, port } = await createPreparer(undefined, {
+      attestorResult: { decision: "deny", reason: "role-denied" },
+    });
+
+    await expect(
+      preparer.prepare(valuationInput(sourceBill)),
+    ).rejects.toMatchObject({ code: "FINANCE_THB_POLICY_APPROVAL_DENIED" });
+    expect(port.getEvidence).not.toHaveBeenCalled();
   });
 
   it("classifies unchanged trusted conversion evidence as replay", async () => {
@@ -423,6 +595,8 @@ describe("Finance multi-currency THB Red contract", () => {
       conversionRateDecimal: "35.00",
       rateEffectiveDate: EFFECTIVE_DATE,
       rateSourceId: RATE_SOURCE_ID,
+      decisionId: AUTHORITY_RECEIPT.decisionId,
+      contentDigest: AUTHORITY_RECEIPT.contentDigest,
     };
 
     expect(
@@ -451,6 +625,8 @@ describe("Finance multi-currency THB Red contract", () => {
         conversionRateDecimal: "35.00",
         rateEffectiveDate: EFFECTIVE_DATE,
         rateSourceId: RATE_SOURCE_ID,
+        decisionId: AUTHORITY_RECEIPT.decisionId,
+        contentDigest: AUTHORITY_RECEIPT.contentDigest,
       };
 
       expect(

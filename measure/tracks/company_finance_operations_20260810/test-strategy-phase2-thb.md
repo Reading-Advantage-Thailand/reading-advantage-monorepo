@@ -34,13 +34,8 @@ The expected missing exports are:
 - `createFinanceThbValuationPreparer`
 - `classifyFinanceThbValuationReplay`
 
-The owner-decision receipt Red sub-slice adds these missing runtime exports:
-
-- `financeThbOwnerDecisionReceiptSchema`
-- `verifyFinanceThbOwnerDecisionReceipt`
-
-The new test uses dynamic loading and local structural types. Every initial
-failure must name only one missing receipt export.
+The Finance integration Red test uses dynamic loading and local structural
+types. Every initial failure must name only one of the three missing exports.
 
 The Company Identity authority-extension Red sub-slice runs this additional
 test:
@@ -75,8 +70,18 @@ All decimal values must remain strings. Currency values must use uppercase
 three-letter codes. The evidence schema must reject unknown keys, numbers,
 lowercase codes, and invalid-length codes.
 
-`createFinanceThbValuationPreparer` must accept an injected internal evidence
-port. The port returns trusted conversion evidence for one source bill.
+`createFinanceThbValuationPreparer` must accept the accepted Company Identity
+attestor and an injected internal evidence port. The port returns trusted
+conversion evidence for one source bill.
+
+The preparer must call `FinanceThbPolicyApprovalAttestor.verify` first. It must
+pass operation `finance-thb-policy-approval`, the caller receipt, and the
+trusted expected scope. It must permit evidence access only after an `allow` or
+`replay` result.
+
+The preparer must use only the receipt returned by the attestor. It must bind
+that receipt's `decisionId` and `contentDigest` to the valuation result. It
+must map deny, conflict, malformed, and dependency failures to stable errors.
 
 The preparer must preserve the exact source amount and source currency. It must
 produce a separate exact THB amount.
@@ -88,62 +93,36 @@ a provider directly.
 `classifyFinanceThbValuationReplay` must return replay for unchanged evidence.
 It must return conflict for changed conversion evidence.
 
-## Owner-decision receipt Red sub-slice
+## Accepted Company Identity attestor integration Red sub-slice
 
-The future receipt must use a strict root and strict nested objects. It must
-bind one authenticated Company Identity signer to one company-first scope.
+Company Identity owns receipt validation, authority, ledger lookup, and audit.
+Finance must not define a duplicate receipt schema or receipt verifier.
 
-The smallest verifier boundary accepts:
+The future preparer receives these two injected boundaries:
 
-- An unknown receipt value.
-- An expected company and optional school scope.
-- An injected reviewed Company Identity authority port for
-  `finance-thb-policy-approval`.
-- An injected Company Identity authorization port.
-- An injected audit append port.
-- An injected clock.
-- An optional existing receipt for replay and supersession checks.
+- `FinanceThbPolicyApprovalAttestor.verify` from the public Company Identity
+  barrel.
+- A Finance-owned internal evidence port for the source bill.
 
-Caller-supplied signer fields never authorize a receipt. The authority port
-must independently bind the server-issued decision identity to an attestation
-or receipt-ledger lookup. It must verify the signature, signer policy, trusted
-scope, and the `finance-thb-policy-approval` operation.
+The preparer request contains a source bill, a caller approval receipt, and an
+expected company-first scope with an optional school. The preparer passes the
+request receipt to the accepted attestor. It passes no caller receipt fields
+to the evidence port as trusted conversion facts.
 
-The authority result must return the reviewed decision identity, decision
-evidence, and signer. It must return the trusted scope, content digest, and
-verified signature marker. A mismatch or dependency failure must return a
-stable error without the dependency message, cause, or stack.
+The attestor may return `allow` or `replay` with an authoritative receipt. The
+preparer may read evidence only after either result. It must use the returned
+receipt, not the caller receipt, for valuation identity and digest fields.
 
-The receipt must contain these bounded fields:
+The attestor may return `deny` or `conflict`. The preparer must stop before
+evidence access and map each result to a stable Finance error. Malformed
+attestor results and dependency failures must also stop before evidence access.
 
-- Receipt and canonicalization versions.
-- The Finance THB valuation operation.
-- A server-bound decision identity.
-- Company and optional school scope.
-- Company Identity signer, claims version, and role-policy version.
-- Company Identity decision evidence with the
-  `finance-thb-policy-approval` operation, attestation identity, and opaque
-  signature.
-- Opaque rate-source, effective-date-rule, and rounding-rule identifiers.
-- Valid-from and expiry instants.
-- Optional superseded decision identity.
-- Canonical replay and content digests.
-- Event, request, correlation, and occurrence identities.
+The preparer must snapshot and validate the request before the attestor await.
+It must reject getters, Proxies, unknown keys, and mutations across the await.
+It must return immutable valuation data without caller or dependency aliases.
 
-The supported receipt version is
-`finance-thb-owner-decision-receipt.v1`. The supported canonicalization
-version is `finance-thb-owner-decision-canonical.v1`.
-
-Canonical content and replay identities use separate domain separators. Each
-field uses UTF-8 byte-length framing and a fixed field order. Optional values
-use explicit presence tags. Lists encode presence, length, order, and
-duplicates. Canonicalization does not fold case or Unicode.
-
-The schema rejects unknown keys in the root, scope, signer, decision evidence,
-rate-source, effective-date-rule, rounding-rule, and audit objects.
-
-The Red slice must not select a rate source, date rule, or rounding rule. Its
-fixtures use opaque identifiers only.
+This Red slice keeps rate-source, effective-date, and rounding identifiers
+opaque. Company Identity tests own signer, authority, receipt, and audit rules.
 
 ## Required Red cases
 
@@ -166,30 +145,27 @@ The Red suite must cover:
 15. Stable replay for unchanged evidence.
 16. Conflict for changed rate, effective date, THB amount, or rate source.
 
-The owner-decision receipt test must also cover:
+The Finance integration test must also cover:
 
-17. Authenticated signer authority and denied role decisions.
-18. Company scope and optional school membership.
-19. Claims and role-policy version binding.
-20. Strict root and nested keys.
-21. Canonical digest ordering and length framing.
-22. Optional, delimiter, Unicode, case, list-order, and duplicate collisions.
-23. Replay with the authoritative existing receipt.
-24. Conflicts for changed receipt policy identity or trusted scope.
-25. Valid successor, self-supersession, and unknown supersession.
-26. Expired and not-yet-valid receipts.
-27. Compact audit projection through the existing reviewed metadata keys.
-28. Zero audit and domain writes after authorization denial.
-29. Getter, proxy, deferred-await, and post-call mutation poison.
-30. Stable errors without dependency text, causes, stacks, or secrets.
-31. Unsupported receipt and canonicalization versions.
-32. Invalid content digests and forged replay identities.
-33. Independent authority mismatch, denial, signature failure, and dependency
-    stack failure.
-34. Changed trusted scope in the replay conflict matrix.
-35. Length, delimiter, Unicode, case, list-order, duplicate, and absent-versus
-    literal-sentinel canonical collisions.
-36. Exact audit projection through `projectSecretSafeAuditMetadata`.
+17. The exact Company Identity attestor verify envelope.
+18. Attestor invocation before any evidence access.
+19. Evidence access after `allow` and after `replay`.
+20. Use of the attestor-returned decision identity and content digest.
+21. Denial and conflict before evidence access.
+22. Malformed attestor results with missing fields, invalid decisions, and invalid receipts.
+23. Unknown keys in attestor results before evidence access.
+24. Dependency failure mapping without dependency text or secrets.
+25. Caller receipt and authoritative receipt disagreement.
+26. Company and optional school scope binding through the attestor.
+27. Optional-school mismatch before evidence access.
+28. Getter-bearing request and attestor-result rejection.
+29. Proxy request rejection before attestor access.
+30. Request mutation across the attestor await.
+31. Attestor-result mutation after promise resolution.
+32. Unknown request keys and caller-only conversion fields.
+33. Evidence mutation and defensive valuation output behavior.
+34. Stable valuation replay for unchanged conversion evidence.
+35. Conflict for changed conversion evidence.
 
 ## Company Identity authority-extension Red contract
 

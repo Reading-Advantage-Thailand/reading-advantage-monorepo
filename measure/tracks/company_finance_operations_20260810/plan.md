@@ -61,7 +61,7 @@
   - Run fresh correctness and security reviews against the final implementation.
 
   Red strategy: `test-strategy-phase2-thb.md`. Red command:
-  `../../node_modules/.bin/vitest run src/modules/finance-operations/__tests__/multi-currency-thb-phase2.red.test.ts --pool=threads --maxWorkers=1` from `packages/backend`. Initial Red failures must name only missing THB contract or implementation exports.
+  `../../node_modules/.bin/vitest run src/modules/finance-operations/__tests__/multi-currency-thb-phase2.red.test.ts src/modules/finance-operations/__tests__/thb-owner-decision-receipt.red.test.ts --pool=threads --maxWorkers=1` from `packages/backend`. Initial Red failures must name only missing THB contract or implementation exports.
 
   Handoff: `phase2-multi-currency-thb-handoff-20260814.md`. The completed trust-binding source commit is `1d0ffd568`.
 
@@ -73,6 +73,18 @@
   - Correctness Review A and Security Review B accepted manifest `86663871501a8fd3ff492244c933b5015c90e0703433ac9886a98602e0018d2c`.
   - This evidence completes only the policy-approval attestor boundary.
   - Rate-source selection, rounding policy, and exact THB valuation remain owner-gated.
+
+  Finance Red alignment evidence (2026-08-15): the two-file Red command now
+  runs the accepted Company Identity attestor boundary before future valuation
+  evidence access. It uses only the attestor-returned decision identity and
+  content digest. It keeps rate, effective-date, and rounding identifiers
+  opaque.
+
+  - The bounded Finance command ran 47 tests and produced 47 intentional Red failures: 25 multi-currency cases and 22 attestor-integration cases.
+  - Every failure names only `financeThbConversionEvidenceSchema`, `createFinanceThbValuationPreparer`, or `classifyFinanceThbValuationReplay`.
+  - The Company Identity attestor command remained Green at 83/83 tests.
+  - The backend test typecheck, targeted Finance lint, Prettier check, and scoped diff check passed.
+  - No production, provider, database, or migration file changed. The THB task remains `[~]`; owner decisions remain required before Green valuation work.
 
 - [b] Task: Pilot one reconciled month and one billing packet through owner-attested private-evidence packets. — deferred:finance-owner-data
 
