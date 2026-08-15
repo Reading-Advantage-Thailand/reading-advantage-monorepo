@@ -1,0 +1,51 @@
+Measure Jr Green role log — Task 9 enqueue, retry, DLQ, and replay
+Track: durable_job_worker_platform_20260713
+Phase: Phase 2: Red Concurrency and Failure Tests
+Role: measure-jr-green
+Date: 2026-08-15
+phase_base_sha: 33d44fc81b84559c2ab7a48acfaf86554bf017a5
+role_base_sha: 2930b213ef8560abe7b54d1806c975ea58e6aaff
+red_commit: fff3fdf0f620cafa81bc69a69e0a24a3c87c10a2
+source_commit: 103497df2
+
+## Contract and scope
+
+The committed Red test is inside `phase_base_sha..HEAD`. It was not edited.
+The source commit changes only `contracts.ts`, `ports.ts`, and the approved
+PostgreSQL adapter root.
+
+The adapter returns `conflict` for a changed payload fingerprint. It preserves
+the durable row. It calculates bounded retry jitter from stable job-name,
+queue-name, and attempt identity. It does not use runtime randomness.
+
+## Verification
+
+Safe default: exit `0`; `1` passed and `6` skipped.
+
+The disposable PostgreSQL 16 gate used `postgres:16-alpine` on loopback port
+`55433`. It exited `0`; `7` tests passed. Cleanup found `0` scratch databases
+and `0` Task 9 roles. The disposable container was removed.
+
+Focused production and test TypeScript checks passed. Focused ESLint passed.
+The adapter format check and exact source-path diff check passed. Existing
+format deviations remain in `contracts.ts` and `ports.ts`.
+
+## Result
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+status: complete
+track: durable_job_worker_platform_20260713
+phase: Phase 2: Red Concurrency and Failure Tests
+phase_base_sha: 33d44fc81b84559c2ab7a48acfaf86554bf017a5
+role_base_sha: 2930b213ef8560abe7b54d1806c975ea58e6aaff
+red_commit: fff3fdf0f620cafa81bc69a69e0a24a3c87c10a2
+source_commit: 103497df2
+resulting_head: pending plan-evidence commit
+tasks_flipped_x: Task 9, pending plan-evidence commit
+tasks_flipped_b: none
+targeted_red_command: safe default exit 0; 1 passed and 6 skipped
+live_gate: disposable PostgreSQL 16 exit 0; 7 passed; 0 scratch databases; 0 Task 9 roles
+new_files: task-9-green-evidence-20260815.md; orchestration/phase2-task9-green-role.log
+handoff: Review the Task 9 source commit and this evidence commit. The committed Red test remains immutable.
+END_MEASURE_AGENT_RESULT
