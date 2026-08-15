@@ -1,7 +1,7 @@
 # Implementation Plan: Legacy Traversal Cutover
 
 - [~] Confirm accepted crosswalk/readiness coverage and publish exact legacy manifests for five titles.
-  Evidence-only Task 1 Red starts here. Task 2 remains blocked by the Asset Contract v2 product-owner receipt and suitability evidence.
+  Evidence-only Task 1 Red starts here. The contract passes accepted readiness checks and fails only on five missing exact per-title legacy source manifests. Task 2 remains blocked by the Asset Contract v2 product-owner receipt and suitability evidence. See `task1-source-manifest-red-evidence-20260815.md`.
 - [~] Consume accepted Asset Contract v2 and suitability/ingestion records; freeze each title's semantic roles, physical behavior descriptors, legacy source manifests, and reuse/ingest/block decisions before implementation.
   Next executable binding work per test-strategy.md Phase 2. Product-owner receipt for the binding freeze is still required before Green.
 - [~] Write failing mechanic, responsive composition, and educational-invariant tests per title.
