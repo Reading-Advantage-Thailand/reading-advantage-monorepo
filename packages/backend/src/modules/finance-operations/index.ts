@@ -6,6 +6,7 @@ export * from "./money.js";
 export * from "./records.js";
 export * from "./ports.js";
 export * from "./controlled-imports.js";
+export * from "./thb-valuation.js";
 export {
   classifyDurableJobReplay,
   customerBillingCatalogInputSchema,
