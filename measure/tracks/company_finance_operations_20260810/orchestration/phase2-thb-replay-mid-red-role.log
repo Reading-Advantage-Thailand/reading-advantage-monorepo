@@ -1,0 +1,69 @@
+Measure Mid Red role log - THB replay remediation
+Track: company_finance_operations_20260810
+Phase: Phase 2 — controlled operational imports
+Role: measure-mid-red
+Date: 2026-08-15
+phase_base_sha: 8fa71b33b79a3090941f884f037564baa0322dbb
+role_base_sha: 58f82e936dc95796ded9158492e98999f487fe1d
+
+## Preflight
+
+Both supplied commits resolve. The phase base defines phase scope. The role
+base was HEAD at role start. The checkout is `master` with one worktree.
+
+I classified the THB test and Finance plan as relevant. I classified
+`.opencode/goals/**`, Codecamp reports and test results, and
+`apps/advantage-games/test-results/` as generated or ignorable. I classified
+Durable Job and Mastery Runtime paths as unrelated user work. I preserved all
+other lanes.
+
+## Red work
+
+The amended THB test adds the required company-first scope to valid replay
+fixtures. It adds thirteen adversarial cases for invalid or changed operands.
+The cases cover empty, incomplete, malformed, unknown-key, company-scope,
+school-scope, getter, Proxy, and post-call mutation inputs.
+
+The task marker remains `[~]`. No production source changed.
+
+## Tests run
+
+The exact focused command from `packages/backend` exited 1:
+
+`../../node_modules/.bin/vitest run src/modules/finance-operations/__tests__/multi-currency-thb-phase2.red.test.ts src/modules/finance-operations/__tests__/thb-owner-decision-receipt.red.test.ts --pool=threads --maxWorkers=1`
+
+The command collected 60 tests. It passed 47 tests and failed 13 expected
+Red cases. The failures are replay-versus-conflict, getter, and Proxy
+failures.
+
+Finance lint exited 0. The THB Prettier check exited 0. The backend test
+typecheck reports two unrelated errors at lines 900 and 947 of
+`src/jobs/__tests__/postgres16-enqueue-retry-replay.red.test.ts`.
+
+## Plan update
+
+`plan.md` records the 60-test result, the 47 passes, the 13 expected failures,
+the unrelated typecheck errors, and the two role artifact paths.
+
+## Handoff
+
+Jr Green must implement strict replay operand validation and defensive
+snapshot behavior. The implementation must return conflict for invalid or
+changed operands. Owner-gated valuation policy remains unresolved.
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+status: complete
+track: company_finance_operations_20260810
+phase: Phase 2 — controlled operational imports
+baseline_sha: 8fa71b33b79a3090941f884f037564baa0322dbb
+phase_base_sha: 8fa71b33b79a3090941f884f037564baa0322dbb
+role_base_sha: 58f82e936dc95796ded9158492e98999f487fe1d
+commits: this Red receipt commit
+resulting_head: commit containing this role log
+tests_run: focused Red exit 1 (60 collected, 47 passed, 13 expected failures); Finance lint exit 0; THB Prettier exit 0; four-path diff check exit 0
+files_changed: packages/backend/src/modules/finance-operations/__tests__/multi-currency-thb-phase2.red.test.ts; measure/tracks/company_finance_operations_20260810/plan.md; measure/tracks/company_finance_operations_20260810/phase2-thb-replay-red-remediation-20260815.md; measure/tracks/company_finance_operations_20260810/orchestration/phase2-thb-replay-mid-red-role.log
+plan_updates: recorded the 60/47/13 Red evidence, unrelated typecheck errors, and role artifact paths; THB task remains [~]
+known_failures: 13 expected replay-remediation failures; two unrelated backend test-typecheck errors at job fixture lines 900 and 947; no production source changed
+handoff: Jr Green must harden replay classification and defensive snapshots without selecting owner-gated valuation policy
+END_MEASURE_AGENT_RESULT

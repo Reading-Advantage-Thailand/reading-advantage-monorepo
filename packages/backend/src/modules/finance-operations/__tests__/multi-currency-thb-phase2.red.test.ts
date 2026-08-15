@@ -10,6 +10,12 @@ type FinanceThbConversionEvidence = {
   readonly rateSourceId: string;
 };
 
+type FinanceThbValuationReplayOperand = FinanceThbConversionEvidence & {
+  readonly decisionId: string;
+  readonly contentDigest: string;
+  readonly scope: FinanceThbPolicyApprovalScope;
+};
+
 type FinanceThbPolicyApprovalScope = {
   readonly companyId: string;
   readonly schoolId?: string;
@@ -194,6 +200,46 @@ async function createPreparer(
     port,
     attestor,
   };
+}
+
+/** Loads the future replay classifier while preserving the bounded Red failure. */
+async function createReplayClassifier(): Promise<
+  NonNullable<FinanceThbModule["classifyFinanceThbValuationReplay"]>
+> {
+  const subject = await loadFinanceThbModule();
+  return requireThbExport(
+    subject.classifyFinanceThbValuationReplay,
+    "classifyFinanceThbValuationReplay",
+  );
+}
+
+/** Creates one complete replay operand with the required company-first scope. */
+function replayValuation(
+  overrides: Partial<FinanceThbValuationReplayOperand> = {},
+): FinanceThbValuationReplayOperand {
+  return {
+    billId: "bill-usd-001",
+    sourceAmountDecimal: "10.00",
+    sourceCurrency: "USD",
+    thbAmountDecimal: "350.00",
+    conversionRateDecimal: "35.00",
+    rateEffectiveDate: EFFECTIVE_DATE,
+    rateSourceId: RATE_SOURCE_ID,
+    decisionId: AUTHORITY_RECEIPT.decisionId,
+    contentDigest: AUTHORITY_RECEIPT.contentDigest,
+    scope: { ...EXPECTED_SCOPE },
+    ...overrides,
+  };
+}
+
+/** Removes one required replay field without changing the other operand fields. */
+function withoutReplayField(
+  value: FinanceThbValuationReplayOperand,
+  field: keyof FinanceThbValuationReplayOperand,
+): Record<string, unknown> {
+  const copy = { ...value } as Record<string, unknown>;
+  delete copy[field];
+  return copy;
 }
 
 const nonThbCases = [
@@ -582,22 +628,8 @@ describe("Finance multi-currency THB Red contract", () => {
   });
 
   it("classifies unchanged trusted conversion evidence as replay", async () => {
-    const subject = await loadFinanceThbModule();
-    const classify = requireThbExport(
-      subject.classifyFinanceThbValuationReplay,
-      "classifyFinanceThbValuationReplay",
-    );
-    const valuation = {
-      billId: "bill-usd-001",
-      sourceAmountDecimal: "10.00",
-      sourceCurrency: "USD",
-      thbAmountDecimal: "350.00",
-      conversionRateDecimal: "35.00",
-      rateEffectiveDate: EFFECTIVE_DATE,
-      rateSourceId: RATE_SOURCE_ID,
-      decisionId: AUTHORITY_RECEIPT.decisionId,
-      contentDigest: AUTHORITY_RECEIPT.contentDigest,
-    };
+    const classify = await createReplayClassifier();
+    const valuation = replayValuation();
 
     expect(
       classify({ existing: valuation, incoming: { ...valuation } }),
@@ -612,22 +644,8 @@ describe("Finance multi-currency THB Red contract", () => {
   ] as const)(
     "classifies changed trusted %s as conflict",
     async (field, value) => {
-      const subject = await loadFinanceThbModule();
-      const classify = requireThbExport(
-        subject.classifyFinanceThbValuationReplay,
-        "classifyFinanceThbValuationReplay",
-      );
-      const valuation = {
-        billId: "bill-usd-001",
-        sourceAmountDecimal: "10.00",
-        sourceCurrency: "USD",
-        thbAmountDecimal: "350.00",
-        conversionRateDecimal: "35.00",
-        rateEffectiveDate: EFFECTIVE_DATE,
-        rateSourceId: RATE_SOURCE_ID,
-        decisionId: AUTHORITY_RECEIPT.decisionId,
-        contentDigest: AUTHORITY_RECEIPT.contentDigest,
-      };
+      const classify = await createReplayClassifier();
+      const valuation = replayValuation();
 
       expect(
         classify({
@@ -640,4 +658,190 @@ describe("Finance multi-currency THB Red contract", () => {
       });
     },
   );
+
+  it.each([
+    ["empty operand objects", {}, {}],
+    [
+      "missing scope from both operands",
+      withoutReplayField(replayValuation(), "scope"),
+      withoutReplayField(replayValuation(), "scope"),
+    ],
+    [
+      "missing content digest from both operands",
+      withoutReplayField(replayValuation(), "contentDigest"),
+      withoutReplayField(replayValuation(), "contentDigest"),
+    ],
+  ] as const)(
+    "classifies %s as conflict instead of replay",
+    async (_name, existing, incoming) => {
+      const classify = await createReplayClassifier();
+
+      expect(classify({ existing, incoming })).toMatchObject({
+        status: "conflict",
+        reason: "conversion-evidence-mismatch",
+      });
+    },
+  );
+
+  it("classifies malformed complete-looking operands as conflict", async () => {
+    const classify = await createReplayClassifier();
+    const malformed = {
+      ...replayValuation(),
+      sourceAmountDecimal: 10,
+      scope: null,
+    };
+
+    expect(
+      classify({ existing: malformed, incoming: malformed }),
+    ).toMatchObject({
+      status: "conflict",
+      reason: "conversion-evidence-mismatch",
+    });
+  });
+
+  it.each(["top-level unknown key", "nested scope unknown key"] as const)(
+    "classifies a %s as conflict",
+    async (unknownKeyLocation) => {
+      const classify = await createReplayClassifier();
+      const operand =
+        unknownKeyLocation === "top-level unknown key"
+          ? {
+              ...replayValuation(),
+              unreviewedReplayField: "must-reject",
+            }
+          : {
+              ...replayValuation(),
+              scope: {
+                ...EXPECTED_SCOPE,
+                unreviewedScopeField: "must-reject",
+              },
+            };
+
+      expect(classify({ existing: operand, incoming: operand })).toMatchObject({
+        status: "conflict",
+        reason: "conversion-evidence-mismatch",
+      });
+    },
+  );
+
+  const scopeChangeCases = [
+    {
+      name: "company scope change",
+      existing: replayValuation(),
+      incoming: replayValuation({ scope: { companyId: "company-b" } }),
+    },
+    {
+      name: "school addition",
+      existing: replayValuation(),
+      incoming: replayValuation({
+        scope: { companyId: "company-a", schoolId: "school-a" },
+      }),
+    },
+    {
+      name: "school removal",
+      existing: replayValuation({
+        scope: { companyId: "company-a", schoolId: "school-a" },
+      }),
+      incoming: replayValuation(),
+    },
+    {
+      name: "school change",
+      existing: replayValuation({
+        scope: { companyId: "company-a", schoolId: "school-a" },
+      }),
+      incoming: replayValuation({
+        scope: { companyId: "company-a", schoolId: "school-b" },
+      }),
+    },
+  ] as const;
+
+  it.each(scopeChangeCases)(
+    "classifies %s as conflict",
+    async ({ existing, incoming }) => {
+      const classify = await createReplayClassifier();
+
+      expect(classify({ existing, incoming })).toMatchObject({
+        status: "conflict",
+        reason: "conversion-evidence-mismatch",
+      });
+    },
+  );
+
+  it("classifies a getter-bearing replay envelope as conflict without reading it", async () => {
+    const classify = await createReplayClassifier();
+    const input = {} as Record<string, unknown>;
+    let getterReads = 0;
+    Object.defineProperty(input, "existing", {
+      enumerable: true,
+      get: () => {
+        getterReads += 1;
+        return replayValuation();
+      },
+    });
+    Object.defineProperty(input, "incoming", {
+      enumerable: true,
+      get: () => {
+        getterReads += 1;
+        return replayValuation();
+      },
+    });
+
+    expect(
+      classify(
+        input as {
+          readonly existing: unknown;
+          readonly incoming: unknown;
+        },
+      ),
+    ).toMatchObject({
+      status: "conflict",
+      reason: "conversion-evidence-mismatch",
+    });
+    expect(getterReads).toBe(0);
+  });
+
+  it("classifies a Proxy replay envelope as conflict without reading it", async () => {
+    const classify = await createReplayClassifier();
+    let proxyReads = 0;
+    const input = new Proxy(
+      {
+        existing: replayValuation(),
+        incoming: replayValuation(),
+      },
+      {
+        get(target, property, receiver) {
+          proxyReads += 1;
+          return Reflect.get(target, property, receiver);
+        },
+      },
+    );
+
+    expect(
+      classify(
+        input as {
+          readonly existing: unknown;
+          readonly incoming: unknown;
+        },
+      ),
+    ).toMatchObject({
+      status: "conflict",
+      reason: "conversion-evidence-mismatch",
+    });
+    expect(proxyReads).toBe(0);
+  });
+
+  it("classifies a post-call unknown-key mutation as conflict", async () => {
+    const classify = await createReplayClassifier();
+    const existing = replayValuation();
+    const incoming = replayValuation();
+    const input = { existing, incoming };
+
+    expect(classify(input)).toMatchObject({ status: "replay" });
+    (incoming as Record<string, unknown>).postCallMutation = "must-reject";
+
+    expect(classify(input)).toMatchObject({
+      status: "conflict",
+      reason: "conversion-evidence-mismatch",
+    });
+  });
 });

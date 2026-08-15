@@ -44,7 +44,7 @@
   - They record 20 Company Identity tests and 25 private-storage tests passed.
   - The recorded type, build, lint, format, diff, and graph checks passed.
 
-- [x] Task: Add exact THB valuations for bills in each source currency. Preserve every source amount and currency. Source commit `4c329d91066e809d2cef0b453a0e752b043b1d6a`.
+- [~] Task: Add exact THB valuations for bills in each source currency. Preserve every source amount and currency. Source commit `4c329d91066e809d2cef0b453a0e752b043b1d6a`. Red remediation is active for accepted finding `THB-RB-001`.
 
   The verified packet must bind the THB amount, rate, effective date, and rate source.
   The owner or accountant must select the rate source and rounding policy.
@@ -144,6 +144,22 @@
   - The seven remaining failures are trusted packet fact binding, preparation-symbol forgery, frozen caller-built plans, unknown repository fields, malformed repository status, sanitized authorization-failure audit, and the bounded decimal limit.
   - `git diff --check -- packages/backend/src/modules/finance-operations/__tests__/controlled-imports-phase2-review-b.red.test.ts packages/backend/src/modules/finance-operations/__tests__/controlled-imports-phase2.red.test.ts measure/tracks/company_finance_operations_20260810/plan.md` — exit 0.
   - Task 1 remains `[~]`; Task 2 remains `[b]` with `deferred:phase2`; no production source changed.
+
+  THB Red remediation evidence (2026-08-15; phase base `8fa71b33b79a3090941f884f037564baa0322dbb`; role base `58f82e936dc95796ded9158492e98999f487fe1d`):
+
+  - The valid replay fixtures now include the required company-first `scope`.
+  - New replay cases require complete strict operands and conflict on empty,
+    incomplete, malformed, unknown-key, company-scope, school-scope, getter,
+    Proxy, and post-call mutation inputs.
+  - The focused THB command exited 1 after collecting 60 tests. It reported 47
+    passes and 13 intentional new replay failures. The existing 25 multi-currency
+    preparer/replay cases and 22 integration cases passed. Each new failure shows
+    the current classifier returning `replay` where `conflict` is required, or
+    reading a getter or Proxy envelope.
+  - Backend test typecheck exited 2 on unchanged `src/jobs/__tests__/postgres16-enqueue-retry-replay.red.test.ts` lines 900 and 947 (`Expected 5 arguments, but got 1`). The targeted Finance lint, Prettier check, and scoped diff check exited 0.
+  - No production, migration, provider, policy, or integration test file changed.
+  - The THB task remains `[~]` pending the owner-gated Green implementation.
+  - The role note is `phase2-thb-replay-red-remediation-20260815.md`; the role log is `orchestration/phase2-thb-replay-mid-red-role.log`.
 
 ## Phase 3 — close and accountant exchange
 
