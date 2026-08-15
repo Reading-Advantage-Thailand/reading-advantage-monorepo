@@ -1,0 +1,15 @@
+Track: wave5_public_surface_completion_20260628
+
+Scope: Phase 3 Group B typed locale access.
+
+Source commit: ee2d7c238db07f2b77646a79a9ce0bc3b5c35916
+
+Content aggregate: e4bf355b8b416a8ad014d37cda790e7c193b7a45866fdb3108c0f9786a0c461f
+
+Correctness Review A: ACCEPT. Security Review B: ACCEPT.
+
+Group B: 5 of 5 passed. Phase 2: 5 of 5 passed.
+
+Phase 3 retains one Green result and two intentional Red results for Groups A and C.
+
+The AST guard rejects unsafe assertions. Rendered sentinels prove translated output reaches both React trees.
