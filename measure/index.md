@@ -17,6 +17,7 @@
 ## Management
 - [Tracks Registry](./tracks.md)
 - [Tracks Directory](./tracks/)
+- [Five-Lane Orchestration Handoff](./FIVE_LANE_ORCHESTRATION_HANDOFF_20260815.md)
 
 ## Plans
 - [Small-Company Operations Program](./small-company-operations-program.md)
