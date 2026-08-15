@@ -15,11 +15,19 @@ const foundationFileNames = [
   "ports.ts",
   "port-contracts.ts",
   "controlled-imports.ts",
+  "thb-valuation.ts",
   "index.ts",
 ] as const;
 const foundationFilePaths = new Set(
   foundationFileNames.map((fileName) => resolve(moduleDirectory, fileName)),
 );
+const allowedFoundationExternalImportBindings = new Map<
+  string,
+  ReadonlySet<string>
+>([
+  ["zod", new Set(["z"])],
+  ["node:util", new Set(["types"])],
+]);
 const foundationFileNamesToScan = foundationFileNames.filter(
   (fileName) =>
     fileName !== "controlled-imports.ts" ||
@@ -110,6 +118,9 @@ function classifyImportSpecifier(
   if (specifier === "zod") {
     return undefined;
   }
+  if (specifier === "node:util") {
+    return undefined;
+  }
 
   if (!specifier.startsWith(".")) {
     if (specifier === "@reading-advantage/db") {
@@ -182,9 +193,52 @@ function collectBoundaryViolations(
     }
   };
 
+  const inspectExternalImportBindings = (node: ts.ImportDeclaration): void => {
+    if (!ts.isStringLiteral(node.moduleSpecifier)) return;
+    const allowedBindings = allowedFoundationExternalImportBindings.get(
+      node.moduleSpecifier.text,
+    );
+    if (allowedBindings === undefined) return;
+
+    const importClause = node.importClause;
+    if (importClause === undefined) {
+      violations.push(
+        `external import must name an approved binding: ${node.moduleSpecifier.text}`,
+      );
+      return;
+    }
+    if (importClause.name !== undefined) {
+      violations.push(
+        `unapproved external default binding: ${importClause.name.text}`,
+      );
+    }
+    const namedBindings = importClause.namedBindings;
+    if (namedBindings === undefined) {
+      violations.push(
+        `external import must name an approved binding: ${node.moduleSpecifier.text}`,
+      );
+      return;
+    }
+    if (ts.isNamespaceImport(namedBindings)) {
+      violations.push(
+        `unapproved external namespace binding: ${namedBindings.name.text}`,
+      );
+      return;
+    }
+    for (const element of namedBindings.elements) {
+      const importedName = element.propertyName?.text ?? element.name.text;
+      if (!allowedBindings.has(importedName)) {
+        violations.push(
+          `unapproved external binding: ${importedName} as ${element.name.text}`,
+        );
+      }
+    }
+  };
+
   const visit = (node: ts.Node): void => {
     if (ts.isImportDeclaration(node)) {
       inspectModuleSpecifier(node.moduleSpecifier);
+      inspectExternalImportBindings(node);
     }
 
     if (ts.isExportDeclaration(node) && node.moduleSpecifier !== undefined) {
@@ -739,7 +793,7 @@ describe("Finance Operations policy-neutral architecture boundary", () => {
     ).toEqual([]);
   });
 
-  it("permits only zod and imports that remain inside the foundation module", () => {
+  it("permits approved external imports and imports inside the foundation module", () => {
     const violations = foundationFileNamesToScan.flatMap((fileName) => {
       const filePath = resolve(moduleDirectory, fileName);
       return collectBoundaryViolations(
@@ -749,6 +803,34 @@ describe("Finance Operations policy-neutral architecture boundary", () => {
     });
 
     expect(violations).toEqual([]);
+  });
+
+  it("rejects unapproved Node utility bindings without widening runtime guards", () => {
+    const counterexamples = [
+      {
+        source: 'import { promisify } from "node:util";',
+        marker: "unapproved external binding: promisify as promisify",
+      },
+      {
+        source: 'import * as util from "node:util";',
+        marker: "unapproved external namespace binding: util",
+      },
+      {
+        source: 'import { readFile } from "node:fs";',
+        marker:
+          "forbidden filesystem, network, process, or environment import: node:fs",
+      },
+    ];
+
+    for (const counterexample of counterexamples) {
+      expect(
+        collectBoundaryViolations(
+          resolve(moduleDirectory, "thb-valuation.ts"),
+          counterexample.source,
+        ),
+        counterexample.source,
+      ).toContain(counterexample.marker);
+    }
   });
 
   it("rejects database and provider imports in a compiler-parsed counterexample", () => {
