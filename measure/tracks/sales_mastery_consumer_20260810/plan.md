@@ -86,12 +86,41 @@
   SHA-256 values are `release-artifact.ts`
   `894bf1c979e1c352158b6db18fc36a8693954af13a631a253b7330834258d8cb`,
   `release-artifact.test.ts`
-  `509876483a470a124ce70ff1136ed7647a601598a541c802525aa973d64859a0`, and
+   `509876483a470a124ce70ff1136ed7647a601598a541c802525aa973d64859a0`, and
   `test-strategy.md`
   `c141bd99f2126937b08d8aebce7cc2b63b8215d5cefcada929ed52ce0f72d4d2`.
   The review ran no packed, install, or canonical-lease gates. Task B remains
-  `[~]`; this receipt does not claim Phase 0 closeout, shared-root Green, or
-  unblock later work.
+   `[~]`; this receipt does not claim Phase 0 closeout, shared-root Green, or
+   unblock later work.
+
+   Security remediation receipt (2026-08-15): implementation commit
+   `5ac0cbfc9342204a368c51f54a5522f1180ebc28` retains the production lease
+   capability and checks process-start identity. It enforces exact Sales imports,
+   uses descriptor-driven packed imports, snapshots inputs, and returns audited
+   HEAD, source, and archive digests. Focused gates exited zero. Task B remains
+   `[~]` because the shared-root doctor and architecture gates remain open.
+
+   Security remediation receipt (2026-08-15): implementation commit
+   `5ac0cbfc9342204a368c51f54a5522f1180ebc28` retains the production lease
+   capability, enforces exact unique Sales imports, uses descriptor-driven packed
+   imports, snapshots inputs, and returns audited HEAD and digest data. Focused
+   lease, admission, packed-consumer, Codecamp, type, lint, build, format, clean
+   CLI, immutable-diff, and diff checks exited zero. The source digest was
+   `590d2d3dd7081f0152563f07b4ae86b4ceca5bdb2dd728b9c64342b2e6c5bf1e`.
+   Task B remains `[~]` because shared-root doctor and architecture gates remain
+   outside this remediation.
+
+   Green test-correction receipt (2026-08-15): implementation commit
+   `b3578c678` replaces a formatting-sensitive source assertion with a live Linux
+   lease proof. The proof records a numeric process-start identity, then reclaims
+   a stale owner that has the live PID but a mismatched identity. The targeted
+   remediation test passed 3/3. Prettier, `git diff --check`, and the immutable
+   engine and Sales-knowledge diff guard passed. Earlier focused lease, admission,
+   packed-consumer, Codecamp, Sales-knowledge, type, lint, build, and clean CLI
+   gates passed. The aggregate runtime-compat test was stopped by the 360-second
+   command timeout after its packed suite passed. It is not Green evidence.
+   Task B remains `[~]` because shared-root doctor and architecture gates remain
+   outside this remediation.
 
 ## Phase 1 — bind the approved course to a knowledge graph
 

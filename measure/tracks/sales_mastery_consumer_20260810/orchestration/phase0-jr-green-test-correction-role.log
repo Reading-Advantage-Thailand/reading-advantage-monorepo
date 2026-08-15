@@ -1,0 +1,19 @@
+role=measure-jr-green
+track=sales_mastery_consumer_20260810
+phase=0
+phase_base_sha=8adc57cb0af0693c1b3420842b3a504939a36b2e
+role_base_sha=5ac0cbfc9342204a368c51f54a5522f1180ebc28
+implementation_commit=b3578c678
+owned_file=packages/mastery-runtime-compat/src/__tests__/phase0-security-remediation.test.ts
+change=Replaced a formatting-sensitive source assertion with lease identity behavior proof.
+targeted_gate=pnpm --filter @reading-advantage/mastery-runtime-compat exec vitest run src/__tests__/phase0-security-remediation.test.ts --maxWorkers=1
+targeted_result=PASS: 3 passed
+format_gate=pnpm exec prettier --check packages/mastery-runtime-compat/src/__tests__/phase0-security-remediation.test.ts
+format_result=PASS
+diff_gate=git diff --check
+diff_result=PASS
+immutable_gate=git diff --name-only 8adc57cb0af0693c1b3420842b3a504939a36b2e -- packages/knowledge-space-core packages/knowledge-space-practice packages/practice-core packages/srs-engine packages/sales-knowledge
+immutable_result=PASS: empty output
+focused_gates=lease 17 passed and 8 skipped; admission 11 passed; packed 25 passed; runtime manifest 18 passed; Codecamp 2 passed; Sales knowledge 19 passed; type, lint, build, and clean CLI passed.
+aggregate_runtime_compat_test=NOT_GREEN_EVIDENCE: command timed out at 360 seconds after the packed suite passed.
+task_state=Task B remains [~]; shared-root doctor and architecture gates remain open.
