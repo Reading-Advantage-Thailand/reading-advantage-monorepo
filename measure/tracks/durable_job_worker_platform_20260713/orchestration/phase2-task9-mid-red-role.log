@@ -1,0 +1,103 @@
+Measure Mid Red role log — Task 9 enqueue, retry, DLQ, and replay
+Track: durable_job_worker_platform_20260713
+Phase: Phase 2: Red Concurrency and Failure Tests
+Role: measure-mid-red
+Date: 2026-08-15
+phase_base_sha: 33d44fc81b84559c2ab7a48acfaf86554bf017a5
+role_base_sha: ee8b0bf03f915b17e63edb4cc3b26a710e67b3af
+HEAD at role start: 0aaefbe6db43e08dae39cc2311c28fe958031b63
+
+## Preflight
+
+- Both supplied SHAs resolve to commits.
+- `master` is the active branch.
+- Exactly one Git worktree exists.
+- The Task 9 Red test and plan edit were relevant leased work.
+- `.opencode/goals/**`, Codecamp reports and test results, and Advantage Games
+  test results were generated or ignorable output. I preserved every path.
+- No unrelated user path was changed.
+- Task 9 was already `[~]` before the Red work started.
+- I edited no production source, schema, migration, adapter, worker, package,
+  root, lockfile, graph, or other track file.
+
+## Red work
+
+The existing leased test covers scoped enqueue identity, conflicting payloads,
+bounded retry timing, exhaustion and dead-letter output, replay authorization and
+audit, and active-lease replay rejection. It uses the isolated PostgreSQL 16
+harness with two independent connections.
+
+The test was not redesigned. The supplied checkpoint showed that the test was
+already run before this reassigned role resumed. The test bytes did not change,
+so this role did not rerun it.
+
+## Commands and evidence
+
+1. Safe-default Red command:
+
+   ```text
+   env -u DURABLE_JOB_PG16_TEST_OPT_IN \
+       -u DURABLE_JOB_PG16_TEST_ADMIN_DATABASE_URL \
+       -u DATABASE_URL \
+       -u DIRECT_DATABASE_URL \
+     CI=true pnpm --filter @reading-advantage/backend exec vitest run \
+       src/jobs/__tests__/postgres16-enqueue-retry-replay.red.test.ts
+   ```
+
+   Checkpoint result: exit `0`; `1` passed and `6` skipped. No PostgreSQL
+   contact occurred.
+
+2. Disposable PostgreSQL 16 Red command:
+
+   ```text
+   DURABLE_JOB_PG16_TEST_OPT_IN=1 \
+   DURABLE_JOB_PG16_TEST_ADMIN_DATABASE_URL=<guarded-url> \
+     CI=true pnpm --filter @reading-advantage/backend exec vitest run \
+       src/jobs/__tests__/postgres16-enqueue-retry-replay.red.test.ts
+   ```
+
+   Checkpoint result: exit `1`; `7` tests ran, with `5` passed and `2`
+   substantive Red failures.
+
+   - The conflicting-payload test received `refreshed`, not `conflict`.
+   - The deterministic-retry test found different delays across eight equal
+     retries.
+
+3. Cleanup result: `0` scratch databases matched
+   `durable_job_pg16_test_%`, and `0` Task 9 roles remained.
+
+4. Formatting and the exact-path `git diff --check` passed at the checkpoint.
+
+## Plan and handoff
+
+The plan keeps Task 9 `[~]` and replaces the stale blocked-evidence note with
+the exact Red commands, counts, failures, and cleanup results. The two remaining
+failures are substantive adapter behavior gaps, not harness failures.
+
+Green must implement conflict outcomes and deterministic bounded retry delays.
+Green must rerun the disposable PostgreSQL 16 command and retain the cleanup
+proof. The accepted enqueue identity, dead-letter, authorization, audit, and
+active-lease replay tests must remain Green.
+
+## Result
+
+This role commits the Task 9 Red test, plan evidence, task note, and role log in
+one conventional test commit. The resulting commit SHA is reported in the final
+role response.
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+status: complete
+track: durable_job_worker_platform_20260713
+phase: Phase 2: Red Concurrency and Failure Tests
+baseline_sha: 33d44fc81b84559c2ab7a48acfaf86554bf017a5
+phase_base_sha: 33d44fc81b84559c2ab7a48acfaf86554bf017a5
+role_base_sha: ee8b0bf03f915b17e63edb4cc3b26a710e67b3af
+resulting_head: reported in the final role response after the locked commit
+commits: one conventional test commit containing exactly the four leased files; SHA reported in the final role response
+tests_run: safe default exit 0 (1 passed, 6 skipped); disposable PostgreSQL 16 exit 1 (7 total: 5 passed, 2 substantive Red failures); cleanup 0 scratch databases and 0 Task 9 roles; formatting and exact-path diff check passed
+files_changed: packages/backend/src/jobs/__tests__/postgres16-enqueue-retry-replay.red.test.ts; measure/tracks/durable_job_worker_platform_20260713/plan.md; measure/tracks/durable_job_worker_platform_20260713/task-9-enqueue-retry-replay-red-20260815.md; measure/tracks/durable_job_worker_platform_20260713/orchestration/phase2-task9-mid-red-role.log
+plan_updates: Task 9 remains [~]; stale blocked evidence was replaced with exact safe-default and live command results, failure names, and cleanup evidence
+known_failures: conflicting payload returned refreshed instead of conflict; eight equal retry inputs produced different delays; Task 9 remains [~]
+handoff: Green must implement conflict rejection and deterministic bounded retry timing, rerun the disposable PostgreSQL 16 command, and preserve the five passing contracts and cleanup proof
+END_MEASURE_AGENT_RESULT

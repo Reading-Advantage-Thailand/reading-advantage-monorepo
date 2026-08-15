@@ -74,8 +74,34 @@ its Red contract or live evidence. This foundation review does not close Phase 2
   - Final security ACCEPT (2026-08-15; source commit `b8b0dce713f4d3f2d17ad0e922ff65a5c1f20b3e`): migration `0052` cleanup removed only test-owned roles after scratch databases were gone. The fixture proved zero scratch databases, zero test-owned roles, fail-closed cleanup, and deterministic claim and reclaim lock barriers.
   - The safe gate passed 6 tests and recorded 7 intentional skips. The fresh PostgreSQL 16 gate passed 13/13 tests. The migration order was `0000 → 0005 → 0007 → 0025 → 0052`. Container removal was verified.
   - Typecheck, build, lint, format, and diff checks passed. Task 8 is complete. Phase 2 remains open because Task 9 remains blocked.
-- [b] Task 9: Add Red idempotent enqueue, bounded deterministic-backoff, exhaustion/DLQ, authorization/audit, and active-lease replay-rejection tests. (deferred:durable-job-backend-red-owner)
-  - Blocked evidence (2026-08-14): no source commit, Red file, explicit PostgreSQL 16 environment evidence, or independent receipt exists.
+- [~] Task 9: Add Red idempotent enqueue, bounded deterministic-backoff, exhaustion/DLQ, authorization/audit, and active-lease replay-rejection tests.
+  - Red evidence (2026-08-15; role `measure-mid-red`; phase base `33d44fc81b84559c2ab7a48acfaf86554bf017a5`; role base `ee8b0bf03f915b17e63edb4cc3b26a710e67b3af`): `packages/backend/src/jobs/__tests__/postgres16-enqueue-retry-replay.red.test.ts` covers scoped duplicate enqueue, conflicting payloads, deterministic bounded retry delay, exhaustion/DLQ, authorized replay audit, and active-lease replay rejection.
+  - Safe-default command:
+    ```bash
+    env -u DURABLE_JOB_PG16_TEST_OPT_IN \
+        -u DURABLE_JOB_PG16_TEST_ADMIN_DATABASE_URL \
+        -u DATABASE_URL \
+        -u DIRECT_DATABASE_URL \
+      CI=true pnpm --filter @reading-advantage/backend exec vitest run \
+        src/jobs/__tests__/postgres16-enqueue-retry-replay.red.test.ts
+    ```
+    Result: exit `0`; `1` passed and `6` skipped; no PostgreSQL contact.
+  - Disposable PostgreSQL 16 command:
+    ```bash
+    DURABLE_JOB_PG16_TEST_OPT_IN=1 \
+    DURABLE_JOB_PG16_TEST_ADMIN_DATABASE_URL=<guarded-url> \
+      CI=true pnpm --filter @reading-advantage/backend exec vitest run \
+        src/jobs/__tests__/postgres16-enqueue-retry-replay.red.test.ts
+    ```
+    Result: exit `1`; `7` tests ran, with `5` passed and `2` failed. The two
+    substantive Red failures are `rejects a conflicting payload for one scoped
+    idempotency key without replacement`, which received `refreshed` instead of
+    `conflict`, and `uses a deterministic bounded retry delay for equal attempts
+    and timestamps`, which produced different delays across eight equal retries.
+  - Cleanup evidence: the post-run query found `0` scratch databases matching
+    `durable_job_pg16_test_%` and `0` Task 9 roles. Formatting and the exact-path
+    `git diff --check` passed. No production source changed. Task 9 remains `[~]`
+    for Green implementation of the two remaining behaviors.
 - [x] Task 10: Add Red worker lifecycle and architecture tests for registration, bounded polling, startup configuration, health, signals, and safe logs. Prove trusted tenant propagation, lifecycle-only port access, and zero direct persistence access. Record named missing-composition failures.
   - Green evidence (2026-08-14; source commit `287f89fad4aa49849a307e4973037ee8bd567a6a`): independent Green acceptance passed. The focused worker suite passed 17/17, and the full worker suite passed 48/48. Worker typecheck, build, scoped lint, format, diff, graph update, and exact lock-scope checks passed. Shutdown, bounded concurrency, and global and tenant scope propagation passed.
 
