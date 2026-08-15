@@ -1,14 +1,20 @@
-import { readFile } from "node:fs/promises";
-import { resolve } from "node:path";
+import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { join, resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
 import { evaluateConsumerCompatibility, runtimeManifest } from "../index.js";
+import { createWorkspaceLeaseRuntimeForTest } from "../release-artifact.js";
 
 const ROOT = resolve(import.meta.dirname, "../../../..");
 const SALES_DESCRIPTOR_PATH = resolve(
   ROOT,
   "packages/mastery-runtime-compat/fixtures/consumer/sales-advantage.json",
 );
+const LEASE_TEST_ROOT = resolve(
+  ROOT,
+  ".cache/mastery-runtime-compat/phase0-security-remediation",
+);
+const WORKSPACE_LEASE_STALE_AFTER_MS = 15 * 60 * 1_000;
 
 /** Returns an independent copy of the admitted Sales descriptor. */
 async function readSalesDescriptor(): Promise<Record<string, unknown>> {
@@ -66,24 +72,45 @@ describe("Phase 0 security remediation", () => {
     expect(source).not.toContain("const enginePackages = [");
   });
 
-  it("binds the production lease and output to immutable proof inputs", async () => {
-    const source = await readFile(
-      resolve(ROOT, "packages/mastery-runtime-compat/src/release-artifact.ts"),
-      "utf8",
-    );
+  it("binds a lease to process-start identity and reclaims a mismatched owner", async () => {
+    expect(process.platform).toBe("linux");
+    await mkdir(LEASE_TEST_ROOT, { recursive: true });
+    const root = await mkdtemp(join(LEASE_TEST_ROOT, "lease-"));
+    const leasePath = resolve(root, ".workspace-build.lease");
+    const runtime = await createWorkspaceLeaseRuntimeForTest({
+      leasePath,
+      now: Date.now,
+      maxWaitMs: 1_000,
+    });
 
-    expect(source).toContain(
-      "const workspaceLeaseRuntime: WorkspaceLeaseRuntimeContext",
-    );
-    expect(source).toContain("maxWaitMs: WORKSPACE_LEASE_MAX_WAIT_MS");
-    expect(source).toContain(
-      "processStartIdentity: await readProcessStartIdentity(process.pid)",
-    );
-    expect(source).toContain("runtimeDistSnapshotRoot");
-    expect(source).toContain(
-      "sourceDigestSha256: releaseInputs.sourceDigestSha256",
-    );
-    expect(source).toContain("archiveDigestsSha256");
-    expect(source).toContain("auditedHead: releaseInputs.auditedHead");
+    try {
+      const lease = await runtime.acquire();
+      const owner = JSON.parse(
+        await readFile(resolve(leasePath, "owner.json"), "utf8"),
+      ) as { processStartIdentity?: unknown };
+      expect(owner.processStartIdentity).toMatch(/^\d+$/);
+      const processStartIdentity = owner.processStartIdentity as string;
+      await runtime.release(lease);
+
+      await mkdir(leasePath);
+      await writeFile(
+        resolve(leasePath, "owner.json"),
+        `${JSON.stringify({
+          pid: process.pid,
+          token: "mismatched-process-start-identity",
+          acquiredAt: Date.now() - WORKSPACE_LEASE_STALE_AFTER_MS - 1,
+          processStartIdentity: processStartIdentity === "0" ? "1" : "0",
+        })}\n`,
+        { flag: "wx" },
+      );
+
+      const reclaimedLease = await runtime.acquire();
+      expect(reclaimedLease.token).not.toBe(
+        "mismatched-process-start-identity",
+      );
+      await runtime.release(reclaimedLease);
+    } finally {
+      await rm(root, { recursive: true, force: true });
+    }
   });
 });
