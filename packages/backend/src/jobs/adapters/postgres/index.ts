@@ -485,8 +485,8 @@ export function createDurableJobQueuePort(input: {
               ELSE "payload_fingerprint"
             END,
             "state" = CASE
-              WHEN "rerun_requested" THEN 'pending'
-              ELSE 'succeeded'
+              WHEN "rerun_requested" THEN CAST('pending' AS "durable_job_state")
+              ELSE CAST('succeeded' AS "durable_job_state")
             END,
             "attempt" = CASE WHEN "rerun_requested" THEN 0 ELSE "attempt" END,
             "max_attempts" = CASE
@@ -515,7 +515,7 @@ export function createDurableJobQueuePort(input: {
             "last_error_summary" = NULL,
             "completed_at" = CASE
               WHEN "rerun_requested" THEN NULL
-              ELSE ${parsed.now}
+              ELSE ${parsed.now}::timestamptz
             END,
             "generation" = CASE
               WHEN "rerun_requested" THEN "generation" + 1
@@ -585,9 +585,9 @@ export function createDurableJobQueuePort(input: {
               ELSE "payload_fingerprint"
             END,
             "state" = CASE
-              WHEN "rerun_requested" THEN 'pending'
-              WHEN "attempt" >= "max_attempts" THEN 'dead'
-              ELSE 'pending'
+              WHEN "rerun_requested" THEN CAST('pending' AS "durable_job_state")
+              WHEN "attempt" >= "max_attempts" THEN CAST('dead' AS "durable_job_state")
+              ELSE CAST('pending' AS "durable_job_state")
             END,
             "attempt" = CASE WHEN "rerun_requested" THEN 0 ELSE "attempt" END,
             "max_attempts" = CASE
@@ -620,7 +620,7 @@ export function createDurableJobQueuePort(input: {
             END,
             "completed_at" = CASE
               WHEN "rerun_requested" THEN NULL
-              WHEN "attempt" >= "max_attempts" THEN ${parsed.now}
+              WHEN "attempt" >= "max_attempts" THEN ${parsed.now}::timestamptz
               ELSE NULL
             END,
             "generation" = CASE

@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
-import { existsSync, readFileSync, readdirSync } from "node:fs";
-import { resolve } from "node:path";
+import { existsSync, readFileSync } from "node:fs";
+import { basename, resolve } from "node:path";
 
 import postgres from "postgres";
 import { afterEach, describe, expect, it, vi } from "vitest";
@@ -29,8 +29,18 @@ const ADAPTER_ROOT = resolve(
 );
 const ADAPTER_SOURCE = resolve(ADAPTER_ROOT, "index.ts");
 const DRIZZLE_ROOT = resolve(REPOSITORY_ROOT, "packages/db/drizzle");
-const LEGACY_MIGRATION_PATH = resolve(DRIZZLE_ROOT, "0025_review_jobs.sql");
 const SCRATCH_DATABASE_PREFIX = "durable_job_pg16_test_";
+const TASK8_MIGRATION_NAMES = [
+  "0000_wide_vengeance.sql",
+  "0005_codecamp_schema.sql",
+  "0007_codecamp_repos_reviews.sql",
+  "0025_review_jobs.sql",
+  "0052_durable_jobs.sql",
+] as const;
+const TEST_OWNED_ROLE_NAMES = [
+  "durable_job_audit_owner",
+  "durable_job_queue_runtime",
+] as const;
 const BASE_TIME = "2026-08-14T10:00:00.000Z";
 const NEXT_TIME = "2026-08-14T10:00:02.000Z";
 const AFTER_FRESH_EXPIRY = "2026-08-14T10:01:03.000Z";
@@ -50,6 +60,18 @@ const OTHER_SCHOOL_SCOPE = {
 const TENANT_SCOPE = SCHOOL_SCOPE;
 const MISSING_ADAPTER_MESSAGE =
   "Intentional Red: PostgreSQL durable-job adapter behavior is missing under the approved adapter root.";
+
+type TestOwnedRoleName = (typeof TEST_OWNED_ROLE_NAMES)[number];
+
+const TEST_OWNED_ROLE_DROP_SQL: Record<TestOwnedRoleName, string> = {
+  durable_job_audit_owner: 'DROP ROLE IF EXISTS "durable_job_audit_owner"',
+  durable_job_queue_runtime: 'DROP ROLE IF EXISTS "durable_job_queue_runtime"',
+};
+
+type HeldLockOperationOutcome<T> =
+  | { readonly kind: "resolved"; readonly value: T }
+  | { readonly kind: "rejected"; readonly error: unknown }
+  | { readonly kind: "timeout" };
 
 interface DurableJobPostgresAdapterModule {
   readonly createDurableJobQueuePort?: (input: {
@@ -261,22 +283,98 @@ async function readPersistedLeaseRow(
   }
 }
 
+async function readTestOwnedRoles(
+  sql: DurableJobTestSql | postgres.TransactionSql,
+): Promise<readonly TestOwnedRoleName[]> {
+  const rows = await sql.unsafe<{ readonly rolname: string }[]>(
+    "SELECT rolname FROM pg_roles WHERE rolname = ANY($1::text[]) ORDER BY rolname",
+    [Array.from(TEST_OWNED_ROLE_NAMES)],
+  );
+  return TEST_OWNED_ROLE_NAMES.filter((roleName) =>
+    rows.some((row) => row.rolname === roleName),
+  );
+}
+
+async function cleanupTestOwnedRoles(
+  adminSql: DurableJobTestSql,
+  preexistingRoles: readonly TestOwnedRoleName[],
+  createdRoles: readonly TestOwnedRoleName[],
+): Promise<void> {
+  const rolesBeforeCleanup = await readTestOwnedRoles(adminSql);
+  const preexistingRoleSet = new Set(preexistingRoles);
+  const createdRoleSet = new Set(createdRoles);
+  const missingPreexistingRoles = preexistingRoles.filter(
+    (roleName) => !rolesBeforeCleanup.includes(roleName),
+  );
+  const unexpectedRoles = rolesBeforeCleanup.filter(
+    (roleName) =>
+      !preexistingRoleSet.has(roleName) && !createdRoleSet.has(roleName),
+  );
+  if (missingPreexistingRoles.length > 0 || unexpectedRoles.length > 0) {
+    throw new Error(
+      `Refusing test-role cleanup because role ownership changed unexpectedly: missing=${missingPreexistingRoles.join(",") || "none"}; unexpected=${unexpectedRoles.join(",") || "none"}.`,
+    );
+  }
+
+  for (const roleName of createdRoles) {
+    if (rolesBeforeCleanup.includes(roleName)) {
+      await adminSql.unsafe(TEST_OWNED_ROLE_DROP_SQL[roleName]);
+    }
+  }
+
+  const remainingRoles = await readTestOwnedRoles(adminSql);
+  expect(
+    remainingRoles,
+    "PostgreSQL cleanup must leave pre-existing roles and remove every role created by this fixture.",
+  ).toEqual(preexistingRoles);
+}
+
 async function applyOptionalDurableMigrations(
   migrationConnection: DurableJobTestSql,
 ): Promise<void> {
-  const migrationNames = readdirSync(DRIZZLE_ROOT)
-    .filter((name) => /^\d+_durable_jobs(?:_platform)?\.sql$/.test(name))
-    .sort();
-  const durableMigration = migrationNames.at(-1);
-  if (durableMigration === undefined) return;
-
-  if (existsSync(LEGACY_MIGRATION_PATH)) {
-    await applySqlFile(migrationConnection, LEGACY_MIGRATION_PATH);
+  for (const migrationPath of task8MigrationPaths()) {
+    await applySqlFile(migrationConnection, migrationPath);
   }
-  await applySqlFile(
-    migrationConnection,
-    resolve(DRIZZLE_ROOT, durableMigration),
+}
+
+function task8MigrationPaths(): readonly string[] {
+  const migrationPaths = TASK8_MIGRATION_NAMES.map((name) =>
+    resolve(DRIZZLE_ROOT, name),
   );
+  const sourceByName = new Map(
+    migrationPaths.map((path) => [basename(path), readFileSync(path, "utf8")]),
+  );
+
+  expect(migrationPaths.map((path) => basename(path))).toEqual([
+    "0000_wide_vengeance.sql",
+    "0005_codecamp_schema.sql",
+    "0007_codecamp_repos_reviews.sql",
+    "0025_review_jobs.sql",
+    "0052_durable_jobs.sql",
+  ]);
+  expect(sourceByName.get("0000_wide_vengeance.sql")).toContain(
+    'CREATE TABLE "users"',
+  );
+  expect(sourceByName.get("0005_codecamp_schema.sql")).toContain(
+    'CREATE TABLE IF NOT EXISTS "codecamp_modules"',
+  );
+  expect(sourceByName.get("0007_codecamp_repos_reviews.sql")).toContain(
+    'REFERENCES "public"."codecamp_modules"',
+  );
+  expect(sourceByName.get("0007_codecamp_repos_reviews.sql")).toContain(
+    'REFERENCES "public"."users"',
+  );
+  expect(sourceByName.get("0025_review_jobs.sql")).toContain(
+    'REFERENCES "codecamp_pr_reviews"',
+  );
+  expect(sourceByName.get("0052_durable_jobs.sql")).toContain(
+    'REFERENCES "review_jobs"',
+  );
+
+  for (const migrationPath of migrationPaths) {
+    expect(existsSync(migrationPath)).toBe(true);
+  }
+  return migrationPaths;
 }
 
 async function applySqlFile(
@@ -288,6 +386,77 @@ async function applySqlFile(
     if (statement.trim().length > 0) {
       await sql.unsafe(statement);
     }
+  }
+}
+
+async function withHeldJobRowLock<T>(
+  context: DurableJobPostgres16HarnessContext,
+  lockRow: (transaction: postgres.TransactionSql) => Promise<string>,
+  operation: () => Promise<T>,
+  operationName: string,
+): Promise<{ readonly lockedJobId: string; readonly result: T }> {
+  let resolveLockReady!: (jobId: string) => void;
+  let rejectLockReady!: (error: unknown) => void;
+  const lockReady = new Promise<string>((resolve, reject) => {
+    resolveLockReady = resolve;
+    rejectLockReady = reject;
+  });
+  let resolveRelease!: () => void;
+  const release = new Promise<void>((resolve) => {
+    resolveRelease = resolve;
+  });
+  const lockPromise = context.connectionOne.begin(async (transaction) => {
+    try {
+      const lockedJobId = await lockRow(transaction);
+      resolveLockReady(lockedJobId);
+      await release;
+      return lockedJobId;
+    } catch (error) {
+      rejectLockReady(error);
+      throw error;
+    }
+  });
+
+  let operationPromise: Promise<T> | undefined;
+  let outcome: HeldLockOperationOutcome<T> | undefined;
+  let timeoutId: ReturnType<typeof setTimeout> | undefined;
+  try {
+    const lockedJobId = await lockReady;
+    operationPromise = operation();
+    const operationOutcome = operationPromise.then(
+      (value): HeldLockOperationOutcome<T> => ({ kind: "resolved", value }),
+      (error): HeldLockOperationOutcome<T> => ({ kind: "rejected", error }),
+    );
+    const timeoutOutcome = new Promise<HeldLockOperationOutcome<T>>(
+      (resolve) => {
+        timeoutId = setTimeout(() => resolve({ kind: "timeout" }), 2_000);
+      },
+    );
+    outcome = await Promise.race([operationOutcome, timeoutOutcome]);
+    if (timeoutId !== undefined) {
+      clearTimeout(timeoutId);
+    }
+
+    resolveRelease();
+    await lockPromise.catch(() => undefined);
+    await operationPromise.catch(() => undefined);
+
+    if (outcome.kind === "timeout") {
+      throw new Error(
+        `${operationName} did not complete while another session held one eligible row; the adapter must use FOR UPDATE SKIP LOCKED.`,
+      );
+    }
+    if (outcome.kind === "rejected") {
+      throw outcome.error;
+    }
+    return { lockedJobId, result: outcome.value };
+  } finally {
+    if (timeoutId !== undefined) {
+      clearTimeout(timeoutId);
+    }
+    resolveRelease();
+    await lockPromise.catch(() => undefined);
+    await operationPromise?.catch(() => undefined);
   }
 }
 
@@ -318,11 +487,30 @@ async function withTask8Harness<T>(
     secondPort: DurableJobQueuePort,
   ) => Promise<T>,
 ): Promise<T> {
+  const adminUrl = resolveDurableJobPostgres16AdminUrl(process.env);
+  const adminSql = postgres(adminUrl.toString(), { max: 1, prepare: false });
+  let preexistingRoles: readonly TestOwnedRoleName[] = [];
+  let createdRoles: readonly TestOwnedRoleName[] = [];
+  let roleSnapshotRead = false;
+  let result: T | undefined;
+  let executionError: unknown;
+  const cleanupErrors: unknown[] = [];
   try {
-    return await withDurableJobPostgres16Harness(
+    preexistingRoles = await readTestOwnedRoles(adminSql);
+    roleSnapshotRead = true;
+    result = await withDurableJobPostgres16Harness(
       {
-        migrate: ({ migrationConnection }) =>
-          applyOptionalDurableMigrations(migrationConnection),
+        migrate: async ({ migrationConnection }) => {
+          try {
+            await applyOptionalDurableMigrations(migrationConnection);
+          } finally {
+            const rolesAfterMigration =
+              await readTestOwnedRoles(migrationConnection);
+            createdRoles = rolesAfterMigration.filter(
+              (roleName) => !preexistingRoles.includes(roleName),
+            );
+          }
+        },
       },
       async (context) => {
         const firstPort = await loadQueuePort(context.connectionOne);
@@ -330,14 +518,58 @@ async function withTask8Harness<T>(
         return testBody(context, firstPort, secondPort);
       },
     );
+  } catch (error) {
+    executionError = error;
   } finally {
-    await expectNoScratchDatabases();
+    if (!roleSnapshotRead) {
+      cleanupErrors.push(
+        new Error(
+          "Refusing test-role cleanup because the pre-existing role snapshot failed.",
+        ),
+      );
+    } else {
+      try {
+        await expectNoScratchDatabases();
+      } catch (error) {
+        cleanupErrors.push(error);
+      }
+      if (cleanupErrors.length === 0) {
+        try {
+          await cleanupTestOwnedRoles(adminSql, preexistingRoles, createdRoles);
+        } catch (error) {
+          cleanupErrors.push(error);
+        }
+      }
+    }
+    try {
+      await adminSql.end({ timeout: 5 });
+    } catch (error) {
+      cleanupErrors.push(error);
+    }
   }
+
+  if (executionError !== undefined && cleanupErrors.length > 0) {
+    throw new AggregateError(
+      [executionError, ...cleanupErrors],
+      "Task 8 execution and test-owned role cleanup both failed.",
+    );
+  }
+  if (cleanupErrors.length > 0) {
+    throw new AggregateError(
+      cleanupErrors,
+      "Task 8 test-owned role cleanup failed; operator inspection is required.",
+    );
+  }
+  if (executionError !== undefined) {
+    throw executionError;
+  }
+  return result as T;
 }
 
 const integrationEnabled = isDurableJobPostgres16IntegrationEnabled(
   process.env,
 );
+const LIVE_TEST_TIMEOUT_MS = 30_000;
 
 afterEach(() => {
   vi.unstubAllEnvs();
@@ -354,9 +586,39 @@ describe("Task 8 durable-job PostgreSQL adapter Red contract", () => {
     );
     expect(MISSING_ADAPTER_MESSAGE).toContain("approved adapter root");
   });
+
+  it("binds settle and fail state CASE expressions to the repository enum", () => {
+    const adapterSource = readFileSync(ADAPTER_SOURCE, "utf8");
+    const settleFailSource = adapterSource.slice(
+      adapterSource.indexOf("const settle ="),
+      adapterSource.indexOf("const reclaimExpired ="),
+    );
+    const stateAssignments = [
+      ...settleFailSource.matchAll(/"state" = CASE[\s\S]*?END/g),
+    ].map((match) => match[0]);
+
+    expect(stateAssignments).toHaveLength(2);
+    for (const assignment of stateAssignments) {
+      expect(assignment).toMatch(
+        /CAST\('(pending|succeeded|dead)' AS "durable_job_state"\)/,
+      );
+      expect(assignment).not.toMatch(/THEN\s+'(pending|succeeded|dead)'/);
+    }
+  });
 });
 
 describe("Task 8 PostgreSQL 16 environment guard", () => {
+  it("declares the ordered migration predecessors for the live fixture", () => {
+    expect(TASK8_MIGRATION_NAMES).toEqual([
+      "0000_wide_vengeance.sql",
+      "0005_codecamp_schema.sql",
+      "0007_codecamp_repos_reviews.sql",
+      "0025_review_jobs.sql",
+      "0052_durable_jobs.sql",
+    ]);
+    expect(task8MigrationPaths()).toHaveLength(5);
+  });
+
   it("rejects harness execution before PostgreSQL access without explicit opt-in", async () => {
     vi.stubEnv(DURABLE_JOB_PG16_OPT_IN_ENV, undefined);
     vi.stubEnv(DURABLE_JOB_PG16_ADMIN_URL_ENV, undefined);
@@ -391,6 +653,7 @@ describe("Task 8 PostgreSQL 16 environment guard", () => {
 
 describe.skipIf(!integrationEnabled)(
   "Task 8 isolated PostgreSQL 16 concurrency and reclaim behavior",
+  { timeout: LIVE_TEST_TIMEOUT_MS },
   () => {
     it("does not grant duplicate active ownership across two connections", async () => {
       await withTask8Harness(async (_context, firstPort, secondPort) => {
@@ -418,6 +681,128 @@ describe.skipIf(!integrationEnabled)(
               : [],
           ),
         ).toEqual([jobId]);
+      });
+    });
+
+    it("proves ready claim skips one held row lock with the declared limit", async () => {
+      await withTask8Harness(async (context, firstPort, secondPort) => {
+        const jobIds = [
+          jobIdFromEnqueue(
+            await firstPort.enqueue(enqueueRequest("task8-skip-locked-one")),
+          ),
+          jobIdFromEnqueue(
+            await firstPort.enqueue(enqueueRequest("task8-skip-locked-two")),
+          ),
+        ];
+
+        const { lockedJobId, result } = await withHeldJobRowLock(
+          context,
+          async (transaction) => {
+            const [row] = await transaction<{ readonly id: string }[]>`
+              SELECT "id"
+              FROM "durable_jobs"
+              WHERE "queue_name" = ${QUEUE_NAME}
+                AND "tenant_mode" = 'global'
+                AND "tenant_id" IS NULL
+                AND "state" = 'pending'
+                AND "available_at" <= ${BASE_TIME}
+              ORDER BY "available_at", "id"
+              LIMIT 1
+              FOR UPDATE
+            `;
+            if (row === undefined) {
+              throw new Error("The claim lock barrier found no eligible job.");
+            }
+            return row.id;
+          },
+          () =>
+            secondPort.claim({
+              ...claimRequest("worker-skip-locked"),
+              limit: 1,
+            }),
+          "Ready claim",
+        );
+
+        const unlockedJobId = jobIds.find((jobId) => jobId !== lockedJobId);
+        expect(unlockedJobId).toBeDefined();
+        expect(result.outcome).toBe("claimed");
+        if (result.outcome !== "claimed") {
+          throw new Error("The lock-barrier claim did not claim a job.");
+        }
+        expect(result.jobs).toHaveLength(1);
+        expect(result.jobs[0]?.id).toBe(unlockedJobId);
+      });
+    });
+
+    it("proves expired reclaim skips one held row lock with the declared limit", async () => {
+      await withTask8Harness(async (context, firstPort, secondPort) => {
+        await firstPort.enqueue(enqueueRequest("task8-expired-lock-one"));
+        await firstPort.enqueue(enqueueRequest("task8-expired-lock-two"));
+        const firstJob = claimedJob(
+          await firstPort.claim({
+            ...claimRequest("worker-expired-lock-one"),
+            leaseSeconds: 1,
+          }),
+        );
+        const secondJob = claimedJob(
+          await firstPort.claim({
+            ...claimRequest("worker-expired-lock-two"),
+            leaseSeconds: 1,
+          }),
+        );
+        const expiredJobs = [firstJob.id, secondJob.id];
+
+        const { lockedJobId, result } = await withHeldJobRowLock(
+          context,
+          async (transaction) => {
+            const [row] = await transaction<{ readonly id: string }[]>`
+              SELECT "id"
+              FROM "durable_jobs"
+              WHERE "queue_name" = ${QUEUE_NAME}
+                AND "tenant_mode" = 'global'
+                AND "tenant_id" IS NULL
+                AND "state" = 'running'
+                AND "lease_expires_at" <= ${NEXT_TIME}
+              ORDER BY "lease_expires_at", "id"
+              LIMIT 1
+              FOR UPDATE
+            `;
+            if (row === undefined) {
+              throw new Error("The reclaim lock barrier found no expired job.");
+            }
+            return row.id;
+          },
+          async () => {
+            const reclaim = await secondPort.reclaimExpired({
+              ...reclaimRequest(GLOBAL_TENANT, NEXT_TIME),
+              limit: 1,
+            });
+            const claim = await secondPort.claim({
+              ...claimRequest(
+                "worker-after-expired-skip-locked",
+                GLOBAL_TENANT,
+                NEXT_TIME,
+              ),
+              limit: 1,
+            });
+            return { claim, reclaim };
+          },
+          "Expired reclaim",
+        );
+
+        const unlockedJobId = expiredJobs.find(
+          (jobId) => jobId !== lockedJobId,
+        );
+        expect(unlockedJobId).toBeDefined();
+        expect(result.reclaim).toEqual({ outcome: "reclaimed", count: 1 });
+        expect(result.claim.outcome).toBe("claimed");
+        if (result.claim.outcome !== "claimed") {
+          throw new Error(
+            "The lock-barrier reclaim did not expose the unlocked job to claim.",
+          );
+        }
+        expect(result.claim.jobs).toHaveLength(1);
+        expect(result.claim.jobs[0]?.id).toBe(unlockedJobId);
       });
     });
 
@@ -892,7 +1277,10 @@ describe.skipIf(!integrationEnabled)(
           tenant: TENANT_SCOPE,
           leaseToken: firstJob.lease.token,
           now: BASE_TIME,
-          error: { code: "RETRYABLE_TEST_FAILURE", safeSummary: "Safe retry" },
+          error: {
+            code: "RETRYABLE_TEST_FAILURE",
+            safeSummary: "Safe retry",
+          },
         });
         expect(retry.outcome).toBe("retry-scheduled");
         if (retry.outcome !== "retry-scheduled") {
