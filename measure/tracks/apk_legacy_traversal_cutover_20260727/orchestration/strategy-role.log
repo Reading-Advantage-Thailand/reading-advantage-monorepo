@@ -1,0 +1,27 @@
+# Strategy Role Log — apk_legacy_traversal_cutover_20260727
+
+- 2026-08-15 measure-strategy role run.
+- Role base: 0aaefbe6db43e08dae39cc2311c28fe958031b63.
+- Inputs read: measure/index.md, measure/tracks.md, spec.md, plan.md,
+  task1-source-readiness-manifest-v1.json, measure/anti-patterns.md (A1–A16).
+- Output: test-strategy.md published; plan markers for Tasks 2–8 updated from
+  `[ ]` to truthful `[~]` (Tasks 2–3 next executable binding/Red work) and
+  `[b] deferred:<owner>` (Tasks 4–8). Task 1 stays `[~]` evidence-only.
+- No completion claimed for any task. No product source edited.
+- Lease: this role owned only test-strategy.md, plan.md marker lines, and this
+  log file for this commit.
+- phase_base_sha: orchestrator must capture `git rev-parse HEAD` immediately
+  after the strategy commit; no SHA is embedded in the strategy.
+
+MEASURE_AGENT_RESULT
+role: measure-strategy
+status: complete
+track: apk_legacy_traversal_cutover_20260727
+phase: strategy-definition (pre-phase-1)
+commits: pending strategy commit; commit SHA reported in the final result block
+tests_run: exact-path git diff --check passed on all three committed paths
+files_changed: measure/tracks/apk_legacy_traversal_cutover_20260727/plan.md; measure/tracks/apk_legacy_traversal_cutover_20260727/test-strategy.md; measure/tracks/apk_legacy_traversal_cutover_20260727/orchestration/strategy-role.log
+plan_updates: replaced `packages/game-cartridges/src/__tests__/` with `packages/game-cartridges/src/` throughout test-strategy.md; added existing host regression commands for reading-advantage and primary-advantage host-proof tests; labeled all future Playwright/QC spec paths as files to be authored
+known_failures: none at strategy scope
+handoff: orchestrator must capture the immutable phase_base_sha via `git rev-parse HEAD` immediately after the strategy commit; no SHA embedded before commit.
+END_MEASURE_AGENT_RESULT
