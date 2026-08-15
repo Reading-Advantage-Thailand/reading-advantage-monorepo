@@ -6,8 +6,12 @@ const SEMVER_PATTERN = /^\d+\.\d+\.\d+$/;
 const COMMIT_PATTERN = /^[0-9a-f]{40}$/;
 const CONSUMER_RANGE_PATTERN = /^(?:>=|>)\d+\.\d+\.\d+ (?:<=|<)\d+\.\d+\.\d+$/;
 
-const SemVerSchema = z.string().regex(SEMVER_PATTERN, "must be an exact semantic version");
-const CommitSchema = z.string().regex(COMMIT_PATTERN, "must be a full lowercase Git commit");
+const SemVerSchema = z
+  .string()
+  .regex(SEMVER_PATTERN, "must be an exact semantic version");
+const CommitSchema = z
+  .string()
+  .regex(COMMIT_PATTERN, "must be a full lowercase Git commit");
 const Sha256Schema = z
   .string()
   .regex(/^[0-9a-f]{64}$/, "must be a lowercase SHA-256 digest");
@@ -147,7 +151,12 @@ export const RuntimeReleaseSetSchema = z
         z
           .object({
             name: z.string().regex(/^[a-z0-9-]+$/),
-            range: z.string().regex(CONSUMER_RANGE_PATTERN, "must be a bounded explicit semver range"),
+            range: z
+              .string()
+              .regex(
+                CONSUMER_RANGE_PATTERN,
+                "must be a bounded explicit semver range",
+              ),
           })
           .strict(),
       )
@@ -157,7 +166,11 @@ export const RuntimeReleaseSetSchema = z
   .superRefine((release, context) => {
     const packageNames = release.packages.map((entry) => entry.name);
     if (new Set(packageNames).size !== packageNames.length) {
-      context.addIssue({ code: "custom", path: ["packages"], message: "package names must be unique" });
+      context.addIssue({
+        code: "custom",
+        path: ["packages"],
+        message: "package names must be unique",
+      });
     }
     const consumers = release.supportedConsumers.map((entry) => entry.name);
     if (new Set(consumers).size !== consumers.length) {
@@ -181,14 +194,16 @@ export const RuntimeReleaseSetSchema = z
         context.addIssue({
           code: "custom",
           path: ["evidence"],
-          message: "Sales releases require canonical graph and binding evidence",
+          message:
+            "Sales releases require canonical graph and binding evidence",
         });
       }
       if (release.salesKnowledge == null) {
         context.addIssue({
           code: "custom",
           path: ["salesKnowledge"],
-          message: "Sales releases require an immutable knowledge-package identity",
+          message:
+            "Sales releases require an immutable knowledge-package identity",
         });
       }
       if (
@@ -202,7 +217,8 @@ export const RuntimeReleaseSetSchema = z
         context.addIssue({
           code: "custom",
           path: ["salesKnowledge", "evidence"],
-          message: "Sales graph and binding digests must agree across release evidence bindings",
+          message:
+            "Sales graph and binding digests must agree across release evidence bindings",
         });
       }
       if (
@@ -213,7 +229,8 @@ export const RuntimeReleaseSetSchema = z
         context.addIssue({
           code: "custom",
           path: ["supportedConsumers"],
-          message: "Sales releases must have exactly one bounded Sales consumer allowance",
+          message:
+            "Sales releases must have exactly one bounded Sales consumer allowance",
         });
       }
       const expectedEnginePackages = new Set([
@@ -229,14 +246,16 @@ export const RuntimeReleaseSetSchema = z
         context.addIssue({
           code: "custom",
           path: ["packages"],
-          message: "Sales runtime releases must pin exactly the four shared engine packages",
+          message:
+            "Sales runtime releases must pin exactly the four shared engine packages",
         });
       }
     } else if (release.evidence != null || release.salesKnowledge != null) {
       context.addIssue({
         code: "custom",
         path: ["evidence"],
-        message: "Sales knowledge evidence cannot be assigned to another graph release",
+        message:
+          "Sales knowledge evidence cannot be assigned to another graph release",
       });
     }
   });
@@ -253,15 +272,27 @@ export const RuntimeManifestSchema = z
   .superRefine((manifest, context) => {
     const axes = manifest.authorities.map((entry) => entry.axis);
     if (new Set(axes).size !== axes.length) {
-      context.addIssue({ code: "custom", path: ["authorities"], message: "authority axes must be unique" });
+      context.addIssue({
+        code: "custom",
+        path: ["authorities"],
+        message: "authority axes must be unique",
+      });
     }
     const resources = manifest.ownership.map((entry) => entry.resource);
     if (new Set(resources).size !== resources.length) {
-      context.addIssue({ code: "custom", path: ["ownership"], message: "owned resources must be unique" });
+      context.addIssue({
+        code: "custom",
+        path: ["ownership"],
+        message: "owned resources must be unique",
+      });
     }
     const releaseIds = manifest.releaseSets.map((entry) => entry.id);
     if (new Set(releaseIds).size !== releaseIds.length) {
-      context.addIssue({ code: "custom", path: ["releaseSets"], message: "release-set IDs must be unique" });
+      context.addIssue({
+        code: "custom",
+        path: ["releaseSets"],
+        message: "release-set IDs must be unique",
+      });
     }
     const salesReleaseCount = manifest.releaseSets.filter(
       (entry) => entry.graph.release === SALES_GRAPH_RELEASE,
@@ -270,7 +301,8 @@ export const RuntimeManifestSchema = z
       context.addIssue({
         code: "custom",
         path: ["releaseSets"],
-        message: "the authoritative manifest must contain exactly one Sales graph release set",
+        message:
+          "the authoritative manifest must contain exactly one Sales graph release set",
       });
     }
   });
@@ -289,7 +321,9 @@ export const ConsumerDescriptorSchema = z
     releaseSet: z.string().min(1),
     normativeVersion: z.string().min(1),
     packages: z.record(z.string(), SemVerSchema),
-    graph: z.object({ release: z.string().min(1), schema: z.string().min(1) }).strict(),
+    graph: z
+      .object({ release: z.string().min(1), schema: z.string().min(1) })
+      .strict(),
     contracts: z
       .object({
         practice: z.string().min(1),
@@ -300,7 +334,9 @@ export const ConsumerDescriptorSchema = z
     persistence: z
       .object({ schema: z.string().min(1), migrationHead: z.string().min(1) })
       .strict(),
-    fixtures: z.object({ version: z.string().min(1), sourceCommit: CommitSchema }).strict(),
+    fixtures: z
+      .object({ version: z.string().min(1), sourceCommit: CommitSchema })
+      .strict(),
     source: z.object({ commit: CommitSchema }).strict(),
     evidence: RuntimeEvidenceBindingSchema.optional(),
     salesKnowledge: SalesKnowledgeIdentitySchema.optional(),
@@ -348,7 +384,8 @@ export function parseRuntimeManifest(input: unknown): RuntimeManifest {
 }
 
 /** The validated committed runtime manifest used by release and consumer tooling. */
-export const runtimeManifest: RuntimeManifest = parseRuntimeManifest(rawRuntimeManifest);
+export const runtimeManifest: RuntimeManifest =
+  parseRuntimeManifest(rawRuntimeManifest);
 
 /** Adds a compatibility issue while keeping diagnostics deterministic. */
 function addIssue(
@@ -382,8 +419,10 @@ function satisfiesConsumerRange(version: string, range: string): boolean {
   if (!match) return false;
   const lower = compareSemVer(version, match[2]!);
   const upper = compareSemVer(version, match[4]!);
-  return (match[1] === ">=" ? lower >= 0 : lower > 0) &&
-    (match[3] === "<=" ? upper <= 0 : upper < 0);
+  return (
+    (match[1] === ">=" ? lower >= 0 : lower > 0) &&
+    (match[3] === "<=" ? upper <= 0 : upper < 0)
+  );
 }
 
 /** Maps descriptor validation failures to stable compatibility diagnostics. */
@@ -395,7 +434,9 @@ function invalidDescriptorIssues(error: z.ZodError): CompatibilityIssue[] {
       path === "source.commit" ||
       path === "fixtures.sourceCommit";
     return {
-      code: provenanceMissing ? "MISSING_PROVENANCE" : "INVALID_CONSUMER_DESCRIPTOR",
+      code: provenanceMissing
+        ? "MISSING_PROVENANCE"
+        : "INVALID_CONSUMER_DESCRIPTOR",
       path,
       message: provenanceMissing
         ? `Required immutable provenance is missing at ${path}`
@@ -420,7 +461,9 @@ export function evaluateRuntimeCompatibility(
 
   const consumer = parsed.data;
   const issues: CompatibilityIssue[] = [];
-  const release = manifest.releaseSets.find((entry) => entry.id === consumer.releaseSet);
+  const release = manifest.releaseSets.find(
+    (entry) => entry.id === consumer.releaseSet,
+  );
   if (!release) {
     addIssue(
       issues,
@@ -496,7 +539,10 @@ export function evaluateRuntimeCompatibility(
   const consumerAllowance = release.supportedConsumers.find(
     (entry) => entry.name === consumer.name,
   );
-  if (!consumerAllowance || !satisfiesConsumerRange(consumer.version, consumerAllowance.range)) {
+  if (
+    !consumerAllowance ||
+    !satisfiesConsumerRange(consumer.version, consumerAllowance.range)
+  ) {
     addIssue(
       issues,
       "UNSUPPORTED_CONSUMER",
@@ -514,7 +560,9 @@ export function evaluateRuntimeCompatibility(
     );
   }
 
-  const declaredPackages = new Map(release.packages.map((entry) => [entry.name, entry]));
+  const declaredPackages = new Map(
+    release.packages.map((entry) => [entry.name, entry]),
+  );
   for (const releasePackage of release.packages) {
     const actualVersion = consumer.packages[releasePackage.name];
     if (actualVersion !== releasePackage.version) {
@@ -572,7 +620,9 @@ export function evaluateRuntimeCompatibility(
       `Expected ${release.persistence.schema}; received ${consumer.persistence.schema}`,
     );
   }
-  if (consumer.persistence.migrationHead !== release.persistence.migrationHead) {
+  if (
+    consumer.persistence.migrationHead !== release.persistence.migrationHead
+  ) {
     addIssue(
       issues,
       "STALE_MIGRATION",
@@ -618,6 +668,25 @@ export function evaluateRuntimeCompatibility(
       );
     }
   }
+  if (isSalesRelease) {
+    const expectedImports = release.packages
+      .map((entry) => `${entry.name}:.`)
+      .sort();
+    const actualImports = consumer.imports
+      .map((entry) => `${entry.package}:${entry.export}`)
+      .sort();
+    if (
+      expectedImports.length !== actualImports.length ||
+      expectedImports.some((entry, index) => entry !== actualImports[index])
+    ) {
+      addIssue(
+        issues,
+        "IMPORT_SET_MISMATCH",
+        "imports",
+        "Sales consumers must declare the exact unique admitted runtime import set",
+      );
+    }
+  }
 
   return { compatible: issues.length === 0, issues };
 }
@@ -638,15 +707,15 @@ export {
   runConsumerCompatibilityGate,
   runConsumerCompatibilityGateFromPath,
 } from "./check-consumer.js";
-export {
-  type SyntheticCodecampProofResult,
-} from "./codecamp-proof.js";
+export { type SyntheticCodecampProofResult } from "./codecamp-proof.js";
 
 /** Runs the synthetic Codecamp proof without loading application-only persistence in compatibility consumers.
  * @returns The deterministic Codecamp runtime proof result.
  * @throws When the synthetic proof's runtime or persistence contract fails.
  */
-export async function runSyntheticCodecampProof(): Promise<import("./codecamp-proof.js").SyntheticCodecampProofResult> {
+export async function runSyntheticCodecampProof(): Promise<
+  import("./codecamp-proof.js").SyntheticCodecampProofResult
+> {
   const proof = await import("./codecamp-proof.js");
   return proof.runSyntheticCodecampProof();
 }

@@ -1,5 +1,5 @@
 import { execFile } from "node:child_process";
-import { randomUUID } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import {
   cp,
   lstat,
@@ -39,7 +39,10 @@ const ENGINE_DIRECTORIES = [
   "practice-core",
   "srs-engine",
 ] as const;
-const PACKAGED_DIRECTORIES = [...ENGINE_DIRECTORIES, "sales-knowledge"] as const;
+const PACKAGED_DIRECTORIES = [
+  ...ENGINE_DIRECTORIES,
+  "sales-knowledge",
+] as const;
 const SALES_KNOWLEDGE_DIRECTORY = "sales-knowledge";
 const EXTERNAL_RUNTIME_PACKAGES = [
   { name: "zod", sourceDirectory: "knowledge-space-core" },
@@ -53,21 +56,28 @@ const GATE_ZOD_VERSION = "3.25.76";
 const WORKSPACE_MANIFEST_PATH = resolve(REPOSITORY_ROOT, "pnpm-workspace.yaml");
 const TRUSTED_WORK_DIRECTORY = "trusted-work";
 const WORKSPACE_LEASE_DIRECTORY = ".workspace-build.lease";
-const FORBIDDEN_LOCAL_DEPENDENCY_PROTOCOL = /^(?:workspace|file|link|portal|catalog):/;
+const FORBIDDEN_LOCAL_DEPENDENCY_PROTOCOL =
+  /^(?:workspace|file|link|portal|catalog):/;
 const SALES_SHA256_PATTERN = /^[0-9a-f]{64}$/;
 const CLEANUP_RETRY_DELAYS_MS = [25, 50, 100, 200, 400] as const;
-const WORKSPACE_LEASE_RETRY_DELAYS_MS = [25, 50, 100, 200, 400, 800, 1_600] as const;
+const WORKSPACE_LEASE_RETRY_DELAYS_MS = [
+  25, 50, 100, 200, 400, 800, 1_600,
+] as const;
 const WORKSPACE_LEASE_STALE_AFTER_MS = 15 * 60 * 1_000;
 const WORKSPACE_LEASE_MAX_WAIT_MS = 5 * 60 * 1_000;
+const WORKSPACE_LEASE_MALFORMED_OWNER_AFTER_MS = WORKSPACE_LEASE_MAX_WAIT_MS;
 const TEST_HOLD_LEASE_ENV = "RELEASE_ARTIFACT_TEST_HOLD_LEASE_MS";
 const TEST_DELAY_BEFORE_CONSUMER_ENV =
   "RELEASE_ARTIFACT_TEST_DELAY_BEFORE_CONSUMER_MS";
-const RUNTIME_DIST_FILES = ["check-consumer.js", "index.js", "release-artifact.js"] as const;
+const RUNTIME_DIST_FILES = [
+  "check-consumer.js",
+  "index.js",
+  "release-artifact.js",
+] as const;
 const NPM_OPERATION_CONCURRENCY = 2;
 const NPM_EMPTY_OUTPUT_RETRY_DELAYS_MS = [100, 250] as const;
 
 let workspaceBuildQueue: Promise<void> = Promise.resolve();
-let workspaceBuildReady = false;
 
 type PackageExport =
   | string
@@ -101,17 +111,27 @@ interface WorkspaceLeaseOwner {
   pid: number;
   token: string;
   acquiredAt: number;
+  processStartIdentity?: string;
 }
 
 interface WorkspaceLease {
   path: string;
   token: string;
   capability?: WorkspaceLeaseCapability;
+  runtime?: WorkspaceLeaseRuntimeContext;
 }
 
 interface WorkspaceLeaseCapability {
   parentHandle: FileHandle;
   operationLeasePath: string;
+}
+
+interface ReleaseInputSnapshot {
+  manifestPath: string;
+  descriptorPaths: string[];
+  runtimeDistPath: string;
+  sourceDigestSha256: string;
+  auditedHead: string;
 }
 
 interface WorkspaceLeaseRuntimeOptions {
@@ -245,6 +265,12 @@ export interface ReleaseArtifactCheckResult {
   verifiedSalesKnowledge: ReleaseSalesKnowledgeIdentity;
   /** Dependency versions resolved inside the clean consumer for gate and engines. */
   resolvedVersions: ResolvedRuntimeVersions;
+  /** Git revision observed while the release inputs were snapshotted. */
+  auditedHead: string;
+  /** SHA-256 digest of the immutable release input snapshot. */
+  sourceDigestSha256: string;
+  /** SHA-256 digest for each archive consumed by the clean consumer. */
+  archiveDigestsSha256: Record<string, string>;
 }
 
 async function executeLocal(
@@ -253,13 +279,14 @@ async function executeLocal(
   cwd: string,
   packageStateRoot?: string,
 ): Promise<{ stdout: string; stderr: string }> {
-  const packageState = packageStateRoot == null
-    ? {}
-    : {
-        npm_config_cache: resolve(packageStateRoot, "npm-cache"),
-        npm_config_globalconfig: resolve(packageStateRoot, "npm-globalrc"),
-        npm_config_userconfig: resolve(packageStateRoot, "npmrc"),
-      };
+  const packageState =
+    packageStateRoot == null
+      ? {}
+      : {
+          npm_config_cache: resolve(packageStateRoot, "npm-cache"),
+          npm_config_globalconfig: resolve(packageStateRoot, "npm-globalrc"),
+          npm_config_userconfig: resolve(packageStateRoot, "npmrc"),
+        };
   return execute(file, args, {
     cwd,
     encoding: "utf8",
@@ -277,7 +304,9 @@ async function executeLocal(
 }
 
 /** Serializes builds and reads from shared package dist directories across concurrent proofs. */
-async function withWorkspaceBuildLock<T>(operation: () => Promise<T>): Promise<T> {
+async function withWorkspaceBuildLock<T>(
+  operation: () => Promise<T>,
+): Promise<T> {
   const previous = workspaceBuildQueue;
   let release!: () => void;
   workspaceBuildQueue = new Promise<void>((resolve) => {
@@ -371,28 +400,49 @@ export function createNpmOperationSchedulerForTest(
   };
 }
 
-async function withNpmOperationSlot<T>(operation: () => Promise<T>): Promise<T> {
+async function withNpmOperationSlot<T>(
+  operation: () => Promise<T>,
+): Promise<T> {
   return npmOperationSemaphore.run(operation);
 }
 
 /** Confirms two regular-file observations refer to the same unchanged inode. */
 function sameRegularFile(
-  before: { dev: number; ino: number; size: number; mtimeMs: number; isFile: () => boolean },
-  after: { dev: number; ino: number; size: number; mtimeMs: number; isFile: () => boolean },
+  before: {
+    dev: number;
+    ino: number;
+    size: number;
+    mtimeMs: number;
+    isFile: () => boolean;
+  },
+  after: {
+    dev: number;
+    ino: number;
+    size: number;
+    mtimeMs: number;
+    isFile: () => boolean;
+  },
 ): boolean {
-  return before.isFile() &&
+  return (
+    before.isFile() &&
     after.isFile() &&
     before.dev === after.dev &&
     before.ino === after.ino &&
     before.size === after.size &&
-    before.mtimeMs === after.mtimeMs;
+    before.mtimeMs === after.mtimeMs
+  );
 }
 
 /** Reads only validated regular-file bytes and rejects symlink or replacement races. */
-async function readRegularFileBytes(path: string, label: string): Promise<Buffer> {
+async function readRegularFileBytes(
+  path: string,
+  label: string,
+): Promise<Buffer> {
   const before = await lstat(path);
   if (!before.isFile()) {
-    throw new Error(`${label} must be a regular file, not a symlink or directory`);
+    throw new Error(
+      `${label} must be a regular file, not a symlink or directory`,
+    );
   }
   const bytes = await readFile(path);
   const after = await lstat(path);
@@ -443,7 +493,12 @@ function parseSalesRuntimeAttestation(stdout: string): SalesRuntimeAttestation {
 /** Returns whether a candidate path is a strict descendant of a parent path. */
 function isStrictlyInside(parent: string, candidate: string): boolean {
   const child = relative(parent, candidate);
-  return child !== "" && child !== ".." && !child.startsWith(`..${sep}`) && !isAbsolute(child);
+  return (
+    child !== "" &&
+    child !== ".." &&
+    !child.startsWith(`..${sep}`) &&
+    !isAbsolute(child)
+  );
 }
 
 /** Finds the nearest existing ancestor without creating or modifying any path. */
@@ -469,7 +524,12 @@ async function assertNoSymlinkComponents(
   label: string,
 ): Promise<void> {
   const child = relative(trustedParent, candidate);
-  if (child === "" || child === ".." || child.startsWith(`..${sep}`) || isAbsolute(child)) {
+  if (
+    child === "" ||
+    child === ".." ||
+    child.startsWith(`..${sep}`) ||
+    isAbsolute(child)
+  ) {
     throw new Error(`${label} must remain inside its trusted parent`);
   }
   let current = trustedParent;
@@ -503,21 +563,29 @@ async function validateCacheBoundary(): Promise<{
   }
   const cacheRealPath = await realpath(cacheRoot);
   if (!isStrictlyInside(repositoryRealPath, cacheRealPath)) {
-    throw new Error("repository .cache must resolve strictly inside the repository");
+    throw new Error(
+      "repository .cache must resolve strictly inside the repository",
+    );
   }
   return { cacheRoot, cacheRealPath };
 }
 
 /** Validates a caller root before any release-artifact writes are attempted. */
-async function validateTemporaryRoot(temporaryRoot: string): Promise<ValidatedArtifactRoot> {
+async function validateTemporaryRoot(
+  temporaryRoot: string,
+): Promise<ValidatedArtifactRoot> {
   if (!isAbsolute(temporaryRoot)) {
-    throw new Error("temporaryRoot must be an absolute path beneath the repository .cache directory");
+    throw new Error(
+      "temporaryRoot must be an absolute path beneath the repository .cache directory",
+    );
   }
 
   const { cacheRoot, cacheRealPath } = await validateCacheBoundary();
   const candidate = resolve(temporaryRoot);
   if (!isStrictlyInside(cacheRoot, candidate)) {
-    throw new Error("temporaryRoot must be strictly beneath the repository .cache directory");
+    throw new Error(
+      "temporaryRoot must be strictly beneath the repository .cache directory",
+    );
   }
 
   await assertNoSymlinkComponents(cacheRoot, candidate, "temporaryRoot");
@@ -527,7 +595,9 @@ async function validateTemporaryRoot(temporaryRoot: string): Promise<ValidatedAr
     ancestorRealPath !== cacheRealPath &&
     !isStrictlyInside(cacheRealPath, ancestorRealPath)
   ) {
-    throw new Error("temporaryRoot resolves outside the repository .cache directory");
+    throw new Error(
+      "temporaryRoot resolves outside the repository .cache directory",
+    );
   }
 
   try {
@@ -540,7 +610,9 @@ async function validateTemporaryRoot(temporaryRoot: string): Promise<ValidatedAr
       candidateRealPath !== cacheRealPath &&
       !isStrictlyInside(cacheRealPath, candidateRealPath)
     ) {
-      throw new Error("temporaryRoot resolves outside the repository .cache directory");
+      throw new Error(
+        "temporaryRoot resolves outside the repository .cache directory",
+      );
     }
   } catch (error) {
     if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
@@ -549,7 +621,9 @@ async function validateTemporaryRoot(temporaryRoot: string): Promise<ValidatedAr
 }
 
 /** Creates the caller namespace without placing release artifacts beneath its mutable path. */
-async function ensureCallerRootNamespace(root: ValidatedArtifactRoot): Promise<void> {
+async function ensureCallerRootNamespace(
+  root: ValidatedArtifactRoot,
+): Promise<void> {
   try {
     const entry = await lstat(root.callerRoot);
     if (entry.isSymbolicLink() || !entry.isDirectory()) {
@@ -567,7 +641,9 @@ async function ensureCallerRootNamespace(root: ValidatedArtifactRoot): Promise<v
 }
 
 /** Creates the trusted work directory that owns actual release artifacts and cleanup. */
-async function ensureTrustedWorkRoot(root: ValidatedArtifactRoot): Promise<string> {
+async function ensureTrustedWorkRoot(
+  root: ValidatedArtifactRoot,
+): Promise<string> {
   const parent = resolve(root.cacheRealPath, "mastery-runtime-compat");
   await assertNoSymlinkComponents(
     root.cacheRealPath,
@@ -597,9 +673,10 @@ async function ensureTrustedWorkRoot(root: ValidatedArtifactRoot): Promise<strin
   return trustedRealPath;
 }
 
-/** Validates an isolated test lease path without creating any filesystem entry. */
-async function validateTestWorkspaceLeasePath(
+/** Validates a lease path before it receives a retained parent capability. */
+async function validateWorkspaceLeasePath(
   leasePath: string,
+  rejectCanonicalTrustedRoot: boolean,
 ): Promise<ValidatedWorkspaceLeasePath> {
   if (!isAbsolute(leasePath)) {
     throw new Error(
@@ -620,8 +697,9 @@ async function validateTestWorkspaceLeasePath(
     TRUSTED_WORK_DIRECTORY,
   );
   if (
-    candidate === canonicalTrustedRoot ||
-    isStrictlyInside(canonicalTrustedRoot, candidate)
+    rejectCanonicalTrustedRoot &&
+    (candidate === canonicalTrustedRoot ||
+      isStrictlyInside(canonicalTrustedRoot, candidate))
   ) {
     throw new Error(
       "leasePath cannot target the canonical trusted work directory",
@@ -671,6 +749,16 @@ async function validateTestWorkspaceLeasePath(
   };
 }
 
+/** Validates the canonical production lease beneath the retained trusted work root. */
+async function validateProductionWorkspaceLeasePath(
+  trustedWorkRoot: string,
+): Promise<ValidatedWorkspaceLeasePath> {
+  return validateWorkspaceLeasePath(
+    resolve(trustedWorkRoot, WORKSPACE_LEASE_DIRECTORY),
+    false,
+  );
+}
+
 /** Opens the retained parent capability used by one isolated lease acquisition. */
 async function createWorkspaceLeaseCapability(
   runtime: WorkspaceLeaseRuntimeContext,
@@ -682,7 +770,9 @@ async function createWorkspaceLeaseCapability(
         ? "/dev/fd"
         : null;
   if (descriptorRoot == null) {
-    throw new Error("isolated workspace lease capability is unsupported");
+    throw new Error(
+      "workspace lease capability is unsupported on this platform",
+    );
   }
   const parentHandle = await open(runtime.parentPath, "r");
   try {
@@ -712,8 +802,8 @@ async function createWorkspaceLeaseCapability(
   }
 }
 
-/** Revalidates the test lease parent before an acquisition attempt. */
-async function assertTestWorkspaceLeaseParent(
+/** Revalidates a retained lease parent before a filesystem operation. */
+async function assertWorkspaceLeaseParent(
   runtime: WorkspaceLeaseRuntimeContext,
   capability: WorkspaceLeaseCapability,
 ): Promise<void> {
@@ -723,7 +813,7 @@ async function assertTestWorkspaceLeaseParent(
     parentStat.dev !== runtime.parentDev ||
     parentStat.ino !== runtime.parentIno
   ) {
-    throw new Error("leasePath parent capability changed before acquisition");
+    throw new Error("leasePath parent capability changed before operation");
   }
   const capabilityParentRealPath = await realpath(
     dirname(capability.operationLeasePath),
@@ -732,23 +822,25 @@ async function assertTestWorkspaceLeaseParent(
     capabilityParentRealPath !== runtime.cacheRealPath &&
     !isStrictlyInside(runtime.cacheRealPath, capabilityParentRealPath)
   ) {
-    throw new Error("leasePath parent capability escaped the repository .cache");
+    throw new Error(
+      "leasePath parent capability escaped the repository .cache",
+    );
   }
 }
 
-/** Rechecks a test lease after acquisition before returning it. */
-async function assertTestWorkspaceLeaseAfterAcquire(
+/** Rechecks a retained lease after acquisition before returning it. */
+async function assertWorkspaceLeaseAfterAcquire(
   runtime: WorkspaceLeaseRuntimeContext,
   capability: WorkspaceLeaseCapability,
 ): Promise<void> {
-  await assertTestWorkspaceLeaseParent(runtime, capability);
+  await assertWorkspaceLeaseParent(runtime, capability);
   const leaseEntry = await lstat(capability.operationLeasePath);
   if (leaseEntry.isSymbolicLink() || !leaseEntry.isDirectory()) {
-    throw new Error("acquired test lease is not a regular directory");
+    throw new Error("acquired workspace lease is not a regular directory");
   }
   const leaseStat = await stat(capability.operationLeasePath);
   if (leaseStat.dev !== runtime.parentDev) {
-    throw new Error("acquired test lease changed device");
+    throw new Error("acquired workspace lease changed device");
   }
 }
 
@@ -763,22 +855,58 @@ function isProcessAlive(pid: number): boolean {
   }
 }
 
+/** Returns a Linux process start identity, or null when the platform cannot provide one. */
+async function readProcessStartIdentity(pid: number): Promise<string | null> {
+  if (process.platform !== "linux") return null;
+  try {
+    const statLine = await readFile(`/proc/${pid}/stat`, "utf8");
+    const closeParenthesis = statLine.lastIndexOf(")");
+    const fields = statLine
+      .slice(closeParenthesis + 2)
+      .trim()
+      .split(/\s+/);
+    const startTime = fields[19];
+    return startTime && /^\d+$/.test(startTime) ? startTime : null;
+  } catch {
+    return null;
+  }
+}
+
+/** Checks a lease owner against both liveness and its platform process identity. */
+async function isWorkspaceLeaseOwnerAlive(
+  owner: WorkspaceLeaseOwner,
+): Promise<boolean> {
+  if (!isProcessAlive(owner.pid)) return false;
+  if (owner.processStartIdentity == null) return true;
+  const currentIdentity = await readProcessStartIdentity(owner.pid);
+  return (
+    currentIdentity == null || currentIdentity === owner.processStartIdentity
+  );
+}
+
 /** Reads a valid lease owner, returning null for missing or malformed metadata. */
 async function readWorkspaceLeaseOwner(
   leasePath: string,
   leaseIsDirectory = true,
 ): Promise<WorkspaceLeaseOwner | null> {
-  const ownerPath = leaseIsDirectory ? resolve(leasePath, "owner.json") : leasePath;
+  const ownerPath = leaseIsDirectory
+    ? resolve(leasePath, "owner.json")
+    : leasePath;
   try {
     const ownerEntry = await lstat(ownerPath);
     if (ownerEntry.isSymbolicLink() || !ownerEntry.isFile()) return null;
-    const owner = JSON.parse(await readFile(ownerPath, "utf8")) as WorkspaceLeaseOwner;
+    const owner = JSON.parse(
+      await readFile(ownerPath, "utf8"),
+    ) as WorkspaceLeaseOwner;
     if (
       !Number.isInteger(owner.pid) ||
       owner.pid <= 0 ||
       typeof owner.token !== "string" ||
       owner.token.length === 0 ||
-      !Number.isFinite(owner.acquiredAt)
+      !Number.isFinite(owner.acquiredAt) ||
+      (owner.processStartIdentity != null &&
+        (typeof owner.processStartIdentity !== "string" ||
+          !/^\d+$/.test(owner.processStartIdentity)))
     ) {
       return null;
     }
@@ -799,14 +927,18 @@ async function clearStaleWorkspaceReclaimMarker(
     if (markerEntry.isSymbolicLink() || !markerEntry.isFile()) return;
     let marker: WorkspaceLeaseOwner | null = null;
     try {
-      marker = JSON.parse(await readFile(markerPath, "utf8")) as WorkspaceLeaseOwner;
+      marker = JSON.parse(
+        await readFile(markerPath, "utf8"),
+      ) as WorkspaceLeaseOwner;
     } catch {
       // A truncated marker is reclaimable only after its own mtime is stale.
     }
-    const stale = marker == null
-      ? now() - markerEntry.mtimeMs >= WORKSPACE_LEASE_STALE_AFTER_MS
-      : now() - marker.acquiredAt >= WORKSPACE_LEASE_STALE_AFTER_MS &&
-        !isProcessAlive(marker.pid);
+    const stale =
+      marker == null
+        ? now() - markerEntry.mtimeMs >=
+          WORKSPACE_LEASE_MALFORMED_OWNER_AFTER_MS
+        : now() - marker.acquiredAt >= WORKSPACE_LEASE_STALE_AFTER_MS &&
+          !(await isWorkspaceLeaseOwnerAlive(marker));
     if (stale) await rm(markerPath, { force: false }).catch(() => undefined);
   } catch (error) {
     if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
@@ -828,13 +960,15 @@ async function reclaimStaleWorkspaceLease(
   if (
     leaseEntry.isSymbolicLink() ||
     (!leaseEntry.isDirectory() && !leaseEntry.isFile())
-  ) return false;
+  )
+    return false;
   const leaseIsDirectory = leaseEntry.isDirectory();
   const owner = await readWorkspaceLeaseOwner(leasePath, leaseIsDirectory);
-  const leaseIsStale = owner == null
-    ? now() - leaseEntry.mtimeMs >= WORKSPACE_LEASE_STALE_AFTER_MS
-    : now() - owner.acquiredAt >= WORKSPACE_LEASE_STALE_AFTER_MS &&
-      !isProcessAlive(owner.pid);
+  const leaseIsStale =
+    owner == null
+      ? now() - leaseEntry.mtimeMs >= WORKSPACE_LEASE_MALFORMED_OWNER_AFTER_MS
+      : now() - owner.acquiredAt >= WORKSPACE_LEASE_STALE_AFTER_MS &&
+        !(await isWorkspaceLeaseOwnerAlive(owner));
   if (!leaseIsStale) return false;
 
   const reclaimPath = `${leasePath}.reclaim`;
@@ -845,6 +979,8 @@ async function reclaimStaleWorkspaceLease(
         pid: process.pid,
         token: `${process.pid}-${randomUUID()}`,
         acquiredAt: now(),
+        processStartIdentity:
+          (await readProcessStartIdentity(process.pid)) ?? undefined,
       })}\n`,
       { flag: "wx", mode: 0o600 },
     );
@@ -861,13 +997,14 @@ async function reclaimStaleWorkspaceLease(
     if (
       currentEntry.isSymbolicLink() ||
       (!currentEntry.isDirectory() && !currentEntry.isFile())
-    ) return false;
+    )
+      return false;
     const currentOwner = await readWorkspaceLeaseOwner(
       leasePath,
       currentEntry.isDirectory(),
     );
     if (currentOwner != null) {
-      if (isProcessAlive(currentOwner.pid)) return false;
+      if (await isWorkspaceLeaseOwnerAlive(currentOwner)) return false;
       if (
         owner != null &&
         (currentOwner.pid !== owner.pid ||
@@ -892,76 +1029,87 @@ async function reclaimStaleWorkspaceLease(
   }
 }
 
-/** Acquires a cross-process filesystem lease with atomic owner publication and stale recovery. */
+/** Acquires a cross-process filesystem lease through a retained parent capability. */
 async function acquireWorkspaceLease(
-  trustedWorkRoot: string,
-  runtime?: WorkspaceLeaseRuntimeContext,
+  runtime: WorkspaceLeaseRuntimeContext,
 ): Promise<WorkspaceLease> {
-  const publicLeasePath =
-    runtime?.leasePath ?? resolve(trustedWorkRoot, WORKSPACE_LEASE_DIRECTORY);
-  const now = runtime?.now ?? Date.now;
-  const maxWaitMs = runtime?.maxWaitMs ?? WORKSPACE_LEASE_MAX_WAIT_MS;
-  const capability = runtime
-    ? await createWorkspaceLeaseCapability(runtime)
-    : undefined;
-  const leasePath = capability?.operationLeasePath ?? publicLeasePath;
+  const publicLeasePath = runtime.leasePath;
+  const now = runtime.now;
+  const maxWaitMs = runtime.maxWaitMs;
+  const capability = await createWorkspaceLeaseCapability(runtime);
+  const leasePath = capability.operationLeasePath;
   const token = `${process.pid}-${randomUUID()}`;
   const startedAt = now();
   let retainCapability = false;
   try {
     for (let attempt = 0; ; attempt += 1) {
-      if (runtime) await assertTestWorkspaceLeaseParent(runtime, capability!);
+      await assertWorkspaceLeaseParent(runtime, capability);
       try {
         await mkdir(leasePath);
-        if (runtime) {
-          await assertTestWorkspaceLeaseAfterAcquire(runtime, capability!);
-        }
+        await assertWorkspaceLeaseAfterAcquire(runtime, capability);
         const ownerTempPath = resolve(leasePath, `.owner-${token}.tmp`);
+        await assertWorkspaceLeaseParent(runtime, capability);
         await writeFile(
           ownerTempPath,
-          `${JSON.stringify({ pid: process.pid, token, acquiredAt: now() })}\n`,
+          `${JSON.stringify({
+            pid: process.pid,
+            token,
+            acquiredAt: now(),
+            processStartIdentity:
+              (await readProcessStartIdentity(process.pid)) ?? undefined,
+          })}\n`,
           { flag: "wx", mode: 0o600 },
         );
+        await assertWorkspaceLeaseParent(runtime, capability);
         await rename(ownerTempPath, resolve(leasePath, "owner.json"));
-        if (runtime) {
-          await assertTestWorkspaceLeaseAfterAcquire(runtime, capability!);
-        }
-        retainCapability = capability != null;
-        return { path: publicLeasePath, token, capability };
+        await assertWorkspaceLeaseAfterAcquire(runtime, capability);
+        retainCapability = true;
+        return { path: publicLeasePath, token, capability, runtime };
       } catch (error) {
         if ((error as NodeJS.ErrnoException).code !== "EEXIST") throw error;
+        await assertWorkspaceLeaseParent(runtime, capability);
         await reclaimStaleWorkspaceLease(leasePath, now);
         if (now() - startedAt >= maxWaitMs) {
           throw new Error("Timed out waiting for the shared workspace lease");
         }
-        const delay = WORKSPACE_LEASE_RETRY_DELAYS_MS[
-          Math.min(attempt, WORKSPACE_LEASE_RETRY_DELAYS_MS.length - 1)
-        ];
+        const delay =
+          WORKSPACE_LEASE_RETRY_DELAYS_MS[
+            Math.min(attempt, WORKSPACE_LEASE_RETRY_DELAYS_MS.length - 1)
+          ];
         await new Promise((resolveDelay) => setTimeout(resolveDelay, delay));
       }
     }
   } finally {
-    if (capability != null && !retainCapability) {
+    if (!retainCapability) {
       await capability.parentHandle.close().catch(() => undefined);
     }
   }
 }
 
 /** Releases a cross-process workspace lease only when its owner token still matches. */
-async function releaseWorkspaceLease(
-  lease: WorkspaceLease,
-  operationLeasePath = lease.path,
-): Promise<boolean> {
+async function releaseWorkspaceLease(lease: WorkspaceLease): Promise<boolean> {
+  const capability = lease.capability;
+  const runtime = lease.runtime;
+  if (capability == null || runtime == null) return false;
+  const operationLeasePath = capability.operationLeasePath;
+  let released = false;
   try {
+    await assertWorkspaceLeaseParent(runtime, capability);
     const leaseEntry = await lstat(operationLeasePath);
     if (leaseEntry.isSymbolicLink() || !leaseEntry.isDirectory()) return false;
+    await assertWorkspaceLeaseParent(runtime, capability);
     const owner = await readWorkspaceLeaseOwner(operationLeasePath);
     if (owner?.token !== lease.token) return false;
+    await assertWorkspaceLeaseParent(runtime, capability);
     await rm(operationLeasePath, { recursive: true, force: false });
-    return true;
+    released = true;
+    return released;
   } catch (error) {
     if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
-    return true;
+    released = true;
+    return released;
+  } finally {
+    if (released) await capability.parentHandle.close().catch(() => undefined);
   }
 }
 
@@ -982,7 +1130,7 @@ export async function createWorkspaceLeaseRuntimeForTest(
       "workspace lease test wait must be a positive finite number",
     );
   }
-  const validated = await validateTestWorkspaceLeasePath(options.leasePath);
+  const validated = await validateWorkspaceLeasePath(options.leasePath, true);
   const runtime: WorkspaceLeaseRuntimeContext = {
     ...validated,
     now: options.now,
@@ -991,7 +1139,7 @@ export async function createWorkspaceLeaseRuntimeForTest(
   const activeCapabilities = new Set<WorkspaceLeaseCapability>();
   return {
     acquire: async () => {
-      const lease = await acquireWorkspaceLease("", runtime);
+      const lease = await acquireWorkspaceLease(runtime);
       if (lease.capability) activeCapabilities.add(lease.capability);
       return lease;
     },
@@ -1005,19 +1153,15 @@ export async function createWorkspaceLeaseRuntimeForTest(
         return;
       }
       try {
-        await assertTestWorkspaceLeaseParent(runtime, capability);
+        await assertWorkspaceLeaseParent(runtime, capability);
       } catch {
         activeCapabilities.delete(capability);
         await capability.parentHandle.close().catch(() => undefined);
         return;
       }
-      const released = await releaseWorkspaceLease(
-        lease,
-        capability.operationLeasePath,
-      );
+      const released = await releaseWorkspaceLease(lease);
       if (released) {
         activeCapabilities.delete(capability);
-        await capability.parentHandle.close().catch(() => undefined);
       }
     },
   };
@@ -1036,11 +1180,20 @@ async function removeArtifactChild(
   for (let attempt = 0; ; attempt += 1) {
     const rootEntry = await lstat(trustedWorkRoot);
     if (rootEntry.isSymbolicLink() || !rootEntry.isDirectory()) {
-      throw new Error("trusted release work directory is unsafe during cleanup");
+      throw new Error(
+        "trusted release work directory is unsafe during cleanup",
+      );
     }
     const rootRealPath = await realpath(trustedWorkRoot);
-    if (!isStrictlyInside((await validateCacheBoundary()).cacheRealPath, rootRealPath)) {
-      throw new Error("trusted release work directory escaped repository .cache");
+    if (
+      !isStrictlyInside(
+        (await validateCacheBoundary()).cacheRealPath,
+        rootRealPath,
+      )
+    ) {
+      throw new Error(
+        "trusted release work directory escaped repository .cache",
+      );
     }
     let childBefore;
     try {
@@ -1050,11 +1203,15 @@ async function removeArtifactChild(
       throw error;
     }
     if (childBefore.isSymbolicLink() || !childBefore.isDirectory()) {
-      throw new Error("release artifact child is no longer a regular directory");
+      throw new Error(
+        "release artifact child is no longer a regular directory",
+      );
     }
     const childRealPath = await realpath(childPath);
     if (!isStrictlyInside(rootRealPath, childRealPath)) {
-      throw new Error("release artifact child resolves outside the caller root");
+      throw new Error(
+        "release artifact child resolves outside the caller root",
+      );
     }
     try {
       await rm(childPath, { recursive: true, force: true });
@@ -1074,7 +1231,9 @@ async function readPackageJson(path: string): Promise<PackageJson> {
 
 /** Reads the repository catalog values needed to normalize publishable manifests. */
 async function readWorkspaceCatalogVersions(): Promise<Record<string, string>> {
-  const lines = (await readFile(WORKSPACE_MANIFEST_PATH, "utf8")).split(/\r?\n/);
+  const lines = (await readFile(WORKSPACE_MANIFEST_PATH, "utf8")).split(
+    /\r?\n/,
+  );
   const catalog: Record<string, string> = {};
   let inCatalog = false;
   for (const line of lines) {
@@ -1086,7 +1245,9 @@ async function readWorkspaceCatalogVersions(): Promise<Record<string, string>> {
       break;
     }
     if (!inCatalog) continue;
-    const match = line.match(/^\s{2}(?:"([^"]+)"|'([^']+)'|([^:]+)):\s*(\S+)\s*$/);
+    const match = line.match(
+      /^\s{2}(?:"([^"]+)"|'([^']+)'|([^:]+)):\s*(\S+)\s*$/,
+    );
     if (!match) continue;
     const name = match[1] ?? match[2] ?? match[3];
     if (!name) continue;
@@ -1147,20 +1308,26 @@ export function normalizePublishManifestForRelease(
   delete normalized.scripts;
   delete normalized.devDependencies;
   delete normalized.publishConfig;
-  for (const section of ["dependencies", "optionalDependencies", "peerDependencies"] as const) {
+  for (const section of [
+    "dependencies",
+    "optionalDependencies",
+    "peerDependencies",
+  ] as const) {
     const dependencies = normalized[section];
     if (!dependencies || typeof dependencies !== "object") continue;
     normalized[section] = Object.fromEntries(
-      Object.entries(dependencies as Record<string, string>).map(([name, version]) => [
-        name,
-        resolvePublishDependencyVersion(
+      Object.entries(dependencies as Record<string, string>).map(
+        ([name, version]) => [
           name,
-          version,
-          localPackageVersions,
-          catalogVersions,
-          packedPackageVersions,
-        ),
-      ]),
+          resolvePublishDependencyVersion(
+            name,
+            version,
+            localPackageVersions,
+            catalogVersions,
+            packedPackageVersions,
+          ),
+        ],
+      ),
     );
   }
   return normalized;
@@ -1186,7 +1353,9 @@ async function findPackageRootFromEntry(
   let candidate = dirname(entryPath);
   while (true) {
     try {
-      const manifest = await readPackageJson(resolve(candidate, "package.json"));
+      const manifest = await readPackageJson(
+        resolve(candidate, "package.json"),
+      );
       if (manifest.name === packageName) return realpath(candidate);
     } catch (error) {
       if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
@@ -1195,7 +1364,9 @@ async function findPackageRootFromEntry(
     if (parent === candidate) break;
     candidate = parent;
   }
-  throw new Error(`Resolved ${packageName} entrypoint has no matching package root`);
+  throw new Error(
+    `Resolved ${packageName} entrypoint has no matching package root`,
+  );
 }
 
 /** Stages a built local package with only publishable files and normalized metadata. */
@@ -1228,16 +1399,19 @@ async function stagePublishPackage(
 }
 
 /** Resolves an external runtime dependency from its package-local installed graph. */
-async function readExternalPackageSource(
-  spec: { name: string; sourceDirectory: string },
-): Promise<ExternalPackageSource> {
+async function readExternalPackageSource(spec: {
+  name: string;
+  sourceDirectory: string;
+}): Promise<ExternalPackageSource> {
   const anchorRoot = resolve(REPOSITORY_ROOT, "packages", spec.sourceDirectory);
   let sourceRoot: string;
   try {
     sourceRoot = await realpath(resolve(anchorRoot, "node_modules", spec.name));
   } catch (error) {
     if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
-    const requireFromAnchor = createRequire(resolve(anchorRoot, "package.json"));
+    const requireFromAnchor = createRequire(
+      resolve(anchorRoot, "package.json"),
+    );
     sourceRoot = await findPackageRootFromEntry(
       requireFromAnchor.resolve(spec.name),
       spec.name,
@@ -1259,7 +1433,9 @@ async function stageGateDependency(
   catalogVersions: Readonly<Record<string, string>>,
 ): Promise<GateDependencyIdentity> {
   if (source.spec.name !== GATE_RUNTIME_PACKAGE.name) {
-    throw new Error(`Compatibility gate dependency must be ${GATE_RUNTIME_PACKAGE.name}`);
+    throw new Error(
+      `Compatibility gate dependency must be ${GATE_RUNTIME_PACKAGE.name}`,
+    );
   }
   if (catalogVersions.zod !== "^3.25.76") {
     throw new Error(
@@ -1273,7 +1449,10 @@ async function stageGateDependency(
   }
   const packageRoot = resolve(stageRoot, "zod");
   await mkdir(stageRoot, { recursive: true });
-  await cp(source.sourceRoot, packageRoot, { recursive: true, dereference: true });
+  await cp(source.sourceRoot, packageRoot, {
+    recursive: true,
+    dereference: true,
+  });
   const normalizedManifest = normalizePublishManifestForRelease(
     source.manifest,
     new Map(),
@@ -1285,12 +1464,16 @@ async function stageGateDependency(
     `${JSON.stringify(normalizedManifest, null, 2)}\n`,
     "utf8",
   );
-  const stagedManifest = await readPackageJson(resolve(packageRoot, "package.json"));
+  const stagedManifest = await readPackageJson(
+    resolve(packageRoot, "package.json"),
+  );
   if (
     stagedManifest.name !== GATE_RUNTIME_PACKAGE.name ||
     stagedManifest.version !== GATE_ZOD_VERSION
   ) {
-    throw new Error("Staged compatibility gate dependency metadata is not Zod 3.25.76");
+    throw new Error(
+      "Staged compatibility gate dependency metadata is not Zod 3.25.76",
+    );
   }
   return {
     package: { name: stagedManifest.name, version: stagedManifest.version },
@@ -1365,7 +1548,9 @@ function nonPublishableDependencyReferences(manifest: PackageJson): string[] {
   ];
   return sections.flatMap((section) =>
     Object.entries(section ?? {})
-      .filter(([, version]) => FORBIDDEN_LOCAL_DEPENDENCY_PROTOCOL.test(version))
+      .filter(([, version]) =>
+        FORBIDDEN_LOCAL_DEPENDENCY_PROTOCOL.test(version),
+      )
       .map(([name, version]) => `${manifest.name}:${name}@${version}`),
   );
 }
@@ -1382,18 +1567,20 @@ export function assertExportTargets(
   for (const target of exportTargets(manifest)) {
     const packedTarget = `package/${target.replace(/^\.\//, "")}`;
     const wildcardIndex = packedTarget.indexOf("*");
-    const present = wildcardIndex < 0
-      ? packedPaths.has(packedTarget)
-      : [...packedPaths].some((path) => {
-          if (!path.startsWith(packedTarget.slice(0, wildcardIndex))) return false;
-          const suffix = packedTarget.slice(wildcardIndex + 1);
-          if (!path.endsWith(suffix)) return false;
-          const wildcardValue = path.slice(
-            wildcardIndex,
-            suffix.length > 0 ? path.length - suffix.length : undefined,
-          );
-          return wildcardValue.length > 0 && !path.endsWith("/");
-        });
+    const present =
+      wildcardIndex < 0
+        ? packedPaths.has(packedTarget)
+        : [...packedPaths].some((path) => {
+            if (!path.startsWith(packedTarget.slice(0, wildcardIndex)))
+              return false;
+            const suffix = packedTarget.slice(wildcardIndex + 1);
+            if (!path.endsWith(suffix)) return false;
+            const wildcardValue = path.slice(
+              wildcardIndex,
+              suffix.length > 0 ? path.length - suffix.length : undefined,
+            );
+            return wildcardValue.length > 0 && !path.endsWith("/");
+          });
     if (!present) {
       throw new Error(
         `${manifest.name} export target ${target} is absent from its release artifact`,
@@ -1436,16 +1623,20 @@ async function buildWorkspacePackages(
     packageMetadata
       .filter(
         ({ directory }) =>
-          directory === "knowledge-space-practice" || directory === "srs-engine",
+          directory === "knowledge-space-practice" ||
+          directory === "srs-engine",
       )
       .map(({ packageRoot }) => buildPackage(packageRoot)),
   );
   const salesPackage = packageMetadata.find(
     ({ directory }) => directory === SALES_KNOWLEDGE_DIRECTORY,
   );
-  if (!salesPackage) throw new Error("Sales knowledge package metadata is missing");
+  if (!salesPackage)
+    throw new Error("Sales knowledge package metadata is missing");
   await buildSalesKnowledgePackage(salesPackage.packageRoot);
-  await buildPackage(resolve(REPOSITORY_ROOT, "packages/mastery-runtime-compat"));
+  await buildPackage(
+    resolve(REPOSITORY_ROOT, "packages/mastery-runtime-compat"),
+  );
 }
 
 /** Copies the shared compatibility entrypoints into the private artifact child while the lease is held. */
@@ -1459,7 +1650,10 @@ async function snapshotRuntimeDist(temporaryRoot: string): Promise<string> {
         "packages/mastery-runtime-compat/dist",
         file,
       );
-      const bytes = await readRegularFileBytes(sourcePath, `Shared runtime ${file}`);
+      const bytes = await readRegularFileBytes(
+        sourcePath,
+        `Shared runtime ${file}`,
+      );
       await writeNewRegularFile(
         resolve(snapshotRoot, file),
         bytes,
@@ -1470,13 +1664,110 @@ async function snapshotRuntimeDist(temporaryRoot: string): Promise<string> {
   return snapshotRoot;
 }
 
+/** Snapshots a validated regular input into the private release child. */
+async function snapshotReleaseInput(
+  temporaryRoot: string,
+  sourcePath: string,
+  targetName: string,
+): Promise<string> {
+  const target = resolve(temporaryRoot, "input-snapshot", targetName);
+  await mkdir(dirname(target), { recursive: true });
+  await writeNewRegularFile(
+    target,
+    await readRegularFileBytes(sourcePath, `Release input ${targetName}`),
+    `Release input snapshot ${targetName}`,
+  );
+  return target;
+}
+
+/** Calculates a SHA-256 digest from immutable bytes. */
+function sha256(bytes: Uint8Array): string {
+  return createHash("sha256").update(bytes).digest("hex");
+}
+
+/** Calculates a deterministic digest over named immutable release inputs. */
+function digestReleaseInputs(
+  inputs: ReadonlyArray<{ name: string; bytes: Uint8Array }>,
+): string {
+  const hash = createHash("sha256");
+  for (const input of [...inputs].sort((left, right) =>
+    left.name.localeCompare(right.name),
+  )) {
+    hash.update(input.name);
+    hash.update("\0");
+    hash.update(String(input.bytes.byteLength));
+    hash.update("\0");
+    hash.update(input.bytes);
+    hash.update("\0");
+  }
+  return hash.digest("hex");
+}
+
+/** Captures the manifest and descriptors that define one release proof. */
+async function snapshotReleaseInputs(
+  temporaryRoot: string,
+  consumerDescriptorPaths: ReadonlyArray<string>,
+  runtimeDistSnapshotRoot: string,
+): Promise<ReleaseInputSnapshot> {
+  const manifestSourcePath = resolve(
+    REPOSITORY_ROOT,
+    "packages/mastery-runtime-compat/runtime-manifest.json",
+  );
+  const manifestPath = await snapshotReleaseInput(
+    temporaryRoot,
+    manifestSourcePath,
+    "runtime-manifest.json",
+  );
+  const descriptorPaths = await Promise.all(
+    consumerDescriptorPaths.map((sourcePath, index) =>
+      snapshotReleaseInput(
+        temporaryRoot,
+        sourcePath,
+        `descriptors/${index}-${basename(sourcePath)}`,
+      ),
+    ),
+  );
+  const sourcePaths = [
+    manifestPath,
+    ...descriptorPaths,
+    ...RUNTIME_DIST_FILES.map((file) => resolve(runtimeDistSnapshotRoot, file)),
+  ];
+  const inputs = await Promise.all(
+    sourcePaths.map(async (path) => ({
+      name: relative(temporaryRoot, path),
+      bytes: await readRegularFileBytes(
+        path,
+        "Immutable release input snapshot",
+      ),
+    })),
+  );
+  const { stdout } = await executeLocal(
+    "git",
+    ["rev-parse", "HEAD"],
+    REPOSITORY_ROOT,
+  );
+  const auditedHead = stdout.trim();
+  if (!/^[0-9a-f]{40}$/.test(auditedHead)) {
+    throw new Error("Release proof could not record an audited Git HEAD");
+  }
+  return {
+    manifestPath,
+    descriptorPaths,
+    runtimeDistPath: runtimeDistSnapshotRoot,
+    sourceDigestSha256: digestReleaseInputs(inputs),
+    auditedHead,
+  };
+}
+
 /** Applies a bounded test-only delay used to force cross-process lease overlap proofs. */
 async function waitForTestHook(environmentName: string): Promise<void> {
   const rawDelay = process.env[environmentName];
   if (rawDelay == null) return;
   const delay = Number(rawDelay);
   if (!Number.isFinite(delay) || delay <= 0) return;
-  await new Promise((resolveDelay) => setTimeout(resolveDelay, Math.min(delay, 120_000)));
+  await new Promise((resolveDelay) =>
+    setTimeout(resolveDelay, Math.min(delay, 120_000)),
+  );
 }
 
 /** Executes one isolated npm pack command and retries only missing JSON output. */
@@ -1500,7 +1791,9 @@ async function executeNpmPack(
         const diagnostic = result.stderr.trim();
         throw new Error(
           `${label} npm pack produced empty stdout${
-            diagnostic.length > 0 ? `; stderr: ${diagnostic.slice(0, 1000)}` : ""
+            diagnostic.length > 0
+              ? `; stderr: ${diagnostic.slice(0, 1000)}`
+              : ""
           }`,
         );
       }
@@ -1527,7 +1820,8 @@ async function dryRunPack(
     manifest.name,
   );
   const output = stdout.trim();
-  if (output.length === 0) throw new Error(`${manifest.name} npm dry-run produced empty stdout`);
+  if (output.length === 0)
+    throw new Error(`${manifest.name} npm dry-run produced empty stdout`);
   let entries: NpmPackEntry[];
   try {
     entries = JSON.parse(output) as NpmPackEntry[];
@@ -1542,7 +1836,9 @@ async function dryRunPack(
   if (!entry || !entry.filename.endsWith(".tgz")) {
     throw new Error(`${manifest.name} did not produce an npm dry-run manifest`);
   }
-  const dryRunPaths = new Set(entry.files.map((file) => `package/${file.path}`));
+  const dryRunPaths = new Set(
+    entry.files.map((file) => `package/${file.path}`),
+  );
   assertExportTargets(manifest, dryRunPaths);
 }
 
@@ -1615,7 +1911,11 @@ async function inspectPackedArtifact(
 ): Promise<{ manifest: PackageJson; paths: Set<string> }> {
   const [{ stdout: manifestJson }, { stdout: archiveListing }] =
     await Promise.all([
-      executeLocal("tar", ["-xOf", archivePath, "package/package.json"], REPOSITORY_ROOT),
+      executeLocal(
+        "tar",
+        ["-xOf", archivePath, "package/package.json"],
+        REPOSITORY_ROOT,
+      ),
       executeLocal("tar", ["-tzf", archivePath], REPOSITORY_ROOT),
     ]);
   return {
@@ -1634,6 +1934,7 @@ async function runCleanConsumer(
   archives: ReadonlyMap<string, string>,
   gateDependency: GateDependencyIdentity,
   runtimeDistSnapshotRoot: string,
+  runtimeManifestSnapshotPath: string,
   consumerDescriptorPaths: ReadonlyArray<string>,
 ): Promise<{
   checkedConsumers: string[];
@@ -1650,7 +1951,11 @@ async function runCleanConsumer(
     [...archives.entries()].map(([name, archive]) => [name, `file:${archive}`]),
   );
   manifest.dependencies = localArtifacts;
-  await writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`, "utf8");
+  await writeFile(
+    manifestPath,
+    `${JSON.stringify(manifest, null, 2)}\n`,
+    "utf8",
+  );
 
   const runtimeDistRoot = resolve(consumerRoot, "dist");
   await mkdir(runtimeDistRoot, { recursive: true });
@@ -1668,7 +1973,7 @@ async function runCleanConsumer(
     { recursive: true, dereference: true },
   );
   await cp(
-    resolve(REPOSITORY_ROOT, "packages/mastery-runtime-compat/runtime-manifest.json"),
+    runtimeManifestSnapshotPath,
     resolve(consumerRoot, "runtime-manifest.json"),
   );
 
@@ -1691,13 +1996,19 @@ async function runCleanConsumer(
         typeof descriptor.version !== "string" ||
         typeof descriptor.graph?.release !== "string"
       ) {
-        throw new Error(`Consumer descriptor ${descriptorPath} must declare a name`);
+        throw new Error(
+          `Consumer descriptor ${descriptorPath} must declare a name`,
+        );
       }
       const target = resolve(
         descriptorRoot,
         `${index}-${basename(descriptorPath)}`,
       );
-      await writeNewRegularFile(target, descriptorBytes, "Consumer descriptor target");
+      await writeNewRegularFile(
+        target,
+        descriptorBytes,
+        "Consumer descriptor target",
+      );
       return {
         descriptor: {
           name: descriptor.name,
@@ -1741,7 +2052,9 @@ async function runCleanConsumer(
       attestation.consumer.version !== descriptor.version ||
       attestation.salesKnowledge.releaseId !== descriptor.graphRelease
     ) {
-      throw new Error("Packed consumer attestation does not match its copied descriptor");
+      throw new Error(
+        "Packed consumer attestation does not match its copied descriptor",
+      );
     }
     checkedConsumers.push(attestation.consumer.name);
     resolvedVersions = attestation.resolvedVersions;
@@ -1749,16 +2062,21 @@ async function runCleanConsumer(
       verifiedSalesKnowledge = {
         package: attestation.salesKnowledge.package,
         verifierExport: attestation.salesKnowledge.verifierExport,
-        evidenceManifestExport: attestation.salesKnowledge.evidenceManifestExport,
+        evidenceManifestExport:
+          attestation.salesKnowledge.evidenceManifestExport,
         evidence: attestation.salesKnowledge.evidence,
       };
     }
   }
   if (verifiedSalesKnowledge == null) {
-    throw new Error("Packed consumer proof did not verify a Sales knowledge identity");
+    throw new Error(
+      "Packed consumer proof did not verify a Sales knowledge identity",
+    );
   }
   if (resolvedVersions == null) {
-    throw new Error("Packed consumer proof did not attest resolved runtime versions");
+    throw new Error(
+      "Packed consumer proof did not attest resolved runtime versions",
+    );
   }
   return { checkedConsumers, verifiedSalesKnowledge, resolvedVersions };
 }
@@ -1773,90 +2091,120 @@ export async function runReleaseArtifactCheck(
   options: ReleaseArtifactCheckOptions,
 ): Promise<ReleaseArtifactCheckResult> {
   if (options.consumerDescriptorPaths.length === 0) {
-    throw new Error("consumerDescriptorPaths must contain at least one descriptor");
+    throw new Error(
+      "consumerDescriptorPaths must contain at least one descriptor",
+    );
   }
   const callerRoot = await validateTemporaryRoot(options.temporaryRoot);
   await ensureCallerRootNamespace(callerRoot);
   const trustedWorkRoot = await ensureTrustedWorkRoot(callerRoot);
   const temporaryRoot = await createArtifactChild(trustedWorkRoot);
   try {
-    const packageMetadata = await Promise.all(
-      PACKAGED_DIRECTORIES.map(async (directory) => {
-        const packageRoot = resolve(REPOSITORY_ROOT, "packages", directory);
-        const manifest = await readPackageJson(resolve(packageRoot, "package.json"));
-        return { directory, packageRoot, manifest };
-      }),
-    );
-
-    const catalogVersions = await readWorkspaceCatalogVersions();
-    const localPackageVersions = new Map(
-      packageMetadata.map(({ manifest }) => [manifest.name, manifest.version]),
-    );
-    const workspaceLease = await acquireWorkspaceLease(trustedWorkRoot);
+    const validatedProductionLease =
+      await validateProductionWorkspaceLeasePath(trustedWorkRoot);
+    const workspaceLeaseRuntime: WorkspaceLeaseRuntimeContext = {
+      ...validatedProductionLease,
+      now: Date.now,
+      maxWaitMs: WORKSPACE_LEASE_MAX_WAIT_MS,
+    };
+    const workspaceLease = await acquireWorkspaceLease(workspaceLeaseRuntime);
+    let packageMetadata!: Array<{
+      directory: string;
+      packageRoot: string;
+      manifest: PackageJson;
+    }>;
+    let catalogVersions!: Record<string, string>;
+    let localPackageVersions!: Map<string, string>;
     let stagedMetadata: StagedPackage[];
     let allPackedVersions: Map<string, string>;
     let gateDependency: GateDependencyIdentity;
     let runtimeDistSnapshotRoot: string;
+    let releaseInputs: ReleaseInputSnapshot;
     try {
       ({
         stagedMetadata,
         allPackedVersions,
         gateDependency,
         runtimeDistSnapshotRoot,
-      } =
-        await withWorkspaceBuildLock(async () => {
-          const externalSources = await Promise.all(
-            EXTERNAL_RUNTIME_PACKAGES.map((spec) => readExternalPackageSource(spec)),
-          );
-          const gateSource = await readExternalPackageSource(GATE_RUNTIME_PACKAGE);
-          const externalPackageVersions = new Map(
-            externalSources.map(({ manifest }) => [manifest.name, manifest.version]),
-          );
-          allPackedVersions = new Map([
-            ...localPackageVersions,
-            ...externalPackageVersions,
-          ]);
-          if (!workspaceBuildReady) {
-            await buildWorkspacePackages(packageMetadata);
-            workspaceBuildReady = true;
-          }
-          const stagedExternalMetadata = await Promise.all(
-            externalSources.map((source) =>
-              stageExternalPackage(
-                source,
-                resolve(temporaryRoot, "external-staging"),
-                catalogVersions,
-                allPackedVersions,
-              ),
+        releaseInputs,
+      } = await withWorkspaceBuildLock(async () => {
+        packageMetadata = await Promise.all(
+          PACKAGED_DIRECTORIES.map(async (directory) => {
+            const packageRoot = resolve(REPOSITORY_ROOT, "packages", directory);
+            const manifest = await readPackageJson(
+              resolve(packageRoot, "package.json"),
+            );
+            return { directory, packageRoot, manifest };
+          }),
+        );
+        catalogVersions = await readWorkspaceCatalogVersions();
+        localPackageVersions = new Map(
+          packageMetadata.map(({ manifest }) => [
+            manifest.name,
+            manifest.version,
+          ]),
+        );
+        const externalSources = await Promise.all(
+          EXTERNAL_RUNTIME_PACKAGES.map((spec) =>
+            readExternalPackageSource(spec),
+          ),
+        );
+        const gateSource =
+          await readExternalPackageSource(GATE_RUNTIME_PACKAGE);
+        const externalPackageVersions = new Map(
+          externalSources.map(({ manifest }) => [
+            manifest.name,
+            manifest.version,
+          ]),
+        );
+        allPackedVersions = new Map([
+          ...localPackageVersions,
+          ...externalPackageVersions,
+        ]);
+        await buildWorkspacePackages(packageMetadata);
+        const stagedExternalMetadata = await Promise.all(
+          externalSources.map((source) =>
+            stageExternalPackage(
+              source,
+              resolve(temporaryRoot, "external-staging"),
+              catalogVersions,
+              allPackedVersions,
             ),
-          );
-          gateDependency = await stageGateDependency(
-            gateSource,
-            resolve(temporaryRoot, "gate-staging"),
-            catalogVersions,
-          );
-          const stagedPackageMetadata = await Promise.all(
-            packageMetadata.map(({ directory, packageRoot, manifest }) =>
-              stagePublishPackage(
-                packageRoot,
-                directory,
-                manifest,
-                resolve(temporaryRoot, "publish-staging"),
-                localPackageVersions,
-                catalogVersions,
-                allPackedVersions,
-              ),
+          ),
+        );
+        gateDependency = await stageGateDependency(
+          gateSource,
+          resolve(temporaryRoot, "gate-staging"),
+          catalogVersions,
+        );
+        const stagedPackageMetadata = await Promise.all(
+          packageMetadata.map(({ directory, packageRoot, manifest }) =>
+            stagePublishPackage(
+              packageRoot,
+              directory,
+              manifest,
+              resolve(temporaryRoot, "publish-staging"),
+              localPackageVersions,
+              catalogVersions,
+              allPackedVersions,
             ),
-          );
-          runtimeDistSnapshotRoot = await snapshotRuntimeDist(temporaryRoot);
-          await waitForTestHook(TEST_HOLD_LEASE_ENV);
-          return {
-            stagedMetadata: [...stagedPackageMetadata, ...stagedExternalMetadata],
-            allPackedVersions,
-            gateDependency,
-            runtimeDistSnapshotRoot,
-          };
-        }));
+          ),
+        );
+        runtimeDistSnapshotRoot = await snapshotRuntimeDist(temporaryRoot);
+        releaseInputs = await snapshotReleaseInputs(
+          temporaryRoot,
+          options.consumerDescriptorPaths,
+          runtimeDistSnapshotRoot,
+        );
+        await waitForTestHook(TEST_HOLD_LEASE_ENV);
+        return {
+          stagedMetadata: [...stagedPackageMetadata, ...stagedExternalMetadata],
+          allPackedVersions,
+          gateDependency,
+          runtimeDistSnapshotRoot,
+          releaseInputs,
+        };
+      }));
     } finally {
       await releaseWorkspaceLease(workspaceLease);
     }
@@ -1878,7 +2226,9 @@ export async function runReleaseArtifactCheck(
           packed.manifest.name !== manifest.name ||
           packed.manifest.version !== manifest.version
         ) {
-          throw new Error(`${manifest.name} packed metadata changed name or version`);
+          throw new Error(
+            `${manifest.name} packed metadata changed name or version`,
+          );
         }
         if (localPackageVersions.has(manifest.name)) {
           assertExportTargets(packed.manifest, packed.paths);
@@ -1911,7 +2261,24 @@ export async function runReleaseArtifactCheck(
       archives,
       gateDependency,
       runtimeDistSnapshotRoot,
-      options.consumerDescriptorPaths,
+      releaseInputs.manifestPath,
+      releaseInputs.descriptorPaths,
+    );
+    const archiveDigestsSha256 = Object.fromEntries(
+      await Promise.all(
+        packedArtifacts.map(
+          async ({ name, archivePath }) =>
+            [
+              name,
+              sha256(
+                await readRegularFileBytes(
+                  archivePath,
+                  `Release archive ${name}`,
+                ),
+              ),
+            ] as const,
+        ),
+      ),
     );
     return {
       packages: packageMetadata.map(({ manifest }) => manifest.name),
@@ -1919,6 +2286,9 @@ export async function runReleaseArtifactCheck(
       exportsVerified: true,
       workspaceDependencies,
       cleanConsumer: true,
+      auditedHead: releaseInputs.auditedHead,
+      sourceDigestSha256: releaseInputs.sourceDigestSha256,
+      archiveDigestsSha256,
       ...cleanConsumer,
     };
   } finally {
