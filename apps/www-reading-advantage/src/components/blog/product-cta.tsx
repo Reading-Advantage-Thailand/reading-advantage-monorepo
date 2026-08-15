@@ -1,4 +1,5 @@
 import { Link } from "@/locales/navigation";
+import { getScopedI18n } from "@/locales/server";
 import { ArrowRight } from "lucide-react";
 
 interface ProductCTAProps {
@@ -14,30 +15,31 @@ function getProductName(path: string): string {
     .join(" ");
 }
 
-export function ProductCTA({ product, locale }: ProductCTAProps) {
+/**
+ * Renders a localized CTA for a product page.
+ * @param props The product and locale props.
+ * @returns The product CTA or no content.
+ */
+export async function ProductCTA({
+  product,
+  locale: _locale,
+}: ProductCTAProps) {
   if (!product) return null;
 
-  const isThai = locale === "th";
+  const t = await getScopedI18n("components.blog.productCta");
   const productName = getProductName(product);
-  const label = isThai
-    ? `เรียนรู้เพิ่มเติมเกี่ยวกับ ${productName}`
-    : `Learn more about ${productName}`;
 
   return (
     <div className="my-8 p-6 bg-gradient-to-br from-sky-50 to-sky-100 rounded-2xl border border-sky-200">
-      <h3 className="text-xl font-bold text-slate-900 mb-2">
-        {isThai ? "สนใจเรียนรู้เพิ่มเติม?" : "Want to learn more?"}
-      </h3>
+      <h3 className="text-xl font-bold text-slate-900 mb-2">{t("title")}</h3>
       <p className="text-slate-700 mb-4">
-        {isThai
-          ? `สำรวจว่า ${productName} สามารถช่วยเหลือลูกของคุณได้อย่างไร`
-          : `Explore how ${productName} can help your child`}
+        {t("description", { product: productName })}
       </p>
       <Link
         href={product}
         className="inline-flex items-center gap-2 font-semibold text-sky-600 hover:text-sky-800 transition-all duration-300"
       >
-        <span>{label}</span>
+        <span>{t("action", { product: productName })}</span>
         <ArrowRight className="h-5 w-5" aria-hidden="true" />
       </Link>
     </div>

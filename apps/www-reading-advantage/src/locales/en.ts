@@ -32,6 +32,8 @@ import { en as b2b } from "./components/products/b2b-solutions";
 import { en as b2c } from "./components/products/b2c-solutions";
 import { en as tutorAdvantage } from "./components/products/tutor-advantage";
 import { en as pagination } from "./components/pagination";
+import { en as blog } from "./components/blog";
+import { en as ui } from "./components/ui";
 
 export default {
   pages: {
@@ -65,6 +67,8 @@ export default {
     comparisonTable,
     contactForm,
     pagination,
+    blog,
+    ui,
     products: {
       b2bSolutions: b2b,
       b2cSolutions: b2c,
