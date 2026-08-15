@@ -40,6 +40,19 @@ const receiptSchema = z.strictObject({
   scope: financeThbPolicyApprovalScopeSchema,
 });
 
+const replayValuationSchema = financeThbConversionEvidenceSchema
+  .extend({
+    decisionId: opaqueIdentifierSchema,
+    contentDigest: digestSchema,
+    scope: financeThbPolicyApprovalScopeSchema,
+  })
+  .strict();
+
+const replayInputSchema = z.strictObject({
+  existing: replayValuationSchema,
+  incoming: replayValuationSchema,
+});
+
 const attestorResultSchema = z.discriminatedUnion("decision", [
   z.strictObject({ decision: z.literal("allow"), receipt: receiptSchema }),
   z.strictObject({ decision: z.literal("replay"), receipt: receiptSchema }),
@@ -364,23 +377,23 @@ export function classifyFinanceThbValuationReplay(input: {
       readonly status: "conflict";
       readonly reason: "conversion-evidence-mismatch";
     } {
-  const keys = [
-    "billId",
-    "sourceAmountDecimal",
-    "sourceCurrency",
-    "thbAmountDecimal",
-    "conversionRateDecimal",
-    "rateEffectiveDate",
-    "rateSourceId",
-    "decisionId",
-    "contentDigest",
-  ];
   try {
-    const existing = capture(input.existing);
-    const incoming = capture(input.incoming);
-    if (!isPlainRecord(existing) || !isPlainRecord(incoming))
-      throw new Error("value");
-    if (keys.every((key) => existing[key] === incoming[key])) {
+    const capturedInput = capture(input);
+    const operands = replayInputSchema.safeParse(capturedInput);
+    if (!operands.success) throw new Error("value");
+    const { existing, incoming } = operands.data;
+    if (
+      existing.billId === incoming.billId &&
+      existing.sourceAmountDecimal === incoming.sourceAmountDecimal &&
+      existing.sourceCurrency === incoming.sourceCurrency &&
+      existing.thbAmountDecimal === incoming.thbAmountDecimal &&
+      existing.conversionRateDecimal === incoming.conversionRateDecimal &&
+      existing.rateEffectiveDate === incoming.rateEffectiveDate &&
+      existing.rateSourceId === incoming.rateSourceId &&
+      existing.decisionId === incoming.decisionId &&
+      existing.contentDigest === incoming.contentDigest &&
+      scopesMatch(existing.scope, incoming.scope)
+    ) {
       return Object.freeze({ status: "replay" as const });
     }
   } catch {
