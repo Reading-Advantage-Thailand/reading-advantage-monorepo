@@ -2,18 +2,16 @@
 
 ## Scope
 
-Source commit: `103497df2`.
+Source commit: `d82c44e0cd3240e73f7bd6ce0c1bc65d8ff24303`.
 
-The change adds the `conflict` enqueue result. The PostgreSQL adapter returns it
-when an idempotency identity has a different payload fingerprint. The stored row
-is not updated.
+The source preserves JSONB payload types. It also supports the Task 9 conflict,
+retry, replay, and audit contracts.
 
-Retry jitter now derives from the stable job-name, queue-name, and attempt
-identity. The delay remains between the exponential delay and the 250 ms jitter
-bound. It does not use runtime randomness.
+Retry jitter derives from stable job identity. The delay remains bounded and
+deterministic under test control.
 
-The adapter also decodes a PostgreSQL JSON string before it returns a claimed
-payload. The conflict test checks that the original payload remains unchanged.
+The adapter returns JSONB values with their original JSON types. The conflict
+case preserves the stored payload.
 
 ## Commands
 
@@ -28,7 +26,7 @@ env -u DURABLE_JOB_PG16_TEST_OPT_IN \
     src/jobs/__tests__/postgres16-enqueue-retry-replay.red.test.ts
 ```
 
-Result: exit `0`; `1` passed and `6` skipped.
+Result: exit `0`; `1` passed and `18` skipped.
 
 Disposable PostgreSQL 16 used `docker.io/library/postgres:16-alpine` on the
 loopback host network. The server used port `55433` and a dedicated
@@ -41,14 +39,15 @@ DURABLE_JOB_PG16_TEST_ADMIN_DATABASE_URL=<guarded-url> \
     src/jobs/__tests__/postgres16-enqueue-retry-replay.red.test.ts
 ```
 
-Result: exit `0`; `7` passed. The post-run query returned `0` scratch databases
-and `0` Task 9 roles. The disposable container was removed.
+Result: exit `0`; `19/19` passed. The post-run query returned `0` scratch
+databases and `0` Task 9 roles. The disposable container was removed.
 
-Focused type checks and ESLint exited `0`. The adapter Prettier check and the
-exact source-path diff check exited `0`. `contracts.ts` and `ports.ts` have
-pre-existing Prettier deviations at `HEAD`; this change did not add them.
+Direct TypeScript, focused ESLint, Prettier, and the exact source-path diff
+check exited `0`. Package `pnpm check-types` was network-blocked.
+
+Serialized graph refresh remains pending orchestration support. It is not a
+product failure.
 
 ## Result
 
-Task 9 is Green. The five existing live contracts remain Green with the new
-conflict and deterministic retry contracts.
+Task 9 is Green. The live PostgreSQL 16 contract passed `19/19`.

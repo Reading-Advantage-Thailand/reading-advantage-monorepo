@@ -1,0 +1,41 @@
+Measure Jr Green role log — Task 9 security completion
+Track: durable_job_worker_platform_20260713
+Phase: Phase 2: Red Concurrency and Failure Tests
+Role: measure-jr-green
+Date: 2026-08-16
+phase_base_sha: 33d44fc81b84559c2ab7a48acfaf86554bf017a5
+role_base_sha: d82c44e0cd3240e73f7bd6ce0c1bc65d8ff24303
+source_commit: d82c44e0cd3240e73f7bd6ce0c1bc65d8ff24303
+
+## Preflight
+
+The immutable phase base and separate role base resolve to commits. The committed
+Task 9 Red test is inside `phase_base_sha..HEAD`. This role did not edit it.
+
+## Verification
+
+The safe-default targeted Red command exited `0` with `1` passed and `18`
+skipped. The live PostgreSQL 16 command passed `19/19`. Cleanup found `0`
+scratch databases and `0` Task 9 roles.
+
+Direct TypeScript, focused ESLint, Prettier, and diff checks passed. Package
+`pnpm check-types` was network-blocked. Serialized graph refresh remains pending
+orchestration support, not a product failure.
+
+`bash measure/doctor.sh` failed on deprecated `[ ]` markers in unrelated tracks.
+The documented Task 9 live gate passed.
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+status: complete
+track: durable_job_worker_platform_20260713
+phase: Phase 2: Red Concurrency and Failure Tests
+phase_base_sha: 33d44fc81b84559c2ab7a48acfaf86554bf017a5
+role_base_sha: d82c44e0cd3240e73f7bd6ce0c1bc65d8ff24303
+source_commit: d82c44e0cd3240e73f7bd6ce0c1bc65d8ff24303
+tests_run: safe default exit 0 with 1 passed and 18 skipped; live PostgreSQL 16 passed 19/19
+files_changed: plan.md; task-9-green-evidence-20260815.md; orchestration/phase2-task9-security-jr-green-role.log
+plan_updates: Task 9 changed to [x] with the source SHA.
+known_failures: package pnpm check-types was network-blocked; graph refresh needs serialized orchestration support; doctor has unrelated deprecated markers.
+handoff: Review source commit d82c44e0cd3240e73f7bd6ce0c1bc65d8ff24303 and this evidence commit. The committed Red test remains immutable.
+END_MEASURE_AGENT_RESULT

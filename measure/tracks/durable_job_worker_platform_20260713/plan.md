@@ -74,7 +74,7 @@ its Red contract or live evidence. This foundation review does not close Phase 2
   - Final security ACCEPT (2026-08-15; source commit `b8b0dce713f4d3f2d17ad0e922ff65a5c1f20b3e`): migration `0052` cleanup removed only test-owned roles after scratch databases were gone. The fixture proved zero scratch databases, zero test-owned roles, fail-closed cleanup, and deterministic claim and reclaim lock barriers.
   - The safe gate passed 6 tests and recorded 7 intentional skips. The fresh PostgreSQL 16 gate passed 13/13 tests. The migration order was `0000 → 0005 → 0007 → 0025 → 0052`. Container removal was verified.
   - Typecheck, build, lint, format, and diff checks passed. Task 8 is complete. Phase 2 remains open because Task 9 remains blocked.
-- [~] Task 9: Add Red idempotent enqueue, bounded deterministic-backoff, exhaustion/DLQ, authorization/audit, and active-lease replay-rejection tests. (source: `103497df2`)
+- [x] Task 9: Add Red idempotent enqueue, bounded deterministic-backoff, exhaustion/DLQ, authorization/audit, and active-lease replay-rejection tests. (source: `d82c44e0cd3240e73f7bd6ce0c1bc65d8ff24303`)
   - Red evidence (2026-08-15; role `measure-mid-red`; phase base `33d44fc81b84559c2ab7a48acfaf86554bf017a5`; role base `ee8b0bf03f915b17e63edb4cc3b26a710e67b3af`): `packages/backend/src/jobs/__tests__/postgres16-enqueue-retry-replay.red.test.ts` covers scoped duplicate enqueue, conflicting payloads, deterministic bounded retry delay, exhaustion/DLQ, authorized replay audit, and active-lease replay rejection.
   - Safe-default command:
     ```bash
@@ -102,12 +102,12 @@ and timestamps`, which produced different delays across eight equal retries.
     `durable_job_pg16_test_%` and `0` Task 9 roles. Formatting and the exact-path
     `git diff --check` passed. No production source changed. Task 9 remains `[~]`
     for Green implementation of the two remaining behaviors.
-  - Green evidence (2026-08-15; source commit `103497df2`): the adapter returns
-    `conflict` without replacing a changed idempotency payload. It calculates
-    bounded retry jitter from stable job-name, queue-name, and attempt identity.
-    The safe-default gate exited `0` with `1` passed and `6` skipped. The
-    disposable PostgreSQL 16 gate exited `0` with `7` passed. Cleanup found `0`
-    scratch databases and `0` Task 9 roles. See
+  - Green evidence (2026-08-16; source commit
+    `d82c44e0cd3240e73f7bd6ce0c1bc65d8ff24303`): the live PostgreSQL 16 gate
+    passed `19/19`. Cleanup found `0` scratch databases and `0` Task 9 roles.
+    Direct TypeScript, focused ESLint, Prettier, and diff checks passed. The
+    package `pnpm check-types` command was network-blocked. Serialized graph
+    refresh remains pending orchestration support, not a product failure. See
     `task-9-green-evidence-20260815.md`.
   - Security Red remediation (2026-08-15; role `measure-mid-red`; phase base
     `33d44fc81b84559c2ab7a48acfaf86554bf017a5`; role base
