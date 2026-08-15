@@ -8,6 +8,7 @@ import type {
   DurableJobQueuePort,
   EnqueueJobRequest,
   JobTenant,
+  ReplayAuthorizationEvidence,
 } from "../index.js";
 import {
   isDurableJobPostgres16IntegrationEnabled,
@@ -41,10 +42,21 @@ const TEST_OWNED_ROLE_DROP_SQL = {
   durable_job_queue_runtime: 'DROP ROLE IF EXISTS "durable_job_queue_runtime"',
 } as const;
 const BASE_TIME = "2026-08-15T10:00:00.000Z";
+const STALE_AUTHORIZED_AT = "2026-08-14T10:00:00.000Z";
 const QUEUE_NAME = "task9-red";
 const JOB_NAME = "codecamp.review.enqueue-retry-replay";
+const SHARED_IDEMPOTENCY_KEY = "task9-shared-idempotency";
 const GLOBAL_TENANT = { mode: "global" } as const;
-const TENANT_SCOPE = { mode: "tenant", tenantId: "task9-school" } as const;
+const TENANT_ONE_SCOPE = {
+  mode: "tenant",
+  tenantId: "task9-school-one",
+} as const;
+const TENANT_TWO_SCOPE = {
+  mode: "tenant",
+  tenantId: "task9-school-two",
+} as const;
+const JSONB_POISON_TIME = "2026-08-15T10:00:01.000Z";
+const REPLAY_AUTHORIZATION_MAX_AGE_MS = 5 * 60 * 1_000;
 const MISSING_ADAPTER_MESSAGE =
   "Intentional Red: PostgreSQL durable-job adapter behavior is missing under the approved adapter root.";
 
@@ -57,9 +69,39 @@ type ClaimedJob = Extract<
 >["jobs"][number];
 type ReplayRequest = Parameters<DurableJobQueuePort["replay"]>[0];
 
+interface ReplayAuthorizationVerificationInput {
+  readonly jobId: string;
+  readonly tenant: JobTenant;
+  readonly authorization: unknown;
+  readonly correlationId: string;
+  readonly now: string;
+}
+
+interface ReplayAuthorizationVerifier {
+  readonly verify: (
+    input: Readonly<ReplayAuthorizationVerificationInput>,
+  ) => Promise<ReplayAuthorizationEvidence>;
+}
+
+interface ReplayAuthorizationReceiptInput {
+  readonly jobId: string;
+  readonly tenant: JobTenant;
+  readonly correlationId: string;
+  readonly authorizedAt?: string;
+}
+
+interface ReplayAuthorizationFixture {
+  readonly verifier: ReplayAuthorizationVerifier;
+  readonly issue: (
+    input: Readonly<ReplayAuthorizationReceiptInput>,
+  ) => ReplayAuthorizationEvidence;
+  readonly calls: readonly ReplayAuthorizationVerificationInput[];
+}
+
 interface DurableJobPostgresAdapterModule {
   readonly createDurableJobQueuePort?: (input: {
     readonly sql: DurableJobTestSql;
+    readonly replayAuthorizationVerifier: ReplayAuthorizationVerifier;
   }) => DurableJobQueuePort;
 }
 
@@ -80,7 +122,22 @@ interface JobSnapshot {
   readonly leaseTokenHash: string | null;
   readonly leaseExpiresAt: string | null;
   readonly payloadJson: unknown;
+  readonly resultJson: unknown | null;
 }
+
+const JSONB_ROUND_TRIP_CASES = [
+  { name: "plain string", value: "task9-plain-string" },
+  {
+    name: "object-like string",
+    value: '{"looks":"like-json","but":"must-stay-a-string"}',
+  },
+  { name: "number", value: 42 },
+  { name: "array", value: ["task9", 7, false] },
+  {
+    name: "object",
+    value: { kind: "task9-object", nested: { stable: true } },
+  },
+] as const;
 
 function enqueueRequest(
   idempotencyKey: string,
@@ -119,20 +176,90 @@ function replayRequest(
   tenant: JobTenant = GLOBAL_TENANT,
   now = BASE_TIME,
   correlationId = "task9-replay-correlation",
+  authorization: ReplayAuthorizationEvidence,
 ): ReplayRequest {
   return {
     jobId,
     tenant,
-    authorization: {
-      subjectId: "task9-admin",
-      permission: "admin:dashboard",
-      decisionId: "task9-decision-1",
-      authorizedAt: BASE_TIME,
-    },
+    authorization,
     reason: "Manual replay for a safe deterministic test.",
     correlationId,
     now,
   };
+}
+
+function tenantKey(tenant: JobTenant): string {
+  return tenant.mode === "global" ? "global" : `tenant:${tenant.tenantId}`;
+}
+
+function replayAuthorizationKey(input: {
+  readonly jobId: string;
+  readonly tenant: JobTenant;
+  readonly correlationId: string;
+  readonly authorization: unknown;
+}): string {
+  return JSON.stringify([
+    input.jobId,
+    tenantKey(input.tenant),
+    input.correlationId,
+    input.authorization,
+  ]);
+}
+
+function createReplayAuthorizationFixture(): ReplayAuthorizationFixture {
+  const receipts = new Map<string, ReplayAuthorizationEvidence>();
+  const calls: ReplayAuthorizationVerificationInput[] = [];
+  let receiptNumber = 0;
+
+  const issue = (
+    input: Readonly<ReplayAuthorizationReceiptInput>,
+  ): ReplayAuthorizationEvidence => {
+    receiptNumber += 1;
+    const receipt: ReplayAuthorizationEvidence = {
+      subjectId: "task9-verified-admin",
+      permission: "admin:dashboard",
+      decisionId: `task9-signed-receipt-${receiptNumber}`,
+      authorizedAt: input.authorizedAt ?? BASE_TIME,
+    };
+    receipts.set(
+      replayAuthorizationKey({
+        jobId: input.jobId,
+        tenant: input.tenant,
+        correlationId: input.correlationId,
+        authorization: receipt,
+      }),
+      receipt,
+    );
+    return receipt;
+  };
+
+  const verifier: ReplayAuthorizationVerifier = {
+    verify: async (input) => {
+      calls.push(input);
+      const expected = receipts.get(
+        replayAuthorizationKey({
+          jobId: input.jobId,
+          tenant: input.tenant,
+          correlationId: input.correlationId,
+          authorization: input.authorization,
+        }),
+      );
+      if (expected === undefined) {
+        throw new Error(
+          "Replay authorization verifier rejected the signed receipt.",
+        );
+      }
+      if (
+        Date.parse(expected.authorizedAt) <
+        Date.parse(input.now) - REPLAY_AUTHORIZATION_MAX_AGE_MS
+      ) {
+        throw new Error("Replay authorization receipt is stale.");
+      }
+      return expected;
+    },
+  };
+
+  return { verifier, issue, calls };
 }
 
 function jobIdFromEnqueue(result: EnqueueResult): string {
@@ -194,6 +321,7 @@ async function applyTask9Migrations(
 
 async function loadQueuePort(
   sql: DurableJobTestSql,
+  replayAuthorizationVerifier: ReplayAuthorizationVerifier,
 ): Promise<DurableJobQueuePort> {
   expect(
     existsSync(ADAPTER_ROOT) && existsSync(ADAPTER_SOURCE),
@@ -211,7 +339,10 @@ async function loadQueuePort(
       "The PostgreSQL adapter queue-port factory is unavailable.",
     );
   }
-  return loaded.createDurableJobQueuePort({ sql });
+  return loaded.createDurableJobQueuePort({
+    sql,
+    replayAuthorizationVerifier,
+  });
 }
 
 async function readTestOwnedRoles(
@@ -275,6 +406,7 @@ async function withTask9Harness<T>(
     context: DurableJobPostgres16HarnessContext,
     firstPort: DurableJobQueuePort,
     secondPort: DurableJobQueuePort,
+    replayAuthorization: ReplayAuthorizationFixture,
   ) => Promise<T>,
 ): Promise<T> {
   const adminUrl = resolveDurableJobPostgres16AdminUrl(process.env);
@@ -285,6 +417,7 @@ async function withTask9Harness<T>(
   let result: T | undefined;
   let executionError: unknown;
   const cleanupErrors: unknown[] = [];
+  const replayAuthorization = createReplayAuthorizationFixture();
 
   try {
     preexistingRoles = await readTestOwnedRoles(adminSql);
@@ -304,9 +437,15 @@ async function withTask9Harness<T>(
         },
       },
       async (context) => {
-        const firstPort = await loadQueuePort(context.connectionOne);
-        const secondPort = await loadQueuePort(context.connectionTwo);
-        return testBody(context, firstPort, secondPort);
+        const firstPort = await loadQueuePort(
+          context.connectionOne,
+          replayAuthorization.verifier,
+        );
+        const secondPort = await loadQueuePort(
+          context.connectionTwo,
+          replayAuthorization.verifier,
+        );
+        return testBody(context, firstPort, secondPort, replayAuthorization);
       },
     );
   } catch (error) {
@@ -387,7 +526,8 @@ async function readJobSnapshot(
       "lease_owner" AS "leaseOwner",
       "lease_token_hash" AS "leaseTokenHash",
       "lease_expires_at"::text AS "leaseExpiresAt",
-      "payload_json" AS "payloadJson"
+      "payload_json" AS "payloadJson",
+      "result_json" AS "resultJson"
     FROM "durable_jobs"
     WHERE "id" = ${jobId}
   `;
@@ -399,6 +539,76 @@ async function readJobSnapshot(
     throw new Error("The independent verifier returned no durable job row.");
   }
   return row;
+}
+
+function retryDelayFrom(
+  result: Awaited<ReturnType<DurableJobQueuePort["fail"]>>,
+  now: string,
+): number {
+  expect(result.outcome).toBe("retry-scheduled");
+  if (result.outcome !== "retry-scheduled") {
+    throw new Error("The adapter did not schedule the retry.");
+  }
+  return Date.parse(result.availableAt) - Date.parse(now);
+}
+
+async function createSucceededJob(
+  port: DurableJobQueuePort,
+  idempotencyKey: string,
+  tenant: JobTenant = GLOBAL_TENANT,
+): Promise<string> {
+  const jobId = jobIdFromEnqueue(
+    await port.enqueue(enqueueRequest(idempotencyKey, tenant)),
+  );
+  const claimed = claimedJob(
+    await port.claim(claimRequest(`${idempotencyKey}-worker`, tenant)),
+  );
+  expect(claimed.id).toBe(jobId);
+  await expect(
+    port.settle({
+      jobId,
+      tenant,
+      leaseToken: claimed.lease.token,
+      now: BASE_TIME,
+      result: { replayable: true },
+    }),
+  ).resolves.toEqual({ outcome: "settled", state: "succeeded" });
+  return jobId;
+}
+
+async function expectReplayDeniedBeforeWriteOrAudit(
+  context: DurableJobPostgres16HarnessContext,
+  port: DurableJobQueuePort,
+  replayAuthorization: ReplayAuthorizationFixture,
+  jobId: string,
+  request: ReplayRequest,
+  label: string,
+): Promise<void> {
+  const before = await readJobSnapshot(context, jobId);
+  const auditBefore = await readReplayAudit(context, jobId);
+  const callsBefore = replayAuthorization.calls.length;
+  let replayResult:
+    | Awaited<ReturnType<DurableJobQueuePort["replay"]>>
+    | undefined;
+  let replayError: unknown;
+
+  try {
+    replayResult = await port.replay(request);
+  } catch (error) {
+    replayError = error;
+  }
+
+  expect(replayError, `${label} must be denied`).toBeDefined();
+  expect(
+    replayResult,
+    `${label} must not return a replay outcome`,
+  ).toBeUndefined();
+  expect(
+    replayAuthorization.calls.length,
+    `${label} must cross the injected verifier boundary`,
+  ).toBe(callsBefore + 1);
+  await expect(readJobSnapshot(context, jobId)).resolves.toEqual(before);
+  await expect(readReplayAudit(context, jobId)).resolves.toEqual(auditBefore);
 }
 
 const integrationEnabled = isDurableJobPostgres16IntegrationEnabled(
@@ -428,27 +638,29 @@ describe.skipIf(!integrationEnabled)(
   "Task 9 isolated PostgreSQL 16 enqueue, retry, DLQ, and replay behavior",
   { timeout: 60_000 },
   () => {
-    it("returns one identity for equal enqueue replay within each tenant scope", async () => {
+    it("scopes one shared job name and idempotency key globally and by tenant", async () => {
       await withTask9Harness(async (_context, firstPort, secondPort) => {
-        const [first, second] = await Promise.all([
-          firstPort.enqueue(enqueueRequest("task9-equal-global")),
-          secondPort.enqueue(enqueueRequest("task9-equal-global")),
-        ]);
-        const globalIds = [jobIdFromEnqueue(first), jobIdFromEnqueue(second)];
-        expect(new Set(globalIds).size).toBe(1);
+        const scopes = [
+          GLOBAL_TENANT,
+          TENANT_ONE_SCOPE,
+          TENANT_TWO_SCOPE,
+        ] as const;
+        const ids = [] as string[];
 
-        const tenantFirst = await firstPort.enqueue(
-          enqueueRequest("task9-equal-tenant", TENANT_SCOPE),
-        );
-        const tenantSecond = await secondPort.enqueue(
-          enqueueRequest("task9-equal-tenant", TENANT_SCOPE),
-        );
-        const tenantIds = [
-          jobIdFromEnqueue(tenantFirst),
-          jobIdFromEnqueue(tenantSecond),
-        ];
-        expect(new Set(tenantIds).size).toBe(1);
-        expect(tenantIds[0]).not.toBe(globalIds[0]);
+        for (const [index, tenant] of scopes.entries()) {
+          const [first, second] = await Promise.all([
+            firstPort.enqueue(enqueueRequest(SHARED_IDEMPOTENCY_KEY, tenant)),
+            secondPort.enqueue(enqueueRequest(SHARED_IDEMPOTENCY_KEY, tenant)),
+          ]);
+          const firstId = jobIdFromEnqueue(first);
+          const secondId = jobIdFromEnqueue(second);
+          expect(secondId, `scope ${index} must return one identity`).toBe(
+            firstId,
+          );
+          ids.push(firstId);
+        }
+
+        expect(new Set(ids).size).toBe(scopes.length);
       });
     });
 
@@ -472,35 +684,212 @@ describe.skipIf(!integrationEnabled)(
       });
     });
 
-    it("uses a deterministic bounded retry delay for equal attempts and timestamps", async () => {
-      await withTask9Harness(async (_context, firstPort) => {
-        const delays: number[] = [];
-        for (let index = 0; index < 8; index += 1) {
-          await firstPort.enqueue(enqueueRequest(`task9-retry-${index}`));
-          const claimed = claimedJob(
-            await firstPort.claim(claimRequest(`task9-retry-worker-${index}`)),
+    for (const [index, testCase] of JSONB_ROUND_TRIP_CASES.entries()) {
+      it(`round-trips JSONB ${testCase.name} values exactly`, async () => {
+        await withTask9Harness(async (context, firstPort) => {
+          const jobId = jobIdFromEnqueue(
+            await firstPort.enqueue(
+              enqueueRequest(`task9-jsonb-${index}`, GLOBAL_TENANT, {
+                payload: testCase.value,
+              }),
+            ),
           );
-          const retry = await firstPort.fail({
-            jobId: claimed.id,
+          const enqueued = await readJobSnapshot(context, jobId);
+          expect(enqueued.payloadJson).toEqual(testCase.value);
+          expect(enqueued.resultJson).toBeNull();
+
+          const claimed = claimedJob(
+            await firstPort.claim(claimRequest(`task9-jsonb-worker-${index}`)),
+          );
+          expect(claimed.payload).toEqual(testCase.value);
+          await expect(
+            firstPort.settle({
+              jobId,
+              tenant: GLOBAL_TENANT,
+              leaseToken: claimed.lease.token,
+              now: BASE_TIME,
+              result: testCase.value,
+            }),
+          ).resolves.toEqual({ outcome: "settled", state: "succeeded" });
+
+          const settled = await readJobSnapshot(context, jobId);
+          expect(settled.payloadJson).toEqual(testCase.value);
+          expect(settled.resultJson).toEqual(testCase.value);
+        });
+      });
+    }
+
+    it("isolates an object-like JSONB poison row from a neighboring row", async () => {
+      await withTask9Harness(async (_context, firstPort) => {
+        const poisonPayload = '{"poison":true}';
+        const healthyPayload = { healthy: true };
+        const poisonJobId = jobIdFromEnqueue(
+          await firstPort.enqueue(
+            enqueueRequest("task9-jsonb-poison", GLOBAL_TENANT, {
+              payload: poisonPayload,
+              availableAt: BASE_TIME,
+            }),
+          ),
+        );
+        const healthyJobId = jobIdFromEnqueue(
+          await firstPort.enqueue(
+            enqueueRequest("task9-jsonb-healthy", GLOBAL_TENANT, {
+              payload: healthyPayload,
+              availableAt: JSONB_POISON_TIME,
+            }),
+          ),
+        );
+
+        const result = await firstPort.claim({
+          ...claimRequest(
+            "task9-jsonb-poison-isolation-worker",
+            GLOBAL_TENANT,
+            JSONB_POISON_TIME,
+          ),
+          limit: 2,
+        });
+        expect(result.outcome).toBe("claimed");
+        if (result.outcome !== "claimed") {
+          throw new Error(
+            "The poison-row isolation claim did not return jobs.",
+          );
+        }
+        expect(result.jobs).toHaveLength(2);
+        const jobsById = new Map(result.jobs.map((job) => [job.id, job]));
+        expect(jobsById.get(poisonJobId)?.payload).toEqual(poisonPayload);
+        expect(jobsById.get(healthyJobId)?.payload).toEqual(healthyPayload);
+      });
+    });
+
+    it("repeats jitter per job and attempt, bounds delay, and disperses job IDs", async () => {
+      await withTask9Harness(async (_context, firstPort) => {
+        const repeatedRequest = enqueueRequest(
+          "task9-repeated-jitter",
+          GLOBAL_TENANT,
+          {
+            maxAttempts: 2,
+          },
+        );
+        const jobId = jobIdFromEnqueue(
+          await firstPort.enqueue(repeatedRequest),
+        );
+        const firstJob = claimedJob(
+          await firstPort.claim(claimRequest("task9-repeated-jitter-worker-1")),
+        );
+        const firstRetry = await firstPort.fail({
+          jobId,
+          tenant: GLOBAL_TENANT,
+          leaseToken: firstJob.lease.token,
+          now: BASE_TIME,
+          error: {
+            code: "RETRYABLE_TEST_FAILURE",
+            safeSummary: "A safe retry summary.",
+          },
+        });
+        const firstDelay = retryDelayFrom(firstRetry, BASE_TIME);
+        expect(firstDelay).toBeGreaterThanOrEqual(1_000);
+        expect(firstDelay).toBeLessThanOrEqual(1_250);
+
+        const secondJob = claimedJob(
+          await firstPort.claim(
+            claimRequest(
+              "task9-repeated-jitter-worker-2",
+              GLOBAL_TENANT,
+              firstRetry.outcome === "retry-scheduled"
+                ? firstRetry.availableAt
+                : BASE_TIME,
+            ),
+          ),
+        );
+        const exhausted = await firstPort.fail({
+          jobId,
+          tenant: GLOBAL_TENANT,
+          leaseToken: secondJob.lease.token,
+          now:
+            firstRetry.outcome === "retry-scheduled"
+              ? firstRetry.availableAt
+              : BASE_TIME,
+          error: {
+            code: "RETRYABLE_TEST_FAILURE",
+            safeSummary: "A safe retry summary.",
+          },
+        });
+        expect(exhausted).toEqual({ outcome: "dead" });
+
+        await expect(firstPort.enqueue(repeatedRequest)).resolves.toEqual({
+          outcome: "refreshed",
+          jobId,
+          priorState: "dead",
+        });
+        const repeatedJob = claimedJob(
+          await firstPort.claim(
+            claimRequest("task9-repeated-jitter-worker-repeat"),
+          ),
+        );
+        expect(repeatedJob.id).toBe(jobId);
+        expect(repeatedJob.attempt).toBe(1);
+        const repeatedRetry = await firstPort.fail({
+          jobId,
+          tenant: GLOBAL_TENANT,
+          leaseToken: repeatedJob.lease.token,
+          now: BASE_TIME,
+          error: {
+            code: "RETRYABLE_TEST_FAILURE",
+            safeSummary: "A safe retry summary.",
+          },
+        });
+        expect(retryDelayFrom(repeatedRetry, BASE_TIME)).toBe(firstDelay);
+        if (repeatedRetry.outcome !== "retry-scheduled") {
+          throw new Error("The repeated retry did not schedule a retry.");
+        }
+        const repeatedFinalJob = claimedJob(
+          await firstPort.claim(
+            claimRequest(
+              "task9-repeated-jitter-worker-final",
+              GLOBAL_TENANT,
+              repeatedRetry.availableAt,
+            ),
+          ),
+        );
+        await expect(
+          firstPort.fail({
+            jobId,
             tenant: GLOBAL_TENANT,
-            leaseToken: claimed.lease.token,
+            leaseToken: repeatedFinalJob.lease.token,
+            now: repeatedRetry.availableAt,
+            error: {
+              code: "RETRYABLE_TEST_FAILURE",
+              safeSummary: "A safe retry summary.",
+            },
+          }),
+        ).resolves.toEqual({ outcome: "dead" });
+
+        const unrelatedDelays: number[] = [];
+        for (let index = 0; index < 16; index += 1) {
+          await firstPort.enqueue(
+            enqueueRequest(`task9-unrelated-jitter-${index}`),
+          );
+          const unrelatedJob = claimedJob(
+            await firstPort.claim(
+              claimRequest(`task9-unrelated-jitter-worker-${index}`),
+            ),
+          );
+          const unrelatedRetry = await firstPort.fail({
+            jobId: unrelatedJob.id,
+            tenant: GLOBAL_TENANT,
+            leaseToken: unrelatedJob.lease.token,
             now: BASE_TIME,
             error: {
               code: "RETRYABLE_TEST_FAILURE",
               safeSummary: "A safe retry summary.",
             },
           });
-          expect(retry.outcome).toBe("retry-scheduled");
-          if (retry.outcome !== "retry-scheduled") {
-            throw new Error("The adapter did not schedule the retry.");
-          }
-          delays.push(Date.parse(retry.availableAt) - Date.parse(BASE_TIME));
+          const delay = retryDelayFrom(unrelatedRetry, BASE_TIME);
+          expect(delay).toBeGreaterThanOrEqual(1_000);
+          expect(delay).toBeLessThanOrEqual(1_250);
+          unrelatedDelays.push(delay);
         }
-
-        expect(delays.every((delay) => delay >= 1_000 && delay <= 1_250)).toBe(
-          true,
-        );
-        expect(new Set(delays).size).toBe(1);
+        expect(new Set(unrelatedDelays).size).toBeGreaterThan(1);
       });
     });
 
@@ -572,78 +961,299 @@ describe.skipIf(!integrationEnabled)(
       });
     });
 
-    it("accepts equal terminal replay once and records one safe authorized audit event", async () => {
-      await withTask9Harness(async (context, firstPort) => {
-        const jobId = jobIdFromEnqueue(
-          await firstPort.enqueue(enqueueRequest("task9-equal-replay")),
-        );
-        const claimed = claimedJob(
-          await firstPort.claim(claimRequest("task9-replay-worker")),
-        );
-        await expect(
-          firstPort.settle({
+    it("accepts one verified terminal replay and records one safe audit event", async () => {
+      await withTask9Harness(
+        async (context, firstPort, _secondPort, replayAuthorization) => {
+          const jobId = jobIdFromEnqueue(
+            await firstPort.enqueue(enqueueRequest("task9-equal-replay")),
+          );
+          const claimed = claimedJob(
+            await firstPort.claim(claimRequest("task9-replay-worker")),
+          );
+          await expect(
+            firstPort.settle({
+              jobId,
+              tenant: GLOBAL_TENANT,
+              leaseToken: claimed.lease.token,
+              now: BASE_TIME,
+              result: { replayable: true },
+            }),
+          ).resolves.toEqual({ outcome: "settled", state: "succeeded" });
+
+          const validAuthorization = replayAuthorization.issue({
             jobId,
             tenant: GLOBAL_TENANT,
-            leaseToken: claimed.lease.token,
-            now: BASE_TIME,
-            result: { replayable: true },
-          }),
-        ).resolves.toEqual({ outcome: "settled", state: "succeeded" });
+            correlationId: "task9-replay-correlation",
+          });
+          const validRequest = replayRequest(
+            jobId,
+            GLOBAL_TENANT,
+            BASE_TIME,
+            "task9-replay-correlation",
+            validAuthorization,
+          );
+          const invalidRequest = {
+            ...validRequest,
+            authorization: {
+              ...validRequest.authorization,
+              permission: "jobs:replay",
+            },
+          } as unknown as ReplayRequest;
+          await expect(firstPort.replay(invalidRequest)).rejects.toThrow();
+          expect(await readReplayAudit(context, jobId)).toEqual([]);
 
-        const validRequest = replayRequest(jobId);
-        const invalidRequest = {
-          ...validRequest,
-          authorization: {
-            ...validRequest.authorization,
-            permission: "jobs:replay",
-          },
-        } as unknown as ReplayRequest;
-        await expect(firstPort.replay(invalidRequest)).rejects.toThrow();
-        expect(await readReplayAudit(context, jobId)).toEqual([]);
-
-        await expect(firstPort.replay(validRequest)).resolves.toEqual({
-          outcome: "replayed",
-          priorState: "succeeded",
-        });
-        await expect(firstPort.replay(validRequest)).resolves.toEqual({
-          outcome: "already-pending",
-        });
-
-        await expect(readReplayAudit(context, jobId)).resolves.toEqual([
-          {
-            action: "replay",
+          await expect(firstPort.replay(validRequest)).resolves.toEqual({
             outcome: "replayed",
             priorState: "succeeded",
-            actor: "task9-admin",
-            authorizationDecisionId: "task9-decision-1",
-            authorizationDecidedAt: "2026-08-15 10:00:00+00",
-            reason: "Manual replay for a safe deterministic test.",
-            correlationId: "task9-replay-correlation",
-          },
-        ]);
-      });
+          });
+          await expect(firstPort.replay(validRequest)).resolves.toEqual({
+            outcome: "already-pending",
+          });
+
+          await expect(readReplayAudit(context, jobId)).resolves.toEqual([
+            {
+              action: "replay",
+              outcome: "replayed",
+              priorState: "succeeded",
+              actor: validAuthorization.subjectId,
+              authorizationDecisionId: validAuthorization.decisionId,
+              authorizationDecidedAt: "2026-08-15 10:00:00+00",
+              reason: "Manual replay for a safe deterministic test.",
+              correlationId: "task9-replay-correlation",
+            },
+          ]);
+        },
+      );
     });
 
     it("rejects replay of a valid active lease without changing the lease or audit", async () => {
-      await withTask9Harness(async (context, firstPort) => {
-        const jobId = jobIdFromEnqueue(
-          await firstPort.enqueue(enqueueRequest("task9-active-replay")),
-        );
-        claimedJob(
-          await firstPort.claim({
-            ...claimRequest("task9-active-replay-worker"),
-            leaseSeconds: 60,
-          }),
-        );
-        const before = await readJobSnapshot(context, jobId);
+      await withTask9Harness(
+        async (context, firstPort, _secondPort, replayAuthorization) => {
+          const jobId = jobIdFromEnqueue(
+            await firstPort.enqueue(enqueueRequest("task9-active-replay")),
+          );
+          claimedJob(
+            await firstPort.claim({
+              ...claimRequest("task9-active-replay-worker"),
+              leaseSeconds: 60,
+            }),
+          );
+          const before = await readJobSnapshot(context, jobId);
 
-        await expect(firstPort.replay(replayRequest(jobId))).resolves.toEqual({
-          outcome: "active-lease-rejected",
-        });
+          const authorization = replayAuthorization.issue({
+            jobId,
+            tenant: GLOBAL_TENANT,
+            correlationId: "task9-replay-correlation",
+          });
+          await expect(
+            firstPort.replay(
+              replayRequest(
+                jobId,
+                GLOBAL_TENANT,
+                BASE_TIME,
+                "task9-replay-correlation",
+                authorization,
+              ),
+            ),
+          ).resolves.toEqual({ outcome: "active-lease-rejected" });
 
-        await expect(readJobSnapshot(context, jobId)).resolves.toEqual(before);
-        await expect(readReplayAudit(context, jobId)).resolves.toEqual([]);
-      });
+          await expect(readJobSnapshot(context, jobId)).resolves.toEqual(
+            before,
+          );
+          await expect(readReplayAudit(context, jobId)).resolves.toEqual([]);
+        },
+      );
+    });
+
+    it("denies a forged replay receipt before writing or auditing", async () => {
+      await withTask9Harness(
+        async (context, firstPort, _secondPort, replayAuthorization) => {
+          const jobId = await createSucceededJob(
+            firstPort,
+            "task9-forged-replay",
+          );
+          const correlationId = "task9-forged-correlation";
+          const trusted = replayAuthorization.issue({
+            jobId,
+            tenant: GLOBAL_TENANT,
+            correlationId,
+          });
+          await expectReplayDeniedBeforeWriteOrAudit(
+            context,
+            firstPort,
+            replayAuthorization,
+            jobId,
+            replayRequest(jobId, GLOBAL_TENANT, BASE_TIME, correlationId, {
+              ...trusted,
+              subjectId: "task9-forged-subject",
+            }),
+            "forged replay receipt",
+          );
+        },
+      );
+    });
+
+    it("denies a stale replay receipt before writing or auditing", async () => {
+      await withTask9Harness(
+        async (context, firstPort, _secondPort, replayAuthorization) => {
+          const jobId = await createSucceededJob(
+            firstPort,
+            "task9-stale-replay",
+          );
+          const correlationId = "task9-stale-correlation";
+          const stale = replayAuthorization.issue({
+            jobId,
+            tenant: GLOBAL_TENANT,
+            correlationId,
+            authorizedAt: STALE_AUTHORIZED_AT,
+          });
+          await expectReplayDeniedBeforeWriteOrAudit(
+            context,
+            firstPort,
+            replayAuthorization,
+            jobId,
+            replayRequest(
+              jobId,
+              GLOBAL_TENANT,
+              BASE_TIME,
+              correlationId,
+              stale,
+            ),
+            "stale replay receipt",
+          );
+        },
+      );
+    });
+
+    it("denies a receipt signed for another job before writing or auditing", async () => {
+      await withTask9Harness(
+        async (context, firstPort, _secondPort, replayAuthorization) => {
+          const signedJobId = await createSucceededJob(
+            firstPort,
+            "task9-wrong-job-signed",
+          );
+          const targetJobId = await createSucceededJob(
+            firstPort,
+            "task9-wrong-job-target",
+          );
+          const correlationId = "task9-wrong-job-correlation";
+          const signedForOtherJob = replayAuthorization.issue({
+            jobId: signedJobId,
+            tenant: GLOBAL_TENANT,
+            correlationId,
+          });
+          await expectReplayDeniedBeforeWriteOrAudit(
+            context,
+            firstPort,
+            replayAuthorization,
+            targetJobId,
+            replayRequest(
+              targetJobId,
+              GLOBAL_TENANT,
+              BASE_TIME,
+              correlationId,
+              signedForOtherJob,
+            ),
+            "wrong-job replay receipt",
+          );
+        },
+      );
+    });
+
+    it("denies a receipt signed for another tenant before writing or auditing", async () => {
+      await withTask9Harness(
+        async (context, firstPort, _secondPort, replayAuthorization) => {
+          const signedJobId = await createSucceededJob(
+            firstPort,
+            "task9-wrong-tenant-signed",
+            GLOBAL_TENANT,
+          );
+          const targetJobId = await createSucceededJob(
+            firstPort,
+            "task9-wrong-tenant-target",
+            TENANT_ONE_SCOPE,
+          );
+          const correlationId = "task9-wrong-tenant-correlation";
+          const signedForOtherTenant = replayAuthorization.issue({
+            jobId: signedJobId,
+            tenant: GLOBAL_TENANT,
+            correlationId,
+          });
+          await expectReplayDeniedBeforeWriteOrAudit(
+            context,
+            firstPort,
+            replayAuthorization,
+            targetJobId,
+            replayRequest(
+              targetJobId,
+              TENANT_ONE_SCOPE,
+              BASE_TIME,
+              correlationId,
+              signedForOtherTenant,
+            ),
+            "wrong-tenant replay receipt",
+          );
+        },
+      );
+    });
+
+    it("denies a malformed replay receipt before writing or auditing", async () => {
+      await withTask9Harness(
+        async (context, firstPort, _secondPort, replayAuthorization) => {
+          const jobId = await createSucceededJob(
+            firstPort,
+            "task9-malformed-replay",
+          );
+          const correlationId = "task9-malformed-correlation";
+          const trusted = replayAuthorization.issue({
+            jobId,
+            tenant: GLOBAL_TENANT,
+            correlationId,
+          });
+          await expectReplayDeniedBeforeWriteOrAudit(
+            context,
+            firstPort,
+            replayAuthorization,
+            jobId,
+            replayRequest(jobId, GLOBAL_TENANT, BASE_TIME, correlationId, {
+              ...trusted,
+              decisionId: "%%%malformed-receipt%%%",
+            }),
+            "malformed replay receipt",
+          );
+        },
+      );
+    });
+
+    it("denies a correlation-mismatched receipt before writing or auditing", async () => {
+      await withTask9Harness(
+        async (context, firstPort, _secondPort, replayAuthorization) => {
+          const jobId = await createSucceededJob(
+            firstPort,
+            "task9-correlation-mismatch",
+          );
+          const signedCorrelationId = "task9-signed-correlation";
+          const signed = replayAuthorization.issue({
+            jobId,
+            tenant: GLOBAL_TENANT,
+            correlationId: signedCorrelationId,
+          });
+          await expectReplayDeniedBeforeWriteOrAudit(
+            context,
+            firstPort,
+            replayAuthorization,
+            jobId,
+            replayRequest(
+              jobId,
+              GLOBAL_TENANT,
+              BASE_TIME,
+              "task9-request-correlation",
+              signed,
+            ),
+            "correlation-mismatched replay receipt",
+          );
+        },
+      );
     });
   },
 );

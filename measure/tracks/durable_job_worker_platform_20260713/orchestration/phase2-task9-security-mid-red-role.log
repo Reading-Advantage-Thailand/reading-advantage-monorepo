@@ -1,0 +1,65 @@
+Measure Mid Red role log — Task 9 security Red remediation
+Track: durable_job_worker_platform_20260713
+Phase: Phase 2: Red Concurrency and Failure Tests
+Role: measure-mid-red
+Date: 2026-08-15
+phase_base_sha: 33d44fc81b84559c2ab7a48acfaf86554bf017a5
+role_base_sha: 58f82e936dc95796ded9158492e98999f487fe1d
+HEAD at role start: 58f82e936dc95796ded9158492e98999f487fe1d
+
+## Preflight
+
+- Both supplied SHAs resolve to commits.
+- `master` is the active branch with one shared worktree.
+- Task 9 was already `[~]` before this work.
+- The amended Red test and Task 9 plan were relevant paths.
+- Generated or ignorable output and unrelated finance and Mastery Runtime
+  changes were preserved.
+- No production source changed.
+
+## Red work
+
+The amended test adds an injected replay verifier, six replay denial cases,
+five JSONB round-trip cases, one poison-row case, job-specific jitter checks,
+and global plus two-tenant idempotency coverage.
+
+Formatting passed. The focused TypeScript test project passed. The safe-default
+test passed with `19` total tests (`PASS=1`, `SKIP=18`, `FAIL=0`).
+
+The disposable host-network PostgreSQL 16 run used server version `160014`.
+It exited `1` with `19` total tests (`PASS=7`, `FAIL=12`). The seven passing
+cases were the adapter-root check, scoped idempotency, conflict preservation,
+poison-row isolation, DLQ metadata, verified replay audit, and active-lease
+replay rejection.
+
+The twelve failures were five JSONB primitive/object round trips, one
+job-specific jitter dispersion case, and six replay-verifier denial cases.
+JSONB values returned as JSON text. Unrelated jobs produced one delay value.
+Each invalid replay receipt reached the write/audit assertion without a denial
+error.
+
+Post-run cleanup returned `CLEANUP_SCRATCH_DATABASES=0` and
+`CLEANUP_TASK9_ROLES=0`. The disposable container was removed.
+
+## Handoff
+
+Green must fix the twelve named behavior gaps and rerun the live Red command.
+Task 9 remains `[~]` until the amended contract passes.
+
+## Result
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+status: complete
+track: durable_job_worker_platform_20260713
+phase: Phase 2: Red Concurrency and Failure Tests
+baseline_sha: 33d44fc81b84559c2ab7a48acfaf86554bf017a5
+phase_base_sha: 33d44fc81b84559c2ab7a48acfaf86554bf017a5
+role_base_sha: 58f82e936dc95796ded9158492e98999f487fe1d
+resulting_head: reported in the final role response after the locked commit
+commits: one conventional test commit containing exactly the amended Red test, plan, security note, and role log; SHA reported in the final role response
+tests_run: safe default exit 0 (19 total: PASS=1, SKIP=18, FAIL=0); disposable PostgreSQL 16 exit 1 (19 total: PASS=7, FAIL=12); cleanup 0 scratch databases and 0 Task 9 roles; typecheck passed; lint passed with 0 errors; format passed; exact four-path staged diff check reported in the final role response
+files_changed: packages/backend/src/jobs/__tests__/postgres16-enqueue-retry-replay.red.test.ts; measure/tracks/durable_job_worker_platform_20260713/plan.md; measure/tracks/durable_job_worker_platform_20260713/task-9-security-red-remediation-20260815.md; measure/tracks/durable_job_worker_platform_20260713/orchestration/phase2-task9-security-mid-red-role.log
+known_failures: five JSONB round trips return JSON text; unrelated jobs share one retry delay; forged, stale, wrong-job, wrong-tenant, malformed, and correlation-mismatched replay receipts are not denied before the write/audit assertion; Task 9 remains [~]
+handoff: Green must remediate the twelve named failures and rerun the disposable PostgreSQL 16 Red command
+END_MEASURE_AGENT_RESULT
