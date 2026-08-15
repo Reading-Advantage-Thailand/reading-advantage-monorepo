@@ -1,4 +1,4 @@
-import { createHash, randomBytes, randomInt } from "node:crypto";
+import { createHash, randomBytes } from "node:crypto";
 
 import type postgres from "postgres";
 
@@ -110,7 +110,18 @@ function payloadFingerprint(payload: unknown): string {
   return digest(jsonText(payload));
 }
 
-function retryDelayMs(attempt: number): number {
+function deserializeJson(value: unknown): unknown {
+  if (typeof value !== "string") {
+    return value;
+  }
+  return JSON.parse(value) as unknown;
+}
+
+function retryDelayMs(
+  jobName: string,
+  queueName: string,
+  attempt: number,
+): number {
   const exponent = Math.min(Math.max(attempt - 1, 0), 10);
   const exponential = Math.min(
     RETRY_MAX_DELAY_MS,
@@ -120,7 +131,10 @@ function retryDelayMs(attempt: number): number {
     RETRY_JITTER_MS,
     RETRY_MAX_DELAY_MS - exponential,
   );
-  return exponential + randomInt(0, jitterLimit + 1);
+  const identity = `${jobName}:${queueName}:${attempt}`;
+  const jitter =
+    Number.parseInt(digest(identity).slice(0, 8), 16) % (jitterLimit + 1);
+  return exponential + jitter;
 }
 
 function encodeDeadLetterCursor(
@@ -195,7 +209,7 @@ function runningEnvelope(row: DurableJobRow): DurableRunningJob {
     availableAt: isoTimestamp(row.available_at),
     createdAt: isoTimestamp(row.created_at),
     updatedAt: isoTimestamp(row.updated_at),
-    payload: row.payload_json,
+    payload: deserializeJson(row.payload_json),
     state: "running" as const,
     lease: {
       token: "",
@@ -306,6 +320,10 @@ export function createDurableJobQueuePort(input: {
       const existing = existingRows[0];
       if (existing === undefined) {
         throw new Error("Durable job identity conflict returned no row.");
+      }
+
+      if (existing.payload_fingerprint !== fingerprint) {
+        return { outcome: "conflict", jobId: existing.id };
       }
 
       if (existing.state === "running") {
@@ -544,9 +562,12 @@ export function createDurableJobQueuePort(input: {
     const scopeId = tenantId(parsed.tenant);
     return input.sql.begin(async (transaction) => {
       const currentRows = await transaction<
-        readonly Pick<DurableJobRow, "attempt" | "state" | "lease_expires_at">[]
+        readonly Pick<
+          DurableJobRow,
+          "attempt" | "job_name" | "queue_name" | "state" | "lease_expires_at"
+        >[]
       >`
-        SELECT "attempt", "state", "lease_expires_at"
+        SELECT "attempt", "job_name", "queue_name", "state", "lease_expires_at"
         FROM "durable_jobs"
         WHERE "id" = ${parsed.jobId}
           AND "tenant_mode" = ${parsed.tenant.mode}
@@ -563,7 +584,8 @@ export function createDurableJobQueuePort(input: {
         return leaseMismatch(transaction, parsed.jobId, parsed.tenant);
       }
       const retryAt = new Date(
-        Date.parse(parsed.now) + retryDelayMs(current.attempt),
+        Date.parse(parsed.now) +
+          retryDelayMs(current.job_name, current.queue_name, current.attempt),
       ).toISOString();
       const rows = await transaction<
         readonly {

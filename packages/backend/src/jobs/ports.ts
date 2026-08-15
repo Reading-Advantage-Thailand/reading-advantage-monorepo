@@ -22,9 +22,9 @@ import type {
 /** Provider-neutral enqueue capability for application/backend producers. */
 export interface DurableJobEnqueuePort {
   /**
-   * Atomically creates or safely refreshes one idempotent durable identity.
+   * Atomically creates, rejects a payload conflict, or safely refreshes one identity.
    * @param request Validated handler identity, tenant, payload, and schedule.
-   * @returns Created, refreshed, or active-lease-retained outcome.
+   * @returns Created, conflict, refreshed, or active-lease-retained outcome.
    */
   enqueue(
     request: Readonly<EnqueueJobRequest>,

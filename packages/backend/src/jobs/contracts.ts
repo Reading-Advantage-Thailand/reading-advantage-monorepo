@@ -175,6 +175,7 @@ export type EnqueueJobRequest<TPayload = unknown> = Omit<
 /** Runtime contract for enqueue identity and active-lease-safe outcomes. */
 export const enqueueJobResultSchema = z.discriminatedUnion("outcome", [
   z.strictObject({ outcome: z.literal("enqueued"), jobId: jobIdSchema }),
+  z.strictObject({ outcome: z.literal("conflict"), jobId: jobIdSchema }),
   z.strictObject({
     outcome: z.literal("refreshed"),
     jobId: jobIdSchema,
@@ -192,7 +193,7 @@ export const enqueueJobResultSchema = z.discriminatedUnion("outcome", [
   }),
 ]);
 
-/** Atomic enqueue result that never silently revokes a valid active lease. */
+/** Atomic enqueue result that rejects payload conflicts and protects active leases. */
 export type EnqueueJobResult = z.infer<typeof enqueueJobResultSchema>;
 
 /** Runtime contract for bounded, due-only queue claiming. */
