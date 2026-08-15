@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { readFileSync } from "node:fs";
+import { readFileSync, statSync } from "node:fs";
 import { dirname, posix, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { isDeepStrictEqual } from "node:util";
@@ -9,11 +9,13 @@ import { describe, expect, it } from "vitest";
 
 type JsonObject = Record<string, unknown>;
 type ArchiveReader = (relativePath: string) => Uint8Array;
+type LegacySourcePresence = "tracked-at-head" | "missing-at-head";
 type ExpectedLegacySource = {
   path: string;
   role: string;
   classification: string;
   evidence_locator: JsonObject;
+  presence: LegacySourcePresence;
 };
 
 const LEGACY_SOURCE_EVIDENCE = Object.freeze({
@@ -233,6 +235,24 @@ function isLegacySourcePath(path: string): boolean {
   );
 }
 
+function sourcePathState(path: string): {
+  tracked: boolean;
+  exists: boolean;
+} {
+  let exists = false;
+  try {
+    exists = statSync(resolve(REPO_ROOT, path)).isFile();
+  } catch {
+    exists = false;
+  }
+  return { tracked: GIT_TRACKED_PATHS.has(path), exists };
+}
+
+function expectedPresenceForPath(path: string): LegacySourcePresence {
+  const state = sourcePathState(path);
+  return state.tracked && state.exists ? "tracked-at-head" : "missing-at-head";
+}
+
 function collectLegacySourceEvidence(
   value: unknown,
   artifact: string,
@@ -283,6 +303,7 @@ function collectLegacySourceEvidence(
         json_pointer: pointer,
         claim_id: claimId,
       },
+      presence: expectedPresenceForPath(sourcePath),
     });
   }
 
@@ -402,16 +423,39 @@ function assertLegacySourcePaths(
 
   for (const rawSource of rawSources) {
     const source = jsonObject(rawSource, `${label}: source path`);
+    if (
+      source.presence !== "tracked-at-head" &&
+      source.presence !== "missing-at-head"
+    ) {
+      throw new Error(`INVALID_LEGACY_SOURCE_PRESENCE: ${label}`);
+    }
+    const hasSha256 = Object.prototype.hasOwnProperty.call(source, "sha256");
+    if (source.presence === "missing-at-head" && hasSha256) {
+      throw new Error(`MISSING_LEGACY_SOURCE_HASH_FORBIDDEN: ${label}`);
+    }
+    if (source.presence === "tracked-at-head" && !hasSha256) {
+      throw new Error(`TRACKED_LEGACY_SOURCE_HASH_REQUIRED: ${label}`);
+    }
     requireEqual(
       Object.keys(source).sort(),
-      [
-        "classification",
-        "disposition",
-        "evidence_locator",
-        "path",
-        "role",
-        "sha256",
-      ],
+      source.presence === "tracked-at-head"
+        ? [
+            "classification",
+            "disposition",
+            "evidence_locator",
+            "path",
+            "presence",
+            "role",
+            "sha256",
+          ]
+        : [
+            "classification",
+            "disposition",
+            "evidence_locator",
+            "path",
+            "presence",
+            "role",
+          ],
       `LEGACY_SOURCE_SCHEMA_INVALID: ${label}`,
     );
     const path = normalizeGitPath(source.path, label);
@@ -422,12 +466,31 @@ function assertLegacySourcePaths(
       throw new Error(`DUPLICATE_LEGACY_SOURCE_PATH: ${path}`);
     }
     actualPaths.add(path);
-    if (!GIT_TRACKED_PATHS.has(path)) {
-      throw new Error(`LEGACY_SOURCE_PATH_NOT_GIT_TRACKED: ${path}`);
+    const expected = expectedByPath.get(path);
+    if (!expected) {
+      throw new Error(`UNBOUND_LEGACY_SOURCE_PATH: ${path}`);
     }
-    const currentHash = sha256(readFileSync(resolve(REPO_ROOT, path)));
-    if (source.sha256 !== currentHash) {
-      throw new Error(`CURRENT_BYTE_HASH_DRIFT: ${path}`);
+    requireEqual(
+      source.presence,
+      expected.presence,
+      `LEGACY_SOURCE_PRESENCE_DRIFT: ${path}`,
+    );
+    const state = sourcePathState(path);
+    if (source.presence === "tracked-at-head") {
+      if (!state.tracked) {
+        throw new Error(`LEGACY_SOURCE_PATH_NOT_GIT_TRACKED: ${path}`);
+      }
+      if (!state.exists) {
+        throw new Error(`LEGACY_SOURCE_PATH_NOT_FOUND: ${path}`);
+      }
+      const currentHash = sha256(readFileSync(resolve(REPO_ROOT, path)));
+      if (source.sha256 !== currentHash) {
+        throw new Error(`CURRENT_BYTE_HASH_DRIFT: ${path}`);
+      }
+    } else if (state.tracked || state.exists) {
+      throw new Error(
+        `MISSING_LEGACY_SOURCE_PATH_NOT_ABSENT_OR_UNTRACKED: ${path}`,
+      );
     }
     requireEqual(
       source.disposition,
@@ -435,10 +498,6 @@ function assertLegacySourcePaths(
       `EVIDENCE_ONLY_SOURCE_DISPOSITION_DRIFT: ${path}`,
     );
 
-    const expected = expectedByPath.get(path);
-    if (!expected) {
-      throw new Error(`UNBOUND_LEGACY_SOURCE_PATH: ${path}`);
-    }
     requireEqual(
       source.role,
       expected.role,
@@ -482,14 +541,20 @@ function createValidPerTitleManifest(
     evidence_binding: title.evidence_binding,
     status: "evidence-only",
     legacy_source_paths_status: "observation-only-not-adoption-or-approval",
-    legacy_source_paths: expectedLegacySourcesForTitle(title).map((source) => ({
-      path: source.path,
-      sha256: sha256(readFileSync(resolve(REPO_ROOT, source.path))),
-      role: source.role,
-      classification: source.classification,
-      evidence_locator: cloneJson(source.evidence_locator),
-      disposition: "evidence-only",
-    })),
+    legacy_source_paths: expectedLegacySourcesForTitle(title).map((source) => {
+      const record: JsonObject = {
+        path: source.path,
+        presence: source.presence,
+        role: source.role,
+        classification: source.classification,
+        evidence_locator: cloneJson(source.evidence_locator),
+        disposition: "evidence-only",
+      };
+      if (source.presence === "tracked-at-head") {
+        record.sha256 = sha256(readFileSync(resolve(REPO_ROOT, source.path)));
+      }
+      return record;
+    }),
     claims: cloneJson(EXPECTED_CLAIMS),
   };
 }
@@ -836,17 +901,24 @@ function assertPerTitleLegacySourceManifest(
     ],
     `TITLE_MANIFEST_SCHEMA_INVALID: ${relativePath}`,
   );
+  assertPerTitleEvidenceOnlyClaims(manifest, relativePath);
+  assertLegacySourcePaths(manifest, title, relativePath);
+}
+
+function assertPerTitleEvidenceOnlyClaims(
+  manifest: JsonObject,
+  label: string,
+): void {
   requireEqual(
     manifest.status,
     "evidence-only",
-    `TITLE_MANIFEST_STATUS_DRIFT: ${relativePath}`,
+    `TITLE_MANIFEST_STATUS_DRIFT: ${label}`,
   );
   requireEqual(
     manifest.claims,
     EXPECTED_CLAIMS,
-    `EVIDENCE_ONLY_MANIFEST_OVERCLAIM: ${relativePath}`,
+    `EVIDENCE_ONLY_MANIFEST_OVERCLAIM: ${label}`,
   );
-  assertLegacySourcePaths(manifest, title, relativePath);
 }
 
 function cloneJson<T>(value: T): T {
@@ -1027,6 +1099,81 @@ describe("legacy traversal Task 1 source/readiness manifest", () => {
       expect(() =>
         assertLegacySourcePaths(manifest, title, `${mutation.code} fixture`),
       ).toThrow(mutation.code);
+    }
+  });
+
+  it("rejects presence lies, fabricated missing hashes, omitted missing paths, and absence authority", () => {
+    const title = EXPECTED_TITLES[1];
+    const valid = createValidPerTitleManifest(title);
+    const validPaths = jsonArray(valid.legacy_source_paths, "valid paths");
+    const missingIndex = validPaths.findIndex(
+      (path) =>
+        jsonObject(path, "missing source path").presence === "missing-at-head",
+    );
+    if (missingIndex < 0) {
+      throw new Error("MISSING_SOURCE_FIXTURE_NOT_AVAILABLE");
+    }
+
+    const lyingPresence = cloneJson(valid);
+    const lyingPaths = jsonArray(
+      lyingPresence.legacy_source_paths,
+      "lying presence paths",
+    ).map((path) => jsonObject(path, "lying presence path"));
+    lyingPaths[missingIndex] = {
+      ...lyingPaths[missingIndex],
+      presence: "tracked-at-head",
+      sha256: "0".repeat(64),
+    };
+    lyingPresence.legacy_source_paths = lyingPaths;
+    expect(() =>
+      assertLegacySourcePaths(lyingPresence, title, "lying presence fixture"),
+    ).toThrow("LEGACY_SOURCE_PRESENCE_DRIFT");
+
+    const fabricatedHash = cloneJson(valid);
+    const fabricatedHashPaths = jsonArray(
+      fabricatedHash.legacy_source_paths,
+      "fabricated hash paths",
+    ).map((path) => jsonObject(path, "fabricated hash path"));
+    fabricatedHashPaths[missingIndex] = {
+      ...fabricatedHashPaths[missingIndex],
+      sha256: "0".repeat(64),
+    };
+    fabricatedHash.legacy_source_paths = fabricatedHashPaths;
+    expect(() =>
+      assertLegacySourcePaths(
+        fabricatedHash,
+        title,
+        "fabricated missing hash fixture",
+      ),
+    ).toThrow("MISSING_LEGACY_SOURCE_HASH_FORBIDDEN");
+
+    const omittedMissingPath = cloneJson(valid);
+    omittedMissingPath.legacy_source_paths = validPaths.filter(
+      (_, index) => index !== missingIndex,
+    );
+    expect(() =>
+      assertLegacySourcePaths(
+        omittedMissingPath,
+        title,
+        "omitted missing path fixture",
+      ),
+    ).toThrow("OMITTED_LEGACY_SOURCE_PATH");
+
+    for (const claim of [
+      "implementation_claimed",
+      "cutover_claimed",
+    ] as const) {
+      const absenceAuthority = cloneJson(valid);
+      absenceAuthority.claims = {
+        ...jsonObject(absenceAuthority.claims, "absence authority claims"),
+        [claim]: true,
+      };
+      expect(() =>
+        assertPerTitleEvidenceOnlyClaims(
+          absenceAuthority,
+          `absence authority ${claim} fixture`,
+        ),
+      ).toThrow("EVIDENCE_ONLY_MANIFEST_OVERCLAIM");
     }
   });
 

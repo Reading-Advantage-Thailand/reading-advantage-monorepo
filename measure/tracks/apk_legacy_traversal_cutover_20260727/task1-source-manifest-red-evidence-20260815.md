@@ -1,14 +1,14 @@
-# Task 1 Red Evidence — 2026-08-15
+# Task 1 Red Evidence — amended 2026-08-16
 
 Track: `apk_legacy_traversal_cutover_20260727`
 Phase: Phase 1 source/readiness manifests
 Task: 1
 Phase base: `c2e28e9e4f326fc056415abfe2d1876f16d48675`
-Role base: `f780ed6312a999c1d318fc0c0b04443c17b36764`
+Role base: `8113c2491dac4b7cc93bd9940f8d55b70cd83b5c`
 
 ## Contract result
 
-The final focused Vitest run collected 12 tests. Seven support and mutation tests passed. Five title tests failed only for the missing exact per-title manifests:
+The final focused Vitest run collected 13 tests. Eight support and mutation tests passed. Five title tests failed only for the missing exact per-title manifests:
 
 - `measure/tracks/apk_legacy_traversal_cutover_20260727/legacy-source-manifests/dragon-rider.json`
 - `measure/tracks/apk_legacy_traversal_cutover_20260727/legacy-source-manifests/spellweavers-run.json`
@@ -16,20 +16,30 @@ The final focused Vitest run collected 12 tests. Seven support and mutation test
 - `measure/tracks/apk_legacy_traversal_cutover_20260727/legacy-source-manifests/labyrinth-goblin-king.json`
 - `measure/tracks/apk_legacy_traversal_cutover_20260727/legacy-source-manifests/griffin-riders-escape.json`
 
-The seven passing support and mutation cases covered:
+The eight passing support and mutation cases covered:
 
 - All five exact title identities, assignment indices, source identities, and locators.
 - All five archive-preferred inputs and accepted SHA-256 values.
 - Active readiness status and the five-title authorization boundary.
 - Accepted Batch A and Batch B evidence coverage.
-- Empty, duplicate, omitted, wrong-hash, generated, and unbound source-path falsifiers.
+- Complete accepted path denominators with `tracked-at-head` and `missing-at-head` entries.
+- Git tracking, file existence, current-byte hashes, roles, classifications, and evidence locators for tracked entries.
+- Accepted locators, exact paths, absent and untracked state, and no hash for missing entries.
+- Empty, duplicate, omitted, wrong-hash, generated, unbound, and presence-state source-path falsifiers.
 - Role, classification, evidence-locator, disposition, bound-byte, missing-input, duplicate-title, wrong-identity, and overclaim falsifiers.
+
+The missing accepted paths are the five Spellweaver's Run paths and five Griffin Rider's Escape paths listed below:
+
+- Spellweaver's Run: `apps/advantage-games/src/components/games/sentence/spellweavers-run/SpellweaversRunGame.tsx`, `apps/advantage-games/src/lib/games/spellweaversRun.ts`, `apps/advantage-games/src/lib/games/spellweaversRunConfig.ts`, `packages/game-cartridges/src/cartridges/spellweavers-run/scene.ts`, `packages/game-cartridges/src/cartridges/spellweavers-run/systems.ts`.
+- Griffin Rider's Escape: `apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/griffin-riders-escape/page.tsx`, `apps/advantage-games/src/components/games/sentence/griffin-riders-escape/GriffinRidersEscapeGame.tsx`, `apps/advantage-games/src/lib/games/griffinRidersEscape.ts`, `apps/advantage-games/src/lib/games/griffinRidersEscapeConfig.ts`, `packages/game-cartridges/src/cartridges/griffin-riders-escape/scene.ts`.
+
+The new falsifiers reject lying about presence, a hash for missing bytes, omitted missing paths, and implementation or cutover authority from absence.
 
 No readiness, gameplay, adoption, cutover, or retirement claim was added.
 
 ## Commands
 
-- `./node_modules/.bin/vitest run packages/game-cartridges/src/legacy-traversal-source-manifest.test.ts` — exit 1; expected Red with 7 passed and 5 named missing-manifest failures across 12 tests.
+- `./node_modules/.bin/vitest run packages/game-cartridges/src/legacy-traversal-source-manifest.test.ts` — exit 1; expected Red with 8 passed and 5 named missing-manifest failures across 13 tests.
 - `pnpm vitest run packages/game-cartridges/src/legacy-traversal-source-manifest.test.ts` — the pnpm preflight entered install and ended with SIGTERM before Vitest collection.
 - `./node_modules/.bin/tsc --noEmit -p packages/game-cartridges/tsconfig.json` — passed.
 - `./node_modules/.bin/eslint --config packages/game-cartridges/eslint.config.mjs packages/game-cartridges/src/legacy-traversal-source-manifest.test.ts` — passed.
@@ -40,4 +50,4 @@ No readiness, gameplay, adoption, cutover, or retirement claim was added.
 
 Before this remediation, relevant dirty paths were the strict test and this track's plan. Generated or ignorable paths included `.opencode/goals/**`, Codecamp Playwright reports, Codecamp test results, and Advantage Games test results. Unrelated user work included the durable-job plan and evidence, the Sales Mastery plan and evidence, and the backend job test. Those paths remain unchanged.
 
-Task 1 remains `[~]` until all five exact per-title manifests exist and this Red command turns green.
+Task 1 remains `[~]` until all five complete per-title manifests exist and this Red command turns green.

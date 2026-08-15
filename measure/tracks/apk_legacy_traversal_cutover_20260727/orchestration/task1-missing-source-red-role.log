@@ -1,0 +1,66 @@
+# Measure Mid Red Role Log — missing traversal source presence
+
+Track: `apk_legacy_traversal_cutover_20260727`
+Phase: Phase 1 source/readiness manifests, Task 1
+Role: `measure-mid-red`
+Date: 2026-08-16
+phase_base_sha: `c2e28e9e4f326fc056415abfe2d1876f16d48675`
+role_base_sha: `8113c2491dac4b7cc93bd9940f8d55b70cd83b5c`
+HEAD at role start: `8113c2491dac4b7cc93bd9940f8d55b70cd83b5c`
+
+## Preflight
+
+- Both supplied SHAs resolve to commits.
+- Phase scope uses `phase_base_sha`.
+- Role provenance uses `role_base_sha` only to prove this new Red commit.
+- The task marker was already `[~]` before work started and remains `[~]`.
+- The exact lease covers the strict Red test, the APK plan, the existing Task 1 evidence, and this new role log.
+- Generated or ignorable dirty paths include `.opencode/goals/**`, Codecamp reports and test results, and Advantage Games test results.
+- Unrelated user work includes `packages/backend/src/jobs/adapters/postgres/index.ts` and `packages/backend/src/jobs/contracts.ts`.
+- All generated paths and unrelated user work remain unstaged and unchanged.
+- No product source or manifest was edited.
+
+## Red contract
+
+Each per-title manifest must preserve the complete accepted path denominator.
+Each entry must declare `tracked-at-head` or `missing-at-head`.
+Tracked entries require Git tracking, file existence, current-byte SHA-256, role, classification, locator, and evidence-only disposition.
+Missing entries require the accepted evidence locator and exact path, omit `sha256`, and prove absence and non-tracking at HEAD.
+Set equality, uniqueness, generated-path rejection, and evidence-only claims remain enforced.
+Falsifiers cover presence lies, fabricated missing hashes, omitted missing paths, and implementation or cutover authority from absence.
+
+The ten accepted paths missing and untracked at HEAD are:
+
+- Spellweaver's Run: `apps/advantage-games/src/components/games/sentence/spellweavers-run/SpellweaversRunGame.tsx`, `apps/advantage-games/src/lib/games/spellweaversRun.ts`, `apps/advantage-games/src/lib/games/spellweaversRunConfig.ts`, `packages/game-cartridges/src/cartridges/spellweavers-run/scene.ts`, `packages/game-cartridges/src/cartridges/spellweavers-run/systems.ts`.
+- Griffin Rider's Escape: `apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/griffin-riders-escape/page.tsx`, `apps/advantage-games/src/components/games/sentence/griffin-riders-escape/GriffinRidersEscapeGame.tsx`, `apps/advantage-games/src/lib/games/griffinRidersEscape.ts`, `apps/advantage-games/src/lib/games/griffinRidersEscapeConfig.ts`, `packages/game-cartridges/src/cartridges/griffin-riders-escape/scene.ts`.
+
+## Commands and evidence
+
+- `./node_modules/.bin/vitest run packages/game-cartridges/src/legacy-traversal-source-manifest.test.ts` — exit 1; 13 tests collected, 8 passed, and 5 failed only for the five missing exact per-title manifests.
+- `./node_modules/.bin/tsc --noEmit -p packages/game-cartridges/tsconfig.json` — exit 0.
+- `./node_modules/.bin/eslint --config packages/game-cartridges/eslint.config.mjs packages/game-cartridges/src/legacy-traversal-source-manifest.test.ts` — exit 0.
+- `./node_modules/.bin/prettier --check packages/game-cartridges/src/legacy-traversal-source-manifest.test.ts` — exit 0.
+- Exact staged-path `git diff --check` — exit 0 after staging the four leased paths.
+
+## Handoff
+
+Green must add only the five complete per-title source manifests.
+Green must preserve the ten missing accepted paths as `missing-at-head` without hashes.
+Green must keep all evidence-only claims false and rerun the focused contract.
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+status: complete
+track: apk_legacy_traversal_cutover_20260727
+phase: Phase 1 source/readiness manifests, Task 1
+baseline_sha: c2e28e9e4f326fc056415abfe2d1876f16d48675
+phase_base_sha: c2e28e9e4f326fc056415abfe2d1876f16d48675
+role_base_sha: 8113c2491dac4b7cc93bd9940f8d55b70cd83b5c
+resulting_head: reported after the locked commit
+commits: one conventional Red test commit containing exactly the four leased paths; SHA reported after commit
+tests_run: focused Vitest exit 1 (13 collected, 8 passed, 5 missing-manifest failures); TypeScript, ESLint, Prettier, and exact staged-path diff checks exit 0
+files_changed: packages/game-cartridges/src/legacy-traversal-source-manifest.test.ts; measure/tracks/apk_legacy_traversal_cutover_20260727/plan.md; measure/tracks/apk_legacy_traversal_cutover_20260727/task1-source-manifest-red-evidence-20260815.md; measure/tracks/apk_legacy_traversal_cutover_20260727/orchestration/task1-missing-source-red-role.log
+plan_updates: recorded the presence union, complete denominator contract, four new falsifiers, exact Red counts, and ten missing accepted paths; Task 1 remains [~]
+known_failures: five complete per-title legacy source manifests remain absent; ten accepted source paths for Spellweaver's Run and Griffin Rider's Escape remain missing and untracked
+handoff: Green must add only the five complete evidence manifests, preserve missing entries without hashes, and rerun the focused contract
+END_MEASURE_AGENT_RESULT
