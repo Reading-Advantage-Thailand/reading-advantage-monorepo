@@ -2,7 +2,7 @@
 
 ## Phase 1: Source/readiness manifests
 
-- [~] Confirm accepted crosswalk/readiness coverage and publish exact legacy manifests for five titles.
+- [x] Publish exact legacy source manifests for five titles. Source SHA: `1e848bda09b6cfb16c8076447101553a247c4417`.
   Evidence-only Task 1 Red remains active. The contract preserves the complete accepted source-path denominator for every title.
   Every entry declares `presence` as `tracked-at-head` or `missing-at-head`.
   Tracked entries require Git tracking, file existence, the current-byte SHA-256, role, classification, locator, and evidence-only disposition.

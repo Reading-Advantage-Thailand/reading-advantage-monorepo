@@ -1,0 +1,31 @@
+# Jr Green Role Log — apk_legacy_traversal_cutover_20260727
+
+- 2026-08-16 measure-jr-green role run.
+- Phase: Phase 1 source/readiness manifests, Task 1.
+- phase_base_sha: `c2e28e9e4f326fc056415abfe2d1876f16d48675`.
+- role_base_sha: `0d920669cb5a55ef5325272ee2d2e50aa0fa71a5`.
+- The committed Red change is within `phase_base_sha..HEAD`.
+- Lease: the APK plan, this Green note, this role log, and five source manifests.
+- Immutable Red test: `packages/game-cartridges/src/legacy-traversal-source-manifest.test.ts`.
+- The initial focused run exited 1 with 13 tests: 8 passed and 5 missing-manifest failures.
+- The source commit is `1e848bda09b6cfb16c8076447101553a247c4417`.
+- The focused Green run exited 0 with 13 passed.
+- TypeScript, ESLint, Prettier, and scoped diff checks exited 0.
+- `bash measure/doctor.sh` exited 1 on unrelated deprecated `[ ]` markers.
+- No product or test path changed.
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+status: complete
+track: apk_legacy_traversal_cutover_20260727
+phase: Phase 1 source/readiness manifests, Task 1
+phase_base_sha: c2e28e9e4f326fc056415abfe2d1876f16d48675
+role_base_sha: 0d920669cb5a55ef5325272ee2d2e50aa0fa71a5
+commits: 1e848bda09b6cfb16c8076447101553a247c4417; plan-evidence commit pending
+tests_run: focused Vitest exit 0 with 13 passed; package type, lint, format, and scoped diff checks exit 0
+files_changed: five legacy-source-manifests JSON files; plan.md; task1-source-manifest-green-evidence-20260816.md; orchestration/task1-jr-green-role.log
+plan_updates: Task 1 marked [x] with source SHA 1e848bda09b6cfb16c8076447101553a247c4417
+blocked_tasks: none
+known_failures: measure/doctor.sh exits 1 on unrelated deprecated [ ] plan markers
+handoff: Review the five source manifests and their evidence-only claims. The source commit holds the manifests. The following plan-evidence commit holds this log and note.
+END_MEASURE_AGENT_RESULT
