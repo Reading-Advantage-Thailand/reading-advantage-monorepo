@@ -1,0 +1,17 @@
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+status: complete
+track: company_finance_operations_20260810
+phase: Phase 2 — controlled operational imports
+phase_base_sha: 8fa71b33b79a3090941f884f037564baa0322dbb
+role_base_sha: 590b803dd24e87994ac1def37688b7d9694b5546
+source_commit: 0e85b4d7e4915d3df62c3f78280debca05fee3ea
+tasks_flipped_x: Phase 2 THB valuation task
+tasks_flipped_b: none
+targeted_red_command: ../../node_modules/.bin/vitest run src/modules/finance-operations/__tests__/multi-currency-thb-phase2.red.test.ts src/modules/finance-operations/__tests__/thb-owner-decision-receipt.red.test.ts --pool=threads --maxWorkers=1
+targeted_red_result: exit 0; 60 passed; 0 failed
+finance_regression_result: exit 0; 23 passed; 0 failed
+new_files: measure/tracks/company_finance_operations_20260810/phase2-thb-replay-green-remediation-20260815.md; measure/tracks/company_finance_operations_20260810/orchestration/phase2-thb-replay-jr-green-role.log
+known_failures: measure/doctor.sh has unrelated deprecated markers; architecture-boundary.test.ts rejects the existing THB barrel import
+handoff: Review strict replay capture, nested scope comparison, and fail-closed operand validation. Owner policy decisions remain outside this remediation.
+END_MEASURE_AGENT_RESULT

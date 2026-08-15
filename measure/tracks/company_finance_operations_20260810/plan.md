@@ -44,7 +44,7 @@
   - They record 20 Company Identity tests and 25 private-storage tests passed.
   - The recorded type, build, lint, format, diff, and graph checks passed.
 
-- [~] Task: Add exact THB valuations for bills in each source currency. Preserve every source amount and currency. Source commit `4c329d91066e809d2cef0b453a0e752b043b1d6a`. Red remediation is active for accepted finding `THB-RB-001`.
+- [x] Task: Add exact THB valuations for bills in each source currency. Preserve every source amount and currency. Source commits `4c329d91066e809d2cef0b453a0e752b043b1d6a` and `0e85b4d7e4915d3df62c3f78280debca05fee3ea`.
 
   The verified packet must bind the THB amount, rate, effective date, and rate source.
   The owner or accountant must select the rate source and rounding policy.
@@ -159,7 +159,17 @@
   - Backend test typecheck exited 2 on unchanged `src/jobs/__tests__/postgres16-enqueue-retry-replay.red.test.ts` lines 900 and 947 (`Expected 5 arguments, but got 1`). The targeted Finance lint, Prettier check, and scoped diff check exited 0.
   - No production, migration, provider, policy, or integration test file changed.
   - The THB task remains `[~]` pending the owner-gated Green implementation.
-  - The role note is `phase2-thb-replay-red-remediation-20260815.md`; the role log is `orchestration/phase2-thb-replay-mid-red-role.log`.
+   - The role note is `phase2-thb-replay-red-remediation-20260815.md`; the role log is `orchestration/phase2-thb-replay-mid-red-role.log`.
+
+   Green replay remediation evidence (2026-08-15):
+
+   - Commit `0e85b4d7e4915d3df62c3f78280debca05fee3ea` validates complete replay operands before comparison.
+   - The focused THB command passed 60/60 tests.
+   - The focused Finance regression command passed 23/23 tests.
+   - Production and test typechecks, targeted lint, Prettier, diff, and build commands passed.
+   - `measure/doctor.sh` remains red on unrelated deprecated `[ ]` markers.
+   - `architecture-boundary.test.ts` remains red because its existing allowlist excludes the committed THB barrel import.
+   - The remediation note is `phase2-thb-replay-green-remediation-20260815.md`; the role log is `orchestration/phase2-thb-replay-jr-green-role.log`.
 
 ## Phase 3 — close and accountant exchange
 
