@@ -1,0 +1,15 @@
+Track: apk_legacy_traversal_cutover_20260727
+
+Scope: Task 1 readiness parser test and manifest.
+
+Source commit: 7e87591d43e6c241567ebe06393ffe69f637c721
+
+Test SHA-256: a649398d5e946b345f37f224a2625eaef956ac395dfbe925cab22f9bfec18ef7
+
+Manifest SHA-256: b8f7f31516617f8800759cf7e88e4fc9bf956d37dbcdec70659f083d8408f758
+
+Correctness Review A: ACCEPT. Security Review B: ACCEPT.
+
+Focused suite: 9 of 9 passed. Visible-Markdown matrix: 19 of 19 rejected correctly.
+
+Boundary: Task 1 remains active. Tasks 2 through 8 remain pending. This commit adds no license blocker.
