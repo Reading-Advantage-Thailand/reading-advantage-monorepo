@@ -1,0 +1,28 @@
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+status: complete
+track: company_finance_operations_20260810
+phase: Phase 2 — controlled operational imports
+phase_base_sha: 8fa71b33b79a3090941f884f037564baa0322dbb
+role_base_sha: 399864a3087287b8435d2b697211245c9cd15085
+commits: adf96232f source correction; this evidence commit records verification
+reproduction_command: CI=true pnpm --filter @reading-advantage/backend exec vitest run src/modules/finance-operations/__tests__/architecture-boundary.test.ts --pool=threads --maxWorkers=1
+reproduction_result: exit 1; 8 tests collected; 7 passed; 1 failed on ./thb-valuation.js
+architecture_command: node ../../node_modules/vitest/vitest.mjs run src/modules/finance-operations/__tests__/architecture-boundary.test.ts --pool=threads --maxWorkers=1
+architecture_result: exit 0; 9 passed; 0 failed
+thb_command: node ../../node_modules/vitest/vitest.mjs run src/modules/finance-operations/__tests__/multi-currency-thb-phase2.red.test.ts src/modules/finance-operations/__tests__/thb-owner-decision-receipt.red.test.ts --pool=threads --maxWorkers=1
+thb_result: exit 0; 60 passed; 0 failed
+finance_regression_command: node ../../node_modules/vitest/vitest.mjs run src/modules/finance-operations/__tests__/contracts.test.ts src/modules/finance-operations/__tests__/money-history.test.ts src/modules/finance-operations/__tests__/port-boundaries.test.ts src/modules/finance-operations/__tests__/postgres-boundary-exports.test.ts src/modules/finance-operations/__tests__/authorization-audit.test.ts --pool=threads --maxWorkers=1
+finance_regression_result: exit 0; 25 passed; 0 failed; 5 files
+typecheck_commands: node ../../node_modules/typescript/bin/tsc --noEmit -p tsconfig.json; node ../../node_modules/typescript/bin/tsc --noEmit -p tsconfig.test.json
+typecheck_result: exit 0; production and test checks passed
+lint_command: node ../../node_modules/eslint/bin/eslint.js src/modules/finance-operations
+lint_result: exit 0
+prettier_command: node ../../node_modules/prettier/bin/prettier.cjs --check src/modules/finance-operations/__tests__/architecture-boundary.test.ts
+prettier_result: exit 0
+diff_command: git diff --check -- packages/backend/src/modules/finance-operations/__tests__/architecture-boundary.test.ts
+diff_result: exit 0
+files: packages/backend/src/modules/finance-operations/__tests__/architecture-boundary.test.ts; measure/tracks/company_finance_operations_20260810/plan.md; measure/tracks/company_finance_operations_20260810/phase2-thb-architecture-boundary-green-20260816.md; measure/tracks/company_finance_operations_20260810/orchestration/phase2-thb-architecture-boundary-jr-green-role.log
+failures: package check-types wrapper interrupted by unavailable registry downloads; no role-owned TypeScript failure
+handoff: Review the exact node:util.types allowlist and counterexamples; owner THB policy decisions remain outside this correction.
+END_MEASURE_AGENT_RESULT

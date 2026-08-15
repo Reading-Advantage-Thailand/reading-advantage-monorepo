@@ -168,7 +168,18 @@
    - The focused Finance regression command passed 23/23 tests.
    - Production and test typechecks, targeted lint, Prettier, diff, and build commands passed.
    - `measure/doctor.sh` remains red on unrelated deprecated `[ ]` markers.
-   - `architecture-boundary.test.ts` remains red because its existing allowlist excludes the committed THB barrel import.
+
+   Architecture boundary Green correction evidence (2026-08-16; phase base `8fa71b33b79a3090941f884f037564baa0322dbb`; role base `399864a3087287b8435d2b697211245c9cd15085`):
+
+   - Source commit `adf96232f` admits the reviewed `thb-valuation.ts` module.
+   - The contract allows only `zod.z` and `node:util.types` from external modules.
+   - Unapproved utility bindings, namespaces, and `node:fs` remain rejected by counterexamples.
+   - The architecture command passed 9/9 tests.
+   - The 60-case THB command passed 60/60 tests.
+   - The focused Finance regression passed 25/25 tests across 5 files.
+   - Production and test TypeScript checks, Finance lint, Prettier, and `git diff --check` passed.
+   - The package `check-types` wrapper was interrupted during an unavailable registry relink; direct local compiler checks passed.
+   - The correction note is `phase2-thb-architecture-boundary-green-20260816.md`; the role log is `orchestration/phase2-thb-architecture-boundary-jr-green-role.log`.
    - The remediation note is `phase2-thb-replay-green-remediation-20260815.md`; the role log is `orchestration/phase2-thb-replay-jr-green-role.log`.
 
 ## Phase 3 — close and accountant exchange
