@@ -3,19 +3,19 @@
 > Canonical strategy for Phase 2 (Red Concurrency and Failure Tests) of
 > `durable_job_worker_platform_20260713`. Phase 1 is accepted. The original
 > Task 6 and Task 7 review failed at `b32cc7f2f`. The 2026-08-14 re-review
-> accepted both remediated tasks. Task 8 has an assigned Red owner. Task 9
+> accepted both remediated tasks. Task 8 has accepted source and live evidence. Task 9
 > remains blocked until its owner creates accepted Red evidence. This role owns
 > no product source and no test source.
 
 ## Phase scope and hard boundaries
 
-| Phase                                                   | State                                                              | Risk              | This strategy                                        |
-| ------------------------------------------------------- | ------------------------------------------------------------------ | ----------------- | ---------------------------------------------------- |
-| Phase 1 - existing behavior contract and generic schema | Accepted (Tasks 1-5; design PASS at `fb8c0d99`)                    | high (historical) | Reference and regression baseline only; not reopened |
-| Phase 2 - Red concurrency and failure tests             | Active; Tasks 6/7 `[x]`; Task 8 `[~]`; Task 9 `[b]`; Task 10 `[~]` | high              | Full strategy below                                  |
-| Phase 3 - PostgreSQL adapter implementation             | `[b]` behind Phase 2 acceptance                                    | critical          | Future Red/Green shape only                          |
-| Phase 4 - worker service and `review_jobs` adoption     | `[b]` behind Phase 3 acceptance                                    | critical          | Future Red/Green shape only                          |
-| Phase 5 - capability integration, docs, doctor          | `[b]` behind Phase 4 and kernel acceptance                         | high              | Future Red/Green shape only                          |
+| Phase                                                   | State                                           | Risk              | This strategy                                        |
+| ------------------------------------------------------- | ----------------------------------------------- | ----------------- | ---------------------------------------------------- |
+| Phase 1 - existing behavior contract and generic schema | Accepted (Tasks 1-5; design PASS at `fb8c0d99`) | high (historical) | Reference and regression baseline only; not reopened |
+| Phase 2 - Red concurrency and failure tests             | Active; Tasks 6/7/8/10 `[x]`; Task 9 `[b]`      | high              | Full strategy below                                  |
+| Phase 3 - PostgreSQL adapter implementation             | `[b]` behind Phase 2 acceptance                 | critical          | Future Red/Green shape only                          |
+| Phase 4 - worker service and `review_jobs` adoption     | `[b]` behind Phase 3 acceptance                 | critical          | Future Red/Green shape only                          |
+| Phase 5 - capability integration, docs, doctor          | `[b]` behind Phase 4 and kernel acceptance      | high              | Future Red/Green shape only                          |
 
 Hard boundaries for Phase 2:
 
@@ -101,13 +101,12 @@ tasks. Each finding has one exact remediation and one falsifier.
    dependency for the Task 6 executable PG16 assertions required by DWP-T6-H2.
 2. Task 6 PG16 executable assertions come second. They consume the frozen Task 7
    harness API and the corrected DWP-T6-H1 fixtures.
-3. Task 10 Red is authorized in parallel after this strategy commit. Task 10
-   tests worker lifecycle and architecture boundaries. It does not consume the
-   PG16 harness and does not wait for Tasks 6/7.
+3. Task 10 tests worker lifecycle and architecture boundaries in parallel with
+   the PG16 work. It does not consume the PG16 harness or wait for Tasks 6/7.
 4. The fresh independent re-review passed on 2026-08-14. It accepted the exact
    Task 6 and Task 7 artifacts.
-5. Tasks 6 and 7 are complete. Task 8 has an assigned Red owner. Task 9
-   remains blocked until its owner creates accepted Red evidence.
+5. Tasks 6, 7, and 8 are complete with accepted evidence. Task 9 remains blocked
+   until its owner creates accepted Red evidence. This foundation does not close Phase 2.
 
 ## Leases
 
@@ -222,10 +221,13 @@ Closeout gate for Task 7: a fresh independent re-review returns PASS over URL
 safety, cleanup under failure and signal, exact hook order, two-session
 independence, PG16 enforcement, and secret-safe errors.
 
-### Task 8 - Red concurrency and reclaim tests (owned; Red in progress)
+### Task 8 - Red concurrency and reclaim tests (accepted)
 
-Task 8 is `[~]` after the Task 6/7 re-review PASS. Its targeted Red command
-runs on the frozen harness:
+Task 8 is `[x]` after source commit
+`b8b0dce713f4d3f2d17ad0e922ff65a5c1f20b3e` and two final ACCEPT decisions.
+Its exact two-file manifest contains the adapter and live concurrency test.
+The manifest SHA-256 is
+`4ccd73cb870e4570fb31806947f73ee052048a6c02e98910f8e723a375f84135`.
 
 ```bash
 DURABLE_JOB_PG16_TEST_OPT_IN=1 \
@@ -234,17 +236,23 @@ DURABLE_JOB_PG16_TEST_ADMIN_DATABASE_URL=<guarded-url> \
     src/jobs/__tests__/postgres16-concurrency.red.test.ts
 ```
 
-Required Red assertions: concurrent `FOR UPDATE SKIP LOCKED` claims never own
-the same active lease; a fresh worker captures token, expiry, state, result, and
-error before heartbeat, settle, and fail reject the first worker's exact stale
-token without mutation; a fresh verifier SQL session compares the persisted
-token digest, expiry, state, result, and error, with result and error absent;
-global, company, and school scopes cannot claim or
-mutate another tenant's job, including reverse tenant access to global jobs;
-concurrent reclaim across independent sessions has one winner; and a fresh
-adapter and session preserve restart progress. Expected failure mode at Red:
-the adapter root does not exist, so suites fail on missing platform behavior,
-not on harness defects.
+Final correctness ACCEPT (2026-08-15; source commit
+`b8b0dce713f4d3f2d17ad0e922ff65a5c1f20b3e`) confirms stale-token fencing,
+authoritative row checks, tenant isolation, restart durability, and one-time
+reclaim.
+
+Final security ACCEPT (2026-08-15; source commit
+`b8b0dce713f4d3f2d17ad0e922ff65a5c1f20b3e`) confirms role ownership tracking,
+fail-closed cleanup, zero scratch databases, zero test-owned roles, and
+deterministic claim and reclaim lock barriers.
+
+The safe gate passed 6 tests and recorded 7 intentional skips. Fresh PostgreSQL
+16 passed 13/13 tests. The migration order was `0000 → 0005 → 0007 → 0025 →
+0052`. The disposable container was removed and its removal was verified.
+
+Typecheck, build, lint, format, and diff checks passed. Task 8 is complete.
+Task 9 remains blocked until its owner creates accepted Red evidence. Phase 2
+and Phase 3 remain open.
 
 ### Task 9 - Red enqueue/retry/DLQ/replay tests (blocked)
 
@@ -255,23 +263,20 @@ exhausted jobs dead-letter; replay requires authorization evidence, rejects an
 active lease, and emits one safe audit event. Expected failure mode: missing
 adapter behavior only.
 
-### Task 10 - Red worker lifecycle and architecture tests (authorized in parallel)
+### Task 10 - Red worker lifecycle and architecture tests (accepted Green)
 
-Task 10 starts after this strategy commit. Targeted Red command shape:
+Task 10 is `[x]` after source commit
+`287f89fad4aa49849a307e4973037ee8bd567a6a`. Independent Green acceptance
+passed the focused worker suite with 17/17 tests and the full worker suite with
+48/48 tests.
 
-```bash
-CI=true pnpm --filter @reading-advantage/worker exec vitest run \
-  src/__tests__/worker-lifecycle.red.test.ts \
-  src/__tests__/worker-architecture.red.test.ts
-```
+Worker typecheck, build, scoped lint, format, diff, graph, and exact lock-scope
+checks passed. The evidence proves bounded shutdown, bounded concurrency, safe
+polling, and global and tenant scope propagation.
 
-Required Red assertions: typed handler registration; bounded concurrency and
-polling; startup env validation; health/readiness transitions; SIGTERM drain;
-safe structured logs with no payload secrets; job-port-only access; zero direct
-DB, schema, SQL, or job-table imports under `services/worker`; queue
-persistence confined to the exact backend adapter root. The producer records
-each expected failure as a named missing worker-loop or composition module.
-Task 10 must not touch the PG16 harness, `packages/db`, or the Task 6/7 files.
+The tenant-scope amendment binds claim and reclaim to one declared polling
+scope. Each accepted envelope must match that scope before handler execution.
+Task 10 does not change the PG16 harness, `packages/db`, or the Task 6/7 files.
 
 ## Phase 2 verification, Green gate, and closeout gate
 
@@ -283,7 +288,8 @@ CI=true pnpm vitest run packages/backend/src/jobs/__tests__ services/worker/src/
 
 Phase 2 Green gate:
 
-- Every Task 6/8/9/10 Red suite fails only on named missing platform behavior.
+- Tasks 6, 8, and 10 have accepted Green evidence. Task 9 remains blocked until
+  its owner creates accepted Red evidence.
 - All support gates pass: fixture integrity, harness safe default, Task 1
   worker suites, focused typecheck and ESLint, and exact-path `git diff --check`.
 - The Phase 1 regression baseline still passes:

@@ -63,21 +63,17 @@ capture-point section; `role_base_sha` values are not valid phase bases.
 
 Acceptance checkpoint (2026-08-14): the fresh joint review returned PASS for
 Tasks 6 and 7. It found no open severity-ranked finding. The review is
-`task-6-task-7-independent-rereview-20260814.md`. Task 8 now has an explicit
-Red owner. Task 9 remains deferred because no owner has supplied its Red
-contract or live evidence. This foundation review does not close Phase 2.
+`task-6-task-7-independent-rereview-20260814.md`. Task 8 now has accepted
+source and live evidence. Task 9 remains deferred because no owner has supplied
+its Red contract or live evidence. This foundation review does not close Phase 2.
 
 - [x] Task 6: Add Red schema/migration/tenant-registry tests and invalid-transition counterexample fixtures. (`caf095c`)
 - [x] Task 7: Build a deterministic isolated PostgreSQL 16 harness using two independent connections, exact migration setup and teardown, an explicit test-only URL, and fail-closed guards forbidding production/default URL fallback. (`897abfe`)
-- [~] Task 8: Add Red concurrent claim, lease-token CAS, stale heartbeat/settle/fail, visibility reclaim, and restart tests on the PG16 harness. (owner:durable-job-backend-red-owner)
-  - Red owner evidence (2026-08-14): /home/daniebo/Desktop/reading-advantage-monorepo/packages/backend/src/jobs/**tests**/postgres16-concurrency.red.test.ts defines two-session claims, a fresh-lease field snapshot with exact real-token stale mutation rejection, an authoritative fresh SQL row comparison for token digest, expiry, state, result, and error, concurrent one-time reclaim, reverse global/company/school tenant isolation, a fresh adapter/session restart boundary, fail-closed opt-in, and scratch-cleanup contracts. The safe-default run passed 3 controls, skipped 5 live tests, and failed once only on the absent approved adapter root. The live gate remains opt-in and has no configured credentials or evidence.
-  - Adapter evidence (2026-08-14): commit `a7031a613` implements the PostgreSQL adapter and additive `0052` migration.
-  - The executable fake adapter contract passed 4/4.
-  - Backend jobs passed 62 tests and skipped 6 live tests.
-  - Database suites passed 95 tests and skipped 1 live test.
-  - Type, lint, format, Drizzle, diff, and graph checks passed.
-  - Independent correctness and security reviews accepted manifest `f201ece9c5d419c08bbcabfc92da5eb757d515b61504541e20a1603317de3189`.
-  - No live PostgreSQL instance ran. Task 8 remains active.
+- [x] Task 8: Add Red concurrent claim, lease-token CAS, stale heartbeat/settle/fail, visibility reclaim, and restart tests on the PG16 harness. (source: `b8b0dce713f4d3f2d17ad0e922ff65a5c1f20b3e`)
+  - Final correctness ACCEPT (2026-08-15; source commit `b8b0dce713f4d3f2d17ad0e922ff65a5c1f20b3e`): the two-file manifest contains `packages/backend/src/jobs/adapters/postgres/index.ts` and `packages/backend/src/jobs/__tests__/postgres16-concurrency.red.test.ts`. Its SHA-256 is `4ccd73cb870e4570fb31806947f73ee052048a6c02e98910f8e723a375f84135`.
+  - Final security ACCEPT (2026-08-15; source commit `b8b0dce713f4d3f2d17ad0e922ff65a5c1f20b3e`): migration `0052` cleanup removed only test-owned roles after scratch databases were gone. The fixture proved zero scratch databases, zero test-owned roles, fail-closed cleanup, and deterministic claim and reclaim lock barriers.
+  - The safe gate passed 6 tests and recorded 7 intentional skips. The fresh PostgreSQL 16 gate passed 13/13 tests. The migration order was `0000 → 0005 → 0007 → 0025 → 0052`. Container removal was verified.
+  - Typecheck, build, lint, format, and diff checks passed. Task 8 is complete. Phase 2 remains open because Task 9 remains blocked.
 - [b] Task 9: Add Red idempotent enqueue, bounded deterministic-backoff, exhaustion/DLQ, authorization/audit, and active-lease replay-rejection tests. (deferred:durable-job-backend-red-owner)
   - Blocked evidence (2026-08-14): no source commit, Red file, explicit PostgreSQL 16 environment evidence, or independent receipt exists.
 - [x] Task 10: Add Red worker lifecycle and architecture tests for registration, bounded polling, startup configuration, health, signals, and safe logs. Prove trusted tenant propagation, lifecycle-only port access, and zero direct persistence access. Record named missing-composition failures.
@@ -95,8 +91,7 @@ closed; Red failures arise from missing platform behavior.
 
 - [b] Task 11: Add reviewed Drizzle schema/migration, indexes, exports, sentinels, and tenant-registry classification. (deferred:durable_job_worker_platform_20260713-phase2-acceptance)
 - [b] Task 12: Implement the job port's PostgreSQL adapter in the exact approved backend adapter root, including atomic enqueue and bounded `FOR UPDATE SKIP LOCKED` claim with lease-token ownership. (deferred:durable_job_worker_platform_20260713-phase2-acceptance)
-  - Source evidence: commit `a7031a613` implements this adapter, but Task 8 still lacks the required live PostgreSQL proof.
-  - Phase 3 acceptance remains blocked.
+  - Source evidence: commit `a7031a613` implements this adapter. Phase 3 acceptance remains blocked behind Phase 2 acceptance.
 - [b] Task 13: Implement heartbeat, lease-token CAS settle/fail, visibility reclaim, bounded jittered retries, dead-letter listing, and authorized audited replay that rejects active leases. (deferred:durable_job_worker_platform_20260713-phase2-acceptance)
 - [b] Task 14: Make transition/concurrency/failure tests Green and run migration governance plus isolated two-connection PG16 locking tests. (deferred:durable_job_worker_platform_20260713-phase2-acceptance)
 
