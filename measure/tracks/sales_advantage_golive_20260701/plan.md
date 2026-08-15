@@ -41,7 +41,6 @@ Do not start Phase 2 until the security gate is green.
     - Types output: `z.string().nullable()` ✅
     - Tests: `packages/domain/src/__tests__/sales-contract-nullability.test.ts` ✅
   - Recorded SHAs: `ba483a4e`, `d83db701`, `b6d1d9f8`, `102cb2c1`, `21a6e40e`, `1fd1e3c8`
-  - **One item NOT at HEAD**: lesson markdown sanitization — documented as [b] deferred:wave-owner. The custom `renderMarkdown` wraps content in HTML tags without sanitizing raw HTML. Risk is partially mitigated because lesson content comes from the curriculum seed (admin-generated), not user input. A real santize-html/dompurify integration should be added.
 - [x] Task: Reconcile `sales_advantage_mvp_20260622`
   - [x] Flipped Phase 3–7 checkboxes to `[x]` with SHAs (see updated `sales_advantage_mvp_20260622/plan.md`)
     - Phase 3 (tRPC Router): `8d5612c5` scaffold, `102cb2c1` wave0 phase3 green
@@ -56,8 +55,7 @@ Do not start Phase 2 until the security gate is green.
   - [x] Adapter-boundary (T4): `MockProvider` exists at `packages/ai/src/providers/mock.ts`. Seed script uses `@reading-advantage/ai` adapter exclusively — no direct OpenRouter/Google SDK call.
   - [x] `AI_PROVIDER=mock` for dry runs: documented in seed script header comments.
   - **Both conditions met at HEAD.**
-- [x] Task: Measure — User Manual Verification 'Preconditions & reconciliation'
-  - [b] deferred:human-gated — requires human sign-off on the XSS finding and overall gate
+- [b] Task: Measure — User Manual Verification 'Preconditions & reconciliation' — deferred:human-gated
 
 ---
 
@@ -144,19 +142,17 @@ Do not start Phase 2 until the security gate is green.
   - [x] All env vars documented: DB, auth, AI provider (openrouter/google/openai/mock), eval model overrides, chat model, storage (S3-compatible), Next.js
   - [x] Key name correction: storage adapter reads `STORAGE_ACCESS_KEY` / `STORAGE_SECRET_KEY` (not `_ACCESS_KEY_ID` / `_SECRET_ACCESS_KEY`)
 - [x] Task: Write `apps/sales-advantage/scripts/sales-smoke.sh` — post-deploy smoke (GET / → 200, GET /api/auth/session → 200, POST /api/trpc → 401 unauth)
-  - [x] Authenticated smoke deferred:human-gated
-- [~] Task: Local production build smoke — `docker build -f apps/sales-advantage/Dockerfile .` succeeds — [b] skipped (Docker not available in this environment)
-- [~] Task: Measure — User Manual Verification 'Deploy infrastructure' — [b] deferred:human-gated
+  - [b] Authenticated smoke — deferred:qa-credential-provisioning
+- [b] Task: Local production build smoke — `docker build -f apps/sales-advantage/Dockerfile .` succeeds — deferred:docker-unavailable
+- [b] Task: Measure — User Manual Verification 'Deploy infrastructure' — deferred:human-gated
 
 ---
 
 ## Phase 3: Deploy + end-to-end QA
 
 - [x] Note: Sales revision `sales-advantage-00005-yas` live evidence was gathered
-  by the Sales QA subagent and recorded in [`qa-browserevidence-20260719.md`](./qa-browserevidence-20260719.md)
-  (`90782806` evidence file). Browser journeys remain blocked by the SSO
-  `SESSION_INVALID` response; QA-credential provisioning is required before
-  authenticated journeys can complete.
+      by the Sales QA subagent. Evidence: [`qa-browserevidence-20260719.md`](./qa-browserevidence-20260719.md).
+      Evidence file: `90782806`. The SSO response was `SESSION_INVALID`. QA credential provisioning remains required before authenticated journeys.
 
 - [x] Task: Continue failed release `f5063222-76bd-4b73-a151-3f7994827e09` without replaying completed mutations
   - [x] Commit a manifest-bound, one-use Cloud Build continuation that deploys only the original immutable image digest.
@@ -167,20 +163,22 @@ Do not start Phase 2 until the security gate is green.
   - Implementation SHA: `2a24a654`; permission-surface correction: `2c96be94`. The corrected focused release suite passed 27 tests plus changed-file ESLint, Sales TypeScript, YAML/Node syntax, and independent review. Build `342cdc52-871c-4f08-bef0-7ebf38290557` completed all 15 continuation steps and promoted `sales-advantage-00005-yas` to 100%; see [`production-continuation-20260719.md`](./production-continuation-20260719.md).
 
 - [x] Task: `gcloud builds submit --config apps/sales-advantage/cloudbuild.yaml` to the `reading-advantage` project; confirm migrate + doctor + deploy steps pass
-  - Build `b45acc2f-9694-4962-95b9-4477209799d2`: SUCCESS; revision `sales-advantage-00003-v4d`; image digest `sha256:9cab345f7f070e0d42488c3357ff492471758d0d17dcb85c86e6eac61b5738d0`; 100% traffic.
+  - Historical build evidence: Build `b45acc2f-9694-4962-95b9-4477209799d2` succeeded. It deployed revision `sales-advantage-00003-v4d` with 100% traffic.
 - [x] Task: Run `sales-smoke.sh` against the live Cloud Run URL
-  - `https://sales.reading-advantage.com` serves over managed HTTPS; Accounts SSO lands on the authenticated curriculum dashboard and `/api/auth/session` returns 200 with `authenticated: true` and role `SALES_ADMIN`.
+  - Historical `sales-smoke.sh` evidence covers the public landing page, session route, and unauthenticated tRPC rejection.
+  - Historical rollout evidence in commit `20ec943033549f103d78be0fa39d5e264ec23cf0` shows an authenticated `SALES_ADMIN` dashboard.
+  - `qa-browserevidence-20260719.md` records `SESSION_INVALID`. `review-2026-07-20.md` keeps `SALES_REP` browser QA open.
+  - Manual QA may start only when a valid Accounts session yields authenticated `SALES_REP` from the Sales callback.
 - [~] Task: End-to-end QA pass (from `sales_advantage_mvp_20260622/plan.md` Phase 8)
-  - [ ] Auth: admin login → Accounts provisions rep → company SSO rep login
-  - [ ] Dashboard modules + progress; theory lesson mark-complete
-  - [ ] Roleplay: record → submit → evaluation displays; retry → best-attempt logic
-  - [ ] Quiz: submit → 70% threshold; Chat: Thai streaming response
-  - [ ] Admin: cohort overview and per-rep detail; verify the release-owner
-        curriculum approval boundary rather than a local credential workflow
-  - [ ] i18n toggle EN↔TH; rate-limit: 11th submission/hour → 429
+  - [b] Auth: admin login → Accounts provisions rep → company SSO rep login — deferred:accounts-provisioned-sales-rep
+  - [b] Dashboard modules + progress; theory lesson mark-complete — deferred:valid-sales-rep-session
+  - [b] Roleplay: record → submit → evaluation displays; retry → best-attempt logic — deferred:valid-sales-rep-session
+  - [b] Quiz: submit → 70% threshold; Chat: Thai streaming response — deferred:valid-sales-rep-session
+  - [b] Admin: cohort overview and per-rep detail; verify the release-owner curriculum approval boundary rather than a local credential workflow — deferred:valid-sales-rep-session
+  - [b] i18n toggle EN↔TH; rate-limit: 11th submission/hour → 429 — deferred:valid-sales-rep-session
 - [x] Task: Verify audio storage is private (signed URL only) and no orphaned keys on failure
-  Evidence (2026-08-14): the installed package-local Vitest gate passed 2 files / 12 tests with one worker. The route test asserts `public: false` and an exact response without a public URL. It also proves null persistence after upload failure and exact-key deletion after a later failure.
-- [~] Task: Measure — User Manual Verification 'Deploy + QA'
+      Evidence (2026-08-14, commit `7330697b`): package-local Vitest passed 2 files and 12 tests with one worker. The route test asserts `public: false` and no public URL. It proves null persistence after upload failure and exact-key deletion after a later failure. This is automated audio evidence only.
+- [b] Task: Measure — User Manual Verification 'Deploy + QA' — deferred:human-gated
 
 ---
 
@@ -191,7 +189,7 @@ Do not start Phase 2 until the security gate is green.
 > complete merely because that successor is active.
 
 - [x] Task: Update `measure/deployment-status.md` — sales-advantage now deployed (service, project, deploy source)
-- [~] Task: Update `measure/tech-debt.md` — go-live shortcuts (audio retention policy, no auto CI/CD trigger, free-tier eval-model reliability + fallback monitoring)
-- [~] Task: Update `measure/lessons-learned.md` if any reusable lesson emerged
-- [~] Task: Archive this track and the reconciled `sales_advantage_mvp_20260622`; update `measure/tracks.md` rows to `[x]`
-- [~] Task: Measure — User Manual Verification 'Closeout'
+- [b] Task: Update `measure/tech-debt.md` — go-live shortcuts (audio retention policy, no auto CI/CD trigger, free-tier eval-model reliability + fallback monitoring) — deferred:phase3-qa-complete
+- [b] Task: Update `measure/lessons-learned.md` if any reusable lesson emerged — deferred:phase3-qa-complete
+- [b] Task: Archive this track and the reconciled `sales_advantage_mvp_20260622`; update `measure/tracks.md` rows to `[x]` — deferred:phase3-qa-and-human-closeout
+- [b] Task: Measure — User Manual Verification 'Closeout' — deferred:human-gated
