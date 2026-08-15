@@ -44,7 +44,7 @@
   - They record 20 Company Identity tests and 25 private-storage tests passed.
   - The recorded type, build, lint, format, diff, and graph checks passed.
 
-- [~] Task: Add exact THB valuations for bills in each source currency. Preserve every source amount and currency. Red work is active; owner decisions remain required for Green production use.
+- [x] Task: Add exact THB valuations for bills in each source currency. Preserve every source amount and currency. Source commit `4c329d91066e809d2cef0b453a0e752b043b1d6a`.
 
   The verified packet must bind the THB amount, rate, effective date, and rate source.
   The owner or accountant must select the rate source and rounding policy.
@@ -84,7 +84,14 @@
   - Every failure names only `financeThbConversionEvidenceSchema`, `createFinanceThbValuationPreparer`, or `classifyFinanceThbValuationReplay`.
   - The Company Identity attestor command remained Green at 83/83 tests.
   - The backend test typecheck, targeted Finance lint, Prettier check, and scoped diff check passed.
-  - No production, provider, database, or migration file changed. The THB task remains `[~]`; owner decisions remain required before Green valuation work.
+   - No production, provider, database, or migration file changed. The THB task remains `[~]`; owner decisions remain required before Green valuation work.
+
+   Green implementation evidence (2026-08-15):
+
+   - Commit `4c329d91066e809d2cef0b453a0e752b043b1d6a` adds the provider-neutral Finance THB valuation preparer and public barrel export.
+   - The canonical two-file THB command passed 47/47 tests. The Company Identity attestor command passed 83/83 tests.
+   - Focused Finance regression tests passed 23/23. Backend typecheck, focused lint, Prettier, scoped diff check, and backend build passed.
+   - `measure/doctor.sh` remains red only for deprecated `[ ]` markers in unrelated active plans. No phase acceptance is claimed.
 
 - [b] Task: Pilot one reconciled month and one billing packet through owner-attested private-evidence packets. — deferred:finance-owner-data
 
