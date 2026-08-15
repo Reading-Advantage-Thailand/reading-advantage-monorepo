@@ -1,0 +1,13 @@
+Track: sales_advantage_golive_20260701
+
+Scope: Sales metadata and the single registry row.
+
+Source commit: 6aa7801d0e9f8da19363efdf6d51f8ca438d5573
+
+Metadata SHA-256: 656fd66465a91b0fbb5b120650b67f2c930250fc710e3e27d98ec279c2daf9c6
+
+Registry SHA-256: e03edda451d7242d791844c818ac7143dbff523d8e225180370286bda981aa4d
+
+Independent status review: ACCEPT.
+
+Boundary: Authenticated SALES_REP QA remains open. This commit makes no shared-Mastery completion claim.
