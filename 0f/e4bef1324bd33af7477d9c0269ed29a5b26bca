@@ -1,0 +1,15 @@
+Track: company_finance_operations_20260810
+
+Scope: four Finance Phase 2 THB Red contract files.
+
+Source commit: 0fe4bef1324bd33af7477d9c0269ed29a5b26bca
+
+Ordered manifest: f0bda6438edbbe65796ccb3f8e9a5363c7359816ceb087573a057de7d891d9fc
+
+Finance Red: 47 of 47 tests failed on exactly three missing exports.
+
+Company Identity attestor: 83 of 83 tests passed.
+
+Independent Red-contract review: ACCEPT.
+
+Boundary: This commit selects no provider, rate rule, date rule, or rounding rule.
