@@ -17,6 +17,7 @@ import {
   type EnqueueJobRequest,
   type JobState,
   type JobTenant,
+  type ReplayAuthorizationVerifier,
 } from "../../index.js";
 import {
   listDeadJobsRequestSchema,
@@ -106,18 +107,22 @@ function jsonText(value: unknown): string {
   return encoded;
 }
 
+/**
+ * Validates a value for the PostgreSQL driver's JSON parameter helper.
+ * @param value JSON-compatible payload or result value.
+ * @returns The validated value with the driver's JSON type.
+ */
+function jsonValue(value: unknown): postgres.JSONValue {
+  jsonText(value);
+  return value as postgres.JSONValue;
+}
+
 function payloadFingerprint(payload: unknown): string {
   return digest(jsonText(payload));
 }
 
-function deserializeJson(value: unknown): unknown {
-  if (typeof value !== "string") {
-    return value;
-  }
-  return JSON.parse(value) as unknown;
-}
-
 function retryDelayMs(
+  jobId: string,
   jobName: string,
   queueName: string,
   attempt: number,
@@ -131,7 +136,7 @@ function retryDelayMs(
     RETRY_JITTER_MS,
     RETRY_MAX_DELAY_MS - exponential,
   );
-  const identity = `${jobName}:${queueName}:${attempt}`;
+  const identity = `${jobId}:${jobName}:${queueName}:${attempt}`;
   const jitter =
     Number.parseInt(digest(identity).slice(0, 8), 16) % (jitterLimit + 1);
   return exponential + jitter;
@@ -209,7 +214,7 @@ function runningEnvelope(row: DurableJobRow): DurableRunningJob {
     availableAt: isoTimestamp(row.available_at),
     createdAt: isoTimestamp(row.created_at),
     updatedAt: isoTimestamp(row.updated_at),
-    payload: deserializeJson(row.payload_json),
+    payload: row.payload_json,
     state: "running" as const,
     lease: {
       token: "",
@@ -277,12 +282,13 @@ function deadSummary(row: DeadJobRow) {
  */
 export function createDurableJobQueuePort(input: {
   readonly sql: DurableJobSql;
+  readonly replayAuthorizationVerifier?: ReplayAuthorizationVerifier;
 }): DurableJobQueuePort {
   const enqueue = async (
     request: Readonly<EnqueueJobRequest>,
   ): Promise<Awaited<ReturnType<DurableJobQueuePort["enqueue"]>>> => {
     const parsed = enqueueJobRequestSchema.parse(request);
-    const payload = jsonText(parsed.payload);
+    const payload = input.sql.json(jsonValue(parsed.payload));
     const fingerprint = payloadFingerprint(parsed.payload);
     const scopeId = tenantId(parsed.tenant);
 
@@ -484,7 +490,7 @@ export function createDurableJobQueuePort(input: {
   ): Promise<Awaited<ReturnType<DurableJobQueuePort["settle"]>>> => {
     const parsed = settleJobRequestSchema.parse(request);
     const scopeId = tenantId(parsed.tenant);
-    const result = jsonText(parsed.result);
+    const result = input.sql.json(jsonValue(parsed.result));
     return input.sql.begin(async (transaction) => {
       const rows = await transaction<
         readonly { readonly state: "pending" | "succeeded" }[]
@@ -585,7 +591,12 @@ export function createDurableJobQueuePort(input: {
       }
       const retryAt = new Date(
         Date.parse(parsed.now) +
-          retryDelayMs(current.job_name, current.queue_name, current.attempt),
+          retryDelayMs(
+            parsed.jobId,
+            current.job_name,
+            current.queue_name,
+            current.attempt,
+          ),
       ).toISOString();
       const rows = await transaction<
         readonly {
@@ -801,6 +812,17 @@ export function createDurableJobQueuePort(input: {
     request: Parameters<DurableJobQueuePort["replay"]>[0],
   ): Promise<Awaited<ReturnType<DurableJobQueuePort["replay"]>>> => {
     const parsed = replayJobRequestSchema.parse(request);
+    if (input.replayAuthorizationVerifier === undefined) {
+      throw new Error("Replay requires a configured authorization verifier.");
+    }
+    const verifiedAuthorization =
+      await input.replayAuthorizationVerifier.verify({
+        jobId: parsed.jobId,
+        tenant: parsed.tenant,
+        authorization: parsed.authorization,
+        correlationId: parsed.correlationId,
+        now: parsed.now,
+      });
     const scopeId = tenantId(parsed.tenant);
     return input.sql.begin(async (transaction) => {
       const rows = await transaction<readonly DurableJobRow[]>`
@@ -857,8 +879,8 @@ export function createDurableJobQueuePort(input: {
           "authorization_decided_at", "reason", "correlation_id"
         ) VALUES (
           ${row.id}, ${parsed.tenant.mode}, ${scopeId}, 'replay', 'replayed',
-          ${row.state}, ${parsed.authorization.subjectId},
-          ${parsed.authorization.decisionId}, ${parsed.authorization.authorizedAt},
+          ${row.state}, ${verifiedAuthorization.subjectId},
+          ${verifiedAuthorization.decisionId}, ${verifiedAuthorization.authorizedAt},
           ${parsed.reason}, ${parsed.correlationId}
         )
       `;

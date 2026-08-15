@@ -69,10 +69,9 @@ export const jobLeaseSchema = z.strictObject({
 /** Opaque, expiring ownership proof for one running attempt. */
 export type JobLease = z.infer<typeof jobLeaseSchema>;
 
-const requiredUnknownSchema = z.unknown().refine(
-  (value) => value !== undefined,
-  "A durable value is required.",
-);
+const requiredUnknownSchema = z
+  .unknown()
+  .refine((value) => value !== undefined, "A durable value is required.");
 
 const envelopeFields = {
   id: jobIdSchema,
@@ -102,46 +101,48 @@ export function createJobEnvelopeSchema<
     payload: payloadSchema,
   };
 
-  return z.discriminatedUnion("state", [
-    z.strictObject({
-      ...common,
-      state: z.literal("pending"),
-      lastError: safeJobErrorSchema.optional(),
-    }),
-    z.strictObject({
-      ...common,
-      state: z.literal("running"),
-      attempt: z.number().int().min(1).max(1_000),
-      lease: jobLeaseSchema,
-      lastError: safeJobErrorSchema.optional(),
-    }),
-    z.strictObject({
-      ...common,
-      state: z.literal("succeeded"),
-      result: resultSchema,
-      completedAt: jobTimestampSchema,
-    }),
-    z.strictObject({
-      ...common,
-      state: z.literal("dead"),
-      lastError: safeJobErrorSchema,
-      completedAt: jobTimestampSchema,
-    }),
-    z.strictObject({
-      ...common,
-      state: z.literal("legacy-failed"),
-      lastError: safeJobErrorSchema,
-      completedAt: jobTimestampSchema,
-    }),
-  ]).superRefine((envelope, context) => {
-    if (envelope.attempt > envelope.maxAttempts) {
-      context.addIssue({
-        code: z.ZodIssueCode.custom,
-        path: ["attempt"],
-        message: "A job attempt cannot exceed its declared maximum.",
-      });
-    }
-  });
+  return z
+    .discriminatedUnion("state", [
+      z.strictObject({
+        ...common,
+        state: z.literal("pending"),
+        lastError: safeJobErrorSchema.optional(),
+      }),
+      z.strictObject({
+        ...common,
+        state: z.literal("running"),
+        attempt: z.number().int().min(1).max(1_000),
+        lease: jobLeaseSchema,
+        lastError: safeJobErrorSchema.optional(),
+      }),
+      z.strictObject({
+        ...common,
+        state: z.literal("succeeded"),
+        result: resultSchema,
+        completedAt: jobTimestampSchema,
+      }),
+      z.strictObject({
+        ...common,
+        state: z.literal("dead"),
+        lastError: safeJobErrorSchema,
+        completedAt: jobTimestampSchema,
+      }),
+      z.strictObject({
+        ...common,
+        state: z.literal("legacy-failed"),
+        lastError: safeJobErrorSchema,
+        completedAt: jobTimestampSchema,
+      }),
+    ])
+    .superRefine((envelope, context) => {
+      if (envelope.attempt > envelope.maxAttempts) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["attempt"],
+          message: "A job attempt cannot exceed its declared maximum.",
+        });
+      }
+    });
 }
 
 /** Runtime contract for an envelope before handler-specific decoding. */
@@ -179,12 +180,7 @@ export const enqueueJobResultSchema = z.discriminatedUnion("outcome", [
   z.strictObject({
     outcome: z.literal("refreshed"),
     jobId: jobIdSchema,
-    priorState: z.enum([
-      "pending",
-      "succeeded",
-      "dead",
-      "legacy-failed",
-    ]),
+    priorState: z.enum(["pending", "succeeded", "dead", "legacy-failed"]),
   }),
   z.strictObject({
     outcome: z.literal("active-lease-retained"),
@@ -209,22 +205,24 @@ export const claimJobsRequestSchema = z.strictObject({
 /** Request for a bounded batch of due jobs with fresh lease ownership. */
 export type ClaimJobsRequest = z.infer<typeof claimJobsRequestSchema>;
 
-const runningJobEnvelopeSchema = z.strictObject({
-  ...envelopeFields,
-  attempt: z.number().int().min(1).max(1_000),
-  payload: requiredUnknownSchema,
-  state: z.literal("running"),
-  lease: jobLeaseSchema,
-  lastError: safeJobErrorSchema.optional(),
-}).superRefine((envelope, context) => {
-  if (envelope.attempt > envelope.maxAttempts) {
-    context.addIssue({
-      code: z.ZodIssueCode.custom,
-      path: ["attempt"],
-      message: "A claimed attempt cannot exceed its declared maximum.",
-    });
-  }
-});
+const runningJobEnvelopeSchema = z
+  .strictObject({
+    ...envelopeFields,
+    attempt: z.number().int().min(1).max(1_000),
+    payload: requiredUnknownSchema,
+    state: z.literal("running"),
+    lease: jobLeaseSchema,
+    lastError: safeJobErrorSchema.optional(),
+  })
+  .superRefine((envelope, context) => {
+    if (envelope.attempt > envelope.maxAttempts) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["attempt"],
+        message: "A claimed attempt cannot exceed its declared maximum.",
+      });
+    }
+  });
 
 /** Runtime contract for explicit empty or non-empty claim outcomes. */
 export const claimJobsResultSchema = z.discriminatedUnion("outcome", [
@@ -359,6 +357,33 @@ export const replayAuthorizationEvidenceSchema = z.strictObject({
 export type ReplayAuthorizationEvidence = z.infer<
   typeof replayAuthorizationEvidenceSchema
 >;
+
+/** Input bound to a replay authorization receipt verification. */
+export interface ReplayAuthorizationVerificationInput {
+  /** Durable job identity that the receipt must authorize. */
+  readonly jobId: string;
+  /** Trusted tenant scope that the receipt must authorize. */
+  readonly tenant: Readonly<JobTenant>;
+  /** Opaque authorization receipt supplied to the replay request. */
+  readonly authorization: unknown;
+  /** Correlation identifier bound to the receipt. */
+  readonly correlationId: string;
+  /** Trusted replay time used for receipt expiry checks. */
+  readonly now: string;
+}
+
+/** Verifies a replay receipt before any durable replay mutation. */
+export interface ReplayAuthorizationVerifier {
+  /**
+   * Verifies receipt authenticity, scope, correlation, and freshness.
+   * @param input Bound replay request data.
+   * @returns The verified authorization evidence.
+   * @throws When the receipt is invalid or cannot authorize the replay.
+   */
+  verify(
+    input: Readonly<ReplayAuthorizationVerificationInput>,
+  ): Promise<ReplayAuthorizationEvidence>;
+}
 
 /** Runtime contract for an authorized, auditable replay request. */
 export const replayJobRequestSchema = z.strictObject({
