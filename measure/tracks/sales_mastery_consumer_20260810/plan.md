@@ -219,7 +219,8 @@
   roleplay eligibility, receipt integrity, and one atomic mapping plus outbox
   boundary. Production source remains unchanged. Green remains blocked until
   these contracts fail for the recorded Review B gaps. Evidence:
-  `phase2-review-b-red-remediation-evidence-20260816.md`.
+  `phase2-review-b-red-remediation-evidence-20260816.md`; Red commit:
+  `75b68ba25`.
 
 ## Phase 3 — project Sales evidence into KST/SRS
 
