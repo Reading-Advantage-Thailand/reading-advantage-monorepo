@@ -1,0 +1,1 @@
+Corrected the stale Phase 4 contact assertion. Rendered email content now uses contactDetails.supportEmail. Locale email.address values remain labels without the raw support email. Phase 4 passed 7/7. Phase 3 passed 10/10 with a 60-second timeout. Green-owned contact source files stayed untouched.
