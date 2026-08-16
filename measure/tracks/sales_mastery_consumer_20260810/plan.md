@@ -208,6 +208,11 @@
   Do not reuse Codecamp's fixed namespace.
   Implemented in `62bbb86a7`; final evidence is recorded in the Jr Green role
   log.
+- [~] Task: Remediate Review A with a corrected registry path and disposable
+  PostgreSQL 16 behavior tests. Safe Red exposes the migration-number collision
+  and snapshot-chain failure. Live Red exposes the malformed legacy migration and
+  the missing cross-organization tenant binding. Green owns migration renumbering,
+  snapshot repair, and cross-organization binding enforcement.
 
 ## Phase 3 — project Sales evidence into KST/SRS
 

@@ -1,0 +1,43 @@
+Measure Mid Red remediation role log — Sales Phase 2 Review A
+Track: sales_mastery_consumer_20260810
+Phase: Phase 2 — company tenant mapping and durable projection
+phase_base_sha: fd581f3dcd15e7b7b632875862aaecb596719621
+role_base_sha: c7d0880e9bfdbe52ca8c06a914d44c4854fbc7ad
+
+## Lease
+
+- Lease: Sales Phase 2 test files, DB live harness, Sales plan, and Red evidence/log files.
+- Production source, migration source, schema source, registry source, and unrelated work stayed unchanged.
+- The checkout has one master worktree.
+
+## Remediation
+
+- Corrected the registry test path from the repository root to `packages/domain/src/tenant-registry.ts`.
+- Added a PostgreSQL 16 harness with explicit `PG_TEST_URL` validation.
+- Added deterministic database creation and forced database cleanup for each live test.
+- Added live migration-chain, mapping, isolation, replay, retry, concurrency, outbox, and trigger contracts.
+- Replaced the literal Codecamp assertion with the reserved namespace UUID assertion.
+
+## Green-owned failures
+
+- The journal contains two `0052` migration numbers.
+- The Sales snapshot points to missing parent ID `0f9b61fb-cd7d-4776-b64f-9f25175ef126` instead of the `0052` snapshot ID.
+- The full chain stops at malformed legacy migration `0013_prisma_drizzle_schema_unification`.
+- The outbox has no composite binding from organization to mastery tenant.
+
+## Handoff
+
+Green must renumber the migration chain, repair the snapshot parent, repair the
+legacy chain, and enforce the cross-organization tenant binding. Green must rerun
+all Red and regression gates after the fixes.
+
+MEASURE_AGENT_RESULT
+role: mid-red
+status: complete-with-green-handoff-blocked
+track: sales_mastery_consumer_20260810
+phase: Phase 2 — company tenant mapping and durable projection
+phase_base_sha: fd581f3dcd15e7b7b632875862aaecb596719621
+role_base_sha: c7d0880e9bfdbe52ca8c06a914d44c4854fbc7ad
+red_evidence: phase2-review-a-red-remediation-evidence-20260816.md
+green_handoff: migration renumbering, snapshot-chain repair, legacy-chain repair, and cross-organization tenant binding
+END_MEASURE_AGENT_RESULT
