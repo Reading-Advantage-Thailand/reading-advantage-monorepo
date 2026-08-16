@@ -33,6 +33,12 @@ export const salesMasteryTenantMappings = pgTable(
       table.applicationKey,
       table.organizationId,
     ),
+    unique("sales_mastery_tenant_mappings_binding_unique").on(
+      table.applicationKey,
+      table.organizationId,
+      table.organizationKey,
+      table.masteryTenantKey,
+    ),
     unique("sales_mastery_tenant_mappings_mastery_tenant_unique").on(
       table.masteryTenantKey,
     ),
@@ -110,10 +116,17 @@ export const salesMasteryProjectionOutbox = pgTable(
     }).onDelete("restrict"),
     foreignKey({
       name: "sales_mastery_projection_outbox_mapping_fk",
-      columns: [table.applicationKey, table.organizationId],
+      columns: [
+        table.applicationKey,
+        table.organizationId,
+        table.organizationKey,
+        table.masteryTenantKey,
+      ],
       foreignColumns: [
         salesMasteryTenantMappings.applicationKey,
         salesMasteryTenantMappings.organizationId,
+        salesMasteryTenantMappings.organizationKey,
+        salesMasteryTenantMappings.masteryTenantKey,
       ],
     }).onDelete("restrict"),
     check(

@@ -15,7 +15,7 @@ const META_ROOT = resolve(DRIZZLE_ROOT, "meta");
 const JOURNAL_PATH = resolve(META_ROOT, "_journal.json");
 const MIGRATION_PATH = resolve(
   PACKAGE_ROOT,
-  "drizzle/0052_sales_mastery_tenant_mapping.sql",
+  "drizzle/0053_sales_mastery_tenant_mapping.sql",
 );
 const TENANT_REGISTRY_PATH = resolve(
   PACKAGE_ROOT,
@@ -141,7 +141,7 @@ describe("Sales Phase 2 tenant mapping and durable outbox schema", () => {
   it("keeps the Sales snapshot linked to the prior journal snapshot", async () => {
     const journal = await readJournal();
     const salesEntry = journal.entries.find(
-      ({ tag }) => tag === "0052_sales_mastery_tenant_mapping",
+      ({ tag }) => tag === "0053_sales_mastery_tenant_mapping",
     );
     expect(salesEntry).toBeDefined();
     if (!salesEntry) return;
@@ -159,7 +159,10 @@ describe("Sales Phase 2 tenant mapping and durable outbox schema", () => {
       ),
     ) as { readonly id: string };
     const salesSnapshot = JSON.parse(
-      await readFile(resolve(META_ROOT, "0053_snapshot.json"), "utf8"),
+      await readFile(
+        resolve(META_ROOT, `${salesEntry.tag.slice(0, 4)}_snapshot.json`),
+        "utf8",
+      ),
     ) as { readonly prevId: string };
     expect(
       salesSnapshot.prevId,

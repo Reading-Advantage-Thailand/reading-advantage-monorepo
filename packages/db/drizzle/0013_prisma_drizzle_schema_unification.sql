@@ -96,9 +96,7 @@ DO $$ BEGIN
     WHERE conname = 'classrooms_class_code_unique' AND conrelid = 'classrooms'::regclass
   ) THEN
     ALTER TABLE "classrooms" ADD CONSTRAINT "classrooms_class_code_unique" UNIQUE ("class_code");
---> statement-breakpoint
   END IF;
---> statement-breakpoint
 END $$;
 --> statement-breakpoint
 
@@ -164,9 +162,7 @@ DO $$ BEGIN
     WHERE conname = 'student_assignments_unique' AND conrelid = 'student_assignments'::regclass
   ) THEN
     ALTER TABLE "student_assignments" ADD CONSTRAINT "student_assignments_unique" UNIQUE ("assignment_id", "student_id");
---> statement-breakpoint
   END IF;
---> statement-breakpoint
 END $$;
 --> statement-breakpoint
 
@@ -188,9 +184,7 @@ DO $$ BEGIN
     WHERE conname = 'user_activity_type_target_unique' AND conrelid = 'user_activity'::regclass
   ) THEN
     ALTER TABLE "user_activity" ADD CONSTRAINT "user_activity_type_target_unique" UNIQUE ("user_id", "activity_type", "target_id");
---> statement-breakpoint
   END IF;
---> statement-breakpoint
 END $$;
 --> statement-breakpoint
 
@@ -225,9 +219,7 @@ DO $$ BEGIN
     WHERE conname = 'game_rankings_user_game_difficulty_unique' AND conrelid = 'game_rankings'::regclass
   ) THEN
     ALTER TABLE "game_rankings" ADD CONSTRAINT "game_rankings_user_game_difficulty_unique" UNIQUE ("user_id", "game_type", "difficulty");
---> statement-breakpoint
   END IF;
---> statement-breakpoint
 END $$;
 --> statement-breakpoint
 
@@ -346,9 +338,7 @@ DO $$ BEGIN
     WHERE conname = 'story_records_user_story_unique' AND conrelid = 'story_records'::regclass
   ) THEN
     ALTER TABLE "story_records" ADD CONSTRAINT "story_records_user_story_unique" UNIQUE ("user_id", "story_id");
---> statement-breakpoint
   END IF;
---> statement-breakpoint
 END $$;
 --> statement-breakpoint
 
@@ -390,9 +380,7 @@ DO $$ BEGIN
     WHERE conname = 'chapter_trackings_user_story_chapter_unique' AND conrelid = 'chapter_trackings'::regclass
   ) THEN
     ALTER TABLE "chapter_trackings" ADD CONSTRAINT "chapter_trackings_user_story_chapter_unique" UNIQUE ("user_id", "story_id", "chapter_number");
---> statement-breakpoint
   END IF;
---> statement-breakpoint
 END $$;
 --> statement-breakpoint
 

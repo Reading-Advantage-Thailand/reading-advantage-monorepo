@@ -10,7 +10,7 @@ const PACKAGE_ROOT = resolve(import.meta.dirname, "../..");
 const DRIZZLE_ROOT = resolve(PACKAGE_ROOT, "drizzle");
 const SALES_MIGRATION = resolve(
   DRIZZLE_ROOT,
-  "0052_sales_mastery_tenant_mapping.sql",
+  "0053_sales_mastery_tenant_mapping.sql",
 );
 
 type PostgresClient = ReturnType<typeof postgres>;

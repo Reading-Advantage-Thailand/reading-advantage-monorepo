@@ -483,23 +483,23 @@ export const sentinelProbes: Record<string, SentinelProbe> = {
       },
     ],
   },
-  "0052_sales_mastery_tenant_mapping": {
-    tag: "0052_sales_mastery_tenant_mapping",
+  "0053_sales_mastery_tenant_mapping": {
+    tag: "0053_sales_mastery_tenant_mapping",
     kind: "all",
     target: "sales_mastery_tenant_mappings",
     allOf: [
       {
-        tag: "0052_sales_mastery_tenant_mapping",
+        tag: "0053_sales_mastery_tenant_mapping",
         kind: "table",
         target: "sales_mastery_tenant_mappings",
       },
       {
-        tag: "0052_sales_mastery_tenant_mapping",
+        tag: "0053_sales_mastery_tenant_mapping",
         kind: "table",
         target: "sales_mastery_projection_outbox",
       },
       {
-        tag: "0052_sales_mastery_tenant_mapping",
+        tag: "0053_sales_mastery_tenant_mapping",
         kind: "table",
         target: "sales_mastery_projection_receipts",
       },

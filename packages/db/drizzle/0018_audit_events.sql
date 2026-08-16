@@ -40,9 +40,7 @@ BEGIN
   -- Only revoke if a non-superuser app role exists
   IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'app_user') THEN
     EXECUTE 'REVOKE UPDATE, DELETE ON audit_events FROM app_user';
---> statement-breakpoint
   END IF;
---> statement-breakpoint
 END $$;
 --> statement-breakpoint
 

@@ -8,6 +8,7 @@ CREATE TABLE "sales_mastery_tenant_mappings" (
 	"request_id" text NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	CONSTRAINT "sales_mastery_tenant_mappings_application_organization_unique" UNIQUE("application_key","organization_id"),
+	CONSTRAINT "sales_mastery_tenant_mappings_binding_unique" UNIQUE("application_key","organization_id","organization_key","mastery_tenant_key"),
 	CONSTRAINT "sales_mastery_tenant_mappings_mastery_tenant_unique" UNIQUE("mastery_tenant_key"),
 	CONSTRAINT "sales_mastery_tenant_mappings_source_tenant_unique" UNIQUE("source_tenant_key"),
 	CONSTRAINT "sales_mastery_tenant_mappings_application_key_check" CHECK ("application_key" = 'sales'),
@@ -52,7 +53,7 @@ CREATE TABLE "sales_mastery_projection_outbox" (
 --> statement-breakpoint
 ALTER TABLE "sales_mastery_projection_outbox" ADD CONSTRAINT "sales_mastery_projection_outbox_mastery_tenant_fk" FOREIGN KEY ("mastery_tenant_key") REFERENCES "schools"("id") ON DELETE RESTRICT;
 --> statement-breakpoint
-ALTER TABLE "sales_mastery_projection_outbox" ADD CONSTRAINT "sales_mastery_projection_outbox_mapping_fk" FOREIGN KEY ("application_key","organization_id") REFERENCES "sales_mastery_tenant_mappings"("application_key","organization_id") ON DELETE RESTRICT;
+ALTER TABLE "sales_mastery_projection_outbox" ADD CONSTRAINT "sales_mastery_projection_outbox_mapping_fk" FOREIGN KEY ("application_key","organization_id","organization_key","mastery_tenant_key") REFERENCES "sales_mastery_tenant_mappings"("application_key","organization_id","organization_key","mastery_tenant_key") ON DELETE RESTRICT;
 --> statement-breakpoint
 CREATE INDEX "sales_mastery_projection_outbox_organization_idx" ON "sales_mastery_projection_outbox" USING btree ("organization_id","learner_principal_id","created_at");
 --> statement-breakpoint

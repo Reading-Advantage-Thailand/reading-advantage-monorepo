@@ -1,6 +1,6 @@
 {
   "id": "f6a630bf-31af-4ed8-b947-1ac57139629c",
-  "prevId": "0f9b61fb-cd7d-4776-b64f-9f25175ef126",
+  "prevId": "fae49603-c1a1-42ff-b8a5-7bf14dcf3189",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -15922,11 +15922,15 @@
           "tableTo": "sales_mastery_tenant_mappings",
           "columnsFrom": [
             "application_key",
-            "organization_id"
+            "organization_id",
+            "organization_key",
+            "mastery_tenant_key"
           ],
           "columnsTo": [
             "application_key",
-            "organization_id"
+            "organization_id",
+            "organization_key",
+            "mastery_tenant_key"
           ],
           "onDelete": "restrict",
           "onUpdate": "no action"
@@ -16214,6 +16218,16 @@
           "columns": [
             "application_key",
             "organization_id"
+          ]
+        },
+        "sales_mastery_tenant_mappings_binding_unique": {
+          "name": "sales_mastery_tenant_mappings_binding_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "application_key",
+            "organization_id",
+            "organization_key",
+            "mastery_tenant_key"
           ]
         },
         "sales_mastery_tenant_mappings_mastery_tenant_unique": {
