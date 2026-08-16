@@ -72,7 +72,7 @@ track: wave5_public_surface_completion_20260628
 phase: Phase 3: i18n Completeness and Typed Locale Access
 phase_base_sha: c312eb71942715a0d12b2df037ac9527323b31c7
 role_base_sha: a2c378992
-commits: 758c42c42 implementation; pending plan-evidence commit
+commits: 758c42c42 implementation; 6e9b8c283 plan-evidence
 commands: Red 4/5 with one failure; focused Green 5/5; direct typecheck passed; fresh typecheck failed on services/page.tsx:56; build failed on services/page.tsx:56; targeted lint passed; Prettier passed; diff check passed
 counts: 3 locale dictionaries; 21 missing message paths added; 22 Red diagnostics removed; 5/5 focused tests passed
 files: apps/www-reading-advantage/src/locales/pages/products/science-advantage.ts; measure/tracks/wave5_public_surface_completion_20260628/plan.md; measure/tracks/wave5_public_surface_completion_20260628/phase-3-science-contract-jr-green-role-log.md
