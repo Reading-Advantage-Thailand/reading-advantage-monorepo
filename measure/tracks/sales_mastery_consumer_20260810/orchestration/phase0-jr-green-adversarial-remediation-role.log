@@ -1,0 +1,67 @@
+MEASURE_AGENT_RESULT
+role: jr-green
+status: complete
+track: sales_mastery_consumer_20260810
+phase: Phase 0 — reconcile and admit the consumer
+phase_base_sha: 8adc57cb0af0693c1b3420842b3a504939a36b2e
+red_commit: a3b26aeb9ac92b5444a6b975615425f32453362c
+role_base_sha: f3b1fd371c29461721c7531c37cc26d1b8b56857
+implementation_commit: b3ead5ffce75968223ad6a5e1ecc17a59dce3861
+evidence_commit: separate commit after this implementation commit
+
+findings:
+- SMC-P0-ADV-001 now opens the lease directory with O_NOFOLLOW and verifies
+  device and inode identity against the retained canonical path.
+- Owner temporary and final writes use the verified lease directory handle.
+- A path swap before or after an owner write fails closed with a changed-path
+  error and does not write outside the lease directory.
+- SMC-P0-ADV-002 now captures exact archive bytes and their SHA-256 digest after
+  npm pack and verifies both immediately before npm install consumes them.
+- Archive substitution fails with RELEASE_ARCHIVE_MUTATION_CONFLICT.
+- Existing fixture snapshots, source digests, process identity checks, imports,
+  archive digest output, and secret-safe errors remain active.
+
+gates:
+- adversarial suite: PASS; 3 passed, 1 file.
+- digest contract: PASS; 2 passed, 24 skipped.
+- WorkspaceLeaseRuntime contract: PASS; 17 passed, 9 skipped.
+- Sales runtime admission: PASS; 11 passed.
+- packed-consumer suite: PASS; 26 passed.
+- runtime-manifest and Codecamp regressions: PASS; 20 passed across 2 files.
+- Sales knowledge suite: PASS; 19 passed across 3 files.
+- focused type checks: PASS; both packages exited 0.
+- focused lint checks: PASS; both packages exited 0.
+- focused builds: PASS; both packages exited 0.
+- clean Sales CLI: PASS; compatible true and issues empty.
+- Prettier source and adversarial test check: PASS.
+- immutable source and diff checks: PASS; engine and Sales-knowledge diff was
+  empty, Red and protected artifacts were unchanged.
+
+post_commit_proof:
+- auditedHead: b3ead5ffce75968223ad6a5e1ecc17a59dce3861.
+- sourceDigestSha256: 74e2d13e378c99985624e7221bcd53a9ae9ba3cb1676493c5b9908282207009f.
+- archiveDigestsSha256: 5 release-package values.
+- checkedConsumers: 1, sales-advantage.
+- resolvedVersions: gateZod 3.25.76, engineZod 4.4.3, tsFsrs 5.4.1.
+
+failures_and_corrections:
+- The first lease remediation returned ENOENT after a swapped path. The error
+  now revalidates the path and returns a changed-path failure.
+- The first packed rerun emitted a file-handle warning. Invalid release paths
+  now close retained lease handles, and the packed rerun passed without warning.
+- The first runtime lint run found no-useless-catch. The wrapper was removed,
+  and the final focused lint run passed.
+- No requested gate has a persistent failure.
+
+files_changed:
+- packages/mastery-runtime-compat/src/release-artifact.ts
+- measure/tracks/sales_mastery_consumer_20260810/plan.md
+- measure/tracks/sales_mastery_consumer_20260810/orchestration/phase0-jr-green-adversarial-remediation-role.log
+
+adversarial_rerun_handoff:
+Review the implementation commit against SMC-P0-ADV-001 and SMC-P0-ADV-002.
+Rerun phase0-adversarial.test.ts from a clean checkout. Confirm both mutation
+codes, the current auditedHead, and the unchanged Red and protected artifacts.
+Task B remains [~] because shared-root doctor and architecture gates remain open.
+
+END_MEASURE_AGENT_RESULT

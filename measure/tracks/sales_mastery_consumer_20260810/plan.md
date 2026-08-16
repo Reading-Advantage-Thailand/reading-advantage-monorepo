@@ -136,6 +136,15 @@
    Codecamp, Sales knowledge, type, lint, build, CLI, format, and diff gates
    passed. Task B remains `[~]`; this receipt does not close shared-root gates.
 
+   Adversarial remediation implementation (2026-08-16; commit
+   `b3ead5ffce75968223ad6a5e1ecc17a59dce3861`) binds the verified lease
+   directory through a no-follow file capability and checks its identity before
+   and after owner writes. It binds archive bytes and SHA-256 values at pack
+   time, then verifies them immediately before offline installation. Adversarial,
+   digest, lease, admission, packed-consumer, Codecamp, Sales knowledge, type,
+   lint, build, CLI, format, and diff gates passed. Task B remains `[~]`; this
+   receipt does not close shared-root gates.
+
 ## Phase 1 — bind the approved course to a knowledge graph
 
 - [x] Task: Define the versioned Sales objective graph, activity variants,
