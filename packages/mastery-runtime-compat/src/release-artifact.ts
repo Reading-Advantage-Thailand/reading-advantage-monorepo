@@ -43,6 +43,12 @@ const PACKAGED_DIRECTORIES = [
   ...ENGINE_DIRECTORIES,
   "sales-knowledge",
 ] as const;
+const CONSUMER_FIXTURE_FILES = [
+  "check-consumer.mjs",
+  "consumer.json",
+  "package.json",
+  "sales-advantage.json",
+] as const;
 const SALES_KNOWLEDGE_DIRECTORY = "sales-knowledge";
 const EXTERNAL_RUNTIME_PACKAGES = [
   { name: "zod", sourceDirectory: "knowledge-space-core" },
@@ -130,6 +136,10 @@ interface ReleaseInputSnapshot {
   manifestPath: string;
   descriptorPaths: string[];
   runtimeDistPath: string;
+  consumerFixtureInputs: Array<{
+    sourcePath: string;
+    snapshotPath: string;
+  }>;
   sourceDigestSha256: string;
   auditedHead: string;
 }
@@ -1680,6 +1690,22 @@ async function snapshotReleaseInput(
   return target;
 }
 
+/** Snapshots every checked-in clean-consumer fixture before the fixture is used. */
+async function snapshotConsumerFixtures(
+  temporaryRoot: string,
+): Promise<ReleaseInputSnapshot["consumerFixtureInputs"]> {
+  return Promise.all(
+    CONSUMER_FIXTURE_FILES.map(async (file) => ({
+      sourcePath: resolve(FIXTURE_ROOT, file),
+      snapshotPath: await snapshotReleaseInput(
+        temporaryRoot,
+        resolve(FIXTURE_ROOT, file),
+        `consumer-fixture/${file}`,
+      ),
+    })),
+  );
+}
+
 /** Calculates a SHA-256 digest from immutable bytes. */
 function sha256(bytes: Uint8Array): string {
   return createHash("sha256").update(bytes).digest("hex");
@@ -1709,6 +1735,7 @@ async function snapshotReleaseInputs(
   consumerDescriptorPaths: ReadonlyArray<string>,
   runtimeDistSnapshotRoot: string,
 ): Promise<ReleaseInputSnapshot> {
+  const consumerFixtureInputs = await snapshotConsumerFixtures(temporaryRoot);
   const manifestSourcePath = resolve(
     REPOSITORY_ROOT,
     "packages/mastery-runtime-compat/runtime-manifest.json",
@@ -1731,6 +1758,7 @@ async function snapshotReleaseInputs(
     manifestPath,
     ...descriptorPaths,
     ...RUNTIME_DIST_FILES.map((file) => resolve(runtimeDistSnapshotRoot, file)),
+    ...consumerFixtureInputs.map(({ snapshotPath }) => snapshotPath),
   ];
   const inputs = await Promise.all(
     sourcePaths.map(async (path) => ({
@@ -1754,9 +1782,36 @@ async function snapshotReleaseInputs(
     manifestPath,
     descriptorPaths,
     runtimeDistPath: runtimeDistSnapshotRoot,
+    consumerFixtureInputs,
     sourceDigestSha256: digestReleaseInputs(inputs),
     auditedHead,
   };
+}
+
+/** Rejects clean-consumer fixture changes after the immutable snapshot was created. */
+async function assertConsumerFixturesUnchanged(
+  consumerFixtureInputs: ReadonlyArray<{
+    sourcePath: string;
+    snapshotPath: string;
+  }>,
+): Promise<void> {
+  await Promise.all(
+    consumerFixtureInputs.map(async ({ sourcePath, snapshotPath }) => {
+      try {
+        const [sourceBytes, snapshotBytes] = await Promise.all([
+          readRegularFileBytes(sourcePath, "Clean-consumer fixture source"),
+          readRegularFileBytes(snapshotPath, "Clean-consumer fixture snapshot"),
+        ]);
+        if (!sourceBytes.equals(snapshotBytes)) {
+          throw new Error("fixture bytes differ");
+        }
+      } catch {
+        throw new Error(
+          `RELEASE_INPUT_MUTATION_CONFLICT clean-consumer fixture ${basename(sourcePath)} changed after snapshot`,
+        );
+      }
+    }),
+  );
 }
 
 /** Applies a bounded test-only delay used to force cross-process lease overlap proofs. */
@@ -1935,14 +1990,29 @@ async function runCleanConsumer(
   gateDependency: GateDependencyIdentity,
   runtimeDistSnapshotRoot: string,
   runtimeManifestSnapshotPath: string,
-  consumerDescriptorPaths: ReadonlyArray<string>,
+  consumerFixtureSnapshotPaths: ReadonlyArray<string>,
+  consumerDescriptorSnapshotPaths: ReadonlyArray<string>,
 ): Promise<{
   checkedConsumers: string[];
   verifiedSalesKnowledge: ReleaseSalesKnowledgeIdentity;
   resolvedVersions: ResolvedRuntimeVersions;
 }> {
   const consumerRoot = resolve(temporaryRoot, "consumer");
-  await cp(FIXTURE_ROOT, consumerRoot, { recursive: true });
+  await mkdir(consumerRoot, { recursive: true });
+  await Promise.all(
+    consumerFixtureSnapshotPaths.map(async (snapshotPath) => {
+      const file = basename(snapshotPath);
+      const bytes = await readRegularFileBytes(
+        snapshotPath,
+        `Clean-consumer fixture snapshot ${file}`,
+      );
+      await writeNewRegularFile(
+        resolve(consumerRoot, file),
+        bytes,
+        `Clean-consumer fixture ${file}`,
+      );
+    }),
+  );
   const manifestPath = resolve(consumerRoot, "package.json");
   const manifest = JSON.parse(await readFile(manifestPath, "utf8")) as {
     dependencies?: Record<string, string>;
@@ -1980,7 +2050,7 @@ async function runCleanConsumer(
   const descriptorRoot = resolve(consumerRoot, "descriptors");
   await mkdir(descriptorRoot, { recursive: true });
   const copiedDescriptors = await Promise.all(
-    consumerDescriptorPaths.map(async (descriptorPath, index) => {
+    consumerDescriptorSnapshotPaths.map(async (descriptorPath, index) => {
       const descriptorBytes = await readRegularFileBytes(
         descriptorPath,
         "Consumer descriptor source",
@@ -2256,28 +2326,38 @@ export async function runReleaseArtifactCheck(
     }
 
     await waitForTestHook(TEST_DELAY_BEFORE_CONSUMER_ENV);
+    await assertConsumerFixturesUnchanged(releaseInputs.consumerFixtureInputs);
     const cleanConsumer = await runCleanConsumer(
       temporaryRoot,
       archives,
       gateDependency,
       runtimeDistSnapshotRoot,
       releaseInputs.manifestPath,
+      releaseInputs.consumerFixtureInputs.map(
+        ({ snapshotPath }) => snapshotPath,
+      ),
       releaseInputs.descriptorPaths,
+    );
+    await assertConsumerFixturesUnchanged(releaseInputs.consumerFixtureInputs);
+    const releasePackageNames = new Set(
+      packageMetadata.map(({ manifest }) => manifest.name),
     );
     const archiveDigestsSha256 = Object.fromEntries(
       await Promise.all(
-        packedArtifacts.map(
-          async ({ name, archivePath }) =>
-            [
-              name,
-              sha256(
-                await readRegularFileBytes(
-                  archivePath,
-                  `Release archive ${name}`,
+        packedArtifacts
+          .filter(({ name }) => releasePackageNames.has(name))
+          .map(
+            async ({ name, archivePath }) =>
+              [
+                name,
+                sha256(
+                  await readRegularFileBytes(
+                    archivePath,
+                    `Release archive ${name}`,
+                  ),
                 ),
-              ),
-            ] as const,
-        ),
+              ] as const,
+          ),
       ),
     );
     return {
