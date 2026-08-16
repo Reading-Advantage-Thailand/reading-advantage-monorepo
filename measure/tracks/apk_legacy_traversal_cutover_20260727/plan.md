@@ -44,7 +44,9 @@
 - Follow-up Red remediation corrected `/37` for `SW-CART-001`, `/claims/14` for `SGD-RESULT-001`, and `/claims/8` for `GRF-INPUT-001`.
 - The six corrected pointer groups are applied to the five candidate dossiers. All fifteen decisions remain `blocked`, owner acceptance remains pending, and selected unions remain empty.
 - Dossier corrections commit: `15fb7ea46`.
-- The focused binding contract passes 6/7. The remaining failure is `SW-INPUT-002`: the immutable Red pointer `/29` resolves to `SW-RESP-003` in the archive; `/28` is recommended.
+- The focused binding contract uses `/28` for `SW-INPUT-002`. The remaining failure may only be the unchanged `spellweavers-run.json` pointer `/29`; the archive resolves `/29` to `SW-RESP-003`.
 - Manifest validation passed 13/13. Python readiness passed 9/9 with `python3`; `python` is unavailable in this environment. TypeScript, ESLint, Prettier, and the scoped diff check passed.
 - Red-remediation evidence: `phase2-binding-freeze-red-remediation-evidence-20260816.md`.
 - Review A must route the remaining `SW-INPUT-002` pointer mismatch to Mid Red. No adoption, ingestion, implementation, cutover, or cartridge Green is claimed.
+- Final pointer remediation: Mid Red verified `/28` as `SW-INPUT-002` and retained the dossier mismatch as the only expected Red failure.
+- Final run: the focused contract passed 6/7, with the one failure limited to `spellweavers-run.json` retaining `/29`; manifest 13/13, Python readiness 9/9, TypeScript, ESLint, and diff checks passed.

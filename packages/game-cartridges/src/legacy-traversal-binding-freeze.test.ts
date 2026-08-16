@@ -109,7 +109,7 @@ const EXPECTED_TITLES: readonly TitleSpec[] = [
         role_id: "player-lane",
         semantic: claim(SPELLWEAVER_EVIDENCE, "/13", "SW-MOVE-001"),
         physical: claim(SPELLWEAVER_EVIDENCE, "/37", "SW-CART-001"),
-        decision: claim(SPELLWEAVER_EVIDENCE, "/29", "SW-INPUT-002"),
+        decision: claim(SPELLWEAVER_EVIDENCE, "/28", "SW-INPUT-002"),
       },
       {
         role_id: "word-orb",

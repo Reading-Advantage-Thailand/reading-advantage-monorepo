@@ -46,6 +46,39 @@ handoff: return to the same Green session for evidence finalization after explic
 authority: blocked candidates only; no owner acceptance, adoption, ingestion, implementation, or cartridge Green
 END_MEASURE_AGENT_RESULT
 
+## Final Red remediation — Spellweaver input pointer
+
+The accepted Spellweaver ledger resolves `/28` to `SW-INPUT-002` and `/29` to `SW-RESP-003`. The test now uses `/28`. The archive and all five dossiers remain unchanged.
+
+The final focused run, manifest suite, Python readiness, TypeScript, lint, Prettier, and diff results follow this note.
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+status: pending-verification
+track: apk_legacy_traversal_cutover_20260727
+phase: Phase 2 final accepted-evidence pointer remediation
+handoff: same Green session for final evidence disposition
+authority: blocked candidates only; no owner acceptance, adoption, ingestion, implementation, or cartridge Green
+END_MEASURE_AGENT_RESULT
+
+## Final verification result
+
+The focused contract passed 6/7. Its only failure is the unchanged `spellweavers-run.json` decision pointer `/29`; the archive resolves `/29` to `SW-RESP-003`, while `/28` resolves `SW-INPUT-002`.
+
+The manifest suite passed 13/13. Python readiness passed 9/9 with `python3`. TypeScript, ESLint, and diff checks passed. Prettier passed for the test and evidence note; the plan retains its pre-existing indentation warning.
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+status: complete-with-green-handoff-blocked
+track: apk_legacy_traversal_cutover_20260727
+phase: Phase 2 final accepted-evidence pointer remediation
+counts: 1 pointer corrected; 7 focused tests; 6 passed; 1 superseded dossier-pointer failure; 13 manifest tests; 9 Python readiness tests
+failures: only spellweavers-run.json retains the superseded /29 pointer
+files_changed: packages/game-cartridges/src/legacy-traversal-binding-freeze.test.ts; measure/tracks/apk_legacy_traversal_cutover_20260727/plan.md; measure/tracks/apk_legacy_traversal_cutover_20260727/phase2-binding-freeze-red-remediation-evidence-20260816.md
+handoff: same Green session for final evidence disposition
+authority: blocked candidates only; no adoption, owner acceptance, implementation, or cutover claim
+END_MEASURE_AGENT_RESULT
+
 ## Follow-up Red remediation — accepted-evidence pointers
 
 The accepted archive ledgers verify these further pointers:
