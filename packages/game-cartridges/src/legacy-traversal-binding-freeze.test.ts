@@ -119,9 +119,9 @@ const EXPECTED_TITLES: readonly TitleSpec[] = [
       },
       {
         role_id: "learning-feedback",
-        semantic: claim(SPELLWEAVER_EVIDENCE, "/26", "SW-TRANS-005"),
-        physical: claim(SPELLWEAVER_EVIDENCE, "/36", "SW-UI-001"),
-        decision: claim(SPELLWEAVER_EVIDENCE, "/37", "SW-TRANS-007"),
+        semantic: claim(SPELLWEAVER_EVIDENCE, "/25", "SW-TRANS-005"),
+        physical: claim(SPELLWEAVER_EVIDENCE, "/35", "SW-UI-001"),
+        decision: claim(SPELLWEAVER_EVIDENCE, "/36", "SW-TRANS-007"),
       },
     ],
   },

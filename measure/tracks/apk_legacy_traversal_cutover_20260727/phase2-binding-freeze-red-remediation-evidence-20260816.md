@@ -2,7 +2,7 @@
 
 Track: `apk_legacy_traversal_cutover_20260727`
 Phase: Phase 2 binding freeze
-Current base: `b4683613dd05c241fc525e886b75e1ff363cb9f3`
+Current base: `1cb0018e37d4875206608f05b67c6642a18e9cfd`
 Original phase base: `8c30dc0e138567f4d461b6cb69c10c66a6bb2eaf`
 
 ## Immutable locator review
@@ -139,20 +139,22 @@ handoff: same Green session for final evidence disposition
 authority: blocked candidates only; no adoption, owner acceptance, implementation, or cutover claim
 END_MEASURE_AGENT_RESULT
 
-## Interrupted Mid Red resume — Spellweaver collision pointer
+## Consolidated Mid Red resume — all accepted evidence pointers
 
-The accepted Spellweaver ledger resolves `/18` to `SW-COLL-001` and `/19` to `SW-TRANS-002`. The test now uses `/18`. The accepted archive and all five dossiers remain unchanged.
+The archive-to-test comparison covered 45 semantic, physical, and decision references across all five titles. Forty-two pointers already matched. The test corrected three Spellweaver pointers: SW-TRANS-005 `/26`→`/25`, SW-UI-001 `/36`→`/35`, and SW-TRANS-007 `/37`→`/36`.
 
-The resumed binding run passed 6/7. Its only failure is the unchanged `spellweavers-run.json` decision pointer `/19`. The manifest suite passed 13/13. Python readiness passed 9/9 with `python3`. TypeScript and ESLint passed. Prettier and the scoped diff check passed after the document updates.
+The accepted archives and all five dossiers remain unchanged. The existing Spellweaver dossier has six stale pointers: `/semantic_roles/2/evidence/semantic` SW-TRANS-005 `/26`→`/25`; `/semantic_roles/2/evidence/physical` SW-UI-001 `/36`→`/35`; `/semantic_roles/2/evidence/decision` SW-TRANS-007 `/37`→`/36`; and `/decisions/2/evidence/0`, `/decisions/2/evidence/1`, and `/decisions/2/evidence/2` retain those same three superseded values.
+
+The binding run against the existing dossiers passed 6/7. Its only failure is the unchanged Spellweaver dossier with those six stale pointers. The manifest suite passed 13/13. Python readiness passed 9/9 with `python3`. TypeScript, ESLint, Prettier, and the scoped diff check passed.
 
 MEASURE_AGENT_RESULT
 role: measure-mid-red
-status: complete-with-green-handoff-blocked
+status: complete-with-green-batch-handoff-blocked
 track: apk_legacy_traversal_cutover_20260727
-phase: Phase 2 final accepted-evidence pointer remediation
-counts: 1 pointer corrected; 7 focused tests; 6 passed; 1 superseded dossier-pointer failure; 13 manifest tests; 9 Python readiness tests
-failures: only spellweavers-run.json retains the superseded /19 pointer
+phase: Phase 2 consolidated accepted-evidence pointer remediation
+counts: 45 archive-to-test references compared; 42 matched; 3 test pointers corrected; 7 focused tests; 6 passed; 1 dossier failure; 6 stale dossier pointers; 13 manifest tests; 9 Python readiness tests
+failures: spellweavers-run.json retains six stale pointers: /semantic_roles/2/evidence/semantic /26 for SW-TRANS-005; /semantic_roles/2/evidence/physical /36 for SW-UI-001; /semantic_roles/2/evidence/decision /37 for SW-TRANS-007; /decisions/2/evidence/0 /26; /decisions/2/evidence/1 /36; /decisions/2/evidence/2 /37
 files_changed: packages/game-cartridges/src/legacy-traversal-binding-freeze.test.ts; measure/tracks/apk_legacy_traversal_cutover_20260727/plan.md; measure/tracks/apk_legacy_traversal_cutover_20260727/phase2-binding-freeze-red-remediation-evidence-20260816.md
-handoff: same Green session for final evidence disposition
+handoff: same Green session for consolidated evidence disposition
 authority: blocked candidates only; no adoption, owner acceptance, implementation, or cutover claim
 END_MEASURE_AGENT_RESULT
