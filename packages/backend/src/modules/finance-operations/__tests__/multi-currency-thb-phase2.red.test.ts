@@ -724,6 +724,27 @@ describe("Finance multi-currency THB Red contract", () => {
     },
   );
 
+  it("classifies an own __proto__ replay key as conflict", async () => {
+    const classify = await createReplayClassifier();
+    const withOwnProto = (): Record<string, unknown> => {
+      const operand = { ...replayValuation() } as Record<string, unknown>;
+      Object.defineProperty(operand, "__proto__", {
+        configurable: true,
+        enumerable: true,
+        value: "POISON_THB_PROTO_REPLAY",
+        writable: true,
+      });
+      return operand;
+    };
+
+    expect(
+      classify({ existing: withOwnProto(), incoming: withOwnProto() }),
+    ).toMatchObject({
+      status: "conflict",
+      reason: "conversion-evidence-mismatch",
+    });
+  });
+
   const scopeChangeCases = [
     {
       name: "company scope change",

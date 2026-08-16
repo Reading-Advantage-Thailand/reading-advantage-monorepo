@@ -93,6 +93,47 @@ const TRUSTED_EVIDENCE = {
   rateSourceId: "opaque-rate-source",
 };
 
+/** Creates the complete validated receipt returned by the public Company Identity contract. */
+const PUBLIC_AUTHORITY_RECEIPT = {
+  receiptVersion: "finance-thb-owner-decision-receipt.v1",
+  canonicalizationVersion: "finance-thb-owner-decision-canonical.v1",
+  operation: "finance-thb-policy-approval",
+  decisionId: AUTHORITY_RECEIPT.decisionId,
+  scope: EXPECTED_SCOPE,
+  signer: {
+    source: "company-identity",
+    actorKind: "authenticated-owner",
+    subjectId: "owner-a",
+    organizationId: EXPECTED_SCOPE.companyId,
+    appRoleIds: ["finance-thb-policy-approver"],
+    claimsVersion: "claims-contract-opaque-v1",
+    policyVersion: "role-policy-opaque-v1",
+  },
+  decisionEvidence: {
+    source: "company-identity",
+    operation: "finance-thb-policy-approval",
+    decisionId: AUTHORITY_RECEIPT.decisionId,
+    attestationId: "attestation-001",
+    signature: "signature-opaque-v1",
+    contentDigest: AUTHORITY_RECEIPT.contentDigest,
+  },
+  rules: {
+    rateSourceId: "opaque-rate-source",
+    effectiveDateRuleId: "opaque-effective-date-rule",
+    roundingRuleId: "opaque-rounding-rule",
+  },
+  validFrom: "2026-08-01T00:00:00.000Z",
+  expiresAt: "2026-09-01T00:00:00.000Z",
+  contentDigest: AUTHORITY_RECEIPT.contentDigest,
+  replayIdentity: "b".repeat(64),
+  audit: {
+    eventId: "event-001",
+    requestId: "request-001",
+    correlationId: "correlation-001",
+    occurredAt: "2026-08-01T00:00:00.000Z",
+  },
+} as const;
+
 /** Loads the Finance barrel without importing missing exports statically. */
 async function loadFinanceModule(): Promise<FinanceThbModule> {
   return (await import("../index.js")) as unknown as FinanceThbModule;
@@ -212,6 +253,27 @@ describe("Finance THB valuation integration with Company Identity", () => {
       contentDigest: AUTHORITY_RECEIPT.contentDigest,
     });
     expect(JSON.stringify(result)).not.toContain(CALLER_RECEIPT.decisionId);
+  });
+
+  it("accepts the complete public Company Identity receipt without re-verifying authority", async () => {
+    const attestor = createAttestor({
+      decision: "allow",
+      receipt: PUBLIC_AUTHORITY_RECEIPT,
+    });
+    const { preparer, evidencePort } = await createHarness({ attestor });
+
+    const result = (await preparer.prepare(valuationInput())) as Record<
+      string,
+      unknown
+    >;
+
+    expect(result).toMatchObject({
+      decisionId: PUBLIC_AUTHORITY_RECEIPT.decisionId,
+      contentDigest: PUBLIC_AUTHORITY_RECEIPT.contentDigest,
+      scope: EXPECTED_SCOPE,
+    });
+    expect(attestor.verify).toHaveBeenCalledTimes(1);
+    expect(evidencePort.getEvidence).toHaveBeenCalledTimes(1);
   });
 
   it("allows evidence after an attestor replay and uses its receipt", async () => {
@@ -429,6 +491,42 @@ describe("Finance THB valuation integration with Company Identity", () => {
     });
     expect(attestor.verify).not.toHaveBeenCalled();
     expect(evidencePort.getEvidence).not.toHaveBeenCalled();
+  });
+
+  it("rejects an own __proto__ request key before attestor access", async () => {
+    const request = valuationInput() as unknown as Record<string, unknown>;
+    Object.defineProperty(request, "__proto__", {
+      configurable: true,
+      enumerable: true,
+      value: "POISON_THB_PROTO_REQUEST",
+      writable: true,
+    });
+    const { preparer, attestor, evidencePort } = await createHarness();
+
+    await expect(preparer.prepare(request)).rejects.toMatchObject({
+      code: "FINANCE_THB_INPUT_INVALID",
+    });
+    expect(attestor.verify).not.toHaveBeenCalled();
+    expect(evidencePort.getEvidence).not.toHaveBeenCalled();
+  });
+
+  it("rejects an own __proto__ evidence key after evidence access", async () => {
+    const evidence = { ...TRUSTED_EVIDENCE } as Record<string, unknown>;
+    Object.defineProperty(evidence, "__proto__", {
+      configurable: true,
+      enumerable: true,
+      value: "POISON_THB_PROTO_EVIDENCE",
+      writable: true,
+    });
+    const { preparer, attestor, evidencePort } = await createHarness({
+      evidence,
+    });
+
+    await expect(preparer.prepare(valuationInput())).rejects.toMatchObject({
+      code: "FINANCE_THB_CONVERSION_EVIDENCE_INVALID",
+    });
+    expect(attestor.verify).toHaveBeenCalledTimes(1);
+    expect(evidencePort.getEvidence).toHaveBeenCalledTimes(1);
   });
 
   it("rejects a Proxy request before attestor access", async () => {

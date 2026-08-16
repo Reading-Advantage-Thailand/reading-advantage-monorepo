@@ -2,14 +2,14 @@
 
 ## Status and boundary
 
-This document defines the active THB Red slice for
+This document defines the active THB acceptance-remediation Red slice for
 `company_finance_operations_20260810`.
 
-The THB task is `[~]` because Red tests are active. Green production work stays
-owner-gated.
+The THB valuation implementation is complete in the plan. Acceptance Red tests
+remain active for public receipt compatibility and strict `__proto__` capture.
 
-The owner or accountant must choose the rate source, rounding policy, and
-effective-date policy before Green production use.
+The owner or accountant must still choose the rate source, rounding policy, and
+effective-date policy before valuation policy use.
 
 This slice must not choose those policies. It must not implement a rate
 provider. Future provider access must use an internal Finance port.
@@ -25,8 +25,8 @@ Run from `packages/backend`:
   --pool=threads --maxWorkers=1
 ```
 
-The initial Red result must show only missing THB contract or implementation
-exports. It must not show collection, fixture, type, or provider failures.
+The implementation Red result must show only the accepted THB compatibility and
+capture findings. It must not show collection, fixture, type, or provider failures.
 
 The expected missing exports are:
 
@@ -36,6 +36,9 @@ The expected missing exports are:
 
 The Finance integration Red test uses dynamic loading and local structural
 types. Every initial failure must name only one of the three missing exports.
+
+The post-implementation Red result must name only the complete public Company
+Identity receipt gap and the own `__proto__` capture gaps.
 
 The Company Identity authority-extension Red sub-slice runs this additional
 test:
@@ -166,6 +169,10 @@ The Finance integration test must also cover:
 33. Evidence mutation and defensive valuation output behavior.
 34. Stable valuation replay for unchanged conversion evidence.
 35. Conflict for changed conversion evidence.
+36. Acceptance of a complete validated public Company Identity receipt.
+37. Own `__proto__` request keys before attestor and evidence access.
+38. Own `__proto__` evidence keys under strict evidence validation.
+39. Own `__proto__` replay keys as conflicts.
 
 ## Company Identity authority-extension Red contract
 
@@ -258,8 +265,11 @@ rounding rule, or effective-date policy.
 
 ## Green boundary
 
-Green work may begin after owner decisions define the rate source, rounding
-policy, and effective-date policy.
+Green remediation for the acceptance findings may begin without owner policy
+decisions. It must only consume the public receipt and harden strict capture.
+
+New valuation policy work remains blocked until the owner decisions define the
+rate source, rounding policy, and effective-date policy.
 
 Green must add the smallest internal port and implementation that satisfy this
 strategy. It must preserve source facts and bind conversion evidence.

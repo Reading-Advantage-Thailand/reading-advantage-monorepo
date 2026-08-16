@@ -1,0 +1,58 @@
+Measure Mid Red role log - Finance THB Review C remediation
+Track: company_finance_operations_20260810
+Phase: Phase 2 — controlled operational imports
+Role: measure-mid-red
+Date: 2026-08-16
+phase_base_sha: 8fa71b33b79a3090941f884f037564baa0322dbb
+role_base_sha: b4683613dd05c241fc525e886b75e1ff363cb9f3
+
+## Preflight
+
+- Both supplied SHAs resolve.
+- The phase base is an ancestor of the role base.
+- The checkout is `master` with exactly one worktree.
+- Review C reports THB-C-001, THB-C-002, and THB-C-003.
+- Existing dirty paths are unrelated user work. I preserved them.
+- I leased only the THB Red tests, Finance plan and strategy, and Red evidence and log files.
+- No production source changed.
+
+## Red work
+
+The THB Red tests now require the full public Company Identity receipt shape.
+The current Finance receipt parser rejects that validated result.
+
+The tests now require own `__proto__` request keys to fail before attestor
+access. They require own `__proto__` evidence keys to fail strict validation.
+They require own `__proto__` replay keys to return conflict.
+
+The existing ordinary unknown-key contracts remain in place.
+
+## Tests run
+
+1. THB command: exit 1; 65 collected, 61 passed, 4 behavior failures.
+2. Architecture command: exit 0; 11/11 tests passed.
+3. Finance regression: exit 0; 25/25 tests passed across 5 files.
+4. Production and test TypeScript checks: exit 0.
+5. Finance ESLint: exit 0.
+6. Prettier: exit 0 for changed tests, plan, strategy, and evidence note.
+7. Scoped `git diff --check`: exit 0.
+
+## Handoff
+
+Jr Green must close only the public receipt and own `__proto__` capture gaps.
+Green must preserve completed implementation status and deferred owner policies.
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+status: complete
+track: company_finance_operations_20260810
+phase: Phase 2 — controlled operational imports
+phase_base_sha: 8fa71b33b79a3090941f884f037564baa0322dbb
+role_base_sha: b4683613dd05c241fc525e886b75e1ff363cb9f3
+commits: this Red and evidence commit records the leased files
+tests_run: THB exit 1 (65 collected, 61 passed, 4 behavior failures); architecture exit 0 (11/11); Finance regression exit 0 (25/25)
+files_changed: packages/backend/src/modules/finance-operations/__tests__/thb-owner-decision-receipt.red.test.ts; packages/backend/src/modules/finance-operations/__tests__/multi-currency-thb-phase2.red.test.ts; measure/tracks/company_finance_operations_20260810/plan.md; measure/tracks/company_finance_operations_20260810/test-strategy-phase2-thb.md; measure/tracks/company_finance_operations_20260810/phase2-thb-review-c-red-remediation-20260816.md; measure/tracks/company_finance_operations_20260810/orchestration/phase2-thb-review-c-mid-red-role.log
+plan_updates: recorded THB-C-001, THB-C-002, and THB-C-003 remediation; implementation remains [x] and owner policies remain deferred
+known_failures: public receipt compatibility and own __proto__ capture gaps are intentionally Red
+handoff: Jr Green must close the public receipt and __proto__ gaps and rerun all listed gates
+END_MEASURE_AGENT_RESULT

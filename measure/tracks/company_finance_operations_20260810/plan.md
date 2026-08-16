@@ -222,6 +222,20 @@
   - Production and test TypeScript checks, Finance lint, Prettier, and scoped diff checks passed.
   - The Green evidence note is `phase2-thb-review-b-green-remediation-20260816.md`; the role log is `orchestration/phase2-thb-review-b-jr-green-role.log`.
 
+  THB Review C acceptance remediation Red evidence (2026-08-16; phase base `8fa71b33b79a3090941f884f037564baa0322dbb`; role base `b4683613dd05c241fc525e886b75e1ff363cb9f3`):
+
+  - Review C artifact `thb-review-c-cac10174c.json` failed on THB-C-001, THB-C-002, and THB-C-003.
+  - The Red tests require acceptance of the complete validated public Company Identity receipt without a second authority verification.
+  - The Red tests require own `__proto__` request and evidence keys to fail, and own `__proto__` replay keys to return conflict.
+  - The THB command collected 65 tests. It passed 61 tests and reported 4 behavior-level failures.
+  - The failures name only the public receipt compatibility gap and the `__proto__` capture gaps. Collection and fixtures succeeded.
+  - The architecture command passed 11 tests.
+  - The Finance regression command passed 25 tests across 5 files.
+  - Production and test TypeScript checks, Finance lint, Prettier, and the scoped diff check passed.
+  - The plan keeps the implementation task `[x]`. Owner rate-source, rounding, and effective-date decisions remain deferred.
+  - The THB strategy now separates completed implementation, active acceptance remediation, and deferred owner policy decisions.
+  - The Red evidence note is `phase2-thb-review-c-red-remediation-20260816.md`; the role log is `orchestration/phase2-thb-review-c-mid-red-role.log`.
+
 ## Phase 3 — close and accountant exchange
 
 - [b] Task: Implement close controls and accountant packs after the required written policy decisions and pilot acceptance. — deferred:accountant-owner-decisions
