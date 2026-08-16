@@ -217,10 +217,9 @@
 - [x] Task: Remediate Review B with Red contracts for trusted Company Identity
   authorization, cross-organization replay denial, reviewed activity and
   roleplay eligibility, receipt integrity, and one atomic mapping plus outbox
-  boundary. Production source remains unchanged. Green remains blocked until
-  these contracts fail for the recorded Review B gaps. Evidence:
-  `phase2-review-b-red-remediation-evidence-20260816.md`; Red commit:
-  `75b68ba25`.
+  boundary. Red commit: `75b68ba25`. Green implementation commit:
+  `401b65d3f777dc4e4da6a0127d1a56f523c8d984`. Verification and handoff:
+  `phase2-review-b-green-remediation-evidence-20260816.md`.
 
 ## Phase 3 — project Sales evidence into KST/SRS
 

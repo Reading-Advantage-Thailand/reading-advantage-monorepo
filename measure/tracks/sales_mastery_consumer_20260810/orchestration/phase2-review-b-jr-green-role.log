@@ -1,0 +1,55 @@
+Measure Jr Green role log — Sales Phase 2 Review B
+Track: sales_mastery_consumer_20260810
+Phase: Phase 2 — company tenant mapping and durable projection
+phase_base_sha: fd581f3dcd15e7b7b632875862aaecb596719621
+red_commit: 75b68ba25
+implementation_commit: 401b65d3f777dc4e4da6a0127d1a56f523c8d984
+
+## Lease
+
+- The lease covered Sales Phase 2 implementation, migration metadata, the plan, and Green evidence.
+- Review B Red tests remained unchanged.
+- Marketing and unrelated worktree changes remained unstaged.
+
+## Remediation
+
+- Enforced the trusted Company Identity application and organization tuple.
+- Enforced approved activity coordinates and roleplay consent gates.
+- Added source identity uniqueness and receipt identity foreign-key integrity.
+- Joined mapping and outbox creation in one durable transaction.
+- Serialized shared source identities in the in-memory adapter.
+
+## Gate results
+
+- Domain Review B Red passed 20/20.
+- Live PostgreSQL 16 Sales behavior passed 20/20.
+- Sales regressions passed 91/91 with one live-database test skipped.
+- Sales Knowledge passed 19/19.
+- Tenant coverage passed 12/12.
+- Migration and schema controls passed 221/221.
+- Domain, DB, and Sales Knowledge type, lint, and build checks passed.
+- Focused Prettier, `git diff --check`, and build-graph update checks passed.
+
+## Non-candidate failures
+
+- The aggregate domain suite reported unrelated database reset and append-only failures without `DATABASE_URL`.
+- No source fix followed implementation commit `401b65d3f`.
+
+## Handoff
+
+- Review A should verify trusted Company Identity and approved activity checks.
+- Review B should verify replay denial, receipt integrity, and the atomic mapping boundary.
+- Both reviews should preserve Red tests and migration `0053`.
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+status: complete-with-known-unrelated-gates
+track: sales_mastery_consumer_20260810
+phase: Phase 2 — company tenant mapping and durable projection
+phase_base_sha: fd581f3dcd15e7b7b632875862aaecb596719621
+red_commit: 75b68ba25
+implementation_commit: 401b65d3f777dc4e4da6a0127d1a56f523c8d984
+candidate_result: Red 20 passed; live PG16 20 passed; Sales regressions 91 passed and 1 skipped
+quality_result: type, lint, build, format, diff, and graph checks passed
+handoff: Review A and Review B should verify the committed Review B controls
+END_MEASURE_AGENT_RESULT
