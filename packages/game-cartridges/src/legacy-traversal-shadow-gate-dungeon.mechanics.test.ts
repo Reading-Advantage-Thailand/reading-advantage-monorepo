@@ -6,8 +6,10 @@ import {
   createBoundedFrameScheduler,
   createDeterministicSpawner,
   createInputActionNormalizer,
+  type GameInput,
   type InputActionId,
   type RuntimeCartridge,
+  type RuntimeEdition,
 } from "@reading-advantage/advantage-play-kit";
 import { describe, expect, it } from "vitest";
 
@@ -30,6 +32,7 @@ type MechanicsFixture = {
 };
 type TitleFixture = {
   readonly title_id: string;
+  readonly input: unknown;
   readonly input_mode: "vocabulary" | "sentence";
   readonly mechanics: MechanicsFixture;
 };
@@ -74,6 +77,34 @@ async function requireCartridge(
   expect(cartridge.manifest.inputMode, `${missing}; input mode is absent`).toBe(
     fixture.input_mode,
   );
+  const config = cartridge.createGameConfig({
+    input: fixture.input as GameInput,
+    edition: {} as RuntimeEdition,
+    complete: () => undefined,
+    diagnostic: () => undefined,
+    inputController: {
+      snapshot: () => ({
+        keys: [],
+        pointer: {
+          down: false,
+          cancelled: false,
+          id: null,
+          kind: null,
+          startX: 0,
+          startY: 0,
+          x: 0,
+          y: 0,
+        },
+        destroyed: false,
+      }),
+      cancelActiveGesture: () => undefined,
+      destroy: () => undefined,
+    },
+  });
+  expect(
+    config,
+    `${missing}; createGameConfig returned a no-op config`,
+  ).toEqual(expect.objectContaining({ scene: expect.anything() }));
   return cartridge;
 }
 

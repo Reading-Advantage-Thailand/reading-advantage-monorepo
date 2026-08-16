@@ -22,3 +22,13 @@ failures: no missing imports; no syntax, fixture, or TypeScript failures
 files_changed: fifteen per-title Red tests; phase3-red-fixtures.json; plan.md; phase3-red-evidence-20260816.md; this log
 handoff: owner-gated Green only after accepted Phase 2 evidence; no production implementation authority is granted
 END_MEASURE_AGENT_RESULT
+
+## Red remediation — 2026-08-16
+
+- Corrected two stale fixture pointers: Spellweaver `/26` and Griffin `/claims/4`.
+- Added complete fixture pointer validation before the Red batch.
+- Added `RuntimeCartridge.createGameConfig` assertions to all fifteen tests.
+- The assertions reject empty Phaser configurations.
+- The rerun collected fifteen tests and produced fifteen expected empty-catalog failures.
+- TypeScript, focused ESLint, Prettier, and the scoped diff check passed.
+- Owner acceptance remains pending, so this remediation grants no Green authority.

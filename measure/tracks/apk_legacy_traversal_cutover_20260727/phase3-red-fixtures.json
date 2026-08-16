@@ -83,7 +83,7 @@
       "responsive": {
         "evidence": {
           "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/claim-evidence-ledger-v2.json",
-          "json_pointer": "/28",
+          "json_pointer": "/26",
           "claim_id": "SW-RESP-002"
         },
         "compact": { "width": 390, "height": 844 },
@@ -222,7 +222,7 @@
       "mechanics": {
         "evidence": {
           "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/griffin-riders-escape/claim-evidence-ledger-v2.json",
-          "json_pointer": "/claims/6",
+          "json_pointer": "/claims/4",
           "claim_id": "GRF-WAVE-001"
         },
         "input_evidence": {

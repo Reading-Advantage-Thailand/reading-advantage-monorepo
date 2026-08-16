@@ -6,10 +6,12 @@ import {
   createBoundedFrameScheduler,
   createDeterministicSpawner,
   createInputActionNormalizer,
+  type GameInput,
   type InputActionId,
   type RuntimeCartridge,
+  type RuntimeEdition,
 } from "@reading-advantage/advantage-play-kit";
-import { describe, expect, it } from "vitest";
+import { beforeAll, describe, expect, it } from "vitest";
 
 import { cartridgeLoaders, getCartridgeCatalogEntry } from "./catalog.js";
 
@@ -30,8 +32,11 @@ type MechanicsFixture = {
 };
 type TitleFixture = {
   readonly title_id: string;
+  readonly input: unknown;
   readonly input_mode: "vocabulary" | "sentence";
   readonly mechanics: MechanicsFixture;
+  readonly responsive: { readonly evidence: Evidence };
+  readonly learning: { readonly evidence: Evidence };
 };
 type FixtureDocument = { readonly titles: readonly TitleFixture[] };
 
@@ -40,6 +45,57 @@ const FIXTURE_PATH = resolve(
   REPO_ROOT,
   "measure/tracks/apk_legacy_traversal_cutover_20260727/phase3-red-fixtures.json",
 );
+
+function resolveJsonPointer(value: unknown, pointer: string): unknown {
+  if (pointer === "") return value;
+  return pointer
+    .slice(1)
+    .split("/")
+    .map((segment) => segment.replaceAll("~1", "/").replaceAll("~0", "~"))
+    .reduce<unknown>((current, segment) => {
+      if (Array.isArray(current)) return current[Number(segment)];
+      if (typeof current === "object" && current !== null) {
+        return (current as Record<string, unknown>)[segment];
+      }
+      return undefined;
+    }, value);
+}
+
+function assertFixtureEvidencePointers(document: FixtureDocument): void {
+  for (const title of document.titles) {
+    const evidenceContracts = [
+      ["mechanics", title.mechanics.evidence],
+      ["mechanics-input", title.mechanics.input_evidence],
+      ["responsive", title.responsive.evidence],
+      ["learning", title.learning.evidence],
+    ] as const;
+    for (const [section, evidence] of evidenceContracts) {
+      const artifact = JSON.parse(
+        readFileSync(resolve(REPO_ROOT, evidence.artifact), "utf8"),
+      ) as unknown;
+      const resolved = resolveJsonPointer(artifact, evidence.json_pointer);
+      expect(
+        resolved,
+        `EVIDENCE_POINTER_MISSING: ${title.title_id}:${section}`,
+      ).toBeDefined();
+      const claimId =
+        typeof resolved === "object" && resolved !== null
+          ? (resolved as Record<string, unknown>).claim_id
+          : undefined;
+      expect(
+        claimId,
+        `EVIDENCE_POINTER_DRIFT: ${title.title_id}:${section}`,
+      ).toBe(evidence.claim_id);
+    }
+  }
+}
+
+beforeAll(() => {
+  const document = JSON.parse(
+    readFileSync(FIXTURE_PATH, "utf8"),
+  ) as FixtureDocument;
+  assertFixtureEvidencePointers(document);
+});
 
 function loadFixture(titleId: string): TitleFixture {
   const document = JSON.parse(
@@ -74,6 +130,34 @@ async function requireCartridge(
   expect(cartridge.manifest.inputMode, `${missing}; input mode is absent`).toBe(
     fixture.input_mode,
   );
+  const config = cartridge.createGameConfig({
+    input: fixture.input as GameInput,
+    edition: {} as RuntimeEdition,
+    complete: () => undefined,
+    diagnostic: () => undefined,
+    inputController: {
+      snapshot: () => ({
+        keys: [],
+        pointer: {
+          down: false,
+          cancelled: false,
+          id: null,
+          kind: null,
+          startX: 0,
+          startY: 0,
+          x: 0,
+          y: 0,
+        },
+        destroyed: false,
+      }),
+      cancelActiveGesture: () => undefined,
+      destroy: () => undefined,
+    },
+  });
+  expect(
+    config,
+    `${missing}; createGameConfig returned a no-op config`,
+  ).toEqual(expect.objectContaining({ scene: expect.anything() }));
   return cartridge;
 }
 

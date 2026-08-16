@@ -74,3 +74,19 @@ files_changed: 15 per-title Red test files; phase3-red-fixtures.json; plan.md; p
 authority: Red contracts only; no owner acceptance, adoption, ingestion, implementation, cutover, or Green authorization
 handoff: owner must accept Phase 2 asset-adoption evidence before Green receives production implementation authority
 END_MEASURE_AGENT_RESULT
+
+## Red remediation — 2026-08-16
+
+- Corrected the Spellweaver responsive pointer from `/28` to `/26`.
+- Corrected the Griffin mechanics pointer from `/claims/6` to `/claims/4`.
+- Added a complete fixture pointer guard for mechanics, input, responsive, and learning evidence.
+- Added a `RuntimeCartridge.createGameConfig` boundary assertion to all fifteen tests.
+- The assertion rejects a no-op configuration without a Phaser `scene` entry.
+- The targeted Vitest run collected fifteen files and fifteen tests.
+- All fifteen tests failed at the empty public catalog, as expected for Red.
+- Game-cartridges TypeScript passed with exit 0.
+- Focused ESLint passed with exit 0.
+- Prettier passed for all leased fixture and test files.
+- The scoped `git diff --check` passed with exit 0.
+
+Owner acceptance remains pending. Green remains blocked.

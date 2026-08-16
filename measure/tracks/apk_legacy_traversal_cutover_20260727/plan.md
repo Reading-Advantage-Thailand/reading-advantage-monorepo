@@ -27,6 +27,11 @@
 - The Red failures cover distinct traversal loops, compact and wide composition, ordered learning progress, and normalized input.
 - Red evidence: `phase3-red-evidence-20260816.md`; owner acceptance remains pending, so Green is not authorized.
 - Red role log: `orchestration/phase3-mid-red-role.log`; no production cartridge, catalog, dossier, archive, registry, or metadata file changed.
+- Red remediation on 2026-08-16 corrected the Spellweaver responsive pointer to `/26` and the Griffin mechanics pointer to `/claims/4`.
+- The mechanics test validates every fixture evidence pointer and claim ID before the fifteen-test batch runs.
+- All fifteen tests call `RuntimeCartridge.createGameConfig` and reject a configuration without a Phaser `scene` entry.
+- The remediation rerun collected fifteen tests and preserved the expected public-catalog failures.
+- TypeScript, ESLint, Prettier, and the scoped diff check passed after remediation.
 - [b] Build each cartridge using current public APK APIs and approved semantic bindings. deferred:green-role-after-phase-3-red-review
 - [b] Run Advantage Games QC with compact/wide, resize, input, and selected-output checks. deferred:phase-4-cartridge-green
 - [b] Run Reading and Primary host proofs for loading, authoritative completion, persistence, replay, and navigation. deferred:phase-5-qc-evidence
