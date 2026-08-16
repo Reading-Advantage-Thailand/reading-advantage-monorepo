@@ -38,3 +38,5 @@
 - The contract rejects unknown Must-have adoption, stale release identity, missing roles or descriptors, silent fallback, whole-pack delivery, app-local copies, and unsupported owner acceptance.
 - Red evidence: `phase2-binding-freeze-red-evidence-20260816.md`.
 - The five dossier files are intentionally absent. Phase 2 remains `[~]`; no production or manifest file changed.
+- Green attempt: five candidate dossiers were added, but the immutable Red test exposes three stale JSON-pointer bindings. Phase 2 remains `[~]`.
+- Green evidence: `phase2-binding-freeze-green-evidence-20260816.md`; the Red contract needs Review A disposition before Green can complete.

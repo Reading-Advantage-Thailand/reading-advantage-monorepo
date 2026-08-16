@@ -1,0 +1,31 @@
+# Jr Green Role Log — apk_legacy_traversal_cutover_20260727
+
+- 2026-08-16 Measure Jr Green role run.
+- Phase: Phase 2 binding freeze.
+- phase_base_sha: `8c30dc0e138567f4d461b6cb69c10c66a6bb2eaf`.
+- role_base_sha: `698f5c41406841aac37a4679ff173e689f2c7888`.
+- Lease: five phase2-binding-dossiers JSON files, plan.md, this evidence file, and this log.
+- The committed Red test is immutable: `packages/game-cartridges/src/legacy-traversal-binding-freeze.test.ts`.
+- Five candidate dossiers were added with fifteen blocked role decisions.
+- The focused contract exited 1 because three immutable Red evidence pointers resolve to different claim IDs.
+- The manifest suite passed 13/13.
+- The Python readiness suite passed 9/9.
+- TypeScript, ESLint, and scoped diff checks exited 0.
+- Prettier exited 1 for the five dossier files.
+- No production code, source manifest, suitability source, Asset Contract source, registry, metadata, or Red test changed.
+- Phase 2 remains `[~]`.
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+status: blocked
+track: apk_legacy_traversal_cutover_20260727
+phase: Phase 2 binding freeze
+phase_base_sha: 8c30dc0e138567f4d461b6cb69c10c66a6bb2eaf
+role_base_sha: 698f5c41406841aac37a4679ff173e689f2c7888
+commits: f9809655074acb637eb72b90ca91d9c3c989053f; evidence commit pending
+tests_run: focused binding-freeze 4/7 passed with 3 pointer-drift failures; manifest 13/13; Python readiness 9/9; TypeScript, ESLint, and diff checks passed
+files_changed: five phase2-binding-dossiers JSON files; plan.md; phase2-binding-freeze-green-evidence-20260816.md; this log
+counts: 5 dossiers; 15 roles; 15 blocked; 0 adoption; 4/7 focused tests passed
+known_failures: immutable Red pointer drift for Spellweaver's Run, Shadow Gate Dungeon, and Griffin Rider's Escape; Prettier fails on five dossier files
+handoff: Review A must repair the immutable Red contract or publish accepted evidence with matching pointers. No phase completion or downstream authority is claimed.
+END_MEASURE_AGENT_RESULT
