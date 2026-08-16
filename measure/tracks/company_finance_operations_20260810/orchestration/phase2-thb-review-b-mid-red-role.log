@@ -1,0 +1,58 @@
+Measure Mid Red role log - Finance THB Review B remediation
+Track: company_finance_operations_20260810
+Phase: Phase 2 — controlled operational imports
+Role: measure-mid-red
+Date: 2026-08-16
+phase_base_sha: 8fa71b33b79a3090941f884f037564baa0322dbb
+role_base_sha: 9d6b3af2608f0df7733197692a642905953c71f4
+
+## Preflight
+
+- Both supplied SHAs resolve.
+- The phase base is an ancestor of the role base.
+- The checkout is `master` with exactly one worktree.
+- Existing dirty paths are unrelated user work. I preserved them.
+- I leased only the Finance THB Red tests, plan, evidence note, and role log.
+- The requested `thb-review-b-eed2537d3.json` artifact is absent from the checkout.
+- No production source changed.
+
+## Red work
+
+The THB integration test now requires zero attestor calls for an unknown
+request key. The current implementation calls the attestor once, so the test
+fails after successful collection.
+
+The architecture test now requires rejection of ImportEqualsDeclaration,
+`globalThis.require`, property-loader aliases, and equivalent runtime loader
+forms. The current guard accepts all five counterexamples, so the test fails
+after successful collection.
+
+## Tests run
+
+1. THB command: exit 1; 61 collected, 60 passed, 1 behavior failure.
+2. Architecture command: exit 1; 11 collected, 10 passed, 1 behavior failure.
+3. Finance regression: exit 0; 25/25 tests passed across 5 files.
+4. Production and test TypeScript checks: exit 0.
+5. Finance ESLint: exit 0.
+6. Prettier: exit 0 for changed tests and plan.
+7. Scoped `git diff --check`: exit 0.
+
+## Handoff
+
+Jr Green must implement only the smallest guard changes needed to reject these
+counterexamples. Green must preserve approved static imports and owner gates.
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+status: complete
+track: company_finance_operations_20260810
+phase: Phase 2 — controlled operational imports
+phase_base_sha: 8fa71b33b79a3090941f884f037564baa0322dbb
+role_base_sha: 9d6b3af2608f0df7733197692a642905953c71f4
+commits: this Red and evidence commit records the leased files
+tests_run: THB exit 1 (61 collected, 60 passed, 1 behavior failure); architecture exit 1 (11 collected, 10 passed, 1 behavior failure); Finance regression exit 0 (25/25)
+files_changed: packages/backend/src/modules/finance-operations/__tests__/thb-owner-decision-receipt.red.test.ts; packages/backend/src/modules/finance-operations/__tests__/architecture-boundary.test.ts; measure/tracks/company_finance_operations_20260810/plan.md; measure/tracks/company_finance_operations_20260810/phase2-thb-review-b-red-remediation-20260816.md; measure/tracks/company_finance_operations_20260810/orchestration/phase2-thb-review-b-mid-red-role.log
+plan_updates: recorded THB Review B Red guard gaps; the THB task remains [~]
+known_failures: the new THB and architecture contracts are intentionally Red
+handoff: Jr Green must close the behavioral guard gaps and rerun all listed gates
+END_MEASURE_AGENT_RESULT

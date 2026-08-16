@@ -84,14 +84,14 @@
   - Every failure names only `financeThbConversionEvidenceSchema`, `createFinanceThbValuationPreparer`, or `classifyFinanceThbValuationReplay`.
   - The Company Identity attestor command remained Green at 83/83 tests.
   - The backend test typecheck, targeted Finance lint, Prettier check, and scoped diff check passed.
-   - No production, provider, database, or migration file changed. The THB task remains `[~]`; owner decisions remain required before Green valuation work.
+  - No production, provider, database, or migration file changed. The THB task remains `[~]`; owner decisions remain required before Green valuation work.
 
-   Green implementation evidence (2026-08-15):
+  Green implementation evidence (2026-08-15):
 
-   - Commit `4c329d91066e809d2cef0b453a0e752b043b1d6a` adds the provider-neutral Finance THB valuation preparer and public barrel export.
-   - The canonical two-file THB command passed 47/47 tests. The Company Identity attestor command passed 83/83 tests.
-   - Focused Finance regression tests passed 23/23. Backend typecheck, focused lint, Prettier, scoped diff check, and backend build passed.
-   - `measure/doctor.sh` remains red only for deprecated `[ ]` markers in unrelated active plans. No phase acceptance is claimed.
+  - Commit `4c329d91066e809d2cef0b453a0e752b043b1d6a` adds the provider-neutral Finance THB valuation preparer and public barrel export.
+  - The canonical two-file THB command passed 47/47 tests. The Company Identity attestor command passed 83/83 tests.
+  - Focused Finance regression tests passed 23/23. Backend typecheck, focused lint, Prettier, scoped diff check, and backend build passed.
+  - `measure/doctor.sh` remains red only for deprecated `[ ]` markers in unrelated active plans. No phase acceptance is claimed.
 
 - [b] Task: Pilot one reconciled month and one billing packet through owner-attested private-evidence packets. — deferred:finance-owner-data
 
@@ -159,41 +159,56 @@
   - Backend test typecheck exited 2 on unchanged `src/jobs/__tests__/postgres16-enqueue-retry-replay.red.test.ts` lines 900 and 947 (`Expected 5 arguments, but got 1`). The targeted Finance lint, Prettier check, and scoped diff check exited 0.
   - No production, migration, provider, policy, or integration test file changed.
   - The THB task remains `[~]` pending the owner-gated Green implementation.
-   - The role note is `phase2-thb-replay-red-remediation-20260815.md`; the role log is `orchestration/phase2-thb-replay-mid-red-role.log`.
+  - The role note is `phase2-thb-replay-red-remediation-20260815.md`; the role log is `orchestration/phase2-thb-replay-mid-red-role.log`.
 
-   Green replay remediation evidence (2026-08-15):
+  Green replay remediation evidence (2026-08-15):
 
-   - Commit `0e85b4d7e4915d3df62c3f78280debca05fee3ea` validates complete replay operands before comparison.
-   - The focused THB command passed 60/60 tests.
-   - The focused Finance regression command passed 23/23 tests.
-   - Production and test typechecks, targeted lint, Prettier, diff, and build commands passed.
-   - `measure/doctor.sh` remains red on unrelated deprecated `[ ]` markers.
+  - Commit `0e85b4d7e4915d3df62c3f78280debca05fee3ea` validates complete replay operands before comparison.
+  - The focused THB command passed 60/60 tests.
+  - The focused Finance regression command passed 23/23 tests.
+  - Production and test typechecks, targeted lint, Prettier, diff, and build commands passed.
+  - `measure/doctor.sh` remains red on unrelated deprecated `[ ]` markers.
 
-   Architecture boundary Green correction evidence (2026-08-16; phase base `8fa71b33b79a3090941f884f037564baa0322dbb`; role base `399864a3087287b8435d2b697211245c9cd15085`):
+  Architecture boundary Green correction evidence (2026-08-16; phase base `8fa71b33b79a3090941f884f037564baa0322dbb`; role base `399864a3087287b8435d2b697211245c9cd15085`):
 
-   - Source commit `adf96232f` admits the reviewed `thb-valuation.ts` module.
-   - The contract allows only `zod.z` and `node:util.types` from external modules.
-   - Unapproved utility bindings, namespaces, and `node:fs` remain rejected by counterexamples.
-   - The architecture command passed 9/9 tests.
-   - The 60-case THB command passed 60/60 tests.
-   - The focused Finance regression passed 25/25 tests across 5 files.
-   - Production and test TypeScript checks, Finance lint, Prettier, and `git diff --check` passed.
-   - The package `check-types` wrapper was interrupted during an unavailable registry relink; direct local compiler checks passed.
-    - The correction note is `phase2-thb-architecture-boundary-green-20260816.md`; the role log is `orchestration/phase2-thb-architecture-boundary-jr-green-role.log`.
-    - The remediation note is `phase2-thb-replay-green-remediation-20260815.md`; the role log is `orchestration/phase2-thb-replay-jr-green-role.log`.
+  - Source commit `adf96232f` admits the reviewed `thb-valuation.ts` module.
+  - The contract allows only `zod.z` and `node:util.types` from external modules.
+  - Unapproved utility bindings, namespaces, and `node:fs` remain rejected by counterexamples.
+  - The architecture command passed 9/9 tests.
+  - The 60-case THB command passed 60/60 tests.
+  - The focused Finance regression passed 25/25 tests across 5 files.
+  - Production and test TypeScript checks, Finance lint, Prettier, and `git diff --check` passed.
+  - The package `check-types` wrapper was interrupted during an unavailable registry relink; direct local compiler checks passed.
+  - The correction note is `phase2-thb-architecture-boundary-green-20260816.md`; the role log is `orchestration/phase2-thb-architecture-boundary-jr-green-role.log`.
+  - The remediation note is `phase2-thb-replay-green-remediation-20260815.md`; the role log is `orchestration/phase2-thb-replay-jr-green-role.log`.
 
-   Architecture boundary Review A remediation evidence (2026-08-16; source commit `22b99787f`; phase base `8fa71b33b79a3090941f884f037564baa0322dbb`; role base `63da03a0e27e0c696df44f2a0285973b269d1cfd`):
+  Architecture boundary Review A remediation evidence (2026-08-16; source commit `22b99787f`; phase base `8fa71b33b79a3090941f884f037564baa0322dbb`; role base `63da03a0e27e0c696df44f2a0285973b269d1cfd`):
 
-   - Dynamic imports now fail closed, including approved `node:util` and `zod` modules.
-   - Approved external named exports use the exact binding allowlist.
-   - Export-all and namespace exports from approved modules now fail closed.
-   - The static `node:util.types` and `zod.z` imports remain admitted.
-   - The architecture command passed 10/10 tests.
-   - The 60-case THB command passed 60/60 tests.
-   - The focused Finance regression passed 25/25 tests across 5 files.
-   - Production and test TypeScript checks, Finance lint, Prettier, and scoped diff checks passed.
-   - An initial test typecheck found one new optional-module-specifier error; the final typechecks passed after narrowing.
-   - The remediation note is `phase2-thb-architecture-review-a-remediation-20260816.md`; the role log is `orchestration/phase2-thb-architecture-review-a-jr-green-role.log`.
+  - Dynamic imports now fail closed, including approved `node:util` and `zod` modules.
+  - Approved external named exports use the exact binding allowlist.
+  - Export-all and namespace exports from approved modules now fail closed.
+  - The static `node:util.types` and `zod.z` imports remain admitted.
+  - The architecture command passed 10/10 tests.
+  - The 60-case THB command passed 60/60 tests.
+  - The focused Finance regression passed 25/25 tests across 5 files.
+  - Production and test TypeScript checks, Finance lint, Prettier, and scoped diff checks passed.
+  - An initial test typecheck found one new optional-module-specifier error; the final typechecks passed after narrowing.
+  - The remediation note is `phase2-thb-architecture-review-a-remediation-20260816.md`; the role log is `orchestration/phase2-thb-architecture-review-a-jr-green-role.log`.
+
+  THB Review B Red remediation evidence (2026-08-16; phase base `8fa71b33b79a3090941f884f037564baa0322dbb`; role base `9d6b3af2608f0df7733197692a642905953c71f4`):
+
+  - The THB integration Red test now requires zero attestor calls for an unknown request key.
+  - The architecture Red test now rejects ImportEqualsDeclaration and property-based runtime loader aliases.
+  - The loader cases include `globalThis.require`, bracket access, Reflect access, and equivalent aliases.
+  - The THB command collected 61 tests. It passed 60 tests and failed 1 expected behavior assertion.
+  - The failure showed one attestor call before unknown-key rejection. Collection and fixtures succeeded.
+  - The architecture command collected 11 tests. It passed 10 tests and failed 1 expected behavior assertion.
+  - The failure showed that the current guard accepts all five new loader counterexamples.
+  - The Finance regression command passed 25 tests across 5 files.
+  - Production and test TypeScript checks, Finance lint, Prettier, and the scoped diff check passed.
+  - No production, provider, database, migration, configuration, registry, metadata, or generated file changed.
+  - The requested `thb-review-b-eed2537d3.json` artifact was not present in the checkout.
+  - The Red evidence note is `phase2-thb-review-b-red-remediation-20260816.md`; the role log is `orchestration/phase2-thb-review-b-mid-red-role.log`.
 
 ## Phase 3 — close and accountant exchange
 

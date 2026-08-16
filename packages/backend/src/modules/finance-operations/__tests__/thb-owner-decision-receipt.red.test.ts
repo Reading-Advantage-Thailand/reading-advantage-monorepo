@@ -417,6 +417,20 @@ describe("Finance THB valuation integration with Company Identity", () => {
     expect(evidencePort.getEvidence).not.toHaveBeenCalled();
   });
 
+  it("rejects unknown request keys before attestor access", async () => {
+    const { preparer, attestor, evidencePort } = await createHarness();
+    const request = {
+      ...valuationInput(),
+      unreviewedRequestSecret: "POISON_THB_REQUEST_SECRET",
+    };
+
+    await expect(preparer.prepare(request)).rejects.toMatchObject({
+      code: "FINANCE_THB_INPUT_INVALID",
+    });
+    expect(attestor.verify).not.toHaveBeenCalled();
+    expect(evidencePort.getEvidence).not.toHaveBeenCalled();
+  });
+
   it("rejects a Proxy request before attestor access", async () => {
     const request = new Proxy(valuationInput(), {
       get() {

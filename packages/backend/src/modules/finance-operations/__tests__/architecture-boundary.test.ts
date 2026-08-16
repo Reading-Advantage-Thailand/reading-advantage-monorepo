@@ -949,6 +949,61 @@ describe("Finance Operations policy-neutral architecture boundary", () => {
     );
   });
 
+  it("rejects ImportEqualsDeclaration and property-based runtime loader aliases", () => {
+    const counterexamples = [
+      {
+        name: "ImportEqualsDeclaration",
+        source: "import legacy = foreignNamespace;",
+        marker: "forbidden ImportEqualsDeclaration",
+      },
+      {
+        name: "globalThis.require",
+        source: 'globalThis.require("@reading-advantage/db");',
+        marker: "forbidden runtime loader property: globalThis.require",
+      },
+      {
+        name: "globalThis.require property alias",
+        source: [
+          "const load = globalThis.require;",
+          'load("@reading-advantage/db");',
+        ].join("\n"),
+        marker: "forbidden runtime loader property: globalThis.require",
+      },
+      {
+        name: "globalThis require property alias",
+        source: [
+          'const load = globalThis["require"];',
+          'load("@reading-advantage/db");',
+        ].join("\n"),
+        marker: "forbidden runtime loader property: globalThis.require",
+      },
+      {
+        name: "Reflect property loader alias",
+        source: [
+          'const load = Reflect.get(globalThis, "require");',
+          'load("@reading-advantage/db");',
+        ].join("\n"),
+        marker: "forbidden runtime loader property access through Reflect",
+      },
+    ];
+
+    const unhandledCounterexamples = counterexamples.flatMap(
+      (counterexample) => {
+        const violations = collectBoundaryViolations(
+          resolve(moduleDirectory, "thb-valuation.ts"),
+          counterexample.source,
+        );
+        return violations.some((violation) =>
+          violation.includes(counterexample.marker),
+        )
+          ? []
+          : [counterexample.name];
+      },
+    );
+
+    expect(unhandledCounterexamples).toEqual([]);
+  });
+
   it("fails closed for every reviewed Task 3 database and runtime-loader bypass", () => {
     const counterexamples = [
       {
