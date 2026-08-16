@@ -105,6 +105,7 @@ interface PackageJson {
 
 interface NpmPackEntry {
   filename: string;
+  shasum?: string;
   files: Array<{ path: string }>;
 }
 
@@ -1161,12 +1162,19 @@ async function releaseWorkspaceLease(lease: WorkspaceLease): Promise<boolean> {
   let released = false;
   try {
     await assertWorkspaceLeaseParent(runtime, capability);
-    const leaseEntry = await lstat(operationLeasePath);
-    if (leaseEntry.isSymbolicLink() || !leaseEntry.isDirectory()) return false;
-    await assertWorkspaceLeaseParent(runtime, capability);
-    const owner = await readWorkspaceLeaseOwner(operationLeasePath);
+    try {
+      await assertWorkspaceLeaseAfterAcquire(runtime, capability);
+    } catch {
+      released = true;
+      return released;
+    }
+    const leaseHandle = capability.leaseHandle;
+    if (leaseHandle == null) return false;
+    const owner = await readWorkspaceLeaseOwner(
+      descriptorRelativePath(leaseHandle, "."),
+    );
     if (owner?.token !== lease.token) return false;
-    await assertWorkspaceLeaseParent(runtime, capability);
+    await assertWorkspaceLeaseAfterAcquire(runtime, capability);
     await rm(operationLeasePath, { recursive: true, force: false });
     released = true;
     return released;
@@ -1414,7 +1422,9 @@ interface StagedPackage {
 interface PackedArtifact {
   name: string;
   archivePath: string;
+  installArchivePath: string;
   archiveBytes: Buffer;
+  archiveSha1: string;
   archiveSha256: string;
   workspaceDependencies: string[];
 }
@@ -1781,27 +1791,38 @@ function sha256(bytes: Uint8Array): string {
   return createHash("sha256").update(bytes).digest("hex");
 }
 
+/** Calculates the npm pack checksum used to bind an archive before path exposure. */
+function sha1(bytes: Uint8Array): string {
+  return createHash("sha1").update(bytes).digest("hex");
+}
+
 /** Rejects archive bytes that differ from the bytes bound when npm pack completed. */
 async function assertPackedArchivesUnchanged(
   artifacts: ReadonlyArray<PackedArtifact>,
 ): Promise<void> {
   await Promise.all(
     artifacts.map(async (artifact) => {
-      try {
-        const currentBytes = await readRegularFileBytes(
-          artifact.archivePath,
-          `Release archive ${artifact.name}`,
-        );
-        if (
-          !currentBytes.equals(artifact.archiveBytes) ||
-          sha256(currentBytes) !== artifact.archiveSha256
-        ) {
-          throw new Error("archive bytes differ");
+      for (const archivePath of [
+        artifact.archivePath,
+        artifact.installArchivePath,
+      ]) {
+        try {
+          const currentBytes = await readRegularFileBytes(
+            archivePath,
+            `Release archive ${artifact.name}`,
+          );
+          if (
+            !currentBytes.equals(artifact.archiveBytes) ||
+            sha1(currentBytes) !== artifact.archiveSha1 ||
+            sha256(currentBytes) !== artifact.archiveSha256
+          ) {
+            throw new Error("archive bytes differ");
+          }
+        } catch {
+          throw new Error(
+            `RELEASE_ARCHIVE_MUTATION_CONFLICT release archive ${artifact.name} changed before consumption`,
+          );
         }
-      } catch {
-        throw new Error(
-          `RELEASE_ARCHIVE_MUTATION_CONFLICT release archive ${artifact.name} changed before consumption`,
-        );
       }
     }),
   );
@@ -2025,7 +2046,7 @@ async function createPackedArtifact(
   packageRoot: string,
   destination: string,
   packageStateRoot: string,
-): Promise<string> {
+): Promise<{ archivePath: string; archiveSha1: string }> {
   const isolatedStateRoot = resolve(
     packageStateRoot,
     "npm-pack",
@@ -2051,10 +2072,18 @@ async function createPackedArtifact(
     packageRoot,
   );
   const entry = parseNpmPackEntries(stdout, stderr, packageRoot)[0];
-  if (!entry || !entry.filename.endsWith(".tgz")) {
+  if (
+    !entry ||
+    !entry.filename.endsWith(".tgz") ||
+    !entry.shasum ||
+    !/^[0-9a-f]{40}$/.test(entry.shasum)
+  ) {
     throw new Error(`npm pack produced no artifact for ${packageRoot}`);
   }
-  return resolve(archiveDestination, basename(entry.filename));
+  return {
+    archivePath: resolve(archiveDestination, basename(entry.filename)),
+    archiveSha1: entry.shasum,
+  };
 }
 
 async function inspectPackedArtifact(
@@ -2116,7 +2145,7 @@ async function runCleanConsumer(
   const localArtifacts = Object.fromEntries(
     [...archives.entries()].map(([name, archive]) => [
       name,
-      `file:${archive.archivePath}`,
+      `file:${archive.installArchivePath}`,
     ]),
   );
   manifest.dependencies = localArtifacts;
@@ -2384,13 +2413,16 @@ export async function runReleaseArtifactCheck(
       ),
     );
 
+    const verifiedArchiveRoot = resolve(temporaryRoot, "verified-archives");
+    await mkdir(verifiedArchiveRoot, { recursive: true });
     const packedArtifacts = await Promise.all(
       stagedMetadata.map(async ({ packageRoot, manifest }) => {
-        const archivePath = await createPackedArtifact(
+        const packedArchive = await createPackedArtifact(
           packageRoot,
           temporaryRoot,
           temporaryRoot,
         );
+        const { archivePath, archiveSha1 } = packedArchive;
         const packed = await inspectPackedArtifact(archivePath);
         if (
           packed.manifest.name !== manifest.name ||
@@ -2407,10 +2439,26 @@ export async function runReleaseArtifactCheck(
           archivePath,
           `Release archive ${manifest.name}`,
         );
+        if (sha1(archiveBytes) !== archiveSha1) {
+          throw new Error(
+            `RELEASE_ARCHIVE_MUTATION_CONFLICT release archive ${manifest.name} changed after npm pack`,
+          );
+        }
+        const installArchivePath = resolve(
+          verifiedArchiveRoot,
+          `${manifest.name.replace(/^@/, "").replace(/[\\/]/g, "-")}.tgz`,
+        );
+        await writeNewRegularFile(
+          installArchivePath,
+          archiveBytes,
+          `Verified release archive ${manifest.name}`,
+        );
         return {
           name: manifest.name,
           archivePath,
+          installArchivePath,
           archiveBytes,
+          archiveSha1,
           archiveSha256: sha256(archiveBytes),
           workspaceDependencies: assertPackedDependencyVersions(
             packed.manifest,
