@@ -94,3 +94,40 @@ plan_updates: none; registry, metadata, source, tests, and other files unchanged
 known_failures: pilot packet/month, policy decisions, accountant-pack decisions, and Company Admin access remain owner-gated
 handoff: BLOCKED NOW; admit the conditional pilot only after the exact owner packet and reconciled month are accepted
 END_MEASURE_AGENT_RESULT
+
+## Resume repair
+
+Repair base: `ee27a0213c03d8a8396cb84805ef64377e9b2f09`.
+
+The named Review A artifact `post-thb-strategy-review-a-fd581f3dc.json` was not
+present in the checkout. The repair uses the requested findings and current
+Finance evidence. It does not invent additional findings or policy decisions.
+
+The repair adds:
+
+- one exact blocked-operation entry for each blocked Finance operation;
+- required external input, current evidence, unaffected work, and next executable
+  action for every entry;
+- separate CRM and Tutor source-owner contract blockers;
+- a complete owner-input checklist;
+- a live-integration review gate distinct from the policy-neutral pilot review.
+
+The THB completion boundary remains unchanged. The pilot, source-owner contracts,
+Thai policy, close, pack, and Company Admin release remain blocked.
+
+The repair changes only this strategy document and this role log.
+
+MEASURE_AGENT_RESULT
+role: measure-strategy
+status: complete
+track: company_finance_operations_20260810
+phase: post-THB Review A repair
+repair_base_sha: ee27a0213c03d8a8396cb84805ef64377e9b2f09
+commits: this repair commit (track_id: company_finance_operations_20260810)
+tests_run: none; documentation-only role
+files_changed: test-strategy-post-thb.md; orchestration/post-thb-strategy-role.log
+plan_updates: none; registry, metadata, source, tests, and other files unchanged
+known_failures: named Review A JSON absent from checkout; pilot, source-owner contracts, policy, close, pack, and access inputs remain blocked
+handoff: BLOCKED NOW; admit only the pilot after its packet and month are accepted; keep CRM, Tutor, policy, close, pack, and access gates separate
+owner_input_checklist: THB rate source; THB rounding; THB effective date; pilot month and packet; CRM source-owner contract; Tutor source-owner contract; Tutor conflict disposition; VAT/WHT/classification; close rules; accountant pack; Company Admin access
+END_MEASURE_AGENT_RESULT

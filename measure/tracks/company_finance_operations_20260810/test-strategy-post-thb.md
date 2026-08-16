@@ -21,6 +21,7 @@ It does not accept Finance phase, product, accountant-pack, or release closeout.
 
 The current plan marks the controlled import and THB implementation tasks `[x]`.
 It marks the pilot `[b] deferred:finance-owner-data`.
+It marks live CRM and Tutor owner contracts `[b] deferred:crm-tutor-source-owners`.
 It marks close, accountant packs, and release as owner-gated.
 
 **Decision:** no new production code slice is executable at this checkpoint.
@@ -55,6 +56,148 @@ The pilot may become executable only when all conditions below hold:
 6. No test requires an unaccepted Thai tax, accounting, close, or pack decision.
 
 Until these conditions hold, the correct state is **blocked**.
+
+## Blocked-operation register
+
+Each blocked operation has a separate external gate. Pilot data, source-owner
+contracts, Thai policy, and Company Admin access must not be treated as one gate.
+
+### Use THB valuation policy in production
+
+- **Blocked operation:** Apply a THB valuation to a production Finance bill.
+- **Required external input:** An owner or accountant must accept the authoritative
+  `rateSourceId`, `roundingRuleId`, and `effectiveDateRuleId`. The decision must
+  state the exact rate evidence, rounding behavior, and date rule.
+- **Current evidence:** `measure/tracks/company_finance_operations_20260810/spec.md`
+  requires these decisions before production use. The
+  `test-strategy-phase2-thb.md` keeps the identifiers opaque. The current
+  `packages/backend/src/modules/finance-operations/thb-valuation.ts` uses trusted
+  evidence and an injected port without selecting a policy.
+- **Unaffected work:** Exact decimal validation, THB identity conversion, source
+  amount preservation, public receipt projection, replay, and conflict behavior stay accepted.
+- **Next executable action:** Obtain the written decision receipt. Then author a
+  policy-specific Red contract. Do not select values in Finance source now.
+
+### Read an external THB rate source
+
+- **Blocked operation:** Read or adapt a live provider as the THB evidence source.
+- **Required external input:** First accept the THB policy decision. Then the named
+  rate-source owner must publish a versioned source contract and an approved internal
+  Finance port shape. Provider credentials and SDK choice remain adapter-owned.
+- **Current evidence:** `packages/backend/src/modules/finance-operations/thb-valuation.ts`
+  accepts `FinanceThbEvidencePort` only. The architecture boundary rejects provider
+  and direct-runtime access.
+- **Unaffected work:** Finance can validate trusted rate evidence without a provider.
+  The bounded THB implementation remains complete.
+- **Next executable action:** After the policy and source contract receipts exist,
+  write port and adapter Red tests. Keep provider code outside Finance Operations.
+
+### Run the historical pilot month and billing packet
+
+- **Blocked operation:** Admit and execute one reconciled historical month and one billing packet.
+- **Required external input:** The owner must supply the exact month boundaries, one
+  `historical-private-evidence-packet.v1`, company or school scope, source identity and
+  version, payload digest, private evidence reference, and owner attestation.
+- **Current evidence:** `measure/tracks/company_finance_operations_20260810/plan.md`
+  marks this task `[b] deferred:finance-owner-data`. The current
+  `packages/backend/src/modules/finance-operations/controlled-imports.ts` pilot
+  boundary returns `not-admitted` until this task is admitted. Accepted controlled-
+  import contracts already cover normalization and atomic acceptance.
+- **Unaffected work:** Historical packet validation, private-evidence binding, source
+  provenance, replay, conflict, rollback, audit, and no-live-source guards remain usable.
+- **Next executable action:** Accept the redacted packet and digest. Then admit the
+  conditional pilot Red contract in this strategy.
+
+### Read a live CRM billing catalog
+
+- **Blocked operation:** Consume a live CRM customer billing-catalog snapshot.
+- **Required external input:** The CRM source owner must publish and accept a
+  versioned `CustomerBillingCatalogPort` contract. It must define authenticated
+  company scope, customer and site identity, subscription and provisioning facts,
+  provenance, revisions, and idempotency.
+- **Current evidence:** `measure/tracks/company_finance_operations_20260810/spec.md`
+  defers live CRM adapters until a named source-owner module publishes an accepted
+  source-native contract. `measure/tracks/company_finance_operations_20260810/plan.md`
+  records `[b] deferred:crm-tutor-source-owners`. The current
+  `packages/backend/src/modules/finance-operations/ports.ts` and
+  `port-contracts.ts` types are seams, not source-owner acceptance.
+- **Unaffected work:** Historical private-evidence imports and the pilot do not need
+  CRM data. Finance remains isolated from the CRM database.
+- **Next executable action:** CRM owner publishes the source contract and acceptance
+  receipt. Then create a separate CRM Red strategy. Do not add a CRM adapter now.
+
+### Read a live Tutor financial export
+
+- **Blocked operation:** Consume a live Tutor financial export for Finance reconciliation.
+- **Required external input:** The Tutor source owner must publish and accept a
+  versioned, authenticated, immutable `TutorFinancialExportPort` contract. It must
+  bind evidence, revision or supersession identity, and idempotency. Any Tutor source
+  conflict also needs a dated owner and accountant or legal disposition.
+- **Current evidence:** `measure/tracks/company_finance_operations_20260810/spec.md`
+  defers Tutor adapters until a named source-owner module publishes an accepted
+  source-native contract. `measure/tracks/company_finance_operations_20260810/plan.md`
+  keeps the combined CRM and Tutor task blocked. Current Finance port types do not
+  prove Tutor ownership.
+- **Unaffected work:** The historical packet pilot can run without Tutor. Finance does
+  not read Tutor databases or reuse Tutor credentials.
+- **Next executable action:** Tutor owner publishes the contract and resolves any
+  source conflict. Then create a separate Tutor Red strategy. Do not add the adapter now.
+
+### Interpret VAT, WHT, invoice, or accounting classification
+
+- **Blocked operation:** Derive VAT, WHT, tax-invoice status, or accounting classification.
+- **Required external input:** The owner and accountant must provide written decisions
+  for invoice and tax-invoice fields, VAT posture, WHT treatment, and accounting classification.
+- **Current evidence:** `measure/tracks/company_finance_operations_20260810/spec.md`
+  explicitly defers these policies. Current controlled imports retain source-stated
+  labels and unknown states. The controlled-import tests reject unreviewed policy fields.
+- **Unaffected work:** Source-stated tax labels, source-stated amounts, and explicit
+  unknowns remain valid. No statutory interpretation is claimed.
+- **Next executable action:** Obtain the written decisions. Then author a bounded
+  policy Red contract. Do not add guessed fields or calculations.
+
+### Close a Finance period
+
+- **Blocked operation:** Lock, reopen, or apply late-document and correction rules to a close period.
+- **Required external input:** The owner and accountant must accept the close calendar,
+  period boundaries, lock and reopen authority, late-document handling, retention,
+  and correction or supersession policy.
+- **Current evidence:** `measure/tracks/company_finance_operations_20260810/plan.md`
+  marks close controls `[b] deferred:accountant-owner-decisions`. Existing records
+  support append-only corrections, but no close policy is accepted.
+- **Unaffected work:** Immutable history, explicit corrections, provenance, and audit
+  behavior remain available before close controls.
+- **Next executable action:** Obtain the written close decision. Then create Red tests
+  for the exact close contract. Do not infer lock or reopen behavior.
+
+### Generate or exchange an accountant pack
+
+- **Blocked operation:** Generate, send, acknowledge, or correct an accountant pack.
+- **Required external input:** The accountant and owner must accept the pack version,
+  layout, required fields, period and evidence references, acknowledgement, correction
+  reference, delivery boundary, and retention expectation.
+- **Current evidence:** `measure/tracks/company_finance_operations_20260810/spec.md`
+  defers accountant-pack layout. `measure/tracks/company_finance_operations_20260810/plan.md`
+  blocks accountant packs until written policy decisions and pilot acceptance.
+- **Unaffected work:** Finance may retain operational evidence and source provenance.
+  It does not claim an accepted statutory pack.
+- **Next executable action:** Obtain the accepted pack contract and pilot acceptance.
+  Then author pack Red tests. Do not create a layout now.
+
+### Grant Finance production access and release
+
+- **Blocked operation:** Grant employee access to Finance or release Finance to production.
+- **Required external input:** Company Admin owners must accept the Finance application
+  role map, `COMPANY_ADMIN` inheritance, ordinary-employee access and denial,
+  revocation, company or school scope, and audit evidence.
+- **Current evidence:** `measure/tracks/company_finance_operations_20260810/plan.md`
+  marks release `[b] deferred:company-admin-owner`. The small-company program
+  ratifies `COMPANY_ADMIN` generally, but it does not accept Finance application
+  roles or Finance production access.
+- **Unaffected work:** Backend contracts, policy-neutral tests, and historical packet
+  boundaries can proceed without production access.
+- **Next executable action:** Accept the Company Admin role-to-application matrix.
+  Then run the bounded access review and release gate. Do not add access routes now.
 
 ## Conditional code-bearing slice
 
@@ -212,20 +355,37 @@ The small-company program ratifies `COMPANY_ADMIN` as the owner/operator role. I
 does not, by itself, accept Finance application roles or Finance production access.
 The Company Admin role-to-application map remains an acceptance input.
 
+## Complete owner-input checklist
+
+- `OWNER INPUT MISSING — THB rate source:` authoritative source, stable `rateSourceId`, and version.
+- `OWNER INPUT MISSING — THB rounding:` stable `roundingRuleId`, precision, mode, stage, and examples.
+- `OWNER INPUT MISSING — THB effective date:` stable `effectiveDateRuleId`, source-date rule, time zone, and validity handling.
+- `OWNER INPUT MISSING — pilot month and packet:` exact month, packet, scope, source identity, version, digest, evidence reference, and attestation.
+- `OWNER INPUT MISSING — CRM source-owner contract:` accepted versioned `CustomerBillingCatalogPort` contract and owner receipt.
+- `OWNER INPUT MISSING — Tutor source-owner contract:` accepted versioned `TutorFinancialExportPort` contract and owner receipt.
+- `OWNER INPUT MISSING — Tutor source conflicts:` dated owner and accountant or legal disposition for each disputed source fact.
+- `OWNER INPUT MISSING — VAT, WHT, and classification:` written owner and accountant decisions for each policy.
+- `OWNER INPUT MISSING — close rules:` calendar, boundaries, lock, reopen, late documents, retention, and corrections.
+- `OWNER INPUT MISSING — accountant pack:` accepted version, layout, fields, evidence, acknowledgement, correction, delivery, and retention.
+- `OWNER INPUT MISSING — Company Admin access:` accepted Finance roles, inheritance, denial, revocation, scope, and audit evidence.
+
+The disposable database and live proof environment are execution prerequisites.
+They are not owner or accountant policy decisions.
+
 ## Review applicability
 
-| Review                        | Applicability               | Gate                                                                                                             |
-| ----------------------------- | --------------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| Backend correctness           | Required                    | Contract, replay, conflict, rollback, provenance, and scope behavior must pass.                                  |
-| Security                      | Required                    | Company Identity, private evidence, authorization, tenant scope, and audit boundaries must pass.                 |
-| Adversarial testing           | Required                    | Caller fabrication, mutation, getters, Proxies, unknown keys, lookalikes, and partial failures must fail closed. |
-| Architecture/source isolation | Required                    | Finance uses internal ports and no provider, database, runtime, or source-owner bypass.                          |
-| Live database                 | Required for pilot closeout | Disposable PostgreSQL proof must pass with cleanup verification.                                                 |
-| Accountant policy review      | Required for policy use     | Not required to run the policy-neutral Red/Green contract. Required before policy, close, or pack behavior.      |
-| UX/API review                 | Not applicable              | No UI or public HTTP API is authorized in this slice.                                                            |
-| Browser review                | Not applicable              | No browser behavior is authorized in this slice.                                                                 |
-| CRM/Tutor integration review  | Not applicable to the pilot | The pilot must reject those adapters. A later source-owner track must accept their contracts.                    |
-| Company Admin access review   | Required for release only   | The release task stays blocked until the access matrix is accepted.                                              |
+| Review                        | Applicability                                              | Gate                                                                                                             |
+| ----------------------------- | ---------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| Backend correctness           | Required                                                   | Contract, replay, conflict, rollback, provenance, and scope behavior must pass.                                  |
+| Security                      | Required                                                   | Company Identity, private evidence, authorization, tenant scope, and audit boundaries must pass.                 |
+| Adversarial testing           | Required                                                   | Caller fabrication, mutation, getters, Proxies, unknown keys, lookalikes, and partial failures must fail closed. |
+| Architecture/source isolation | Required                                                   | Finance uses internal ports and no provider, database, runtime, or source-owner bypass.                          |
+| Live database                 | Required for pilot closeout                                | Disposable PostgreSQL proof must pass with cleanup verification.                                                 |
+| Accountant policy review      | Required for policy use                                    | Not required to run the policy-neutral Red/Green contract. Required before policy, close, or pack behavior.      |
+| UX/API review                 | Not applicable                                             | No UI or public HTTP API is authorized in this slice.                                                            |
+| Browser review                | Not applicable                                             | No browser behavior is authorized in this slice.                                                                 |
+| CRM/Tutor integration review  | Not applicable to the pilot; required for live integration | The pilot must reject those adapters. Source owners must accept their contracts before separate Red work.        |
+| Company Admin access review   | Required for release only                                  | The release task stays blocked until the access matrix is accepted.                                              |
 
 ## Anti-pattern defenses
 
@@ -249,7 +409,8 @@ The next role must not begin pilot Red, Green, or acceptance work at this checkp
 The orchestrator may admit the conditional pilot only after the owner supplies and
 accepts the exact month and packet inputs in the matrix.
 
-Rate source, rounding, effective date, VAT, WHT, classification, close rules,
-accountant-pack layout, and Company Admin access remain owner-gated.
+Live CRM and Tutor source-owner contracts remain separately blocked. Rate source,
+rounding, effective date, VAT, WHT, classification, close rules, accountant-pack
+layout, and Company Admin access remain owner-gated.
 
 No overall five-lane workflow is planned here.
