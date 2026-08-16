@@ -19,11 +19,22 @@
 ## Phase 2: Binding freeze and Red cartridge contracts
 
 - [~] Consume accepted Asset Contract v2 and suitability/ingestion records; freeze each title's semantic roles, physical behavior descriptors, legacy source manifests, and reuse/ingest/block decisions before implementation.
-  Next executable binding work per test-strategy.md Phase 2. Product-owner receipt for the binding freeze is still required before Green.
+   Next executable binding work per test-strategy.md Phase 2. Product-owner receipt for the binding freeze is still required before Green.
 - [~] Write failing mechanic, responsive composition, and educational-invariant tests per title.
-  Next executable Red work per test-strategy.md Phase 3; each test must name its accepted-evidence falsification condition.
+   Next executable Red work per test-strategy.md Phase 3; each test must name its accepted-evidence falsification condition.
 - [b] Build each cartridge using current public APK APIs and approved semantic bindings. deferred:green-role-after-phase-3-red-review
 - [b] Run Advantage Games QC with compact/wide, resize, input, and selected-output checks. deferred:phase-4-cartridge-green
 - [b] Run Reading and Primary host proofs for loading, authoritative completion, persistence, replay, and navigation. deferred:phase-5-qc-evidence
 - [b] Retire only exact proven legacy paths and validate callers, selected outputs, and copied-asset guards. deferred:phase-6-host-proof-and-retirement-disposition
 - [b] Obtain independent review and product-owner acceptance. deferred:product-owner
+
+### Phase 2 Red evidence — binding freeze (2026-08-16)
+
+- Phase base: `8c30dc0e138567f4d461b6cb69c10c66a6bb2eaf`.
+- Role base: `63da03a0e27e0c696df44f2a0285973b269d1cfd`.
+- The Red lease covers the new binding-freeze test, this plan, the Red evidence, and the Red role log.
+- The contract requires one strict dossier at `phase2-binding-dossiers/<title_id>.json` for each of the five titles.
+- Each dossier binds semantic roles, Asset Contract v2 physical descriptors, the exact source-manifest digest, accepted traversal claim locators, and a closed reuse/ingest/block decision.
+- The contract rejects unknown Must-have adoption, stale release identity, missing roles or descriptors, silent fallback, whole-pack delivery, app-local copies, and unsupported owner acceptance.
+- Red evidence: `phase2-binding-freeze-red-evidence-20260816.md`.
+- The five dossier files are intentionally absent. Phase 2 remains `[~]`; no production or manifest file changed.
