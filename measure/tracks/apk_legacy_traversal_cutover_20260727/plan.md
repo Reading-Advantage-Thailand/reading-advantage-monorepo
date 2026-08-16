@@ -50,3 +50,5 @@
 - Review A must route the remaining `SW-INPUT-002` pointer mismatch to Mid Red. No adoption, ingestion, implementation, cutover, or cartridge Green is claimed.
 - Final pointer remediation: Mid Red verified `/28` as `SW-INPUT-002` and retained the dossier mismatch as the only expected Red failure.
 - Final run: the focused contract passed 6/7, with the one failure limited to `spellweavers-run.json` retaining `/29`; manifest 13/13, Python readiness 9/9, TypeScript, ESLint, and diff checks passed.
+- Resume at HEAD `f3b1fd371`: the test still binds `SW-INPUT-002` to `/28`; unrelated working-tree changes remain untouched.
+- Resume verification: binding passed 6/7 with only the unchanged `spellweavers-run.json` `/29` mismatch; manifest 13/13, Python readiness 9/9, TypeScript, ESLint, Prettier, and diff checks passed.
