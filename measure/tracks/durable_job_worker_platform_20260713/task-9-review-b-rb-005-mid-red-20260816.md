@@ -309,3 +309,53 @@ This lease does not change the migration or weaken the fixture assertion.
 Green must add the reviewed rerun-attempt bound constraint and update its own
 migration evidence. Review B receives the exact `rerun-maximum-under-bound`
 failure and the completed fixture-specific Red corrections.
+
+## Complete durable-jobs fixture reconciliation — 2026-08-16
+
+### Method
+
+The current fixture set contains no false expected-constraint labels after the
+prior rerun corrections. Each rejected row reports its expected first check.
+
+The PG16 schema test now collects every fixture failure and deletes each fixture
+row in `finally`. The test still requires code `23514` and the exact expected
+constraint for every fixture. Cleanup prevents accepted rows from causing
+duplicate-key noise in later fixtures.
+
+### Full live result
+
+The safe schema gate passed 2 tests and skipped 1. The disposable PostgreSQL 16
+schema gate ran 3 tests, passed 2, and reported all remaining production Red
+failures together.
+
+1. `pending-at-maximum-without-redelivery` was accepted instead of rejecting
+   through `durable_jobs_redelivery_state_check`. The redelivery check allows
+   `redeliver_current_attempt=false` without rejecting a pending row at its
+   maximum attempt.
+2. `running-attempt-zero` was accepted instead of rejecting through
+   `durable_jobs_state_truth_table_check`. The running state check does not
+   require `attempt >= 1`.
+3. `dead-attempt-zero` was accepted instead of rejecting through
+   `durable_jobs_state_truth_table_check`. The dead state check does not require
+   `attempt >= 1`.
+
+These are candidate-attributable production contract failures. This lease does
+not change the migration or weaken any assertion.
+
+### Requested gates
+
+- Safe role-hardening: 1/1 passed.
+- Disposable PostgreSQL 16 role-hardening: 1/1 passed.
+- Task 9 security: 3/3 passed.
+- Safe Task 9: 1 passed and 18 skipped.
+- Disposable PostgreSQL 16 Task 9: 19/19 passed.
+- Focused DB governance and journal suite: 31 passed and 1 skipped.
+- Journal integrity: 9/9 passed.
+- Direct TypeScript, ESLint, Prettier, and diff checks passed.
+- Fixture and plan Prettier warnings remain pre-existing.
+
+### Green handoff
+
+Green must add reviewed constraints for pending-at-maximum redelivery, running
+attempt lower bounds, and dead attempt lower bounds. Review B receives the full
+three-failure production Red list.

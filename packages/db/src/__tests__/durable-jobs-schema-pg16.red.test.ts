@@ -738,18 +738,26 @@ describe.skipIf(!integrationEnabled)(
             await connectionOne`DELETE FROM "durable_jobs"`;
           }
 
+          const fixtureFailures: string[] = [];
           for (const fixture of durableJobInvalidRowFixtures) {
-            await expect(
-              insertDurableJobRow(
-                connectionOne,
-                durableJobRowFromFixture(fixture),
-              ),
-              `${fixture.id} must fail through ${fixture.expectedConstraint}.`,
-            ).rejects.toMatchObject({
-              code: "23514",
-              constraint_name: fixture.expectedConstraint,
-            });
+            const fixtureRow = durableJobRowFromFixture(fixture);
+            try {
+              await expect(
+                insertDurableJobRow(connectionOne, fixtureRow),
+                `${fixture.id} must fail through ${fixture.expectedConstraint}.`,
+              ).rejects.toMatchObject({
+                code: "23514",
+                constraint_name: fixture.expectedConstraint,
+              });
+            } catch (error) {
+              fixtureFailures.push(
+                `${fixture.id}: ${error instanceof Error ? error.message : String(error)}`,
+              );
+            } finally {
+              await connectionOne`DELETE FROM "durable_jobs" WHERE "id" = ${fixtureRow.id}`;
+            }
           }
+          expect(fixtureFailures).toEqual([]);
         },
       );
     });

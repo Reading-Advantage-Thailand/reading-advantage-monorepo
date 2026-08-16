@@ -126,6 +126,44 @@ known_failures: rerun-columns-with-flag-false expected durable_jobs_rerun_tuple_
 handoff: Green must not change rerun production constraints; Review B receives the corrected fixture and exact next Red failure
 END_MEASURE_AGENT_RESULT
 
+## Complete durable-jobs fixture reconciliation
+
+current_head_start=1cb0018e37d4875206608f05b67c6642a18e9cfd
+scope=aggregate every durable-job fixture result and clean each inserted row
+fixture_labels=all rejected fixtures matched their expected first constraint; no false labels remain
+schema_test_change=collect failures, preserve code 23514 and exact constraint assertions, delete rows in finally
+safe_schema_gate=exit 0; 2 passed; 1 skipped; no PostgreSQL contact
+live_schema_gate=exit 1; 3 total; 2 passed; 3 production failures reported
+failure_1=pending-at-maximum-without-redelivery accepted; expected durable_jobs_redelivery_state_check
+failure_2=running-attempt-zero accepted; expected durable_jobs_state_truth_table_check
+failure_3=dead-attempt-zero accepted; expected durable_jobs_state_truth_table_check
+role_hardening_safe=1/1 passed
+role_hardening_live=1/1 passed; PostgreSQL 16.14
+task9_security=3/3 passed
+task9_safe=1 passed; 18 skipped
+task9_live=19/19 passed; PostgreSQL 16.14
+cleanup=0 scratch databases; 0 Task 9 roles; disposable containers removed
+typescript=passed
+lint=passed
+prettier=passed for schema test and evidence; fixture and plan retain pre-existing warnings
+diff_check=passed
+production_change=not made; migration lease is excluded
+route_to=Green
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+status: complete
+verdict: PASS_WITH_THREE_RECORDED_SUBSTANTIVE_RED_FAILURES
+track: durable_job_worker_platform_20260713
+phase: Phase 2: Red Concurrency and Failure Tests
+task: 9
+finding: DWP-T9-RB-006
+current_head_start: 1cb0018e37d4875206608f05b67c6642a18e9cfd
+files_changed: packages/db/src/__tests__/durable-jobs-schema-pg16.red.test.ts; measure/tracks/durable_job_worker_platform_20260713/plan.md; measure/tracks/durable_job_worker_platform_20260713/task-9-review-b-rb-005-mid-red-20260816.md; measure/tracks/durable_job_worker_platform_20260713/orchestration/phase2-task9-review-b-rb-005-mid-red-role.log
+known_failures: pending-at-maximum-without-redelivery, running-attempt-zero, and dead-attempt-zero were accepted by the current production constraints
+handoff: Green adds the three reviewed invariants; Review B receives the complete aggregate Red list
+END_MEASURE_AGENT_RESULT
+
 ## Final DWP-T9-RB-006 handoff
 
 current_head_start=b4683613dd05c241fc525e886b75e1ff363cb9f3
