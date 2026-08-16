@@ -115,6 +115,7 @@ const FAQAccordion = React.forwardRef<HTMLDivElement, FAQAccordionProps>(
                 id={`faq-answer-${index}`}
                 role="region"
                 aria-labelledby={`faq-question-${index}`}
+                aria-hidden={!isOpen}
                 className={cn(
                   "overflow-hidden transition-all duration-300",
                   isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0",

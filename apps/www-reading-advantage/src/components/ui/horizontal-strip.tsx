@@ -25,10 +25,14 @@ const HorizontalStrip = React.forwardRef<HTMLDivElement, HorizontalStripProps>(
         padding,
         className,
       )}
-      aria-label="Scrollable content"
       {...props}
     >
-      <div className="w-full overflow-x-auto scrollbar-hide snap-x snap-mandatory">
+      <div
+        className="w-full overflow-x-auto scrollbar-hide snap-x snap-mandatory"
+        tabIndex={0}
+        role="region"
+        aria-label="Scrollable content"
+      >
         <div className="flex gap-6 px-4 md:px-8 min-w-max">{children}</div>
       </div>
     </section>

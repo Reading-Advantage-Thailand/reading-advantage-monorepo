@@ -28,9 +28,15 @@ export function ComparisonTable() {
 
     if (!isMark) return cell.value;
 
+    const semanticLabel = {
+      "✔": t("semanticLabels.included"),
+      "✘": t("semanticLabels.unavailable"),
+      "⚬": t("semanticLabels.partial"),
+    }[cell.value];
+
     return (
       <>
-        <span role="img" aria-label={cell.title ?? cell.value} />
+        <span role="img" aria-label={semanticLabel} />
         <span aria-hidden="true">{cell.value}</span>
       </>
     );
