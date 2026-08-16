@@ -137,3 +137,47 @@ test-owned roles, and verified zero scratch databases and roles afterward.
 
 No production Red remains. Review A receives the rerun counts, cleanup proof,
 and the unchanged `followUp.queueName` correction.
+
+## Review A remediation Red — 2026-08-16
+
+The approved test commit is `81df805826846c10306e81126d9f8c6b429bd1a4`.
+The verification start is `e6265b0bed56290f5776353193e554c177a823df`.
+
+The leased test scope contains these two backend files:
+
+- `packages/backend/src/jobs/__tests__/durable-job-architecture.red.test.ts`
+- `packages/backend/src/jobs/__tests__/postgres16-enqueue-retry-replay.red.test.ts`
+
+The architecture contract preserves REFERENTIAL classification for both durable
+job tables and requires one exact ownership-map exception. The enqueue contract
+proves complete active-enqueue snapshots and transition-first locking for
+settle, fail, and reclaim. Production source and configuration remain unchanged.
+
+### Verification
+
+The approved PostgreSQL 16 M3/M4 barrier run passed 26/26 tests. The safe
+enqueue suite passed 1 test and skipped 25 tests without PostgreSQL contact.
+
+The safe architecture contract run failed with the expected Red assertion:
+`ownershipMap.exactExceptions` returned `[]` instead of the required exception.
+The backend test TypeScript check passed. Existing plan, evidence, and role-log
+files passed the Prettier check before this evidence update.
+
+### Required ownership-map exception
+
+The expected single entry is:
+
+```json
+{
+  "schemaVersion": 1,
+  "id": "durable-job-tenant-registry-classification",
+  "ruleId": "DURABLE_JOB_DATABASE_BOUNDARY",
+  "sourcePath": "packages/domain/src/tenant-registry.ts",
+  "owner": "domain-platform",
+  "rationale": "Mandatory TenantDB classification only; no durable-job queries or mutation."
+}
+```
+
+The ownership map remains unchanged in this lease. The exception owner must
+add and review this exact entry before the architecture contract can turn Green.
+Phase 3 remains unaccepted.

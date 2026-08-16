@@ -93,3 +93,31 @@ production_red: none
 cleanup: zero scratch databases and zero durable-job roles after test-owned role cleanup
 review_a_rerun_handoff: Review A receives the final PG16 rerun and confirms no production Red remains
 END_MEASURE_AGENT_RESULT
+
+## Review A remediation Red after approved test commit
+
+approved_test_commit=81df805826846c10306e81126d9f8c6b429bd1a4
+verification_head_start=e6265b0bed56290f5776353193e554c177a823df
+scope=durable-job architecture Red contract and M3/M4 PG16 transition-first lock-barrier contract
+production_change=not made; configuration, ownership map, migrations, adapter, and runtime source excluded
+approved_pg16_barrier=26/26 passed
+safe_enqueue=exit 0; 1 passed; 25 skipped; no PostgreSQL contact
+safe_architecture=exit 1; 1 expected Red failure; ownershipMap.exactExceptions returned []
+typescript=passed; backend test project
+expected_exception_id=durable-job-tenant-registry-classification
+expected_exception_rule=DURABLE_JOB_DATABASE_BOUNDARY
+expected_exception_source=packages/domain/src/tenant-registry.ts
+expected_exception_owner=domain-platform
+expected_exception_rationale=Mandatory TenantDB classification only; no durable-job queries or mutation.
+phase3_status=unaccepted; ownership-map exception review remains required
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+status: complete
+verdict: PASS_WITH_EXPECTED_H1_OWNERSHIP_MAP_RED
+track: durable_job_worker_platform_20260713
+phase: Phase 3: PostgreSQL Adapter Implementation
+approved_test_commit: 81df805826846c10306e81126d9f8c6b429bd1a4
+known_red: exact tenant-registry ownership exception is absent
+green_handoff: Add and review only the exact ownership-map exception, then rerun the architecture contract. Keep Phase 3 unaccepted until review passes.
+END_MEASURE_AGENT_RESULT
