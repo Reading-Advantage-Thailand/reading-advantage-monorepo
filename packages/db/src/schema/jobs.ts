@@ -102,11 +102,11 @@ export const durableJobs = pgTable(
     ),
     check(
       "durable_jobs_job_name_check",
-      sql`"job_name" ~ '^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)+$'`,
+      sql`(char_length("job_name") BETWEEN 3 AND 160 AND char_length(btrim("job_name")) BETWEEN 3 AND 160 AND "job_name" = btrim("job_name") AND "job_name" ~ '^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)+$')`,
     ),
     check(
       "durable_jobs_queue_name_check",
-      sql`"queue_name" ~ '^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$'`,
+      sql`(char_length("queue_name") BETWEEN 1 AND 100 AND char_length(btrim("queue_name")) BETWEEN 1 AND 100 AND "queue_name" = btrim("queue_name") AND "queue_name" ~ '^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$')`,
     ),
     check(
       "durable_jobs_worker_id_check",
@@ -126,7 +126,7 @@ export const durableJobs = pgTable(
     ),
     check(
       "durable_jobs_rerun_tuple_check",
-      sql`(("rerun_queue_name" IS NULL AND "rerun_payload_json" IS NULL AND "rerun_payload_fingerprint" IS NULL AND "rerun_max_attempts" IS NULL AND "rerun_available_at" IS NULL) OR ("rerun_queue_name" IS NOT NULL AND "rerun_payload_json" IS NOT NULL AND "rerun_payload_fingerprint" IS NOT NULL AND "rerun_max_attempts" IS NOT NULL AND "rerun_available_at" IS NOT NULL))`,
+      sql`(("rerun_queue_name" IS NULL AND "rerun_payload_json" IS NULL AND "rerun_payload_fingerprint" IS NULL AND "rerun_max_attempts" IS NULL AND "rerun_available_at" IS NULL) OR ("rerun_queue_name" IS NOT NULL AND "rerun_payload_json" IS NOT NULL AND "rerun_payload_fingerprint" IS NOT NULL AND "rerun_max_attempts" BETWEEN 1 AND 1000 AND "rerun_available_at" IS NOT NULL))`,
     ),
     check(
       "durable_jobs_rerun_state_check",
@@ -134,11 +134,11 @@ export const durableJobs = pgTable(
     ),
     check(
       "durable_jobs_redelivery_state_check",
-      sql`("redeliver_current_attempt" = false OR ("state" = 'pending' AND "attempt" >= 1 AND "attempt" <= "max_attempts"))`,
+      sql`(("redeliver_current_attempt" = true AND "state" = 'pending' AND "attempt" >= 1 AND "attempt" <= "max_attempts") OR ("redeliver_current_attempt" = false AND ("state" <> 'pending' OR "attempt" < "max_attempts")))`,
     ),
     check(
       "durable_jobs_state_truth_table_check",
-      sql`(("state" = 'pending' AND "lease_token_hash" IS NULL AND "lease_owner" IS NULL AND "lease_expires_at" IS NULL AND "result_json" IS NULL AND "completed_at" IS NULL) OR ("state" = 'running' AND "lease_token_hash" IS NOT NULL AND "lease_owner" IS NOT NULL AND "lease_expires_at" IS NOT NULL AND "result_json" IS NULL AND "completed_at" IS NULL AND "redeliver_current_attempt" = false) OR ("state" = 'succeeded' AND "lease_token_hash" IS NULL AND "lease_owner" IS NULL AND "lease_expires_at" IS NULL AND "result_json" IS NOT NULL AND "completed_at" IS NOT NULL AND "last_error_code" IS NULL AND "last_error_summary" IS NULL) OR ("state" IN ('dead', 'legacy-failed') AND "lease_token_hash" IS NULL AND "lease_owner" IS NULL AND "lease_expires_at" IS NULL AND "result_json" IS NULL AND "completed_at" IS NOT NULL AND "last_error_code" IS NOT NULL AND "last_error_summary" IS NOT NULL))`,
+      sql`(("state" = 'pending' AND "lease_token_hash" IS NULL AND "lease_owner" IS NULL AND "lease_expires_at" IS NULL AND "result_json" IS NULL AND "completed_at" IS NULL) OR ("state" = 'running' AND "attempt" >= 1 AND "lease_token_hash" IS NOT NULL AND "lease_owner" IS NOT NULL AND "lease_expires_at" IS NOT NULL AND "result_json" IS NULL AND "completed_at" IS NULL AND "redeliver_current_attempt" = false) OR ("state" = 'succeeded' AND "lease_token_hash" IS NULL AND "lease_owner" IS NULL AND "lease_expires_at" IS NULL AND "result_json" IS NOT NULL AND "completed_at" IS NOT NULL AND "last_error_code" IS NULL AND "last_error_summary" IS NULL) OR ("state" = 'dead' AND "attempt" >= 1 AND "lease_token_hash" IS NULL AND "lease_owner" IS NULL AND "lease_expires_at" IS NULL AND "result_json" IS NULL AND "completed_at" IS NOT NULL AND "last_error_code" IS NOT NULL AND "last_error_summary" IS NOT NULL) OR ("state" = 'legacy-failed' AND "lease_token_hash" IS NULL AND "lease_owner" IS NULL AND "lease_expires_at" IS NULL AND "result_json" IS NULL AND "completed_at" IS NOT NULL AND "last_error_code" IS NOT NULL AND "last_error_summary" IS NOT NULL))`,
     ),
     uniqueIndex("durable_jobs_global_identity_unique")
       .on(table.jobName, table.idempotencyKey)
@@ -210,19 +210,19 @@ export const durableJobAuditEvents = pgTable(
   (table) => [
     check(
       "durable_job_audit_events_actor_check",
-      sql`${table.actor} IS NOT NULL AND char_length(btrim(${table.actor})) BETWEEN 1 AND 200`,
+      sql`${table.actor} IS NOT NULL AND char_length(${table.actor}) BETWEEN 1 AND 200 AND ${table.actor} ~ '[^[:space:]]'`,
     ),
     check(
       "durable_job_audit_events_authorization_decision_check",
-      sql`${table.authorizationDecisionId} IS NOT NULL AND char_length(btrim(${table.authorizationDecisionId})) BETWEEN 1 AND 200`,
+      sql`${table.authorizationDecisionId} IS NOT NULL AND char_length(${table.authorizationDecisionId}) BETWEEN 1 AND 200 AND ${table.authorizationDecisionId} ~ '[^[:space:]]'`,
     ),
     check(
       "durable_job_audit_events_reason_check",
-      sql`${table.reason} IS NOT NULL AND char_length(${table.reason}) BETWEEN 1 AND 500`,
+      sql`${table.reason} IS NOT NULL AND char_length(${table.reason}) BETWEEN 1 AND 500 AND ${table.reason} ~ '[^[:space:]]'`,
     ),
     check(
       "durable_job_audit_events_correlation_check",
-      sql`${table.correlationId} IS NOT NULL AND char_length(btrim(${table.correlationId})) BETWEEN 1 AND 200`,
+      sql`${table.correlationId} IS NOT NULL AND char_length(${table.correlationId}) BETWEEN 1 AND 200 AND ${table.correlationId} ~ '[^[:space:]]'`,
     ),
   ],
 );
@@ -250,19 +250,19 @@ export const reviewJobAdoptionAuditEvents = pgTable(
   (table) => [
     check(
       "review_job_adoption_audit_events_actor_check",
-      sql`${table.actor} IS NOT NULL AND char_length(btrim(${table.actor})) BETWEEN 1 AND 200`,
+      sql`${table.actor} IS NOT NULL AND char_length(${table.actor}) BETWEEN 1 AND 200 AND ${table.actor} ~ '[^[:space:]]'`,
     ),
     check(
       "review_job_adoption_audit_events_authorization_decision_check",
-      sql`${table.authorizationDecisionId} IS NOT NULL AND char_length(btrim(${table.authorizationDecisionId})) BETWEEN 1 AND 200`,
+      sql`${table.authorizationDecisionId} IS NOT NULL AND char_length(${table.authorizationDecisionId}) BETWEEN 1 AND 200 AND ${table.authorizationDecisionId} ~ '[^[:space:]]'`,
     ),
     check(
       "review_job_adoption_audit_events_reason_check",
-      sql`${table.reason} IS NOT NULL AND char_length(${table.reason}) BETWEEN 1 AND 500`,
+      sql`${table.reason} IS NOT NULL AND char_length(${table.reason}) BETWEEN 1 AND 500 AND ${table.reason} ~ '[^[:space:]]'`,
     ),
     check(
       "review_job_adoption_audit_events_correlation_check",
-      sql`${table.correlationId} IS NOT NULL AND char_length(btrim(${table.correlationId})) BETWEEN 1 AND 200`,
+      sql`${table.correlationId} IS NOT NULL AND char_length(${table.correlationId}) BETWEEN 1 AND 200 AND ${table.correlationId} ~ '[^[:space:]]'`,
     ),
     check(
       "review_job_adoption_generation_check",
@@ -294,11 +294,11 @@ export const reviewJobDurableBindings = pgTable(
   (table) => [
     check(
       "review_job_durable_bindings_created_by_check",
-      sql`${table.createdBy} IS NOT NULL AND char_length(btrim(${table.createdBy})) BETWEEN 1 AND 200`,
+      sql`${table.createdBy} IS NOT NULL AND char_length(${table.createdBy}) BETWEEN 1 AND 200 AND ${table.createdBy} ~ '[^[:space:]]'`,
     ),
     check(
       "review_job_durable_bindings_correlation_check",
-      sql`${table.correlationId} IS NOT NULL AND char_length(btrim(${table.correlationId})) BETWEEN 1 AND 200`,
+      sql`${table.correlationId} IS NOT NULL AND char_length(${table.correlationId}) BETWEEN 1 AND 200 AND ${table.correlationId} ~ '[^[:space:]]'`,
     ),
     foreignKey({
       columns: [table.reviewJobId],
@@ -331,7 +331,7 @@ export const reviewJobDurableAdoption = pgTable(
   (table) => [
     check(
       "review_job_durable_adoption_updated_by_check",
-      sql`${table.updatedBy} IS NOT NULL AND char_length(btrim(${table.updatedBy})) BETWEEN 1 AND 200`,
+      sql`${table.updatedBy} IS NOT NULL AND char_length(${table.updatedBy}) BETWEEN 1 AND 200 AND ${table.updatedBy} ~ '[^[:space:]]'`,
     ),
     check(
       "review_job_durable_adoption_control_key_check",
@@ -363,19 +363,19 @@ export const reviewJobMigrationIssues = pgTable(
   (table) => [
     check(
       "review_job_migration_issues_code_check",
-      sql`${table.code} IS NOT NULL AND char_length(btrim(${table.code})) BETWEEN 1 AND 200`,
+      sql`${table.code} IS NOT NULL AND char_length(${table.code}) BETWEEN 1 AND 200 AND ${table.code} ~ '[^[:space:]]'`,
     ),
     check(
       "review_job_migration_issues_field_group_check",
-      sql`${table.fieldGroup} IS NOT NULL AND char_length(btrim(${table.fieldGroup})) BETWEEN 1 AND 200`,
+      sql`${table.fieldGroup} IS NOT NULL AND char_length(${table.fieldGroup}) BETWEEN 1 AND 200 AND ${table.fieldGroup} ~ '[^[:space:]]'`,
     ),
     check(
       "review_job_migration_issues_resolution_code_check",
-      sql`${table.resolutionCode} IS NULL OR char_length(btrim(${table.resolutionCode})) BETWEEN 1 AND 200`,
+      sql`${table.resolutionCode} IS NULL OR (char_length(${table.resolutionCode}) BETWEEN 1 AND 200 AND ${table.resolutionCode} ~ '[^[:space:]]')`,
     ),
     check(
       "review_job_migration_issues_resolver_subject_check",
-      sql`${table.resolverSubject} IS NULL OR char_length(btrim(${table.resolverSubject})) BETWEEN 1 AND 200`,
+      sql`${table.resolverSubject} IS NULL OR (char_length(${table.resolverSubject}) BETWEEN 1 AND 200 AND ${table.resolverSubject} ~ '[^[:space:]]')`,
     ),
     foreignKey({
       columns: [table.reviewJobId],
