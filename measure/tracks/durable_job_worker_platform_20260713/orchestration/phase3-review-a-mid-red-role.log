@@ -62,3 +62,34 @@ known_issue: promoted snapshot queue was correct; the test used its default queu
 production_red: none
 review_a_handoff: Review A receives the corrected queue assertion and complete green schema, concurrency, and enqueue PG16 results
 END_MEASURE_AGENT_RESULT
+
+## Review A rerun after the follow-up queue correction
+
+verification_head_start=27c7f4f23a87a4456ff5d9bd51afb18efc6bf007
+correction_commit=98bdfca33; production source unchanged
+safe_complete_enqueue=exit 0; 1 passed; 23 skipped; no PostgreSQL contact
+live_schema=exit 0; PostgreSQL 16.14; 3/3 passed
+live_concurrency=exit 0; PostgreSQL 16.14; 14/14 passed
+live_enqueue=exit 0; PostgreSQL 16.14; 24/24 passed
+cleanup_before_role_cleanup=scratch databases 0; durable-job roles 2
+cleanup_action=removed only durable_job_audit_owner and durable_job_queue_runtime after verifying zero scratch databases
+cleanup_after_role_cleanup=scratch databases 0; durable-job roles 0
+typecheck=passed; backend and database direct package checks
+lint=passed; backend package
+prettier=passed; exact test and evidence files
+diff_check=passed
+production_red=none; followUp.queueName correction remains the complete fix
+review_a_rerun_handoff=Review A receives final isolated PG16 schema, concurrency, enqueue, and zero-residue results
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+status: complete
+verdict: PASS_WITH_FALSE_FIXTURE_CORRECTION_CONFIRMED
+track: durable_job_worker_platform_20260713
+phase: Phase 3: PostgreSQL Adapter Implementation
+verification_head_start: 27c7f4f23a87a4456ff5d9bd51afb18efc6bf007
+correction_commit: 98bdfca33
+production_red: none
+cleanup: zero scratch databases and zero durable-job roles after test-owned role cleanup
+review_a_rerun_handoff: Review A receives the final PG16 rerun and confirms no production Red remains
+END_MEASURE_AGENT_RESULT

@@ -118,3 +118,22 @@ not the default queue. The smallest correction sets the claim request queue to
 
 No production Red remains for this preserved mismatch. Review A receives the
 false expected-queue correction and the complete green PG16 batch.
+
+## Review A rerun — 2026-08-16
+
+The rerun started at `27c7f4f23` after correction commit `98bdfca33`.
+Production source and migrations remained unchanged.
+
+- Safe complete enqueue: 1 passed and 23 skipped.
+- Live schema: 3/3 passed on PostgreSQL 16.14.
+- Live concurrency: 14/14 passed on PostgreSQL 16.14.
+- Live complete enqueue: 24/24 passed on PostgreSQL 16.14.
+- Backend and database TypeScript checks passed.
+- Backend lint, focused Prettier, and `git diff --check` passed.
+
+The migration tests left two named test roles after their scratch databases
+were removed. The rerun verified zero scratch databases, removed only those
+test-owned roles, and verified zero scratch databases and roles afterward.
+
+No production Red remains. Review A receives the rerun counts, cleanup proof,
+and the unchanged `followUp.queueName` correction.
