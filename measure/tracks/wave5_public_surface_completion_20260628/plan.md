@@ -102,6 +102,9 @@
    - Phase 3, typecheck, build, lint, Prettier, and scoped diff checks pass.
    - Remaining browser Red at `f76f2f523`: `phase-4-browser-regressions-remaining-red-20260816.md`.
    - UX-P4-003 Contact Form remains successor-owned by `www_crm_lead_intake_20260722`.
+   - Remaining browser Green implementation commit: `0e8e3e24c`.
+   - Remaining browser tests pass 11/11. Phase 3 and HeroSection tests pass 14/14.
+   - TypeScript, ESLint, Prettier, direct Next production build, and diff checks pass.
 
 ## Phase 5: Comparison/Pricing Data and Legal Copy
 

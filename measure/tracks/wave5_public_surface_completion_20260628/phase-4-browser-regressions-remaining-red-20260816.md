@@ -58,6 +58,16 @@ Existing Phase 4 assertions pass unchanged.
 - Keep UX-P4-003 successor-owned by `www_crm_lead_intake_20260722`.
 - Rerun the focused Phase 4/browser suites and all listed diagnostics.
 
+## Green Verification
+
+- Green commit: `0e8e3e24c`.
+- Related article tags wrap at narrow widths.
+- The pricing table scrollport has keyboard focus and an accessible name.
+- The pricing hero uses `text-slate-900` and `text-slate-700` for dark text.
+- Focused Phase 4/browser tests pass 11/11.
+- Phase 3 and HeroSection tests pass 14/14.
+- TypeScript, ESLint, Prettier, direct Next production build, and diff checks pass.
+
 MEASURE_AGENT_RESULT
 role: mid-red
 status: complete
