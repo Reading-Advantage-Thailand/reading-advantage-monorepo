@@ -124,10 +124,16 @@
        - The contract covers ContactPage, Footer, ContactForm, and raw contact locale authority fields.
        - Locale labels and descriptions remain outside the duplicate-value authority check.
        - UX-P4-003 Contact Form remains successor-owned by `www_crm_lead_intake_20260722`.
-       - Mid Red resumed at `401b65d3f777dc4e4da6a0127d1a56f523c8d984` to correct a stale email parity assertion.
-       - Rendered contact assertions now use `contactDetails.supportEmail`; locale `email.address` values remain labels and exclude the raw address.
-       - Test correction commit: `c9ea196dc`; evidence and role log: `phase-4-contact-authority-red-20260816.md` and `phase-4-contact-authority-mid-red-role.log`.
-       - Green-owned ContactPage and contact locale edits remain uncommitted and untouched.
+        - Mid Red resumed at `401b65d3f777dc4e4da6a0127d1a56f523c8d984` to correct a stale email parity assertion.
+        - Rendered contact assertions now use `contactDetails.supportEmail`; locale `email.address` values remain labels and exclude the raw address.
+        - Test correction commit: `c9ea196dc`; evidence and role log: `phase-4-contact-authority-red-20260816.md` and `phase-4-contact-authority-mid-red-role.log`.
+        - Approved source Green commit: `e6265b0bed56290f5776353193e554c177a823df`.
+        - Authority tests pass 3/3. All Phase 4/browser tests pass 13/13.
+        - Phase 3 passes 10/10 with the accepted 60-second timeout.
+        - Direct and fresh typechecks, build, targeted lint, Prettier, diff, and graph update pass.
+        - ContactForm remains successor-owned by `www_crm_lead_intake_20260722`.
+        - Green evidence and role log are prepared for primary review.
+        - This evidence does not accept the full Phase 4 or Wave 5 track.
 
 ## Phase 5: Comparison/Pricing Data and Legal Copy
 
