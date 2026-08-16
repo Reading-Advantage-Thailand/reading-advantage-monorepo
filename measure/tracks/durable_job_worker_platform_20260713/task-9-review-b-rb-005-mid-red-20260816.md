@@ -359,3 +359,26 @@ not change the migration or weaken any assertion.
 Green must add reviewed constraints for pending-at-maximum redelivery, running
 attempt lower bounds, and dead attempt lower bounds. Review B receives the full
 three-failure production Red list.
+
+## Resume verification — 2026-08-16
+
+The committed scope contains only the aggregate fixture test and its four
+permitted track evidence paths. No migration or production path changed.
+
+The safe schema command passed 2 tests and skipped 1 without PostgreSQL contact.
+The final disposable PostgreSQL 16 command used Podman host networking on port
+55451 and PostgreSQL 16.14. It ran 3 tests, passed 2, and recorded the complete
+three-failure batch below:
+
+- `pending-at-maximum-without-redelivery` resolved instead of rejecting through
+  `durable_jobs_redelivery_state_check`.
+- `running-attempt-zero` resolved instead of rejecting through
+  `durable_jobs_state_truth_table_check`.
+- `dead-attempt-zero` resolved instead of rejecting through
+  `durable_jobs_state_truth_table_check`.
+
+The harness cleanup query returned `CLEANUP_SCRATCH_DATABASES=0` and
+`CLEANUP_TEST_ROLES=0`. Prettier passed for the test and evidence files. The
+plan retains older indentation warnings outside this entry. `git diff --check`
+passed for the leased files. These three failures remain Green-owned migration
+invariants.

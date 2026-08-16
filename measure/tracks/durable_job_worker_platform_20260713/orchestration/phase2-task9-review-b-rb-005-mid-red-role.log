@@ -319,3 +319,31 @@ files_changed: packages/db/src/__tests__/fixtures/durable-job-transition-counter
 known_failures: rerun-columns-with-flag-false expected durable_jobs_rerun_tuple_check but received durable_jobs_rerun_state_check; no invalid rerun row was accepted
 handoff: Green must not change rerun production constraints; Review B receives the corrected fixture and exact next Red failure
 END_MEASURE_AGENT_RESULT
+
+## Resumed final verification
+
+current_head_start=f76f2f523
+commit_scope=commit f76f2f523 contains only the aggregate schema test and the permitted plan, evidence, and role-log paths; no migration or production path changed
+safe_schema_gate=exit 0; 2 passed; 1 skipped; no PostgreSQL contact
+live_schema_gate=exit 1; PostgreSQL 16.14; port 55451; 3 total; 2 passed; 1 failed with three aggregated fixture failures
+failure_1=pending-at-maximum-without-redelivery accepted; expected durable_jobs_redelivery_state_check
+failure_2=running-attempt-zero accepted; expected durable_jobs_state_truth_table_check
+failure_3=dead-attempt-zero accepted; expected durable_jobs_state_truth_table_check
+cleanup=CLEANUP_SCRATCH_DATABASES=0; CLEANUP_TEST_ROLES=0; disposable container removed
+prettier=passed for test, evidence, and role log; plan retains older indentation warnings outside this entry
+diff_check=passed for the committed and current leased diffs
+production_change=not made; migration and production leases are excluded
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+status: complete
+verdict: PASS_WITH_THREE_RECORDED_SUBSTANTIVE_RED_FAILURES
+track: durable_job_worker_platform_20260713
+phase: Phase 2: Red Concurrency and Failure Tests
+task: 9
+finding: DWP-T9-RB-006
+current_head_start: f76f2f523
+files_changed: measure/tracks/durable_job_worker_platform_20260713/plan.md; measure/tracks/durable_job_worker_platform_20260713/task-9-review-b-rb-005-mid-red-20260816.md; measure/tracks/durable_job_worker_platform_20260713/orchestration/phase2-task9-review-b-rb-005-mid-red-role.log
+known_failures: pending-at-maximum-without-redelivery, running-attempt-zero, and dead-attempt-zero remain accepted by the current production constraints
+green_batch_handoff: Green adds the three reviewed invariants; Review B receives the complete production failure batch
+END_MEASURE_AGENT_RESULT
