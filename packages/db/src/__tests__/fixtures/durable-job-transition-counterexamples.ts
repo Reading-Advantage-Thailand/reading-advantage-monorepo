@@ -251,7 +251,7 @@ const rerunPartialFixtures: readonly DurableJobInvalidRowFixture[] = partialTupl
   finding: "T5-H2",
   state: "running",
   overrides,
-  expectedConstraint: "durable_jobs_rerun_tuple_check",
+  expectedConstraint: "durable_jobs_rerun_state_check",
   rationale: "A coalesced rerun must persist the complete five-field request snapshot.",
 }));
 

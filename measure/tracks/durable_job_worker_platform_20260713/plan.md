@@ -222,6 +222,14 @@ packages/backend/tsconfig.test.json` passed.
        `durable_jobs_rerun_state_check` instead of the expected
        `durable_jobs_rerun_tuple_check`. See
        `task-9-review-b-queue-name-green-evidence-20260816.md` and its role log.
+    - Review B Mid Red rerun-fixture follow-up (2026-08-16; current HEAD start
+      `11a78ebda7cf4136da2fa8e7ede21b122bc4d2e7`): `rerun-partial-01` starts from
+      a valid running row, keeps `rerun_requested=true`, and nulls part of the
+      five-field snapshot. Both rerun checks reject that row, so the fixture now
+      expects the first reported `durable_jobs_rerun_state_check` constraint.
+      The safe schema gate passed 2 tests and skipped 1. The final live schema
+      gate passed 2 tests and exposed the next exact Red fixture,
+      `rerun-columns-with-flag-false`. See the appended Mid Red evidence.
 - [x] Task 10: Add Red worker lifecycle and architecture tests for registration, bounded polling, startup configuration, health, signals, and safe logs. Prove trusted tenant propagation, lifecycle-only port access, and zero direct persistence access. Record named missing-composition failures. (source: `287f89fad4aa49849a307e4973037ee8bd567a6a`)
   - Green evidence (2026-08-14; source commit `287f89fad4aa49849a307e4973037ee8bd567a6a`): independent Green acceptance passed. The focused worker suite passed 17/17, and the full worker suite passed 48/48. Worker typecheck, build, scoped lint, format, diff, graph update, and exact lock-scope checks passed. Shutdown, bounded concurrency, and global and tenant scope propagation passed.
 

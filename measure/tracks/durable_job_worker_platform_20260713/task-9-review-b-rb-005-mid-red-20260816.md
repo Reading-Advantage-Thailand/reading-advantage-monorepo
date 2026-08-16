@@ -183,3 +183,62 @@ The DWP-T9-RB-005 trigger catalog defect is repaired in the test boundary.
 Review B should retain the exact `job-name-over-bound` Red failure as a separate
 schema-contract finding. No migration, sentinel, production source, journal, or
 snapshot changed.
+
+## DWP-T9-RB-006 rerun fixture follow-up — 2026-08-16
+
+### Accepted contract and fixture cause
+
+Review B requires each invalid fixture to fail through its declared database
+constraint. It does not accept a row that fails through a different constraint.
+
+The rerun tuple check accepts either all five snapshot fields as `NULL` or all
+five fields as non-`NULL`. The rerun state check requires the same completeness
+when `rerun_requested=true` and `state='running'`.
+
+`rerun-partial-01` starts with the canonical running row and `rerun_requested=true`.
+It keeps `rerun_queue_name` and nulls the other four snapshot fields. The row
+violates both checks. PostgreSQL reports `durable_jobs_rerun_state_check` first.
+The row is rejected. It is not accepted by the database.
+
+The false setup was the fixture's expected constraint, not its invalid row. The
+smallest correction changed `rerunPartialFixtures.expectedConstraint` to
+`durable_jobs_rerun_state_check`. The rejection code and named-constraint
+assertion remain unchanged.
+
+### Verification
+
+- Safe schema gate: 2 passed and 1 skipped without PostgreSQL contact.
+- Disposable PostgreSQL 16 schema gate: 3 tests ran; 2 passed and 1 failed.
+- `rerun-partial-01` now passed its exact rejection assertion.
+
+The next exact Red failure is:
+
+```text
+AssertionError: rerun-columns-with-flag-false must fail through durable_jobs_rerun_tuple_check.
+Expected constraint_name: durable_jobs_rerun_tuple_check
+Received constraint_name: durable_jobs_rerun_state_check
+```
+
+That fixture keeps the complete rerun snapshot and sets `rerun_requested=false`.
+The tuple check passes. The state check rejects the row because a false request
+requires all rerun snapshot fields to be `NULL`.
+
+This lease records the next fixture without changing its assertion or migration.
+
+### Other requested gates
+
+- Safe role-hardening gate: 1/1 passed.
+- Disposable PostgreSQL 16 role-hardening gate: 1/1 passed.
+- Task 9 post-review security tests: 3/3 passed.
+- Safe Task 9 enqueue/retry/replay gate: 1 passed and 18 skipped.
+- Disposable PostgreSQL 16 Task 9 gate: 19/19 passed.
+- Cleanup returned zero scratch databases and zero Task 9 roles.
+- Direct TypeScript, focused ESLint, and scoped diff checks passed.
+- Prettier passed for the schema test and evidence file. The fixture retains a
+  pre-existing formatting warning.
+- The full plan Prettier check retains a pre-existing Markdown indentation warning.
+
+### Green handoff
+
+Green must not change the rerun production constraints for DWP-T9-RB-006.
+Review B receives the corrected partial fixture and the exact next Red failure.
