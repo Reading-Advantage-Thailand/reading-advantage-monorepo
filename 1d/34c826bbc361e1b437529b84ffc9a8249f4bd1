@@ -1,0 +1,1 @@
+Phase 4 Mid Red refinement for wave5_public_surface_completion_20260628. Added a runtime glob contract for src/config/contact.ts with supportEmail, phoneNumber, tiktokUrl, and lineQrSrc. The focused Red suite still fails 4 tests with 19 expected missing-contract assertions. TypeScript, lint, and Prettier pass.
