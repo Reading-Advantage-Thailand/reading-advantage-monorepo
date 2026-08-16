@@ -61,7 +61,7 @@ phase: Phase 2 — company tenant mapping and durable projection
 phase_base_sha: fd581f3dcd15e7b7b632875862aaecb596719621
 role_base_sha: ee27a0213c03d8a8396cb84805ef64377e9b2f09
 implementation_commit: 62bbb86a75f545d068bf64b5453753a070debee2
-evidence_commit: pending
+evidence_commit: d1ff774c2
 red_tests_preserved: true
 reviews_handoff: Review A and security review required
 known_limitations: committed DB Red registry path is outside the packages directory; Phase 0 shared-root closeout remains open
