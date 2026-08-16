@@ -205,6 +205,13 @@ packages/backend/tsconfig.test.json` passed.
       passed 1/1, and the live Task 9 suite passed 19/19. Final live schema passed
       2 tests and exposed the exact `job-name-over-bound` fixture acceptance.
       See the appended Review B Mid Red evidence and role log.
+    - Review B Green job-name remediation (2026-08-16; implementation commit
+      `a26c3aedf`; role base `a4aa125ab`): `durable_jobs_job_name_check` now enforces
+      raw and trimmed lengths from 3 through 160, trimmed-value equality, and the
+      existing lowercase namespaced grammar. The job-name-over-bound fixture now
+      rejects through its named constraint. Safe schema passed 2 tests and skipped 1.
+      Role hardening passed 1/1. Task 9 passed 19/19. Final live schema passed 2
+      tests and exposed the next committed Red fixture, `queue-name-over-bound`.
 - [x] Task 10: Add Red worker lifecycle and architecture tests for registration, bounded polling, startup configuration, health, signals, and safe logs. Prove trusted tenant propagation, lifecycle-only port access, and zero direct persistence access. Record named missing-composition failures. (source: `287f89fad4aa49849a307e4973037ee8bd567a6a`)
   - Green evidence (2026-08-14; source commit `287f89fad4aa49849a307e4973037ee8bd567a6a`): independent Green acceptance passed. The focused worker suite passed 17/17, and the full worker suite passed 48/48. Worker typecheck, build, scoped lint, format, diff, graph update, and exact lock-scope checks passed. Shutdown, bounded concurrency, and global and tenant scope propagation passed.
 

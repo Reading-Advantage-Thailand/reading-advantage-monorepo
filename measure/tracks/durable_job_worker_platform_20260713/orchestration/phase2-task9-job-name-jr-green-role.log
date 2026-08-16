@@ -1,0 +1,58 @@
+Measure Jr Green role log — Task 9 job-name remediation
+Track: durable_job_worker_platform_20260713
+Phase: Phase 2: Red Concurrency and Failure Tests
+Task: 9
+Role: measure-jr-green
+Date: 2026-08-16
+phase_base_sha: 33d44fc81b84559c2ab7a48acfaf86554bf017a5
+role_base_sha: a4aa125ab
+red_source_commit: 07791887d
+implementation_commit: a26c3aedf
+
+## Scope
+
+The migration now enforces raw and trimmed `job_name` lengths from 3 through 160.
+It requires trimmed-value equality and preserves the existing name grammar.
+No Red test, sentinel, journal, snapshot, registry, or other lane changed.
+
+## Gates
+
+safe_schema_gate=passed:2 skipped:1
+safe_focused_db_gate=passed:31 skipped:1
+safe_task9_gate=passed:1 skipped:18
+live_schema_gate=passed:2 failed:1; next Red fixture queue-name-over-bound
+live_role_gate=passed:1/1
+live_task9_gate=passed:19/19
+migration_governance=passed:112 skipped:4
+journal_integrity=passed:9/9
+required_migration_doctor=passed
+safe_doctor=exit:2 fail-closed without database URL
+typescript=db/backend-production/backend-test passed
+lint=db passed with 0 errors and 9 existing warnings
+prettier=passed for changed TypeScript and evidence files; plan warning retained
+diff_check=passed for leased paths
+measure_doctor=exit:1 unrelated deprecated markers
+
+## Cleanup
+
+cleanup_scratch_databases=0
+cleanup_durable_job_roles=0
+cleanup_container=removed
+
+## Review B rerun handoff
+
+The `job-name-over-bound` failure is repaired. Review B should rerun from
+`a26c3aedf` and retain `queue-name-over-bound` as the next Red contract result.
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+status: complete_with_recorded_next_red
+track: durable_job_worker_platform_20260713
+phase: Phase 2: Red Concurrency and Failure Tests
+task: 9
+phase_base_sha: 33d44fc81b84559c2ab7a48acfaf86554bf017a5
+role_base_sha: a4aa125ab
+implementation_commit: a26c3aedf
+evidence_files: task-9-review-b-job-name-green-evidence-20260816.md; orchestration/phase2-task9-job-name-jr-green-role.log
+handoff: Review B rerun verifies the implementation and records the next Red fixture
+END_MEASURE_AGENT_RESULT
