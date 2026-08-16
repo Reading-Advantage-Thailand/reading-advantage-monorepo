@@ -45,3 +45,27 @@ files_changed: packages/game-cartridges/src/legacy-traversal-binding-freeze.test
 handoff: return to the same Green session for evidence finalization after explicit disposition of the frozen candidate-locator mismatch
 authority: blocked candidates only; no owner acceptance, adoption, ingestion, implementation, or cartridge Green
 END_MEASURE_AGENT_RESULT
+
+## Follow-up Red remediation — accepted-evidence pointers
+
+The accepted archive ledgers verify these further pointers:
+
+- Spellweaver's Run: `/37` resolves `SW-CART-001`.
+- Shadow Gate Dungeon: `/claims/14` resolves `SGD-RESULT-001`.
+- Griffin Rider's Escape: `/claims/8` resolves `GRF-INPUT-001`.
+
+The test updates both Griffin references to `GRF-INPUT-001`. The accepted archives and all five candidate dossiers remain unchanged.
+
+The follow-up focused contract collected 7 tests, passed 4, and failed only on the three superseded dossier pointers. The manifest suite passed 13/13. Python readiness passed 9/9. TypeScript, ESLint, and diff checks passed. Prettier passed for the test and evidence note; the plan retains its pre-existing indentation warning.
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+status: complete-with-green-handoff-blocked
+track: apk_legacy_traversal_cutover_20260727
+phase: Phase 2 accepted-evidence pointer remediation
+counts: 3 archive pointer groups corrected; 7 focused tests; 4 passed; 3 superseded dossier-pointer failures; 13 manifest tests; 9 Python readiness tests
+failures: only unchanged candidate dossier pointer values remain superseded
+files_changed: packages/game-cartridges/src/legacy-traversal-binding-freeze.test.ts; measure/tracks/apk_legacy_traversal_cutover_20260727/plan.md; measure/tracks/apk_legacy_traversal_cutover_20260727/phase2-binding-freeze-red-remediation-evidence-20260816.md
+handoff: same Green session for final evidence disposition
+authority: blocked candidates only; no owner acceptance, adoption, ingestion, implementation, or cartridge Green
+END_MEASURE_AGENT_RESULT

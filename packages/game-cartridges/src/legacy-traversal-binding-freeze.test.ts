@@ -108,7 +108,7 @@ const EXPECTED_TITLES: readonly TitleSpec[] = [
       {
         role_id: "player-lane",
         semantic: claim(SPELLWEAVER_EVIDENCE, "/13", "SW-MOVE-001"),
-        physical: claim(SPELLWEAVER_EVIDENCE, "/38", "SW-CART-001"),
+        physical: claim(SPELLWEAVER_EVIDENCE, "/37", "SW-CART-001"),
         decision: claim(SPELLWEAVER_EVIDENCE, "/29", "SW-INPUT-002"),
       },
       {
@@ -148,7 +148,7 @@ const EXPECTED_TITLES: readonly TitleSpec[] = [
         role_id: "ordered-crystal-learning",
         semantic: claim(SHADOW_EVIDENCE, "/claims/10", "SGD-PROG-001"),
         physical: claim(SHADOW_EVIDENCE, "/claims/11", "SGD-TRANS-001"),
-        decision: claim(SHADOW_EVIDENCE, "/claims/13", "SGD-RESULT-001"),
+        decision: claim(SHADOW_EVIDENCE, "/claims/14", "SGD-RESULT-001"),
       },
     ],
   },
@@ -190,7 +190,7 @@ const EXPECTED_TITLES: readonly TitleSpec[] = [
         role_id: "player-lane",
         semantic: claim(GRIFFIN_EVIDENCE, "/claims/3", "GRF-MOVE-001"),
         physical: claim(GRIFFIN_EVIDENCE, "/claims/10", "GRF-CART-001"),
-        decision: claim(GRIFFIN_EVIDENCE, "/claims/7", "GRF-INPUT-001"),
+        decision: claim(GRIFFIN_EVIDENCE, "/claims/8", "GRF-INPUT-001"),
       },
       {
         role_id: "target-gate",
@@ -201,7 +201,7 @@ const EXPECTED_TITLES: readonly TitleSpec[] = [
       {
         role_id: "learning-feedback",
         semantic: claim(GRIFFIN_EVIDENCE, "/claims/2", "GRF-START-001"),
-        physical: claim(GRIFFIN_EVIDENCE, "/claims/7", "GRF-INPUT-001"),
+        physical: claim(GRIFFIN_EVIDENCE, "/claims/8", "GRF-INPUT-001"),
         decision: claim(GRIFFIN_EVIDENCE, "/claims/6", "GRF-TRANS-001"),
       },
     ],

@@ -46,3 +46,6 @@
 - Manifest validation passed 13/13. Python readiness passed 9/9 with `python3`; `python` is unavailable in this environment. TypeScript, ESLint, and the scoped diff check passed.
 - Prettier still reports the pre-existing plan indentation mismatch. No unrelated plan text was reformatted.
 - Red-remediation evidence: `phase2-binding-freeze-red-remediation-evidence-20260816.md`.
+- Follow-up Red remediation: `/37` resolves `SW-CART-001`, `/claims/14` resolves `SGD-RESULT-001`, and `/claims/8` resolves `GRF-INPUT-001`.
+- The test corrects both Griffin references to `GRF-INPUT-001`. Accepted archive evidence and all five candidate dossiers remain unchanged.
+- The follow-up focused run retained only the three frozen candidate-dossier pointer failures. Phase 2 remains `[~]` until the same Green session finalizes that disposition.
