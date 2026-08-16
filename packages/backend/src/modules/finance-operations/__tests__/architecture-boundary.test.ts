@@ -235,6 +235,38 @@ function collectBoundaryViolations(
     }
   };
 
+  const inspectExternalExportBindings = (node: ts.ExportDeclaration): void => {
+    const moduleSpecifier = node.moduleSpecifier;
+    if (moduleSpecifier === undefined || !ts.isStringLiteral(moduleSpecifier)) {
+      return;
+    }
+    const allowedBindings = allowedFoundationExternalImportBindings.get(
+      moduleSpecifier.text,
+    );
+    if (allowedBindings === undefined) return;
+
+    if (node.exportClause === undefined) {
+      violations.push(
+        `forbidden export-all from approved external module: ${moduleSpecifier.text}`,
+      );
+      return;
+    }
+    if (!ts.isNamedExports(node.exportClause)) {
+      violations.push(
+        `forbidden namespace export from approved external module: ${moduleSpecifier.text}`,
+      );
+      return;
+    }
+    for (const element of node.exportClause.elements) {
+      const importedName = element.propertyName?.text ?? element.name.text;
+      if (!allowedBindings.has(importedName)) {
+        violations.push(
+          `unapproved external export binding: ${importedName} as ${element.name.text}`,
+        );
+      }
+    }
+  };
+
   const visit = (node: ts.Node): void => {
     if (ts.isImportDeclaration(node)) {
       inspectModuleSpecifier(node.moduleSpecifier);
@@ -243,6 +275,7 @@ function collectBoundaryViolations(
 
     if (ts.isExportDeclaration(node) && node.moduleSpecifier !== undefined) {
       inspectModuleSpecifier(node.moduleSpecifier);
+      inspectExternalExportBindings(node);
     }
 
     if (
@@ -255,6 +288,9 @@ function collectBoundaryViolations(
 
     if (ts.isCallExpression(node)) {
       if (node.expression.kind === ts.SyntaxKind.ImportKeyword) {
+        violations.push(
+          "forbidden dynamic import in the Finance Operations boundary",
+        );
         const moduleSpecifier = node.arguments[0];
         if (moduleSpecifier === undefined) {
           violations.push("dynamic import must declare a module specifier");
@@ -829,6 +865,65 @@ describe("Finance Operations policy-neutral architecture boundary", () => {
           counterexample.source,
         ),
         counterexample.source,
+      ).toContain(counterexample.marker);
+    }
+  });
+
+  it("rejects dynamic imports and external export allowlist bypasses", () => {
+    const counterexamples = [
+      {
+        name: "dynamic node utility import",
+        source: 'import("node:util");',
+        marker: "forbidden dynamic import in the Finance Operations boundary",
+      },
+      {
+        name: "dynamic approved package import",
+        source: 'import("zod");',
+        marker: "forbidden dynamic import in the Finance Operations boundary",
+      },
+      {
+        name: "nonliteral dynamic approved import",
+        source: [
+          'const approvedModule = "node:util";',
+          "import(approvedModule);",
+        ].join("\n"),
+        marker: "forbidden dynamic import in the Finance Operations boundary",
+      },
+      {
+        name: "unapproved node utility export",
+        source: 'export { promisify } from "node:util";',
+        marker: "unapproved external export binding: promisify as promisify",
+      },
+      {
+        name: "unapproved approved-package export",
+        source: 'export { promisify } from "zod";',
+        marker: "unapproved external export binding: promisify as promisify",
+      },
+      {
+        name: "node utility export-all",
+        source: 'export * from "node:util";',
+        marker: "forbidden export-all from approved external module: node:util",
+      },
+      {
+        name: "approved-package export-all",
+        source: 'export * from "zod";',
+        marker: "forbidden export-all from approved external module: zod",
+      },
+      {
+        name: "node utility namespace export",
+        source: 'export * as util from "node:util";',
+        marker:
+          "forbidden namespace export from approved external module: node:util",
+      },
+    ];
+
+    for (const counterexample of counterexamples) {
+      expect(
+        collectBoundaryViolations(
+          resolve(moduleDirectory, "thb-valuation.ts"),
+          counterexample.source,
+        ),
+        counterexample.name,
       ).toContain(counterexample.marker);
     }
   });
