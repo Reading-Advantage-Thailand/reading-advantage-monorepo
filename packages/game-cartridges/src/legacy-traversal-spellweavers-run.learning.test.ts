@@ -9,11 +9,16 @@ import {
   finalizeResult,
   type GameInput,
   type RuntimeCartridge,
-  type RuntimeEdition,
 } from "@reading-advantage/advantage-play-kit";
 import { describe, expect, it } from "vitest";
 
 import { cartridgeLoaders, getCartridgeCatalogEntry } from "./catalog.js";
+import {
+  assertCartridgeBoundary,
+  assertNonEmptyCartridgeScene,
+  createPhase3InputController,
+  PHASE3_RUNTIME_EDITION,
+} from "./legacy-traversal-phase3-test-helpers.js";
 
 type Evidence = {
   readonly artifact: string;
@@ -66,40 +71,21 @@ async function requireCartridge(
   );
   const cartridge = await (loader as () => Promise<RuntimeCartridge>)();
   expect(cartridge, missing).toBeDefined();
-  expect(cartridge.manifest.id, `${missing}; manifest id is absent`).toBe(
+  assertCartridgeBoundary(
+    cartridge,
     fixture.title_id,
-  );
-  expect(cartridge.manifest.inputMode, `${missing}; input mode is absent`).toBe(
     fixture.input_mode,
+    missing,
   );
   const config = cartridge.createGameConfig({
     input: fixture.input as GameInput,
-    edition: {} as RuntimeEdition,
+    edition: PHASE3_RUNTIME_EDITION,
     complete: () => undefined,
     diagnostic: () => undefined,
-    inputController: {
-      snapshot: () => ({
-        keys: [],
-        pointer: {
-          down: false,
-          cancelled: false,
-          id: null,
-          kind: null,
-          startX: 0,
-          startY: 0,
-          x: 0,
-          y: 0,
-        },
-        destroyed: false,
-      }),
-      cancelActiveGesture: () => undefined,
-      destroy: () => undefined,
-    },
+    inputController: createPhase3InputController(),
+    seed: 0,
   });
-  expect(
-    config,
-    `${missing}; createGameConfig returned a no-op config`,
-  ).toEqual(expect.objectContaining({ scene: expect.anything() }));
+  assertNonEmptyCartridgeScene(config, missing);
   return cartridge;
 }
 
@@ -109,11 +95,25 @@ describe("legacy traversal Phase 3 Spellweaver's Run learning contract", () => {
     const progression = createLanguageTargetProgression(
       fixture.learning.targets,
     );
+    expect(fixture.learning.targets.length).toBeGreaterThan(0);
+    expect(new Set(fixture.learning.targets).size).toBe(
+      fixture.learning.targets.length,
+    );
+    expect(fixture.learning.targets).not.toContain(
+      fixture.learning.wrong_candidate,
+    );
     expect(progression.match(fixture.learning.wrong_candidate)).toEqual({
       matched: false,
       progressed: false,
     });
     expect(progression.currentIndex).toBe(0);
+    if (fixture.learning.targets.length > 1) {
+      expect(progression.match(fixture.learning.targets[1])).toEqual({
+        matched: false,
+        progressed: false,
+      });
+      expect(progression.currentIndex).toBe(0);
+    }
     for (const target of fixture.learning.targets) {
       expect(progression.match(target)).toEqual({
         matched: true,

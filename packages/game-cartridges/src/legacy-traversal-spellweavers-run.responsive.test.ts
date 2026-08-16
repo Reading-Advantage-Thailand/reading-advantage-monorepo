@@ -9,11 +9,17 @@ import {
   resolveResponsiveComposition,
   type GameInput,
   type RuntimeCartridge,
-  type RuntimeEdition,
+  type SupportedResponsiveComposition,
 } from "@reading-advantage/advantage-play-kit";
 import { describe, expect, it } from "vitest";
 
 import { cartridgeLoaders, getCartridgeCatalogEntry } from "./catalog.js";
+import {
+  assertCartridgeBoundary,
+  assertNonEmptyCartridgeScene,
+  createPhase3InputController,
+  PHASE3_RUNTIME_EDITION,
+} from "./legacy-traversal-phase3-test-helpers.js";
 
 type Evidence = {
   readonly artifact: string;
@@ -53,6 +59,7 @@ async function requireCartridge(
   fixture: TitleFixture,
   evidence: Evidence,
   behavior: string,
+  composition?: SupportedResponsiveComposition,
 ): Promise<RuntimeCartridge> {
   const missing = `MISSING_CARTRIDGE_BEHAVIOR: ${fixture.title_id}; evidence=${evidence.claim_id}; ${behavior}`;
   const entry = getCartridgeCatalogEntry(fixture.title_id);
@@ -67,40 +74,22 @@ async function requireCartridge(
   );
   const cartridge = await (loader as () => Promise<RuntimeCartridge>)();
   expect(cartridge, missing).toBeDefined();
-  expect(cartridge.manifest.id, `${missing}; manifest id is absent`).toBe(
+  assertCartridgeBoundary(
+    cartridge,
     fixture.title_id,
-  );
-  expect(cartridge.manifest.inputMode, `${missing}; input mode is absent`).toBe(
     fixture.input_mode,
+    missing,
   );
   const config = cartridge.createGameConfig({
     input: fixture.input as GameInput,
-    edition: {} as RuntimeEdition,
+    edition: PHASE3_RUNTIME_EDITION,
     complete: () => undefined,
     diagnostic: () => undefined,
-    inputController: {
-      snapshot: () => ({
-        keys: [],
-        pointer: {
-          down: false,
-          cancelled: false,
-          id: null,
-          kind: null,
-          startX: 0,
-          startY: 0,
-          x: 0,
-          y: 0,
-        },
-        destroyed: false,
-      }),
-      cancelActiveGesture: () => undefined,
-      destroy: () => undefined,
-    },
+    inputController: createPhase3InputController(),
+    ...(composition ? { composition } : {}),
+    seed: 0,
   });
-  expect(
-    config,
-    `${missing}; createGameConfig returned a no-op config`,
-  ).toEqual(expect.objectContaining({ scene: expect.anything() }));
+  assertNonEmptyCartridgeScene(config, missing);
   return cartridge;
 }
 
@@ -144,8 +133,19 @@ describe("legacy traversal Phase 3 Spellweaver's Run responsive composition", ()
       pause: () => calls.push("pause"),
       resume: () => calls.push("resume"),
       cancelGesture: () => calls.push("cancel"),
-      recompose: () => calls.push("recompose"),
-      diagnostic: () => calls.push("diagnostic"),
+      recompose: (next) => {
+        expect(next).toBe(wide);
+        expect(next.safeRect).not.toEqual(compact.safeRect);
+        calls.push("recompose");
+      },
+      diagnostic: (diagnostic) => {
+        expect(diagnostic.code).toBe("RESPONSIVE_TRANSITION");
+        expect(diagnostic.details).toMatchObject({
+          oldProfile: "compact",
+          newProfile: "wide",
+        });
+        calls.push("diagnostic");
+      },
     });
     coordinator.transition(compact, wide, "resize");
     expect(calls).toEqual([
@@ -161,6 +161,7 @@ describe("legacy traversal Phase 3 Spellweaver's Run responsive composition", ()
       fixture,
       fixture.responsive.evidence,
       `the cartridge must expose ${fixture.responsive.strategy} compact and wide composition and preserve its traversal state`,
+      compact,
     );
   });
 });

@@ -9,11 +9,16 @@ import {
   type GameInput,
   type InputActionId,
   type RuntimeCartridge,
-  type RuntimeEdition,
 } from "@reading-advantage/advantage-play-kit";
 import { describe, expect, it } from "vitest";
 
 import { cartridgeLoaders, getCartridgeCatalogEntry } from "./catalog.js";
+import {
+  assertCartridgeBoundary,
+  assertNonEmptyCartridgeScene,
+  createPhase3InputController,
+  PHASE3_RUNTIME_EDITION,
+} from "./legacy-traversal-phase3-test-helpers.js";
 
 type Evidence = {
   readonly artifact: string;
@@ -71,40 +76,21 @@ async function requireCartridge(
   );
   const cartridge = await (loader as () => Promise<RuntimeCartridge>)();
   expect(cartridge, missing).toBeDefined();
-  expect(cartridge.manifest.id, `${missing}; manifest id is absent`).toBe(
+  assertCartridgeBoundary(
+    cartridge,
     fixture.title_id,
-  );
-  expect(cartridge.manifest.inputMode, `${missing}; input mode is absent`).toBe(
     fixture.input_mode,
+    missing,
   );
   const config = cartridge.createGameConfig({
     input: fixture.input as GameInput,
-    edition: {} as RuntimeEdition,
+    edition: PHASE3_RUNTIME_EDITION,
     complete: () => undefined,
     diagnostic: () => undefined,
-    inputController: {
-      snapshot: () => ({
-        keys: [],
-        pointer: {
-          down: false,
-          cancelled: false,
-          id: null,
-          kind: null,
-          startX: 0,
-          startY: 0,
-          x: 0,
-          y: 0,
-        },
-        destroyed: false,
-      }),
-      cancelActiveGesture: () => undefined,
-      destroy: () => undefined,
-    },
+    inputController: createPhase3InputController(),
+    seed: 0,
   });
-  expect(
-    config,
-    `${missing}; createGameConfig returned a no-op config`,
-  ).toEqual(expect.objectContaining({ scene: expect.anything() }));
+  assertNonEmptyCartridgeScene(config, missing);
   return cartridge;
 }
 
@@ -120,6 +106,10 @@ describe("legacy traversal Phase 3 Labyrinth of the Goblin King mechanics", () =
     expect(new Set(fixture.mechanics.steps).size).toBe(
       fixture.mechanics.steps.length,
     );
+    expect(fixture.mechanics.capabilities.length).toBeGreaterThan(0);
+    expect(new Set(fixture.mechanics.capabilities).size).toBe(
+      fixture.mechanics.capabilities.length,
+    );
 
     const keyboard = Object.fromEntries(
       Object.entries(fixture.mechanics.keyboard).map(([code, action]) => [
@@ -127,13 +117,17 @@ describe("legacy traversal Phase 3 Labyrinth of the Goblin King mechanics", () =
         action as InputActionId,
       ]),
     ) as Record<string, InputActionId>;
+    expect(Object.keys(keyboard).length).toBeGreaterThan(0);
     const normalize = createInputActionNormalizer({ keyboard });
     for (const [code, action] of Object.entries(keyboard)) {
       expect(normalize({ modality: "keyboard", code })).toEqual([
         { action, edge: "press" },
       ]);
     }
+    expect(normalize({ modality: "keyboard", code: "UnboundKey" })).toEqual([]);
 
+    expect(fixture.mechanics.spawn_interval_ms).toBeGreaterThan(0);
+    expect(fixture.mechanics.frame_delta_ms).toBeGreaterThan(0);
     const spawner = createDeterministicSpawner({
       intervalMs: fixture.mechanics.spawn_interval_ms,
       maxPerTick: 1,
@@ -153,7 +147,10 @@ describe("legacy traversal Phase 3 Labyrinth of the Goblin King mechanics", () =
       `the cartridge must implement ${fixture.mechanics.loop}; input evidence=${fixture.mechanics.input_evidence.claim_id}`,
     );
     expect(cartridge.manifest.capabilities).toEqual(
-      expect.arrayContaining([...fixture.mechanics.capabilities]),
+      fixture.mechanics.capabilities,
+    );
+    expect(new Set(cartridge.manifest.capabilities).size).toBe(
+      cartridge.manifest.capabilities.length,
     );
   });
 });
