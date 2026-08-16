@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
 import { basename, resolve } from "node:path";
+import { setTimeout as delay } from "node:timers/promises";
 
 import postgres from "postgres";
 import { afterEach, describe, expect, it, vi } from "vitest";
@@ -61,6 +62,10 @@ const TENANT_TWO_SCOPE = {
 } as const;
 const JSONB_POISON_TIME = "2026-08-15T10:00:01.000Z";
 const REPLAY_AUTHORIZATION_MAX_AGE_MS = 5 * 60 * 1_000;
+const TEST_ROW_LOCK_BARRIER_KEY = 2_026_081_601;
+const TEST_ROW_LOCK_BARRIER_FUNCTION = "task9_test_row_lock_barrier";
+const TEST_ROW_LOCK_BARRIER_TRIGGER = "task9_test_row_lock_barrier_trigger";
+const TEST_ROW_LOCK_BARRIER_TIMEOUT_MS = 2_000;
 const MISSING_ADAPTER_MESSAGE =
   "Intentional Red: PostgreSQL durable-job adapter behavior is missing under the approved adapter root.";
 
@@ -71,6 +76,10 @@ function hashLeaseToken(token: string): string {
 type TestOwnedRoleName = (typeof TEST_OWNED_ROLE_NAMES)[number];
 type EnqueueResult = Awaited<ReturnType<DurableJobQueuePort["enqueue"]>>;
 type ClaimResult = Awaited<ReturnType<DurableJobQueuePort["claim"]>>;
+type TransitionResult =
+  | Awaited<ReturnType<DurableJobQueuePort["settle"]>>
+  | Awaited<ReturnType<DurableJobQueuePort["fail"]>>
+  | Awaited<ReturnType<DurableJobQueuePort["reclaimExpired"]>>;
 type ClaimedJob = Extract<
   ClaimResult,
   { readonly outcome: "claimed" }
@@ -580,6 +589,173 @@ async function readJobSnapshot(
   return row;
 }
 
+function postgresErrorCode(error: unknown): string | undefined {
+  if (typeof error !== "object" || error === null || !("code" in error)) {
+    return undefined;
+  }
+  const code = (error as { readonly code?: unknown }).code;
+  return typeof code === "string" ? code : undefined;
+}
+
+async function connectionBackendPid(sql: DurableJobTestSql): Promise<number> {
+  const [row] = await sql<{ readonly backendPid: number }[]>`
+    SELECT pg_backend_pid() AS "backendPid"
+  `;
+  expect(row?.backendPid).toBeTypeOf("number");
+  if (row === undefined) {
+    throw new Error(
+      "The durable-job barrier could not identify a backend PID.",
+    );
+  }
+  return row.backendPid;
+}
+
+async function waitForRowLock(
+  barrierSql: DurableJobTestSql,
+  jobId: string,
+): Promise<void> {
+  const deadline = Date.now() + TEST_ROW_LOCK_BARRIER_TIMEOUT_MS;
+  while (Date.now() < deadline) {
+    try {
+      await barrierSql<readonly { readonly id: string }[]>`
+        SELECT "id"
+        FROM "durable_jobs"
+        WHERE "id" = ${jobId}
+        FOR UPDATE NOWAIT
+      `;
+    } catch (error) {
+      if (postgresErrorCode(error) === "55P03") {
+        return;
+      }
+      throw error;
+    }
+    await delay(10);
+  }
+  throw new Error(
+    "The durable-job barrier did not observe the first operation holding the row lock.",
+  );
+}
+
+async function waitForBlockedBackend(
+  barrierSql: DurableJobTestSql,
+  backendPid: number,
+): Promise<void> {
+  const deadline = Date.now() + TEST_ROW_LOCK_BARRIER_TIMEOUT_MS;
+  while (Date.now() < deadline) {
+    const [row] = await barrierSql<
+      readonly {
+        readonly state: string;
+        readonly waitEventType: string | null;
+        readonly query: string;
+      }[]
+    >`
+      SELECT
+        "state",
+        "wait_event_type" AS "waitEventType",
+        "query"
+      FROM pg_stat_activity
+      WHERE "pid" = ${backendPid}
+    `;
+    if (
+      row?.state === "active" &&
+      row.waitEventType === "Lock" &&
+      row.query.includes("durable_jobs")
+    ) {
+      return;
+    }
+    await delay(10);
+  }
+  throw new Error(
+    "The durable-job barrier did not observe the second operation waiting on the row lock.",
+  );
+}
+
+async function installRowLockBarrier(
+  barrierSql: DurableJobTestSql,
+): Promise<void> {
+  await barrierSql.unsafe(`
+    CREATE OR REPLACE FUNCTION "${TEST_ROW_LOCK_BARRIER_FUNCTION}"()
+    RETURNS trigger
+    LANGUAGE plpgsql
+    AS $task9_barrier$
+    BEGIN
+      IF OLD."state" = 'running' AND (
+        NEW."state" <> 'running'
+        OR (NEW."state" = 'running' AND NEW."rerun_requested")
+      ) THEN
+        PERFORM pg_advisory_xact_lock(${TEST_ROW_LOCK_BARRIER_KEY});
+      END IF;
+      RETURN NEW;
+    END;
+    $task9_barrier$;
+
+    DROP TRIGGER IF EXISTS "${TEST_ROW_LOCK_BARRIER_TRIGGER}"
+      ON "durable_jobs";
+    CREATE TRIGGER "${TEST_ROW_LOCK_BARRIER_TRIGGER}"
+      BEFORE UPDATE ON "durable_jobs"
+      FOR EACH ROW
+      EXECUTE FUNCTION "${TEST_ROW_LOCK_BARRIER_FUNCTION}"();
+  `);
+}
+
+async function removeRowLockBarrier(
+  barrierSql: DurableJobTestSql,
+): Promise<void> {
+  await barrierSql.unsafe(`
+    DROP TRIGGER IF EXISTS "${TEST_ROW_LOCK_BARRIER_TRIGGER}"
+      ON "durable_jobs";
+    DROP FUNCTION IF EXISTS "${TEST_ROW_LOCK_BARRIER_FUNCTION}"();
+  `);
+}
+
+async function withDeterministicRowLockBarrier<TFirst, TSecond>(
+  context: DurableJobPostgres16HarnessContext,
+  jobId: string,
+  first: () => Promise<TFirst>,
+  second: () => Promise<TSecond>,
+): Promise<{ readonly firstResult: TFirst; readonly secondResult: TSecond }> {
+  const barrierUrl = resolveDurableJobPostgres16AdminUrl(process.env);
+  barrierUrl.pathname = `/${context.databaseName}`;
+  const barrierSql = postgres(barrierUrl.toString(), {
+    max: 1,
+    prepare: false,
+  });
+  let firstPromise: Promise<TFirst> | undefined;
+  let secondPromise: Promise<TSecond> | undefined;
+  let advisoryLockHeld = false;
+  try {
+    await installRowLockBarrier(barrierSql);
+    await barrierSql`SELECT pg_advisory_lock(${TEST_ROW_LOCK_BARRIER_KEY})`;
+    advisoryLockHeld = true;
+
+    await connectionBackendPid(context.connectionOne);
+    const secondPid = await connectionBackendPid(context.connectionTwo);
+    firstPromise = first();
+    await waitForRowLock(barrierSql, jobId);
+    secondPromise = second();
+    await waitForBlockedBackend(barrierSql, secondPid);
+
+    await barrierSql`SELECT pg_advisory_unlock(${TEST_ROW_LOCK_BARRIER_KEY})`;
+    advisoryLockHeld = false;
+    const [firstResult, secondResult] = await Promise.all([
+      firstPromise,
+      secondPromise,
+    ]);
+    return { firstResult, secondResult };
+  } finally {
+    if (advisoryLockHeld) {
+      await barrierSql`SELECT pg_advisory_unlock(${TEST_ROW_LOCK_BARRIER_KEY})`;
+    }
+    await firstPromise?.catch(() => undefined);
+    await secondPromise?.catch(() => undefined);
+    try {
+      await removeRowLockBarrier(barrierSql);
+    } finally {
+      await barrierSql.end({ timeout: 5 });
+    }
+  }
+}
+
 type TransitionEnqueueRaceOrder = "transition-first" | "enqueue-first";
 
 async function runTransitionEnqueueRace<TTransition, TEnqueue>(
@@ -915,6 +1091,59 @@ describe.skipIf(!integrationEnabled)(
       });
     });
 
+    it("proves the final active snapshot follows database commit order", async () => {
+      await withTask9Harness(async (context, firstPort, secondPort) => {
+        const identity = "task9-t5h3-database-commit-order";
+        const jobId = jobIdFromEnqueue(
+          await firstPort.enqueue(enqueueRequest(identity)),
+        );
+        const claimed = claimedJob(
+          await firstPort.claim(
+            claimRequest("task9-t5h3-database-commit-order-worker"),
+          ),
+        );
+        expect(claimed.id).toBe(jobId);
+
+        const firstFollowUp = enqueueRequest(identity, GLOBAL_TENANT, {
+          queueName: "task9-commit-order-first",
+          payload: { generation: "first-commit" },
+          maxAttempts: 2,
+          availableAt: FOLLOW_UP_TIME,
+        });
+        const secondFollowUp = enqueueRequest(identity, GLOBAL_TENANT, {
+          queueName: "task9-commit-order-second",
+          payload: { generation: "second-commit" },
+          maxAttempts: 7,
+          availableAt: SECOND_FOLLOW_UP_TIME,
+        });
+        const race = await withDeterministicRowLockBarrier(
+          context,
+          jobId,
+          () => firstPort.enqueue(firstFollowUp),
+          () => secondPort.enqueue(secondFollowUp),
+        );
+
+        expect(race.firstResult).toMatchObject({
+          outcome: "active-lease-retained",
+          jobId,
+        });
+        expect(race.secondResult).toMatchObject({
+          outcome: "active-lease-retained",
+          jobId,
+        });
+        const activeSnapshot = await readJobSnapshot(context, jobId);
+        expect(activeSnapshot.rerunRequested).toBe(true);
+        expect(activeSnapshot.rerunQueueName).toBe(secondFollowUp.queueName);
+        expect(activeSnapshot.rerunPayloadJson).toEqual(secondFollowUp.payload);
+        expect(activeSnapshot.rerunMaxAttempts).toBe(
+          secondFollowUp.maxAttempts,
+        );
+        expect(snapshotTimestamp(activeSnapshot.rerunAvailableAt ?? "")).toBe(
+          SECOND_FOLLOW_UP_TIME,
+        );
+      });
+    });
+
     it("covers both settle and active-enqueue lock orders", async () => {
       await withTask9Harness(async (context, firstPort, secondPort) => {
         for (const order of ["transition-first", "enqueue-first"] as const) {
@@ -1032,6 +1261,85 @@ describe.skipIf(!integrationEnabled)(
           expect(["active-lease-retained", "refreshed"]).toContain(
             race.enqueueResult.outcome,
           );
+          expectPromotedFollowUp(
+            await readJobSnapshot(context, jobId),
+            followUp,
+          );
+        }
+      });
+    });
+
+    it("proves transition-first settle, fail, and reclaim hold the row lock before enqueue begins", async () => {
+      await withTask9Harness(async (context, firstPort, secondPort) => {
+        for (const operation of ["settle", "fail", "reclaim"] as const) {
+          const identity = `task9-t5h3-barrier-${operation}`;
+          const jobId = jobIdFromEnqueue(
+            await firstPort.enqueue(
+              enqueueRequest(identity, GLOBAL_TENANT, {
+                maxAttempts: operation === "fail" ? 4 : 3,
+              }),
+            ),
+          );
+          const claimed = claimedJob(
+            await firstPort.claim({
+              ...claimRequest(`${identity}-worker`),
+              ...(operation === "reclaim" ? { leaseSeconds: 1 } : {}),
+            }),
+          );
+          const followUp = enqueueRequest(identity, GLOBAL_TENANT, {
+            queueName: `task9-barrier-${operation}-follow`,
+            availableAt: FOLLOW_UP_TIME,
+          });
+          const race = await withDeterministicRowLockBarrier<
+            TransitionResult,
+            EnqueueResult
+          >(
+            context,
+            jobId,
+            () => {
+              if (operation === "settle") {
+                return firstPort.settle({
+                  jobId,
+                  tenant: GLOBAL_TENANT,
+                  leaseToken: claimed.lease.token,
+                  now: BASE_TIME,
+                  result: { operation },
+                });
+              }
+              if (operation === "fail") {
+                return firstPort.fail({
+                  jobId,
+                  tenant: GLOBAL_TENANT,
+                  leaseToken: claimed.lease.token,
+                  now: BASE_TIME,
+                  error: {
+                    code: "T5H3_TRANSITION_BARRIER_FAILURE",
+                    safeSummary: "The transition barrier failure is safe.",
+                  },
+                });
+              }
+              return firstPort.reclaimExpired(reclaimRequest());
+            },
+            () => secondPort.enqueue(followUp),
+          );
+
+          if (operation === "settle") {
+            expect(race.firstResult).toEqual({
+              outcome: "settled",
+              state: "succeeded",
+            });
+          } else if (operation === "fail") {
+            expect(race.firstResult.outcome).toBe("retry-scheduled");
+          } else {
+            expect(race.firstResult).toEqual({
+              outcome: "reclaimed",
+              count: 1,
+            });
+          }
+          expect(race.secondResult).toMatchObject({
+            outcome: "refreshed",
+            jobId,
+          });
           expectPromotedFollowUp(
             await readJobSnapshot(context, jobId),
             followUp,
