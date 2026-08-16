@@ -491,7 +491,7 @@ export const durableJobInvalidRowFixtures: readonly DurableJobInvalidRowFixture[
     finding: "T5-H2",
     state: "running",
     overrides: { rerun_requested: false },
-    expectedConstraint: "durable_jobs_rerun_tuple_check",
+    expectedConstraint: "durable_jobs_rerun_state_check",
     rationale: "The flag is equivalent to the complete snapshot being present.",
   },
   {
@@ -505,7 +505,7 @@ export const durableJobInvalidRowFixtures: readonly DurableJobInvalidRowFixture[
       rerun_max_attempts: null,
       rerun_available_at: null,
     },
-    expectedConstraint: "durable_jobs_rerun_tuple_check",
+    expectedConstraint: "durable_jobs_rerun_state_check",
     rationale: "A true rerun flag cannot stand in for a lost request snapshot.",
   },
   {

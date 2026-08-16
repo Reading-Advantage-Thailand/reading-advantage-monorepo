@@ -242,3 +242,70 @@ This lease records the next fixture without changing its assertion or migration.
 
 Green must not change the rerun production constraints for DWP-T9-RB-006.
 Review B receives the corrected partial fixture and the exact next Red failure.
+
+## DWP-T9-RB-006 flag-fixture follow-up — 2026-08-16
+
+### Contract and correction
+
+`rerun-columns-with-flag-false` starts from a valid running row with all five
+rerun fields populated. It sets `rerun_requested=false`.
+
+The tuple check passes because all five fields are non-`NULL`. The state check
+rejects the row because a false request requires all five fields to be `NULL`.
+The fixture's expected constraint was false. This correction changes only its
+expected constraint to `durable_jobs_rerun_state_check`.
+
+The rejection code and named-constraint assertion remain unchanged.
+
+### Verification
+
+- Safe schema gate: 2 passed and 1 skipped without PostgreSQL contact.
+- Disposable PostgreSQL 16 schema gate: 3 tests ran; 2 passed and 1 failed.
+- `rerun-columns-with-flag-false` now passed its exact rejection assertion.
+
+The next exact substantive Red failure is:
+
+```text
+AssertionError: rerun-flag-with-null-columns must fail through durable_jobs_rerun_tuple_check.
+Expected constraint_name: durable_jobs_rerun_tuple_check
+Received constraint_name: durable_jobs_rerun_state_check
+```
+
+That fixture keeps `rerun_requested=true` and nulls all five rerun fields. The
+tuple check passes because all fields are `NULL`. The state check rejects the
+row because a true running rerun requires all five fields to be non-`NULL`.
+
+This lease records the next fixture without changing its assertion or migration.
+
+### Review B handoff
+
+Green must not change rerun production constraints for DWP-T9-RB-006. Review B
+receives the corrected flag fixture and the exact next Red failure.
+
+## Rerun bound follow-up — 2026-08-16
+
+The corrected `rerun-flag-with-null-columns` fixture now passes its exact
+`durable_jobs_rerun_state_check` rejection.
+
+The final disposable PostgreSQL 16 schema gate still ran 3 tests, passed 2, and
+failed on the next substantive Red case:
+
+```text
+Fixture: rerun-maximum-under-bound
+Override: rerun_max_attempts=0
+Expected: rejection through durable_jobs_rerun_tuple_check
+Actual: promise resolved "undefined" instead of rejecting
+```
+
+The rerun tuple and state checks enforce field completeness. They do not enforce
+a positive or bounded value for `rerun_max_attempts`. The existing
+`durable_jobs_attempt_bounds_check` bounds `max_attempts`, not `rerun_max_attempts`.
+
+This failure is candidate-attributable and requires a Green migration change.
+This lease does not change the migration or weaken the fixture assertion.
+
+### Green handoff
+
+Green must add the reviewed rerun-attempt bound constraint and update its own
+migration evidence. Review B receives the exact `rerun-maximum-under-bound`
+failure and the completed fixture-specific Red corrections.
