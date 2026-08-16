@@ -1,0 +1,96 @@
+Measure Strategy role log - post-THB Finance delivery
+Track: company_finance_operations_20260810
+Phase: post-THB conditional pilot admission
+Date: 2026-08-16
+Role: measure-strategy
+role_base_sha: 5cb38dc43fe8868c8ecc0d27352c460ea22cb191
+
+## Scope
+
+This docs-only role separates executable policy-neutral Finance work from owner and
+accountant decisions. It owns only `test-strategy-post-thb.md` and this log.
+
+No source, test, plan, registry, metadata, migration, generated, or unrelated file
+was edited.
+
+## Inputs read
+
+- `measure/index.md`
+- `measure/tracks.md`
+- `measure/anti-patterns.md`
+- `measure/small-company-operations-program.md`
+- `measure/business-operations-system-map.md`
+- `measure/tracks/company_finance_operations_20260810/index.md`
+- `measure/tracks/company_finance_operations_20260810/spec.md`
+- `measure/tracks/company_finance_operations_20260810/plan.md`
+- `measure/tracks/company_finance_operations_20260810/test-strategy-phase2-thb.md`
+- bounded THB remediation evidence through `phase2-thb-review-c-green-remediation-20260816.md`
+- current Finance Operations source and Company Identity THB source
+- current Finance persistence schema and record store
+
+## Determination
+
+The specification authorizes a policy-neutral historical pilot after controlled
+imports. The plan still marks that pilot `[b] deferred:finance-owner-data`.
+
+No new production code slice is executable now. The strategy defines conditional
+Red, Green, closeout, review, and live-proof gates for the pilot only.
+
+The strategy keeps rate source, rounding, effective-date, VAT, WHT, classification,
+close, accountant-pack, and Company Admin access decisions owner-gated.
+
+The strategy does not select Thai policy or plan the overall five-lane workflow.
+
+## Work performed
+
+1. Created `test-strategy-post-thb.md`.
+2. Recorded the conditional pilot boundary around the existing historical packet and
+   controlled-import contracts.
+3. Defined targeted future Red and Green commands without claiming their execution.
+4. Defined closeout and disposable PostgreSQL live-proof requirements.
+5. Defined the exact owner and accountant input matrix.
+6. Defined review applicability and anti-pattern defenses.
+
+## Verification
+
+No tests ran. This role changed documentation only.
+
+The strategy must pass the following documentation checks before commit:
+
+```bash
+./node_modules/.bin/prettier --check \
+  measure/tracks/company_finance_operations_20260810/test-strategy-post-thb.md \
+  measure/tracks/company_finance_operations_20260810/orchestration/post-thb-strategy-role.log
+git diff --check -- \
+  measure/tracks/company_finance_operations_20260810/test-strategy-post-thb.md \
+  measure/tracks/company_finance_operations_20260810/orchestration/post-thb-strategy-role.log
+```
+
+## Known limitations and non-claims
+
+- The pilot packet and reconciled month are not accepted in the checkout.
+- No pilot Red command exists at this docs-only checkpoint.
+- No phase acceptance or Finance release acceptance is claimed.
+- No accountant policy decision is inferred from source labels or current tests.
+- Existing unrelated dirty paths were preserved.
+
+## Handoff
+
+**BLOCKED NOW.** Do not dispatch pilot Red, Green, or acceptance work.
+
+Admit the conditional pilot only after an owner supplies and accepts the exact
+historical month, billing packet, scope, and evidence digest listed in the strategy.
+Keep all policy and Company Admin inputs owner-gated.
+
+MEASURE_AGENT_RESULT
+role: measure-strategy
+status: complete
+track: company_finance_operations_20260810
+phase: post-THB conditional pilot admission
+commits: this docs-only strategy commit (track_id: company_finance_operations_20260810)
+tests_run: none; documentation-only role
+files_changed: test-strategy-post-thb.md; orchestration/post-thb-strategy-role.log
+plan_updates: none; registry, metadata, source, tests, and other files unchanged
+known_failures: pilot packet/month, policy decisions, accountant-pack decisions, and Company Admin access remain owner-gated
+handoff: BLOCKED NOW; admit the conditional pilot only after the exact owner packet and reconciled month are accepted
+END_MEASURE_AGENT_RESULT
