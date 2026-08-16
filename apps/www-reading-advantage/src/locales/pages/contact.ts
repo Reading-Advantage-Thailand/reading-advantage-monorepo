@@ -27,7 +27,7 @@ export const en = {
     title: "Follow Us",
     description:
       "Connect with us on social media for updates and educational content.",
-    tiktok: "Follow us on",
+    tiktok: "Follow us on TikTok",
   },
   lineQr: {
     title: "Line Us",
@@ -69,7 +69,7 @@ export const th = {
   social: {
     title: "ติดตามเรา",
     description: "ติดตามเราบนโซเชียลมีเดียเพื่อรับข่าวสารและเนื้อหาทางการศึกษา",
-    tiktok: "ติดตามเราบน",
+    tiktok: "ติดตามเราบน TikTok",
   },
   lineQr: {
     title: "Line",
@@ -110,7 +110,7 @@ export const zh = {
   social: {
     title: "关注我们",
     description: "在社交媒体上关注我们，获取更新和教育内容。",
-    tiktok: "关注我们",
+    tiktok: "在 TikTok 关注我们",
   },
   lineQr: {
     title: "Line",
