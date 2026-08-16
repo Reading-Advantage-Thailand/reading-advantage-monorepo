@@ -1,0 +1,61 @@
+MEASURE_AGENT_RESULT
+role: jr-green
+status: complete
+track: sales_mastery_consumer_20260810
+phase: Phase 0 — reconcile and admit the consumer
+phase_base_sha: 8adc57cb0af0693c1b3420842b3a504939a36b2e
+role_base_sha: c1494c162dc77c0c3299f0cb72481ccf42137cb0
+implementation_commit: 2f8152fc78ce78959ed14c997ca9712aa4fce7e8
+evidence_commit: separate commit after this implementation commit
+
+implementation:
+- Copied verified release archives into a private `.tgz` directory.
+- Made archive files read-only and made their directory non-writable during npm
+  installation.
+- Restored temporary permissions in cleanup so the parent temporary directory can
+  be removed.
+- Delayed the clean consumer dependency-path rewrite until after archive
+  verification and fixture checks.
+- Preserved archive byte, npm pack SHA-1, and SHA-256 verification.
+
+gates:
+- post-commit adversarial suite: PASS; 3 passed, 1 file.
+- digest contract: PASS; 2 passed, 24 skipped.
+- WorkspaceLeaseRuntime contract: PASS; 17 passed, 9 skipped.
+- Sales runtime admission: PASS; 11 passed.
+- packed-consumer suite: PASS; 26 passed.
+- runtime-manifest and Codecamp regressions: PASS; 20 passed across 2 files.
+- Sales knowledge suite: PASS; 19 passed across 3 files.
+- focused type checks: PASS; both packages exited 0.
+- focused lint checks: PASS; both packages exited 0.
+- focused builds: PASS; both packages exited 0.
+- clean Sales CLI: PASS; compatible true and issues empty.
+- Prettier source and adversarial test check: PASS.
+- immutable source and diff checks: PASS; engine, Sales-knowledge, Red, and
+  protected artifacts were unchanged.
+- build-graph update: PASS; `release-artifact.ts` updated the graph from 215 to
+  220 nodes and from 216 to 220 edges.
+
+post_commit_proof:
+- auditedHead: 2f8152fc78ce78959ed14c997ca9712aa4fce7e8.
+- sourceDigestSha256: c731afc2b602ad49cf6b16513850663d5cfe1f15158ea2999e377a078b8aaccf.
+- archiveDigestsSha256: 5 release-package values.
+- checkedConsumers: 1, sales-advantage.
+- resolvedVersions: gateZod 3.25.76, engineZod 4.4.3, tsFsrs 5.4.1.
+
+failures_and_corrections:
+- The first read-only archive attempt used a file descriptor and blocked npm
+  access. The implementation now protects private `.tgz` files by permissions
+  and verifies them before installation.
+- No requested gate has a persistent failure.
+
+files_changed:
+- packages/mastery-runtime-compat/src/release-artifact.ts
+- measure/tracks/sales_mastery_consumer_20260810/plan.md
+- measure/tracks/sales_mastery_consumer_20260810/orchestration/phase0-jr-green-archive-consumption-remediation-role.log
+
+handoff:
+- Task B remains `[~]` because shared-root doctor and architecture gates remain
+  open. This receipt does not close Phase 0 or unblock Phase 2.
+
+END_MEASURE_AGENT_RESULT

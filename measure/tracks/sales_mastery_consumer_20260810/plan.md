@@ -153,6 +153,20 @@
    Sales knowledge, type, lint, build, CLI, format, and diff gates passed. Task
    B remains `[~]`; this receipt does not close shared-root gates.
 
+   Atomic archive-consumption remediation (2026-08-16; implementation commit
+   `2f8152fc78ce78959ed14c997ca9712aa4fce7e8`) copies verified release archives
+   into a private `.tgz` directory, makes the copies and directory read-only
+   during consumer installation, and restores permissions for cleanup. The
+   clean consumer now rewrites dependency paths only after archive verification,
+   so the protected archive bytes drive npm installation. Post-commit adversarial
+   tests passed 3/3. Digest, lease, admission, packed-consumer, runtime,
+   Codecamp, Sales knowledge, type, lint, build, clean CLI, format, immutable-
+   source, and diff checks passed. The final proof records audited HEAD
+   `2f8152fc78ce78959ed14c997ca9712aa4fce7e8`, source digest
+   `c731afc2b602ad49cf6b16513850663d5cfe1f15158ea2999e377a078b8aaccf`, five
+   archive digests, and `sales-advantage` as the checked consumer. Task B
+   remains `[~]`; this receipt does not close shared-root gates.
+
 ## Phase 1 — bind the approved course to a knowledge graph
 
 - [x] Task: Define the versioned Sales objective graph, activity variants,
