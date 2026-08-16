@@ -103,7 +103,7 @@ task: 9
 phase_base_sha: 33d44fc81b84559c2ab7a48acfaf86554bf017a5
 role_base_sha: 0e0b420c61885a96f7210fe3777151a0568520dc
 implementation_commit: 63b41b598ca0bd0cd8defff6658b218b82f6b693
-evidence_commit: 3e6f2a1b7a889295c62993853125c9c98829bf9a
+evidence_commit: 3e6f2a1b78855995ea316938271f03db0baf2fcf
 tests_run: role safe 1/1; role live 1/1; Task 9 live 19/19; migration support 43 passed and 1 skipped
 cleanup: 0 scratch databases; 0 Task 9 roles; disposable containers removed
 known_failures: migration governance 51 passed, 2 failed, 1 skipped; full DB 1094 passed, 55 failed, 39 skipped; unrelated doctor markers; package-wrapper network resolution
