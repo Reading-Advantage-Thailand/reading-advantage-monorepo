@@ -48,7 +48,7 @@ phase: Phase 2: Red Concurrency and Failure Tests
 task: 9
 phase_base_sha: 33d44fc81b84559c2ab7a48acfaf86554bf017a5
 role_base_sha: 0e0b420c61885a96f7210fe3777151a0568520dc
-commits: 63b41b598ca0bd0cd8defff6658b218b82f6b693; evidence commit pending
+commits: 63b41b598ca0bd0cd8defff6658b218b82f6b693; evidence 3e6f2a1b7a889295c62993853125c9c98829bf9a; receipt update follows in this commit
 counts: role 1/1; Task 9 live 19/19; migration support 43 passed and 1 skipped; full DB 1094 passed, 55 failed, 39 skipped
 cleanup: 0 scratch databases; 0 Task 9 roles; containers removed
 failures: governance sentinel gap; unrelated full DB failures; unrelated doctor markers; package-wrapper network resolution
