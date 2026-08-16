@@ -10,6 +10,7 @@ export const en = {
     description:
       "Interactive science learning with adaptive AI recommendations, real-time progress tracking, and teacher intervention tools.",
     badge: "Early Access",
+    comingSoon: "Coming Soon",
     cta: "Request Demo",
     secondaryCta: "Learn More",
   },
@@ -25,11 +26,13 @@ export const en = {
       },
       {
         title: "AI-Powered Learning",
-        description: "Adaptive recommendations and mastery tracking personalized for each student",
+        description:
+          "Adaptive recommendations and mastery tracking personalized for each student",
       },
       {
         title: "Real-Time Intervention",
-        description: "Teacher alerts for at-risk students with actionable insights",
+        description:
+          "Teacher alerts for at-risk students with actionable insights",
       },
     ],
   },
@@ -39,19 +42,23 @@ export const en = {
     features: [
       {
         title: "Join Classes Instantly",
-        description: "Enter a 6-character code to join your teacher's class and access lessons",
+        description:
+          "Enter a 6-character code to join your teacher's class and access lessons",
       },
       {
         title: "Interactive Lessons",
-        description: "Engaging science content with integrated quizzes and assessments",
+        description:
+          "Engaging science content with integrated quizzes and assessments",
       },
       {
         title: "Track Your Progress",
-        description: "XP, levels, streaks, and badges gamify your learning journey",
+        description:
+          "XP, levels, streaks, and badges gamify your learning journey",
       },
       {
         title: "AI Recommendations",
-        description: "Get personalized lesson suggestions based on your mastery profile",
+        description:
+          "Get personalized lesson suggestions based on your mastery profile",
       },
     ],
   },
@@ -61,11 +68,13 @@ export const en = {
     features: [
       {
         title: "Intervention Alerts",
-        description: "Real-time notifications for students who need extra support",
+        description:
+          "Real-time notifications for students who need extra support",
       },
       {
         title: "Class Analytics",
-        description: "Detailed progress reports and lesson analytics for your entire class",
+        description:
+          "Detailed progress reports and lesson analytics for your entire class",
       },
       {
         title: "Student Progress",
@@ -73,7 +82,8 @@ export const en = {
       },
       {
         title: "Assignment Management",
-        description: "Create and distribute assignments with automated tracking",
+        description:
+          "Create and distribute assignments with automated tracking",
       },
     ],
   },
@@ -118,10 +128,51 @@ export const en = {
       contactSales: "Contact Sales",
     },
   },
+  targetAudience: {
+    heading: "Built for Schools, Teachers, and Students",
+    audiences: [
+      {
+        title: "Schools",
+        points: [
+          "Curriculum integration",
+          "Teacher tools",
+          "NGSS-aligned instruction",
+          "Progress visibility",
+        ],
+      },
+      {
+        title: "Teachers",
+        points: [
+          "Lesson planning",
+          "Assessment tools",
+          "Intervention alerts",
+          "Classroom insights",
+        ],
+      },
+      {
+        title: "Students",
+        points: [
+          "Personalized learning paths",
+          "Interactive science lessons",
+          "Engaging science activities",
+          "Mastery-based progress",
+        ],
+      },
+    ],
+  },
+  waitlist: {
+    heading: "Join Our Waitlist",
+    description: "Be the first to access Science Advantage",
+    form: {
+      placeholder: "Enter your email",
+      button: "Join Waitlist",
+    },
+  },
   adaptiveEngine: {
     eyebrow: "Adaptive Engine",
     heading: "Inquiry-based science, personalized for every student",
-    description: "Powered by Mastery Advantage — the KST + SRS engine that maps every science skill and schedules practice at the perfect moment.",
+    description:
+      "Powered by Mastery Advantage — the KST + SRS engine that maps every science skill and schedules practice at the perfect moment.",
     alt: "Science Advantage adaptive learning visualization",
   },
   eyebrows: {
@@ -143,6 +194,7 @@ export const th = {
     description:
       "การเรียนรู้วิทยาศาสตร์แบบโต้ตอบด้วยการแนะนำ AI ที่ปรับตัวได้ การติดตามความก้าวหน้าแบบเรียลไทม์ และเครื่องมือแทรกแซงของครู",
     badge: "เข้าถึงล่วงหน้า",
+    comingSoon: "เร็ว ๆ นี้",
     cta: "ขอสาธิต",
     secondaryCta: "เรียนรู้เพิ่มเติม",
   },
@@ -158,11 +210,13 @@ export const th = {
       },
       {
         title: "การเรียนรู้ด้วย AI",
-        description: "การแนะนำที่ปรับตัวได้และการติดตามความเชี่ยวชาญสำหรับนักเรียนแต่ละคน",
+        description:
+          "การแนะนำที่ปรับตัวได้และการติดตามความเชี่ยวชาญสำหรับนักเรียนแต่ละคน",
       },
       {
         title: "การแทรกแซงแบบเรียลไทม์",
-        description: "การแจ้งเตือนครูสำหรับนักเรียนที่เสี่ยงพร้อมข้อมูลเชิงลึกที่ใช้งานได้",
+        description:
+          "การแจ้งเตือนครูสำหรับนักเรียนที่เสี่ยงพร้อมข้อมูลเชิงลึกที่ใช้งานได้",
       },
     ],
   },
@@ -172,15 +226,18 @@ export const th = {
     features: [
       {
         title: "เข้าร่วมชั้นเรียนทันที",
-        description: "ป้อนรหัส 6 ตัวอักษรเพื่อเข้าร่วมชั้นเรียนของครูและเข้าถึงบทเรียน",
+        description:
+          "ป้อนรหัส 6 ตัวอักษรเพื่อเข้าร่วมชั้นเรียนของครูและเข้าถึงบทเรียน",
       },
       {
         title: "บทเรียนเชิงโต้ตอบ",
-        description: "เนื้อหาวิทยาศาสตร์ที่น่าสนใจพร้อมแบบทดสอบและการประเมินที่ผสานรวม",
+        description:
+          "เนื้อหาวิทยาศาสตร์ที่น่าสนใจพร้อมแบบทดสอบและการประเมินที่ผสานรวม",
       },
       {
         title: "ติดตามความก้าวหน้า",
-        description: "XP, ระดับ, สตรีค และแบดจ์ทำให้การเดินทางการเรียนรู้ของคุณสนุกขึ้น",
+        description:
+          "XP, ระดับ, สตรีค และแบดจ์ทำให้การเดินทางการเรียนรู้ของคุณสนุกขึ้น",
       },
       {
         title: "การแนะนำด้วย AI",
@@ -194,11 +251,13 @@ export const th = {
     features: [
       {
         title: "การแจ้งเตือนการแทรกแซง",
-        description: "การแจ้งเตือนแบบเรียลไทม์สำหรับนักเรียนที่ต้องการการสนับสนุนเพิ่มเติม",
+        description:
+          "การแจ้งเตือนแบบเรียลไทม์สำหรับนักเรียนที่ต้องการการสนับสนุนเพิ่มเติม",
       },
       {
         title: "การวิเคราะห์ชั้นเรียน",
-        description: "รายงานความก้าวหน้าโดยละเอียดและการวิเคราะห์บทเรียนสำหรับชั้นเรียนทั้งหมด",
+        description:
+          "รายงานความก้าวหน้าโดยละเอียดและการวิเคราะห์บทเรียนสำหรับชั้นเรียนทั้งหมด",
       },
       {
         title: "ความก้าวหน้าของนักเรียน",
@@ -251,10 +310,51 @@ export const th = {
       contactSales: "ติดต่อฝ่ายขาย",
     },
   },
+  targetAudience: {
+    heading: "สร้างขึ้นสำหรับโรงเรียน ครู และนักเรียน",
+    audiences: [
+      {
+        title: "โรงเรียน",
+        points: [
+          "การผสานหลักสูตร",
+          "เครื่องมือสำหรับครู",
+          "การเรียนการสอนวิทยาศาสตร์ตาม NGSS",
+          "เห็นความก้าวหน้าของนักเรียน",
+        ],
+      },
+      {
+        title: "ครู",
+        points: [
+          "การวางแผนบทเรียน",
+          "เครื่องมือประเมินผล",
+          "การแจ้งเตือนการแทรกแซง",
+          "ข้อมูลเชิงลึกในชั้นเรียน",
+        ],
+      },
+      {
+        title: "นักเรียน",
+        points: [
+          "เส้นทางการเรียนรู้เฉพาะบุคคล",
+          "บทเรียนวิทยาศาสตร์แบบโต้ตอบ",
+          "กิจกรรมวิทยาศาสตร์ที่น่าสนใจ",
+          "ความก้าวหน้าตามความเชี่ยวชาญ",
+        ],
+      },
+    ],
+  },
+  waitlist: {
+    heading: "เข้าร่วมรายชื่อรอ",
+    description: "เป็นกลุ่มแรกที่เข้าถึง Science Advantage",
+    form: {
+      placeholder: "กรอกอีเมลของคุณ",
+      button: "เข้าร่วมรายชื่อรอ",
+    },
+  },
   adaptiveEngine: {
     eyebrow: "เครื่องยนต์ปรับตัว",
     heading: "วิทยาศาสตร์จากการสอบถาม ปรับแต่งสำหรับนักเรียนทุกคน",
-    description: "ขับเคลื่อนโดย Mastery Advantage — เครื่องยนต์ KST + SRS ที่จัดทำแผนที่ทักษะวิทยาศาสตร์ทุกอย่างและกำหนดเวลาฝึกฝนในช่วงเวลาที่เหมาะสมที่สุด",
+    description:
+      "ขับเคลื่อนโดย Mastery Advantage — เครื่องยนต์ KST + SRS ที่จัดทำแผนที่ทักษะวิทยาศาสตร์ทุกอย่างและกำหนดเวลาฝึกฝนในช่วงเวลาที่เหมาะสมที่สุด",
     alt: "ภาพจำลองการเรียนรู้แบบปรับตัวของ Science Advantage",
   },
   eyebrows: {
@@ -273,8 +373,10 @@ export const zh = {
   hero: {
     title: "Science Advantage",
     subtitle: "符合NGSS标准的K-12科学教育平台",
-    description: "互动式科学学习，配备自适应AI推荐、实时进度跟踪和教师干预工具。",
+    description:
+      "互动式科学学习，配备自适应AI推荐、实时进度跟踪和教师干预工具。",
     badge: "抢先体验",
+    comingSoon: "即将推出",
     cta: "申请演示",
     secondaryCta: "了解更多",
   },
@@ -364,27 +466,59 @@ export const zh = {
       },
       {
         title: "评估工具",
-        points: [
-          "综合课程测验",
-          "实时进度跟踪",
-          "标准一致性报告",
-          "自动反馈",
-        ],
+        points: ["综合课程测验", "实时进度跟踪", "标准一致性报告", "自动反馈"],
       },
     ],
   },
   cta: {
     heading: "准备好改变您的科学课堂了吗？",
-    description: "抢先体验Science Advantage，将符合NGSS标准、AI驱动的科学教育带到您的学校。",
+    description:
+      "抢先体验Science Advantage，将符合NGSS标准、AI驱动的科学教育带到您的学校。",
     buttons: {
       requestDemo: "申请演示",
       contactSales: "联系销售",
     },
   },
+  targetAudience: {
+    heading: "为学校、教师和学生打造",
+    audiences: [
+      {
+        title: "学校",
+        points: [
+          "课程整合",
+          "教师工具",
+          "符合NGSS的科学教学",
+          "学生进度可视化",
+        ],
+      },
+      {
+        title: "教师",
+        points: ["课程规划", "评估工具", "干预提醒", "课堂数据洞察"],
+      },
+      {
+        title: "学生",
+        points: [
+          "个性化学习路径",
+          "互动科学课程",
+          "引人入胜的科学活动",
+          "基于掌握度的学习进阶",
+        ],
+      },
+    ],
+  },
+  waitlist: {
+    heading: "加入我们的候补名单",
+    description: "抢先体验 Science Advantage",
+    form: {
+      placeholder: "请输入您的邮箱",
+      button: "加入候补名单",
+    },
+  },
   adaptiveEngine: {
     eyebrow: "自适应引擎",
     heading: "基于探究的科学教育，为每位学生个性化",
-    description: "由 Mastery Advantage 驱动 — KST + SRS 引擎映射每项科学技能并在最佳时刻安排练习。",
+    description:
+      "由 Mastery Advantage 驱动 — KST + SRS 引擎映射每项科学技能并在最佳时刻安排练习。",
     alt: "Science Advantage 自适应学习可视化",
   },
   eyebrows: {
