@@ -1,0 +1,57 @@
+Measure Jr Green role log — Task 9 role hardening
+Track: durable_job_worker_platform_20260713
+Phase: Phase 2: Red Concurrency and Failure Tests
+Task: 9
+Role: measure-jr-green
+Date: 2026-08-16
+phase_base_sha: 33d44fc81b84559c2ab7a48acfaf86554bf017a5
+role_base_sha: 0e0b420c61885a96f7210fe3777151a0568520dc
+implementation_commit: 63b41b598ca0bd0cd8defff6658b218b82f6b693
+
+## Scope
+
+The role changed migration `0052` only before the evidence phase.
+The migration hardens both durable-job roles before protected ownership and grants.
+The committed Red test was not changed.
+
+## Verification
+
+- Role safe default: 1/1 passed with no PostgreSQL contact.
+- Role live PostgreSQL 16 gate: 1/1 passed on server `160014`.
+- Task 9 live gate: 19/19 passed on server `160014`.
+- Migration support tests: 43 passed and 1 skipped.
+- Direct TypeScript checks passed for DB and backend.
+- Direct ESLint passed with zero errors.
+- Prettier and targeted diff checks passed.
+- Cleanup found zero scratch databases and zero Task 9 roles.
+- Both disposable containers were removed.
+
+## Failures and boundaries
+
+Migration governance remains red because `0052_durable_jobs` lacks a sentinel.
+The full DB suite remains red from unrelated existing failures.
+Measure doctor remains red from unrelated deprecated markers.
+Package-wrapper checks were network-blocked during dependency resolution.
+No journal, snapshot, registry, metadata, or other lane changed.
+
+## Review B handoff
+
+Review B must verify `63b41b598ca0bd0cd8defff6658b218b82f6b693`.
+The implementation preserves append-only audit enforcement.
+The committed Red test remains immutable.
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+status: complete
+track: durable_job_worker_platform_20260713
+phase: Phase 2: Red Concurrency and Failure Tests
+task: 9
+phase_base_sha: 33d44fc81b84559c2ab7a48acfaf86554bf017a5
+role_base_sha: 0e0b420c61885a96f7210fe3777151a0568520dc
+commits: 63b41b598ca0bd0cd8defff6658b218b82f6b693; evidence commit pending
+counts: role 1/1; Task 9 live 19/19; migration support 43 passed and 1 skipped; full DB 1094 passed, 55 failed, 39 skipped
+cleanup: 0 scratch databases; 0 Task 9 roles; containers removed
+failures: governance sentinel gap; unrelated full DB failures; unrelated doctor markers; package-wrapper network resolution
+files_changed: packages/db/drizzle/0052_durable_jobs.sql; measure/tracks/durable_job_worker_platform_20260713/plan.md; measure/tracks/durable_job_worker_platform_20260713/task-9-role-hardening-green-evidence-20260816.md; measure/tracks/durable_job_worker_platform_20260713/orchestration/phase2-task9-role-hardening-jr-green-role.log
+handoff: Review B verification is required for the implementation commit and immutable Red contract.
+END_MEASURE_AGENT_RESULT
