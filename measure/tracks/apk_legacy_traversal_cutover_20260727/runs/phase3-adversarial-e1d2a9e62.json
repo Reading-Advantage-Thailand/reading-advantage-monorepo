@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "Phase 3 Red contracts resisted pointer, no-op, declaration, input, responsive, learning, and renderer-coupling attacks.",
+  "role": "measure-adversarial-testing",
+  "track_id": "apk_legacy_traversal_cutover_20260727",
+  "phase": "Phase 3 Red mechanics, responsive, and learning contracts",
+  "pre_adversarial_head_sha": "27c7f4f23",
+  "audited_head_sha": "e1d2a9e62",
+  "head_drift": {
+    "status": "unrelated_commits_before_test_commit",
+    "commits": [
+      "e628a7e40 docs(backend): record Review A rerun (track_id: durable_job_worker_platform_20260713)"
+    ],
+    "apk_paths_changed_by_drift": false
+  },
+  "blocking_findings": [],
+  "nonblocking_findings": [],
+  "evidence": [
+    "The independent adversarial suite passed three tests.",
+    "All fifteen Red tests failed at the empty public catalog boundary.",
+    "The pointer test resolved mechanics, input, responsive, and learning claims for all five titles.",
+    "The scene falsifier rejects missing, empty-list, and empty-object configurations without inspecting renderer internals.",
+    "The five mechanics tests require exact capability lists, non-empty maps, positive timing, and unmapped-input rejection.",
+    "The five responsive tests pass the compact composition and verify target recomposition diagnostics.",
+    "The five learning tests reject out-of-order progress and require non-empty unique targets, result accounting, and one completion.",
+    "The source guard rejects Phaser imports and private renderer-factory coupling in all fifteen Red files."
+  ],
+  "commands": [
+    {
+      "command": "CI=true pnpm exec vitest run packages/game-cartridges/src/legacy-traversal-{dragon-rider,spellweavers-run,shadow-gate-dungeon,labyrinth-goblin-king,griffin-riders-escape}.{mechanics,responsive,learning}.test.ts",
+      "result": "expected_red",
+      "exit_code": 1,
+      "evidence": "15 files collected; 15 tests failed at the empty catalog boundary."
+    },
+    {
+      "command": "CI=true pnpm exec vitest run packages/game-cartridges/src/legacy-traversal-phase3-adversarial.test.ts",
+      "result": "passed",
+      "exit_code": 0,
+      "evidence": "3 adversarial tests passed."
+    },
+    {
+      "command": "./node_modules/.bin/tsc --noEmit -p packages/game-cartridges/tsconfig.json",
+      "result": "passed",
+      "exit_code": 0
+    },
+    {
+      "command": "./node_modules/.bin/eslint --config packages/game-cartridges/eslint.config.mjs packages/game-cartridges/src/legacy-traversal-phase3-adversarial.test.ts packages/game-cartridges/src/legacy-traversal-phase3-test-helpers.ts packages/game-cartridges/src/legacy-traversal-{dragon-rider,spellweavers-run,shadow-gate-dungeon,labyrinth-goblin-king,griffin-riders-escape}.{mechanics,responsive,learning}.test.ts",
+      "result": "passed",
+      "exit_code": 0
+    },
+    {
+      "command": "./node_modules/.bin/prettier --check packages/game-cartridges/src/legacy-traversal-phase3-adversarial.test.ts packages/game-cartridges/src/legacy-traversal-phase3-test-helpers.ts packages/game-cartridges/src/legacy-traversal-{dragon-rider,spellweavers-run,shadow-gate-dungeon,labyrinth-goblin-king,griffin-riders-escape}.{mechanics,responsive,learning}.test.ts",
+      "result": "passed",
+      "exit_code": 0
+    },
+    {
+      "command": "git diff --check 27c7f4f23..e1d2a9e62 -- Phase 3 test paths",
+      "result": "passed",
+      "exit_code": 0
+    }
+  ],
+  "changed_files": [
+    "packages/game-cartridges/src/legacy-traversal-phase3-adversarial.test.ts",
+    "packages/game-cartridges/src/legacy-traversal-phase3-test-helpers.ts",
+    "packages/game-cartridges/src/legacy-traversal-*.mechanics.test.ts",
+    "packages/game-cartridges/src/legacy-traversal-*.responsive.test.ts",
+    "packages/game-cartridges/src/legacy-traversal-*.learning.test.ts"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "review_inputs": {
+    "review_c": "PASS; no blocking findings; final Review A artifact was absent at its audited head.",
+    "owner_acceptance": "PENDING; separate gate; Green remains withheld"
+  },
+  "retry_recommendation": "none",
+  "confidence": "high"
+}
