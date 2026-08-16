@@ -2,7 +2,7 @@
 
 Track: `apk_legacy_traversal_cutover_20260727`
 Role base: `0aaefbe6db43e08dae39cc2311c28fe958031b63`
-Status: strategy defined; no phase is complete. Task 1 remains evidence-only `[~]`.
+Status: Task 1 evidence-only manifest work is complete. Phase 2 remains incomplete.
 
 ## Scope of record
 
@@ -11,7 +11,7 @@ Labyrinth of the Goblin King, Griffin Rider's Escape. No scope expansion.
 
 Accepted inputs:
 
-- Task 1 evidence-only manifest `task1-source-readiness-manifest-v1.json` (does not complete Task 1).
+- Task 1 evidence-only manifest `task1-source-readiness-manifest-v1.json` (records completed evidence-only manifest work; it grants no downstream authority).
 - Accepted readiness receipt `d371fc5df05922d5f1bbb50b837c0fd5314d8f136e2c699510c84186447f1720`.
 - Phase-1 denominator crosswalk `eb395d3d365115696fc31359406a4e9f126604ca159ea8358a0eb8931c8c5f57`.
 - Identity ledger `a31c99650bf1abd6623e64b2e9a23c4c481ce970036b52cfbe08c74b1c09c407`.
@@ -41,14 +41,14 @@ runs. A binding test must fail on byte drift of any bound input.
 
 Phases map one-to-one to plan tasks 1–8.
 
-### Phase 1 — Source/readiness manifests (Task 1, `[~]` in progress)
+### Phase 1 — Source/readiness manifests (Task 1, `[x]` evidence-only work complete)
 
-- Red command: `pnpm vitest run packages/game-cartridges/src/legacy-traversal-source-manifest.test.ts` (to be authored).
-- Red target: locator resolution for all five titles against bound bytes; archive-preferred path existence; revocation on drift.
-- Green gate: all five locator pairs resolve; manifest validates against its schema; no completion claim present.
-- Closeout gate: independent review of the manifest plus product-owner receipt.
+- Historical Red evidence: `task1-source-manifest-red-evidence-20260815.md`; it records the five missing-manifest failures before Green.
+- Green result: all five source manifests validate; the focused suite exits 0 with 13 passed tests.
+- Completion boundary: the manifests record source evidence only. Missing source paths remain `missing-at-head`, and no adoption or cutover claim is granted.
+- Closeout gate: independent review of the manifests plus product-owner receipt for downstream use.
 - Fixtures: bound archive JSON files; synthetic drifted copies as negative fixtures.
-- Mocks: none. Live read of archive bytes only.
+- Mocks: none. The contract reads archive bytes directly.
 - Falsifier: any title whose locator pair resolves against mutated bytes invalidates the gate.
 - Risk: low.
 - Anti-pattern defenses: A3 (labeled-integer parse of five resolved locators, not a digit regex); A4 (zero resolved titles fails, never vacuous-pass); A9 (archive-preferred path resolution); A15 (receipt reissued after any byte change).

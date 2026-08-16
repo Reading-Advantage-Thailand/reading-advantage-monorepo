@@ -3,14 +3,16 @@
 ## Phase 1: Source/readiness manifests
 
 - [x] Publish exact legacy source manifests for five titles. Source SHA: `1e848bda09b6cfb16c8076447101553a247c4417`.
-  Evidence-only Task 1 Red remains active. The contract preserves the complete accepted source-path denominator for every title.
+  Task 1 is complete as evidence-only manifest work. It grants no source availability, adoption, implementation, or cutover authority.
+  Historical Task 1 Red evidence is retained as a prior failure record; it is not the current Task 1 result.
+  The contract preserves the complete accepted source-path denominator for every title.
   Every entry declares `presence` as `tracked-at-head` or `missing-at-head`.
   Tracked entries require Git tracking, file existence, the current-byte SHA-256, role, classification, locator, and evidence-only disposition.
   Missing entries require the accepted evidence locator and exact path, omit `sha256`, and prove absence and non-tracking at HEAD.
-  The focused Red run exits 1 with 13 tests: 8 passed and 5 failed only on missing exact per-title legacy source manifests.
+  The focused Green run exits 0 with 13 tests passed.
   Falsifiers cover presence lies, fabricated hashes for missing bytes, omitted missing paths, and implementation or cutover claims from absence.
-  Task 2 remains blocked by the Asset Contract v2 product-owner receipt and suitability evidence. See `task1-source-manifest-red-evidence-20260815.md`.
-  Red command: `./node_modules/.bin/vitest run packages/game-cartridges/src/legacy-traversal-source-manifest.test.ts` — exit 1; 13 tests, 8 passed, 5 missing-manifest failures.
+  Phase 2 remains incomplete. Task 2 is the next executable binding work.
+  Historical Red evidence: `task1-source-manifest-red-evidence-20260815.md`.
   Strict-set coverage rejects empty, duplicate, extra, omitted, wrong-hash, generated, and unbound paths, plus presence, role, classification, locator, and disposition drift.
   Static checks passed: direct TypeScript, ESLint, Prettier, and the exact staged-path diff check.
 

@@ -16,22 +16,27 @@ TRACK_ROOT = REPO_ROOT / "measure/tracks/apk_legacy_traversal_cutover_20260727"
 MANIFEST_PATH = TRACK_ROOT / "task1-source-readiness-manifest-v1.json"
 PLAN_PATH = TRACK_ROOT / "plan.md"
 TRACK_ID = "apk_legacy_traversal_cutover_20260727"
-TASK1_MARKER = "- [~] Confirm accepted crosswalk/readiness coverage and publish exact legacy manifests for five titles."
+TASK1_MARKER = "- [x] Publish exact legacy source manifests for five titles. Source SHA: `1e848bda09b6cfb16c8076447101553a247c4417`."
 TASK1_TEXT = TASK1_MARKER.split("] ", 1)[1]
-TASK1_RED_BOUNDARY_TEXT = "Evidence-only Task 1 Red starts here."
-TASK2_BLOCKER_TEXT = "Task 2 remains blocked by the Asset Contract v2 product-owner receipt and suitability evidence."
-EXPECTED_PENDING_TASK_MARKERS = (
-    "- [ ] Consume accepted Asset Contract v2 and suitability/ingestion records; freeze each title's semantic roles, physical behavior descriptors, legacy source manifests, and reuse/ingest/block decisions before implementation.",
-    "- [ ] Write failing mechanic, responsive composition, and educational-invariant tests per title.",
-    "- [ ] Build each cartridge using current public APK APIs and approved semantic bindings.",
-    "- [ ] Run Advantage Games QC with compact/wide, resize, input, and selected-output checks.",
-    "- [ ] Run Reading and Primary host proofs for loading, authoritative completion, persistence, replay, and navigation.",
-    "- [ ] Retire only exact proven legacy paths and validate callers, selected outputs, and copied-asset guards.",
-    "- [ ] Obtain independent review and product-owner acceptance.",
+TASK1_HISTORICAL_RED_TEXT = (
+    "Historical Task 1 Red evidence is retained as a prior failure record; "
+    "it is not the current Task 1 result."
 )
-EXPECTED_PLAN_TASK_STATUSES = {TASK1_TEXT: "~"}
+PHASE2_INCOMPLETE_TEXT = (
+    "Phase 2 remains incomplete. Task 2 is the next executable binding work."
+)
+EXPECTED_INCOMPLETE_TASK_MARKERS = (
+    "- [~] Consume accepted Asset Contract v2 and suitability/ingestion records; freeze each title's semantic roles, physical behavior descriptors, legacy source manifests, and reuse/ingest/block decisions before implementation.",
+    "- [~] Write failing mechanic, responsive composition, and educational-invariant tests per title.",
+    "- [b] Build each cartridge using current public APK APIs and approved semantic bindings. deferred:green-role-after-phase-3-red-review",
+    "- [b] Run Advantage Games QC with compact/wide, resize, input, and selected-output checks. deferred:phase-4-cartridge-green",
+    "- [b] Run Reading and Primary host proofs for loading, authoritative completion, persistence, replay, and navigation. deferred:phase-5-qc-evidence",
+    "- [b] Retire only exact proven legacy paths and validate callers, selected outputs, and copied-asset guards. deferred:phase-6-host-proof-and-retirement-disposition",
+    "- [b] Obtain independent review and product-owner acceptance. deferred:product-owner",
+)
+EXPECTED_PLAN_TASK_STATUSES = {TASK1_TEXT: "x"}
 EXPECTED_PLAN_TASK_STATUSES.update(
-    {marker.split("] ", 1)[1]: " " for marker in EXPECTED_PENDING_TASK_MARKERS}
+    {marker.split("] ", 1)[1]: marker[3] for marker in EXPECTED_INCOMPLETE_TASK_MARKERS}
 )
 CHECKLIST_LINE_RE = re.compile(r"^-\s+\[(?P<status>[ x~b])\]\s+(?P<text>.+?)\s*$")
 FENCE_LINE_RE = re.compile(r"^\s*(?P<fence>`{3,}|~{3,})(?P<rest>.*)$")
@@ -359,12 +364,12 @@ def _active_checklist_lines(visible_markdown: str) -> list[tuple[int, str, str]]
 
 
 def _validate_plan_text(plan_text: str) -> None:
-    """Requires exact active and pending markers for Tasks 1 through 8."""
+    """Requires the completed Task 1 marker and incomplete Phase 2 markers."""
     visible_markdown = _normalize_visible_markdown(plan_text)
-    if TASK1_RED_BOUNDARY_TEXT not in visible_markdown:
-        raise AssertionError("PLAN_EVIDENCE_MISSING: Red boundary is required")
-    if TASK2_BLOCKER_TEXT not in visible_markdown:
-        raise AssertionError("PLAN_BOUNDARY_DRIFT: Task 2 blocker changed")
+    if TASK1_HISTORICAL_RED_TEXT not in visible_markdown:
+        raise AssertionError("PLAN_EVIDENCE_MISSING: historical Red boundary is required")
+    if PHASE2_INCOMPLETE_TEXT not in visible_markdown:
+        raise AssertionError("PLAN_BOUNDARY_DRIFT: Phase 2 incomplete boundary changed")
     checklist_lines = _active_checklist_lines(visible_markdown)
     for task_number, (task_text, expected_status) in enumerate(
         EXPECTED_PLAN_TASK_STATUSES.items(), start=1
@@ -385,13 +390,13 @@ def _validate_plan_text(plan_text: str) -> None:
 
 
 class LegacyTraversalSourceReadinessManifestTests(unittest.TestCase):
-    """Ensures Legacy Traversal Task 1 remains archive-aware and evidence-only."""
+    """Ensures Legacy Traversal Task 1 is complete as evidence-only work."""
 
-    def test_red_manifest_is_only_missing_artifact(self) -> None:
-        """Requires the not-yet-created Task 1 manifest and validates it after creation."""
+    def test_task1_manifest_is_complete_and_evidence_only(self) -> None:
+        """Validates the completed Task 1 readiness manifest and its evidence-only boundary."""
         self.assertTrue(
             MANIFEST_PATH.is_file(),
-            f"MISSING_ARTIFACT: create only {MANIFEST_PATH}",
+            f"MISSING_ARTIFACT: expected {MANIFEST_PATH}",
         )
         _validate_manifest(_load_object(MANIFEST_PATH))
 
@@ -494,8 +499,8 @@ class LegacyTraversalSourceReadinessManifestTests(unittest.TestCase):
                 "implementation", " ".join(evidence["scope"]["excluded_use"]).lower()
             )
 
-    def test_plan_marker_and_boundary_are_active(self) -> None:
-        """Reads the plan and preserves the evidence-only Task 2 boundary."""
+    def test_plan_marker_and_phase2_boundary_are_current(self) -> None:
+        """Reads the plan and preserves the completed Task 1 and incomplete Phase 2 boundaries."""
         plan_text = PLAN_PATH.read_text(encoding="utf-8")
         _validate_plan_text(plan_text)
 
@@ -571,49 +576,49 @@ class LegacyTraversalSourceReadinessManifestTests(unittest.TestCase):
         with self.assertRaisesRegex(AssertionError, "PLAN_MARKER_DRIFT"):
             _validate_plan_text(tab_task1)
 
-        comment_only_blocker = (
+        comment_only_phase2_boundary = (
             plan_text.replace(
-                TASK2_BLOCKER_TEXT,
-                "Task 2 blocker text removed.",
+                PHASE2_INCOMPLETE_TEXT,
+                "Phase 2 boundary text removed.",
                 1,
             )
-            + f"\n<!-- {TASK2_BLOCKER_TEXT} -->\n"
+            + f"\n<!-- {PHASE2_INCOMPLETE_TEXT} -->\n"
         )
         with self.assertRaisesRegex(AssertionError, "PLAN_BOUNDARY_DRIFT"):
-            _validate_plan_text(comment_only_blocker)
+            _validate_plan_text(comment_only_phase2_boundary)
 
-        four_space_blocker = plan_text.replace(
-            f"  {TASK1_RED_BOUNDARY_TEXT} {TASK2_BLOCKER_TEXT}",
-            f"  {TASK1_RED_BOUNDARY_TEXT}\n    {TASK2_BLOCKER_TEXT}",
+        four_space_phase2_boundary = plan_text.replace(
+            f"  {PHASE2_INCOMPLETE_TEXT}",
+            f"    {PHASE2_INCOMPLETE_TEXT}",
             1,
         )
         with self.assertRaisesRegex(AssertionError, "PLAN_BOUNDARY_DRIFT"):
-            _validate_plan_text(four_space_blocker)
+            _validate_plan_text(four_space_phase2_boundary)
 
         for indent_prefix in (" \t", "  \t", "   \t"):
-            tab_blocker = plan_text.replace(
-                f"  {TASK1_RED_BOUNDARY_TEXT} {TASK2_BLOCKER_TEXT}",
-                f"  {TASK1_RED_BOUNDARY_TEXT}\n{indent_prefix}{TASK2_BLOCKER_TEXT}",
+            tab_phase2_boundary = plan_text.replace(
+                f"  {PHASE2_INCOMPLETE_TEXT}",
+                f"{indent_prefix}{PHASE2_INCOMPLETE_TEXT}",
                 1,
             )
-            with self.subTest(tab_blocker_indent=repr(indent_prefix)):
+            with self.subTest(tab_phase2_indent=repr(indent_prefix)):
                 with self.assertRaisesRegex(AssertionError, "PLAN_BOUNDARY_DRIFT"):
-                    _validate_plan_text(tab_blocker)
+                    _validate_plan_text(tab_phase2_boundary)
 
         comment_only_red_boundary = (
             plan_text.replace(
-                TASK1_RED_BOUNDARY_TEXT,
-                "Task 1 Red boundary text removed.",
+                TASK1_HISTORICAL_RED_TEXT,
+                "Historical Red boundary text removed.",
                 1,
             )
-            + f"\n<!-- {TASK1_RED_BOUNDARY_TEXT} -->\n"
+            + f"\n<!-- {TASK1_HISTORICAL_RED_TEXT} -->\n"
         )
         with self.assertRaisesRegex(AssertionError, "PLAN_EVIDENCE_MISSING"):
             _validate_plan_text(comment_only_red_boundary)
 
         four_space_red_boundary = plan_text.replace(
-            f"  {TASK1_RED_BOUNDARY_TEXT} {TASK2_BLOCKER_TEXT}",
-            f"    {TASK1_RED_BOUNDARY_TEXT}\n  {TASK2_BLOCKER_TEXT}",
+            f"  {TASK1_HISTORICAL_RED_TEXT}",
+            f"    {TASK1_HISTORICAL_RED_TEXT}",
             1,
         )
         with self.assertRaisesRegex(AssertionError, "PLAN_EVIDENCE_MISSING"):
@@ -621,8 +626,8 @@ class LegacyTraversalSourceReadinessManifestTests(unittest.TestCase):
 
         for indent_prefix in (" \t", "  \t", "   \t"):
             tab_red_boundary = plan_text.replace(
-                f"  {TASK1_RED_BOUNDARY_TEXT} {TASK2_BLOCKER_TEXT}",
-                f"{indent_prefix}{TASK1_RED_BOUNDARY_TEXT}\n  {TASK2_BLOCKER_TEXT}",
+                f"  {TASK1_HISTORICAL_RED_TEXT}",
+                f"{indent_prefix}{TASK1_HISTORICAL_RED_TEXT}",
                 1,
             )
             with self.subTest(tab_red_boundary_indent=repr(indent_prefix)):

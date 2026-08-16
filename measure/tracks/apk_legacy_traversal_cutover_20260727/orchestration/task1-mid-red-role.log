@@ -4,6 +4,7 @@
 - Phase: Phase 1 source/readiness manifests, Task 1.
 - Phase base: `c2e28e9e4f326fc056415abfe2d1876f16d48675`.
 - Role base: `f780ed6312a999c1d318fc0c0b04443c17b36764`.
+- Historical status: this log records pre-Green Red work and is not the current Task 1 result.
 - Lease: `packages/game-cartridges/src/legacy-traversal-source-manifest.test.ts`, this track `plan.md`, `task1-source-manifest-red-evidence-20260815.md`, and this log.
 - Pre-existing dirty paths were generated or tool state files. Relevant dirty paths: none. Unrelated user work: none identified.
 - Test contract: exact five-title identities, five archive-preferred bindings and hashes, readiness boundary, accepted Batch A/B evidence, and five falsifiers.

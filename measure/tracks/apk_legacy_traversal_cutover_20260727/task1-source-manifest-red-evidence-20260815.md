@@ -1,10 +1,12 @@
-# Task 1 Red Evidence — amended 2026-08-16
+# Historical Task 1 Red Evidence — amended 2026-08-16
 
 Track: `apk_legacy_traversal_cutover_20260727`
 Phase: Phase 1 source/readiness manifests
 Task: 1
 Phase base: `c2e28e9e4f326fc056415abfe2d1876f16d48675`
 Role base: `8113c2491dac4b7cc93bd9940f8d55b70cd83b5c`
+
+This file records the pre-Green Red result. It is historical and does not describe the current Task 1 status.
 
 ## Contract result
 
@@ -50,4 +52,6 @@ No readiness, gameplay, adoption, cutover, or retirement claim was added.
 
 Before this remediation, relevant dirty paths were the strict test and this track's plan. Generated or ignorable paths included `.opencode/goals/**`, Codecamp Playwright reports, Codecamp test results, and Advantage Games test results. Unrelated user work included the durable-job plan and evidence, the Sales Mastery plan and evidence, and the backend job test. Those paths remain unchanged.
 
-Task 1 remains `[~]` until all five complete per-title manifests exist and this Red command turns green.
+The five per-title manifests now exist in source commit `1e848bda09b6cfb16c8076447101553a247c4417`, and the focused command now passes.
+Missing source paths remain `missing-at-head`; manifest completion does not make those sources available.
+Task 1 is complete as evidence-only manifest work. Phase 2 remains incomplete.

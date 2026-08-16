@@ -9,12 +9,15 @@ Manifest source commit: `1e848bda09b6cfb16c8076447101553a247c4417`
 
 ## Output
 
+Task 1 is complete as evidence-only manifest work.
 The source commit adds five exact per-title manifests.
 Each manifest preserves its accepted source-path denominator.
 Tracked paths record current-byte SHA-256 values.
 Missing paths record no SHA-256 value.
+Missing paths remain `missing-at-head`; this evidence does not make them available.
 Every path record uses the `evidence-only` disposition.
 Every claims object remains false for the contract fields.
+Phase 2 remains incomplete. Task 2 is the next executable binding work.
 
 ## Verification
 

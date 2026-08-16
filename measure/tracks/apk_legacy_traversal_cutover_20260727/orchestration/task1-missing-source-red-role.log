@@ -8,6 +8,8 @@ phase_base_sha: `c2e28e9e4f326fc056415abfe2d1876f16d48675`
 role_base_sha: `8113c2491dac4b7cc93bd9940f8d55b70cd83b5c`
 HEAD at role start: `8113c2491dac4b7cc93bd9940f8d55b70cd83b5c`
 
+Historical status: this log records pre-Green Red work and is not the current Task 1 result.
+
 ## Preflight
 
 - Both supplied SHAs resolve to commits.

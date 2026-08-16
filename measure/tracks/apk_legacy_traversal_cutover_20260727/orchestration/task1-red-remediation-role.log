@@ -5,6 +5,7 @@
 - phase_base_sha: `c2e28e9e4f326fc056415abfe2d1876f16d48675`.
 - role_base_sha: `58f82e936dc95796ded9158492e98999f487fe1d`.
 - Both supplied base commits resolve. Phase scope uses `phase_base_sha`. The role receipt uses `role_base_sha` only to prove new Red work.
+- Historical status: this log records pre-Green Red remediation and is not the current Task 1 result.
 
 Scope classification before editing:
 - Relevant: `packages/game-cartridges/src/legacy-traversal-source-manifest.test.ts`, this track's `plan.md`, and this requested role log.
