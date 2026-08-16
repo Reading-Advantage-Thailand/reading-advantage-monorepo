@@ -34,6 +34,7 @@ export interface HeroProps {
   };
   height?: "tall" | "medium";
   alignment?: "left" | "center";
+  textColor?: "light" | "dark";
   customGradient?: string;
   className?: string;
 }
@@ -76,6 +77,7 @@ export default function HeroSection({
   backgroundImage,
   height = "medium",
   alignment = "center",
+  textColor = "light",
   customGradient,
   className = "",
 }: HeroProps) {
@@ -103,10 +105,7 @@ export default function HeroSection({
     >
       {/* Background image with parallax */}
       {backgroundImage && (
-        <div
-          ref={bgRef}
-          className="absolute inset-0 z-0"
-        >
+        <div ref={bgRef} className="absolute inset-0 z-0">
           <Image
             src={backgroundImage.src}
             alt={backgroundImage.alt}
@@ -187,7 +186,9 @@ export default function HeroSection({
           /* Left-aligned layout with optional logo (asymmetric) */
           <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center min-h-[50vh]">
             {/* Text Content */}
-            <div className={`lg:col-span-7 ${productLogo ? "xl:col-span-7" : ""} z-20`}>
+            <div
+              className={`lg:col-span-7 ${productLogo ? "xl:col-span-7" : ""} z-20`}
+            >
               {/* Badge */}
               {badge && (
                 <div
@@ -202,7 +203,11 @@ export default function HeroSection({
 
               {/* Title */}
               {typeof title === "string" ? (
-                <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 leading-tight tracking-tight">
+                <h1
+                  className={`text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 leading-tight tracking-tight ${
+                    textColor === "dark" ? "text-slate-900" : ""
+                  }`}
+                >
                   {title}
                 </h1>
               ) : (
@@ -211,7 +216,11 @@ export default function HeroSection({
 
               {/* Description */}
               {typeof description === "string" ? (
-                <p className="text-lg md:text-xl lg:text-2xl leading-relaxed mb-8 text-white/90 max-w-2xl">
+                <p
+                  className={`text-lg md:text-xl lg:text-2xl leading-relaxed mb-8 max-w-2xl ${
+                    textColor === "dark" ? "text-slate-700" : "text-white/90"
+                  }`}
+                >
                   {description}
                 </p>
               ) : (

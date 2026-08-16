@@ -48,6 +48,7 @@ export default async function PricingPage() {
         }}
         height="medium"
         alignment="left"
+        textColor="dark"
       />
 
       {/* Trust Signals Strip */}

@@ -169,7 +169,12 @@ export function PricingTable() {
     <div className="max-w-7xl mx-auto">
       <p className="text-right mb-4 text-gray-600">{t("table.lastUpdated")}</p>
 
-      <div className="overflow-x-auto">
+      <div
+        className="overflow-x-auto"
+        tabIndex={0}
+        role="region"
+        aria-label={t("table.title")}
+      >
         <table className="w-full border-collapse bg-white shadow-lg rounded-lg">
           <thead>
             <tr className="bg-sky-100">
