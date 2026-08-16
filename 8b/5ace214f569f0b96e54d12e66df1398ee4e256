@@ -1,0 +1,1 @@
+Phase 3 source fix for durable_job_worker_platform_20260713. Synchronized the Drizzle durable-job checks with reviewed migration 0052 bounds and state invariants. Direct DB and backend type/build checks passed; focused tests passed.
