@@ -25,6 +25,7 @@
   - Finance maintenance removed the exact 3 architecture additions attributable to original Task 3. The current separate checker remains globally Red: `files=4247`, `findings=697`, `parseErrors=0`, additions 137, removals 0, renames 21. No global architecture or doctor Green claim is made.
   - Shared graph/generated refresh commit `390448dd2` is post-maintenance freshness evidence: 71-path hash `40df25b062d742ccb715e301b4a2914a079473575e504733de7dae7d70a2fb0d` and Finance subset hash `29ff5a83a30df7917e088b2257eed22f3fd6d64692c2efd14a0fe18da5150dc6`. The whole-graph audit timed out/was terminated with exit 130, and `measure/doctor.sh` remains Red on 80 deprecated `[ ]` markers across nine unrelated plans; this is not structural Green evidence.
   - Task 3 remains `[x]`. CRM/Tutor and Phase 2/3 blockers are unchanged, and no phase checkpoint is recorded.
+  - H-1 maintenance/remediation (2026-08-16; post-acceptance, no status change): source commit `e27090fa`; full Finance 401/401 and focused Finance 52/52 passed; owner gates remain unchanged; Task 3 remains `[x]`, with no phase checkpoint or whole-track acceptance claim.
 
 - [b] Task: Add live CRM and Tutor owner contracts after their source owners accept the source-native contracts. — deferred:crm-tutor-source-owners
 

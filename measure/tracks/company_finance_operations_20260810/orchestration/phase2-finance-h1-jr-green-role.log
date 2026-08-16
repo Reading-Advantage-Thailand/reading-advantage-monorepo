@@ -1,0 +1,27 @@
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+status: ready-for-primary-review
+track: company_finance_operations_20260810
+phase: Phase 2 — controlled operational imports
+role_base_sha: e6265b0be
+source_commit: e27090fa43d523e9249b89cb8e7e5e5be8a0939d
+head_at_review: e6265b0bed56290f5776353193e554c177a823df
+focused_finance_result: exit 0; 52 passed; 0 failed
+full_finance_result: exit 0; 401 passed; 0 failed; 21 files
+thb_result: exit 0; 94 passed; 0 failed; 3 files
+thb_adversarial_result: exit 0; 29 passed; 0 failed
+architecture_result: exit 0; 11 passed; 0 failed
+company_identity_result: exit 0; 103 passed; 0 failed; 2 files
+typecheck_result: exit 0; production and test checks passed
+lint_result: exit 0; Finance Operations passed
+build_result: exit 0; backend build passed
+prettier_result: exit 0; ports.ts passed
+diff_result: exit 0; scoped diff passed
+behavior_change: omit undefined schoolIds from the durable outbox payload
+formatting_change: remaining source diff is Prettier-only
+owner_status: rate-source, rounding, effective-date, pilot, CRM, Tutor, close, accountant-pack, release, and Company Admin gates remain deferred or blocked
+acceptance_status: no phase or whole-track acceptance claim
+staging_status: no files staged; no commit created for evidence
+files: packages/backend/src/modules/finance-operations/ports.ts; measure/tracks/company_finance_operations_20260810/phase2-finance-h1-green-20260816.md; measure/tracks/company_finance_operations_20260810/orchestration/phase2-finance-h1-jr-green-role.log
+handoff: Primary review may accept the H-1 behavior and formatting evidence. Keep owner gates and whole-track non-acceptance unchanged.
+END_MEASURE_AGENT_RESULT
