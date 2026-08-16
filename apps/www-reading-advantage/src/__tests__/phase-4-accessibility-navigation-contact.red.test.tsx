@@ -17,6 +17,22 @@ import thMessages from "@/locales/th";
 import zhMessages from "@/locales/zh";
 import { navigation } from "@/config/navigation";
 
+type ContactDetailsContract = {
+  supportEmail: string;
+  phoneNumber: string;
+  tiktokUrl: string;
+  lineQrSrc: string;
+};
+
+type ImportMetaWithGlob = ImportMeta & {
+  glob: (pattern: string, options: { eager: true }) => Record<string, unknown>;
+};
+
+const contactConfigModules = (import.meta as ImportMetaWithGlob).glob(
+  "../config/contact.ts",
+  { eager: true },
+);
+
 const serverWiring = vi.hoisted(() => {
   const supportEmail = "support@reading-advantage.com";
   return {
@@ -172,8 +188,21 @@ describe("Wave 5 Phase 4 accessibility, navigation, and contact contracts", () =
 
   it("uses one support contact contract across locale data and contact surfaces", async () => {
     const localeMessages = [enMessages, thMessages, zhMessages];
-    const supportEmail = enMessages.pages.contact.email.address;
+    const contactModule = contactConfigModules["../config/contact.ts"] as
+      | { contactDetails?: ContactDetailsContract }
+      | undefined;
+    const contactDetails = contactModule?.contactDetails;
+    const supportEmail =
+      contactDetails?.supportEmail ?? enMessages.pages.contact.email.address;
 
+    expect.soft(contactDetails).toEqual(
+      expect.objectContaining({
+        supportEmail: expect.any(String),
+        phoneNumber: expect.any(String),
+        tiktokUrl: expect.any(String),
+        lineQrSrc: expect.any(String),
+      }),
+    );
     expect(supportEmail).toMatch(/^[^\s@]+@[^\s@]+\.[^\s@]+$/);
     for (const messages of localeMessages) {
       expect(messages.pages.contact.email.address).toBe(supportEmail);
