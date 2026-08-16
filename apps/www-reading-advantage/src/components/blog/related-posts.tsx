@@ -7,7 +7,10 @@ interface RelatedPostsProps {
   locale?: string;
 }
 
-export async function RelatedPosts({ posts, locale = "en" }: RelatedPostsProps) {
+export async function RelatedPosts({
+  posts,
+  locale = "en",
+}: RelatedPostsProps) {
   const t = await getScopedI18n("pages.blog");
 
   if (posts.length === 0) {
@@ -17,7 +20,7 @@ export async function RelatedPosts({ posts, locale = "en" }: RelatedPostsProps) 
   return (
     <section className="mt-12 border-t pt-8">
       <h2 className="text-2xl font-bold mb-6">{t("youMightAlsoLike")}</h2>
-      <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid min-w-0 gap-8 md:grid-cols-2 lg:grid-cols-3">
         {posts.map((post) => (
           <BlogCard key={post.slug} post={post} locale={locale} />
         ))}

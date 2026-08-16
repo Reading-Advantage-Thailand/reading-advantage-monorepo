@@ -103,7 +103,9 @@ main {
 
 /* Header styles */
 .header-shadow {
-  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  box-shadow:
+    0 1px 3px 0 rgb(0 0 0 / 0.1),
+    0 1px 2px -1px rgb(0 0 0 / 0.1);
 }
 
 /* Pricing and Feature Table styles */
@@ -113,7 +115,7 @@ main {
 }
 
 .coming-soon {
-  @apply text-orange-500 italic;
+  @apply text-amber-800 italic;
 }
 
 .feature-name {
@@ -147,7 +149,7 @@ main {
 
 /* Brand accent utilities */
 .brand-accent-gradient {
-  background: linear-gradient(135deg, #38BDF8 0%, #0EA5E9 100%);
+  background: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%);
 }
 
 .brand-text-gradient {

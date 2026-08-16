@@ -18,9 +18,9 @@ export async function BlogCard({ post, locale = "en" }: BlogCardProps) {
   }).format(new Date(post.date));
 
   return (
-    <div className="rounded-lg border bg-card text-card-foreground shadow-sm">
+    <div className="min-w-0 max-w-full rounded-lg border bg-card text-card-foreground shadow-sm">
       {post.coverImage && (
-        <div className="relative h-48 w-full overflow-hidden rounded-t-lg">
+        <div className="relative h-48 w-full max-w-full overflow-hidden rounded-t-lg">
           <Image
             src={post.coverImage}
             alt={post.title}
@@ -36,7 +36,7 @@ export async function BlogCard({ post, locale = "en" }: BlogCardProps) {
           <span>•</span>
           <span>{t("readingTime", { count: post.readingTime })}</span>
         </div>
-        <h2 className="text-2xl font-bold mb-2">
+        <h2 className="text-2xl font-bold mb-2 break-words">
           <Link href={`/blog/${post.slug}`} className="hover:underline">
             {post.title}
           </Link>

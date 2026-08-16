@@ -201,7 +201,9 @@ export function PricingTable() {
                       ""
                     )
                   ) : feature.basic === "coming-soon" ? (
-                    <span className="coming-soon">{t("comingSoon")}</span>
+                    <span className="coming-soon text-amber-800">
+                      {t("comingSoon")}
+                    </span>
                   ) : (
                     feature.basic
                   )}
@@ -218,7 +220,9 @@ export function PricingTable() {
                       ""
                     )
                   ) : feature.aiEnhanced === "coming-soon" ? (
-                    <span className="coming-soon">{t("comingSoon")}</span>
+                    <span className="coming-soon text-amber-800">
+                      {t("comingSoon")}
+                    </span>
                   ) : (
                     feature.aiEnhanced
                   )}
@@ -235,7 +239,9 @@ export function PricingTable() {
                       ""
                     )
                   ) : feature.aiTutor === "coming-soon" ? (
-                    <span className="coming-soon">{t("comingSoon")}</span>
+                    <span className="coming-soon text-amber-800">
+                      {t("comingSoon")}
+                    </span>
                   ) : (
                     feature.aiTutor
                   )}

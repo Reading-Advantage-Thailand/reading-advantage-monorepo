@@ -68,7 +68,7 @@ export default async function ContactPage() {
       <section className="py-24 px-4 bg-sky-50">
         <div className="container mx-auto">
           <div className="text-center mb-16">
-            <span className="uppercase tracking-widest text-xs font-semibold text-sky-600 mb-4 block">
+            <span className="uppercase tracking-widest text-xs font-semibold text-sky-700 mb-4 block">
               {t("getInTouch")}
             </span>
             <h2 className="text-4xl font-bold text-sky-900 tracking-tight">
@@ -134,7 +134,7 @@ export default async function ContactPage() {
       <section className="py-24 px-4 bg-white">
         <div className="container mx-auto">
           <div className="text-center mb-16">
-            <span className="uppercase tracking-widest text-xs font-semibold text-sky-600 mb-4 block">
+            <span className="uppercase tracking-widest text-xs font-semibold text-sky-700 mb-4 block">
               {t("connectWithUs")}
             </span>
             <h2 className="text-3xl font-bold text-sky-900 tracking-tight">
