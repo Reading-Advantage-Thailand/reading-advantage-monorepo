@@ -79,3 +79,49 @@ files: apps/www-reading-advantage/src/locales/pages/products/science-advantage.t
 failures: production build and fresh non-incremental typecheck remain blocked by the pre-existing services locale error at services/page.tsx:56
 review_a_handoff: Review implementation commit 758c42c42 against immutable Red a2c378992 and phase base c312eb71942715a0d12b2df037ac9527323b31c7; verify en/th/zh parity and ExactMessages preservation
 END_MEASURE_AGENT_RESULT
+
+## Resumed Services Remediation
+
+- Resume base SHA: `1faed8ed4`
+- Implementation commit: `c24ec2104`
+- Lease: `apps/www-reading-advantage/src/app/[locale]/(marketing)/services/page.tsx` and this track's evidence paths
+
+The services caller now narrows service 3 before it translates feature keys.
+The change keeps the exact four service rows and feature counts 6/6/6/4.
+The change uses no casts, `any`, string widening, or `ExactMessages` changes.
+
+## Resumed Verification
+
+| Check                           | Result       |
+| ------------------------------- | ------------ |
+| Focused Phase 3 suite           | 10/10 passed |
+| Direct www typecheck            | Passed       |
+| Fresh non-incremental typecheck | Passed       |
+| Production build                | Passed       |
+| Targeted services lint          | Passed       |
+| Services Prettier check         | Passed       |
+| Scoped diff check               | Passed       |
+
+The focused suite included the immutable Red contract and the accepted Group B service contract.
+The Group B contract confirmed the four service rows and feature counts 6/6/6/4.
+
+## Resumed Review A Handoff
+
+Review `c24ec2104` against `1faed8ed4` and the original Red commit `a2c378992`.
+Confirm the service 3 narrowing preserves exact message keys without weakening `ExactMessages`.
+Confirm no concurrent or unrelated dirty files entered the implementation commit.
+
+MEASURE_AGENT_RESULT
+role: jr-green
+status: complete
+track: wave5_public_surface_completion_20260628
+phase: Phase 3: i18n Completeness and Typed Locale Access
+phase_base_sha: c312eb71942715a0d12b2df037ac9527323b31c7
+resume_base_sha: 1faed8ed4
+commits: 758c42c42 Science locale implementation; c24ec2104 services implementation; pending evidence commit
+commands: focused Phase 3 10/10; direct typecheck passed; fresh typecheck passed; production build passed; targeted lint passed; Prettier passed; scoped diff passed
+counts: 4 service rows; feature counts 6/6/6/4; 2 focused test files; 10/10 tests passed
+files: apps/www-reading-advantage/src/app/[locale]/(marketing)/services/page.tsx; measure/tracks/wave5_public_surface_completion_20260628/plan.md; measure/tracks/wave5_public_surface_completion_20260628/phase-3-science-contract-jr-green-role-log.md
+failures: none in the resumed Phase 3 gates; unrelated dirty files were preserved
+review_a_handoff: Review c24ec2104 against resume base 1faed8ed4 and Red a2c378992; verify exact service rows, 6/6/6/4 feature counts, and ExactMessages preservation
+END_MEASURE_AGENT_RESULT

@@ -54,24 +54,25 @@
   - Evidence refs: www T8 (LRF-021/022/023/024/016), T15 (LRF-027).
   - The historical Red test failed 3/3 for reviewed CTA/accessibility copy, locale casts, and Thai typo forms.
   - Mid Red remediation adds non-vacuous CTA interpolation, Sheet screen-reader, locale-parity, and Science caller type contracts.
-- [x] Task: Externalize strings, add zh fallback, fix Thai typos, replace `as never` with typed accessors. Source SHA evidence: `ee2d7c238db07f2b77646a79a9ce0bc3b5c35916`, `1ac4e1b3ed80db90f7797bf68aefce04ad6b2768`, `758c42c42`.
+- [x] Task: Externalize strings, add zh fallback, fix Thai typos, replace `as never` with typed accessors. Source SHA evidence: `ee2d7c238db07f2b77646a79a9ce0bc3b5c35916`, `1ac4e1b3ed80db90f7797bf68aefce04ad6b2768`, `758c42c42`, `c24ec2104`.
   - Source SHA evidence: `1ac4e1b3ed80db90f7797bf68aefce04ad6b2768`.
   - Group B typed locale access is accepted in source commit `ee2d7c238db07f2b77646a79a9ce0bc3b5c35916`.
   - The content-bound five-path aggregate is `e4bf355b8b416a8ad014d37cda790e7c193b7a45866fdb3108c0f9786a0c461f`.
   - Final Review A and Security Review B both returned ACCEPT for Group B.
   - Group B proves exact en/th/zh contracts, AST assertion rejection, and exact translator key sequences.
    - The historical source commits add typed CTA and Sheet messages and correct the reviewed Thai typo forms.
-   - The Science locale contract is corrected in `758c42c42`. All existing Science callers now resolve against en, th, and zh dictionaries.
-   - The correction adds only missing caller messages. It preserves existing translations and keeps `ExactMessages` unchanged.
-- [x] Task: Run www targeted tests. Source SHA evidence: `758c42c42`.
+    - The Science locale contract is corrected in `758c42c42`. All existing Science callers now resolve against en, th, and zh dictionaries.
+    - The correction adds only missing caller messages. It preserves existing translations and keeps `ExactMessages` unchanged.
+- [x] Task: Run www targeted tests. Source SHA evidence: `758c42c42`, `c24ec2104`.
   - Source SHA evidence: `1ac4e1b3ed80db90f7797bf68aefce04ad6b2768`.
   - Historical Group B and Phase 2 evidence remains separate from this remediation.
    - The immutable Red rerun at `a2c378992` remains 4/5, with one Science failure and 22 locale-key diagnostics.
    - The corrected focused suite passes 5/5 with `--testTimeout=30000` for the TypeScript program assertion.
-   - Direct www typecheck passes with the app command. A fresh non-incremental check finds the pre-existing services locale error at `services/page.tsx:56`.
-   - Production `next build` compiles, then exits 1 on that same pre-existing services locale error.
-   - Targeted lint, Prettier, and diff checks pass for the implementation file.
-   - Phase 3 Review A must review the implementation commit before overall phase acceptance.
+   - The services caller correction is in `c24ec2104`. It preserves four rows with feature counts 6/6/6/4.
+   - Direct standard and fresh non-incremental www typechecks pass.
+   - Production `next build` passes.
+   - Targeted lint, Prettier, and scoped diff checks pass for the implementation files.
+   - Phase 3 Review A must review `758c42c42` and `c24ec2104` before overall phase acceptance.
 
 ## Phase 4: Accessibility, Navigation, and Contact
 
