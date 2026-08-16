@@ -124,6 +124,10 @@
        - The contract covers ContactPage, Footer, ContactForm, and raw contact locale authority fields.
        - Locale labels and descriptions remain outside the duplicate-value authority check.
        - UX-P4-003 Contact Form remains successor-owned by `www_crm_lead_intake_20260722`.
+       - Mid Red resumed at `401b65d3f777dc4e4da6a0127d1a56f523c8d984` to correct a stale email parity assertion.
+       - Rendered contact assertions now use `contactDetails.supportEmail`; locale `email.address` values remain labels and exclude the raw address.
+       - Test correction commit: `c9ea196dc`; evidence and role log: `phase-4-contact-authority-red-20260816.md` and `phase-4-contact-authority-mid-red-role.log`.
+       - Green-owned ContactPage and contact locale edits remain uncommitted and untouched.
 
 ## Phase 5: Comparison/Pricing Data and Legal Copy
 

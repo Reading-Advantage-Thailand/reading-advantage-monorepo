@@ -1,0 +1,44 @@
+# Phase 4 RC-P4-001 Mid Red Role Log
+
+- Track: `wave5_public_surface_completion_20260628`.
+- Phase: Phase 4 RC-P4-001 contact authority assertion correction.
+- Role: Measure Mid Red.
+- Phase base SHA: `c572d0b87`.
+- Role base SHA: `401b65d3f777dc4e4da6a0127d1a56f523c8d984`.
+- Lease: the named Red test, this plan, one evidence file, and this role log.
+
+## Correction
+
+The historical assertion required every locale `email.address` to equal the raw support email.
+The accepted authority contract keeps raw contact values in `src/config/contact.ts`.
+The Red test now checks rendered email content against `contactDetails.supportEmail`.
+It also checks that locale `email.address` values remain labels without the raw address.
+
+## Boundary
+
+- The test correction commit is `c9ea196dc`.
+- ContactPage and the contact locale file remain Green-owned dirty paths.
+- Neither Green-owned path was edited or staged.
+- No accessibility, navigation, or visible support assertion was removed.
+
+## Verification
+
+- Phase 4 two-file suite: 7/7 passed.
+- Phase 3 regression: 10/10 passed with a 60-second test timeout.
+- TypeScript, targeted ESLint, Prettier, and scoped diff checks passed.
+- A 30-second Phase 3 attempt hit the existing Science diagnostic timeout; the retry passed.
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+status: complete
+track: wave5_public_surface_completion_20260628
+phase: Phase 4 RC-P4-001 contact authority assertion correction
+phase_base_sha: c572d0b87
+role_base_sha: 401b65d3f777dc4e4da6a0127d1a56f523c8d984
+test_commit: c9ea196dc
+evidence_commit: this evidence/plan commit
+tests_run: Phase 4 7/7; Phase 3 10/10 with a 60-second test timeout
+files_changed: the named Red test; this plan; the RC-P4-001 evidence; this role log
+boundary: Green-owned ContactPage and contact locale edits were not changed or staged
+handoff: Jr Green may resume from this evidence/plan commit and must preserve both Green source paths.
+END_MEASURE_AGENT_RESULT

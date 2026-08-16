@@ -74,3 +74,42 @@ focused_result: 2 authority contracts fail; duplicate-value counterexample passe
 files_changed: apps/www-reading-advantage/src/__tests__/phase-4-contact-authority.red.test.tsx; measure/tracks/wave5_public_surface_completion_20260628/plan.md; measure/tracks/wave5_public_surface_completion_20260628/phase-4-contact-authority-red-20260816.md
 green_handoff: Route visible raw contact values through contactDetails and remove raw authority values from locale fields. Keep translated labels and UX-P4-003 successor ownership.
 END_MEASURE_AGENT_RESULT
+
+## Mid Red Resume — Historical Assertion Correction
+
+- Resume base SHA: `401b65d3f777dc4e4da6a0127d1a56f523c8d984`.
+- The historical Phase 4 test used locale `email.address` as a fallback raw authority.
+- The corrected test requires `contactDetails.supportEmail` and checks rendered email content and mailto links against that value.
+- The corrected test checks that every locale `email.address` remains a string label without the raw support email.
+- Test correction commit: `c9ea196dc`.
+
+## Resume Verification
+
+| Command | Result |
+|---|---|
+| `CI=true ../../node_modules/.bin/vitest run src/__tests__/phase-4-accessibility-navigation-contact.red.test.tsx src/__tests__/phase-4-contact-authority.red.test.tsx --maxWorkers=1 --testTimeout=30000` | 7/7 passed. |
+| `CI=true ../../node_modules/.bin/vitest run src/__tests__/phase-3-i18n.red.test.ts src/__tests__/phase-3-group-b-types.test.ts --maxWorkers=1 --testTimeout=60000` | 10/10 passed. |
+| `../../node_modules/.bin/tsc --noEmit -p tsconfig.json` | Passed. |
+| `../../node_modules/.bin/eslint src/__tests__/phase-4-accessibility-navigation-contact.red.test.tsx src/__tests__/phase-4-contact-authority.red.test.tsx` | Passed. |
+| `../../node_modules/.bin/prettier --check src/__tests__/phase-4-accessibility-navigation-contact.red.test.tsx src/__tests__/phase-4-contact-authority.red.test.tsx` | Passed. |
+| `git diff --check` on the leased paths | Passed. |
+
+The initial Phase 3 run with a 30-second test timeout hit the existing Science diagnostic timeout.
+The 60-second retry passed all 10 cases.
+
+The Red test changed only through `c9ea196dc`.
+The Green-owned ContactPage and contact locale edits remained unstaged and uncommitted.
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+status: complete
+track: wave5_public_surface_completion_20260628
+phase: Phase 4 RC-P4-001 contact authority assertion correction
+phase_base_sha: c572d0b87
+role_base_sha: 401b65d3f777dc4e4da6a0127d1a56f523c8d984
+test_commit: c9ea196dc
+focused_result: Phase 4 two-file suite passed 7/7
+regression_result: Phase 3 regression passed 10/10 with a 60-second test timeout
+boundary: Green-owned ContactPage and contact locale edits were not changed or staged
+handoff: Jr Green may resume from the evidence/plan commit. Preserve the two uncommitted Green source files.
+END_MEASURE_AGENT_RESULT
