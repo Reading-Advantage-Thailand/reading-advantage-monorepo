@@ -28,11 +28,14 @@
   `src/release-artifact.ts` 7ead9d382b4211f8822e3615541f515b81b231579d51cf3e82e5c21769deeeab,
   `fixtures/consumer/check-consumer.mjs` bf386bdbd02770fd80413e7a5270031c22b91f771baca6620ca723e7cc2cf805,
   and `src/__tests__/release-artifact.test.ts`
-  d2f9a9f288c9d4450cb785e799eee2e2b8450641b0ae9585bc298da633c97c4c. Review
+  d2f9a9f288c9d4450cb785e799eee2e2b8450641b0ae9585bc298da633c97c4c. These
+  five hashes are historical Task A scope at commit
+  `324d81a838ccab07907720a7c3f79482dd1205e0`, not current-head hashes. Review
   A ACCEPT and Security Review B ACCEPT both bind the committed Green and these
   final hashes; their receipts are recorded in the commit note. The architecture
   audit recorded zero findings introduced by `324d81a83`.
-- [x] Task: Source: `b3578c678`; evidence: `91aa90a70`. Run and record the runtime manifest, consumer, packed-consumer,
+- [~] Task: Historical source scope: `b3578c678`; historical evidence scope:
+  `91aa90a70`. Run and record the runtime manifest, consumer, packed-consumer,
   lint, type, build, and immutable-source closeout gates after Task A Green
   acceptance. Local installed ESLint and TypeScript binaries passed for both
   `mastery-runtime-compat` and `sales-knowledge`; runtime-compat passed 4 test
@@ -93,23 +96,26 @@
    progress; this receipt does not claim Phase 0 closeout, shared-root Green, or
    unblock later work.
 
-   Security remediation receipt (2026-08-15): implementation commit
+   Historical security remediation receipt (2026-08-15; implementation commit
    `5ac0cbfc9342204a368c51f54a5522f1180ebc28` retains the production lease
    capability and checks process-start identity. It enforces exact Sales imports,
    uses descriptor-driven packed imports, snapshots inputs, and returns audited
-   HEAD, source, and archive digests. Focused gates exited zero. Task B was in
-   progress because the shared-root doctor and architecture gates remained open.
+   HEAD, source, and archive digests. Focused gates exited zero. This historical
+   receipt does not close Task B because the shared-root doctor and architecture
+   gates remain open.
 
-   Security remediation receipt (2026-08-15): implementation commit
+   Historical security remediation receipt (2026-08-15; implementation commit
    `5ac0cbfc9342204a368c51f54a5522f1180ebc28` retains the production lease
    capability, enforces exact unique Sales imports, uses descriptor-driven packed
    imports, snapshots inputs, and returns audited HEAD and digest data. Focused
    lease, admission, packed-consumer, Codecamp, type, lint, build, format, clean
    CLI, immutable-diff, and diff checks exited zero. The source digest was
-   `590d2d3dd7081f0152563f07b4ae86b4ceca5bdb2dd728b9c64342b2e6c5bf1e`.
-   Task B is complete with source `b3578c678` and evidence `91aa90a70`.
+   `590d2d3dd7081f0152563f07b4ae86b4ceca5bdb2dd728b9c64342b2e6c5bf1e` belongs
+   to implementation commit `5ac0cbfc9342204a368c51f54a5522f1180ebc28`.
+   Task B remains `[~]`; source `b3578c678` and evidence `91aa90a70` are prior
+   correction scopes, not closeout evidence.
 
-   Green test-correction receipt (2026-08-15): implementation commit
+   Historical Green test-correction receipt (2026-08-15; implementation commit
    `b3578c678` replaces a formatting-sensitive source assertion with a live Linux
    lease proof. The proof records a numeric process-start identity, then reclaims
    a stale owner that has the live PID but a mismatched identity. The targeted
@@ -118,8 +124,8 @@
    packed-consumer, Codecamp, Sales-knowledge, type, lint, build, and clean CLI
    gates passed. The aggregate runtime-compat test was stopped by the 360-second
    command timeout after its packed suite passed. It is not Green evidence.
-   This receipt preceded Task B completion. The shared-root doctor and
-   architecture gates remain outside this remediation.
+   This receipt is historical correction evidence. Task B remains `[~]`; the
+   shared-root doctor and architecture gates remain outside this remediation.
 
 ## Phase 1 — bind the approved course to a knowledge graph
 

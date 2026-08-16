@@ -77,6 +77,42 @@ The Green slice does not close Phase 0 Task B or activate Phase 2. It keeps the
 existing default-path concurrency proof on the canonical lease and keeps the
 test seam unavailable through the package public export.
 
+## Review A digest provenance Red remediation (current)
+
+Review A found that the release proof reports source and archive digests but
+does not bind every clean-consumer fixture byte to `sourceDigestSha256`.
+The missing boundary includes the copied and executed `check-consumer.mjs` and
+the copied `package.json`. The Red contract remains test-only and does not edit
+production source.
+
+The focused contract in `src/__tests__/release-artifact.test.ts` must prove:
+
+1. `auditedHead` equals the Git HEAD observed by the release proof.
+2. `sourceDigestSha256` is a SHA-256 digest over the runtime inputs and all four
+   copied fixture files: `check-consumer.mjs`, `consumer.json`, `package.json`,
+   and `sales-advantage.json`.
+3. `archiveDigestsSha256` has exactly one SHA-256 value for each packed package.
+4. Replacing any copied fixture after input snapshot causes the release proof to
+   fail with `RELEASE_INPUT_MUTATION_CONFLICT` or an equivalent clear conflict.
+5. The clean consumer never executes a replacement fixture after the snapshot.
+
+The digest input names are part of this contract. Fixture bytes use
+`input-snapshot/consumer-fixture/<file>`, and runtime bytes retain their current
+snapshot names. The package manifest digest uses its original bytes before the
+clean consumer adds local archive dependencies.
+
+Run the Red contract with:
+
+```bash
+pnpm --filter @reading-advantage/mastery-runtime-compat exec vitest run \
+  src/__tests__/release-artifact.test.ts --maxWorkers=1 \
+  -t "digest contract"
+```
+
+At Mid Red, only the named digest contract is expected to fail. The lease and
+Sales admission contracts must remain green. Green must add the smallest
+production snapshot and mutation guard needed to satisfy this contract.
+
 ## Phase 0 - reconcile and admit the consumer (one-shot Red/Green)
 
 ### Ownership of the one-shot
@@ -406,7 +442,7 @@ is breaking and security-relevant.
 | A7 (over-broad filter swallowing real hits) | The gate uses `--filter @reading-advantage/mastery-runtime-compat` and `--filter @reading-advantage/sales-knowledge`, not `pnpm turbo run test`. Falsification: a Phase 0 regression fails the focused command even when the aggregate is already red.                                                                                                                                                                                                            |
 | A10 (generated-facts drift)                 | The combined graph refresh covered 71 unique TS/TSX paths and generated-facts commit `390448dd2` embeds the recorded sourceRevision, architecture hash, and routes hash; the pre-commit rerun matched staged bytes. This freshness is independent evidence and does not waive the Red `measure/doctor.sh` marker guard or the separate Red architecture checker. Falsification: a stale generated fact or mismatched embedded hash fails the corresponding check. |
 | A14 (invalid ripgrep option)                | Any audit detector in this strategy uses `rg -n '<regex>'`, never `rg -nE`. Falsification: `rg -nE` exits 2 and is treated as a failure, not a zero-hit result.                                                                                                                                                                                                                                                                                                   |
-| A15 (stale role-receipt hashes)             | If the closeout produces a role receipt that enumerates output SHA-256 values, a later Green fix must refresh the receipt. Falsification: `bash tests/orchestrator_role_receipt_integrity.sh` fails on a stale receipt.                                                                                                                                                                                                                                           |
+| A15 (stale role-receipt hashes)             | If the closeout produces a role receipt that enumerates output SHA-256 values, a later Green fix must refresh the receipt. Historical source and archive hashes must name their commit scope. Falsification: `bash tests/orchestrator_role_receipt_integrity.sh` fails on a stale receipt.                                                                                                                                                     |
 
 ## Phase 1 - accepted reference (no active tests)
 

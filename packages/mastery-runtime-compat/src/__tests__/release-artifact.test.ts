@@ -1,5 +1,5 @@
 import { execFile } from "node:child_process";
-import { randomUUID } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import {
   lstat,
   mkdir,
@@ -37,9 +37,24 @@ const ENGINE_PACKAGES = [
   "srs-engine",
 ] as const;
 const PACKAGES = [...ENGINE_PACKAGES, "sales-knowledge"] as const;
+const RUNTIME_DIST_FILES = [
+  "check-consumer.js",
+  "index.js",
+  "release-artifact.js",
+] as const;
+const CONSUMER_FIXTURE_FILES = [
+  "check-consumer.mjs",
+  "consumer.json",
+  "package.json",
+  "sales-advantage.json",
+] as const;
 const SALES_DESCRIPTOR_PATH = resolve(
   ROOT,
   "packages/mastery-runtime-compat/fixtures/consumer/sales-advantage.json",
+);
+const CONSUMER_FIXTURE_ROOT = resolve(
+  ROOT,
+  "packages/mastery-runtime-compat/fixtures/consumer",
 );
 const ARTIFACT_ROOT = resolve(
   ROOT,
@@ -52,6 +67,10 @@ const RED_LEASE_PARENT = resolve(
 const WORKSPACE_LEASE_ROOT = resolve(
   ROOT,
   ".cache/mastery-runtime-compat/trusted-work/.workspace-build.lease",
+);
+const TRUSTED_WORK_ROOT = resolve(
+  ROOT,
+  ".cache/mastery-runtime-compat/trusted-work",
 );
 const WORKSPACE_LEASE_STALE_AFTER_MS = 15 * 60 * 1_000;
 const RESOLVED_RUNTIME_VERSIONS = {
@@ -213,6 +232,58 @@ async function waitForPath(path: string): Promise<void> {
     }
   }
   throw new Error("Workspace lease child did not become ready");
+}
+
+/** Computes the canonical digest for named immutable files in the release proof. */
+async function digestNamedFiles(
+  inputs: ReadonlyArray<{ name: string; path: string }>,
+): Promise<string> {
+  const hash = createHash("sha256");
+  const namedBytes = await Promise.all(
+    inputs.map(async (input) => ({
+      name: input.name,
+      bytes: await readFile(input.path),
+    })),
+  );
+  for (const input of namedBytes.sort((left, right) =>
+    left.name.localeCompare(right.name),
+  )) {
+    hash.update(input.name);
+    hash.update("\0");
+    hash.update(String(input.bytes.byteLength));
+    hash.update("\0");
+    hash.update(input.bytes);
+    hash.update("\0");
+  }
+  return hash.digest("hex");
+}
+
+/** Waits for a newly created release child to finish its immutable input snapshot. */
+async function waitForReleaseInputSnapshot(
+  initialEntries: ReadonlySet<string>,
+): Promise<void> {
+  for (let attempt = 0; attempt < 300; attempt += 1) {
+    const entries = await readdir(TRUSTED_WORK_ROOT);
+    for (const entry of entries) {
+      if (initialEntries.has(entry) || !entry.startsWith(".release-artifact-"))
+        continue;
+      try {
+        await lstat(
+          resolve(
+            TRUSTED_WORK_ROOT,
+            entry,
+            "input-snapshot",
+            "runtime-manifest.json",
+          ),
+        );
+        return;
+      } catch (error) {
+        if (error?.code !== "ENOENT") throw error;
+      }
+    }
+    await new Promise((resolveDelay) => setTimeout(resolveDelay, 100));
+  }
+  throw new Error("Release artifact input snapshot did not become visible");
 }
 
 /** Finds a positive process identifier that is not live for the dead-owner contract. */
@@ -1002,7 +1073,7 @@ describe("mastery runtime packed release contract", () => {
     ).toThrow(/wildcard|absent/i);
   });
 
-  it("dry-runs the engines and Sales knowledge then validates the isolated Sales consumer", async () => {
+  it("[digest contract] binds every clean-consumer fixture byte to release provenance", async () => {
     const module = await loadReleaseGate();
     expect(
       module,
@@ -1025,7 +1096,161 @@ describe("mastery runtime packed release contract", () => {
       checkedConsumers: ["sales-advantage"],
       resolvedVersions: RESOLVED_RUNTIME_VERSIONS,
     });
+    const { stdout: auditedHead } = await execute(
+      "git",
+      ["rev-parse", "HEAD"],
+      { cwd: ROOT, encoding: "utf8" },
+    );
+    expect(result.auditedHead).toBe(auditedHead.trim());
+    expect(result.auditedHead).toMatch(/^[0-9a-f]{40}$/);
+    expect(result.sourceDigestSha256).toMatch(/^[0-9a-f]{64}$/);
+    expect(result.sourceDigestSha256).toBe(
+      await digestNamedFiles([
+        {
+          name: "input-snapshot/runtime-manifest.json",
+          path: resolve(
+            ROOT,
+            "packages/mastery-runtime-compat/runtime-manifest.json",
+          ),
+        },
+        {
+          name: "input-snapshot/descriptors/0-sales-advantage.json",
+          path: SALES_DESCRIPTOR_PATH,
+        },
+        ...RUNTIME_DIST_FILES.map((file) => ({
+          name: `runtime-dist-snapshot/${file}`,
+          path: resolve(ROOT, "packages/mastery-runtime-compat/dist", file),
+        })),
+        ...CONSUMER_FIXTURE_FILES.map((file) => ({
+          name: `input-snapshot/consumer-fixture/${file}`,
+          path: resolve(CONSUMER_FIXTURE_ROOT, file),
+        })),
+      ]),
+    );
+    expect(Object.keys(result.archiveDigestsSha256).sort()).toEqual(
+      PACKAGES.map((name) => `@reading-advantage/${name}`).sort(),
+    );
+    for (const packageName of PACKAGES.map(
+      (name) => `@reading-advantage/${name}`,
+    )) {
+      expect(result.archiveDigestsSha256[packageName]).toMatch(
+        /^[0-9a-f]{64}$/,
+      );
+    }
   }, 240_000);
+
+  it("[digest contract] rejects replacement of copied fixtures after snapshot", async () => {
+    const root = resolve(
+      ROOT,
+      ".cache/mastery-runtime-compat/release-artifact-test",
+      `fixture-replacement-${randomUUID()}`,
+    );
+    const releaseModuleUrl = pathToFileURL(
+      resolve(ROOT, "packages/mastery-runtime-compat/dist/release-artifact.js"),
+    ).href;
+    const childScript = `
+      const release = await import(${JSON.stringify(releaseModuleUrl)});
+      await release.runReleaseArtifactCheck({
+        temporaryRoot: process.argv[1],
+        consumerDescriptorPaths: [process.argv[2]],
+      });
+    `;
+    const initialTrustedWorkEntries = new Set(await readdir(TRUSTED_WORK_ROOT));
+    const childPromise = execute(
+      process.execPath,
+      ["--input-type=module", "-e", childScript, root, SALES_DESCRIPTOR_PATH],
+      {
+        cwd: ROOT,
+        encoding: "utf8",
+        env: {
+          ...process.env,
+          CI: "true",
+          RELEASE_ARTIFACT_TEST_DELAY_BEFORE_CONSUMER_MS: "30000",
+        },
+        maxBuffer: 20 * 1024 * 1024,
+      },
+    );
+    const backups: Array<{ original: string; backup: string }> = [];
+    try {
+      await waitForReleaseInputSnapshot(initialTrustedWorkEntries);
+      const replacements = new Map<string, Buffer>([
+        [
+          resolve(CONSUMER_FIXTURE_ROOT, "check-consumer.mjs"),
+          Buffer.concat([
+            await readFile(
+              resolve(CONSUMER_FIXTURE_ROOT, "check-consumer.mjs"),
+            ),
+            Buffer.from("\n// replacement after the release snapshot\n"),
+          ]),
+        ],
+        [
+          resolve(CONSUMER_FIXTURE_ROOT, "package.json"),
+          Buffer.from(
+            `${JSON.stringify(
+              {
+                ...JSON.parse(
+                  await readFile(
+                    resolve(CONSUMER_FIXTURE_ROOT, "package.json"),
+                    "utf8",
+                  ),
+                ),
+                redFixtureReplacement: "mutation-conflict",
+              },
+              null,
+              2,
+            )}\n`,
+          ),
+        ],
+        [
+          resolve(CONSUMER_FIXTURE_ROOT, "consumer.json"),
+          Buffer.concat([
+            await readFile(resolve(CONSUMER_FIXTURE_ROOT, "consumer.json")),
+            Buffer.from("\n"),
+          ]),
+        ],
+        [
+          resolve(CONSUMER_FIXTURE_ROOT, "sales-advantage.json"),
+          Buffer.concat([
+            await readFile(
+              resolve(CONSUMER_FIXTURE_ROOT, "sales-advantage.json"),
+            ),
+            Buffer.from("\n"),
+          ]),
+        ],
+      ]);
+      for (const [original, replacement] of replacements) {
+        const backup = resolve(
+          RED_LEASE_PARENT,
+          `fixture-backup-${randomUUID()}`,
+        );
+        await rename(original, backup);
+        await writeFile(original, replacement, { flag: "wx" });
+        backups.push({ original, backup });
+      }
+
+      let failureText = "";
+      try {
+        await childPromise;
+      } catch (error) {
+        failureText = [
+          error instanceof Error ? error.message : String(error),
+          typeof error === "object" && error !== null && "stderr" in error
+            ? String(error.stderr)
+            : "",
+        ].join("\n");
+      }
+      expect(failureText).toMatch(
+        /RELEASE_INPUT_MUTATION_CONFLICT|fixture.*changed|snapshot.*conflict/i,
+      );
+    } finally {
+      for (const { original, backup } of backups.reverse()) {
+        await rm(original, { force: true });
+        await rename(backup, original);
+      }
+      await childPromise.catch(() => undefined);
+      await rm(root, { recursive: true, force: true });
+    }
+  }, 420_000);
 
   it("forces lease overlap while one process consumes a private dist snapshot", async () => {
     const root = resolve(

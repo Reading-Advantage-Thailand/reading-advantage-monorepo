@@ -1,0 +1,45 @@
+MEASURE_AGENT_RESULT
+role: mid-red
+status: complete
+track: sales_mastery_consumer_20260810
+phase: Phase 0 — reconcile and admit the consumer
+phase_base_sha: 8adc57cb0af0693c1b3420842b3a504939a36b2e
+role_base_sha: 3d09df0ef278ee471ebca894da42eb5588a1e370
+
+review_a_failure: The release proof omitted copied clean-consumer fixture bytes
+from sourceDigestSha256. The missing bytes included check-consumer.mjs and
+package.json. The proof also lacked a fixture replacement conflict test.
+
+red_contract: release-artifact.test.ts now binds all four copied fixture files,
+auditedHead, sourceDigestSha256, archive digest keys and SHA-256 values, and
+fixture replacement after snapshot. No production source changed.
+
+focused_tests:
+- digest contract: exit 1; 2 failed and 24 skipped. The received source digest
+  was 590d2d3dd7081f0152563f07b4ae86b4ceca5bdb2dd728b9c64342b2e6c5bf1e; the
+  fixture-bound expected digest was d617f15e4bc9b41625e09fcb5877758b86161db61ff65c236b85357e5327391f.
+- digest fixture replacement: exit 1; the child completed after replacement,
+  so the expected mutation conflict text was empty.
+- WorkspaceLeaseRuntime Red contract: exit 0; 17 passed and 9 skipped.
+- Sales runtime admission: exit 0; 11 passed.
+- mastery-runtime-compat TypeScript check: exit 0.
+- Prettier check for the changed test: exit 0.
+- git diff --check: exit 0.
+
+task_state: Task B remains [~]. Historical hashes are labeled by commit scope.
+The source digest 590d2d3dd7081f0152563f07b4ae86b4ceca5bdb2dd728b9c64342b2e6c5bf1e
+belongs to implementation commit 5ac0cbfc9342204a368c51f54a5522f1180ebc28.
+The correction source and evidence scopes are b3578c678 and 91aa90a70.
+
+green_handoff: Add the smallest production change that snapshots all copied
+fixture bytes before clean-consumer execution, includes those bytes in the
+canonical source digest, and rejects replacement with
+RELEASE_INPUT_MUTATION_CONFLICT. Re-run the digest, lease, admission, packed,
+lint, type, build, clean-consumer, and immutable-source gates. Keep Task B [~]
+until shared-root closeout and final acceptance pass.
+
+files_changed: packages/mastery-runtime-compat/src/__tests__/release-artifact.test.ts;
+measure/tracks/sales_mastery_consumer_20260810/plan.md;
+measure/tracks/sales_mastery_consumer_20260810/test-strategy.md;
+measure/tracks/sales_mastery_consumer_20260810/orchestration/phase0-mid-red-review-a-remediation-role.log
+END_MEASURE_AGENT_RESULT
