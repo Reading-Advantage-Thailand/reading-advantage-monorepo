@@ -91,6 +91,8 @@
   - Targeted lint, Prettier, and scoped diff checks pass.
   - Review A Red remediation for RA-P4-002, RA-P4-003, and RA-P4-004: `phase-4-mid-red-review-a-remediation-20260816.md`.
   - Existing Phase 4 assertions remain unchanged. The remediation adds only the three Review A Red contracts.
+  - Browser regression Red for UX-P4-001, UX-P4-002, UX-P4-004, and UX-P4-005: `phase-4-browser-regressions-red-20260816.md`.
+  - UX-P4-003 Contact Form remains successor-owned by `www_crm_lead_intake_20260722`; this lane adds no backend contract.
 
 ## Phase 5: Comparison/Pricing Data and Legal Copy
 
