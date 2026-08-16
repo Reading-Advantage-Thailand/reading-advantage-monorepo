@@ -221,8 +221,6 @@ describe("Wave 5 Phase 4 accessibility, navigation, and contact contracts", () =
       | { contactDetails?: ContactDetailsContract }
       | undefined;
     const contactDetails = contactModule?.contactDetails;
-    const supportEmail =
-      contactDetails?.supportEmail ?? enMessages.pages.contact.email.address;
 
     expect.soft(contactDetails).toEqual(
       expect.objectContaining({
@@ -232,9 +230,15 @@ describe("Wave 5 Phase 4 accessibility, navigation, and contact contracts", () =
         lineQrSrc: expect.any(String),
       }),
     );
+    if (!contactDetails?.supportEmail) {
+      throw new Error("contactDetails.supportEmail must be configured");
+    }
+    const supportEmail = contactDetails.supportEmail;
     expect(supportEmail).toMatch(/^[^\s@]+@[^\s@]+\.[^\s@]+$/);
     for (const messages of localeMessages) {
-      expect(messages.pages.contact.email.address).toBe(supportEmail);
+      const emailAddress = messages.pages.contact.email.address;
+      expect(emailAddress).toEqual(expect.any(String));
+      expect(emailAddress).not.toContain(supportEmail);
     }
 
     const footer = render(await Footer());
