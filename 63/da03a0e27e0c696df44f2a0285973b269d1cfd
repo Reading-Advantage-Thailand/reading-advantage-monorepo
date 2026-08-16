@@ -1,0 +1,6 @@
+Track: sales_mastery_consumer_20260810
+Role: Measure Mid Red
+Phase: Phase 0 Review A remediation
+Scope: Added a failing release-artifact digest contract for all copied clean-consumer fixture bytes, auditedHead, sourceDigestSha256, archive digest records, mutation conflict, and fixture replacement. Reconciled Task B to [~] and labeled historical hashes by commit scope.
+Verification: Digest contract exit 1 with source digest 590d2d3dd7081f0152563f07b4ae86b4ceca5bdb2dd728b9c64342b2e6c5bf1e versus fixture-bound expected d617f15e4bc9b41625e09fcb5877758b86161db61ff65c236b85357e5327391f; fixture replacement conflict text was empty. Lease contract exit 0 with 17 passed and 9 skipped. Sales admission exit 0 with 11 passed. TypeScript, Prettier, and diff checks exit 0.
+Green handoff: Snapshot all copied fixture bytes before clean-consumer execution, bind them into sourceDigestSha256, and reject post-snapshot replacement with RELEASE_INPUT_MUTATION_CONFLICT. No production source changed.
