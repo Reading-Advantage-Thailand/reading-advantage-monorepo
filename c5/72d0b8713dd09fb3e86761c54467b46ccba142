@@ -1,0 +1,1 @@
+Track durable_job_worker_platform_20260713 Green evidence: implementation commit ee5442654b0d60a75cf08b4577d416badf920be5; safe and live PG16 gates, Task 9 19-case gate, backend jobs, type, build, lint, Prettier, diff, cleanup, and graph results recorded. Complete enqueue remains blocked by the preserved Red test queue mismatch.
