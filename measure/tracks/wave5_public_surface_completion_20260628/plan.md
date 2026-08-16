@@ -90,9 +90,16 @@
   - Direct and fresh typechecks pass. Production build passes.
   - Targeted lint, Prettier, and scoped diff checks pass.
   - Review A Red remediation for RA-P4-002, RA-P4-003, and RA-P4-004: `phase-4-mid-red-review-a-remediation-20260816.md`.
-  - Existing Phase 4 assertions remain unchanged. The remediation adds only the three Review A Red contracts.
-  - Browser regression Red for UX-P4-001, UX-P4-002, UX-P4-004, and UX-P4-005: `phase-4-browser-regressions-red-20260816.md`.
-  - UX-P4-003 Contact Form remains successor-owned by `www_crm_lead_intake_20260722`; this lane adds no backend contract.
+   - Existing Phase 4 assertions remain unchanged. The remediation adds only the three Review A Red contracts.
+   - Browser regression Red for UX-P4-001, UX-P4-002, UX-P4-004, and UX-P4-005: `phase-4-browser-regressions-red-20260816.md`.
+   - UX-P4-003 Contact Form remains successor-owned by `www_crm_lead_intake_20260722`; this lane adds no backend contract.
+   - Browser regression Green implementation commit: `50f7e15f3`.
+   - Browser regression and existing Phase 4 suites pass 8/8.
+   - Storytime FAQ entries are complete in en, th, and zh.
+   - Related cards and images now constrain long content at mobile width.
+   - Pricing status text uses the WCAG-AA `text-amber-800` token.
+   - Contact eyebrows use the WCAG-AA `text-sky-700` token.
+   - Phase 3, typecheck, build, lint, Prettier, and scoped diff checks pass.
 
 ## Phase 5: Comparison/Pricing Data and Legal Copy
 
