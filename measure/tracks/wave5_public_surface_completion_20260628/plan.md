@@ -77,8 +77,17 @@
   - Evidence refs: www T11 (LRF-020/025).
   - Phase 4 Red contract: `apps/www-reading-advantage/src/__tests__/phase-4-accessibility-navigation-contact.red.test.tsx`.
   - Red evidence: `phase-4-mid-red-20260816.md`; graph ARIA, reviewed component a11y, Services navigation, and contact support behavior fail at the Phase 4 base.
-- [~] Task: Remediate a11y issues; add Services to primary nav (T13/LRF-030); centralize contact details/support email (T14/LRF-026).
-- [~] Task: Run www targeted tests.
+- [x] Task: Remediate a11y issues; add Services to primary nav (T13/LRF-030); centralize contact details/support email (T14/LRF-026).
+  - Implementation commit: `8aea0d191`.
+  - Graph semantics now include an image role, accessible name, and polite status region.
+  - Reviewed components now expose names, state relationships, icon labels, and keyboard-safe disabled pagination.
+  - Services is present in shared navigation and all locale header arrays.
+  - Contact surfaces now use `src/config/contact.ts` and one support email.
+- [x] Task: Run www targeted tests.
+  - Phase 4 focused suite passes 4/4. The committed Red test remains unchanged.
+  - Phase 3 regression passes 10/10.
+  - Direct and fresh typechecks pass. Production build passes.
+  - Targeted lint, Prettier, and scoped diff checks pass.
 
 ## Phase 5: Comparison/Pricing Data and Legal Copy
 
