@@ -1,0 +1,27 @@
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+status: complete
+track: company_finance_operations_20260810
+phase: Phase 2 — controlled operational imports
+phase_base_sha: 8fa71b33b79a3090941f884f037564baa0322dbb
+role_base_sha: 3d66149bf
+commits: 0adff98cc source correction; evidence commit records verification
+adversarial_thb_result: exit 0; 29 passed; 0 failed
+full_thb_result: exit 0; 94 passed; 0 failed; 3 files
+architecture_result: exit 0; 11 passed; 0 failed
+finance_regression_result: exit 0; 25 passed; 0 failed; 5 files
+typecheck_commands: ../../node_modules/.bin/tsc --noEmit; ../../node_modules/.bin/tsc --noEmit -p tsconfig.test.json
+typecheck_result: exit 0; production and test checks passed
+lint_command: ../../node_modules/.bin/eslint src/modules/finance-operations
+lint_result: exit 0
+prettier_command: ../../node_modules/.bin/prettier --check src/modules/finance-operations/thb-valuation.ts
+prettier_result: exit 0
+build_command: ../../node_modules/.bin/tsc
+build_result: exit 0
+diff_command: git diff --check 3d66149bf..0adff98cc -- packages/backend/src/modules/finance-operations/thb-valuation.ts
+diff_result: exit 0
+adversarial_test_unchanged: exit 0; no diff from c84fc2cb6
+files: packages/backend/src/modules/finance-operations/thb-valuation.ts; measure/tracks/company_finance_operations_20260810/phase2-thb-adversarial-green-20260816.md; measure/tracks/company_finance_operations_20260810/orchestration/phase2-thb-adversarial-jr-green-role.log
+failures: initial adversarial run had one expected THB identity failure; final checks passed
+handoff: Review should verify numeric identity handling and exact THB amount preservation. Owner policy decisions remain deferred.
+END_MEASURE_AGENT_RESULT
