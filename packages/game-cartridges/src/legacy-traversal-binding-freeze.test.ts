@@ -113,7 +113,7 @@ const EXPECTED_TITLES: readonly TitleSpec[] = [
       },
       {
         role_id: "word-orb",
-        semantic: claim(SPELLWEAVER_EVIDENCE, "/20", "SW-TRANS-002"),
+        semantic: claim(SPELLWEAVER_EVIDENCE, "/19", "SW-TRANS-002"),
         physical: claim(SPELLWEAVER_EVIDENCE, "/34", "SW-ASSET-001"),
         decision: claim(SPELLWEAVER_EVIDENCE, "/19", "SW-COLL-001"),
       },

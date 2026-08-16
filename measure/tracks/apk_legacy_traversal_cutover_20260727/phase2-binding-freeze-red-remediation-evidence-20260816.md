@@ -2,7 +2,7 @@
 
 Track: `apk_legacy_traversal_cutover_20260727`
 Phase: Phase 2 binding freeze
-Current base: `f3b1fd371c29461721c7531c37cc26d1b8b56857`
+Current base: `c1494c162dc77c0c3299f0cb72481ccf42137cb0`
 Original phase base: `8c30dc0e138567f4d461b6cb69c10c66a6bb2eaf`
 
 ## Immutable locator review
@@ -117,6 +117,24 @@ phase: Phase 2 final accepted-evidence pointer remediation
 counts: 0 test edits required; 7 focused tests; 6 passed; 1 superseded dossier-pointer failure; 13 manifest tests; 9 Python readiness tests
 failures: only spellweavers-run.json retains the superseded /29 pointer
 files_changed: measure/tracks/apk_legacy_traversal_cutover_20260727/plan.md; measure/tracks/apk_legacy_traversal_cutover_20260727/phase2-binding-freeze-red-remediation-evidence-20260816.md
+handoff: same Green session for final evidence disposition
+authority: blocked candidates only; no adoption, owner acceptance, implementation, or cutover claim
+END_MEASURE_AGENT_RESULT
+
+## Interrupted Mid Red resume — Spellweaver transition pointer
+
+The accepted Spellweaver ledger resolves `/19` to `SW-TRANS-002` and `/20` to `SW-TRANS-003`. The test now uses `/19`. The accepted archive and all five dossiers remain unchanged.
+
+The resumed binding run passed 6/7. Its only failure is the unchanged `spellweavers-run.json` semantic pointer `/20`. The manifest suite passed 13/13. Python readiness passed 9/9 with `python3`. TypeScript and ESLint passed. Prettier and the scoped diff check passed after the document updates.
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+status: complete-with-green-handoff-blocked
+track: apk_legacy_traversal_cutover_20260727
+phase: Phase 2 final accepted-evidence pointer remediation
+counts: 1 pointer corrected; 7 focused tests; 6 passed; 1 superseded dossier-pointer failure; 13 manifest tests; 9 Python readiness tests
+failures: only spellweavers-run.json retains the superseded /20 pointer
+files_changed: packages/game-cartridges/src/legacy-traversal-binding-freeze.test.ts; measure/tracks/apk_legacy_traversal_cutover_20260727/plan.md; measure/tracks/apk_legacy_traversal_cutover_20260727/phase2-binding-freeze-red-remediation-evidence-20260816.md
 handoff: same Green session for final evidence disposition
 authority: blocked candidates only; no adoption, owner acceptance, implementation, or cutover claim
 END_MEASURE_AGENT_RESULT
