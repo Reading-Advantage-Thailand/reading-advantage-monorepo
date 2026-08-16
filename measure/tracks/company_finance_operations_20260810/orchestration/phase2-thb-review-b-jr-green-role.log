@@ -1,0 +1,26 @@
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+status: complete
+track: company_finance_operations_20260810
+phase: Phase 2 — controlled operational imports
+phase_base_sha: 8fa71b33b79a3090941f884f037564baa0322dbb
+role_base_sha: 1d34c826bbc361e1b437529b84ffc9a8249f4bd1
+commits: 17fde3ac8 source correction; evidence commit records verification
+red_thb_command: node ../../node_modules/vitest/vitest.mjs run src/modules/finance-operations/__tests__/multi-currency-thb-phase2.red.test.ts src/modules/finance-operations/__tests__/thb-owner-decision-receipt.red.test.ts --pool=threads --maxWorkers=1
+red_thb_result: initial exit 1; 61 collected; 60 passed; 1 unknown-key ordering failure; final exit 0; 61 passed
+red_architecture_command: node ../../node_modules/vitest/vitest.mjs run src/modules/finance-operations/__tests__/architecture-boundary.test.ts --pool=threads --maxWorkers=1
+red_architecture_result: initial exit 1; 11 collected; 10 passed; 1 failure with five unhandled loader cases; final exit 0; 11 passed
+finance_regression_command: node ../../node_modules/vitest/vitest.mjs run src/modules/finance-operations/__tests__/contracts.test.ts src/modules/finance-operations/__tests__/money-history.test.ts src/modules/finance-operations/__tests__/port-boundaries.test.ts src/modules/finance-operations/__tests__/postgres-boundary-exports.test.ts src/modules/finance-operations/__tests__/authorization-audit.test.ts --pool=threads --maxWorkers=1
+finance_regression_result: exit 0; 25 passed; 0 failed; 5 files
+typecheck_commands: node ../../node_modules/typescript/bin/tsc --noEmit -p tsconfig.json; node ../../node_modules/typescript/bin/tsc --noEmit -p tsconfig.test.json
+typecheck_result: exit 0; production and test checks passed
+lint_command: node ../../node_modules/eslint/bin/eslint.js src/modules/finance-operations
+lint_result: exit 0
+prettier_command: node ../../node_modules/prettier/bin/prettier.cjs --check src/modules/finance-operations/__tests__/architecture-boundary.test.ts src/modules/finance-operations/thb-valuation.ts
+prettier_result: exit 0
+diff_command: git diff --check -- packages/backend/src/modules/finance-operations/thb-valuation.ts packages/backend/src/modules/finance-operations/__tests__/architecture-boundary.test.ts
+diff_result: exit 0
+files: packages/backend/src/modules/finance-operations/thb-valuation.ts; packages/backend/src/modules/finance-operations/__tests__/architecture-boundary.test.ts; measure/tracks/company_finance_operations_20260810/plan.md; measure/tracks/company_finance_operations_20260810/phase2-thb-review-b-green-remediation-20260816.md; measure/tracks/company_finance_operations_20260810/orchestration/phase2-thb-review-b-jr-green-role.log
+failures: initial Red assertions failed as expected; final checks passed
+handoff: Review A should recheck loader guards. Review B should recheck unknown-key ordering and caller-only fields.
+END_MEASURE_AGENT_RESULT
