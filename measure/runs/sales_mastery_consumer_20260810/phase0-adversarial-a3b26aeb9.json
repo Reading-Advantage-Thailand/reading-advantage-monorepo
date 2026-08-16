@@ -1,0 +1,135 @@
+{
+  "schema_version": 1,
+  "artifact": "phase0-adversarial",
+  "track_id": "sales_mastery_consumer_20260810",
+  "phase": "Phase 0 - runtime admission",
+  "role": "measure-adversarial-testing",
+  "phase_base_sha": "8adc57cb0af0693c1b3420842b3a504939a36b2e",
+  "role_base_sha": "b7c50e0431b4c36662cf252316c80a2be07aee18",
+  "target_head_sha": "1d34c826bbc361e1b437529b84ffc9a8249f4bd1",
+  "test_commit_sha": "a3b26aeb9ac92b5444a6b975615425f32453362c",
+  "head_at_result": "a3b26aeb9ac92b5444a6b975615425f32453362c",
+  "status": "FAIL",
+  "verdict": "FAIL",
+  "summary": "Two adversarial tests exposed unsafe lease and archive substitution behavior.",
+  "blocking_findings": [
+    {
+      "id": "SMC-P0-ADV-001",
+      "severity": "high",
+      "title": "Lease owner write follows a swapped lease symlink",
+      "evidence": [
+        "phase0-adversarial.test.ts: does not write the lease owner through a swapped lease symlink",
+        "The outside target contained owner.json after the lease path changed to a symlink."
+      ],
+      "impact": "A lease-path race writes owner metadata outside the retained lease directory.",
+      "route": "Return to Green for lease-directory revalidation before owner writes."
+    },
+    {
+      "id": "SMC-P0-ADV-002",
+      "severity": "high",
+      "title": "Release proof accepts a substituted archive",
+      "evidence": [
+        "phase0-adversarial.test.ts: rejects a valid archive substituted before clean-consumer use",
+        "A valid modified archive was installed and the release proof completed without a conflict."
+      ],
+      "impact": "The clean consumer can use archive bytes that the release proof did not bind before installation.",
+      "route": "Return to Green for archive identity binding from pack through install and digest."
+    }
+  ],
+  "passing_attacks": [
+    "Malformed descriptors fail closed with structured issues.",
+    "Fixture replacement after snapshot returns RELEASE_INPUT_MUTATION_CONFLICT.",
+    "Lease process-start identity mismatch is reclaimed safely.",
+    "Duplicate and omitted Sales imports fail closed.",
+    "Sales and Codecamp symlink and root containment checks pass.",
+    "Lease timeout errors do not expose owner tokens.",
+    "Source and release archive digest contracts pass without the substitution attack."
+  ],
+  "review_evidence": {
+    "review_a": {
+      "artifact": "measure/runs/sales_mastery_consumer_20260810/phase0-review-a-eed2537d3.json",
+      "verdict": "ACCEPT",
+      "scope": "Candidate remediation at eed2537d3."
+    },
+    "review_b": {
+      "artifact": "measure/runs/sales_mastery_consumer_20260810/phase0-review-b-eed2537d3.json",
+      "verdict": "FAIL",
+      "scope": "Candidate security checks passed, but the audit HEAD drifted."
+    },
+    "review_c": {
+      "artifact": "measure/runs/sales_mastery_consumer_20260810/phase0-review-c-9d6b3af26.json",
+      "verdict": "FAIL",
+      "scope": "Candidate contract checks passed, but the audit HEAD drifted."
+    }
+  },
+  "commands": [
+    {
+      "command": "CI=true ../../node_modules/.bin/vitest run src/__tests__/phase0-adversarial.test.ts --maxWorkers=1",
+      "exit_code": 1,
+      "result": "1 passed and 2 failed; both failures are substantive adversarial findings."
+    },
+    {
+      "command": "CI=true ../../node_modules/.bin/vitest run src/__tests__/release-artifact.test.ts --maxWorkers=1",
+      "exit_code": 0,
+      "result": "26/26 passed."
+    },
+    {
+      "command": "CI=true ../../node_modules/.bin/vitest run src/__tests__/phase0-security-remediation.test.ts --maxWorkers=1",
+      "exit_code": 0,
+      "result": "3/3 passed."
+    },
+    {
+      "command": "CI=true ../../node_modules/.bin/vitest run src/__tests__/sales-runtime-admission.red.test.ts --maxWorkers=1",
+      "exit_code": 0,
+      "result": "11/11 passed."
+    },
+    {
+      "command": "CI=true ../../node_modules/.bin/vitest run src/__tests__/runtime-manifest.test.ts src/__tests__/codecamp-proof.test.ts --maxWorkers=1",
+      "exit_code": 0,
+      "result": "20/20 passed."
+    },
+    {
+      "command": "CI=true ../../node_modules/.bin/vitest run src/__tests__/sales-curriculum-bindings.red.test.ts src/__tests__/sales-knowledge-graph.red.test.ts src/__tests__/sales-release-adversarial.red.test.ts --maxWorkers=1",
+      "exit_code": 0,
+      "result": "19/19 passed."
+    },
+    {
+      "command": "../../node_modules/.bin/tsc --noEmit and ../../node_modules/.bin/eslint src/ in both focused packages; then ../../node_modules/.bin/tsc builds",
+      "exit_code": 0,
+      "result": "Type checks, lint, and builds passed."
+    },
+    {
+      "command": "node packages/mastery-runtime-compat/dist/check-consumer.js packages/mastery-runtime-compat/fixtures/consumer/sales-advantage.json",
+      "exit_code": 0,
+      "result": "compatible true with no issues."
+    },
+    {
+      "command": "../../node_modules/.bin/prettier --check src/__tests__/phase0-adversarial.test.ts ../../measure/runs/sales_mastery_consumer_20260810/phase0-adversarial-a3b26aeb9.json; git diff --check",
+      "exit_code": 0,
+      "result": "Formatting and whitespace checks passed."
+    },
+    {
+      "command": "git diff --name-only 8adc57cb0af0693c1b3420842b3a504939a36b2e -- packages/knowledge-space-core packages/knowledge-space-practice packages/practice-core packages/srs-engine packages/sales-knowledge",
+      "exit_code": 0,
+      "result": "Empty output."
+    }
+  ],
+  "source_hashes": {
+    "packages/mastery-runtime-compat/src/release-artifact.ts": "43255376548c7b8baaabe15952ecdfd210d1ac4470ec707daad2720cda0b7fd3",
+    "packages/mastery-runtime-compat/src/index.ts": "663c72e799b94ccc79d7b03be65f9ee6d4379a0b187898356e61bc71a79b5edd",
+    "packages/mastery-runtime-compat/fixtures/consumer/check-consumer.mjs": "d8ea382b39a1db172600f8b7b9a713646293f8ff43280a8170881e26e495604d",
+    "packages/mastery-runtime-compat/runtime-manifest.json": "b069bdc2d054ae24a7dddb55e25a84557162adf7713e8e569ef33bccc586245a",
+    "packages/mastery-runtime-compat/src/__tests__/phase0-adversarial.test.ts": "d6d42c42e74232d75ef1b294c596a07da77312657bae27c7b0a84d8d2babf5d8"
+  },
+  "scope": {
+    "production_code_modified": false,
+    "engine_or_sales_knowledge_diff": "empty",
+    "changed_files": [
+      "packages/mastery-runtime-compat/src/__tests__/phase0-adversarial.test.ts",
+      "measure/runs/sales_mastery_consumer_20260810/phase0-adversarial-a3b26aeb9.json"
+    ],
+    "unrelated_dirty_paths_preserved": true
+  },
+  "handoff": "Green must remediate both findings before Phase 0 admission can pass.",
+  "confidence": "high"
+}
