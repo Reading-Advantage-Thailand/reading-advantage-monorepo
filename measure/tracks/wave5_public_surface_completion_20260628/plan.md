@@ -73,8 +73,10 @@
 
 ## Phase 4: Accessibility, Navigation, and Contact
 
-- [~] Task: Write Red a11y tests for graph ARIA and reviewed UI components.
+- [x] Task: Write Red a11y tests for graph ARIA and reviewed UI components.
   - Evidence refs: www T11 (LRF-020/025).
+  - Phase 4 Red contract: `apps/www-reading-advantage/src/__tests__/phase-4-accessibility-navigation-contact.red.test.tsx`.
+  - Red evidence: `phase-4-mid-red-20260816.md`; graph ARIA, reviewed component a11y, Services navigation, and contact support behavior fail at the Phase 4 base.
 - [~] Task: Remediate a11y issues; add Services to primary nav (T13/LRF-030); centralize contact details/support email (T14/LRF-026).
 - [~] Task: Run www targeted tests.
 
