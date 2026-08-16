@@ -1,0 +1,28 @@
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+status: complete
+track: company_finance_operations_20260810
+phase: Phase 2 — controlled operational imports
+phase_base_sha: 8fa71b33b79a3090941f884f037564baa0322dbb
+role_base_sha: 13aa950ab1e393b36d74630d77a2b6a3ff112033
+commits: evidence commit records plan formatting and verification
+prettier_version: 3.8.4
+initial_plan_prettier: exit 1; plan formatting warning; strategy formatting passed
+plan_strategy_prettier: exit 0; plan and THB strategy passed
+thb_command: node ../../node_modules/vitest/vitest.mjs run src/modules/finance-operations/__tests__/multi-currency-thb-phase2.red.test.ts src/modules/finance-operations/__tests__/thb-owner-decision-receipt.red.test.ts --pool=threads --maxWorkers=1
+thb_result: exit 0; 61 passed; 0 failed
+architecture_command: node ../../node_modules/vitest/vitest.mjs run src/modules/finance-operations/__tests__/architecture-boundary.test.ts --pool=threads --maxWorkers=1
+architecture_result: exit 0; 11 passed; 0 failed
+finance_regression_command: node ../../node_modules/vitest/vitest.mjs run src/modules/finance-operations/__tests__/contracts.test.ts src/modules/finance-operations/__tests__/money-history.test.ts src/modules/finance-operations/__tests__/port-boundaries.test.ts src/modules/finance-operations/__tests__/postgres-boundary-exports.test.ts src/modules/finance-operations/__tests__/authorization-audit.test.ts --pool=threads --maxWorkers=1
+finance_regression_result: exit 0; 25 passed; 0 failed; 5 files
+typecheck_commands: node ../../node_modules/typescript/bin/tsc --noEmit -p tsconfig.json; node ../../node_modules/typescript/bin/tsc --noEmit -p tsconfig.test.json
+typecheck_result: exit 0; production and test checks passed
+lint_command: node ../../node_modules/eslint/bin/eslint.js src/modules/finance-operations
+lint_result: exit 0
+scoped_diff_command: git diff --check -- measure/tracks/company_finance_operations_20260810/plan.md
+scoped_diff_result: exit 0
+plan_change: repository Prettier changed 11 wrapped or indented lines; task markers, claims, SHAs, authority boundaries, and wording remain unchanged
+files: measure/tracks/company_finance_operations_20260810/plan.md; measure/tracks/company_finance_operations_20260810/orchestration/phase2-finance-plan-format-jr-green-role.log
+failures: initial plan Prettier check failed as the disclosed Low finding; final plan and strategy checks passed
+handoff: Review A may rerun the formatting Low finding. Review B remains stable at THB 61/61 and architecture 11/11. No production or test source changed.
+END_MEASURE_AGENT_RESULT

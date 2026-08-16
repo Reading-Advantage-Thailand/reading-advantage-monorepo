@@ -210,17 +210,17 @@
   - The requested `thb-review-b-eed2537d3.json` artifact was not present in the checkout.
   - The Red evidence note is `phase2-thb-review-b-red-remediation-20260816.md`; the role log is `orchestration/phase2-thb-review-b-mid-red-role.log`.
 
-   THB Review B Green remediation evidence (2026-08-16; source commit `17fde3ac8`; phase base `8fa71b33b79a3090941f884f037564baa0322dbb`; role base `1d34c826bbc361e1b437529b84ffc9a8249f4bd1`):
+  THB Review B Green remediation evidence (2026-08-16; source commit `17fde3ac8`; phase base `8fa71b33b79a3090941f884f037564baa0322dbb`; role base `1d34c826bbc361e1b437529b84ffc9a8249f4bd1`):
 
-   - The strict request schema rejects unreviewed keys before attestor or evidence calls.
-   - Caller-only conversion fields remain rejected after attestor access.
-   - ImportEqualsDeclaration, globalThis property loaders, bracket loaders, Reflect loaders, and aliases fail closed.
-   - The committed Red counterexamples and expectations remain unchanged.
-   - The THB command passed 61/61 tests.
-   - The architecture command passed 11/11 tests.
-   - The focused Finance regression passed 25/25 tests across 5 files.
-   - Production and test TypeScript checks, Finance lint, Prettier, and scoped diff checks passed.
-   - The Green evidence note is `phase2-thb-review-b-green-remediation-20260816.md`; the role log is `orchestration/phase2-thb-review-b-jr-green-role.log`.
+  - The strict request schema rejects unreviewed keys before attestor or evidence calls.
+  - Caller-only conversion fields remain rejected after attestor access.
+  - ImportEqualsDeclaration, globalThis property loaders, bracket loaders, Reflect loaders, and aliases fail closed.
+  - The committed Red counterexamples and expectations remain unchanged.
+  - The THB command passed 61/61 tests.
+  - The architecture command passed 11/11 tests.
+  - The focused Finance regression passed 25/25 tests across 5 files.
+  - Production and test TypeScript checks, Finance lint, Prettier, and scoped diff checks passed.
+  - The Green evidence note is `phase2-thb-review-b-green-remediation-20260816.md`; the role log is `orchestration/phase2-thb-review-b-jr-green-role.log`.
 
 ## Phase 3 — close and accountant exchange
 
