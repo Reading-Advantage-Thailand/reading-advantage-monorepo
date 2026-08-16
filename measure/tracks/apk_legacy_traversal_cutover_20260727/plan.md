@@ -43,15 +43,15 @@
 - Red remediation corrected `/13` for `SW-MOVE-001`, `/claims/13` for `SGD-RESP-001`, and `/claims/10` for `GRF-CART-001`.
 - Follow-up Red remediation corrected `/37` for `SW-CART-001`, `/claims/14` for `SGD-RESULT-001`, and `/claims/8` for `GRF-INPUT-001`.
 - The six corrected pointer groups are applied to the five candidate dossiers. All fifteen decisions remain `blocked`, owner acceptance remains pending, and selected unions remain empty.
-- Dossier correction commit: `53f78b719`.
+- Dossier correction commit: `1f869aa67`.
 - The focused binding contract uses `/28` for `SW-INPUT-002`, `/19` for `SW-TRANS-002`, `/33` for `SW-ASSET-001`, `/18` for `SW-COLL-001`, `/25` for `SW-TRANS-005`, `/35` for `SW-UI-001`, and `/36` for `SW-TRANS-007`.
 - Manifest validation passed 13/13. Python readiness passed 9/9 with `python3`; `python` is unavailable in this environment. TypeScript, ESLint, Prettier, and the scoped diff check passed.
 - Red-remediation evidence: `phase2-binding-freeze-red-remediation-evidence-20260816.md`.
-- Review A must route the consolidated three-claim pointer mismatch to one Mid Red batch. No adoption, ingestion, implementation, cutover, or cartridge Green is claimed.
+- Review A must verify the bounded dossier correction and pending owner-acceptance gate. No adoption, ingestion, implementation, cutover, or cartridge Green is claimed.
 - Final pointer remediation: Mid Red verified `/28` as `SW-INPUT-002`, `/19` as `SW-TRANS-002`, `/33` as `SW-ASSET-001`, `/18` as `SW-COLL-001`, `/25` as `SW-TRANS-005`, `/35` as `SW-UI-001`, and `/36` as `SW-TRANS-007`.
-- Final run: the focused contract passed 6/7, with the only failure at the unchanged Spellweaver dossier; manifest 13/13, Python readiness 9/9, TypeScript, ESLint, and diff checks passed.
+- Final run: the focused contract passed 7/7; manifest 13/13, Python readiness 9/9, TypeScript, ESLint, and diff checks passed.
 - Resume at HEAD `febc51645`: the dossier now binds `SW-COLL-001` to `/18`; unrelated working-tree changes remain untouched.
 - Resume verification: binding passed 6/7 with only the unchanged `spellweavers-run.json` `/26` mismatch; manifest 13/13, Python readiness 9/9, TypeScript, ESLint, Prettier, and diff checks passed.
 - Consolidated resume at HEAD `1cb0018e3`: all 45 test references across five titles were compared with accepted archive claim IDs; three mismatched test pointers were corrected together.
 - Existing stale dossier pointers are six Spellweaver entries: `/semantic_roles/2/evidence/semantic` `/26`→`/25`, `/semantic_roles/2/evidence/physical` `/36`→`/35`, `/semantic_roles/2/evidence/decision` `/37`→`/36`, and the matching `/decisions/2/evidence/0`, `/decisions/2/evidence/1`, and `/decisions/2/evidence/2` entries.
-- Consolidated verification: binding passed 6/7 with only those six unchanged dossier pointers stale; manifest 13/13, Python readiness 9/9, TypeScript, ESLint, Prettier, and diff checks passed.
+- Consolidated verification: binding passed 7/7 after updating all six stale dossier pointers; manifest 13/13, Python readiness 9/9, TypeScript, ESLint, Prettier, and diff checks passed.
