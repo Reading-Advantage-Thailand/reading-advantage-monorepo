@@ -184,6 +184,34 @@ BEGIN
 END
 $$;
 --> statement-breakpoint
+ALTER ROLE durable_job_audit_owner
+  NOSUPERUSER NOCREATEDB NOCREATEROLE NOLOGIN NOINHERIT NOREPLICATION NOBYPASSRLS;
+--> statement-breakpoint
+ALTER ROLE durable_job_queue_runtime
+  NOSUPERUSER NOCREATEDB NOCREATEROLE NOLOGIN NOINHERIT NOREPLICATION NOBYPASSRLS;
+--> statement-breakpoint
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1
+    FROM pg_roles
+    WHERE rolname IN ('durable_job_audit_owner', 'durable_job_queue_runtime')
+      AND (
+        rolsuper
+        OR rolcreatedb
+        OR rolcreaterole
+        OR rolcanlogin
+        OR rolreplication
+        OR rolbypassrls
+        OR rolinherit
+      )
+  ) THEN
+    RAISE EXCEPTION
+      'Durable-job roles must be NOLOGIN and unprivileged before protected ownership and grants';
+  END IF;
+END
+$$;
+--> statement-breakpoint
 ALTER TABLE "durable_job_audit_events" OWNER TO durable_job_audit_owner;
 ALTER TABLE "review_job_adoption_audit_events" OWNER TO durable_job_audit_owner;
 REVOKE ALL PRIVILEGES ON TABLE "durable_job_audit_events" FROM PUBLIC;
