@@ -42,11 +42,11 @@ export async function BlogCard({ post, locale = "en" }: BlogCardProps) {
           </Link>
         </h2>
         <p className="text-muted-foreground mb-4">{post.excerpt}</p>
-        <div className="flex items-center gap-2">
+        <div className="flex min-w-0 max-w-full flex-wrap gap-2 overflow-hidden">
           {post.tags.map((tag) => (
             <span
               key={tag}
-              className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold break-words transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+              className="inline-flex min-w-0 max-w-full items-center break-words rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
             >
               {tag}
             </span>
