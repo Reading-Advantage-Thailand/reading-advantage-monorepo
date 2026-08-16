@@ -179,8 +179,21 @@
    - The focused Finance regression passed 25/25 tests across 5 files.
    - Production and test TypeScript checks, Finance lint, Prettier, and `git diff --check` passed.
    - The package `check-types` wrapper was interrupted during an unavailable registry relink; direct local compiler checks passed.
-   - The correction note is `phase2-thb-architecture-boundary-green-20260816.md`; the role log is `orchestration/phase2-thb-architecture-boundary-jr-green-role.log`.
-   - The remediation note is `phase2-thb-replay-green-remediation-20260815.md`; the role log is `orchestration/phase2-thb-replay-jr-green-role.log`.
+    - The correction note is `phase2-thb-architecture-boundary-green-20260816.md`; the role log is `orchestration/phase2-thb-architecture-boundary-jr-green-role.log`.
+    - The remediation note is `phase2-thb-replay-green-remediation-20260815.md`; the role log is `orchestration/phase2-thb-replay-jr-green-role.log`.
+
+   Architecture boundary Review A remediation evidence (2026-08-16; source commit `22b99787f`; phase base `8fa71b33b79a3090941f884f037564baa0322dbb`; role base `63da03a0e27e0c696df44f2a0285973b269d1cfd`):
+
+   - Dynamic imports now fail closed, including approved `node:util` and `zod` modules.
+   - Approved external named exports use the exact binding allowlist.
+   - Export-all and namespace exports from approved modules now fail closed.
+   - The static `node:util.types` and `zod.z` imports remain admitted.
+   - The architecture command passed 10/10 tests.
+   - The 60-case THB command passed 60/60 tests.
+   - The focused Finance regression passed 25/25 tests across 5 files.
+   - Production and test TypeScript checks, Finance lint, Prettier, and scoped diff checks passed.
+   - An initial test typecheck found one new optional-module-specifier error; the final typechecks passed after narrowing.
+   - The remediation note is `phase2-thb-architecture-review-a-remediation-20260816.md`; the role log is `orchestration/phase2-thb-architecture-review-a-jr-green-role.log`.
 
 ## Phase 3 — close and accountant exchange
 

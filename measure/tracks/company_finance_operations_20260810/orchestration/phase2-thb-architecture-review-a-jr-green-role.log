@@ -1,0 +1,26 @@
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+status: complete
+track: company_finance_operations_20260810
+phase: Phase 2 — controlled operational imports
+phase_base_sha: 8fa71b33b79a3090941f884f037564baa0322dbb
+role_base_sha: 63da03a0e27e0c696df44f2a0285973b269d1cfd
+commits: 22b99787f source correction; evidence commit records verification
+architecture_command: node ../../node_modules/vitest/vitest.mjs run src/modules/finance-operations/__tests__/architecture-boundary.test.ts --pool=threads --maxWorkers=1
+architecture_result: exit 0; 10 passed; 0 failed
+thb_command: node ../../node_modules/vitest/vitest.mjs run src/modules/finance-operations/__tests__/multi-currency-thb-phase2.red.test.ts src/modules/finance-operations/__tests__/thb-owner-decision-receipt.red.test.ts --pool=threads --maxWorkers=1
+thb_result: exit 0; 60 passed; 0 failed
+finance_regression_command: node ../../node_modules/vitest/vitest.mjs run src/modules/finance-operations/__tests__/contracts.test.ts src/modules/finance-operations/__tests__/money-history.test.ts src/modules/finance-operations/__tests__/port-boundaries.test.ts src/modules/finance-operations/__tests__/postgres-boundary-exports.test.ts src/modules/finance-operations/__tests__/authorization-audit.test.ts --pool=threads --maxWorkers=1
+finance_regression_result: exit 0; 25 passed; 0 failed; 5 files
+typecheck_commands: node ../../node_modules/typescript/bin/tsc --noEmit -p tsconfig.json; node ../../node_modules/typescript/bin/tsc --noEmit -p tsconfig.test.json
+typecheck_result: exit 0; production and test checks passed
+lint_command: node ../../node_modules/eslint/bin/eslint.js src/modules/finance-operations
+lint_result: exit 0
+prettier_command: node ../../node_modules/prettier/bin/prettier.cjs --check src/modules/finance-operations/__tests__/architecture-boundary.test.ts
+prettier_result: exit 0
+diff_command: git diff --check -- packages/backend/src/modules/finance-operations/__tests__/architecture-boundary.test.ts
+diff_result: exit 0
+files: packages/backend/src/modules/finance-operations/__tests__/architecture-boundary.test.ts; measure/tracks/company_finance_operations_20260810/plan.md; measure/tracks/company_finance_operations_20260810/phase2-thb-architecture-review-a-remediation-20260816.md; measure/tracks/company_finance_operations_20260810/orchestration/phase2-thb-architecture-review-a-jr-green-role.log
+failures: initial test typecheck reported TS2345 for the new export-module-specifier guard; final checks passed
+handoff: Review A should recheck dynamic imports and external export allowlists. Owner THB policy decisions remain outside this remediation.
+END_MEASURE_AGENT_RESULT
