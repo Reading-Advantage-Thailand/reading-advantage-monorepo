@@ -139,39 +139,39 @@ ALTER TABLE "durable_job_audit_events"
   ADD CONSTRAINT "durable_job_audit_events_actor_check"
   CHECK ("actor" IS NOT NULL AND char_length("actor") BETWEEN 1 AND 200 AND "actor" ~ '[^[:space:]]'),
   ADD CONSTRAINT "durable_job_audit_events_authorization_decision_check"
-  CHECK ("authorization_decision_id" IS NOT NULL AND char_length(btrim("authorization_decision_id")) BETWEEN 1 AND 200),
+  CHECK ("authorization_decision_id" IS NOT NULL AND char_length("authorization_decision_id") BETWEEN 1 AND 200 AND "authorization_decision_id" ~ '[^[:space:]]'),
   ADD CONSTRAINT "durable_job_audit_events_reason_check"
-  CHECK ("reason" IS NOT NULL AND char_length("reason") BETWEEN 1 AND 500),
+  CHECK ("reason" IS NOT NULL AND char_length("reason") BETWEEN 1 AND 500 AND "reason" ~ '[^[:space:]]'),
   ADD CONSTRAINT "durable_job_audit_events_correlation_check"
-  CHECK ("correlation_id" IS NOT NULL AND char_length(btrim("correlation_id")) BETWEEN 1 AND 200);
+  CHECK ("correlation_id" IS NOT NULL AND char_length("correlation_id") BETWEEN 1 AND 200 AND "correlation_id" ~ '[^[:space:]]');
 ALTER TABLE "review_job_adoption_audit_events"
   ADD CONSTRAINT "review_job_adoption_audit_events_actor_check"
   CHECK ("actor" IS NOT NULL AND char_length("actor") BETWEEN 1 AND 200 AND "actor" ~ '[^[:space:]]'),
   ADD CONSTRAINT "review_job_adoption_audit_events_authorization_decision_check"
-  CHECK ("authorization_decision_id" IS NOT NULL AND char_length(btrim("authorization_decision_id")) BETWEEN 1 AND 200),
+  CHECK ("authorization_decision_id" IS NOT NULL AND char_length("authorization_decision_id") BETWEEN 1 AND 200 AND "authorization_decision_id" ~ '[^[:space:]]'),
   ADD CONSTRAINT "review_job_adoption_audit_events_reason_check"
-  CHECK ("reason" IS NOT NULL AND char_length("reason") BETWEEN 1 AND 500),
+  CHECK ("reason" IS NOT NULL AND char_length("reason") BETWEEN 1 AND 500 AND "reason" ~ '[^[:space:]]'),
   ADD CONSTRAINT "review_job_adoption_audit_events_correlation_check"
-  CHECK ("correlation_id" IS NOT NULL AND char_length(btrim("correlation_id")) BETWEEN 1 AND 200),
+  CHECK ("correlation_id" IS NOT NULL AND char_length("correlation_id") BETWEEN 1 AND 200 AND "correlation_id" ~ '[^[:space:]]'),
   ADD CONSTRAINT "review_job_adoption_audit_events_new_generation_positive_check"
   CHECK ("new_generation" >= 1);
 ALTER TABLE "review_job_durable_bindings"
   ADD CONSTRAINT "review_job_durable_bindings_created_by_check"
-  CHECK ("created_by" IS NOT NULL AND char_length(btrim("created_by")) BETWEEN 1 AND 200),
+  CHECK ("created_by" IS NOT NULL AND char_length("created_by") BETWEEN 1 AND 200 AND "created_by" ~ '[^[:space:]]'),
   ADD CONSTRAINT "review_job_durable_bindings_correlation_check"
-  CHECK ("correlation_id" IS NOT NULL AND char_length(btrim("correlation_id")) BETWEEN 1 AND 200);
+  CHECK ("correlation_id" IS NOT NULL AND char_length("correlation_id") BETWEEN 1 AND 200 AND "correlation_id" ~ '[^[:space:]]');
 ALTER TABLE "review_job_durable_adoption"
   ADD CONSTRAINT "review_job_durable_adoption_updated_by_check"
-  CHECK ("updated_by" IS NOT NULL AND char_length(btrim("updated_by")) BETWEEN 1 AND 200);
+  CHECK ("updated_by" IS NOT NULL AND char_length("updated_by") BETWEEN 1 AND 200 AND "updated_by" ~ '[^[:space:]]');
 ALTER TABLE "review_job_migration_issues"
   ADD CONSTRAINT "review_job_migration_issues_code_check"
-  CHECK ("code" IS NOT NULL AND char_length(btrim("code")) BETWEEN 1 AND 200),
+  CHECK ("code" IS NOT NULL AND char_length("code") BETWEEN 1 AND 200 AND "code" ~ '[^[:space:]]'),
   ADD CONSTRAINT "review_job_migration_issues_field_group_check"
-  CHECK ("field_group" IS NOT NULL AND char_length(btrim("field_group")) BETWEEN 1 AND 200),
+  CHECK ("field_group" IS NOT NULL AND char_length("field_group") BETWEEN 1 AND 200 AND "field_group" ~ '[^[:space:]]'),
   ADD CONSTRAINT "review_job_migration_issues_resolution_code_check"
-  CHECK ("resolution_code" IS NULL OR char_length(btrim("resolution_code")) BETWEEN 1 AND 200),
+  CHECK ("resolution_code" IS NULL OR (char_length("resolution_code") BETWEEN 1 AND 200 AND "resolution_code" ~ '[^[:space:]]')),
   ADD CONSTRAINT "review_job_migration_issues_resolver_subject_check"
-  CHECK ("resolver_subject" IS NULL OR char_length(btrim("resolver_subject")) BETWEEN 1 AND 200);
+  CHECK ("resolver_subject" IS NULL OR (char_length("resolver_subject") BETWEEN 1 AND 200 AND "resolver_subject" ~ '[^[:space:]]'));
 --> statement-breakpoint
 DO $$
 BEGIN
