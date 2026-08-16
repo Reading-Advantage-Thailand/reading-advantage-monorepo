@@ -107,7 +107,7 @@ const EXPECTED_TITLES: readonly TitleSpec[] = [
     roles: [
       {
         role_id: "player-lane",
-        semantic: claim(SPELLWEAVER_EVIDENCE, "/14", "SW-MOVE-001"),
+        semantic: claim(SPELLWEAVER_EVIDENCE, "/13", "SW-MOVE-001"),
         physical: claim(SPELLWEAVER_EVIDENCE, "/38", "SW-CART-001"),
         decision: claim(SPELLWEAVER_EVIDENCE, "/29", "SW-INPUT-002"),
       },
@@ -135,7 +135,7 @@ const EXPECTED_TITLES: readonly TitleSpec[] = [
       {
         role_id: "player-movement",
         semantic: claim(SHADOW_EVIDENCE, "/claims/6", "SGD-MOVE-001"),
-        physical: claim(SHADOW_EVIDENCE, "/claims/12", "SGD-RESP-001"),
+        physical: claim(SHADOW_EVIDENCE, "/claims/13", "SGD-RESP-001"),
         decision: claim(SHADOW_EVIDENCE, "/claims/4", "SGD-INPUT-001"),
       },
       {
@@ -189,7 +189,7 @@ const EXPECTED_TITLES: readonly TitleSpec[] = [
       {
         role_id: "player-lane",
         semantic: claim(GRIFFIN_EVIDENCE, "/claims/3", "GRF-MOVE-001"),
-        physical: claim(GRIFFIN_EVIDENCE, "/claims/9", "GRF-CART-001"),
+        physical: claim(GRIFFIN_EVIDENCE, "/claims/10", "GRF-CART-001"),
         decision: claim(GRIFFIN_EVIDENCE, "/claims/7", "GRF-INPUT-001"),
       },
       {

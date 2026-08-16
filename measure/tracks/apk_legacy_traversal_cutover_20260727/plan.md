@@ -40,3 +40,9 @@
 - The five dossier files are intentionally absent. Phase 2 remains `[~]`; no production or manifest file changed.
 - Green attempt: five candidate dossiers were added, but the immutable Red test exposes three stale JSON-pointer bindings. Phase 2 remains `[~]`.
 - Green evidence: `phase2-binding-freeze-green-evidence-20260816.md`; the Red contract needs Review A disposition before Green can complete.
+- Red remediation: the accepted ledger pointers are `/13` for `SW-MOVE-001`, `/claims/13` for `SGD-RESP-001`, and `/claims/10` for `GRF-CART-001`.
+- The Red test now uses those three archive pointers. Accepted archive evidence and all five candidate dossiers remain unchanged.
+- The focused remediation run collected 7 tests, passed 4, and retained 3 failures on the unchanged candidate dossier locator values. Phase 2 remains `[~]`.
+- Manifest validation passed 13/13. Python readiness passed 9/9 with `python3`; `python` is unavailable in this environment. TypeScript, ESLint, and the scoped diff check passed.
+- Prettier still reports the pre-existing plan indentation mismatch. No unrelated plan text was reformatted.
+- Red-remediation evidence: `phase2-binding-freeze-red-remediation-evidence-20260816.md`.
