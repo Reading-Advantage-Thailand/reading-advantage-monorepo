@@ -1,0 +1,62 @@
+Measure Jr Green role log — Task 9 consolidated attempt-state remediation
+Track: durable_job_worker_platform_20260713
+Phase: Phase 2: Red Concurrency and Failure Tests
+Task: 9
+Role: measure-jr-green
+Date: 2026-08-16
+phase_base_sha: 33d44fc81b84559c2ab7a48acfaf86554bf017a5
+role_base_sha: 5cb38dc43
+red_commit: f76f2f523
+red_evidence_commit: e67f48671
+implementation_commit: 700bb1372
+
+## Scope
+
+Migration `0052` now rejects pending-at-maximum rows without redelivery.
+It requires positive attempts for running and dead rows.
+Legacy-failed attempt zero and valid pending, redelivery, and rerun states remain accepted.
+No Red test, sentinel, journal, snapshot, registry, or unrelated path changed.
+
+## Gates
+
+safe_schema_gate=passed:2 skipped:1
+safe_focused_db_gate=passed:17
+safe_role_gate=passed:1
+safe_task9_gate=passed:1 skipped:18
+live_schema_gate=passed:3/3 aggregate; no next Red fixture
+live_role_gate=passed:1/1
+live_task9_gate=passed:19/19
+governance_and_journal=passed:11/11 targeted tests
+typescript=db/backend-production/backend-test passed
+lint=db passed
+prettier=evidence passed; plan prior warning retained
+safe_doctor=exit:2 fail-closed without database URL
+measure_doctor=exit:1 unrelated deprecated markers
+diff_check=passed for leased paths
+
+## Cleanup
+
+cleanup_scratch_databases=0
+cleanup_durable_job_roles=0
+cleanup_container=removed
+
+## Review B rerun handoff
+
+The three consolidated production failures are repaired. Review B should verify
+`700bb1372` and the separate evidence commit. No next substantive Red remains.
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+status: complete
+track: durable_job_worker_platform_20260713
+phase: Phase 2: Red Concurrency and Failure Tests
+task: 9
+phase_base_sha: 33d44fc81b84559c2ab7a48acfaf86554bf017a5
+role_base_sha: 5cb38dc43
+red_commit: f76f2f523
+red_evidence_commit: e67f48671
+implementation_commit: 700bb1372
+evidence_files: task-9-review-b-attempt-state-green-evidence-20260816.md; orchestration/phase2-task9-attempt-state-jr-green-role.log
+next_red: none
+handoff: Review B verifies the implementation and evidence commits
+END_MEASURE_AGENT_RESULT

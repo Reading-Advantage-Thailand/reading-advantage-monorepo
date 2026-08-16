@@ -259,6 +259,15 @@ packages/backend/tsconfig.test.json` passed.
     constraint. The full live suite reports three production failures:
     `pending-at-maximum-without-redelivery`, `running-attempt-zero`, and
     `dead-attempt-zero`. Green owns the three missing invariants.
+  - Review B Green consolidated attempt-state remediation (2026-08-16;
+    implementation commit `700bb1372`; role base `5cb38dc43`): the redelivery
+    check now rejects a pending row at its maximum without redelivery, while
+    preserving lower-attempt pending rows and valid redelivery rows. The state
+    truth check now requires positive attempts for running and dead rows while
+    preserving legacy-failed attempt zero. The full disposable PG16 schema suite
+    passed 3/3. Role hardening passed 1/1. Task 9 passed 19/19. No next Red
+    fixture remains. See `task-9-review-b-attempt-state-green-evidence-20260816.md`
+    and its role log.
 - [x] Task 10: Add Red worker lifecycle and architecture tests for registration, bounded polling, startup configuration, health, signals, and safe logs. Prove trusted tenant propagation, lifecycle-only port access, and zero direct persistence access. Record named missing-composition failures. (source: `287f89fad4aa49849a307e4973037ee8bd567a6a`)
   - Green evidence (2026-08-14; source commit `287f89fad4aa49849a307e4973037ee8bd567a6a`): independent Green acceptance passed. The focused worker suite passed 17/17, and the full worker suite passed 48/48. Worker typecheck, build, scoped lint, format, diff, graph update, and exact lock-scope checks passed. Shutdown, bounded concurrency, and global and tenant scope propagation passed.
 
