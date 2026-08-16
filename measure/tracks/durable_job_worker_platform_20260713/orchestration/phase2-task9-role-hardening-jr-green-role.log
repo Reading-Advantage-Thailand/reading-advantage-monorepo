@@ -22,7 +22,7 @@ The committed Red test was not changed.
 - Migration support tests: 43 passed and 1 skipped.
 - Direct TypeScript checks passed for DB and backend.
 - Direct ESLint passed with zero errors.
-- Prettier and targeted diff checks passed.
+- Prettier checks passed for the immutable Red test, evidence, and role log.
 - Cleanup found zero scratch databases and zero Task 9 roles.
 - Both disposable containers were removed.
 
@@ -32,6 +32,7 @@ Migration governance remains red because `0052_durable_jobs` lacks a sentinel.
 The full DB suite remains red from unrelated existing failures.
 Measure doctor remains red from unrelated deprecated markers.
 Package-wrapper checks were network-blocked during dependency resolution.
+The existing plan has a Markdown indentation warning; historical plan lines were not reformatted.
 No journal, snapshot, registry, metadata, or other lane changed.
 
 ## Review B handoff

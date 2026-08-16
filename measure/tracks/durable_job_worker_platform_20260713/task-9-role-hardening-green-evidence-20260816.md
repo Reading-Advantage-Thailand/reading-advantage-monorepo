@@ -75,11 +75,13 @@ The disposable container was removed.
 - Direct DB ESLint: 0 errors and 9 existing warnings.
 - Direct backend ESLint: passed.
 - Prettier check for the immutable Red test: passed.
+- Prettier checks for the new evidence and role log: passed.
 - Targeted `git diff --check`: passed.
 
 The governance failures report the missing `0052_durable_jobs` sentinel.
 The full DB failures are unrelated existing database, identity, and ledger failures.
 The package-wrapper typecheck and lint attempts were network-blocked during dependency resolution.
+The existing plan has a Markdown indentation warning; historical plan lines were not reformatted.
 The Measure doctor reports deprecated markers in unrelated tracks.
 
 No journal, snapshot, registry, metadata, or other migration changed.
