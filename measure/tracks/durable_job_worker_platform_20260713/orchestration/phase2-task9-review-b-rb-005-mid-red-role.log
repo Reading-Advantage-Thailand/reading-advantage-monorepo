@@ -56,3 +56,38 @@ files_changed: packages/db/src/__tests__/durable-jobs-schema-pg16.red.test.ts; m
 known_failures: final schema assertion rejects valid char_length(btrim(actor)) definition; package-filtered typecheck was network-blocked
 handoff: Green sentinel DWP-T9-RB-002; preserve the exact DWP-T9-RB-005 Red failure
 END_MEASURE_AGENT_RESULT
+
+## Follow-up
+
+current_head_start=f3b1fd371c29461721c7531c37cc26d1b8b56857
+scope=replace information_schema.triggers assertion only
+catalog_query=pg_catalog.pg_trigger + pg_catalog.pg_proc + pg_catalog.pg_class
+trigger_contract=durable_job_reject_audit_mutation; tgtype 34 BEFORE TRUNCATE; tgtype 27 BEFORE UPDATE OR DELETE FOR EACH ROW
+safe_schema_gate=exit 0; 2 passed; 1 skipped; no PostgreSQL contact
+live_schema_gate=exit 1; 3 total; 2 passed; 1 failed
+intermediate_red_failure=expected trigger_type 26, received 27
+final_red_failure=job-name-over-bound accepted; expected durable_jobs_job_name_check rejection; promise resolved undefined instead of rejecting
+role_hardening_safe=1/1 passed
+role_hardening_live=1/1 passed; PostgreSQL 16.14
+task9_security=3/3 passed
+task9_safe=1 passed; 18 skipped
+task9_live=19/19 passed; PostgreSQL 16.14
+cleanup=0 scratch databases; 0 Task 9 roles; disposable containers removed
+typescript=passed: node_modules/.bin/tsc --noEmit -p packages/db/tsconfig.json
+lint=passed: focused ESLint with packages/db/eslint.config.mjs
+prettier=passed: changed test and evidence; plan retains pre-existing indentation warning
+diff_check=passed: git diff --check on leased tracked paths
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+status: complete
+verdict: PASS_WITH_RECORDED_RED_FAILURE
+track: durable_job_worker_platform_20260713
+phase: Phase 2: Red Concurrency and Failure Tests
+task: 9
+finding: DWP-T9-RB-005
+current_head_start: f3b1fd371c29461721c7531c37cc26d1b8b56857
+files_changed: packages/db/src/__tests__/durable-jobs-schema-pg16.red.test.ts; measure/tracks/durable_job_worker_platform_20260713/plan.md; measure/tracks/durable_job_worker_platform_20260713/task-9-review-b-rb-005-mid-red-20260816.md; measure/tracks/durable_job_worker_platform_20260713/orchestration/phase2-task9-review-b-rb-005-mid-red-role.log
+known_failures: job-name-over-bound was accepted instead of rejected through durable_jobs_job_name_check; full-plan Prettier may retain a pre-existing indentation warning
+handoff: Review B receives the repaired trigger catalog boundary and the exact job-name-over-bound Red failure
+END_MEASURE_AGENT_RESULT

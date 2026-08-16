@@ -652,32 +652,44 @@ async function expectDurableJobCatalogContract(
     }
 
     const triggers = await sql<
-      { trigger_name: string; trigger_owner: string }[]
+      {
+        trigger_name: string;
+        trigger_owner: string;
+        trigger_function: string;
+        trigger_type: number;
+      }[]
     >`
-      SELECT trigger.trigger_name, owner_role.rolname AS trigger_owner
-      FROM information_schema.triggers AS trigger
-      JOIN pg_class AS relation ON relation.relname = trigger.event_object_table
-      JOIN pg_namespace AS namespace
-        ON namespace.oid = relation.relnamespace
-       AND namespace.nspname = trigger.event_object_schema
-      JOIN pg_trigger AS database_trigger
-        ON database_trigger.tgrelid = relation.oid
-       AND database_trigger.tgname = trigger.trigger_name
-      JOIN pg_proc AS procedure ON procedure.oid = database_trigger.tgfoid
-      JOIN pg_roles AS owner_role ON owner_role.oid = procedure.proowner
-      WHERE trigger.event_object_schema = 'public'
-        AND trigger.event_object_table = ${tableName}
-      GROUP BY trigger.trigger_name, owner_role.rolname
-      ORDER BY trigger.trigger_name
+      SELECT
+        trigger_record.tgname AS trigger_name,
+        owner_role.rolname AS trigger_owner,
+        routine.proname AS trigger_function,
+        trigger_record.tgtype AS trigger_type
+      FROM pg_catalog.pg_trigger AS trigger_record
+      JOIN pg_catalog.pg_class AS relation
+        ON relation.oid = trigger_record.tgrelid
+      JOIN pg_catalog.pg_namespace AS namespace_record
+        ON namespace_record.oid = relation.relnamespace
+      JOIN pg_catalog.pg_proc AS routine
+        ON routine.oid = trigger_record.tgfoid
+      JOIN pg_catalog.pg_roles AS owner_role
+        ON owner_role.oid = routine.proowner
+      WHERE namespace_record.nspname = 'public'
+        AND relation.relname = ${tableName}
+        AND NOT trigger_record.tgisinternal
+      ORDER BY trigger_record.tgname
     `;
     expect(triggers).toEqual([
       {
         trigger_name: `${tableName}_reject_truncate`,
         trigger_owner: "durable_job_audit_owner",
+        trigger_function: "durable_job_reject_audit_mutation",
+        trigger_type: 34,
       },
       {
         trigger_name: `${tableName}_reject_update_delete`,
         trigger_owner: "durable_job_audit_owner",
+        trigger_function: "durable_job_reject_audit_mutation",
+        trigger_type: 27,
       },
     ]);
   }

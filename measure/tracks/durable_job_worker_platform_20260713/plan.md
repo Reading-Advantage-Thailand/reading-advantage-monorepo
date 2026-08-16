@@ -193,9 +193,18 @@ packages/backend/tsconfig.test.json` passed.
       raw length and a non-whitespace requirement, so padding cannot bypass limits.
       Safe schema, role, focused DB, journal, and migration-governance gates passed.
       The required-migration doctor gate passed on a disposable PG16 database.
-      The full live schema test reached the immutable trigger assertion, then failed
-      because `information_schema.triggers` omits TRUNCATE triggers. The doctor
-      sentinel verified those triggers through `pg_trigger`; the Red test was not edited.
+     The full live schema test reached the immutable trigger assertion, then failed
+     because `information_schema.triggers` omits TRUNCATE triggers. The doctor
+     sentinel verified those triggers through `pg_trigger`; the Red test was not edited.
+    - Review B Mid Red trigger-catalog follow-up (2026-08-16; current HEAD start
+      `f3b1fd371c29461721c7531c37cc26d1b8b56857`): the leased schema test now reads
+      `pg_catalog.pg_trigger`, `pg_catalog.pg_proc`, and `pg_catalog.pg_class`.
+      It preserves trigger names and owners, and proves the shared function plus
+      exact `tgtype` values `34` for BEFORE TRUNCATE and `27` for BEFORE UPDATE OR
+      DELETE FOR EACH ROW. Safe schema passed 2 tests and skipped 1. Role hardening
+      passed 1/1, and the live Task 9 suite passed 19/19. Final live schema passed
+      2 tests and exposed the exact `job-name-over-bound` fixture acceptance.
+      See the appended Review B Mid Red evidence and role log.
 - [x] Task 10: Add Red worker lifecycle and architecture tests for registration, bounded polling, startup configuration, health, signals, and safe logs. Prove trusted tenant propagation, lifecycle-only port access, and zero direct persistence access. Record named missing-composition failures. (source: `287f89fad4aa49849a307e4973037ee8bd567a6a`)
   - Green evidence (2026-08-14; source commit `287f89fad4aa49849a307e4973037ee8bd567a6a`): independent Green acceptance passed. The focused worker suite passed 17/17, and the full worker suite passed 48/48. Worker typecheck, build, scoped lint, format, diff, graph update, and exact lock-scope checks passed. Shutdown, bounded concurrency, and global and tenant scope propagation passed.
 

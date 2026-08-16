@@ -108,3 +108,78 @@ immutable test assertion or the migration for this evidence.
 
 Task 9 retains the recorded live behavior evidence. The schema gate remains Red
 on the exact `char_length(actor)` versus `char_length(btrim(actor))` assertion.
+
+## Trigger catalog follow-up — 2026-08-16
+
+### Provenance
+
+- Current HEAD at role start: `f3b1fd371c29461721c7531c37cc26d1b8b56857`
+- Existing Task 9 phase base: `33d44fc81b84559c2ab7a48acfaf86554bf017a5`
+- Scope: the preserved PG16 schema test trigger assertion only
+
+The prior live failure showed that `information_schema.triggers` returned only
+the update/delete trigger. PostgreSQL does not expose the TRUNCATE row there.
+
+The test now queries `pg_catalog.pg_trigger`, `pg_catalog.pg_proc`, and
+`pg_catalog.pg_class`. It preserves the trigger name and owner assertions. It
+also proves `durable_job_reject_audit_mutation` for both triggers and exact
+`tgtype` values: `34` for BEFORE TRUNCATE and `27` for BEFORE UPDATE OR DELETE
+FOR EACH ROW.
+
+### Schema gates
+
+The safe schema command passed 2 tests and skipped 1 without PostgreSQL contact.
+
+The first live run after this query change exposed this exact test metadata
+failure:
+
+```text
+AssertionError: expected [ { …(4) }, { …(4) } ] to deeply equal [ { …(4) }, { …(4) } ]
+Expected trigger_type: 26
+Received trigger_type: 27
+```
+
+The test now expects `27`, which includes the row-level bit.
+
+The final disposable PostgreSQL 16 schema gate used server `160014`, ran 3
+tests, passed 2, and exited `1` on the existing fixture contract.
+
+The exact final failure was:
+
+```text
+Fixture: job-name-over-bound
+Expected: rejection through durable_jobs_job_name_check
+Actual: promise resolved "undefined" instead of rejecting
+```
+
+The fixture inserts `a.${"a".repeat(159)}`. This newly exposed failure is outside
+the trigger assertion. This lease records it without changing the fixture,
+migration, or substantive rejection assertion.
+
+Cleanup returned server `160014`, zero scratch databases, and the disposable
+container was removed.
+
+### Available Task 9 gates
+
+- Safe role-hardening gate: 1/1 passed.
+- Disposable PostgreSQL 16 role-hardening gate: 1/1 passed.
+- Task 9 post-review security tests: 3/3 passed.
+- Safe Task 9 enqueue/retry/replay gate: 1 passed and 18 skipped.
+- Disposable PostgreSQL 16 Task 9 enqueue/retry/replay gate: 19/19 passed.
+- Cleanup returned zero scratch databases and zero Task 9 roles.
+
+### Quality gates
+
+- Direct TypeScript: `node_modules/.bin/tsc --noEmit -p packages/db/tsconfig.json` passed.
+- Focused ESLint with `packages/db/eslint.config.mjs` passed.
+- Prettier passed for the changed test and evidence file.
+- `git diff --check` passed for the leased tracked paths.
+- The full plan Prettier check retained a pre-existing Markdown indentation warning.
+  The plan was not reformatted.
+
+### Review B handoff
+
+The DWP-T9-RB-005 trigger catalog defect is repaired in the test boundary.
+Review B should retain the exact `job-name-over-bound` Red failure as a separate
+schema-contract finding. No migration, sentinel, production source, journal, or
+snapshot changed.
