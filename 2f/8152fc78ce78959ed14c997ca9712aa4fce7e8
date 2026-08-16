@@ -1,0 +1,1 @@
+Sales archive-consumption remediation: private verified .tgz archives are read-only during npm installation; dependency paths are rewritten after archive verification; post-commit adversarial, focused package, CLI, and digest gates passed. Final audited HEAD: 2f8152fc78ce78959ed14c997ca9712aa4fce7e8.
