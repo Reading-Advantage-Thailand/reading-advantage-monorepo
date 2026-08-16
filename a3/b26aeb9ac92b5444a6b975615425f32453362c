@@ -1,0 +1,1 @@
+Adversarial tests cover malformed descriptors, lease symlink swaps, and archive substitution. One test passes and two tests expose production defects. No production source changed.
