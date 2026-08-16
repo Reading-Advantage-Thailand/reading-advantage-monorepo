@@ -4,8 +4,8 @@ Track: `apk_legacy_traversal_cutover_20260727`
 Phase: Phase 2 binding freeze
 Phase base: `8c30dc0e138567f4d461b6cb69c10c66a6bb2eaf`
 Role base: `698f5c41406841aac37a4679ff173e689f2c7888`
-Green base: `9d6b3af26`
-Dossier commit: `15fb7ea46`
+Green base: `13aa950ab`
+Dossier commit: `74973bdab`
 
 ## Output
 
@@ -28,22 +28,23 @@ No app-local copies or whole-pack delivery are declared.
 
 ## Blocking finding
 
-The immutable Red test retains one unresolved pointer mismatch outside the six Mid Red corrections.
+The immutable Red test retains one unresolved pointer mismatch outside the final `SW-INPUT-002` correction.
 
 - Spellweaver's Run now binds `/13` to `SW-MOVE-001` and `/37` to `SW-CART-001`.
+- Spellweaver's Run now binds `/28` to `SW-INPUT-002`.
 - Shadow Gate Dungeon now binds `/claims/13` to `SGD-RESP-001` and `/claims/14` to `SGD-RESULT-001`.
 - Griffin Rider's Escape now binds `/claims/10` to `GRF-CART-001` and `/claims/8` to `GRF-INPUT-001`.
-- Spellweaver's Run still declares `/29` as `SW-INPUT-002`; the archive resolves `/29` to `SW-RESP-003`.
-- The recommended archive pointer for `SW-INPUT-002` is `/28`.
+- Spellweaver's Run still declares `/20` as `SW-TRANS-002`; the archive resolves `/20` to `SW-TRANS-003`.
+- The recommended archive pointer for `SW-TRANS-002` is `/19`.
 
-The dossier data cannot satisfy both the immutable `/29` Red expectation and the archive claim identity.
+The dossier data cannot satisfy both the immutable `/20` Red expectation and the archive claim identity.
 No source manifest, suitability source, Asset Contract source, production code, or Red test was changed.
 
 ## Boundary
 
 Phase 2 remains `[~]`.
 The five dossiers are candidate evidence only.
-Review A must return the remaining `SW-INPUT-002` mismatch to Mid Red.
+Review A must return the remaining `SW-TRANS-002` mismatch to Mid Red.
 
 MEASURE_AGENT_RESULT
 role: measure-jr-green
@@ -52,9 +53,9 @@ track: apk_legacy_traversal_cutover_20260727
 phase: Phase 2 binding freeze
 phase_base_sha: 8c30dc0e138567f4d461b6cb69c10c66a6bb2eaf
 role_base_sha: 698f5c41406841aac37a4679ff173e689f2c7888
-commits: 15fb7ea46; evidence commit pending
+commits: 74973bdab; evidence commit pending
 counts: 5 dossiers; 15 roles; 15 blocked decisions; 0 adoption decisions; 6/7 focused tests passed
 files_changed: five phase2-binding-dossiers JSON files; plan.md; this evidence file; orchestration/phase2-jr-green-role.log
-limitations: immutable Red pointer drift remains for Spellweaver's Run `SW-INPUT-002`
+limitations: immutable Red pointer drift remains for Spellweaver's Run `SW-TRANS-002`
 handoff: Review A returns the remaining pointer mismatch to Mid Red. No Green completion or downstream authority is claimed.
 END_MEASURE_AGENT_RESULT
