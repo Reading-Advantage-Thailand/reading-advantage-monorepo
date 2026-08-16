@@ -1,0 +1,54 @@
+Measure Jr Green role log — Task 9 queue-name remediation
+Track: durable_job_worker_platform_20260713
+Phase: Phase 2: Red Concurrency and Failure Tests
+Task: 9
+Role: measure-jr-green
+Date: 2026-08-16
+phase_base_sha: 33d44fc81b84559c2ab7a48acfaf86554bf017a5
+role_base_sha: c1494c162
+red_source_commit: c1494c162
+implementation_commit: 86ed4c900
+
+## Scope
+
+Migration `0052` now enforces raw and trimmed `queue_name` lengths from 1 through
+100. It requires trimmed-value equality and preserves the existing queue grammar.
+No Red test, sentinel, journal, snapshot, registry, or other lane changed.
+
+## Gates
+
+safe_schema_gate=passed:2 skipped:1
+safe_focused_db_gate=passed:17
+safe_role_gate=passed:1
+safe_task9_gate=passed:1 skipped:18
+live_schema_gate=passed:2 failed:1; next Red fixture rerun-partial-01
+live_role_gate=passed:1/1
+live_task9_gate=passed:19/19
+targeted_migration_governance_and_journal=passed:11/11
+typescript=db/backend-production/backend-test passed
+lint=db passed
+diff_check=passed for leased paths
+
+## Cleanup
+
+cleanup_scratch_databases=0
+cleanup_durable_job_roles=0
+cleanup_container=removed
+
+## Review B rerun handoff
+
+The `queue-name-over-bound` failure is repaired. Review B should rerun from
+`86ed4c900` and retain `rerun-partial-01` as the next Red contract result.
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+status: complete_with_recorded_next_red
+track: durable_job_worker_platform_20260713
+phase: Phase 2: Red Concurrency and Failure Tests
+task: 9
+phase_base_sha: 33d44fc81b84559c2ab7a48acfaf86554bf017a5
+role_base_sha: c1494c162
+implementation_commit: 86ed4c900
+evidence_files: task-9-review-b-queue-name-green-evidence-20260816.md; orchestration/phase2-task9-queue-jr-green-role.log
+handoff: Review B rerun verifies the implementation and records the next Red fixture
+END_MEASURE_AGENT_RESULT
