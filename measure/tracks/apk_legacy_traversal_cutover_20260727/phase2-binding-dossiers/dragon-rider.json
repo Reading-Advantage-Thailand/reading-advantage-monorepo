@@ -69,8 +69,16 @@
         "directions": [{ "direction": "down", "clipId": "walk" }],
         "anchor": { "x": 0.5, "y": 1 },
         "renderScale": 1,
-        "collisionEnvelope": { "x": 0.2, "y": 0.1, "width": 0.6, "height": 0.9 },
-        "readabilityEnvelope": { "minimumRenderPixels": 16, "minimumContrastRatio": 1 }
+        "collisionEnvelope": {
+          "x": 0.2,
+          "y": 0.1,
+          "width": 0.6,
+          "height": 0.9
+        },
+        "readabilityEnvelope": {
+          "minimumRenderPixels": 16,
+          "minimumContrastRatio": 1
+        }
       },
       "evidence": {
         "semantic": {
@@ -126,8 +134,16 @@
         "directions": [{ "direction": "down", "clipId": "walk" }],
         "anchor": { "x": 0.5, "y": 1 },
         "renderScale": 1,
-        "collisionEnvelope": { "x": 0.2, "y": 0.1, "width": 0.6, "height": 0.9 },
-        "readabilityEnvelope": { "minimumRenderPixels": 16, "minimumContrastRatio": 1 }
+        "collisionEnvelope": {
+          "x": 0.2,
+          "y": 0.1,
+          "width": 0.6,
+          "height": 0.9
+        },
+        "readabilityEnvelope": {
+          "minimumRenderPixels": 16,
+          "minimumContrastRatio": 1
+        }
       },
       "evidence": {
         "semantic": {
@@ -183,8 +199,16 @@
         "directions": [{ "direction": "down", "clipId": "walk" }],
         "anchor": { "x": 0.5, "y": 1 },
         "renderScale": 1,
-        "collisionEnvelope": { "x": 0.2, "y": 0.1, "width": 0.6, "height": 0.9 },
-        "readabilityEnvelope": { "minimumRenderPixels": 16, "minimumContrastRatio": 1 }
+        "collisionEnvelope": {
+          "x": 0.2,
+          "y": 0.1,
+          "width": 0.6,
+          "height": 0.9
+        },
+        "readabilityEnvelope": {
+          "minimumRenderPixels": 16,
+          "minimumContrastRatio": 1
+        }
       },
       "evidence": {
         "semantic": {
@@ -218,13 +242,34 @@
           "sourceReceiptDigest": "93562cc3070a4907d06d6196a2c5d917a07c4b487cf4be031805d60fdc75eea9"
         },
         "mediaKind": "animation",
-        "geometry": { "width": 32, "height": 32, "frameWidth": 32, "frameHeight": 32, "columns": 1, "rows": 1 },
-        "clips": [{ "id": "walk", "frames": [{ "column": 0, "row": 0 }], "timing": { "fps": 8, "loop": true } }],
+        "geometry": {
+          "width": 32,
+          "height": 32,
+          "frameWidth": 32,
+          "frameHeight": 32,
+          "columns": 1,
+          "rows": 1
+        },
+        "clips": [
+          {
+            "id": "walk",
+            "frames": [{ "column": 0, "row": 0 }],
+            "timing": { "fps": 8, "loop": true }
+          }
+        ],
         "directions": [{ "direction": "down", "clipId": "walk" }],
         "anchor": { "x": 0.5, "y": 1 },
         "renderScale": 1,
-        "collisionEnvelope": { "x": 0.2, "y": 0.1, "width": 0.6, "height": 0.9 },
-        "readabilityEnvelope": { "minimumRenderPixels": 16, "minimumContrastRatio": 1 }
+        "collisionEnvelope": {
+          "x": 0.2,
+          "y": 0.1,
+          "width": 0.6,
+          "height": 0.9
+        },
+        "readabilityEnvelope": {
+          "minimumRenderPixels": 16,
+          "minimumContrastRatio": 1
+        }
       }
     },
     {
@@ -239,13 +284,34 @@
           "sourceReceiptDigest": "93562cc3070a4907d06d6196a2c5d917a07c4b487cf4be031805d60fdc75eea9"
         },
         "mediaKind": "animation",
-        "geometry": { "width": 32, "height": 32, "frameWidth": 32, "frameHeight": 32, "columns": 1, "rows": 1 },
-        "clips": [{ "id": "walk", "frames": [{ "column": 0, "row": 0 }], "timing": { "fps": 8, "loop": true } }],
+        "geometry": {
+          "width": 32,
+          "height": 32,
+          "frameWidth": 32,
+          "frameHeight": 32,
+          "columns": 1,
+          "rows": 1
+        },
+        "clips": [
+          {
+            "id": "walk",
+            "frames": [{ "column": 0, "row": 0 }],
+            "timing": { "fps": 8, "loop": true }
+          }
+        ],
         "directions": [{ "direction": "down", "clipId": "walk" }],
         "anchor": { "x": 0.5, "y": 1 },
         "renderScale": 1,
-        "collisionEnvelope": { "x": 0.2, "y": 0.1, "width": 0.6, "height": 0.9 },
-        "readabilityEnvelope": { "minimumRenderPixels": 16, "minimumContrastRatio": 1 }
+        "collisionEnvelope": {
+          "x": 0.2,
+          "y": 0.1,
+          "width": 0.6,
+          "height": 0.9
+        },
+        "readabilityEnvelope": {
+          "minimumRenderPixels": 16,
+          "minimumContrastRatio": 1
+        }
       }
     },
     {
@@ -260,13 +326,34 @@
           "sourceReceiptDigest": "93562cc3070a4907d06d6196a2c5d917a07c4b487cf4be031805d60fdc75eea9"
         },
         "mediaKind": "animation",
-        "geometry": { "width": 32, "height": 32, "frameWidth": 32, "frameHeight": 32, "columns": 1, "rows": 1 },
-        "clips": [{ "id": "walk", "frames": [{ "column": 0, "row": 0 }], "timing": { "fps": 8, "loop": true } }],
+        "geometry": {
+          "width": 32,
+          "height": 32,
+          "frameWidth": 32,
+          "frameHeight": 32,
+          "columns": 1,
+          "rows": 1
+        },
+        "clips": [
+          {
+            "id": "walk",
+            "frames": [{ "column": 0, "row": 0 }],
+            "timing": { "fps": 8, "loop": true }
+          }
+        ],
         "directions": [{ "direction": "down", "clipId": "walk" }],
         "anchor": { "x": 0.5, "y": 1 },
         "renderScale": 1,
-        "collisionEnvelope": { "x": 0.2, "y": 0.1, "width": 0.6, "height": 0.9 },
-        "readabilityEnvelope": { "minimumRenderPixels": 16, "minimumContrastRatio": 1 }
+        "collisionEnvelope": {
+          "x": 0.2,
+          "y": 0.1,
+          "width": 0.6,
+          "height": 0.9
+        },
+        "readabilityEnvelope": {
+          "minimumRenderPixels": 16,
+          "minimumContrastRatio": 1
+        }
       }
     }
   ],
@@ -277,9 +364,21 @@
       "rationale": "Accepted evidence does not establish suitable physical asset adoption.",
       "selected_asset_key": null,
       "evidence": [
-        { "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/claim-evidence-ledger-v3.json", "json_pointer": "/claim_atoms/1", "claim_id": "DR-STATE-001B" },
-        { "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/claim-evidence-ledger-v3.json", "json_pointer": "/claim_atoms/4", "claim_id": "DR-ASSET-001A" },
-        { "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/claim-evidence-ledger-v3.json", "json_pointer": "/claim_atoms/7", "claim_id": "DR-TEST-001B" }
+        {
+          "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/claim-evidence-ledger-v3.json",
+          "json_pointer": "/claim_atoms/1",
+          "claim_id": "DR-STATE-001B"
+        },
+        {
+          "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/claim-evidence-ledger-v3.json",
+          "json_pointer": "/claim_atoms/4",
+          "claim_id": "DR-ASSET-001A"
+        },
+        {
+          "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/claim-evidence-ledger-v3.json",
+          "json_pointer": "/claim_atoms/7",
+          "claim_id": "DR-TEST-001B"
+        }
       ]
     },
     {
@@ -288,9 +387,21 @@
       "rationale": "Accepted evidence does not establish suitable physical asset adoption.",
       "selected_asset_key": null,
       "evidence": [
-        { "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/claim-evidence-ledger-v3.json", "json_pointer": "/claim_atoms/3", "claim_id": "DR-SCENE-002B" },
-        { "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/claim-evidence-ledger-v3.json", "json_pointer": "/claim_atoms/4", "claim_id": "DR-ASSET-001A" },
-        { "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/claim-evidence-ledger-v3.json", "json_pointer": "/claim_atoms/6", "claim_id": "DR-TEST-001A" }
+        {
+          "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/claim-evidence-ledger-v3.json",
+          "json_pointer": "/claim_atoms/3",
+          "claim_id": "DR-SCENE-002B"
+        },
+        {
+          "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/claim-evidence-ledger-v3.json",
+          "json_pointer": "/claim_atoms/4",
+          "claim_id": "DR-ASSET-001A"
+        },
+        {
+          "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/claim-evidence-ledger-v3.json",
+          "json_pointer": "/claim_atoms/6",
+          "claim_id": "DR-TEST-001A"
+        }
       ]
     },
     {
@@ -299,9 +410,21 @@
       "rationale": "Accepted evidence does not establish suitable physical asset adoption.",
       "selected_asset_key": null,
       "evidence": [
-        { "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/claim-evidence-ledger-v3.json", "json_pointer": "/claim_atoms/0", "claim_id": "DR-STATE-001A" },
-        { "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/claim-evidence-ledger-v3.json", "json_pointer": "/claim_atoms/4", "claim_id": "DR-ASSET-001A" },
-        { "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/claim-evidence-ledger-v3.json", "json_pointer": "/claim_atoms/7", "claim_id": "DR-TEST-001B" }
+        {
+          "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/claim-evidence-ledger-v3.json",
+          "json_pointer": "/claim_atoms/0",
+          "claim_id": "DR-STATE-001A"
+        },
+        {
+          "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/claim-evidence-ledger-v3.json",
+          "json_pointer": "/claim_atoms/4",
+          "claim_id": "DR-ASSET-001A"
+        },
+        {
+          "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/claim-evidence-ledger-v3.json",
+          "json_pointer": "/claim_atoms/7",
+          "claim_id": "DR-TEST-001B"
+        }
       ]
     }
   ],
