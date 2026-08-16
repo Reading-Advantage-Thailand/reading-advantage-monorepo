@@ -137,7 +137,7 @@ ALTER TABLE "review_job_migration_issues"
 --> statement-breakpoint
 ALTER TABLE "durable_job_audit_events"
   ADD CONSTRAINT "durable_job_audit_events_actor_check"
-  CHECK ("actor" IS NOT NULL AND char_length(btrim("actor")) BETWEEN 1 AND 200),
+  CHECK ("actor" IS NOT NULL AND char_length("actor") BETWEEN 1 AND 200 AND "actor" ~ '[^[:space:]]'),
   ADD CONSTRAINT "durable_job_audit_events_authorization_decision_check"
   CHECK ("authorization_decision_id" IS NOT NULL AND char_length(btrim("authorization_decision_id")) BETWEEN 1 AND 200),
   ADD CONSTRAINT "durable_job_audit_events_reason_check"
@@ -146,7 +146,7 @@ ALTER TABLE "durable_job_audit_events"
   CHECK ("correlation_id" IS NOT NULL AND char_length(btrim("correlation_id")) BETWEEN 1 AND 200);
 ALTER TABLE "review_job_adoption_audit_events"
   ADD CONSTRAINT "review_job_adoption_audit_events_actor_check"
-  CHECK ("actor" IS NOT NULL AND char_length(btrim("actor")) BETWEEN 1 AND 200),
+  CHECK ("actor" IS NOT NULL AND char_length("actor") BETWEEN 1 AND 200 AND "actor" ~ '[^[:space:]]'),
   ADD CONSTRAINT "review_job_adoption_audit_events_authorization_decision_check"
   CHECK ("authorization_decision_id" IS NOT NULL AND char_length(btrim("authorization_decision_id")) BETWEEN 1 AND 200),
   ADD CONSTRAINT "review_job_adoption_audit_events_reason_check"
