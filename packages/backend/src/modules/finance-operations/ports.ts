@@ -209,7 +209,9 @@ const historicalPrivateEvidenceIdempotencyKeySchema = z
     const prefix = `${HISTORICAL_PRIVATE_EVIDENCE_OUTBOX_KEY_PREFIX}|`;
     if (!value.startsWith(prefix)) return false;
     const suffix = value.slice(prefix.length);
-    return suffix.startsWith("operation=") || /^sha256=[a-f0-9]{64}$/u.test(suffix);
+    return (
+      suffix.startsWith("operation=") || /^sha256=[a-f0-9]{64}$/u.test(suffix)
+    );
   });
 function hasNoControlCharacters(value: string): boolean {
   for (const character of value) {
@@ -272,7 +274,9 @@ export const historicalPrivateEvidenceOutboxIntentSchema = z
         message: "Evidence reference company must match the outbox scope",
       });
     }
-    if (intent.authorizationEvidence.organizationId !== intent.scope.companyId) {
+    if (
+      intent.authorizationEvidence.organizationId !== intent.scope.companyId
+    ) {
       context.addIssue({
         code: z.ZodIssueCode.custom,
         path: ["authorizationEvidence", "organizationId"],
@@ -297,42 +301,46 @@ export type HistoricalPrivateEvidenceOutboxIntent = z.infer<
 >;
 
 /** Runtime contract for a durable receipt bound to a Finance outbox event. */
-export const historicalPrivateEvidenceProjectorReceiptSchema = z.strictObject({
-  outboxEventId: boundedIdentitySchema,
-  auditEventId: boundedIdentitySchema,
-  auditReceiptId: boundedIdentitySchema,
-  objectId: historicalPrivateEvidenceObjectIdSchema,
-  scope: scopeSchema,
-  authorizationEvidence: historicalPrivateEvidenceAuthorizationEvidenceSchema,
-  policyVersion: boundedIdentitySchema,
-  idempotencyKey: historicalPrivateEvidenceIdempotencyKeySchema,
-  jobId: z.string().uuid(),
-}).superRefine((receipt, context) => {
-  if (receipt.policyVersion !== receipt.authorizationEvidence.policyVersion) {
-    context.addIssue({
-      code: z.ZodIssueCode.custom,
-      path: ["policyVersion"],
-      message: "Receipt policy version must match authorization evidence",
-    });
-  }
-  if (receipt.authorizationEvidence.organizationId !== receipt.scope.companyId) {
-    context.addIssue({
-      code: z.ZodIssueCode.custom,
-      path: ["authorizationEvidence", "organizationId"],
-      message: "Receipt authorization evidence company must match scope",
-    });
-  }
-  if (
-    receipt.scope.schoolId !== undefined &&
-    !receipt.authorizationEvidence.schoolIds?.includes(receipt.scope.schoolId)
-  ) {
-    context.addIssue({
-      code: z.ZodIssueCode.custom,
-      path: ["authorizationEvidence", "schoolIds"],
-      message: "Receipt authorization evidence must attest the school scope",
-    });
-  }
-});
+export const historicalPrivateEvidenceProjectorReceiptSchema = z
+  .strictObject({
+    outboxEventId: boundedIdentitySchema,
+    auditEventId: boundedIdentitySchema,
+    auditReceiptId: boundedIdentitySchema,
+    objectId: historicalPrivateEvidenceObjectIdSchema,
+    scope: scopeSchema,
+    authorizationEvidence: historicalPrivateEvidenceAuthorizationEvidenceSchema,
+    policyVersion: boundedIdentitySchema,
+    idempotencyKey: historicalPrivateEvidenceIdempotencyKeySchema,
+    jobId: z.string().uuid(),
+  })
+  .superRefine((receipt, context) => {
+    if (receipt.policyVersion !== receipt.authorizationEvidence.policyVersion) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["policyVersion"],
+        message: "Receipt policy version must match authorization evidence",
+      });
+    }
+    if (
+      receipt.authorizationEvidence.organizationId !== receipt.scope.companyId
+    ) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["authorizationEvidence", "organizationId"],
+        message: "Receipt authorization evidence company must match scope",
+      });
+    }
+    if (
+      receipt.scope.schoolId !== undefined &&
+      !receipt.authorizationEvidence.schoolIds?.includes(receipt.scope.schoolId)
+    ) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["authorizationEvidence", "schoolIds"],
+        message: "Receipt authorization evidence must attest the school scope",
+      });
+    }
+  });
 
 /** Immutable durable receipt bound to one Finance outbox event and succeeded audit. */
 export type HistoricalPrivateEvidenceProjectorReceipt = z.infer<
@@ -454,29 +462,28 @@ export interface HistoricalPrivateEvidenceProjectionStore {
 }
 
 /** Runtime result of the token-fenced receipt binding CAS. Stale/takeover results carry the authoritative receipt so callers never write through a lost token. */
-export const historicalPrivateEvidenceProjectorBindResultSchema =
-  z.union([
-    z.strictObject({ status: z.literal("bound") }),
-    z.strictObject({
-      status: z.literal("replay"),
-      receipt: historicalPrivateEvidenceProjectorReceiptSchema,
-    }),
-    z.strictObject({
-      status: z.literal("stale"),
-      /** Authoritative receipt retained by the takeover owner. */
-      receipt: historicalPrivateEvidenceProjectorReceiptSchema,
-    }),
-    z.strictObject({
-      status: z.literal("conflict"),
-      reason: z.literal("receipt-mismatch"),
-    }),
-    z.strictObject({
-      status: z.literal("conflict"),
-      reason: z.literal("claim-taken-over"),
-      /** Authoritative receipt retained by the takeover owner. */
-      receipt: historicalPrivateEvidenceProjectorReceiptSchema,
-    }),
-  ]);
+export const historicalPrivateEvidenceProjectorBindResultSchema = z.union([
+  z.strictObject({ status: z.literal("bound") }),
+  z.strictObject({
+    status: z.literal("replay"),
+    receipt: historicalPrivateEvidenceProjectorReceiptSchema,
+  }),
+  z.strictObject({
+    status: z.literal("stale"),
+    /** Authoritative receipt retained by the takeover owner. */
+    receipt: historicalPrivateEvidenceProjectorReceiptSchema,
+  }),
+  z.strictObject({
+    status: z.literal("conflict"),
+    reason: z.literal("receipt-mismatch"),
+  }),
+  z.strictObject({
+    status: z.literal("conflict"),
+    reason: z.literal("claim-taken-over"),
+    /** Authoritative receipt retained by the takeover owner. */
+    receipt: historicalPrivateEvidenceProjectorReceiptSchema,
+  }),
+]);
 
 /** Strict outcome returned by a receipt-binding compare-and-set operation. */
 export type HistoricalPrivateEvidenceProjectorBindResult = z.infer<
@@ -534,9 +541,8 @@ function parseCapturedBindOutput(
   ownershipLost: boolean,
 ): BindOutputParseResult {
   try {
-    const result = historicalPrivateEvidenceProjectorBindResultSchema.safeParse(
-      value,
-    );
+    const result =
+      historicalPrivateEvidenceProjectorBindResultSchema.safeParse(value);
     if (result.success) return { kind: "valid", data: result.data };
     return ownershipLost
       ? { kind: "ownership-lost-invalid" }
@@ -723,11 +729,13 @@ export function createHistoricalPrivateEvidenceBindingAdapter(
     expectedPayloadDigest: historicalOutboxDigestSchema,
     authorization: historicalPrivateEvidenceAuthorizationEvidenceSchema,
   });
-  const readerResultSchema = z.object({
-    evidenceReference: privateEvidenceReferenceSchema,
-    payloadDigest: historicalOutboxDigestSchema,
-    scope: financeOperationScopeSchema.optional(),
-  }).passthrough();
+  const readerResultSchema = z
+    .object({
+      evidenceReference: privateEvidenceReferenceSchema,
+      payloadDigest: historicalOutboxDigestSchema,
+      scope: financeOperationScopeSchema.optional(),
+    })
+    .passthrough();
 
   return Object.freeze({
     async verify(
@@ -740,10 +748,14 @@ export function createHistoricalPrivateEvidenceBindingAdapter(
       try {
         parsedRequest = bindingRequestSchema.safeParse(request);
       } catch {
-        throw projectorError("FINANCE_PRIVATE_EVIDENCE_BINDING_REQUEST_INVALID");
+        throw projectorError(
+          "FINANCE_PRIVATE_EVIDENCE_BINDING_REQUEST_INVALID",
+        );
       }
       if (!parsedRequest.success) {
-        throw projectorError("FINANCE_PRIVATE_EVIDENCE_BINDING_REQUEST_INVALID");
+        throw projectorError(
+          "FINANCE_PRIVATE_EVIDENCE_BINDING_REQUEST_INVALID",
+        );
       }
       const immutableRequest = freezeDeep(parsedRequest.data);
       const referenceCompanyId = immutableRequest.evidenceReference
@@ -758,7 +770,9 @@ export function createHistoricalPrivateEvidenceBindingAdapter(
             immutableRequest.scope.schoolId,
           ))
       ) {
-        throw projectorError("FINANCE_PRIVATE_EVIDENCE_BINDING_REQUEST_INVALID");
+        throw projectorError(
+          "FINANCE_PRIVATE_EVIDENCE_BINDING_REQUEST_INVALID",
+        );
       }
       let rawResult: unknown;
       try {
@@ -770,7 +784,9 @@ export function createHistoricalPrivateEvidenceBindingAdapter(
           maxBytes,
         });
       } catch {
-        throw projectorError("FINANCE_PRIVATE_EVIDENCE_BINDING_DEPENDENCY_FAILED");
+        throw projectorError(
+          "FINANCE_PRIVATE_EVIDENCE_BINDING_DEPENDENCY_FAILED",
+        );
       }
       let result: z.SafeParseReturnType<
         unknown,
@@ -847,8 +863,10 @@ function encodeStringList(values: readonly string[] | undefined): string {
     : `some:${values.length}:${values.map(encodeIdentity).join(",")}`;
 }
 
-const arrayBufferByteLengthGetter =
-  Object.getOwnPropertyDescriptor(ArrayBuffer.prototype, "byteLength")?.get;
+const arrayBufferByteLengthGetter = Object.getOwnPropertyDescriptor(
+  ArrayBuffer.prototype,
+  "byteLength",
+)?.get;
 
 /** Copies one genuine 32-byte WebCrypto ArrayBuffer into this realm without retaining provider memory. */
 function copySha256Digest(result: unknown): Uint8Array {
@@ -937,9 +955,8 @@ async function createBoundedIdempotencyKey(
     );
     const identity = createIdempotencyKey(intent, sourceIdentityDigest);
     if (identity.length <= 500) {
-      const identityResult = historicalPrivateEvidenceIdempotencyKeySchema.safeParse(
-        identity,
-      );
+      const identityResult =
+        historicalPrivateEvidenceIdempotencyKeySchema.safeParse(identity);
       if (!identityResult.success) {
         throw new Error("invalid idempotency key");
       }
@@ -955,9 +972,8 @@ async function createBoundedIdempotencyKey(
       value.toString(16).padStart(2, "0"),
     ).join("");
     const idempotencyKey = `${HISTORICAL_PRIVATE_EVIDENCE_OUTBOX_KEY_PREFIX}|sha256=${hexadecimal}`;
-    const idempotencyKeyResult = historicalPrivateEvidenceIdempotencyKeySchema.safeParse(
-      idempotencyKey,
-    );
+    const idempotencyKeyResult =
+      historicalPrivateEvidenceIdempotencyKeySchema.safeParse(idempotencyKey);
     if (!idempotencyKeyResult.success) {
       throw new Error("invalid idempotency key");
     }
@@ -1007,7 +1023,10 @@ function resolveAuthoritativeBindReceipt(
     historicalPrivateEvidenceProjectorReceiptSchema.parse(receipt),
   );
   if (receiptMatchesIntent(authoritativeReceipt, intent, idempotencyKey)) {
-    return freezeDeep({ status: "replay" as const, receipt: authoritativeReceipt });
+    return freezeDeep({
+      status: "replay" as const,
+      receipt: authoritativeReceipt,
+    });
   }
   return freezeDeep({
     status: "conflict" as const,
@@ -1021,6 +1040,7 @@ function createEnqueueRequest(
   idempotencyKey: string,
   job: Readonly<HistoricalPrivateEvidenceProjectorJob>,
 ): Readonly<HistoricalPrivateEvidenceDurableJobRequest> {
+  const { schoolIds, ...authorizationEvidence } = intent.authorizationEvidence;
   const request = {
     jobName: job.jobName,
     queueName: job.queueName,
@@ -1030,7 +1050,10 @@ function createEnqueueRequest(
       outboxEventId: intent.outboxEventId,
       auditEventId: intent.auditEventId,
       objectId: intent.objectId,
-      authorizationEvidence: intent.authorizationEvidence,
+      authorizationEvidence: {
+        ...authorizationEvidence,
+        ...(schoolIds === undefined ? {} : { schoolIds }),
+      },
     },
     maxAttempts: job.maxAttempts,
     availableAt: new Date().toISOString(),
@@ -1051,7 +1074,9 @@ export function createHistoricalPrivateEvidenceOutboxProjector(
   input: HistoricalPrivateEvidenceProjectorInput,
 ): HistoricalPrivateEvidenceOutboxProjector {
   let jobValue: unknown;
-  let durableJobs: HistoricalPrivateEvidenceProjectorInput["durableJobs"] | undefined;
+  let durableJobs:
+    | HistoricalPrivateEvidenceProjectorInput["durableJobs"]
+    | undefined;
   let projectionStore:
     | HistoricalPrivateEvidenceProjectorInput["projectionStore"]
     | undefined;
@@ -1159,9 +1184,8 @@ export function createHistoricalPrivateEvidenceOutboxProjector(
         z.infer<typeof historicalPrivateEvidenceOutboxIntentSchema>
       >;
       try {
-        intentResult = historicalPrivateEvidenceOutboxIntentSchema.safeParse(
-          rawIntent,
-        );
+        intentResult =
+          historicalPrivateEvidenceOutboxIntentSchema.safeParse(rawIntent);
       } catch {
         throw projectorError("FINANCE_OUTBOX_INTENT_INVALID");
       }
@@ -1185,9 +1209,10 @@ export function createHistoricalPrivateEvidenceOutboxProjector(
           z.infer<typeof historicalPrivateEvidenceProjectorReceiptSchema>
         >;
         try {
-          receiptResult = historicalPrivateEvidenceProjectorReceiptSchema.safeParse(
-            storedReceipt,
-          );
+          receiptResult =
+            historicalPrivateEvidenceProjectorReceiptSchema.safeParse(
+              storedReceipt,
+            );
         } catch {
           throw projectorError("FINANCE_OUTBOX_RECEIPT_INVALID");
         }
