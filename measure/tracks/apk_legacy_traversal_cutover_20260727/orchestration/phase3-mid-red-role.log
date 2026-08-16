@@ -32,3 +32,19 @@ END_MEASURE_AGENT_RESULT
 - The rerun collected fifteen tests and produced fifteen expected empty-catalog failures.
 - TypeScript, focused ESLint, Prettier, and the scoped diff check passed.
 - Owner acceptance remains pending, so this remediation grants no Green authority.
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red-resume
+status: complete-with-green-handoff-blocked
+track: apk_legacy_traversal_cutover_20260727
+phase: Phase 3 Red mechanics, responsive, and learning contracts
+base_sha: c7d0880e9
+scope: HEAD scope verified; 19 files in the prior commit, all within the leased Red batch
+tests_run: 15 collected; 15 expected missing-public-cartridge failures
+fixture_claims: all mechanics, input, responsive, and learning pointers resolved with matching claim IDs
+runtime_boundary: all 15 tests call RuntimeCartridge.createGameConfig and reject a no-op Phaser config
+failures: no missing imports, fixture pointers, syntax, or TypeScript failures; catalog boundary only
+checks: TypeScript, ESLint, Prettier, and diff checks passed
+authority: Red contracts only; no owner acceptance, adoption, ingestion, implementation, cutover, or Green authorization
+handoff: owner-gated Green remains blocked until Phase 2 asset-adoption evidence is accepted
+END_MEASURE_AGENT_RESULT
