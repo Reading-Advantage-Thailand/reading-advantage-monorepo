@@ -118,7 +118,7 @@ track: wave5_public_surface_completion_20260628
 phase: Phase 3: i18n Completeness and Typed Locale Access
 phase_base_sha: c312eb71942715a0d12b2df037ac9527323b31c7
 resume_base_sha: 1faed8ed4
-commits: 758c42c42 Science locale implementation; c24ec2104 services implementation; pending evidence commit
+commits: 758c42c42 Science locale implementation; c24ec2104 services implementation; 542132b15 evidence
 commands: focused Phase 3 10/10; direct typecheck passed; fresh typecheck passed; production build passed; targeted lint passed; Prettier passed; scoped diff passed
 counts: 4 service rows; feature counts 6/6/6/4; 2 focused test files; 10/10 tests passed
 files: apps/www-reading-advantage/src/app/[locale]/(marketing)/services/page.tsx; measure/tracks/wave5_public_surface_completion_20260628/plan.md; measure/tracks/wave5_public_surface_completion_20260628/phase-3-science-contract-jr-green-role-log.md
