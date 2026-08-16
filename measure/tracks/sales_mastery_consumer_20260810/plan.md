@@ -145,6 +145,14 @@
    lint, build, CLI, format, and diff gates passed. Task B remains `[~]`; this
    receipt does not close shared-root gates.
 
+   Lease and archive identity remediation (2026-08-16; commit
+   `74280d0284a94f1616e6279d99171572c5c80f22`) binds release to the original
+   lease directory identity and preserves replacement directories. It installs
+   only from private verified `.tgz` bytes after pack-time checksum binding.
+   Adversarial, digest, lease, admission, packed-consumer, runtime, Codecamp,
+   Sales knowledge, type, lint, build, CLI, format, and diff gates passed. Task
+   B remains `[~]`; this receipt does not close shared-root gates.
+
 ## Phase 1 — bind the approved course to a knowledge graph
 
 - [x] Task: Define the versioned Sales objective graph, activity variants,

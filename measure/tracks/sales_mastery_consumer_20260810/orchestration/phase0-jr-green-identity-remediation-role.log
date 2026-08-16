@@ -1,0 +1,67 @@
+MEASURE_AGENT_RESULT
+role: jr-green
+status: complete
+track: sales_mastery_consumer_20260810
+phase: Phase 0 — reconcile and admit the consumer
+phase_base_sha: 8adc57cb0af0693c1b3420842b3a504939a36b2e
+current_head_start: c1494c162
+role_base_sha: c1494c162dc77c0c3299f0cb72481ccf42137cb0
+implementation_commit: 74280d0284a94f1616e6279d99171572c5c80f22
+evidence_commit: separate commit after this implementation commit
+
+findings:
+- SMC-P0-ADV-003 now checks the original lease directory device and inode.
+- Release reads owner metadata through the retained original directory handle.
+- A replacement directory is never removed during lease release.
+- SMC-P0-ADV-004 now captures npm pack SHA-1, exact bytes, and SHA-256 values.
+- Clean installation uses private verified `.tgz` copies.
+- The original archive and private copy are verified immediately before npm use.
+- Existing symlink, snapshot, process identity, import, and secret-safe controls
+  remain active.
+
+gates:
+- adversarial suite: PASS; 3 passed, 1 file.
+- digest contract: PASS; 2 passed, 24 skipped.
+- WorkspaceLeaseRuntime contract: PASS; 17 passed, 9 skipped.
+- Sales runtime admission: PASS; 11 passed.
+- packed-consumer suite: PASS; 26 passed.
+- runtime-manifest and Codecamp regressions: PASS; 20 passed across 2 files.
+- Sales knowledge suite: PASS; 19 passed across 3 files.
+- focused type checks: PASS; both packages exited 0.
+- focused lint checks: PASS; both packages exited 0.
+- focused builds: PASS; both packages exited 0.
+- clean Sales CLI: PASS; compatible true and issues empty.
+- Prettier source and adversarial test check: PASS.
+- immutable-source and diff checks: PASS; protected files and Red tests stayed
+  unchanged.
+- direct replacement-directory proof: PASS; replacement owner bytes remained.
+
+post_commit_proof:
+- auditedHead: 74280d0284a94f1616e6279d99171572c5c80f22.
+- sourceDigestSha256: 3bc760078807eae90f648b92674f53f22e3ba9df32b17590571dfe53c29e1f9a.
+- archiveDigestsSha256: 5 release-package values.
+- checkedConsumers: 1, sales-advantage.
+- resolvedVersions: gateZod 3.25.76, engineZod 4.4.3, tsFsrs 5.4.1.
+
+failures_and_corrections:
+- The first private archive suffix was not resolved by npm. The path now uses
+  `.tgz` while remaining private and verified.
+- The final adversarial run exposed a race before byte capture. Npm pack SHA-1
+  now binds the archive before substitution can pass.
+- Sales knowledge tests report missing DATABASE_URL on stderr. They passed.
+- No requested gate has a persistent failure.
+
+files_changed:
+- packages/mastery-runtime-compat/src/release-artifact.ts
+- measure/tracks/sales_mastery_consumer_20260810/plan.md
+- measure/tracks/sales_mastery_consumer_20260810/orchestration/phase0-jr-green-identity-remediation-role.log
+
+adversarial_rerun_handoff:
+- Rerun phase0-adversarial.test.ts from a clean checkout.
+- Add or run SMC-P0-ADV-003 for copied-owner release substitution.
+- Add or run SMC-P0-ADV-004 for substitution during archive consumption.
+- Confirm the replacement directory remains and private bytes drive installation.
+- Confirm the Red and protected artifacts remain byte-identical.
+- Task B remains [~] because shared-root doctor and architecture gates remain open.
+
+END_MEASURE_AGENT_RESULT
