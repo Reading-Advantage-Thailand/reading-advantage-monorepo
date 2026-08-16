@@ -23,6 +23,10 @@
 - Next executable binding work per test-strategy.md Phase 2. Product-owner receipt for the binding freeze is still required before Green.
 - [~] Write failing mechanic, responsive composition, and educational-invariant tests per title.
 - Next executable Red work per test-strategy.md Phase 3; each test must name its accepted-evidence falsification condition.
+- Phase 3 Red batch added five deterministic title fixtures and fifteen per-title contracts.
+- The Red failures cover distinct traversal loops, compact and wide composition, ordered learning progress, and normalized input.
+- Red evidence: `phase3-red-evidence-20260816.md`; owner acceptance remains pending, so Green is not authorized.
+- Red role log: `orchestration/phase3-mid-red-role.log`; no production cartridge, catalog, dossier, archive, registry, or metadata file changed.
 - [b] Build each cartridge using current public APK APIs and approved semantic bindings. deferred:green-role-after-phase-3-red-review
 - [b] Run Advantage Games QC with compact/wide, resize, input, and selected-output checks. deferred:phase-4-cartridge-green
 - [b] Run Reading and Primary host proofs for loading, authoritative completion, persistence, replay, and navigation. deferred:phase-5-qc-evidence

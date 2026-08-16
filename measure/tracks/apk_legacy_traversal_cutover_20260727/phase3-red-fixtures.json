@@ -1,0 +1,271 @@
+{
+  "schema_version": "apk-legacy-traversal-phase3-red-fixtures.v1",
+  "track_id": "apk_legacy_traversal_cutover_20260727",
+  "phase": "Phase 3: Red mechanics, responsive, and learning contracts",
+  "status": "red-fixture-only",
+  "titles": [
+    {
+      "title_id": "dragon-rider",
+      "title": "Dragon Rider",
+      "input_mode": "vocabulary",
+      "input": [
+        { "term": "dragon", "translation": "มังกร" },
+        { "term": "rider", "translation": "นักขี่" }
+      ],
+      "mechanics": {
+        "evidence": {
+          "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/claim-evidence-ledger-v3.json",
+          "json_pointer": "/claim_atoms/6",
+          "claim_id": "DR-TEST-001A"
+        },
+        "input_evidence": {
+          "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/claim-evidence-ledger-v3.json",
+          "json_pointer": "/claim_atoms/7",
+          "claim_id": "DR-TEST-001B"
+        },
+        "loop": "two translation gates lead to flight growth, a timed boss phase, and one result",
+        "steps": ["gate-selection", "flight-growth", "boss-resolution"],
+        "capabilities": ["arcade-physics", "camera", "timers", "tweens"],
+        "spawn_interval_ms": 1250,
+        "frame_delta_ms": 1250,
+        "keyboard": { "ArrowLeft": "move-left", "ArrowRight": "move-right" }
+      },
+      "responsive": {
+        "evidence": {
+          "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/claim-evidence-ledger-v3.json",
+          "json_pointer": "/claim_atoms/2",
+          "claim_id": "DR-SCENE-002A"
+        },
+        "compact": { "width": 390, "height": 844 },
+        "wide": { "width": 1440, "height": 900 },
+        "strategy": "reflow"
+      },
+      "learning": {
+        "evidence": {
+          "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/vocabulary/dragon-rider/claim-evidence-ledger-v3.json",
+          "json_pointer": "/claim_atoms/6",
+          "claim_id": "DR-TEST-001A"
+        },
+        "targets": ["dragon", "rider"],
+        "wrong_candidate": "wrong-word"
+      }
+    },
+    {
+      "title_id": "spellweavers-run",
+      "title": "Spellweaver's Run",
+      "input_mode": "sentence",
+      "input": [{ "term": "the bright moon", "translation": "พระจันทร์สว่าง" }],
+      "mechanics": {
+        "evidence": {
+          "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/claim-evidence-ledger-v2.json",
+          "json_pointer": "/19",
+          "claim_id": "SW-TRANS-002"
+        },
+        "input_evidence": {
+          "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/claim-evidence-ledger-v2.json",
+          "json_pointer": "/28",
+          "claim_id": "SW-INPUT-002"
+        },
+        "loop": "three lane selection resolves falling word orbs in sentence order before victory or defeat",
+        "steps": ["orb-scroll", "lane-collection", "ordered-sentence-result"],
+        "capabilities": ["timers", "tweens"],
+        "spawn_interval_ms": 2000,
+        "frame_delta_ms": 2000,
+        "keyboard": {
+          "ArrowLeft": "move-left",
+          "KeyA": "move-left",
+          "ArrowDown": "confirm",
+          "KeyS": "confirm",
+          "ArrowRight": "move-right",
+          "KeyD": "move-right"
+        }
+      },
+      "responsive": {
+        "evidence": {
+          "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/claim-evidence-ledger-v2.json",
+          "json_pointer": "/28",
+          "claim_id": "SW-RESP-002"
+        },
+        "compact": { "width": 390, "height": 844 },
+        "wide": { "width": 1440, "height": 900 },
+        "strategy": "reflow"
+      },
+      "learning": {
+        "evidence": {
+          "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/claim-evidence-ledger-v2.json",
+          "json_pointer": "/19",
+          "claim_id": "SW-TRANS-002"
+        },
+        "targets": ["the", "bright", "moon"],
+        "wrong_candidate": "dark"
+      }
+    },
+    {
+      "title_id": "shadow-gate-dungeon",
+      "title": "Shadow Gate Dungeon",
+      "input_mode": "sentence",
+      "input": [{ "term": "the silent gate", "translation": "ประตูเงียบ" }],
+      "mechanics": {
+        "evidence": {
+          "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/shadow-gate-dungeon/claim-evidence-ledger-v2.json",
+          "json_pointer": "/claims/6",
+          "claim_id": "SGD-MOVE-001"
+        },
+        "input_evidence": {
+          "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/shadow-gate-dungeon/claim-evidence-ledger-v2.json",
+          "json_pointer": "/claims/4",
+          "claim_id": "SGD-INPUT-001"
+        },
+        "loop": "bounded dungeon movement enters creature chase, ordered crystal learning, and an unlocked gate",
+        "steps": [
+          "bounded-movement",
+          "creature-hazard",
+          "ordered-crystals",
+          "gate-transition"
+        ],
+        "capabilities": ["arcade-physics", "camera", "timers"],
+        "spawn_interval_ms": 1500,
+        "frame_delta_ms": 1500,
+        "keyboard": {
+          "ArrowUp": "move-up",
+          "KeyW": "move-up",
+          "ArrowDown": "move-down",
+          "KeyS": "move-down",
+          "ArrowLeft": "move-left",
+          "KeyA": "move-left",
+          "ArrowRight": "move-right",
+          "KeyD": "move-right"
+        }
+      },
+      "responsive": {
+        "evidence": {
+          "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/shadow-gate-dungeon/claim-evidence-ledger-v2.json",
+          "json_pointer": "/claims/13",
+          "claim_id": "SGD-RESP-001"
+        },
+        "compact": { "width": 390, "height": 844 },
+        "wide": { "width": 1440, "height": 900 },
+        "strategy": "reflow"
+      },
+      "learning": {
+        "evidence": {
+          "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/shadow-gate-dungeon/claim-evidence-ledger-v2.json",
+          "json_pointer": "/claims/10",
+          "claim_id": "SGD-PROG-001"
+        },
+        "targets": ["the", "silent", "gate"],
+        "wrong_candidate": "loud"
+      }
+    },
+    {
+      "title_id": "labyrinth-goblin-king",
+      "title": "Labyrinth of the Goblin King",
+      "input_mode": "sentence",
+      "input": [{ "term": "the goblin waits", "translation": "ก็อบลินรออยู่" }],
+      "mechanics": {
+        "evidence": {
+          "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/labyrinth-goblin-king/claim-evidence-ledger-batch-b-v2.json",
+          "json_pointer": "/claim_atoms/4",
+          "claim_id": "LGK-MOVE-001"
+        },
+        "input_evidence": {
+          "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/labyrinth-goblin-king/claim-evidence-ledger-batch-b-v2.json",
+          "json_pointer": "/claim_atoms/4",
+          "claim_id": "LGK-MOVE-001"
+        },
+        "loop": "grid movement navigates a bounded maze while ordered word orbs and goblin hazards change state",
+        "steps": [
+          "maze-navigation",
+          "ordered-orb",
+          "goblin-hazard",
+          "sentence-transition"
+        ],
+        "capabilities": ["arcade-physics", "camera", "tweens"],
+        "spawn_interval_ms": 1000,
+        "frame_delta_ms": 1000,
+        "keyboard": {
+          "ArrowUp": "move-up",
+          "KeyW": "move-up",
+          "ArrowDown": "move-down",
+          "KeyS": "move-down",
+          "ArrowLeft": "move-left",
+          "KeyA": "move-left",
+          "ArrowRight": "move-right",
+          "KeyD": "move-right"
+        }
+      },
+      "responsive": {
+        "evidence": {
+          "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/labyrinth-goblin-king/claim-evidence-ledger-batch-b-v2.json",
+          "json_pointer": "/claim_atoms/11",
+          "claim_id": "LGK-RESP-001"
+        },
+        "compact": { "width": 390, "height": 844 },
+        "wide": { "width": 1440, "height": 900 },
+        "strategy": "reflow"
+      },
+      "learning": {
+        "evidence": {
+          "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/labyrinth-goblin-king/claim-evidence-ledger-batch-b-v2.json",
+          "json_pointer": "/claim_atoms/6",
+          "claim_id": "LGK-ORB-001"
+        },
+        "targets": ["the", "goblin", "waits"],
+        "wrong_candidate": "runs"
+      }
+    },
+    {
+      "title_id": "griffin-riders-escape",
+      "title": "Griffin Rider's Escape",
+      "input_mode": "sentence",
+      "input": [{ "term": "the griffin flies", "translation": "กริฟฟินบิน" }],
+      "mechanics": {
+        "evidence": {
+          "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/griffin-riders-escape/claim-evidence-ledger-v2.json",
+          "json_pointer": "/claims/6",
+          "claim_id": "GRF-WAVE-001"
+        },
+        "input_evidence": {
+          "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/griffin-riders-escape/claim-evidence-ledger-v2.json",
+          "json_pointer": "/claims/8",
+          "claim_id": "GRF-INPUT-001"
+        },
+        "loop": "lane switching resolves perspective waves, correct gates advance words, and hazards consume lives",
+        "steps": [
+          "lane-switch",
+          "wave-spawn",
+          "gate-collision",
+          "ordered-result"
+        ],
+        "capabilities": ["camera", "timers", "tweens"],
+        "spawn_interval_ms": 2000,
+        "frame_delta_ms": 2000,
+        "keyboard": {
+          "ArrowLeft": "move-left",
+          "KeyA": "move-left",
+          "ArrowRight": "move-right",
+          "KeyD": "move-right"
+        }
+      },
+      "responsive": {
+        "evidence": {
+          "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/griffin-riders-escape/claim-evidence-ledger-v2.json",
+          "json_pointer": "/claims/7",
+          "claim_id": "GRF-RESP-001"
+        },
+        "compact": { "width": 390, "height": 844 },
+        "wide": { "width": 1440, "height": 900 },
+        "strategy": "reflow"
+      },
+      "learning": {
+        "evidence": {
+          "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/griffin-riders-escape/claim-evidence-ledger-v2.json",
+          "json_pointer": "/claims/6",
+          "claim_id": "GRF-TRANS-001"
+        },
+        "targets": ["the", "griffin", "flies"],
+        "wrong_candidate": "falls"
+      }
+    }
+  ]
+}

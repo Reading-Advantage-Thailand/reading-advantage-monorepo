@@ -1,0 +1,24 @@
+# Mid Red Role Log — apk_legacy_traversal_cutover_20260727
+
+- 2026-08-16 Measure Mid Red role run.
+- Phase: Phase 3 Red mechanics, responsive, and learning contracts.
+- Phase base: `5baf6cc92`.
+- Role base: `fd581f3dcd15e7b7b632875862aaecb596719621`.
+- Lease: fifteen new per-title test files, the deterministic fixture, the plan, this evidence file, and this log.
+- The five title mechanics loops are gate-to-boss, falling-orb lane collection, dungeon gate traversal, maze hazard traversal, and perspective gate waves.
+- Shared APK public APIs cover bounded timing, normalized input, compact and wide composition, ordered progression, result accounting, and single completion.
+- Targeted Red result: 15 test files and 15 tests collected; all 15 failed only because the public catalog has no Phase 3 cartridge entries.
+- Every failure names an accepted traversal claim and missing cartridge behavior.
+- TypeScript, ESLint, Prettier, and the scoped diff check passed.
+- Phase 2 owner acceptance remains pending. This role does not authorize Green.
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+status: complete-with-green-handoff-blocked
+track: apk_legacy_traversal_cutover_20260727
+phase: Phase 3 Red mechanics, responsive, and learning contracts
+tests_run: 15 collected; 15 expected cartridge-boundary failures
+failures: no missing imports; no syntax, fixture, or TypeScript failures
+files_changed: fifteen per-title Red tests; phase3-red-fixtures.json; plan.md; phase3-red-evidence-20260816.md; this log
+handoff: owner-gated Green only after accepted Phase 2 evidence; no production implementation authority is granted
+END_MEASURE_AGENT_RESULT
