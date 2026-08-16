@@ -52,7 +52,7 @@ netlink: Too many routes to duplicate
 Couldn't set IPv4 route(s) in guest: Argument list too long
 ```
 
-The disposable fallback used host networking, PostgreSQL `16.0.14`, port `55449`,
+The disposable fallback used host networking, PostgreSQL `16.14`, port `55449`,
 and database `durable_job_test_admin_local`.
 
 Command:
