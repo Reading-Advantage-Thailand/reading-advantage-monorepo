@@ -85,6 +85,7 @@
   - Contact surfaces now use `src/config/contact.ts` and one support email.
 - [x] Task: Run www targeted tests.
   - Phase 4 focused suite passes 4/4. The committed Red test remains unchanged.
+  - The pre-review Green result remains 4/4. Review A Red remediation now fails 1/4 tests with three named assertions.
   - Phase 3 regression passes 10/10.
   - Direct and fresh typechecks pass. Production build passes.
   - Targeted lint, Prettier, and scoped diff checks pass.
