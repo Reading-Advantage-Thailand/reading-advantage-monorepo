@@ -54,23 +54,24 @@
   - Evidence refs: www T8 (LRF-021/022/023/024/016), T15 (LRF-027).
   - The historical Red test failed 3/3 for reviewed CTA/accessibility copy, locale casts, and Thai typo forms.
   - Mid Red remediation adds non-vacuous CTA interpolation, Sheet screen-reader, locale-parity, and Science caller type contracts.
-- [~] Task: Externalize strings, add zh fallback, fix Thai typos, replace `as never` with typed accessors. Source SHA evidence: `ee2d7c238db07f2b77646a79a9ce0bc3b5c35916`, `1ac4e1b3ed80db90f7797bf68aefce04ad6b2768`.
+- [x] Task: Externalize strings, add zh fallback, fix Thai typos, replace `as never` with typed accessors. Source SHA evidence: `ee2d7c238db07f2b77646a79a9ce0bc3b5c35916`, `1ac4e1b3ed80db90f7797bf68aefce04ad6b2768`, `758c42c42`.
   - Source SHA evidence: `1ac4e1b3ed80db90f7797bf68aefce04ad6b2768`.
   - Group B typed locale access is accepted in source commit `ee2d7c238db07f2b77646a79a9ce0bc3b5c35916`.
   - The content-bound five-path aggregate is `e4bf355b8b416a8ad014d37cda790e7c193b7a45866fdb3108c0f9786a0c461f`.
   - Final Review A and Security Review B both returned ACCEPT for Group B.
   - Group B proves exact en/th/zh contracts, AST assertion rejection, and exact translator key sequences.
    - The historical source commits add typed CTA and Sheet messages and correct the reviewed Thai typo forms.
-   - Current Mid Red evidence remains open because Science translator callers have 22 locale-key diagnostics.
-   - This plan does not claim current Phase 3 Green.
-- [~] Task: Run www targeted tests. Source SHA evidence: `1ac4e1b3ed80db90f7797bf68aefce04ad6b2768`.
+   - The Science locale contract is corrected in `758c42c42`. All existing Science callers now resolve against en, th, and zh dictionaries.
+   - The correction adds only missing caller messages. It preserves existing translations and keeps `ExactMessages` unchanged.
+- [x] Task: Run www targeted tests. Source SHA evidence: `758c42c42`.
   - Source SHA evidence: `1ac4e1b3ed80db90f7797bf68aefce04ad6b2768`.
   - Historical Group B and Phase 2 evidence remains separate from this remediation.
-  - Current focused Red: 4/5 tests pass. The only failing test is the Science translator caller type contract.
-  - The failure contains 22 `NamespacedMessageKeys<ExactMessages, "pages.products.scienceAdvantage">` errors.
-  - Direct www typecheck exits 2 with those same 22 production locale-contract errors and no test-file errors.
-  - Direct `next build` compiles, then exits 1 at the first Science locale-contract error, `hero.comingSoon`.
-  - Targeted Prettier passes. No current test, typecheck, or build Green is claimed.
+   - The immutable Red rerun at `a2c378992` remains 4/5, with one Science failure and 22 locale-key diagnostics.
+   - The corrected focused suite passes 5/5 with `--testTimeout=30000` for the TypeScript program assertion.
+   - Direct www typecheck passes with the app command. A fresh non-incremental check finds the pre-existing services locale error at `services/page.tsx:56`.
+   - Production `next build` compiles, then exits 1 on that same pre-existing services locale error.
+   - Targeted lint, Prettier, and diff checks pass for the implementation file.
+   - Phase 3 Review A must review the implementation commit before overall phase acceptance.
 
 ## Phase 4: Accessibility, Navigation, and Contact
 
