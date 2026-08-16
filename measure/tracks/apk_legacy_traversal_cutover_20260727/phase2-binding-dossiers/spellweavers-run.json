@@ -148,7 +148,7 @@
       "evidence": {
         "semantic": {
           "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/claim-evidence-ledger-v2.json",
-          "json_pointer": "/20",
+          "json_pointer": "/19",
           "claim_id": "SW-TRANS-002"
         },
         "physical": {
@@ -389,7 +389,7 @@
       "evidence": [
         {
           "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/claim-evidence-ledger-v2.json",
-          "json_pointer": "/20",
+          "json_pointer": "/19",
           "claim_id": "SW-TRANS-002"
         },
         {
