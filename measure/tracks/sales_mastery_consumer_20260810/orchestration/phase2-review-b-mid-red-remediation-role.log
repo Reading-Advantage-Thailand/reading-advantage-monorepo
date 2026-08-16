@@ -1,0 +1,45 @@
+Measure Mid Red remediation role log — Sales Phase 2 Review B
+Track: sales_mastery_consumer_20260810
+Phase: Phase 2 — company tenant mapping and durable projection
+phase_base_sha: fd581f3dcd15e7b7b632875862aaecb596719621
+role_base_sha: c572d0b8713dd09fb3e86761c54467b46ccba142
+
+## Lease
+
+- The lease covered Sales Phase 2 test files, the plan, and Red evidence files.
+- Production source, migration source, schema source, tenant registry source, and the live harness stayed unchanged.
+- Unrelated worktree changes stayed unstaged.
+
+## Red contracts
+
+- Domain Red covers strict Company Identity authorization, Sales application binding, organization binding, cross-organization replay, approved activity binding, roleplay applicability, and atomic mapping plus outbox rollback.
+- Live Red covers PostgreSQL source identity reuse, organization-key binding, application binding, and receipt identity integrity.
+- Receipt tests use caller-built lookalike rows and require database rejection.
+
+## Gate results
+
+- Domain Red: 20 tests, 14 passed, 6 expected Review B failures.
+- Safe DB: 5 passed and 15 live tests skipped without `PG_TEST_URL`.
+- Live PostgreSQL 16.14: 15 passed and 5 expected Review B failures.
+- Sales authorization and tenant regressions: 87 passed.
+- Tenant coverage: 12 passed.
+- Migration and schema controls: 261 passed.
+- Focused type, lint, Prettier, and diff checks passed.
+
+## Handoff
+
+Green must remediate only the recorded Review B gaps.
+Green must not edit the accepted Sales graph or shared runtime in this handoff.
+Green must rerun the safe and live Red suites after implementation.
+
+MEASURE_AGENT_RESULT
+role: mid-red
+status: complete-with-green-handoff-blocked
+track: sales_mastery_consumer_20260810
+phase: Phase 2 — company tenant mapping and durable projection
+phase_base_sha: fd581f3dcd15e7b7b632875862aaecb596719621
+role_base_sha: c572d0b8713dd09fb3e86761c54467b46ccba142
+red_evidence: phase2-review-b-red-remediation-evidence-20260816.md
+production_source_modified: false
+green_handoff: trusted Company Identity, application and organization binding, cross-organization replay denial, approved activity and roleplay gates, receipt integrity, and atomic mapping plus outbox projection
+END_MEASURE_AGENT_RESULT

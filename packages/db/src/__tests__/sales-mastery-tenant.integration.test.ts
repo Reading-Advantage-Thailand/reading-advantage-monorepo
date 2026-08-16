@@ -30,6 +30,7 @@ const ORGANIZATION_C = "20000000-0000-4000-8000-000000000103";
 const TENANT_A = "30000000-0000-4000-8000-000000000101";
 const TENANT_B = "30000000-0000-4000-8000-000000000102";
 const LEARNER_A = "sales:00000000-0000-4000-8000-000000000101";
+const LEARNER_B = "sales:00000000-0000-4000-8000-000000000102";
 const CODECAMP_NAMESPACE = "c0deca00-0000-4000-8000-000000000001";
 const DIGEST_A = `sha256:${"a".repeat(64)}`;
 const DIGEST_B = `sha256:${"b".repeat(64)}`;
@@ -206,6 +207,7 @@ async function insertOutbox(
     readonly organizationId: string;
     readonly organizationKey: string;
     readonly masteryTenantKey: string;
+    readonly learnerPrincipalId?: string;
     readonly sourceAttemptId: string;
     readonly idempotencyKey: string;
     readonly payloadDigest: string;
@@ -235,7 +237,7 @@ async function insertOutbox(
       ${input.organizationKey},
       ${input.masteryTenantKey},
       ${`sales:${input.organizationId}`},
-      ${LEARNER_A},
+      ${input.learnerPrincipalId ?? LEARNER_A},
       'sales-advantage',
       ${input.sourceAttemptId},
       ${input.idempotencyKey},
@@ -253,12 +255,17 @@ async function insertOutbox(
   return row.id;
 }
 
-/** Inserts one immutable projection receipt fixture. */
+/** Inserts one projection receipt fixture with caller-controlled identity fields. */
 async function insertReceipt(
   harness: SalesMasteryPostgres16Harness,
-  outboxId: string,
-  idempotencyKey: string,
-  commitId: string,
+  input: {
+    readonly outboxId: string;
+    readonly masteryTenantKey: string;
+    readonly organizationId: string;
+    readonly learnerPrincipalId: string;
+    readonly idempotencyKey: string;
+    readonly commitId: string;
+  },
 ): Promise<void> {
   await harness.sql`
     INSERT INTO sales_mastery_projection_receipts (
@@ -270,16 +277,15 @@ async function insertReceipt(
       commit_id,
       result_json
     )
-    SELECT
-      ${outboxId},
-      mastery_tenant_key,
-      organization_id,
-      learner_principal_id,
-      ${idempotencyKey},
-      ${commitId},
+    VALUES (
+      ${input.outboxId},
+      ${input.masteryTenantKey},
+      ${input.organizationId},
+      ${input.learnerPrincipalId},
+      ${input.idempotencyKey},
+      ${input.commitId},
       ${JSON.stringify({ status: "applied" })}::jsonb
-    FROM sales_mastery_projection_outbox
-    WHERE id = ${outboxId}
+    )
   `;
 }
 
@@ -324,6 +330,80 @@ liveBehavior("Sales Phase 2 PostgreSQL 16 behavior", () => {
         payloadDigest: DIGEST_A,
       }),
     ).rejects.toMatchObject({ code: "23503" });
+  });
+
+  it("rejects an outbox organization key that does not match its organization mapping", async () => {
+    if (!harness)
+      throw new Error("Sales PostgreSQL harness was not initialized.");
+    await harness.sql`INSERT INTO schools (id, name) VALUES (${TENANT_A}, 'Sales A')`;
+    await insertMapping(harness, ORGANIZATION_A, "sales-a", TENANT_A);
+
+    await expect(
+      insertOutbox(harness, {
+        organizationId: ORGANIZATION_A,
+        organizationKey: "sales-a-forged",
+        masteryTenantKey: TENANT_A,
+        sourceAttemptId: "organization-key-forged-attempt",
+        idempotencyKey: "organization-key-forged-idempotency",
+        payloadDigest: DIGEST_A,
+      }),
+    ).rejects.toBeDefined();
+  });
+
+  it("rejects a non-Sales application binding at the mapping boundary", async () => {
+    if (!harness)
+      throw new Error("Sales PostgreSQL harness was not initialized.");
+    await harness.sql`INSERT INTO schools (id, name) VALUES (${TENANT_A}, 'Sales A')`;
+
+    await expect(
+      harness.sql`
+        INSERT INTO sales_mastery_tenant_mappings (
+          application_key,
+          organization_id,
+          organization_key,
+          mastery_tenant_key,
+          source_tenant_key,
+          provisioned_by,
+          request_id
+        ) VALUES (
+          'codecamp',
+          ${ORGANIZATION_A},
+          'internal-company',
+          ${TENANT_A},
+          ${`sales:${ORGANIZATION_A}`},
+          'phase2-red',
+          'wrong-application'
+        )
+      `,
+    ).rejects.toBeDefined();
+  });
+
+  it("rejects cross-organization reuse of source-attempt and idempotency identities", async () => {
+    if (!harness)
+      throw new Error("Sales PostgreSQL harness was not initialized.");
+    await harness.sql`INSERT INTO schools (id, name) VALUES (${TENANT_A}, 'Sales A'), (${TENANT_B}, 'Sales B')`;
+    await insertMapping(harness, ORGANIZATION_A, "sales-a-replay", TENANT_A);
+    await insertMapping(harness, ORGANIZATION_B, "sales-b-replay", TENANT_B);
+    await insertOutbox(harness, {
+      organizationId: ORGANIZATION_A,
+      organizationKey: "sales-a-replay",
+      masteryTenantKey: TENANT_A,
+      sourceAttemptId: "cross-organization-source-attempt",
+      idempotencyKey: "cross-organization-idempotency",
+      payloadDigest: DIGEST_A,
+    });
+
+    await expect(
+      insertOutbox(harness, {
+        organizationId: ORGANIZATION_B,
+        organizationKey: "sales-b-replay",
+        masteryTenantKey: TENANT_B,
+        learnerPrincipalId: LEARNER_B,
+        sourceAttemptId: "cross-organization-source-attempt",
+        idempotencyKey: "cross-organization-idempotency",
+        payloadDigest: DIGEST_A,
+      }),
+    ).rejects.toBeDefined();
   });
 
   it("keeps organization reads isolated from another organization's outbox", async () => {
@@ -455,7 +535,14 @@ liveBehavior("Sales Phase 2 PostgreSQL 16 behavior", () => {
     `;
     expect(pending?.count).toBe(0);
 
-    await insertReceipt(harness, outboxId, "retry-idempotency", "commit-retry");
+    await insertReceipt(harness, {
+      outboxId,
+      masteryTenantKey: TENANT_B,
+      organizationId: ORGANIZATION_B,
+      learnerPrincipalId: LEARNER_A,
+      idempotencyKey: "retry-idempotency",
+      commitId: "commit-retry",
+    });
     await harness.sql`
       INSERT INTO sales_mastery_projection_receipts (
         outbox_id, mastery_tenant_key, organization_id, learner_principal_id,
@@ -475,6 +562,53 @@ liveBehavior("Sales Phase 2 PostgreSQL 16 behavior", () => {
     expect(receipts?.count).toBe(1);
   });
 
+  it.each([
+    {
+      field: "mastery tenant",
+      overrides: { masteryTenantKey: TENANT_B },
+    },
+    {
+      field: "organization",
+      overrides: { organizationId: ORGANIZATION_B },
+    },
+    {
+      field: "learner",
+      overrides: { learnerPrincipalId: LEARNER_B },
+    },
+    {
+      field: "idempotency",
+      overrides: { idempotencyKey: "receipt-lookalike-idempotency" },
+    },
+  ])(
+    "rejects a receipt lookalike with a mismatched $field",
+    async ({ field, overrides }) => {
+      if (!harness)
+        throw new Error("Sales PostgreSQL harness was not initialized.");
+      await harness.sql`INSERT INTO schools (id, name) VALUES (${TENANT_A}, 'Sales A'), (${TENANT_B}, 'Sales B')`;
+      await insertMapping(harness, ORGANIZATION_A, "sales-a-receipt", TENANT_A);
+      const outboxId = await insertOutbox(harness, {
+        organizationId: ORGANIZATION_A,
+        organizationKey: "sales-a-receipt",
+        masteryTenantKey: TENANT_A,
+        sourceAttemptId: `receipt-lookalike-${field}-attempt`,
+        idempotencyKey: `receipt-lookalike-${field}-outbox`,
+        payloadDigest: DIGEST_A,
+      });
+
+      await expect(
+        insertReceipt(harness, {
+          outboxId,
+          masteryTenantKey: TENANT_A,
+          organizationId: ORGANIZATION_A,
+          learnerPrincipalId: LEARNER_A,
+          idempotencyKey: `receipt-lookalike-${field}-receipt`,
+          commitId: `receipt-lookalike-${field}-commit`,
+          ...overrides,
+        }),
+      ).rejects.toBeDefined();
+    },
+  );
+
   it("rejects update, delete, and truncate mutations on append-only tables", async () => {
     if (!harness)
       throw new Error("Sales PostgreSQL harness was not initialized.");
@@ -488,12 +622,14 @@ liveBehavior("Sales Phase 2 PostgreSQL 16 behavior", () => {
       idempotencyKey: "append-idempotency",
       payloadDigest: DIGEST_A,
     });
-    await insertReceipt(
-      harness,
+    await insertReceipt(harness, {
       outboxId,
-      "append-idempotency",
-      "commit-append",
-    );
+      masteryTenantKey: TENANT_B,
+      organizationId: ORGANIZATION_B,
+      learnerPrincipalId: LEARNER_A,
+      idempotencyKey: "append-idempotency",
+      commitId: "commit-append",
+    });
 
     await expect(
       harness.sql`UPDATE sales_mastery_projection_outbox SET organization_key = 'mutated' WHERE id = ${outboxId}`,

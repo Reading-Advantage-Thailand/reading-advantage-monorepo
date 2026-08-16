@@ -214,6 +214,12 @@
   the missing cross-organization tenant binding. Green repaired migration
   numbering, snapshot linkage, legacy split markers, and the composite tenant
   binding in `0559d4889`.
+- [x] Task: Remediate Review B with Red contracts for trusted Company Identity
+  authorization, cross-organization replay denial, reviewed activity and
+  roleplay eligibility, receipt integrity, and one atomic mapping plus outbox
+  boundary. Production source remains unchanged. Green remains blocked until
+  these contracts fail for the recorded Review B gaps. Evidence:
+  `phase2-review-b-red-remediation-evidence-20260816.md`.
 
 ## Phase 3 — project Sales evidence into KST/SRS
 

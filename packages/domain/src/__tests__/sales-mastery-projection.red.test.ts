@@ -2,6 +2,12 @@
 import { describe, expect, it, vi } from "vitest";
 
 import {
+  salesMasteryProjectionOutbox,
+  salesMasteryProjectionReceipts,
+  salesMasteryTenantMappings,
+  schools,
+} from "@reading-advantage/db";
+import {
   companyIdentityClaimsSchema,
   type CompanyIdentityClaims,
 } from "../../../backend/src/modules/company-identity/contracts.js";
@@ -57,6 +63,90 @@ interface SalesMasteryProjectionModule {
     readonly database: unknown;
     readonly mastery: MasteryPersistencePort;
   }): SalesMasteryProjection;
+}
+
+interface TransactionalDatabaseProbe {
+  readonly database: Record<string, unknown>;
+  mappingCount(): number;
+}
+
+/** Creates a rollback-capable database double for the atomic-boundary contract. */
+function transactionalDatabaseProbe(options: {
+  readonly failOutboxInsert: boolean;
+}): TransactionalDatabaseProbe {
+  const rows = new Map<unknown, Record<string, unknown>[]>([
+    [salesMasteryTenantMappings, []],
+    [salesMasteryProjectionOutbox, []],
+    [salesMasteryProjectionReceipts, []],
+    [schools, []],
+  ]);
+
+  function rowsFor(table: unknown): Record<string, unknown>[] {
+    const tableRows = rows.get(table);
+    if (!tableRows) throw new Error("Unexpected table in database probe.");
+    return tableRows;
+  }
+
+  function databaseApi(): Record<string, unknown> {
+    return {
+      select: () => {
+        let selectedTable: unknown;
+        const query: Record<string, unknown> = {
+          from(table: unknown) {
+            selectedTable = table;
+            return query;
+          },
+          where() {
+            return query;
+          },
+          limit: async (count: number) =>
+            rowsFor(selectedTable).slice(0, count),
+        };
+        return query;
+      },
+      insert: (table: unknown) => ({
+        values(value: Record<string, unknown>) {
+          return {
+            onConflictDoNothing: async () => {
+              if (
+                options.failOutboxInsert &&
+                table === salesMasteryProjectionOutbox
+              ) {
+                throw new Error("forced outbox insert failure");
+              }
+              rowsFor(table).push(value);
+              return [];
+            },
+          };
+        },
+      }),
+    };
+  }
+
+  const database = databaseApi();
+  database.transaction = async (
+    callback: (transaction: Record<string, unknown>) => Promise<unknown>,
+  ) => {
+    const snapshot = new Map(
+      [...rows.entries()].map(([table, tableRows]) => [
+        table,
+        tableRows.map((row) => ({ ...row })),
+      ]),
+    );
+    try {
+      return await callback(databaseApi());
+    } catch (error) {
+      for (const [table, tableRows] of snapshot.entries()) {
+        rows.set(table, tableRows);
+      }
+      throw error;
+    }
+  };
+
+  return {
+    database,
+    mappingCount: () => rowsFor(salesMasteryTenantMappings).length,
+  };
 }
 
 /** Creates one Company Identity claim set for the requested organization. */
@@ -154,7 +244,7 @@ async function loadSalesMasteryProjection(): Promise<SalesMasteryProjectionModul
 }
 
 /** Creates the real future projection seam with the existing Mastery adapter port. */
-async function createProjection(): Promise<{
+async function createProjection(database: unknown = {}): Promise<{
   readonly projection: SalesMasteryProjection;
   readonly mastery: MasteryPersistencePort;
 }> {
@@ -162,7 +252,7 @@ async function createProjection(): Promise<{
   const mastery = masteryDouble();
   return {
     projection: module.createSalesMasteryProjection({
-      database: {},
+      database,
       mastery,
     }),
     mastery,
@@ -196,7 +286,27 @@ describe("Sales Phase 2 tenant authorization and durable projection", () => {
     expect(mastery.commitMasteryEvidence).not.toHaveBeenCalled();
   });
 
-  it("rejects a frontend tenant or organization override", async () => {
+  it.each([
+    {
+      name: "roleless Company Identity claims",
+      overrides: { roles: [] },
+    },
+    {
+      name: "non-canonical organization key",
+      overrides: { organizationKey: "other-company" },
+    },
+  ])("rejects $name before tenant mapping", async ({ overrides }) => {
+    const { projection, mastery } = await createProjection();
+
+    await expect(
+      projection.resolveTenant({
+        identity: companyClaims(ORGANIZATION_A, overrides),
+      }),
+    ).rejects.toThrow(/Company Identity|authorization|organization|role/i);
+    expect(mastery.commitMasteryEvidence).not.toHaveBeenCalled();
+  });
+
+  it("rejects caller-built tenant, organization, or application bindings", async () => {
     const { projection } = await createProjection();
     const claims = companyClaims(ORGANIZATION_A);
 
@@ -206,6 +316,7 @@ describe("Sales Phase 2 tenant authorization and durable projection", () => {
         schoolId: SCHOOL_A,
         organizationId: ORGANIZATION_B,
         tenantKey: "codecamp",
+        applicationKey: "codecamp",
       }),
     ).rejects.toThrow(/tenant|scope|validation/i);
   });
@@ -278,6 +389,24 @@ describe("Sales Phase 2 tenant authorization and durable projection", () => {
     await expect(
       projection.project({ ...input, identity: organizationB }),
     ).rejects.toThrow(/organization|tenant|scope|idempotency/i);
+  });
+
+  it("rejects cross-organization source-attempt and idempotency replay with the new learner principal", async () => {
+    const { projection } = await createProjection();
+    const organizationA = companyClaims(ORGANIZATION_A);
+    const organizationB = companyClaims(ORGANIZATION_B, {
+      sub: "00000000-0000-4000-8000-000000000002",
+    });
+    const input = projectionInput(organizationA);
+
+    await projection.project(input);
+    await expect(
+      projection.project({
+        ...input,
+        identity: organizationB,
+        principalId: LEARNER_B,
+      }),
+    ).rejects.toThrow(/organization|tenant|scope|replay|idempotency/i);
   });
 
   it("returns the original receipt for an equal replay", async () => {
@@ -394,5 +523,53 @@ describe("Sales Phase 2 tenant authorization and durable projection", () => {
         bindingsDigest: `0${BINDINGS_DIGEST.slice(1)}`,
       }),
     ).rejects.toThrow(/binding|digest|provenance/i);
+  });
+
+  it("rejects an activity and rubric that are absent from the approved Sales bindings", async () => {
+    const { projection, mastery } = await createProjection();
+    const input = projectionInput(companyClaims(ORGANIZATION_A));
+
+    await expect(
+      projection.project({
+        ...input,
+        payload: {
+          ...input.payload,
+          objectiveId: "sales.unknown.objective",
+          variantKey: "sales.unknown.variant",
+          rubricVersion: "sales.unapproved-rubric.v9",
+        },
+      }),
+    ).rejects.toThrow(/activity|binding|objective|rubric|provenance/i);
+    expect(mastery.commitMasteryEvidence).not.toHaveBeenCalled();
+  });
+
+  it("rejects roleplay evidence without the accepted consent and retention gate", async () => {
+    const { projection, mastery } = await createProjection();
+    const input = projectionInput(companyClaims(ORGANIZATION_A));
+
+    await expect(
+      projection.project({
+        ...input,
+        payload: {
+          ...input.payload,
+          activityKind: "roleplay",
+          evidenceSource: "roleplay-evaluation",
+          consentGiven: false,
+          retentionDays: 0,
+          evaluatorEligibility: null,
+        },
+      }),
+    ).rejects.toThrow(/consent|retention|roleplay|eligib|binding/i);
+    expect(mastery.commitMasteryEvidence).not.toHaveBeenCalled();
+  });
+
+  it("rolls back a new mapping when its projection outbox insert fails", async () => {
+    const probe = transactionalDatabaseProbe({ failOutboxInsert: true });
+    const { projection } = await createProjection(probe.database);
+
+    await expect(
+      projection.project(projectionInput(companyClaims(ORGANIZATION_A))),
+    ).rejects.toThrow(/persistence|outbox|unavailable/i);
+    expect(probe.mappingCount()).toBe(0);
   });
 });
