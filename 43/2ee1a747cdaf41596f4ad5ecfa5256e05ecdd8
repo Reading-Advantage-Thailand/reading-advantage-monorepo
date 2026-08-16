@@ -1,0 +1,7 @@
+Track: wave5_public_surface_completion_20260628
+Role: Measure Jr Green resumed
+Phase: Phase 3 i18n Completeness and Typed Locale Access
+Implementation commit: c24ec2104. Evidence commit: 542132b15. Evidence binding: 432ee1a74.
+Verification: Focused Phase 3 suite 10/10; direct standard and fresh typechecks passed; production build passed; targeted lint, Prettier, and scoped diff checks passed.
+Contract: Service rows remain exact at four, with feature counts 6/6/6/4. The fix narrows service 3 before translating feature keys. No casts, any, string widening, or ExactMessages changes.
+Review A handoff: Review c24ec2104 against 1faed8ed4 and Red a2c378992.
