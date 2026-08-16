@@ -127,6 +127,15 @@
    This receipt is historical correction evidence. Task B remains `[~]`; the
    shared-root doctor and architecture gates remain outside this remediation.
 
+   Digest remediation implementation (2026-08-16; commit
+   `9985a843a4139e81567c68c2552aeec6be603101`) snapshots all four clean-consumer
+   fixtures before use, binds their bytes into `sourceDigestSha256`, and rejects
+   post-snapshot fixture changes with `RELEASE_INPUT_MUTATION_CONFLICT`. The
+   implementation uses only snapshotted fixture and descriptor bytes during the
+   clean-consumer proof. Focused Red, lease, admission, packed-consumer,
+   Codecamp, Sales knowledge, type, lint, build, CLI, format, and diff gates
+   passed. Task B remains `[~]`; this receipt does not close shared-root gates.
+
 ## Phase 1 — bind the approved course to a knowledge graph
 
 - [x] Task: Define the versioned Sales objective graph, activity variants,

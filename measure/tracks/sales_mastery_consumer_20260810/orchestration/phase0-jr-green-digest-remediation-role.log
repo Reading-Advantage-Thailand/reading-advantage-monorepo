@@ -1,0 +1,67 @@
+MEASURE_AGENT_RESULT
+role: jr-green
+status: complete
+track: sales_mastery_consumer_20260810
+phase: Phase 0 — reconcile and admit the consumer
+phase_base_sha: 8adc57cb0af0693c1b3420842b3a504939a36b2e
+role_base_sha: 63da03a0e27e0c696df44f2a0285973b269d1cfd
+implementation_commit: 9985a843a4139e81567c68c2552aeec6be603101
+evidence_commit: separate commit after this implementation commit
+
+implementation:
+- Snapshotted check-consumer.mjs, consumer.json, package.json, and
+  sales-advantage.json before clean-consumer use.
+- Bound the four fixture snapshots into sourceDigestSha256 with the existing
+  manifest, descriptor, and runtime distribution snapshot inputs.
+- Copied only snapshot bytes into the clean consumer.
+- Rejected source fixture byte changes with RELEASE_INPUT_MUTATION_CONFLICT.
+- Preserved auditedHead capture and release-package archive digest semantics.
+- Left the committed Red test, registry, metadata, lockfiles, generated files,
+  engine packages, and Sales knowledge source unchanged.
+
+focused_gates:
+- digest Red contract: PASS; 2 passed, 24 skipped, 1 file.
+- WorkspaceLeaseRuntime Red contract: PASS; 17 passed, 9 skipped, 1 file.
+- Sales runtime admission: PASS; 11 passed, 1 file.
+- packed-consumer suite: PASS; 26 passed, 1 file.
+- Codecamp proof: PASS; 2 passed, 1 file.
+- Sales knowledge suite: PASS; 19 passed across 3 files.
+- runtime-manifest regression: PASS; 18 passed, 1 file.
+- mastery-runtime-compat and sales-knowledge type checks: PASS; exit 0.
+- mastery-runtime-compat and sales-knowledge lint: PASS; exit 0.
+- mastery-runtime-compat and sales-knowledge builds: PASS; exit 0.
+- clean Sales CLI: PASS; compatible true and issues empty.
+- Prettier check for source and immutable Red test: PASS.
+- phase-base immutable-source diff: PASS; empty for four engines and
+  sales-knowledge.
+- git diff --check: PASS.
+
+post_commit_proof:
+- auditedHead: 698f5c41406841aac37a4679ff173e689f2c7888.
+- sourceDigestSha256: deaa9c4c6f8f571aa5e1d7aaeed3ea1a3fc18bf393d83c6063ade1338eca2697.
+- packages: 5 release packages.
+- checkedConsumers: 1, sales-advantage.
+- archiveDigestsSha256: 5 SHA-256 values, one per release package.
+- resolvedVersions: gateZod 3.25.76, engineZod 4.4.3, tsFsrs 5.4.1.
+
+failures_and_corrections:
+- The first digest run exposed seven archive keys instead of the Red contract's
+  five release-package keys. The implementation now excludes external support
+  archives from the reported release archive digest map.
+- The first root lint command failed because ESLint had no root config. Package
+  working-directory lint commands passed on rerun.
+- No requested gate has a persistent failure.
+
+review_a_handoff:
+Review A identified missing check-consumer.mjs and package.json fixture bytes.
+The Green implementation binds all four fixture files and checks source bytes
+before and after clean-consumer execution. The mutation test passed with the
+required RELEASE_INPUT_MUTATION_CONFLICT code. Task B remains [~] because the
+shared-root doctor and architecture gates remain outside this remediation.
+
+files_changed:
+- packages/mastery-runtime-compat/src/release-artifact.ts
+- measure/tracks/sales_mastery_consumer_20260810/plan.md
+- measure/tracks/sales_mastery_consumer_20260810/orchestration/phase0-jr-green-digest-remediation-role.log
+
+END_MEASURE_AGENT_RESULT
