@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "track_id": "company_finance_operations_20260810",
+  "phase": "Phase 2 — controlled operational imports",
+  "role": "measure-adversarial-testing",
+  "pre_adversarial_head_sha": "08b1351b2c99048592c59a72fa944fa74623db3d",
+  "verification_head_sha": "63d70164535b928db1788e6bf14b378e110dc430",
+  "post_adversarial_head_sha": "0559d48890191a068a15d2ae1cce6c4a1d4660ce",
+  "head_advanced_during_run": true,
+  "finance_path_drift_after_pre_head": false,
+  "decision": "FAIL",
+  "summary": "The Finance THB adversarial suite found one conversion defect. The implementation rejects a numerically identity THB rate written with trailing zeros.",
+  "handoff": {
+    "status": "FAIL",
+    "next_role": "measure-jr-green",
+    "reason": "Remediate THB identity conversion trailing-zero equivalence. Do not change this adversarial test expectation without an accepted contract decision."
+  },
+  "reviewed_inputs": [
+    "measure/tracks/company_finance_operations_20260810/spec.md",
+    "measure/tracks/company_finance_operations_20260810/test-strategy-phase2-thb.md",
+    "measure/tracks/company_finance_operations_20260810/test-strategy-post-thb.md",
+    "measure/tracks/company_finance_operations_20260810/phase2-final-trust-binding-review-a-v2-20260814.json",
+    "measure/tracks/company_finance_operations_20260810/phase2-final-trust-binding-review-b-v2-20260814.json",
+    "measure/tracks/company_finance_operations_20260810/phase2-thb-review-c-green-remediation-20260816.md",
+    "measure/anti-patterns.md",
+    "packages/backend/src/modules/finance-operations/thb-valuation.ts",
+    "packages/backend/src/modules/finance-operations/__tests__/multi-currency-thb-phase2.red.test.ts",
+    "packages/backend/src/modules/finance-operations/__tests__/thb-owner-decision-receipt.red.test.ts"
+  ],
+  "adversarial_coverage": [
+    "decimal extremes",
+    "trailing-zero equivalence",
+    "company and school scope confusion",
+    "full public receipt projection and lookalike secret stripping",
+    "nested getters and Proxy evidence results",
+    "symbol and own constructor/prototype keys",
+    "post-resolution evidence mutation",
+    "cycles and capture-depth overflow",
+    "secret-safe dependency failures",
+    "malformed dependency results",
+    "symmetric replay classification"
+  ],
+  "findings": [
+    {
+      "id": "THB-ADV-001",
+      "severity": "High",
+      "title": "A trailing-zero-equivalent THB identity rate is rejected.",
+      "file": "packages/backend/src/modules/finance-operations/thb-valuation.ts",
+      "lines": "266-271",
+      "test": "packages/backend/src/modules/finance-operations/__tests__/thb-adversarial.test.ts:270",
+      "expected": "A THB bill with conversionRateDecimal \"1.00\" and unchanged source amount returns a valuation.",
+      "observed": "The preparer returns FINANCE_THB_CONVERSION_EVIDENCE_CONFLICT because it requires coefficient 1 with scale 0.",
+      "impact": "Equivalent exact decimal evidence cannot represent an identity conversion consistently with non-THB trailing-zero arithmetic.",
+      "production_fix_allowed": false,
+      "route": "Green remediation"
+    }
+  ],
+  "checks": [
+    {
+      "command": "CI=true ../../node_modules/.bin/vitest run src/modules/finance-operations/__tests__/multi-currency-thb-phase2.red.test.ts src/modules/finance-operations/__tests__/thb-owner-decision-receipt.red.test.ts src/modules/finance-operations/__tests__/thb-adversarial.test.ts --pool=threads --maxWorkers=1 --testTimeout=15000",
+      "exit_code": 1,
+      "result": "FAIL — 94 tests collected; 93 passed; 1 failed (THB-ADV-001)."
+    },
+    {
+      "command": "CI=true ../../node_modules/.bin/vitest run src/modules/finance-operations/__tests__/architecture-boundary.test.ts --pool=threads --maxWorkers=1 --testTimeout=15000",
+      "exit_code": 0,
+      "result": "PASS — 11 tests passed."
+    },
+    {
+      "command": "CI=true ../../node_modules/.bin/vitest run src/modules/finance-operations/__tests__/contracts.test.ts src/modules/finance-operations/__tests__/money-history.test.ts src/modules/finance-operations/__tests__/port-boundaries.test.ts src/modules/finance-operations/__tests__/postgres-boundary-exports.test.ts src/modules/finance-operations/__tests__/authorization-audit.test.ts --pool=threads --maxWorkers=1 --testTimeout=15000",
+      "exit_code": 0,
+      "result": "PASS — 25 tests passed across 5 regression files."
+    },
+    {
+      "command": "../../node_modules/.bin/tsc --noEmit -p tsconfig.json && ../../node_modules/.bin/tsc --noEmit -p tsconfig.test.json",
+      "exit_code": 0,
+      "result": "PASS — production and test TypeScript checks passed."
+    },
+    {
+      "command": "../../node_modules/.bin/eslint src/modules/finance-operations",
+      "exit_code": 0,
+      "result": "PASS — Finance lint passed."
+    },
+    {
+      "command": "../../node_modules/.bin/tsc",
+      "exit_code": 0,
+      "result": "PASS — backend build passed."
+    },
+    {
+      "command": "../../node_modules/.bin/prettier --check src/modules/finance-operations/__tests__/thb-adversarial.test.ts ../../measure/tracks/company_finance_operations_20260810/runs/adversarial-20260816-08b1351b.json",
+      "exit_code": 0,
+      "result": "PASS — adversarial test and provenance formatting passed."
+    },
+    {
+      "command": "git diff --cached --check",
+      "exit_code": 0,
+      "result": "PASS — no whitespace errors in the scoped paths."
+    }
+  ],
+  "production_source_modified": false,
+  "changed_files": [
+    "packages/backend/src/modules/finance-operations/__tests__/thb-adversarial.test.ts",
+    "measure/tracks/company_finance_operations_20260810/runs/adversarial-20260816-08b1351b.json"
+  ],
+  "known_limitations": [
+    "The Finance module has no database or provider change, so live database verification was not applicable.",
+    "The shared worktree advanced with unrelated commits. Finance paths did not drift after the pre-adversarial head."
+  ]
+}
