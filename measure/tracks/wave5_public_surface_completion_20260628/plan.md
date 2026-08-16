@@ -111,8 +111,11 @@
     - Final browser Green implementation commit: `43a0b1e01`.
     - Final focused tests pass 2/2. All Phase 4/browser tests pass 13/13.
     - Reading Advantage `resultsSection.stats.2.value` and `label` now exist in en, th, and zh.
-    - Blog tags now use mobile containment classes on the container and links.
-    - Phase 3, typecheck, build, lint, Prettier, and scoped diff checks pass.
+     - Blog tags now use mobile containment classes on the container and links.
+     - Phase 3, typecheck, build, lint, Prettier, and scoped diff checks pass.
+     - Persistent mobile overflow Red at `c7d0880e9`: `phase-4-browser-regressions-mobile-overflow-red-20260816.md`.
+     - The strengthened test renders BlogTags and BlogCard, detects containment hazards, and catches the observed 490px counterexample.
+     - UX-P4-003 Contact Form remains successor-owned by `www_crm_lead_intake_20260722`.
 
 ## Phase 5: Comparison/Pricing Data and Legal Copy
 
