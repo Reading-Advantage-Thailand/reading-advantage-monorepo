@@ -317,28 +317,28 @@ async function expectSupportTableKeys(sql: DurableJobTestSql): Promise<void> {
     }[]
   >`
     SELECT
-      constraint.table_name,
-      constraint.constraint_name,
-      constraint.constraint_type,
+      constraint_row.table_name,
+      constraint_row.constraint_name,
+      constraint_row.constraint_type,
       key_column.column_name
-    FROM information_schema.table_constraints AS constraint
+    FROM information_schema.table_constraints AS constraint_row
     JOIN information_schema.key_column_usage AS key_column
-      ON key_column.constraint_catalog = constraint.constraint_catalog
-     AND key_column.constraint_schema = constraint.constraint_schema
-     AND key_column.constraint_name = constraint.constraint_name
-    WHERE constraint.table_schema = 'public'
-      AND constraint.table_name IN (
+      ON key_column.constraint_catalog = constraint_row.constraint_catalog
+     AND key_column.constraint_schema = constraint_row.constraint_schema
+     AND key_column.constraint_name = constraint_row.constraint_name
+    WHERE constraint_row.table_schema = 'public'
+      AND constraint_row.table_name IN (
         'durable_job_audit_events',
         'review_job_adoption_audit_events',
         'review_job_durable_bindings',
         'review_job_durable_adoption',
         'review_job_migration_issues'
       )
-      AND constraint.constraint_type IN ('PRIMARY KEY', 'UNIQUE')
+      AND constraint_row.constraint_type IN ('PRIMARY KEY', 'UNIQUE')
     ORDER BY
-      constraint.table_name,
-      constraint.constraint_type,
-      constraint.constraint_name,
+      constraint_row.table_name,
+      constraint_row.constraint_type,
+      constraint_row.constraint_name,
       key_column.ordinal_position
   `;
 
@@ -393,9 +393,9 @@ async function expectSupportTableBounds(sql: DurableJobTestSql): Promise<void> {
     { table_name: string; constraint_definition: string }[]
   >`
     SELECT relation.relname AS table_name,
-      pg_get_constraintdef(constraint.oid, true) AS constraint_definition
-    FROM pg_constraint AS constraint
-    JOIN pg_class AS relation ON relation.oid = constraint.conrelid
+      pg_get_constraintdef(constraint_row.oid, true) AS constraint_definition
+    FROM pg_constraint AS constraint_row
+    JOIN pg_class AS relation ON relation.oid = constraint_row.conrelid
     JOIN pg_namespace AS namespace ON namespace.oid = relation.relnamespace
     WHERE namespace.nspname = 'public'
       AND relation.relname IN (
@@ -405,7 +405,7 @@ async function expectSupportTableBounds(sql: DurableJobTestSql): Promise<void> {
         'review_job_durable_adoption',
         'review_job_migration_issues'
       )
-      AND constraint.contype = 'c'
+      AND constraint_row.contype = 'c'
   `;
   const boundColumns = {
     durable_job_audit_events: [
@@ -543,13 +543,14 @@ async function expectDurableJobCatalogContract(
   const checks = await sql<
     { constraint_name: string; constraint_definition: string }[]
   >`
-    SELECT constraint_name, pg_get_constraintdef(constraint.oid, true) AS constraint_definition
-    FROM pg_constraint AS constraint
-    JOIN pg_class AS relation ON relation.oid = constraint.conrelid
+    SELECT constraint_row.conname AS constraint_name,
+      pg_get_constraintdef(constraint_row.oid, true) AS constraint_definition
+    FROM pg_constraint AS constraint_row
+    JOIN pg_class AS relation ON relation.oid = constraint_row.conrelid
     JOIN pg_namespace AS namespace ON namespace.oid = relation.relnamespace
     WHERE namespace.nspname = 'public'
       AND relation.relname = 'durable_jobs'
-      AND constraint.contype = 'c'
+      AND constraint_row.contype = 'c'
     ORDER BY constraint_name
   `;
   const declaredCheckNames = new Set(
