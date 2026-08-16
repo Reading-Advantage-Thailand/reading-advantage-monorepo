@@ -109,6 +109,19 @@ export const salesMasteryProjectionOutbox = pgTable(
       table.masteryTenantKey,
       table.sourceAttemptId,
     ),
+    unique("sales_mastery_projection_outbox_idempotency_unique").on(
+      table.idempotencyKey,
+    ),
+    unique("sales_mastery_projection_outbox_source_attempt_unique").on(
+      table.sourceAttemptId,
+    ),
+    unique("sales_mastery_projection_outbox_receipt_integrity_unique").on(
+      table.id,
+      table.masteryTenantKey,
+      table.organizationId,
+      table.learnerPrincipalId,
+      table.idempotencyKey,
+    ),
     foreignKey({
       name: "sales_mastery_projection_outbox_mastery_tenant_fk",
       columns: [table.masteryTenantKey],
@@ -189,6 +202,23 @@ export const salesMasteryProjectionReceipts = pgTable(
       name: "sales_mastery_projection_receipts_outbox_fk",
       columns: [table.outboxId],
       foreignColumns: [salesMasteryProjectionOutbox.id],
+    }).onDelete("restrict"),
+    foreignKey({
+      name: "sales_mastery_projection_receipts_outbox_integrity_fk",
+      columns: [
+        table.outboxId,
+        table.masteryTenantKey,
+        table.organizationId,
+        table.learnerPrincipalId,
+        table.idempotencyKey,
+      ],
+      foreignColumns: [
+        salesMasteryProjectionOutbox.id,
+        salesMasteryProjectionOutbox.masteryTenantKey,
+        salesMasteryProjectionOutbox.organizationId,
+        salesMasteryProjectionOutbox.learnerPrincipalId,
+        salesMasteryProjectionOutbox.idempotencyKey,
+      ],
     }).onDelete("restrict"),
     foreignKey({
       name: "sales_mastery_projection_receipts_mastery_tenant_fk",

@@ -2636,6 +2636,9 @@ importers:
       '@reading-advantage/srs-engine':
         specifier: workspace:*
         version: link:../srs-engine
+      '@reading-advantage/sales-knowledge':
+        specifier: workspace:*
+        version: link:../sales-knowledge
       '@reading-advantage/types':
         specifier: workspace:*
         version: link:../types

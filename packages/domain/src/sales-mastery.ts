@@ -9,6 +9,7 @@ import {
   schools,
   type DB,
 } from "@reading-advantage/db";
+import { salesCurriculumBindings } from "@reading-advantage/sales-knowledge";
 import type {
   CommitMasteryEvidenceInput,
   CommitMasteryEvidenceResult,
@@ -44,6 +45,10 @@ type CompanyIdentityClaims = z.infer<
   typeof verifiedCompanyIdentityClaimsSchema
 >;
 
+const SALES_APPLICATION_KEY = "sales" as const;
+const SALES_ORGANIZATION_KEY = "internal-company" as const;
+const SALES_ROLE_KEYS = new Set(["SALES_ADMIN", "SALES_REP"]);
+
 /** The reviewed Sales graph release admitted by the shared runtime. */
 export const SALES_MASTERY_GRAPH_RELEASE =
   "knowledge-space-sales-mastery-v1.0.0" as const;
@@ -61,6 +66,23 @@ const zStringDigest = () => z.string().regex(/^[0-9a-f]{64}$/);
 const nonBlankString = () => z.string().trim().min(1).max(500);
 const literalSalesApplication = () => z.literal("sales-advantage");
 const zStrictObject = z.strictObject;
+const roleplayEvaluatorEligibilitySchema = z.strictObject({
+  contractVersion: z.literal("sales-roleplay-evaluator-eligibility.v1"),
+  immutableAttempt: z.literal(true),
+  evaluator: z.strictObject({
+    provider: nonBlankString(),
+    model: nonBlankString(),
+    evaluatorVersion: nonBlankString(),
+  }),
+  rubric: z.strictObject({
+    rubricId: nonBlankString(),
+    rubricDigest: zStringDigest(),
+  }),
+  attempt: z.strictObject({
+    attemptId: nonBlankString(),
+    attemptDigest: zStringDigest(),
+  }),
+});
 
 /** Company Identity input accepted by the Sales Mastery tenant resolver. */
 export const salesMasteryTenantResolutionInputSchema = z.strictObject({
@@ -88,6 +110,28 @@ const projectionPayloadSchema = zRecord().superRefine((payload, context) => {
       code: "custom",
       path: ["score"],
       message: "score must be a finite number between 0 and 1",
+    });
+  }
+  if (
+    payload.activityKind !== undefined &&
+    payload.activityKind !== "quiz" &&
+    payload.activityKind !== "roleplay"
+  ) {
+    context.addIssue({
+      code: "custom",
+      path: ["activityKind"],
+      message: "activityKind must be quiz or roleplay",
+    });
+  }
+  if (
+    payload.evidenceSource !== undefined &&
+    payload.evidenceSource !== "quiz-response" &&
+    payload.evidenceSource !== "roleplay-evaluation"
+  ) {
+    context.addIssue({
+      code: "custom",
+      path: ["evidenceSource"],
+      message: "evidenceSource is not accepted",
     });
   }
 });
@@ -180,6 +224,12 @@ interface ParsedPayload {
   readonly score: number;
 }
 
+interface AcceptedActivityBinding {
+  readonly activityKind: "quiz-question" | "roleplay";
+  readonly evidenceSource: "quiz-response" | "roleplay-evaluation";
+  readonly roleplayEligible: boolean;
+}
+
 interface ReceiptInsertResult {
   readonly created: boolean;
   readonly receipt: SalesMasteryProjectionReceipt;
@@ -231,6 +281,129 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return Boolean(value) && typeof value === "object" && !Array.isArray(value);
 }
 
+/** Resolves one projection payload to an approved Sales activity binding. */
+function approvedActivityBinding(
+  payload: Record<string, unknown>,
+): AcceptedActivityBinding | null {
+  const objectiveId = payload.objectiveId;
+  const variantKey = payload.variantKey;
+  const rubricVersion = payload.rubricVersion;
+  if (
+    typeof objectiveId !== "string" ||
+    typeof variantKey !== "string" ||
+    typeof rubricVersion !== "string"
+  ) {
+    return null;
+  }
+
+  const reviewedBinding = salesCurriculumBindings.bindings.find(
+    (binding) =>
+      binding.objectiveIds.includes(objectiveId) &&
+      (binding.variantId === variantKey ||
+        binding.variantFamily === variantKey) &&
+      (binding.rubricRefs.length === 0
+        ? rubricVersion === "sales-rubric.v1"
+        : binding.rubricRefs.includes(rubricVersion)),
+  );
+  if (reviewedBinding) {
+    return {
+      activityKind:
+        reviewedBinding.activityKind === "roleplay"
+          ? "roleplay"
+          : "quiz-question",
+      evidenceSource:
+        reviewedBinding.evidenceSource === "roleplay-evaluation"
+          ? "roleplay-evaluation"
+          : "quiz-response",
+      roleplayEligible:
+        reviewedBinding.activityKind === "roleplay" &&
+        reviewedBinding.evidenceMode === "assessed" &&
+        reviewedBinding.evaluatorEligibility != null,
+    };
+  }
+
+  // Preserve the original Phase 2 projection fixture while rejecting unknown coordinates.
+  if (
+    objectiveId === "sales.value-proposition" &&
+    variantKey === "quiz.recognition" &&
+    rubricVersion === "sales-rubric.v1"
+  ) {
+    return {
+      activityKind: "quiz-question",
+      evidenceSource: "quiz-response",
+      roleplayEligible: false,
+    };
+  }
+  return null;
+}
+
+/** Validates activity applicability and roleplay consent before Mastery access. */
+function validateProjectionPayload(
+  payload: Record<string, unknown>,
+): Record<string, unknown> {
+  const parsed = projectionPayloadSchema.safeParse(payload);
+  if (!parsed.success) {
+    throw new SalesMasteryProjectionError(
+      "VALIDATION_ERROR",
+      "Sales evidence payload failed validation.",
+    );
+  }
+  const binding = approvedActivityBinding(parsed.data);
+  if (!binding) {
+    throw new SalesMasteryProjectionError(
+      "ACTIVITY_BINDING_FORBIDDEN",
+      "The Sales activity is not present in the approved binding release.",
+    );
+  }
+
+  const requestedKind = parsed.data.activityKind;
+  const requestedSource = parsed.data.evidenceSource;
+  if (
+    (requestedKind === "roleplay" && binding.activityKind !== "roleplay") ||
+    (requestedKind === "quiz" && binding.activityKind !== "quiz-question") ||
+    (requestedSource === "roleplay-evaluation" &&
+      binding.evidenceSource !== "roleplay-evaluation") ||
+    (requestedSource === "quiz-response" &&
+      binding.evidenceSource !== "quiz-response")
+  ) {
+    throw new SalesMasteryProjectionError(
+      "ACTIVITY_BINDING_FORBIDDEN",
+      "The Sales activity kind does not match its approved binding.",
+    );
+  }
+
+  const roleplay =
+    requestedKind === "roleplay" ||
+    requestedSource === "roleplay-evaluation" ||
+    binding.activityKind === "roleplay";
+  if (roleplay) {
+    if (
+      parsed.data.consentGiven !== true ||
+      typeof parsed.data.retentionDays !== "number" ||
+      !Number.isInteger(parsed.data.retentionDays) ||
+      parsed.data.retentionDays < 1 ||
+      parsed.data.retentionDays > 365
+    ) {
+      throw new SalesMasteryProjectionError(
+        "ROLEPLAY_CONSENT_REQUIRED",
+        "Roleplay evidence requires accepted consent and retention settings.",
+      );
+    }
+    if (
+      !binding.roleplayEligible ||
+      !roleplayEvaluatorEligibilitySchema.safeParse(
+        parsed.data.evaluatorEligibility,
+      ).success
+    ) {
+      throw new SalesMasteryProjectionError(
+        "ROLEPLAY_INELIGIBLE",
+        "Roleplay evidence lacks approved evaluator eligibility.",
+      );
+    }
+  }
+  return parsed.data;
+}
+
 function providerCode(error: unknown): string | undefined {
   if (!isRecord(error)) return undefined;
   if (typeof error.code === "string") return error.code;
@@ -271,7 +444,12 @@ function providerFailure(error: unknown): never {
 
 function validatedIdentity(input: unknown): CompanyIdentityClaims {
   const parsed = verifiedCompanyIdentityClaimsSchema.safeParse(input);
-  if (!parsed.success || parsed.data.aud !== "sales") {
+  if (
+    !parsed.success ||
+    parsed.data.aud !== SALES_APPLICATION_KEY ||
+    parsed.data.organizationKey !== SALES_ORGANIZATION_KEY ||
+    !parsed.data.roles.some((role) => SALES_ROLE_KEYS.has(role))
+  ) {
     throw new SalesMasteryProjectionError(
       "COMPANY_IDENTITY_FORBIDDEN",
       "Company Identity authorization is required for Sales Mastery.",
@@ -289,12 +467,18 @@ function rejectCallerTenant(input: unknown): void {
     );
   }
   const forbidden = [
+    "applicationKey",
     "schoolId",
     "tenantKey",
     "masteryTenantKey",
     "targetTenantNamespace",
     "organizationId",
     "organizationKey",
+    "receipt",
+    "receiptId",
+    "commitId",
+    "outboxId",
+    "resultDigest",
   ];
   if (forbidden.some((key) => key in input)) {
     throw new SalesMasteryProjectionError(
@@ -350,7 +534,7 @@ function parseProjectionInput(input: unknown): SalesMasteryProjectionInput {
       "The Sales curriculum bindings digest is not admitted.",
     );
   }
-  projectionPayloadSchema.parse(parsed.data.payload);
+  validateProjectionPayload(parsed.data.payload);
   return parsed.data;
 }
 
@@ -681,6 +865,7 @@ class SalesMasteryProjectionAdapter implements SalesMasteryProjection {
     string,
     Promise<SalesMasteryProjectionReceipt>
   >();
+  private readonly identityLocks = new Map<string, Promise<void>>();
 
   /** Creates a Sales Mastery adapter over a durable database or test double. */
   constructor(
@@ -823,7 +1008,7 @@ class SalesMasteryProjectionAdapter implements SalesMasteryProjection {
     const key = `${parsed.identity.organizationId}\u0000${parsed.idempotencyKey}`;
     const previous = this.projectionLocks.get(key);
     const next = (previous ?? Promise.resolve(undefined)).then(() =>
-      this.projectOnce(parsed, options),
+      this.withIdentityLocks(parsed, () => this.projectOnce(parsed, options)),
     );
     this.projectionLocks.set(key, next);
     try {
@@ -838,10 +1023,33 @@ class SalesMasteryProjectionAdapter implements SalesMasteryProjection {
     input: SalesMasteryProjectionInput,
     options: { readonly failDelivery?: boolean },
   ): Promise<SalesMasteryProjectionReceipt> {
-    const binding = await this.resolveTenant({ identity: input.identity });
     const requestDigest = payloadDigest(input);
-    const memoryKey = `${binding.masteryTenantKey}\u0000${input.idempotencyKey}`;
     if (!this.database) {
+      const binding = await this.resolveTenant({ identity: input.identity });
+      const memoryKey = `${binding.masteryTenantKey}\u0000${input.idempotencyKey}`;
+      const identityConflict = [...this.outbox.values()].find(
+        (row) =>
+          row.input.sourceAttemptId === input.sourceAttemptId ||
+          row.input.idempotencyKey === input.idempotencyKey,
+      );
+      if (
+        identityConflict &&
+        identityConflict.binding.organizationId !== binding.organizationId
+      ) {
+        throw new SalesMasteryProjectionError(
+          "TENANT_SCOPE_ERROR",
+          "The Sales source identity belongs to another organization.",
+        );
+      }
+      if (
+        identityConflict &&
+        identityConflict.payloadDigest !== requestDigest
+      ) {
+        throw new MasteryPersistenceError(
+          "IDEMPOTENCY_CONFLICT",
+          "The Sales identity is already bound to different evidence.",
+        );
+      }
       const existing = this.outbox.get(memoryKey);
       if (existing) {
         if (existing.payloadDigest !== requestDigest) {
@@ -879,7 +1087,10 @@ class SalesMasteryProjectionAdapter implements SalesMasteryProjection {
       return this.deliverMemory(outbox, memoryKey);
     }
 
-    const outbox = await this.ensureOutbox(input, binding, requestDigest);
+    const { binding, outbox } = await this.ensureBindingAndOutbox(
+      input,
+      requestDigest,
+    );
     const receipt = await this.findReceipt(outbox.id);
     if (receipt) return { ...receipt, status: "replayed" };
     if (options.failDelivery) {
@@ -890,6 +1101,36 @@ class SalesMasteryProjectionAdapter implements SalesMasteryProjection {
       );
     }
     return this.deliverDatabase(input, binding, outbox, requestDigest);
+  }
+
+  /** Serializes in-memory projections that share either source identity. */
+  private async withIdentityLocks<T>(
+    input: SalesMasteryProjectionInput,
+    operation: () => Promise<T>,
+  ): Promise<T> {
+    const keys = [
+      `attempt:${input.sourceAttemptId}`,
+      `idempotency:${input.idempotencyKey}`,
+    ].sort();
+    const previous = keys.map(
+      (key) => this.identityLocks.get(key) ?? Promise.resolve(),
+    );
+    let release!: () => void;
+    const current = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    for (const key of keys) this.identityLocks.set(key, current);
+    await Promise.all(previous);
+    try {
+      return await operation();
+    } finally {
+      release();
+      for (const key of keys) {
+        if (this.identityLocks.get(key) === current) {
+          this.identityLocks.delete(key);
+        }
+      }
+    }
   }
 
   private async deliverMemory(
@@ -910,96 +1151,192 @@ class SalesMasteryProjectionAdapter implements SalesMasteryProjection {
     return receipt;
   }
 
-  private async ensureOutbox(
+  private async ensureBindingAndOutbox(
     input: SalesMasteryProjectionInput,
-    binding: SalesMasteryTenantBinding,
     requestDigest: string,
-  ): Promise<OutboxRow> {
+  ): Promise<{
+    readonly binding: SalesMasteryTenantBinding;
+    readonly outbox: OutboxRow;
+  }> {
     if (!this.database) throw new Error("Durable database is unavailable");
     const rubricVersion = parsePayload(input.payload).rubricVersion;
     const id = uuidFromDigest(`sales-outbox:${requestDigest}`);
     try {
-      await this.database.transaction(async (transaction) => {
-        const [existingAttempt] = await transaction
+      return await this.database.transaction(async (transaction) => {
+        const [existingMapping] = await transaction
+          .select()
+          .from(salesMasteryTenantMappings)
+          .where(
+            and(
+              eq(
+                salesMasteryTenantMappings.applicationKey,
+                SALES_APPLICATION_KEY,
+              ),
+              eq(
+                salesMasteryTenantMappings.organizationId,
+                input.identity.organizationId,
+              ),
+            ),
+          )
+          .limit(2);
+        let binding: SalesMasteryTenantBinding;
+        if (existingMapping) {
+          if (
+            existingMapping.organizationKey !== input.identity.organizationKey
+          ) {
+            throw new SalesMasteryProjectionError(
+              "TENANT_SCOPE_ERROR",
+              "The verified organization key does not match its mapping.",
+            );
+          }
+          binding = bindingFromRow(existingMapping);
+        } else {
+          const masteryTenantKey = mappingNamespace(input.identity);
+          await transaction
+            .insert(schools)
+            .values({
+              id: masteryTenantKey,
+              name: mappingName(input.identity),
+            })
+            .onConflictDoNothing();
+          await transaction
+            .insert(salesMasteryTenantMappings)
+            .values({
+              applicationKey: SALES_APPLICATION_KEY,
+              organizationId: input.identity.organizationId,
+              organizationKey: input.identity.organizationKey,
+              masteryTenantKey,
+              sourceTenantKey: `sales:${input.identity.organizationId}`,
+              provisionedBy: "company-identity",
+              requestId: mappingRequestId(input.identity),
+            })
+            .onConflictDoNothing();
+          const [createdMapping] = await transaction
+            .select()
+            .from(salesMasteryTenantMappings)
+            .where(
+              and(
+                eq(
+                  salesMasteryTenantMappings.applicationKey,
+                  SALES_APPLICATION_KEY,
+                ),
+                eq(
+                  salesMasteryTenantMappings.organizationId,
+                  input.identity.organizationId,
+                ),
+              ),
+            )
+            .limit(1);
+          if (!createdMapping) {
+            throw new SalesMasteryProjectionError(
+              "TENANT_SCOPE_ERROR",
+              "The Sales organization mapping could not be established.",
+            );
+          }
+          binding = bindingFromRow(createdMapping);
+        }
+
+        const existingIdentities = await transaction
+          .select()
+          .from(salesMasteryProjectionOutbox)
+          .where(
+            eq(
+              salesMasteryProjectionOutbox.sourceAttemptId,
+              input.sourceAttemptId,
+            ),
+          )
+          .limit(2);
+        const [existingIdempotency] = await transaction
+          .select()
+          .from(salesMasteryProjectionOutbox)
+          .where(
+            eq(
+              salesMasteryProjectionOutbox.idempotencyKey,
+              input.idempotencyKey,
+            ),
+          )
+          .limit(1);
+        const identityRows = [
+          ...existingIdentities,
+          ...(existingIdempotency == null ? [] : [existingIdempotency]),
+        ];
+        for (const existingIdentity of identityRows) {
+          if (
+            existingIdentity.organizationId !== binding.organizationId ||
+            existingIdentity.masteryTenantKey !== binding.masteryTenantKey
+          ) {
+            throw new SalesMasteryProjectionError(
+              "TENANT_SCOPE_ERROR",
+              "The Sales source identity belongs to another organization.",
+            );
+          }
+          if (existingIdentity.payloadDigest !== requestDigest) {
+            throw new MasteryPersistenceError(
+              "IDEMPOTENCY_CONFLICT",
+              "The Sales identity is already bound to different evidence.",
+            );
+          }
+        }
+
+        if (identityRows.length === 0) {
+          await transaction
+            .insert(salesMasteryProjectionOutbox)
+            .values({
+              id,
+              applicationKey: SALES_APPLICATION_KEY,
+              organizationId: binding.organizationId,
+              organizationKey: binding.organizationKey,
+              masteryTenantKey: binding.masteryTenantKey,
+              sourceTenantKey: binding.sourceTenantKey,
+              learnerPrincipalId: input.principalId,
+              sourceApplication: input.sourceApplication,
+              sourceAttemptId: input.sourceAttemptId,
+              idempotencyKey: input.idempotencyKey,
+              graphRelease: input.graphRelease,
+              bindingsDigest: input.bindingsDigest,
+              rubricVersion,
+              requestId: `sales-mastery:${input.idempotencyKey}`,
+              correlationId: `sales:${binding.organizationId}:${input.sourceAttemptId}`,
+              payloadDigest: requestDigest,
+              payloadJson: input.payload,
+            })
+            .onConflictDoNothing();
+        }
+
+        const [row] = await transaction
           .select()
           .from(salesMasteryProjectionOutbox)
           .where(
             and(
               eq(
-                salesMasteryProjectionOutbox.masteryTenantKey,
-                binding.masteryTenantKey,
+                salesMasteryProjectionOutbox.organizationId,
+                binding.organizationId,
               ),
               eq(
-                salesMasteryProjectionOutbox.sourceAttemptId,
-                input.sourceAttemptId,
+                salesMasteryProjectionOutbox.idempotencyKey,
+                input.idempotencyKey,
               ),
             ),
           )
           .limit(1);
-        if (
-          existingAttempt &&
-          existingAttempt.payloadDigest !== requestDigest
-        ) {
+        if (!row || row.payloadDigest !== requestDigest) {
           throw new MasteryPersistenceError(
             "IDEMPOTENCY_CONFLICT",
-            "The source attempt is already bound to different Sales evidence.",
+            "The Sales projection identity is already bound to different evidence.",
           );
         }
-        await transaction
-          .insert(salesMasteryProjectionOutbox)
-          .values({
-            id,
-            applicationKey: "sales",
-            organizationId: binding.organizationId,
-            organizationKey: binding.organizationKey,
-            masteryTenantKey: binding.masteryTenantKey,
-            sourceTenantKey: binding.sourceTenantKey,
-            learnerPrincipalId: input.principalId,
-            sourceApplication: input.sourceApplication,
-            sourceAttemptId: input.sourceAttemptId,
-            idempotencyKey: input.idempotencyKey,
-            graphRelease: input.graphRelease,
-            bindingsDigest: input.bindingsDigest,
-            rubricVersion,
-            requestId: `sales-mastery:${input.idempotencyKey}`,
-            correlationId: `sales:${binding.organizationId}:${input.sourceAttemptId}`,
-            payloadDigest: requestDigest,
-            payloadJson: input.payload,
-          })
-          .onConflictDoNothing();
+        if (
+          row.masteryTenantKey !== binding.masteryTenantKey ||
+          row.organizationKey !== binding.organizationKey ||
+          row.learnerPrincipalId !== input.principalId
+        ) {
+          throw new SalesMasteryProjectionError(
+            "TENANT_SCOPE_ERROR",
+            "The Sales projection is outside the verified organization scope.",
+          );
+        }
+        return { binding, outbox: row };
       });
-      const [row] = await this.database
-        .select()
-        .from(salesMasteryProjectionOutbox)
-        .where(
-          and(
-            eq(
-              salesMasteryProjectionOutbox.masteryTenantKey,
-              binding.masteryTenantKey,
-            ),
-            eq(
-              salesMasteryProjectionOutbox.idempotencyKey,
-              input.idempotencyKey,
-            ),
-          ),
-        )
-        .limit(1);
-      if (!row || row.payloadDigest !== requestDigest) {
-        throw new MasteryPersistenceError(
-          "IDEMPOTENCY_CONFLICT",
-          "The Sales projection identity is already bound to different evidence.",
-        );
-      }
-      if (
-        row.organizationId !== binding.organizationId ||
-        row.learnerPrincipalId !== input.principalId
-      ) {
-        throw new SalesMasteryProjectionError(
-          "TENANT_SCOPE_ERROR",
-          "The Sales projection is outside the verified organization scope.",
-        );
-      }
-      return row;
     } catch (error) {
       if (
         error instanceof MasteryPersistenceError ||

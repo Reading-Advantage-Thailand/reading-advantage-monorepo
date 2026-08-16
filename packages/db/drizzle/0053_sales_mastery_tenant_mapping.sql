@@ -42,6 +42,9 @@ CREATE TABLE "sales_mastery_projection_outbox" (
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	CONSTRAINT "sales_mastery_projection_outbox_tenant_idempotency_unique" UNIQUE("mastery_tenant_key","idempotency_key"),
 	CONSTRAINT "sales_mastery_projection_outbox_tenant_attempt_unique" UNIQUE("mastery_tenant_key","source_attempt_id"),
+	CONSTRAINT "sales_mastery_projection_outbox_idempotency_unique" UNIQUE("idempotency_key"),
+	CONSTRAINT "sales_mastery_projection_outbox_source_attempt_unique" UNIQUE("source_attempt_id"),
+	CONSTRAINT "sales_mastery_projection_outbox_receipt_integrity_unique" UNIQUE("id","mastery_tenant_key","organization_id","learner_principal_id","idempotency_key"),
 	CONSTRAINT "sales_mastery_projection_outbox_application_key_check" CHECK ("application_key" = 'sales'),
 	CONSTRAINT "sales_mastery_projection_outbox_source_application_check" CHECK ("source_application" = 'sales-advantage'),
 	CONSTRAINT "sales_mastery_projection_outbox_source_tenant_key_check" CHECK ("source_tenant_key" = 'sales:' || "organization_id"::text),
@@ -72,6 +75,8 @@ CREATE TABLE "sales_mastery_projection_receipts" (
 );
 --> statement-breakpoint
 ALTER TABLE "sales_mastery_projection_receipts" ADD CONSTRAINT "sales_mastery_projection_receipts_outbox_fk" FOREIGN KEY ("outbox_id") REFERENCES "sales_mastery_projection_outbox"("id") ON DELETE RESTRICT;
+--> statement-breakpoint
+ALTER TABLE "sales_mastery_projection_receipts" ADD CONSTRAINT "sales_mastery_projection_receipts_outbox_integrity_fk" FOREIGN KEY ("outbox_id","mastery_tenant_key","organization_id","learner_principal_id","idempotency_key") REFERENCES "sales_mastery_projection_outbox"("id","mastery_tenant_key","organization_id","learner_principal_id","idempotency_key") ON DELETE RESTRICT;
 --> statement-breakpoint
 ALTER TABLE "sales_mastery_projection_receipts" ADD CONSTRAINT "sales_mastery_projection_receipts_mastery_tenant_fk" FOREIGN KEY ("mastery_tenant_key") REFERENCES "schools"("id") ON DELETE RESTRICT;
 --> statement-breakpoint

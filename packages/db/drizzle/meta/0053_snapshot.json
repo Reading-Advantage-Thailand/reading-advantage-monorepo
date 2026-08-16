@@ -15953,6 +15953,31 @@
             "mastery_tenant_key",
             "source_attempt_id"
           ]
+        },
+        "sales_mastery_projection_outbox_idempotency_unique": {
+          "name": "sales_mastery_projection_outbox_idempotency_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "idempotency_key"
+          ]
+        },
+        "sales_mastery_projection_outbox_source_attempt_unique": {
+          "name": "sales_mastery_projection_outbox_source_attempt_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "source_attempt_id"
+          ]
+        },
+        "sales_mastery_projection_outbox_receipt_integrity_unique": {
+          "name": "sales_mastery_projection_outbox_receipt_integrity_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "id",
+            "mastery_tenant_key",
+            "organization_id",
+            "learner_principal_id",
+            "idempotency_key"
+          ]
         }
       },
       "policies": {},
@@ -16078,6 +16103,27 @@
           ],
           "columnsTo": [
             "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "sales_mastery_projection_receipts_outbox_integrity_fk": {
+          "name": "sales_mastery_projection_receipts_outbox_integrity_fk",
+          "tableFrom": "sales_mastery_projection_receipts",
+          "tableTo": "sales_mastery_projection_outbox",
+          "columnsFrom": [
+            "outbox_id",
+            "mastery_tenant_key",
+            "organization_id",
+            "learner_principal_id",
+            "idempotency_key"
+          ],
+          "columnsTo": [
+            "id",
+            "mastery_tenant_key",
+            "organization_id",
+            "learner_principal_id",
+            "idempotency_key"
           ],
           "onDelete": "restrict",
           "onUpdate": "no action"
