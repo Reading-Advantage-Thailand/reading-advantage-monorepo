@@ -4,13 +4,13 @@
 - Phase: Phase 2 binding freeze.
 - phase_base_sha: `8c30dc0e138567f4d461b6cb69c10c66a6bb2eaf`.
 - role_base_sha: `698f5c41406841aac37a4679ff173e689f2c7888`.
-- Green base: `cac10174c`.
+- Green base: `466ec180a`.
 - Lease: five phase2-binding-dossiers JSON files, plan.md, this evidence file, and this log.
 - The committed Red test is immutable: `packages/game-cartridges/src/legacy-traversal-binding-freeze.test.ts`.
-- Dossier correction committed as `82c50f82a`.
+- Dossier correction committed as `a0e27d909`.
 - Five candidate dossiers contain fifteen blocked role decisions.
 - Mid Red corrected six logical pointer groups.
-- The focused contract exited 1 because `/34` declares `SW-ASSET-001`, while the archive resolves `/34` to `SW-WORLD-004`.
+- The focused contract exited 1 because `/19` declares `SW-COLL-001`, while the archive resolves `/19` to `SW-TRANS-002`.
 - The manifest suite passed 13/13.
 - The Python readiness suite passed 9/9.
 - TypeScript, ESLint, and scoped diff checks exited 0.
@@ -25,10 +25,10 @@ track: apk_legacy_traversal_cutover_20260727
 phase: Phase 2 binding freeze
 phase_base_sha: 8c30dc0e138567f4d461b6cb69c10c66a6bb2eaf
 role_base_sha: 698f5c41406841aac37a4679ff173e689f2c7888
-commits: 82c50f82a; evidence commit pending
-tests_run: focused binding-freeze 6/7 passed with one SW-ASSET-001 pointer failure; manifest 13/13; Python readiness 9/9; TypeScript, ESLint, and diff checks passed
+commits: a0e27d909; evidence commit pending
+tests_run: focused binding-freeze 6/7 passed with one SW-COLL-001 pointer failure; manifest 13/13; Python readiness 9/9; TypeScript, ESLint, and diff checks passed
 files_changed: five phase2-binding-dossiers JSON files; plan.md; phase2-binding-freeze-green-evidence-20260816.md; this log
 counts: 5 dossiers; 15 roles; 15 blocked; 0 adoption; 6/7 focused tests passed
-known_failures: immutable Red pointer drift for Spellweaver's Run `SW-ASSET-001`; `/34` resolves to `SW-WORLD-004`, and `/33` is recommended
+known_failures: immutable Red pointer drift for Spellweaver's Run `SW-COLL-001`; `/19` resolves to `SW-TRANS-002`, and `/18` is recommended
 handoff: Review A returns the remaining pointer mismatch to Mid Red. No phase completion or downstream authority is claimed.
 END_MEASURE_AGENT_RESULT
