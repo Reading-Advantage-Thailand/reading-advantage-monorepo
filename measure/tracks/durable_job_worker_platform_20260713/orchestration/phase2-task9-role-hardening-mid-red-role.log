@@ -1,0 +1,67 @@
+Measure Mid Red role log — Task 9 role hardening
+Track: durable_job_worker_platform_20260713
+Phase: Phase 2: Red Concurrency and Failure Tests
+Task: 9 security remediation
+Role: measure-mid-red
+Date: 2026-08-16
+phase_base_sha: 33d44fc81b84559c2ab7a48acfaf86554bf017a5
+role_base_sha: 63da03a0e27e0c696df44f2a0285973b269d1cfd
+HEAD at role start: 63da03a0e27e0c696df44f2a0285973b269d1cfd
+
+## Scope
+
+The role read the Measure index, workflow, durable-job specification, plan,
+strategy, Review B artifact, migration `0052`, PG16 harness and tests, and
+anti-pattern catalog.
+
+The role added one migration-governance Red test, one plan note, one evidence
+note, and this role log. It changed no migration or production source.
+
+## Red contract
+
+The test creates both durable-job roles with `LOGIN CREATEDB` before migration.
+It requires migration failure before protected ownership and grants, or requires
+`NOLOGIN` for both roles before those objects remain assigned.
+
+The successful path checks both audit table owners, the append-only trigger
+function owner, and runtime privileges. The failure path checks no unsafe owner
+and no runtime grant. The test removes only its created roles.
+
+## Verification
+
+Safe default passed one test with no PostgreSQL contact.
+
+Disposable `docker.io/library/postgres:16-alpine` PostgreSQL `160014` ran the
+contract on port `55441`. It produced one named failure:
+
+```text
+durable_job_audit_owner must be NOLOGIN before protected grants and ownership.:
+expected true to be false
+```
+
+The run produced no other test failure. Cleanup returned zero scratch databases,
+zero Task 9 roles, and removed the disposable container.
+
+Focused TypeScript, package typecheck, package-local ESLint, Prettier, and the
+targeted diff check passed.
+
+## Green handoff
+
+Green must update migration `0052` only after reviewing this contract.
+The migration must fail closed or enforce and verify `NOLOGIN` before grants and
+ownership. Green must rerun both recorded PG16 commands.
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+status: complete
+track: durable_job_worker_platform_20260713
+phase: Phase 2: Red Concurrency and Failure Tests
+task: 9
+phase_base_sha: 33d44fc81b84559c2ab7a48acfaf86554bf017a5
+role_base_sha: 63da03a0e27e0c696df44f2a0285973b269d1cfd
+tests_run: safe default 1 passed; disposable PostgreSQL 16 1 failed
+exact_failure: durable_job_audit_owner retained rolcanlogin=true
+cleanup: 0 scratch databases; 0 Task 9 roles; container removed
+files_changed: packages/db/src/__tests__/durable-jobs-role-hardening-pg16.red.test.ts; measure/tracks/durable_job_worker_platform_20260713/plan.md; measure/tracks/durable_job_worker_platform_20260713/task-9-role-hardening-red-20260816.md; measure/tracks/durable_job_worker_platform_20260713/orchestration/phase2-task9-role-hardening-mid-red-role.log
+handoff: Green must fail closed or enforce and verify NOLOGIN before protected grants and ownership
+END_MEASURE_AGENT_RESULT
