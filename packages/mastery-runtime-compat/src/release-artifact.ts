@@ -3,6 +3,7 @@ import { createHash, randomUUID } from "node:crypto";
 import { constants as fsConstants } from "node:fs";
 import {
   cp,
+  chmod,
   lstat,
   mkdir,
   mkdtemp,
@@ -1828,6 +1829,30 @@ async function assertPackedArchivesUnchanged(
   );
 }
 
+/** Makes verified archive copies read-only inside a non-writable private directory. */
+async function protectVerifiedArchives(
+  artifacts: ReadonlyArray<PackedArtifact>,
+): Promise<void> {
+  const archiveRoot = dirname(artifacts[0]?.installArchivePath ?? "");
+  await Promise.all(
+    artifacts.map(({ installArchivePath }) => chmod(installArchivePath, 0o400)),
+  );
+  await chmod(archiveRoot, 0o500);
+}
+
+/** Restores private archive permissions so the enclosing temporary child can be removed. */
+async function restoreVerifiedArchives(
+  artifacts: ReadonlyArray<PackedArtifact>,
+): Promise<void> {
+  const archiveRoot = dirname(artifacts[0]?.installArchivePath ?? "");
+  await chmod(archiveRoot, 0o700).catch(() => undefined);
+  await Promise.all(
+    artifacts.map(({ installArchivePath }) =>
+      chmod(installArchivePath, 0o600).catch(() => undefined),
+    ),
+  );
+}
+
 /** Calculates a deterministic digest over named immutable release inputs. */
 function digestReleaseInputs(
   inputs: ReadonlyArray<{ name: string; bytes: Uint8Array }>,
@@ -2142,18 +2167,6 @@ async function runCleanConsumer(
   const manifest = JSON.parse(await readFile(manifestPath, "utf8")) as {
     dependencies?: Record<string, string>;
   };
-  const localArtifacts = Object.fromEntries(
-    [...archives.entries()].map(([name, archive]) => [
-      name,
-      `file:${archive.installArchivePath}`,
-    ]),
-  );
-  manifest.dependencies = localArtifacts;
-  await writeFile(
-    manifestPath,
-    `${JSON.stringify(manifest, null, 2)}\n`,
-    "utf8",
-  );
 
   const runtimeDistRoot = resolve(consumerRoot, "dist");
   await mkdir(runtimeDistRoot, { recursive: true });
@@ -2219,6 +2232,19 @@ async function runCleanConsumer(
   );
 
   await assertPackedArchivesUnchanged([...archives.values()]);
+  const localArtifacts = Object.fromEntries(
+    [...archives.entries()].map(([name, archive]) => [
+      name,
+      `file:${archive.installArchivePath}`,
+    ]),
+  );
+  manifest.dependencies = localArtifacts;
+  await writeFile(
+    manifestPath,
+    `${JSON.stringify(manifest, null, 2)}\n`,
+    "utf8",
+  );
+
   await executeLocal(
     "npm",
     [
@@ -2413,9 +2439,7 @@ export async function runReleaseArtifactCheck(
       ),
     );
 
-    const verifiedArchiveRoot = resolve(temporaryRoot, "verified-archives");
-    await mkdir(verifiedArchiveRoot, { recursive: true });
-    const packedArtifacts = await Promise.all(
+    let packedArtifacts = await Promise.all(
       stagedMetadata.map(async ({ packageRoot, manifest }) => {
         const packedArchive = await createPackedArtifact(
           packageRoot,
@@ -2444,19 +2468,10 @@ export async function runReleaseArtifactCheck(
             `RELEASE_ARCHIVE_MUTATION_CONFLICT release archive ${manifest.name} changed after npm pack`,
           );
         }
-        const installArchivePath = resolve(
-          verifiedArchiveRoot,
-          `${manifest.name.replace(/^@/, "").replace(/[\\/]/g, "-")}.tgz`,
-        );
-        await writeNewRegularFile(
-          installArchivePath,
-          archiveBytes,
-          `Verified release archive ${manifest.name}`,
-        );
         return {
           name: manifest.name,
           archivePath,
-          installArchivePath,
+          installArchivePath: archivePath,
           archiveBytes,
           archiveSha1,
           archiveSha256: sha256(archiveBytes),
@@ -2465,6 +2480,22 @@ export async function runReleaseArtifactCheck(
             allPackedVersions,
           ),
         };
+      }),
+    );
+    const verifiedArchiveRoot = resolve(temporaryRoot, "verified-archives");
+    await mkdir(verifiedArchiveRoot, { recursive: true });
+    packedArtifacts = await Promise.all(
+      packedArtifacts.map(async (artifact) => {
+        const installArchivePath = resolve(
+          verifiedArchiveRoot,
+          `${artifact.name.replace(/^@/, "").replace(/[\\/]/g, "-")}.tgz`,
+        );
+        await writeNewRegularFile(
+          installArchivePath,
+          artifact.archiveBytes,
+          `Verified release archive ${artifact.name}`,
+        );
+        return { ...artifact, installArchivePath };
       }),
     );
     const archives = new Map(
@@ -2479,39 +2510,48 @@ export async function runReleaseArtifactCheck(
       );
     }
 
-    await waitForTestHook(TEST_DELAY_BEFORE_CONSUMER_ENV);
-    await assertConsumerFixturesUnchanged(releaseInputs.consumerFixtureInputs);
-    const cleanConsumer = await runCleanConsumer(
-      temporaryRoot,
-      archives,
-      gateDependency,
-      runtimeDistSnapshotRoot,
-      releaseInputs.manifestPath,
-      releaseInputs.consumerFixtureInputs.map(
-        ({ snapshotPath }) => snapshotPath,
-      ),
-      releaseInputs.descriptorPaths,
-    );
-    await assertConsumerFixturesUnchanged(releaseInputs.consumerFixtureInputs);
-    const releasePackageNames = new Set(
-      packageMetadata.map(({ manifest }) => manifest.name),
-    );
-    const archiveDigestsSha256 = Object.fromEntries(
-      packedArtifacts
-        .filter(({ name }) => releasePackageNames.has(name))
-        .map(({ name, archiveSha256 }) => [name, archiveSha256] as const),
-    );
-    return {
-      packages: packageMetadata.map(({ manifest }) => manifest.name),
-      dryRun: true,
-      exportsVerified: true,
-      workspaceDependencies,
-      cleanConsumer: true,
-      auditedHead: releaseInputs.auditedHead,
-      sourceDigestSha256: releaseInputs.sourceDigestSha256,
-      archiveDigestsSha256,
-      ...cleanConsumer,
-    };
+    await protectVerifiedArchives(packedArtifacts);
+    try {
+      await waitForTestHook(TEST_DELAY_BEFORE_CONSUMER_ENV);
+      await assertConsumerFixturesUnchanged(
+        releaseInputs.consumerFixtureInputs,
+      );
+      const cleanConsumer = await runCleanConsumer(
+        temporaryRoot,
+        archives,
+        gateDependency,
+        runtimeDistSnapshotRoot,
+        releaseInputs.manifestPath,
+        releaseInputs.consumerFixtureInputs.map(
+          ({ snapshotPath }) => snapshotPath,
+        ),
+        releaseInputs.descriptorPaths,
+      );
+      await assertConsumerFixturesUnchanged(
+        releaseInputs.consumerFixtureInputs,
+      );
+      const releasePackageNames = new Set(
+        packageMetadata.map(({ manifest }) => manifest.name),
+      );
+      const archiveDigestsSha256 = Object.fromEntries(
+        packedArtifacts
+          .filter(({ name }) => releasePackageNames.has(name))
+          .map(({ name, archiveSha256 }) => [name, archiveSha256] as const),
+      );
+      return {
+        packages: packageMetadata.map(({ manifest }) => manifest.name),
+        dryRun: true,
+        exportsVerified: true,
+        workspaceDependencies,
+        cleanConsumer: true,
+        auditedHead: releaseInputs.auditedHead,
+        sourceDigestSha256: releaseInputs.sourceDigestSha256,
+        archiveDigestsSha256,
+        ...cleanConsumer,
+      };
+    } finally {
+      await restoreVerifiedArchives(packedArtifacts);
+    }
   } finally {
     await removeArtifactChild(trustedWorkRoot, temporaryRoot);
   }
