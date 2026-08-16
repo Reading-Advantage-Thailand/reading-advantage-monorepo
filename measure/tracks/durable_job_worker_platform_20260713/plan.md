@@ -281,11 +281,13 @@ closed; Red failures arise from missing platform behavior.
 
 ## Phase 3: PostgreSQL Adapter Implementation
 
-- [b] Task 11: Add reviewed Drizzle schema/migration, indexes, exports, sentinels, and tenant-registry classification. (deferred:durable_job_worker_platform_20260713-phase2-acceptance)
-- [b] Task 12: Implement the job port's PostgreSQL adapter in the exact approved backend adapter root, including atomic enqueue and bounded `FOR UPDATE SKIP LOCKED` claim with lease-token ownership. (deferred:durable_job_worker_platform_20260713-phase2-acceptance)
-  - Source evidence: commit `a7031a613` implements this adapter. Phase 3 acceptance remains blocked behind Phase 2 acceptance.
-- [b] Task 13: Implement heartbeat, lease-token CAS settle/fail, visibility reclaim, bounded jittered retries, dead-letter listing, and authorized audited replay that rejects active leases. (deferred:durable_job_worker_platform_20260713-phase2-acceptance)
-- [b] Task 14: Make transition/concurrency/failure tests Green and run migration governance plus isolated two-connection PG16 locking tests. (deferred:durable_job_worker_platform_20260713-phase2-acceptance)
+- [x] Task 11: Add reviewed Drizzle schema/migration, indexes, exports, sentinels, and tenant-registry classification. (commit: `8b5ace2`)
+  - Evidence: Migration `0052_durable_jobs` passed the live schema gate. The Drizzle checks now match its reviewed bounds and state invariants.
+- [x] Task 12: Implement the job port's PostgreSQL adapter in the exact approved backend adapter root, including atomic enqueue and bounded `FOR UPDATE SKIP LOCKED` claim with lease-token ownership. (source: `a7031a6`)
+  - Evidence: Separate PostgreSQL sessions proved scoped idempotency, atomic claims, and bounded lock skipping.
+- [x] Task 13: Implement heartbeat, lease-token CAS settle/fail, visibility reclaim, bounded jittered retries, dead-letter listing, and authorized audited replay that rejects active leases. (source: `a7031a6`)
+  - Evidence: Separate PostgreSQL sessions proved heartbeat, stale-token rejection, reclaim, retry, DLQ, and replay behavior.
+- [x] Task 14: Make transition/concurrency/failure tests Green and run migration governance plus isolated two-connection PG16 locking tests. (evidence: `phase-3-jr-green-20260816.md`)
 
 **Verification:** `CI=true pnpm --filter @reading-advantage/db test && CI=true pnpm vitest run packages/backend/src/jobs/__tests__ && pnpm architecture:check`
 
