@@ -1,575 +1,594 @@
 export const en = {
-    hero: {
-        title: "AI-Powered Language Learning",
-        subtitle: "Experience personalized extensive reading with advanced AI technology",
-        description: "Our AI-powered platform adapts to your learning journey, providing personalized content and interactive activities for optimal language acquisition. Reading Advantage also offers a Blended Learning option with teacher-led classes and student workbooks.",
+  hero: {
+    title: "AI-Powered Language Learning",
+    subtitle:
+      "Experience personalized extensive reading with advanced AI technology",
+    description:
+      "Our AI-powered platform adapts to your learning journey, providing personalized content and interactive activities for optimal language acquisition. Reading Advantage also offers a Blended Learning option with teacher-led classes and student workbooks.",
+  },
+  blendedLearning: {
+    buttonLabel: "Blended Learning",
+    newBadge: "NOW AVAILABLE",
+    heading: "Blended Learning",
+    studentWorkbooks: {
+      title: "Student Workbooks",
+      description: "Hands-on practice materials",
     },
-    blendedLearning: {
-        buttonLabel: "Blended Learning",
-        newBadge: "NOW AVAILABLE",
-        heading: "Blended Learning",
-        studentWorkbooks: {
-            title: "Student Workbooks",
-            description: "Hands-on practice materials",
-        },
-    },
-    keyFeatures: {
-        heading: "Key Features",
-        features: [
-            {
-                title: "Extensive Article Library",
-                items: [
-                    "Over 3,000 articles available",
-                    "60 new pieces added daily",
-                    "Content for every learning level",
-                ],
-            },
-            {
-                title: "Comprehensible Input",
-                items: [
-                    "Audio with sentence highlighting",
-                    "Instant translations",
-                    "Engaging multimedia content",
-                ],
-            },
-            {
-                title: "Interactive Learning",
-                items: [
-                    "SRS flashcards",
-                    "Matching exercises",
-                    "Ordering activities",
-                ],
-            },
+  },
+  keyFeatures: {
+    heading: "Key Features",
+    features: [
+      {
+        title: "Extensive Article Library",
+        items: [
+          "Over 3,000 articles available",
+          "60 new pieces added daily",
+          "Content for every learning level",
         ],
-    },
-    videoSection: {
-        heading: "See Reading Advantage in Action",
-        expanded: "Click to minimize",
-        collapsed: "Click to expand",
-    },
-    platformFeatures: {
-        heading: "Platform Features",
-        features: [
-            {
-                title: "Extensive Article Selection",
-                description: "Browse through thousands of articles across various topics and difficulty levels.",
-            },
-            {
-                title: "Multi-Language Support",
-                description: "Switch between English, Thai, Chinese, Vietnamese, and more languages seamlessly.",
-            },
-            {
-                title: "AI-Powered Reading Assistant",
-                description: "Get instant help with vocabulary, grammar, and comprehension through our AI chat system.",
-            },
-            {
-                title: "Interactive Sentence Activities",
-                description: "Practice sentence structure and grammar through engaging ordering activities.",
-            },
-            {
-                title: "Word Order Exercises",
-                description: "Build confidence in sentence construction with interactive word ordering activities.",
-            },
-            {
-                title: "SRS Flashcard System",
-                description: "Master vocabulary efficiently with our spaced repetition system.",
-            },
+      },
+      {
+        title: "Comprehensible Input",
+        items: [
+          "Audio with sentence highlighting",
+          "Instant translations",
+          "Engaging multimedia content",
         ],
-    },
-    resultsSection: {
-        heading: "Evidence-Based Methodology",
-        title: "Research-Backed Methodology",
-        description: "Reading Advantage is built on decades of classroom research supporting extensive reading over traditional grammar instruction for reading outcomes. Specific efficacy gains vary by implementation fidelity and consistent classroom use.",
-        stats: [
-            { value: "3000+", label: "Articles Available" },
-            { value: "60+", label: "New Articles Daily" },
+      },
+      {
+        title: "Interactive Learning",
+        items: ["SRS flashcards", "Matching exercises", "Ordering activities"],
+      },
+    ],
+  },
+  videoSection: {
+    heading: "See Reading Advantage in Action",
+    expanded: "Click to minimize",
+    collapsed: "Click to expand",
+  },
+  platformFeatures: {
+    heading: "Platform Features",
+    features: [
+      {
+        title: "Extensive Article Selection",
+        description:
+          "Browse through thousands of articles across various topics and difficulty levels.",
+      },
+      {
+        title: "Multi-Language Support",
+        description:
+          "Switch between English, Thai, Chinese, Vietnamese, and more languages seamlessly.",
+      },
+      {
+        title: "AI-Powered Reading Assistant",
+        description:
+          "Get instant help with vocabulary, grammar, and comprehension through our AI chat system.",
+      },
+      {
+        title: "Interactive Sentence Activities",
+        description:
+          "Practice sentence structure and grammar through engaging ordering activities.",
+      },
+      {
+        title: "Word Order Exercises",
+        description:
+          "Build confidence in sentence construction with interactive word ordering activities.",
+      },
+      {
+        title: "SRS Flashcard System",
+        description:
+          "Master vocabulary efficiently with our spaced repetition system.",
+      },
+    ],
+  },
+  resultsSection: {
+    heading: "Evidence-Based Methodology",
+    title: "Research-Backed Methodology",
+    description:
+      "Reading Advantage is built on decades of classroom research supporting extensive reading over traditional grammar instruction for reading outcomes. Specific efficacy gains vary by implementation fidelity and consistent classroom use.",
+    stats: [
+      { value: "3000+", label: "Articles Available" },
+      { value: "60+", label: "New Articles Daily" },
+      { value: "AI", label: "Reading Assistant" },
+    ],
+  },
+  teacherTools: {
+    heading: "Teacher & Admin Tools",
+    tools: [
+      {
+        title: "Class Management",
+        items: [
+          "Easy student enrollment and grouping",
+          "Assignment creation and tracking",
+          "Printable classroom activities",
         ],
-    },
-    teacherTools: {
-        heading: "Teacher & Admin Tools",
-        tools: [
-            {
-                title: "Class Management",
-                items: [
-                    "Easy student enrollment and grouping",
-                    "Assignment creation and tracking",
-                    "Printable classroom activities",
-                ],
-            },
-            {
-                title: "Analytics Dashboard",
-                items: [
-                    "Real-time progress monitoring",
-                    "Detailed performance reports",
-                    "Student engagement metrics",
-                ],
-            },
+      },
+      {
+        title: "Analytics Dashboard",
+        items: [
+          "Real-time progress monitoring",
+          "Detailed performance reports",
+          "Student engagement metrics",
         ],
+      },
+    ],
+  },
+  technicalHighlights: {
+    heading: "Technical Excellence",
+    features: [
+      {
+        title: "AI-Powered",
+        description: "Advanced content generation and adaptation",
+      },
+      {
+        title: "Multi-Language",
+        description: "Support for multiple languages and translations",
+      },
+      {
+        title: "Cloud-Based",
+        description: "Powered by Google Cloud Platform",
+      },
+      {
+        title: "Cross-Platform",
+        description: "Access on any device, anywhere",
+      },
+    ],
+  },
+  games: {
+    newBadge: "NEW!",
+    heading: "🎮 Exciting Vocabulary Games",
+    description: "Make learning vocabulary fun with our engaging games!",
+    games: [
+      {
+        title: "Magic Defense",
+        description:
+          "Defend your castles from falling words by typing their correct translations!",
+        image: "/images/gameplay.png",
+      },
+      {
+        title: "RPG Battle",
+        description: "Fight monsters PvP",
+        image: "/images/rpg-battle.png",
+      },
+      {
+        title: "Dragon Flight",
+        description:
+          "Choose the correct gate to gather enough dragons to defeat the boss",
+        image: "/images/dragon-flight.png",
+      },
+      {
+        title: "Wizard vs Zombie",
+        description:
+          "Survive the zombie horde by running to collect magic orbs",
+        image: "/images/wizard-vs-zombie.png",
+      },
+    ],
+  },
+  cta: {
+    heading: "Transform Your Language Learning Journey",
+    description:
+      "Start using Reading Advantage today and experience the power of AI-enhanced learning",
+    buttons: {
+      signUp: "Sign Up Your School",
+      freeTrial: "Start Free Trial",
     },
-    technicalHighlights: {
-        heading: "Technical Excellence",
-        features: [
-            {
-                title: "AI-Powered",
-                description: "Advanced content generation and adaptation",
-            },
-            {
-                title: "Multi-Language",
-                description: "Support for multiple languages and translations",
-            },
-            {
-                title: "Cloud-Based",
-                description: "Powered by Google Cloud Platform",
-            },
-            {
-                title: "Cross-Platform",
-                description: "Access on any device, anywhere",
-            },
-        ],
-    },
-    games: {
-        newBadge: "NEW!",
-        heading: "🎮 Exciting Vocabulary Games",
-        description: "Make learning vocabulary fun with our engaging games!",
-        games: [
-            {
-                title: "Magic Defense",
-                description: "Defend your castles from falling words by typing their correct translations!",
-                image: "/images/gameplay.png",
-            },
-            {
-                title: "RPG Battle",
-                description: "Fight monsters PvP",
-                image: "/images/rpg-battle.png",
-            },
-            {
-                title: "Dragon Flight",
-                description: "Choose the correct gate to gather enough dragons to defeat the boss",
-                image: "/images/dragon-flight.png",
-            },
-            {
-                title: "Wizard vs Zombie",
-                description: "Survive the zombie horde by running to collect magic orbs",
-                image: "/images/wizard-vs-zombie.png",
-            },
-        ],
-    },
-    cta: {
-        heading: "Transform Your Language Learning Journey",
-        description: "Start using Reading Advantage today and experience the power of AI-enhanced learning",
-        buttons: {
-            signUp: "Sign Up Your School",
-            freeTrial: "Start Free Trial",
-        },
-    },
-    adaptiveEngine: {
-        eyebrow: "Adaptive Engine",
-        heading: "Personalized reading paths for every student",
-        description: "Powered by Mastery Advantage — the KST + SRS engine that maps every reading skill and schedules practice at the perfect moment.",
-        alt: "Reading Advantage adaptive learning visualization",
-    },
-    eyebrows: {
-        platform: "PLATFORM",
-        blendedLearning: "BLENDED LEARNING",
-        educationalGames: "EDUCATIONAL GAMES",
-        results: "RESULTS",
-        getStarted: "GET STARTED",
-    },
-    devices: {
-        desktop: "Desktop",
-        tablet: "Tablet",
-        mobile: "Mobile",
-    },
-    altText: {
-        desktop: "Reading Advantage app displayed on desktop computer screen showing student dashboard",
-        tablet: "Reading Advantage app displayed on tablet device with reading exercises interface",
-        mobile: "Reading Advantage app displayed on mobile phone with personalized learning interface",
-        blendedLearningTeacher: "Teacher demonstrating blended learning approach with Reading Advantage materials",
-        blendedLearningWorkbook: "Reading Advantage student workbook with guided reading exercises and activities",
-        studentsAtBoard: "Students using Reading Advantage platform",
-    },
+  },
+  adaptiveEngine: {
+    eyebrow: "Adaptive Engine",
+    heading: "Personalized reading paths for every student",
+    description:
+      "Powered by Mastery Advantage — the KST + SRS engine that maps every reading skill and schedules practice at the perfect moment.",
+    alt: "Reading Advantage adaptive learning visualization",
+  },
+  eyebrows: {
+    platform: "PLATFORM",
+    blendedLearning: "BLENDED LEARNING",
+    educationalGames: "EDUCATIONAL GAMES",
+    results: "RESULTS",
+    getStarted: "GET STARTED",
+  },
+  devices: {
+    desktop: "Desktop",
+    tablet: "Tablet",
+    mobile: "Mobile",
+  },
+  altText: {
+    desktop:
+      "Reading Advantage app displayed on desktop computer screen showing student dashboard",
+    tablet:
+      "Reading Advantage app displayed on tablet device with reading exercises interface",
+    mobile:
+      "Reading Advantage app displayed on mobile phone with personalized learning interface",
+    blendedLearningTeacher:
+      "Teacher demonstrating blended learning approach with Reading Advantage materials",
+    blendedLearningWorkbook:
+      "Reading Advantage student workbook with guided reading exercises and activities",
+    studentsAtBoard: "Students using Reading Advantage platform",
+  },
 };
 
 export const th = {
-    hero: {
-        title: "การเรียนรู้ภาษาที่ขับเคลื่อนด้วย AI",
-        subtitle: "สัมผัสการอ่านแบบกว้างขวางที่ปรับแต่งเฉพาะบุคคลด้วยเทคโนโลยี AI ที่ล้ำสมัย",
-        description: "แพลตฟอร์มของเราปรับให้เข้ากับการเรียนรู้ของคุณโดยเฉพาะมอบเนื้อหาและกิจกรรมแบบอินเทอร์แอคทีฟเพื่อการพัฒนาทักษะภาษาอย่างมีประสิทธิภาพ Reading Advantage ยังมีตัวเลือกการเรียนแบบผสมผสานซึ่งรวมการสอนโดยครูและหนังสือนักเรียน",
+  hero: {
+    title: "การเรียนรู้ภาษาที่ขับเคลื่อนด้วย AI",
+    subtitle:
+      "สัมผัสการอ่านแบบกว้างขวางที่ปรับแต่งเฉพาะบุคคลด้วยเทคโนโลยี AI ที่ล้ำสมัย",
+    description:
+      "แพลตฟอร์มของเราปรับให้เข้ากับการเรียนรู้ของคุณโดยเฉพาะมอบเนื้อหาและกิจกรรมแบบอินเทอร์แอคทีฟเพื่อการพัฒนาทักษะภาษาอย่างมีประสิทธิภาพ Reading Advantage ยังมีตัวเลือกการเรียนแบบผสมผสานซึ่งรวมการสอนโดยครูและหนังสือนักเรียน",
+  },
+  blendedLearning: {
+    buttonLabel: "การเรียนแบบผสมผสาน",
+    newBadge: "พร้อมให้บริการแล้ว",
+    heading: "การเรียนแบบผสมผสาน",
+    studentWorkbooks: {
+      title: "หนังสือนักเรียน",
+      description: "เอกสารปฏิบัติแบบฝึกหัด",
     },
-    blendedLearning: {
-        buttonLabel: "การเรียนแบบผสมผสาน",
-        newBadge: "พร้อมให้บริการแล้ว",
-        heading: "การเรียนแบบผสมผสาน",
-        studentWorkbooks: {
-            title: "หนังสือนักเรียน",
-            description: "เอกสารปฏิบัติแบบฝึกหัด",
-        },
-    },
-    keyFeatures: {
-        heading: "คุณสมบัติเด่น",
-        features: [
-            {
-                title: "ห้องสมุดบทความที่กว้างขวาง",
-                items: [
-                    "บทความมากกว่า 3,000 บทความ",
-                    "เพิ่มเนื้อหาใหม่ 60 ชิ้นทุกวัน",
-                    "เนื้อหาสำหรับทุกระดับการเรียนรู้",
-                ],
-            },
-            {
-                title: "การป้อนข้อมูลที่เข้าใจง่าย",
-                items: [
-                    "เสียงพร้อมการไฮไลต์ประโยค",
-                    "การแปลทันที",
-                    "เนื้อหาแบบมัลติมีเดียที่น่าสนใจ",
-                ],
-            },
-            {
-                title: "การเรียนรู้แบบโต้ตอบ",
-                items: [
-                    "บัตรคำแบบ SRS",
-                    "แบบฝึกหัดจับคู่",
-                    "กิจกรรมการจัดลำดับ",
-                ],
-            },
+  },
+  keyFeatures: {
+    heading: "คุณสมบัติเด่น",
+    features: [
+      {
+        title: "ห้องสมุดบทความที่กว้างขวาง",
+        items: [
+          "บทความมากกว่า 3,000 บทความ",
+          "เพิ่มเนื้อหาใหม่ 60 ชิ้นทุกวัน",
+          "เนื้อหาสำหรับทุกระดับการเรียนรู้",
         ],
-    },
-    videoSection: {
-        heading: "ดูการทำงานของ Reading Advantage",
-        expanded: "คลิกเพื่อลดขนาด",
-        collapsed: "คลิกเพื่อขยาย",
-    },
-    platformFeatures: {
-        heading: "คุณสมบัติของแพลตฟอร์ม",
-        features: [
-            {
-                title: "การเลือกบทความที่หลากหลาย",
-                description: "เรียกดูบทความนับพันในหัวข้อต่างๆ และระดับความยากที่หลากหลาย",
-            },
-            {
-                title: "รองรับหลายภาษา",
-                description: "สลับระหว่างภาษาอังกฤษ ไทย จีน เวียดนาม และภาษาอื่นๆ ได้อย่างราบรื่น",
-            },
-            {
-                title: "ผู้ช่วยการอ่านที่ขับเคลื่อนด้วย AI",
-                description: "รับความช่วยเหลือทันทีเกี่ยวกับคำศัพท์ ไวยากรณ์ และความเข้าใจผ่านระบบ AI ของเรา",
-            },
-            {
-                title: "กิจกรรมประโยคเชิงโต้ตอบ",
-                description: "ฝึกโครงสร้างประโยคและไวยากรณ์ผ่านกิจกรรมการจัดลำดับที่น่าสนใจ",
-            },
-            {
-                title: "แบบฝึกหัดจัดลำดับคำ",
-                description: "สร้างความมั่นใจในการสร้างประโยคด้วยกิจกรรมการจัดลำดับคำ",
-            },
-            {
-                title: "ระบบบัตรคำแบบ SRS",
-                description: "เรียนรู้คำศัพท์อย่างมีประสิทธิภาพด้วยระบบทบทวนระยะห่าง",
-            },
+      },
+      {
+        title: "การป้อนข้อมูลที่เข้าใจง่าย",
+        items: [
+          "เสียงพร้อมการไฮไลต์ประโยค",
+          "การแปลทันที",
+          "เนื้อหาแบบมัลติมีเดียที่น่าสนใจ",
         ],
-    },
-    resultsSection: {
-        heading: "ระเบียบวิธีที่อิงหลักฐานเชิงประจักษ์",
-        title: "ระเบียบวิธีที่ได้รับการสนับสนุนจากการวิจัย",
-        description: "Reading Advantage สร้างขึ้นบนงานวิจัยด้านการศึกษาในห้องเรียนหลายทศวรรษที่สนับสนุนการอ่านแบบกว้างเหนือการสอนไวยากรณ์แบบดั้งเดิมสำหรับผลลัพธ์ด้านการอ่าน ผลลัพธ์ด้านประสิทธิภาพเฉพาะจะแตกต่างกันไปตามความสม่ำเสมอในการใช้งานและการใช้งานในห้องเรียนอย่างต่อเนื่อง",
-        stats: [
-            { value: "3000+", label: "บทความที่มีอยู่" },
-            { value: "60+", label: "บทความใหม่ทุกวัน" },
+      },
+      {
+        title: "การเรียนรู้แบบโต้ตอบ",
+        items: ["บัตรคำแบบ SRS", "แบบฝึกหัดจับคู่", "กิจกรรมการจัดลำดับ"],
+      },
+    ],
+  },
+  videoSection: {
+    heading: "ดูการทำงานของ Reading Advantage",
+    expanded: "คลิกเพื่อลดขนาด",
+    collapsed: "คลิกเพื่อขยาย",
+  },
+  platformFeatures: {
+    heading: "คุณสมบัติของแพลตฟอร์ม",
+    features: [
+      {
+        title: "การเลือกบทความที่หลากหลาย",
+        description:
+          "เรียกดูบทความนับพันในหัวข้อต่างๆ และระดับความยากที่หลากหลาย",
+      },
+      {
+        title: "รองรับหลายภาษา",
+        description:
+          "สลับระหว่างภาษาอังกฤษ ไทย จีน เวียดนาม และภาษาอื่นๆ ได้อย่างราบรื่น",
+      },
+      {
+        title: "ผู้ช่วยการอ่านที่ขับเคลื่อนด้วย AI",
+        description:
+          "รับความช่วยเหลือทันทีเกี่ยวกับคำศัพท์ ไวยากรณ์ และความเข้าใจผ่านระบบ AI ของเรา",
+      },
+      {
+        title: "กิจกรรมประโยคเชิงโต้ตอบ",
+        description:
+          "ฝึกโครงสร้างประโยคและไวยากรณ์ผ่านกิจกรรมการจัดลำดับที่น่าสนใจ",
+      },
+      {
+        title: "แบบฝึกหัดจัดลำดับคำ",
+        description: "สร้างความมั่นใจในการสร้างประโยคด้วยกิจกรรมการจัดลำดับคำ",
+      },
+      {
+        title: "ระบบบัตรคำแบบ SRS",
+        description: "เรียนรู้คำศัพท์อย่างมีประสิทธิภาพด้วยระบบทบทวนระยะห่าง",
+      },
+    ],
+  },
+  resultsSection: {
+    heading: "ระเบียบวิธีที่อิงหลักฐานเชิงประจักษ์",
+    title: "ระเบียบวิธีที่ได้รับการสนับสนุนจากการวิจัย",
+    description:
+      "Reading Advantage สร้างขึ้นบนงานวิจัยด้านการศึกษาในห้องเรียนหลายทศวรรษที่สนับสนุนการอ่านแบบกว้างเหนือการสอนไวยากรณ์แบบดั้งเดิมสำหรับผลลัพธ์ด้านการอ่าน ผลลัพธ์ด้านประสิทธิภาพเฉพาะจะแตกต่างกันไปตามความสม่ำเสมอในการใช้งานและการใช้งานในห้องเรียนอย่างต่อเนื่อง",
+    stats: [
+      { value: "3000+", label: "บทความที่มีอยู่" },
+      { value: "60+", label: "บทความใหม่ทุกวัน" },
+      { value: "AI", label: "ผู้ช่วยการอ่าน" },
+    ],
+  },
+  teacherTools: {
+    heading: "เครื่องมือสำหรับครูและผู้ดูแลระบบ",
+    tools: [
+      {
+        title: "การจัดการชั้นเรียน",
+        items: [
+          "ลงทะเบียนนักเรียนและจัดกลุ่มได้ง่าย",
+          "สร้างและติดตามงานที่มอบหมาย",
+          "กิจกรรมในชั้นเรียนที่พิมพ์ได้",
         ],
-    },
-    teacherTools: {
-        heading: "เครื่องมือสำหรับครูและผู้ดูแลระบบ",
-        tools: [
-            {
-                title: "การจัดการชั้นเรียน",
-                items: [
-                    "ลงทะเบียนนักเรียนและจัดกลุ่มได้ง่าย",
-                    "สร้างและติดตามงานที่มอบหมาย",
-                    "กิจกรรมในชั้นเรียนที่พิมพ์ได้",
-                ],
-            },
-            {
-                title: "แดชบอร์ดการวิเคราะห์",
-                items: [
-                    "ตรวจสอบความก้าวหน้าแบบเรียลไทม์",
-                    "รายงานผลการปฏิบัติงานโดยละเอียด",
-                    "ข้อมูลเชิงลึกเกี่ยวกับการมีส่วนร่วมของนักเรียน",
-                ],
-            },
+      },
+      {
+        title: "แดชบอร์ดการวิเคราะห์",
+        items: [
+          "ตรวจสอบความก้าวหน้าแบบเรียลไทม์",
+          "รายงานผลการปฏิบัติงานโดยละเอียด",
+          "ข้อมูลเชิงลึกเกี่ยวกับการมีส่วนร่วมของนักเรียน",
         ],
+      },
+    ],
+  },
+  technicalHighlights: {
+    heading: "ความเป็นเลิศทางเทคนิค",
+    features: [
+      {
+        title: "ขับเคลื่อนด้วย AI",
+        description: "การสร้างและปรับเนื้อหาขั้นสูง",
+      },
+      {
+        title: "รองรับหลายภาษา",
+        description: "รองรับหลายภาษาและการแปล",
+      },
+      {
+        title: "ระบบคลาวด์",
+        description: "ขับเคลื่อนโดย Google Cloud Platform",
+      },
+      {
+        title: "ข้ามแพลตฟอร์ม",
+        description: "เข้าถึงได้บนทุกอุปกรณ์ ทุกที่",
+      },
+    ],
+  },
+  games: {
+    newBadge: "มาใหม่!",
+    heading: "🎮 เกมคำศัพท์ที่น่าสนใจ",
+    description:
+      "ทำให้การเรียนรู้คำศัพท์เป็นเรื่องสนุกด้วยเกมที่น่าตื่นเต้นของเรา!",
+    games: [
+      {
+        title: "Magic Defense",
+        description: "ปกป้องปราสาทของคุณจากคำที่ตกลงมาโดยพิมพ์คำแปลที่ถูกต้อง!",
+        image: "/images/gameplay.png",
+      },
+      {
+        title: "RPG Battle",
+        description: "ต่อสู้กับมอนสเตอร์ PvP",
+        image: "/images/rpg-battle.png",
+      },
+      {
+        title: "Dragon Flight",
+        description:
+          "เลือกประตูที่ถูกต้องเพื่อรวบรวมมังกรให้เพียงพอเพื่อเอาชนะบอส",
+        image: "/images/dragon-flight.png",
+      },
+      {
+        title: "Wizard vs Zombie",
+        description: "รอดชีวิตจากฝูงซอมบี้โดยวิ่งเก็บลูกแก้วเวทมนตร์",
+        image: "/images/wizard-vs-zombie.png",
+      },
+    ],
+  },
+  cta: {
+    heading: "เปลี่ยนแปลงเส้นทางการเรียนรู้ภาษาของคุณ",
+    description:
+      "เริ่มใช้ Reading Advantage วันนี้และสัมผัสพลังของการเรียนรู้ที่ขับเคลื่อนด้วย AI",
+    buttons: {
+      signUp: "สมัครโรงเรียนของคุณ",
+      freeTrial: "เริ่มทดลองใช้ฟรี",
     },
-    technicalHighlights: {
-        heading: "ความเป็นเลิศทางเทคนิค",
-        features: [
-            {
-                title: "ขับเคลื่อนด้วย AI",
-                description: "การสร้างและปรับเนื้อหาขั้นสูง",
-            },
-            {
-                title: "รองรับหลายภาษา",
-                description: "รองรับหลายภาษาและการแปล",
-            },
-            {
-                title: "ระบบคลาวด์",
-                description: "ขับเคลื่อนโดย Google Cloud Platform",
-            },
-            {
-                title: "ข้ามแพลตฟอร์ม",
-                description: "เข้าถึงได้บนทุกอุปกรณ์ ทุกที่",
-            },
-        ],
-    },
-    games: {
-        newBadge: "มาใหม่!",
-        heading: "🎮 เกมคำศัพท์ที่น่าสนใจ",
-        description: "ทำให้การเรียนรู้คำศัพท์เป็นเรื่องสนุกด้วยเกมที่น่าตื่นเต้นของเรา!",
-        games: [
-            {
-                title: "Magic Defense",
-                description: "ปกป้องปราสาทของคุณจากคำที่ตกลงมาโดยพิมพ์คำแปลที่ถูกต้อง!",
-                image: "/images/gameplay.png",
-            },
-            {
-                title: "RPG Battle",
-                description: "ต่อสู้กับมอนสเตอร์ PvP",
-                image: "/images/rpg-battle.png",
-            },
-            {
-                title: "Dragon Flight",
-                description: "เลือกประตูที่ถูกต้องเพื่อรวบรวมมังกรให้เพียงพอเพื่อเอาชนะบอส",
-                image: "/images/dragon-flight.png",
-            },
-            {
-                title: "Wizard vs Zombie",
-                description: "รอดชีวิตจากฝูงซอมบี้โดยวิ่งเก็บลูกแก้วเวทมนตร์",
-                image: "/images/wizard-vs-zombie.png",
-            },
-        ],
-    },
-    cta: {
-        heading: "เปลี่ยนแปลงเส้นทางการเรียนรู้ภาษาของคุณ",
-        description: "เริ่มใช้ Reading Advantage วันนี้และสัมผัสพลังของการเรียนรู้ที่ขับเคลื่อนด้วย AI",
-        buttons: {
-            signUp: "สมัครโรงเรียนของคุณ",
-            freeTrial: "เริ่มทดลองใช้ฟรี",
-        },
-    },
-    adaptiveEngine: {
-        eyebrow: "เครื่องยนต์ปรับตัว",
-        heading: "เส้นทางการอ่านที่ปรับแต่งเฉพาะบุคคลสำหรับนักเรียนทุกคน",
-        description: "ขับเคลื่อนโดย Mastery Advantage — เครื่องยนต์ KST + SRS ที่จัดทำแผนที่ทักษะการอ่านทุกอย่างและกำหนดเวลาฝึกฝนในช่วงเวลาที่เหมาะสมที่สุด",
-        alt: "ภาพจำลองการเรียนรู้แบบปรับตัวของ Reading Advantage",
-    },
-    eyebrows: {
-        platform: "แพลตฟอร์ม",
-        blendedLearning: "การเรียนแบบผสมผสาน",
-        educationalGames: "เกมการศึกษา",
-        results: "ผลลัพธ์",
-        getStarted: "เริ่มต้นใช้งาน",
-    },
-    devices: {
-        desktop: "เดสก์ท็อป",
-        tablet: "แท็บเล็ต",
-        mobile: "มือถือ",
-    },
-    altText: {
-        desktop: "แอป Reading Advantage แสดงบนหน้าจอคอมพิวเตอร์เดสก์ท็อปแสดงแดชบอร์ดนักเรียน",
-        tablet: "แอป Reading Advantage บนอุปกรณ์แท็บเล็ตพร้อมอินเทอร์เฟซแบบฝึกหัดการอ่าน",
-        mobile: "แอป Reading Advantage บนโทรศัพท์มือถือพร้อมอินเทอร์เฟซการเรียนรู้ส่วนบุคคล",
-        blendedLearningTeacher: "ครูสาธิตวิธีการเรียนแบบผสมผสานด้วยสื่อ Reading Advantage",
-        blendedLearningWorkbook: "หนังสือนักเรียน Reading Advantage พร้อมแบบฝึกหัดการอ่านที่มีคำแนะนำ",
-        studentsAtBoard: "นักเรียนใช้แพลตฟอร์ม Reading Advantage",
-    },
+  },
+  adaptiveEngine: {
+    eyebrow: "เครื่องยนต์ปรับตัว",
+    heading: "เส้นทางการอ่านที่ปรับแต่งเฉพาะบุคคลสำหรับนักเรียนทุกคน",
+    description:
+      "ขับเคลื่อนโดย Mastery Advantage — เครื่องยนต์ KST + SRS ที่จัดทำแผนที่ทักษะการอ่านทุกอย่างและกำหนดเวลาฝึกฝนในช่วงเวลาที่เหมาะสมที่สุด",
+    alt: "ภาพจำลองการเรียนรู้แบบปรับตัวของ Reading Advantage",
+  },
+  eyebrows: {
+    platform: "แพลตฟอร์ม",
+    blendedLearning: "การเรียนแบบผสมผสาน",
+    educationalGames: "เกมการศึกษา",
+    results: "ผลลัพธ์",
+    getStarted: "เริ่มต้นใช้งาน",
+  },
+  devices: {
+    desktop: "เดสก์ท็อป",
+    tablet: "แท็บเล็ต",
+    mobile: "มือถือ",
+  },
+  altText: {
+    desktop:
+      "แอป Reading Advantage แสดงบนหน้าจอคอมพิวเตอร์เดสก์ท็อปแสดงแดชบอร์ดนักเรียน",
+    tablet:
+      "แอป Reading Advantage บนอุปกรณ์แท็บเล็ตพร้อมอินเทอร์เฟซแบบฝึกหัดการอ่าน",
+    mobile:
+      "แอป Reading Advantage บนโทรศัพท์มือถือพร้อมอินเทอร์เฟซการเรียนรู้ส่วนบุคคล",
+    blendedLearningTeacher:
+      "ครูสาธิตวิธีการเรียนแบบผสมผสานด้วยสื่อ Reading Advantage",
+    blendedLearningWorkbook:
+      "หนังสือนักเรียน Reading Advantage พร้อมแบบฝึกหัดการอ่านที่มีคำแนะนำ",
+    studentsAtBoard: "นักเรียนใช้แพลตฟอร์ม Reading Advantage",
+  },
 };
 
 export const zh = {
-    hero: {
-        title: "AI 驱动的语言学习",
-        subtitle: "通过先进的 AI 技术体验个性化的广泛阅读",
-        description: "我们的 AI 驱动平台会根据您的学习旅程进行调整，提供个性化内容和互动活动，助力语言学习。Reading Advantage 还提供混合学习模式，包括教师主导的课程和学生练习册。",
+  hero: {
+    title: "AI 驱动的语言学习",
+    subtitle: "通过先进的 AI 技术体验个性化的广泛阅读",
+    description:
+      "我们的 AI 驱动平台会根据您的学习旅程进行调整，提供个性化内容和互动活动，助力语言学习。Reading Advantage 还提供混合学习模式，包括教师主导的课程和学生练习册。",
+  },
+  blendedLearning: {
+    buttonLabel: "混合学习",
+    newBadge: "现已可用",
+    heading: "混合学习",
+    studentWorkbooks: {
+      title: "学生练习册",
+      description: "实践练习材料",
     },
-    blendedLearning: {
-        buttonLabel: "混合学习",
-        newBadge: "现已可用",
-        heading: "混合学习",
-        studentWorkbooks: {
-            title: "学生练习册",
-            description: "实践练习材料",
-        },
-    },
-    keyFeatures: {
-        heading: "主要特点",
-        features: [
-            {
-                title: "丰富的文章库",
-                items: [
-                    "超过 3,000 篇文章",
-                    "每天新增 60 篇",
-                    "适合各个学习水平的内容",
-                ],
-            },
-            {
-                title: "易于理解的输入",
-                items: [
-                    "带句子高亮的音频",
-                    "即时翻译",
-                    "引人入胜的多媒体内容",
-                ],
-            },
-            {
-                title: "互动学习",
-                items: [
-                    "SRS 闪卡",
-                    "配对练习",
-                    "排序活动",
-                ],
-            },
+  },
+  keyFeatures: {
+    heading: "主要特点",
+    features: [
+      {
+        title: "丰富的文章库",
+        items: [
+          "超过 3,000 篇文章",
+          "每天新增 60 篇",
+          "适合各个学习水平的内容",
         ],
+      },
+      {
+        title: "易于理解的输入",
+        items: ["带句子高亮的音频", "即时翻译", "引人入胜的多媒体内容"],
+      },
+      {
+        title: "互动学习",
+        items: ["SRS 闪卡", "配对练习", "排序活动"],
+      },
+    ],
+  },
+  videoSection: {
+    heading: "观看 Reading Advantage 的实际操作",
+    expanded: "点击以最小化",
+    collapsed: "点击以展开",
+  },
+  platformFeatures: {
+    heading: "平台功能",
+    features: [
+      {
+        title: "丰富的文章选择",
+        description: "浏览数千篇涵盖各种主题和难度级别的文章。",
+      },
+      {
+        title: "多语言支持",
+        description: "无缝切换英语、泰语、中文、越南语等多种语言。",
+      },
+      {
+        title: "AI 驱动的阅读助手",
+        description:
+          "通过我们的 AI 聊天系统即时获取词汇、语法和理解方面的帮助。",
+      },
+      {
+        title: "互动句子活动",
+        description: "通过引人入胜的排序活动练习句子结构和语法。",
+      },
+      {
+        title: "词序练习",
+        description: "通过互动式的词序排列活动增强句子构建信心。",
+      },
+      {
+        title: "SRS 闪卡系统",
+        description: "使用间隔重复系统高效掌握词汇。",
+      },
+    ],
+  },
+  resultsSection: {
+    heading: "基于证据的方法",
+    title: "有研究支持的方法论",
+    description:
+      "Reading Advantage 基于数十年的课堂教学研究建立，支持广泛阅读优于传统语法教学。具体的效能提升取决于实施保真度和持续的课堂使用。",
+    stats: [
+      { value: "3000+", label: "可用文章" },
+      { value: "60+", label: "每日新增文章" },
+      { value: "AI", label: "阅读助手" },
+    ],
+  },
+  teacherTools: {
+    heading: "教师和管理员工具",
+    tools: [
+      {
+        title: "课堂管理",
+        items: ["轻松的学生注册和分组", "任务创建和跟踪", "可打印的课堂活动"],
+      },
+      {
+        title: "分析仪表板",
+        items: ["实时进度监控", "详细的绩效报告", "学生参与度指标"],
+      },
+    ],
+  },
+  technicalHighlights: {
+    heading: "技术卓越",
+    features: [
+      {
+        title: "AI 驱动",
+        description: "高级内容生成和适配",
+      },
+      {
+        title: "多语言支持",
+        description: "支持多种语言和翻译",
+      },
+      {
+        title: "基于云",
+        description: "由 Google Cloud Platform 提供支持",
+      },
+      {
+        title: "跨平台",
+        description: "随时随地在任何设备上访问",
+      },
+    ],
+  },
+  games: {
+    newBadge: "全新推出！",
+    heading: "🎮 令人兴奋的词汇游戏",
+    description: "通过我们引人入胜的游戏让学习词汇变得有趣！",
+    games: [
+      {
+        title: "Magic Defense",
+        description: "通过输入正确的翻译来保卫您的城堡免受落下的单词的侵害！",
+        image: "/images/gameplay.png",
+      },
+      {
+        title: "RPG Battle",
+        description: "与怪物 PvP 对战",
+        image: "/images/rpg-battle.png",
+      },
+      {
+        title: "Dragon Flight",
+        description: "选择正确的门，收集足够的龙来击败 BOSS",
+        image: "/images/dragon-flight.png",
+      },
+      {
+        title: "Wizard vs Zombie",
+        description: "通过奔跑收集魔法球来在僵尸潮中生存",
+        image: "/images/wizard-vs-zombie.png",
+      },
+    ],
+  },
+  cta: {
+    heading: "改变您的语言学习之旅",
+    description: "立即使用 Reading Advantage，体验 AI 增强学习的强大功能",
+    buttons: {
+      signUp: "为您的学校注册",
+      freeTrial: "开始免费试用",
     },
-    videoSection: {
-        heading: "观看 Reading Advantage 的实际操作",
-        expanded: "点击以最小化",
-        collapsed: "点击以展开",
-    },
-    platformFeatures: {
-        heading: "平台功能",
-        features: [
-            {
-                title: "丰富的文章选择",
-                description: "浏览数千篇涵盖各种主题和难度级别的文章。",
-            },
-            {
-                title: "多语言支持",
-                description: "无缝切换英语、泰语、中文、越南语等多种语言。",
-            },
-            {
-                title: "AI 驱动的阅读助手",
-                description: "通过我们的 AI 聊天系统即时获取词汇、语法和理解方面的帮助。",
-            },
-            {
-                title: "互动句子活动",
-                description: "通过引人入胜的排序活动练习句子结构和语法。",
-            },
-            {
-                title: "词序练习",
-                description: "通过互动式的词序排列活动增强句子构建信心。",
-            },
-            {
-                title: "SRS 闪卡系统",
-                description: "使用间隔重复系统高效掌握词汇。",
-            },
-        ],
-    },
-    resultsSection: {
-        heading: "基于证据的方法",
-        title: "有研究支持的方法论",
-        description: "Reading Advantage 基于数十年的课堂教学研究建立，支持广泛阅读优于传统语法教学。具体的效能提升取决于实施保真度和持续的课堂使用。",
-        stats: [
-            { value: "3000+", label: "可用文章" },
-            { value: "60+", label: "每日新增文章" },
-        ],
-    },
-    teacherTools: {
-        heading: "教师和管理员工具",
-        tools: [
-            {
-                title: "课堂管理",
-                items: [
-                    "轻松的学生注册和分组",
-                    "任务创建和跟踪",
-                    "可打印的课堂活动",
-                ],
-            },
-            {
-                title: "分析仪表板",
-                items: [
-                    "实时进度监控",
-                    "详细的绩效报告",
-                    "学生参与度指标",
-                ],
-            },
-        ],
-    },
-    technicalHighlights: {
-        heading: "技术卓越",
-        features: [
-            {
-                title: "AI 驱动",
-                description: "高级内容生成和适配",
-            },
-            {
-                title: "多语言支持",
-                description: "支持多种语言和翻译",
-            },
-            {
-                title: "基于云",
-                description: "由 Google Cloud Platform 提供支持",
-            },
-            {
-                title: "跨平台",
-                description: "随时随地在任何设备上访问",
-            },
-        ],
-    },
-    games: {
-        newBadge: "全新推出！",
-        heading: "🎮 令人兴奋的词汇游戏",
-        description: "通过我们引人入胜的游戏让学习词汇变得有趣！",
-        games: [
-            {
-                title: "Magic Defense",
-                description: "通过输入正确的翻译来保卫您的城堡免受落下的单词的侵害！",
-                image: "/images/gameplay.png",
-            },
-            {
-                title: "RPG Battle",
-                description: "与怪物 PvP 对战",
-                image: "/images/rpg-battle.png",
-            },
-            {
-                title: "Dragon Flight",
-                description: "选择正确的门，收集足够的龙来击败 BOSS",
-                image: "/images/dragon-flight.png",
-            },
-            {
-                title: "Wizard vs Zombie",
-                description: "通过奔跑收集魔法球来在僵尸潮中生存",
-                image: "/images/wizard-vs-zombie.png",
-            },
-        ],
-    },
-    cta: {
-        heading: "改变您的语言学习之旅",
-        description: "立即使用 Reading Advantage，体验 AI 增强学习的强大功能",
-        buttons: {
-            signUp: "为您的学校注册",
-            freeTrial: "开始免费试用",
-        },
-    },
-    adaptiveEngine: {
-        eyebrow: "自适应引擎",
-        heading: "为每位学生量身定制的个性化阅读路径",
-        description: "由 Mastery Advantage 驱动 — KST + SRS 引擎映射每项阅读技能并在最佳时刻安排练习。",
-        alt: "Reading Advantage 自适应学习可视化",
-    },
-    eyebrows: {
-        platform: "平台",
-        blendedLearning: "混合学习",
-        educationalGames: "教育游戏",
-        results: "成果",
-        getStarted: "立即开始",
-    },
-    devices: {
-        desktop: "桌面端",
-        tablet: "平板端",
-        mobile: "移动端",
-    },
-    altText: {
-        desktop: "Reading Advantage 应用在桌面电脑屏幕上显示学生仪表板",
-        tablet: "Reading Advantage 应用在平板设备上显示阅读练习界面",
-        mobile: "Reading Advantage 应用在手机上显示个性化学习界面",
-        blendedLearningTeacher: "教师使用 Reading Advantage 教材演示混合学习方法",
-        blendedLearningWorkbook: "Reading Advantage 学生练习册包含引导性阅读练习和活动",
-        studentsAtBoard: "学生使用 Reading Advantage 平台",
-    },
+  },
+  adaptiveEngine: {
+    eyebrow: "自适应引擎",
+    heading: "为每位学生量身定制的个性化阅读路径",
+    description:
+      "由 Mastery Advantage 驱动 — KST + SRS 引擎映射每项阅读技能并在最佳时刻安排练习。",
+    alt: "Reading Advantage 自适应学习可视化",
+  },
+  eyebrows: {
+    platform: "平台",
+    blendedLearning: "混合学习",
+    educationalGames: "教育游戏",
+    results: "成果",
+    getStarted: "立即开始",
+  },
+  devices: {
+    desktop: "桌面端",
+    tablet: "平板端",
+    mobile: "移动端",
+  },
+  altText: {
+    desktop: "Reading Advantage 应用在桌面电脑屏幕上显示学生仪表板",
+    tablet: "Reading Advantage 应用在平板设备上显示阅读练习界面",
+    mobile: "Reading Advantage 应用在手机上显示个性化学习界面",
+    blendedLearningTeacher: "教师使用 Reading Advantage 教材演示混合学习方法",
+    blendedLearningWorkbook:
+      "Reading Advantage 学生练习册包含引导性阅读练习和活动",
+    studentsAtBoard: "学生使用 Reading Advantage 平台",
+  },
 };
