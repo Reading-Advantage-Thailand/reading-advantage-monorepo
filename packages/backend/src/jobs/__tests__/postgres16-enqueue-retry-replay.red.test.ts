@@ -807,13 +807,14 @@ describe.skipIf(!integrationEnabled)(
         const promotedSnapshot = await readJobSnapshot(context, jobId);
         expectPromotedFollowUp(promotedSnapshot, followUp);
         const promotedClaim = claimedJob(
-          await secondPort.claim(
-            claimRequest(
+          await secondPort.claim({
+            ...claimRequest(
               "task9-t5h3-follow-up-worker",
               GLOBAL_TENANT,
               FOLLOW_UP_TIME,
             ),
-          ),
+            queueName: followUp.queueName,
+          }),
         );
         expect(promotedClaim.id).toBe(jobId);
         expect(promotedClaim.payload).toEqual(followUp.payload);

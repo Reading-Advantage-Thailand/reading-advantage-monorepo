@@ -31,3 +31,34 @@ current_head_start: 3d66149bf3d5a0b68f0ac2861ce6392bdb0112c8
 known_failures: active enqueue rejects changed payloads; fail and reclaim transition-first promotion leaves generation 1
 green_batch_handoff: Green receives all four new failures as one batch and reruns the isolated PG16 suites after remediation
 END_MEASURE_AGENT_RESULT
+
+## Preserved complete-enqueue mismatch resolution
+
+current_head_start=c572d0b8713dd09fb3e86761c54467b46ccba142
+fixture_mismatch=first snapshot claim used task9-red after promotion to task9-follow-up-queue
+fixture_correction=claim request now uses followUp.queueName; production source unchanged
+safe_complete_enqueue=exit 0; 1 passed; 23 skipped; no PostgreSQL contact
+safe_combined=exit 0; 10 passed; 32 skipped; no PostgreSQL contact
+live_schema=exit 0; PostgreSQL 16.14; 3/3 passed; scratch databases 0; container removed
+live_role_hardening=exit 0; PostgreSQL 16.14; 1/1 passed; scratch databases 0; durable-job roles 0; container removed
+live_concurrency=exit 0; PostgreSQL 16.14; 14/14 passed; scratch databases 0; test roles 0; container removed
+live_enqueue=exit 0; PostgreSQL 16.14; 24/24 passed; scratch databases 0; container removed
+environment_repair=first role rerun found two stale test-owned roles; verified scratch databases 0, removed only those roles, and reran successfully
+typecheck=passed
+lint=passed
+prettier=passed; plan and exact test/evidence files
+diff_check=passed
+production_red=none; mismatch was a false expected queue in the test
+review_a_handoff=Review A receives the false queue correction and complete PG16 green batch
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+status: complete
+verdict: PASS_WITH_FALSE_FIXTURE_CORRECTION
+track: durable_job_worker_platform_20260713
+phase: Phase 3: PostgreSQL Adapter Implementation
+current_head_start: c572d0b8713dd09fb3e86761c54467b46ccba142
+known_issue: promoted snapshot queue was correct; the test used its default queue for the claim
+production_red: none
+review_a_handoff: Review A receives the corrected queue assertion and complete green schema, concurrency, and enqueue PG16 results
+END_MEASURE_AGENT_RESULT

@@ -89,3 +89,32 @@ Green receives the four failures as one batch. Green must make active enqueue
 accept a complete changed follow-up snapshot and promote retry or redelivery
 pending rows as a new generation. Green must rerun all three isolated PG16
 suites and preserve the heartbeat and audit mutation evidence.
+
+## Preserved complete-enqueue mismatch — 2026-08-16
+
+Green commit `ee5442654` correctly promoted the complete follow-up snapshot to
+`task9-follow-up-queue`. The first snapshot test then called `claimRequest` with
+its default `task9-red` queue. The claim returned empty because queue isolation
+worked as designed.
+
+The accepted T5-H3 contract requires the promoted queue to remain the current
+queue. The fixture proves that the expected claim queue is the follow-up queue,
+not the default queue. The smallest correction sets the claim request queue to
+`followUp.queueName`. No production source changed.
+
+### Final verification from `c572d0b87`
+
+- Safe complete enqueue: 1 passed and 23 skipped.
+- Safe combined schema, role, concurrency, and Task 9 files: 10 passed and 32 skipped.
+- Live schema: 3/3 passed on PostgreSQL 16.14.
+- Live role hardening: 1/1 passed on PostgreSQL 16.14.
+- Live concurrency: 14/14 passed on PostgreSQL 16.14.
+- Live complete enqueue: 24/24 passed on PostgreSQL 16.14.
+- TypeScript, ESLint, Prettier, and `git diff --check` passed.
+- The first role rerun found two stale test-owned roles in the shared test
+  cluster. Scratch databases were already absent. Removing those test-owned
+  roles allowed the role test to pass. Final scratch databases and roles were
+  both zero.
+
+No production Red remains for this preserved mismatch. Review A receives the
+false expected-queue correction and the complete green PG16 batch.
