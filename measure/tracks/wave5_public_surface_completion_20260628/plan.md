@@ -88,6 +88,8 @@
   - Phase 3 regression passes 10/10.
   - Direct and fresh typechecks pass. Production build passes.
   - Targeted lint, Prettier, and scoped diff checks pass.
+  - Review A Red remediation for RA-P4-002, RA-P4-003, and RA-P4-004: `phase-4-mid-red-review-a-remediation-20260816.md`.
+  - Existing Phase 4 assertions remain unchanged. The remediation adds only the three Review A Red contracts.
 
 ## Phase 5: Comparison/Pricing Data and Legal Copy
 

@@ -106,6 +106,14 @@ describe("Wave 5 Phase 4 accessibility, navigation, and contact contracts", () =
     );
     const faqButton = faq.getByRole("button", { name: "Question" });
     expect.soft(faqButton).toHaveAttribute("aria-controls");
+    const collapsedFaqPanel = faq.container.querySelector('[role="region"]');
+    expect
+      .soft(
+        collapsedFaqPanel?.hasAttribute("hidden") === true ||
+          collapsedFaqPanel?.getAttribute("aria-hidden") === "true",
+        "RA-P4-004: collapsed FAQ panels must leave the accessibility tree",
+      )
+      .toBe(true);
     await user.click(faqButton);
     const faqPanel = faq.queryByRole("region");
     expect.soft(faqPanel).toHaveAttribute("aria-labelledby", faqButton.id);
@@ -117,6 +125,15 @@ describe("Wave 5 Phase 4 accessibility, navigation, and contact contracts", () =
       </HorizontalStrip>,
     );
     expect.soft(strip.queryByRole("region")).toHaveAccessibleName();
+    const scrollport = strip.container.querySelector("section > div");
+    expect
+      .soft(
+        scrollport?.getAttribute("tabindex") === "0" &&
+          scrollport.getAttribute("role") === "region" &&
+          scrollport.getAttribute("aria-label") === "Scrollable content",
+        "RA-P4-002: the horizontal scrollport must be keyboard discoverable and directly named",
+      )
+      .toBe(true);
     cleanup();
 
     const pricing = render(<PricingTable />);
@@ -143,6 +160,18 @@ describe("Wave 5 Phase 4 accessibility, navigation, and contact contracts", () =
         markedCells.every(
           (cell) => cell.querySelector("[aria-label], .sr-only") !== null,
         ),
+      )
+      .toBe(true);
+    const semanticMarkLabels = [
+      ...comparison.container.querySelectorAll('[role="img"]'),
+    ].map((mark) => mark.getAttribute("aria-label"));
+    expect
+      .soft(
+        semanticMarkLabels.length > 0 &&
+          semanticMarkLabels.every(
+            (label) => label !== null && !/^[✔✘⚬]$/.test(label),
+          ),
+        "RA-P4-003: comparison marks must use localized semantic labels instead of raw glyphs",
       )
       .toBe(true);
     cleanup();
