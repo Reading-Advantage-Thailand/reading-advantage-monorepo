@@ -76,6 +76,10 @@
       "types": "./dist/sales/index.d.ts",
       "import": "./dist/sales/index.js"
     },
+    "./sales-mastery": {
+      "types": "./dist/sales-mastery.d.ts",
+      "import": "./dist/sales-mastery.js"
+    },
     "./db-contract": {
       "types": "./dist/db-contract.d.ts",
       "import": "./dist/db-contract.js"

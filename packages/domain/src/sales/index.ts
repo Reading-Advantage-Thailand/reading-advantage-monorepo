@@ -10,3 +10,4 @@ export {
   aiClientToEvaluateRoleplay,
   buildEvaluationPrompt,
 } from "./roleplay-evaluator.js";
+export * from "../sales-mastery.js";

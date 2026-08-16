@@ -276,6 +276,9 @@ import {
   workbookPublicationEvents,
   financeRecords,
   financeRecordSuccessAuditOutbox,
+  salesMasteryTenantMappings,
+  salesMasteryProjectionOutbox,
+  salesMasteryProjectionReceipts,
 } from "@reading-advantage/db";
 
 register(xpLogs, "REFERENTIAL");
@@ -389,3 +392,9 @@ register(workbookPublicationEvents, "REFERENTIAL");
 // TenantDB's school-only injection cannot prove the required company scope.
 register(financeRecords, "REFERENTIAL");
 register(financeRecordSuccessAuditOutbox, "REFERENTIAL");
+
+// Sales Mastery mappings and projection receipts are company-scoped by the
+// verified organization tuple, not by a nullable schoolId column.
+register(salesMasteryTenantMappings, "REFERENTIAL");
+register(salesMasteryProjectionOutbox, "REFERENTIAL");
+register(salesMasteryProjectionReceipts, "REFERENTIAL");
