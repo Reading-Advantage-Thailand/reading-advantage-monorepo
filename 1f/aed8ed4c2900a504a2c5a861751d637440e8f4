@@ -1,0 +1,8 @@
+Track: wave5_public_surface_completion_20260628
+Role: Measure Jr Green
+Phase: Phase 3 i18n Completeness and Typed Locale Access
+Plan evidence commit: 6e9b8c283; binding correction: 1faed8ed4.
+Implementation commit: 758c42c42.
+Focused Red: 4/5 passed with one Science failure containing 22 locale-key diagnostics. Corrected focused suite: 5/5 passed with --testTimeout=30000. En, th, and zh parity: 85 message leaves each. Targeted lint, Prettier, and scoped diff checks passed.
+Known failures: fresh non-incremental typecheck and production build report the pre-existing services/page.tsx:56 locale contract. No services source was changed.
+Review A handoff: verify the 21 added message paths, the 22 removed Science diagnostics, and ExactMessages preservation against Red a2c378992 and phase base c312eb719.
