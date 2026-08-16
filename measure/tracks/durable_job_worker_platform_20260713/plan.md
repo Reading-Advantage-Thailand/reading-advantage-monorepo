@@ -185,6 +185,17 @@ packages/backend/tsconfig.test.json` passed.
      `char_length(actor)`, while PostgreSQL returned the valid migration check using
      `char_length(btrim(actor))`. See
      `task-9-review-b-rb-005-mid-red-20260816.md` and its role log.
+    - Review B Green remediation (2026-08-16; finding `DWP-T9-RB-002`; implementation
+      commits `12719652e` and `11dfb8e16`): `0052_durable_jobs` now has a composite
+      sentinel for all six durable tables and four protected append-only trigger
+      configurations. The migration keeps NOLOGIN role hardening, protected owners,
+      revoked PUBLIC privileges, and limited runtime grants. Bounded text checks use
+      raw length and a non-whitespace requirement, so padding cannot bypass limits.
+      Safe schema, role, focused DB, journal, and migration-governance gates passed.
+      The required-migration doctor gate passed on a disposable PG16 database.
+      The full live schema test reached the immutable trigger assertion, then failed
+      because `information_schema.triggers` omits TRUNCATE triggers. The doctor
+      sentinel verified those triggers through `pg_trigger`; the Red test was not edited.
 - [x] Task 10: Add Red worker lifecycle and architecture tests for registration, bounded polling, startup configuration, health, signals, and safe logs. Prove trusted tenant propagation, lifecycle-only port access, and zero direct persistence access. Record named missing-composition failures. (source: `287f89fad4aa49849a307e4973037ee8bd567a6a`)
   - Green evidence (2026-08-14; source commit `287f89fad4aa49849a307e4973037ee8bd567a6a`): independent Green acceptance passed. The focused worker suite passed 17/17, and the full worker suite passed 48/48. Worker typecheck, build, scoped lint, format, diff, graph update, and exact lock-scope checks passed. Shutdown, bounded concurrency, and global and tenant scope propagation passed.
 

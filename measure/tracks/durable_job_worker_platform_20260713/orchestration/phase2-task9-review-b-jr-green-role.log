@@ -1,0 +1,62 @@
+Measure Jr Green role log — Task 9 Review B remediation
+Track: durable_job_worker_platform_20260713
+Phase: Phase 2: Red Concurrency and Failure Tests
+Task: 9
+Role: measure-jr-green
+Date: 2026-08-16
+phase_base_sha: 33d44fc81b84559c2ab7a48acfaf86554bf017a5
+role_base_sha: a4aa125ab
+implementation_commits: 12719652e; 11dfb8e16
+
+## Scope
+
+The implementation changed only `packages/db/src/sentinels.ts` and
+`packages/db/drizzle/0052_durable_jobs.sql` before this evidence commit.
+The committed Red tests remain unchanged.
+
+The sentinel covers six durable tables and four append-only trigger configurations.
+The migration preserves NOLOGIN hardening, ownership, grants, and trigger fencing.
+The bounded text checks reject whitespace-only values and raw lengths above limits.
+
+## Gates
+
+safe_schema_gate=passed:2 skipped:1
+safe_role_gate=passed:1
+safe_focused_db_gate=passed:31 skipped:1
+live_role_gate=passed:1/1
+live_task9_gate=passed:19/19
+live_schema_gate=passed:2/3; immutable information_schema trigger query failed on TRUNCATE omission
+migration_governance=passed:112 skipped:4
+journal_integrity=passed:9/9
+required_migration_doctor=passed
+safe_doctor=exit:2 fail-closed without database URL
+typescript=db/backend-production/backend-test passed
+lint=db passed with 0 errors and 9 existing warnings
+prettier=passed for changed TypeScript and evidence files
+diff_check=passed for leased implementation paths
+measure_doctor=exit:1 unrelated deprecated markers
+
+## Cleanup
+
+cleanup_scratch_databases=0
+cleanup_durable_job_roles=0
+cleanup_container=removed
+
+## Review A/B handoff
+
+Review A remains the prior accepted Task 9 behavior review. Review B finding
+`DWP-T9-RB-002` is repaired. Review B must verify implementation commits
+`12719652e` and `11dfb8e16`, then this evidence commit.
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+status: complete_with_recorded_test_boundary
+track: durable_job_worker_platform_20260713
+phase: Phase 2: Red Concurrency and Failure Tests
+task: 9
+phase_base_sha: 33d44fc81b84559c2ab7a48acfaf86554bf017a5
+role_base_sha: a4aa125ab
+implementation_commits: 12719652e; 11dfb8e16
+evidence_files: task-9-review-b-green-evidence-20260816.md; orchestration/phase2-task9-review-b-jr-green-role.log
+handoff: Review A retained; Review B verifies sentinel parity, migration hardening, and recorded schema-test boundary
+END_MEASURE_AGENT_RESULT
