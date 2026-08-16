@@ -1,0 +1,43 @@
+Measure Jr Green remediation role log — Sales Phase 2 Review A
+Track: sales_mastery_consumer_20260810
+Phase: Phase 2 — company tenant mapping and durable projection
+phase_base_sha: fd581f3dcd15e7b7b632875862aaecb596719621
+implementation_commit: 0559d48890191a068a15d2ae1cce6c4a1d4660ce
+
+## Lease
+
+- Sales migration, schema, snapshot, journal, sentinel, harness, plan, and Green evidence files.
+- Legacy migration split-marker repairs were required for the requested PG16 chain gate.
+- Unrelated worktree changes remained unstaged.
+
+## Remediation
+
+- Renumbered the Sales migration to `0053` after `0052_durable_jobs`.
+- Linked `0053_snapshot.json` to `0052_snapshot.json`.
+- Added an exact composite organization-to-Mastery tenant foreign key.
+- Repaired malformed procedural migration splits in `0013` and `0018`.
+
+## Gate results
+
+- Safe Sales and migration gates passed.
+- Live PostgreSQL 16.14 Sales behavior passed 13/13.
+- Focused domain gates passed 26/26.
+- Sales Knowledge passed 19/19.
+- Runtime manifest passed 18/18.
+- Codecamp runtime proof passed 2/2.
+- Type, lint, format, and diff checks passed.
+
+## Non-candidate failures
+
+- Aggregate domain execution needs database configuration and timed out with unrelated live failures.
+- Unchanged runtime pack and release tests timed out in this environment.
+
+MEASURE_AGENT_RESULT
+role: jr-green
+status: complete-with-known-unrelated-gates
+track: sales_mastery_consumer_20260810
+phase: Phase 2 — company tenant mapping and durable projection
+phase_base_sha: fd581f3dcd15e7b7b632875862aaecb596719621
+implementation_commit: 0559d48890191a068a15d2ae1cce6c4a1d4660ce
+red_findings_closed: migration collision, snapshot parent, legacy split markers, cross-organization outbox binding
+END_MEASURE_AGENT_RESULT
