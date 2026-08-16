@@ -43,14 +43,12 @@
 - Red remediation corrected `/13` for `SW-MOVE-001`, `/claims/13` for `SGD-RESP-001`, and `/claims/10` for `GRF-CART-001`.
 - Follow-up Red remediation corrected `/37` for `SW-CART-001`, `/claims/14` for `SGD-RESULT-001`, and `/claims/8` for `GRF-INPUT-001`.
 - The six corrected pointer groups are applied to the five candidate dossiers. All fifteen decisions remain `blocked`, owner acceptance remains pending, and selected unions remain empty.
-- Dossier correction commit: `a0e27d909`.
-- The focused binding contract uses `/28` for `SW-INPUT-002`, `/19` for `SW-TRANS-002`, `/33` for `SW-ASSET-001`, and `/18` for `SW-COLL-001`. The remaining failure is the unchanged `spellweavers-run.json` pointer `/19`; the archive resolves `/19` to `SW-TRANS-002`.
+- Dossier correction commit: `53f78b719`.
+- The focused binding contract uses `/28` for `SW-INPUT-002`, `/19` for `SW-TRANS-002`, `/33` for `SW-ASSET-001`, and `/18` for `SW-COLL-001`. The remaining failure is the unchanged `spellweavers-run.json` pointer `/26`; the archive resolves `/26` to `SW-RESP-002`, and `/25` is recommended.
 - Manifest validation passed 13/13. Python readiness passed 9/9 with `python3`; `python` is unavailable in this environment. TypeScript, ESLint, Prettier, and the scoped diff check passed.
 - Red-remediation evidence: `phase2-binding-freeze-red-remediation-evidence-20260816.md`.
-- Review A must route the remaining `SW-COLL-001` pointer mismatch to Mid Red. No adoption, ingestion, implementation, cutover, or cartridge Green is claimed.
+- Review A must route the remaining `SW-TRANS-005` pointer mismatch to Mid Red. No adoption, ingestion, implementation, cutover, or cartridge Green is claimed.
 - Final pointer remediation: Mid Red verified `/28` as `SW-INPUT-002`, `/19` as `SW-TRANS-002`, `/33` as `SW-ASSET-001`, and `/18` as `SW-COLL-001`.
-- Final run: the focused contract passed 6/7, with the one failure limited to `spellweavers-run.json` retaining `/19` for `SW-COLL-001`; manifest 13/13, Python readiness 9/9, TypeScript, ESLint, and diff checks passed.
-- Resume at HEAD `466ec180a`: the dossier now binds `SW-ASSET-001` to `/33`; unrelated working-tree changes remain untouched.
-- Resume verification: binding passed 6/7 with only the unchanged `spellweavers-run.json` `/19` mismatch; manifest 13/13, Python readiness 9/9, TypeScript, ESLint, Prettier, and diff checks passed.
-- Resume at HEAD `b4683613d`: the test now binds `SW-COLL-001` to `/18`; unrelated working-tree changes remain untouched.
-- Resume verification: binding passed 6/7 with only the unchanged `spellweavers-run.json` `/19` mismatch; manifest 13/13, Python readiness 9/9, TypeScript, ESLint, Prettier, and diff checks passed.
+- Final run: the focused contract passed 6/7, with the one failure limited to `spellweavers-run.json` retaining `/26` for `SW-TRANS-005`; manifest 13/13, Python readiness 9/9, TypeScript, ESLint, and diff checks passed.
+- Resume at HEAD `febc51645`: the dossier now binds `SW-COLL-001` to `/18`; unrelated working-tree changes remain untouched.
+- Resume verification: binding passed 6/7 with only the unchanged `spellweavers-run.json` `/26` mismatch; manifest 13/13, Python readiness 9/9, TypeScript, ESLint, Prettier, and diff checks passed.
