@@ -116,10 +116,14 @@
       - Persistent mobile overflow Red at `c7d0880e9`: `phase-4-browser-regressions-mobile-overflow-red-20260816.md`.
       - The strengthened test renders BlogTags and BlogCard, detects containment hazards, and catches the observed 490px counterexample.
       - UX-P4-003 Contact Form remains successor-owned by `www_crm_lead_intake_20260722`.
-      - Persistent mobile overflow Green implementation commit: `726de6064`.
-      - The real BlogCard contract and 490px counterexample pass 2/2.
-      - BlogCard tag groups now wrap and use min-width, max-width, and overflow-safe containment.
-      - All Phase 4/browser tests pass 13/13. Phase 3, typecheck, build, lint, Prettier, and scoped diff checks pass.
+       - Persistent mobile overflow Green implementation commit: `726de6064`.
+       - The real BlogCard contract and 490px counterexample pass 2/2.
+       - BlogCard tag groups now wrap and use min-width, max-width, and overflow-safe containment.
+       - All Phase 4/browser tests pass 13/13. Phase 3, typecheck, build, lint, Prettier, and scoped diff checks pass.
+       - RC-P4-001 contact authority Red at `c572d0b87`: `phase-4-contact-authority-red-20260816.md`.
+       - The contract covers ContactPage, Footer, ContactForm, and raw contact locale authority fields.
+       - Locale labels and descriptions remain outside the duplicate-value authority check.
+       - UX-P4-003 Contact Form remains successor-owned by `www_crm_lead_intake_20260722`.
 
 ## Phase 5: Comparison/Pricing Data and Legal Copy
 
