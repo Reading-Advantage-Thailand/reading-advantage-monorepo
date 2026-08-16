@@ -49,13 +49,11 @@
 
 ## Phase 3: i18n Completeness and Typed Locale Access
 
-- [x] Task: Write Red tests for hardcoded strings, missing zh fallback, and unsafe locale key casts. Source SHA evidence: `86f0611cf418632d5767a588d8fe15a4272973b1`.
-  - Source SHA evidence: `1ac4e1b3ed80db90f7797bf68aefce04ad6b2768`.
+- [x] Task: Write Red tests for hardcoded strings, missing zh fallback, and unsafe locale key casts. Source SHA evidence: `86f0611cf418632d5767a588d8fe15a4272973b1`, `a2c378992`.
   - Evidence refs: www T8 (LRF-021/022/023/024/016), T15 (LRF-027).
   - The historical Red test failed 3/3 for reviewed CTA/accessibility copy, locale casts, and Thai typo forms.
   - Mid Red remediation adds non-vacuous CTA interpolation, Sheet screen-reader, locale-parity, and Science caller type contracts.
 - [x] Task: Externalize strings, add zh fallback, fix Thai typos, replace `as never` with typed accessors. Source SHA evidence: `ee2d7c238db07f2b77646a79a9ce0bc3b5c35916`, `1ac4e1b3ed80db90f7797bf68aefce04ad6b2768`, `758c42c42`, `c24ec2104`.
-  - Source SHA evidence: `1ac4e1b3ed80db90f7797bf68aefce04ad6b2768`.
   - Group B typed locale access is accepted in source commit `ee2d7c238db07f2b77646a79a9ce0bc3b5c35916`.
   - The content-bound five-path aggregate is `e4bf355b8b416a8ad014d37cda790e7c193b7a45866fdb3108c0f9786a0c461f`.
   - Final Review A and Security Review B both returned ACCEPT for Group B.
@@ -63,16 +61,15 @@
    - The historical source commits add typed CTA and Sheet messages and correct the reviewed Thai typo forms.
     - The Science locale contract is corrected in `758c42c42`. All existing Science callers now resolve against en, th, and zh dictionaries.
     - The correction adds only missing caller messages. It preserves existing translations and keeps `ExactMessages` unchanged.
-- [x] Task: Run www targeted tests. Source SHA evidence: `758c42c42`, `c24ec2104`.
-  - Source SHA evidence: `1ac4e1b3ed80db90f7797bf68aefce04ad6b2768`.
+- [x] Task: Run www targeted tests. Source SHA evidence: `758c42c42`, `c24ec2104`, `04bae4e3a`.
   - Historical Group B and Phase 2 evidence remains separate from this remediation.
-   - The immutable Red rerun at `a2c378992` remains 4/5, with one Science failure and 22 locale-key diagnostics.
-   - The corrected focused suite passes 5/5 with `--testTimeout=30000` for the TypeScript program assertion.
-   - The services caller correction is in `c24ec2104`. It preserves four rows with feature counts 6/6/6/4.
-   - Direct standard and fresh non-incremental www typechecks pass.
-   - Production `next build` passes.
-   - Targeted lint, Prettier, and scoped diff checks pass for the implementation files.
-   - Phase 3 Review A must review `758c42c42` and `c24ec2104` before overall phase acceptance.
+   - Historical Red scope: `86f0611cf418632d5767a588d8fe15a4272973b1` and committed Red `a2c378992`; it had one Science failure with 22 diagnostics.
+   - Historical Green scope: `1ac4e1b3ed80db90f7797bf68aefce04ad6b2768`, `758c42c42`, and `c24ec2104`; `04bae4e3a` is formatting-only.
+   - Current Phase 3 suite passes 10/10 with the immutable Red test and Group B service contract.
+   - Current standard and fresh non-incremental typechecks pass.
+   - Current production `next build` passes.
+   - Current targeted lint, full Phase 3 Prettier, and scoped diff checks pass.
+   - Review A must rerun against `04bae4e3a` for RA-P3-003 before overall phase acceptance.
 
 ## Phase 4: Accessibility, Navigation, and Contact
 

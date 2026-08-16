@@ -65,6 +65,8 @@ Confirm all 21 missing Science message paths exist in en, th, and zh dictionarie
 Confirm the 22 caller diagnostics are absent without changing `ExactMessages` or adding casts.
 Keep the services locale error outside this remediation scope.
 
+## Historical Mid-Red Result
+
 MEASURE_AGENT_RESULT
 role: jr-green
 status: complete
@@ -80,7 +82,7 @@ failures: production build and fresh non-incremental typecheck remain blocked by
 review_a_handoff: Review implementation commit 758c42c42 against immutable Red a2c378992 and phase base c312eb71942715a0d12b2df037ac9527323b31c7; verify en/th/zh parity and ExactMessages preservation
 END_MEASURE_AGENT_RESULT
 
-## Resumed Services Remediation
+## Historical Services Remediation (before RA-P3-003)
 
 - Resume base SHA: `1faed8ed4`
 - Implementation commit: `c24ec2104`
@@ -124,4 +126,48 @@ counts: 4 service rows; feature counts 6/6/6/4; 2 focused test files; 10/10 test
 files: apps/www-reading-advantage/src/app/[locale]/(marketing)/services/page.tsx; measure/tracks/wave5_public_surface_completion_20260628/plan.md; measure/tracks/wave5_public_surface_completion_20260628/phase-3-science-contract-jr-green-role-log.md
 failures: none in the resumed Phase 3 gates; unrelated dirty files were preserved
 review_a_handoff: Review c24ec2104 against resume base 1faed8ed4 and Red a2c378992; verify exact service rows, 6/6/6/4 feature counts, and ExactMessages preservation
+END_MEASURE_AGENT_RESULT
+
+## Current RA-P3-003 Result
+
+- Finding: Full Phase 3 Prettier identified `locales/pages/services.ts` and `locales/pages/managed-service.ts`.
+- Formatting commit: `04bae4e3a`.
+- Translation values and locale structure remain unchanged.
+- The plan now records historical Red and Green scope without nested SHA claims.
+
+## Current Gates
+
+| Check                           | Result       |
+| ------------------------------- | ------------ |
+| Focused Phase 3 tests           | 10/10 passed |
+| Direct www typecheck            | Passed       |
+| Fresh non-incremental typecheck | Passed       |
+| Production build                | Passed       |
+| Targeted lint                   | Passed       |
+| Full Phase 3 Prettier           | Passed       |
+| Scoped diff check               | Passed       |
+
+Current gates appear once in this section.
+Historical failures remain labeled in the earlier role receipts.
+
+## Review A Rerun Handoff
+
+Rerun Review A against `04bae4e3a`, `432ee1a74`, and the committed Red `a2c378992`.
+Confirm both locale files changed only through behavior-neutral formatting.
+Confirm historical Red and Green commit scopes remain exact.
+Confirm the current gate summary has no stale nested SHA claims or contradictions.
+
+MEASURE_AGENT_RESULT
+role: jr-green
+status: complete
+track: wave5_public_surface_completion_20260628
+phase: Phase 3: i18n Completeness and Typed Locale Access
+phase_base_sha: c312eb71942715a0d12b2df037ac9527323b31c7
+resume_base_sha: 432ee1a74
+commits: 04bae4e3a formatting; pending evidence commit
+commands: focused Phase 3 10/10; direct typecheck passed; fresh typecheck passed; production build passed; targeted lint passed; full Phase 3 Prettier passed; scoped diff passed
+counts: 2 locale files formatted; 2 focused test files; 10/10 tests passed; zero translation changes
+files: apps/www-reading-advantage/src/locales/pages/services.ts; apps/www-reading-advantage/src/locales/pages/managed-service.ts; measure/tracks/wave5_public_surface_completion_20260628/plan.md; measure/tracks/wave5_public_surface_completion_20260628/phase-3-science-contract-jr-green-role-log.md
+failures: none in current Phase 3 gates; unrelated dirty files were preserved
+review_a_handoff: Rerun Review A against 04bae4e3a and 432ee1a74; verify behavior-neutral formatting, exact historical Red/Green scope, and the single current gate summary
 END_MEASURE_AGENT_RESULT
