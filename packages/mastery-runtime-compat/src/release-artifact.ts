@@ -1,5 +1,6 @@
 import { execFile } from "node:child_process";
 import { createHash, randomUUID } from "node:crypto";
+import { constants as fsConstants } from "node:fs";
 import {
   cp,
   lstat,
@@ -130,6 +131,7 @@ interface WorkspaceLease {
 interface WorkspaceLeaseCapability {
   parentHandle: FileHandle;
   operationLeasePath: string;
+  leaseHandle?: FileHandle;
 }
 
 interface ReleaseInputSnapshot {
@@ -769,10 +771,8 @@ async function validateProductionWorkspaceLeasePath(
   );
 }
 
-/** Opens the retained parent capability used by one isolated lease acquisition. */
-async function createWorkspaceLeaseCapability(
-  runtime: WorkspaceLeaseRuntimeContext,
-): Promise<WorkspaceLeaseCapability> {
+/** Builds a descriptor-relative path for one retained file capability. */
+function descriptorRelativePath(handle: FileHandle, child: string): string {
   const descriptorRoot =
     process.platform === "linux"
       ? "/proc/self/fd"
@@ -784,6 +784,13 @@ async function createWorkspaceLeaseCapability(
       "workspace lease capability is unsupported on this platform",
     );
   }
+  return resolve(descriptorRoot, String(handle.fd), child);
+}
+
+/** Opens the retained parent capability used by one isolated lease acquisition. */
+async function createWorkspaceLeaseCapability(
+  runtime: WorkspaceLeaseRuntimeContext,
+): Promise<WorkspaceLeaseCapability> {
   const parentHandle = await open(runtime.parentPath, "r");
   try {
     const [openedParentStat, openedParentRealPath] = await Promise.all([
@@ -800,14 +807,42 @@ async function createWorkspaceLeaseCapability(
     }
     return {
       parentHandle,
-      operationLeasePath: resolve(
-        descriptorRoot,
-        String(parentHandle.fd),
+      operationLeasePath: descriptorRelativePath(
+        parentHandle,
         basename(runtime.leasePath),
       ),
     };
   } catch (error) {
     await parentHandle.close().catch(() => undefined);
+    throw error;
+  }
+}
+
+/** Opens and verifies the lease directory without following a swapped symlink. */
+async function openWorkspaceLeaseDirectory(
+  capability: WorkspaceLeaseCapability,
+): Promise<FileHandle> {
+  const leaseHandle = await open(
+    capability.operationLeasePath,
+    fsConstants.O_RDONLY | fsConstants.O_DIRECTORY | fsConstants.O_NOFOLLOW,
+  );
+  try {
+    const [leaseEntry, leaseStat] = await Promise.all([
+      lstat(capability.operationLeasePath),
+      leaseHandle.stat(),
+    ]);
+    if (
+      leaseEntry.isSymbolicLink() ||
+      !leaseEntry.isDirectory() ||
+      !leaseStat.isDirectory() ||
+      leaseEntry.dev !== leaseStat.dev ||
+      leaseEntry.ino !== leaseStat.ino
+    ) {
+      throw new Error("workspace lease directory changed before owner write");
+    }
+    return leaseHandle;
+  } catch (error) {
+    await leaseHandle.close().catch(() => undefined);
     throw error;
   }
 }
@@ -844,13 +879,20 @@ async function assertWorkspaceLeaseAfterAcquire(
   capability: WorkspaceLeaseCapability,
 ): Promise<void> {
   await assertWorkspaceLeaseParent(runtime, capability);
-  const leaseEntry = await lstat(capability.operationLeasePath);
-  if (leaseEntry.isSymbolicLink() || !leaseEntry.isDirectory()) {
-    throw new Error("acquired workspace lease is not a regular directory");
+  const leaseHandle = capability.leaseHandle;
+  if (leaseHandle == null) {
+    throw new Error("workspace lease directory capability is missing");
   }
-  const leaseStat = await stat(capability.operationLeasePath);
-  if (leaseStat.dev !== runtime.parentDev) {
-    throw new Error("acquired workspace lease changed device");
+  const leaseStat = await leaseHandle.stat();
+  const leaseEntry = await lstat(capability.operationLeasePath);
+  if (
+    leaseEntry.isSymbolicLink() ||
+    !leaseEntry.isDirectory() ||
+    !leaseStat.isDirectory() ||
+    leaseEntry.dev !== leaseStat.dev ||
+    leaseEntry.ino !== leaseStat.ino
+  ) {
+    throw new Error("acquired workspace lease changed before owner write");
   }
 }
 
@@ -1056,26 +1098,40 @@ async function acquireWorkspaceLease(
       await assertWorkspaceLeaseParent(runtime, capability);
       try {
         await mkdir(leasePath);
+        const leaseHandle = await openWorkspaceLeaseDirectory(capability);
+        capability.leaseHandle = leaseHandle;
         await assertWorkspaceLeaseAfterAcquire(runtime, capability);
-        const ownerTempPath = resolve(leasePath, `.owner-${token}.tmp`);
-        await assertWorkspaceLeaseParent(runtime, capability);
-        await writeFile(
-          ownerTempPath,
-          `${JSON.stringify({
-            pid: process.pid,
-            token,
-            acquiredAt: now(),
-            processStartIdentity:
-              (await readProcessStartIdentity(process.pid)) ?? undefined,
-          })}\n`,
-          { flag: "wx", mode: 0o600 },
+        const ownerTempPath = descriptorRelativePath(
+          leaseHandle,
+          `.owner-${token}.tmp`,
         );
+        const ownerPath = descriptorRelativePath(leaseHandle, "owner.json");
         await assertWorkspaceLeaseParent(runtime, capability);
-        await rename(ownerTempPath, resolve(leasePath, "owner.json"));
+        try {
+          await writeFile(
+            ownerTempPath,
+            `${JSON.stringify({
+              pid: process.pid,
+              token,
+              acquiredAt: now(),
+              processStartIdentity:
+                (await readProcessStartIdentity(process.pid)) ?? undefined,
+            })}\n`,
+            { flag: "wx", mode: 0o600 },
+          );
+        } catch (error) {
+          await assertWorkspaceLeaseAfterAcquire(runtime, capability);
+          throw error;
+        }
+        await assertWorkspaceLeaseAfterAcquire(runtime, capability);
+        await rename(ownerTempPath, ownerPath);
         await assertWorkspaceLeaseAfterAcquire(runtime, capability);
         retainCapability = true;
         return { path: publicLeasePath, token, capability, runtime };
       } catch (error) {
+        const leaseHandle = capability.leaseHandle;
+        capability.leaseHandle = undefined;
+        await leaseHandle?.close().catch(() => undefined);
         if ((error as NodeJS.ErrnoException).code !== "EEXIST") throw error;
         await assertWorkspaceLeaseParent(runtime, capability);
         await reclaimStaleWorkspaceLease(leasePath, now);
@@ -1119,7 +1175,11 @@ async function releaseWorkspaceLease(lease: WorkspaceLease): Promise<boolean> {
     released = true;
     return released;
   } finally {
-    if (released) await capability.parentHandle.close().catch(() => undefined);
+    if (released) {
+      await capability.leaseHandle?.close().catch(() => undefined);
+      capability.leaseHandle = undefined;
+      await capability.parentHandle.close().catch(() => undefined);
+    }
   }
 }
 
@@ -1166,6 +1226,8 @@ export async function createWorkspaceLeaseRuntimeForTest(
         await assertWorkspaceLeaseParent(runtime, capability);
       } catch {
         activeCapabilities.delete(capability);
+        await capability.leaseHandle?.close().catch(() => undefined);
+        capability.leaseHandle = undefined;
         await capability.parentHandle.close().catch(() => undefined);
         return;
       }
@@ -1347,6 +1409,14 @@ interface StagedPackage {
   directory: string;
   packageRoot: string;
   manifest: PackageJson;
+}
+
+interface PackedArtifact {
+  name: string;
+  archivePath: string;
+  archiveBytes: Buffer;
+  archiveSha256: string;
+  workspaceDependencies: string[];
 }
 
 interface ExternalPackageSource {
@@ -1711,6 +1781,32 @@ function sha256(bytes: Uint8Array): string {
   return createHash("sha256").update(bytes).digest("hex");
 }
 
+/** Rejects archive bytes that differ from the bytes bound when npm pack completed. */
+async function assertPackedArchivesUnchanged(
+  artifacts: ReadonlyArray<PackedArtifact>,
+): Promise<void> {
+  await Promise.all(
+    artifacts.map(async (artifact) => {
+      try {
+        const currentBytes = await readRegularFileBytes(
+          artifact.archivePath,
+          `Release archive ${artifact.name}`,
+        );
+        if (
+          !currentBytes.equals(artifact.archiveBytes) ||
+          sha256(currentBytes) !== artifact.archiveSha256
+        ) {
+          throw new Error("archive bytes differ");
+        }
+      } catch {
+        throw new Error(
+          `RELEASE_ARCHIVE_MUTATION_CONFLICT release archive ${artifact.name} changed before consumption`,
+        );
+      }
+    }),
+  );
+}
+
 /** Calculates a deterministic digest over named immutable release inputs. */
 function digestReleaseInputs(
   inputs: ReadonlyArray<{ name: string; bytes: Uint8Array }>,
@@ -1986,7 +2082,7 @@ async function inspectPackedArtifact(
 
 async function runCleanConsumer(
   temporaryRoot: string,
-  archives: ReadonlyMap<string, string>,
+  archives: ReadonlyMap<string, PackedArtifact>,
   gateDependency: GateDependencyIdentity,
   runtimeDistSnapshotRoot: string,
   runtimeManifestSnapshotPath: string,
@@ -2018,7 +2114,10 @@ async function runCleanConsumer(
     dependencies?: Record<string, string>;
   };
   const localArtifacts = Object.fromEntries(
-    [...archives.entries()].map(([name, archive]) => [name, `file:${archive}`]),
+    [...archives.entries()].map(([name, archive]) => [
+      name,
+      `file:${archive.archivePath}`,
+    ]),
   );
   manifest.dependencies = localArtifacts;
   await writeFile(
@@ -2090,6 +2189,7 @@ async function runCleanConsumer(
     }),
   );
 
+  await assertPackedArchivesUnchanged([...archives.values()]);
   await executeLocal(
     "npm",
     [
@@ -2303,9 +2403,15 @@ export async function runReleaseArtifactCheck(
         if (localPackageVersions.has(manifest.name)) {
           assertExportTargets(packed.manifest, packed.paths);
         }
+        const archiveBytes = await readRegularFileBytes(
+          archivePath,
+          `Release archive ${manifest.name}`,
+        );
         return {
           name: manifest.name,
           archivePath,
+          archiveBytes,
+          archiveSha256: sha256(archiveBytes),
           workspaceDependencies: assertPackedDependencyVersions(
             packed.manifest,
             allPackedVersions,
@@ -2314,7 +2420,7 @@ export async function runReleaseArtifactCheck(
       }),
     );
     const archives = new Map(
-      packedArtifacts.map(({ name, archivePath }) => [name, archivePath]),
+      packedArtifacts.map((artifact) => [artifact.name, artifact] as const),
     );
     const workspaceDependencies = packedArtifacts.flatMap(
       ({ workspaceDependencies: references }) => references,
@@ -2343,22 +2449,9 @@ export async function runReleaseArtifactCheck(
       packageMetadata.map(({ manifest }) => manifest.name),
     );
     const archiveDigestsSha256 = Object.fromEntries(
-      await Promise.all(
-        packedArtifacts
-          .filter(({ name }) => releasePackageNames.has(name))
-          .map(
-            async ({ name, archivePath }) =>
-              [
-                name,
-                sha256(
-                  await readRegularFileBytes(
-                    archivePath,
-                    `Release archive ${name}`,
-                  ),
-                ),
-              ] as const,
-          ),
-      ),
+      packedArtifacts
+        .filter(({ name }) => releasePackageNames.has(name))
+        .map(({ name, archiveSha256 }) => [name, archiveSha256] as const),
     );
     return {
       packages: packageMetadata.map(({ manifest }) => manifest.name),
