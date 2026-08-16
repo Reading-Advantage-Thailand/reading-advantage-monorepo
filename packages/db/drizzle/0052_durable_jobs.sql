@@ -52,7 +52,7 @@ CREATE TABLE "durable_jobs" (
 	CONSTRAINT "durable_jobs_generation_check" CHECK ("generation" >= 1),
 	CONSTRAINT "durable_jobs_hash_format_check" CHECK (("payload_fingerprint" ~ '^[0-9a-f]{64}$' AND ("lease_token_hash" IS NULL OR "lease_token_hash" ~ '^[0-9a-f]{64}$') AND ("rerun_payload_fingerprint" IS NULL OR "rerun_payload_fingerprint" ~ '^[0-9a-f]{64}$'))),
 	CONSTRAINT "durable_jobs_idempotency_key_check" CHECK (char_length(btrim("idempotency_key")) BETWEEN 1 AND 500),
-	CONSTRAINT "durable_jobs_job_name_check" CHECK ("job_name" ~ '^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)+$'),
+	CONSTRAINT "durable_jobs_job_name_check" CHECK (char_length("job_name") BETWEEN 3 AND 160 AND char_length(btrim("job_name")) BETWEEN 3 AND 160 AND "job_name" = btrim("job_name") AND "job_name" ~ '^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)+$'),
 	CONSTRAINT "durable_jobs_queue_name_check" CHECK ("queue_name" ~ '^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$'),
 	CONSTRAINT "durable_jobs_worker_id_check" CHECK (("lease_owner" IS NULL OR char_length(btrim("lease_owner")) BETWEEN 1 AND 200)),
 	CONSTRAINT "durable_jobs_lease_tuple_check" CHECK ((("lease_token_hash" IS NULL AND "lease_owner" IS NULL AND "lease_expires_at" IS NULL) OR ("lease_token_hash" IS NOT NULL AND "lease_owner" IS NOT NULL AND "lease_expires_at" IS NOT NULL))),
