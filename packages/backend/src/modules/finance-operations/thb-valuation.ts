@@ -264,8 +264,8 @@ function conversionEvidenceStatus(
     return "conflict";
   }
   if (bill.sourceCurrency === "THB") {
-    return decimalParts(evidence.conversionRateDecimal).coefficient === 1n &&
-      decimalParts(evidence.conversionRateDecimal).scale === 0 &&
+    const rate = decimalParts(evidence.conversionRateDecimal);
+    return rate.coefficient === 10n ** BigInt(rate.scale) &&
       evidence.thbAmountDecimal === bill.sourceAmountDecimal
       ? "valid"
       : "conflict";
