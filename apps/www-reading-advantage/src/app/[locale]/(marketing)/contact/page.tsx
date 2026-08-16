@@ -55,7 +55,7 @@ export default async function ContactPage() {
           </div>
         }
         ctaButton={{
-          text: t("email.address"),
+          text: contactDetails.supportEmail,
           href: `mailto:${contactDetails.supportEmail}`,
           variant: "primary",
         }}
@@ -88,7 +88,7 @@ export default async function ContactPage() {
               <p className="text-slate-600 mb-6">{t("email.description")}</p>
               <Button asChild>
                 <a href={`mailto:${contactDetails.supportEmail}`}>
-                  {t("email.address")}
+                  {contactDetails.supportEmail}
                   <ArrowRight className="w-4 h-4" />
                 </a>
               </Button>
@@ -109,7 +109,7 @@ export default async function ContactPage() {
                 asChild
               >
                 <a href={contactDetails.phoneHref}>
-                  {t("phone.number")}
+                  {contactDetails.phoneNumber}
                   <ArrowRight className="w-4 h-4" />
                 </a>
               </Button>
@@ -191,7 +191,7 @@ export default async function ContactPage() {
                   rel="noopener noreferrer"
                 >
                   <Smartphone className="w-5 h-5" />
-                  {t("social.tiktok")}
+                  {t("social.tiktok")} {contactDetails.tiktokLabel}
                   <ArrowRight className="w-4 h-4" />
                 </a>
               </Button>
