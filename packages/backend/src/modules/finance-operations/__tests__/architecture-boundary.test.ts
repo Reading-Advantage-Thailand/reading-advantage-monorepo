@@ -267,7 +267,46 @@ function collectBoundaryViolations(
     }
   };
 
+  const isGlobalThisRequireAccess = (node: ts.Node): boolean => {
+    if (ts.isPropertyAccessExpression(node)) {
+      return (
+        node.expression.getText(sourceFile) === "globalThis" &&
+        node.name.text === "require"
+      );
+    }
+    if (ts.isElementAccessExpression(node)) {
+      return (
+        node.expression.getText(sourceFile) === "globalThis" &&
+        ts.isStringLiteralLike(node.argumentExpression) &&
+        node.argumentExpression.text === "require"
+      );
+    }
+    return false;
+  };
+
+  const isReflectRequireAccess = (node: ts.CallExpression): boolean => {
+    if (
+      !ts.isPropertyAccessExpression(node.expression) ||
+      node.expression.expression.getText(sourceFile) !== "Reflect" ||
+      node.expression.name.text !== "get" ||
+      node.arguments.length !== 2
+    ) {
+      return false;
+    }
+    const [target, property] = node.arguments;
+    return (
+      target?.getText(sourceFile) === "globalThis" &&
+      property !== undefined &&
+      ts.isStringLiteralLike(property) &&
+      property.text === "require"
+    );
+  };
+
   const visit = (node: ts.Node): void => {
+    if (ts.isImportEqualsDeclaration(node)) {
+      violations.push("forbidden ImportEqualsDeclaration");
+    }
+
     if (ts.isImportDeclaration(node)) {
       inspectModuleSpecifier(node.moduleSpecifier);
       inspectExternalImportBindings(node);
@@ -286,7 +325,16 @@ function collectBoundaryViolations(
       inspectModuleSpecifier(node.moduleReference.expression);
     }
 
+    if (isGlobalThisRequireAccess(node)) {
+      violations.push("forbidden runtime loader property: globalThis.require");
+    }
+
     if (ts.isCallExpression(node)) {
+      if (isReflectRequireAccess(node)) {
+        violations.push(
+          "forbidden runtime loader property access through Reflect",
+        );
+      }
       if (node.expression.kind === ts.SyntaxKind.ImportKeyword) {
         violations.push(
           "forbidden dynamic import in the Finance Operations boundary",

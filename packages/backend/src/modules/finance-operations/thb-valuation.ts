@@ -66,7 +66,7 @@ const attestorResultSchema = z.discriminatedUnion("decision", [
   }),
 ]);
 
-const requestSchema = z.object({
+const requestSchema = z.strictObject({
   bill: z.strictObject({
     billId: opaqueIdentifierSchema,
     sourceAmountDecimal: decimalSchema,
@@ -74,6 +74,10 @@ const requestSchema = z.object({
   }),
   approvalReceipt: z.unknown(),
   expectedScope: financeThbPolicyApprovalScopeSchema,
+  thbAmountDecimal: decimalSchema.optional(),
+  conversionRateDecimal: decimalSchema.optional(),
+  rateEffectiveDate: opaqueIdentifierSchema.optional(),
+  rateSourceId: opaqueIdentifierSchema.optional(),
 });
 
 /** Accepted Company Identity boundary for Finance THB policy approval. */
