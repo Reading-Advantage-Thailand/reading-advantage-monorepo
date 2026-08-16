@@ -194,17 +194,20 @@
   or migrations, and it did not capture `phase2_base_sha`; the capture point is
   defined in `test-strategy-phase2.md` section 12. This does not claim Phase 0
   closeout or Phase 2 admission.
-- [b] Task: After Phase 2 Red acceptance,
+- [x] Task: After Phase 2 Red acceptance,
   migrate the fail-closed Company Identity organization-to-Mastery tenant
   mapping. Migration identifiers must remain serial and reviewable.
-  deferred:phase2-red-acceptance
-- [~] Task: Write Red authorization, cross-organization, replay, conflict,
-  retry, concurrency, and append-only outbox tests after Phase 0 acceptance.
-  Phase 2 Red is active in this change.
-- [b] Task: Implement the tenant mapping and durable idempotent projection port
+  Implemented in `62bbb86a7` with the serial journal entry, snapshot, and
+  append-only mapping and projection tables.
+- [x] Task: Write Red authorization, cross-organization, replay, conflict,
+   retry, concurrency, and append-only outbox tests after Phase 0 acceptance.
+   Phase 2 Red is Green against the implementation in `62bbb86a7`; the Red
+   tests remain unchanged.
+- [x] Task: Implement the tenant mapping and durable idempotent projection port
   behind existing Mastery/activity adapters only after Phase 2 Red acceptance.
   Do not reuse Codecamp's fixed namespace.
-  deferred:phase2-red-acceptance
+  Implemented in `62bbb86a7`; final evidence is recorded in the Jr Green role
+  log.
 
 ## Phase 3 — project Sales evidence into KST/SRS
 

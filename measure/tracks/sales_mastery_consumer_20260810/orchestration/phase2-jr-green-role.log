@@ -1,0 +1,68 @@
+Measure Jr Green role log — Phase 2 tenant mapping and durable projection
+Track: sales_mastery_consumer_20260810
+Phase: Phase 2 — company tenant mapping and durable projection
+Date: 2026-08-16
+Role: measure-jr-green
+phase_base_sha: fd581f3dcd15e7b7b632875862aaecb596719621
+role_base_sha: ee27a0213c03d8a8396cb84805ef64377e9b2f09
+
+## Implementation
+
+Implementation commit: `62bbb86a75f545d068bf64b5453753a070debee2`.
+
+The implementation adds a strict Sales projection boundary in
+`packages/domain/src/sales-mastery.ts`. It validates active Sales Company
+Identity claims, binds the learner to `sales:<sub>`, and rejects caller tenant
+fields, wrong audiences, cross-organization access, graph drift, and binding
+drift.
+
+The database change adds the mapping, outbox, and receipt tables. The mapping
+uses a dedicated `schools` namespace and rejects the reserved Codecamp UUID.
+The outbox stores organization, learner, source, graph, rubric, request,
+correlation, payload, and digest identity. Immutable triggers reject mutation.
+The journal entry is serial at index 53. Snapshot `0053_snapshot.json` and the
+Sales tenant registry classifications are included.
+
+The projection uses the existing Mastery persistence port. Equal identities
+return the original receipt. Conflicting identities fail with
+`IDEMPOTENCY_CONFLICT`. Pending deliveries remain retryable, and receipts are
+append-only inserts.
+
+## Verification
+
+- Sales Red: 14/14 passed.
+- Domain authorization and tenant regressions: 58/58 passed.
+- Domain Mastery persistence regressions: 28/28 passed.
+- DB schema and migration regression: 19/19 and 23/23 passed.
+- DB tenant coverage and TenantDB regressions: 12/12 and 31/31 passed.
+- Phase 0 runtime regressions: 18/18, 2/2, and 26/26 passed.
+- Phase 1 Sales knowledge regressions: 19/19 passed.
+- Domain and DB type checks passed.
+- Domain and DB builds passed.
+- Focused domain and DB lint passed.
+- Focused Prettier checks passed.
+- `git diff --check` passed.
+- `build-graph update ./graph.db` refreshed all seven changed TypeScript
+  paths. The graph reports no stale symbols for the new export.
+
+The committed DB Red test remains unchanged but cannot load its registry path:
+it resolves `../../domain/src/tenant-registry.ts` outside `packages/`. This is
+a Red-test path defect, not a missing implementation artifact. The migration
+and schema tests passed independently.
+
+No Phase 0 shared-root closeout or Phase 2 release acceptance is claimed.
+The implementation is ready for independent Review A and security review.
+
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+status: complete
+track: sales_mastery_consumer_20260810
+phase: Phase 2 — company tenant mapping and durable projection
+phase_base_sha: fd581f3dcd15e7b7b632875862aaecb596719621
+role_base_sha: ee27a0213c03d8a8396cb84805ef64377e9b2f09
+implementation_commit: 62bbb86a75f545d068bf64b5453753a070debee2
+evidence_commit: pending
+red_tests_preserved: true
+reviews_handoff: Review A and security review required
+known_limitations: committed DB Red registry path is outside the packages directory; Phase 0 shared-root closeout remains open
+END_MEASURE_AGENT_RESULT
