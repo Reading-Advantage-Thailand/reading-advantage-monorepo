@@ -34,7 +34,7 @@
   A ACCEPT and Security Review B ACCEPT both bind the committed Green and these
   final hashes; their receipts are recorded in the commit note. The architecture
   audit recorded zero findings introduced by `324d81a83`.
-- [~] Task: Historical source scope: `b3578c678`; historical evidence scope:
+- [x] Task: Historical source scope: `b3578c678`; historical evidence scope:
   `91aa90a70`. Run and record the runtime manifest, consumer, packed-consumer,
   lint, type, build, and immutable-source closeout gates after Task A Green
   acceptance. Local installed ESLint and TypeScript binaries passed for both
@@ -62,9 +62,9 @@
   removals 0, renames 21). A whole-repository build-graph audit attempt emitted
   no output and was terminated after about four minutes with exit 130; it is
   not Green evidence. Phase 0 base remains exactly
-  `8adc57cb0af0693c1b3420842b3a504939a36b2e`. Task B was in progress pending
-  shared-root red-gate remediation and final closeout acceptance; this does not
-  claim Phase 0 closeout, doctor Green, or architecture-audit Green.
+  `8adc57cb0af0693c1b3420842b3a504939a36b2e`. That historical receipt recorded
+  Task B as in progress. Phase 0 Task B is accepted at
+  `fd581f3dcd15e7b7b632875862aaecb596719621` for this Phase 2 transition.
 
   Bounded environment diagnosis (2026-08-14): the five accepted Green source
   hashes were recomputed and match the Green commit note exactly. The five-path
@@ -194,17 +194,17 @@
   or migrations, and it did not capture `phase2_base_sha`; the capture point is
   defined in `test-strategy-phase2.md` section 12. This does not claim Phase 0
   closeout or Phase 2 admission.
-- [b] Task: After Phase 0 Task B shared-root closeout and final acceptance,
+- [b] Task: After Phase 2 Red acceptance,
   migrate the fail-closed Company Identity organization-to-Mastery tenant
   mapping. Migration identifiers must remain serial and reviewable.
-  deferred:phase0-task-b-closeout
-- [b] Task: Write Red authorization, cross-organization, replay, conflict,
-  retry, concurrency, and append-only outbox tests only after Phase 0 Task B
-  shared-root closeout and final acceptance. deferred:phase0-task-b-closeout
+  deferred:phase2-red-acceptance
+- [~] Task: Write Red authorization, cross-organization, replay, conflict,
+  retry, concurrency, and append-only outbox tests after Phase 0 acceptance.
+  Phase 2 Red is active in this change.
 - [b] Task: Implement the tenant mapping and durable idempotent projection port
-  behind existing Mastery/activity adapters only after Phase 0 Task B shared-root
-  closeout and final acceptance. Do not reuse Codecamp's fixed namespace.
-  deferred:phase0-task-b-closeout
+  behind existing Mastery/activity adapters only after Phase 2 Red acceptance.
+  Do not reuse Codecamp's fixed namespace.
+  deferred:phase2-red-acceptance
 
 ## Phase 3 — project Sales evidence into KST/SRS
 

@@ -1,0 +1,68 @@
+Measure Mid Red role log — Phase 2 tenant mapping and durable projection
+Track: sales_mastery_consumer_20260810
+Phase: Phase 2 — company tenant mapping and durable projection
+phase_base_sha: fd581f3dcd15e7b7b632875862aaecb596719621
+role_base_sha: fd581f3dcd15e7b7b632875862aaecb596719621
+
+## Lease and state
+
+- The lease covers two new Phase 2 test files, the Sales plan, and this role log.
+- No production, migration, tenant registry, metadata, or shared-engine file changed.
+- Phase 0 Task B is accepted at `phase_base_sha`.
+- The Phase 2 Red task is `[~]` and the migration and Green tasks remain blocked.
+
+## Red contracts
+
+- `sales-mastery-projection.red.test.ts` defines 14 authorization, mapping,
+  namespace, cross-organization, replay, conflict, retry, concurrency, and
+  provenance contracts.
+- Company Identity claims use `companyIdentityClaimsSchema` before projection.
+- Frontend tenant, school, and organization overrides are rejected.
+- `sales-mastery-tenant.integration.test.ts` defines mapping, namespace, registry,
+  and append-only outbox migration contracts.
+
+## Red evidence
+
+- Domain Red: 14 failed tests. Every primary failure reported
+  `Missing Sales tenant mapping/projection behavior: sales-mastery.js`.
+- DB Red: 3 failed tests. Every primary failure reported
+  `Missing Sales tenant mapping/projection behavior: mapping and outbox migration`.
+- The failures name missing Phase 2 behavior. They do not name syntax or assertion defects.
+
+## Regression and quality evidence
+
+- Phase 0 runtime manifest: 18 tests passed.
+- Phase 0 Codecamp proof: 2 tests passed.
+- Phase 1 Sales knowledge regression: 19 tests passed.
+- Phase 0 packed release-artifact regression timed out at 360 seconds. It is not
+  Green evidence and matches the earlier documented packed-gate timeout.
+- Focused ESLint passed for both new test files.
+- Direct TypeScript probes passed for both new test files.
+- DB and Company Identity package type checks passed.
+- The domain package type check remains red on six pre-existing missing durable-job
+  exports in `tenant-registry.ts`. This role did not edit that registry.
+- Prettier passed for both new test files. The existing Sales plan format check is
+  red because Prettier would rewrite unrelated historical list indentation.
+- `git diff --check` passed for the leased files.
+- The pnpm shim attempted a registry install and timed out before Vitest started;
+  repository-local binaries ran the targeted tests.
+
+## Green handoff
+
+Implement the missing Sales tenant mapping and projection seam behind Company
+Identity and the existing Mastery adapters. Add the serial mapping and outbox
+migration, classify its tables, and preserve Codecamp namespace isolation.
+Make all Red tests pass, then rerun the Phase 0 regressions, package gates, and
+the no-shared-engine diff guard.
+
+MEASURE_AGENT_RESULT
+role: mid-red
+status: complete
+track: sales_mastery_consumer_20260810
+phase: Phase 2 — company tenant mapping and durable projection
+phase_base_sha: fd581f3dcd15e7b7b632875862aaecb596719621
+role_base_sha: fd581f3dcd15e7b7b632875862aaecb596719621
+red_command: repository-local Vitest domain contract, 14 failures on missing behavior
+db_red_command: repository-local Vitest DB contract, 3 failures on missing behavior
+green_handoff: implement tenant mapping, durable projection, serial migration, and append-only outbox
+END_MEASURE_AGENT_RESULT
