@@ -143,115 +143,115 @@ packages/backend/tsconfig.test.json` passed.
     returned JSON text instead of the original string, number, array, or
     object. The jitter case produced one delay value across unrelated job
     IDs. Each denial case received no error before the write/audit check.
-   - Security Red cleanup: the post-run queries returned
-     `CLEANUP_SCRATCH_DATABASES=0` and `CLEANUP_TASK9_ROLES=0`. The disposable
-     container was removed. Task 9 remains `[~]` for Green remediation of the
-     twelve named failures.
-   - Post-review Green evidence (2026-08-16; source commit `92f13c06c`): the
-     focused suite passed 7/7. The safe gate passed 1 and skipped 18. The live
-     PostgreSQL 16 gate passed 19/19. Cleanup found zero scratch databases, and
-     the disposable container was removed. Package lint was network-blocked.
-     Doctor has unrelated deprecated-marker failures. A serialized graph refresh
-     remains pending. See `task-9-postreview-green-evidence-20260816.md`.
-   - Security role-hardening Red (2026-08-16; phase base
-     `33d44fc81b84559c2ab7a48acfaf86554bf017a5`; role base
-     `63da03a0e27e0c696df44f2a0285973b269d1cfd`):
-     `durable-jobs-role-hardening-pg16.red.test.ts` creates both named roles with
-     LOGIN and CREATEDB before migration. It requires migration failure before
-     protected grants and ownership, or successful NOLOGIN verification for both
-     roles, audit tables, and the trigger function.
-   - Security Red safe default: 1 passed with no PostgreSQL contact. Security Red
-     disposable PostgreSQL 16: 1 failed because `durable_job_audit_owner`
-     retained `rolcanlogin=true`; no other test failure occurred. Server version
-     was `160014`.
-   - Security Red cleanup: `CLEANUP_SCRATCH_DATABASES=0`,
-     `CLEANUP_TASK9_ROLES=0`, and the disposable container was removed. Green
-     must harden both pre-existing roles before audit ownership and runtime grants.
-   - Role-hardening Green (2026-08-16; implementation commit
-     `63b41b598ca0bd0cd8defff6658b218b82f6b693`; role base
-     `0e0b420c61885a96f7210fe3777151a0568520dc`): migration `0052` now applies
-     `NOLOGIN` and removes unsafe role attributes before protected ownership and
-     grants. The safe role gate passed 1/1. The disposable PG16 role gate passed
-     1/1. The live Task 9 gate passed 19/19. Cleanup found zero scratch databases
-     and zero Task 9 roles. See `task-9-role-hardening-green-evidence-20260816.md`.
-   - Review B Mid Red remediation (2026-08-16; finding `DWP-T9-RB-005`; phase base
-     `33d44fc81b84559c2ab7a48acfaf86554bf017a5`; role base
-     `9d6b3af2608f0df7733197692a642905953c71f4`): the schema test now uses the
-     safe `constraint_row` alias in all catalog queries and projects
-     `pg_constraint.conname` as the existing `constraint_name` result field.
-     Assertions, migration, sentinels, journal, and snapshots were unchanged.
-     The safe gate passed 2 tests and skipped 1. The disposable PG16 gate ran 3
-     tests, passed 2, and exposed one exact Red assertion failure: the test expects
-     `char_length(actor)`, while PostgreSQL returned the valid migration check using
-     `char_length(btrim(actor))`. See
-     `task-9-review-b-rb-005-mid-red-20260816.md` and its role log.
-    - Review B Green remediation (2026-08-16; finding `DWP-T9-RB-002`; implementation
-      commits `12719652e` and `11dfb8e16`): `0052_durable_jobs` now has a composite
-      sentinel for all six durable tables and four protected append-only trigger
-      configurations. The migration keeps NOLOGIN role hardening, protected owners,
-      revoked PUBLIC privileges, and limited runtime grants. Bounded text checks use
-      raw length and a non-whitespace requirement, so padding cannot bypass limits.
-      Safe schema, role, focused DB, journal, and migration-governance gates passed.
-      The required-migration doctor gate passed on a disposable PG16 database.
-     The full live schema test reached the immutable trigger assertion, then failed
-     because `information_schema.triggers` omits TRUNCATE triggers. The doctor
-     sentinel verified those triggers through `pg_trigger`; the Red test was not edited.
-    - Review B Mid Red trigger-catalog follow-up (2026-08-16; current HEAD start
-      `f3b1fd371c29461721c7531c37cc26d1b8b56857`): the leased schema test now reads
-      `pg_catalog.pg_trigger`, `pg_catalog.pg_proc`, and `pg_catalog.pg_class`.
-      It preserves trigger names and owners, and proves the shared function plus
-      exact `tgtype` values `34` for BEFORE TRUNCATE and `27` for BEFORE UPDATE OR
-      DELETE FOR EACH ROW. Safe schema passed 2 tests and skipped 1. Role hardening
-      passed 1/1, and the live Task 9 suite passed 19/19. Final live schema passed
-      2 tests and exposed the exact `job-name-over-bound` fixture acceptance.
-      See the appended Review B Mid Red evidence and role log.
-    - Review B Green job-name remediation (2026-08-16; implementation commit
-      `a26c3aedf`; role base `a4aa125ab`): `durable_jobs_job_name_check` now enforces
-      raw and trimmed lengths from 3 through 160, trimmed-value equality, and the
-      existing lowercase namespaced grammar. The job-name-over-bound fixture now
-      rejects through its named constraint. Safe schema passed 2 tests and skipped 1.
-      Role hardening passed 1/1. Task 9 passed 19/19. Final live schema passed 2
-      tests and exposed the next committed Red fixture, `queue-name-over-bound`.
-     - Review B Green queue-name remediation (2026-08-16; implementation commit
-       `86ed4c900`; role base `c1494c162`): `durable_jobs_queue_name_check` now
-       enforces raw and trimmed lengths from 1 through 100, trimmed-value
-       equality, and the existing lowercase queue grammar. Safe schema passed 2
-       tests and skipped 1. Safe focused DB passed 17/17. Role hardening passed
-       1/1. Task 9 passed 19/19. Final live schema passed 2 tests and exposed the
-       next committed Red fixture, `rerun-partial-01`: PostgreSQL returned
-       `durable_jobs_rerun_state_check` instead of the expected
-       `durable_jobs_rerun_tuple_check`. See
-       `task-9-review-b-queue-name-green-evidence-20260816.md` and its role log.
-    - Review B Mid Red rerun-fixture follow-up (2026-08-16; current HEAD start
-      `11a78ebda7cf4136da2fa8e7ede21b122bc4d2e7`): `rerun-partial-01` starts from
-      a valid running row, keeps `rerun_requested=true`, and nulls part of the
-      five-field snapshot. Both rerun checks reject that row, so the fixture now
-      expects the first reported `durable_jobs_rerun_state_check` constraint.
-      The safe schema gate passed 2 tests and skipped 1. The final live schema
-      gate passed 2 tests and exposed the next exact Red fixture,
-      `rerun-columns-with-flag-false`. See the appended Mid Red evidence.
-    - Review B Mid Red flag-fixture follow-up (2026-08-16; current HEAD start
-      `b4683613dd05c241fc525e886b75e1ff363cb9f3`): `rerun-columns-with-flag-false`
-      keeps all five rerun fields and sets `rerun_requested=false`, so the tuple
-      check passes and the state check rejects the row. Its expected constraint
-      now matches `durable_jobs_rerun_state_check`. The safe schema gate passed 2
-      tests and skipped 1. The final live schema gate passed 2 tests and exposed
-      the next exact Red fixture, `rerun-flag-with-null-columns`.
-    - Review B Mid Red rerun-bound follow-up (2026-08-16):
-      `rerun-flag-with-null-columns` now passes its state-check rejection. The
-      final live schema gate passed 2 tests and exposed the substantive
-      `rerun-maximum-under-bound` failure: `rerun_max_attempts=0` was accepted.
-      The migration has no bound for that rerun field. Green must add the
-      reviewed database constraint in its own lease.
-    - Review B Green rerun-bound remediation (2026-08-16; implementation commit
-      `a554da1af`; role base `ecdf1fef1`): `durable_jobs_rerun_tuple_check` now
-      requires active rerun maximum attempts from 1 through 1000. Ordinary rows
-      retain the all-null rerun tuple. Safe schema passed 2 tests and skipped 1.
-      Safe focused DB passed 17/17. Role hardening passed 1/1. Task 9 passed
-      19/19. Final live schema passed 2 tests and exposed the next exact Red
-      fixture, `pending-at-maximum-without-redelivery`, which was accepted
-      instead of rejecting through `durable_jobs_redelivery_state_check`. See
-      `task-9-review-b-rerun-bound-green-evidence-20260816.md` and its role log.
+  - Security Red cleanup: the post-run queries returned
+    `CLEANUP_SCRATCH_DATABASES=0` and `CLEANUP_TASK9_ROLES=0`. The disposable
+    container was removed. Task 9 remains `[~]` for Green remediation of the
+    twelve named failures.
+  - Post-review Green evidence (2026-08-16; source commit `92f13c06c`): the
+    focused suite passed 7/7. The safe gate passed 1 and skipped 18. The live
+    PostgreSQL 16 gate passed 19/19. Cleanup found zero scratch databases, and
+    the disposable container was removed. Package lint was network-blocked.
+    Doctor has unrelated deprecated-marker failures. A serialized graph refresh
+    remains pending. See `task-9-postreview-green-evidence-20260816.md`.
+  - Security role-hardening Red (2026-08-16; phase base
+    `33d44fc81b84559c2ab7a48acfaf86554bf017a5`; role base
+    `63da03a0e27e0c696df44f2a0285973b269d1cfd`):
+    `durable-jobs-role-hardening-pg16.red.test.ts` creates both named roles with
+    LOGIN and CREATEDB before migration. It requires migration failure before
+    protected grants and ownership, or successful NOLOGIN verification for both
+    roles, audit tables, and the trigger function.
+  - Security Red safe default: 1 passed with no PostgreSQL contact. Security Red
+    disposable PostgreSQL 16: 1 failed because `durable_job_audit_owner`
+    retained `rolcanlogin=true`; no other test failure occurred. Server version
+    was `160014`.
+  - Security Red cleanup: `CLEANUP_SCRATCH_DATABASES=0`,
+    `CLEANUP_TASK9_ROLES=0`, and the disposable container was removed. Green
+    must harden both pre-existing roles before audit ownership and runtime grants.
+  - Role-hardening Green (2026-08-16; implementation commit
+    `63b41b598ca0bd0cd8defff6658b218b82f6b693`; role base
+    `0e0b420c61885a96f7210fe3777151a0568520dc`): migration `0052` now applies
+    `NOLOGIN` and removes unsafe role attributes before protected ownership and
+    grants. The safe role gate passed 1/1. The disposable PG16 role gate passed
+    1/1. The live Task 9 gate passed 19/19. Cleanup found zero scratch databases
+    and zero test-owned roles. See `task-9-role-hardening-green-evidence-20260816.md`.
+  - Review B Mid Red remediation (2026-08-16; finding `DWP-T9-RB-005`; phase base
+    `33d44fc81b84559c2ab7a48acfaf86554bf017a5`; role base
+    `9d6b3af2608f0df7733197692a642905953c71f4`): the schema test now uses the
+    safe `constraint_row` alias in all catalog queries and projects
+    `pg_constraint.conname` as the existing `constraint_name` result field.
+    Assertions, migration, sentinels, journal, and snapshots were unchanged.
+    The safe gate passed 2 tests and skipped 1. The disposable PG16 gate ran 3
+    tests, passed 2, and exposed one exact Red assertion failure: the test expects
+    `char_length(actor)`, while PostgreSQL returned the valid migration check using
+    `char_length(btrim(actor))`. See
+    `task-9-review-b-rb-005-mid-red-20260816.md` and its role log.
+  - Review B Green remediation (2026-08-16; finding `DWP-T9-RB-002`; implementation
+    commits `12719652e` and `11dfb8e16`): `0052_durable_jobs` now has a composite
+    sentinel for all six durable tables and four protected append-only trigger
+    configurations. The migration keeps NOLOGIN role hardening, protected owners,
+    revoked PUBLIC privileges, and limited runtime grants. Bounded text checks use
+    raw length and a non-whitespace requirement, so padding cannot bypass limits.
+    Safe schema, role, focused DB, journal, and migration-governance gates passed.
+    The required-migration doctor gate passed on a disposable PG16 database.
+    The full live schema test reached the immutable trigger assertion, then failed
+    because `information_schema.triggers` omits TRUNCATE triggers. The doctor
+    sentinel verified those triggers through `pg_trigger`; the Red test was not edited.
+  - Review B Mid Red trigger-catalog follow-up (2026-08-16; current HEAD start
+    `f3b1fd371c29461721c7531c37cc26d1b8b56857`): the leased schema test now reads
+    `pg_catalog.pg_trigger`, `pg_catalog.pg_proc`, and `pg_catalog.pg_class`.
+    It preserves trigger names and owners, and proves the shared function plus
+    exact `tgtype` values `34` for BEFORE TRUNCATE and `27` for BEFORE UPDATE OR
+    DELETE FOR EACH ROW. Safe schema passed 2 tests and skipped 1. Role hardening
+    passed 1/1, and the live Task 9 suite passed 19/19. Final live schema passed
+    2 tests and exposed the exact `job-name-over-bound` fixture acceptance.
+    See the appended Review B Mid Red evidence and role log.
+  - Review B Green job-name remediation (2026-08-16; implementation commit
+    `a26c3aedf`; role base `a4aa125ab`): `durable_jobs_job_name_check` now enforces
+    raw and trimmed lengths from 3 through 160, trimmed-value equality, and the
+    existing lowercase namespaced grammar. The job-name-over-bound fixture now
+    rejects through its named constraint. Safe schema passed 2 tests and skipped 1.
+    Role hardening passed 1/1. Task 9 passed 19/19. Final live schema passed 2
+    tests and exposed the next committed Red fixture, `queue-name-over-bound`.
+  - Review B Green queue-name remediation (2026-08-16; implementation commit
+    `86ed4c900`; role base `c1494c162`): `durable_jobs_queue_name_check` now
+    enforces raw and trimmed lengths from 1 through 100, trimmed-value
+    equality, and the existing lowercase queue grammar. Safe schema passed 2
+    tests and skipped 1. Safe focused DB passed 17/17. Role hardening passed
+    1/1. Task 9 passed 19/19. Final live schema passed 2 tests and exposed the
+    next committed Red fixture, `rerun-partial-01`: PostgreSQL returned
+    `durable_jobs_rerun_state_check` instead of the expected
+    `durable_jobs_rerun_tuple_check`. See
+    `task-9-review-b-queue-name-green-evidence-20260816.md` and its role log.
+  - Review B Mid Red rerun-fixture follow-up (2026-08-16; current HEAD start
+    `11a78ebda7cf4136da2fa8e7ede21b122bc4d2e7`): `rerun-partial-01` starts from
+    a valid running row, keeps `rerun_requested=true`, and nulls part of the
+    five-field snapshot. Both rerun checks reject that row, so the fixture now
+    expects the first reported `durable_jobs_rerun_state_check` constraint.
+    The safe schema gate passed 2 tests and skipped 1. The final live schema
+    gate passed 2 tests and exposed the next exact Red fixture,
+    `rerun-columns-with-flag-false`. See the appended Mid Red evidence.
+  - Review B Mid Red flag-fixture follow-up (2026-08-16; current HEAD start
+    `b4683613dd05c241fc525e886b75e1ff363cb9f3`): `rerun-columns-with-flag-false`
+    keeps all five rerun fields and sets `rerun_requested=false`, so the tuple
+    check passes and the state check rejects the row. Its expected constraint
+    now matches `durable_jobs_rerun_state_check`. The safe schema gate passed 2
+    tests and skipped 1. The final live schema gate passed 2 tests and exposed
+    the next exact Red fixture, `rerun-flag-with-null-columns`.
+  - Review B Mid Red rerun-bound follow-up (2026-08-16):
+    `rerun-flag-with-null-columns` now passes its state-check rejection. The
+    final live schema gate passed 2 tests and exposed the substantive
+    `rerun-maximum-under-bound` failure: `rerun_max_attempts=0` was accepted.
+    The migration has no bound for that rerun field. Green must add the
+    reviewed database constraint in its own lease.
+  - Review B Green rerun-bound remediation (2026-08-16; implementation commit
+    `a554da1af`; role base `ecdf1fef1`): `durable_jobs_rerun_tuple_check` now
+    requires active rerun maximum attempts from 1 through 1000. Ordinary rows
+    retain the all-null rerun tuple. Safe schema passed 2 tests and skipped 1.
+    Safe focused DB passed 17/17. Role hardening passed 1/1. Task 9 passed
+    19/19. Final live schema passed 2 tests and exposed the next exact Red
+    fixture, `pending-at-maximum-without-redelivery`, which was accepted
+    instead of rejecting through `durable_jobs_redelivery_state_check`. See
+    `task-9-review-b-rerun-bound-green-evidence-20260816.md` and its role log.
   - Complete fixture reconciliation Mid Red (2026-08-16; current HEAD start
     `1cb0018e37d4875206608f05b67c6642a18e9cfd`): the PG16 schema test now
     aggregates every fixture assertion and deletes each fixture row in a
@@ -288,6 +288,7 @@ closed; Red failures arise from missing platform behavior.
 - [x] Task 13: Implement heartbeat, lease-token CAS settle/fail, visibility reclaim, bounded jittered retries, dead-letter listing, and authorized audited replay that rejects active leases. (source: `a7031a6`)
   - Evidence: Separate PostgreSQL sessions proved heartbeat, stale-token rejection, reclaim, retry, DLQ, and replay behavior.
 - [x] Task 14: Make transition/concurrency/failure tests Green and run migration governance plus isolated two-connection PG16 locking tests. (evidence: `phase-3-jr-green-20260816.md`)
+  - Phase 3 Review A Mid Red remediation (2026-08-16; current HEAD start `3d66149bf`): added live two-connection coverage for the T5-H3 active-enqueue snapshot, settle/fail/reclaim lock orders, positive heartbeat expiry and settlement, and both audit-table mutation triggers. Safe tests passed 9 and skipped 32. Isolated PG16 schema passed 3/3, concurrency passed 14/14, and enqueue passed 20/24. The four new enqueue failures are recorded in the consolidated Red evidence and role log.
 
 **Verification:** `CI=true pnpm --filter @reading-advantage/db test && CI=true pnpm vitest run packages/backend/src/jobs/__tests__ && pnpm architecture:check`
 

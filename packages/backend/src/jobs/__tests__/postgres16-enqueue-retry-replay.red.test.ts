@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
 import { basename, resolve } from "node:path";
 
@@ -8,6 +9,7 @@ import type {
   DurableJobQueuePort,
   EnqueueJobRequest,
   JobTenant,
+  ReclaimExpiredJobsRequest,
   ReplayAuthorizationEvidence,
 } from "../index.js";
 import {
@@ -42,6 +44,8 @@ const TEST_OWNED_ROLE_DROP_SQL = {
   durable_job_queue_runtime: 'DROP ROLE IF EXISTS "durable_job_queue_runtime"',
 } as const;
 const BASE_TIME = "2026-08-15T10:00:00.000Z";
+const FOLLOW_UP_TIME = "2026-08-15T10:05:00.000Z";
+const SECOND_FOLLOW_UP_TIME = "2026-08-15T10:06:00.000Z";
 const STALE_AUTHORIZED_AT = "2026-08-14T10:00:00.000Z";
 const QUEUE_NAME = "task9-red";
 const JOB_NAME = "codecamp.review.enqueue-retry-replay";
@@ -59,6 +63,10 @@ const JSONB_POISON_TIME = "2026-08-15T10:00:01.000Z";
 const REPLAY_AUTHORIZATION_MAX_AGE_MS = 5 * 60 * 1_000;
 const MISSING_ADAPTER_MESSAGE =
   "Intentional Red: PostgreSQL durable-job adapter behavior is missing under the approved adapter root.";
+
+function hashLeaseToken(token: string): string {
+  return createHash("sha256").update(token).digest("hex");
+}
 
 type TestOwnedRoleName = (typeof TEST_OWNED_ROLE_NAMES)[number];
 type EnqueueResult = Awaited<ReturnType<DurableJobQueuePort["enqueue"]>>;
@@ -117,10 +125,20 @@ interface ReplayAuditRow {
 }
 
 interface JobSnapshot {
+  readonly queueName: string;
   readonly state: string;
+  readonly attempt: number;
+  readonly maxAttempts: number;
+  readonly availableAt: string;
+  readonly generation: number;
   readonly leaseOwner: string | null;
   readonly leaseTokenHash: string | null;
   readonly leaseExpiresAt: string | null;
+  readonly rerunRequested: boolean;
+  readonly rerunQueueName: string | null;
+  readonly rerunPayloadJson: unknown | null;
+  readonly rerunMaxAttempts: number | null;
+  readonly rerunAvailableAt: string | null;
   readonly payloadJson: unknown;
   readonly resultJson: unknown | null;
 }
@@ -167,6 +185,17 @@ function claimRequest(
     workerId,
     limit: 1,
     leaseSeconds: 60,
+    now,
+  };
+}
+
+function reclaimRequest(
+  tenant: JobTenant = GLOBAL_TENANT,
+  now = FOLLOW_UP_TIME,
+): ReclaimExpiredJobsRequest {
+  return {
+    tenant,
+    limit: 10,
     now,
   };
 }
@@ -522,10 +551,20 @@ async function readJobSnapshot(
 ): Promise<JobSnapshot> {
   const [row] = await context.connectionTwo<JobSnapshot[]>`
     SELECT
+      "queue_name" AS "queueName",
       "state",
+      "attempt",
+      "max_attempts" AS "maxAttempts",
+      "available_at"::text AS "availableAt",
+      "generation",
       "lease_owner" AS "leaseOwner",
       "lease_token_hash" AS "leaseTokenHash",
       "lease_expires_at"::text AS "leaseExpiresAt",
+      "rerun_requested" AS "rerunRequested",
+      "rerun_queue_name" AS "rerunQueueName",
+      "rerun_payload_json" AS "rerunPayloadJson",
+      "rerun_max_attempts" AS "rerunMaxAttempts",
+      "rerun_available_at"::text AS "rerunAvailableAt",
       "payload_json" AS "payloadJson",
       "result_json" AS "resultJson"
     FROM "durable_jobs"
@@ -539,6 +578,60 @@ async function readJobSnapshot(
     throw new Error("The independent verifier returned no durable job row.");
   }
   return row;
+}
+
+type TransitionEnqueueRaceOrder = "transition-first" | "enqueue-first";
+
+async function runTransitionEnqueueRace<TTransition, TEnqueue>(
+  order: TransitionEnqueueRaceOrder,
+  transition: () => Promise<TTransition>,
+  enqueue: () => Promise<TEnqueue>,
+): Promise<{
+  readonly transitionResult: TTransition;
+  readonly enqueueResult: TEnqueue;
+}> {
+  if (order === "enqueue-first") {
+    const enqueueResult = await enqueue();
+    const transitionResult = await transition();
+    return { transitionResult, enqueueResult };
+  }
+
+  const transitionPromise = transition();
+  await new Promise<void>((resolve) => setImmediate(resolve));
+  const enqueuePromise = enqueue();
+  const [transitionResult, enqueueResult] = await Promise.all([
+    transitionPromise,
+    enqueuePromise,
+  ]);
+  return { transitionResult, enqueueResult };
+}
+
+function snapshotTimestamp(value: string): string {
+  return new Date(value).toISOString();
+}
+
+function expectPromotedFollowUp(
+  snapshot: JobSnapshot,
+  followUp: EnqueueJobRequest,
+): void {
+  expect(snapshot.state).toBe("pending");
+  expect(snapshot.queueName).toBe(followUp.queueName);
+  expect(snapshot.attempt).toBe(0);
+  expect(snapshot.maxAttempts).toBe(followUp.maxAttempts);
+  expect(snapshotTimestamp(snapshot.availableAt)).toBe(
+    new Date(followUp.availableAt).toISOString(),
+  );
+  expect(snapshot.generation).toBe(2);
+  expect(snapshot.leaseOwner).toBeNull();
+  expect(snapshot.leaseTokenHash).toBeNull();
+  expect(snapshot.leaseExpiresAt).toBeNull();
+  expect(snapshot.rerunRequested).toBe(false);
+  expect(snapshot.rerunQueueName).toBeNull();
+  expect(snapshot.rerunPayloadJson).toBeNull();
+  expect(snapshot.rerunMaxAttempts).toBeNull();
+  expect(snapshot.rerunAvailableAt).toBeNull();
+  expect(snapshot.payloadJson).toEqual(followUp.payload);
+  expect(snapshot.resultJson).toBeNull();
 }
 
 function retryDelayFrom(
@@ -638,6 +731,314 @@ describe.skipIf(!integrationEnabled)(
   "Task 9 isolated PostgreSQL 16 enqueue, retry, DLQ, and replay behavior",
   { timeout: 60_000 },
   () => {
+    it("persists every active-enqueue field and promotes the complete snapshot on settle", async () => {
+      await withTask9Harness(async (context, firstPort, secondPort) => {
+        const original = enqueueRequest(
+          "task9-t5h3-complete-snapshot",
+          GLOBAL_TENANT,
+          {
+            queueName: "task9-current-queue",
+            payload: { generation: "current", version: 1 },
+            maxAttempts: 5,
+          },
+        );
+        const jobId = jobIdFromEnqueue(await firstPort.enqueue(original));
+        const claimed = claimedJob(
+          await firstPort.claim({
+            ...claimRequest(
+              "task9-t5h3-snapshot-worker",
+              GLOBAL_TENANT,
+              BASE_TIME,
+            ),
+            queueName: original.queueName,
+          }),
+        );
+        expect(claimed.id).toBe(jobId);
+
+        const followUp = enqueueRequest(
+          "task9-t5h3-complete-snapshot",
+          GLOBAL_TENANT,
+          {
+            queueName: "task9-follow-up-queue",
+            payload: { generation: "follow-up", version: 2, moved: true },
+            maxAttempts: 1,
+            availableAt: FOLLOW_UP_TIME,
+          },
+        );
+        await expect(secondPort.enqueue(followUp)).resolves.toEqual({
+          outcome: "active-lease-retained",
+          jobId,
+          followUpScheduled: true,
+        });
+
+        const activeSnapshot = await readJobSnapshot(context, jobId);
+        expect(activeSnapshot).toMatchObject({
+          queueName: original.queueName,
+          state: "running",
+          attempt: 1,
+          maxAttempts: original.maxAttempts,
+          leaseOwner: claimed.lease.workerId,
+          leaseTokenHash: expect.any(String),
+          rerunRequested: true,
+          rerunQueueName: followUp.queueName,
+          rerunPayloadJson: followUp.payload,
+          rerunMaxAttempts: followUp.maxAttempts,
+          payloadJson: original.payload,
+          resultJson: null,
+        });
+        expect(snapshotTimestamp(activeSnapshot.rerunAvailableAt ?? "")).toBe(
+          FOLLOW_UP_TIME,
+        );
+        expect(snapshotTimestamp(activeSnapshot.availableAt)).toBe(BASE_TIME);
+        expect(activeSnapshot.leaseTokenHash).toBe(
+          hashLeaseToken(claimed.lease.token),
+        );
+
+        await expect(
+          firstPort.settle({
+            jobId,
+            tenant: GLOBAL_TENANT,
+            leaseToken: claimed.lease.token,
+            now: BASE_TIME,
+            result: { ignoredByPromotedRerun: true },
+          }),
+        ).resolves.toEqual({ outcome: "settled", state: "succeeded" });
+
+        const promotedSnapshot = await readJobSnapshot(context, jobId);
+        expectPromotedFollowUp(promotedSnapshot, followUp);
+        const promotedClaim = claimedJob(
+          await secondPort.claim(
+            claimRequest(
+              "task9-t5h3-follow-up-worker",
+              GLOBAL_TENANT,
+              FOLLOW_UP_TIME,
+            ),
+          ),
+        );
+        expect(promotedClaim.id).toBe(jobId);
+        expect(promotedClaim.payload).toEqual(followUp.payload);
+        expect(promotedClaim.maxAttempts).toBe(followUp.maxAttempts);
+      });
+    });
+
+    it("keeps concurrent active-enqueue snapshots complete and last-commit-wins", async () => {
+      await withTask9Harness(async (context, firstPort, secondPort) => {
+        const identity = "task9-t5h3-last-commit-wins";
+        const jobId = jobIdFromEnqueue(
+          await firstPort.enqueue(
+            enqueueRequest(identity, GLOBAL_TENANT, {
+              queueName: "task9-current-queue",
+              payload: { generation: "current" },
+              maxAttempts: 4,
+            }),
+          ),
+        );
+        const claimed = claimedJob(
+          await firstPort.claim({
+            ...claimRequest(
+              "task9-t5h3-last-commit-worker",
+              GLOBAL_TENANT,
+              BASE_TIME,
+            ),
+            queueName: "task9-current-queue",
+          }),
+        );
+
+        const firstFollowUp = enqueueRequest(identity, GLOBAL_TENANT, {
+          queueName: "task9-follow-up-first",
+          payload: { generation: "first", fields: ["queue", "payload"] },
+          maxAttempts: 1,
+          availableAt: FOLLOW_UP_TIME,
+        });
+        const secondFollowUp = enqueueRequest(identity, GLOBAL_TENANT, {
+          queueName: "task9-follow-up-second",
+          payload: { generation: "second", fields: ["max", "schedule"] },
+          maxAttempts: 9,
+          availableAt: SECOND_FOLLOW_UP_TIME,
+        });
+        const [firstResult, secondResult] = await Promise.all([
+          firstPort.enqueue(firstFollowUp),
+          secondPort.enqueue(secondFollowUp),
+        ]);
+        expect(firstResult).toMatchObject({
+          outcome: "active-lease-retained",
+          jobId,
+        });
+        expect(secondResult).toMatchObject({
+          outcome: "active-lease-retained",
+          jobId,
+        });
+
+        const activeSnapshot = await readJobSnapshot(context, jobId);
+        const actualSnapshot = {
+          queueName: activeSnapshot.rerunQueueName,
+          payloadJson: activeSnapshot.rerunPayloadJson,
+          maxAttempts: activeSnapshot.rerunMaxAttempts,
+          availableAt: snapshotTimestamp(activeSnapshot.rerunAvailableAt ?? ""),
+        };
+        const expectedSnapshots = [firstFollowUp, secondFollowUp].map(
+          (request) => ({
+            queueName: request.queueName,
+            payloadJson: request.payload,
+            maxAttempts: request.maxAttempts,
+            availableAt: new Date(request.availableAt).toISOString(),
+          }),
+        );
+        expect(activeSnapshot.rerunRequested).toBe(true);
+        expect(expectedSnapshots).toContainEqual(actualSnapshot);
+        expect(activeSnapshot.queueName).toBe("task9-current-queue");
+        expect(activeSnapshot.payloadJson).toEqual({ generation: "current" });
+        expect(activeSnapshot.maxAttempts).toBe(4);
+        expect(activeSnapshot.attempt).toBe(claimed.attempt);
+        expect(activeSnapshot.leaseTokenHash).toBe(
+          hashLeaseToken(claimed.lease.token),
+        );
+
+        const committedFollowUp =
+          expectedSnapshots[0]?.queueName === actualSnapshot.queueName
+            ? firstFollowUp
+            : secondFollowUp;
+        await expect(
+          firstPort.settle({
+            jobId,
+            tenant: GLOBAL_TENANT,
+            leaseToken: claimed.lease.token,
+            now: BASE_TIME,
+            result: { promoted: true },
+          }),
+        ).resolves.toEqual({ outcome: "settled", state: "succeeded" });
+        expectPromotedFollowUp(
+          await readJobSnapshot(context, jobId),
+          committedFollowUp,
+        );
+      });
+    });
+
+    it("covers both settle and active-enqueue lock orders", async () => {
+      await withTask9Harness(async (context, firstPort, secondPort) => {
+        for (const order of ["transition-first", "enqueue-first"] as const) {
+          const identity = `task9-t5h3-settle-${order}`;
+          const jobId = jobIdFromEnqueue(
+            await firstPort.enqueue(enqueueRequest(identity)),
+          );
+          const claimed = claimedJob(
+            await firstPort.claim(claimRequest(`${identity}-worker`)),
+          );
+          const followUp = enqueueRequest(identity, GLOBAL_TENANT, {
+            queueName: `task9-settle-follow-${order}`,
+            maxAttempts: 2,
+            availableAt: FOLLOW_UP_TIME,
+          });
+          const race = await runTransitionEnqueueRace(
+            order,
+            () =>
+              firstPort.settle({
+                jobId,
+                tenant: GLOBAL_TENANT,
+                leaseToken: claimed.lease.token,
+                now: BASE_TIME,
+                result: { order },
+              }),
+            () => secondPort.enqueue(followUp),
+          );
+          expect(race.transitionResult).toEqual({
+            outcome: "settled",
+            state: "succeeded",
+          });
+          expect(["active-lease-retained", "refreshed"]).toContain(
+            race.enqueueResult.outcome,
+          );
+          expectPromotedFollowUp(
+            await readJobSnapshot(context, jobId),
+            followUp,
+          );
+        }
+      });
+    });
+
+    it("covers both fail and active-enqueue lock orders", async () => {
+      await withTask9Harness(async (context, firstPort, secondPort) => {
+        for (const order of ["transition-first", "enqueue-first"] as const) {
+          const identity = `task9-t5h3-fail-${order}`;
+          const jobId = jobIdFromEnqueue(
+            await firstPort.enqueue(
+              enqueueRequest(identity, GLOBAL_TENANT, { maxAttempts: 4 }),
+            ),
+          );
+          const claimed = claimedJob(
+            await firstPort.claim(claimRequest(`${identity}-worker`)),
+          );
+          const followUp = enqueueRequest(identity, GLOBAL_TENANT, {
+            queueName: `task9-fail-follow-${order}`,
+            maxAttempts: 1,
+            availableAt: FOLLOW_UP_TIME,
+          });
+          const race = await runTransitionEnqueueRace(
+            order,
+            () =>
+              firstPort.fail({
+                jobId,
+                tenant: GLOBAL_TENANT,
+                leaseToken: claimed.lease.token,
+                now: BASE_TIME,
+                error: {
+                  code: "T5H3_LOCK_ORDER_FAILURE",
+                  safeSummary: "The lock-order failure is safe.",
+                },
+              }),
+            () => secondPort.enqueue(followUp),
+          );
+          expect(race.transitionResult.outcome).toBe("retry-scheduled");
+          expect(["active-lease-retained", "refreshed"]).toContain(
+            race.enqueueResult.outcome,
+          );
+          expectPromotedFollowUp(
+            await readJobSnapshot(context, jobId),
+            followUp,
+          );
+        }
+      });
+    });
+
+    it("covers both reclaim and active-enqueue lock orders", async () => {
+      await withTask9Harness(async (context, firstPort, secondPort) => {
+        for (const order of ["transition-first", "enqueue-first"] as const) {
+          const identity = `task9-t5h3-reclaim-${order}`;
+          const jobId = jobIdFromEnqueue(
+            await firstPort.enqueue(enqueueRequest(identity)),
+          );
+          const claimed = claimedJob(
+            await firstPort.claim({
+              ...claimRequest(`${identity}-worker`),
+              leaseSeconds: 1,
+            }),
+          );
+          expect(claimed.id).toBe(jobId);
+          const followUp = enqueueRequest(identity, GLOBAL_TENANT, {
+            queueName: `task9-reclaim-follow-${order}`,
+            maxAttempts: 3,
+            availableAt: FOLLOW_UP_TIME,
+          });
+          const race = await runTransitionEnqueueRace(
+            order,
+            () => firstPort.reclaimExpired(reclaimRequest()),
+            () => secondPort.enqueue(followUp),
+          );
+          expect(race.transitionResult).toEqual({
+            outcome: "reclaimed",
+            count: 1,
+          });
+          expect(["active-lease-retained", "refreshed"]).toContain(
+            race.enqueueResult.outcome,
+          );
+          expectPromotedFollowUp(
+            await readJobSnapshot(context, jobId),
+            followUp,
+          );
+        }
+      });
+    });
+
     it("scopes one shared job name and idempotency key globally and by tenant", async () => {
       await withTask9Harness(async (_context, firstPort, secondPort) => {
         const scopes = [

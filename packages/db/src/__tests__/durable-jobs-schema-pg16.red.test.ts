@@ -695,6 +695,47 @@ async function expectDurableJobCatalogContract(
   }
 }
 
+/** Verifies that both append-only audit tables reject every destructive mutation. */
+async function expectAuditMutationRejection(
+  sql: DurableJobTestSql,
+): Promise<void> {
+  await sql`
+    INSERT INTO "durable_job_audit_events" (
+      "requested_job_id", "tenant_mode", "action", "outcome", "actor",
+      "authorization_decision_id", "authorization_decided_at", "reason",
+      "correlation_id"
+    ) VALUES (
+      '00000000-0000-0000-0000-000000000001', 'global', 'replay', 'missing',
+      'schema-test', 'schema-decision', '2026-08-16T10:00:00Z',
+      'schema mutation test', 'schema-correlation'
+    )
+  `;
+  await sql`
+    INSERT INTO "review_job_adoption_audit_events" (
+      "from_mode", "to_mode", "prior_generation", "new_generation", "actor",
+      "authorization_decision_id", "authorization_decided_at", "reason",
+      "correlation_id"
+    ) VALUES (
+      'legacy', 'shadow', 1, 2, 'schema-test', 'schema-decision',
+      '2026-08-16T10:00:00Z', 'schema mutation test', 'schema-correlation'
+    )
+  `;
+
+  const mutationStatements = [
+    'UPDATE "durable_job_audit_events" SET "reason" = "reason"',
+    'DELETE FROM "durable_job_audit_events" WHERE true',
+    'TRUNCATE "durable_job_audit_events"',
+    'UPDATE "review_job_adoption_audit_events" SET "reason" = "reason"',
+    'DELETE FROM "review_job_adoption_audit_events" WHERE true',
+    'TRUNCATE "review_job_adoption_audit_events"',
+  ] as const;
+  for (const statement of mutationStatements) {
+    await expect(sql.unsafe(statement)).rejects.toThrow(
+      "Durable-job audit tables are append-only",
+    );
+  }
+}
+
 describe.skipIf(!integrationEnabled)(
   "Task 6 durable-jobs PostgreSQL 16 schema Red contract",
   () => {
@@ -721,6 +762,7 @@ describe.skipIf(!integrationEnabled)(
         },
         async ({ connectionOne }) => {
           await expectDurableJobCatalogContract(connectionOne);
+          await expectAuditMutationRejection(connectionOne);
 
           for (const canonicalRow of Object.values(durableJobCanonicalRows)) {
             await insertDurableJobRow(connectionOne, canonicalRow);

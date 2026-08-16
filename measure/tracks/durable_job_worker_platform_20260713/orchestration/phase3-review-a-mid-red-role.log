@@ -1,0 +1,33 @@
+role=measure-mid-red
+track=durable_job_worker_platform_20260713
+phase=Phase 3: PostgreSQL Adapter Implementation
+findings=DWP3-RA-H2,DWP3-RA-M1,DWP3-RA-M2,DWP3-RA-L1
+current_head_start=3d66149bf3d5a0b68f0ac2861ce6392bdb0112c8
+scope=existing PG16 concurrency, enqueue, and schema tests; durable-job plan; Red evidence and role log
+production_change=not made; migration, sentinels, registry, journal, and snapshots excluded
+safe_suites=exit 0; 9 passed; 32 skipped; no PostgreSQL contact
+live_schema=exit 0; PostgreSQL 16.14; 3/3 passed; port 55453; scratch databases 0; container removed
+live_concurrency=exit 0; PostgreSQL 16.14; 14/14 passed; port 55454; scratch databases 0; test roles 0; container removed
+live_enqueue=exit 1; PostgreSQL 16.14; 20/24 passed; port 55456; scratch databases 0; test roles 0; container removed
+new_failure_1=active changed payload returned conflict instead of active-lease-retained
+new_failure_2=concurrent active changed payload returned conflict instead of active-lease-retained
+new_failure_3=fail transition-first promotion left generation 1 instead of 2
+new_failure_4=reclaim transition-first promotion left generation 1 instead of 2
+positive_heartbeat=passed; independent expiry read and settlement
+audit_mutations=passed; UPDATE, DELETE, and TRUNCATE rejected on both audit tables
+typescript=passed; backend test and database projects
+lint=passed; focused backend test lint
+prettier=passed; three tests and durable-job plan
+diff_check=passed
+
+MEASURE_AGENT_RESULT
+role: measure-mid-red
+status: complete
+verdict: PASS_WITH_FOUR_RECORDED_SUBSTANTIVE_RED_FAILURES
+track: durable_job_worker_platform_20260713
+phase: Phase 3: PostgreSQL Adapter Implementation
+findings: DWP3-RA-H2, DWP3-RA-M1, DWP3-RA-M2, DWP3-RA-L1
+current_head_start: 3d66149bf3d5a0b68f0ac2861ce6392bdb0112c8
+known_failures: active enqueue rejects changed payloads; fail and reclaim transition-first promotion leaves generation 1
+green_batch_handoff: Green receives all four new failures as one batch and reruns the isolated PG16 suites after remediation
+END_MEASURE_AGENT_RESULT

@@ -941,6 +941,64 @@ describe.skipIf(!integrationEnabled)(
       });
     });
 
+    it("extends a current lease and proves persisted expiry before settlement", async () => {
+      await withTask8Harness(async (context, firstPort, secondPort) => {
+        const jobId = jobIdFromEnqueue(
+          await firstPort.enqueue(enqueueRequest("task8-positive-heartbeat")),
+        );
+        const claimed = claimedJob(
+          await firstPort.claim({
+            ...claimRequest("worker-positive-heartbeat"),
+            leaseSeconds: 1,
+          }),
+        );
+        expect(claimed.id).toBe(jobId);
+
+        await expect(
+          secondPort.heartbeat({
+            jobId,
+            tenant: GLOBAL_TENANT,
+            leaseToken: claimed.lease.token,
+            now: BASE_TIME,
+            extendBySeconds: 60,
+          }),
+        ).resolves.toEqual({
+          outcome: "extended",
+          expiresAt: expectedExpiry(BASE_TIME, 60),
+        });
+
+        const persistedAfterHeartbeat = await readPersistedLeaseRow(
+          context,
+          jobId,
+        );
+        expect(
+          normalizePersistedTimestamp(persistedAfterHeartbeat.leaseExpiresAt),
+        ).toBe(expectedExpiry(BASE_TIME, 60));
+        expect(persistedAfterHeartbeat.state).toBe("running");
+
+        await expect(
+          secondPort.settle({
+            jobId,
+            tenant: GLOBAL_TENANT,
+            leaseToken: claimed.lease.token,
+            now: NEXT_TIME,
+            result: { completedAfterHeartbeat: true },
+          }),
+        ).resolves.toEqual({ outcome: "settled", state: "succeeded" });
+
+        const persistedAfterSettlement = await readPersistedLeaseRow(
+          context,
+          jobId,
+        );
+        expect(persistedAfterSettlement.state).toBe("succeeded");
+        expect(persistedAfterSettlement.leaseTokenHash).toBeNull();
+        expect(persistedAfterSettlement.leaseExpiresAt).toBeNull();
+        expect(persistedAfterSettlement.resultJson).toEqual({
+          completedAfterHeartbeat: true,
+        });
+      });
+    });
+
     it("reclaims an expired lease once across independent sessions", async () => {
       await withTask8Harness(async (_context, firstPort, secondPort) => {
         const jobId = jobIdFromEnqueue(
