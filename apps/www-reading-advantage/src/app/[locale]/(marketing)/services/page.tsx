@@ -52,9 +52,16 @@ export default async function Services() {
     status: t(`services.${serviceConfig.serviceIndex}.status`),
     statusBadge: t(`services.${serviceConfig.serviceIndex}.statusBadge`),
     description: t(`services.${serviceConfig.serviceIndex}.description`),
-    features: serviceConfig.featureIndexes.map((featureIndex) =>
-      t(`services.${serviceConfig.serviceIndex}.features.${featureIndex}`),
-    ),
+    features:
+      serviceConfig.serviceIndex === 3
+        ? serviceConfig.featureIndexes.map((featureIndex) =>
+            t(`services.3.features.${featureIndex}`),
+          )
+        : serviceConfig.featureIndexes.map((featureIndex) =>
+            t(
+              `services.${serviceConfig.serviceIndex}.features.${featureIndex}`,
+            ),
+          ),
     cta: t(`services.${serviceConfig.serviceIndex}.cta`),
     href: t(`services.${serviceConfig.serviceIndex}.href`),
     image: t(`services.${serviceConfig.serviceIndex}.image`),
