@@ -9,8 +9,7 @@ export interface FAQItem {
   answer: string;
 }
 
-export interface FAQAccordionProps
-  extends React.HTMLAttributes<HTMLDivElement> {
+export interface FAQAccordionProps extends React.HTMLAttributes<HTMLDivElement> {
   items: FAQItem[];
   variant?:
     | "sky"
@@ -24,16 +23,51 @@ export interface FAQAccordionProps
     | "slate";
 }
 
-const variantStyles: Record<string, { border: string; accent: string; icon: string }> = {
+const variantStyles: Record<
+  string,
+  { border: string; accent: string; icon: string }
+> = {
   sky: { border: "border-sky-200", accent: "bg-sky-50", icon: "text-sky-600" },
-  cyan: { border: "border-cyan-200", accent: "bg-cyan-50", icon: "text-cyan-600" },
-  orange: { border: "border-orange-200", accent: "bg-orange-50", icon: "text-orange-600" },
-  rose: { border: "border-rose-200", accent: "bg-rose-50", icon: "text-rose-600" },
-  indigo: { border: "border-indigo-200", accent: "bg-indigo-50", icon: "text-indigo-600" },
-  amber: { border: "border-amber-200", accent: "bg-amber-50", icon: "text-amber-600" },
-  fuchsia: { border: "border-fuchsia-200", accent: "bg-fuchsia-50", icon: "text-fuchsia-600" },
-  emerald: { border: "border-emerald-200", accent: "bg-emerald-50", icon: "text-emerald-600" },
-  slate: { border: "border-slate-200", accent: "bg-slate-50", icon: "text-slate-600" },
+  cyan: {
+    border: "border-cyan-200",
+    accent: "bg-cyan-50",
+    icon: "text-cyan-600",
+  },
+  orange: {
+    border: "border-orange-200",
+    accent: "bg-orange-50",
+    icon: "text-orange-600",
+  },
+  rose: {
+    border: "border-rose-200",
+    accent: "bg-rose-50",
+    icon: "text-rose-600",
+  },
+  indigo: {
+    border: "border-indigo-200",
+    accent: "bg-indigo-50",
+    icon: "text-indigo-600",
+  },
+  amber: {
+    border: "border-amber-200",
+    accent: "bg-amber-50",
+    icon: "text-amber-600",
+  },
+  fuchsia: {
+    border: "border-fuchsia-200",
+    accent: "bg-fuchsia-50",
+    icon: "text-fuchsia-600",
+  },
+  emerald: {
+    border: "border-emerald-200",
+    accent: "bg-emerald-50",
+    icon: "text-emerald-600",
+  },
+  slate: {
+    border: "border-slate-200",
+    accent: "bg-slate-50",
+    icon: "text-slate-600",
+  },
 };
 
 const FAQAccordion = React.forwardRef<HTMLDivElement, FAQAccordionProps>(
@@ -59,10 +93,12 @@ const FAQAccordion = React.forwardRef<HTMLDivElement, FAQAccordionProps>(
               )}
             >
               <button
+                id={`faq-question-${index}`}
                 type="button"
                 onClick={() => toggle(index)}
                 className="w-full flex items-center justify-between p-6 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-sky-500"
                 aria-expanded={isOpen}
+                aria-controls={`faq-answer-${index}`}
               >
                 <span className="font-semibold text-slate-900 text-lg pr-4">
                   {item.question}
@@ -76,6 +112,9 @@ const FAQAccordion = React.forwardRef<HTMLDivElement, FAQAccordionProps>(
                 />
               </button>
               <div
+                id={`faq-answer-${index}`}
+                role="region"
+                aria-labelledby={`faq-question-${index}`}
                 className={cn(
                   "overflow-hidden transition-all duration-300",
                   isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0",

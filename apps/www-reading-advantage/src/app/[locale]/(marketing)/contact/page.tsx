@@ -13,6 +13,7 @@ import HeroSection from "@/components/marketing/hero-section";
 import { Button } from "@/components/ui/button";
 import { buildMarketingMetadata } from "@/lib/seo";
 import type { Metadata } from "next";
+import { contactDetails } from "@/config/contact";
 
 /**
  * Builds metadata for the public contact route.
@@ -55,7 +56,7 @@ export default async function ContactPage() {
         }
         ctaButton={{
           text: t("email.address"),
-          href: "mailto:support@reading-advantage.com",
+          href: `mailto:${contactDetails.supportEmail}`,
           variant: "primary",
         }}
         height="medium"
@@ -86,7 +87,7 @@ export default async function ContactPage() {
               </h3>
               <p className="text-slate-600 mb-6">{t("email.description")}</p>
               <Button asChild>
-                <a href="mailto:support@reading-advantage.com">
+                <a href={`mailto:${contactDetails.supportEmail}`}>
                   {t("email.address")}
                   <ArrowRight className="w-4 h-4" />
                 </a>
@@ -107,7 +108,7 @@ export default async function ContactPage() {
                 className="border-amber-500 text-amber-700 hover:bg-amber-50"
                 asChild
               >
-                <a href="tel:+660990058038">
+                <a href={contactDetails.phoneHref}>
                   {t("phone.number")}
                   <ArrowRight className="w-4 h-4" />
                 </a>
@@ -171,7 +172,7 @@ export default async function ContactPage() {
                 </p>
                 <div className="flex items-center justify-center bg-white rounded-xl p-4 mb-3">
                   <Image
-                    src="/line-qr.jpg"
+                    src={contactDetails.lineQrSrc}
                     alt={t("lineQrCode")}
                     width={200}
                     height={200}
@@ -185,7 +186,7 @@ export default async function ContactPage() {
 
               <Button variant="white" className="mt-6 w-full" asChild>
                 <a
-                  href="https://www.tiktok.com/@reading.advantage"
+                  href={contactDetails.tiktokUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -207,7 +208,7 @@ export default async function ContactPage() {
             {t("description")}
           </p>
           <Button variant="white" size="lg" asChild>
-            <a href="mailto:support@reading-advantage.com">
+            <a href={`mailto:${contactDetails.supportEmail}`}>
               {t("email.title")}
               <ArrowRight className="w-5 h-5" />
             </a>

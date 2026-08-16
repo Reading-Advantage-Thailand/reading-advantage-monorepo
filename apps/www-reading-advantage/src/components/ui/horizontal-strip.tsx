@@ -1,16 +1,12 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 
-export interface HorizontalStripProps
-  extends React.HTMLAttributes<HTMLDivElement> {
+export interface HorizontalStripProps extends React.HTMLAttributes<HTMLDivElement> {
   background?: string;
   padding?: string;
 }
 
-const HorizontalStrip = React.forwardRef<
-  HTMLDivElement,
-  HorizontalStripProps
->(
+const HorizontalStrip = React.forwardRef<HTMLDivElement, HorizontalStripProps>(
   (
     {
       className,
@@ -29,12 +25,11 @@ const HorizontalStrip = React.forwardRef<
         padding,
         className,
       )}
+      aria-label="Scrollable content"
       {...props}
     >
       <div className="w-full overflow-x-auto scrollbar-hide snap-x snap-mandatory">
-        <div className="flex gap-6 px-4 md:px-8 min-w-max">
-          {children}
-        </div>
+        <div className="flex gap-6 px-4 md:px-8 min-w-max">{children}</div>
       </div>
     </section>
   ),

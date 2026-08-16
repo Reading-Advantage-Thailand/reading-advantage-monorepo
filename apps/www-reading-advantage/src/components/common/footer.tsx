@@ -2,6 +2,7 @@ import { getScopedI18n } from "@/locales/server";
 import { Link } from "@/locales/navigation";
 import React from "react";
 import Image from "next/image";
+import { contactDetails } from "@/config/contact";
 
 export default async function Footer() {
   const t = await getScopedI18n("components.common.footer");
@@ -11,12 +12,8 @@ export default async function Footer() {
         <div className="bg-white rounded-[40px] border border-sky-100 p-8 md:p-12 shadow-xl">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
-              <h3 className=" font-semibold text-lg mb-4">
-                {t("heading")}
-              </h3>
-              <p className="text-slate-600 ">
-                {t("description")}
-              </p>
+              <h3 className=" font-semibold text-lg mb-4">{t("heading")}</h3>
+              <p className="text-slate-600 ">{t("description")}</p>
             </div>
             <div>
               <h3 className=" font-semibold text-lg mb-4">
@@ -70,18 +67,22 @@ export default async function Footer() {
                 {t("contactUs.title")}
               </h3>
               <ul className="space-y-2 text-slate-600 ">
-                <li>{t("contactUs.email")}: support@reading-advantage.com</li>
-                <li>{t("contactUs.phone")}: +66 099-005-8038</li>
+                <li>
+                  {t("contactUs.email")}: {contactDetails.supportEmail}
+                </li>
+                <li>
+                  {t("contactUs.phone")}: {contactDetails.phoneNumber}
+                </li>
                 <li>
                   {t("contactUs.location")} <br />
-                  Tiktok @reading.advantage
+                  {contactDetails.tiktokLabel}
                 </li>
                 <li>
                   <Image
-                    src="/line-qr.jpg"
+                    src={contactDetails.lineQrSrc}
                     width={100}
                     height={100}
-                    alt="Line QR"
+                    alt={contactDetails.lineQrAlt}
                     className="rounded-lg"
                   />
                 </li>

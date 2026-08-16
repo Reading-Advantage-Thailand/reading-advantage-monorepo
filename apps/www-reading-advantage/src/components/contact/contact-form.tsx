@@ -5,6 +5,7 @@ import { useScopedI18n } from "@/locales/client";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { productLinks } from "@/config/navigation";
+import { contactDetails } from "@/config/contact";
 
 export function ContactForm() {
   const t = useScopedI18n("components.contactForm");
@@ -18,7 +19,11 @@ export function ContactForm() {
     message: "",
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >,
+  ) => {
     setFormData((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
@@ -40,7 +45,7 @@ ${t("form.fields.message")}:
 ${formData.message}
         `.trim();
 
-    window.location.href = `mailto:contact@readingadvantage.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    window.location.href = `mailto:${contactDetails.supportEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   };
 
   return (

@@ -66,18 +66,22 @@ export function BlogPagination({
       className="flex items-center justify-center gap-2 py-8"
       aria-label="Pagination"
     >
-      <Link
-        href={currentPage > 1 ? `${baseUrl}/page/${currentPage - 1}` : "#"}
-        className={`px-4 py-2 rounded-md border ${
-          currentPage === 1
-            ? "opacity-50 cursor-not-allowed pointer-events-none border-muted text-muted-foreground"
-            : "border-input bg-background hover:bg-accent hover:text-accent-foreground"
-        }`}
-        aria-disabled={currentPage === 1}
-        scroll={false}
-      >
-        {t("previous")}
-      </Link>
+      {currentPage > 1 ? (
+        <Link
+          href={`${baseUrl}/page/${currentPage - 1}`}
+          className="px-4 py-2 rounded-md border border-input bg-background hover:bg-accent hover:text-accent-foreground"
+          scroll={false}
+        >
+          {t("previous")}
+        </Link>
+      ) : (
+        <span
+          aria-disabled="true"
+          className="px-4 py-2 rounded-md border opacity-50 cursor-not-allowed border-muted text-muted-foreground"
+        >
+          {t("previous")}
+        </span>
+      )}
 
       {pageNumbers.map((page, index) =>
         typeof page === "number" ? (
@@ -103,20 +107,22 @@ export function BlogPagination({
         ),
       )}
 
-      <Link
-        href={
-          currentPage < totalPages ? `${baseUrl}/page/${currentPage + 1}` : "#"
-        }
-        className={`px-4 py-2 rounded-md border ${
-          currentPage === totalPages
-            ? "opacity-50 cursor-not-allowed pointer-events-none border-muted text-muted-foreground"
-            : "border-input bg-background hover:bg-accent hover:text-accent-foreground"
-        }`}
-        aria-disabled={currentPage === totalPages}
-        scroll={false}
-      >
-        {t("next")}
-      </Link>
+      {currentPage < totalPages ? (
+        <Link
+          href={`${baseUrl}/page/${currentPage + 1}`}
+          className="px-4 py-2 rounded-md border border-input bg-background hover:bg-accent hover:text-accent-foreground"
+          scroll={false}
+        >
+          {t("next")}
+        </Link>
+      ) : (
+        <span
+          aria-disabled="true"
+          className="px-4 py-2 rounded-md border opacity-50 cursor-not-allowed border-muted text-muted-foreground"
+        >
+          {t("next")}
+        </span>
+      )}
     </nav>
   );
 }

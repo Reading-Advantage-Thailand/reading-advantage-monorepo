@@ -50,7 +50,10 @@ export function TableOfContents({ headings }: TableOfContentsProps) {
 
   return (
     <>
-      <nav className="hidden md:block sticky top-24 w-64 float-right ml-8 mb-8 p-4 border rounded-lg bg-card">
+      <nav
+        aria-label={t("onThisPage")}
+        className="hidden md:block sticky top-24 w-64 float-right ml-8 mb-8 p-4 border rounded-lg bg-card"
+      >
         <h2 className="font-semibold text-lg mb-4">{t("onThisPage")}</h2>
         <ul className="space-y-2">
           {headings.map((heading) => (
@@ -83,6 +86,9 @@ export function TableOfContents({ headings }: TableOfContentsProps) {
 
       <div className="md:hidden mb-8">
         <button
+          type="button"
+          aria-expanded={isOpen}
+          aria-controls="mobile-table-of-contents"
           onClick={() => setIsOpen(!isOpen)}
           className="flex items-center justify-between w-full p-4 border rounded-lg bg-card"
         >
@@ -102,7 +108,10 @@ export function TableOfContents({ headings }: TableOfContentsProps) {
           </svg>
         </button>
         {isOpen && (
-          <ul className="mt-2 p-4 border rounded-lg bg-card space-y-2">
+          <ul
+            id="mobile-table-of-contents"
+            className="mt-2 p-4 border rounded-lg bg-card space-y-2"
+          >
             {headings.map((heading) => (
               <li
                 key={heading.id}

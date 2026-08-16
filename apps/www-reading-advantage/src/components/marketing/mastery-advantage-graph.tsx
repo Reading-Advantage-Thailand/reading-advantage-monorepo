@@ -17,10 +17,19 @@ interface FloatingLabel {
   color: string;
 }
 
-export function MasteryAdvantageGraph({ className = "" }: { className?: string }) {
+export function MasteryAdvantageGraph({
+  className = "",
+}: {
+  className?: string;
+}) {
   const [domainIndex, setDomainIndex] = useState(0);
-  const [caption, setCaption] = useState({ text: "Mastery Advantage ®", color: "" });
-  const [nodeOverrides, setNodeOverrides] = useState<Record<number, string>>({});
+  const [caption, setCaption] = useState({
+    text: "Mastery Advantage ®",
+    color: "",
+  });
+  const [nodeOverrides, setNodeOverrides] = useState<Record<number, string>>(
+    {},
+  );
   const [floatingLabels, setFloatingLabels] = useState<FloatingLabel[]>([]);
   const [isVisible, setIsVisible] = useState(false);
 
@@ -43,7 +52,7 @@ export function MasteryAdvantageGraph({ className = "" }: { className?: string }
     y1: number,
     x2: number,
     y2: number,
-    ms: number
+    ms: number,
   ) => {
     return new Promise<void>((resolve) => {
       const el = cursorRef.current;
@@ -107,7 +116,10 @@ export function MasteryAdvantageGraph({ className = "" }: { className?: string }
     };
 
     // Phase 1: forgetting
-    setCaption({ text: "About to forget — reviewing before it fades", color: "#d97706" });
+    setCaption({
+      text: "About to forget — reviewing before it fades",
+      color: "#d97706",
+    });
     setNodeOverrides({ [forgetIdx]: "forgetting" });
     await delay(900);
     if (abortRef.current) return;
@@ -121,7 +133,9 @@ export function MasteryAdvantageGraph({ className = "" }: { className?: string }
 
     // Phase 3: refreshed
     setCaption({ text: "Reviewed! Memory secured.", color: "#34d399" });
-    const lid1 = fN ? addLabel(fN.x, fN.y - fN.r - 30, "Reviewed! ✓", "#34d399") : 0;
+    const lid1 = fN
+      ? addLabel(fN.x, fN.y - fN.r - 30, "Reviewed! ✓", "#34d399")
+      : 0;
     setNodeOverrides((prev) => ({ ...prev, [forgetIdx]: "refreshed" }));
     await delay(700);
     if (abortRef.current) return;
@@ -144,7 +158,10 @@ export function MasteryAdvantageGraph({ className = "" }: { className?: string }
     }
 
     // Phase 5: ready to learn
-    setCaption({ text: "Ready to learn — prerequisites mastered", color: "#f5b942" });
+    setCaption({
+      text: "Ready to learn — prerequisites mastered",
+      color: "#f5b942",
+    });
     const lid2 = addLabel(lN.x, lN.y - lN.r - 30, "Ready to learn!", "#f5b942");
     await delay(700);
     if (abortRef.current) return;
@@ -163,7 +180,10 @@ export function MasteryAdvantageGraph({ className = "" }: { className?: string }
       [currentIdx]: "mastered",
       [learnIdx]: "current",
     }));
-    setCaption({ text: "Skill unlocked! Recalculating your path…", color: "#818cf8" });
+    setCaption({
+      text: "Skill unlocked! Recalculating your path…",
+      color: "#818cf8",
+    });
     await delay(520);
     if (abortRef.current) return;
 
@@ -231,7 +251,7 @@ export function MasteryAdvantageGraph({ className = "" }: { className?: string }
     if (!el) return;
     const obs = new IntersectionObserver(
       ([entry]) => setIsVisible(entry.isIntersecting),
-      { threshold: 0.1 }
+      { threshold: 0.1 },
     );
     obs.observe(el);
     return () => obs.disconnect();
@@ -254,15 +274,19 @@ export function MasteryAdvantageGraph({ className = "" }: { className?: string }
       "--ma-edge-active": meta.edge,
       "--ma-node-current-ring": meta.currentRing,
     }),
-    [meta]
+    [meta],
   );
 
-  const effectiveState = (idx: number) => nodeOverrides[idx] || data.nodes[idx].state;
+  const effectiveState = (idx: number) =>
+    nodeOverrides[idx] || data.nodes[idx].state;
 
   return (
     <div ref={containerRef} className={`relative ${className}`}>
       {/* Status bar */}
       <div
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
         className="flex items-center px-6 py-3.5 min-h-[56px] border-b border-white/5"
         style={{ background: "rgba(10,16,28,0.98)" }}
       >
@@ -275,6 +299,8 @@ export function MasteryAdvantageGraph({ className = "" }: { className?: string }
       </div>
 
       <svg
+        role="img"
+        aria-label="Mastery Advantage knowledge graph"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 1000 1000"
         preserveAspectRatio="xMidYMid meet"
@@ -379,30 +405,88 @@ export function MasteryAdvantageGraph({ className = "" }: { className?: string }
             <stop offset="0%" stop-color="var(--ma-bg-soft)" />
             <stop offset="100%" stop-color="var(--ma-bg)" />
           </radialGradient>
-          <pattern id="ma-grid-pattern" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
-            <path d="M 40 0 L 0 0 0 40" fill="none" stroke="var(--ma-grid)" stroke-width="1" />
+          <pattern
+            id="ma-grid-pattern"
+            x="0"
+            y="0"
+            width="40"
+            height="40"
+            patternUnits="userSpaceOnUse"
+          >
+            <path
+              d="M 40 0 L 0 0 0 40"
+              fill="none"
+              stroke="var(--ma-grid)"
+              stroke-width="1"
+            />
           </pattern>
-          <filter id="ma-glow-soft" x="-50%" y="-50%" width="200%" height="200%">
+          <filter
+            id="ma-glow-soft"
+            x="-50%"
+            y="-50%"
+            width="200%"
+            height="200%"
+          >
             <feGaussianBlur stdDeviation="3" result="blur" />
-            <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
           </filter>
-          <filter id="ma-glow-strong" x="-100%" y="-100%" width="300%" height="300%">
+          <filter
+            id="ma-glow-strong"
+            x="-100%"
+            y="-100%"
+            width="300%"
+            height="300%"
+          >
             <feGaussianBlur stdDeviation="6" result="blur" />
-            <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
           </filter>
-          <linearGradient id="ma-active-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+          <linearGradient
+            id="ma-active-gradient"
+            x1="0%"
+            y1="0%"
+            x2="100%"
+            y2="0%"
+          >
             <stop offset="0%" stop-color="var(--ma-node-mastered)" />
             <stop offset="100%" stop-color="var(--ma-node-current-ring)" />
           </linearGradient>
           <symbol id="ma-icon-check" viewBox="0 0 20 20">
-            <path d="M5 10.5 L8.5 14 L15 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+            <path
+              d="M5 10.5 L8.5 14 L15 7"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
           </symbol>
           <symbol id="ma-icon-spark" viewBox="0 0 20 20">
-            <path d="M10 3 L11.5 8.5 L17 10 L11.5 11.5 L10 17 L8.5 11.5 L3 10 L8.5 8.5 Z" fill="currentColor" />
+            <path
+              d="M10 3 L11.5 8.5 L17 10 L11.5 11.5 L10 17 L8.5 11.5 L3 10 L8.5 8.5 Z"
+              fill="currentColor"
+            />
           </symbol>
           <symbol id="ma-icon-lock" viewBox="0 0 20 20">
-            <rect x="6" y="9" width="8" height="7" rx="1.2" fill="currentColor" />
-            <path d="M7.5 9 V7 a2.5 2.5 0 0 1 5 0 V9" fill="none" stroke="currentColor" stroke-width="1.4" />
+            <rect
+              x="6"
+              y="9"
+              width="8"
+              height="7"
+              rx="1.2"
+              fill="currentColor"
+            />
+            <path
+              d="M7.5 9 V7 a2.5 2.5 0 0 1 5 0 V9"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.4"
+            />
           </symbol>
         </defs>
 
@@ -477,13 +561,19 @@ export function MasteryAdvantageGraph({ className = "" }: { className?: string }
                 className="ma-node"
                 data-state={state}
                 transform={`translate(${n.x} ${n.y})`}
-                filter={n.glow && state === "current" ? "url(#ma-glow-strong)" : undefined}
+                filter={
+                  n.glow && state === "current"
+                    ? "url(#ma-glow-strong)"
+                    : undefined
+                }
               >
                 <circle
                   className="ma-node-fill"
                   r={n.r}
                   style={
-                    n.fillColor && state !== "forgetting" && state !== "refreshed"
+                    n.fillColor &&
+                    state !== "forgetting" &&
+                    state !== "refreshed"
                       ? { fill: n.fillColor, transition: "fill .5s" }
                       : undefined
                   }
@@ -492,19 +582,32 @@ export function MasteryAdvantageGraph({ className = "" }: { className?: string }
                   className="ma-node-ring"
                   r={n.r + (state === "current" ? 6 : 4)}
                   style={
-                    n.ringColor && state !== "forgetting" && state !== "refreshed"
+                    n.ringColor &&
+                    state !== "forgetting" &&
+                    state !== "refreshed"
                       ? { stroke: n.ringColor, transition: "stroke .5s" }
                       : undefined
                   }
                 />
-                <use href={iconId} x="-10" y="-10" width="20" height="20" className="ma-node-icon" />
+                <use
+                  href={iconId}
+                  x="-10"
+                  y="-10"
+                  width="20"
+                  height="20"
+                  className="ma-node-icon"
+                />
               </g>
             );
           })}
         </g>
 
         {/* Cursor */}
-        <g ref={cursorRef} style={{ display: "none" }} filter="url(#ma-glow-soft)">
+        <g
+          ref={cursorRef}
+          style={{ display: "none" }}
+          filter="url(#ma-glow-soft)"
+        >
           <circle r="13" fill="#fff" opacity="0.35" />
           <circle r="6" fill="#fff" />
         </g>
@@ -515,7 +618,15 @@ export function MasteryAdvantageGraph({ className = "" }: { className?: string }
             const w = l.text.length * 7.5 + 24;
             return (
               <g key={l.id} transform={`translate(${l.x} ${l.y})`}>
-                <rect x={-w / 2} y={-14} width={w} height={22} rx={4} fill="#0b1220" opacity="0.9" />
+                <rect
+                  x={-w / 2}
+                  y={-14}
+                  width={w}
+                  height={22}
+                  rx={4}
+                  fill="#0b1220"
+                  opacity="0.9"
+                />
                 <text
                   textAnchor="middle"
                   y={3}
