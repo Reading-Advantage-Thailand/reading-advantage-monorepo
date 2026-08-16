@@ -41,3 +41,37 @@ role_base_sha: c7d0880e9bfdbe52ca8c06a914d44c4854fbc7ad
 red_evidence: phase2-review-a-red-remediation-evidence-20260816.md
 green_handoff: migration renumbering, snapshot-chain repair, legacy-chain repair, and cross-organization tenant binding
 END_MEASURE_AGENT_RESULT
+
+## Follow-up after the approved test commit
+
+- Approved test commit: `63f1ec7e8563b96397c6d07ec994255482f4bf46`.
+- The follow-up lease covers the plan, one Red evidence file, and this role log.
+- The six findings are RA-001 valid UUID persistence, RA-002 trusted identity,
+  RA-003 reviewed activity, RA-004 scoped factory, RA-005 safe provider errors,
+  and RA-006 strict payload validation.
+- Final domain Red had 20 tests, 18 expected failures, and 2 existing passes.
+- Immutable domain Red passed 20/20.
+- Existing PostgreSQL 16 behavior passed 20/20.
+- New live PostgreSQL 16 Red had one expected validation failure.
+- Type, lint, focused Prettier, scoped diff, graph, and cleanup checks passed.
+- The full plan Prettier check remains red from historical indentation outside
+  this lease.
+- This lease changed no production, schema, migration, or dependency files.
+
+## Green handoff
+
+Route Green to the responsible Sales session for
+`sales_mastery_consumer_20260810`. Green owns the production implementation and
+must rerun all Red, immutable Red, PG16, quality, graph, and cleanup gates.
+Phase 2 acceptance remains pending.
+
+MEASURE_AGENT_RESULT
+role: mid-red
+status: complete-with-green-handoff
+track: sales_mastery_consumer_20260810
+phase: Phase 2 — company tenant mapping and durable projection
+approved_test_commit: 63f1ec7e8563b96397c6d07ec994255482f4bf46
+red_evidence: phase2-review-a-red-remediation-evidence-20260817.md
+handoff: responsible Sales Green session
+phase2_acceptance: not accepted
+END_MEASURE_AGENT_RESULT

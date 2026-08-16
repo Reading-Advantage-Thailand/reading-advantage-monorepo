@@ -220,6 +220,12 @@
   boundary. Red commit: `75b68ba25`. Green implementation commit:
   `401b65d3f777dc4e4da6a0127d1a56f523c8d984`. Verification and handoff:
   `phase2-review-b-green-remediation-evidence-20260816.md`.
+- [~] Task: Record the approved Review A remediation Red contracts for trusted
+   Company Identity, reviewed activity, scoped Mastery access, provider errors,
+   strict payloads, and disposable PostgreSQL 16 persistence. Test commit:
+   `63f1ec7e8563b96397c6d07ec994255482f4bf46`. Evidence:
+   `phase2-review-a-red-remediation-evidence-20260817.md`. Green remains
+   pending in the responsible Sales session. Phase 2 is not accepted.
 
 ## Phase 3 — project Sales evidence into KST/SRS
 
