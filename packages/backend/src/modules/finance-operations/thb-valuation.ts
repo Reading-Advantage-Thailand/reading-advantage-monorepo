@@ -34,7 +34,8 @@ export type FinanceThbPolicyApprovalScope = z.infer<
   typeof financeThbPolicyApprovalScopeSchema
 >;
 
-const receiptSchema = z.strictObject({
+// Company Identity validates the complete receipt. Finance projects only its authoritative fields.
+const receiptSchema = z.object({
   decisionId: opaqueIdentifierSchema,
   contentDigest: digestSchema,
   scope: financeThbPolicyApprovalScopeSchema,
@@ -163,10 +164,27 @@ function isPlainRecord(value: unknown): value is PlainRecord {
 function capture(value: unknown, depth = 0): unknown {
   if (depth > 12) throw new Error("boundary depth");
   if (value === null || typeof value !== "object") return value;
+  if (Array.isArray(value)) {
+    if (nodeTypes.isProxy(value)) throw new Error("boundary object");
+    const output: unknown[] = [];
+    for (const key of Reflect.ownKeys(value)) {
+      if (typeof key !== "string" || key === "__proto__" || key === "length") {
+        if (key !== "length") throw new Error("boundary array key");
+        continue;
+      }
+      const descriptor = Object.getOwnPropertyDescriptor(value, key);
+      if (descriptor === undefined || !("value" in descriptor)) {
+        throw new Error("boundary accessor");
+      }
+      output[Number(key)] = capture(descriptor.value, depth + 1);
+    }
+    return output;
+  }
   if (!isPlainRecord(value)) throw new Error("boundary object");
   const output: PlainRecord = {};
   for (const key of Reflect.ownKeys(value)) {
     if (typeof key !== "string") throw new Error("boundary symbol");
+    if (key === "__proto__") throw new Error("boundary prototype key");
     const descriptor = Object.getOwnPropertyDescriptor(value, key);
     if (descriptor === undefined || !("value" in descriptor)) {
       throw new Error("boundary accessor");
