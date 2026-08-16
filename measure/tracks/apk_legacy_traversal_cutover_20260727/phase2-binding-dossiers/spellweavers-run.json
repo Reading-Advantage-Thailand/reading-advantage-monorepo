@@ -158,7 +158,7 @@
         },
         "decision": {
           "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/claim-evidence-ledger-v2.json",
-          "json_pointer": "/19",
+          "json_pointer": "/18",
           "claim_id": "SW-COLL-001"
         }
       }
@@ -399,7 +399,7 @@
         },
         {
           "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/claim-evidence-ledger-v2.json",
-          "json_pointer": "/19",
+          "json_pointer": "/18",
           "claim_id": "SW-COLL-001"
         }
       ]
