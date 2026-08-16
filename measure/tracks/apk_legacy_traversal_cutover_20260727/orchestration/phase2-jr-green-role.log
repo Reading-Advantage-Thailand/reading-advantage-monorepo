@@ -11,7 +11,7 @@
 - The manifest suite passed 13/13.
 - The Python readiness suite passed 9/9.
 - TypeScript, ESLint, and scoped diff checks exited 0.
-- Prettier exited 1 for the five dossier files.
+- Prettier exited 1 for the five dossier files and the plan.
 - No production code, source manifest, suitability source, Asset Contract source, registry, metadata, or Red test changed.
 - Phase 2 remains `[~]`.
 
@@ -26,6 +26,6 @@ commits: f9809655074acb637eb72b90ca91d9c3c989053f; evidence commit pending
 tests_run: focused binding-freeze 4/7 passed with 3 pointer-drift failures; manifest 13/13; Python readiness 9/9; TypeScript, ESLint, and diff checks passed
 files_changed: five phase2-binding-dossiers JSON files; plan.md; phase2-binding-freeze-green-evidence-20260816.md; this log
 counts: 5 dossiers; 15 roles; 15 blocked; 0 adoption; 4/7 focused tests passed
-known_failures: immutable Red pointer drift for Spellweaver's Run, Shadow Gate Dungeon, and Griffin Rider's Escape; Prettier fails on five dossier files
+known_failures: immutable Red pointer drift for Spellweaver's Run, Shadow Gate Dungeon, and Griffin Rider's Escape; Prettier fails on five dossier files and the plan
 handoff: Review A must repair the immutable Red contract or publish accepted evidence with matching pointers. No phase completion or downstream authority is claimed.
 END_MEASURE_AGENT_RESULT
