@@ -27,38 +27,12 @@
     "The source guard rejects Phaser imports and private renderer-factory coupling in all fifteen Red files."
   ],
   "commands": [
-    {
-      "command": "CI=true pnpm exec vitest run packages/game-cartridges/src/legacy-traversal-{dragon-rider,spellweavers-run,shadow-gate-dungeon,labyrinth-goblin-king,griffin-riders-escape}.{mechanics,responsive,learning}.test.ts",
-      "result": "expected_red",
-      "exit_code": 1,
-      "evidence": "15 files collected; 15 tests failed at the empty catalog boundary."
-    },
-    {
-      "command": "CI=true pnpm exec vitest run packages/game-cartridges/src/legacy-traversal-phase3-adversarial.test.ts",
-      "result": "passed",
-      "exit_code": 0,
-      "evidence": "3 adversarial tests passed."
-    },
-    {
-      "command": "./node_modules/.bin/tsc --noEmit -p packages/game-cartridges/tsconfig.json",
-      "result": "passed",
-      "exit_code": 0
-    },
-    {
-      "command": "./node_modules/.bin/eslint --config packages/game-cartridges/eslint.config.mjs packages/game-cartridges/src/legacy-traversal-phase3-adversarial.test.ts packages/game-cartridges/src/legacy-traversal-phase3-test-helpers.ts packages/game-cartridges/src/legacy-traversal-{dragon-rider,spellweavers-run,shadow-gate-dungeon,labyrinth-goblin-king,griffin-riders-escape}.{mechanics,responsive,learning}.test.ts",
-      "result": "passed",
-      "exit_code": 0
-    },
-    {
-      "command": "./node_modules/.bin/prettier --check packages/game-cartridges/src/legacy-traversal-phase3-adversarial.test.ts packages/game-cartridges/src/legacy-traversal-phase3-test-helpers.ts packages/game-cartridges/src/legacy-traversal-{dragon-rider,spellweavers-run,shadow-gate-dungeon,labyrinth-goblin-king,griffin-riders-escape}.{mechanics,responsive,learning}.test.ts",
-      "result": "passed",
-      "exit_code": 0
-    },
-    {
-      "command": "git diff --check 27c7f4f23..e1d2a9e62 -- Phase 3 test paths",
-      "result": "passed",
-      "exit_code": 0
-    }
+    "CI=true pnpm exec vitest run packages/game-cartridges/src/legacy-traversal-{dragon-rider,spellweavers-run,shadow-gate-dungeon,labyrinth-goblin-king,griffin-riders-escape}.{mechanics,responsive,learning}.test.ts (exit 1; expected Red)",
+    "CI=true pnpm exec vitest run packages/game-cartridges/src/legacy-traversal-phase3-adversarial.test.ts (exit 0)",
+    "./node_modules/.bin/tsc --noEmit -p packages/game-cartridges/tsconfig.json (exit 0)",
+    "./node_modules/.bin/eslint --config packages/game-cartridges/eslint.config.mjs packages/game-cartridges/src/legacy-traversal-phase3-adversarial.test.ts packages/game-cartridges/src/legacy-traversal-phase3-test-helpers.ts packages/game-cartridges/src/legacy-traversal-{dragon-rider,spellweavers-run,shadow-gate-dungeon,labyrinth-goblin-king,griffin-riders-escape}.{mechanics,responsive,learning}.test.ts (exit 0)",
+    "./node_modules/.bin/prettier --check packages/game-cartridges/src/legacy-traversal-phase3-adversarial.test.ts packages/game-cartridges/src/legacy-traversal-phase3-test-helpers.ts packages/game-cartridges/src/legacy-traversal-{dragon-rider,spellweavers-run,shadow-gate-dungeon,labyrinth-goblin-king,griffin-riders-escape}.{mechanics,responsive,learning}.test.ts (exit 0)",
+    "git diff --check 27c7f4f23..e1d2a9e62 -- Phase 3 test paths (exit 0)"
   ],
   "changed_files": [
     "packages/game-cartridges/src/legacy-traversal-phase3-adversarial.test.ts",
