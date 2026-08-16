@@ -236,6 +236,18 @@
   - The THB strategy now separates completed implementation, active acceptance remediation, and deferred owner policy decisions.
   - The Red evidence note is `phase2-thb-review-c-red-remediation-20260816.md`; the role log is `orchestration/phase2-thb-review-c-mid-red-role.log`.
 
+  THB Review C Green remediation evidence (2026-08-16; source commit `92af1eb11`; phase base `8fa71b33b79a3090941f884f037564baa0322dbb`; role base `febc51645d10f7997c4eeac705306472676e0113`):
+
+  - Finance accepts the complete validated public Company Identity receipt.
+  - Finance projects only the authoritative `decisionId`, `contentDigest`, and `scope`.
+  - Finance does not repeat Company Identity authority, ledger, or audit verification.
+  - Own `__proto__` keys fail during boundary capture before each object is used.
+  - The THB command passed 65/65 tests.
+  - The architecture command passed 11/11 tests.
+  - The focused Finance regression passed 25/25 tests across 5 files.
+  - Production and test TypeScript checks, Finance lint, Prettier, build, and scoped diff checks passed.
+  - The Green evidence note is `phase2-thb-review-c-green-remediation-20260816.md`; the role log is `orchestration/phase2-thb-review-c-jr-green-role.log`.
+
 ## Phase 3 — close and accountant exchange
 
 - [b] Task: Implement close controls and accountant packs after the required written policy decisions and pilot acceptance. — deferred:accountant-owner-decisions

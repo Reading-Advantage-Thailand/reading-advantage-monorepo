@@ -1,0 +1,25 @@
+MEASURE_AGENT_RESULT
+role: measure-jr-green
+status: complete
+track: company_finance_operations_20260810
+phase: Phase 2 — controlled operational imports
+phase_base_sha: 8fa71b33b79a3090941f884f037564baa0322dbb
+role_base_sha: febc51645d10f7997c4eeac705306472676e0113
+commits: 92af1eb11 source correction; evidence commit records verification
+red_thb_result: initial exit 1; 65 collected; 61 passed; 4 expected behavior failures; final exit 0; 65 passed
+architecture_result: exit 0; 11 passed; 0 failed
+finance_regression_result: exit 0; 25 passed; 0 failed; 5 files
+typecheck_commands: node ../../node_modules/typescript/bin/tsc --noEmit -p tsconfig.json; node ../../node_modules/typescript/bin/tsc --noEmit -p tsconfig.test.json
+typecheck_result: exit 0; production and test checks passed
+lint_command: node ../../node_modules/eslint/bin/eslint.js src/modules/finance-operations
+lint_result: exit 0
+prettier_command: node ../../node_modules/prettier/bin/prettier.cjs --check src/modules/finance-operations/thb-valuation.ts
+prettier_result: exit 0
+build_command: node ../../node_modules/typescript/bin/tsc -p tsconfig.json
+build_result: exit 0
+diff_command: git diff --check -- packages/backend/src/modules/finance-operations/thb-valuation.ts
+diff_result: exit 0
+files: packages/backend/src/modules/finance-operations/thb-valuation.ts; measure/tracks/company_finance_operations_20260810/plan.md; measure/tracks/company_finance_operations_20260810/phase2-thb-review-c-green-remediation-20260816.md; measure/tracks/company_finance_operations_20260810/orchestration/phase2-thb-review-c-jr-green-role.log
+failures: initial Red rerun had 4 expected behavior failures; final checks passed
+handoff: Review C should verify receipt projection and prototype-key rejection. Review A/B remain stable. Owner policy decisions remain deferred.
+END_MEASURE_AGENT_RESULT
