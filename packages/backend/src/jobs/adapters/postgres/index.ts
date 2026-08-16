@@ -324,10 +324,6 @@ export function createDurableJobQueuePort(input: {
         throw new Error("Durable job identity conflict returned no row.");
       }
 
-      if (existing.payload_fingerprint !== fingerprint) {
-        return { outcome: "conflict", jobId: existing.id };
-      }
-
       if (existing.state === "running") {
         await transaction`
           UPDATE "durable_jobs"
@@ -347,8 +343,18 @@ export function createDurableJobQueuePort(input: {
         };
       }
 
+      const isRetryOrRedeliveryPending =
+        existing.state === "pending" &&
+        (existing.attempt > 0 || existing.redeliver_current_attempt);
+      if (
+        existing.payload_fingerprint !== fingerprint &&
+        !isRetryOrRedeliveryPending
+      ) {
+        return { outcome: "conflict", jobId: existing.id };
+      }
+
       const nextGeneration =
-        existing.state === "pending"
+        existing.state === "pending" && !isRetryOrRedeliveryPending
           ? existing.generation
           : existing.generation + 1;
       await transaction`
