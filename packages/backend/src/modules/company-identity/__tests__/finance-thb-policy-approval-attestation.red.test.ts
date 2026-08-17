@@ -521,6 +521,20 @@ function verificationInput(
   };
 }
 
+/** Adds an own enumerable `__proto__` data property without invoking the prototype setter. */
+function withOwnEnumerableProto<T extends object>(value: T): T {
+  Object.defineProperty(value, "__proto__", {
+    configurable: true,
+    enumerable: true,
+    value: POISON,
+    writable: true,
+  });
+  expect(Object.prototype.propertyIsEnumerable.call(value, "__proto__")).toBe(
+    true,
+  );
+  return value;
+}
+
 interface AuditExpectation {
   readonly reasonCode: string;
   readonly receipt?: DecisionReceipt;
@@ -1217,11 +1231,20 @@ describe("Company Identity finance-thb-policy-approval authority RED contract", 
         unexpected: POISON,
       }) as unknown as DecisionReceipt,
     ],
+    [
+      "authority result own enumerable __proto__",
+      withOwnEnumerableProto(authorityAllow()),
+    ],
+    [
+      "ledger result own enumerable __proto__",
+      withOwnEnumerableProto(baseReceipt()) as unknown as DecisionReceipt,
+    ],
   ] as const)(
     "maps malformed %s to a stable terminal failure and safe audit",
     async (_label, malformedResult) => {
       const harness =
-        _label === "authority result"
+        _label === "authority result" ||
+        _label === "authority result own enumerable __proto__"
           ? await createHarness({
               authorityResult: malformedResult as AuthorityResult,
             })
@@ -1351,10 +1374,18 @@ describe("Company Identity finance-thb-policy-approval authority RED contract", 
   it.each([
     ["root", Object.assign(baseReceipt(), { unexpected: POISON })],
     [
+      "receipt root own enumerable __proto__",
+      withOwnEnumerableProto(baseReceipt()),
+    ],
+    [
       "scope",
       baseReceipt({
         scope: Object.assign(baseScope(), { unexpected: POISON }),
       }),
+    ],
+    [
+      "scope own enumerable __proto__",
+      baseReceipt({ scope: withOwnEnumerableProto(baseScope()) }),
     ],
     [
       "signer",
@@ -1363,10 +1394,18 @@ describe("Company Identity finance-thb-policy-approval authority RED contract", 
       }),
     ],
     [
+      "signer own enumerable __proto__",
+      baseReceipt({ signer: withOwnEnumerableProto(baseSigner()) }),
+    ],
+    [
       "decision evidence",
       baseReceipt({
         decisionEvidence: Object.assign(baseEvidence(), { unexpected: POISON }),
       }),
+    ],
+    [
+      "decision evidence own enumerable __proto__",
+      baseReceipt({ decisionEvidence: withOwnEnumerableProto(baseEvidence()) }),
     ],
     [
       "policy rules",
@@ -1375,10 +1414,18 @@ describe("Company Identity finance-thb-policy-approval authority RED contract", 
       }),
     ],
     [
+      "policy rules own enumerable __proto__",
+      baseReceipt({ rules: withOwnEnumerableProto(baseReceipt().rules) }),
+    ],
+    [
       "audit context",
       baseReceipt({
         audit: Object.assign(baseReceipt().audit, { unexpected: POISON }),
       }),
+    ],
+    [
+      "audit context own enumerable __proto__",
+      baseReceipt({ audit: withOwnEnumerableProto(baseReceipt().audit) }),
     ],
   ] as const)(
     "rejects unknown keys in the %s object",
