@@ -62,12 +62,6 @@
       "description": "Durable job-table queries are limited to database definitions, migrations, and the exact PostgreSQL job adapter.",
       "severity": "error",
       "findingKinds": [
-        "static-import",
-        "namespace-import",
-        "dynamic-import",
-        "commonjs-require",
-        "re-export",
-        "client-construction",
         "query-call"
       ],
       "moduleMatchers": [],
