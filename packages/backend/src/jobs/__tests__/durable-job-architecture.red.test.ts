@@ -3,9 +3,12 @@ import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 
 import { describe, expect, it } from "vitest";
+import { durableJobs as durableJobsForArchitectureCounterexample } from "@reading-advantage/db";
 
 const REPOSITORY_ROOT = resolve(import.meta.dirname, "../../../../..");
 const TENANT_REGISTRY_SOURCE_PATH = "packages/domain/src/tenant-registry.ts";
+const ARCHITECTURE_TEST_SOURCE_PATH =
+  "packages/backend/src/jobs/__tests__/durable-job-architecture.red.test.ts";
 const TENANT_REGISTRY_PATH = resolve(
   REPOSITORY_ROOT,
   TENANT_REGISTRY_SOURCE_PATH,
@@ -30,6 +33,7 @@ const DATABASE_MODULE_SPECIFIER = "@reading-advantage/db";
 
 interface DurableJobOwnershipRule {
   readonly id: string;
+  readonly findingKinds: readonly string[];
   readonly resourceMatchers: readonly {
     readonly kind: string;
     readonly value: string;
@@ -60,6 +64,7 @@ interface ArchitectureAnalyzerModule {
     readonly parseErrors: readonly unknown[];
     readonly findings: readonly {
       readonly ruleId: string;
+      readonly evidenceKind: string;
       readonly resource?: string;
       readonly sourcePath: string;
     }[];
@@ -79,6 +84,16 @@ interface TenantRegistryModule {
 interface DatabaseModule {
   readonly durableJobs: unknown;
   readonly durableJobAuditEvents: unknown;
+}
+
+function runOutOfRootDurableJobQueryCounterexample(): unknown {
+  const queryBuilder = {
+    select: () => ({
+      from: (table: unknown) => table,
+    }),
+  };
+
+  return queryBuilder.select().from(durableJobsForArchitectureCounterexample);
 }
 
 describe("durable-job architecture Red contract", () => {
@@ -119,6 +134,7 @@ describe("durable-job architecture Red contract", () => {
       "database-migrations",
       "postgres-job-adapter",
     ]);
+    expect(durableJobRule?.findingKinds).toEqual(["query-call"]);
     expect(durableJobRule?.resolvedTargetRoots).toEqual([]);
     expect(durableJobRule?.resourceMatchers).toEqual([
       { kind: "exact", value: "database-table:review_jobs" },
@@ -135,7 +151,7 @@ describe("durable-job architecture Red contract", () => {
 
     const result = await analyzer.analyzeArchitectureSources({
       repoRoot: REPOSITORY_ROOT,
-      sourcePaths: [TENANT_REGISTRY_SOURCE_PATH],
+      sourcePaths: [TENANT_REGISTRY_SOURCE_PATH, ARCHITECTURE_TEST_SOURCE_PATH],
       workspaceTargets:
         await workspaceResolution.loadWorkspaceModuleTargets(REPOSITORY_ROOT),
       config,
@@ -146,17 +162,48 @@ describe("durable-job architecture Red contract", () => {
       "reviewJobs",
       "durableJobs",
       "durableJobAuditEvents",
+      "reviewJobAdoptionAuditEvents",
+      "reviewJobDurableBindings",
+      "reviewJobDurableAdoption",
+      "reviewJobMigrationIssues",
     ].filter((binding) => tenantRegistrySource.includes(binding));
-    expect({
-      directDurableTableBindings,
-      durableJobFindings: result.findings.filter(
-        (finding) =>
-          finding.ruleId === "DURABLE_JOB_DATABASE_BOUNDARY" &&
-          finding.sourcePath === TENANT_REGISTRY_SOURCE_PATH,
+    expect(directDurableTableBindings).toEqual([
+      "reviewJobs",
+      "durableJobs",
+      "durableJobAuditEvents",
+      "reviewJobAdoptionAuditEvents",
+      "reviewJobDurableBindings",
+      "reviewJobDurableAdoption",
+      "reviewJobMigrationIssues",
+    ]);
+    for (const binding of directDurableTableBindings) {
+      expect(tenantRegistrySource).toMatch(
+        new RegExp(`register\\(${binding},\\s*"REFERENTIAL"\\)`),
+      );
+    }
+
+    const durableJobFindings = result.findings.filter(
+      (finding) => finding.ruleId === "DURABLE_JOB_DATABASE_BOUNDARY",
+    );
+    expect(
+      durableJobFindings.filter(
+        (finding) => finding.sourcePath === TENANT_REGISTRY_SOURCE_PATH,
       ),
-    }).toEqual({
-      directDurableTableBindings: [],
-      durableJobFindings: [],
-    });
+    ).toEqual([]);
+
+    expect(runOutOfRootDurableJobQueryCounterexample()).toBe(
+      durableJobsForArchitectureCounterexample,
+    );
+    expect(
+      durableJobFindings.filter(
+        (finding) => finding.sourcePath === ARCHITECTURE_TEST_SOURCE_PATH,
+      ),
+    ).toEqual([
+      expect.objectContaining({
+        evidenceKind: "query-call",
+        resource: "database-table:durable_jobs",
+        sourcePath: ARCHITECTURE_TEST_SOURCE_PATH,
+      }),
+    ]);
   }, 10_000);
 });
