@@ -298,7 +298,8 @@ function isPlainRecord(value: unknown): value is PlainRecord {
     return (
       value !== null &&
       typeof value === "object" &&
-      Object.getPrototypeOf(value) === Object.prototype
+      (Object.getPrototypeOf(value) === Object.prototype ||
+        Object.getPrototypeOf(value) === null)
     );
   } catch {
     return false;
@@ -377,7 +378,7 @@ function captureExternalValue(value: unknown, depth = 0): unknown {
   if (stringKeys.length !== keys.length) {
     throw new Error("boundary symbol key");
   }
-  const result: PlainRecord = {};
+  const result: PlainRecord = Object.create(null) as PlainRecord;
   for (const key of stringKeys) {
     result[key] = captureExternalValue(readOwnDataValue(value, key), depth + 1);
   }
