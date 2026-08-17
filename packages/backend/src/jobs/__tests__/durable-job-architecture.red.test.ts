@@ -1,42 +1,75 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
+import { pathToFileURL } from "node:url";
 
 import { describe, expect, it } from "vitest";
 
 const REPOSITORY_ROOT = resolve(import.meta.dirname, "../../../../..");
+const TENANT_REGISTRY_SOURCE_PATH = "packages/domain/src/tenant-registry.ts";
 const TENANT_REGISTRY_PATH = resolve(
   REPOSITORY_ROOT,
-  "packages/domain/src/tenant-registry.ts",
-);
-const OWNERSHIP_MAP_PATH = resolve(
-  REPOSITORY_ROOT,
-  "packages/architecture-enforcement/src/config/ownership-map.v1.json",
+  TENANT_REGISTRY_SOURCE_PATH,
 );
 const TENANT_REGISTRY_MODULE_PATH = resolve(
   REPOSITORY_ROOT,
-  "packages/domain/src/tenant-registry.ts",
+  TENANT_REGISTRY_SOURCE_PATH,
+);
+const ARCHITECTURE_ANALYZER_MODULE_PATH = resolve(
+  REPOSITORY_ROOT,
+  "packages/architecture-enforcement/src/analyzer.ts",
+);
+const OWNERSHIP_MAP_MODULE_PATH = resolve(
+  REPOSITORY_ROOT,
+  "packages/architecture-enforcement/src/ownership-map.ts",
+);
+const WORKSPACE_RESOLUTION_MODULE_PATH = resolve(
+  REPOSITORY_ROOT,
+  "packages/architecture-enforcement/src/workspace-resolution.ts",
 );
 const DATABASE_MODULE_SPECIFIER = "@reading-advantage/db";
 
 interface DurableJobOwnershipRule {
   readonly id: string;
-  readonly resourceMatchers: readonly { readonly value: string }[];
+  readonly resourceMatchers: readonly {
+    readonly kind: string;
+    readonly value: string;
+  }[];
   readonly resolvedTargetRoots: readonly string[];
   readonly ownershipRootIds: readonly string[];
 }
 
-interface ReviewedOwnershipException {
-  readonly schemaVersion: number;
-  readonly id: string;
+interface OwnershipException {
   readonly ruleId: string;
   readonly sourcePath: string;
-  readonly owner: string;
-  readonly rationale: string;
 }
 
-interface OwnershipMapFixture {
-  readonly rules: readonly DurableJobOwnershipRule[];
-  readonly exactExceptions: readonly ReviewedOwnershipException[];
+interface OwnershipMapModule {
+  readonly loadOwnershipMap: () => {
+    readonly rules: readonly DurableJobOwnershipRule[];
+    readonly exactExceptions: readonly OwnershipException[];
+  };
+}
+
+interface ArchitectureAnalyzerModule {
+  readonly analyzeArchitectureSources: (options: {
+    readonly repoRoot: string;
+    readonly sourcePaths: readonly string[];
+    readonly workspaceTargets: ReadonlyMap<string, string>;
+    readonly config: unknown;
+  }) => Promise<{
+    readonly parseErrors: readonly unknown[];
+    readonly findings: readonly {
+      readonly ruleId: string;
+      readonly resource?: string;
+      readonly sourcePath: string;
+    }[];
+  }>;
+}
+
+interface WorkspaceResolutionModule {
+  readonly loadWorkspaceModuleTargets: (
+    repoRoot: string,
+  ) => Promise<ReadonlyMap<string, string>>;
 }
 
 interface TenantRegistryModule {
@@ -49,31 +82,7 @@ interface DatabaseModule {
 }
 
 describe("durable-job architecture Red contract", () => {
-  it("requires one reviewed tenant-registry exception and preserves REFERENTIAL classification", async () => {
-    const tenantRegistrySource = readFileSync(TENANT_REGISTRY_PATH, "utf8");
-    const ownershipMap = JSON.parse(
-      readFileSync(OWNERSHIP_MAP_PATH, "utf8"),
-    ) as OwnershipMapFixture;
-    const durableJobRule = ownershipMap.rules.find(
-      (rule) => rule.id === "DURABLE_JOB_DATABASE_BOUNDARY",
-    );
-
-    expect(tenantRegistrySource).toContain("durableJobs");
-    expect(tenantRegistrySource).toContain("durableJobAuditEvents");
-    expect(durableJobRule).toBeDefined();
-    expect(durableJobRule?.ownershipRootIds).toEqual([
-      "database-schema",
-      "database-migrations",
-      "postgres-job-adapter",
-    ]);
-    expect(durableJobRule?.resolvedTargetRoots).toEqual([]);
-    expect(
-      durableJobRule?.resourceMatchers.map((matcher) => matcher.value),
-    ).toEqual([
-      "database-table:review_jobs",
-      "database-table:jobs",
-      "database-table:durable_jobs",
-    ]);
+  it("preserves REFERENTIAL classification for both durable job tables", async () => {
     const tenantRegistry = (await import(
       TENANT_REGISTRY_MODULE_PATH
     )) as TenantRegistryModule;
@@ -86,24 +95,68 @@ describe("durable-job architecture Red contract", () => {
     expect(tenantRegistry.classifyTable(database.durableJobAuditEvents)).toBe(
       "REFERENTIAL",
     );
-    expect(tenantRegistrySource).toContain("register(durableJobs");
-    expect(tenantRegistrySource).toContain("register(durableJobAuditEvents");
-
-    const expectedException: ReviewedOwnershipException = {
-      schemaVersion: 1,
-      id: "durable-job-tenant-registry-classification",
-      ruleId: "DURABLE_JOB_DATABASE_BOUNDARY",
-      sourcePath: "packages/domain/src/tenant-registry.ts",
-      owner: "domain-platform",
-      rationale:
-        "Mandatory TenantDB classification only; no durable-job queries or mutation.",
-    };
-    expect(
-      ownershipMap.exactExceptions.filter(
-        (exception) =>
-          exception.sourcePath === expectedException.sourcePath &&
-          exception.ruleId === expectedException.ruleId,
-      ),
-    ).toEqual([expectedException]);
   }, 5_000);
+
+  it("keeps durable table ownership in approved roots without a production exception", async () => {
+    const ownershipMap = (await import(
+      pathToFileURL(OWNERSHIP_MAP_MODULE_PATH).href
+    )) as OwnershipMapModule;
+    const analyzer = (await import(
+      pathToFileURL(ARCHITECTURE_ANALYZER_MODULE_PATH).href
+    )) as ArchitectureAnalyzerModule;
+    const workspaceResolution = (await import(
+      pathToFileURL(WORKSPACE_RESOLUTION_MODULE_PATH).href
+    )) as WorkspaceResolutionModule;
+    const config = ownershipMap.loadOwnershipMap();
+    const tenantRegistrySource = readFileSync(TENANT_REGISTRY_PATH, "utf8");
+    const durableJobRule = config.rules.find(
+      (rule) => rule.id === "DURABLE_JOB_DATABASE_BOUNDARY",
+    );
+
+    expect(durableJobRule).toBeDefined();
+    expect(durableJobRule?.ownershipRootIds).toEqual([
+      "database-schema",
+      "database-migrations",
+      "postgres-job-adapter",
+    ]);
+    expect(durableJobRule?.resolvedTargetRoots).toEqual([]);
+    expect(durableJobRule?.resourceMatchers).toEqual([
+      { kind: "exact", value: "database-table:review_jobs" },
+      { kind: "exact", value: "database-table:jobs" },
+      { kind: "exact", value: "database-table:durable_jobs" },
+    ]);
+    expect(
+      config.exactExceptions.some(
+        (exception) =>
+          exception.ruleId === "DURABLE_JOB_DATABASE_BOUNDARY" &&
+          exception.sourcePath === TENANT_REGISTRY_SOURCE_PATH,
+      ),
+    ).toBe(false);
+
+    const result = await analyzer.analyzeArchitectureSources({
+      repoRoot: REPOSITORY_ROOT,
+      sourcePaths: [TENANT_REGISTRY_SOURCE_PATH],
+      workspaceTargets:
+        await workspaceResolution.loadWorkspaceModuleTargets(REPOSITORY_ROOT),
+      config,
+    });
+
+    expect(result.parseErrors).toEqual([]);
+    const directDurableTableBindings = [
+      "reviewJobs",
+      "durableJobs",
+      "durableJobAuditEvents",
+    ].filter((binding) => tenantRegistrySource.includes(binding));
+    expect({
+      directDurableTableBindings,
+      durableJobFindings: result.findings.filter(
+        (finding) =>
+          finding.ruleId === "DURABLE_JOB_DATABASE_BOUNDARY" &&
+          finding.sourcePath === TENANT_REGISTRY_SOURCE_PATH,
+      ),
+    }).toEqual({
+      directDurableTableBindings: [],
+      durableJobFindings: [],
+    });
+  }, 10_000);
 });
