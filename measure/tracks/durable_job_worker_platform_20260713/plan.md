@@ -292,11 +292,61 @@ closed; Red failures arise from missing platform behavior.
   - Review A complete-enqueue mismatch follow-up (2026-08-16; current HEAD start `c572d0b87`): the first snapshot test claimed `task9-red` after the adapter promoted `task9-follow-up-queue`. The test now claims with the promoted queue from its follow-up request. Safe complete enqueue passed 1 and skipped 23. Live schema passed 3/3, concurrency passed 14/14, and complete enqueue passed 24/24. No production Red remains.
   - Review A rerun after correction commit `98bdfca33` (2026-08-16; verification start `27c7f4f23`): safe complete enqueue passed 1 and skipped 23. Isolated PG16 schema passed 3/3, concurrency passed 14/14, and complete enqueue passed 24/24. The run left zero scratch databases. It left two migration-created test roles, which were removed after verification; final scratch databases and durable-job roles were zero. TypeScript, lint, Prettier, and diff checks passed. No production Red remains.
   - Review A remediation Red (2026-08-16; approved test commit `81df805826846c10306e81126d9f8c6b429bd1a4`; current HEAD `e6265b0be`): added the exact tenant-registry ownership exception contract and the M3/M4 transition-first lock-barrier contract. The approved PostgreSQL 16 barrier run passed 26/26. The safe enqueue suite passed 1 test and skipped 25. The architecture contract remains expected Red because the exact ownership-map exception is absent. This lease changed no production or configuration source. Phase 3 remains unaccepted pending the ownership-map exception review.
+- [~] Task 14a: Implement the owner-approved first-class analyzer reconciliation
+  v2. Preserve the accepted v1 manifest bytes at SHA-256
+  `4c95113cfff50d9e92f0770e1f18ef7d195dd50b5201f108e90990771ca46ec0`.
+  Add explicit v1/v2 policy selection. Activate v2 only after its Red tests,
+  hashes, clean architecture check, fresh Luna reviews, and owner receipt pass.
+  Add no baseline finding entries.
+
+  - Pre-phase-base gate: preserve the six dirty Green files as a verified binary
+    patch outside the repository. Record the patch SHA-256. Verify reverse patch
+    application. Verify forward patch application. Restore these files to current
+    `HEAD`:
+    `packages/architecture-enforcement/src/analyzer.ts`,
+    `packages/architecture-enforcement/src/contracts.ts`,
+    `packages/architecture-enforcement/src/ownership-map.ts`,
+    `packages/architecture-enforcement/src/config/analyzer-reconciliation.v1.json`,
+    `packages/architecture-enforcement/src/config/baselines/database.v1.json`,
+    and `packages/architecture-enforcement/src/config/ownership-map.v1.json`.
+    Do not stage or commit the saved patch.
+  - The current dirty analyzer, contracts, and ownership-map exception branches
+    violate the target. The current dirty v1 policy changes violate v1
+    immutability. None of those changes may survive in a commit.
+  - Restore dirty files to current `HEAD`, not to Gate 1, during preflight. Do not
+    restore drifted v1 policy or baseline files before Red. The v1 immutability
+    Red must expose every clean-HEAD mismatch. Green then restores exact Gate 1
+    bytes.
+  - Record the clean-HEAD blob and raw SHA-256 values in
+    `analyzer-reconciliation-v2-strategy.md`. Record `phase_base_sha` only after
+    the strategy and plan commit, with no intended track-owned paths dirty.
+  - Red gate: run exactly three Red suites for policy selection, v1
+    immutability, and the v2 manifest. All three suites must fail for named
+    missing v2 behavior. The policy-selection Red must use the existing
+    `analyzer-hardening.test.ts` inputs under both policies.
+  - The policy-selection Red must store an immutable output oracle derived from
+    the Gate 1 analyzer. It must require v1 parity for findings, diagnostics,
+    ordering, counts, and serialized output. Do not add a fixture or oracle file.
+  - Green gate: restore all four v1 artifacts to exact Gate 1 bytes after Red
+    records mismatches. Require the four accepted v1 hashes to match. Do not
+    commit the current hard-coded exception branches. Keep the exception only in
+    the v2 ownership map. Allow it only for `static-import` evidence.
+  - Acceptance gate: explicit v1 passes the immutable output oracle. Explicit v2
+    passes a clean architecture check with zero baseline additions, removals, or
+    renames. Four fresh Luna reviews inspect one review subject. Each review
+    binds the protected v1 manifest and every v2 artifact hash. The owner receipt
+    binds the accepted v2 manifest SHA. No-policy selection remains v1 until all
+    gates pass.
 
 **Verification:** `CI=true pnpm --filter @reading-advantage/db test && CI=true pnpm vitest run packages/backend/src/jobs/__tests__ && pnpm architecture:check`
 
 **Acceptance gate:** AC-2–AC-4 and migration/tenant gates pass; no stale owner can
 mutate a reclaimed job; no baseline addition is accepted.
+
+**Task 14a acceptance gate:** The three Red suites pass in Green; explicit v1
+matches the Gate 1 output oracle with v1 parity and exact bytes; v2 is clean with
+zero baseline deltas; four Luna reviews bind one subject; and the owner binds
+the accepted v2 manifest.
 
 ## Phase 4: Worker Service and `review_jobs` Adoption
 
