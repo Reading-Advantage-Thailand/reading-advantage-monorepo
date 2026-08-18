@@ -9,3 +9,5 @@ saved_patch_sha256: 3ae3d00787c8a071410adb9cb9d143a7b40997602dc551d35f6158942e1a
 preflight: reverse apply check passed; six paths restored to HEAD; forward apply check passed; six clean hashes matched the strategy.
 
 docs_review: Luna ACCEPT; primary inspection ACCEPT.
+
+phase_base_superseded_by: 310847b15f9a2f59982208bdae1581ca605b6674
