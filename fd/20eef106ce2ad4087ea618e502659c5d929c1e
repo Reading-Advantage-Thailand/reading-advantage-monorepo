@@ -1,0 +1,19 @@
+Track: sales_mastery_consumer_20260810
+Task: Add trusted-only Sales projection Red contract.
+
+Summary:
+- Reject legacy-only and mixed constructor modes before dependency access.
+- Require a Company Identity verifier and scoped Mastery factory.
+- Reject the unreviewed legacy activity fallback before Mastery access.
+- Preserve issuer and expiry validation inside the existing OIDC adapter.
+
+Files:
+- packages/domain/src/__tests__/sales-phase2-trusted-only.red.test.ts
+
+Verification:
+- Focused Red: 1 intended failure and 3 passes.
+- TypeScript, ESLint, Prettier, and git diff checks passed.
+- Fresh independent review found the Red commit-eligible.
+
+Why:
+The public legacy constructor bypasses the trusted Company Identity boundary and has no production caller.
