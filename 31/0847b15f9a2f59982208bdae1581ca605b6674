@@ -9,3 +9,5 @@ saved_patch_sha256: 3ae3d00787c8a071410adb9cb9d143a7b40997602dc551d35f6158942e1a
 preflight: six paths remain clean at HEAD; forward patch check passed; clean hashes match the strategy.
 
 docs_review: Luna ACCEPT; primary inspection ACCEPT.
+
+phase_base_superseded_by: f09c14f147ed4e9a0517167e6c37da7d64134ccf
