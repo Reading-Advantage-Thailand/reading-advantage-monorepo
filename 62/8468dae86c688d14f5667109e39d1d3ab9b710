@@ -1,0 +1,22 @@
+Track: sales_mastery_consumer_20260810
+Task: Add live Sales projection atomicity Red contract.
+
+Summary:
+- Force Sales receipt insertion to fail after the Mastery commit path is reached.
+- Prove the committed outbox remains pending without a receipt.
+- Require zero durable Mastery residue after rollback.
+- Require the scoped Mastery factory to receive the active transaction handle.
+- Add an explicit live-required environment gate.
+
+Files:
+- packages/db/src/__tests__/sales-phase2-transaction-atomicity.red.test.ts
+
+Verification:
+- PostgreSQL 16 Red reached Mastery and receipt once each.
+- The Red found seven persisted Mastery record groups and no receipt.
+- The Red also found the missing active transaction handle.
+- TypeScript, ESLint, Prettier, and git diff checks passed.
+- Fresh independent correctness and security reviews confirmed substantive Red behavior.
+
+Why:
+Mastery evidence and the Sales receipt currently commit through separate transaction boundaries.
