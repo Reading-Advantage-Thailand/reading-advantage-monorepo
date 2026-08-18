@@ -1,0 +1,357 @@
+{
+  "schema_version": 1,
+  "track_id": "wave5_public_surface_completion_20260628",
+  "phase": "Phase 6: www Test Hygiene",
+  "role": "Fresh independent Review B",
+  "phase_base_sha": "c7a4d9bf8f6e59d2cac228ba929c53f2f3af58c2",
+  "role_base_sha": "7bbc22c2ed95013c6de48d44f5dc984ad125bd0b",
+  "red_commit_sha": "c7a4d9bf8f6e59d2cac228ba929c53f2f3af58c2",
+  "red_commit_shas": [
+    "c7a4d9bf8f6e59d2cac228ba929c53f2f3af58c2",
+    "7bbc22c2ed95013c6de48d44f5dc984ad125bd0b"
+  ],
+  "candidate_sha": "1a6810a10bebfb1658e277049a27c95131706603",
+  "candidate_parent_sha": "1d1f91a69e560137b2f2730e4e68549b755b7e56",
+  "audited_head_sha": "1a6810a10bebfb1658e277049a27c95131706603",
+  "audit_start_head_sha": "b6ab9306a7d153321e1e35daa6e7f00bb966085c",
+  "verification_head_start_sha": "b6ab9306a7d153321e1e35daa6e7f00bb966085c",
+  "verification_head_end_sha": "b6ab9306a7d153321e1e35daa6e7f00bb966085c",
+  "head_advanced_during_audit": false,
+  "status": "PASS",
+  "decision": "PASS",
+  "summary": "The candidate does not introduce or change the owner-gated statistics. Actual locale parity passes. One pre-existing mock gap remains.",
+  "target_verdict": "PASS",
+  "current_head_acceptance": "withheld",
+  "phase_or_track_completion_claim": false,
+  "production_code_modified_by_review": false,
+  "tests_modified_by_review": false,
+  "plans_modified_by_review": false,
+  "baselines_modified_by_review": false,
+  "commit_created": false,
+  "report_is_unstaged": true,
+  "reviewed_inputs": [
+    "measure/index.md",
+    "measure/workflow.md",
+    "measure/product.md",
+    "measure/product-guidelines.md",
+    "measure/tech-stack.md",
+    "measure/code_styleguides/general.md",
+    "measure/code_styleguides/typescript.md",
+    "measure/audit-reports/www-reading-advantage_20260626/claims-matrix.md",
+    "measure/audit-reports/www-reading-advantage_20260626/line-review/line-review-findings.md",
+    "measure/audit-reports/www-reading-advantage_20260626/test-gaps.md",
+    "measure/tracks/wave5_public_surface_completion_20260628/spec.md",
+    "measure/tracks/wave5_public_surface_completion_20260628/plan.md",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/(home)/page.test.tsx",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/(home)/page.tsx",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/primary-advantage/page.test.tsx",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/primary-advantage/page.tsx",
+    "apps/www-reading-advantage/src/locales/pages/products/primary-advantage.ts",
+    "apps/www-reading-advantage/src/test/setup.ts",
+    "apps/www-reading-advantage/src/config/locale-config.ts",
+    "apps/www-reading-advantage/src/i18n/routing.ts",
+    "apps/www-reading-advantage/src/proxy.ts",
+    "apps/www-reading-advantage/src/components/marketing/marketing-svg.tsx",
+    "apps/www-reading-advantage/src/lib/__tests__/phase-w3-claims.test.ts",
+    "apps/www-reading-advantage/src/__tests__/phase-3-i18n.red.test.ts",
+    "apps/www-reading-advantage/src/__tests__/phase-3-group-b-types.test.ts"
+  ],
+  "scope_audit": {
+    "candidate_diff": "The candidate changes exactly three files: one homepage test, one deleted duplicate Primary test, and one Primary page.",
+    "candidate_parent": "The candidate parent is 1d1f91a69e560137b2f2730e4e68549b755b7e56.",
+    "red_contracts": "c7a4d9bf8 activates the homepage Red contract. 7bbc22c2e adds the Primary statistic Red contract.",
+    "current_head": "One unrelated sales commit follows the candidate at current HEAD.",
+    "reviewed_path_drift": "All reviewed www source and test paths match the candidate and current HEAD.",
+    "dirty_tree": "The worktree has 213 unrelated status entries. This review changed none of them."
+  },
+  "history_audit": {
+    "candidate_locale_diff": "The candidate has no diff for primary-advantage.ts. The candidate and parent both use blob 838a17a6a3a9fbd18c7544876ae1d10e71b2c7b5.",
+    "candidate_page_diff": "The candidate changes the grid from three columns to two and removes only the stats.2 card.",
+    "stat_history": "Git history traces 85% and 100% to fc78ad0c19796a17d3e8d8bff52bf8b41a191b15, dated 2026-05-01.",
+    "candidate_regression": false,
+    "owner_gate": "Phase 0 and the claims matrix keep the figures owner-gated under Phase 5.",
+    "phase6_disposition": "The report records the High claims risk. The candidate did not introduce or change it, so it does not block Phase 6."
+  },
+  "candidate_manifest": [
+    {
+      "path": "apps/www-reading-advantage/src/app/[locale]/(marketing)/(home)/page.test.tsx",
+      "status": "modified",
+      "parent_blob_sha": "caf57728ca885041c665d4ead6a17f543f0060a9",
+      "candidate_blob_sha": "d3cd9394901821d554a7336b589a46269611e44b"
+    },
+    {
+      "path": "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/primary-advantage/page.test.tsx.skip",
+      "status": "deleted",
+      "parent_blob_sha": "4a7a08654d2728d2f030ab4a66fc69aeb4f44200",
+      "candidate_blob_sha": null
+    },
+    {
+      "path": "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/primary-advantage/page.tsx",
+      "status": "modified",
+      "parent_blob_sha": "21c02255aa712832f4ade9eaab777ad13b96ebea",
+      "candidate_blob_sha": "301523f674c7321d4a4ae87146423fd658c11a93"
+    }
+  ],
+  "red_bindings": [
+    {
+      "commit_sha": "c7a4d9bf8f6e59d2cac228ba929c53f2f3af58c2",
+      "path": "apps/www-reading-advantage/src/app/[locale]/(marketing)/(home)/page.test.tsx",
+      "blob_sha": "caf57728ca885041c665d4ead6a17f543f0060a9"
+    },
+    {
+      "commit_sha": "7bbc22c2ed95013c6de48d44f5dc984ad125bd0b",
+      "path": "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/primary-advantage/page.test.tsx",
+      "blob_sha": "fed5813de54cfd6405da6f1630ba476e61d75ea7"
+    }
+  ],
+  "reviewed_blobs": {
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/(home)/page.test.tsx": "d3cd9394901821d554a7336b589a46269611e44b",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/(home)/page.tsx": "e76f274ceda1f163d2e0c6f8c5b46e7453bc46dd",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/primary-advantage/page.test.tsx": "fed5813de54cfd6405da6f1630ba476e61d75ea7",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/primary-advantage/page.tsx": "301523f674c7321d4a4ae87146423fd658c11a93",
+    "apps/www-reading-advantage/src/locales/pages/products/primary-advantage.ts": "838a17a6a3a9fbd18c7544876ae1d10e71b2c7b5"
+  },
+  "contract_audit": {
+    "claims_boundary": {
+      "status": "PASS_WITH_PREEXISTING_PHASE5_DEBT",
+      "evidence": [
+        "The candidate diff changes only the Primary results layout and removes the stats.2 card.",
+        "The candidate parent and candidate use the same Primary locale blob: 838a17a6a3a9fbd18c7544876ae1d10e71b2c7b5.",
+        "Git blame traces all three 85% and 100% locale pairs to the initial migration commit fc78ad0c19 from 2026-05-01.",
+        "Claims matrix LRF-014 identifies these duplicated Primary statistics as requiring evidence or product-owner confirmation.",
+        "Phase 0 still gates approved figures, so the claim risk remains owner-gated Phase 5 debt.",
+        "The Phase 3 claims suite passes 20/20 but does not ban these two values."
+      ]
+    },
+    "i18n_access": {
+      "status": "PASS_WITH_TEST_GAP",
+      "evidence": [
+        "A runtime probe resolved all 58 Primary translator calls in en, th, and zh.",
+        "The Primary locale leaf-key shapes match across en, th, and zh.",
+        "The candidate adds no locale cast or locale routing change.",
+        "The existing Primary page uses locale as Locale, but production routing accepts only en, th, and zh.",
+        "The test mocks still accept arbitrary keys and can hide missing messages."
+      ]
+    },
+    "contact_cta_boundary": {
+      "status": "PASS",
+      "evidence": [
+        "The homepage has two local /contact links and no new external href.",
+        "The Primary page keeps the free-trial CTA at /contact.",
+        "The candidate diff adds no backend, mailto, provider, or redirect behavior."
+      ]
+    },
+    "test_mock_truthfulness": {
+      "status": "PASS_WITH_PREEXISTING_GAP",
+      "evidence": [
+        "The shared test setup returns scope.key for every requested key.",
+        "The active Primary test repeats the same broad fallback mock.",
+        "A missing locale key could therefore render a non-empty sentinel instead of an error.",
+        "The candidate homepage assertions match these generated key sentinels.",
+        "The independent en/th/zh parity probe found no current missing Primary key."
+      ]
+    },
+    "security_boundary": {
+      "status": "PASS",
+      "evidence": [
+        "The candidate changes no authentication, authorization, database, tenant, provider, input, raw HTML, or executable boundary.",
+        "The diff adds no external href, fetch, eval, dangerouslySetInnerHTML, or secret.",
+        "Each test restores the global IntersectionObserver stub."
+      ]
+    },
+    "caller_compatibility": {
+      "status": "PASS_WITH_NO_SIGNATURE_CHANGE",
+      "evidence": [
+        "The candidate changes JSX, a test harness, and deletes a skipped duplicate test.",
+        "Home and Primary function signatures do not change.",
+        "The fresh graph contains no external caller edge for Home or PrimaryAdvantage."
+      ]
+    }
+  },
+  "findings": [
+    {
+      "id": "P6-RB-H1",
+      "severity": "High",
+      "title": "Owner-gated Primary statistics remain public",
+      "files": [
+        "apps/www-reading-advantage/src/locales/pages/products/primary-advantage.ts:100-113",
+        "apps/www-reading-advantage/src/locales/pages/products/primary-advantage.ts:236-249",
+        "apps/www-reading-advantage/src/locales/pages/products/primary-advantage.ts:372-385",
+        "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/primary-advantage/page.tsx:340-368",
+        "measure/tracks/wave5_public_surface_completion_20260628/plan.md:14-16"
+      ],
+      "context": "The candidate removes stats.2 but does not touch the 85% and 100% values. History shows both values predate the candidate and the Phase 5 owner gate.",
+      "impact": "The public Primary page still carries a real claims risk, but the candidate does not worsen it.",
+      "suggestion": "Obtain evidence and product-owner approval, or remove or qualify both values. Add a regression guard for each value.",
+      "introduced_or_changed_by_candidate": false,
+      "owner": "Phase 5 comparison, pricing, and claims work",
+      "disposition": "Nonblocking for Phase 6. Preserve as owner-gated Phase 5 debt; do not waive it."
+    },
+    {
+      "id": "P6-RB-M1",
+      "severity": "Medium",
+      "title": "Locale test mocks accept missing keys",
+      "files": [
+        "apps/www-reading-advantage/src/test/setup.ts:43-51",
+        "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/primary-advantage/page.test.tsx:5-13"
+      ],
+      "context": "Both mocks return scope.key for arbitrary keys. Missing locale messages can produce a passing sentinel instead of an error.",
+      "impact": "Homepage and Primary tests can pass while locale keys are missing or renamed.",
+      "suggestion": "Use a locale-backed lookup that throws for missing or non-text values, and render each supported locale.",
+      "introduced_or_changed_by_candidate": false,
+      "disposition": "Nonblocking. The mocks predate this candidate, and actual en/th/zh parity passes."
+    }
+  ],
+  "blocking_findings": [],
+  "nonblocking_findings": ["P6-RB-H1", "P6-RB-M1"],
+  "checks": [
+    {
+      "command": "git diff --shortstat 1a6810a10bebfb1658e277049a27c95131706603^ 1a6810a10bebfb1658e277049a27c95131706603; git diff --name-status; git diff --check",
+      "exit_code": 0,
+      "result": "PASS — exactly three files; no whitespace errors."
+    },
+    {
+      "command": "candidate tree, worktree blob, HEAD blob, and reviewed-path drift assertions",
+      "exit_code": 0,
+      "result": "PASS — candidate blobs match the worktree and HEAD; no reviewed www drift exists."
+    },
+    {
+      "command": "git diff --name-status candidate^ candidate for Primary locale and page; parent/candidate locale blob hashes",
+      "exit_code": 0,
+      "result": "PASS — the candidate leaves the locale file unchanged and changes only the Primary page layout."
+    },
+    {
+      "command": "git log --all --follow -S'85%' -S'100%'; git blame candidate Primary locale lines",
+      "exit_code": 0,
+      "result": "PASS — both values trace to the initial fc78ad0c19 migration commit from 2026-05-01, before Phase 6."
+    },
+    {
+      "command": "CI=true ../../node_modules/.bin/vitest run src/app/[locale]/(marketing)/(home)/page.test.tsx src/app/[locale]/(marketing)/products/primary-advantage/page.test.tsx --maxWorkers=1",
+      "exit_code": 0,
+      "result": "PASS — 2 files and 12 tests passed. Existing SVG DOM warnings appeared."
+    },
+    {
+      "command": "CI=true ../../node_modules/.bin/vitest run src/lib/__tests__/phase-w3-claims.test.ts --maxWorkers=1 --testTimeout=60000",
+      "exit_code": 0,
+      "result": "PASS — 1 file and 20 tests passed. The guard does not cover 85% or 100%."
+    },
+    {
+      "command": "CI=true ../../node_modules/.bin/vitest run src/__tests__/phase-3-i18n.red.test.ts src/__tests__/phase-3-group-b-types.test.ts --maxWorkers=1 --testTimeout=60000",
+      "exit_code": 0,
+      "result": "PASS — 2 files and 10 tests passed."
+    },
+    {
+      "command": "../../node_modules/.bin/tsx -e <Primary translator-call and locale-shape probe>",
+      "exit_code": 0,
+      "result": "PASS — 58 calls resolve; locale shapes match; each locale has two result statistics."
+    },
+    {
+      "command": "pnpm exec tsc --noEmit -p tsconfig.json",
+      "exit_code": 0,
+      "result": "PASS"
+    },
+    {
+      "command": "pnpm exec eslint src/app/[locale]/(marketing)/(home)/page.test.tsx src/app/[locale]/(marketing)/products/primary-advantage/page.test.tsx src/app/[locale]/(marketing)/products/primary-advantage/page.tsx",
+      "exit_code": 0,
+      "result": "PASS"
+    },
+    {
+      "command": "pnpm exec prettier --check src/app/[locale]/(marketing)/(home)/page.test.tsx src/app/[locale]/(marketing)/products/primary-advantage/page.test.tsx src/app/[locale]/(marketing)/products/primary-advantage/page.tsx",
+      "exit_code": 0,
+      "result": "PASS"
+    },
+    {
+      "command": "build-graph stats ./graph.db; exact Home and PrimaryAdvantage caller queries",
+      "exit_code": 0,
+      "result": "PASS — The graph is fresh. The query found no external caller edge or signature change."
+    },
+    {
+      "command": "Kimi WebBridge read-only checks for /en and /en/products/primary-advantage",
+      "exit_code": 0,
+      "result": "PASS_WITH_LIMITATION — both routes render main and heading; no uncaught errors; final network capture has zero failed requests; screenshot helper returned exit 4."
+    },
+    {
+      "command": "git status --porcelain=v1 and reviewed-path status checks",
+      "exit_code": 0,
+      "result": "PASS — The status check found 213 pre-existing entries. Reviewed paths had no changes before this artifact."
+    }
+  ],
+  "graph_audit": {
+    "graph_db_mtime": "2026-08-18T10:18:38+08:00",
+    "stats": {
+      "nodes": 34310,
+      "edges": 60062,
+      "files": 3710
+    },
+    "caller_queries": {
+      "Home": "The graph query returned only the route file and params edge.",
+      "PrimaryAdvantage": "The graph query returned only the route file and params edge."
+    },
+    "disposition": "The candidate changes no exported signature. This review queried the graph read-only."
+  },
+  "browser_review": {
+    "status": "PASS_WITH_LIMITATION",
+    "routes": [
+      "/en",
+      "/en/products/primary-advantage"
+    ],
+    "evidence": [
+      "Both routes exposed a main element and a primary heading.",
+      "The homepage contact links resolved to /en/contact.",
+      "The Primary page rendered two statistic cards and local contact links.",
+      "The installed error listeners captured no uncaught errors.",
+      "The final network capture reported zero failed requests."
+    ],
+    "limitations": [
+      "The server on port 3000 predated this review.",
+      "The screenshot helper returned exit 4 and produced no file.",
+      "No browser assertion can establish product-owner approval for claims."
+    ]
+  },
+  "dirty_tree_disclosure": {
+    "status_entries_before_artifact": 213,
+    "reviewed_paths_clean": true,
+    "scope_note": "This review preserved unrelated APK, package, Measure, pricing, and application changes."
+  },
+  "candidate_changed_files": [
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/(home)/page.test.tsx",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/primary-advantage/page.test.tsx.skip",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/primary-advantage/page.tsx"
+  ],
+  "red_changed_files": [
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/(home)/page.test.tsx",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/primary-advantage/page.test.tsx"
+  ],
+  "files_written": [
+    "measure/tracks/wave5_public_surface_completion_20260628/phase6-review-b-1a6810a10bebfb1658e277049a27c95131706603.json"
+  ],
+  "known_limitations": [
+    "This review did not run the full www test suite or production build.",
+    "The High claims risk remains owner-gated Phase 5 debt and needs a product-owner or evidence decision.",
+    "The locale mock finding predates the candidate and affects future test truthfulness, but current parity passes.",
+    "This report does not accept current HEAD, Phase 6, or the Wave 5 track."
+  ],
+  "MEASURE_AGENT_RESULT": {
+    "role": "Fresh independent Review B",
+    "status": "PASS",
+    "track": "wave5_public_surface_completion_20260628",
+    "phase": "Phase 6: www Test Hygiene",
+    "candidate_commit": "1a6810a10bebfb1658e277049a27c95131706603",
+    "red_commits": [
+      "c7a4d9bf8f6e59d2cac228ba929c53f2f3af58c2",
+      "7bbc22c2ed95013c6de48d44f5dc984ad125bd0b"
+    ],
+    "audited_head_sha": "1a6810a10bebfb1658e277049a27c95131706603",
+    "current_head_sha": "b6ab9306a7d153321e1e35daa6e7f00bb966085c",
+    "blocking_findings": [],
+    "nonblocking_findings": ["P6-RB-H1", "P6-RB-M1"],
+    "source_modified": false,
+    "tests_modified": false,
+    "plans_modified": false,
+    "commit_created": false,
+    "report_is_unstaged": true,
+    "current_head_acceptance": "withheld",
+    "phase_or_track_completion_claim": false,
+    "completion_claim": "none"
+  }
+}

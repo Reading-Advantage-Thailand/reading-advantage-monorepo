@@ -1,0 +1,319 @@
+{
+  "schema_version": 1,
+  "track_id": "wave5_public_surface_completion_20260628",
+  "phase": "Phase 6: www Test Hygiene",
+  "role": "Fresh independent Review A",
+  "phase_base_sha": "c7a4d9bf8f6e59d2cac228ba929c53f2f3af58c2",
+  "role_base_sha": "7bbc22c2ed95013c6de48d44f5dc984ad125bd0b",
+  "red_commit_sha": "c7a4d9bf8f6e59d2cac228ba929c53f2f3af58c2",
+  "red_commit_shas": [
+    "c7a4d9bf8f6e59d2cac228ba929c53f2f3af58c2",
+    "7bbc22c2ed95013c6de48d44f5dc984ad125bd0b"
+  ],
+  "candidate_sha": "1a6810a10bebfb1658e277049a27c95131706603",
+  "candidate_parent_sha": "1d1f91a69e560137b2f2730e4e68549b755b7e56",
+  "audited_head_sha": "1a6810a10bebfb1658e277049a27c95131706603",
+  "audit_start_head_sha": "b6ab9306a7d153321e1e35daa6e7f00bb966085c",
+  "verification_head_start_sha": "b6ab9306a7d153321e1e35daa6e7f00bb966085c",
+  "verification_head_end_sha": "b6ab9306a7d153321e1e35daa6e7f00bb966085c",
+  "head_advanced_during_audit": false,
+  "status": "PASS",
+  "decision": "PASS",
+  "summary": "The candidate satisfies the Phase 6 Green contracts. One low warning gap remains outside the candidate scope.",
+  "target_verdict": "PASS",
+  "current_head_acceptance": "withheld",
+  "phase_or_track_completion_claim": false,
+  "production_code_modified_by_review": false,
+  "tests_modified_by_review": false,
+  "plans_modified_by_review": false,
+  "baselines_modified_by_review": false,
+  "commit_created": false,
+  "report_is_unstaged": true,
+  "reviewed_inputs": [
+    "measure/index.md",
+    "measure/workflow.md",
+    "measure/product.md",
+    "measure/product-guidelines.md",
+    "measure/audit-reports/www-reading-advantage_20260626/claims-matrix.md",
+    "measure/audit-reports/www-reading-advantage_20260626/line-review/line-review-findings.md",
+    "measure/audit-reports/www-reading-advantage_20260626/test-gaps.md",
+    "measure/tracks/wave5_public_surface_completion_20260628/spec.md",
+    "measure/tracks/wave5_public_surface_completion_20260628/plan.md",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/(home)/page.test.tsx",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/(home)/page.tsx",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/primary-advantage/page.test.tsx",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/primary-advantage/page.tsx",
+    "apps/www-reading-advantage/src/locales/pages/products/primary-advantage.ts",
+    "apps/www-reading-advantage/src/components/marketing/mastery-advantage-graph.tsx",
+    "apps/www-reading-advantage/package.json",
+    "apps/www-reading-advantage/vitest.config.ts"
+  ],
+  "scope_audit": {
+    "candidate_diff": "The candidate changes exactly three files: one homepage test, one deleted duplicate Primary test, and one Primary page.",
+    "candidate_parent": "The candidate parent is 1d1f91a69e560137b2f2730e4e68549b755b7e56.",
+    "red_contracts": "c7a4d9bf8 activates the homepage Red contract. 7bbc22c2e adds the Primary statistic Red contract.",
+    "current_head": "HEAD is one unrelated sales commit after the candidate.",
+    "reviewed_path_drift": "Reviewed source and test paths match between the candidate and current HEAD.",
+    "dirty_tree": "The worktree contains unrelated changes. This review did not change them."
+  },
+  "candidate_manifest": [
+    {
+      "path": "apps/www-reading-advantage/src/app/[locale]/(marketing)/(home)/page.test.tsx",
+      "status": "modified",
+      "parent_blob_sha": "caf57728ca885041c665d4ead6a17f543f0060a9",
+      "candidate_blob_sha": "d3cd9394901821d554a7336b589a46269611e44b",
+      "current_blob_sha": "d3cd9394901821d554a7336b589a46269611e44b"
+    },
+    {
+      "path": "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/primary-advantage/page.test.tsx.skip",
+      "status": "deleted",
+      "parent_blob_sha": "4a7a08654d2728d2f030ab4a66fc69aeb4f44200",
+      "candidate_blob_sha": null,
+      "current_blob_sha": null
+    },
+    {
+      "path": "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/primary-advantage/page.tsx",
+      "status": "modified",
+      "parent_blob_sha": "21c02255aa712832f4ade9eaab777ad13b96ebea",
+      "candidate_blob_sha": "301523f674c7321d4a4ae87146423fd658c11a93",
+      "current_blob_sha": "301523f674c7321d4a4ae87146423fd658c11a93"
+    }
+  ],
+  "red_bindings": [
+    {
+      "commit_sha": "c7a4d9bf8f6e59d2cac228ba929c53f2f3af58c2",
+      "path": "apps/www-reading-advantage/src/app/[locale]/(marketing)/(home)/page.test.tsx",
+      "blob_sha": "caf57728ca885041c665d4ead6a17f543f0060a9"
+    },
+    {
+      "commit_sha": "7bbc22c2ed95013c6de48d44f5dc984ad125bd0b",
+      "path": "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/primary-advantage/page.test.tsx",
+      "blob_sha": "fed5813de54cfd6405da6f1630ba476e61d75ea7"
+    }
+  ],
+  "reviewed_blobs": {
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/(home)/page.test.tsx": "d3cd9394901821d554a7336b589a46269611e44b",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/primary-advantage/page.test.tsx": "fed5813de54cfd6405da6f1630ba476e61d75ea7",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/primary-advantage/page.tsx": "301523f674c7321d4a4ae87146423fd658c11a93",
+    "apps/www-reading-advantage/src/locales/pages/products/primary-advantage.ts": "838a17a6a3a9fbd18c7544876ae1d10e71b2c7b5",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/(home)/page.tsx": "e76f274ceda1f163d2e0c6f8c5b46e7453bc46dd",
+    "apps/www-reading-advantage/src/components/marketing/mastery-advantage-graph.tsx": "457ae6fc32ca350f65931334aa02a52c9dd10ec6"
+  },
+  "contract_audit": {
+    "homepage_test": {
+      "status": "PASS",
+      "evidence": [
+        "The async Home server component accepts Next.js promise params.",
+        "The test stubs IntersectionObserver and restores globals after each test.",
+        "The assertions match the current engine, suite, Thai schools, and impact sections.",
+        "The homepage suite passes 6/6."
+      ]
+    },
+    "primary_test_deduplication": {
+      "status": "PASS",
+      "evidence": [
+        "The candidate tree omits the duplicate page.test.tsx.skip file.",
+        "The active Primary test remains present and passes 6/6.",
+        "The existing CTA, structure, and results-statistic checks remain active."
+      ]
+    },
+    "claims_safety": {
+      "status": "PASS",
+      "evidence": [
+        "The candidate adds no marketing claim copy.",
+        "The candidate removes the unapproved third Primary result statistic and its stale locale-key output.",
+        "The Primary locale dictionary has exactly two result statistics in en, th, and zh.",
+        "The Phase 3 claims suite passes 20/20."
+      ],
+      "phase5_owner_gated_debt": {
+        "status": "OPEN_NOT_BASELINE_ACCEPTED",
+        "figures": ["85%", "100%"],
+        "classification": "The unchanged 85% and 100% figures remain owner-gated Phase 5 debt.",
+        "candidate_attribution": "Candidate 1a6810a10 did not introduce either figure.",
+        "owner": "Phase 5: Comparison/Pricing Data and Legal Copy",
+        "acceptance": "Phase 6 does not accept these figures.",
+        "evidence": [
+          "Candidate 1a6810a10 changes neither locale figure nor its label.",
+          "The candidate removes only the third result statistic and its stale locale-key output.",
+          "Phase 5 owns approval and reconciliation for comparison and pricing figures."
+        ]
+      }
+    },
+    "i18n": {
+      "status": "PASS",
+      "evidence": [
+        "Primary page calls remain for locale keys 0 and 1 only.",
+        "The en, th, and zh Primary result arrays each contain two entries.",
+        "The Phase 3 i18n and typed-locale suites pass 10/10."
+      ]
+    },
+    "mobile_layout": {
+      "status": "PASS_WITH_LIMITATION",
+      "evidence": [
+        "The remaining two cards use one column on mobile and two columns from the md breakpoint.",
+        "The scale and vertical offset apply from md, not on narrow screens.",
+        "This audit did not run a browser session."
+      ]
+    },
+    "regressions": {
+      "status": "PASS",
+      "evidence": [
+        "The Phase 2 SEO suite passes 4/4.",
+        "The Phase 4 browser regression suites pass 13/13.",
+        "The focused homepage and Primary suites pass 12/12."
+      ]
+    },
+    "caller_compatibility": {
+      "status": "PASS_WITH_NO_SIGNATURE_CHANGE",
+      "evidence": [
+        "The candidate changes JSX and test setup only.",
+        "The Home and Primary function signatures do not change.",
+        "The graph query returned no external caller edge for either route function."
+      ]
+    }
+  },
+  "findings": [
+    {
+      "id": "P6-RA-L1",
+      "severity": "Low",
+      "title": "Focused homepage tests emit existing SVG warnings",
+      "files": [
+        "apps/www-reading-advantage/src/components/marketing/mastery-advantage-graph.tsx:405-466"
+      ],
+      "context": "The newly active homepage suite renders the graph and reports stop-color, stroke-width, stroke-linecap, and stroke-linejoin warnings.",
+      "impact": "Existing React warnings reduce test diagnostic clarity.",
+      "recommendation": "Correct the SVG attribute casing in a later UI cleanup.",
+      "disposition": "Nonblocking. The candidate does not change this component."
+    }
+  ],
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    {
+      "id": "P6-RA-L1",
+      "severity": "Low",
+      "title": "Focused homepage tests emit existing SVG warnings",
+      "files": [
+        "apps/www-reading-advantage/src/components/marketing/mastery-advantage-graph.tsx:405-466"
+      ],
+      "context": "The newly active homepage suite renders the graph and reports existing SVG property warnings.",
+      "impact": "Existing React warnings reduce test diagnostic clarity.",
+      "recommendation": "Correct the SVG attribute casing in a later UI cleanup."
+    }
+  ],
+  "checks": [
+    {
+      "command": "CI=true ../../node_modules/.bin/vitest run src/app/[locale]/(marketing)/(home)/page.test.tsx src/app/[locale]/(marketing)/products/primary-advantage/page.test.tsx --maxWorkers=1",
+      "exit_code": 0,
+      "result": "PASS — 2 files and 12 tests passed."
+    },
+    {
+      "command": "CI=true ../../node_modules/.bin/vitest run src/__tests__/phase-2-seo-assets.red.test.ts src/__tests__/phase-4-browser-regressions.red.test.tsx src/__tests__/phase-4-browser-regressions-remaining.red.test.tsx src/__tests__/phase-4-browser-regressions-final.red.test.tsx --maxWorkers=1 --testTimeout=60000",
+      "exit_code": 0,
+      "result": "PASS — 4 files and 13 tests passed. The run emitted existing React DOM warnings."
+    },
+    {
+      "command": "CI=true ../../node_modules/.bin/vitest run src/__tests__/phase-3-i18n.red.test.ts src/__tests__/phase-3-group-b-types.test.ts --maxWorkers=1 --testTimeout=60000",
+      "exit_code": 0,
+      "result": "PASS — 2 files and 10 tests passed."
+    },
+    {
+      "command": "CI=true ../../node_modules/.bin/vitest run src/lib/__tests__/phase-w3-claims.test.ts --maxWorkers=1 --testTimeout=60000",
+      "exit_code": 0,
+      "result": "PASS — 1 file and 20 tests passed."
+    },
+    {
+      "command": "pnpm exec tsc --noEmit -p tsconfig.json",
+      "exit_code": 0,
+      "result": "PASS"
+    },
+    {
+      "command": "pnpm exec eslint src/app/[locale]/(marketing)/(home)/page.test.tsx src/app/[locale]/(marketing)/products/primary-advantage/page.test.tsx src/app/[locale]/(marketing)/products/primary-advantage/page.tsx",
+      "exit_code": 0,
+      "result": "PASS"
+    },
+    {
+      "command": "pnpm exec prettier --check src/app/[locale]/(marketing)/(home)/page.test.tsx src/app/[locale]/(marketing)/products/primary-advantage/page.test.tsx src/app/[locale]/(marketing)/products/primary-advantage/page.tsx",
+      "exit_code": 0,
+      "result": "PASS"
+    },
+    {
+      "command": "git diff --check 1d1f91a69e560137b2f2730e4e68549b755b7e56 1a6810a10bebfb1658e277049a27c95131706603 -- exact three-file Green manifest",
+      "exit_code": 0,
+      "result": "PASS — no whitespace errors."
+    },
+    {
+      "command": "build-graph stats ./graph.db and exact caller queries for Home, PrimaryAdvantage, and both generateMetadata functions",
+      "exit_code": 0,
+      "result": "PASS — graph has 34285 nodes, 60036 edges, and 3709 files. The query returned no external caller edge."
+    },
+    {
+      "command": "candidate tree, Red blob, current reviewed-path drift, and reviewed worktree status checks",
+      "exit_code": 0,
+      "result": "PASS — candidate blobs match the worktree, Red bindings are immutable, and reviewed paths are clean."
+    }
+  ],
+  "graph_audit": {
+    "graph_db_mtime": "2026-08-18T09:14:57+08:00",
+    "stats": {
+      "nodes": 34285,
+      "edges": 60036,
+      "files": 3709
+    },
+    "caller_queries": {
+      "Home": "The query returned only the route file and its params edge.",
+      "PrimaryAdvantage": "The query returned only the route file and its params edge.",
+      "generateMetadata": "The query returned only the route file and its props edge for each route."
+    },
+    "disposition": "The candidate preserves all exported signatures. The review queried the graph in read-only mode."
+  },
+  "dirty_tree_disclosure": {
+    "status_entries_before_artifact": 1735,
+    "reviewed_paths_clean": true,
+    "scope_note": "The review preserved unrelated APK, package, Measure, and application changes."
+  },
+  "browser_review": {
+    "status": "NOT_RUN",
+    "reason": "This audit used responsive class inspection and regression tests. It did not run a browser session."
+  },
+  "candidate_changed_files": [
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/(home)/page.test.tsx",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/primary-advantage/page.test.tsx.skip",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/primary-advantage/page.tsx"
+  ],
+  "red_changed_files": [
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/(home)/page.test.tsx",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/primary-advantage/page.test.tsx"
+  ],
+  "files_written": [
+    "measure/tracks/wave5_public_surface_completion_20260628/phase6-review-a-1a6810a10bebfb1658e277049a27c95131706603.json"
+  ],
+  "known_limitations": [
+    "This audit did not run a browser or live mobile session.",
+    "This audit did not run the full www test suite or a production build.",
+    "The low SVG warning is outside the candidate scope.",
+    "This report does not accept current HEAD or complete Phase 6 or the Wave 5 track."
+  ],
+  "MEASURE_AGENT_RESULT": {
+    "role": "Fresh independent Review A",
+    "status": "PASS",
+    "track": "wave5_public_surface_completion_20260628",
+    "phase": "Phase 6: www Test Hygiene",
+    "candidate_commit": "1a6810a10bebfb1658e277049a27c95131706603",
+    "red_commits": [
+      "c7a4d9bf8f6e59d2cac228ba929c53f2f3af58c2",
+      "7bbc22c2ed95013c6de48d44f5dc984ad125bd0b"
+    ],
+    "audited_head_sha": "1a6810a10bebfb1658e277049a27c95131706603",
+    "current_head_sha": "b6ab9306a7d153321e1e35daa6e7f00bb966085c",
+    "blocking_findings": [],
+    "nonblocking_findings": ["P6-RA-L1"],
+    "source_modified": false,
+    "tests_modified": false,
+    "plans_modified": false,
+    "commit_created": false,
+    "report_is_unstaged": true,
+    "current_head_acceptance": "withheld",
+    "phase_or_track_completion_claim": false,
+    "completion_claim": "none"
+  }
+}

@@ -1,0 +1,433 @@
+{
+  "schema_version": 1,
+  "track_id": "wave5_public_surface_completion_20260628",
+  "phase": "Phase 6: www Test Hygiene",
+  "role": "Fresh independent Review C UX/API reviewer",
+  "phase_base_sha": "c7a4d9bf8f6e59d2cac228ba929c53f2f3af58c2",
+  "role_base_sha": "7bbc22c2ed95013c6de48d44f5dc984ad125bd0b",
+  "red_commit_sha": "c7a4d9bf8f6e59d2cac228ba929c53f2f3af58c2",
+  "red_commit_shas": [
+    "c7a4d9bf8f6e59d2cac228ba929c53f2f3af58c2",
+    "7bbc22c2ed95013c6de48d44f5dc984ad125bd0b"
+  ],
+  "candidate_sha": "1a6810a10bebfb1658e277049a27c95131706603",
+  "candidate_parent_sha": "1d1f91a69e560137b2f2730e4e68549b755b7e56",
+  "audited_head_sha": "1a6810a10bebfb1658e277049a27c95131706603",
+  "audit_start_head_sha": "b6ab9306a7d153321e1e35daa6e7f00bb966085c",
+  "verification_head_start_sha": "b6ab9306a7d153321e1e35daa6e7f00bb966085c",
+  "verification_head_end_sha": "b6ab9306a7d153321e1e35daa6e7f00bb966085c",
+  "head_advanced_during_audit": false,
+  "status": "PASS",
+  "decision": "PASS",
+  "summary": "The candidate passes the Phase 6 UX and API checks. Current-head acceptance stays withheld. Existing Phase 5 claims debt and pre-existing test and landmark gaps remain nonblocking.",
+  "target_verdict": "PASS",
+  "current_head_acceptance": "withheld",
+  "phase_or_track_completion_claim": false,
+  "production_code_modified_by_review": false,
+  "tests_modified_by_review": false,
+  "plans_modified_by_review": false,
+  "baselines_modified_by_review": false,
+  "commit_created": false,
+  "report_is_unstaged": true,
+  "reviewed_inputs": [
+    "measure/index.md",
+    "measure/workflow.md",
+    "measure/product.md",
+    "measure/product-guidelines.md",
+    "measure/tracks/wave5_public_surface_completion_20260628/spec.md",
+    "measure/tracks/wave5_public_surface_completion_20260628/plan.md",
+    "measure/audit-reports/www-reading-advantage_20260626/test-gaps.md",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/(home)/page.tsx",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/(home)/page.test.tsx",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/primary-advantage/page.tsx",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/primary-advantage/page.test.tsx",
+    "apps/www-reading-advantage/src/locales/pages/products/primary-advantage.ts",
+    "apps/www-reading-advantage/src/locales/en.ts",
+    "apps/www-reading-advantage/src/locales/th.ts",
+    "apps/www-reading-advantage/src/locales/zh.ts",
+    "apps/www-reading-advantage/src/test/setup.ts",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/layout.tsx",
+    "apps/www-reading-advantage/src/components/marketing/hero-section.tsx",
+    "apps/www-reading-advantage/src/components/marketing/mastery-advantage-graph.tsx",
+    "apps/www-reading-advantage/src/__tests__/phase-3-i18n.red.test.ts",
+    "apps/www-reading-advantage/src/__tests__/phase-3-group-b-types.test.ts",
+    "apps/www-reading-advantage/src/lib/__tests__/phase-w3-claims.test.ts"
+  ],
+  "scope_audit": {
+    "candidate_diff": "The candidate changes exactly three files: one homepage test, one deleted duplicate Primary test, and one Primary page.",
+    "candidate_parent": "The candidate parent is 1d1f91a69e560137b2f2730e4e68549b755b7e56.",
+    "red_contracts": "c7a4d9bf8 activates the homepage Red contract. 7bbc22c2e adds the Primary statistic Red contract.",
+    "current_head": "HEAD is one unrelated sales commit after the candidate.",
+    "reviewed_path_drift": "No reviewed www source, locale, or test path differs between the candidate and current HEAD.",
+    "dirty_tree": "The worktree had 217 pre-existing status entries before this artifact. This review preserved them."
+  },
+  "candidate_manifest": [
+    {
+      "path": "apps/www-reading-advantage/src/app/[locale]/(marketing)/(home)/page.test.tsx",
+      "status": "modified",
+      "parent_blob_sha": "caf57728ca885041c665d4ead6a17f543f0060a9",
+      "candidate_blob_sha": "d3cd9394901821d554a7336b589a46269611e44b",
+      "current_blob_sha": "d3cd9394901821d554a7336b589a46269611e44b"
+    },
+    {
+      "path": "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/primary-advantage/page.test.tsx.skip",
+      "status": "deleted",
+      "parent_blob_sha": "4a7a08654d2728d2f030ab4a66fc69aeb4f44200",
+      "candidate_blob_sha": null,
+      "current_blob_sha": null
+    },
+    {
+      "path": "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/primary-advantage/page.tsx",
+      "status": "modified",
+      "parent_blob_sha": "21c02255aa712832f4ade9eaab777ad13b96ebea",
+      "candidate_blob_sha": "301523f674c7321d4a4ae87146423fd658c11a93",
+      "current_blob_sha": "301523f674c7321d4a4ae87146423fd658c11a93"
+    }
+  ],
+  "red_bindings": [
+    {
+      "commit_sha": "c7a4d9bf8f6e59d2cac228ba929c53f2f3af58c2",
+      "path": "apps/www-reading-advantage/src/app/[locale]/(marketing)/(home)/page.test.tsx",
+      "blob_sha": "caf57728ca885041c665d4ead6a17f543f0060a9"
+    },
+    {
+      "commit_sha": "7bbc22c2ed95013c6de48d44f5dc984ad125bd0b",
+      "path": "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/primary-advantage/page.test.tsx",
+      "blob_sha": "fed5813de54cfd6405da6f1630ba476e61d75ea7"
+    }
+  ],
+  "reviewed_blobs": {
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/(home)/page.test.tsx": "d3cd9394901821d554a7336b589a46269611e44b",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/(home)/page.tsx": "e76f274ceda1f163d2e0c6f8c5b46e7453bc46dd",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/primary-advantage/page.test.tsx": "fed5813de54cfd6405da6f1630ba476e61d75ea7",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/primary-advantage/page.tsx": "301523f674c7321d4a4ae87146423fd658c11a93",
+    "apps/www-reading-advantage/src/locales/pages/products/primary-advantage.ts": "838a17a6a3a9fbd18c7544876ae1d10e71b2c7b5"
+  },
+  "contract_audit": {
+    "homepage_flow": {
+      "status": "PASS",
+      "evidence": [
+        "The candidate test awaits the async Home route with the Next.js promise params shape.",
+        "The focused homepage suite passes 6/6.",
+        "The live homepage exposes a heading, navigation, links, the graph status, and no unlabeled image.",
+        "Desktop and mobile browser checks show no document horizontal overflow or visible locale-key sentinel.",
+        "The homepage demo CTA opens /en/contact in the mobile browser flow."
+      ]
+    },
+    "primary_flow": {
+      "status": "PASS",
+      "evidence": [
+        "The active Primary suite passes 6/6.",
+        "The live Primary route exposes its H1, CEFR content, feature lists, two result cards, and final CTA links.",
+        "The Primary Learn More CTA opens /en/contact in the mobile browser flow.",
+        "The Primary pilot CTA keeps its existing mailto target. The candidate does not change that target."
+      ]
+    },
+    "cta_target": {
+      "status": "PASS",
+      "evidence": [
+        "The homepage impact CTA uses /contact in source and resolves to /en/contact at runtime.",
+        "The Primary free-trial CTA uses /contact in source and resolves to /en/contact at runtime.",
+        "The browser clicked both reviewed local CTAs and reached the contact route."
+      ]
+    },
+    "missing_key_absence": {
+      "status": "PASS_WITH_PREEXISTING_TEST_GAP",
+      "evidence": [
+        "The locale probe found no missing key across 39 homepage calls and 58 Primary calls in en, th, and zh.",
+        "The live desktop and mobile body text contains no pages.* or components.* sentinel.",
+        "The shared setup mock and the Primary test mock return scope.key for arbitrary keys, so tests do not fail on every missing key.",
+        "The active tests pass, but their fallback mocks do not prove locale-key absence."
+      ]
+    },
+    "two_card_layout": {
+      "status": "PASS",
+      "evidence": [
+        "The candidate changes the stats wrapper to grid-cols-1 md:grid-cols-2.",
+        "The desktop browser reports two cards at 1440px width.",
+        "The mobile browser reports two stacked cards at 390px width.",
+        "The live page and active test omit the removed stats.2 card."
+      ]
+    },
+    "overflow": {
+      "status": "PASS_WITH_LIMITATION",
+      "evidence": [
+        "Document scrollWidth equals clientWidth on the homepage and Primary route at 1440px and 390px widths.",
+        "The browser reports no failed requests, page errors, or console errors for the reviewed routes.",
+        "Some descendants have larger scrollWidth values because the existing layout clips the hero image and scales the central stats card.",
+        "The clipped descendant widths do not create document-level horizontal overflow."
+      ]
+    },
+    "accessible_roles": {
+      "status": "PASS_WITH_PREEXISTING_LANDMARK_GAP",
+      "evidence": [
+        "The accessibility snapshot exposes banner, navigation, main content, headings, links, named images, and the homepage status region.",
+        "The browser found zero images without alt text on both reviewed routes.",
+        "Each reviewed route has two implicit main landmarks because the marketing layout and page both render main.",
+        "The duplicate main landmark predates the candidate and does not block this candidate."
+      ]
+    },
+    "duplicate_test_removal": {
+      "status": "PASS",
+      "evidence": [
+        "The candidate tree has no page.test.tsx.skip file for Primary.",
+        "The active Primary test remains present and passes 6/6.",
+        "The candidate diff deletes the duplicate skipped file and no other test file."
+      ]
+    },
+    "claims_boundary": {
+      "status": "PASS_WITH_PREEXISTING_PHASE5_DEBT",
+      "evidence": [
+        "The candidate removes stats.2 and changes no locale file.",
+        "The candidate parent and candidate share the Primary locale blob.",
+        "The 85% and 100% Primary values remain public and predate Phase 6.",
+        "The Phase 3 claims suite passes 20/20 but does not approve those two values.",
+        "Phase 5 remains the owner for comparison, pricing, legal, and claims decisions."
+      ]
+    },
+    "api_boundary": {
+      "status": "PASS",
+      "evidence": [
+        "The candidate changes no API route, backend adapter, database access, provider SDK, or input boundary.",
+        "The candidate adds no fetch, external href, raw HTML, executable code, or secret.",
+        "The reviewed local CTAs use the locale-aware contact route."
+      ]
+    },
+    "regressions": {
+      "status": "PASS",
+      "evidence": [
+        "Focused homepage and Primary tests pass 12/12.",
+        "Phase 3 i18n and typed-locale tests pass 10/10.",
+        "Phase 4 browser regression tests pass 9/9.",
+        "The Wave 3 claims suite passes 20/20.",
+        "TypeScript, ESLint, Prettier, and the scoped whitespace check pass."
+      ]
+    }
+  },
+  "findings": [
+    {
+      "id": "P6-RC-H1",
+      "severity": "High",
+      "title": "Owner-gated Primary statistics remain public",
+      "files": [
+        "apps/www-reading-advantage/src/locales/pages/products/primary-advantage.ts:100-113",
+        "apps/www-reading-advantage/src/locales/pages/products/primary-advantage.ts:236-249",
+        "apps/www-reading-advantage/src/locales/pages/products/primary-advantage.ts:372-385",
+        "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/primary-advantage/page.tsx:340-368",
+        "measure/tracks/wave5_public_surface_completion_20260628/plan.md:140-143"
+      ],
+      "context": "The candidate removes stats.2 but leaves the 85% and 100% values. History places both values before Phase 6 and Phase 5 owns their approval.",
+      "impact": "The public Primary page retains a claims risk.",
+      "recommendation": "Obtain evidence and product-owner approval, or remove or qualify both values. Add a guard for each approved value.",
+      "introduced_or_changed_by_candidate": false,
+      "owner": "Phase 5 comparison, pricing, legal, and claims work",
+      "disposition": "Nonblocking for Phase 6. Preserve as unchanged Phase 5 debt."
+    },
+    {
+      "id": "P6-RC-M1",
+      "severity": "Medium",
+      "title": "Locale test mocks accept missing keys",
+      "files": [
+        "apps/www-reading-advantage/src/test/setup.ts:43-51",
+        "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/primary-advantage/page.test.tsx:5-13"
+      ],
+      "context": "Both mocks return scope.key for arbitrary keys. A missing locale key can render a passing sentinel instead of failing.",
+      "impact": "The active homepage and Primary tests can miss a renamed or missing message.",
+      "recommendation": "Use locale-backed lookup mocks that throw for missing or non-text values, and render each supported locale.",
+      "introduced_or_changed_by_candidate": false,
+      "disposition": "Nonblocking. Runtime locale parity passes and the mock gap predates this candidate."
+    },
+    {
+      "id": "P6-RC-M2",
+      "severity": "Medium",
+      "title": "Marketing routes expose duplicate main landmarks",
+      "files": [
+        "apps/www-reading-advantage/src/app/[locale]/(marketing)/layout.tsx:15-18",
+        "apps/www-reading-advantage/src/app/[locale]/(marketing)/(home)/page.tsx:106-107",
+        "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/primary-advantage/page.tsx:131-132"
+      ],
+      "context": "The marketing layout wraps each page in main, and both reviewed pages render another main.",
+      "impact": "Screen-reader landmark navigation exposes two main regions on each reviewed route.",
+      "recommendation": "Keep one main landmark per route by changing the layout wrapper to a div or removing the child main element.",
+      "introduced_or_changed_by_candidate": false,
+      "disposition": "Nonblocking. The landmark issue predates this candidate."
+    },
+    {
+      "id": "P6-RC-L1",
+      "severity": "Low",
+      "title": "Homepage tests emit existing SVG property warnings",
+      "files": [
+        "apps/www-reading-advantage/src/components/marketing/mastery-advantage-graph.tsx:405-466"
+      ],
+      "context": "The newly active homepage suite reports React warnings for SVG property casing.",
+      "impact": "Existing warnings reduce test output clarity.",
+      "recommendation": "Correct the SVG property casing in a later UI cleanup.",
+      "introduced_or_changed_by_candidate": false,
+      "disposition": "Nonblocking. The candidate does not change the graph component."
+    }
+  ],
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "P6-RC-H1",
+    "P6-RC-M1",
+    "P6-RC-M2",
+    "P6-RC-L1"
+  ],
+  "checks": [
+    {
+      "command": "CI=true ../../node_modules/.bin/vitest run src/app/[locale]/(marketing)/(home)/page.test.tsx src/app/[locale]/(marketing)/products/primary-advantage/page.test.tsx --maxWorkers=1",
+      "exit_code": 0,
+      "result": "PASS — 2 files and 12 tests passed. The output contains existing SVG warnings."
+    },
+    {
+      "command": "CI=true ../../node_modules/.bin/vitest run src/__tests__/phase-3-i18n.red.test.ts src/__tests__/phase-3-group-b-types.test.ts --maxWorkers=1 --testTimeout=60000",
+      "exit_code": 0,
+      "result": "PASS — 2 files and 10 tests passed."
+    },
+    {
+      "command": "CI=true ../../node_modules/.bin/vitest run src/__tests__/phase-4-browser-regressions.red.test.tsx src/__tests__/phase-4-browser-regressions-remaining.red.test.tsx src/__tests__/phase-4-browser-regressions-final.red.test.tsx --maxWorkers=1 --testTimeout=60000",
+      "exit_code": 0,
+      "result": "PASS — 3 files and 9 tests passed. The output contains existing fill attribute warnings."
+    },
+    {
+      "command": "CI=true ../../node_modules/.bin/vitest run src/lib/__tests__/phase-w3-claims.test.ts --maxWorkers=1 --testTimeout=60000",
+      "exit_code": 0,
+      "result": "PASS — 1 file and 20 tests passed."
+    },
+    {
+      "command": "pnpm exec tsc --noEmit -p tsconfig.json",
+      "exit_code": 0,
+      "result": "PASS"
+    },
+    {
+      "command": "pnpm exec eslint src/app/[locale]/(marketing)/(home)/page.test.tsx src/app/[locale]/(marketing)/products/primary-advantage/page.test.tsx src/app/[locale]/(marketing)/products/primary-advantage/page.tsx",
+      "exit_code": 0,
+      "result": "PASS"
+    },
+    {
+      "command": "pnpm exec prettier --check src/app/[locale]/(marketing)/(home)/page.test.tsx src/app/[locale]/(marketing)/products/primary-advantage/page.test.tsx src/app/[locale]/(marketing)/products/primary-advantage/page.tsx",
+      "exit_code": 0,
+      "result": "PASS"
+    },
+    {
+      "command": "pnpm exec tsx locale probe for homepage and Primary translator calls in en, th, and zh",
+      "exit_code": 0,
+      "result": "PASS — homepage 39 calls and Primary 58 calls have no missing locale keys."
+    },
+    {
+      "command": "Playwright with /usr/bin/google-chrome at 1440x900 and 390x844 for /en and /en/products/primary-advantage",
+      "exit_code": 0,
+      "result": "PASS — no document overflow, no visible key sentinel, two Primary cards at both widths, and no browser errors."
+    },
+    {
+      "command": "Playwright mobile CTA flow for homepage demo and Primary Learn More",
+      "exit_code": 0,
+      "result": "PASS — both local CTAs reached /en/contact."
+    },
+    {
+      "command": "~/.kimi-webbridge/bin/kimi-webbridge status and accessibility snapshots",
+      "exit_code": 0,
+      "result": "PASS_WITH_LIMITATION — WebBridge reported a connected extension; snapshots exposed the reviewed roles."
+    },
+    {
+      "command": "git diff --check 1d1f91a69e560137b2f2730e4e68549b755b7e56 1a6810a10bebfb1658e277049a27c95131706603 and duplicate-test absence check",
+      "exit_code": 0,
+      "result": "PASS — The check found no whitespace errors and confirmed that the skipped duplicate file is absent."
+    },
+    {
+      "command": "build-graph stats and exact Home and PrimaryAdvantage node query",
+      "exit_code": 0,
+      "result": "PASS — graph has 34703 nodes, 60506 edges, and 3722 files; no external caller edge appears for either route function."
+    }
+  ],
+  "graph_audit": {
+    "graph_db_mtime": "2026-08-18T11:06:43+08:00",
+    "stats": {
+      "nodes": 34703,
+      "edges": 60506,
+      "files": 3722
+    },
+    "caller_queries": {
+      "Home": "The exact route node has only file containment and params flow edges.",
+      "PrimaryAdvantage": "The exact route node has only file containment and params flow edges."
+    },
+    "disposition": "No exported signature changed. This review queried the graph in read-only mode."
+  },
+  "browser_review": {
+    "status": "PASS_WITH_LIMITATION",
+    "routes": [
+      "/en",
+      "/en/products/primary-advantage"
+    ],
+    "viewports": [
+      "1440x900",
+      "390x844"
+    ],
+    "evidence": [
+      "Both routes rendered a primary heading and accessible navigation.",
+      "Homepage and Primary local CTAs reached /en/contact.",
+      "Primary rendered exactly two stats cards at desktop and mobile widths.",
+      "Document width matched the viewport at both widths.",
+      "The browser showed no visible locale-key sentinel, uncaught page error, console error, or failed request."
+    ],
+    "limitations": [
+      "The Playwright managed Chromium binary was unavailable, so this review used the installed system Chrome executable.",
+      "The local server was already running before this review.",
+      "The browser confirms runtime behavior but cannot establish product-owner approval for claims.",
+      "The accessibility snapshot exposed the pre-existing duplicate main landmark."
+    ]
+  },
+  "dirty_tree_disclosure": {
+    "status_entries_before_artifact": 217,
+    "reviewed_paths_clean": true,
+    "scope_note": "This review preserved unrelated APK, pricing, legal, package, application, and Measure changes."
+  },
+  "candidate_changed_files": [
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/(home)/page.test.tsx",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/primary-advantage/page.test.tsx.skip",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/primary-advantage/page.tsx"
+  ],
+  "red_changed_files": [
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/(home)/page.test.tsx",
+    "apps/www-reading-advantage/src/app/[locale]/(marketing)/products/primary-advantage/page.test.tsx"
+  ],
+  "files_written": [
+    "measure/tracks/wave5_public_surface_completion_20260628/phase6-review-c-1a6810a10.json"
+  ],
+  "known_limitations": [
+    "This review did not run the full www test suite or production build.",
+    "The High claims risk remains owner-gated Phase 5 debt.",
+    "The locale test mocks do not fail on missing keys, although runtime parity passed.",
+    "The marketing layout exposes two main landmarks on each reviewed route.",
+    "This review used the installed system Chrome because the Playwright managed browser was absent.",
+    "This report does not accept current HEAD, Phase 6, or the Wave 5 track."
+  ],
+  "MEASURE_AGENT_RESULT": {
+    "role": "Fresh independent Review C UX/API reviewer",
+    "status": "PASS",
+    "track": "wave5_public_surface_completion_20260628",
+    "phase": "Phase 6: www Test Hygiene",
+    "candidate_commit": "1a6810a10bebfb1658e277049a27c95131706603",
+    "red_commits": [
+      "c7a4d9bf8f6e59d2cac228ba929c53f2f3af58c2",
+      "7bbc22c2ed95013c6de48d44f5dc984ad125bd0b"
+    ],
+    "audited_head_sha": "1a6810a10bebfb1658e277049a27c95131706603",
+    "current_head_sha": "b6ab9306a7d153321e1e35daa6e7f00bb966085c",
+    "blocking_findings": [],
+    "nonblocking_findings": [
+      "P6-RC-H1",
+      "P6-RC-M1",
+      "P6-RC-M2",
+      "P6-RC-L1"
+    ],
+    "source_modified": false,
+    "tests_modified": false,
+    "plans_modified": false,
+    "commit_created": false,
+    "report_is_unstaged": true,
+    "current_head_acceptance": "withheld",
+    "phase_or_track_completion_claim": false,
+    "completion_claim": "none"
+  }
+}
