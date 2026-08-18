@@ -1,0 +1,13 @@
+track_id: durable_job_worker_platform_20260713
+
+phase_base_sha: f09c14f147ed4e9a0517167e6c37da7d64134ccf
+
+red_commit_sha: 0ccebc866848cbe8df22ea172e63ee5abd977f67
+
+red_result: 3 suites; 10 tests; 10 intended failures; no transform, import, or environment failure.
+
+hardening_result: 2 tests; 1 pass; 1 intended pre-existing failure.
+
+verification: typecheck, ESLint, Prettier, diff check, build-graph update, and production-source integrity passed.
+
+reviews: fresh Luna correctness ACCEPT; fresh Luna security ACCEPT; primary inspection ACCEPT.
