@@ -1,0 +1,15 @@
+track_id: durable_job_worker_platform_20260713
+
+phase_base_sha: f09c14f147ed4e9a0517167e6c37da7d64134ccf
+
+saved_green_patch: /tmp/opencode/durable-job-analyzer-green.patch
+
+saved_green_patch_sha256: 3ae3d00787c8a071410adb9cb9d143a7b40997602dc551d35f6158942e1ad86d
+
+saved_red_patch: /tmp/opencode/analyzer-v2-red-lease.patch
+
+saved_red_patch_sha256: 7310e61e7343ba25e21a48246d4fb32af4139e0250779906299b6d377b81f4e4
+
+preflight: six Green paths are clean; Red files are absent; both forward patch checks passed.
+
+docs_review: two fresh Luna reviews ACCEPT; primary inspection ACCEPT.
