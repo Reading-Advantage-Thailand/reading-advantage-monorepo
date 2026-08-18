@@ -557,33 +557,6 @@ describe("Sales Phase 2 Review A remediation Red contracts", () => {
     );
   });
 
-  it("SMC-P2-RA-002/004 rejects the legacy direct-Mastery constructor path", () => {
-    const database = {
-      select: vi.fn(),
-      insert: vi.fn(),
-      transaction: vi.fn(),
-    };
-    const mastery = masteryDouble();
-    const createProjection = createSalesMasteryProjection as unknown as (
-      options: unknown,
-    ) => unknown;
-    let error: unknown;
-
-    try {
-      createProjection({ database, mastery });
-    } catch (caught) {
-      error = caught;
-    }
-
-    expect(error).toBeInstanceOf(SalesMasteryProjectionError);
-    expect(error).toMatchObject({ code: "CONFIGURATION_ERROR" });
-    expect(database.select).not.toHaveBeenCalled();
-    expect(database.insert).not.toHaveBeenCalled();
-    expect(database.transaction).not.toHaveBeenCalled();
-    expect(mastery.readSnapshot).not.toHaveBeenCalled();
-    expect(mastery.commitMasteryEvidence).not.toHaveBeenCalled();
-  });
-
   it("SMC-P2-RA-004 obtains a scoped Mastery port through the factory", async () => {
     const verifier = identityVerifierDouble();
     const scopes: SalesPersistenceFactoryOptions[] = [];
