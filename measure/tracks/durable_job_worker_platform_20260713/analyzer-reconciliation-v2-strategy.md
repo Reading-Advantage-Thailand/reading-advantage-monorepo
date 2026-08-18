@@ -138,20 +138,25 @@ Do not add this exception to any v1 file.
 
 The committed hardening tests already cover this behavior.
 The relevant commits are `9275d4977` and `ebf4cd435`.
-Do not add another analyzer fixture or analyzer-behavior Red suite.
+Do not add another fixture set or analyzer-behavior Red suite.
+The approved helper extracts the existing fixture set without adding inputs.
 
 ## Minimal Red plan
 
-The Red role may add only these test files and one evidence file:
+The Red role may add these test files, one shared test-input helper, and one
+evidence file:
 
 | File                                                                                     | Required Red contract                                                                                                                                  |
 | ---------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `packages/architecture-enforcement/src/__tests__/policy-selection-v2.red.test.ts`        | Reuse existing hardening fixtures to prove immutable v1 output parity, v2 detection, candidate validation, and default v1 selection before acceptance. |
 | `packages/architecture-enforcement/src/__tests__/v1-immutability-v2.red.test.ts`         | Compare clean-HEAD bytes with Gate 1 bytes. Expose every v1 mismatch. Reject changed v1 bytes and v1 replacement writes.                               |
 | `packages/architecture-enforcement/src/__tests__/reconciliation-manifest-v2.red.test.ts` | Prove strict v2 manifest fields, artifact hashes, canonical ordering, review bindings, and zero baseline entry additions.                              |
+| `packages/architecture-enforcement/src/__tests__/fixtures/analyzer-hardening-inputs.ts`  | Export the existing hardening source paths and source bytes without assertions or test registration.                                                   |
 | `measure/tracks/durable_job_worker_platform_20260713/analyzer-reconciliation-v2-red.md`  | Record the Red command, named failures, source commit, and exact file hashes.                                                                          |
 
 The Red role must not add `analyzer-policy-selector.json`.
+It may modify `analyzer-hardening.test.ts` only to consume the shared helper.
+That refactor must preserve every existing assertion and expected result.
 It must not add another fixture suite, baseline entries, a second policy artifact, or an architecture preview suite.
 
 The three Red suites must fail because v2 code or artifacts are absent.
@@ -190,7 +195,9 @@ The policy-selection Red must run the existing hardening fixture inputs under bo
 For the same fixture inputs, the v1 run must preserve the accepted v1 findings and output.
 The v2 run must detect the hardened analyzer cases.
 Use the committed fixtures from `packages/architecture-enforcement/src/__tests__/analyzer-hardening.test.ts`.
-Do not copy them into a new fixture file or add another fixture suite.
+Move their exact source paths and source bytes into the approved shared helper.
+Import that helper from both Red suites.
+Do not duplicate those inputs or add another fixture suite.
 
 ### Immutable v1 output oracle
 
@@ -200,7 +207,7 @@ Capture findings, diagnostics, ordering, counts, and serialized output exactly.
 Embed the resulting expectations in a deep-frozen constant in `policy-selection-v2.red.test.ts`.
 Use the same inputs under explicit v1 selection.
 Require byte-identical output against the oracle.
-Do not create a fixture, snapshot, or separate oracle file.
+Do not create a snapshot or separate oracle file.
 
 V1 must use the historical analyzer behavior bound by the archived v1 manifest.
 V2 may use current hardened analyzer logic where the v2 policy differs.
