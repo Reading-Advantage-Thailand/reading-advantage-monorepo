@@ -1,0 +1,11 @@
+track_id: durable_job_worker_platform_20260713
+
+phase_base_sha: 310847b15f9a2f59982208bdae1581ca605b6674
+
+saved_patch: /tmp/opencode/durable-job-analyzer-green.patch
+
+saved_patch_sha256: 3ae3d00787c8a071410adb9cb9d143a7b40997602dc551d35f6158942e1ad86d
+
+preflight: six paths remain clean at HEAD; forward patch check passed; clean hashes match the strategy.
+
+docs_review: Luna ACCEPT; primary inspection ACCEPT.
