@@ -295,31 +295,31 @@ closed; Red failures arise from missing platform behavior.
 - [~] Task 14a: Implement the owner-approved first-class analyzer reconciliation
   v2. Preserve the accepted v1 manifest bytes at SHA-256
   `4c95113cfff50d9e92f0770e1f18ef7d195dd50b5201f108e90990771ca46ec0`.
-  Add explicit v1/v2 policy selection. Activate v2 only after its Red tests,
-  hashes, clean architecture check, fresh Luna reviews, and owner receipt pass.
+  Add explicit v1/v2 policy selection and preserve v1 behavior and output.
+  Activate v2 only after its Red tests, hashes, clean architecture check, fresh
+  Luna reviews, and owner receipt pass.
   Add no baseline finding entries.
 
-  - Pre-phase-base gate: preserve the six dirty Green files as a verified binary
-    patch outside the repository. Record the patch SHA-256. Verify reverse patch
-    application. Verify forward patch application. Restore these files to current
-    `HEAD`:
-    `packages/architecture-enforcement/src/analyzer.ts`,
-    `packages/architecture-enforcement/src/contracts.ts`,
-    `packages/architecture-enforcement/src/ownership-map.ts`,
-    `packages/architecture-enforcement/src/config/analyzer-reconciliation.v1.json`,
-    `packages/architecture-enforcement/src/config/baselines/database.v1.json`,
-    and `packages/architecture-enforcement/src/config/ownership-map.v1.json`.
-    Do not stage or commit the saved patch.
-  - The current dirty analyzer, contracts, and ownership-map exception branches
-    violate the target. The current dirty v1 policy changes violate v1
-    immutability. None of those changes may survive in a commit.
-  - Restore dirty files to current `HEAD`, not to Gate 1, during preflight. Do not
-    restore drifted v1 policy or baseline files before Red. The v1 immutability
-    Red must expose every clean-HEAD mismatch. Green then restores exact Gate 1
-    bytes.
+  - Completed preflight: saved the six Green files to
+    `/tmp/opencode/durable-job-analyzer-green.patch` with SHA-256
+    `3ae3d00787c8a071410adb9cb9d143a7b40997602dc551d35f6158942e1ad86d`.
+    Reverse apply was verified before restoration. All six files were restored to
+    current `HEAD` and are clean now. Forward apply check passes. Reverse apply
+    is not expected against the clean tree. The saved patch is not staged or
+    committed.
+  - The saved analyzer, contracts, and ownership-map exception branches violate
+    the target. The saved v1 policy changes violate v1 immutability. None of
+    those changes may survive in a commit.
+  - The six files remain at current `HEAD`, not Gate 1, before Red. Do not restore
+    drifted v1 policy or baseline files before Red. The v1 immutability Red must
+    expose every clean-HEAD mismatch. Green then restores exact Gate 1 bytes.
   - Record the clean-HEAD blob and raw SHA-256 values in
     `analyzer-reconciliation-v2-strategy.md`. Record `phase_base_sha` only after
-    the strategy and plan commit, with no intended track-owned paths dirty.
+    this correction's strategy and plan commit, while all Red files are absent.
+    Do not reuse the prior Red base `310847b15f9a2f59982208bdae1581ca605b6674`.
+  - The saved Red patch is `/tmp/opencode/analyzer-v2-red-lease.patch` with
+    SHA-256 `7310e61e7343ba25e21a48246d4fb32af4139e0250779906299b6d377b81f4e`.
+    Do not apply, stage, or commit it before the new phase-base capture.
   - Red gate: run exactly three Red suites for policy selection, v1
     immutability, and the v2 manifest. All three suites must fail for named
     missing v2 behavior. The policy-selection Red must use the existing
@@ -327,26 +327,46 @@ closed; Red failures arise from missing platform behavior.
   - The policy-selection Red must store an immutable output oracle derived from
     the Gate 1 analyzer. It must require v1 parity for findings, diagnostics,
     ordering, counts, and serialized output. Do not add a fixture or oracle file.
+  - The selector accepts only explicit `v1`, explicit `v2`, or no policy. Every
+    result exposes `status`, `defaultPolicy`, and `manifestSha256` from the
+    validated committed manifest. V1 hashes remain internal constants.
+  - Policy-aware writes allow only the complete exact v2 destination set. They
+    reject v1, partial, mixed, unknown, wildcard, traversal, and other invalid
+    dry and non-dry destination sets before any write.
+    The set is `analyzer-reconciliation.v2.json`, `ownership-map.v2.json`,
+    `baselines/database.v2.json`, and `baselines/provider.v2.json` under the
+    architecture-enforcement config root.
+  - The review subject hashes protected manifest fields only. It excludes
+    reviews, acceptance, `reviewSubjectSha256`, and itself. Review evidence binds
+    role, reviewer, result, review subject, protected v1 hash, exact v2 artifacts,
+    and zero deltas. The manifest records evidence paths and hashes.
+  - The owner receipt binds owner, review subject, protected v1 hash, exact v2
+    artifacts, and zero deltas. The accepted manifest binds receipt path/hash and
+    owner review subject. The receipt does not bind final manifest SHA.
   - Green gate: restore all four v1 artifacts to exact Gate 1 bytes after Red
     records mismatches. Require the four accepted v1 hashes to match. Do not
     commit the current hard-coded exception branches. Keep the exception only in
     the v2 ownership map. Allow it only for `static-import` evidence.
   - Acceptance gate: explicit v1 passes the immutable output oracle. Explicit v2
     passes a clean architecture check with zero baseline additions, removals, or
-    renames. Four fresh Luna reviews inspect one review subject. Each review
-    binds the protected v1 manifest and every v2 artifact hash. The owner receipt
-    binds the accepted v2 manifest SHA. No-policy selection remains v1 until all
-    gates pass.
+    renames. Four fresh Luna reviews inspect one review subject. Each evidence
+    file binds its role, reviewer, result, protected v1 hash, exact v2 artifacts,
+    and zero deltas. The owner receipt binds owner, review subject, protected v1
+    hash, exact v2 artifacts, and zero deltas. The accepted manifest binds the
+    receipt path/hash and owner review subject. The receipt does not bind final
+    manifest SHA. No-policy selection remains v1 until all gates pass.
 
-**Verification:** `CI=true pnpm --filter @reading-advantage/db test && CI=true pnpm vitest run packages/backend/src/jobs/__tests__ && pnpm architecture:check`
+**Verification:** `CI=true pnpm --filter @reading-advantage/db test && CI=true pnpm vitest run packages/backend/src/jobs/__tests__ && pnpm architecture:check --policy v1 --format json && pnpm architecture:check --policy v2 --format json`
 
 **Acceptance gate:** AC-2–AC-4 and migration/tenant gates pass; no stale owner can
 mutate a reclaimed job; no baseline addition is accepted.
 
 **Task 14a acceptance gate:** The three Red suites pass in Green; explicit v1
 matches the Gate 1 output oracle with v1 parity and exact bytes; v2 is clean with
-zero baseline deltas; four Luna reviews bind one subject; and the owner binds
-the accepted v2 manifest.
+zero baseline deltas; four Luna reviews bind one subject; the manifest records
+review evidence paths and hashes; and the accepted manifest binds the owner
+receipt path/hash and owner review subject without requiring a final manifest
+hash in the receipt.
 
 ## Phase 4: Worker Service and `review_jobs` Adoption
 

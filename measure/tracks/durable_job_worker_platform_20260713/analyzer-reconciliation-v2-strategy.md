@@ -6,7 +6,7 @@ This document defines the Task 14a strategy for `durable_job_worker_platform_202
 It records the Red and Green plan only.
 It records no acceptance decision.
 
-The strategy role owns this file only.
+This correction owns this strategy file and the track plan only.
 It must not stage, commit, or modify another file.
 
 ## Owner decision
@@ -20,7 +20,7 @@ The accepted v1 manifest must retain this exact raw SHA-256:
 
 V2 must not rewrite, rehash, or replace any v1 artifact.
 V2 remains a candidate until its artifacts pass validation and fresh Luna reviews pass.
-V2 becomes the default only after accepted artifacts and fresh Luna reviews bind the final v2 manifest.
+V2 becomes the default only after the validated committed manifest records accepted artifacts, fresh Luna reviews, and an owner receipt.
 
 Explicit v1 selection is a first-class compatibility contract.
 It must preserve accepted v1 analyzer behavior and output, not only accepted JSON bytes.
@@ -58,14 +58,14 @@ Its provider ruleset SHA-256 is `1f26b6b7bd73ab2ce7ca38f182206dd8d41995f566733bd
 
 ## Clean-HEAD preflight
 
-The current working tree contains six dirty Green files.
-Their current hard-coded exception branches violate this target.
+The completed preflight saved the six Green files outside the repository.
+The saved versions contained hard-coded exception branches that violate this target.
 Those branches must not survive in a commit.
 
 The recorded clean reference commit is `628468dae86c688d14f5667109e39d1d3ab9b710`.
 This commit is not the future `phase_base_sha`.
 
-| Dirty Green file                                                               | Clean-HEAD blob SHA                        | Clean-HEAD raw SHA-256                                             |
+| Green file                                                                     | Clean-HEAD blob SHA                        | Clean-HEAD raw SHA-256                                             |
 | ------------------------------------------------------------------------------ | ------------------------------------------ | ------------------------------------------------------------------ |
 | `packages/architecture-enforcement/src/analyzer.ts`                            | `511b0405240ea51d45e309bf7d1b3049dd07ee5c` | `f64a5b0aa41a02086b03263086aa8dfffc81d80adcf9610ce4e46ba4c65a2391` |
 | `packages/architecture-enforcement/src/contracts.ts`                           | `613d9c5c8a69a72e727f42ad2f85c5352decfe3c` | `8ea1ef6f144fa6a0995dc32249e8ccb049bfdd649d89afa086caefa9ca2c3c68` |
@@ -78,40 +78,30 @@ The clean-HEAD ownership-map v1 hash differs from the Gate 1 hash.
 Its Gate 1 hash is `f6d7b64d8d0091ef9d696d3bf0677f3b995ee78f41011ed56eea50399949f1e8`.
 The Red must report this mismatch.
 
-Before phase-base capture, save the six-file Green patch outside the repository.
-Record the patch SHA-256.
-Verify the reverse patch applies to the dirty files.
-Restore the six files to current `HEAD`.
-Verify the forward patch applies without changing files.
-Do not stage or commit the saved patch.
+The completed preflight record is:
 
-Use this sequence:
+- saved patch: `/tmp/opencode/durable-job-analyzer-green.patch`;
+- saved patch SHA-256: `3ae3d00787c8a071410adb9cb9d143a7b40997602dc551d35f6158942e1ad86d`;
+- reverse apply check: verified before restoration;
+- restoration: all six files restored to current `HEAD`;
+- current state: all six files are clean;
+- forward apply check: passes against the clean tree;
+- reverse apply check: not expected against the clean tree;
+- saved patch: not staged or committed.
 
-```bash
-ls /tmp/opencode
-git diff --binary -- \
-  packages/architecture-enforcement/src/analyzer.ts \
-  packages/architecture-enforcement/src/contracts.ts \
-  packages/architecture-enforcement/src/ownership-map.ts \
-  packages/architecture-enforcement/src/config/analyzer-reconciliation.v1.json \
-  packages/architecture-enforcement/src/config/baselines/database.v1.json \
-  packages/architecture-enforcement/src/config/ownership-map.v1.json \
-  > /tmp/opencode/durable-job-analyzer-green.patch
-sha256sum /tmp/opencode/durable-job-analyzer-green.patch
-git apply --check --reverse /tmp/opencode/durable-job-analyzer-green.patch
-git restore --source=HEAD -- \
-  packages/architecture-enforcement/src/analyzer.ts \
-  packages/architecture-enforcement/src/contracts.ts \
-  packages/architecture-enforcement/src/ownership-map.ts \
-  packages/architecture-enforcement/src/config/analyzer-reconciliation.v1.json \
-  packages/architecture-enforcement/src/config/baselines/database.v1.json \
-  packages/architecture-enforcement/src/config/ownership-map.v1.json
-git apply --check /tmp/opencode/durable-job-analyzer-green.patch
-```
+The clean files remain at `HEAD` before Red.
+Red must expose the ownership-map mismatch against Gate 1.
+Green restores exact Gate 1 v1 bytes only after Red records mismatches.
 
-Restore to current `HEAD`, not to Gate 1, during this preflight.
-Do not use the saved patch to restore drifted v1 files before Red.
-Green restores exact Gate 1 v1 bytes only after the immutability Red records mismatches.
+## Audited Red lease
+
+The saved Red patch is `/tmp/opencode/analyzer-v2-red-lease.patch`.
+Its SHA-256 is `7310e61e7343ba25e21a48246d4fb32af4139e0250779906299b6d377b81f4e`.
+The patch is evidence only and must not be staged or committed.
+
+The patch records the prior Red base `310847b15f9a2f59982208bdae1581ca605b6674`.
+That base is obsolete after this correction.
+Capture a new phase base after this correction and before applying the Red patch.
 
 ## Exact v2 tenant-registry exception
 
@@ -216,6 +206,13 @@ No v2-only hardening behavior may execute during explicit v1 selection.
 Do not create a selector JSON file.
 Keep activation status and its manifest binding in the v2 manifest and owner acceptance receipt.
 
+The selector accepts only `v1`, `v2`, or no policy.
+It rejects every other policy value.
+Every selection result exposes `status`, `defaultPolicy`, and `manifestSha256`.
+These fields come from the validated committed manifest, not from the request or candidate bytes.
+Explicit v1, explicit v2, and no-policy results expose the same committed-manifest status and hash.
+The accepted v1 artifact hashes remain internal constants.
+
 Red records the mismatches before Green restoration.
 Green restores every v1 artifact to its exact Gate 1 bytes.
 Green uses the archived Gate 1 lineage.
@@ -250,11 +247,50 @@ The v2 manifest must bind:
 - one review subject SHA-256;
 - fresh Luna review evidence SHA-256 values;
 - empty baseline addition, removal, and rename arrays;
-- acceptance status and the final manifest activation binding.
+- acceptance status, default policy, and owner receipt path/hash binding.
 
 The validator must reject duplicate or unordered arrays.
 It must reject changed artifact bytes, wildcard paths, source bodies, secrets, and unbound review records.
-The final manifest hash is computed last and never includes itself.
+
+The v2 manifest must use these exact review and acceptance bindings:
+
+- `reviewSubjectSha256` is the SHA-256 of canonical protected manifest fields;
+- the review subject excludes `reviews`, `acceptance`, `reviewSubjectSha256`, and itself;
+- each review evidence file binds `role`, `reviewer`, `result`, `reviewSubjectSha256`, `v1ManifestSha256`, the exact v2 artifact references, and three empty baseline-delta arrays;
+- each manifest review record stores the evidence path and exact evidence SHA-256;
+- the owner receipt binds `ownerId`, `reviewSubjectSha256`, `v1ManifestSha256`, the exact v2 artifact references, and three empty baseline-delta arrays;
+- accepted `acceptance.ownerBinding` stores the owner receipt path, owner receipt SHA-256, and owner review subject;
+- the owner receipt must not bind the final manifest SHA-256.
+
+Candidate review records form an ordered prefix of the four required roles:
+`adversarial-testing`, `correctness`, `developer-api`, and `security`.
+Candidate status requires `defaultPolicy: "v1"` and no owner binding.
+Accepted status requires all four reviews, `defaultPolicy: "v2"`, and a valid owner binding.
+Use one evidence path for each role under
+`measure/tracks/durable_job_worker_platform_20260713/reviews/`.
+Use `measure/tracks/durable_job_worker_platform_20260713/owner-receipt.json` for the owner receipt.
+
+The final manifest hash is computed last.
+Its hash is not an input to the review subject or owner receipt.
+
+The exact v2 artifact references exclude the v2 manifest itself.
+They contain the v2 ownership map and the two v2 baselines.
+The complete write set also contains the v2 manifest.
+The manifest must not create a self-reference through its artifact list.
+
+### Policy-aware writes
+
+Policy-aware writes accept only `policyVersion: "v2"` and this complete destination set:
+
+1. `packages/architecture-enforcement/src/config/analyzer-reconciliation.v2.json`
+2. `packages/architecture-enforcement/src/config/ownership-map.v2.json`
+3. `packages/architecture-enforcement/src/config/baselines/database.v2.json`
+4. `packages/architecture-enforcement/src/config/baselines/provider.v2.json`
+
+An exact v2 dry run is allowed and must apply no bytes.
+Invalid dry and non-dry requests must fail before any write.
+Reject v1, partial, mixed, unknown, wildcard, traversal, and other non-exact destination sets.
+Rejected requests must preserve every v1 byte.
 
 ## Zero baseline entry additions
 
@@ -298,11 +334,12 @@ Compute hashes in this order:
 5. Hash the ordered v2 implementation and test tree.
 6. Hash the ordered analyzer input path-and-byte snapshot.
 7. Hash two byte-identical analyzer reports.
-8. Build the review subject without review records or acceptance receipts.
-9. Hash the review subject and bind it to every fresh Luna review.
-10. Hash each exact review evidence file.
-11. Serialize the final v2 manifest with stable ordering and one trailing newline.
-12. Hash the final v2 manifest bytes last.
+8. Build the review subject from protected manifest fields only.
+9. Exclude reviews, acceptance, `reviewSubjectSha256`, and itself from that subject.
+10. Hash the review subject and bind it to every fresh Luna review and the owner receipt.
+11. Hash each exact review evidence file and the owner receipt.
+12. Serialize the final v2 manifest with stable ordering and one trailing newline.
+13. Hash the final v2 manifest bytes last.
 
 No review subject may include mutable review evidence.
 No manifest hash may include itself.
@@ -311,14 +348,16 @@ No manifest hash may include itself.
 
 V2 remains a candidate during Red, Green, hash verification, and review.
 Four fresh Luna reviews must inspect the same final v2 review subject.
-Each review receipt must include the protected v1 manifest SHA and every v2 artifact hash.
+Each review evidence file must include its role, reviewer, result, review subject, protected v1 manifest hash, exact v2 artifact references, and zero deltas.
+The manifest must record each evidence path and evidence hash.
 
 Before default activation, `architecture:check --policy v2` must exit zero and report clean.
 It must report zero baseline additions, removals, and renames.
 The 143 current additions therefore block v2 default activation until source migration or false-positive correction succeeds.
 
-An owner acceptance receipt must bind the accepted v2 manifest SHA.
-The v2 manifest must bind the accepted artifact hashes, zero baseline deltas, review subject, and review evidence.
+The owner receipt must bind `ownerId`, the owner review subject, the protected v1 manifest hash, exact v2 artifact references, and zero deltas.
+The accepted manifest must bind the owner receipt path, owner receipt hash, and owner review subject.
+The owner receipt must not bind the final manifest SHA.
 Only this accepted state may change the no-policy default from v1 to v2.
 
 Task 14a is not accepted until all of these gates pass:
@@ -328,22 +367,25 @@ Task 14a is not accepted until all of these gates pass:
 3. All v1 artifacts match their exact Gate 1 bytes after Green restoration.
 4. Explicit v2 selection passes with a clean zero-delta architecture result.
 5. Four Luna reviews inspect one review subject and bind every artifact hash.
-6. The owner receipt binds the accepted v2 manifest SHA.
+6. The accepted manifest binds the owner receipt path/hash and owner review subject.
 
 ## Phase-base capture
 
 Commit the strategy and plan update together in one strategy-plus-plan commit.
-Capture `phase_base_sha` after that commit and before any Red change.
+Capture a new `phase_base_sha` after that correction commit while the Red files are absent.
+Do not reuse `310847b15f9a2f59982208bdae1581ca605b6674`.
+Do not apply the saved Red patch before this capture.
 
 At the capture point:
 
 1. Complete the Clean-HEAD preflight.
 2. Confirm the strategy-plus-plan commit is on `master`.
-3. Confirm no intended track-owned path is dirty.
-4. Preserve unrelated dirty paths.
-5. Do not stage unrelated dirty paths.
-6. Run `git rev-parse HEAD`.
-7. Record the printed value as `phase_base_sha` in orchestrator state.
+3. Confirm the three Red suites, shared helper, and Red evidence file are absent.
+4. Confirm no intended track-owned path is dirty.
+5. Preserve unrelated dirty paths.
+6. Do not stage unrelated dirty paths.
+7. Run `git rev-parse HEAD`.
+8. Record the printed value as `phase_base_sha` in orchestrator state.
 
 No v2 Red or Green source commit may precede this capture.
 This documentation task does not perform the commit or capture.
