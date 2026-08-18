@@ -1,0 +1,107 @@
+{
+  "schema_version": 1,
+  "track_id": "company_finance_operations_20260810",
+  "phase": "Phase 2 — controlled operational imports",
+  "role": "measure-review-a",
+  "source_sha": "8b89be27f56b3fbf49ba5fdd224de3eccecd6f8d",
+  "red_sha": "b0b77862c7484135951b67d5eedebc8d512d92db",
+  "audited_head_sha": "8c49120b1aa386798a3da9a9efccada69a51b2e5",
+  "audit_start_head_sha": "8c49120b1aa386798a3da9a9efccada69a51b2e5",
+  "verification_head_start_sha": "8c49120b1aa386798a3da9a9efccada69a51b2e5",
+  "verification_head_end_sha": "8c49120b1aa386798a3da9a9efccada69a51b2e5",
+  "head_advanced_during_audit": false,
+  "current_head_acceptance": "withheld",
+  "current_head_acceptance_reason": "This review is bound to audited_head_sha 8c49120b1. Later unrelated HEAD changes are outside scope.",
+  "status": "pass",
+  "summary": "The finance-thb-policy-approval implementation passes Review A. Owner rate-source, rounding, and effective-date decisions remain unresolved and are outside this review.",
+  "blocking_findings": [],
+  "nonblocking_findings": [],
+  "evidence": [
+    "Source 8b89be27f changes only packages/backend/src/modules/company-identity/finance-thb-policy-approval.ts. Its Git blob is 2c0107dbd01f3fb5472ffc01119c971f125fde59.",
+    "Red b0b77862c changes only packages/backend/src/modules/company-identity/__tests__/finance-thb-policy-approval-attestation.red.test.ts. Its Git blob is 74fbba9a9babf878ec5bc483dfb252bc48533278.",
+    "The source accepts Object.prototype and null prototypes at finance-thb-policy-approval.ts:296-306.",
+    "The source preserves every own string key and copies records into a null-prototype object at finance-thb-policy-approval.ts:374-384.",
+    "Authority and ledger values pass through the capture boundary before strict parsing at finance-thb-policy-approval.ts:954-1026.",
+    "The Red covers own enumerable __proto__ keys in dependency records and nested receipt records at finance-thb-policy-approval-attestation.red.test.ts:1235-1448.",
+    "The 91-case Company Identity suite passed. It verified poison rejection, stable errors, one terminal audit, and secret-safe audit data.",
+    "The 65-case THB regression passed across multi-currency and owner-decision receipt tests.",
+    "No Finance path changed from source 8b89be27f to current HEAD 8c49120b1. No THB valuation path changed in the reviewed source range.",
+    "The owner policy boundary remains unchanged in test-strategy-phase2-thb.md blob 3471613deeb507fba69cc478ffd21f598b88baed. Rate source, rounding, and effective-date policies remain owner-gated.",
+    "The reviewed THB regression blobs are 84814535e6131d619ac951c99fd025cd65d76c54, 879335c5e7e9884eb372cc6c6ae71f3a7a402ead, and 40a3ad6e4255b5371d7e8d3c5661b7add4980933."
+  ],
+  "commands": [
+    {
+      "command": "git diff --name-status 8b89be27f..HEAD -- packages/backend/src/modules/company-identity packages/backend/src/modules/finance-operations measure/tracks/company_finance_operations_20260810",
+      "exit_code": 0,
+      "result": "passed — no Finance path drift after source 8b89be27f"
+    },
+    {
+      "command": "git diff --name-status b0b77862c7484135951b67d5eedebc8d512d92db^..8b89be27f -- packages/backend/src/modules/finance-operations measure/tracks/company_finance_operations_20260810",
+      "exit_code": 0,
+      "result": "passed — no THB policy path changed in the reviewed source range"
+    },
+    {
+      "command": "CI=true ../../node_modules/.bin/vitest run src/modules/company-identity/__tests__/finance-thb-policy-approval-attestation.red.test.ts --pool=threads --maxWorkers=1",
+      "exit_code": 0,
+      "result": "passed — 1 file and 91 tests"
+    },
+    {
+      "command": "CI=true ../../node_modules/.bin/vitest run src/modules/finance-operations/__tests__/multi-currency-thb-phase2.red.test.ts src/modules/finance-operations/__tests__/thb-owner-decision-receipt.red.test.ts --pool=threads --maxWorkers=1",
+      "exit_code": 0,
+      "result": "passed — 2 files and 65 tests"
+    },
+    {
+      "command": "../../node_modules/.bin/tsc --noEmit",
+      "exit_code": 0,
+      "result": "passed — backend production typecheck"
+    },
+    {
+      "command": "../../node_modules/.bin/tsc --noEmit -p tsconfig.test.json",
+      "exit_code": 0,
+      "result": "passed — backend test typecheck"
+    },
+    {
+      "command": "../../node_modules/.bin/eslint src/modules/company-identity/finance-thb-policy-approval.ts src/modules/company-identity/__tests__/finance-thb-policy-approval-attestation.red.test.ts",
+      "exit_code": 0,
+      "result": "passed — focused Company Identity lint"
+    },
+    {
+      "command": "../../node_modules/.bin/prettier --check src/modules/company-identity/finance-thb-policy-approval.ts src/modules/company-identity/__tests__/finance-thb-policy-approval-attestation.red.test.ts",
+      "exit_code": 0,
+      "result": "passed — reviewed Company Identity files use Prettier formatting"
+    },
+    {
+      "command": "git diff --check 8b89be27f^ 8b89be27f -- packages/backend/src/modules/company-identity/finance-thb-policy-approval.ts && git diff --check b0b77862c7484135951b67d5eedebc8d512d92db^ b0b77862c7484135951b67d5eedebc8d512d92db -- packages/backend/src/modules/company-identity/__tests__/finance-thb-policy-approval-attestation.red.test.ts",
+      "exit_code": 0,
+      "result": "passed — candidate and Red committed diffs have no whitespace errors"
+    },
+    {
+      "command": "git diff --quiet HEAD -- packages/backend/src/modules/company-identity/finance-thb-policy-approval.ts packages/backend/src/modules/company-identity/__tests__/finance-thb-policy-approval-attestation.red.test.ts packages/backend/src/modules/finance-operations/thb-valuation.ts packages/backend/src/modules/finance-operations/index.ts packages/backend/src/modules/finance-operations/__tests__/multi-currency-thb-phase2.red.test.ts packages/backend/src/modules/finance-operations/__tests__/thb-owner-decision-receipt.red.test.ts",
+      "exit_code": 0,
+      "result": "passed — reviewed source and regression paths are clean"
+    }
+  ],
+  "changed_files": [
+    "measure/tracks/company_finance_operations_20260810/finance-poison-review-a-8b89be27.json"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "MEASURE_AGENT_RESULT": {
+    "role": "measure-review-a",
+    "status": "complete",
+    "track": "company_finance_operations_20260810",
+    "phase": "Phase 2 — controlled operational imports",
+    "source_sha": "8b89be27f56b3fbf49ba5fdd224de3eccecd6f8d",
+    "red_sha": "b0b77862c7484135951b67d5eedebc8d512d92db",
+    "audited_head_sha": "8c49120b1aa386798a3da9a9efccada69a51b2e5",
+    "blocking_findings": [],
+    "nonblocking_findings": [],
+    "phase_or_track_completion_claim": false,
+    "production_code_modified": false,
+    "commit_created": false
+  }
+}

@@ -1,0 +1,216 @@
+{
+  "schema_version": 1,
+  "track_id": "company_finance_operations_20260810",
+  "phase": "Phase 2 — controlled operational imports",
+  "role": "fresh independent Review B security reviewer",
+  "phase_base_sha": "b0b77862c7484135951b67d5eedebc8d512d92db",
+  "role_base_sha": "b0b77862c7484135951b67d5eedebc8d512d92db",
+  "audited_head_sha": "8b89be27f56b3fbf49ba5fdd224de3eccecd6f8d",
+  "security_applicability": "applicable",
+  "status": "pass",
+  "summary": "The implementation passes the poison-boundary review. Owner rate-source, rounding, and effective-date decisions remain separate policy gates.",
+  "reviewed_files": [
+    "packages/backend/src/modules/company-identity/finance-thb-policy-approval.ts",
+    "packages/backend/src/modules/company-identity/__tests__/finance-thb-policy-approval-attestation.red.test.ts",
+    "packages/backend/src/modules/finance-operations/__tests__/thb-owner-decision-receipt.red.test.ts",
+    "packages/backend/src/modules/finance-operations/__tests__/multi-currency-thb-phase2.red.test.ts",
+    "packages/backend/src/modules/finance-operations/__tests__/thb-adversarial.test.ts"
+  ],
+  "blocking_findings": [],
+  "nonblocking_findings": [],
+  "evidence": [
+    "The candidate source blob is 2c0107dbd01f3fb5472ffc01119c971f125fde59 with SHA-256 4f76b49b63662405fc4a0283da86facf6f1ca951af5b86183120b4f8d78c9286.",
+    "The candidate source diff SHA-256 is a59d39a707fdca1f07969a83797674bc6d739d645a85b33f8abf8d6c4cecc10e.",
+    "The supplied Red tree is fe4b1f9f50a61e189d2121591bee973882397c30, and the candidate tree is 98512cea56d593b2166b91169dafeefccf9054e9.",
+    "The Finance range contains one reviewed source path. Two unrelated concurrent paths remain outside this review.",
+    "Boundary capture writes into a null-prototype record, preserves own prototype keys, rejects symbols, requires data descriptors, rejects Proxies, and limits depth.",
+    "The focused identity and Finance suites cover own __proto__, constructor, symbol, accessor, Proxy, depth, null-prototype, mutation, replay, scope, digest, authority, and audit cases.",
+    "The read-only probe accepted a fully null-prototype valid receipt, rejected poison keys, denied malformed replay input, and found no audit secret or Object.prototype pollution.",
+    "The attestor checks receipt identity and signer binding before authority verification. It checks company scope, school scope, and organization binding.",
+    "The attestor checks content and replay digests before authority and ledger acceptance. It parses existing receipts strictly and classifies replay or conflict.",
+    "The candidate changes no imports or adapters. It keeps authority, ledger, audit, and trusted-time sources behind injected ports.",
+    "The implementation review passed. Owner rate-source, rounding, and effective-date decisions remain deferred policy gates.",
+    "Live database review was not applicable because the candidate changes no database, migration, or provider adapter.",
+    "The report withholds current-head acceptance because an unrelated commit followed the original review.",
+    "The repository graph was stale, so its output did not support the review decision.",
+    "Pre-existing dirty paths remained outside this review. The review changed no source, test, plan, or unrelated artifact."
+  ],
+  "commands": [
+    "git rev-parse HEAD && git rev-parse 8b89be27f56b3fbf49ba5fdd224de3eccecd6f8d^{commit} && git diff --name-status b0b77862c7484135951b67d5eedebc8d512d92db..8b89be27f56b3fbf49ba5fdd224de3eccecd6f8d -- packages/backend/src/modules/company-identity/finance-thb-policy-approval.ts && git ls-tree 8b89be27f56b3fbf49ba5fdd224de3eccecd6f8d packages/backend/src/modules/company-identity/finance-thb-policy-approval.ts",
+    "sha256sum <(git show 8b89be27f56b3fbf49ba5fdd224de3eccecd6f8d:packages/backend/src/modules/company-identity/finance-thb-policy-approval.ts) <(git show 8b89be27f56b3fbf49ba5fdd224de3eccecd6f8d:packages/backend/src/modules/company-identity/__tests__/finance-thb-policy-approval-attestation.red.test.ts) <(git show 8b89be27f56b3fbf49ba5fdd224de3eccecd6f8d:packages/backend/src/modules/finance-operations/__tests__/thb-owner-decision-receipt.red.test.ts) <(git show 8b89be27f56b3fbf49ba5fdd224de3eccecd6f8d:packages/backend/src/modules/finance-operations/__tests__/multi-currency-thb-phase2.red.test.ts) <(git show 8b89be27f56b3fbf49ba5fdd224de3eccecd6f8d:packages/backend/src/modules/finance-operations/__tests__/thb-adversarial.test.ts)",
+    "git diff --quiet 8b89be27f56b3fbf49ba5fdd224de3eccecd6f8d -- packages/backend/src/modules/company-identity/finance-thb-policy-approval.ts",
+    "CI=true ../../node_modules/.bin/vitest run src/modules/company-identity/__tests__/finance-thb-policy-approval-attestation.red.test.ts src/modules/company-identity/__tests__/protocol-safety.red.test.ts src/modules/finance-operations/__tests__/thb-owner-decision-receipt.red.test.ts src/modules/finance-operations/__tests__/multi-currency-thb-phase2.red.test.ts src/modules/finance-operations/__tests__/thb-adversarial.test.ts --pool=threads --maxWorkers=1 --testTimeout=15000 — exit 0: 5 files and 198 tests passed",
+    "CI=true ../../node_modules/.bin/vitest run src/modules/finance-operations/__tests__/architecture-boundary.test.ts --pool=threads --maxWorkers=1 --testTimeout=15000 — exit 0: 11 tests passed",
+    "../../node_modules/.bin/tsc --noEmit -p tsconfig.json && ../../node_modules/.bin/tsc --noEmit -p tsconfig.test.json — exit 0: production and test typechecks passed",
+    "../../node_modules/.bin/eslint src/modules/company-identity/finance-thb-policy-approval.ts && ../../node_modules/.bin/tsc --noEmit -p tsconfig.json && ../../node_modules/.bin/tsc --noEmit -p tsconfig.test.json && ../../node_modules/.bin/prettier --check src/modules/company-identity/finance-thb-policy-approval.ts src/modules/company-identity/__tests__/finance-thb-policy-approval-attestation.red.test.ts src/modules/finance-operations/__tests__/thb-owner-decision-receipt.red.test.ts src/modules/finance-operations/__tests__/multi-currency-thb-phase2.red.test.ts src/modules/finance-operations/__tests__/thb-adversarial.test.ts — exit 0: lint, typechecks, and formatting passed",
+    "git diff --check b0b77862c7484135951b67d5eedebc8d512d92db..8b89be27f56b3fbf49ba5fdd224de3eccecd6f8d -- packages/backend/src/modules/company-identity/finance-thb-policy-approval.ts — exit 0",
+    "build-graph stats ./graph.db && build-graph inspect ./graph.db createFinanceThbPolicyApprovalAttestor && build-graph callers ./graph.db createFinanceThbPolicyApprovalAttestor — exit 0: no production caller edge; stale graph excluded from decision evidence",
+    "jq empty measure/tracks/company_finance_operations_20260810/finance-poison-review-b-8b89be27f.json — exit 0: valid JSON"
+  ],
+  "changed_files": [
+    "measure/tracks/company_finance_operations_20260810/finance-poison-review-b-8b89be27f.json"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high",
+  "metadata": {
+    "candidate_commit": "8b89be27f56b3fbf49ba5fdd224de3eccecd6f8d",
+    "candidate_parent_sha": "d01a4a0cf4975bb2dfee4698b513f1279a50264d",
+    "red_commit": "b0b77862c7484135951b67d5eedebc8d512d92db",
+    "red_tree_sha": "fe4b1f9f50a61e189d2121591bee973882397c30",
+    "candidate_tree_sha": "98512cea56d593b2166b91169dafeefccf9054e9",
+    "candidate_source_blob_sha": "2c0107dbd01f3fb5472ffc01119c971f125fde59",
+    "candidate_source_sha256": "4f76b49b63662405fc4a0283da86facf6f1ca951af5b86183120b4f8d78c9286",
+    "candidate_source_diff_sha256": "a59d39a707fdca1f07969a83797674bc6d739d645a85b33f8abf8d6c4cecc10e",
+    "audit_start_head_sha": "8b89be27f56b3fbf49ba5fdd224de3eccecd6f8d",
+    "original_audit_revision": {
+      "immutable": true,
+      "audit_start_head_sha": "8b89be27f56b3fbf49ba5fdd224de3eccecd6f8d",
+      "audited_head_sha": "8b89be27f56b3fbf49ba5fdd224de3eccecd6f8d",
+      "head_advanced_during_audit": false
+    },
+    "current_head_acceptance": {
+      "status": "withheld",
+      "current_head_sha": "8c49120b1aa386798a3da9a9efccada69a51b2e5",
+      "audited_head_sha": "8b89be27f56b3fbf49ba5fdd224de3eccecd6f8d",
+      "reason": "HEAD advanced after the original review through an unrelated backend Red test commit. This report does not evaluate that commit."
+    },
+    "candidate_source_matches_worktree": true,
+    "unrelated_dirty_paths_preserved": true,
+    "candidate_scope": {
+      "reviewed_source_paths": [
+        "packages/backend/src/modules/company-identity/finance-thb-policy-approval.ts"
+      ],
+      "excluded_range_paths": [
+        "packages/backend/src/jobs/__tests__/durable-job-architecture.red.test.ts",
+        "apps/www-reading-advantage/src/__tests__/phase-5-pricing-legal.red.test.tsx"
+      ],
+      "excluded_range_reason": "The supplied range contains unrelated concurrent changes."
+    },
+    "reviewed_file_sha256": {
+      "packages/backend/src/modules/company-identity/finance-thb-policy-approval.ts": "4f76b49b63662405fc4a0283da86facf6f1ca951af5b86183120b4f8d78c9286",
+      "packages/backend/src/modules/company-identity/__tests__/finance-thb-policy-approval-attestation.red.test.ts": "d39e74037a74b9410fd1f0f6101ed1cff048b3871f48e4842cff2e443d89be75",
+      "packages/backend/src/modules/finance-operations/__tests__/thb-owner-decision-receipt.red.test.ts": "feeebb81c775a3cef9c98d3406918e1b7b94c41ae9f903c93f8dfd7a2e696418",
+      "packages/backend/src/modules/finance-operations/__tests__/multi-currency-thb-phase2.red.test.ts": "27a8523f31b00c7ca34f881012fee5251a93d238f4921c09cdc548cd86cb6801",
+      "packages/backend/src/modules/finance-operations/__tests__/thb-adversarial.test.ts": "201a2edb3ac1fb5a4138bbe2d6944dfb397c2a467ed3e692fb64f71c96be9074"
+    },
+    "adversarial_matrix": [
+      {
+        "attack": "own __proto__ keys",
+        "result": "pass",
+        "evidence": "Capture preserves the key in a null-prototype record, so strict parsing rejects it."
+      },
+      {
+        "attack": "constructor and prototype keys",
+        "result": "pass",
+        "evidence": "Strict parsing rejects unknown own keys before authority access."
+      },
+      {
+        "attack": "symbol keys",
+        "result": "pass",
+        "evidence": "Reflect.ownKeys finds symbols before capture reads values."
+      },
+      {
+        "attack": "accessor values",
+        "result": "pass",
+        "evidence": "The boundary requires data descriptors, and the getter probe recorded zero reads."
+      },
+      {
+        "attack": "Proxy values",
+        "result": "pass",
+        "evidence": "Runtime Proxy detection rejects the value before traps or dependency calls."
+      },
+      {
+        "attack": "nested depth and cycles",
+        "result": "pass",
+        "evidence": "The depth limit rejects a 20-level input with a stable invalid error."
+      },
+      {
+        "attack": "null-prototype values",
+        "result": "pass",
+        "evidence": "A fully null-prototype valid receipt reached allow without prototype pollution."
+      },
+      {
+        "attack": "caller mutation",
+        "result": "pass",
+        "evidence": "The identity test keeps one captured receipt snapshot while authority verification awaits."
+      },
+      {
+        "attack": "audit leakage",
+        "result": "pass",
+        "evidence": "The focused tests and probe found no poison text, signature, or policy-rule leakage."
+      },
+      {
+        "attack": "Object.prototype pollution",
+        "result": "pass",
+        "evidence": "The probe found no unexpected Object.prototype property after poison-key capture."
+      }
+    ],
+    "boundary_audit": {
+      "authority": {
+        "result": "pass",
+        "evidence": "The attestor validates receipt identity and signer binding before authority verification at lines 911-945."
+      },
+      "scope": {
+        "result": "pass",
+        "evidence": "The attestor checks expected scope, organization, and optional school membership at lines 934-985."
+      },
+      "digest": {
+        "result": "pass",
+        "evidence": "The attestor checks content and replay digests before acceptance at lines 922-925 and 1028-1035."
+      },
+      "replay": {
+        "result": "pass",
+        "evidence": "The verifier parses existing receipts strictly and classifies replay or conflict at lines 1101-1118."
+      },
+      "audit": {
+        "result": "pass",
+        "evidence": "The attestor emits compact, frozen, secret-safe terminal audit output at lines 823-880."
+      },
+      "adapter_boundary": {
+        "result": "pass",
+        "evidence": "The candidate changes no imports or adapters and keeps external sources behind injected ports."
+      }
+    },
+    "probe_evidence": {
+      "exit_code": 0,
+      "result": "pass",
+      "detail": "The probe accepted null-prototype input, rejected poison cases, denied malformed replay input, and found no leakage or pollution.",
+      "authority_call_check": "The constructor poison case added no authority call."
+    },
+    "policy_decision_gates": {
+      "implementation_security_review": "pass",
+      "rate_source_selection": "deferred",
+      "rounding_policy": "deferred",
+      "effective_date_policy": "deferred",
+      "note": "These owner decisions do not change the implementation security result."
+    },
+    "worktree": {
+      "source_modified_by_review": false,
+      "tests_modified_by_review": false,
+      "plans_modified_by_review": false,
+      "commit_created": false,
+      "report_is_unstaged": true
+    }
+  },
+  "measure_agent_result": {
+    "marker": "MEASURE_AGENT_RESULT",
+    "role": "fresh independent Review B security reviewer",
+    "status": "complete",
+    "track": "company_finance_operations_20260810",
+    "phase": "Phase 2 — controlled operational imports",
+    "candidate_commit": "8b89be27f56b3fbf49ba5fdd224de3eccecd6f8d",
+    "red_commit": "b0b77862c7484135951b67d5eedebc8d512d92db",
+    "files_written": [
+      "measure/tracks/company_finance_operations_20260810/finance-poison-review-b-8b89be27f.json"
+    ],
+    "source_modified": false,
+    "tests_modified": false,
+    "plans_modified": false,
+    "completion_claim": "none",
+    "end_marker": "END_MEASURE_AGENT_RESULT"
+  }
+}
