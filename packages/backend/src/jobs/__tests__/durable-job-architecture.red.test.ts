@@ -43,8 +43,12 @@ interface DurableJobOwnershipRule {
 }
 
 interface OwnershipException {
+  readonly schemaVersion: number;
+  readonly id: string;
   readonly ruleId: string;
   readonly sourcePath: string;
+  readonly owner: string;
+  readonly rationale: string;
 }
 
 interface OwnershipMapModule {
@@ -86,6 +90,36 @@ interface DatabaseModule {
   readonly durableJobAuditEvents: unknown;
 }
 
+const EXPECTED_DURABLE_EVIDENCE_KINDS = [
+  "static-import",
+  "namespace-import",
+  "dynamic-import",
+  "commonjs-require",
+  "re-export",
+  "client-construction",
+  "query-call",
+] as const;
+
+const EXPECTED_TENANT_REGISTRY_EXCEPTION = {
+  schemaVersion: 1,
+  id: "durable-job-tenant-registry-classification",
+  ruleId: "DURABLE_JOB_DATABASE_BOUNDARY",
+  sourcePath: TENANT_REGISTRY_SOURCE_PATH,
+  owner: "domain-platform",
+  rationale:
+    "Mandatory TenantDB classification only; no durable-job queries or mutation.",
+} as const;
+
+const EXPECTED_REVIEW_JOBS_SCHEMA_EXCEPTION = {
+  schemaVersion: 1,
+  id: "reconciliation-review-jobs-schema",
+  ruleId: "DURABLE_JOB_DATABASE_BOUNDARY",
+  sourcePath: "packages/db/src/__tests__/phase-1-review-jobs-schema.test.ts",
+  owner: "database-platform",
+  rationale:
+    "This exact database schema test imports the durable review-jobs table to verify its contract; the covered finding is enumerated and production paths remain enforced.",
+} as const;
+
 function runOutOfRootDurableJobQueryCounterexample(): unknown {
   const queryBuilder = {
     select: () => ({
@@ -112,7 +146,7 @@ describe("durable-job architecture Red contract", () => {
     );
   }, 5_000);
 
-  it("keeps durable table ownership in approved roots without a production exception", async () => {
+  it("keeps durable table ownership in approved roots with reviewed exceptions", async () => {
     const ownershipMap = (await import(
       pathToFileURL(OWNERSHIP_MAP_MODULE_PATH).href
     )) as OwnershipMapModule;
@@ -134,20 +168,25 @@ describe("durable-job architecture Red contract", () => {
       "database-migrations",
       "postgres-job-adapter",
     ]);
-    expect(durableJobRule?.findingKinds).toEqual(["query-call"]);
+    expect(durableJobRule?.findingKinds).toEqual(
+      EXPECTED_DURABLE_EVIDENCE_KINDS,
+    );
     expect(durableJobRule?.resolvedTargetRoots).toEqual([]);
     expect(durableJobRule?.resourceMatchers).toEqual([
       { kind: "exact", value: "database-table:review_jobs" },
       { kind: "exact", value: "database-table:jobs" },
       { kind: "exact", value: "database-table:durable_jobs" },
     ]);
-    expect(
-      config.exactExceptions.some(
-        (exception) =>
-          exception.ruleId === "DURABLE_JOB_DATABASE_BOUNDARY" &&
-          exception.sourcePath === TENANT_REGISTRY_SOURCE_PATH,
-      ),
-    ).toBe(false);
+    const durableJobExceptions = config.exactExceptions.filter(
+      (exception) => exception.ruleId === "DURABLE_JOB_DATABASE_BOUNDARY",
+    );
+    expect(durableJobExceptions).toHaveLength(2);
+    expect(durableJobExceptions).toContainEqual(
+      EXPECTED_REVIEW_JOBS_SCHEMA_EXCEPTION,
+    );
+    expect(durableJobExceptions).toContainEqual(
+      EXPECTED_TENANT_REGISTRY_EXCEPTION,
+    );
 
     const result = await analyzer.analyzeArchitectureSources({
       repoRoot: REPOSITORY_ROOT,
@@ -196,7 +235,9 @@ describe("durable-job architecture Red contract", () => {
     );
     expect(
       durableJobFindings.filter(
-        (finding) => finding.sourcePath === ARCHITECTURE_TEST_SOURCE_PATH,
+        (finding) =>
+          finding.sourcePath === ARCHITECTURE_TEST_SOURCE_PATH &&
+          finding.evidenceKind === "query-call",
       ),
     ).toEqual([
       expect.objectContaining({

@@ -83,4 +83,147 @@ describe("architecture analyzer evidence hardening", () => {
     );
     expect(JSON.stringify(result)).not.toContain("secretSafeReference");
   });
+
+  it("enforces durable access forms outside the adapter and allows adapter SQL", async () => {
+    const repoRoot = await createTemporaryRoot();
+    const sourcePaths = {
+      namespace: "packages/backend/src/jobs/namespace-durable-query.ts",
+      dynamic: "packages/backend/src/jobs/dynamic-durable-query.ts",
+      commonjs: "packages/backend/src/jobs/commonjs-durable-query.ts",
+      reexport: "packages/backend/src/jobs/reexport-durable-query.ts",
+      clientConstruction:
+        "packages/backend/src/jobs/client-construction-durable.ts",
+      rawSql: "packages/backend/src/jobs/raw-durable-query.ts",
+      adapterRawSql:
+        "packages/backend/src/jobs/adapters/postgres/raw-durable-query.ts",
+      reexportSupport: "packages/backend/src/jobs/durable-reexports.ts",
+    } as const;
+    const sources: Record<string, string> = {
+      [sourcePaths.namespace]: [
+        'import * as database from "@reading-advantage/db";',
+        "const query = {",
+        "  select: () => ({ from: (table: unknown) => table }),",
+        "};",
+        "export const namespaceAccess = query.select().from(database.durableJobs);",
+      ].join("\n"),
+      [sourcePaths.dynamic]: [
+        "const query = {",
+        "  select: () => ({ from: (table: unknown) => table }),",
+        "};",
+        "export async function dynamicAccess() {",
+        '  const database = await import("@reading-advantage/db");',
+        "  return query.select().from(database.durableJobs);",
+        "}",
+      ].join("\n"),
+      [sourcePaths.commonjs]: [
+        'const database = require("@reading-advantage/db");',
+        "const query = {",
+        "  select: () => ({ from: (table: unknown) => table }),",
+        "};",
+        "export const commonjsAccess = query.select().from(database.durableJobs);",
+      ].join("\n"),
+      [sourcePaths.reexport]: [
+        'import { durableJobs } from "./durable-reexports.js";',
+        "const query = {",
+        "  select: () => ({ from: (table: unknown) => table }),",
+        "};",
+        "export const reexportAccess = query.select().from(durableJobs);",
+      ].join("\n"),
+      [sourcePaths.clientConstruction]: [
+        'import { durableJobs } from "@reading-advantage/db";',
+        "class SyntheticDurableClient {",
+        "  constructor(readonly table: unknown) {}",
+        "}",
+        "export const clientConstructionAccess = new SyntheticDurableClient(durableJobs);",
+      ].join("\n"),
+      [sourcePaths.rawSql]: [
+        'import postgres from "postgres";',
+        "const client = postgres();",
+        'export const rawSqlAccess = client.unsafe(`SELECT * FROM "durable_jobs" JOIN "review_jobs" ON true`);',
+      ].join("\n"),
+      [sourcePaths.adapterRawSql]: [
+        'import postgres from "postgres";',
+        "const client = postgres();",
+        'export const adapterRawSqlAccess = client.unsafe(`SELECT * FROM "durable_jobs" JOIN "review_jobs" ON true`);',
+      ].join("\n"),
+      [sourcePaths.reexportSupport]:
+        'export { durableJobs } from "@reading-advantage/db";',
+    };
+    await mkdir(resolve(repoRoot, "packages/backend/src/jobs"), {
+      recursive: true,
+    });
+    await mkdir(
+      resolve(repoRoot, "packages/backend/src/jobs/adapters/postgres"),
+      {
+        recursive: true,
+      },
+    );
+    for (const [sourcePath, source] of Object.entries(sources)) {
+      await writeFile(resolve(repoRoot, sourcePath), source, "utf8");
+    }
+
+    const result = await analyzeArchitectureSources({
+      repoRoot,
+      sourcePaths: Object.keys(sources),
+      workspaceTargets: new Map(),
+      config: loadOwnershipMap(),
+    });
+
+    expect(result.parseErrors).toEqual([]);
+    const durableJobFindings = result.findings.filter(
+      (finding) => finding.ruleId === "DURABLE_JOB_DATABASE_BOUNDARY",
+    );
+    expect(
+      durableJobFindings.filter(
+        (finding) => finding.sourcePath === sourcePaths.adapterRawSql,
+      ),
+    ).toEqual([]);
+    const expectedDurableFindings: Array<{
+      sourcePath: string;
+      evidenceKind: string;
+      resource: string;
+    }> = [
+      sourcePaths.namespace,
+      sourcePaths.dynamic,
+      sourcePaths.commonjs,
+      sourcePaths.reexport,
+      sourcePaths.rawSql,
+    ].map((sourcePath) => ({
+      sourcePath,
+      evidenceKind: "query-call",
+      resource: "database-table:durable_jobs",
+    }));
+    expectedDurableFindings.push({
+      sourcePath: sourcePaths.clientConstruction,
+      evidenceKind: "client-construction",
+      resource: "database-table:durable_jobs",
+    });
+    expect(durableJobFindings).toEqual(
+      expect.arrayContaining(
+        expectedDurableFindings.map((finding) =>
+          expect.objectContaining(finding),
+        ),
+      ),
+    );
+    expect(
+      durableJobFindings.filter(
+        (finding) =>
+          finding.sourcePath === sourcePaths.clientConstruction &&
+          finding.evidenceKind === "client-construction" &&
+          finding.resource === "database-table:durable_jobs",
+      ),
+    ).toHaveLength(1);
+    expect(
+      durableJobFindings.filter(
+        (finding) => finding.sourcePath === sourcePaths.rawSql,
+      ),
+    ).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          evidenceKind: "query-call",
+          resource: "database-table:review_jobs",
+        }),
+      ]),
+    );
+  });
 });

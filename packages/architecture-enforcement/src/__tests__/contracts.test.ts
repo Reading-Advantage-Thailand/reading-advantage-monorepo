@@ -59,6 +59,16 @@ const databaseException = {
   rationale: "Exact synthetic fixture for boundary verification.",
 } as const;
 
+const durableTenantRegistryException = {
+  schemaVersion: 1,
+  id: "durable-job-tenant-registry-classification",
+  ruleId: "DURABLE_JOB_DATABASE_BOUNDARY",
+  sourcePath: "packages/domain/src/tenant-registry.ts",
+  owner: "domain-platform",
+  rationale:
+    "Mandatory TenantDB classification only; no durable-job queries or mutation.",
+} as const;
+
 const validConfig = {
   schemaVersion: 1,
   rules: [databaseRule],
@@ -157,6 +167,37 @@ describe("architecture enforcement contracts", () => {
     expect(exactExceptionSchema.parse(dynamicRouteException)).toEqual(
       dynamicRouteException,
     );
+  });
+
+  it("accepts only the reviewed durable tenant-registry production exception", () => {
+    expect(exactExceptionSchema.parse(durableTenantRegistryException)).toEqual(
+      durableTenantRegistryException,
+    );
+
+    for (const candidate of [
+      {
+        ...durableTenantRegistryException,
+        id: "durable-job-tenant-registry-other",
+      },
+      {
+        ...durableTenantRegistryException,
+        ruleId: "DATABASE_BOUNDARY",
+      },
+      {
+        ...durableTenantRegistryException,
+        sourcePath: "packages/domain/src/other-production-file.ts",
+      },
+      {
+        ...durableTenantRegistryException,
+        owner: "other-platform",
+      },
+      {
+        ...durableTenantRegistryException,
+        rationale: "Another reviewed production exception.",
+      },
+    ]) {
+      expect(() => exactExceptionSchema.parse(candidate)).toThrow();
+    }
   });
 
   it("rejects unversioned, future-version, malformed, and unknown contract fields", () => {
