@@ -96,6 +96,11 @@ describe("architecture analyzer evidence hardening", () => {
       rawSql: "packages/backend/src/jobs/raw-durable-query.ts",
       adapterRawSql:
         "packages/backend/src/jobs/adapters/postgres/raw-durable-query.ts",
+      literalConst: "packages/backend/src/jobs/literal-const-durable-query.ts",
+      literalConcat:
+        "packages/backend/src/jobs/literal-concat-durable-query.ts",
+      sqlMention: "packages/backend/src/jobs/sql-mention-durable-query.ts",
+      shadowed: "packages/backend/src/jobs/shadowed-durable-query.ts",
       reexportSupport: "packages/backend/src/jobs/durable-reexports.ts",
     } as const;
     const sources: Record<string, string> = {
@@ -145,6 +150,32 @@ describe("architecture analyzer evidence hardening", () => {
         'import postgres from "postgres";',
         "const client = postgres();",
         'export const adapterRawSqlAccess = client.unsafe(`SELECT * FROM "durable_jobs" JOIN "review_jobs" ON true`);',
+      ].join("\n"),
+      [sourcePaths.literalConst]: [
+        'import postgres from "postgres";',
+        "const client = postgres();",
+        'const sql = `SELECT * FROM "durable_jobs" JOIN "review_jobs" ON true`;',
+        "export const literalConstAccess = client.unsafe(sql);",
+      ].join("\n"),
+      [sourcePaths.literalConcat]: [
+        'import postgres from "postgres";',
+        "const client = postgres();",
+        'const sql = "SELECT * FROM " +\n          \'"durable_jobs" JOIN "review_jobs" ON true\';',
+        "export const literalConcatAccess = client.unsafe(sql);",
+      ].join("\n"),
+      [sourcePaths.sqlMention]: [
+        'import postgres from "postgres";',
+        "const client = postgres();",
+        'export const commentMention = client.unsafe("SELECT 1 /* durable_jobs review_jobs */");',
+        "export const valueMention = client.unsafe(\"SELECT 'durable_jobs' AS durable, 'review_jobs' AS review\");",
+      ].join("\n"),
+      [sourcePaths.shadowed]: [
+        'import { durableJobs } from "@reading-advantage/db";',
+        "const query = {",
+        "  select: () => ({ from: (table: unknown) => table }),",
+        "};",
+        "export const shadowedAccess = (durableJobs: unknown) =>",
+        "  query.select().from(durableJobs);",
       ].join("\n"),
       [sourcePaths.reexportSupport]:
         'export { durableJobs } from "@reading-advantage/db";',
@@ -225,5 +256,71 @@ describe("architecture analyzer evidence hardening", () => {
         }),
       ]),
     );
+
+    for (const sourcePath of [
+      sourcePaths.literalConst,
+      sourcePaths.literalConcat,
+    ]) {
+      expect
+        .soft(
+          durableJobFindings.filter(
+            (finding) => finding.sourcePath === sourcePath,
+          ),
+        )
+        .toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({
+              evidenceKind: "query-call",
+              resource: "database-table:durable_jobs",
+            }),
+            expect.objectContaining({
+              evidenceKind: "query-call",
+              resource: "database-table:review_jobs",
+            }),
+          ]),
+        );
+    }
+
+    expect
+      .soft(
+        durableJobFindings.filter(
+          (finding) => finding.sourcePath === sourcePaths.sqlMention,
+        ),
+      )
+      .toEqual([]);
+    expect
+      .soft(
+        durableJobFindings.filter(
+          (finding) =>
+            finding.sourcePath === sourcePaths.shadowed &&
+            finding.evidenceKind === "static-import" &&
+            finding.resource === "database-table:durable_jobs",
+        ),
+      )
+      .toHaveLength(1);
+    expect
+      .soft(
+        durableJobFindings.filter(
+          (finding) =>
+            finding.sourcePath === sourcePaths.shadowed &&
+            finding.evidenceKind === "query-call",
+        ),
+      )
+      .toEqual([]);
+
+    for (const sourcePath of [
+      sourcePaths.namespace,
+      sourcePaths.dynamic,
+      sourcePaths.commonjs,
+    ]) {
+      expect(
+        durableJobFindings.filter(
+          (finding) =>
+            finding.sourcePath === sourcePath &&
+            finding.evidenceKind === "query-call" &&
+            finding.resource === "database-table:durable_jobs",
+        ),
+      ).toHaveLength(1);
+    }
   });
 });

@@ -13,6 +13,15 @@ const databaseImport: OwnershipCandidate = {
   resolvedTarget: "packages/db/src/index.ts",
 };
 
+const tenantRegistryDurableFinding: OwnershipCandidate = {
+  ruleId: "DURABLE_JOB_DATABASE_BOUNDARY",
+  sourcePath: "packages/domain/src/tenant-registry.ts",
+  evidenceKind: "static-import",
+  importSpecifier: "@reading-advantage/db",
+  resource: "database-table:durable_jobs",
+  resolvedTarget: "external:database-table",
+};
+
 describe("architecture ownership map", () => {
   it("loads a strict, cross-referenced database and provider policy", () => {
     const map = loadOwnershipMap();
@@ -35,7 +44,14 @@ describe("architecture ownership map", () => {
           !/[*!?{}]/.test(exception.sourcePath) &&
           (exception.sourcePath.includes("/__tests__/") ||
             exception.sourcePath.includes("/fixtures/") ||
-            /\.(?:test|spec)\.[cm]?[jt]sx?$/.test(exception.sourcePath)),
+            /\.(?:test|spec)\.[cm]?[jt]sx?$/.test(exception.sourcePath) ||
+            (exception.id === "durable-job-tenant-registry-classification" &&
+              exception.ruleId === "DURABLE_JOB_DATABASE_BOUNDARY" &&
+              exception.sourcePath ===
+                "packages/domain/src/tenant-registry.ts" &&
+              exception.owner === "domain-platform" &&
+              exception.rationale ===
+                "Mandatory TenantDB classification only; no durable-job queries or mutation.")),
       ),
     ).toBe(true);
   });
@@ -140,6 +156,30 @@ describe("architecture ownership map", () => {
       status: "allowed",
       reasonCode: "rule-not-applicable",
     });
+  });
+
+  it("limits the tenant-registry exception to classification imports", () => {
+    expect(
+      evaluateOwnership(loadOwnershipMap(), tenantRegistryDurableFinding),
+    ).toEqual({
+      status: "allowed",
+      reasonCode: "exact-exception",
+      ruleId: "DURABLE_JOB_DATABASE_BOUNDARY",
+      exceptionId: "durable-job-tenant-registry-classification",
+    });
+
+    for (const evidenceKind of ["query-call", "client-construction"] as const) {
+      expect(
+        evaluateOwnership(loadOwnershipMap(), {
+          ...tenantRegistryDurableFinding,
+          evidenceKind,
+        }),
+      ).toEqual({
+        status: "violation",
+        reasonCode: "outside-approved-root",
+        ruleId: "DURABLE_JOB_DATABASE_BOUNDARY",
+      });
+    }
   });
 
   it("isolates Company Identity persistence from product apps and education tenancy", () => {
