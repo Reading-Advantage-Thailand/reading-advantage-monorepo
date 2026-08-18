@@ -337,7 +337,7 @@ export default async function PrimaryAdvantage({
               {t("resultsSection.heading")}
             </h2>
           </div>
-          <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+          <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
             {/* Small supporting card (left, staggered up) */}
             <div data-testid="stat-card" className="md:-translate-y-8">
               <Card className="text-center p-8 border-cyan-100">
@@ -361,20 +361,6 @@ export default async function PrimaryAdvantage({
                   </div>
                   <p className="text-slate-600 font-medium text-lg">
                     {t("resultsSection.stats.1.label")}
-                  </p>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Small supporting card (right, staggered down) */}
-            <div data-testid="stat-card" className="md:translate-y-8">
-              <Card className="text-center p-8 border-cyan-100">
-                <CardContent className="p-0">
-                  <div className="text-4xl md:text-5xl font-bold text-cyan-700 mb-2">
-                    {t("resultsSection.stats.2.value")}
-                  </div>
-                  <p className="text-slate-600 font-medium">
-                    {t("resultsSection.stats.2.label")}
                   </p>
                 </CardContent>
               </Card>
