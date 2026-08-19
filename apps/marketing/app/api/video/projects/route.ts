@@ -40,6 +40,16 @@ const projectUpdateSchema = projectWriteSchema
   })
   .strict();
 
+const projectClientColumns = {
+  id: videoProjects.id,
+  campaignId: videoProjects.campaignId,
+  topic: videoProjects.topic,
+  script: videoProjects.script,
+  status: videoProjects.status,
+  createdAt: videoProjects.createdAt,
+  updatedAt: videoProjects.updatedAt,
+};
+
 /**
  * GET /api/video/projects?campaignId=... lists persisted projects for a
  * campaign.
@@ -47,6 +57,7 @@ const projectUpdateSchema = projectWriteSchema
  * @returns A JSON response containing project rows or a structured error.
  */
 export async function GET(request: Request) {
+  // prettier-ignore
   const guard = await requireMarketingPermission(request, "video:projects:list");
   if (!guard.ok) {
     return guard.response;
@@ -64,7 +75,7 @@ export async function GET(request: Request) {
 
   try {
     const projects = await db
-      .select()
+      .select(projectClientColumns)
       .from(videoProjects)
       .where(eq(videoProjects.campaignId, campaignId.data));
 
@@ -83,6 +94,7 @@ export async function GET(request: Request) {
  * @returns A JSON response containing the inserted row or a structured error.
  */
 export async function POST(request: Request) {
+  // prettier-ignore
   const guard = await requireMarketingPermission(request, "video:projects:create");
   if (!guard.ok) {
     return guard.response;
@@ -92,10 +104,7 @@ export async function POST(request: Request) {
   try {
     body = await request.json();
   } catch {
-    return NextResponse.json(
-      { message: "Invalid JSON body" },
-      { status: 400 },
-    );
+    return NextResponse.json({ message: "Invalid JSON body" }, { status: 400 });
   }
 
   const validation = projectWriteSchema.safeParse(body);
@@ -109,8 +118,11 @@ export async function POST(request: Request) {
   try {
     const [project] = await db
       .insert(videoProjects)
-      .values(validation.data)
-      .returning();
+      .values({
+        ...validation.data,
+        createdBy: guard.session.user.id,
+      })
+      .returning(projectClientColumns);
 
     return NextResponse.json(project);
   } catch {
@@ -127,6 +139,7 @@ export async function POST(request: Request) {
  * @returns A JSON response containing the updated row, 404, or a structured error.
  */
 export async function PATCH(request: Request) {
+  // prettier-ignore
   const guard = await requireMarketingPermission(request, "video:projects:update");
   if (!guard.ok) {
     return guard.response;
@@ -136,10 +149,7 @@ export async function PATCH(request: Request) {
   try {
     body = await request.json();
   } catch {
-    return NextResponse.json(
-      { message: "Invalid JSON body" },
-      { status: 400 },
-    );
+    return NextResponse.json({ message: "Invalid JSON body" }, { status: 400 });
   }
 
   const validation = projectUpdateSchema.safeParse(body);
@@ -155,14 +165,11 @@ export async function PATCH(request: Request) {
   try {
     const [project] = await db
       .update(videoProjects)
-      .set({ topic, script })
+      .set({ topic, script, updatedBy: guard.session.user.id })
       .where(
-        and(
-          eq(videoProjects.id, id),
-          eq(videoProjects.campaignId, campaignId),
-        ),
+        and(eq(videoProjects.id, id), eq(videoProjects.campaignId, campaignId)),
       )
-      .returning();
+      .returning(projectClientColumns);
 
     if (!project) {
       return NextResponse.json(

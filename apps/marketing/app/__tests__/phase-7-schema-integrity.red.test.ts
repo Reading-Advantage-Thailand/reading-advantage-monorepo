@@ -21,18 +21,16 @@ vi.mock("next/server", () => ({
   },
 }));
 
-const {
-  insertMock,
-  updateMock,
-  requireMarketingPermissionMock,
-} = vi.hoisted(() => ({
-  insertMock: vi.fn(),
-  updateMock: vi.fn(),
-  requireMarketingPermissionMock: vi.fn(async () => ({
-    ok: true,
-    session: { user: { id: "marketing-admin", role: "ADMIN" } },
-  })),
-}));
+const { insertMock, updateMock, requireMarketingPermissionMock } = vi.hoisted(
+  () => ({
+    insertMock: vi.fn(),
+    updateMock: vi.fn(),
+    requireMarketingPermissionMock: vi.fn(async () => ({
+      ok: true,
+      session: { user: { id: "marketing-admin", role: "ADMIN" } },
+    })),
+  }),
+);
 
 vi.mock("@/lib/db", () => ({
   db: {
@@ -83,7 +81,10 @@ function projectRequest(
 }
 
 function appSource(relativePath: string): string {
-  return readFileSync(resolve(REPO_ROOT, "apps/marketing/app", relativePath), "utf8");
+  return readFileSync(
+    resolve(REPO_ROOT, "apps/marketing/app", relativePath),
+    "utf8",
+  );
 }
 
 beforeEach(() => {
@@ -208,11 +209,16 @@ describe("Phase 7.1: shared APPS catalog", () => {
           `export\\s+const\\s+${mapName}\\b[\\s\\S]*?(?=\\nexport\\s+const|$)`,
         ),
       );
-      expect(declaration, `${mapName} is not exported from the shared module`).not.toBeNull();
+      expect(
+        declaration,
+        `${mapName} is not exported from the shared module`,
+      ).not.toBeNull();
       expect(declaration?.[0]).toMatch(/\bAPPS\b/);
     }
 
-    expect(campaignsSource).toMatch(/APP_COLORS[\s\S]*from\s+["']@\/lib\/apps["']/);
+    expect(campaignsSource).toMatch(
+      /APP_COLORS[\s\S]*from\s+["']@\/lib\/apps["']/,
+    );
     expect(videoSource).toMatch(/APP_NAMES[\s\S]*from\s+["']@\/lib\/apps["']/);
     expect(campaignsSource).not.toMatch(/const\s+APP_COLORS\s*:/);
     expect(videoSource).not.toMatch(/const\s+APP_NAMES\s*:/);
@@ -223,16 +229,20 @@ describe("Phase 7.1: shared APPS catalog", () => {
           `export\\s+const\\s+${mapName}\\b[\\s\\S]*?(?=\\nexport\\s+const|$)`,
         ),
       );
-      expect(declaration?.[0]).toMatch(
-        /Object\.fromEntries\(\s*APPS\.map\(/,
-      );
+      expect(declaration?.[0]).toMatch(/Object\.fromEntries\(\s*APPS\.map\(/);
     }
   });
 
   it("keeps the VideoProject response audit fields aligned with the schema", () => {
     const videoSource = appSource("campaigns/[id]/video/page.tsx");
-    expect(videoSource).toMatch(/interface\s+VideoProject[\s\S]*updatedAt:\s*string/);
-    expect(videoSource).toMatch(/interface\s+VideoProject[\s\S]*createdBy:\s*string\s*\|\s*null/);
-    expect(videoSource).toMatch(/interface\s+VideoProject[\s\S]*updatedBy:\s*string\s*\|\s*null/);
+    expect(videoSource).toMatch(
+      /interface\s+VideoProject[\s\S]*updatedAt:\s*string/,
+    );
+    expect(videoSource).not.toMatch(
+      /interface\s+VideoProject[\s\S]*createdBy:/,
+    );
+    expect(videoSource).not.toMatch(
+      /interface\s+VideoProject[\s\S]*updatedBy:/,
+    );
   });
 });

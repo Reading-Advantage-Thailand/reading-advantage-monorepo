@@ -25,6 +25,16 @@ import { desc } from "drizzle-orm";
 import { requireMarketingPermission } from "@/lib/auth";
 import { createCampaignSchema } from "@/lib/campaign-schema";
 
+const campaignClientColumns = {
+  id: campaigns.id,
+  type: campaigns.type,
+  app: campaigns.app,
+  name: campaigns.name,
+  status: campaigns.status,
+  createdAt: campaigns.createdAt,
+  updatedAt: campaigns.updatedAt,
+};
+
 /**
  * GET /api/campaigns — list campaigns ordered by `createdAt` desc.
  *
@@ -38,7 +48,7 @@ export async function GET(request: Request) {
 
   try {
     const allCampaigns = await db
-      .select()
+      .select(campaignClientColumns)
       .from(campaigns)
       .orderBy(desc(campaigns.createdAt));
     return NextResponse.json(allCampaigns);
@@ -68,10 +78,7 @@ export async function POST(request: Request) {
   try {
     body = await request.json();
   } catch {
-    return NextResponse.json(
-      { message: "Invalid JSON body" },
-      { status: 400 },
-    );
+    return NextResponse.json({ message: "Invalid JSON body" }, { status: 400 });
   }
 
   const parsed = createCampaignSchema.safeParse(body);
@@ -100,8 +107,9 @@ export async function POST(request: Request) {
           | "zhongwen-advantage"
           | "tutor-advantage",
         name: parsed.data.name,
+        createdBy: guard.session.user.id,
       })
-      .returning();
+      .returning(campaignClientColumns);
     return NextResponse.json(campaign);
   } catch (error) {
     return NextResponse.json(

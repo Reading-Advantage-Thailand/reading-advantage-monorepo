@@ -27,8 +27,6 @@ interface VideoProject {
   status: "draft" | "in-progress" | "complete";
   createdAt?: string;
   updatedAt: string;
-  createdBy: string | null;
-  updatedBy: string | null;
 }
 
 const emptyScene: Scene = {

@@ -30,6 +30,16 @@ import {
 import { requireMarketingPermission } from "@/lib/auth";
 import { campaignIdSchema, updateCampaignSchema } from "@/lib/campaign-schema";
 
+const campaignClientColumns = {
+  id: campaigns.id,
+  type: campaigns.type,
+  app: campaigns.app,
+  name: campaigns.name,
+  status: campaigns.status,
+  createdAt: campaigns.createdAt,
+  updatedAt: campaigns.updatedAt,
+};
+
 /**
  * GET /api/campaigns/[id] — fetch a single campaign by id.
  *
@@ -54,7 +64,7 @@ export async function GET(
 
   try {
     const [campaign] = await db
-      .select()
+      .select(campaignClientColumns)
       .from(campaigns)
       .where(eq(campaigns.id, campaignId.data));
 
@@ -104,10 +114,7 @@ export async function PATCH(
   try {
     body = await request.json();
   } catch {
-    return NextResponse.json(
-      { message: "Invalid JSON body" },
-      { status: 400 },
-    );
+    return NextResponse.json({ message: "Invalid JSON body" }, { status: 400 });
   }
 
   const parsed = updateCampaignSchema.safeParse(body);
@@ -125,7 +132,7 @@ export async function PATCH(
     const nextStatus = parsed.data.status as CampaignStatus;
 
     const [existing] = await db
-      .select()
+      .select(campaignClientColumns)
       .from(campaigns)
       .where(eq(campaigns.id, campaignId.data));
 
@@ -150,9 +157,10 @@ export async function PATCH(
       .set({
         status: nextStatus,
         updatedAt: new Date(),
+        updatedBy: guard.session.user.id,
       })
       .where(eq(campaigns.id, campaignId.data))
-      .returning();
+      .returning(campaignClientColumns);
 
     if (!updated) {
       return NextResponse.json(

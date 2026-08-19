@@ -9,10 +9,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { pastTopics } from "@reading-advantage/db/schema";
-import {
-  deduplicateTopics,
-  normalizeTopic,
-} from "@/lib/topic-dedup";
+import { deduplicateTopics, normalizeTopic } from "@/lib/topic-dedup";
 import { requireMarketingPermission } from "@/lib/auth";
 import { saveTopicsSchema } from "@/lib/topic-schema";
 
@@ -31,10 +28,7 @@ export async function POST(request: Request) {
   try {
     body = await request.json();
   } catch {
-    return NextResponse.json(
-      { message: "Invalid JSON body" },
-      { status: 400 },
-    );
+    return NextResponse.json({ message: "Invalid JSON body" }, { status: 400 });
   }
 
   const parsed = saveTopicsSchema.safeParse(body);
@@ -64,6 +58,7 @@ export async function POST(request: Request) {
       app: appEnum,
       topic,
       normalizedKey: normalizeTopic(topic),
+      createdBy: guard.session.user.id,
     }));
 
     const inserted = await db.transaction(async (transaction) => {
