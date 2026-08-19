@@ -9,11 +9,8 @@ import {
   readArchitectureBaselines,
 } from "../architecture-check.js";
 import { computeRulesetHash } from "../baseline.js";
-import type {
-  ArchitectureBaseline,
-  ArchitectureConfig,
-} from "../contracts.js";
-import { loadOwnershipMap } from "../ownership-map.js";
+import type { ArchitectureBaseline, ArchitectureConfig } from "../contracts.js";
+import { selectArchitecturePolicy } from "../policy-selection.js";
 
 const temporaryRoots: string[] = [];
 
@@ -22,9 +19,11 @@ async function createCheckerRepository(): Promise<{
   config: ArchitectureConfig;
   repoRoot: string;
 }> {
-  const repoRoot = await mkdtemp(resolve(tmpdir(), "architecture-check-cover-"));
+  const repoRoot = await mkdtemp(
+    resolve(tmpdir(), "architecture-check-cover-"),
+  );
   temporaryRoots.push(repoRoot);
-  const config = loadOwnershipMap();
+  const config = selectArchitecturePolicy("v1").config;
   for (const domain of ["database", "provider"] as const) {
     const path = resolve(repoRoot, config.baselineFiles[domain]);
     await mkdir(resolve(path, ".."), { recursive: true });
@@ -114,13 +113,13 @@ describe("architecture checker branch coverage", () => {
     });
 
     expect(result.status).toBe("analysis-error");
-    expect(result.parseErrors.map((error) => [error.line, error.column])).toEqual(
-      [
-        [1, 1],
-        [2, 1],
-        [2, 23],
-      ],
-    );
+    expect(
+      result.parseErrors.map((error) => [error.line, error.column]),
+    ).toEqual([
+      [1, 1],
+      [2, 1],
+      [2, 23],
+    ]);
     const human = formatArchitectureCheckReport(result);
     expect(human.match(/MODULE_RESOLUTION_ERROR/g)).toHaveLength(3);
     expect(human).not.toContain("missing-z");

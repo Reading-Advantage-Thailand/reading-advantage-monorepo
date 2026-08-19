@@ -573,27 +573,23 @@ describe("architecture reconciliation orchestration", () => {
     ).rejects.toThrow(/missing a required document hash/i);
   });
 
-  it("applies only the exact wrapper-hash-bound preview", async () => {
+  it("rejects acknowledged non-v2 previews without mutation", async () => {
     const fixture = createFixture();
     const preview = await previewArchitectureReconciliation({
       repoRoot: ROOT,
       dependencies: fixture.dependencies,
     });
 
-    const result = await applyArchitectureReconciliation({
-      preview,
-      acknowledge: true,
-      expectedReconciliationPlanHash: preview.reconciliationPlanHash,
-      dependencies: fixture.dependencies,
-    });
-
-    expect(result.transactionOutcome.state).toBe("committed");
-    expect(fixture.transactionPreview).toHaveBeenCalledTimes(2);
-    expect(fixture.transactionApply).toHaveBeenCalledOnce();
-    expect(fixture.transactionApply.mock.calls[0]?.[0]).toMatchObject({
-      acknowledge: true,
-      expectedPlanHash: preview.transactionPlan.planHash,
-    });
+    await expect(
+      applyArchitectureReconciliation({
+        preview,
+        acknowledge: true,
+        expectedReconciliationPlanHash: preview.reconciliationPlanHash,
+        dependencies: fixture.dependencies,
+      }),
+    ).rejects.toThrow(/exact accepted v2 policy/i);
+    expect(fixture.transactionPreview).toHaveBeenCalledOnce();
+    expect(fixture.transactionApply).not.toHaveBeenCalled();
 
     const mismatchFixture = createFixture();
     const mismatchPreview = await previewArchitectureReconciliation({
@@ -627,7 +623,26 @@ describe("architecture reconciliation orchestration", () => {
     );
   });
 
-  it("rechecks manifest, analyzer tree, and tracked inputs before mutation", async () => {
+  it("rejects an injected non-v2 preview even when its revalidation inputs are unchanged", async () => {
+    const fixture = createFixture();
+    const preview = await previewArchitectureReconciliation({
+      repoRoot: ROOT,
+      dependencies: fixture.dependencies,
+    });
+
+    await expect(
+      applyArchitectureReconciliation({
+        preview,
+        acknowledge: true,
+        expectedReconciliationPlanHash: preview.reconciliationPlanHash,
+        dependencies: fixture.dependencies,
+      }),
+    ).rejects.toThrow(/exact accepted v2 policy/i);
+    expect(fixture.transactionPreview).toHaveBeenCalledOnce();
+    expect(fixture.transactionApply).not.toHaveBeenCalled();
+  });
+
+  it("rejects non-v2 applies before revalidation or mutation", async () => {
     const manifestFixture = createFixture();
     const manifestPreview = await previewArchitectureReconciliation({
       repoRoot: ROOT,
@@ -644,7 +659,8 @@ describe("architecture reconciliation orchestration", () => {
         expectedReconciliationPlanHash: manifestPreview.reconciliationPlanHash,
         dependencies: manifestFixture.dependencies,
       }),
-    ).rejects.toThrow(/finding set|changed before acknowledged apply/i);
+    ).rejects.toThrow(/exact accepted v2 policy/i);
+    expect(manifestFixture.transactionPreview).toHaveBeenCalledOnce();
     expect(manifestFixture.transactionApply).not.toHaveBeenCalled();
 
     const treeFixture = createFixture();
@@ -660,7 +676,8 @@ describe("architecture reconciliation orchestration", () => {
         expectedReconciliationPlanHash: treePreview.reconciliationPlanHash,
         dependencies: treeFixture.dependencies,
       }),
-    ).rejects.toThrow(/changed before acknowledged apply/i);
+    ).rejects.toThrow(/exact accepted v2 policy/i);
+    expect(treeFixture.transactionPreview).toHaveBeenCalledOnce();
     expect(treeFixture.transactionApply).not.toHaveBeenCalled();
 
     const inputFixture = createFixture();
@@ -679,7 +696,8 @@ describe("architecture reconciliation orchestration", () => {
         expectedReconciliationPlanHash: inputPreview.reconciliationPlanHash,
         dependencies: inputFixture.dependencies,
       }),
-    ).rejects.toThrow(/changed before acknowledged apply/i);
+    ).rejects.toThrow(/exact accepted v2 policy/i);
+    expect(inputFixture.transactionPreview).toHaveBeenCalledOnce();
     expect(inputFixture.transactionApply).not.toHaveBeenCalled();
 
     const directReviewFixture = createFixture();
@@ -699,11 +717,12 @@ describe("architecture reconciliation orchestration", () => {
           directReviewPreview.reconciliationPlanHash,
         dependencies: directReviewFixture.dependencies,
       }),
-    ).rejects.toThrow(/changed before acknowledged apply/i);
+    ).rejects.toThrow(/exact accepted v2 policy/i);
+    expect(directReviewFixture.transactionPreview).toHaveBeenCalledOnce();
     expect(directReviewFixture.transactionApply).not.toHaveBeenCalled();
   });
 
-  it("rejects caller-side summary tampering before mutation", async () => {
+  it("rejects non-v2 caller-side summary tampering before callbacks", async () => {
     const fixture = createFixture();
     const preview = await previewArchitectureReconciliation({
       repoRoot: ROOT,
@@ -718,7 +737,8 @@ describe("architecture reconciliation orchestration", () => {
         expectedReconciliationPlanHash: preview.reconciliationPlanHash,
         dependencies: fixture.dependencies,
       }),
-    ).rejects.toThrow(/preview.*changed/i);
+    ).rejects.toThrow(/exact accepted v2 policy/i);
+    expect(fixture.transactionPreview).toHaveBeenCalledOnce();
     expect(fixture.transactionApply).not.toHaveBeenCalled();
   });
 });

@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
@@ -22,10 +23,71 @@ import {
   RECONCILIATION_REVIEW_EVIDENCE_PATHS,
   type AnalyzerReconciliationManifest,
 } from "../reconciliation-manifest.js";
+import {
+  assertAcceptedV2ComparisonIsClean,
+  computeAnalyzerInputSnapshotSha256,
+  computeAnalyzerReportSha256,
+  createV2EvidenceSourceProjection,
+  selectV2AnalyzerSourcePaths,
+  V2_PRODUCTION_TYPESCRIPT_PATHS,
+  validateAnalyzerReconciliationManifestV2Sync,
+} from "../v2-manifest-validation.js";
+import {
+  applyArchitectureReconciliationForPolicy,
+  V2_RECONCILIATION_DESTINATION_PATHS,
+} from "../policy-write-guard.js";
 
 const temporaryRoots: string[] = [];
 const packageRoot = fileURLToPath(new URL("../../", import.meta.url));
 const repositoryRoot = fileURLToPath(new URL("../../../../", import.meta.url));
+const V1_ARTIFACT_PATHS = [
+  "packages/architecture-enforcement/src/config/analyzer-reconciliation.v1.json",
+  "packages/architecture-enforcement/src/config/ownership-map.v1.json",
+  "packages/architecture-enforcement/src/config/baselines/database.v1.json",
+  "packages/architecture-enforcement/src/config/baselines/provider.v1.json",
+] as const;
+const V2_ARTIFACT_PATHS = [
+  "packages/architecture-enforcement/src/config/ownership-map.v2.json",
+  "packages/architecture-enforcement/src/config/baselines/database.v2.json",
+  "packages/architecture-enforcement/src/config/baselines/provider.v2.json",
+] as const;
+const V2_MANIFEST_PATH =
+  "packages/architecture-enforcement/src/config/analyzer-reconciliation.v2.json";
+
+/** Serializes JSON data with stable object-key ordering for manifest subjects. */
+function canonicalJson(value: unknown): string {
+  if (Array.isArray(value)) {
+    return `[${value.map((item) => canonicalJson(item)).join(",")}]`;
+  }
+  if (value !== null && typeof value === "object") {
+    const record = value as Record<string, unknown>;
+    return `{${Object.keys(record)
+      .sort()
+      .map((key) => `${JSON.stringify(key)}:${canonicalJson(record[key])}`)
+      .join(",")}}`;
+  }
+  return JSON.stringify(value) ?? "null";
+}
+
+/** Recomputes the review subject after changing one protected manifest hash. */
+function withProtectedManifestHash(
+  manifest: Record<string, unknown>,
+  key: string,
+): Record<string, unknown> {
+  const changed = { ...manifest, [key]: "1".repeat(64) };
+  const {
+    reviews: _reviews,
+    acceptance: _acceptance,
+    reviewSubjectSha256: _reviewSubjectSha256,
+    ...protectedFields
+  } = changed;
+  return {
+    ...changed,
+    reviewSubjectSha256: createHash("sha256")
+      .update(canonicalJson(protectedFields), "utf8")
+      .digest("hex"),
+  };
+}
 
 /**
  * Creates an isolated tracked-source repository for baseline gate tests.
@@ -44,6 +106,61 @@ async function createTemporaryRepository(
   execFileSync("git", ["init", "--quiet"], { cwd: root });
   execFileSync("git", ["add", "--", sourcePath], { cwd: root });
   return root;
+}
+
+/** Creates the smallest Git repository accepted by the production v2 evidence functions. */
+async function createMinimalV2EvidenceRepository(): Promise<{
+  root: string;
+  codingPath: string;
+  unrelatedPath: string;
+}> {
+  const root = await mkdtemp(join(tmpdir(), "architecture-v2-evidence-"));
+  temporaryRoots.push(root);
+  const codingPath =
+    "packages/architecture-enforcement/src/policy-selection.ts";
+  const unrelatedPath = "apps/unrelated/src/input.ts";
+  const paths = [
+    "package.json",
+    "pnpm-workspace.yaml",
+    "packages/fixture/package.json",
+    unrelatedPath,
+    V2_MANIFEST_PATH,
+    ...V1_ARTIFACT_PATHS,
+    ...V2_ARTIFACT_PATHS,
+    ...V2_PRODUCTION_TYPESCRIPT_PATHS,
+  ];
+  for (const path of new Set(paths)) {
+    const destination = resolve(root, path);
+    await mkdir(dirname(destination), { recursive: true });
+    const source =
+      path === V2_ARTIFACT_PATHS[0]
+        ? await readFile(resolve(repositoryRoot, path), "utf8")
+        : path === "packages/fixture/package.json"
+          ? '{"name":"fixture"}\n'
+          : path === codingPath
+            ? "export const fixture = true;\n"
+            : path === unrelatedPath
+              ? "export const unrelated = true;\n"
+              : `${path}\n`;
+    await writeFile(destination, source, "utf8");
+  }
+  execFileSync("git", ["init", "--quiet"], { cwd: root });
+  execFileSync("git", ["add", "."], { cwd: root });
+  execFileSync(
+    "git",
+    [
+      "-c",
+      "user.email=architecture@example.com",
+      "-c",
+      "user.name=Architecture Tests",
+      "commit",
+      "--quiet",
+      "-m",
+      "baseline",
+    ],
+    { cwd: root },
+  );
+  return { root, codingPath, unrelatedPath };
 }
 
 /**
@@ -294,4 +411,190 @@ describe("committed architecture baseline validation", () => {
       validateCommittedBaselines(root, dependencies),
     ).rejects.toThrow(/checker is not clean/i);
   }, 30_000);
+
+  it("binds analyzer reports and input snapshots to fixed v2 sources before tracking", async () => {
+    const complete = selectV2AnalyzerSourcePaths(repositoryRoot);
+    const trackedBeforeCommit = complete.filter(
+      (path) => !V2_PRODUCTION_TYPESCRIPT_PATHS.includes(path as never),
+    );
+    const beforeTracking = selectV2AnalyzerSourcePaths(
+      repositoryRoot,
+      trackedBeforeCommit,
+    );
+    const afterTracking = selectV2AnalyzerSourcePaths(repositoryRoot, [
+      ...trackedBeforeCommit,
+      ...V2_PRODUCTION_TYPESCRIPT_PATHS,
+    ]);
+
+    expect(beforeTracking).toEqual(afterTracking);
+    expect(beforeTracking).toEqual(
+      expect.arrayContaining([...V2_PRODUCTION_TYPESCRIPT_PATHS]),
+    );
+  }, 30_000);
+
+  it("projects clean HEAD plus Coding bytes without unrelated dirty inputs", async () => {
+    const root = await mkdtemp(join(tmpdir(), "architecture-v2-projection-"));
+    temporaryRoots.push(root);
+    const unrelatedPath = "apps/unrelated/src/dirty.ts";
+    const codingPath = "packages/architecture-enforcement/src/analyzer.ts";
+    await mkdir(dirname(resolve(root, unrelatedPath)), { recursive: true });
+    await mkdir(dirname(resolve(root, codingPath)), { recursive: true });
+    await writeFile(resolve(root, unrelatedPath), "HEAD unrelated\n", "utf8");
+    await writeFile(resolve(root, codingPath), "HEAD Coding\n", "utf8");
+    execFileSync("git", ["init", "--quiet"], { cwd: root });
+    execFileSync("git", ["add", "--", unrelatedPath, codingPath], {
+      cwd: root,
+    });
+    execFileSync(
+      "git",
+      [
+        "-c",
+        "user.email=architecture@example.com",
+        "-c",
+        "user.name=Architecture Tests",
+        "commit",
+        "--quiet",
+        "-m",
+        "baseline",
+      ],
+      { cwd: root },
+    );
+    await writeFile(resolve(root, unrelatedPath), "dirty unrelated\n", "utf8");
+    await writeFile(resolve(root, codingPath), "Coding candidate\n", "utf8");
+
+    const projection = await createV2EvidenceSourceProjection(root);
+    try {
+      await expect(
+        readFile(resolve(projection.projectedRoot, unrelatedPath), "utf8"),
+      ).resolves.toBe("HEAD unrelated\n");
+      await expect(
+        readFile(resolve(projection.projectedRoot, codingPath), "utf8"),
+      ).resolves.toBe("Coding candidate\n");
+    } finally {
+      await projection.dispose();
+    }
+  });
+
+  it("keeps production evidence stable for unrelated dirt and sensitive to Coding bytes", async () => {
+    const fixture = await createMinimalV2EvidenceRepository();
+    const cleanSnapshot = await computeAnalyzerInputSnapshotSha256(
+      fixture.root,
+    );
+    const cleanReport = await computeAnalyzerReportSha256(fixture.root);
+
+    await writeFile(
+      resolve(fixture.root, fixture.unrelatedPath),
+      "unrelated dirty import\n",
+      "utf8",
+    );
+    await expect(
+      computeAnalyzerInputSnapshotSha256(fixture.root),
+    ).resolves.toBe(cleanSnapshot);
+    await expect(computeAnalyzerReportSha256(fixture.root)).resolves.toBe(
+      cleanReport,
+    );
+
+    await writeFile(
+      resolve(fixture.root, fixture.codingPath),
+      'import openai from "openai";\nvoid openai;\n',
+      "utf8",
+    );
+    await expect(
+      computeAnalyzerInputSnapshotSha256(fixture.root),
+    ).resolves.not.toBe(cleanSnapshot);
+    await expect(computeAnalyzerReportSha256(fixture.root)).resolves.not.toBe(
+      cleanReport,
+    );
+  }, 30_000);
+
+  it("rejects stale synchronous v2 implementation and input hashes", async () => {
+    const manifest = JSON.parse(
+      await readFile(
+        resolve(
+          repositoryRoot,
+          "packages/architecture-enforcement/src/config/analyzer-reconciliation.v2.json",
+        ),
+        "utf8",
+      ),
+    ) as Record<string, unknown>;
+
+    const staleImplementation = validateAnalyzerReconciliationManifestV2Sync({
+      repoRoot: repositoryRoot,
+      manifest: withProtectedManifestHash(
+        manifest,
+        "analyzerImplementationTreeSha256",
+      ),
+    });
+    expect(staleImplementation).toMatchObject({
+      valid: false,
+      errors: expect.arrayContaining([
+        "Analyzer implementation tree hash does not match current bytes",
+      ]),
+    });
+
+    const staleInput = validateAnalyzerReconciliationManifestV2Sync({
+      repoRoot: repositoryRoot,
+      manifest: withProtectedManifestHash(
+        manifest,
+        "analyzerInputSnapshotSha256",
+      ),
+    });
+    expect(staleInput).toMatchObject({
+      valid: false,
+      errors: expect.arrayContaining([
+        "Analyzer input snapshot hash does not match current bytes",
+      ]),
+    });
+  }, 30_000);
+
+  it("guards the exact v2 manifest transaction destination set", async () => {
+    await expect(
+      applyArchitectureReconciliationForPolicy({
+        policyVersion: "v2",
+        repoRoot: repositoryRoot,
+        destinationPaths: V2_RECONCILIATION_DESTINATION_PATHS,
+        dryRun: true,
+      }),
+    ).resolves.toEqual({ allowed: true, applied: false });
+    await expect(
+      applyArchitectureReconciliationForPolicy({
+        policyVersion: "v2",
+        repoRoot: repositoryRoot,
+        destinationPaths: V2_RECONCILIATION_DESTINATION_PATHS,
+        dryRun: false,
+      }),
+    ).resolves.toEqual({ allowed: true, applied: true });
+
+    for (const destinationPaths of [
+      V2_RECONCILIATION_DESTINATION_PATHS.slice(1),
+      [...V2_RECONCILIATION_DESTINATION_PATHS].reverse(),
+      [...V2_RECONCILIATION_DESTINATION_PATHS, "unexpected.json"],
+    ]) {
+      await expect(
+        applyArchitectureReconciliationForPolicy({
+          policyVersion: "v2",
+          repoRoot: repositoryRoot,
+          destinationPaths,
+          dryRun: false,
+        }),
+      ).resolves.toEqual({ allowed: false, applied: false });
+    }
+  });
+
+  it("rejects dirty comparisons for accepted v2 state", () => {
+    expect(() =>
+      assertAcceptedV2ComparisonIsClean({
+        additions: [{} as never],
+        removals: [],
+        renames: [],
+      }),
+    ).toThrow(/clean zero-delta/i);
+    expect(() =>
+      assertAcceptedV2ComparisonIsClean({
+        additions: [],
+        removals: [],
+        renames: [],
+      }),
+    ).not.toThrow();
+  });
 });

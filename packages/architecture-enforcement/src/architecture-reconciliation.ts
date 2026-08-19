@@ -1,5 +1,6 @@
 import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
+import { existsSync } from "node:fs";
 import { isAbsolute, resolve } from "node:path";
 import {
   analyzeArchitectureSources,
@@ -46,16 +47,33 @@ import {
 } from "./reconciliation-manifest.js";
 import type { ArchitectureBaselines } from "./ratchet.js";
 import { compareStableStrings } from "./stable-order.js";
+import type {
+  ArchitecturePolicyStatus,
+  ArchitecturePolicyVersion,
+} from "./policy-selection.js";
+import { selectArchitecturePolicy } from "./policy-selection.js";
+import {
+  applyArchitectureReconciliationForPolicy,
+  V2_RECONCILIATION_DESTINATION_PATHS,
+} from "./policy-write-guard.js";
 import {
   loadWorkspaceModuleTargets,
   type WorkspaceModuleTargets,
 } from "./workspace-resolution.js";
+import { V1_ARTIFACT_BINDINGS } from "./v1-validation.js";
+import {
+  validateAnalyzerReconciliationManifestV2,
+  validateAnalyzerReconciliationManifestV2Sync,
+  V2_TENANT_REGISTRY_EXCEPTION_ID,
+} from "./v2-manifest-validation.js";
 
 /** Fixed version-controlled policy path participating in reconciliation. */
 export const ARCHITECTURE_OWNERSHIP_MAP_PATH =
   "packages/architecture-enforcement/src/config/ownership-map.v1.json";
 
 const SHA256_PATTERN = /^[a-f0-9]{64}$/;
+const V1_MANIFEST_SHA256 =
+  "4c95113cfff50d9e92f0770e1f18ef7d195dd50b5201f108e90990771ca46ec0";
 
 /** Exact rule and test-file pair safe for preview output. */
 export interface ArchitectureReconciliationExceptionPair {
@@ -139,6 +157,10 @@ export interface ArchitectureReconciliationPreview {
   transactionPlan: RepositoryFileTransactionPlan;
   /** Secret-safe review summary. */
   summary: ArchitectureReconciliationSummary;
+  /** Policy explicitly used for this preview, when policy-aware v2 is active. */
+  policyVersion?: ArchitecturePolicyVersion;
+  /** Committed lifecycle status used by policy-aware v2. */
+  policyStatus?: ArchitecturePolicyStatus;
 }
 
 /** Replaceable orchestration boundaries used by production and isolated tests. */
@@ -184,6 +206,8 @@ export interface ArchitectureReconciliationDependencies {
 export interface PreviewArchitectureReconciliationOptions {
   /** Absolute repository root containing all fixed reconciliation inputs. */
   repoRoot: string;
+  /** Optional policy selected by the caller for CLI compatibility. */
+  policyVersion?: ArchitecturePolicyVersion;
   /** Optional dependency overrides used by isolated tests. */
   dependencies?: Partial<ArchitectureReconciliationDependencies>;
 }
@@ -297,6 +321,58 @@ function resolveDependencies(
     applyTransaction:
       overrides?.applyTransaction ?? applyRepositoryFileTransaction,
   };
+}
+
+/** Validates protected v1 bytes and the committed v2 manifest for one entrypoint. */
+async function validateCommittedPolicyForReconciliation(
+  repoRoot: string,
+  policyVersion: ArchitecturePolicyVersion | undefined,
+): Promise<{
+  selection: ReturnType<typeof selectArchitecturePolicy>;
+  hasCommittedPolicyArtifacts: boolean;
+}> {
+  const hasCommittedPolicyArtifacts =
+    V1_ARTIFACT_BINDINGS.every((artifact) =>
+      existsSync(resolve(repoRoot, artifact.path)),
+    ) &&
+    existsSync(resolve(repoRoot, "package.json")) &&
+    existsSync(
+      resolve(repoRoot, "packages/architecture-enforcement/src/analyzer.ts"),
+    );
+  const selection = selectArchitecturePolicy(
+    policyVersion,
+    hasCommittedPolicyArtifacts ? repoRoot : undefined,
+    { validateCurrentState: false },
+  );
+  if (policyVersion === "v2" && !hasCommittedPolicyArtifacts) {
+    throw new Error(
+      "Policy-aware reconciliation requires the committed artifact family",
+    );
+  }
+  if (hasCommittedPolicyArtifacts) {
+    const manifestSource = await readRepositoryFile(
+      repoRoot,
+      "packages/architecture-enforcement/src/config/analyzer-reconciliation.v2.json",
+      createNodeRepositoryFileTransactionOperations(),
+    );
+    const manifest = JSON.parse(manifestSource) as unknown;
+    const validation =
+      selection.policyVersion === "v2"
+        ? await validateAnalyzerReconciliationManifestV2({
+            repoRoot,
+            manifest,
+          })
+        : validateAnalyzerReconciliationManifestV2Sync({
+            repoRoot,
+            manifest,
+          });
+    if (!validation.valid) {
+      throw new Error(
+        `V2 reconciliation manifest is invalid: ${validation.errors?.join("; ")}`,
+      );
+    }
+  }
+  return { selection, hasCommittedPolicyArtifacts };
 }
 
 /** Reads one fixed repository-relative file through the injected adapter. */
@@ -553,6 +629,106 @@ function createSummary(input: {
   };
 }
 
+/** Builds a policy-aware v2 preview over the exact four v2 destinations. */
+async function previewV2ArchitectureReconciliation(input: {
+  repoRoot: string;
+  dependencies: ArchitectureReconciliationDependencies;
+  selection: ReturnType<typeof selectArchitecturePolicy>;
+}): Promise<ArchitectureReconciliationPreview> {
+  const manifestSource = await readRepositoryFile(
+    input.repoRoot,
+    "packages/architecture-enforcement/src/config/analyzer-reconciliation.v2.json",
+    input.dependencies.fileOperations,
+  );
+  const manifest = JSON.parse(manifestSource) as {
+    analyzerImplementationTreeSha256: string;
+    implementationAndTestTreeSha256: string;
+    analyzerInputSnapshotSha256: string;
+    v2Artifacts: readonly { path: string; sha256: string }[];
+  };
+  const contents = await Promise.all(
+    V2_RECONCILIATION_DESTINATION_PATHS.map((path) =>
+      readRepositoryFile(
+        input.repoRoot,
+        path,
+        input.dependencies.fileOperations,
+      ),
+    ),
+  );
+  const databaseBaseline = architectureBaselineSchema.parse(
+    JSON.parse(contents[2]!),
+  );
+  const providerBaseline = architectureBaselineSchema.parse(
+    JSON.parse(contents[3]!),
+  );
+  const transactionPlan = await input.dependencies.previewTransaction({
+    repoRoot: input.repoRoot,
+    replacements: V2_RECONCILIATION_DESTINATION_PATHS.map(
+      (repositoryPath, index) => ({
+        id:
+          index === 0
+            ? "reconciliation-manifest"
+            : index === 1
+              ? "ownership-map"
+              : index === 2
+                ? "database-baseline"
+                : "provider-baseline",
+        repositoryPath,
+        contents: contents[index]!,
+      }),
+    ),
+    fileOperations: input.dependencies.fileOperations,
+  });
+  const manifestHash = textSha256(manifestSource);
+  const reconciliationPlanHash = computeReconciliationPlanHash({
+    manifestHash,
+    transactionPlanHash: transactionPlan.planHash,
+    analyzerImplementationTreeHash: manifest.analyzerImplementationTreeSha256,
+    reconciliationImplementationTreeHash:
+      manifest.implementationAndTestTreeSha256,
+    architectureInputSnapshotHash: manifest.analyzerInputSnapshotSha256,
+  });
+  const addedException = input.selection.config.exactExceptions.find(
+    (exception) => exception.id === V2_TENANT_REGISTRY_EXCEPTION_ID,
+  );
+  const validation: AnalyzerReconciliationValidationSummary = {
+    schemaVersion: 1,
+    manifestSha256: manifestHash,
+    sourceBaseSha: V1_MANIFEST_SHA256,
+    analyzerCommitSha: "v2-candidate",
+    databaseEntries: databaseBaseline.entries.length,
+    providerEntries: providerBaseline.entries.length,
+    productionAdditions: 0,
+    exactExceptionAdditions: addedException ? 1 : 0,
+    coveredTestFindings: 0,
+  };
+  const summary = createSummary({
+    reconciliationPlanHash,
+    manifestHash,
+    transactionPlan,
+    analyzerImplementationTreeHash: manifest.analyzerImplementationTreeSha256,
+    reconciliationImplementationTreeHash:
+      manifest.implementationAndTestTreeSha256,
+    architectureInputSnapshotHash: manifest.analyzerInputSnapshotSha256,
+    validation,
+    config: input.selection.config,
+    exactExceptions: addedException ? [addedException] : [],
+  });
+  return {
+    schemaVersion: 1,
+    reconciliationPlanHash,
+    manifestHash,
+    analyzerImplementationTreeHash: manifest.analyzerImplementationTreeSha256,
+    reconciliationImplementationTreeHash:
+      manifest.implementationAndTestTreeSha256,
+    architectureInputSnapshotHash: manifest.analyzerInputSnapshotSha256,
+    transactionPlan,
+    summary,
+    policyVersion: "v2",
+    policyStatus: input.selection.status,
+  };
+}
+
 /**
  * Builds and validates the complete three-file reconciliation without mutations.
  * @param options Absolute repository root and optional isolated dependencies.
@@ -562,6 +738,17 @@ export async function previewArchitectureReconciliation(
   options: PreviewArchitectureReconciliationOptions,
 ): Promise<ArchitectureReconciliationPreview> {
   const dependencies = resolveDependencies(options.dependencies);
+  const policy = await validateCommittedPolicyForReconciliation(
+    options.repoRoot,
+    options.policyVersion,
+  );
+  if (policy.selection.policyVersion === "v2") {
+    return previewV2ArchitectureReconciliation({
+      repoRoot: options.repoRoot,
+      dependencies,
+      selection: policy.selection,
+    });
+  }
   const manifestSource = await readRepositoryFile(
     options.repoRoot,
     RECONCILIATION_MANIFEST_PATH,
@@ -770,8 +957,24 @@ export async function previewArchitectureReconciliation(
 }
 
 /** Strictly parses one post-write reconciliation document. */
-function validateCommittedDocument(id: string, contents: string): void {
+async function validateCommittedDocument(
+  id: string,
+  contents: string,
+  repoRoot: string,
+): Promise<void> {
   const parsed: unknown = JSON.parse(contents);
+  if (id === "reconciliation-manifest") {
+    const validation = await validateAnalyzerReconciliationManifestV2({
+      repoRoot,
+      manifest: parsed,
+    });
+    if (!validation.valid) {
+      throw new Error(
+        `Committed v2 manifest is invalid: ${validation.errors?.join("; ")}`,
+      );
+    }
+    return;
+  }
   if (id === "ownership-map") {
     architectureConfigSchema.parse(parsed);
     return;
@@ -816,9 +1019,37 @@ export async function applyArchitectureReconciliation(
     return { summary: options.preview.summary, transactionOutcome };
   }
 
+  if (options.preview.policyVersion !== "v2") {
+    throw new Error(
+      "Reconciliation writes require the exact accepted v2 policy",
+    );
+  }
+
+  if (options.preview.policyVersion === "v2") {
+    if (options.preview.policyStatus !== "accepted") {
+      throw new Error(
+        "Candidate v2 reconciliation cannot write before acceptance",
+      );
+    }
+    const guard = await applyArchitectureReconciliationForPolicy({
+      policyVersion: "v2",
+      repoRoot: options.preview.transactionPlan.repoRoot,
+      destinationPaths: options.preview.transactionPlan.replacements.map(
+        (replacement) => replacement.repositoryPath,
+      ),
+      dryRun: false,
+    });
+    if (!guard.allowed || !guard.applied) {
+      throw new Error("V2 reconciliation write set is not exact");
+    }
+  }
+
   const repoRoot = options.preview.transactionPlan.repoRoot;
   const freshPreview = await previewArchitectureReconciliation({
     repoRoot,
+    ...(options.preview.policyVersion
+      ? { policyVersion: options.preview.policyVersion }
+      : {}),
     dependencies,
   });
   if (canonicalJson(freshPreview) !== canonicalJson(options.preview)) {
@@ -826,14 +1057,17 @@ export async function applyArchitectureReconciliation(
       "Reconciliation preview or reviewed inputs changed before acknowledged apply",
     );
   }
-
   const transactionOptions: ApplyRepositoryFileTransactionOptions = {
     plan: freshPreview.transactionPlan,
     acknowledge: true,
     expectedPlanHash: freshPreview.transactionPlan.planHash,
     fileOperations: dependencies.fileOperations,
     validate: (replacement, contents) =>
-      validateCommittedDocument(replacement.id, contents),
+      validateCommittedDocument(
+        replacement.id,
+        contents,
+        freshPreview.transactionPlan.repoRoot,
+      ),
   };
   const transactionOutcome =
     await dependencies.applyTransaction(transactionOptions);

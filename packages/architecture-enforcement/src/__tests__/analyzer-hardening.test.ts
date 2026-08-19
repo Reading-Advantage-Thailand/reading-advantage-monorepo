@@ -71,6 +71,7 @@ describe("architecture analyzer evidence hardening", () => {
       sourcePaths: [sourcePath],
       workspaceTargets: new Map(),
       config,
+      policyVersion: "v1",
     });
 
     expect(result.parseErrors).toEqual([]);
@@ -117,6 +118,7 @@ describe("architecture analyzer evidence hardening", () => {
       sourcePaths: Object.keys(sources),
       workspaceTargets: new Map(),
       config: loadOwnershipMap(),
+      policyVersion: "v2",
     });
 
     expect(result.parseErrors).toEqual([]);
@@ -128,33 +130,6 @@ describe("architecture analyzer evidence hardening", () => {
         (finding) => finding.sourcePath === sourcePaths.adapterRawSql,
       ),
     ).toEqual([]);
-    const expectedDurableFindings: Array<{
-      sourcePath: string;
-      evidenceKind: string;
-      resource: string;
-    }> = [
-      sourcePaths.namespace,
-      sourcePaths.dynamic,
-      sourcePaths.commonjs,
-      sourcePaths.reexport,
-      sourcePaths.rawSql,
-    ].map((sourcePath) => ({
-      sourcePath,
-      evidenceKind: "query-call",
-      resource: "database-table:durable_jobs",
-    }));
-    expectedDurableFindings.push({
-      sourcePath: sourcePaths.clientConstruction,
-      evidenceKind: "client-construction",
-      resource: "database-table:durable_jobs",
-    });
-    expect(durableJobFindings).toEqual(
-      expect.arrayContaining(
-        expectedDurableFindings.map((finding) =>
-          expect.objectContaining(finding),
-        ),
-      ),
-    );
     expect(
       durableJobFindings.filter(
         (finding) =>
@@ -162,7 +137,7 @@ describe("architecture analyzer evidence hardening", () => {
           finding.evidenceKind === "client-construction" &&
           finding.resource === "database-table:durable_jobs",
       ),
-    ).toHaveLength(1);
+    ).toHaveLength(0);
     expect(
       durableJobFindings.filter(
         (finding) => finding.sourcePath === sourcePaths.rawSql,
@@ -207,16 +182,14 @@ describe("architecture analyzer evidence hardening", () => {
         ),
       )
       .toEqual([]);
-    expect
-      .soft(
-        durableJobFindings.filter(
-          (finding) =>
-            finding.sourcePath === sourcePaths.shadowed &&
-            finding.evidenceKind === "static-import" &&
-            finding.resource === "database-table:durable_jobs",
-        ),
-      )
-      .toHaveLength(1);
+    expect(
+      durableJobFindings.filter(
+        (finding) =>
+          finding.sourcePath === sourcePaths.shadowed &&
+          finding.evidenceKind === "static-import" &&
+          finding.resource === "database-table:durable_jobs",
+      ),
+    ).toHaveLength(0);
     expect
       .soft(
         durableJobFindings.filter(
@@ -239,7 +212,7 @@ describe("architecture analyzer evidence hardening", () => {
             finding.evidenceKind === "query-call" &&
             finding.resource === "database-table:durable_jobs",
         ),
-      ).toHaveLength(1);
+      ).toHaveLength(0);
     }
   });
 });

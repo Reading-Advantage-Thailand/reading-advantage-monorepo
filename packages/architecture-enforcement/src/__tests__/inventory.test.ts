@@ -319,4 +319,50 @@ describe("deterministic architecture inventory", () => {
       },
     ]);
   });
+
+  it("limits production exact exceptions to static-import inventory evidence", () => {
+    const sourcePath = "packages/domain/src/other-production-file.ts";
+    const v2Map = loadOwnershipMap("v2");
+    const config = {
+      ...v2Map,
+      exactExceptions: [
+        ...v2Map.exactExceptions,
+        {
+          schemaVersion: 1 as const,
+          id: "production-static-exception",
+          ruleId: "DURABLE_JOB_DATABASE_BOUNDARY",
+          sourcePath,
+          owner: "domain-platform",
+          rationale: "Reviewed production classification import exception.",
+        },
+      ],
+    };
+    const facts = ["static-import", "query-call"].map((kind) => ({
+      schemaVersion: 1 as const,
+      sourcePath,
+      line: 1,
+      column: 1,
+      kind: kind as "static-import" | "query-call",
+      importSpecifier: "@reading-advantage/db",
+      resource: "database-table:durable_jobs",
+    }));
+
+    const candidates = proposeDirectViolations(
+      {
+        schemaVersion: 1,
+        filesScanned: 1,
+        facts,
+        parseErrors: [],
+      },
+      config,
+    );
+
+    expect(candidates).toEqual([
+      expect.objectContaining({
+        sourcePath,
+        evidenceKind: "query-call",
+        proposedDisposition: "baseline-review",
+      }),
+    ]);
+  });
 });

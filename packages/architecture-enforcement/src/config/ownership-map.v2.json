@@ -44,9 +44,7 @@
         }
       ],
       "resourceMatchers": [],
-      "resolvedTargetRoots": [
-        "packages/db/src/"
-      ],
+      "resolvedTargetRoots": ["packages/db/src/"],
       "ownershipRootIds": [
         "database-source",
         "database-migrations",
@@ -180,9 +178,7 @@
           "value": "database-schema:company-identity"
         }
       ],
-      "resolvedTargetRoots": [
-        "packages/db/src/company-identity/"
-      ],
+      "resolvedTargetRoots": ["packages/db/src/company-identity/"],
       "ownershipRootIds": [
         "company-identity-database",
         "company-identity-migrations",
@@ -244,12 +240,8 @@
           "value": "environment:AI_GATEWAY_API_KEY"
         }
       ],
-      "resolvedTargetRoots": [
-        "packages/ai/src/providers/"
-      ],
-      "ownershipRootIds": [
-        "ai-provider-adapters"
-      ]
+      "resolvedTargetRoots": ["packages/ai/src/providers/"],
+      "ownershipRootIds": ["ai-provider-adapters"]
     },
     {
       "schemaVersion": 1,
@@ -302,12 +294,8 @@
           "value": "environment:GOOGLE_APPLICATION_CREDENTIALS"
         }
       ],
-      "resolvedTargetRoots": [
-        "packages/storage/src/drivers/"
-      ],
-      "ownershipRootIds": [
-        "storage-provider-adapters"
-      ]
+      "resolvedTargetRoots": ["packages/storage/src/drivers/"],
+      "ownershipRootIds": ["storage-provider-adapters"]
     },
     {
       "schemaVersion": 1,
@@ -368,12 +356,8 @@
           "value": "environment:STRIPE_SECRET_KEY"
         }
       ],
-      "resolvedTargetRoots": [
-        "packages/integrations/github/src/drivers/"
-      ],
-      "ownershipRootIds": [
-        "github-provider-adapters"
-      ]
+      "resolvedTargetRoots": ["packages/integrations/github/src/drivers/"],
+      "ownershipRootIds": ["github-provider-adapters"]
     }
   ],
   "ownershipRoots": [
@@ -383,9 +367,7 @@
       "domain": "database",
       "path": "packages/db/src/",
       "kind": "database",
-      "ruleIds": [
-        "DATABASE_BOUNDARY"
-      ],
+      "ruleIds": ["DATABASE_BOUNDARY"],
       "owner": "database-platform",
       "rationale": "The database package owns schema definitions, clients, migrations helpers, and low-level persistence primitives."
     },
@@ -395,9 +377,7 @@
       "domain": "database",
       "path": "packages/db/src/schema/",
       "kind": "database",
-      "ruleIds": [
-        "DURABLE_JOB_DATABASE_BOUNDARY"
-      ],
+      "ruleIds": ["DURABLE_JOB_DATABASE_BOUNDARY"],
       "owner": "database-platform",
       "rationale": "Database schema modules own durable job table definitions but do not run worker polling loops."
     },
@@ -407,10 +387,7 @@
       "domain": "database",
       "path": "packages/db/drizzle/",
       "kind": "migration",
-      "ruleIds": [
-        "DATABASE_BOUNDARY",
-        "DURABLE_JOB_DATABASE_BOUNDARY"
-      ],
+      "ruleIds": ["DATABASE_BOUNDARY", "DURABLE_JOB_DATABASE_BOUNDARY"],
       "owner": "database-platform",
       "rationale": "Reviewed Drizzle migrations may define and evolve PostgreSQL-owned tables, including durable job tables."
     },
@@ -420,9 +397,7 @@
       "domain": "database",
       "path": "packages/db/scripts/",
       "kind": "migration",
-      "ruleIds": [
-        "DATABASE_BOUNDARY"
-      ],
+      "ruleIds": ["DATABASE_BOUNDARY"],
       "owner": "database-platform",
       "rationale": "Database-owned maintenance commands may inspect migration state through low-level PostgreSQL connections."
     },
@@ -432,9 +407,7 @@
       "domain": "database",
       "path": "packages/domain/src/",
       "kind": "domain",
-      "ruleIds": [
-        "DATABASE_BOUNDARY"
-      ],
+      "ruleIds": ["DATABASE_BOUNDARY"],
       "owner": "backend-platform",
       "rationale": "Existing transport-independent domain functions are an approved database orchestration boundary during incremental migration."
     },
@@ -444,9 +417,7 @@
       "domain": "database",
       "path": "packages/backend/src/",
       "kind": "domain",
-      "ruleIds": [
-        "DATABASE_BOUNDARY"
-      ],
+      "ruleIds": ["DATABASE_BOUNDARY"],
       "owner": "backend-platform",
       "rationale": "Capability handlers and backend modules may use scoped database ports under the canonical backend architecture."
     },
@@ -456,9 +427,7 @@
       "domain": "database",
       "path": "packages/backend/src/jobs/adapters/postgres/",
       "kind": "adapter",
-      "ruleIds": [
-        "DURABLE_JOB_DATABASE_BOUNDARY"
-      ],
+      "ruleIds": ["DURABLE_JOB_DATABASE_BOUNDARY"],
       "owner": "backend-platform",
       "rationale": "This exact PostgreSQL adapter is the only query root outside database definitions and migrations for durable job tables."
     },
@@ -507,9 +476,7 @@
       "domain": "provider",
       "path": "packages/ai/src/providers/",
       "kind": "adapter",
-      "ruleIds": [
-        "AI_PROVIDER_BOUNDARY"
-      ],
+      "ruleIds": ["AI_PROVIDER_BOUNDARY"],
       "owner": "ai-platform",
       "rationale": "AI provider implementations normalize vendor calls behind the provider-neutral AI client interface."
     },
@@ -519,9 +486,7 @@
       "domain": "provider",
       "path": "packages/storage/src/drivers/",
       "kind": "adapter",
-      "ruleIds": [
-        "STORAGE_PROVIDER_BOUNDARY"
-      ],
+      "ruleIds": ["STORAGE_PROVIDER_BOUNDARY"],
       "owner": "storage-platform",
       "rationale": "Storage drivers normalize S3-compatible provider behavior behind the provider-neutral storage client."
     },
@@ -531,9 +496,7 @@
       "domain": "provider",
       "path": "packages/integrations/github/src/drivers/",
       "kind": "integration",
-      "ruleIds": [
-        "INTEGRATION_PROVIDER_BOUNDARY"
-      ],
+      "ruleIds": ["INTEGRATION_PROVIDER_BOUNDARY"],
       "owner": "integrations-platform",
       "rationale": "GitHub driver implementations own direct provider calls behind the repository integration interface."
     }
@@ -1426,10 +1389,18 @@
       "sourcePath": "packages/storage/src/__tests__/factory.test.ts",
       "owner": "storage-platform",
       "rationale": "This exact storage adapter test imports the provider factory contract; the covered finding is enumerated and production paths remain enforced."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "durable-job-tenant-registry-classification",
+      "ruleId": "DURABLE_JOB_DATABASE_BOUNDARY",
+      "sourcePath": "packages/domain/src/tenant-registry.ts",
+      "owner": "domain-platform",
+      "rationale": "Mandatory TenantDB classification only; no durable-job queries or mutation."
     }
   ],
   "baselineFiles": {
-    "database": "packages/architecture-enforcement/src/config/baselines/database.v1.json",
-    "provider": "packages/architecture-enforcement/src/config/baselines/provider.v1.json"
+    "database": "packages/architecture-enforcement/src/config/baselines/database.v2.json",
+    "provider": "packages/architecture-enforcement/src/config/baselines/provider.v2.json"
   }
 }

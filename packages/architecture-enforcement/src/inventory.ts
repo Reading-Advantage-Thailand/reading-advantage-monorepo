@@ -513,7 +513,9 @@ export function proposeDirectViolations(
       const isExactException = validatedConfig.exactExceptions.some(
         (exception) =>
           exception.ruleId === rule.id &&
-          exception.sourcePath === fact.sourcePath,
+          exception.sourcePath === fact.sourcePath &&
+          (isTestOrFixturePath(fact.sourcePath) ||
+            fact.kind === "static-import"),
       );
       if (isExactException) continue;
 

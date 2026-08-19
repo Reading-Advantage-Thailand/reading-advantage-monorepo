@@ -1,3 +1,4 @@
+import { existsSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import {
@@ -13,7 +14,11 @@ import {
   type ArchitectureFinding,
 } from "./contracts.js";
 import { selectArchitectureSourceFiles } from "./inventory.js";
-import { loadOwnershipMap } from "./ownership-map.js";
+import {
+  selectArchitecturePolicy,
+  type ArchitecturePolicyStatus,
+  type ArchitecturePolicyVersion,
+} from "./policy-selection.js";
 import {
   compareArchitectureDebt,
   formatArchitectureComparison,
@@ -25,6 +30,8 @@ import {
   loadWorkspaceModuleTargets,
   type WorkspaceModuleTargets,
 } from "./workspace-resolution.js";
+import { V1_ARTIFACT_BINDINGS } from "./v1-validation.js";
+import { validateAnalyzerReconciliationManifestV2 } from "./v2-manifest-validation.js";
 
 /** Stable outcomes emitted by the repository architecture checker. */
 export type ArchitectureCheckStatus =
@@ -46,6 +53,14 @@ export interface ArchitectureCheckReport {
   parseErrors: ArchitectureAnalyzerError[];
   /** Debt comparison, omitted when analysis could not complete safely. */
   comparison?: ArchitectureComparison;
+  /** Policy selected for this report. */
+  policyVersion?: ArchitecturePolicyVersion;
+  /** Candidate or accepted state of the committed v2 manifest. */
+  policyStatus?: ArchitecturePolicyStatus;
+  /** Default policy recorded by the committed manifest. */
+  defaultPolicy?: ArchitecturePolicyVersion;
+  /** Protected committed v2 manifest hash. */
+  manifestSha256?: string;
 }
 
 /** Options accepted by the read-only repository architecture checker. */
@@ -60,6 +75,8 @@ export interface CheckArchitectureRepositoryOptions {
   workspaceTargets?: WorkspaceModuleTargets;
   /** Optional exact resolver configuration path relative to the repository. */
   resolverConfigPath?: string;
+  /** Explicit policy selection; omission uses the committed default. */
+  policyVersion?: ArchitecturePolicyVersion;
 }
 
 /** Converts one domain baseline into its canonical configured baseline path. */
@@ -133,9 +150,50 @@ function sortAnalyzerErrors(
 export async function checkArchitectureRepository(
   options: CheckArchitectureRepositoryOptions,
 ): Promise<ArchitectureCheckReport> {
-  const config = architectureConfigSchema.parse(
-    options.config ?? loadOwnershipMap(),
+  const hasCommittedPolicyArtifacts =
+    V1_ARTIFACT_BINDINGS.every((artifact) =>
+      existsSync(resolve(options.repoRoot, artifact.path)),
+    ) &&
+    existsSync(resolve(options.repoRoot, "package.json")) &&
+    existsSync(
+      resolve(
+        options.repoRoot,
+        "packages/architecture-enforcement/src/analyzer.ts",
+      ),
+    );
+  const selection = selectArchitecturePolicy(
+    options.policyVersion,
+    hasCommittedPolicyArtifacts ? options.repoRoot : undefined,
+    { validateCurrentState: false },
   );
+  if (hasCommittedPolicyArtifacts && options.config === undefined) {
+    const manifestSource = await readFile(
+      resolve(
+        options.repoRoot,
+        "packages/architecture-enforcement/src/config/analyzer-reconciliation.v2.json",
+      ),
+      "utf8",
+    );
+    const validation = await validateAnalyzerReconciliationManifestV2({
+      repoRoot: options.repoRoot,
+      manifest: JSON.parse(manifestSource) as unknown,
+    });
+    if (!validation.valid) {
+      throw new Error(
+        `V2 reconciliation manifest is invalid: ${validation.errors?.join("; ")}`,
+      );
+    }
+  }
+  const config = architectureConfigSchema.parse(
+    options.config ?? selection.config,
+  );
+  const selectedPolicy = options.policyVersion ?? selection.policyVersion;
+  const policyMetadata = {
+    policyVersion: selectedPolicy,
+    policyStatus: selection.status,
+    defaultPolicy: selection.defaultPolicy,
+    manifestSha256: selection.manifestSha256,
+  };
   const sourcePaths = options.sourcePaths
     ? [...options.sourcePaths]
     : selectArchitectureSourceFiles(
@@ -151,6 +209,7 @@ export async function checkArchitectureRepository(
     sourcePaths,
     config,
     workspaceTargets,
+    policyVersion: selectedPolicy,
     ...(options.resolverConfigPath
       ? { resolverConfigPath: options.resolverConfigPath }
       : {}),
@@ -163,6 +222,7 @@ export async function checkArchitectureRepository(
       filesScanned: analysis.sourcePaths.length,
       findings: analysis.findings,
       parseErrors,
+      ...policyMetadata,
     };
   }
   const comparison = compareArchitectureDebt({
@@ -176,6 +236,7 @@ export async function checkArchitectureRepository(
     findings: analysis.findings,
     parseErrors,
     comparison,
+    ...policyMetadata,
   };
 }
 
@@ -213,6 +274,11 @@ export function formatArchitectureCheckReport(
   const lines = [
     `architecture check: ${report.status} (files=${report.filesScanned}, findings=${report.findings.length}, parseErrors=${report.parseErrors.length})`,
   ];
+  if (report.policyVersion) {
+    lines.push(
+      `architecture policy: ${report.policyVersion} (status=${report.policyStatus}, default=${report.defaultPolicy})`,
+    );
+  }
   for (const error of report.parseErrors) {
     lines.push(
       `! ${error.code} ${error.sourcePath}:${error.line}:${error.column}`,

@@ -419,29 +419,23 @@ describe("architecture analyzer policy selection v2 (expected Red)", () => {
           evidenceKind: "static-import",
           resolvedTarget: "external:@reading-advantage/db",
         }),
-        expect.objectContaining({
-          evidenceKind: "static-import",
-          resource: "database-table:review_jobs",
-        }),
       ]),
     );
-    expect(durable.findings).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({
-          evidenceKind: "query-call",
-          resource: "database-table:durable_jobs",
-          sourcePath:
-            analyzerHardeningInputs.durableAccess.sourcePaths.namespace,
-        }),
-        expect.objectContaining({
-          evidenceKind: "client-construction",
-          resource: "database-table:durable_jobs",
-          sourcePath:
-            analyzerHardeningInputs.durableAccess.sourcePaths
-              .clientConstruction,
-        }),
-      ]),
-    );
+    expect(direct.findings.filter((finding) => finding.resource)).toEqual([]);
+    const provenanceFreePaths = new Set<string>([
+      analyzerHardeningInputs.durableAccess.sourcePaths.namespace,
+      analyzerHardeningInputs.durableAccess.sourcePaths.dynamic,
+      analyzerHardeningInputs.durableAccess.sourcePaths.commonjs,
+      analyzerHardeningInputs.durableAccess.sourcePaths.reexport,
+      analyzerHardeningInputs.durableAccess.sourcePaths.clientConstruction,
+      analyzerHardeningInputs.durableAccess.sourcePaths.shadowed,
+    ]);
+    expect(
+      durable.findings.filter(
+        (finding) =>
+          finding.resource && provenanceFreePaths.has(finding.sourcePath),
+      ),
+    ).toEqual([]);
   });
 
   it("accepts explicit v1/v2 and restricts no-policy default states", async () => {

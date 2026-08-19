@@ -8,6 +8,7 @@ import {
   type ArchitectureReconciliationPreview,
   type ArchitectureReconciliationSummary,
 } from "./architecture-reconciliation.js";
+import type { ArchitecturePolicyVersion } from "./policy-selection.js";
 
 /** Output representations supported by the one-time reconciliation command. */
 export type ArchitectureReconciliationCliFormat = "human" | "json";
@@ -22,6 +23,8 @@ export interface ArchitectureReconciliationCliOptions {
   format: ArchitectureReconciliationCliFormat;
   /** Absolute repository root containing reconciliation inputs. */
   repoRoot: string;
+  /** Optional explicit architecture policy. */
+  policyVersion?: ArchitecturePolicyVersion;
 }
 
 /** Replaceable command boundaries used by production and isolated tests. */
@@ -34,7 +37,10 @@ export interface ArchitectureReconciliationCliDependencies {
   /** Finds the containing repository root. */
   discoverRepositoryRoot(cwd: string): string;
   /** Builds the mutation-free reconciliation preview. */
-  preview(repoRoot: string): Promise<ArchitectureReconciliationPreview>;
+  preview(
+    repoRoot: string,
+    policyVersion?: ArchitecturePolicyVersion,
+  ): Promise<ArchitectureReconciliationPreview>;
   /** Writes one complete diagnostic to standard error. */
   writeStderr(value: string): void;
   /** Writes one complete result to standard output. */
@@ -66,7 +72,11 @@ function resolveDependencies(
       overrides?.discoverRepositoryRoot ?? discoverRepositoryRoot,
     preview:
       overrides?.preview ??
-      ((repoRoot) => previewArchitectureReconciliation({ repoRoot })),
+      ((repoRoot, policyVersion) =>
+        previewArchitectureReconciliation({
+          repoRoot,
+          ...(policyVersion ? { policyVersion } : {}),
+        })),
     writeStderr:
       overrides?.writeStderr ?? ((value) => process.stderr.write(value)),
     writeStdout:
@@ -91,10 +101,18 @@ export function parseArchitectureReconciliationArguments(
   let expectedPlanHash: string | undefined;
   let format: ArchitectureReconciliationCliFormat = "human";
   let repoRoot: string | undefined;
+  let policyVersion: ArchitecturePolicyVersion | undefined;
   for (let index = 0; index < args.length; index += 1) {
     const argument = args[index];
     if (argument === "--acknowledge") {
       acknowledge = true;
+    } else if (argument === "--policy") {
+      const value = args[index + 1];
+      if (value !== "v1" && value !== "v2") {
+        throw new Error("--policy must be v1 or v2");
+      }
+      policyVersion = value;
+      index += 1;
     } else if (argument === "--expected-plan-hash") {
       const value = args[index + 1];
       if (!value || !/^[a-f0-9]{64}$/.test(value)) {
@@ -132,6 +150,7 @@ export function parseArchitectureReconciliationArguments(
     ...(expectedPlanHash ? { expectedPlanHash } : {}),
     format,
     repoRoot: repoRoot ?? discover(cwd),
+    ...(policyVersion ? { policyVersion } : {}),
   };
 }
 
@@ -176,7 +195,9 @@ export async function runArchitectureReconciliationCli(
     cwd,
     dependencies.discoverRepositoryRoot,
   );
-  const preview = await dependencies.preview(options.repoRoot);
+  const preview = options.policyVersion
+    ? await dependencies.preview(options.repoRoot, options.policyVersion)
+    : await dependencies.preview(options.repoRoot);
   if (!options.acknowledge) {
     const result = {
       state: "preview-required" as const,

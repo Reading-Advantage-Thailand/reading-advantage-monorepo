@@ -1,4 +1,14 @@
 import { createHash } from "node:crypto";
+import {
+  copyFile,
+  mkdir,
+  mkdtemp,
+  readFile,
+  rm,
+  writeFile,
+} from "node:fs/promises";
+import { dirname, join, resolve } from "node:path";
+import { tmpdir } from "node:os";
 import { describe, expect, it } from "vitest";
 import {
   computeRulesetHash,
@@ -30,11 +40,15 @@ import {
   RECONCILIATION_MANIFEST_PATH,
   RECONCILIATION_REVIEW_EVIDENCE_PATHS,
   RECONCILIATION_SOURCE_BASE_SHA,
+  computeReconciliationImplementationTreeSha256V2,
+  V2_IMPLEMENTATION_AND_TEST_PATHS,
   serializeAnalyzerReconciliationManifest,
   validateAnalyzerReconciliation,
   type AnalyzerReconciliationManifest,
   type ValidateAnalyzerReconciliationInput,
 } from "../reconciliation-manifest.js";
+
+const repositoryRoot = resolve(import.meta.dirname, "../../../..");
 
 /** Converts JSON-compatible test data into key-sorted compact JSON. */
 function canonicalJson(value: unknown): string {
@@ -467,6 +481,53 @@ function fixture(): ReconciliationFixture {
 }
 
 describe("analyzer reconciliation manifest", () => {
+  it("deterministically binds the complete v2 write surface and transaction tests", async () => {
+    const temporaryRoot = await mkdtemp(
+      join(tmpdir(), "architecture-manifest-tree-"),
+    );
+    try {
+      for (const path of V2_IMPLEMENTATION_AND_TEST_PATHS) {
+        const destination = resolve(temporaryRoot, path);
+        await mkdir(dirname(destination), { recursive: true });
+        await copyFile(resolve(repositoryRoot, path), destination);
+      }
+
+      const initial =
+        await computeReconciliationImplementationTreeSha256V2(temporaryRoot);
+      await expect(
+        computeReconciliationImplementationTreeSha256V2(temporaryRoot),
+      ).resolves.toBe(initial);
+
+      const transactionPath = resolve(
+        temporaryRoot,
+        "packages/architecture-enforcement/src/policy-update-transaction.ts",
+      );
+      await writeFile(
+        transactionPath,
+        `${await readFile(transactionPath, "utf8")}\n// transaction binding regression\n`,
+        "utf8",
+      );
+      const changedImplementation =
+        await computeReconciliationImplementationTreeSha256V2(temporaryRoot);
+      expect(changedImplementation).not.toBe(initial);
+
+      const transactionTestPath = resolve(
+        temporaryRoot,
+        "packages/architecture-enforcement/src/__tests__/policy-update-transaction.test.ts",
+      );
+      await writeFile(
+        transactionTestPath,
+        `${await readFile(transactionTestPath, "utf8")}\n// transaction test binding regression\n`,
+        "utf8",
+      );
+      const changedTest =
+        await computeReconciliationImplementationTreeSha256V2(temporaryRoot);
+      expect(changedTest).not.toBe(changedImplementation);
+    } finally {
+      await rm(temporaryRoot, { recursive: true, force: true });
+    }
+  });
+
   it("validates exact historical provenance and emits deterministic bytes", () => {
     const current = fixture();
     const summary = validateAnalyzerReconciliation(current.input);

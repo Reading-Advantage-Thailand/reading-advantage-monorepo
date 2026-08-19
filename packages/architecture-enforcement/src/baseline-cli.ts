@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { execFileSync } from "node:child_process";
 import { validateCommittedBaselines } from "./baseline-validation.js";
+import type { ArchitecturePolicyVersion } from "./policy-selection.js";
 
 /** Output representations supported by the baseline validation command. */
 type BaselineValidationFormat = "human" | "json";
@@ -11,6 +12,8 @@ interface BaselineCliOptions {
   format: BaselineValidationFormat;
   /** Absolute repository root containing the committed baselines. */
   repoRoot: string;
+  /** Optional explicit architecture policy. */
+  policyVersion?: ArchitecturePolicyVersion;
 }
 
 /**
@@ -38,6 +41,7 @@ function parseArguments(
 ): BaselineCliOptions {
   let format: BaselineValidationFormat = "human";
   let repoRoot: string | undefined;
+  let policyVersion: ArchitecturePolicyVersion | undefined;
   for (let index = 0; index < args.length; index += 1) {
     const argument = args[index];
     if (argument === "--format") {
@@ -46,6 +50,13 @@ function parseArguments(
         throw new Error("--format must be human or json");
       }
       format = value;
+      index += 1;
+    } else if (argument === "--policy") {
+      const value = args[index + 1];
+      if (value !== "v1" && value !== "v2") {
+        throw new Error("--policy must be v1 or v2");
+      }
+      policyVersion = value;
       index += 1;
     } else if (argument === "--repo-root") {
       const value = args[index + 1];
@@ -58,7 +69,11 @@ function parseArguments(
       );
     }
   }
-  return { format, repoRoot: repoRoot ?? discoverRepositoryRoot(cwd) };
+  return {
+    format,
+    repoRoot: repoRoot ?? discoverRepositoryRoot(cwd),
+    ...(policyVersion ? { policyVersion } : {}),
+  };
 }
 
 /**
@@ -72,7 +87,11 @@ export async function runBaselineValidationCli(
   cwd: string,
 ): Promise<number> {
   const options = parseArguments(args, cwd);
-  const summary = await validateCommittedBaselines(options.repoRoot);
+  const summary = await validateCommittedBaselines(
+    options.repoRoot,
+    undefined,
+    options.policyVersion,
+  );
   if (options.format === "json") {
     process.stdout.write(`${JSON.stringify(summary, null, 2)}\n`);
   } else {
@@ -84,6 +103,11 @@ export async function runBaselineValidationCli(
         `Architecture provider baseline entries: ${summary.providerEntries}`,
         `Architecture database ruleset hash: ${summary.databaseRulesetHash}`,
         `Architecture provider ruleset hash: ${summary.providerRulesetHash}`,
+        ...(summary.policyVersion
+          ? [
+              `Architecture policy: ${summary.policyVersion} (default=${summary.defaultPolicy}, status=${summary.policyStatus}, manifest=${summary.manifestSha256})`,
+            ]
+          : []),
         ...(summary.reconciliationManifestHash
           ? [
               `Architecture reconciliation manifest hash: ${summary.reconciliationManifestHash}`,

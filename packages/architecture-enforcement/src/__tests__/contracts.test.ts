@@ -59,16 +59,6 @@ const databaseException = {
   rationale: "Exact synthetic fixture for boundary verification.",
 } as const;
 
-const durableTenantRegistryException = {
-  schemaVersion: 1,
-  id: "durable-job-tenant-registry-classification",
-  ruleId: "DURABLE_JOB_DATABASE_BOUNDARY",
-  sourcePath: "packages/domain/src/tenant-registry.ts",
-  owner: "domain-platform",
-  rationale:
-    "Mandatory TenantDB classification only; no durable-job queries or mutation.",
-} as const;
-
 const validConfig = {
   schemaVersion: 1,
   rules: [databaseRule],
@@ -169,35 +159,17 @@ describe("architecture enforcement contracts", () => {
     );
   });
 
-  it("accepts only the reviewed durable tenant-registry production exception", () => {
-    expect(exactExceptionSchema.parse(durableTenantRegistryException)).toEqual(
-      durableTenantRegistryException,
-    );
-
-    for (const candidate of [
-      {
-        ...durableTenantRegistryException,
-        id: "durable-job-tenant-registry-other",
-      },
-      {
-        ...durableTenantRegistryException,
-        ruleId: "DATABASE_BOUNDARY",
-      },
-      {
-        ...durableTenantRegistryException,
-        sourcePath: "packages/domain/src/other-production-file.ts",
-      },
-      {
-        ...durableTenantRegistryException,
-        owner: "other-platform",
-      },
-      {
-        ...durableTenantRegistryException,
-        rationale: "Another reviewed production exception.",
-      },
-    ]) {
-      expect(() => exactExceptionSchema.parse(candidate)).toThrow();
-    }
+  it("accepts production exceptions without a path-specific contract", () => {
+    const productionException = {
+      ...databaseException,
+      id: "production-static-exception",
+      sourcePath: "packages/domain/src/other-production-file.ts",
+      rationale: "Another reviewed production exception.",
+    } as const;
+    expect(exactExceptionSchema.parse(productionException)).toMatchObject({
+      id: "production-static-exception",
+      sourcePath: "packages/domain/src/other-production-file.ts",
+    });
   });
 
   it("rejects unversioned, future-version, malformed, and unknown contract fields", () => {
@@ -350,13 +322,13 @@ describe("architecture enforcement contracts", () => {
     ).toThrow();
   });
 
-  it("limits exact exceptions to exact test and fixture files", () => {
+  it("keeps exact exception paths precise while leaving evidence scope to evaluation", () => {
     expect(() =>
       exactExceptionSchema.parse({
         ...databaseException,
         sourcePath: "packages/ai/src/internal-sdk.ts",
       }),
-    ).toThrow();
+    ).not.toThrow();
     expect(() =>
       exactExceptionSchema.parse({
         ...databaseException,

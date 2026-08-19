@@ -1,11 +1,14 @@
 import { z } from "zod";
-import ownershipMapData from "./config/ownership-map.v1.json";
 import {
   architectureConfigSchema,
   findingKindSchema,
   policyResourceSchema,
   type ArchitectureConfig,
 } from "./contracts.js";
+import {
+  selectArchitecturePolicy,
+  type ArchitecturePolicyVersion,
+} from "./policy-selection.js";
 
 const RULE_ID_PATTERN = /^[A-Z][A-Z0-9_]*$/;
 const GLOB_OR_PATH_CHARACTERS = new Set(["*", "?", "{", "}", "\\"]);
@@ -113,12 +116,17 @@ export type OwnershipDecision =
   | ViolatingOwnershipDecision;
 
 /**
- * Loads and validates the canonical version-one ownership map.
+ * Loads and validates one ownership-map policy.
+ * @param policyVersion Policy artifact family to load; omission selects the committed default.
  * @returns A fresh validated ownership configuration.
  * @throws When the committed ownership map violates its strict runtime contract.
  */
-export function loadOwnershipMap(): ArchitectureConfig {
-  return architectureConfigSchema.parse(ownershipMapData);
+export function loadOwnershipMap(
+  policyVersion?: ArchitecturePolicyVersion,
+): ArchitectureConfig {
+  return selectArchitecturePolicy(policyVersion, undefined, {
+    validateCurrentState: false,
+  }).config;
 }
 
 /**
@@ -144,6 +152,25 @@ function matchesModule(
  */
 function belongsToRoot(filePath: string, root: string): boolean {
   return filePath.startsWith(root);
+}
+
+/** Returns whether one exception path identifies a test or fixture source. */
+function isTestOrFixturePath(sourcePath: string): boolean {
+  const segments = sourcePath.split("/");
+  const filename = segments.at(-1) ?? "";
+  return (
+    segments.includes("__tests__") ||
+    segments.includes("fixtures") ||
+    /\.(?:test|spec)\.[cm]?[jt]sx?$/.test(filename)
+  );
+}
+
+/** Applies exact exceptions only to evidence classes covered by their scope. */
+function exceptionAppliesToCandidate(
+  sourcePath: string,
+  evidenceKind: OwnershipCandidate["evidenceKind"],
+): boolean {
+  return isTestOrFixturePath(sourcePath) || evidenceKind === "static-import";
 }
 
 /**
@@ -193,7 +220,11 @@ export function evaluateOwnership(
   const exception = validatedConfig.exactExceptions.find(
     (configuredException) =>
       configuredException.ruleId === rule.id &&
-      configuredException.sourcePath === candidate.sourcePath,
+      configuredException.sourcePath === candidate.sourcePath &&
+      exceptionAppliesToCandidate(
+        configuredException.sourcePath,
+        candidate.evidenceKind,
+      ),
   );
   if (exception) {
     return {

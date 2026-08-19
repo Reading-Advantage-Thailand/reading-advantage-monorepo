@@ -59,8 +59,9 @@ export function discoverBaselineUpdateRepositoryRoot(cwd: string): string {
 export function parseBaselineUpdateArguments(
   args: readonly string[],
   cwd: string,
-  discoverRepositoryRoot: (cwd: string) => string =
-    discoverBaselineUpdateRepositoryRoot,
+  discoverRepositoryRoot: (
+    cwd: string,
+  ) => string = discoverBaselineUpdateRepositoryRoot,
 ): BaselineUpdateCliOptions {
   let acknowledge = false;
   let format: BaselineUpdateOutputFormat = "human";

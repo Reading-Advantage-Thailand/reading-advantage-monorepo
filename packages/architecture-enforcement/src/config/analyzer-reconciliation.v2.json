@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 2,
+  "reconciliationId": "backend-architecture-analyzer-v2",
+  "v1ManifestSha256": "4c95113cfff50d9e92f0770e1f18ef7d195dd50b5201f108e90990771ca46ec0",
+  "v1Artifacts": [
+    {
+      "path": "packages/architecture-enforcement/src/config/analyzer-reconciliation.v1.json",
+      "sha256": "4c95113cfff50d9e92f0770e1f18ef7d195dd50b5201f108e90990771ca46ec0"
+    },
+    {
+      "path": "packages/architecture-enforcement/src/config/ownership-map.v1.json",
+      "sha256": "f6d7b64d8d0091ef9d696d3bf0677f3b995ee78f41011ed56eea50399949f1e8"
+    },
+    {
+      "path": "packages/architecture-enforcement/src/config/baselines/database.v1.json",
+      "sha256": "8de5a20f36bd81fc492cd4e99676a439d4e2545dea927ed8389f186d08f4fe73"
+    },
+    {
+      "path": "packages/architecture-enforcement/src/config/baselines/provider.v1.json",
+      "sha256": "7137e81c662f25073e233144a585178fdd19ec324630f58cc5a807de42b4ace5"
+    }
+  ],
+  "v2Artifacts": [
+    {
+      "path": "packages/architecture-enforcement/src/config/ownership-map.v2.json",
+      "sha256": "361fe1a887d38f558032d9ef55198abc622af12c7cda5c201ce42fe648111677"
+    },
+    {
+      "path": "packages/architecture-enforcement/src/config/baselines/database.v2.json",
+      "sha256": "72fabd22dbb881b298ba1cb9d731751f94989aad83dbc6bac810c381c09be235"
+    },
+    {
+      "path": "packages/architecture-enforcement/src/config/baselines/provider.v2.json",
+      "sha256": "7137e81c662f25073e233144a585178fdd19ec324630f58cc5a807de42b4ace5"
+    }
+  ],
+  "analyzerImplementationTreeSha256": "0c63805ecf50f7c37867e2db2692b1818a0d2eaf1108ab12bfa829736704c962",
+  "implementationAndTestTreeSha256": "94456b7e57d5dba24d98c0fce9257cc450a24ca2b528c80f8b86d7bf4449a02f",
+  "analyzerInputSnapshotSha256": "fdecc5a1472e15240a884b2bf6488c29cc75c8d43bdf0f48d635d07cdae8a0f5",
+  "reportSha256s": [
+    "41a39e5ae8e1ac100c9e8e543a42a3c2329dbadfa779db1959a5f29579e4abdc",
+    "41a39e5ae8e1ac100c9e8e543a42a3c2329dbadfa779db1959a5f29579e4abdc"
+  ],
+  "reviewSubjectSha256": "1ae51b81f7aeb0e5ba4c3b3e857cca54e0bcef4a77b982223d17c32da7a24580",
+  "reviews": [],
+  "baselineAdditions": [],
+  "baselineRemovals": [],
+  "baselineRenames": [],
+  "acceptance": {
+    "status": "candidate",
+    "defaultPolicy": "v1"
+  }
+}

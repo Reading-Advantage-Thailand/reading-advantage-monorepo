@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { readFileSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { z } from "zod";
@@ -91,6 +92,50 @@ const RECONCILIATION_IMPLEMENTATION_PATHS = [
   "packages/architecture-enforcement/src/__tests__/reconciliation-manifest-builder.test.ts",
   "packages/architecture-enforcement/src/__tests__/reconciliation-manifest.test.ts",
 ] as const;
+const V2_ANALYZER_IMPLEMENTATION_PATHS = [
+  ...ANALYZER_IMPLEMENTATION_PATHS,
+  "packages/architecture-enforcement/src/architecture-check-cli.ts",
+  "packages/architecture-enforcement/src/contracts.ts",
+  "packages/architecture-enforcement/src/policy-selection.ts",
+  "packages/architecture-enforcement/src/v1-validation.ts",
+  "packages/architecture-enforcement/src/v2-manifest-validation.ts",
+] as const;
+const V2_WRITE_SURFACE_PATHS = [
+  "packages/architecture-enforcement/src/architecture-reconciliation-cli.ts",
+  "packages/architecture-enforcement/src/architecture-reconciliation.ts",
+  "packages/architecture-enforcement/src/baseline-cli.ts",
+  "packages/architecture-enforcement/src/baseline-update-cli.ts",
+  "packages/architecture-enforcement/src/baseline-update.ts",
+  "packages/architecture-enforcement/src/baseline-validation.ts",
+  "packages/architecture-enforcement/src/index.ts",
+  "packages/architecture-enforcement/src/node-file-transaction.ts",
+  "packages/architecture-enforcement/src/policy-selection.ts",
+  "packages/architecture-enforcement/src/policy-update-transaction.ts",
+  "packages/architecture-enforcement/src/policy-write-guard.ts",
+  "packages/architecture-enforcement/src/reconciliation-manifest-builder.ts",
+  "packages/architecture-enforcement/src/repository-transaction-recovery-cli.ts",
+  "packages/architecture-enforcement/src/v1-validation.ts",
+  "packages/architecture-enforcement/src/v2-manifest-validation.ts",
+  "packages/architecture-enforcement/src/__tests__/architecture-reconciliation-cli.test.ts",
+  "packages/architecture-enforcement/src/__tests__/architecture-reconciliation.test.ts",
+  "packages/architecture-enforcement/src/__tests__/baseline-update.test.ts",
+  "packages/architecture-enforcement/src/__tests__/baseline-validation.test.ts",
+  "packages/architecture-enforcement/src/__tests__/fixtures/transaction-crash-child.ts",
+  "packages/architecture-enforcement/src/__tests__/node-file-transaction.test.ts",
+  "packages/architecture-enforcement/src/__tests__/policy-selection-v2.red.test.ts",
+  "packages/architecture-enforcement/src/__tests__/policy-update-transaction.test.ts",
+  "packages/architecture-enforcement/src/__tests__/reconciliation-manifest-v2.red.test.ts",
+  "packages/architecture-enforcement/src/__tests__/repository-transaction-recovery-cli.test.ts",
+  "packages/architecture-enforcement/src/__tests__/v1-immutability-v2.red.test.ts",
+] as const;
+/** Exact implementation and test paths that can influence v2 writes. */
+export const V2_IMPLEMENTATION_AND_TEST_PATHS = [
+  ...new Set([
+    ...V2_ANALYZER_IMPLEMENTATION_PATHS,
+    ...RECONCILIATION_IMPLEMENTATION_PATHS,
+    ...V2_WRITE_SURFACE_PATHS,
+  ]),
+].sort(compareStableStrings);
 
 const domainCountsSchema = z
   .object({
@@ -527,6 +572,62 @@ export async function computeReconciliationImplementationTreeSha256(
       contents: await readFile(resolve(repoRoot, path), "utf8"),
     })),
   );
+  return canonicalSha256(files);
+}
+
+/** Hashes a sorted v2 implementation tree with exact path and byte bindings. */
+export async function computeAnalyzerImplementationTreeSha256V2(
+  repoRoot: string,
+): Promise<string> {
+  const files = await Promise.all(
+    [...V2_ANALYZER_IMPLEMENTATION_PATHS]
+      .sort(compareStableStrings)
+      .map(async (path) => ({
+        path,
+        contents: await readFile(resolve(repoRoot, path), "utf8"),
+      })),
+  );
+  return canonicalSha256(files);
+}
+
+/** Hashes the complete sorted v2 implementation and test tree. */
+export async function computeReconciliationImplementationTreeSha256V2(
+  repoRoot: string,
+): Promise<string> {
+  const files = await Promise.all(
+    [...V2_IMPLEMENTATION_AND_TEST_PATHS]
+      .sort(compareStableStrings)
+      .map(async (path) => ({
+        path,
+        contents: await readFile(resolve(repoRoot, path), "utf8"),
+      })),
+  );
+  return canonicalSha256(files);
+}
+
+/** Hashes the sorted v2 analyzer implementation tree synchronously. */
+export function computeAnalyzerImplementationTreeSha256V2Sync(
+  repoRoot: string,
+): string {
+  const files = [...V2_ANALYZER_IMPLEMENTATION_PATHS]
+    .sort(compareStableStrings)
+    .map((path) => ({
+      path,
+      contents: readFileSync(resolve(repoRoot, path), "utf8"),
+    }));
+  return canonicalSha256(files);
+}
+
+/** Hashes the complete sorted v2 implementation and test tree synchronously. */
+export function computeReconciliationImplementationTreeSha256V2Sync(
+  repoRoot: string,
+): string {
+  const files = [...V2_IMPLEMENTATION_AND_TEST_PATHS]
+    .sort(compareStableStrings)
+    .map((path) => ({
+      path,
+      contents: readFileSync(resolve(repoRoot, path), "utf8"),
+    }));
   return canonicalSha256(files);
 }
 

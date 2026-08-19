@@ -7,6 +7,7 @@ import {
   formatArchitectureCheckReport,
   serializeArchitectureCheckReport,
 } from "./architecture-check.js";
+import type { ArchitecturePolicyVersion } from "./policy-selection.js";
 
 /** Supported architecture check output representations. */
 export type ArchitectureCheckOutputFormat = "human" | "json";
@@ -17,6 +18,8 @@ export interface ArchitectureCheckCliOptions {
   format: ArchitectureCheckOutputFormat;
   /** Exact repository root supplied or discovered for the command. */
   repoRoot: string;
+  /** Optional explicit architecture policy. */
+  policyVersion?: ArchitecturePolicyVersion;
 }
 
 /** Replaceable command dependencies used by direct, side-effect-free tests. */
@@ -53,11 +56,13 @@ export function discoverArchitectureRepositoryRoot(cwd: string): string {
 export function parseArchitectureCheckArguments(
   args: readonly string[],
   cwd: string,
-  discoverRepositoryRoot: (cwd: string) => string =
-    discoverArchitectureRepositoryRoot,
+  discoverRepositoryRoot: (
+    cwd: string,
+  ) => string = discoverArchitectureRepositoryRoot,
 ): ArchitectureCheckCliOptions {
   let format: ArchitectureCheckOutputFormat = "human";
   let repoRoot: string | undefined;
+  let policyVersion: ArchitecturePolicyVersion | undefined;
   for (let index = 0; index < args.length; index += 1) {
     const argument = args[index];
     if (argument === "--format") {
@@ -66,6 +71,13 @@ export function parseArchitectureCheckArguments(
         throw new Error("--format must be human or json");
       }
       format = value;
+      index += 1;
+    } else if (argument === "--policy") {
+      const value = args[index + 1];
+      if (value !== "v1" && value !== "v2") {
+        throw new Error("--policy must be v1 or v2");
+      }
+      policyVersion = value;
       index += 1;
     } else if (argument === "--repo-root") {
       const value = args[index + 1];
@@ -76,7 +88,11 @@ export function parseArchitectureCheckArguments(
       throw new Error(`Unsupported architecture check argument: ${argument}`);
     }
   }
-  return { format, repoRoot: repoRoot ?? discoverRepositoryRoot(cwd) };
+  return {
+    format,
+    repoRoot: repoRoot ?? discoverRepositoryRoot(cwd),
+    ...(policyVersion ? { policyVersion } : {}),
+  };
 }
 
 /**
@@ -99,6 +115,7 @@ export async function runArchitectureCheckCli(
     dependencies.checkRepository ?? checkArchitectureRepository
   )({
     repoRoot: options.repoRoot,
+    ...(options.policyVersion ? { policyVersion: options.policyVersion } : {}),
   });
   (dependencies.writeStdout ?? writeProcessStdout)(
     options.format === "json"

@@ -80,15 +80,11 @@ function exportSpecifier(
   return `${packageName}/${exportKey.slice(2)}`;
 }
 
-/**
- * Loads exact workspace package exports as repository source-file targets.
- * @param repoRoot Repository root whose tracked package manifests are read.
- * @returns Exact import-specifier map suitable for baseline identities.
- * @throws When manifests are invalid or exact source resolutions collide.
+/** Lists tracked workspace package manifests in canonical order.
+ * @param repoRoot Repository root used as the Git working directory.
+ * @returns Exact tracked package manifest paths.
  */
-export async function loadWorkspaceModuleTargets(
-  repoRoot: string,
-): Promise<WorkspaceModuleTargets> {
+export function listWorkspacePackageManifestPaths(repoRoot: string): string[] {
   const stdout = execFileSync(
     "git",
     [
@@ -99,10 +95,25 @@ export async function loadWorkspaceModuleTargets(
     ],
     { cwd: repoRoot, encoding: "utf8" },
   );
-  const manifestPaths = stdout
+  return stdout
     .split("\n")
     .filter((path) => path.length > 0)
     .sort(compareStableStrings);
+}
+
+/**
+ * Loads exact workspace package exports as repository source-file targets.
+ * @param repoRoot Repository root whose package manifests are read.
+ * @param manifestPaths Optional immutable manifest paths selected from another Git root.
+ * @returns Exact import-specifier map suitable for baseline identities.
+ * @throws When manifests are invalid or exact source resolutions collide.
+ */
+export async function loadWorkspaceModuleTargets(
+  repoRoot: string,
+  manifestPaths: readonly string[] = listWorkspacePackageManifestPaths(
+    repoRoot,
+  ),
+): Promise<WorkspaceModuleTargets> {
   const targets = new Map<string, string>();
   for (const manifestPath of manifestPaths) {
     const manifest = packageManifestSchema.parse(

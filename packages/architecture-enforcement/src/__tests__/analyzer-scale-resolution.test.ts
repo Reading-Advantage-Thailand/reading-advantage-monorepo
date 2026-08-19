@@ -131,14 +131,59 @@ describe("architecture source loading at repository scale", () => {
     );
   });
 
+  it("resolves tracked package tsconfig aliases without node_modules bytes", async () => {
+    const repoRoot = await createWorkspaceRoot();
+    await mkdir(resolve(repoRoot, "packages/config/tsconfig"), {
+      recursive: true,
+    });
+    await writeFile(
+      resolve(repoRoot, "packages/config/package.json"),
+      JSON.stringify({
+        name: "@reading-advantage/config",
+        exports: { "./tsconfig": "./tsconfig/base.json" },
+      }),
+    );
+    await writeFile(
+      resolve(repoRoot, "packages/config/tsconfig/base.json"),
+      JSON.stringify({ compilerOptions: { strict: true } }),
+    );
+    await writeFile(
+      resolve(repoRoot, "apps/example/tsconfig.json"),
+      JSON.stringify({
+        extends: "@reading-advantage/config/tsconfig",
+        compilerOptions: { paths: { "@/*": ["./src/*"] } },
+      }),
+    );
+    await writeFile(
+      resolve(repoRoot, "apps/example/src/value.ts"),
+      "export const value = 1;\n",
+    );
+    await writeFile(
+      resolve(repoRoot, "apps/example/src/page.ts"),
+      'import { value } from "@/value.js";\nexport { value };\n',
+    );
+
+    const result = await loadArchitectureSources({
+      repoRoot,
+      sourcePaths: ["apps/example/src/page.ts"],
+      workspaceTargets: new Map(),
+      trackedSourceOnly: true,
+    });
+
+    expect(result.parseErrors).toEqual([]);
+    expect(result.evidence).toContainEqual(
+      expect.objectContaining({
+        importSpecifier: "@/value.js",
+        resolvedTarget: "apps/example/src/value.ts",
+      }),
+    );
+  });
+
   it("remains fail-closed for missing extensionless and emitted-code imports", async () => {
     const repoRoot = await createWorkspaceRoot();
     await writeFile(
       resolve(repoRoot, "apps/example/src/page.ts"),
-      [
-        'import "./missing";',
-        'import "@/also-missing.js";',
-      ].join("\n"),
+      ['import "./missing";', 'import "@/also-missing.js";'].join("\n"),
     );
 
     const result = await loadArchitectureSources({
@@ -153,13 +198,16 @@ describe("architecture source loading at repository scale", () => {
     ]);
   });
 
-  it("resolves exact framework route types and package build output to source", async () => {
+  it("preserves logical package build targets in normal and tracked modes", async () => {
     const repoRoot = await createWorkspaceRoot();
     await mkdir(resolve(repoRoot, "apps/example"), { recursive: true });
     await mkdir(resolve(repoRoot, "packages/example/scripts"), {
       recursive: true,
     });
     await mkdir(resolve(repoRoot, "packages/example/src"), { recursive: true });
+    await mkdir(resolve(repoRoot, "packages/example/dist"), {
+      recursive: true,
+    });
     await writeFile(
       resolve(repoRoot, "apps/example/next-env.d.ts"),
       'import "./.next/dev/types/routes.d.ts";\n',
@@ -172,6 +220,10 @@ describe("architecture source loading at repository scale", () => {
       resolve(repoRoot, "packages/example/src/index.ts"),
       "export const value = 1;\n",
     );
+    await writeFile(
+      resolve(repoRoot, "packages/example/dist/index.js"),
+      "export const value = 1;\n",
+    );
 
     const result = await loadArchitectureSources({
       repoRoot,
@@ -180,6 +232,12 @@ describe("architecture source loading at repository scale", () => {
         "apps/example/next-env.d.ts",
       ],
       workspaceTargets: new Map(),
+    });
+    const tracked = await loadArchitectureSources({
+      repoRoot,
+      sourcePaths: ["packages/example/scripts/check.mjs"],
+      workspaceTargets: new Map(),
+      trackedSourceOnly: true,
     });
 
     expect(result.parseErrors).toEqual([]);
@@ -191,10 +249,123 @@ describe("architecture source loading at repository scale", () => {
         }),
         expect.objectContaining({
           sourcePath: "packages/example/scripts/check.mjs",
-          resolvedTarget: "packages/example/src/index.ts",
+          resolvedTarget: "packages/example/dist/index.js",
         }),
       ]),
     );
+    expect(tracked.parseErrors).toEqual([]);
+    expect(tracked.evidence).toEqual(
+      result.evidence.filter(
+        (evidence) =>
+          evidence.sourcePath === "packages/example/scripts/check.mjs",
+      ),
+    );
+  });
+
+  it("treats tracked node_modules path mappings as external dependencies", async () => {
+    const repoRoot = await createWorkspaceRoot();
+    await writeFile(
+      resolve(repoRoot, "apps/example/tsconfig.json"),
+      JSON.stringify({
+        compilerOptions: {
+          baseUrl: ".",
+          paths: { "@external/*": ["./node_modules/external/*"] },
+        },
+      }),
+    );
+    await writeFile(
+      resolve(repoRoot, "apps/example/src/page.ts"),
+      'import value from "@external/value.js";\nvoid value;\n',
+    );
+
+    const result = await loadArchitectureSources({
+      repoRoot,
+      sourcePaths: ["apps/example/src/page.ts"],
+      workspaceTargets: new Map(),
+      trackedSourceOnly: true,
+    });
+
+    expect(result.parseErrors).toEqual([]);
+    expect(result.evidence).toContainEqual(
+      expect.objectContaining({
+        importSpecifier: "@external/value.js",
+        resolvedTarget: "external:@external/value.js",
+      }),
+    );
+  });
+
+  it("fails closed for unsafe and cyclic tracked tsconfig extends", async () => {
+    const unsafeRoot = await createWorkspaceRoot();
+    await writeFile(
+      resolve(unsafeRoot, "apps/example/tsconfig.json"),
+      JSON.stringify({ extends: "../../../outside.json" }),
+    );
+    await writeFile(
+      resolve(unsafeRoot, "apps/example/src/page.ts"),
+      "export const page = true;\n",
+    );
+    const unsafe = await loadArchitectureSources({
+      repoRoot: unsafeRoot,
+      sourcePaths: ["apps/example/src/page.ts"],
+      workspaceTargets: new Map(),
+      trackedSourceOnly: true,
+    });
+
+    const cyclicRoot = await createWorkspaceRoot();
+    await writeFile(
+      resolve(cyclicRoot, "apps/example/tsconfig.json"),
+      JSON.stringify({ extends: "../../tsconfig.cycle.json" }),
+    );
+    await writeFile(
+      resolve(cyclicRoot, "tsconfig.cycle.json"),
+      JSON.stringify({ extends: "apps/example/tsconfig.json" }),
+    );
+    await writeFile(
+      resolve(cyclicRoot, "apps/example/src/page.ts"),
+      "export const page = true;\n",
+    );
+    const cyclic = await loadArchitectureSources({
+      repoRoot: cyclicRoot,
+      sourcePaths: ["apps/example/src/page.ts"],
+      workspaceTargets: new Map(),
+      trackedSourceOnly: true,
+    });
+
+    expect(unsafe.parseErrors).toEqual([
+      expect.objectContaining({
+        sourcePath: "apps/example/tsconfig.json",
+        code: "RESOLVER_CONFIG_ERROR",
+      }),
+    ]);
+    expect(cyclic.parseErrors).toEqual([
+      expect.objectContaining({
+        sourcePath: "apps/example/tsconfig.json",
+        code: "RESOLVER_CONFIG_ERROR",
+      }),
+    ]);
+  });
+
+  it("reports missing tracked internal aliases as module resolution errors", async () => {
+    const repoRoot = await createWorkspaceRoot();
+    await writeFile(
+      resolve(repoRoot, "apps/example/src/page.ts"),
+      'import missing from "@/missing.js";\nvoid missing;\n',
+    );
+
+    const result = await loadArchitectureSources({
+      repoRoot,
+      sourcePaths: ["apps/example/src/page.ts"],
+      workspaceTargets: new Map(),
+      trackedSourceOnly: true,
+    });
+
+    expect(result.parseErrors).toEqual([
+      expect.objectContaining({
+        sourcePath: "apps/example/src/page.ts",
+        code: "MODULE_RESOLUTION_ERROR",
+        line: 1,
+      }),
+    ]);
   });
 
   it("processes a shared-config source batch deterministically within a bounded interval", async () => {
@@ -246,16 +417,12 @@ describe("architecture source loading at repository scale", () => {
         "apps/example/src/direct.ts",
         'export { db } from "@reading-advantage/db";\n',
       ],
-      [
-        "apps/example/src/barrel-a.ts",
-        'export { db } from "./barrel-b";\n',
-      ],
+      ["apps/example/src/barrel-a.ts", 'export { db } from "./barrel-b";\n'],
       [
         "apps/example/src/barrel-b.ts",
-        [
-          'export { db } from "./direct";',
-          'export * from "./barrel-a";',
-        ].join("\n"),
+        ['export { db } from "./direct";', 'export * from "./barrel-a";'].join(
+          "\n",
+        ),
       ],
       [
         "apps/example/src/consumer.ts",
@@ -327,8 +494,173 @@ describe("architecture source loading at repository scale", () => {
       result.findings.filter(
         (finding) => finding.evidenceKind === "query-call",
       ),
-    ).toEqual([
-      expect.objectContaining({ sourcePath, line: 4, column: 10 }),
-    ]);
+    ).toEqual([expect.objectContaining({ sourcePath, line: 4, column: 10 })]);
+  });
+
+  it("keeps ordinary matching-name symbols clean", async () => {
+    const repoRoot = await createWorkspaceRoot();
+    await writeFile(
+      resolve(repoRoot, "apps/example/src/ordinary.ts"),
+      "export interface CompanyIdentityVerificationPort { verify(): Promise<void> }\n",
+    );
+    await writeFile(
+      resolve(repoRoot, "apps/example/src/consumer.ts"),
+      [
+        'import type { CompanyIdentityVerificationPort } from "./ordinary.js";',
+        "export const port: CompanyIdentityVerificationPort | undefined = undefined;",
+      ].join("\n"),
+    );
+
+    const result = await analyzeArchitectureSources({
+      repoRoot,
+      sourcePaths: [
+        "apps/example/src/consumer.ts",
+        "apps/example/src/ordinary.ts",
+      ],
+      workspaceTargets: new Map(),
+      config: loadOwnershipMap(),
+      policyVersion: "v2",
+    });
+
+    expect(result.parseErrors).toEqual([]);
+    expect(result.findings).toEqual([]);
+  });
+
+  it("keeps direct database table bindings detected", async () => {
+    const repoRoot = await createWorkspaceRoot();
+    await writeFile(
+      resolve(repoRoot, "apps/example/src/company-table.ts"),
+      [
+        'import { pgTable, text } from "drizzle-orm/pg-core";',
+        'export const companyIdentityVerificationPort = pgTable("company_identity_verification_port", {',
+        '  id: text("id").notNull(),',
+        "});",
+      ].join("\n"),
+    );
+    await writeFile(
+      resolve(repoRoot, "apps/example/src/direct.ts"),
+      [
+        'import { companyIdentityVerificationPort } from "./company-table.js";',
+        "void companyIdentityVerificationPort;",
+      ].join("\n"),
+    );
+
+    const result = await analyzeArchitectureSources({
+      repoRoot,
+      sourcePaths: [
+        "apps/example/src/company-table.ts",
+        "apps/example/src/direct.ts",
+      ],
+      workspaceTargets: new Map(),
+      config: loadOwnershipMap(),
+      policyVersion: "v2",
+    });
+
+    expect(result.parseErrors).toEqual([]);
+    expect(result.findings).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          sourcePath: "apps/example/src/direct.ts",
+          resource: "database-table:company_identity_verification_port",
+        }),
+      ]),
+    );
+  });
+
+  it("keeps true database re-exports detected", async () => {
+    const repoRoot = await createWorkspaceRoot();
+    await writeFile(
+      resolve(repoRoot, "apps/example/src/company-table.ts"),
+      [
+        'import { pgTable, text } from "drizzle-orm/pg-core";',
+        'export const companyIdentityVerificationPort = pgTable("company_identity_verification_port", {',
+        '  id: text("id").notNull(),',
+        "});",
+      ].join("\n"),
+    );
+    await writeFile(
+      resolve(repoRoot, "apps/example/src/barrel.ts"),
+      'export { companyIdentityVerificationPort } from "./company-table.js";\n',
+    );
+    await writeFile(
+      resolve(repoRoot, "apps/example/src/consumer.ts"),
+      [
+        'import { companyIdentityVerificationPort } from "./barrel.js";',
+        "void companyIdentityVerificationPort;",
+      ].join("\n"),
+    );
+
+    const result = await analyzeArchitectureSources({
+      repoRoot,
+      sourcePaths: [
+        "apps/example/src/company-table.ts",
+        "apps/example/src/barrel.ts",
+        "apps/example/src/consumer.ts",
+      ],
+      workspaceTargets: new Map(),
+      config: loadOwnershipMap(),
+      policyVersion: "v2",
+    });
+
+    expect(result.parseErrors).toEqual([]);
+    expect(result.findings).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          sourcePath: "apps/example/src/barrel.ts",
+          resource: "database-table:company_identity_verification_port",
+        }),
+        expect.objectContaining({
+          sourcePath: "apps/example/src/consumer.ts",
+          resource: "database-table:company_identity_verification_port",
+        }),
+      ]),
+    );
+  });
+
+  it("does not infer table resources from runtime contracts with matching names", async () => {
+    const repoRoot = await createWorkspaceRoot();
+    await writeFile(
+      resolve(repoRoot, "apps/example/src/company-contract.ts"),
+      [
+        'import { z } from "zod";',
+        "export const companyIdentityVerificationPort = z.object({});",
+      ].join("\n"),
+    );
+    await writeFile(
+      resolve(repoRoot, "apps/example/src/consumer.ts"),
+      [
+        'import { companyIdentityVerificationPort } from "@reading-advantage/db/company-identity";',
+        "void companyIdentityVerificationPort;",
+      ].join("\n"),
+    );
+
+    const result = await analyzeArchitectureSources({
+      repoRoot,
+      sourcePaths: [
+        "apps/example/src/company-contract.ts",
+        "apps/example/src/consumer.ts",
+      ],
+      workspaceTargets: new Map([
+        [
+          "@reading-advantage/db/company-identity",
+          "apps/example/src/company-contract.ts",
+        ],
+      ]),
+      config: loadOwnershipMap(),
+      policyVersion: "v2",
+    });
+
+    expect(result.parseErrors).toEqual([]);
+    expect(
+      result.findings.filter((finding) => finding.resource !== undefined),
+    ).toEqual([]);
+    expect(result.findings).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          sourcePath: "apps/example/src/consumer.ts",
+          resolvedTarget: "apps/example/src/company-contract.ts",
+        }),
+      ]),
+    );
   });
 });

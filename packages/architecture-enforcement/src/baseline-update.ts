@@ -14,7 +14,7 @@ import {
   type ArchitectureFinding,
   type BaselineEntry,
 } from "./contracts.js";
-import { loadOwnershipMap } from "./ownership-map.js";
+import { selectArchitecturePolicy } from "./policy-selection.js";
 import { createNodeRepositoryFileTransactionOperations } from "./node-file-transaction.js";
 import {
   applyRepositoryFileTransaction,
@@ -27,6 +27,8 @@ import {
   type ArchitectureComparison,
 } from "./ratchet.js";
 import { compareStableStrings } from "./stable-order.js";
+import { V1_ARTIFACT_BINDINGS } from "./v1-validation.js";
+import { V2_RECONCILIATION_DESTINATION_PATHS } from "./policy-write-guard.js";
 
 /** Review metadata required to accept newly introduced architecture debt. */
 export interface NewDebtReviewMetadata {
@@ -241,6 +243,16 @@ async function writeArchitectureBaselines(
   baselines: ArchitectureBaselines,
   fileOperations: ArchitectureBaselineFileOperations,
 ): Promise<void> {
+  const protectedV1Paths = new Set(
+    V1_ARTIFACT_BINDINGS.map((artifact) => artifact.path),
+  );
+  for (const domain of ["database", "provider"] as const) {
+    if (protectedV1Paths.has(config.baselineFiles[domain])) {
+      throw new Error(
+        `Architecture ${domain} baseline writes cannot target protected v1 artifacts`,
+      );
+    }
+  }
   const plan = await previewRepositoryFileTransaction({
     repoRoot,
     replacements: (["database", "provider"] as const).map((domain) => ({
@@ -277,6 +289,26 @@ async function writeArchitectureBaselines(
   }
 }
 
+/** Rejects direct baseline updates that target any v2 reconciliation destination. */
+function assertDirectBaselineUpdatePaths(
+  config: ArchitectureConfig | undefined,
+): void {
+  const configuredPaths = config?.baselineFiles;
+  if (!configuredPaths) return;
+  const v2Destinations = new Set(V2_RECONCILIATION_DESTINATION_PATHS);
+  for (const [domain, path] of Object.entries(configuredPaths)) {
+    if (
+      v2Destinations.has(
+        path as (typeof V2_RECONCILIATION_DESTINATION_PATHS)[number],
+      )
+    ) {
+      throw new Error(
+        `Architecture ${domain} baseline writes require the complete four-file reconciliation transaction`,
+      );
+    }
+  }
+}
+
 /**
  * Runs preview-first baseline update behavior and writes only after acknowledgement.
  * @param options Checker inputs, acknowledgement, and optional new-debt metadata.
@@ -285,7 +317,21 @@ async function writeArchitectureBaselines(
 export async function updateArchitectureBaselines(
   options: UpdateArchitectureBaselinesOptions,
 ): Promise<ArchitectureBaselineUpdateResult> {
-  const report = await checkArchitectureRepository(options);
+  assertDirectBaselineUpdatePaths(options.config);
+  const selectedPolicy = options.config
+    ? undefined
+    : selectArchitecturePolicy(options.policyVersion, options.repoRoot, {
+        validateCurrentState: false,
+      });
+  if (selectedPolicy?.policyVersion === "v2") {
+    throw new Error(
+      "Policy v2 baseline writes require the complete four-file reconciliation transaction",
+    );
+  }
+  const report = await checkArchitectureRepository({
+    ...options,
+    ...(selectedPolicy ? { policyVersion: selectedPolicy.policyVersion } : {}),
+  });
   if (
     report.status === "analysis-error" ||
     report.status === "clean" ||
@@ -294,7 +340,7 @@ export async function updateArchitectureBaselines(
     return { schemaVersion: 1, report, wroteBaselines: false };
   }
 
-  const config = options.config ?? loadOwnershipMap();
+  const config = options.config ?? selectedPolicy!.config;
   const baselines = await readArchitectureBaselines(options.repoRoot, config);
   const replacements = createUpdatedArchitectureBaselines({
     config,

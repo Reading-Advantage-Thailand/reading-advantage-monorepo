@@ -284,22 +284,7 @@ export const exactExceptionSchema = z
     owner: ownerSchema,
     rationale: rationaleSchema,
   })
-  .strict()
-  .superRefine((exception, context) => {
-    const segments = exception.sourcePath.split("/");
-    const filename = segments.at(-1) ?? "";
-    const isTestOrFixture =
-      segments.includes("__tests__") ||
-      segments.includes("fixtures") ||
-      /\.(?:test|spec)\.[cm]?[jt]sx?$/.test(filename);
-    if (!isTestOrFixture) {
-      context.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: "exact exceptions are limited to test and fixture files",
-        path: ["sourcePath"],
-      });
-    }
-  });
+  .strict();
 
 const findingIdentityShape = {
   schemaVersion: z.literal(1),

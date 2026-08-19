@@ -26,6 +26,7 @@ import {
   ARCHITECTURE_WRITE_LOCK_PATH,
   RepositoryFileTransactionFailure,
 } from "../policy-update-transaction.js";
+import { V2_RECONCILIATION_DESTINATION_PATHS } from "../policy-write-guard.js";
 
 const hash = (character: string): string => character.repeat(64);
 const fixtureRoots: string[] = [];
@@ -344,6 +345,146 @@ describe("explicit architecture baseline updates", () => {
     expect(provider.entries[0]?.owner).toBe("architecture-platform");
     expect(provider.entries[0]?.rationale).toContain("provider adapter");
   });
+
+  it("rejects acknowledged writes that target a protected v1 baseline", async () => {
+    const fixture = await createLiveBaselineFixture();
+    const protectedDatabasePath =
+      "packages/architecture-enforcement/src/config/baselines/database.v1.json";
+    const protectedConfig = {
+      ...config,
+      baselineFiles: {
+        ...config.baselineFiles,
+        database: protectedDatabasePath,
+      },
+    };
+    const protectedPath = resolve(fixture.repoRoot, protectedDatabasePath);
+    await mkdir(resolve(protectedPath, ".."), { recursive: true });
+    await writeFile(
+      protectedPath,
+      `${JSON.stringify(baseline("database", []), null, 2)}\n`,
+      "utf8",
+    );
+
+    await expect(
+      updateArchitectureBaselines({
+        ...liveUpdateOptions(fixture),
+        config: protectedConfig,
+        acknowledge: true,
+        newDebtMetadata: {
+          owner: "architecture-platform",
+          rationale:
+            "Reviewed temporary debt pending the provider adapter migration.",
+        },
+      }),
+    ).rejects.toThrow(/protected v1 artifacts/i);
+  });
+
+  it.each(V2_RECONCILIATION_DESTINATION_PATHS)(
+    "rejects an acknowledged direct update when a configured path targets v2: %s",
+    async (v2DestinationPath) => {
+      const fixture = await createLiveBaselineFixture();
+      const configuredDatabasePath = resolve(
+        fixture.repoRoot,
+        v2DestinationPath,
+      );
+      const configuredDatabaseContents = `${JSON.stringify(
+        baseline("database", []),
+        null,
+        2,
+      )}\n`;
+      await mkdir(resolve(configuredDatabasePath, ".."), { recursive: true });
+      await writeFile(
+        configuredDatabasePath,
+        configuredDatabaseContents,
+        "utf8",
+      );
+      const configured = {
+        ...config,
+        baselineFiles: {
+          ...config.baselineFiles,
+          database: v2DestinationPath,
+        },
+      };
+
+      await expect(
+        updateArchitectureBaselines({
+          ...liveUpdateOptions(fixture),
+          config: configured,
+          acknowledge: true,
+          newDebtMetadata: {
+            owner: "architecture-platform",
+            rationale:
+              "Reviewed temporary debt pending the provider adapter migration.",
+          },
+        }),
+      ).rejects.toThrow(/four-file reconciliation transaction/i);
+      await expect(
+        readFile(fixture.databaseBaselinePath, "utf8"),
+      ).resolves.toBe(fixture.databaseOriginal);
+      await expect(
+        readFile(fixture.providerBaselinePath, "utf8"),
+      ).resolves.toBe(fixture.providerOriginal);
+      await expect(readFile(configuredDatabasePath, "utf8")).resolves.toBe(
+        configuredDatabaseContents,
+      );
+    },
+  );
+
+  it.each([
+    [V2_RECONCILIATION_DESTINATION_PATHS[2], config.baselineFiles.provider],
+    [config.baselineFiles.database, V2_RECONCILIATION_DESTINATION_PATHS[3]],
+  ] as const)(
+    "rejects mixed and partial v2 direct baseline configurations before mutation",
+    async (databasePath, providerPath) => {
+      const fixture = await createLiveBaselineFixture();
+      const configured = {
+        ...config,
+        baselineFiles: { database: databasePath, provider: providerPath },
+      };
+      const destinationPaths = [databasePath, providerPath].map((path) =>
+        resolve(fixture.repoRoot, path),
+      );
+      await Promise.all(
+        destinationPaths.map(async (path, index) => {
+          await mkdir(resolve(path, ".."), { recursive: true });
+          await writeFile(
+            path,
+            `${JSON.stringify(
+              baseline(index === 0 ? "database" : "provider", []),
+              null,
+              2,
+            )}\n`,
+            "utf8",
+          );
+        }),
+      );
+      const before = await Promise.all(
+        destinationPaths.map((path) => readFile(path, "utf8")),
+      );
+
+      await expect(
+        updateArchitectureBaselines({
+          ...liveUpdateOptions(fixture),
+          config: configured,
+          acknowledge: true,
+          newDebtMetadata: {
+            owner: "architecture-platform",
+            rationale:
+              "Reviewed temporary debt pending the provider adapter migration.",
+          },
+        }),
+      ).rejects.toThrow(/four-file reconciliation transaction/i);
+      await expect(
+        Promise.all(destinationPaths.map((path) => readFile(path, "utf8"))),
+      ).resolves.toEqual(before);
+      await expect(
+        readFile(fixture.databaseBaselinePath, "utf8"),
+      ).resolves.toBe(fixture.databaseOriginal);
+      await expect(
+        readFile(fixture.providerBaselinePath, "utf8"),
+      ).resolves.toBe(fixture.providerOriginal);
+    },
+  );
 
   it("preserves a baseline changed after analysis instead of overwriting it", async () => {
     const fixture = await createLiveBaselineFixture();

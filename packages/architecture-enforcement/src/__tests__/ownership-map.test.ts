@@ -4,6 +4,7 @@ import {
   loadOwnershipMap,
   type OwnershipCandidate,
 } from "../ownership-map.js";
+import { selectArchitecturePolicy } from "../policy-selection.js";
 
 const databaseImport: OwnershipCandidate = {
   ruleId: "DATABASE_BOUNDARY",
@@ -23,6 +24,14 @@ const tenantRegistryDurableFinding: OwnershipCandidate = {
 };
 
 describe("architecture ownership map", () => {
+  it("loads the committed default policy when no version is supplied", () => {
+    const selected = selectArchitecturePolicy(undefined, undefined, {
+      validateCurrentState: false,
+    });
+
+    expect(loadOwnershipMap()).toEqual(selected.config);
+  });
+
   it("loads a strict, cross-referenced database and provider policy", () => {
     const map = loadOwnershipMap();
 
@@ -44,14 +53,7 @@ describe("architecture ownership map", () => {
           !/[*!?{}]/.test(exception.sourcePath) &&
           (exception.sourcePath.includes("/__tests__/") ||
             exception.sourcePath.includes("/fixtures/") ||
-            /\.(?:test|spec)\.[cm]?[jt]sx?$/.test(exception.sourcePath) ||
-            (exception.id === "durable-job-tenant-registry-classification" &&
-              exception.ruleId === "DURABLE_JOB_DATABASE_BOUNDARY" &&
-              exception.sourcePath ===
-                "packages/domain/src/tenant-registry.ts" &&
-              exception.owner === "domain-platform" &&
-              exception.rationale ===
-                "Mandatory TenantDB classification only; no durable-job queries or mutation.")),
+            /\.(?:test|spec)\.[cm]?[jt]sx?$/.test(exception.sourcePath)),
       ),
     ).toBe(true);
   });
@@ -159,9 +161,8 @@ describe("architecture ownership map", () => {
   });
 
   it("limits the tenant-registry exception to classification imports", () => {
-    expect(
-      evaluateOwnership(loadOwnershipMap(), tenantRegistryDurableFinding),
-    ).toEqual({
+    const v2Map = loadOwnershipMap("v2");
+    expect(evaluateOwnership(v2Map, tenantRegistryDurableFinding)).toEqual({
       status: "allowed",
       reasonCode: "exact-exception",
       ruleId: "DURABLE_JOB_DATABASE_BOUNDARY",
@@ -170,7 +171,7 @@ describe("architecture ownership map", () => {
 
     for (const evidenceKind of ["query-call", "client-construction"] as const) {
       expect(
-        evaluateOwnership(loadOwnershipMap(), {
+        evaluateOwnership(v2Map, {
           ...tenantRegistryDurableFinding,
           evidenceKind,
         }),
@@ -180,6 +181,44 @@ describe("architecture ownership map", () => {
         ruleId: "DURABLE_JOB_DATABASE_BOUNDARY",
       });
     }
+  });
+
+  it("allows arbitrary production exceptions only for static imports", () => {
+    const v2Map = loadOwnershipMap("v2");
+    const config = {
+      ...v2Map,
+      exactExceptions: [
+        ...v2Map.exactExceptions,
+        {
+          schemaVersion: 1 as const,
+          id: "production-static-exception",
+          ruleId: "DURABLE_JOB_DATABASE_BOUNDARY",
+          sourcePath: "packages/domain/src/other-production-file.ts",
+          owner: "domain-platform",
+          rationale: "Reviewed production classification import exception.",
+        },
+      ],
+    };
+    const staticImport = {
+      ...tenantRegistryDurableFinding,
+      sourcePath: "packages/domain/src/other-production-file.ts",
+    };
+
+    expect(evaluateOwnership(config, staticImport)).toMatchObject({
+      status: "allowed",
+      reasonCode: "exact-exception",
+      exceptionId: "production-static-exception",
+    });
+    expect(
+      evaluateOwnership(config, {
+        ...staticImport,
+        evidenceKind: "query-call",
+      }),
+    ).toEqual({
+      status: "violation",
+      reasonCode: "outside-approved-root",
+      ruleId: "DURABLE_JOB_DATABASE_BOUNDARY",
+    });
   });
 
   it("isolates Company Identity persistence from product apps and education tenancy", () => {

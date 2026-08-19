@@ -1,3 +1,4 @@
+import { existsSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import {
@@ -13,7 +14,10 @@ import {
 } from "./baseline.js";
 import { loadOwnershipMap } from "./ownership-map.js";
 import { loadWorkspaceModuleTargets } from "./workspace-resolution.js";
-import { checkArchitectureRepository } from "./architecture-check.js";
+import {
+  checkArchitectureRepository,
+  readArchitectureBaselines,
+} from "./architecture-check.js";
 import type { ArchitectureCheckReport } from "./architecture-check.js";
 import {
   analyzerReconciliationManifestSchema,
@@ -27,6 +31,18 @@ import {
   type AnalyzerReconciliationValidationSummary,
   type ValidateAnalyzerReconciliationInput,
 } from "./reconciliation-manifest.js";
+import {
+  selectArchitecturePolicy,
+  type ArchitecturePolicyVersion,
+} from "./policy-selection.js";
+import {
+  validateV1ArtifactFamily,
+  V1_ARTIFACT_BINDINGS,
+} from "./v1-validation.js";
+import {
+  validateAnalyzerReconciliationManifestV2,
+  validateAnalyzerReconciliationManifestV2Sync,
+} from "./v2-manifest-validation.js";
 
 /** Deterministic result returned after validating both committed baselines. */
 export interface BaselineValidationSummary {
@@ -46,6 +62,14 @@ export interface BaselineValidationSummary {
   mode: "analyzer-complete" | "historical-direct";
   /** Accepted reconciliation manifest hash in analyzer-complete mode. */
   reconciliationManifestHash?: string;
+  /** Explicit policy selected by the caller, when supplied. */
+  policyVersion?: ArchitecturePolicyVersion;
+  /** Effective policy selected when the caller omits a policy. */
+  defaultPolicy?: ArchitecturePolicyVersion;
+  /** Candidate or accepted v2 lifecycle state, when supplied. */
+  policyStatus?: "candidate" | "accepted";
+  /** Committed v2 manifest hash, when supplied. */
+  manifestSha256?: string;
 }
 
 /** Replaceable analyzer-complete validation boundaries used by isolated tests. */
@@ -234,7 +258,144 @@ async function validateAnalyzerCompleteBaselines(
 export async function validateCommittedBaselines(
   repoRoot: string,
   overrides?: Partial<BaselineValidationDependencies>,
+  policyVersion?: ArchitecturePolicyVersion,
 ): Promise<BaselineValidationSummary> {
+  const hasCommittedPolicyArtifacts =
+    V1_ARTIFACT_BINDINGS.every((artifact) =>
+      existsSync(resolve(repoRoot, artifact.path)),
+    ) &&
+    existsSync(resolve(repoRoot, "package.json")) &&
+    existsSync(
+      resolve(repoRoot, "packages/architecture-enforcement/src/analyzer.ts"),
+    );
+  if (policyVersion === "v1") {
+    const artifactValidation = await validateV1ArtifactFamily({ repoRoot });
+    if (!artifactValidation.valid) {
+      throw new Error(
+        `Protected v1 artifacts do not match Gate 1: ${artifactValidation.mismatches?.map((mismatch) => mismatch.path).join(", ")}`,
+      );
+    }
+    const selection = selectArchitecturePolicy("v1", repoRoot, {
+      validateCurrentState: false,
+    });
+    const manifestSource = await readFile(
+      resolve(
+        repoRoot,
+        "packages/architecture-enforcement/src/config/analyzer-reconciliation.v2.json",
+      ),
+      "utf8",
+    );
+    const v2Validation = validateAnalyzerReconciliationManifestV2Sync({
+      repoRoot,
+      manifest: JSON.parse(manifestSource) as unknown,
+    });
+    if (!v2Validation.valid) {
+      throw new Error(
+        `V2 reconciliation manifest is invalid: ${v2Validation.errors?.join("; ")}`,
+      );
+    }
+    const baselines = await readArchitectureBaselines(
+      repoRoot,
+      selection.config,
+    );
+    return {
+      schemaVersion: 1,
+      mode: "historical-direct",
+      filesScanned: 0,
+      databaseEntries: baselines.database.entries.length,
+      providerEntries: baselines.provider.entries.length,
+      databaseRulesetHash: baselines.database.rulesetHash,
+      providerRulesetHash: baselines.provider.rulesetHash,
+      policyVersion: "v1",
+      defaultPolicy: selection.defaultPolicy,
+      policyStatus: selection.status,
+      manifestSha256: selection.manifestSha256,
+    };
+  }
+  if (policyVersion === "v2") {
+    const selection = selectArchitecturePolicy("v2", repoRoot, {
+      validateCurrentState: false,
+    });
+    const manifestSource = await readFile(
+      resolve(
+        repoRoot,
+        "packages/architecture-enforcement/src/config/analyzer-reconciliation.v2.json",
+      ),
+      "utf8",
+    );
+    const manifest = JSON.parse(manifestSource) as unknown;
+    const validation = await validateAnalyzerReconciliationManifestV2({
+      repoRoot,
+      manifest,
+    });
+    if (!validation.valid) {
+      throw new Error(
+        `V2 reconciliation manifest is invalid: ${validation.errors?.join("; ")}`,
+      );
+    }
+    const baselines = await readArchitectureBaselines(
+      repoRoot,
+      selection.config,
+    );
+    return {
+      schemaVersion: 1,
+      mode: "analyzer-complete",
+      filesScanned: 0,
+      databaseEntries: baselines.database.entries.length,
+      providerEntries: baselines.provider.entries.length,
+      databaseRulesetHash: baselines.database.rulesetHash,
+      providerRulesetHash: baselines.provider.rulesetHash,
+      policyVersion: "v2",
+      defaultPolicy: selection.defaultPolicy,
+      policyStatus: selection.status,
+      manifestSha256: selection.manifestSha256,
+    };
+  }
+  if (hasCommittedPolicyArtifacts) {
+    const selection = selectArchitecturePolicy(undefined, repoRoot, {
+      validateCurrentState: false,
+    });
+    const manifestSource = await readFile(
+      resolve(
+        repoRoot,
+        "packages/architecture-enforcement/src/config/analyzer-reconciliation.v2.json",
+      ),
+      "utf8",
+    );
+    const manifest = JSON.parse(manifestSource) as unknown;
+    const validation =
+      selection.policyVersion === "v2"
+        ? await validateAnalyzerReconciliationManifestV2({
+            repoRoot,
+            manifest,
+          })
+        : validateAnalyzerReconciliationManifestV2Sync({
+            repoRoot,
+            manifest,
+          });
+    if (!validation.valid) {
+      throw new Error(
+        `V2 reconciliation manifest is invalid: ${validation.errors?.join("; ")}`,
+      );
+    }
+    const baselines = await readArchitectureBaselines(
+      repoRoot,
+      selection.config,
+    );
+    return {
+      schemaVersion: 1,
+      mode: "historical-direct",
+      filesScanned: 0,
+      databaseEntries: baselines.database.entries.length,
+      providerEntries: baselines.provider.entries.length,
+      databaseRulesetHash: baselines.database.rulesetHash,
+      providerRulesetHash: baselines.provider.rulesetHash,
+      policyVersion: selection.policyVersion,
+      defaultPolicy: selection.defaultPolicy,
+      policyStatus: selection.status,
+      manifestSha256: selection.manifestSha256,
+    };
+  }
   const manifestSource = await readOptionalFile(
     resolve(repoRoot, RECONCILIATION_MANIFEST_PATH),
   );

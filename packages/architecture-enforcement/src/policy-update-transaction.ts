@@ -538,6 +538,19 @@ async function verifyOriginals(
   return failures;
 }
 
+/** Validates one committed replacement against its planned bytes. */
+async function validateCommittedFileHash(
+  replacement: RepositoryFileTransactionPlanReplacement,
+  fileOperations: RepositoryFileTransactionOperations,
+): Promise<void> {
+  const contents = await fileOperations.readFile(replacement.destination);
+  if (sha256(contents) !== replacement.afterHash) {
+    throw new Error(
+      `Committed file hash does not match preview: ${replacement.repositoryPath}`,
+    );
+  }
+}
+
 /** Validates after-hashes and invokes the optional parser callback. */
 async function validateCommittedFiles(
   replacements: readonly TransactionReplacement[],
@@ -546,11 +559,7 @@ async function validateCommittedFiles(
 ): Promise<void> {
   for (const replacement of replacements) {
     const contents = await fileOperations.readFile(replacement.destination);
-    if (sha256(contents) !== replacement.afterHash) {
-      throw new Error(
-        `Committed file hash does not match preview: ${replacement.repositoryPath}`,
-      );
-    }
+    await validateCommittedFileHash(replacement, fileOperations);
     await validate?.(replacement, contents);
   }
 }
@@ -781,6 +790,7 @@ export async function applyRepositoryFileTransaction(
         replacement.staged,
         replacement.destination,
       );
+      await validateCommittedFileHash(replacement, options.fileOperations);
     }
     await validateCommittedFiles(
       replacements,
