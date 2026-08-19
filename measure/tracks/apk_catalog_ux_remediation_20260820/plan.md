@@ -33,8 +33,25 @@ Waves run five parallel agents. Shared-host blockers go first.
 - [x] Task: Leftover page dead links (`/student/articles` and `/student/games`) `6cd44a3`
 - [x] Task: Placeholder music vs real unused tracks `6cd44a3`
 - [x] Task: Remaining per-game keyboard, placeholder text, and description drift `6cd44a3`
+- [x] Task: Generate unique medieval catalog BGM with mmx music-2.6 `a0a2ab0`
 
-Open: Phaser still does not load catalog art (C1/C2). Leftover Thai copy is unchanged. Most music files remain the 4387-byte placeholder.
+Open: Phaser still does not load catalog art (C1/C2). Leftover pages will be deleted later.
+
+## Catalog music
+
+Hosts play `/sounds/music/{id}.mp3` through `useBackgroundMusic`. Commit `a0a2ab0` replaced the 22 remaining 4387-byte placeholders with unique mmx `music-2.6` instrumentals (lute, recorder, harp, strings, brass, choir, timpani, frame drums). Six pre-existing unique tracks were kept. `babel-architect.mp3` stays a stub because that title is not in the catalog.
+
+## Art loading (C1/C2) — documented solution
+
+Recorded in `measure/audit-reports/advantage-games-ux-wiring_20260819/independent-gameplay.md` (C1, C2, C3) and `assets.md`.
+
+Durable fix:
+
+1. Replace invented cartridge keys with owner-approved role/state keys (`player:idle`, `enemy:idle`, …).
+2. Resolve keys with `createAcceptedStandardAssetResolver` against pack `2026.07.23`.
+3. Materialize only the selected union into `public/` through `withBasePath`.
+4. Call `preloadAssetBindings` before `new Phaser.Game`.
+5. Draw with `add.image` / sprites. Do not use leftover `public/games/**` as a private pack (policy: `privatePackTrees` prohibited).
 
 ## Checkpoints
 
@@ -44,3 +61,4 @@ Implementation (waves W1-W4, one atomic commit): `6cd44a3`
 - W2 auth host, castle, magic-defense, paladins, haunted-library: `6cd44a3`
 - W3 rpg-battle, archers, enchanted-library, village-guardian, tutorials: `6cd44a3`
 - W4 briefing credit, home locale, leftover links, music, placeholders: `6cd44a3`
+- Catalog mmx medieval BGM for 22 remaining placeholders: `a0a2ab0`
