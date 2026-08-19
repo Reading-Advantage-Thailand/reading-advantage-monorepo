@@ -1,0 +1,17 @@
+Task: Generate medieval RPG catalog background music with mmx.
+
+Replaced 22 identical 4387-byte placeholders under
+apps/advantage-games/public/sounds/music/{id}.mp3 with unique
+mmx music-2.6 instrumental tracks. Style: lute, recorder, harp,
+strings, brass, choir, timpani, and frame drums.
+
+Catalog APK hosts already start/stop these files through
+useBackgroundMusic(resolveGameMusicId(cartridgeId)).
+
+Kept existing unique tracks: dragon-flight, griffin-sky-joust,
+haunted-library, potion-rush, spellweavers-run, wizard-vs-zombie.
+
+Did not replace babel-architect.mp3 or placeholder.mp3; babel-architect
+is not in the live catalog.
+
+C1/C2 Phaser art loading remains documented and unimplemented.
