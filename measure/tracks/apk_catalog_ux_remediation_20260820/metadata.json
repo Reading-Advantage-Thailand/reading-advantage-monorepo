@@ -1,0 +1,10 @@
+{
+  "track_id": "apk_catalog_ux_remediation_20260820",
+  "type": "bug",
+  "status": "in-progress",
+  "created_at": "2026-08-20T00:00:00Z",
+  "updated_at": "2026-08-20T00:00:00Z",
+  "description": "Repair catalog APK user-experience defects from the 2026-08-19 wiring audits, most severe first.",
+  "estimated_tasks": 40,
+  "actual_tasks": null
+}

@@ -282,8 +282,8 @@ export type GameResultPanelProps = Omit<ComponentProps<"section">, "children"> &
   readonly totalAttempts: number;
   /** Display XP; authoritative persistence remains host-owned. */
   readonly xp: number;
-  /** Required canonical-pack attribution. */
-  readonly requiredCredit: "Pixel art assets by ElvGames";
+  /** Attribution shown only when the session loaded credited art. */
+  readonly requiredCredit: string;
   /** Requests a replay. */
   readonly onReplay: () => void;
   /** Requests host-owned exit navigation. */
@@ -291,7 +291,7 @@ export type GameResultPanelProps = Omit<ComponentProps<"section">, "children"> &
 };
 
 /**
- * Renders complete terminal results, required attribution, replay, and exit actions.
+ * Renders complete terminal results, optional attribution, replay, and exit actions.
  * @param props Outcome, result values, credit, callbacks, and native section attributes.
  * @returns A named result region with non-color semantic statistics.
  * @throws When result values are invalid.
@@ -322,7 +322,7 @@ export function GameResultPanel({
         <div><dt>Total attempts</dt><dd>{totalAttempts}</dd></div>
         <div><dt>Display XP</dt><dd>{xp}</dd></div>
       </dl>
-      <p data-apk-attribution="true">{requiredCredit}</p>
+      {requiredCredit ? <p data-apk-attribution="true">{requiredCredit}</p> : null}
       <button type="button" onClick={onReplay}>Play again</button>
       <button type="button" onClick={onExit}>Exit</button>
     </section>

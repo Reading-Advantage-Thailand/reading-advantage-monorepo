@@ -122,7 +122,7 @@ export default function ShadowGateDungeonPage() {
       <main className="min-h-screen px-3 py-4 md:px-6 md:py-10 text-white">
         <div className="mx-auto flex w-full max-w-6xl flex-col gap-4 md:gap-8">
           <Link
-            href="/student/games"
+            href={`/${locale}/student/games`}
             className="inline-flex items-center text-sm uppercase tracking-[0.2em] text-white/60 transition hover:text-white"
           >
             <ChevronLeft className="mr-1 h-4 w-4" />
@@ -171,7 +171,7 @@ export default function ShadowGateDungeonPage() {
 
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <Link
-                    href="/student/articles"
+                    href={`/${locale}/student/games`}
                     className="group bg-gradient-to-r from-purple-600 to-indigo-500 hover:from-purple-500 hover:to-indigo-400 text-white font-bold py-4 px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-purple-500/50 flex items-center justify-center gap-2"
                   >
                     <BookOpen className="w-5 h-5" />
@@ -179,7 +179,7 @@ export default function ShadowGateDungeonPage() {
                     <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                   </Link>
                   <Link
-                    href="/student/games"
+                    href={`/${locale}/student/games`}
                     className="bg-slate-800 hover:bg-slate-700 text-white font-bold py-4 px-8 rounded-xl transition-all duration-300 border border-white/10"
                   >
                     {tGamesPage("backToGames")}
@@ -196,7 +196,7 @@ export default function ShadowGateDungeonPage() {
   return (
     <main className="min-h-screen px-3 pt-3 pb-6 md:px-6 md:pt-6 transition-colors duration-300 text-slate-900">
       <Button variant="ghost" size="sm" asChild className="mb-2 md:mb-4">
-        <Link href="/student/games">
+        <Link href={`/${locale}/student/games`}>
           <ChevronLeft className="mr-1 h-4 w-4" />
           {tGamesPage("backToGames")}
         </Link>

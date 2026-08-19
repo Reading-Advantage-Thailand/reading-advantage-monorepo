@@ -68,7 +68,7 @@ describe('RuneForgeChamberPage', () => {
     render(<RuneForgeChamberPage />)
     await waitFor(() => {
       const links = screen.getAllByRole('link')
-      const backLink = links.find(l => l.getAttribute('href') === '/student/games')
+      const backLink = links.find(l => l.getAttribute('href') === '/en/student/games')
       expect(backLink).toBeInTheDocument()
     })
   })

@@ -161,7 +161,7 @@ export default function EnchantedLibraryPage({
       <main className="min-h-screen px-6 py-10 text-white">
         <div className="mx-auto flex w-full max-w-6xl flex-col gap-8">
           <Link
-            href="/student/games"
+            href={`/${locale}/student/games`}
             className="text-sm uppercase tracking-[0.2em] text-white/60 transition hover:text-white"
           >
             Back to Games
@@ -183,7 +183,7 @@ export default function EnchantedLibraryPage({
   return (
     <main className="min-h-screen px-3 sm:px-6 text-slate-900">
       <Button variant="ghost" size="sm" asChild className="mb-4">
-        <Link href="/student/games">
+        <Link href={`/${locale}/student/games`}>
           <ChevronLeft className="mr-1 h-4 w-4" />
           Back to Games
         </Link>

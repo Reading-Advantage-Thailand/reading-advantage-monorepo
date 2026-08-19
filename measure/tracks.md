@@ -232,10 +232,28 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
   absent Reading/Primary consumers, representative-device FPS proof, and manual
   owner browser inspection remain explicitly open.
 
+- [~] **Track: APK Catalog UX Remediation** *Link: [./tracks/apk_catalog_ux_remediation_20260820/](./tracks/apk_catalog_ux_remediation_20260820/)*
+  Repair catalog APK user-experience defects from the 2026-08-19 wiring audits, most severe first.
+
 - [~] **Track: APK Standard Game Experience** *Link: [./tracks/apk_standard_game_experience_20260810/](./tracks/apk_standard_game_experience_20260810/)*
   Make briefing, guided tutorial, safe demo, gameplay transition, and learning
   debrief mandatory shared APK capabilities, then generate and enforce them in
-  the intern cartridge scaffold and authoring QC workflow.
+  the intern cartridge scaffold and authoring QC workflow. **Recovery update
+  2026-08-17:** 28 unique game links are playable, eight Phaser cartridges run
+  through the generic APK host, and the scaffold generates runnable game code.
+   The end-to-end lane passes full APK coverage, 1,782 app tests, 129 cartridge
+   tests, ten browser lifecycle cases, and a database-backed student completion.
+   The remaining 20 catalog games stay on separate legacy routes.
+
+- [x] **Track: APK Legacy Catalog Completion** *Link: [./archive/apk_legacy_catalog_completion_20260818/](./archive/apk_legacy_catalog_completion_20260818/)*
+  Refactored the exact 20 remaining legacy catalog games into standard APK
+  cartridges. The 28-entry catalog, compact and wide browser lifecycle, both
+  authenticated input modes, static assets, builds, and graph refresh passed.
+  Final independent review found no unresolved Critical or High issues.
+
+- [~] **Track: APK Legacy Catalog Manual Browser Evidence** *Link: [./tracks/apk_legacy_catalog_manual_browser_evidence_20260819/](./tracks/apk_legacy_catalog_manual_browser_evidence_20260819/)*
+  Manually inspect the 20 refactored cartridges at compact and wide viewports.
+  Publish gameplay screenshots, per-title verdicts, hashes, and independent review.
 
 - [x] **Track: APK Standard Asset Library Contract and Production** *Link: [./archive/apk_dual_theme_asset_production_20260712/](./archive/apk_dual_theme_asset_production_20260712/)*
   Accepted release `2026.07.23`: 43,075 receipt-bound assets, catalog digest
@@ -275,8 +293,8 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
     Vertically revalidates Archer's Revenge, Paladin's Twin-Soul, Griffin Sky-Joust, Gryphon Patrol, and Realm Carver. **Blocked:** Asset Contract v2 needs a current-byte independent review and product-owner receipt.
   - [ ] **Track: APK Legacy Defense Rebuild and Cutover** *Link: [./tracks/apk_legacy_defense_cutover_20260727/](./tracks/apk_legacy_defense_cutover_20260727/)*
     Vertically rebuilds Castle Defense, Wizard vs Zombie, Village Guardian, and Storm the Castle Tower.
-  - [ ] **Track: APK Legacy Traversal Rebuild and Cutover** *Link: [./tracks/apk_legacy_traversal_cutover_20260727/](./tracks/apk_legacy_traversal_cutover_20260727/)*
-    Vertically rebuilds Dragon Rider, Spellweaver's Run, Shadow Gate Dungeon, Labyrinth of the Goblin King, and Griffin Rider's Escape.
+  - [~] **Track: APK Legacy Traversal Rebuild and Cutover** *Link: [./tracks/apk_legacy_traversal_cutover_20260727/](./tracks/apk_legacy_traversal_cutover_20260727/)*
+    Rebuilds Dragon Rider, Spellweaver's Run, Shadow Gate Dungeon, Labyrinth of the Goblin King, and Griffin Rider's Escape. Advantage Games publication and interaction proof pass. Reading/Primary proofs, legacy retirement, and final acceptance remain open.
   - [ ] **Track: APK Legacy Puzzle Rebuild and Cutover** *Link: [./tracks/apk_legacy_puzzle_cutover_20260727/](./tracks/apk_legacy_puzzle_cutover_20260727/)*
     Vertically rebuilds Enchanted Library, Rune Match, Alchemist's Synthesis, Potion Rush, and Rune Forge Chamber.
   - [x] **Track: APK Historical/Cancelled Identity Disposition** *Link: [./archive/apk_historical_identity_disposition_20260727/](./archive/apk_historical_identity_disposition_20260727/)*

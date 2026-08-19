@@ -11,7 +11,7 @@
   "legacy_source_paths": [
     {
       "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/shadow-gate-dungeon/page.tsx",
-      "presence": "tracked-at-head",
+      "presence": "present-at-head",
       "role": "route-data",
       "classification": "current-source",
       "evidence_locator": {
@@ -20,11 +20,11 @@
         "claim_id": "SGD-ROUTE-001"
       },
       "disposition": "evidence-only",
-      "sha256": "759a587f3409885a32d418ee8c46763b204361f84569b47ec0012d7275f09ac6"
+      "sha256": "9b38502cd057f2d54772c25963ce97017346b2dd11d04361f09404039060406a"
     },
     {
       "path": "apps/advantage-games/src/app/api/v1/games/shadow-gate-dungeon/sentences/route.ts",
-      "presence": "tracked-at-head",
+      "presence": "present-at-head",
       "role": "sentences-api",
       "classification": "current-source",
       "evidence_locator": {
@@ -37,7 +37,7 @@
     },
     {
       "path": "apps/advantage-games/src/components/games/sentence/shadow-gate-dungeon/ShadowGateDungeonGame.tsx",
-      "presence": "tracked-at-head",
+      "presence": "present-at-head",
       "role": "component-state",
       "classification": "current-source",
       "evidence_locator": {
@@ -50,7 +50,7 @@
     },
     {
       "path": "apps/advantage-games/src/lib/games/shadowGateDungeon.ts",
-      "presence": "tracked-at-head",
+      "presence": "present-at-head",
       "role": "movement-bounds",
       "classification": "current-source",
       "evidence_locator": {
@@ -63,7 +63,7 @@
     },
     {
       "path": "apps/advantage-games/src/lib/games/shadowGateDungeonConfig.ts",
-      "presence": "tracked-at-head",
+      "presence": "present-at-head",
       "role": "world-dimensions",
       "classification": "current-source",
       "evidence_locator": {

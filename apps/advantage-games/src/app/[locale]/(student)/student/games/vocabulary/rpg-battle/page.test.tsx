@@ -162,7 +162,7 @@ describe("RpgBattlePage", () => {
     expect(screen.getByText("rpgBattle.battlePreparation")).toBeInTheDocument();
     expect(
       screen.getByRole("link", { name: /backToGames/i }),
-    ).toHaveAttribute("href", "/student/games");
+    ).toHaveAttribute("href", "/en/student/games");
   });
 
   it("shows the selection modal before the battle starts", async () => {

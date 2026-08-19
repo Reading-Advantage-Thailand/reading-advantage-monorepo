@@ -60,6 +60,6 @@ describe('WizardZombiePage', () => {
     render(<WizardZombiePage />)
     const link = screen.getByRole('link', { name: /back to games/i })
     expect(link).toBeInTheDocument()
-    expect(link).toHaveAttribute('href', '/student/games')
+    expect(link).toHaveAttribute('href', '/en/student/games')
   })
 })

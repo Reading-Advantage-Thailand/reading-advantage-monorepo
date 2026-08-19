@@ -14,7 +14,6 @@ import { useSession } from "@/hooks/useSession";
 
 export default function MagicDefensePage() {
   const t = useScopedI18n("pages.student.gamesPage");
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const locale = useCurrentLocale();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { data: session } = useSession();
@@ -99,7 +98,7 @@ export default function MagicDefensePage() {
     <div className="space-y-6">
       {/* Back Button */}
       <Button variant="ghost" size="sm" asChild>
-        <Link href="/student/games">
+        <Link href={`/${locale}/student/games`}>
           <ChevronLeft className="mr-1 h-4 w-4" />
           {t("backToGames")}
         </Link>

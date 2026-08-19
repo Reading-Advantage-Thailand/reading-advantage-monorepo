@@ -103,7 +103,7 @@ describe("EnchantedLibraryPage", () => {
 
     const link = await screen.findByRole("link", { name: /back to games/i });
     expect(link).toBeInTheDocument();
-    expect(link).toHaveAttribute("href", "/student/games");
+    expect(link).toHaveAttribute("href", "/en/student/games");
   });
 
   it("loads vocabulary from API", async () => {

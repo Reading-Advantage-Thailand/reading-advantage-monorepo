@@ -454,7 +454,7 @@ export default function RpgBattlePage() {
     return (
       <div className="space-y-6">
         <Button variant="ghost" size="sm" asChild>
-          <Link href="/student/games">
+          <Link href={`/${currentLocale}/student/games`}>
             <ChevronLeft className="mr-1 h-4 w-4" />
             {t("backToGames")}
           </Link>
@@ -484,7 +484,7 @@ export default function RpgBattlePage() {
     return (
       <div className="space-y-6">
         <Button variant="ghost" size="sm" asChild>
-          <Link href="/student/games">
+          <Link href={`/${currentLocale}/student/games`}>
             <ChevronLeft className="mr-1 h-4 w-4" />
             {t("backToGames")}
           </Link>
@@ -510,7 +510,7 @@ export default function RpgBattlePage() {
   return (
     <div ref={containerRef} className="space-y-6">
       <Button variant="ghost" size="sm" asChild>
-        <Link href="/student/games">
+        <Link href={`/${currentLocale}/student/games`}>
           <ChevronLeft className="mr-1 h-4 w-4" />
           {t("backToGames")}
         </Link>

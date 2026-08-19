@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { getCartridgeCatalogEntry } from "@reading-advantage/game-cartridges";
 import { LoginForm } from "@/features/auth/LoginForm";
 
 export const metadata: Metadata = {
@@ -10,14 +11,27 @@ type LoginPageProps = {
   searchParams: Promise<{ redirect?: string | string[] }>;
 };
 
+const FALLBACK_REDIRECT = "/";
+const STUDENT_GAMES_PATH = /^\/(en|th|zh)\/student\/games$/u;
+const STUDENT_APK_PATH = /^\/(en|th|zh)\/student\/games\/apk\/([^/?#]+)$/u;
+const STUDENT_ARCADE_PATH = /^\/(en|th|zh)\/student\/arcade\/([^/?#]+)$/u;
+
 /**
- * Withholds former arcade redirects while APK cartridges are quarantined.
+ * Accepts only a same-origin student games or arcade path as a post-login destination.
  * @param value Untrusted redirect query value.
- * @returns The safe application root.
+ * @returns A safe same-app student path, or the application root.
  */
 export function resolveStudentRedirect(value: string | string[] | undefined): string {
-  void value;
-  return "/";
+  if (typeof value !== "string") return FALLBACK_REDIRECT;
+  if (STUDENT_GAMES_PATH.test(value)) return value;
+
+  const apkMatch = value.match(STUDENT_APK_PATH);
+  if (apkMatch && getCartridgeCatalogEntry(apkMatch[2])) return value;
+
+  const arcadeMatch = value.match(STUDENT_ARCADE_PATH);
+  if (arcadeMatch && getCartridgeCatalogEntry(arcadeMatch[2])) return value;
+
+  return FALLBACK_REDIRECT;
 }
 
 /** Renders the Advantage Games student login page.

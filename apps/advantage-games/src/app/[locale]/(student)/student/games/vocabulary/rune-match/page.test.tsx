@@ -65,7 +65,7 @@ describe('RuneMatchPage', () => {
   it('includes back to games link', () => {
     render(<RuneMatchPage />)
     const backLink = screen.getByRole('link', { name: /back to games/i })
-    expect(backLink).toHaveAttribute('href', '/student/games')
+    expect(backLink).toHaveAttribute('href', '/en/student/games')
   })
 
   it('renders RuneMatchGame directly', async () => {

@@ -10,10 +10,11 @@ import { Header } from "@/components/header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { useScopedI18n } from "@/locales/client";
+import { useScopedI18n, useCurrentLocale } from "@/locales/client";
 
 export default function DragonFlightPage() {
   const t = useScopedI18n("pages.student.gamesPage");
+  const locale = useCurrentLocale();
   const vocabulary = useGameStore((state) => state.vocabulary);
   const setVocabulary = useGameStore((state) => state.setVocabulary);
   const setLastResult = useGameStore((state) => state.setLastResult);
@@ -106,7 +107,7 @@ export default function DragonFlightPage() {
     <div className="space-y-6">
       {/* Back Button */}
       <Button variant="ghost" size="sm" asChild>
-        <Link href="/student/games">
+        <Link href={`/${locale}/student/games`}>
           <ChevronLeft className="mr-1 h-4 w-4" />
           {t("backToGames")}
         </Link>

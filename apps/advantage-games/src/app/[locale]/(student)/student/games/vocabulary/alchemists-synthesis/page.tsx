@@ -15,7 +15,7 @@ import { useScopedI18n, useCurrentLocale } from "@/locales/client";
 
 export default function AlchemistsSynthesisPage() {
   const t = useScopedI18n("pages.student.gamesPage");
-  useCurrentLocale();
+  const locale = useCurrentLocale();
   const { data: session } = useSession();
   const [vocabulary, setVocabulary] = useState<VocabularyItem[]>([]);
 
@@ -75,7 +75,7 @@ export default function AlchemistsSynthesisPage() {
   return (
     <div className="space-y-6 mb-10">
       <Button variant="ghost" size="sm" asChild>
-        <Link href="/student/games">
+        <Link href={`/${locale}/student/games`}>
           <ArrowLeft className="mr-1 h-4 w-4" />
           {t("backToGames")}
         </Link>

@@ -158,7 +158,7 @@ export default function PotionRushPage() {
       <main className="min-h-screen px-6 py-10 text-white">
         <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 items-start">
           <Button variant="ghost" size="sm" asChild>
-            <Link href="/student/games">
+            <Link href={`/${locale}/student/games`}>
               <ChevronLeft className="mr-1 h-4 w-4" />
               Back to Games
             </Link>
@@ -209,7 +209,7 @@ export default function PotionRushPage() {
 
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <Link
-                    href="/student/articles"
+                    href={`/${locale}/student/games`}
                     className="group bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-bold py-4 px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-blue-500/50 flex items-center justify-center gap-2"
                   >
                     <BookOpen className="w-5 h-5" />
@@ -230,7 +230,7 @@ export default function PotionRushPage() {
       <header className="px-3 sm:px-6 py-3 sm:py-4 flex items-center justify-between border-b border-white/10 bg-slate-900/50 backdrop-blur-md sticky top-0 z-40">
         <div className="flex items-center gap-2 sm:gap-4 min-w-0">
           <Link
-            href="/student/games"
+            href={`/${locale}/student/games`}
             className="p-2 hover:bg-white/10 rounded-full transition-colors shrink-0"
           >
             <ArrowLeft className="w-5 h-5 sm:w-6 sm:h-6" />

@@ -85,6 +85,26 @@ describe("accessible game presentation", () => {
     expect(exit).toHaveBeenCalledOnce();
   });
 
+  it("omits debrief attribution when no credited art loaded", () => {
+    render(
+      <GameResultPanel
+        outcome="complete"
+        score={10}
+        accuracy={1}
+        correctAnswers={1}
+        totalAttempts={1}
+        xp={5}
+        requiredCredit=""
+        onReplay={() => undefined}
+        onExit={() => undefined}
+      />,
+    );
+
+    expect(screen.getByRole("region", { name: "Game result" })).toBeInTheDocument();
+    expect(screen.queryByText("Pixel art assets by ElvGames")).not.toBeInTheDocument();
+    expect(document.querySelector("[data-apk-attribution]")).toBeNull();
+  });
+
   it("covers loading, optional errors, HUD semantics, incorrect alerts, and closed instructions", () => {
     const { rerender } = render(
       <>
