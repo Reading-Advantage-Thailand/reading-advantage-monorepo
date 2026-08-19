@@ -2,11 +2,11 @@
 
 ## Status and boundary
 
-This document defines the active THB acceptance-remediation Red slice for
-`company_finance_operations_20260810`.
+This document records the THB acceptance-remediation Red and Green slice.
 
-The THB valuation implementation is complete in the plan. Acceptance Red tests
-remain active for public receipt compatibility and strict `__proto__` capture.
+Implementation and acceptance remediation are complete at Green commit `92af1eb11`.
+
+Public receipt compatibility and strict `__proto__` tests now pass.
 
 The owner or accountant must still choose the rate source, rounding policy, and
 effective-date policy before valuation policy use.
