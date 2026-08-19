@@ -226,6 +226,27 @@
    `63f1ec7e8563b96397c6d07ec994255482f4bf46`. Evidence:
    `phase2-review-a-red-remediation-evidence-20260817.md`. Green remains
    pending in the responsible Sales session. Phase 2 is not accepted.
+- [~] Task: Docs strategy: Record the owner-approved successor ledger strategy in
+  `phase2-successor-ledger-strategy.md`. It supersedes only the old Phase 2
+  execution deferral and does not grant Phase 2 acceptance. The first commit
+  contains only this strategy and this plan block. The follow-up
+  evidence/plan-marker commit marks this task `[x]`.
+  - Preserve historical commits.
+  - Exclude APK.
+  - Keep Phase 3 wiring out of scope.
+- [b] Task: Implementation: After the two docs commits and capture of
+  `successor_phase2_base_sha`, add the successor Red contracts and conditional
+  Green implementation for the append-only learner-attempt ledger.
+  - Include `lessonId` in the trusted retry scope.
+  - Require every projection to load one ledger/outbox pair.
+  - Remove every direct project path.
+  - Reject roleplay in Phase 2.
+  - Add strict Zod output schemas for submissions, question attempts, pending
+    states, and receipts.
+  - Add `packages/db/src/sentinels.ts` to Green.
+  - Allow `packages/domain/src/mastery/drizzle-mastery-persistence.ts` only when
+    live Red proves that active-transaction support requires an adapter change.
+  - Keep Phase 3 wiring and APK excluded.
 
 ## Phase 3 — project Sales evidence into KST/SRS
 
