@@ -34,12 +34,13 @@ Waves run five parallel agents. Shared-host blockers go first.
 - [x] Task: Placeholder music vs real unused tracks `6cd44a3`
 - [x] Task: Remaining per-game keyboard, placeholder text, and description drift `6cd44a3`
 - [x] Task: Generate unique medieval catalog BGM with mmx music-2.6 `a0a2ab0`
+- [x] Task: Lengthen babel-architect, rune-match, and sorcerer-ziggurat BGM `4f0f5c2`
 
 Open: Phaser still does not load catalog art (C1/C2). Leftover pages will be deleted later.
 
 ## Catalog music
 
-Hosts play `/sounds/music/{id}.mp3` through `useBackgroundMusic`. Commit `a0a2ab0` replaced the 22 remaining 4387-byte placeholders with unique mmx `music-2.6` instrumentals (lute, recorder, harp, strings, brass, choir, timpani, frame drums). Six pre-existing unique tracks were kept. `babel-architect.mp3` stays a stub because that title is not in the catalog.
+Hosts play `/sounds/music/{id}.mp3` through `useBackgroundMusic`. Commit `a0a2ab0` replaced the 22 remaining 4387-byte placeholders with unique mmx `music-2.6` instrumentals (lute, recorder, harp, strings, brass, choir, timpani, frame drums). Six pre-existing unique tracks were kept. Commit `4f0f5c2` regenerated three short clips: `babel-architect` 6:05, `rune-match` 4:40, `sorcerer-ziggurat` 2:21.
 
 ## Art loading (C1/C2) — documented solution
 
@@ -62,3 +63,4 @@ Implementation (waves W1-W4, one atomic commit): `6cd44a3`
 - W3 rpg-battle, archers, enchanted-library, village-guardian, tutorials: `6cd44a3`
 - W4 briefing credit, home locale, leftover links, music, placeholders: `6cd44a3`
 - Catalog mmx medieval BGM for 22 remaining placeholders: `a0a2ab0`
+- Lengthen babel-architect, rune-match, sorcerer-ziggurat BGM: `4f0f5c2`
