@@ -1,0 +1,39 @@
+{
+  "name": "accounting",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev --port 3010",
+    "build": "next build",
+    "start": "next start --port 3010",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "check-types": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@reading-advantage/auth": "workspace:*",
+    "@reading-advantage/auth-client": "workspace:*",
+    "@reading-advantage/config": "workspace:*",
+    "@reading-advantage/types": "workspace:*",
+    "@reading-advantage/ui": "workspace:*",
+    "@reading-advantage/utils": "workspace:*",
+    "next": "16.2.9",
+    "react": "19.2.7",
+    "react-dom": "19.2.7",
+    "tw-animate-css": "catalog:"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "catalog:",
+    "@testing-library/jest-dom": "catalog:",
+    "@testing-library/react": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "19.2.2",
+    "@types/react-dom": "19.2.2",
+    "jsdom": "catalog:",
+    "tailwindcss": "catalog:",
+    "typescript": "5.9.3",
+    "vitest": "4.1.8"
+  }
+}
