@@ -34,6 +34,11 @@
       "import": "./dist/company-identity/runtime.js",
       "default": "./dist/company-identity/runtime.js"
     },
+    "./accounting": {
+      "types": "./dist/accounting/index.d.ts",
+      "import": "./dist/accounting/index.js",
+      "default": "./dist/accounting/index.js"
+    },
     "./seed": {
       "types": "./dist/seed/index.d.ts",
       "import": "./dist/seed/index.js",
@@ -53,6 +58,8 @@
     "company-identity:doctor": "tsx src/company-identity/commands/doctor.ts",
     "company-identity:bootstrap": "tsx src/company-identity/commands/bootstrap.ts",
     "company-identity:local-bootstrap": "tsx src/company-identity/commands/local-bootstrap.ts",
+    "accounting:generate": "drizzle-kit generate --config accounting/drizzle.config.ts",
+    "accounting:migrate": "tsx src/accounting/commands/migrate.ts",
     "lint": "eslint .",
     "test": "vitest run",
     "check-types": "tsc --noEmit"

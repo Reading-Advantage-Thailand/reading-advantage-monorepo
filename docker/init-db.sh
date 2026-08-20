@@ -5,6 +5,8 @@ set -e
 psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" <<-EOSQL
     CREATE ROLE company_identity_migrator LOGIN NOINHERIT NOSUPERUSER NOCREATEDB NOCREATEROLE NOREPLICATION NOBYPASSRLS PASSWORD 'company_identity_migrator_local';
     CREATE ROLE company_identity_runtime LOGIN NOINHERIT NOSUPERUSER NOCREATEDB NOCREATEROLE NOREPLICATION NOBYPASSRLS PASSWORD 'company_identity_runtime_local';
+    CREATE ROLE accounting_migrator LOGIN NOINHERIT NOSUPERUSER NOCREATEDB NOCREATEROLE NOREPLICATION NOBYPASSRLS PASSWORD 'accounting_migrator_local';
+    CREATE ROLE accounting_runtime LOGIN NOINHERIT NOSUPERUSER NOCREATEDB NOCREATEROLE NOREPLICATION NOBYPASSRLS PASSWORD 'accounting_runtime_local';
     CREATE DATABASE reading_advantage;
     CREATE DATABASE primary_advantage;
     CREATE DATABASE science_advantage;
@@ -12,6 +14,8 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" <<-EOSQL
     CREATE DATABASE sales_advantage;
     CREATE DATABASE company_identity OWNER company_identity_migrator;
     GRANT CONNECT ON DATABASE company_identity TO company_identity_runtime;
+    CREATE DATABASE accounting OWNER accounting_migrator;
+    GRANT CONNECT ON DATABASE accounting TO accounting_runtime;
     CREATE DATABASE science_advantage_test;
 EOSQL
 
