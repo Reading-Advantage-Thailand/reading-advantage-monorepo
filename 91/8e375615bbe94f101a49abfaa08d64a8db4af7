@@ -1,0 +1,10 @@
+Task: S1 scaffold apps/accounting + accounting role contract + OIDC client registration (track_id: accounting_app_foundation_20260820)
+
+Three atomic commits:
+- e3a37ef4e feat(db): accounting application + STAFF/OWNER/ACCOUNTANT roles in company-identity bootstrap seed; bootstrap.integration.test.ts updated.
+- 6e8728041 feat(accounts): accounting-web OIDC client in production bootstrap contract (4-client tuple), ACCOUNTING_COMPANY_AUTH_OIDC_CLIENT_SECRET env/cloudbuild/runbook wiring, owner granted accounting:OWNER, pinning tests updated.
+- 918e37561 feat(accounting): apps/accounting Next.js 16 skeleton (port 3010), mirrors sales/codecamp config, @reading-advantage/ui placeholder page, .env.example with accounting COMPANY_AUTH_* values, RTL smoke test.
+
+Why: Phase S1 of the accounting app foundation — the app must sign in via the existing accounts OIDC IdP with app-scoped roles. COMPANY_ADMIN-derived admin is not yet implemented (small_company_admin_privileges_20260722), so the owner gets an explicit accounting:OWNER assignment like existing apps.
+
+Verified: packages/db company-identity suite 301 pass / 18 pre-existing env failures (identical on pristine tree), tsc clean; accounts scripts tests 20 pass + check-types clean; accounting app build/lint/check-types/test all pass.
