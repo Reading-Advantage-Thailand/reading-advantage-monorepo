@@ -10,8 +10,9 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 
 1. **Business and finance operations.** Stabilize Company Admin and the bounded
    customer/licensing control plane, then build the distinct `apps/accounting`
-   Finance Operations product. Finance is an operational subledger/evidence
-   system; the Thai accountant retains accepted books and statutory filings.
+   product on the Finance Operations foundation. Per the owner decision of
+   2026-08-20, the app grows beyond the operational subledger into real
+   double-entry books with Thai statutory support as accounting moves in-house.
 2. **Advantage Play Kit intern golden path.** Make creating, validating,
    previewing, and publishing mini-games easy and repeatable for current interns.
    Evidence or cartridge work that does not improve that path does not jump the
@@ -59,8 +60,16 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 - [~] **Track: Company Finance Operations Foundation** *Link: [./tracks/company_finance_operations_20260810/](./tracks/company_finance_operations_20260810/)*
   Define the distinct `apps/accounting` product through policy-neutral contracts,
   ports, schema, and Red tests for money, idempotency, immutable history,
-  authorization, audit, provenance, and source-system isolation. Thai-specific
-  policy remains blocked pending written accountant decisions.
+  authorization, audit, provenance, and source-system isolation. THB valuation
+  policy decided by the owner 2026-08-20 (settlement-derived rate, 2dp half-up);
+  close/accountant policy list and pilot data remain pending.
+
+- [ ] **Track: Accounting App Foundation** *Link: [./tracks/accounting_app_foundation_20260820/](./tracks/accounting_app_foundation_20260820/)*
+  Build `apps/accounting` on the Finance Operations foundation: Accounts SSO
+  sign-in, staff expense/bill submission with evidence, owner approval with
+  immutable audit, full double-entry ledger on a standard Thai SME chart of
+  accounts, Thai statutory support (VAT, WHT, tax invoices), and accountant
+  export. Story-shaped spec, 8 phases (S1–S8).
 
 - [~] **Track: Small-Company Admin Privilege Simplification** *Link: [./tracks/small_company_admin_privileges_20260722/](./tracks/small_company_admin_privileges_20260722/)*
   Make `COMPANY_ADMIN` the intentional owner/operator role with exact inherited
@@ -232,28 +241,24 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
   absent Reading/Primary consumers, representative-device FPS proof, and manual
   owner browser inspection remain explicitly open.
 
-- [~] **Track: APK Catalog UX Remediation** *Link: [./tracks/apk_catalog_ux_remediation_20260820/](./tracks/apk_catalog_ux_remediation_20260820/)*
-  Repair catalog APK user-experience defects from the 2026-08-19 wiring audits, most severe first.
+- [x] **Track: APK Product Simplification** *Link: [./tracks/apk_product_simplification_20260820/](./tracks/apk_product_simplification_20260820/)*
+  Collapse remaining APK process tracks into catalog completion, live standard-pack art, and real Reading/Primary student game routes.
+
+- [x] **Track: APK Catalog UX Remediation** *Link: [./tracks/apk_catalog_ux_remediation_20260820/](./tracks/apk_catalog_ux_remediation_20260820/)*
+  Catalog UX waves W1–W4, music, leftover Konva page deletion, and old-URL redirects to `/student/games/apk/{id}` are complete.
 
 - [~] **Track: APK Standard Game Experience** *Link: [./tracks/apk_standard_game_experience_20260810/](./tracks/apk_standard_game_experience_20260810/)*
-  Make briefing, guided tutorial, safe demo, gameplay transition, and learning
-  debrief mandatory shared APK capabilities, then generate and enforce them in
-  the intern cartridge scaffold and authoring QC workflow. **Recovery update
-  2026-08-17:** 28 unique game links are playable, eight Phaser cartridges run
-  through the generic APK host, and the scaffold generates runnable game code.
-   The end-to-end lane passes full APK coverage, 1,782 app tests, 129 cartridge
-   tests, ten browser lifecycle cases, and a database-backed student completion.
-   The remaining 20 catalog games stay on separate legacy routes.
+  Briefing, guided tutorial, and class demonstration are in the live host. S4 debrief and S5 intern workflow stay dropped. S2 owner browser verification remains for later.
 
 - [x] **Track: APK Legacy Catalog Completion** *Link: [./archive/apk_legacy_catalog_completion_20260818/](./archive/apk_legacy_catalog_completion_20260818/)*
   Refactored the exact 20 remaining legacy catalog games into standard APK
   cartridges. The 28-entry catalog, compact and wide browser lifecycle, both
   authenticated input modes, static assets, builds, and graph refresh passed.
-  Final independent review found no unresolved Critical or High issues.
+  Final independent review found no unresolved Critical or High issues. This is
+  the implementation for Action, Defense, and Puzzle titles.
 
-- [~] **Track: APK Legacy Catalog Manual Browser Evidence** *Link: [./tracks/apk_legacy_catalog_manual_browser_evidence_20260819/](./tracks/apk_legacy_catalog_manual_browser_evidence_20260819/)*
-  Manually inspect the 20 refactored cartridges at compact and wide viewports.
-  Publish gameplay screenshots, per-title verdicts, hashes, and independent review.
+- [x] **Track: APK Legacy Catalog Manual Browser Evidence — SUPERSEDED** *Link: [./archive/apk_legacy_catalog_manual_browser_evidence_20260819/](./archive/apk_legacy_catalog_manual_browser_evidence_20260819/)*
+  Standing Fail report retired. Recapture belongs to `apk_product_simplification_20260820` after art loads on the authenticated catalog route.
 
 - [x] **Track: APK Standard Asset Library Contract and Production** *Link: [./archive/apk_dual_theme_asset_production_20260712/](./archive/apk_dual_theme_asset_production_20260712/)*
   Accepted release `2026.07.23`: 43,075 receipt-bound assets, catalog digest
@@ -267,10 +272,10 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
   and cartridge presentation behavior. It makes animation and selected-union
   metadata descriptor-driven without reopening T10/T11 or authorizing migration.
 
-- [ ] **Track: APK Standard-Pack Suitability and Canonical Ingestion** *Link: [./tracks/apk_standard_pack_suitability_ingestion_20260728/](./tracks/apk_standard_pack_suitability_ingestion_20260728/)*
-  Consumes Asset Contract v2 to decide per role whether to reuse suitable
-  canonical art, canonically ingest approved legacy art with provenance, or
-  block the role; it publishes additive release and binding evidence only.
+- [x] **Track: APK Standard-Pack Suitability and Canonical Ingestion** *Link: [./tracks/apk_standard_pack_suitability_ingestion_20260728/](./tracks/apk_standard_pack_suitability_ingestion_20260728/)*
+  Evidence-only contract and Existing Core dossiers are complete. Live catalog
+  player and enemy roles reuse pack `2026.07.23` through `createCatalogStandardEdition`.
+  Real legacy-asset ingestion remains unauthorized.
 
 - [x] **Track: APK Durable Successor Registry and Release Admission** *Link: [./archive/apk_durable_successor_registry_20260730/](./archive/apk_durable_successor_registry_20260730/)*
   Replaces process-local APK successor reservations with a transaction-safe,
@@ -287,22 +292,22 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
   cutover, deletion, historical rebuild, and completeness claims remain cohort-gated.
   - [x] **Track: APK Denominator, Readiness, and T11 Release Integrity** *Link: [./archive/apk_denominator_readiness_t11_integrity_20260727/](./archive/apk_denominator_readiness_t11_integrity_20260727/)*
     Accepted exact owner message `approved`; receipt `d371fc5d…f1720` preserves all reviewed hashes, restrictions, disclosures, and child authorization boundaries.
-- [~] **Track: APK Existing Core Cartridge Revalidation and Cutover** *Link: [./tracks/apk_existing_core_cutover_20260727/](./tracks/apk_existing_core_cutover_20260727/)*
-    Vertically revalidates Dragon Flight, Magic Defense, Dungeon Liberator, The Sorcerer's Ziggurat, and Astral Mage. **Task 4 accepted:** exact hash-bound Advantage Games QC and compact/wide real-input proof is accepted; authorization is limited to beginning Task 5 Reading/Primary host proof. New title-acceptance evidence additionally requires Asset Contract v2 and accepted suitability/ingestion dossiers. No production catalog exposure, Task-5 success, retirement, cutover, or cohort acceptance is claimed.
-  - [b] **Track: APK Existing Action Cartridge Revalidation and Cutover** *Link: [./tracks/apk_existing_action_cutover_20260727/](./tracks/apk_existing_action_cutover_20260727/)*
-    Vertically revalidates Archer's Revenge, Paladin's Twin-Soul, Griffin Sky-Joust, Gryphon Patrol, and Realm Carver. **Blocked:** Asset Contract v2 needs a current-byte independent review and product-owner receipt.
-  - [ ] **Track: APK Legacy Defense Rebuild and Cutover** *Link: [./tracks/apk_legacy_defense_cutover_20260727/](./tracks/apk_legacy_defense_cutover_20260727/)*
-    Vertically rebuilds Castle Defense, Wizard vs Zombie, Village Guardian, and Storm the Castle Tower.
-  - [~] **Track: APK Legacy Traversal Rebuild and Cutover** *Link: [./tracks/apk_legacy_traversal_cutover_20260727/](./tracks/apk_legacy_traversal_cutover_20260727/)*
-    Rebuilds Dragon Rider, Spellweaver's Run, Shadow Gate Dungeon, Labyrinth of the Goblin King, and Griffin Rider's Escape. Advantage Games publication and interaction proof pass. Reading/Primary proofs, legacy retirement, and final acceptance remain open.
-  - [ ] **Track: APK Legacy Puzzle Rebuild and Cutover** *Link: [./tracks/apk_legacy_puzzle_cutover_20260727/](./tracks/apk_legacy_puzzle_cutover_20260727/)*
-    Vertically rebuilds Enchanted Library, Rune Match, Alchemist's Synthesis, Potion Rush, and Rune Forge Chamber.
+- [x] **Track: APK Existing Core Cartridge Revalidation and Cutover** *Link: [./tracks/apk_existing_core_cutover_20260727/](./tracks/apk_existing_core_cutover_20260727/)*
+    Five core titles play as APK cartridges on Advantage Games, Reading, and Primary. Leftover Konva pages redirect to `/student/games/apk/{id}`. Task 6 keeps the 32 inventory PNG paths. Hidden host-proof pages stay frozen.
+  - [x] **Track: APK Existing Action Cartridge Revalidation and Cutover — SUPERSEDED** *Link: [./archive/apk_existing_action_cutover_20260727/](./archive/apk_existing_action_cutover_20260727/)*
+    Superseded by catalog completion. Do not rebuild Archer's Revenge, Paladin's Twin-Soul, Griffin Sky-Joust, Gryphon Patrol, or Realm Carver as a new cutover program.
+  - [x] **Track: APK Legacy Defense Rebuild and Cutover — SUPERSEDED** *Link: [./archive/apk_legacy_defense_cutover_20260727/](./archive/apk_legacy_defense_cutover_20260727/)*
+    Superseded by catalog completion. Do not rebuild Castle Defense, Wizard vs Zombie, Village Guardian, or Storm the Castle Tower as a new cutover program.
+  - [x] **Track: APK Legacy Traversal Rebuild and Cutover** *Link: [./tracks/apk_legacy_traversal_cutover_20260727/](./tracks/apk_legacy_traversal_cutover_20260727/)*
+    Five traversal titles play as APK cartridges on Advantage Games, Reading, and Primary. Leftover Konva pages redirect to `/student/games/apk/{id}`. Hidden host-proof pages stay frozen.
+  - [x] **Track: APK Legacy Puzzle Rebuild and Cutover — SUPERSEDED** *Link: [./archive/apk_legacy_puzzle_cutover_20260727/](./archive/apk_legacy_puzzle_cutover_20260727/)*
+    Superseded by catalog completion. Do not rebuild Enchanted Library, Rune Match, Alchemist's Synthesis, Potion Rush, or Rune Forge Chamber as a new cutover program.
   - [x] **Track: APK Historical/Cancelled Identity Disposition** *Link: [./archive/apk_historical_identity_disposition_20260727/](./archive/apk_historical_identity_disposition_20260727/)*
-    **Accepted with disclosure (2026-07-31; accepted-gated-disposition-only):** `product-owner-acceptance-v1.json` binds defer for RPG Battle, Devourer Slime, and The Haunted Library, and retain-history for The Abyssal Well and Babel Architect, against the independently reviewed evidence. `future-track-criteria-v1.json` requires a separately accepted bounded child track for any future work. No gameplay, playable, rebuild, shipping, or portfolio-completeness claim is made; all five remain gated and non-playable.
-  - [ ] **Track: APK Planned/New-Game Intake** *Link: [./tracks/apk_new_game_intake_20260727/](./tracks/apk_new_game_intake_20260727/)*
-    Defines evidence-first future intake and rejects placeholder titles, implementation, routes, and catalog exposure.
-  - [ ] **Track: APK Residual Cross-Host Retirement and Closeout** *Link: [./tracks/apk_cross_host_closeout_20260727/](./tracks/apk_cross_host_closeout_20260727/)*
-    Owns only residual cross-host work that no vertical cohort owns after cohort outcomes are accepted or explicitly blocked.
+    **Accepted with disclosure (2026-07-31; accepted-gated-disposition-only):** `product-owner-acceptance-v1.json` binds defer for RPG Battle, Devourer Slime, and The Haunted Library, and retain-history for The Abyssal Well and Babel Architect, against the independently reviewed evidence. Catalog completion later shipped playable APK ports for the deferred titles.
+  - [x] **Track: APK Planned/New-Game Intake** *Link: [./archive/apk_new_game_intake_20260727/](./archive/apk_new_game_intake_20260727/)*
+    Intake template published. No future game is accepted. Closed as registry hygiene.
+  - [x] **Track: APK Residual Cross-Host Retirement and Closeout** *Link: [./archive/apk_cross_host_closeout_20260727/](./archive/apk_cross_host_closeout_20260727/)*
+    Closed as registry hygiene. Residual leftover pages are not a separate program.
 
 - [x] **Track: APK Dual-Theme Production Asset Packs — SUPERSEDED, DO NOT IMPLEMENT** *Link: [./archive/apk_dual_theme_asset_packs_20260711/](./archive/apk_dual_theme_asset_packs_20260711/)*
   Superseded 2026-07-12 because it froze a speculative physical inventory before completing cross-game requirements analysis. Retained as failure evidence; no completion claim is made.

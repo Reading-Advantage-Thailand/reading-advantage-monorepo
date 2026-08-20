@@ -1,0 +1,26 @@
+{
+  "track_id": "accounting_app_foundation_20260820",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-08-20T01:54:43Z",
+  "updated_at": "2026-08-20T01:54:43Z",
+  "description": "Build apps/accounting as the in-house finance workspace: SSO via apps/accounts, staff expense/bill submission with evidence, owner approval with immutable audit, full double-entry ledger on a standard Thai SME chart of accounts, Thai statutory support (VAT, WHT, tax invoices), and accountant export — on top of the Finance Operations foundation.",
+  "estimated_tasks": 40,
+  "actual_tasks": null,
+  "deviation_notes": "",
+  "sprint": {
+    "goal": "Stand up apps/accounting as the company's in-house finance workspace: staff submit expenses and bills with evidence, the owner approves, and accepted records post to a full double-entry ledger on a standard Thai SME chart of accounts, with Thai statutory support (VAT, withholding tax, tax invoices) built in, accessed through Accounts SSO.",
+    "stories": [
+      { "id": "S1", "title": "Company SSO sign-in", "size": "M", "priority": "Must", "status": "pending" },
+      { "id": "S2", "title": "Expense & bill submission with evidence", "size": "L", "priority": "Must", "status": "pending" },
+      { "id": "S3", "title": "Settlement-derived THB valuation", "size": "M", "priority": "Must", "status": "pending" },
+      { "id": "S4", "title": "Owner approval with immutable audit", "size": "M", "priority": "Must", "status": "pending" },
+      { "id": "S5", "title": "Double-entry ledger, Thai SME chart", "size": "L", "priority": "Must", "status": "pending" },
+      { "id": "S6", "title": "VAT & tax invoices", "size": "L", "priority": "Should", "status": "pending" },
+      { "id": "S7", "title": "Withholding tax", "size": "M", "priority": "Should", "status": "pending" },
+      { "id": "S8", "title": "Accountant export pack", "size": "M", "priority": "Could", "status": "pending" }
+    ],
+    "demo_notes": null,
+    "retro_ref": null
+  }
+}
