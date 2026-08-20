@@ -24,6 +24,10 @@
       "types": "./dist/modules/finance-operations/postgres/index.d.ts",
       "import": "./dist/modules/finance-operations/postgres/index.js"
     },
+    "./accounting": {
+      "types": "./dist/modules/accounting/index.d.ts",
+      "import": "./dist/modules/accounting/index.js"
+    },
     "./company-identity/internal-route-adapter": {
       "types": "./dist/modules/company-identity/public-route-adapter.d.ts",
       "import": "./dist/modules/company-identity/public-route-adapter.js"
