@@ -207,9 +207,10 @@ dependencies: 22/22 tasks successful.
     - [ ] Requeue the existing dead jobs and record how many now complete
     - [ ] Record the residual dead rows and their reasons here
     - Note 2026-08-20: the baseline shows zero dead rows and zero pending learner
-      reviews, so there are no dead jobs to requeue. The deploy is held because the
-      accounting and APK lanes have committed code on the same branch; deploying
-      codecamp-advantage now would ship their commits too. The owner decides timing.
+      reviews, so there are no dead jobs to requeue. Owner decision: hold the deploy
+      until all four codecamp_20260820 tracks are complete, then deploy once. The
+      accounting and APK lanes also have committed code on the same branch. The
+      post-deploy baseline comparison and the browser acceptance run at that point.
 - [x] Task: Retrospective (7798b93)
     - [x] Add the enum-in-transaction constraint to `measure/lessons-learned.md` if it is not already there - added; two housekeeping entries merged to hold the 50-line cap
     - [x] Close or update the related `tech-debt.md` rows for the review pipeline - verified: the review-pipeline rows are already Resolved by `webhook_review_reliability_20260605`; no open row matches this track's scope
