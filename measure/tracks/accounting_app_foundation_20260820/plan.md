@@ -1,6 +1,6 @@
 # Implementation plan
 
-## Phase S1: Company SSO sign-in
+## Phase S1: Company SSO sign-in [checkpoint: 8f8118e]
 _Story ref: spec.md#story-s1_
 
 - [x] Task: Scaffold `apps/accounting` (Next.js + TS + Tailwind + shadcn/ui, matching monorepo conventions) and define the accounting role contract (`STAFF`, `OWNER`, `ACCOUNTANT` + reviewed admin derivation) in the internal auth adapter's app-role registry; register `apps/accounting` as an OIDC client of `apps/accounts`. 918e375
