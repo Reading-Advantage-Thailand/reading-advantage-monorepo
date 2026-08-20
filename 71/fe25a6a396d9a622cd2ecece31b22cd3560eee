@@ -1,0 +1,3 @@
+Track: codecamp_pr_review_recovery_20260820 - Phase 2 Red.
+
+Seven test suites: 64 failing assertions recorded in plan.md. Diff preparation (10 red), contract failure kind (5 red, 9 guards), repair loop (4 red), worker outcomes (4 red, 1 guard), tick deadline (3 red), learner-visible ReviewHistory (35 red), deployment contract (3 red, 4 guards). i18n parity 439/439 green. check-types green for domain, webhooks, codecamp-advantage. All red failures are assertion failures; no compile errors. Verified by orchestrator: every count reproduced independently.
