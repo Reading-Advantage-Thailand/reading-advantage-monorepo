@@ -10,9 +10,9 @@
 
 export interface ResolvedRequestLocale {
   /** Resolved locale identifier, either from the cookie or the default. */
-  locale: string;
+  readonly locale: string;
   /** True when the locale came from a valid NEXT_LOCALE cookie. */
-  fromCookie: boolean;
+  readonly fromCookie: boolean;
 }
 
 /**
