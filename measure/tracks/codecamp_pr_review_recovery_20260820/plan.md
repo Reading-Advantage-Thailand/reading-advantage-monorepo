@@ -64,7 +64,7 @@ Red-phase commits contain ONLY the new test files and Measure document edits.
 Check `git status --short` before staging; the tree carries unrelated
 modifications (lessons-learned 2026-06-07).
 
-- [ ] Task: Write diff preparation Red tests
+- [x] Task: Write diff preparation Red tests
     - [ ] `packages/domain/src/__tests__/review-diff-preparation.test.ts`
     - [ ] Strips a whole `diff --git` section for `dist/`, `build/`, `.next/`, `coverage/`, `node_modules/`
     - [ ] Strips `.map`, `.min.js`, `.min.css` by suffix
@@ -73,45 +73,64 @@ modifications (lessons-learned 2026-06-07).
     - [ ] Returns `empty: true` when nothing remains
     - [ ] Measures the 200,000 character limit after stripping, not before
     - [ ] Still throws on a secret pattern and on binary content
-- [ ] Task: Write contract failure classification Red tests
+- [x] Task: Write contract failure classification Red tests
     - [ ] `packages/domain/src/__tests__/review-contract-failure-kind.test.ts`
     - [ ] Each of the five model-shape messages carries `kind = "model_shape"` and `retryable = true`
     - [ ] Each of the five input-safety messages carries `kind = "input_safety"` and `retryable = false`
     - [ ] `isCodecampPrReviewContractError` keeps its existing structural shape for the worker
-- [ ] Task: Write repair-loop Red tests
+- [x] Task: Write repair-loop Red tests
     - [ ] `packages/domain/src/__tests__/review-repair-loop.test.ts`
     - [ ] A generator that omits one bound objective on call 1 and is correct on call 2 produces a review
     - [ ] A generator that is wrong three times throws, and the thrown error is `model_shape`
     - [ ] The repair prompt names the violated rule and every authorized objective identifier
     - [ ] The loop makes at most three generator calls in total
-- [ ] Task: Write settle and outcome Red tests
+- [x] Task: Write settle and outcome Red tests
     - [ ] `packages/webhooks/src/__tests__/review-worker-outcomes.test.ts`
     - [ ] `input_safety` failure settles `dead` with `outcome = "failed_permanent"` and a reason
     - [ ] `model_shape` failure settles `pending` with backoff while attempts remain
     - [ ] Exhaustion settles `dead` with `outcome = "failed_exhausted"`
     - [ ] An empty stripped diff settles `succeeded` with `outcome = "skipped_generated"`
     - [ ] Every terminal settle writes exactly one structured log line
-- [ ] Task: Write tick deadline Red tests
+- [x] Task: Write tick deadline Red tests
     - [ ] `packages/webhooks/src/__tests__/review-worker-deadline.test.ts`
     - [ ] `runWorkerTick` stops claiming after the deadline passes and returns cleanly
     - [ ] A job already claimed before the deadline still settles
     - [ ] The default deadline is 120,000 milliseconds
-- [ ] Task: Write learner-visible status Red tests
+- [x] Task: Write learner-visible status Red tests
     - [ ] `apps/codecamp-advantage/components/__tests__/review-history.test.tsx`
     - [ ] Renders `failed` with a reason and a retry action when the job is dead
     - [ ] Renders `skipped` with the removed paths when the outcome is `skipped_generated`
     - [ ] Renders `processing` and `retrying` from the job state
     - [ ] Never renders `pending` for a dead job
     - [ ] Both locale files carry every new key (`i18n-key-parity.test.ts` must stay green)
-- [ ] Task: Write deployment contract Red tests
+- [x] Task: Write deployment contract Red tests
     - [ ] Extend `apps/codecamp-advantage/lib/__tests__/review-worker-deployment-contract.test.ts`
     - [ ] `cloudbuild.yaml` sets `REVIEW_WORKER_BACKOFF_BASE_MS=30000`
     - [ ] `cloudbuild.yaml` sets `CODECAMP_PR_REVIEW_MODEL` to a pinned version, and the value contains no `~` alias prefix
     - [ ] `configure-review-worker-scheduler.sh` passes `--attempt-deadline=180s`
-- [ ] Task: Confirm the Red phase
-    - [ ] Run each new suite and record the failing assertion counts in this plan
-    - [ ] Commit the test files and this plan only
-- [ ] Task: Measure - User Manual Verification 'Phase 2: Test' (Protocol in workflow.md)
+- [x] Task: Confirm the Red phase
+    - [x] Run each new suite and record the failing assertion counts in this plan
+    - [x] Commit the test files and this plan only
+
+Red counts, verified by the orchestrator on 2026-08-20 (64 failing assertions total):
+
+| Suite | Tests | Red | Passing (regression guards) |
+|---|---|---|---|
+| review-diff-preparation.test.ts | 10 | 10 | 0 |
+| review-contract-failure-kind.test.ts | 14 | 5 | 9 |
+| review-repair-loop.test.ts | 4 | 4 | 0 |
+| review-worker-outcomes.test.ts | 5 | 4 | 1 |
+| review-worker-deadline.test.ts | 3 | 3 | 0 |
+| review-history.test.tsx | 35 | 35 | 0 |
+| review-worker-deployment-contract.test.ts | 7 | 3 | 4 |
+
+New i18n keys under the `review.` namespace: `statusFailed`, `statusFailedMsg`,
+`statusFailedRetryAction`, `statusSkipped`, `statusSkippedMsg`,
+`statusSkippedPathsLabel`, `statusProcessing`, `statusProcessingMsg`,
+`statusRetrying`, `statusRetryingMsg`. `i18n-key-parity.test.ts` stays green
+(439/439). check-types passes for domain, webhooks, and codecamp-advantage.
+
+- [x] Task: Measure - User Manual Verification 'Phase 2: Test' (Protocol in workflow.md) - orchestrator re-ran every suite: red counts above reproduced exactly; no existing suite regressed beyond the 3 known pre-existing webhooks git-notes failures
 
 ## Phase 3: Implement
 

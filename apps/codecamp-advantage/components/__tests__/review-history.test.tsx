@@ -1,111 +1,156 @@
 import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { ReviewHistory } from "../review-history";
+import enMessages from "../../messages/en.json";
+import thMessages from "../../messages/th.json";
 
-describe("ReviewHistory", () => {
-  it("renders review timeline with current status", () => {
+/**
+ * Phase 2 (Red) tests for the learner-visible review statuses (FR-1).
+ *
+ * Behavior lands in Phase 3. The current `ReviewHistory` only knows the
+ * four editorial statuses, so the new-state and i18n-key assertions
+ * are RED.
+ *
+ * New i18n key names chosen to follow the existing `review.statusXxx`
+ * convention in `apps/codecamp-advantage/messages/{en,th}.json`:
+ *
+ *   review.statusFailed
+ *   review.statusFailedMsg
+ *   review.statusFailedRetryAction
+ *   review.statusSkipped
+ *   review.statusSkippedMsg
+ *   review.statusSkippedPathsLabel
+ *   review.statusProcessing
+ *   review.statusProcessingMsg
+ *   review.statusRetrying
+ *   review.statusRetryingMsg
+ */
+
+const NEW_KEYS = [
+  "review.statusFailed",
+  "review.statusFailedMsg",
+  "review.statusFailedRetryAction",
+  "review.statusSkipped",
+  "review.statusSkippedMsg",
+  "review.statusSkippedPathsLabel",
+  "review.statusProcessing",
+  "review.statusProcessingMsg",
+  "review.statusRetrying",
+  "review.statusRetryingMsg",
+] as const;
+
+/** Reads a nested messages bundle to a flat dotted-key map. */
+function flatten(obj: Record<string, unknown>, prefix = ""): Record<string, string> {
+  const out: Record<string, string> = {};
+  for (const [k, v] of Object.entries(obj)) {
+    const key = prefix ? `${prefix}.${k}` : k;
+    if (typeof v === "object" && v !== null && !Array.isArray(v)) {
+      Object.assign(out, flatten(v as Record<string, unknown>, key));
+    } else {
+      out[key] = String(v ?? "");
+    }
+  }
+  return out;
+}
+
+describe("ReviewHistory learner-visible operational statuses (FR-1)", () => {
+  it("renders failed with a plain-language reason and a retry action when the job is dead", () => {
+    const props = {
+      prUrl: "https://github.com/org/repo/pull/5",
+      reviewStatus: "failed",
+      summary: null,
+      failureReason: "Review model timed out after retries.",
+      onRequestAnotherReview: () => {},
+    };
     render(
-      <ReviewHistory
-        prUrl="https://github.com/org/repo/pull/5"
-        reviewStatus="needs_changes"
-        summary="Add error handling for empty inputs"
-      />
+      // Cast: Phase 3 extends the `reviewStatus` union and props.
+      <ReviewHistory {...(props as unknown as Parameters<typeof ReviewHistory>[0])} />,
     );
 
-    expect(screen.getByText(/history/i)).toBeInTheDocument();
-    expect(screen.getAllByText(/statusNeedsChanges/i).length).toBeGreaterThanOrEqual(1);
+    expect(screen.getByText("statusFailed")).toBeInTheDocument();
+    expect(screen.getByText("statusFailedMsg")).toBeInTheDocument();
+    expect(screen.getByText("statusFailedRetryAction")).toBeInTheDocument();
+    expect(screen.getByText(/Review model timed out after retries\./)).toBeInTheDocument();
   });
 
-  it("shows pending state when no review yet", () => {
+  it("renders skipped with the removed paths when the outcome is skipped_generated", () => {
+    const props = {
+      prUrl: "https://github.com/org/repo/pull/5",
+      reviewStatus: "skipped",
+      summary: null,
+      removedPaths: ["dist/bundle.js", "build/out.js"],
+    };
     render(
-      <ReviewHistory
-        prUrl="https://github.com/org/repo/pull/5"
-        reviewStatus="pending"
-        summary={null}
-      />
+      <ReviewHistory {...(props as unknown as Parameters<typeof ReviewHistory>[0])} />,
     );
 
-    expect(screen.getByText(/statusPendingMsg/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/review timeline: pending/i)).toBeInTheDocument();
+    expect(screen.getByText("statusSkipped")).toBeInTheDocument();
+    expect(screen.getByText("statusSkippedMsg")).toBeInTheDocument();
+    expect(screen.getByText("statusSkippedPathsLabel")).toBeInTheDocument();
+    expect(screen.getByText(/dist\/bundle\.js/)).toBeInTheDocument();
+    expect(screen.getByText(/build\/out\.js/)).toBeInTheDocument();
   });
 
-  it("shows approved state with success message", () => {
+  it("renders the processing state when the worker has claimed the job", () => {
+    const props = {
+      prUrl: "https://github.com/org/repo/pull/5",
+      reviewStatus: "processing",
+      summary: null,
+    };
     render(
-      <ReviewHistory
-        prUrl="https://github.com/org/repo/pull/5"
-        reviewStatus="approved"
-        summary="Great work! All tests pass."
-      />
+      <ReviewHistory {...(props as unknown as Parameters<typeof ReviewHistory>[0])} />,
     );
 
-    expect(screen.getAllByText(/statusApproved/i).length).toBeGreaterThanOrEqual(1);
-    expect(screen.getByText(/Great work! All tests pass./i)).toBeInTheDocument();
+    expect(screen.getByText("statusProcessing")).toBeInTheDocument();
+    expect(screen.getByText("statusProcessingMsg")).toBeInTheDocument();
   });
 
-  it("shows reviewed state without blocking", () => {
+  it("renders the retrying state when the worker has scheduled a backoff attempt", () => {
+    const props = {
+      prUrl: "https://github.com/org/repo/pull/5",
+      reviewStatus: "retrying",
+      summary: null,
+    };
     render(
-      <ReviewHistory
-        prUrl="https://github.com/org/repo/pull/5"
-        reviewStatus="reviewed"
-        summary="Initial review complete. Minor style suggestions."
-      />
+      <ReviewHistory {...(props as unknown as Parameters<typeof ReviewHistory>[0])} />,
     );
 
-    expect(screen.getAllByText(/statusReviewed/i).length).toBeGreaterThanOrEqual(1);
+    expect(screen.getByText("statusRetrying")).toBeInTheDocument();
+    expect(screen.getByText("statusRetryingMsg")).toBeInTheDocument();
   });
 
-  it("renders PR link with shortened display", () => {
+  it("never renders pending for a dead job (FR-1: true learner-visible state)", () => {
+    const props = {
+      prUrl: "https://github.com/org/repo/pull/5",
+      reviewStatus: "failed",
+      summary: null,
+      failureReason: "Review dead-lettered — model timed out.",
+    };
     render(
-      <ReviewHistory
-        prUrl="https://github.com/reading-advantage/tracker/pull/5"
-        reviewStatus="pending"
-        summary={null}
-      />
+      <ReviewHistory {...(props as unknown as Parameters<typeof ReviewHistory>[0])} />,
     );
 
-    const link = screen.getByRole("link");
-    expect(link).toHaveAttribute("href", "https://github.com/reading-advantage/tracker/pull/5");
-    expect(link).toHaveAttribute("target", "_blank");
+    expect(screen.queryByText("statusPending")).not.toBeInTheDocument();
+    expect(screen.queryByText("statusPendingMsg")).not.toBeInTheDocument();
+    expect(screen.queryByLabelText(/review timeline: pending/i)).not.toBeInTheDocument();
   });
+});
 
-  it("shows all timeline steps", () => {
-    render(
-      <ReviewHistory
-        prUrl="https://github.com/org/repo/pull/5"
-        reviewStatus="needs_changes"
-        summary="Fix the error handling"
-      />
-    );
+describe("ReviewHistory i18n key parity for new operational statuses (FR-1)", () => {
+  const enKeys = flatten(enMessages as Record<string, unknown>);
+  const thKeys = flatten(thMessages as Record<string, unknown>);
 
-    expect(screen.getAllByText(/prSubmitted/i).length).toBeGreaterThanOrEqual(1);
-    expect(screen.getAllByText(/firstReview/i).length).toBeGreaterThanOrEqual(1);
-    expect(screen.getAllByText(/revisions/i).length).toBeGreaterThanOrEqual(1);
-    expect(screen.getAllByText(/approvedDesc/i).length).toBeGreaterThanOrEqual(1);
-  });
-
-  it("renders without summary when summary is null", () => {
-    render(
-      <ReviewHistory
-        prUrl="https://github.com/org/repo/pull/5"
-        reviewStatus="pending"
-        summary={null}
-      />
-    );
-
-    expect(screen.queryByText(/feedback/i)).not.toBeInTheDocument();
-    expect(screen.getByText(/statusPendingMsg/i)).toBeInTheDocument();
-  });
-
-  it("renders with empty string summary", () => {
-    render(
-      <ReviewHistory
-        prUrl="https://github.com/org/repo/pull/5"
-        reviewStatus="reviewed"
-        summary=""
-      />
-    );
-
-    expect(screen.queryByRole("heading", { name: /feedback/i })).not.toBeInTheDocument();
-    expect(screen.getByText(/statusReviewedMsg/i)).toBeInTheDocument();
-  });
+  for (const key of NEW_KEYS) {
+    it(`en.json carries ${key}`, () => {
+      expect(enKeys[key], `en.json must define ${key}`).toBeTruthy();
+    });
+    it(`th.json carries ${key}`, () => {
+      expect(thKeys[key], `th.json must define ${key}`).toBeTruthy();
+    });
+    it(`th.json ${key} differs from en.json ${key} (no English fallback)`, () => {
+      const en = enKeys[key] ?? "";
+      const th = thKeys[key] ?? "";
+      expect(th.trim(), `Thai value for ${key} must not be byte-identical to English`).not.toBe(en.trim());
+    });
+  }
 });

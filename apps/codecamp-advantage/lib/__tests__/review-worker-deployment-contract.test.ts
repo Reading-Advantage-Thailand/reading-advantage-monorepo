@@ -73,4 +73,38 @@ describe("Codecamp PR-review worker deployment contract", () => {
     expect(source).toContain("REVIEW_WORKER_TICK_TOKEN");
     expect(source).toContain("CODECAMP_REVIEW_WORKER_TICK_TOKEN");
   });
+
+  it("passes --attempt-deadline=180s on the create branch of the scheduler config (FR-7)", () => {
+    const source = readArtifact(schedulerConfig);
+    // The scheduler config has both a `create` and an `update` branch. Both
+    // must forward the tick deadline so the worker has a time budget per tick.
+    expect(source, "scheduler create branch must forward the attempt deadline").toMatch(
+      /gcloud\s+scheduler\s+jobs\s+create\s+http[\s\S]{0,400}--attempt-deadline=180s/,
+    );
+    expect(source, "scheduler update branch must forward the attempt deadline").toMatch(
+      /gcloud\s+scheduler\s+jobs\s+update\s+http[\s\S]{0,400}--attempt-deadline=180s/,
+    );
+  });
+
+  it("sets REVIEW_WORKER_BACKOFF_BASE_MS=30000 in --set-env-vars (FR-6)", () => {
+    const source = readArtifact(cloudbuild);
+    // The base backoff must be 30 seconds so five attempts span ~8 minutes
+    // (30000 * 2^0..4 = ~465s ≈ 7.75 min).
+    expect(
+      source,
+      "cloudbuild.yaml must export REVIEW_WORKER_BACKOFF_BASE_MS=30000",
+    ).toMatch(/--set-env-vars=[\s\S]*?REVIEW_WORKER_BACKOFF_BASE_MS=30000/);
+  });
+
+  it("pins CODECAMP_PR_REVIEW_MODEL to a non-alias version (no `~` prefix) (FR-8)", () => {
+    const source = readArtifact(cloudbuild);
+    const match = source.match(/CODECAMP_PR_REVIEW_MODEL=([^,]+)/);
+    expect(match, "cloudbuild.yaml must pin CODECAMP_PR_REVIEW_MODEL").not.toBeNull();
+    const pinnedValue = match?.[1]?.trim() ?? "";
+    expect(pinnedValue.length, "CODECAMP_PR_REVIEW_MODEL value must be non-empty").toBeGreaterThan(0);
+    expect(
+      pinnedValue.startsWith("~"),
+      `CODECAMP_PR_REVIEW_MODEL must NOT use the OpenRouter ~alias prefix (got: ${pinnedValue})`,
+    ).toBe(false);
+  });
 });
