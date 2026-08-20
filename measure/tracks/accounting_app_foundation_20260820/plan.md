@@ -7,7 +7,7 @@ _Story ref: spec.md#story-s1_
 - [x] Task: Red tests — OIDC Authorization Code + PKCE round-trip against the Accounts IdP (mocked token endpoint), role denial for users without an accounting role, session via internal auth adapter only (no app-local password store). a9f448e
 - [x] Task: Implement — sign-in flow via `apps/accounts` OIDC, `proxy.ts` route guard (Next.js 16 nodejs runtime — per lessons-learned), declare any native auth deps in the app's own `package.json` (argon2/Turbopack gotcha). 09e980a
 - [x] Task: Generate docs & doctor — `measure/generate.sh`, `measure/doctor.sh`. b9b9bbc
-- [b] Task: Measure - User Manual Verification 'Phase S1: Company SSO sign-in' (Protocol in workflow.md) (deferred:owner-manual-verification)
+- [x] Task: Measure - User Manual Verification 'Phase S1: Company SSO sign-in' (Protocol in workflow.md) — owner-verified live 2026-08-20: full OIDC round-trip in a real browser (found and fixed the `__Host-` cookie `Secure` bug, `9684d16`); session endpoint returns the owner identity with role OWNER.
 
 ## Phase S2: Expense & bill submission with evidence
 _Story ref: spec.md#story-s2_

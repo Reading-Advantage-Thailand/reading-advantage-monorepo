@@ -11,7 +11,7 @@
   "sprint": {
     "goal": "Stand up apps/accounting as the company's in-house finance workspace: staff submit expenses and bills with evidence, the owner approves, and accepted records post to a full double-entry ledger on a standard Thai SME chart of accounts, with Thai statutory support (VAT, withholding tax, tax invoices) built in, accessed through Accounts SSO.",
     "stories": [
-      { "id": "S1", "title": "Company SSO sign-in", "size": "M", "priority": "Must", "status": "pending" },
+      { "id": "S1", "title": "Company SSO sign-in", "size": "M", "priority": "Must", "status": "done" },
       { "id": "S2", "title": "Expense & bill submission with evidence", "size": "L", "priority": "Must", "status": "pending" },
       { "id": "S3", "title": "Settlement-derived THB valuation", "size": "M", "priority": "Must", "status": "pending" },
       { "id": "S4", "title": "Owner approval with immutable audit", "size": "M", "priority": "Must", "status": "pending" },
