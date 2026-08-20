@@ -194,21 +194,25 @@ dependencies: 22/22 tasks successful.
 
 ## Phase 4: Generate Docs & Doctor
 
-- [ ] Task: Update documentation
-    - [ ] Record the failure taxonomy in `apps/codecamp-advantage/docs/pr-review-e2e-runbook.md`
-    - [ ] Document the new environment variables in `apps/codecamp-advantage/.env.example`
-    - [ ] Correct the `REVIEW_WORKER_ENABLED` note: the interval worker belongs to the standalone Hono server, not to this Cloud Run service
-- [ ] Task: Run the generated-facts and architecture gates
-    - [ ] Run `measure/generate.sh`
-    - [ ] Run `measure/doctor.sh`
-    - [ ] Run `build-graph update ./graph.db` for the changed files
-- [ ] Task: Production verification
+- [x] Task: Update documentation (7798b93)
+    - [x] Record the failure taxonomy in `apps/codecamp-advantage/docs/pr-review-e2e-runbook.md`
+    - [x] Document the new environment variables in `apps/codecamp-advantage/.env.example`
+    - [x] Correct the `REVIEW_WORKER_ENABLED` note: the interval worker belongs to the standalone Hono server, not to this Cloud Run service
+- [x] Task: Run the generated-facts and architecture gates (7798b93)
+    - [x] Run `measure/generate.sh` - exit 0
+    - [x] Run `measure/doctor.sh` - exit 0
+    - [x] Run `build-graph update ./graph.db` for the changed files - 11 files, 553 to 650 nodes, 783 to 812 edges
+- [ ] Task: Production verification (pending owner decision on deploy timing)
     - [ ] Deploy, then re-run the baseline query and compare the dead-row mix
     - [ ] Requeue the existing dead jobs and record how many now complete
     - [ ] Record the residual dead rows and their reasons here
-- [ ] Task: Retrospective
-    - [ ] Add the enum-in-transaction constraint to `measure/lessons-learned.md` if it is not already there
-    - [ ] Close or update the related `tech-debt.md` rows for the review pipeline
+    - Note 2026-08-20: the baseline shows zero dead rows and zero pending learner
+      reviews, so there are no dead jobs to requeue. The deploy is held because the
+      accounting and APK lanes have committed code on the same branch; deploying
+      codecamp-advantage now would ship their commits too. The owner decides timing.
+- [x] Task: Retrospective (7798b93)
+    - [x] Add the enum-in-transaction constraint to `measure/lessons-learned.md` if it is not already there - added; two housekeeping entries merged to hold the 50-line cap
+    - [x] Close or update the related `tech-debt.md` rows for the review pipeline - verified: the review-pipeline rows are already Resolved by `webhook_review_reliability_20260605`; no open row matches this track's scope
 - [ ] Task: Measure - User Manual Verification 'Phase 4: Generate Docs & Doctor' (Protocol in workflow.md)
 
 ## Checkpoints
@@ -220,4 +224,4 @@ produced six dangling references in this repository (lessons-learned 2026-06-07)
 - Phase 1 contracts: 96841ba
 - Phase 2 Red: 71fe25a
 - Phase 3 Green: 62d65ae
-- Phase 4 docs and doctor:
+- Phase 4 docs and doctor: 7798b93
