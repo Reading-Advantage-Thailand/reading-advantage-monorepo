@@ -45,6 +45,7 @@ steps:
       - "MARKETING_COMPANY_AUTH_OIDC_CLIENT_SECRET"
       - "SALES_COMPANY_AUTH_OIDC_CLIENT_SECRET"
       - "CODECAMP_COMPANY_AUTH_OIDC_CLIENT_SECRET"
+      - "ACCOUNTING_COMPANY_AUTH_OIDC_CLIENT_SECRET"
 
   - name: "node:22-slim"
     id: "runtime-db-contract"
@@ -97,6 +98,8 @@ availableSecrets:
       env: "SALES_COMPANY_AUTH_OIDC_CLIENT_SECRET"
     - versionName: "projects/reading-advantage/secrets/CODECAMP_COMPANY_AUTH_OIDC_CLIENT_SECRET/versions/latest"
       env: "CODECAMP_COMPANY_AUTH_OIDC_CLIENT_SECRET"
+    - versionName: "projects/$PROJECT_ID/secrets/ACCOUNTING_COMPANY_AUTH_OIDC_CLIENT_SECRET/versions/latest"
+      env: "ACCOUNTING_COMPANY_AUTH_OIDC_CLIENT_SECRET"
 
 options:
   logging: CLOUD_LOGGING_ONLY

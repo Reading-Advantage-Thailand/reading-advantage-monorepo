@@ -75,6 +75,7 @@ async function main(): Promise<void> {
         { applicationKey: "marketing", roleKey: "ADMIN" },
         { applicationKey: "sales", roleKey: "SALES_ADMIN" },
         { applicationKey: "codecamp", roleKey: "ADMIN" },
+        { applicationKey: "accounting", roleKey: "OWNER" },
       ] as const;
       for (const assignment of ownerApplicationRoles) {
         const [application] = await transaction<Array<{ id: string }>>`
@@ -169,7 +170,7 @@ async function main(): Promise<void> {
         }
       }
     });
-    process.stdout.write("Accounts bootstrap verified: owner=1 owner_app_admin_roles=3 clients=3 audit=immutable\n");
+    process.stdout.write("Accounts bootstrap verified: owner=1 owner_app_admin_roles=4 clients=4 audit=immutable\n");
   } finally {
     await sql.end({ timeout: 5 });
   }

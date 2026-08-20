@@ -76,6 +76,14 @@ describe("Accounts production readiness", () => {
     expect(dbBuild).toBeGreaterThanOrEqual(0);
     expect(authBuild).toBeGreaterThan(dbBuild);
     expect(bootstrap).toBeGreaterThan(authBuild);
+    for (const clientSecret of [
+      "MARKETING_COMPANY_AUTH_OIDC_CLIENT_SECRET",
+      "SALES_COMPANY_AUTH_OIDC_CLIENT_SECRET",
+      "CODECAMP_COMPANY_AUTH_OIDC_CLIENT_SECRET",
+      "ACCOUNTING_COMPANY_AUTH_OIDC_CLIENT_SECRET",
+    ]) {
+      expect(productionBootstrap).toContain(clientSecret);
+    }
     expect(cloudbuild.match(/cloud-sql-proxy\/v2\.15\.1/g)).toHaveLength(5);
     expect(cloudbuild).toContain("https://accounts.reading-advantage.com");
     expect(cloudbuild).toContain("__Host-ra_company_sso");
@@ -189,6 +197,7 @@ describe("Accounts production readiness", () => {
       "MARKETING_COMPANY_AUTH_OIDC_CLIENT_SECRET",
       "SALES_COMPANY_AUTH_OIDC_CLIENT_SECRET",
       "CODECAMP_COMPANY_AUTH_OIDC_CLIENT_SECRET",
+      "ACCOUNTING_COMPANY_AUTH_OIDC_CLIENT_SECRET",
     ]) {
       expect(deploy).not.toContain(bootstrapSecret);
     }

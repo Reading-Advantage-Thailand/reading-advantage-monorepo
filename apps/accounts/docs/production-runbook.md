@@ -26,6 +26,7 @@ they are never attached to the Accounts Cloud Run service:
 - `SALES_COMPANY_AUTH_OIDC_CLIENT_SECRET`
 - `CODECAMP_COMPANY_AUTH_OIDC_CLIENT_SECRET`, owned centrally at
   `projects/reading-advantage/secrets/CODECAMP_COMPANY_AUTH_OIDC_CLIENT_SECRET`.
+- `ACCOUNTING_COMPANY_AUTH_OIDC_CLIENT_SECRET`
 
 The same central Codecamp secret is bound by its runtime manifest even though
 Codecamp is not part of today's deployment.

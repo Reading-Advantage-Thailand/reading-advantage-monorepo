@@ -21,6 +21,7 @@ export const productionBootstrapSchema = z.strictObject({
     clientSchema("marketing", "marketing-web", "https://marketing.reading-advantage.com/api/auth/callback"),
     clientSchema("sales", "sales-web", "https://sales.reading-advantage.com/api/auth/callback"),
     clientSchema("codecamp", "codecamp-web", "https://codecamp.reading-advantage.com/api/auth/callback"),
+    clientSchema("accounting", "accounting-web", "https://accounting.reading-advantage.com/api/auth/callback"),
   ]),
 });
 
@@ -58,6 +59,12 @@ export function createProductionBootstrapInput(
         clientId: "codecamp-web",
         clientSecret: environment.CODECAMP_COMPANY_AUTH_OIDC_CLIENT_SECRET,
         redirectUri: "https://codecamp.reading-advantage.com/api/auth/callback",
+      },
+      {
+        applicationKey: "accounting",
+        clientId: "accounting-web",
+        clientSecret: environment.ACCOUNTING_COMPANY_AUTH_OIDC_CLIENT_SECRET,
+        redirectUri: "https://accounting.reading-advantage.com/api/auth/callback",
       },
     ],
   });

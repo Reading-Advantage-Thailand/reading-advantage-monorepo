@@ -10,13 +10,14 @@ const base = {
   MARKETING_COMPANY_AUTH_OIDC_CLIENT_SECRET: "m".repeat(32),
   SALES_COMPANY_AUTH_OIDC_CLIENT_SECRET: "s".repeat(32),
   CODECAMP_COMPANY_AUTH_OIDC_CLIENT_SECRET: "c".repeat(32),
+  ACCOUNTING_COMPANY_AUTH_OIDC_CLIENT_SECRET: "a".repeat(32),
 };
 
 describe("production bootstrap contract", () => {
   it("requires one exact confidential client for each application", () => {
-    expect(createProductionBootstrapInput(base).clients).toHaveLength(3);
+    expect(createProductionBootstrapInput(base).clients).toHaveLength(4);
     expect(createProductionBootstrapInput(base).clients.map((client) => client.clientId))
-      .toEqual(["marketing-web", "sales-web", "codecamp-web"]);
+      .toEqual(["marketing-web", "sales-web", "codecamp-web", "accounting-web"]);
   });
 
   it("rejects non-HTTPS callbacks and never includes secret values in errors", () => {
