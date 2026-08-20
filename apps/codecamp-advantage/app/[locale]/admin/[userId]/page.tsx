@@ -37,6 +37,7 @@ export default function InternDetailPage() {
     processing: t("reviewOperationalStatus.processing"),
     retrying: t("reviewOperationalStatus.retrying"),
     failed: t("reviewOperationalStatus.failed"),
+    skipped: t("reviewOperationalStatus.skipped"),
   };
   const params = useParams();
   const userId = params.userId as string;
@@ -162,7 +163,7 @@ export default function InternDetailPage() {
             reviewReceived: boolean;
             latestPrUrl: string | null;
             latestPrReviewStatus: string | null;
-            latestPrReviewOperationalStatus: "pending" | "processing" | "retrying" | "failed" | null;
+            latestPrReviewOperationalStatus: "pending" | "processing" | "retrying" | "failed" | "skipped" | null;
           }) => (
             <div
               key={mod.moduleId}
@@ -292,7 +293,7 @@ export default function InternDetailPage() {
                 id: string;
                 prUrl: string;
                 reviewStatus: string;
-                operationalStatus: "pending" | "processing" | "retrying" | "failed" | null;
+                operationalStatus: "pending" | "processing" | "retrying" | "failed" | "skipped" | null;
                 llmReviewSummary: string | null;
                 reviewedAt: Date | null;
               }) => (

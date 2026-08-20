@@ -58,6 +58,8 @@ vi.mock("@reading-advantage/domain/codecamp", async () => {
         passed: true,
         summary: "[IntegrationFixture] LGTM",
         comments: [],
+        removedPaths: [],
+        repair: { repairCount: 0, generatorCalls: 1 },
       };
     }),
   };

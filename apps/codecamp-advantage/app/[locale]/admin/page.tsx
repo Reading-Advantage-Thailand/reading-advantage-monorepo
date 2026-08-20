@@ -218,7 +218,7 @@ export default function AdminPage() {
                   latestPrReview: {
                     prUrl: string;
                     reviewStatus: "pending" | "reviewed" | "needs_changes" | "approved";
-                    operationalStatus: "pending" | "processing" | "retrying" | "failed" | null;
+                    operationalStatus: "pending" | "processing" | "retrying" | "failed" | "skipped" | null;
                     llmReviewSummary: string | null;
                     createdAt: Date;
                   } | null;

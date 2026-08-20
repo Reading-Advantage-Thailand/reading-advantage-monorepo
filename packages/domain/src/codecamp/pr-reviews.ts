@@ -1,7 +1,7 @@
-import { eq, and, desc, ne, sql } from "drizzle-orm";
+import { eq, and, desc, ne, sql, inArray } from "drizzle-orm";
 import {
   codecampPrReviews, codecampExerciseRepos, codecampLessons, codecampModules,
-  codecampWebhookEvents,
+  codecampWebhookEvents, reviewJobs,
 } from "@reading-advantage/db/schema";
 import { assertCan, type UserContext, type Tenant } from "@reading-advantage/auth";
 import type { TenantDB } from "../db-contract.js";
@@ -14,6 +14,8 @@ import { DrizzleActivityPersistence, CODECAMP_MASTERY_SCHOOL_ID } from "../activ
 import { apkPrEvaluationSchema, apkTrustedPrEvidenceSchema, type APKPrEvaluation } from "./review-exercise.js";
 import { assertCodecampModuleAssigned } from "./curriculum-assignments.js";
 import { recordTrustedPrReviewAttempt, resolveGraphBoundPrObjectives } from "./pr-review-attempts.js";
+import { derivePrReviewOperationalStatus, derivePrReviewFailureReason } from "./intern-accounts.js";
+import type { PrReviewOperationalStatus } from "@reading-advantage/types";
 
 export type CodecampWebhookEventOutcome = "ignored" | "failed";
 
@@ -33,10 +35,33 @@ function publicPrReview(row: typeof codecampPrReviews.$inferSelect) {
 }
 
 /**
- * Lists all PR reviews submitted by the current user.
+ * Operational row produced by `getPrReviewsForUser`: pairs a public
+ * `codecamp_pr_reviews` row with the queue-derived status and any plain
+ * language failure reason the learner should see.
+ */
+export interface PrReviewReportRow {
+  id: string;
+  exerciseRepoId: string;
+  userId: string;
+  prUrl: string;
+  reviewStatus: "pending" | "reviewed" | "needs_changes" | "approved";
+  llmReviewSummary: string | null;
+  reviewedAt: Date | null;
+  createdAt: Date;
+  /** Derived queue state for `pending` editorial reviews; null once terminal. */
+  operationalStatus: PrReviewOperationalStatus | null;
+  /** Plain-language reason for `failed` or `skipped`; null otherwise. */
+  failureReason: string | null;
+}
+
+/**
+ * Lists all PR reviews submitted by the current user, joined with the
+ * matching durable review job so each row carries its derived
+ * `operationalStatus` and any `failureReason`.
  *
  * `codecamp_pr_reviews` is classified as REFERENTIAL (no `schoolId` column);
- * the query is scoped manually by `userId`.
+ * the query is scoped manually by `userId`. `review_jobs` is the durable
+ * queue row that backs the worker.
  */
 export async function getPrReviewsForUser({
   db, user, tenant,
@@ -47,8 +72,31 @@ export async function getPrReviewsForUser({
 
   const rawDb = db.unscoped("codecamp pr-reviews scoped by userId");
 
-  return (await rawDb.select().from(codecampPrReviews)
-    .where(eq(codecampPrReviews.userId, user.id)).orderBy(desc(codecampPrReviews.createdAt))).map(publicPrReview);
+  const reviews = await rawDb.select().from(codecampPrReviews)
+    .where(eq(codecampPrReviews.userId, user.id)).orderBy(desc(codecampPrReviews.createdAt));
+  const reviewIds = reviews.map(({ id }) => id);
+  const jobs = reviewIds.length > 0
+    ? await rawDb.select({
+      reviewId: reviewJobs.reviewId,
+      status: reviewJobs.status,
+      attempts: reviewJobs.attempts,
+      lastError: reviewJobs.lastError,
+    }).from(reviewJobs).where(inArray(reviewJobs.reviewId, reviewIds))
+    : [];
+  const jobsByReviewId = new Map<string, { status: string; attempts: number; lastError: string | null }>();
+  for (const job of jobs) {
+    if (job.reviewId) jobsByReviewId.set(job.reviewId, job);
+  }
+
+  return reviews.map((row) => {
+    const base = publicPrReview(row);
+    const job = jobsByReviewId.get(row.id) ?? null;
+    return {
+      ...base,
+      operationalStatus: derivePrReviewOperationalStatus(base.reviewStatus, job as Parameters<typeof derivePrReviewOperationalStatus>[1]),
+      failureReason: derivePrReviewFailureReason(job),
+    } satisfies PrReviewReportRow;
+  });
 }
 
 /**

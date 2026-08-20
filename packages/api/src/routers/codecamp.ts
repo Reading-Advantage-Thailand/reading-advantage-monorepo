@@ -24,6 +24,7 @@ import {
   prReviewSchema,
   prReviewInputSchema,
   prReviewUpdateSchema,
+  prReviewReportSchema,
   webhookEventSchema,
   reviewJobSchema,
   listDeadReviewJobsInputSchema,
@@ -350,7 +351,7 @@ export const codecampRouter = router({
   // ─── PR Reviews ───────────────────────────────────────────
 
   prReviews: protectedProcedure
-    .output(z.array(prReviewSchema))
+    .output(z.array(prReviewReportSchema))
     .query(async ({ ctx }) => {
       try {
         return await codecamp.getPrReviewsForUser({

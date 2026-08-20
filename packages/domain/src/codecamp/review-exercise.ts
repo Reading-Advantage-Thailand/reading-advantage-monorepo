@@ -84,9 +84,21 @@ export function resolveCodecampPrReviewModel(
 }
 
 /**
- * Rejects PR material that must never enter an inference prompt.
- * @param prDiff Raw unified diff fetched from GitHub.
- * @throws When the diff is oversized, binary, generated, or appears to contain a credential.
+ * Returns true when any segment of `path` matches a generated-artifact segment exactly.
+ * @param path Repository-relative path extracted from a `diff --git` header.
+ * @returns True when the path targets a generated directory or suffix.
+ */
+function isGeneratedPath(path: string): boolean {
+  const segments = path.split("/");
+  if (segments.some((segment) => GENERATED_PATH_SEGMENTS.has(segment))) return true;
+  return GENERATED_FILE_SUFFIXES.some((suffix) => path.endsWith(suffix));
+}
+
+/**
+ * Rejects PR material that must never enter an inference prompt. Generated
+ * paths are stripped by `prepareReviewDiff` before this check runs.
+ * @param prDiff Diff with generated-artifact sections already removed.
+ * @throws When the (stripped) diff is oversized, binary, or appears to contain a credential.
  */
 export function assertSafeReviewDiff(prDiff: string): void {
   if (prDiff.length > MAX_PR_DIFF_CHARACTERS) {
@@ -94,17 +106,6 @@ export function assertSafeReviewDiff(prDiff: string): void {
   }
   if (/^GIT binary patch$|^Binary files .* differ$/m.test(prDiff)) {
     throw new CodecampPrReviewContractError("PR diff contains binary content and cannot be reviewed");
-  }
-  const paths = [
-    ...Array.from(prDiff.matchAll(/^diff --git a\/(.+) b\/(.+)$/gm), (match) => [match[1], match[2]]),
-    ...Array.from(prDiff.matchAll(/^\+\+\+ b\/(.+)$/gm), (match) => [match[1]]),
-  ].flat();
-  if (paths.some((path) => {
-    const segments = path.split("/");
-    return segments.some((segment) => GENERATED_PATH_SEGMENTS.has(segment))
-      || GENERATED_FILE_SUFFIXES.some((suffix) => path.endsWith(suffix));
-  })) {
-    throw new CodecampPrReviewContractError("PR diff contains generated artifacts and cannot be reviewed");
   }
   if (SECRET_PATTERNS.some((pattern) => pattern.test(prDiff))) {
     throw new CodecampPrReviewContractError("PR diff appears to contain a secret and cannot be reviewed");
@@ -122,13 +123,73 @@ export interface PreparedReviewDiff {
 }
 
 /**
- * Strips generated-artifact sections from a PR diff before review. Phase 1
- * ships the contract only; behavior lands in Phase 3.
+ * Strips generated-artifact sections from a PR diff before review.
+ *
+ * Match policy:
+ *   - Path segment match: `dist`, `build`, `.next`, `coverage`, `node_modules`
+ *     match the path segment exactly. `builder.ts` survives because the
+ *     segment `builder.ts` is not in the set; `rebuild/` survives because
+ *     `rebuild` is not in the set.
+ *   - Suffix match: `.map`, `.min.js`, `.min.css` match the file suffix.
+ *     `cart.map.ts` survives because the full suffix is not `.map`.
+ *
+ * Removed paths are reported in diff order, deduplicated by the first
+ * occurrence of each path. The stripped diff retains the original line
+ * breaks between sections so downstream parsing (hunk ranges, `+++` lines)
+ * still works.
+ *
  * @param prDiff Raw unified diff fetched from GitHub.
  * @returns The stripped diff, the removed paths, and an empty-source flag.
+ * @throws When the source that survives stripping exceeds the size limit, is binary, or contains a secret.
  */
 export function prepareReviewDiff(prDiff: string): PreparedReviewDiff {
-  throw new Error("Not implemented: implemented in Phase 3");
+  const lines = prDiff.split("\n");
+  const kept: string[] = [];
+  const removedPaths: string[] = [];
+  const seen = new Set<string>();
+  let currentPath: string | null = null;
+  let inGeneratedSection = false;
+  let i = 0;
+  while (i < lines.length) {
+    const line = lines[i]!;
+    const headerMatch = /^diff --git a\/(.+) b\/(.+)$/.exec(line);
+    if (headerMatch) {
+      const targetPath = headerMatch[2]!;
+      currentPath = targetPath;
+      if (isGeneratedPath(targetPath)) {
+        inGeneratedSection = true;
+        if (!seen.has(targetPath)) {
+          seen.add(targetPath);
+          removedPaths.push(targetPath);
+        }
+      } else {
+        inGeneratedSection = false;
+        kept.push(line);
+      }
+      i++;
+      continue;
+    }
+    if (inGeneratedSection) {
+      i++;
+      continue;
+    }
+    // Drop `+++`/`---` lines whose path matches the generated rule, even
+    // when no `diff --git` header was captured (e.g. corrupt upstream diffs).
+    if (/^(\+\+\+|---) [ab]\/(.+)$/.test(line) && currentPath !== null && isGeneratedPath(currentPath)) {
+      i++;
+      continue;
+    }
+    kept.push(line);
+    i++;
+  }
+  const stripped = kept.join("\n");
+  if (stripped.length === 0) {
+    return { diff: "", removedPaths, empty: true };
+  }
+  // Re-run the safety checks against the stripped diff so the 200k limit
+  // measures reviewable content, not the raw PR blob.
+  assertSafeReviewDiff(stripped);
+  return { diff: stripped, removedPaths, empty: false };
 }
 
 /** Input required to generate one advisory Codecamp pull-request review. */
@@ -187,7 +248,9 @@ export class CodecampPrReviewContractError extends Error {
 
 /**
  * Builds the repair prompt that asks the LLM to retry one bound contract
- * violation. Phase 1 ships the contract only; behavior lands in Phase 3.
+ * violation. The prompt restates the violated rule, lists every authorized
+ * objective identifier, and enumerates the changed paths the reviewer may
+ * reference.
  * @param violation Rule that the previous review output violated.
  * @param authorizedObjectiveIds Objective identifiers the reviewer may cite.
  * @param changedPaths Repository paths the reviewer may reference.
@@ -198,7 +261,19 @@ export function buildReviewRepairPrompt(
   authorizedObjectiveIds: string[],
   changedPaths: string[],
 ): string {
-  throw new Error("Not implemented: implemented in Phase 3");
+  return [
+    "Your previous review violated the following contract:",
+    violation,
+    "",
+    "Authorized objective identifiers (cite exactly these):",
+    ...authorizedObjectiveIds.map((id) => `- ${id}`),
+    "",
+    "Changed paths in this pull request (cite only these):",
+    ...changedPaths.map((path) => `- ${path}`),
+    "",
+    "Regenerate the review output covering every authorized objective exactly once,",
+    "referencing only the changed paths above, and respecting the violated rule.",
+  ].join("\n");
 }
 
 /** Describes the structural marker recognized by the durable review queue. */
@@ -226,7 +301,12 @@ export function isCodecampPrReviewContractError(
 
 /** Converts a deterministic validation failure into the worker's permanent error shape. */
 function contractViolation(message: string, cause?: unknown): CodecampPrReviewContractError {
-  return new CodecampPrReviewContractError(message, cause);
+  return new CodecampPrReviewContractError(message, cause, "input_safety");
+}
+
+/** Re-throws a contract error preserving its `kind` and `retryable` classification. */
+function rethrowContractError(error: CodecampPrReviewContractError): never {
+  throw new CodecampPrReviewContractError(error.message, error.cause ?? error, error.kind);
 }
 
 /** Structured APK rubric evaluation required before independent PR approval. */
@@ -367,13 +447,23 @@ export function validateReviewObjectiveEvidence(
 ): void {
   const bindings = resolveReviewObjectiveBindings(moduleSlug);
   if (bindings.length === 0) {
-    if (review.objectiveEvidence.length > 0) throw new CodecampPrReviewContractError("Review output contains objective evidence for an unbound repository");
+    if (review.objectiveEvidence.length > 0) {
+      throw new CodecampPrReviewContractError(
+        "Review output contains objective evidence for an unbound repository",
+        undefined,
+        "model_shape",
+      );
+    }
     return;
   }
   const expectedObjectiveIds = new Set(bindings.map(({ objectiveId }) => objectiveId));
   const actualObjectiveIds = review.objectiveEvidence.map(({ objectiveId }) => objectiveId);
   if (actualObjectiveIds.length !== expectedObjectiveIds.size || new Set(actualObjectiveIds).size !== actualObjectiveIds.length || actualObjectiveIds.some((objectiveId) => !expectedObjectiveIds.has(objectiveId))) {
-    throw new CodecampPrReviewContractError("Review output must cover every graph-bound objective exactly once");
+    throw new CodecampPrReviewContractError(
+      "Review output must cover every graph-bound objective exactly once",
+      undefined,
+      "model_shape",
+    );
   }
   const changedPaths = new Set<string>();
   const changedLineRanges = new Map<string, Array<{ startLine: number; endLine: number }>>();
@@ -396,17 +486,31 @@ export function validateReviewObjectiveEvidence(
   }
   for (const objective of review.objectiveEvidence) {
     for (const reference of objective.references) {
-      if (!changedPaths.has(reference.filePath)) throw new CodecampPrReviewContractError("Review output references a file outside the reviewed diff");
+      if (!changedPaths.has(reference.filePath)) {
+        throw new CodecampPrReviewContractError(
+          "Review output references a file outside the reviewed diff",
+          undefined,
+          "model_shape",
+        );
+      }
       const ranges = changedLineRanges.get(reference.filePath) ?? [];
       if (!ranges.some((range) => reference.startLine >= range.startLine && reference.endLine <= range.endLine)) {
-        throw new CodecampPrReviewContractError("Review output references lines outside the changed diff hunk");
+        throw new CodecampPrReviewContractError(
+          "Review output references lines outside the changed diff hunk",
+          undefined,
+          "model_shape",
+        );
       }
     }
   }
   if (moduleSlug === "apk-game-creation") {
     const [objective] = review.objectiveEvidence;
     if (!review.apkEvaluation || !objective || objective.objectiveId !== codecampAPKUnit.youdo.objectiveId || objective.score !== Math.round(review.apkEvaluation.totalScore * 100)) {
-      throw new CodecampPrReviewContractError("APK objective evidence must match the authored rubric score");
+      throw new CodecampPrReviewContractError(
+        "APK objective evidence must match the authored rubric score",
+        undefined,
+        "model_shape",
+      );
     }
   }
 }
@@ -536,6 +640,28 @@ Output a structured review with:
 
 // ─── Review Exercise ──────────────────────────────────────
 
+/** Maximum number of repair retries the bounded loop may attempt after the initial generator call. */
+const MAX_REVIEW_REPAIR_ATTEMPTS = 2;
+
+/** Maximum total number of generator calls (initial + repairs) per `reviewExercise` invocation. */
+const MAX_REVIEW_GENERATOR_CALLS = 1 + MAX_REVIEW_REPAIR_ATTEMPTS;
+
+/** Repair-loop provenance recorded on the result so the durable queue can audit retry behavior. */
+export interface ReviewRepairProvenance {
+  /** Number of model-shape violations the repair loop retried. */
+  repairCount: number;
+  /** Total generator invocations (initial + repairs) the loop consumed. */
+  generatorCalls: number;
+}
+
+/** Result returned by `reviewExercise`: the validated review plus the audit fields the worker renders. */
+export interface ReviewExerciseOutput extends ReviewResult {
+  /** Paths stripped from the diff because they target generated-artifact segments or suffixes. */
+  removedPaths: string[];
+  /** Repair-loop metadata for the durable queue and audit log. */
+  repair: ReviewRepairProvenance;
+}
+
 /**
  * Generate an LLM-based code review for a PR diff.
  *
@@ -556,10 +682,11 @@ export async function reviewExercise({
   repoUrl,
   trustedContext: rawTrustedContext,
   generateReview,
-}: ReviewExerciseInput): Promise<ReviewResult> {
+}: ReviewExerciseInput): Promise<ReviewExerciseOutput> {
   assertCan(user, "admin:dashboard", tenant);
+  let prepared: PreparedReviewDiff;
   try {
-    assertSafeReviewDiff(prDiff);
+    prepared = prepareReviewDiff(prDiff);
   } catch (error) {
     throw contractViolation(error instanceof Error ? error.message : "PR diff violates the review safety contract", error);
   }
@@ -632,35 +759,115 @@ export async function reviewExercise({
     }
   }
   const apkRubric = moduleSlug === "apk-game-creation" ? `\nAPK independent-transfer evaluation is mandatory. Evaluate rubric ${codecampAPKUnit.youdo.rubric.rubricId} against these weighted dimensions: ${JSON.stringify(codecampAPKUnit.youdo.rubric.dimensions)}. Report these required checks: ${JSON.stringify(codecampAPKUnit.youdo.requiredChecks)}. Include apkEvaluation with evidence for every dimension and check. passed may be true only when every required check passes and totalScore is at least 0.8.` : undefined;
+  // When stripping removed every reviewable path, return a sentinel result
+  // so the durable queue settles `skipped_generated` without invoking the
+  // model. The empty diff still carries the stripped metadata for the
+  // worker advisory comment.
+  if (prepared.empty) {
+    return {
+      passed: true,
+      summary: "Review skipped: PR diff contained only generated artifacts.",
+      comments: [],
+      objectiveEvidence: [],
+      removedPaths: prepared.removedPaths,
+      repair: { repairCount: 0, generatorCalls: 0 },
+    };
+  }
   const objectiveBindings = moduleSlug ? resolveReviewObjectiveBindings(moduleSlug) : [];
+  const authorizedObjectiveIds = objectiveBindings.map(({ objectiveId }) => objectiveId);
+  const changedPaths = extractChangedPaths(prepared.diff);
   const system = buildSystemPrompt(moduleTitle, moduleDescription, apkRubric, objectiveBindings, trustedContext);
-  const prompt = `Please review the following code diff:\n\n\`\`\`diff\n${prDiff}\n\`\`\``;
-  let review: ReviewResult;
-  try {
-    review = reviewResultSchema.parse(await generateReview(system, prompt));
-  } catch (error) {
-    const errorCode = typeof error === "object" && error !== null && "code" in error
-      ? (error as { code?: unknown }).code
-      : undefined;
-    if (errorCode === "SCHEMA_VALIDATION_ERROR" || error instanceof z.ZodError) {
-      throw contractViolation("Review output does not satisfy the PR review response schema", error);
-    }
-    throw error;
-  }
-  if (moduleSlug === "apk-game-creation") {
+  const prompt = `Please review the following code diff:\n\n\`\`\`diff\n${prepared.diff}\n\`\`\``;
+  let review: ReviewResult = {
+    passed: false,
+    summary: "",
+    comments: [],
+    objectiveEvidence: [],
+  };
+  let repairCount = 0;
+  let generatorCalls = 0;
+  let userPrompt = prompt;
+  let settled = false;
+  while (generatorCalls < MAX_REVIEW_GENERATOR_CALLS) {
+    generatorCalls++;
+    let raw: unknown;
     try {
-      const evaluation = apkPrEvaluationSchema.parse(review.apkEvaluation);
-      if (review.passed !== isPassingAPKPrEvaluation(evaluation)) throw new Error("APK review pass state does not match the authored rubric and required checks");
+      raw = await generateReview(system, userPrompt);
     } catch (error) {
-      throw contractViolation(error instanceof Error ? error.message : "APK review violates its rubric contract", error);
+      const errorCode = typeof error === "object" && error !== null && "code" in error
+        ? (error as { code?: unknown }).code
+        : undefined;
+      if (errorCode === "SCHEMA_VALIDATION_ERROR" || error instanceof z.ZodError) {
+        throw contractViolation("Review output does not satisfy the PR review response schema", error);
+      }
+      throw error;
     }
-  }
-  if (moduleSlug) {
     try {
-      validateReviewObjectiveEvidence(review, moduleSlug, prDiff);
+      review = reviewResultSchema.parse(raw);
     } catch (error) {
-      throw contractViolation(error instanceof Error ? error.message : "Review output violates the objective contract", error);
+      const errorCode = typeof error === "object" && error !== null && "code" in error
+        ? (error as { code?: unknown }).code
+        : undefined;
+      if (errorCode === "SCHEMA_VALIDATION_ERROR" || error instanceof z.ZodError) {
+        throw contractViolation("Review output does not satisfy the PR review response schema", error);
+      }
+      throw error;
+    }
+    try {
+      if (moduleSlug === "apk-game-creation") {
+        const evaluation = apkPrEvaluationSchema.parse(review.apkEvaluation);
+        if (review.passed !== isPassingAPKPrEvaluation(evaluation)) {
+          throw new Error("APK review pass state does not match the authored rubric and required checks");
+        }
+      }
+      if (moduleSlug) {
+        validateReviewObjectiveEvidence(review, moduleSlug, prepared.diff);
+      }
+      settled = true;
+      break;
+    } catch (error) {
+      if (error instanceof CodecampPrReviewContractError && error.kind === "model_shape" && repairCount < MAX_REVIEW_REPAIR_ATTEMPTS) {
+        repairCount++;
+        userPrompt = buildReviewRepairPrompt(error.message, authorizedObjectiveIds, changedPaths);
+        continue;
+      }
+      if (error instanceof CodecampPrReviewContractError) {
+        rethrowContractError(error);
+      }
+      if (moduleSlug === "apk-game-creation") {
+        throw contractViolation(error instanceof Error ? error.message : "APK review violates its rubric contract", error);
+      }
+      throw contractViolation("Review output violates the objective contract", error);
     }
   }
-  return review;
+  if (!settled) {
+    // Loop exited because every repair attempt still failed; surface the
+    // last model-shape violation. The repair loop already kept the
+    // contract error message on the most recent throw path.
+    throw contractViolation("Review output violates the objective contract after repair retries");
+  }
+  return {
+    ...review,
+    removedPaths: prepared.removedPaths,
+    repair: { repairCount, generatorCalls },
+  };
+}
+
+/**
+ * Extracts the unique ordered changed paths from a stripped PR diff.
+ * @param strippedDiff Diff with generated-artifact sections already removed.
+ * @returns Source-tree paths the model may reference, in diff order.
+ */
+function extractChangedPaths(strippedDiff: string): string[] {
+  const seen = new Set<string>();
+  const paths: string[] = [];
+  for (const line of strippedDiff.split("\n")) {
+    const match = /^diff --git a\/(.+) b\/(.+)$/.exec(line);
+    if (!match) continue;
+    const target = match[2]!;
+    if (seen.has(target)) continue;
+    seen.add(target);
+    paths.push(target);
+  }
+  return paths;
 }

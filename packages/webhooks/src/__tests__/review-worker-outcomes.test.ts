@@ -117,7 +117,8 @@ describe("Phase 2 — empty stripped diff skipped outcome (FR-3)", () => {
     const claim = vi.fn().mockResolvedValueOnce([job]).mockResolvedValueOnce([]);
     // Spy on the model — it must NOT be invoked when the stripped diff is empty.
     const generateObject = vi.fn();
-    // Spy on the comment poster — it must NOT be called for a skip outcome.
+    // Spy on the comment poster — it IS called for a skip outcome so the
+    // intern sees why the review was skipped (FR-4).
     const postComment = vi.fn();
     // Track what payload `applySettle` receives so we can assert outcome.
     const capturedPayloads: Array<{ status: string; outcome?: string; failureReason?: string | null }> = [];
@@ -155,7 +156,7 @@ describe("Phase 2 — empty stripped diff skipped outcome (FR-3)", () => {
     });
 
     expect(generateObject, "skip path must not call the model").not.toHaveBeenCalled();
-    expect(postComment, "skip path must not post a PR comment").not.toHaveBeenCalled();
+    expect(postComment, "skip path must post an advisory comment naming the ignored paths").toHaveBeenCalledTimes(1);
     expect(applySettle, "skip path must settle exactly once").toHaveBeenCalledTimes(1);
     const settledPayload = capturedPayloads[0];
     expect(settledPayload, "skip settle payload is captured").toBeDefined();

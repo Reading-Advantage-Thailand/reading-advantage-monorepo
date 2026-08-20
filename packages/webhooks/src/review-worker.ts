@@ -729,6 +729,20 @@ export async function processJob(
 
   const token = await tokenFn();
   const diff = await fetchDiffFn(prInfo, token);
+  const prepared = domain.prepareReviewDiff(diff);
+  // An empty stripped diff is a deterministic skip. Surface it as a
+  // typed marker so the durable queue can settle `skipped_generated`
+  // without invoking the model. The marker carries the removed paths
+  // so the read path can derive the operational status durably.
+  if (prepared.empty) {
+    throw Object.assign(new Error("PR diff contained only generated artifacts"), {
+      code: "CODECAMP_REVIEW_DIFF_SKIPPED" as const,
+      reason: prepared.removedPaths.length > 0
+        ? `[SKIPPED_GENERATED] ${prepared.removedPaths.join(", ")}`
+        : "[SKIPPED_GENERATED]",
+      removedPaths: prepared.removedPaths,
+    });
+  }
   const headSha = readHeadSha(job.payloadJson);
   const deterministicChecks = headSha
     ? await fetchCheckEvidenceFn(prInfo, headSha, token)
@@ -810,6 +824,12 @@ export async function processJob(
     evidenceAuthority: "advisory_model" as const,
   };
   const objectiveEvidence = renderAdvisoryObjectiveEvidence(reviewResult);
+  const removedPaths = Array.isArray((reviewResult as { removedPaths?: unknown }).removedPaths)
+    ? (reviewResult as { removedPaths: string[] }).removedPaths
+    : [];
+  const removedPathsSection = removedPaths.length > 0
+    ? `\n\n### Ignored paths\nThe following generated paths were stripped from the diff before review and do not belong in a commit:\n${removedPaths.map((path) => `- \`${path}\``).join("\n")}`
+    : "";
   const commentBody = `## 🤖 CodeCamp AI Review\n\n**Status:** ℹ️ Advisory feedback — this review does not approve, block, or create mastery evidence.\n\n**Summary:** ${reviewResult.summary}\n\n${
     reviewResult.comments.length > 0
       ? "### Comments\n" +
@@ -817,7 +837,7 @@ export async function processJob(
           .map((c) => `- ${c.line ? `Line ${c.line}: ` : ""}${c.body}`)
           .join("\n")
       : ""
-  }${objectiveEvidence ? `\n\n${objectiveEvidence}` : ""}`;
+  }${objectiveEvidence ? `\n\n${objectiveEvidence}` : ""}${removedPathsSection}`;
 
   /**
    * Persists review evidence and publishes feedback against one database
@@ -970,6 +990,12 @@ export interface SettleJobPayload {
   failureReason?: string;
 }
 
+/** Truncates a settle-side string to fit the durable storage and structured log budget. */
+function capFailureReason(reason: string): string {
+  if (reason.length <= 240) return reason;
+  return reason.slice(0, 240);
+}
+
 /**
  * Computes the settle payload for a job that just finished (success or
  * failure). Pure function — given `(job, err, config)` it returns the
@@ -1025,6 +1051,7 @@ export function settleJob(
   // expects the dead row to retain that value).
   const nextAttempts = job.attempts + 1;
   const lastError = err.message;
+  const failureReason = capFailureReason(lastError);
 
   // Contract violations are deterministic: retrying the same review input
   // cannot change its identity, schema, safe-diff, or objective result. Keep
@@ -1037,6 +1064,8 @@ export function settleJob(
       lastError,
       claimedAt: null,
       claimedBy: null,
+      outcome: "failed_permanent",
+      failureReason,
     };
   }
 
@@ -1049,6 +1078,8 @@ export function settleJob(
       lastError,
       claimedAt: null,
       claimedBy: null,
+      outcome: "failed_exhausted",
+      failureReason,
     };
   }
 
@@ -1103,6 +1134,12 @@ function createPermanentReviewContractError(message: string): Error {
  * supplied by the worker, the complete lease identity. The latter prevents a
  * stale worker from settling a newer claim after visibility reclaim/re-claim.
  *
+ * For terminal outcomes (`failed_permanent`, `failed_exhausted`,
+ * `skipped_generated`), `payload.failureReason` is persisted into
+ * `last_error` so the read path can derive the operational status without a
+ * schema migration. Transient schedules leave `lastError` to the worker's
+ * raw error message.
+ *
  * @param dbArg - DB connection (or privileged singleton if omitted).
  * @param jobId - The job id to settle.
  * @param payload - The output of `settleJob`.
@@ -1137,13 +1174,16 @@ export async function applySettle(
           : eq(reviewJobs.deliveryId, claim.deliveryId),
       )
       : and(eq(reviewJobs.id, jobId), eq(reviewJobs.status, "claimed"));
+    const lastError = payload.outcome && payload.failureReason
+      ? payload.failureReason
+      : payload.lastError;
     await conn
       .update(reviewJobs)
       .set({
         status: payload.status,
         attempts: payload.attempts,
         nextAttemptAt: payload.nextAttemptAt,
-        lastError: payload.lastError,
+        lastError,
         claimedAt: payload.claimedAt,
         claimedBy: payload.claimedBy,
         updatedAt: new Date(),
@@ -1158,6 +1198,8 @@ export async function applySettle(
 
 export interface CreateReviewWorkerOptions {
   intervalMs?: number;
+  /** Soft deadline in milliseconds; the tick stops claiming new batches once it passes. Default 120,000 ms. */
+  deadlineMs?: number;
   deps?: Partial<ProcessJobDeps>;
   /** Override `claimDueJobs` for tests (e.g. a no-op). */
   claim?: (
@@ -1177,6 +1219,9 @@ export interface CreateReviewWorkerOptions {
   ) => Promise<void>;
 }
 
+/** Default tick deadline — 120 seconds — sized to clear the worst-case LLM latency without exceeding the scheduler budget. */
+export const DEFAULT_TICK_DEADLINE_MS = 120_000;
+
 export interface ReviewWorker {
   run(): Promise<void>;
   start(): void;
@@ -1185,13 +1230,17 @@ export interface ReviewWorker {
 
 /**
  * Runs a single worker tick: reclaim stuck jobs, claim due jobs,
- * process each, settle each.
+ * process each, settle each. The tick stops claiming new batches once
+ * `deadlineMs` (default 120 s) has elapsed, after the currently claimed
+ * batch has settled.
  */
 export async function runWorkerTick(opts: CreateReviewWorkerOptions = {}): Promise<void> {
   const claim = opts.claim ?? claimDueJobs;
   const reclaim = opts.reclaim ?? reclaimStuckJobs;
   const settle = opts.settle ?? settleJob;
   const applySettlement = opts.applySettle ?? applySettle;
+  const tickStartedAt = Date.now();
+  const deadlineMs = opts.deadlineMs ?? DEFAULT_TICK_DEADLINE_MS;
 
   // Lazy import so test files can mock `@reading-advantage/db` and have the
   // worker use the mock instead of the privileged DB. In production this
@@ -1208,15 +1257,50 @@ export async function runWorkerTick(opts: CreateReviewWorkerOptions = {}): Promi
   // `nextAttemptAt` is now <= now()) in the same `run()` call — the
   // exponential backoff pushes the next attempt into the future, so
   // each iteration settles at most one batch of due jobs. The loop
-  // terminates when `claim()` returns an empty array.
+  // terminates when `claim()` returns an empty array or the deadline
+  // elapses after the current batch has settled.
   let iterations = 0;
   const MAX_ITERATIONS_PER_RUN = 100;
   while (iterations < MAX_ITERATIONS_PER_RUN) {
     iterations++;
+    // Always allow at least the first claim attempt so a tick that
+    // starts just past the deadline still drains one batch. Subsequent
+    // attempts honor the deadline once it elapses.
+    if (iterations > 1 && Date.now() - tickStartedAt > deadlineMs) break;
     const claimed = await claim(undefined);
     if (claimed.length === 0) break;
 
     for (const job of claimed) {
+      const settlePayload = async (err: Error | null, skipInfo?: { removedPaths: string[]; reason: string }) => {
+        const payload = skipInfo !== undefined
+          ? {
+              status: "succeeded" as const,
+              attempts: job.attempts,
+              nextAttemptAt: new Date(),
+              lastError: skipInfo.reason,
+              claimedAt: null,
+              claimedBy: null,
+              outcome: "skipped_generated" as const,
+              failureReason: skipInfo.reason,
+            }
+          : settle({ id: job.id, attempts: job.attempts, maxAttempts: job.maxAttempts }, err, {});
+        if (payload.outcome) {
+          // One structured log line per terminal settle (FR-9).
+          console.log({
+            event: "reviewJob.settled",
+            reviewJobId: job.id,
+            reviewId: job.reviewId,
+            outcome: payload.outcome,
+            reason: payload.failureReason ?? null,
+          });
+        }
+        await applySettlement(undefined, job.id, payload, {
+          id: job.id,
+          status: "claimed",
+          claimedBy: job.claimedBy,
+          deliveryId: job.deliveryId,
+        });
+      };
       try {
         const completed = await processJob(job, {
           db: defaultDb,
@@ -1226,22 +1310,45 @@ export async function runWorkerTick(opts: CreateReviewWorkerOptions = {}): Promi
         // either the newer claim is already processing it or the pending row
         // will be picked up on the next tick.
         if (!completed) continue;
-        const payload = settle({ id: job.id, attempts: job.attempts, maxAttempts: job.maxAttempts }, null, {});
-        await applySettlement(undefined, job.id, payload, {
-          id: job.id,
-          status: "claimed",
-          claimedBy: job.claimedBy,
-          deliveryId: job.deliveryId,
-        });
+        await settlePayload(null);
       } catch (err) {
+        // The empty-stripped-diff skip is delivered as a typed marker
+        // from the worker seam so the durable queue can settle
+        // `skipped_generated` without invoking the model. Post an
+        // advisory PR comment so the intern learns why the review was
+        // skipped (FR-4).
+        if (err && typeof err === "object" && (err as { code?: unknown }).code === "CODECAMP_REVIEW_DIFF_SKIPPED") {
+          const marker = err as { reason?: unknown; removedPaths?: unknown };
+          const removedPaths = Array.isArray(marker.removedPaths)
+            ? marker.removedPaths.filter((p): p is string => typeof p === "string")
+            : [];
+          const reason = typeof marker.reason === "string"
+            ? marker.reason
+            : "[SKIPPED_GENERATED]";
+          const depsPostComment = opts.deps?.postComment;
+          if (depsPostComment) {
+            try {
+              const skippedBody = `## 🤖 CodeCamp AI Review\n\n**Status:** ⏭️ Review skipped — the PR diff contained only generated artifacts.\n\nBuild output and other generated paths do not belong in a commit. Please regenerate from source and push a follow-up commit that excludes the following paths:\n\n${
+                removedPaths.length > 0
+                  ? removedPaths.map((path) => `- \`${path}\``).join("\n")
+                  : "_No reviewable source remained after stripping._"
+              }`;
+              const depsGetToken = opts.deps?.getToken ?? (await import("./github-client")).getInstallationTokenForRepo;
+              const tokenLocal = await depsGetToken();
+              await depsPostComment(
+                { owner: job.repoOwner, repo: job.repoName, pullNumber: job.pullNumber },
+                skippedBody,
+                tokenLocal,
+              );
+            } catch (commentErr) {
+              console.error("[Review Worker] Failed to post skip PR comment:", commentErr);
+            }
+          }
+          await settlePayload(null, { removedPaths, reason });
+          continue;
+        }
         const e = err instanceof Error ? err : new Error(String(err));
-        const payload = settle({ id: job.id, attempts: job.attempts, maxAttempts: job.maxAttempts }, e, {});
-        await applySettlement(undefined, job.id, payload, {
-          id: job.id,
-          status: "claimed",
-          claimedBy: job.claimedBy,
-          deliveryId: job.deliveryId,
-        }).catch(() => {
+        await settlePayload(e).catch(() => {
           // Settle failure is non-fatal — log + move on.
           console.error("[Review Worker] Failed to settle job:", job.id, e);
         });

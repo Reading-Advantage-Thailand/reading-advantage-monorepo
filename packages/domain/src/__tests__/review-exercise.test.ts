@@ -288,7 +288,6 @@ describe("reviewExercise", () => {
   });
 
   it.each([
-    ["a generated artifact", "diff --git a/dist/app.js b/dist/app.js\n+++ b/dist/app.js\n+minified"],
     ["a binary patch", "diff --git a/image.png b/image.png\nGIT binary patch\nliteral 4"],
     ["a credential-like value", "diff --git a/a.ts b/a.ts\n+const token = 'ghp_123456789012345678901234567890123456';"],
   ])("does not send %s to the review model", async (_label, prDiff) => {
@@ -300,21 +299,44 @@ describe("reviewExercise", () => {
       tenant: globalTenant,
       prDiff,
       generateReview,
-    })).rejects.toThrow(/unsafe|generated|binary|secret/i);
+    })).rejects.toThrow(/unsafe|binary|secret/i);
 
     expect(generateReview).not.toHaveBeenCalled();
   });
 
-  it("rejects generated files that are deleted and therefore have no new-file header", async () => {
+  it("strips a generated-artifact section and reviews the remaining source without calling the model on the artifact", async () => {
+    const generateReview = vi.fn().mockResolvedValue({
+      passed: true,
+      summary: "Reviewed remaining source",
+      comments: [],
+    });
+
+    const result = await reviewExercise({
+      db: wrapDb(createMockDb()),
+      user: admin,
+      tenant: globalTenant,
+      prDiff: "diff --git a/dist/app.js b/dist/app.js\n+++ b/dist/app.js\n+minified\ndiff --git a/src/keep.ts b/src/keep.ts\n@@ -1 +1 @@\n-old\n+new",
+      generateReview,
+    });
+
+    expect(generateReview).toHaveBeenCalledTimes(1);
+    expect(result.removedPaths).toEqual(["dist/app.js"]);
+  });
+
+  it("returns a skipped review when the entire diff is generated artifacts", async () => {
     const generateReview = vi.fn();
 
-    await expect(reviewExercise({
-      db: wrapDb(createMockDb()), user: admin, tenant: globalTenant,
+    const result = await reviewExercise({
+      db: wrapDb(createMockDb()),
+      user: admin,
+      tenant: globalTenant,
       prDiff: "diff --git a/coverage/report.json b/coverage/report.json\ndeleted file mode 100644",
       generateReview,
-    })).rejects.toThrow(/generated/i);
+    });
 
     expect(generateReview).not.toHaveBeenCalled();
+    expect(result.removedPaths).toEqual(["coverage/report.json"]);
+    expect(result.repair.generatorCalls).toBe(0);
   });
 
   it("rejects an oversized diff before calling the model", async () => {

@@ -99,7 +99,8 @@
       "pending": "Pending editorial review",
       "processing": "Processing review",
       "retrying": "Retrying review",
-      "failed": "Review failed"
+      "failed": "Review failed",
+      "skipped": "Review skipped"
     },
     "webhookDiagnostics": "Webhook Diagnostics",
     "webhookDiagnosticsHint": "Recent ignored or failed GitHub webhook events.",

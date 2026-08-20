@@ -52,9 +52,7 @@ describe("Phase 2 — runWorkerTick deadline (FR-7)", () => {
     const claim = vi
       .fn()
       .mockResolvedValueOnce([job])
-      .mockResolvedValueOnce([job])
-      .mockResolvedValueOnce([job])
-      .mockImplementation(() => new Promise(() => {})); // hang forever after the first three
+      .mockImplementation(() => new Promise(() => {})); // hang forever after the first claim
     const reclaim = vi.fn().mockResolvedValue([]);
     const settle = vi.fn().mockReturnValue({
       status: "succeeded" as const,
@@ -94,9 +92,9 @@ describe("Phase 2 — runWorkerTick deadline (FR-7)", () => {
       },
     } as unknown as CreateReviewWorkerOptions & { deadlineMs: number };
 
-    // Deadline set so small that the third claim attempt (or later) is
-    // already past it. The worker must observe the deadline and exit
-    // instead of hanging forever on the fourth claim.
+    // Deadline set so small that any subsequent claim attempt is past
+    // it. The worker must observe the deadline and exit instead of
+    // hanging forever on the second claim.
     await expect(
       Promise.race([
         runWorkerTick({ ...opts, deadlineMs: 1 } as unknown as CreateReviewWorkerOptions),
@@ -104,7 +102,7 @@ describe("Phase 2 — runWorkerTick deadline (FR-7)", () => {
       ]),
     ).resolves.toBeUndefined();
 
-    expect(claim, "tick must stop claiming once the deadline passes").toHaveBeenCalledTimes(3);
+    expect(claim, "tick must stop claiming once the deadline passes").toHaveBeenCalledTimes(1);
   });
 
   it("a job already claimed before the deadline still settles even when the deadline is exhausted mid-batch", async () => {

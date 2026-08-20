@@ -42,6 +42,7 @@ import {
   reviewExercise,
   completeApprovedPrReviewLesson,
 } from "@reading-advantage/domain/codecamp";
+import type { ReviewExerciseOutput } from "@reading-advantage/domain/codecamp";
 import { getUserByGithubUsername } from "@reading-advantage/domain/users";
 
 function signPayload(payload: string): string {
@@ -92,13 +93,8 @@ describe("GitHub webhook ACK latency", () => {
 
   it("returns HTTP 200 before the LLM review promise resolves", async () => {
     let reviewResolved = false;
-    let resolveReview: (value: { passed: boolean; summary: string; comments: { line?: number; body: string }[]; objectiveEvidence: [] }) => void = () => {};
-    const reviewPromise = new Promise<{
-      passed: boolean;
-      summary: string;
-      comments: { line?: number; body: string }[];
-      objectiveEvidence: [];
-    }>((resolve) => {
+    let resolveReview: (value: ReviewExerciseOutput) => void = () => {};
+    const reviewPromise = new Promise<ReviewExerciseOutput>((resolve) => {
       resolveReview = (value) => {
         reviewResolved = true;
         resolve(value);
@@ -199,7 +195,7 @@ describe("GitHub webhook ACK latency", () => {
       reviewResolvedWhenAcked = reviewResolved;
     } finally {
       // Always unblock the handler so we do not leave a dangling promise.
-      resolveReview({ passed: true, summary: "ok", comments: [], objectiveEvidence: [] });
+      resolveReview({ passed: true, summary: "ok", comments: [], objectiveEvidence: [], removedPaths: [], repair: { repairCount: 0, generatorCalls: 1 } });
       await responsePromise;
     }
 

@@ -238,6 +238,9 @@ describe("CodecampPrReviewContractError model_shape classification (FR-5)", () =
       totalScore: 1,
     };
     const db = createMockDb({ selectResults: [moduleRow] });
+    // Diff targets README.md so the file check passes and the rubric-score
+    // check is the one that fires.
+    const apkDiff = "diff --git a/README.md b/README.md\n@@ -1 +1 @@\n-old\n+new";
     // Mismatch: objective score 90 but totalScore*100 = 100.
     const generateReview = vi.fn().mockResolvedValue({
       passed: true,
@@ -249,7 +252,7 @@ describe("CodecampPrReviewContractError model_shape classification (FR-5)", () =
         score: 90,
         confidence: 80,
         misconceptionTags: [],
-        references: [{ filePath: "src/cartridge.ts", startLine: 1, endLine: 1, testName: null }],
+        references: [{ filePath: "README.md", startLine: 1, endLine: 1, testName: null }],
       }],
     });
 
@@ -258,7 +261,7 @@ describe("CodecampPrReviewContractError model_shape classification (FR-5)", () =
         db: wrapDb(db),
         user: admin,
         tenant: globalTenant,
-        prDiff: reviewedDiff,
+        prDiff: apkDiff,
         moduleId: moduleRow.id,
         generateReview,
       });

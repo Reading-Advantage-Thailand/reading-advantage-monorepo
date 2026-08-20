@@ -22,13 +22,22 @@ const PR_REVIEW_EVIDENCE_AUTHORITY_SCHEMA = z.enum(["advisory_model", "trusted_d
 const PR_REVIEW_EVIDENCE_STATE_SCHEMA = z.enum(["advisory", "validated", "rejected"]);
 
 type ReviewStatus = "pending" | "reviewed" | "needs_changes" | "approved";
-type ReviewJobSnapshot = Pick<typeof reviewJobs.$inferSelect, "reviewId" | "status" | "attempts">;
+type ReviewJobSnapshot = Pick<typeof reviewJobs.$inferSelect, "reviewId" | "status" | "attempts" | "lastError">;
+
+/**
+ * Durable marker written into `review_jobs.last_error` when the worker
+ * settles a `skipped_generated` outcome. The read path derives
+ * `prReviewOperationalStatus` from this prefix without a schema migration.
+ */
+export const REVIEW_JOB_SKIPPED_GENERATED_MARKER = "[SKIPPED_GENERATED]";
 
 /**
  * Derives the administrator-facing queue state without changing the
  * editorial review status stored on the PR review.
  * @param reviewStatus Editorial status persisted on the PR review row.
- * @param job Matching durable review job, when one exists.
+ * @param job Matching durable review job, when one exists. May carry the
+ *   durable `lastError` marker so a `succeeded` job can still report
+ *   `skipped` when the diff was entirely generated artifacts.
  * @returns Queue state for pending editorial reviews, or null after editorial review.
  */
 export function derivePrReviewOperationalStatus(
@@ -37,12 +46,36 @@ export function derivePrReviewOperationalStatus(
 ): PrReviewOperationalStatus | null {
   if (reviewStatus !== "pending") return null;
   if (!job) return "pending";
+  // A succeeded job whose `lastError` carries the durable skip marker is
+  // visibly `skipped` rather than awaiting the editorial projection.
+  if (job.status === "succeeded" && typeof job.lastError === "string" && job.lastError.startsWith(REVIEW_JOB_SKIPPED_GENERATED_MARKER)) {
+    return "skipped";
+  }
   if (job.status === "claimed" || (job.status === "pending" && job.attempts === 0)) return "processing";
   if (job.status === "pending") return "retrying";
   if (job.status === "dead" || job.status === "failed") return "failed";
   // A succeeded job with a still-pending editorial row is awaiting the
   // editorial projection, so it remains visibly pending rather than hidden.
   return "pending";
+}
+
+/**
+ * Derives the plain-language failure reason for a review whose durable job
+ * ended in a terminal failure or a generated-artifact skip.
+ * @param job Matching durable review job, when one exists.
+ * @returns The terminal reason, or null when no terminal reason applies.
+ */
+export function derivePrReviewFailureReason(
+  job: { status: string; lastError: string | null } | null,
+): string | null {
+  if (!job) return null;
+  if (job.status === "dead" || job.status === "failed") {
+    return typeof job.lastError === "string" && job.lastError.length > 0 ? job.lastError : null;
+  }
+  if (job.status === "succeeded" && typeof job.lastError === "string" && job.lastError.startsWith(REVIEW_JOB_SKIPPED_GENERATED_MARKER)) {
+    return job.lastError;
+  }
+  return null;
 }
 
 /** Aggregated tutor support context that is safe to show to an administrator. */
@@ -219,6 +252,7 @@ export async function listInterns({
       reviewId: reviewJobs.reviewId,
       status: reviewJobs.status,
       attempts: reviewJobs.attempts,
+      lastError: reviewJobs.lastError,
     }).from(reviewJobs).where(inArray(reviewJobs.reviewId, allReviews.map(({ id }) => id)))
     : [];
   const reviewJobsByReviewId = new Map<string, ReviewJobSnapshot>();
@@ -366,6 +400,7 @@ export async function getInternProgress({
       reviewId: reviewJobs.reviewId,
       status: reviewJobs.status,
       attempts: reviewJobs.attempts,
+      lastError: reviewJobs.lastError,
     }).from(reviewJobs).where(inArray(reviewJobs.reviewId, reviews.map(({ id }) => id)))
     : [];
   const reviewJobsByReviewId = new Map<string, ReviewJobSnapshot>();
@@ -441,6 +476,9 @@ export async function getInternProgress({
     ...review,
     operationalStatus: derivePrReviewOperationalStatus(
       review.reviewStatus,
+      reviewJobsByReviewId.get(review.id) ?? null,
+    ),
+    failureReason: derivePrReviewFailureReason(
       reviewJobsByReviewId.get(review.id) ?? null,
     ),
   }));

@@ -487,6 +487,8 @@ describe("codecamp router", () => {
           llmReviewSummary: null,
           reviewedAt: null,
           createdAt: testDate,
+          operationalStatus: "pending" as const,
+          failureReason: null,
         },
       ];
       vi.mocked(getPrReviewsForUser).mockResolvedValue(reviewRows as unknown as Awaited<ReturnType<typeof getPrReviewsForUser>>);
@@ -496,6 +498,8 @@ describe("codecamp router", () => {
 
       expect(result).toHaveLength(1);
       expect(result[0].reviewStatus).toBe("pending");
+      expect(result[0].operationalStatus).toBe("pending");
+      expect(result[0].failureReason ?? null).toBeNull();
     });
   });
 

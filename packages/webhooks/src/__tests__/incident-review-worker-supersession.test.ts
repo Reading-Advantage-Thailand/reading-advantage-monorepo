@@ -19,14 +19,18 @@ vi.mock("@reading-advantage/domain", () => ({
   createTenantDB: (db: unknown) => db,
 }));
 
-vi.mock("@reading-advantage/domain/codecamp", () => ({
-  aiClientToGenerateReview: vi.fn(() => vi.fn()),
-  isPrEvaluationCanarySelected: vi.fn(() => true),
-  listPriorPrReviewAttempts: domainMocks.listPriorPrReviewAttempts,
-  recordAdvisoryPrReviewAttempt: domainMocks.recordAdvisoryPrReviewAttempt,
-  reviewExercise: domainMocks.reviewExercise,
-  reviewResultGenerationSchema: {},
-}));
+vi.mock("@reading-advantage/domain/codecamp", async () => {
+  const actual = await vi.importActual<typeof import("@reading-advantage/domain/codecamp")>("@reading-advantage/domain/codecamp");
+  return {
+    ...actual,
+    aiClientToGenerateReview: vi.fn(() => vi.fn()),
+    isPrEvaluationCanarySelected: vi.fn(() => true),
+    listPriorPrReviewAttempts: domainMocks.listPriorPrReviewAttempts,
+    recordAdvisoryPrReviewAttempt: domainMocks.recordAdvisoryPrReviewAttempt,
+    reviewExercise: domainMocks.reviewExercise,
+    reviewResultGenerationSchema: {},
+  };
+});
 
 vi.mock("@reading-advantage/ai", () => ({
   getAIClient: vi.fn(),

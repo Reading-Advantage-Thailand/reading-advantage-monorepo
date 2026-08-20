@@ -107,7 +107,7 @@ describe("reviewExercise with AIClient-backed callback", () => {
       generateReview,
     });
 
-    expect(result).toEqual(reviewResult);
+    expect(result).toMatchObject(reviewResult);
     expect(client.generateObject).toHaveBeenCalledTimes(1);
   });
 

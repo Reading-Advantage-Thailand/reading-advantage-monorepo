@@ -99,7 +99,8 @@
       "pending": "รอการตรวจสอบด้านบรรณาธิการ",
       "processing": "กำลังประมวลผลรีวิว",
       "retrying": "กำลังลองรีวิวอีกครั้ง",
-      "failed": "รีวิวล้มเหลว"
+      "failed": "รีวิวล้มเหลว",
+      "skipped": "ข้ามการรีวิว"
     },
     "webhookDiagnostics": "การวินิจฉัย Webhook",
     "webhookDiagnosticsHint": "เหตุการณ์ GitHub webhook ล่าสุดที่ถูกข้ามหรือล้มเหลว",

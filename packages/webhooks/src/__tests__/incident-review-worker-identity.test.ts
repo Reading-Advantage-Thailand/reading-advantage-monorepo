@@ -15,10 +15,14 @@ vi.mock("@reading-advantage/domain", () => ({
   createTenantDB: (db: unknown) => db,
 }));
 
-vi.mock("@reading-advantage/domain/codecamp", () => ({
-  ...mocks,
-  reviewResultGenerationSchema: {},
-}));
+vi.mock("@reading-advantage/domain/codecamp", async () => {
+  const actual = await vi.importActual<typeof import("@reading-advantage/domain/codecamp")>("@reading-advantage/domain/codecamp");
+  return {
+    ...actual,
+    ...mocks,
+    reviewResultGenerationSchema: {},
+  };
+});
 
 vi.mock("@reading-advantage/ai", () => ({ getAIClient: vi.fn() }));
 
