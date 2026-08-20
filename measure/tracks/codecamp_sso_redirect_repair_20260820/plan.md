@@ -122,7 +122,7 @@ Red-phase commits contain ONLY the new test files and Measure document edits.
 Record a commit SHA only after the commit is an ancestor of HEAD.
 
 - Phase 1 contracts: 5fb43e1bc
-- Phase 2 Red:
+- Phase 2 Red: 2d93e79c0
 - Phase 3 Green:
 - Phase 4 docs and doctor:
 
@@ -140,4 +140,4 @@ Record a commit SHA only after the commit is an ancestor of HEAD.
 - `pnpm turbo run build --filter=codecamp-advantage`: passed.
 - `pnpm turbo run lint --filter=codecamp-advantage`: failed on the existing `components/tutor-coach.tsx:150` hook violation. This track did not modify that file.
 - The tests cover seven acceptance cases. The specification calls browser acceptance six cases.
-- No commit was created by request.
+- Red test commit: `2d93e79c0`.
