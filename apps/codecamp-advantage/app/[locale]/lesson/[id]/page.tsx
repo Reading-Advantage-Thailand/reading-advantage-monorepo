@@ -9,7 +9,7 @@ import {
   Send,
 } from "lucide-react";
 import { ForkInstruction } from "@/components/fork-instruction";
-import { ReviewHistory } from "@/components/review-history";
+import { ReviewHistory, type ReviewStatus as ReviewHistoryStatus } from "@/components/review-history";
 import { WorkflowTracker } from "@/components/workflow-tracker";
 import { useState, useMemo } from "react";
 import { useLocale, useTranslations } from "next-intl";
@@ -32,6 +32,12 @@ export default function LessonPage() {
   );
 
   const { data: prReviews } = trpc.codecamp.prReviews.useQuery();
+  const utils = trpc.useUtils();
+  const createPrReview = trpc.codecamp.createPrReview.useMutation({
+    onSuccess: () => {
+      utils.codecamp.prReviews.invalidate();
+    },
+  });
 
   const { data: practiceIssues } = trpc.codecamp.practiceIssues.useQuery(
     undefined,
@@ -164,14 +170,35 @@ export default function LessonPage() {
             {moduleReviews.length > 0 && (
               <div className="mt-6 space-y-4">
                 <h3 className="text-sm font-semibold">{tLesson("prReviewFeedback")}</h3>
-                {moduleReviews.map((review) => (
-                  <ReviewHistory
-                    key={review.id}
-                    prUrl={review.prUrl}
-                    reviewStatus={review.reviewStatus}
-                    summary={review.llmReviewSummary}
-                  />
-                ))}
+                {moduleReviews.map((review) => {
+                  // `review` is a `PrReview` (or widened report) — backend
+                  // may carry operationalStatus, failureReason, and removedPaths
+                  // when the worker queue is observable to the learner.
+                  const widenedReview = review as typeof review & {
+                    operationalStatus?: ReviewHistoryStatus | null;
+                    failureReason?: string | null;
+                    removedPaths?: string[];
+                  };
+                  const effectiveStatus =
+                    widenedReview.operationalStatus ?? review.reviewStatus;
+                  const handleRequestAnotherReview = () => {
+                    createPrReview.mutate({
+                      exerciseRepoId: review.exerciseRepoId,
+                      prUrl: review.prUrl,
+                    });
+                  };
+                  return (
+                    <ReviewHistory
+                      key={review.id}
+                      prUrl={review.prUrl}
+                      reviewStatus={effectiveStatus}
+                      summary={review.llmReviewSummary}
+                      failureReason={widenedReview.failureReason ?? null}
+                      removedPaths={widenedReview.removedPaths ?? []}
+                      onRequestAnotherReview={handleRequestAnotherReview}
+                    />
+                  );
+                })}
               </div>
             )}
           </div>

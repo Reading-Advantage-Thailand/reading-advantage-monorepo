@@ -8,17 +8,44 @@ import {
   RotateCcw,
   ExternalLink,
   Circle,
+  XCircle,
+  SkipForward,
+  RefreshCcw,
 } from "lucide-react";
 import { getPrDisplayName } from "@/lib/pr-url";
+import { Button } from "@reading-advantage/ui";
 import { useTranslations } from "next-intl";
+
+export type ReviewStatus =
+  | "pending"
+  | "reviewed"
+  | "needs_changes"
+  | "approved"
+  | "processing"
+  | "retrying"
+  | "failed"
+  | "skipped";
 
 interface ReviewHistoryProps {
   prUrl: string;
-  reviewStatus: "pending" | "reviewed" | "needs_changes" | "approved";
+  reviewStatus: ReviewStatus;
   summary: string | null;
+  failureReason?: string | null;
+  removedPaths?: string[];
+  onRequestAnotherReview?: () => void;
 }
 
-function getStatusConfig(status: ReviewHistoryProps["reviewStatus"], t: ReturnType<typeof useTranslations>) {
+interface StatusConfig {
+  label: string;
+  className: string;
+  icon: React.ReactNode;
+  message: string;
+}
+
+function getStatusConfig(
+  status: ReviewStatus,
+  t: ReturnType<typeof useTranslations>,
+): StatusConfig {
   switch (status) {
     case "pending":
       return {
@@ -48,25 +75,66 @@ function getStatusConfig(status: ReviewHistoryProps["reviewStatus"], t: ReturnTy
         icon: <CheckCircle className="h-4 w-4" />,
         message: t("statusApprovedMsg"),
       };
+    case "processing":
+      return {
+        label: t("statusProcessing"),
+        className: "bg-sky-100 text-sky-800 dark:bg-sky-900 dark:text-sky-200",
+        icon: <RotateCcw className="h-4 w-4 animate-spin" />,
+        message: t("statusProcessingMsg"),
+      };
+    case "retrying":
+      return {
+        label: t("statusRetrying"),
+        className: "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200",
+        icon: <RefreshCcw className="h-4 w-4 animate-spin" />,
+        message: t("statusRetryingMsg"),
+      };
+    case "failed":
+      return {
+        label: t("statusFailed"),
+        className: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200",
+        icon: <XCircle className="h-4 w-4" />,
+        message: t("statusFailedMsg"),
+      };
+    case "skipped":
+      return {
+        label: t("statusSkipped"),
+        className: "bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-200",
+        icon: <SkipForward className="h-4 w-4" />,
+        message: t("statusSkippedMsg"),
+      };
   }
 }
 
 function getTimelineStepStatus(
   stepId: string,
-  reviewStatus: ReviewHistoryProps["reviewStatus"]
+  reviewStatus: ReviewStatus,
 ): "pending" | "completed" | "active" {
-  const statusOrder = ["pending", "reviewed", "needs_changes", "approved"];
+  // Editorial statuses drive the four-step editorial timeline.
+  const statusOrder: ReviewStatus[] = ["pending", "reviewed", "needs_changes", "approved"];
   const currentIndex = statusOrder.indexOf(reviewStatus);
-
   const stepIndex = ["submitted", "first_review", "revisions", "approved"].indexOf(stepId);
 
+  if (currentIndex === -1) {
+    // Operational states (processing, retrying, failed, skipped) leave the
+    // editorial timeline inert — every step reads as pending so the learner
+    // does not see a misleading "first review completed" marker.
+    return "pending";
+  }
   if (stepIndex === -1) return "pending";
   if (stepIndex < currentIndex) return "completed";
   if (stepIndex === currentIndex) return "active";
   return "pending";
 }
 
-export function ReviewHistory({ prUrl, reviewStatus, summary }: ReviewHistoryProps) {
+export function ReviewHistory({
+  prUrl,
+  reviewStatus,
+  summary,
+  failureReason,
+  removedPaths,
+  onRequestAnotherReview,
+}: ReviewHistoryProps) {
   const t = useTranslations("review");
   const config = getStatusConfig(reviewStatus, t);
 
@@ -76,6 +144,9 @@ export function ReviewHistory({ prUrl, reviewStatus, summary }: ReviewHistoryPro
     { id: "revisions", label: t("revisions"), description: t("revisionsDesc") },
     { id: "approved", label: t("approved"), description: t("approvedDesc") },
   ];
+
+  const showFailureReason = reviewStatus === "failed" && failureReason;
+  const showRemovedPaths = reviewStatus === "skipped" && removedPaths && removedPaths.length > 0;
 
   return (
     <div className="space-y-4">
@@ -102,12 +173,46 @@ export function ReviewHistory({ prUrl, reviewStatus, summary }: ReviewHistoryPro
       {/* Status message */}
       <p className="text-sm text-muted-foreground">{config.message}</p>
 
+      {/* Failure reason — only for terminal `failed` state */}
+      {showFailureReason && (
+        <div className="rounded-lg border border-red-200 bg-red-50 p-3 dark:border-red-900 dark:bg-red-950/40">
+          <p className="text-sm text-red-800 dark:text-red-200">{failureReason}</p>
+        </div>
+      )}
+
+      {/* Skipped paths — only for terminal `skipped` state */}
+      {showRemovedPaths && (
+        <div className="rounded-lg border bg-muted/50 p-3">
+          <p className="text-sm font-medium">{t("statusSkippedPathsLabel")}</p>
+          <ul className="mt-1 list-disc space-y-0.5 pl-4 text-sm text-muted-foreground">
+            {removedPaths!.map((p) => (
+              <li key={p} className="font-mono text-xs">
+                {p}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
       {/* Review summary */}
       {summary && (
         <div className="rounded-lg border bg-muted/50 p-3">
           <p className="text-sm font-medium">{t("feedback")}</p>
           <p className="mt-1 text-sm text-muted-foreground">{summary}</p>
         </div>
+      )}
+
+      {/* Retry action — only when a failed review is replayable */}
+      {reviewStatus === "failed" && onRequestAnotherReview && (
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={onRequestAnotherReview}
+          className="inline-flex items-center gap-1.5"
+        >
+          <RefreshCcw className="h-4 w-4" />
+          {t("statusFailedRetryAction")}
+        </Button>
       )}
 
       {/* Timeline */}

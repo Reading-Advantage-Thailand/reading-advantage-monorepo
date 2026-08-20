@@ -22,7 +22,7 @@ common_args=(
 )
 
 if gcloud scheduler jobs describe "${job_name}" --project="${PROJECT_ID}" --location="${location}" >/dev/null 2>&1; then
-  gcloud scheduler jobs update http "${job_name}" "${common_args[@]}" "--update-headers=${authorization_header}"
+  gcloud scheduler jobs update http "${job_name}" "${common_args[@]}" "--update-headers=${authorization_header}" "--attempt-deadline=180s"
 else
-  gcloud scheduler jobs create http "${job_name}" "${common_args[@]}" "--headers=${authorization_header}"
+  gcloud scheduler jobs create http "${job_name}" "${common_args[@]}" "--headers=${authorization_header}" "--attempt-deadline=180s"
 fi

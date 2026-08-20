@@ -50,7 +50,7 @@ steps:
       - "--allow-unauthenticated"
       - "--service-account=codecamp-cloud-run@$PROJECT_ID.iam.gserviceaccount.com"
       - "--add-cloudsql-instances=reading-advantage:asia-southeast1:cloud-sql"
-      - "--set-env-vars=NODE_ENV=production,CODECAMP_AUTH_MODE=company,NEXT_PUBLIC_API_URL=https://codecamp.reading-advantage.com,TUTORIAL_REPOSITORY_WORKER_URL=https://codecamp.reading-advantage.com/api/internal/tutorial-repository-capture,TUTORIAL_REPOSITORY_BASE_URL=https://github.com,AI_PROVIDER=openrouter,CODECAMP_PR_REVIEW_ROLLOUT_MODE=active,CODECAMP_PR_REVIEW_RELEASE_APPROVED_BY=codecamp-ops-release,COMPANY_AUTH_ISSUER_URL=https://accounts.reading-advantage.com,COMPANY_AUTH_OIDC_CLIENT_ID=codecamp-web,COMPANY_AUTH_OIDC_REDIRECT_URI=https://codecamp.reading-advantage.com/api/auth/callback,COMPANY_AUTH_EXPECTED_AUDIENCE=codecamp,COMPANY_AUTH_CLOCK_SKEW_SECONDS=30"
+      - "--set-env-vars=NODE_ENV=production,CODECAMP_AUTH_MODE=company,NEXT_PUBLIC_API_URL=https://codecamp.reading-advantage.com,TUTORIAL_REPOSITORY_WORKER_URL=https://codecamp.reading-advantage.com/api/internal/tutorial-repository-capture,TUTORIAL_REPOSITORY_BASE_URL=https://github.com,AI_PROVIDER=openrouter,CODECAMP_PR_REVIEW_ROLLOUT_MODE=active,CODECAMP_PR_REVIEW_RELEASE_APPROVED_BY=codecamp-ops-release,CODECAMP_PR_REVIEW_MODEL=x-ai/grok-4.6,REVIEW_WORKER_BACKOFF_BASE_MS=30000,COMPANY_AUTH_ISSUER_URL=https://accounts.reading-advantage.com,COMPANY_AUTH_OIDC_CLIENT_ID=codecamp-web,COMPANY_AUTH_OIDC_REDIRECT_URI=https://codecamp.reading-advantage.com/api/auth/callback,COMPANY_AUTH_EXPECTED_AUDIENCE=codecamp,COMPANY_AUTH_CLOCK_SKEW_SECONDS=30"
       - "--min-instances=1"
       - "--max-instances=100"
       - "--concurrency=80"
