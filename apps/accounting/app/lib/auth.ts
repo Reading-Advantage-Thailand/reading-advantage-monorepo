@@ -19,7 +19,8 @@ import {
  * Requires an active Accounts-issued Accounting STAFF, OWNER, or ACCOUNTANT session.
  * @param request The route request carrying the application session cookie.
  * @returns The resolved session or a response that the route must return.
- * @throws Unexpected authentication or database failures.
+ *   Never throws: unexpected authentication or introspection failures are
+ *   logged server-side and converted into a 503 response.
  */
 export async function requireAccountingSession(request: Request): Promise<
   | {
@@ -71,7 +72,14 @@ export async function requireAccountingSession(request: Request): Promise<
       };
     }
     return { ok: true, session: { user } };
-  } catch {
+  } catch (error) {
+    console.error(
+      JSON.stringify({
+        level: "error",
+        event: "accounting_session_guard_failed",
+        errorName: error instanceof Error ? error.name : "UnknownError",
+      }),
+    );
     return {
       ok: false,
       response: new Response(

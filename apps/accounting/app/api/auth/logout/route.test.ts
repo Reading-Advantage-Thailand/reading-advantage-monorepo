@@ -1,5 +1,5 @@
 // @vitest-environment node
-import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 
 import { POST } from "@/app/api/auth/logout/route";
 import {
@@ -56,6 +56,25 @@ describe("POST /api/auth/logout", () => {
 
     expect(response.status).toBe(200);
     expect(idp.endSessionTokens).toHaveLength(endSessionCallsBefore);
+  });
+
+  it("clears the session cookie and returns 500 when the IdP logout fails", async () => {
+    idp.setEndSessionFailure(true);
+    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    try {
+      const response = await POST(logoutRequest(PUBLIC_ORIGIN));
+
+      expect(response.status).toBe(500);
+      await expect(response.json()).resolves.toEqual({
+        message: "Logout failed",
+      });
+      const clearedSession = findCookie(response, SESSION_COOKIE);
+      expect(clearedSession).toBeDefined();
+      expect(cookieValue(clearedSession as string)).toBe("");
+    } finally {
+      idp.setEndSessionFailure(false);
+      consoleSpy.mockRestore();
+    }
   });
 
   it("rejects cross-origin POSTs before touching the IdP", async () => {

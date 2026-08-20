@@ -15,7 +15,23 @@ export async function POST(request: Request): Promise<NextResponse> {
     );
   }
   const token = readAccountingCookie(request, ACCOUNTING_SESSION_COOKIE);
-  if (token) await getAccountingOidcClient().logout(token);
+  try {
+    if (token) await getAccountingOidcClient().logout(token);
+  } catch (error) {
+    console.error(
+      JSON.stringify({
+        level: "error",
+        event: "accounting_logout_error",
+        errorName: error instanceof Error ? error.name : "UnknownError",
+      }),
+    );
+    const failure = NextResponse.json(
+      { message: "Logout failed" },
+      { status: 500 },
+    );
+    failure.cookies.delete(ACCOUNTING_SESSION_COOKIE);
+    return failure;
+  }
   const response = NextResponse.json({ success: true });
   response.cookies.delete(ACCOUNTING_SESSION_COOKIE);
   return response;

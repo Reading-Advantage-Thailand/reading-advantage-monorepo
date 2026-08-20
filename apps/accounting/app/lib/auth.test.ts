@@ -1,6 +1,8 @@
 // @vitest-environment node
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 
+import * as authModule from "@/app/lib/auth";
+import { requireAccountingSession } from "@/app/lib/auth";
 import {
   installIdpFetchDouble,
   PUBLIC_ORIGIN,
@@ -39,8 +41,6 @@ describe("requireAccountingSession", () => {
   });
 
   it("denies requests without a session cookie with 401", async () => {
-    const { requireAccountingSession } = await import("@/app/lib/auth");
-
     const guard = await requireAccountingSession(guardRequest(false));
 
     expect(guard.ok).toBe(false);
@@ -55,8 +55,6 @@ describe("requireAccountingSession", () => {
         identity: testIdentity([role]),
         expiresAt: ACTIVE_EXPIRY,
       });
-      const { requireAccountingSession } = await import("@/app/lib/auth");
-
       const guard = await requireAccountingSession(guardRequest());
 
       expect(guard.ok).toBe(true);
@@ -79,8 +77,6 @@ describe("requireAccountingSession", () => {
       identity: testIdentity(["MEMBER"]),
       expiresAt: ACTIVE_EXPIRY,
     });
-    const { requireAccountingSession } = await import("@/app/lib/auth");
-
     const guard = await requireAccountingSession(guardRequest());
 
     expect(guard.ok).toBe(false);
@@ -89,19 +85,17 @@ describe("requireAccountingSession", () => {
 
   it("denies a revoked or expired SSO token with 401", async () => {
     idp.setIntrospection({ active: false });
-    const { requireAccountingSession } = await import("@/app/lib/auth");
-
     const guard = await requireAccountingSession(guardRequest());
 
     expect(guard.ok).toBe(false);
     if (!guard.ok) expect(guard.response.status).toBe(401);
   });
 
-  it("exposes no app-local password or credential sign-in path", async () => {
-    const authModule: Record<string, unknown> = await import("@/app/lib/auth");
+  it("exposes no app-local password or credential sign-in path", () => {
+    const exportedNames: Record<string, unknown> = authModule;
 
-    expect(Object.keys(authModule).length).toBeGreaterThan(0);
-    for (const exportedName of Object.keys(authModule)) {
+    expect(Object.keys(exportedNames).length).toBeGreaterThan(0);
+    for (const exportedName of Object.keys(exportedNames)) {
       expect(exportedName).not.toMatch(/password|credential|login/i);
     }
   });

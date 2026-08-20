@@ -148,6 +148,8 @@ export interface IdpDouble {
   }): void;
   /** Sets the JSON body returned by the introspection endpoint. */
   setIntrospection(result: unknown): void;
+  /** Toggles a network-level failure of the end-session endpoint. */
+  setEndSessionFailure(fails: boolean): void;
 }
 
 function headerValue(
@@ -171,6 +173,7 @@ export function installIdpFetchDouble(): IdpDouble {
     | { readonly nonce: string; readonly roles: readonly string[] }
     | undefined;
   let introspection: unknown = { active: false };
+  let endSessionFails = false;
   const tokenRequests: TokenRequestRecord[] = [];
   const introspectedTokens: string[] = [];
   const endSessionTokens: string[] = [];
@@ -219,6 +222,9 @@ export function installIdpFetchDouble(): IdpDouble {
           return jsonResponse(introspection);
         }
         case `${ISSUER}/api/oidc/logout`: {
+          if (endSessionFails) {
+            throw new TypeError("fetch failed");
+          }
           const authorization = headerValue(init, "authorization") ?? "";
           endSessionTokens.push(authorization.replace(/^Bearer\s+/, ""));
           return new Response(null, { status: 200 });
@@ -241,6 +247,9 @@ export function installIdpFetchDouble(): IdpDouble {
     },
     setIntrospection(result) {
       introspection = result;
+    },
+    setEndSessionFailure(fails) {
+      endSessionFails = fails;
     },
   };
 }

@@ -1,5 +1,13 @@
 // @vitest-environment node
-import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
+import {
+  afterAll,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi,
+} from "vitest";
 
 import { GET } from "@/app/api/auth/session/route";
 import {
@@ -111,5 +119,25 @@ describe("GET /api/auth/session", () => {
 
     expect(response.status).toBe(401);
     await expect(response.json()).resolves.toEqual({ session: null });
+  });
+
+  it("returns 503 with a null session when the introspection call fails", async () => {
+    // A circular introspection payload makes the IdP double's fetch reject,
+    // simulating an introspection network failure for the route under test.
+    const introspectionFailure: Record<string, unknown> = {};
+    introspectionFailure.self = introspectionFailure;
+    idp.setIntrospection(introspectionFailure);
+    const consoleError = vi
+      .spyOn(console, "error")
+      .mockImplementation(() => {});
+
+    try {
+      const response = await GET(sessionRequest());
+
+      expect(response.status).toBe(503);
+      await expect(response.json()).resolves.toEqual({ session: null });
+    } finally {
+      consoleError.mockRestore();
+    }
   });
 });

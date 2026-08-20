@@ -358,6 +358,9 @@ importers:
 
   apps/accounting:
     dependencies:
+      '@node-rs/argon2':
+        specifier: 'catalog:'
+        version: 2.0.2
       '@reading-advantage/auth':
         specifier: workspace:*
         version: link:../../packages/auth
