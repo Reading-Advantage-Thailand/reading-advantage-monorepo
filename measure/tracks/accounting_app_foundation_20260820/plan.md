@@ -3,7 +3,7 @@
 ## Phase S1: Company SSO sign-in
 _Story ref: spec.md#story-s1_
 
-- [ ] Task: Scaffold `apps/accounting` (Next.js + TS + Tailwind + shadcn/ui, matching monorepo conventions) and define the accounting role contract (`STAFF`, `OWNER`, `ACCOUNTANT` + reviewed admin derivation) in the internal auth adapter's app-role registry; register `apps/accounting` as an OIDC client of `apps/accounts`.
+- [x] Task: Scaffold `apps/accounting` (Next.js + TS + Tailwind + shadcn/ui, matching monorepo conventions) and define the accounting role contract (`STAFF`, `OWNER`, `ACCOUNTANT` + reviewed admin derivation) in the internal auth adapter's app-role registry; register `apps/accounting` as an OIDC client of `apps/accounts`. 918e375
 - [ ] Task: Red tests — OIDC Authorization Code + PKCE round-trip against the Accounts IdP (mocked token endpoint), role denial for users without an accounting role, session via internal auth adapter only (no app-local password store).
 - [ ] Task: Implement — sign-in flow via `apps/accounts` OIDC, `proxy.ts` route guard (Next.js 16 nodejs runtime — per lessons-learned), declare any native auth deps in the app's own `package.json` (argon2/Turbopack gotcha).
 - [ ] Task: Generate docs & doctor — `measure/generate.sh`, `measure/doctor.sh`.
