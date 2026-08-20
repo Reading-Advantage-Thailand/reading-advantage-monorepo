@@ -388,8 +388,8 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 - [~] **Track: CodeCamp Interactive Media and Diagrams Integration** *Link: [./tracks/codecamp_interactive_media_diagrams_20260709/](./tracks/codecamp_interactive_media_diagrams_20260709/)*
   Introduce curated YouTube tutorial embeds and 16 unit-level visual diagrams/illustrations across the CodeCamp curriculum, adapting database seed data and frontend rendering components.
 
-- [ ] **Track: Codecamp PR Review Recovery** *Link: [./tracks/codecamp_pr_review_recovery_20260820/](./tracks/codecamp_pr_review_recovery_20260820/)*
-  Stop Codecamp PR reviews from dying permanently on the first contract failure. Strip generated artifacts instead of killing the review, make model-shape violations retryable with a repair prompt, widen the retry budget, and show the learner the true review state instead of a permanent "pending".
+- [~] **Track: Codecamp PR Review Recovery** *Link: [./tracks/codecamp_pr_review_recovery_20260820/](./tracks/codecamp_pr_review_recovery_20260820/)*
+  Stop Codecamp PR reviews from dying permanently on the first contract failure. Strip generated artifacts instead of killing the review, make model-shape violations retryable with a repair prompt, widen the retry budget, and show the learner the true review state instead of a permanent "pending". Code complete and verified 2026-08-20 (baseline recorded, phases 1-4 checkpointed); production deploy and live verification pending owner timing.
 
 - [ ] **Track: Codecamp SSO Redirect Repair** *Link: [./tracks/codecamp_sso_redirect_repair_20260820/](./tracks/codecamp_sso_redirect_repair_20260820/)*
   Repair the company SSO redirect chain: carry the destination through sign-in, stop overwriting the learner's language cookie, honor the Cloud Run forwarding hop in every auth route, and surface sign-in errors.
