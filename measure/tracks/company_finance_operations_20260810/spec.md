@@ -77,6 +77,15 @@ The conversion rate source and rounding policy require an explicit owner or
 accountant decision before production use. Until that decision exists, the
 controlled import must fail when verified conversion evidence is incomplete.
 
+Owner decision (2026-08-20): the rate source is the actual bank settlement.
+The submitter provides the settled THB total from the bank statement or card
+settlement record; the effective rate is derived per transaction as the
+settled THB total divided by the source-currency amount (e.g. a $20 bill
+settled at ฿692 → rate 34.60). No external rate provider is used, and no
+separate rate effective date applies. The settlement figure must be bound to
+evidence (bank statement or settlement record) — a bare caller assertion is
+not authoritative. Rounding: 2 decimal places, half-up.
+
 ## First executable phase: policy-neutral foundation
 
 Define bounded contracts, ports, and schema, then write Red tests covering:

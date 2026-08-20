@@ -2,32 +2,11 @@
 
 ## Phase 1 — policy-neutral foundation
 
-- [x] Task: Define bounded contracts, internal ports, and schema for the operational records/evidence in `spec.md`; write Red tests for exact money/currency, idempotency, immutable history, authorization, audit, provenance, and cross-database/provider isolation. Accepted with evidence in `phase1-foundation-acceptance-20260810.md` in commit `3b3a128ea381f8fff0c6e1136894fd39228eaff9`.
-- [x] Task: Implement the minimum domain/backend contracts and persistence behind the Red tests. Accepted with evidence in `phase1-persistence-acceptance-20260811.md` in commit `c5ecf18b0830c8702602f9f5f33415c7b3e92d66`.
-- [x] Task: Add behavior-level contract tests and adapters for the Company Identity attestor, authorized private-evidence reads, and scope/digest-bound durable outbox projector required by the historical private-evidence MVP. Source commit `48470311d4f6b06b7e9ebcce7ba1f380444f0a79` (with Git note evidence).
+- [x] Task: Define bounded contracts, internal ports, and schema for the operational records/evidence in `spec.md`; write Red tests for exact money/currency, idempotency, immutable history, authorization, audit, provenance, and cross-database/provider isolation. Accepted — `phase1-foundation-acceptance-20260810.md` (commit `3b3a128`).
+- [x] Task: Implement the minimum domain/backend contracts and persistence behind the Red tests. Accepted — `phase1-persistence-acceptance-20260811.md` (commit `c5ecf18`).
+- [x] Task: Add behavior-level contract tests and adapters for the Company Identity attestor, authorized private-evidence reads, and scope/digest-bound durable outbox projector required by the historical private-evidence MVP. Accepted — source commit `48470311` (Git note evidence); maintenance commits `da3ce21` (audit-boundary repair) and `e27090fa` (H-1 recheck). Suites at acceptance: focused 115/115, backend 318/318, storage 74/74, DB 31/31; PostgreSQL 16 migration-upgrade integration passed; Reviews A and B both ACCEPT. Detailed evidence lives in the phase-1 acceptance/maintenance notes in this track directory.
 
-  Final Task 3 acceptance evidence (2026-08-13):
-
-  - Accepted sorted 32-path manifest: `a078f65cdea002b7ff0b1284c75314d44151877b80e172fe1ca1e914202d7875`.
-  - Review A: ACCEPT, bound to manifest `a078f65c`.
-  - Security Review B: ACCEPT, bound to manifest `a078f65c`.
-  - Focused bind/digest suites: 2 files, 115/115 tests. Backend: 24 files, 318/318 tests. Storage: 8 files, 74/74 tests. DB: 3 files, 31/31 tests.
-  - Backend, Storage, and DB typechecks, targeted lint, and `git diff --check` passed.
-  - PostgreSQL 16 `migration-upgrade.integration` passed 1/1. Backend live suites passed 4 files, 4/4 tests, using a disposable least-privilege database; cleanup verification found 0 remaining temporary databases and 0 remaining temporary roles.
-  - Historical `0002` SQL and snapshot remain byte-immutable with exact SHA-256 hashes `f0535ed5dd6eab2d74818cc0fca6fa964338f5d3fe3bd0ed392810b09a0d913a` and `567a39b4adad21847a64d020e2fb8c64bd33b5407cd29c2bd68430588aa10e14`. The additive/journaled `0003_finance_attestation_audit_metadata` migration and `meta/0003_snapshot.json` carry the exact doctor sentinel, which was validated.
-  - The Phase 2 aggregate stayed intentionally Red and was excluded from Task 3 acceptance. No Phase 1 checkpoint is recorded because the CRM/Tutor source-owner task remains blocked.
-
-  Maintenance evidence (2026-08-13; post-acceptance, no status change):
-
-  - Maintenance source commit `da3ce21916a170ea9029efe1c449ea39395a36ba` contains the exact 3-path portable audit-boundary repair; its canonical committed-content aggregate is `90a9e3251d83f2f67b2f407b50e2b63e6dfc814198aac48be94cd18be1c38854`. Final correctness Review A and Security Review B are both ACCEPT, bound to these stable hashes; the loader/shadow matrix passed 40/40.
-  - Maintenance evidence passed Backend 127 tests with 1 live-PostgreSQL environment skip, DB 31/31, Storage 48/48, and the architecture guard 7/7. Production typechecks, exact strict typecheck, targeted lint, Prettier, `git diff --check`, and metadata/repository parity passed.
-  - Immutable `0002` hashes and additive/journaled `0003_finance_attestation_audit_metadata` linkage are unchanged; no migration changed.
-  - Finance maintenance removed the exact 3 architecture additions attributable to original Task 3. The current separate checker remains globally Red: `files=4247`, `findings=697`, `parseErrors=0`, additions 137, removals 0, renames 21. No global architecture or doctor Green claim is made.
-  - Shared graph/generated refresh commit `390448dd2` is post-maintenance freshness evidence: 71-path hash `40df25b062d742ccb715e301b4a2914a079473575e504733de7dae7d70a2fb0d` and Finance subset hash `29ff5a83a30df7917e088b2257eed22f3fd6d64692c2efd14a0fe18da5150dc6`. The whole-graph audit timed out/was terminated with exit 130, and `measure/doctor.sh` remains Red on 80 deprecated `[ ]` markers across nine unrelated plans; this is not structural Green evidence.
-  - Task 3 remains `[x]`. CRM/Tutor and Phase 2/3 blockers are unchanged, and no phase checkpoint is recorded.
-  - H-1 maintenance/remediation (2026-08-16; post-acceptance, no status change): source commit `e27090fa`; full Finance 401/401 and focused Finance 52/52 passed; owner gates remain unchanged; Task 3 remains `[x]`, with no phase checkpoint or whole-track acceptance claim.
-
-- [b] Task: Add live CRM and Tutor owner contracts after their source owners accept the source-native contracts. — deferred:crm-tutor-source-owners
+- [b] Task: Add live CRM and Tutor owner contracts after their source owners accept the source-native contracts. — deferred:crm-tutor-source-owners (owner confirmed 2026-08-20: no live imports for now; owner-attested historical packets are sufficient)
 
 ## Phase 2 — controlled operational imports
 
@@ -94,7 +73,7 @@
   - Focused Finance regression tests passed 23/23. Backend typecheck, focused lint, Prettier, scoped diff check, and backend build passed.
   - `measure/doctor.sh` remains red only for deprecated `[ ]` markers in unrelated active plans. No phase acceptance is claimed.
 
-- [b] Task: Pilot one reconciled month and one billing packet through owner-attested private-evidence packets. — deferred:finance-owner-data
+- [b] Task: Pilot one reconciled month and one billing packet through owner-attested private-evidence packets. — deferred:finance-owner-data (owner will supply the pilot month and packet after production deployment; owner is remote, 2026-08-20)
 
   The pilot must prove authorization, audit, rollback, replay, and conflict behavior.
   An authorized owner must supply the pilot month and packet.
@@ -249,7 +228,14 @@
   - Production and test TypeScript checks, Finance lint, Prettier, build, and scoped diff checks passed.
   - The Green evidence note is `phase2-thb-review-c-green-remediation-20260816.md`; the role log is `orchestration/phase2-thb-review-c-jr-green-role.log`.
 
+  Owner policy decision (2026-08-20; made by the owner):
+
+  - Rate source: submitter-provided effective rate, derived per transaction from the actual bank-settled THB total divided by the source-currency amount (e.g. a $20 bill settled at ฿692 → rate 34.60). No external rate provider.
+  - Rounding: 2 decimal places, half-up.
+  - Effective date: not applicable — the rate derives from the actual settlement, so no rate-date lookup is needed.
+  - This resolves the owner-gated THB valuation decisions. Wiring these policy values into the production configuration remains open work.
+
 ## Phase 3 — close and accountant exchange
 
-- [b] Task: Implement close controls and accountant packs after the required written policy decisions and pilot acceptance. — deferred:accountant-owner-decisions
-- [b] Task: Release Finance Operations after Company Admin access and all integration reviews pass. — deferred:company-admin-owner
+- [b] Task: Implement close controls and accountant packs after the required written policy decisions and pilot acceptance. — deferred:accountant-owner-decisions (owner will obtain the policy list from the accountant, 2026-08-20)
+- [b] Task: Release Finance Operations after Company Admin access and all integration reviews pass. — deferred:company-admin-owner (owner confirmed 2026-08-20: Company Admin access is SSO-based; SSO integration is required before release)
