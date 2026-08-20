@@ -1,0 +1,9 @@
+Task: S2 contracts & schema for expense/bill submission (track_id: accounting_app_foundation_20260820)
+
+Two commits:
+- 5b3ec4273 feat(backend): packages/backend/src/modules/accounting/contracts.ts — accountingSubmissionInputSchema/Schema with kind (expense|bill), payee, category, description, money (reused financeMoneyInputSchema, minor units + [A-Z]{3} currency), evidenceReference (reused privateEvidenceReferenceSchema), settledThbAmount (required non-THB / forbidden THB via superRefine mirroring the owner 2026-08-20 THB decision), status z.enum(['pending']) (extensible for S4), scope (reused financeOperationScopeSchema, company-wide). Subpath export ./accounting added.
+- c84b2d327 feat(db): new accounting DB stream mirroring the company-identity pattern (src/accounting/{schema,client,environment,migration,commands/migrate}.ts, accounting/drizzle.config.ts, generated 0000 migration, accounting:generate/:migrate scripts, ./accounting export, docker/init-db.sh roles+database). accounting_submissions table mirrors the contracts including the conditional settled-THB CHECK at the DB level; append-only (no updated_at); no cross-database FKs.
+
+Tenant-registry note: the plan task anticipated classifying new tables; the separate accounting stream is not part of the main @reading-advantage/db barrel that tenant-coverage scans (company-identity pattern), so no registration applies — tenant-coverage 12/12 passes.
+
+Verified: backend build + tsc clean; db tsc clean; accounting:generate idempotent; tenant-coverage 12/12; prettier clean.
