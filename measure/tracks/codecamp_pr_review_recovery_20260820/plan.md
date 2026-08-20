@@ -200,6 +200,6 @@ Record a commit SHA only after the commit is an ancestor of HEAD
 produced six dangling references in this repository (lessons-learned 2026-06-07).
 
 - Phase 1 contracts: 96841ba
-- Phase 2 Red:
+- Phase 2 Red: 71fe25a
 - Phase 3 Green:
 - Phase 4 docs and doctor:
