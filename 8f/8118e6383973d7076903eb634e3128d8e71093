@@ -1,0 +1,9 @@
+Phase S1 verification report — 'Phase S1: Company SSO sign-in' (track_id: accounting_app_foundation_20260820)
+
+Automated tests: accounting vitest 8 files / 33 tests pass (protocol-level IdP double driving the real @reading-advantage/auth client end-to-end); accounts scripts vitest 20 pass + 1 pre-existing DB-skip; accounting lint, check-types, build clean; packages/db tsc clean. Doctor: no findings attributable to this track (7 pre-existing deprecated-marker FAILs in unrelated plans).
+
+Phase code review (change-quality-reviewer, range 12214a654..HEAD): 0 Critical, 1 High (H1 flaky dynamic-import test), 1 Medium (M1 logout error path), 6 Low. H1/M1 + L1-L6 fixed in f847af7ae and re-reviewed PASS; findings documented in plan-review.md; L7 (x-forwarded-host trust) deferred to the deployment track.
+
+Manual verification (owner, 2026-08-20, live local stack: podman Postgres + accounts IdP :3007 + accounting :3010): full OIDC Authorization Code + PKCE round-trip in a real browser. First attempt surfaced a real-browser-only bug: __Host- cookies set without Secure were rejected by Chrome in dev, bouncing the callback to /login?error=sso — fixed in 9684d1635 (secure: true + regression assertions). Re-verified via WebBridge: sign-in redirects back to / signed in; GET /api/auth/session returns 200 with username owner, role OWNER, applicationRoles [OWNER]. Role-denial path (403) covered by automated suite. Owner confirmed: 'Yes. SSO works fine.'
+
+Environment repairs along the way (local, uncommitted unless noted): podman rootless networking switched to slirp4netns in ~/.config/containers/containers.conf; local identity DB bootstrapped with accounting app/roles/client (+localhost redirect URI); pre-existing HEAD breakage in apps/accounts (deep packages/backend/src .js import unresolvable under Turbopack) patched in working tree to the dist adapter — handed to the identity track, NOT committed under this track.
