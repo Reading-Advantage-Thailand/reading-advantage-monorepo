@@ -1,5 +1,5 @@
 // @vitest-environment node
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
   legacyMode: vi.fn(),
@@ -26,6 +26,18 @@ function request(): Request {
   );
 }
 
+function forwardedRequest(): Request {
+  return new Request(
+    "http://codecamp-internal:8080/api/auth/callback?code=code&state=state",
+    {
+      headers: {
+        "x-forwarded-host": "codecamp.reading-advantage.com",
+        "x-forwarded-proto": "https",
+      },
+    },
+  );
+}
+
 describe("GET /api/auth/callback", () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -36,6 +48,11 @@ describe("GET /api/auth/callback", () => {
       expiresAt: new Date(Date.now() + 60_000).toISOString(),
       returnTo: "/en/module/intro",
     });
+    vi.stubEnv("NODE_ENV", "test");
+  });
+
+  afterEach(() => {
+    vi.unstubAllEnvs();
   });
 
   it("never exchanges Accounts credentials in explicit legacy mode", async () => {
@@ -69,5 +86,35 @@ describe("GET /api/auth/callback", () => {
     expect(response.headers.get("set-cookie")).toContain(
       "__Host-ra_codecamp_session=company-token",
     );
+  });
+
+  it("uses the forwarded origin after exchange", async () => {
+    mocks.exchange.mockResolvedValue({
+      accessToken: "company-token",
+      expiresAt: new Date(Date.now() + 60_000).toISOString(),
+      returnTo: "/en/admin",
+    });
+
+    const response = await GET(forwardedRequest());
+
+    expect(response.headers.get("location")).toBe(
+      "https://codecamp.reading-advantage.com/en/admin",
+    );
+  });
+
+  it("uses the forwarded origin for sso errors", async () => {
+    mocks.readCookie.mockReturnValue(null);
+
+    const response = await GET(forwardedRequest());
+
+    expect(response.headers.get("location")).toBe(
+      "https://codecamp.reading-advantage.com/?error=sso",
+    );
+  });
+
+  it("secures a session cookie for forwarded https", async () => {
+    const response = await GET(forwardedRequest());
+
+    expect(response.headers.get("set-cookie")).toContain("Secure");
   });
 });

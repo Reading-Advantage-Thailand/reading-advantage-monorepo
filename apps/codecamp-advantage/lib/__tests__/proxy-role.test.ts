@@ -78,7 +78,7 @@ describe("proxy admin role enforcement", () => {
     const res = await proxy(req);
 
     expect(res.status).toBe(307);
-    expect(res.headers.get("location")).toContain("redirectTo=%2Fadmin");
+    expect(res.headers.get("location")).toBe("http://localhost:3000/");
     const setCookie = res.headers.get("set-cookie") ?? "";
     expect(setCookie).toMatch(/session_token=;.*Max-Age=0/i);
   });
@@ -132,6 +132,6 @@ describe("proxy admin role enforcement", () => {
 
     expect(requireRoleMock).not.toHaveBeenCalled();
     expect(res.status).toBe(307);
-    expect(res.headers.get("location")).toContain("redirectTo=%2Fadmin");
+    expect(res.headers.get("location")).toBe("http://localhost:3000/");
   });
 });

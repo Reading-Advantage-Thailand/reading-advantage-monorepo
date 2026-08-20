@@ -66,7 +66,7 @@ describe("proxy", () => {
     const res = await proxy(req);
 
     expect(res.status).toBe(307);
-    expect(res.headers.get("location")).toBe("http://localhost:3000/?redirectTo=%2Fadmin");
+    expect(res.headers.get("location")).toBe("http://localhost:3000/");
   });
 
   it("redirects unauthenticated users from /th/admin to home", async () => {
@@ -74,7 +74,7 @@ describe("proxy", () => {
     const res = await proxy(req);
 
     expect(res.status).toBe(307);
-    expect(res.headers.get("location")).toBe("http://localhost:3000/?redirectTo=%2Fth%2Fadmin");
+    expect(res.headers.get("location")).toBe("http://localhost:3000/");
   });
 
   it("redirects unauthenticated users from /en/admin to home", async () => {
@@ -82,7 +82,7 @@ describe("proxy", () => {
     const res = await proxy(req);
 
     expect(res.status).toBe(307);
-    expect(res.headers.get("location")).toBe("http://localhost:3000/?redirectTo=%2Fen%2Fadmin");
+    expect(res.headers.get("location")).toBe("http://localhost:3000/");
   });
 
   it("redirects unauthenticated users from /admin/user-123 to home", async () => {
@@ -90,7 +90,7 @@ describe("proxy", () => {
     const res = await proxy(req);
 
     expect(res.status).toBe(307);
-    expect(res.headers.get("location")).toBe("http://localhost:3000/?redirectTo=%2Fadmin%2Fuser-123");
+    expect(res.headers.get("location")).toBe("http://localhost:3000/");
   });
 
   it("allows authenticated users through to locale-prefixed admin routes", async () => {
@@ -107,6 +107,24 @@ describe("proxy", () => {
 
     expect(res.status).toBe(307);
     expect(res.headers.get("location")).toBe("http://localhost:3000/th");
+  });
+
+  it("keeps an English locale cookie on an unprefixed root request", async () => {
+    const req = createRequest("/", { NEXT_LOCALE: "en" });
+    const res = await proxy(req);
+    const location = new URL(res.headers.get("location")!);
+
+    expect(location.pathname).toMatch(/^\/en\/?$/);
+    expect(res.headers.get("set-cookie") ?? "").not.toContain("NEXT_LOCALE=");
+  });
+
+  it("sets the default locale only for a cookieless root request", async () => {
+    const req = createRequest("/");
+    const res = await proxy(req);
+    const location = new URL(res.headers.get("location")!);
+
+    expect(location.pathname).toMatch(/^\/th\/?$/);
+    expect(res.headers.get("set-cookie") ?? "").toContain("NEXT_LOCALE=th");
   });
 
   it("builds non-prefixed locale redirects from forwarded Cloud Run host headers", async () => {
@@ -146,7 +164,7 @@ describe("proxy", () => {
     const res = await proxy(req);
 
     expect(res.status).toBe(307);
-    expect(res.headers.get("location")).toBe("http://localhost:3000/?redirectTo=%2Fth%2Fadmin%2Fuser-123");
+    expect(res.headers.get("location")).toBe("http://localhost:3000/");
   });
 
   it("allows authenticated users through to nested locale-prefixed admin routes", async () => {
@@ -162,7 +180,7 @@ describe("proxy", () => {
     const res = await proxy(req);
 
     expect(res.status).toBe(307);
-    expect(res.headers.get("location")).toBe("http://localhost:3000/?redirectTo=%2FAdmin");
+    expect(res.headers.get("location")).toBe("http://localhost:3000/");
   });
 
   it("blocks /EN/Admin bypass via case-insensitive match", async () => {
@@ -170,15 +188,23 @@ describe("proxy", () => {
     const res = await proxy(req);
 
     expect(res.status).toBe(307);
-    expect(res.headers.get("location")).toBe("http://localhost:3000/?redirectTo=%2FEN%2FAdmin");
+    expect(res.headers.get("location")).toBe("http://localhost:3000/");
   });
 
-  it("preserves query parameters in redirectTo", async () => {
-    const req = createRequest("/admin?debug=true&internId=42");
+  it("redirects a company-mode unauthenticated admin request to Accounts start", async () => {
+    vi.stubEnv("CODECAMP_AUTH_MODE", "company");
+    const req = createRequest("/en/admin?tab=users", undefined, {
+      "x-forwarded-host": "codecamp.reading-advantage.com",
+      "x-forwarded-proto": "https",
+    });
     const res = await proxy(req);
+    const location = new URL(res.headers.get("location")!);
 
     expect(res.status).toBe(307);
-    expect(res.headers.get("location")).toBe("http://localhost:3000/?redirectTo=%2Fadmin%3Fdebug%3Dtrue%26internId%3D42");
+    expect(location.origin).toBe("https://codecamp.reading-advantage.com");
+    expect(location.pathname).toBe("/api/auth/company/start");
+    expect(location.searchParams.getAll("returnTo")).toEqual(["/en/admin?tab=users"]);
+    expect(location.searchParams.get("redirectTo")).toBeNull();
   });
 
   it("exports a matcher config", () => {

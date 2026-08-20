@@ -830,7 +830,7 @@ describe("Phase 4 — Module & Lesson pages", () => {
 describe("Phase 4 — Admin panel", () => {
   describe("Admin page gating (proxy)", () => {
     skipIf(
-      "GET /en/admin (unauth) → 307 redirect to / (login wall)",
+      "GET /en/admin (unauth) → 307 redirect to company start with returnTo=/en/admin",
       async () => {
         const response = await fetchWithTimeout(`${PROD_URL}/en/admin`, { method: "GET" });
         expect.soft(
@@ -841,12 +841,13 @@ describe("Phase 4 — Admin panel", () => {
         const u = new URL(location, PROD_URL);
         expect.soft(
           u.pathname,
-          "redirect target must be / (login form is inline there)",
-        ).toBe("/");
+          "redirect target must be the company sign-in start route",
+        ).toBe("/api/auth/company/start");
         expect.soft(
-          u.searchParams.get("redirectTo"),
-          "redirectTo query param must be set so client can resume after login",
+          u.searchParams.get("returnTo"),
+          "returnTo query param must preserve the requested administrator page",
         ).toBe("/en/admin");
+        expect.soft(u.searchParams.get("redirectTo")).toBeNull();
       },
       REQUEST_TIMEOUT_MS + 2_000,
     );
@@ -1364,12 +1365,19 @@ describe("Phase 4 — P0 launch gate (single hard assertion)", () => {
       } else {
         const location = adminRes.headers.get("location") ?? "";
         const u = new URL(location, PROD_URL);
-        if (u.pathname !== "/") {
-          missing.push(`GET /en/admin (unauth) Location=${location} — expected redirect to /`);
-        }
-        if (u.searchParams.get("redirectTo") !== "/en/admin") {
+        if (u.pathname !== "/api/auth/company/start") {
           missing.push(
-            `GET /en/admin (unauth) missing redirectTo=/en/admin — got: ${location}`,
+            `GET /en/admin (unauth) Location=${location} — expected company start route`,
+          );
+        }
+        if (u.searchParams.get("returnTo") !== "/en/admin") {
+          missing.push(
+            `GET /en/admin (unauth) missing returnTo=/en/admin — got: ${location}`,
+          );
+        }
+        if (u.searchParams.has("redirectTo")) {
+          missing.push(
+            `GET /en/admin (unauth) must not contain redirectTo — got: ${location}`,
           );
         }
       }

@@ -468,7 +468,7 @@ describe("Phase 3 — Login flow", () => {
 describe("Phase 3 — Role enforcement", () => {
   describe("Admin path gating (proxy)", () => {
     skipIf(
-      "GET /th/admin (unauthenticated) → 307 redirect to /?redirectTo=/th/admin (not 200, not 403)",
+      "GET /th/admin (unauthenticated) → 307 redirect to company start with returnTo=/th/admin (not 200, not 403)",
       async () => {
         const response = await fetchWithTimeout(`${PROD_URL}/th/admin`, { method: "GET" });
         expect.soft(
@@ -477,17 +477,16 @@ describe("Phase 3 — Role enforcement", () => {
         ).toBe(307);
         const location = response.headers.get("location") ?? "";
         expect.soft(location, "Location header missing on unauth admin redirect").toBeTruthy();
-        // The proxy redirects to "/" with a redirectTo query param so the
-        // client can navigate back after login. See apps/codecamp-advantage/proxy.ts.
         const u = new URL(location, PROD_URL);
         expect.soft(
           u.pathname,
-          "expected redirect target to be the home / page (login form is inline there)",
-        ).toBe("/");
+          "expected redirect target to be the company sign-in start route",
+        ).toBe("/api/auth/company/start");
         expect.soft(
-          u.searchParams.get("redirectTo"),
-          "expected redirectTo query param so client can resume after login",
+          u.searchParams.get("returnTo"),
+          "expected one returnTo query param so Accounts can restore the request",
         ).toBe("/th/admin");
+        expect.soft(u.searchParams.get("redirectTo")).toBeNull();
       },
       REQUEST_TIMEOUT_MS + 2_000,
     );
@@ -710,14 +709,19 @@ describe("Phase 3 — P0 launch gate (single hard assertion)", () => {
       } else {
         const location = adminRes.headers.get("location") ?? "";
         const u = new URL(location, PROD_URL);
-        if (u.pathname !== "/") {
+        if (u.pathname !== "/api/auth/company/start") {
           missing.push(
-            `GET /th/admin (unauth) Location=${location} — expected redirect to /`,
+            `GET /th/admin (unauth) Location=${location} — expected company start route`,
           );
         }
-        if (u.searchParams.get("redirectTo") !== "/th/admin") {
+        if (u.searchParams.get("returnTo") !== "/th/admin") {
           missing.push(
-            `GET /th/admin (unauth) missing redirectTo=/th/admin — got: ${location}`,
+            `GET /th/admin (unauth) missing returnTo=/th/admin — got: ${location}`,
+          );
+        }
+        if (u.searchParams.has("redirectTo")) {
+          missing.push(
+            `GET /th/admin (unauth) must not contain redirectTo — got: ${location}`,
           );
         }
       }

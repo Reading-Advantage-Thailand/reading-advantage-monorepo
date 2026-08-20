@@ -31,6 +31,17 @@ function request(): NextRequest {
   });
 }
 
+function forwardedRequest(): NextRequest {
+  return new NextRequest("http://codecamp-internal:8080/api/auth/logout", {
+    method: "POST",
+    headers: {
+      origin: "https://codecamp.reading-advantage.com",
+      "x-forwarded-host": "codecamp.reading-advantage.com",
+      "x-forwarded-proto": "https",
+    },
+  });
+}
+
 describe("POST /api/auth/logout", () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -56,5 +67,12 @@ describe("POST /api/auth/logout", () => {
     expect(response.status).toBe(200);
     expect(mocks.handleLogout).toHaveBeenCalledWith(legacyRequest);
     expect(mocks.oidcLogout).not.toHaveBeenCalled();
+  });
+
+  it("accepts the public origin behind a forwarding hop", async () => {
+    const response = await POST(forwardedRequest());
+
+    expect(response.status).toBe(200);
+    expect(mocks.oidcLogout).toHaveBeenCalledWith("company-token");
   });
 });

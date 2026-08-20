@@ -35,40 +35,40 @@ _Blast radius: `getPublicUrl` has two definitions — `apps/codecamp-advantage/p
 
 Red-phase commits contain ONLY the new test files and Measure document edits.
 
-- [ ] Task: Write public URL Red tests
-    - [ ] `apps/codecamp-advantage/lib/__tests__/public-url.test.ts`
-    - [ ] Uses `x-forwarded-host` and `x-forwarded-proto` when both are present
-    - [ ] Falls back to the request URL when neither is present
-    - [ ] Drops the port when the forwarded host has none
-    - [ ] Keeps the port when the forwarded host carries one
-    - [ ] Never produces an `http` target when the forwarded protocol is `https`
-- [ ] Task: Write locale resolution Red tests
-    - [ ] `apps/codecamp-advantage/lib/__tests__/locale-resolution.test.ts`
-    - [ ] An `en` cookie on `/` resolves to `en`
-    - [ ] A `th` cookie on `/` resolves to `th`
-    - [ ] A missing cookie resolves to the default locale with `fromCookie: false`
-    - [ ] An unknown cookie value resolves to the default locale with `fromCookie: false`
-- [ ] Task: Write proxy Red tests
-    - [ ] Update `apps/codecamp-advantage/lib/__tests__/proxy.test.ts`
-    - [ ] An unauthenticated `/en/admin` request redirects to `/api/auth/company/start?returnTo=%2Fen%2Fadmin`
-    - [ ] No response carries a `redirectTo` query parameter
-    - [ ] An `en` cookie holder who opens `/` reaches `/en/` and the response sets no `NEXT_LOCALE`
-    - [ ] A cookieless visitor who opens `/` reaches `/th/` and the response sets `NEXT_LOCALE=th`
-    - [ ] Keep every existing administrator role case in `proxy-role.test.ts` green
-- [ ] Task: Write auth route Red tests
-    - [ ] Update `apps/codecamp-advantage/app/api/auth/callback/route.test.ts`
-    - [ ] The success redirect uses the forwarded host, not the request origin
-    - [ ] The `?error=sso` redirect uses the forwarded host
-    - [ ] The session cookie sets `secure: true` whenever the resolved target is `https`
-    - [ ] Update `app/api/auth/company/start/route.test.ts`: a malformed `returnTo` yields a redirect to `/`, status 307, and no 500
-- [ ] Task: Write sign-in entry Red tests
-    - [ ] `apps/codecamp-advantage/lib/__tests__/sign-in-href.test.ts` covers path encoding, query preservation, and host rejection
-    - [ ] `apps/codecamp-advantage/components/auth-entry.test.tsx` asserts the link carries the current path
-    - [ ] Assert the landing page renders a message for each of the four error codes
-    - [ ] Confirm `i18n-key-parity.test.ts` covers the new keys in both locales
-- [ ] Task: Confirm the Red phase
-    - [ ] Run each new suite and record the failing assertion counts here
-    - [ ] Commit the test files and this plan only
+- [x] Task: Write public URL Red tests
+    - [x] `apps/codecamp-advantage/lib/__tests__/public-url.test.ts`
+    - [x] Uses `x-forwarded-host` and `x-forwarded-proto` when both are present
+    - [x] Falls back to the request URL when neither is present
+    - [x] Drops the port when the forwarded host has none
+    - [x] Keeps the port when the forwarded host carries one
+    - [x] Never produces an `http` target when the forwarded protocol is `https`
+- [x] Task: Write locale resolution Red tests
+    - [x] `apps/codecamp-advantage/lib/__tests__/locale-resolution.test.ts`
+    - [x] An `en` cookie on `/` resolves to `en`
+    - [x] A `th` cookie on `/` resolves to `th`
+    - [x] A missing cookie resolves to the default locale with `fromCookie: false`
+    - [x] An unknown cookie value resolves to the default locale with `fromCookie: false`
+- [x] Task: Write proxy Red tests
+    - [x] Update `apps/codecamp-advantage/lib/__tests__/proxy.test.ts`
+    - [x] An unauthenticated `/en/admin` request redirects to `/api/auth/company/start?returnTo=%2Fen%2Fadmin`
+    - [x] No response carries a `redirectTo` query parameter
+    - [x] An `en` cookie holder who opens `/` reaches `/en/` and the response sets no `NEXT_LOCALE`
+    - [x] A cookieless visitor who opens `/` reaches `/th/` and the response sets `NEXT_LOCALE=th`
+    - [x] Preserve every existing administrator role case in `proxy-role.test.ts`
+- [x] Task: Write auth route Red tests
+    - [x] Update `apps/codecamp-advantage/app/api/auth/callback/route.test.ts`
+    - [x] The success redirect uses the forwarded host, not the request origin
+    - [x] The `?error=sso` redirect uses the forwarded host
+    - [x] The session cookie sets `secure: true` whenever the resolved target is `https`
+    - [x] Update `app/api/auth/company/start/route.test.ts`: a malformed `returnTo` restarts with `/`, status 307, and no 500
+- [x] Task: Write sign-in entry Red tests
+    - [x] `apps/codecamp-advantage/lib/__tests__/sign-in-href.test.ts` covers path encoding, query preservation, and host rejection
+    - [x] `apps/codecamp-advantage/components/auth-entry.test.tsx` asserts the link carries the current path
+    - [x] Assert the landing page renders a message for each of the four error codes
+    - [x] Confirm `i18n-key-parity.test.ts` covers the new keys in both locales
+- [x] Task: Confirm the Red phase
+    - [x] Run each new suite and record the failing assertion counts here
+    - [x] Commit the test files and this plan only
 - [ ] Task: Measure - User Manual Verification 'Phase 2: Test' (Protocol in workflow.md)
 
 ## Phase 3: Implement
@@ -121,7 +121,23 @@ Red-phase commits contain ONLY the new test files and Measure document edits.
 
 Record a commit SHA only after the commit is an ancestor of HEAD.
 
-- Phase 1 contracts: pending
+- Phase 1 contracts: 5fb43e1bc
 - Phase 2 Red:
 - Phase 3 Green:
 - Phase 4 docs and doctor:
+
+### Phase 2 Red execution record (2026-08-20)
+
+- `CI=true pnpm --filter codecamp-advantage exec vitest run lib/__tests__/public-url.test.ts`: 4 failed assertions.
+- `CI=true pnpm --filter codecamp-advantage exec vitest run lib/__tests__/locale-resolution.test.ts`: 4 failed assertions.
+- `CI=true pnpm --filter codecamp-advantage exec vitest run lib/__tests__/sign-in-href.test.ts`: 3 failed assertions.
+- `CI=true pnpm --filter codecamp-advantage exec vitest run lib/__tests__/proxy.test.ts lib/__tests__/proxy-role.test.ts`: 11 failed assertions.
+- `CI=true pnpm --filter codecamp-advantage exec vitest run app/api/auth/callback/route.test.ts app/api/auth/company/start/route.test.ts app/api/auth/logout/route.test.ts`: 6 failed assertions.
+- `CI=true pnpm --filter codecamp-advantage exec vitest run components/auth-entry.test.tsx 'app/[locale]/page.test.tsx'`: 6 failed assertions.
+- Phase 1 initial contract commit: `1710a2b8f`; readonly-field remediation: `5fb43e1bc`.
+- `CI=true pnpm --filter codecamp-advantage exec vitest run lib/__tests__/i18n-key-parity.test.ts`: 469 passed.
+- `pnpm turbo run check-types --filter=codecamp-advantage`: passed.
+- `pnpm turbo run build --filter=codecamp-advantage`: passed.
+- `pnpm turbo run lint --filter=codecamp-advantage`: failed on the existing `components/tutor-coach.tsx:150` hook violation. This track did not modify that file.
+- The tests cover seven acceptance cases. The specification calls browser acceptance six cases.
+- No commit was created by request.
