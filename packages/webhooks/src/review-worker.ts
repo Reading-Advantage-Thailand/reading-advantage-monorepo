@@ -946,6 +946,17 @@ export interface SettleJobOptions {
   now?: Date;
 }
 
+/**
+ * Derived terminal state of a settled review job. Distinct from the durable
+ * `status` column: this value is computed at settle time and surfaces the
+ * learner-visible reason a job ended without changing `codecamp_review_status`.
+ */
+export type ReviewJobTerminalOutcome =
+  | "succeeded"
+  | "skipped_generated"
+  | "failed_permanent"
+  | "failed_exhausted";
+
 export interface SettleJobPayload {
   status: "pending" | "claimed" | "succeeded" | "failed" | "dead";
   attempts: number;
@@ -953,6 +964,10 @@ export interface SettleJobPayload {
   lastError: string | null;
   claimedAt: Date | null;
   claimedBy: string | null;
+  /** Derived terminal outcome; absent for transient retry schedules. */
+  outcome?: ReviewJobTerminalOutcome;
+  /** Plain-language terminal reason, capped at 240 characters to fit durable storage and log lines. */
+  failureReason?: string;
 }
 
 /**

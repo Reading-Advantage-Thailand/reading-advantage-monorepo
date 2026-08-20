@@ -111,6 +111,26 @@ export function assertSafeReviewDiff(prDiff: string): void {
   }
 }
 
+/** Outcome of a `prepareReviewDiff` call: the stripped diff, the dropped paths, and an empty flag. */
+export interface PreparedReviewDiff {
+  /** Diff with generated-artifact sections removed. */
+  diff: string;
+  /** Source-tree paths whose `diff --git` section was removed, in diff order. */
+  removedPaths: string[];
+  /** True when the stripped diff carries no reviewable source. */
+  empty: boolean;
+}
+
+/**
+ * Strips generated-artifact sections from a PR diff before review. Phase 1
+ * ships the contract only; behavior lands in Phase 3.
+ * @param prDiff Raw unified diff fetched from GitHub.
+ * @returns The stripped diff, the removed paths, and an empty-source flag.
+ */
+export function prepareReviewDiff(prDiff: string): PreparedReviewDiff {
+  throw new Error("Not implemented: implemented in Phase 3");
+}
+
 /** Input required to generate one advisory Codecamp pull-request review. */
 export interface ReviewExerciseInput {
   db: TenantDB;
@@ -130,24 +150,55 @@ export interface ReviewExerciseInput {
 /** Stable error code for deterministic PR-review contract violations. */
 export const CODECAMP_PR_REVIEW_CONTRACT_VIOLATION = "CODECAMP_PR_REVIEW_CONTRACT_VIOLATION" as const;
 
+/** Classification of a PR-review contract failure, used by the worker to pick retry vs. dead-letter. */
+export type ReviewContractFailureKind = "model_shape" | "input_safety";
+
 /** The only error shape a review worker may dead-letter without retrying. */
 export class CodecampPrReviewContractError extends Error {
   /** Stable machine-readable contract error code. */
   readonly code = CODECAMP_PR_REVIEW_CONTRACT_VIOLATION;
 
-  /** Contract failures are deterministic and must never be retried. */
-  readonly retryable = false as const;
+  /** Classification that decides whether the durable queue retries or dead-letters. */
+  readonly kind: ReviewContractFailureKind;
+
+  /** Retry flag derived from `kind`; model-shape failures may retry, input-safety failures must not. */
+  readonly retryable: boolean;
 
   /**
-   * Creates a deterministic PR-review contract error.
+   * Creates a deterministic PR-review contract error. The `kind` parameter
+   * defaults to `"input_safety"` so every existing unstamped throw site keeps
+   * `retryable = false` and the worker dead-letters as before.
    * @param message Human-readable explanation of the violated contract.
    * @param cause Optional underlying validation error for diagnostics.
+   * @param kind Optional failure classification; defaults to `"input_safety"`.
    */
-  constructor(message: string, cause?: unknown) {
+  constructor(
+    message: string,
+    cause?: unknown,
+    kind: ReviewContractFailureKind = "input_safety",
+  ) {
     super(message);
     this.name = "CodecampPrReviewContractError";
+    this.kind = kind;
+    this.retryable = kind === "model_shape";
     if (cause !== undefined) this.cause = cause;
   }
+}
+
+/**
+ * Builds the repair prompt that asks the LLM to retry one bound contract
+ * violation. Phase 1 ships the contract only; behavior lands in Phase 3.
+ * @param violation Rule that the previous review output violated.
+ * @param authorizedObjectiveIds Objective identifiers the reviewer may cite.
+ * @param changedPaths Repository paths the reviewer may reference.
+ * @returns A repair prompt addressed to the LLM reviewer.
+ */
+export function buildReviewRepairPrompt(
+  violation: string,
+  authorizedObjectiveIds: string[],
+  changedPaths: string[],
+): string {
+  throw new Error("Not implemented: implemented in Phase 3");
 }
 
 /** Describes the structural marker recognized by the durable review queue. */

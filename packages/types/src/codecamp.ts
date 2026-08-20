@@ -268,13 +268,17 @@ export const prReviewSchema = z.object({
 
 /**
  * Operational states used by administrator reporting while an editorial PR
- * review is still pending.
+ * review is still pending. The `skipped` value carries a generated-artifact
+ * outcome (see `ReviewJobTerminalOutcome.skipped_generated`) without adding a
+ * new `codecamp_review_status` enum member, because `ALTER TYPE ... ADD VALUE`
+ * cannot run inside the Drizzle migration transaction.
  */
 export const prReviewOperationalStatusSchema = z.enum([
   "pending",
   "processing",
   "retrying",
   "failed",
+  "skipped",
 ]);
 
 /** The derived queue-facing state of an editorially pending PR review. */
@@ -286,6 +290,8 @@ export type PrReviewOperationalStatus = z.infer<typeof prReviewOperationalStatus
  */
 export const prReviewReportSchema = prReviewSchema.extend({
   operationalStatus: prReviewOperationalStatusSchema.nullable(),
+  /** Plain-language reason for a `failed` or `skipped` operational status; null otherwise. */
+  failureReason: z.string().nullable(),
 });
 
 /** Administrator-facing PR review row with operational queue state. */
