@@ -1,0 +1,5 @@
+Track: codecamp_pr_review_recovery_20260820 - Phase 1 contracts.
+
+Added ReviewJobTerminalOutcome and SettleJobPayload.outcome/failureReason in review-worker.ts; failureReason and skipped operational status in types/codecamp.ts; PreparedReviewDiff + prepareReviewDiff stub, ReviewContractFailureKind, kind-stamped CodecampPrReviewContractError with behavior-preserving default, and buildReviewRepairPrompt stub in domain review-exercise.ts; exports wired through domain index.
+
+Verification (orchestrator): check-types PASS x3 packages; domain review-exercise suites 21/21; webhooks 229 pass with 3 pre-existing phase-7-closeout git-notes failures (unrelated, confirmed); types 90/90. Full diff reviewed line by line by orchestrator; independent subagent review deferred to the Phase 2+3 combined diff where behavior lands.
