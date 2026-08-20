@@ -1,0 +1,24 @@
+{
+  "track_id": "codecamp_tutor_consolidation_20260820",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-08-20T00:00:00Z",
+  "updated_at": "2026-08-20T00:00:00Z",
+  "description": "Retire the stateless Codecamp chat route and extend the intervention tutor with an ask mode, so all 88 lessons gain memory, lesson grounding, and support telemetry.",
+  "estimated_tasks": 31,
+  "actual_tasks": null,
+  "deviation_notes": "",
+  "sprint": {
+    "goal": "Every Codecamp lesson uses one tutor that remembers the conversation, reads the lesson content, offers graded help, and records the support it gave.",
+    "stories": [
+      { "id": "S1", "title": "One tutor contract with two modes", "size": "M", "priority": "Must", "status": "pending" },
+      { "id": "S2", "title": "The tutor remembers the conversation", "size": "M", "priority": "Must", "status": "pending" },
+      { "id": "S3", "title": "The tutor reads the lesson", "size": "M", "priority": "Must", "status": "pending" },
+      { "id": "S4", "title": "Every lesson uses the one tutor", "size": "L", "priority": "Must", "status": "pending" },
+      { "id": "S5", "title": "Support use is recorded for every lesson", "size": "M", "priority": "Should", "status": "pending" },
+      { "id": "S6", "title": "The rate limit works across instances", "size": "S", "priority": "Should", "status": "pending" }
+    ],
+    "demo_notes": null,
+    "retro_ref": null
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "track_id": "codecamp_sso_redirect_repair_20260820",
+  "type": "bug",
+  "status": "new",
+  "created_at": "2026-08-20T00:00:00Z",
+  "updated_at": "2026-08-20T00:00:00Z",
+  "description": "Repair the Codecamp company SSO redirect chain: keep the destination, keep the language, and honor the Cloud Run forwarding hop.",
+  "estimated_tasks": 24,
+  "actual_tasks": null,
+  "deviation_notes": ""
+}

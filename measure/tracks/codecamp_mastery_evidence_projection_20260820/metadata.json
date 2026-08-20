@@ -1,0 +1,26 @@
+{
+  "track_id": "codecamp_mastery_evidence_projection_20260820",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-08-20T00:00:00Z",
+  "updated_at": "2026-08-20T00:00:00Z",
+  "description": "Make Codecamp learner evidence trustworthy, then project it into the shared Mastery Advantage knowledge space for every module instead of only Unit 20.",
+  "estimated_tasks": 41,
+  "actual_tasks": null,
+  "deviation_notes": "",
+  "sprint": {
+    "goal": "Codecamp produces trustworthy learner evidence and projects it into the shared Mastery Advantage knowledge space for every module, not only for Unit 20.",
+    "stories": [
+      { "id": "S1", "title": "The bindings match the curriculum, and CI proves it", "size": "M", "priority": "Must", "status": "pending" },
+      { "id": "S2", "title": "Exercise submissions are stored and answered", "size": "L", "priority": "Must", "status": "pending" },
+      { "id": "S3", "title": "Quiz attempts are recorded and the answers stay hidden", "size": "M", "priority": "Must", "status": "pending" },
+      { "id": "S4", "title": "Theory completion is earned", "size": "L", "priority": "Must", "status": "pending" },
+      { "id": "S5", "title": "Assessed lesson evidence reaches the knowledge space", "size": "L", "priority": "Must", "status": "pending" },
+      { "id": "S6", "title": "Approved pull requests project for every module", "size": "M", "priority": "Must", "status": "pending" },
+      { "id": "S7", "title": "Due mastery cards reach the learner", "size": "M", "priority": "Should", "status": "pending" },
+      { "id": "S8", "title": "Module gating uses graph prerequisites", "size": "L", "priority": "Could", "status": "pending" }
+    ],
+    "demo_notes": null,
+    "retro_ref": null
+  }
+}

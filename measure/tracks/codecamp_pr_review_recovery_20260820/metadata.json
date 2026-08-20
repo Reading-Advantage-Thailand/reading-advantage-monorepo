@@ -1,0 +1,11 @@
+{
+  "track_id": "codecamp_pr_review_recovery_20260820",
+  "type": "bug",
+  "status": "new",
+  "created_at": "2026-08-20T00:00:00Z",
+  "updated_at": "2026-08-20T00:00:00Z",
+  "description": "Stop Codecamp PR reviews from dying permanently on the first contract failure, and show the learner the true review state.",
+  "estimated_tasks": 30,
+  "actual_tasks": null,
+  "deviation_notes": ""
+}
