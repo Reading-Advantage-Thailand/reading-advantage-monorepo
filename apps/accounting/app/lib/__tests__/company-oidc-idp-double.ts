@@ -150,7 +150,10 @@ export interface IdpDouble {
   setIntrospection(result: unknown): void;
 }
 
-function headerValue(init: RequestInit | undefined, name: string): string | null {
+function headerValue(
+  init: RequestInit | undefined,
+  name: string,
+): string | null {
   if (!init?.headers) return null;
   return new Headers(init.headers).get(name);
 }

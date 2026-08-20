@@ -46,7 +46,11 @@ async function beginTransaction(returnTo = "/expenses"): Promise<{
   };
 }
 
-function callbackRequest(code: string, state: string, sealed?: string): Request {
+function callbackRequest(
+  code: string,
+  state: string,
+  sealed?: string,
+): Request {
   return new Request(
     `${PUBLIC_ORIGIN}/api/auth/callback?code=${encodeURIComponent(code)}&state=${encodeURIComponent(state)}`,
     sealed
