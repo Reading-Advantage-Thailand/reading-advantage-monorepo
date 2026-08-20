@@ -13,8 +13,8 @@ _Story ref: spec.md#story-s1_
 _Story ref: spec.md#story-s2_
 
 - [x] Task: Contracts & schema — Zod contracts for expense/bill submissions (amount, 3-letter currency, payee, category, evidence ref, settled-THB total required for non-THB); Drizzle tables in the new accounting database stream; tenant-registry classification N/A (separate stream, not in the main barrel — tenant-coverage 12/12 passes). c84b2d3
-- [~] Task: Red tests — submission validation (missing evidence, bad currency, non-THB without settled total), authorization (STAFF can submit, cannot approve), evidence stored in private storage via the storage adapter only.
-- [b] Task: Implement — submission domain functions extending `finance-operations` records, private-storage evidence upload, submission UI (staff). (deferred:accounting_app_foundation_20260820-phase-s1-acceptance)
+- [x] Task: Red tests — submission validation (missing evidence, bad currency, non-THB without settled total), authorization (STAFF can submit, cannot approve), evidence stored in private storage via the storage adapter only. 966019b
+- [~] Task: Implement — submission domain functions extending `finance-operations` records, private-storage evidence upload, submission UI (staff).
 - [b] Task: Generate docs & doctor — `measure/generate.sh`, `measure/doctor.sh`. (deferred:accounting_app_foundation_20260820-phase-s1-acceptance)
 - [b] Task: Measure - User Manual Verification 'Phase S2: Expense & bill submission with evidence' (Protocol in workflow.md) (deferred:owner-manual-verification)
 
