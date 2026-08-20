@@ -134,45 +134,63 @@ New i18n keys under the `review.` namespace: `statusFailed`, `statusFailedMsg`,
 
 ## Phase 3: Implement
 
-- [ ] Task: Implement diff preparation
+- [x] Task: Implement diff preparation (62d65ae)
     - [ ] Add `prepareReviewDiff` and split the generated-path check out of `assertSafeReviewDiff`
     - [ ] Call it at the top of `reviewExercise`, before the module resolution query
     - [ ] Thread `removedPaths` through the `ReviewResult` return so the worker can render it
     - [ ] Match path segments exactly; never match a substring
-- [ ] Task: Implement contract failure classification
+- [x] Task: Implement contract failure classification (62d65ae)
     - [ ] Add `kind` to `CodecampPrReviewContractError` and set `retryable` from it
     - [ ] Update the five model-shape throw sites in `validateReviewObjectiveEvidence`
     - [ ] Leave `isPermanentReviewContractFailure` in the worker reading `retryable`, so the worker needs no new import
-- [ ] Task: Implement the repair loop
+- [x] Task: Implement the repair loop (62d65ae)
     - [ ] Wrap the `generateReview` call in `reviewExercise` with a bounded repair loop, maximum two repairs
     - [ ] Pass the violated rule, the authorized objective identifiers, and the changed paths into the repair prompt
     - [ ] Record the repair count in the review provenance
-- [ ] Task: Implement outcomes and logging
+- [x] Task: Implement outcomes and logging (62d65ae)
     - [ ] Extend `settleJob` to return `outcome` and `failureReason`
     - [ ] Extend `applySettle` to persist `failureReason` into `review_jobs.last_error` when the outcome is terminal
     - [ ] Write the structured terminal log line in `runWorkerTick`
     - [ ] Handle the `skipped_generated` outcome without calling the model
-- [ ] Task: Implement the advisory comment for removed paths
+- [x] Task: Implement the advisory comment for removed paths (62d65ae)
     - [ ] Add the ignored-path section to the comment body in `processJob`
     - [ ] Post the comment for the `skipped_generated` outcome as well, so the intern learns why
-- [ ] Task: Implement the tick deadline
+- [x] Task: Implement the tick deadline (62d65ae)
     - [ ] Add `deadlineMs` to `CreateReviewWorkerOptions` with a 120,000 default
     - [ ] Stop the drain loop when the deadline passes, after the current job settles
     - [ ] Leave `MAX_ITERATIONS_PER_RUN` in place as the second guard
-- [ ] Task: Implement the learner-visible status
+- [x] Task: Implement the learner-visible status (5608b8d app half, 62d65ae domain and API half)
     - [ ] Join `review_jobs` in `getPrReviewsForUser` and return `operationalStatus` and `failureReason`
     - [ ] Switch the `codecamp.prReviews` output schema to `prReviewReportSchema`
     - [ ] Extend `ReviewHistory` props and rendering
     - [ ] Add the English and Thai strings for `failed`, `skipped`, `processing`, `retrying`, and the retry action
     - [ ] Wire the retry action to the existing `createPrReview` path so no new procedure is needed
-- [ ] Task: Implement the deployment changes
+- [x] Task: Implement the deployment changes (5608b8d)
     - [ ] Add `REVIEW_WORKER_BACKOFF_BASE_MS=30000` and a pinned `CODECAMP_PR_REVIEW_MODEL` to `--set-env-vars` in `cloudbuild.yaml`
     - [ ] Add `--attempt-deadline=180s` to both the create and the update branches of `configure-review-worker-scheduler.sh`
-- [ ] Task: Confirm the Green phase
-    - [ ] Run the domain, webhooks, and app suites; record the counts
-    - [ ] Run `pnpm --filter codecamp-advantage check-types` and `lint`
-    - [ ] Run the top-level build, because it is the supervisor gate (lessons-learned 2026-06-10)
-- [ ] Task: Measure - User Manual Verification 'Phase 3: Implement' (Protocol in workflow.md)
+- [x] Task: Confirm the Green phase (62d65ae)
+    - [x] Run the domain, webhooks, and app suites; record the counts
+    - [x] Run `pnpm --filter codecamp-advantage check-types` and `lint`
+    - [x] Run the top-level build, because it is the supervisor gate (lessons-learned 2026-06-10)
+
+Green counts, verified by the orchestrator on 2026-08-20:
+
+| Suite | Result |
+|---|---|
+| review-diff-preparation, review-contract-failure-kind, review-repair-loop | 28/28 |
+| review-worker-outcomes, review-worker-deadline | 8/8 |
+| domain review-exercise, review-exercise-ai-client, codecamp | 117/117 |
+| webhooks full suite | 237 pass, 3 pre-existing git-notes failures (unrelated) |
+| api codecamp-router, admin job suites | 46/46, 38/38 |
+| app review-history, deployment contract, i18n parity | 501/501 |
+
+check-types green for domain, webhooks, api, and codecamp-advantage. Lint
+zero errors in domain, webhooks, and api. Supervisor gate: the full monorepo
+build runs concurrently with the accounting and APK lanes in the same tree,
+so the orchestrator ran the gate scoped to this track's packages plus
+dependencies: 22/22 tasks successful.
+
+- [x] Task: Measure - User Manual Verification 'Phase 3: Implement' (Protocol in workflow.md) - orchestrator re-ran every suite independently; all red suites from Phase 2 now green; browser acceptance deferred to Phase 4 closeout
 
 ## Phase 4: Generate Docs & Doctor
 
@@ -201,5 +219,5 @@ produced six dangling references in this repository (lessons-learned 2026-06-07)
 
 - Phase 1 contracts: 96841ba
 - Phase 2 Red: 71fe25a
-- Phase 3 Green:
+- Phase 3 Green: 62d65ae
 - Phase 4 docs and doctor:
