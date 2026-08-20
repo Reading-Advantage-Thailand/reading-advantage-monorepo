@@ -167,6 +167,60 @@ gh repo delete "$(gh api /user --jq .login)/codecamp-exercise-git-github" --yes
 
 ---
 
+## Failure taxonomy and recovery
+
+Review jobs fail in exactly two classes, stamped on `CodecampPrReviewContractError.kind`:
+
+**Model-shape failures (`kind="model_shape"`, retryable).** The review output
+violated the contract between the model and the graph. The worker retries
+with a repair prompt that restates the violated rule, the authorized
+objective identifiers, and the changed paths. The repair loop runs at most
+twice inside one job attempt (three generator calls total). Messages:
+
+- "Review output must cover every graph-bound objective exactly once"
+- "Review output references a file outside the reviewed diff"
+- "Review output references lines outside the changed diff hunk"
+- "Review output contains objective evidence for an unbound repository"
+- "APK objective evidence must match the authored rubric score"
+
+**Input-safety failures (`kind="input_safety"`, permanent).** The PR input
+itself cannot be reviewed safely. These dead-letter on the first attempt.
+Messages:
+
+- "PR diff appears to contain a secret and cannot be reviewed"
+- "PR diff contains binary content and cannot be reviewed"
+- "PR diff is too large for safe review" (measured after stripping)
+- "Review relationship requires a valid review ID"
+- "Review relationship ... could not resolve an exercise repository and module"
+
+**Generated artifacts are stripped, not fatal.** Diff sections under `dist/`,
+`build/`, `.next/`, `coverage/`, `node_modules/`, or ending in `.map`,
+`.min.js`, `.min.css` are removed before review. The advisory PR comment
+lists the ignored paths. When nothing reviewable remains, the job settles
+`succeeded` with outcome `skipped_generated`, and `review_jobs.last_error`
+carries the durable `[SKIPPED_GENERATED]` marker so the read path derives the
+`skipped` operational status without a schema migration.
+
+**Terminal outcomes.** `settleJob` emits `succeeded`, `skipped_generated`,
+`failed_permanent`, or `failed_exhausted`. Every terminal settle writes one
+structured log line: `event="reviewJob.settled"` with `reviewJobId`,
+`reviewId`, `outcome`, and a truncated reason.
+
+**Retry budget.** Production sets `REVIEW_WORKER_BACKOFF_BASE_MS=30000`; five
+attempts span about 8 minutes. Each tick stops claiming new batches after
+`DEFAULT_TICK_DEADLINE_MS` (120 seconds); the scheduler passes
+`--attempt-deadline=180s`. The review model is pinned via
+`CODECAMP_PR_REVIEW_MODEL=x-ai/grok-4.6` (no `~` alias prefix).
+
+**Baseline query** (run before and after a deploy to compare the dead-row mix):
+
+```sql
+SELECT status, left(last_error, 80) AS err, count(*)
+  FROM review_jobs GROUP BY 1, 2 ORDER BY 3 DESC;
+```
+
+---
+
 ## Audit trail
 
 Every run writes `./e2e-results/<UTC-timestamp>-<gh-user>.json`:
