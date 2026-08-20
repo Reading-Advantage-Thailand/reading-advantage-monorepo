@@ -1,0 +1,5 @@
+Track: codecamp_pr_review_recovery_20260820 - Phase 3 app half (P3b).
+
+ReviewHistory renders processing/retrying/failed/skipped with failureReason, removedPaths, and a retry action wired to the existing createPrReview mutation. 10 i18n keys added to en.json and th.json. Lesson page passes operationalStatus ?? reviewStatus with graceful degradation. cloudbuild.yaml pins CODECAMP_PR_REVIEW_MODEL=x-ai/grok-4.6 and REVIEW_WORKER_BACKOFF_BASE_MS=30000; scheduler script passes --attempt-deadline=180s on create and update branches.
+
+Orchestrator verification: review-history 35/35, deployment contract 7/7, i18n parity 459/459 (was 439; +20 from 10 new keys). check-types clean. Diff reviewed.
