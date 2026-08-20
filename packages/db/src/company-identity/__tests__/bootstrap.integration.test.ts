@@ -12,6 +12,8 @@ const BOOTSTRAP_NAMES = {
   sales: "https://reading-advantage.com/company-identity/application/sales",
   codecamp:
     "https://reading-advantage.com/company-identity/application/codecamp",
+  accounting:
+    "https://reading-advantage.com/company-identity/application/accounting",
 } as const;
 
 interface MigrationModule {
@@ -108,12 +110,14 @@ describe("company identity deterministic bootstrap", () => {
             },
           ]);
           expect(firstApplications).toEqual(
-            ["codecamp", "marketing", "sales"].map((stableKey) => ({
-              id: uuidV5(
-                BOOTSTRAP_NAMES[stableKey as keyof typeof BOOTSTRAP_NAMES],
-              ),
-              stable_key: stableKey,
-            })),
+            ["accounting", "codecamp", "marketing", "sales"].map(
+              (stableKey) => ({
+                id: uuidV5(
+                  BOOTSTRAP_NAMES[stableKey as keyof typeof BOOTSTRAP_NAMES],
+                ),
+                stable_key: stableKey,
+              }),
+            ),
           );
           const firstRoleDefinitions = await sql<
             Array<{
@@ -134,6 +138,9 @@ describe("company identity deterministic bootstrap", () => {
                 `${stableKey}:${roleKey}`,
             ),
           ).toEqual([
+            "accounting:ACCOUNTANT",
+            "accounting:OWNER",
+            "accounting:STAFF",
             "codecamp:ADMIN",
             "codecamp:INTERN",
             "codecamp:STUDENT",

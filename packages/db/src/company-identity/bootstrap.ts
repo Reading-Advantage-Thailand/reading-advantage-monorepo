@@ -47,6 +47,13 @@ const APPLICATIONS = [
     stableKey: "codecamp",
     displayName: "Codecamp Advantage",
   },
+  {
+    id: uuidV5(
+      "https://reading-advantage.com/company-identity/application/accounting",
+    ),
+    stableKey: "accounting",
+    displayName: "Accounting",
+  },
 ] as const;
 
 const APPLICATION_ROLES = [
@@ -97,6 +104,24 @@ const APPLICATION_ROLES = [
     roleKey: "ADMIN",
     displayName: "Administrator",
     description: "Administers Codecamp users and curriculum.",
+  },
+  {
+    applicationKey: "accounting",
+    roleKey: "STAFF",
+    displayName: "Staff",
+    description: "Submits Accounting expenses and bills.",
+  },
+  {
+    applicationKey: "accounting",
+    roleKey: "OWNER",
+    displayName: "Owner",
+    description: "Approves and administers Accounting submissions.",
+  },
+  {
+    applicationKey: "accounting",
+    roleKey: "ACCOUNTANT",
+    displayName: "Accountant",
+    description: "Reviews and exports Accounting records.",
   },
 ] as const;
 
