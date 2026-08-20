@@ -13,22 +13,22 @@
 ## Phase 1: Contract & Schema Definition
 _Blast radius: `getPublicUrl` has two definitions — `apps/codecamp-advantage/proxy.ts` and `apps/sales-advantage/proxy.ts`. Only the Codecamp copy moves. Do not touch the Sales copy in this track._
 
-- [ ] Task: Define the public URL contract
-    - [ ] Create `apps/codecamp-advantage/lib/public-url.ts` exporting `getPublicUrl(request, pathname)`
-    - [ ] Add `getPublicOrigin(request): URL` for the auth routes, which need an origin rather than a path
-    - [ ] Document the precedence: `x-forwarded-proto` and `x-forwarded-host` first, then the request URL
-    - [ ] Strip the port only when the forwarded host carries none, matching the current behavior
-- [ ] Task: Define the locale resolution contract
-    - [ ] Add `resolveRequestLocale(request): { locale, fromCookie: boolean }` to `apps/codecamp-advantage/lib/locale-resolution.ts`
-    - [ ] A cookie value counts only when it is a member of `routing.locales`
-    - [ ] The contract states that the proxy writes `NEXT_LOCALE` only when `fromCookie` is false
-- [ ] Task: Define the sign-in entry contract
-    - [ ] `buildSignInHref(pathname: string, search: string): string` in `apps/codecamp-advantage/lib/sign-in-href.ts`
-    - [ ] The output is always `/api/auth/company/start?returnTo=<encoded path>`
-    - [ ] The encoded path is relative, starts with a single `/`, and never carries a host
-- [ ] Task: Define the sign-in error surface contract
-    - [ ] Enumerate the error codes the landing page renders: `sso`, `forbidden`, `session_check_failed`, `legacy_auth_active`
-    - [ ] Add one message key per code to both locale files
+- [x] Task: Define the public URL contract
+    - [x] Create `apps/codecamp-advantage/lib/public-url.ts` exporting `getPublicUrl(request, pathname)`
+    - [x] Add `getPublicOrigin(request): URL` for the auth routes, which need an origin rather than a path
+    - [x] Document the precedence: `x-forwarded-proto` and `x-forwarded-host` first, then the request URL
+    - [x] Strip the port only when the forwarded host carries none, matching the current behavior
+- [x] Task: Define the locale resolution contract
+    - [x] Add `resolveRequestLocale(request): { locale, fromCookie: boolean }` to `apps/codecamp-advantage/lib/locale-resolution.ts`
+    - [x] A cookie value counts only when it is a member of `routing.locales`
+    - [x] The contract states that the proxy writes `NEXT_LOCALE` only when `fromCookie` is false
+- [x] Task: Define the sign-in entry contract
+    - [x] `buildSignInHref(pathname: string, search: string): string` in `apps/codecamp-advantage/lib/sign-in-href.ts`
+    - [x] The output is always `/api/auth/company/start?returnTo=<encoded path>`
+    - [x] The encoded path is relative, starts with a single `/`, and never carries a host
+- [x] Task: Define the sign-in error surface contract
+    - [x] Enumerate the error codes the landing page renders: `sso`, `forbidden`, `session_check_failed`, `legacy_auth_active`
+    - [x] Add one message key per code to both locale files
 - [ ] Task: Measure - User Manual Verification 'Phase 1: Contract & Schema Definition' (Protocol in workflow.md)
 
 ## Phase 2: Test
@@ -121,7 +121,7 @@ Red-phase commits contain ONLY the new test files and Measure document edits.
 
 Record a commit SHA only after the commit is an ancestor of HEAD.
 
-- Phase 1 contracts:
+- Phase 1 contracts: pending
 - Phase 2 Red:
 - Phase 3 Green:
 - Phase 4 docs and doctor:

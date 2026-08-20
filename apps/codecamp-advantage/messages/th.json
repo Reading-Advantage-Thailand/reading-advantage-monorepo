@@ -14,7 +14,11 @@
     "logout": "ออกจากระบบ",
     "loginTitle": "เข้าสู่ระบบ CodeCamp",
     "username": "ชื่อผู้ใช้",
-    "password": "รหัสผ่าน"
+    "password": "รหัสผ่าน",
+    "signInErrorSso": "การเข้าสู่ระบบล้มเหลว โปรดลองอีกครั้ง",
+    "signInErrorForbidden": "บัญชีของคุณไม่มีสิทธิ์เข้าถึง Codecamp",
+    "signInErrorSessionCheckFailed": "ไม่สามารถตรวจสอบเซสชันของคุณได้ โปรดเข้าสู่ระบบอีกครั้ง",
+    "signInErrorLegacyAuthActive": "การเข้าสู่ระบบใช้วิธีสำรองชั่วคราว โปรดลองอีกครั้งในภายหลัง"
   },
   "dashboard": {
     "title": "เรียนรู้การพัฒนาเว็บ",

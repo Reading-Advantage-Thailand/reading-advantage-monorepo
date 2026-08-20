@@ -14,7 +14,11 @@
     "logout": "Log out",
     "loginTitle": "Log in to CodeCamp",
     "username": "Username",
-    "password": "Password"
+    "password": "Password",
+    "signInErrorSso": "Sign-in failed. Please try again.",
+    "signInErrorForbidden": "Your account does not have access to Codecamp.",
+    "signInErrorSessionCheckFailed": "We could not verify your session. Please sign in again.",
+    "signInErrorLegacyAuthActive": "Sign-in is temporarily using the backup method. Please try again shortly."
   },
   "dashboard": {
     "title": "Welcome to CodeCamp Advantage",
