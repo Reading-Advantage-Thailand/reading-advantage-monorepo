@@ -15,7 +15,9 @@ export async function GET(request: Request): Promise<NextResponse> {
     started.sealedTransaction,
     {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      // __Host- cookies require Secure; browsers accept Secure on localhost,
+      // so this holds for both local http development and https production.
+      secure: true,
       sameSite: "lax",
       path: "/",
       maxAge: 600,

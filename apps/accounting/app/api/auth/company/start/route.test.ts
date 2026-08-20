@@ -61,6 +61,8 @@ describe("GET /api/auth/company/start", () => {
     const transactionCookie = findCookie(response, TRANSACTION_COOKIE);
     expect(transactionCookie).toBeDefined();
     expect(transactionCookie).toMatch(/HttpOnly/i);
+    // __Host- cookies are rejected by real browsers without Secure.
+    expect(transactionCookie).toMatch(/Secure/i);
     expect(transactionCookie).toMatch(/SameSite=Lax/i);
     expect(transactionCookie).toMatch(/Path=\//);
 

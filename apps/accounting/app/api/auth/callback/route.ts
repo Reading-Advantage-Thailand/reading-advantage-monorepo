@@ -32,7 +32,9 @@ export async function GET(request: Request): Promise<NextResponse> {
     );
     response.cookies.set(ACCOUNTING_SESSION_COOKIE, session.accessToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      // __Host- cookies require Secure; browsers accept Secure on localhost,
+      // so this holds for both local http development and https production.
+      secure: true,
       sameSite: "lax",
       path: "/",
       maxAge: Math.max(

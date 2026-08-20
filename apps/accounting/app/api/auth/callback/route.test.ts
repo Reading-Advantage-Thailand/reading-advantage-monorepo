@@ -96,6 +96,8 @@ describe("GET /api/auth/callback", () => {
     const sessionCookie = findCookie(response, SESSION_COOKIE);
     expect(sessionCookie).toBeDefined();
     expect(sessionCookie).toMatch(/HttpOnly/i);
+    // __Host- cookies are rejected by real browsers without Secure.
+    expect(sessionCookie).toMatch(/Secure/i);
     expect(sessionCookie).toMatch(/SameSite=Lax/i);
     expect(cookieValue(sessionCookie as string)).toBe(OPAQUE_ACCESS_TOKEN);
 
