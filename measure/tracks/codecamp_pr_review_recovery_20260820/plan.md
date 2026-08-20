@@ -12,10 +12,29 @@
 
 ## Production baseline
 
-- [ ] Task: Record the `review_jobs` status and error mix from production
-    - [ ] Run `SELECT status, left(last_error, 80) AS err, count(*) FROM review_jobs GROUP BY 1, 2 ORDER BY 3 DESC`
-    - [ ] Paste the result here with the date and the operator name
-    - [ ] Record how many `dead` rows have a learner review still at `pending`
+- [x] Task: Record the `review_jobs` status and error mix from production
+    - [x] Run `SELECT status, left(last_error, 80) AS err, count(*) FROM review_jobs GROUP BY 1, 2 ORDER BY 3 DESC`
+    - [x] Paste the result here with the date and the operator name
+    - [x] Record how many `dead` rows have a learner review still at `pending`
+
+Result, run 2026-08-20 by daniebo (via orchestrator agent, Cloud SQL proxy):
+
+```
+ status   | err | count
+----------+-----+-------
+ succeeded |     |     3
+```
+
+All 3 rows succeeded with `attempts = 0` and no `last_error`. The jobs date
+from 2026-08-03 and 2026-08-10. `codecamp_pr_reviews` holds 23 approved,
+3 reviewed, and 1 needs_changes. No review sits at `pending`. Dead rows with
+a pending learner review: 0.
+
+Interpretation: the queue currently holds no dead rows, so the failure mix
+does not order FR-2 and FR-5 inside Phase 3. Both proceed in plan order. The
+owner report of a stuck review every 3 to 4 submissions remains the defect
+evidence, together with the code paths in `spec.md#evidence`. This snapshot
+is the comparison point for the Phase 4 verification query.
 
 ## Phase 1: Contract & Schema Definition
 _Blast radius: `settleJob` and `processJob` are reached through the dependency-injection seams in `runWorkerTick`, so `build-graph callers` resolves no static edges. Grep confirms the call sites are `packages/webhooks/src/review-worker.ts` and its test suite only._
