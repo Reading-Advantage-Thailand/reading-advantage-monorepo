@@ -367,9 +367,18 @@ importers:
       '@reading-advantage/auth-client':
         specifier: workspace:*
         version: link:../../packages/auth-client
+      '@reading-advantage/backend':
+        specifier: workspace:*
+        version: link:../../packages/backend
       '@reading-advantage/config':
         specifier: workspace:*
         version: link:../../packages/config
+      '@reading-advantage/db':
+        specifier: workspace:*
+        version: link:../../packages/db
+      '@reading-advantage/storage':
+        specifier: workspace:*
+        version: link:../../packages/storage
       '@reading-advantage/types':
         specifier: workspace:*
         version: link:../../packages/types
@@ -391,6 +400,9 @@ importers:
       tw-animate-css:
         specifier: 'catalog:'
         version: 1.4.0
+      zod:
+        specifier: 'catalog:'
+        version: 3.25.76
     devDependencies:
       '@tailwindcss/postcss':
         specifier: 'catalog:'

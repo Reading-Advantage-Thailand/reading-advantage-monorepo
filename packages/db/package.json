@@ -39,6 +39,11 @@
       "import": "./dist/accounting/index.js",
       "default": "./dist/accounting/index.js"
     },
+    "./accounting/runtime": {
+      "types": "./dist/accounting/runtime.d.ts",
+      "import": "./dist/accounting/runtime.js",
+      "default": "./dist/accounting/runtime.js"
+    },
     "./seed": {
       "types": "./dist/seed/index.d.ts",
       "import": "./dist/seed/index.js",

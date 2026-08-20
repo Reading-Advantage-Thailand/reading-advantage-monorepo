@@ -108,6 +108,7 @@ export function accountingSessionUser(identity: CompanyOidcIdentity) {
     username: identity.username,
     name: identity.displayName,
     role: accountingRole,
+    organizationId: identity.organizationId,
     schoolId: null,
     xp: 0,
     level: 1,

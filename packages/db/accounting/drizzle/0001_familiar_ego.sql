@@ -1,0 +1,2 @@
+ALTER TABLE "accounting_submissions" ADD COLUMN "idempotency_key" text;--> statement-breakpoint
+CREATE UNIQUE INDEX "accounting_submissions_idempotency_key_idx" ON "accounting_submissions" USING btree ("scope_company_id","submitted_by_account_id","idempotency_key");

@@ -12,6 +12,9 @@ const nextConfig: NextConfig = {
   transpilePackages: [
     "@reading-advantage/auth",
     "@reading-advantage/auth-client",
+    "@reading-advantage/backend",
+    "@reading-advantage/db",
+    "@reading-advantage/storage",
     "@reading-advantage/types",
     "@reading-advantage/ui",
     "@reading-advantage/utils",

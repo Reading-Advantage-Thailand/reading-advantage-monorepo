@@ -6,6 +6,7 @@ import {
   pgTable,
   text,
   timestamp,
+  uniqueIndex,
   uuid,
 } from "drizzle-orm/pg-core";
 
@@ -38,6 +39,12 @@ export const accountingSubmissions = pgTable(
     submittedAt: timestamp("submitted_at", { withTimezone: true })
       .defaultNow()
       .notNull(),
+    /**
+     * Caller-supplied request identity retained for idempotent replay. NULL
+     * for submissions made without a key; the partial uniqueness boundary
+     * below deliberately allows any number of NULL keys per actor.
+     */
+    idempotencyKey: text("idempotency_key"),
     createdAt: timestamp("created_at", { withTimezone: true })
       .defaultNow()
       .notNull(),
@@ -89,6 +96,11 @@ export const accountingSubmissions = pgTable(
     ),
     index("accounting_submissions_submitted_by_idx").on(
       table.submittedByAccountId,
+    ),
+    uniqueIndex("accounting_submissions_idempotency_key_idx").on(
+      table.scopeCompanyId,
+      table.submittedByAccountId,
+      table.idempotencyKey,
     ),
   ],
 );

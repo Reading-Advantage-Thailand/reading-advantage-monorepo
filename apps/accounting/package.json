@@ -16,14 +16,18 @@
     "@node-rs/argon2": "catalog:",
     "@reading-advantage/auth": "workspace:*",
     "@reading-advantage/auth-client": "workspace:*",
+    "@reading-advantage/backend": "workspace:*",
     "@reading-advantage/config": "workspace:*",
+    "@reading-advantage/db": "workspace:*",
+    "@reading-advantage/storage": "workspace:*",
     "@reading-advantage/types": "workspace:*",
     "@reading-advantage/ui": "workspace:*",
     "@reading-advantage/utils": "workspace:*",
     "next": "16.2.9",
     "react": "19.2.7",
     "react-dom": "19.2.7",
-    "tw-animate-css": "catalog:"
+    "tw-animate-css": "catalog:",
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "catalog:",
