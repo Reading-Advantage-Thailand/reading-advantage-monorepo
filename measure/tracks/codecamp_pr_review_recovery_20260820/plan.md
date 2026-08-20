@@ -39,24 +39,24 @@ is the comparison point for the Phase 4 verification query.
 ## Phase 1: Contract & Schema Definition
 _Blast radius: `settleJob` and `processJob` are reached through the dependency-injection seams in `runWorkerTick`, so `build-graph callers` resolves no static edges. Grep confirms the call sites are `packages/webhooks/src/review-worker.ts` and its test suite only._
 
-- [ ] Task: Define the terminal outcome contract
-    - [ ] Add `ReviewJobTerminalOutcome` to `packages/webhooks/src/review-worker.ts`: `succeeded | skipped_generated | failed_permanent | failed_exhausted`
-    - [ ] Extend `SettleJobPayload` with `outcome` and `failureReason` (max 240 characters)
-    - [ ] Keep the existing `status` column values unchanged; `outcome` is derived, not a new database enum
-- [ ] Task: Define the learner-visible review contract
-    - [ ] Extend `prReviewSchema` consumers to use `prReviewReportSchema` on the learner path in `packages/types/src/codecamp.ts`
-    - [ ] Add `failureReason: z.string().nullable()` to `prReviewReportSchema`
-    - [ ] Add the `skipped` member to `prReviewOperationalStatusSchema`
-    - [ ] Confirm no database migration is required, and record the `ALTER TYPE` rationale in the task note
-- [ ] Task: Define the diff preparation contract
-    - [ ] Add `prepareReviewDiff(prDiff: string): { diff: string; removedPaths: string[]; empty: boolean }` to `packages/domain/src/codecamp/review-exercise.ts`
-    - [ ] Keep `assertSafeReviewDiff` for the permanent checks: secret, binary, oversize measured after stripping
-    - [ ] Export both from `packages/domain/src/codecamp/index.ts`
-- [ ] Task: Define the model repair contract
-    - [ ] Add `ReviewContractFailureKind = "model_shape" | "input_safety"` and stamp every `CodecampPrReviewContractError` with it
-    - [ ] Set `retryable` from the kind rather than the constant `false`
-    - [ ] Add `buildReviewRepairPrompt(violation: string, authorizedObjectiveIds: string[], changedPaths: string[]): string`
-- [ ] Task: Measure - User Manual Verification 'Phase 1: Contract & Schema Definition' (Protocol in workflow.md)
+- [x] Task: Define the terminal outcome contract (96841ba)
+    - [x] Add `ReviewJobTerminalOutcome` to `packages/webhooks/src/review-worker.ts`: `succeeded | skipped_generated | failed_permanent | failed_exhausted`
+    - [x] Extend `SettleJobPayload` with `outcome` and `failureReason` (max 240 characters)
+    - [x] Keep the existing `status` column values unchanged; `outcome` is derived, not a new database enum
+- [x] Task: Define the learner-visible review contract (96841ba)
+    - [x] Extend `prReviewSchema` consumers to use `prReviewReportSchema` on the learner path in `packages/types/src/codecamp.ts` (schema contract defined; consumer wiring is the Phase 3 learner-visible status task)
+    - [x] Add `failureReason: z.string().nullable()` to `prReviewReportSchema`
+    - [x] Add the `skipped` member to `prReviewOperationalStatusSchema`
+    - [x] Confirm no database migration is required, and record the `ALTER TYPE` rationale in the task note
+- [x] Task: Define the diff preparation contract (96841ba)
+    - [x] Add `prepareReviewDiff(prDiff: string): { diff: string; removedPaths: string[]; empty: boolean }` to `packages/domain/src/codecamp/review-exercise.ts`
+    - [x] Keep `assertSafeReviewDiff` for the permanent checks: secret, binary, oversize measured after stripping
+    - [x] Export both from `packages/domain/src/codecamp/index.ts`
+- [x] Task: Define the model repair contract (96841ba)
+    - [x] Add `ReviewContractFailureKind = "model_shape" | "input_safety"` and stamp every `CodecampPrReviewContractError` with it
+    - [x] Set `retryable` from the kind rather than the constant `false`
+    - [x] Add `buildReviewRepairPrompt(violation: string, authorizedObjectiveIds: string[], changedPaths: string[]): string`
+- [x] Task: Measure - User Manual Verification 'Phase 1: Contract & Schema Definition' (Protocol in workflow.md) - orchestrator verification: check-types x3 PASS, types 90/90, domain review-exercise 21/21, webhooks 229 pass with 3 pre-existing unrelated git-notes failures; full diff line review by orchestrator
 
 ## Phase 2: Test
 
@@ -180,7 +180,7 @@ Record a commit SHA only after the commit is an ancestor of HEAD
 (`git merge-base --is-ancestor <sha> HEAD`). Recording a pre-rebase SHA has
 produced six dangling references in this repository (lessons-learned 2026-06-07).
 
-- Phase 1 contracts:
+- Phase 1 contracts: 96841ba
 - Phase 2 Red:
 - Phase 3 Green:
 - Phase 4 docs and doctor:
