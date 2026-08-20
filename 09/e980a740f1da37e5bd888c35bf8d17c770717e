@@ -1,0 +1,5 @@
+Task: S1 implement sign-in flow via accounts OIDC + proxy guard (track_id: accounting_app_foundation_20260820)
+
+Green commit after Red a9f448e76. Created thin OIDC routes (start/callback/session/logout) over @reading-advantage/auth's confidential client (PKCE S256, sealed tx cookie, revocation-aware introspect), requireAccountingSession guard (401 missing/revoked, 403 no accounting role, 503 IdP failure), Next 16 proxy.ts routing hint, /login landing, AuthProvider in root layout. Cookie names __Host-ra_accounting_session / __Host-ra_accounting_oidc_tx; audience accounting; roles STAFF/OWNER/ACCOUNTANT.
+
+Verified: vitest 6/6 files, 23/23 tests (real auth client end-to-end vs protocol-level IdP double); check-types, lint, build all clean. No app-local password auth; no test edits.
