@@ -46,19 +46,11 @@ function getAllSchemaTables(): Record<string, unknown> {
 
 const allTables = getAllSchemaTables();
 const totalTableCount = Object.keys(allTables).length;
-const REVIEWED_MANUAL_SCHOOL_ID_TABLES = new Set([
-  "activitySessions",
-  "financeRecords",
-  "financeRecordSuccessAuditOutbox",
-]);
+const REVIEWED_MANUAL_SCHOOL_ID_TABLES = new Set(["activitySessions"]);
 const ACTIVITY_SESSION_QUERY_SOURCES = [
   join(__dirname, "..", "activity", "drizzle-activity-persistence.ts"),
   join(__dirname, "..", "codecamp", "tutor.ts"),
 ] as const;
-const FINANCE_RECORD_STORE_SOURCE = join(
-  __dirname,
-  "../../../db/src/finance-operations-record-store.ts",
-);
 
 describe("FR-6: table classification registry completeness", () => {
   it("every exported Drizzle table is classified in the registry", () => {
@@ -223,16 +215,6 @@ describe("FR-6: table classification registry completeness", () => {
     ).toBeGreaterThan(0);
   });
 
-  it("Finance manual queries retain company and nullable-school scope", () => {
-    const content = readFileSync(FINANCE_RECORD_STORE_SOURCE, "utf8");
-    expect(content).toContain("finance_records");
-    expect(content).toContain("finance_record_success_audit_outbox");
-    expect(content).toContain("company_id =");
-    expect(content).toContain("school_id IS NOT DISTINCT FROM");
-    expect(content).toContain("event_id =");
-    expect(content).toContain("ON CONFLICT DO NOTHING");
-    expect(content).toContain("FOR UPDATE");
-  });
 });
 
 // ─── 2. Domain code: REFERENTIAL tables reached only via unscoped ──
@@ -345,8 +327,6 @@ const REFERENTIAL_TABLE_NAMES = new Set([
   "workbookDrafts",
   "workbookEditions",
   "workbookPublicationEvents",
-  "financeRecords",
-  "financeRecordSuccessAuditOutbox",
 ]);
 
 /**

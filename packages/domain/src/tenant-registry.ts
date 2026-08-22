@@ -279,8 +279,6 @@ import {
   workbookDrafts,
   workbookEditions,
   workbookPublicationEvents,
-  financeRecords,
-  financeRecordSuccessAuditOutbox,
   salesMasteryTenantMappings,
   salesMasteryProjectionOutbox,
   salesMasteryProjectionReceipts,
@@ -390,13 +388,6 @@ register(settings, "REFERENTIAL");
 register(workbookDrafts, "REFERENTIAL");
 register(workbookEditions, "REFERENTIAL");
 register(workbookPublicationEvents, "REFERENTIAL");
-// Finance records and their success-audit outbox are company-first and may
-// legitimately have no school scope; adapters must apply company scope
-// explicitly instead of inferring it from the nullable school column. The
-// outbox remains REFERENTIAL even though it has a nullable schoolId because
-// TenantDB's school-only injection cannot prove the required company scope.
-register(financeRecords, "REFERENTIAL");
-register(financeRecordSuccessAuditOutbox, "REFERENTIAL");
 
 // Sales Mastery mappings and projection receipts are company-scoped by the
 // verified organization tuple, not by a nullable schoolId column.
