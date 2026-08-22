@@ -93,20 +93,33 @@ function createFakeRepository(
   stored: readonly AccountingSubmission[] = [],
 ): AccountingSubmissionRepository & {
   readonly submissions: AccountingSubmission[];
+  readonly auditEvents: unknown[];
 } {
   const submissions = [...stored];
+  const auditEvents: unknown[] = [];
   return {
     submissions,
-    insert: vi.fn(async (submission: AccountingSubmission) => {
-      submissions.push(submission);
-      return submission;
-    }),
+    auditEvents,
+    insert: vi.fn(
+      async (
+        submission: AccountingSubmission,
+        _idempotencyKey?: string,
+        auditEvent?: unknown,
+      ) => {
+        if (auditEvent !== undefined) auditEvents.push(auditEvent);
+        submissions.push(submission);
+        return submission;
+      },
+    ),
     findByIdempotencyKey: vi.fn(async () => undefined),
     listByScope: vi.fn(async (scope: { readonly companyId: string }) =>
       submissions.filter(
         (submission) => submission.scope.companyId === scope.companyId,
       ),
     ),
+  } as unknown as AccountingSubmissionRepository & {
+    readonly submissions: AccountingSubmission[];
+    readonly auditEvents: unknown[];
   };
 }
 
@@ -323,6 +336,21 @@ describe("submitAccountingSubmission", () => {
         idempotencyKey,
       }),
     );
+  });
+
+  it("writes one 'submit' audit event through the same transaction boundary", async () => {
+    const repository = createFakeRepository();
+
+    await submitAccountingSubmission({
+      repository,
+      actor: staffActor,
+      input: thbExpenseInput,
+    });
+
+    expect((repository as unknown as { auditEvents: unknown[] }).auditEvents).toHaveLength(1);
+    expect((repository as unknown as { auditEvents: unknown[] }).auditEvents[0]).toMatchObject({
+      action: "submit",
+    });
   });
 });
 
