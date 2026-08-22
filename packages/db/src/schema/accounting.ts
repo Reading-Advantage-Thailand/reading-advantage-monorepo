@@ -89,7 +89,7 @@ export const accountingSubmissions = pgTable(
     ),
     check(
       "accounting_submissions_status_check",
-      sql`${table.status} = 'pending'`,
+      sql`${table.status} IN ('pending', 'approved', 'rejected')`,
     ),
     index("accounting_submissions_scope_company_status_idx").on(
       table.scopeCompanyId,
@@ -102,6 +102,40 @@ export const accountingSubmissions = pgTable(
       table.scopeCompanyId,
       table.submittedByAccountId,
       table.idempotencyKey,
+    ),
+  ],
+);
+
+/**
+ * Append-only audit trail for the accounting submission lifecycle.
+ * Enforced at the DB level via REVOKE UPDATE, DELETE (see the migration
+ * generated for this change, following 0018_audit_events).
+ */
+export const accountingSubmissionAuditEvents = pgTable(
+  "accounting_submission_audit_events",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    submissionId: uuid("submission_id").notNull(),
+    action: text("action").notNull(),
+    actorAccountId: uuid("actor_account_id").notNull(),
+    actorRole: text("actor_role").notNull(),
+    reason: text("reason"),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    check(
+      "accounting_submission_audit_events_action_check",
+      sql`${table.action} IN ('submit', 'approve', 'reject')`,
+    ),
+    check(
+      "accounting_submission_audit_events_reason_check",
+      sql`${table.reason} IS NULL OR ${table.reason} ~ '[^[:space:]]'`,
+    ),
+    index("accounting_submission_audit_events_submission_idx").on(
+      table.submissionId,
+      table.createdAt,
     ),
   ],
 );

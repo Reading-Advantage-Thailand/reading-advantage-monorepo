@@ -44,8 +44,15 @@ describe("accounting submission audit events schema (red - Task 7)", () => {
   });
 
   it("classifies both accounting tables as EXEMPT", async () => {
-    const submissionsTable = tableOrUndefined("accountingSubmissions");
-    const auditTable = tableOrUndefined("accountingSubmissionAuditEvents");
+    // classifyTable keys on object identity. Load the built package tables
+    // so the objects match the ones tenant-registry registers.
+    const dbIndex = join(REPO_ROOT, "packages/db/dist/index.js");
+    const db = (await import(/* @vite-ignore */ pathToFileURL(dbIndex).href)) as Record<
+      string,
+      unknown
+    >;
+    const submissionsTable = db.accountingSubmissions;
+    const auditTable = db.accountingSubmissionAuditEvents;
     expect(submissionsTable, "accountingSubmissions is missing").toBeDefined();
     expect(auditTable, "accountingSubmissionAuditEvents is missing - red phase expected").toBeDefined();
     if (!submissionsTable || !auditTable) return;
