@@ -76,12 +76,16 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
   accounts, Thai statutory support (VAT, WHT, tax invoices), and accountant
   export. Story-shaped spec, 8 phases (S1–S8).
 
-- [~] **Track: Accounting Product Simplification** *Link: [./tracks/accounting_product_simplification_20260822/](./tracks/accounting_product_simplification_20260822/)*
-  Cut the finance-accounting tail-chasing found by the 2026-08-22 deep review:
-  delete the dead 96% finance-operations surface, collapse the separate
-  accounting database into the main stream, add audit-backed approve/reject,
-  and freeze the foundation at its five consumed symbols. Ledger/VAT/WHT are
-  cut as build items pending the accountant tool decision (FlowAccount/PEAK).
+- [x] **Track: Accounting Product Simplification** *Link: [./tracks/accounting_product_simplification_20260822/](./tracks/accounting_product_simplification_20260822/)*
+  Fix the two live finance-operations defects, cut the module to its
+  consumed symbols, collapse the accounting database, and add audit-backed
+  approval. Ledger/VAT/WHT cut pending the accountant tool decision. **Completed 2026-08-22**
+
+- [ ] **Track: Accounting Minimum Product** *Link: [./tracks/accounting_minimum_product_20260822/](./tracks/accounting_minimum_product_20260822/)*
+  The remaining product path after simplification: owner review UI with
+  audit-backed approve/reject, settlement-derived rate display, and S8-lite
+  CSV export of approved submissions. Ledger/VAT/WHT stay cut pending the
+  accountant tool decision; no new tables or packages.
 
 - [~] **Track: Small-Company Admin Privilege Simplification** *Link: [./tracks/small_company_admin_privileges_20260722/](./tracks/small_company_admin_privileges_20260722/)*
   Make `COMPANY_ADMIN` the intentional owner/operator role with exact inherited

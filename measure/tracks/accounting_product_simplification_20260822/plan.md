@@ -180,7 +180,7 @@ Commit: `fix(finance-operations): append the allowed audit after the atomic comm
 
 ## Phase 2: Collapse the separate accounting database (FR-5, FR-6)
 
-### Task 4: Move the submissions table into the main schema stream
+### Task 4: Move the submissions table into the main schema stream [checkpoint: f63c4a9c4]
 
 Files:
 
@@ -220,7 +220,7 @@ registration exists.
 
 Commit: `chore(db): move accounting_submissions into the main schema stream (track_id: accounting_product_simplification_20260822)`
 
-### Task 5: Rewire the app to the main database client
+### Task 5: Rewire the app to the main database client [checkpoint: 7a71a9a51]
 
 Data check first. Run:
 
@@ -269,7 +269,7 @@ CI=true pnpm --filter accounting check-types
 
 Commit: `chore(accounting): point the app at the main database client (track_id: accounting_product_simplification_20260822)`
 
-### Task 6: Delete the separate accounting database stream
+### Task 6: Delete the separate accounting database stream [checkpoint: 3632ad766]
 
 Deletions:
 
@@ -315,7 +315,7 @@ Commit: `chore(db): delete the separate accounting database stream (track_id: ac
 
 ## Phase 3: Submission audit events and slim approval (FR-8)
 
-### Task 7: Red tests for approval transitions and audit events
+### Task 7: Red tests for approval transitions and audit events [checkpoint: 5811a566e]
 
 New file
 `packages/backend/src/modules/accounting/__tests__/approvals.test.ts`,
@@ -358,7 +358,7 @@ CI=true pnpm --filter @reading-advantage/db exec vitest run src/__tests__/accoun
 
 Commit: `test(accounting): red tests for approval transitions and audit events (track_id: accounting_product_simplification_20260822)`
 
-### Task 8: Audit table, status widening, and migration
+### Task 8: Audit table, status widening, and migration [checkpoint: fd628bbed]
 
 Files:
 
@@ -440,7 +440,7 @@ CI=true pnpm --filter @reading-advantage/domain exec vitest run src/__tests__/te
 
 Commit: `chore(db): add the append-only accounting submission audit table (track_id: accounting_product_simplification_20260822)`
 
-### Task 9: Implement approval domain functions, repository, and routes
+### Task 9: Implement approval domain functions, repository, and routes [checkpoint: dc1e5455f]
 
 Files:
 
@@ -524,7 +524,7 @@ Commit: `feat(accounting): approve and reject submissions with transactional aud
 
 ## Phase 4: Dead-surface cut (FR-3, FR-4, FR-7)
 
-### Task 10: Cut the finance-operations module to its consumed surface
+### Task 10: Cut the finance-operations module to its consumed surface [checkpoint: 349ea438b]
 
 Delete these files under `packages/backend/src/modules/finance-operations/`:
 
@@ -598,7 +598,7 @@ CI=true pnpm --filter accounting test
 
 Commit: `chore(finance-operations): cut the module to its five consumed symbols (track_id: accounting_product_simplification_20260822)`
 
-### Task 11: Delete the db-side finance-operations surface
+### Task 11: Delete the db-side finance-operations surface [checkpoint: ba8e9b4]
 
 Deletions:
 
@@ -646,7 +646,7 @@ Commit: `chore(db): drop the unused finance-operations persistence surface (trac
 
 ## Phase 5: Documentation and closeout (FR-9, FR-10)
 
-### Task 12: Align the specs with reality
+### Task 12: Align the specs with reality [checkpoint: 3a3fa62]
 
 - Edit `measure/tracks/company_finance_operations_20260810/spec.md`: add a
   dated notice at the top:
