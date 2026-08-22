@@ -2,11 +2,10 @@
  * Application adapter wiring the `@reading-advantage/backend/accounting`
  * domain functions to a Postgres-backed `AccountingSubmissionRepository`.
  *
- * The database client is created lazily on first use from
- * `ACCOUNTING_DATABASE_URL` through the reviewed accounting runtime-client
- * boundary, so importing this module never opens a connection.
- * Domain `invalid-input` rejections are translated here into a route-ready
- * error carrying `fieldErrors`, keeping the API route thin.
+ * The repository uses the shared main database client
+ * (`@reading-advantage/db/client`); the separate accounting database stream
+ * is gone. Domain `invalid-input` rejections are translated here into a
+ * route-ready error carrying `fieldErrors`, keeping the API route thin.
  */
 import {
   AccountingSubmissionError,
@@ -16,33 +15,11 @@ import {
   type AccountingActor,
   type AccountingSubmission,
   type AccountingSubmissionInput,
-  type AccountingSubmissionRepository,
 } from "@reading-advantage/backend/accounting";
-import {
-  createAccountingRuntimeClient,
-  createAccountingRuntimeConfig,
-} from "@reading-advantage/db/accounting/runtime";
+import { client } from "@reading-advantage/db/client";
 import type { ZodIssue } from "zod";
 
-let repositoryPromise: Promise<AccountingSubmissionRepository> | undefined;
-
-/**
- * Returns the lazily created Postgres-backed submission repository.
- * @returns The shared repository backed by the accounting runtime client.
- * @throws When the strict accounting runtime database configuration is invalid.
- */
-function getSubmissionRepository(): Promise<AccountingSubmissionRepository> {
-  repositoryPromise ??= (async () => {
-    const config = createAccountingRuntimeConfig({
-      ACCOUNTING_DATABASE_URL: process.env.ACCOUNTING_DATABASE_URL,
-      ACCOUNTING_DATABASE_POOL_MAX:
-        process.env.ACCOUNTING_DATABASE_POOL_MAX,
-    });
-    const sql = await createAccountingRuntimeClient(config);
-    return createPostgresAccountingSubmissionRepository({ sql });
-  })();
-  return repositoryPromise;
-}
+const repository = createPostgresAccountingSubmissionRepository({ sql: client });
 
 /**
  * Groups Zod issues into a field-path → messages map for 400 responses.
@@ -103,7 +80,6 @@ export async function submitAccountingSubmission(
   request: SubmitAccountingSubmissionRequest,
 ): Promise<AccountingSubmission> {
   try {
-    const repository = await getSubmissionRepository();
     return await submitDomainAccountingSubmission({
       repository,
       actor: request.actor,
@@ -133,7 +109,6 @@ export async function listAccountingSubmissions(
   request: ListAccountingSubmissionsRequest,
 ): Promise<readonly AccountingSubmission[]> {
   try {
-    const repository = await getSubmissionRepository();
     return await listDomainAccountingSubmissions({
       repository,
       actor: request.actor,
