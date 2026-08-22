@@ -1,0 +1,5 @@
+Task 2: Convert page.tsx to a server component and extract the form.
+
+Extracted NewSubmissionForm, added getAccountingSessionOrRedirect via cookies(), and rewrote HomePage as an async server component. Form tests moved; page tests use hoisted module mocks.
+
+Files: apps/accounting/app/_components/new-submission-form.tsx, apps/accounting/app/_components/new-submission-form.test.tsx, apps/accounting/app/lib/auth.ts, apps/accounting/app/page.tsx, apps/accounting/app/page.test.tsx
