@@ -80,6 +80,15 @@ function textField(form: FormData, name: string): string | undefined {
   return typeof value === "string" ? value : undefined;
 }
 
+/** Checks whether an uploaded evidence file declares a supported MIME type. */
+function isSupportedEvidenceType(contentType: string): boolean {
+  const normalizedContentType = contentType.toLowerCase();
+  return (
+    normalizedContentType === "application/pdf" ||
+    normalizedContentType.startsWith("image/")
+  );
+}
+
 /**
  * Handles POST /api/submissions: multipart submission intake with exactly one
  * required evidence file. Evidence is stored through the private-evidence
@@ -107,8 +116,13 @@ export async function POST(request: Request): Promise<Response> {
     );
   }
 
-  const evidence = form.get("evidence");
-  if (!(evidence instanceof File) || evidence.size === 0) {
+  const evidenceFiles = form.getAll("evidence");
+  const evidence = evidenceFiles.length === 1 ? evidenceFiles[0] : undefined;
+  if (
+    !(evidence instanceof File) ||
+    evidence.size === 0 ||
+    !isSupportedEvidenceType(evidence.type)
+  ) {
     return jsonResponse(
       {
         message: "An evidence file is required",

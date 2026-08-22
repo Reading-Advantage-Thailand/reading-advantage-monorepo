@@ -1,7 +1,7 @@
 /** Runtime-only accounting database client without migration tooling. */
-export { createAccountingDirectClient } from "./client.js";
+export { createAccountingRuntimeClient } from "./client.js";
 export {
-  accountingDirectEnvSchema,
-  createAccountingDirectConfig,
-  type AccountingDirectConfig,
+  accountingRuntimeEnvSchema,
+  createAccountingRuntimeConfig,
+  type AccountingRuntimeConfig,
 } from "./environment.js";

@@ -25,6 +25,7 @@
  */
 import { describe, expect, it, vi } from "vitest";
 
+import type { StorageClient } from "@reading-advantage/storage";
 import { putPrivateEvidence } from "@/app/lib/private-evidence-storage";
 
 const COMPANY_ID = "33333333-3333-4333-8333-333333333333";
@@ -34,12 +35,12 @@ const EVIDENCE_REFERENCE_PATTERN = new RegExp(
 
 function createFakeStorage() {
   return {
-    put: vi.fn(async () => {}),
+    put: vi.fn<StorageClient["put"]>(async () => {}),
     getUrl: vi.fn(() => ""),
     getSignedUrl: vi.fn(async () => ""),
     delete: vi.fn(async () => {}),
     exists: vi.fn(async () => false),
-  };
+  } satisfies StorageClient;
 }
 
 function upload(overrides: Record<string, unknown> = {}) {

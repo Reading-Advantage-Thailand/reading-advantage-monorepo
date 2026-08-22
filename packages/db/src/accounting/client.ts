@@ -18,6 +18,19 @@ interface ConnectionTarget {
   readonly roleName: string;
 }
 
+interface ConnectionProbe {
+  readonly bypassRls: boolean;
+  readonly canCreateDatabase: boolean;
+  readonly canCreateRole: boolean;
+  readonly databaseName: string;
+  readonly databaseOwner: string;
+  readonly hasMemberships: boolean;
+  readonly inheritsPrivileges: boolean;
+  readonly replication: boolean;
+  readonly roleName: string;
+  readonly superuser: boolean;
+}
+
 /**
  * Creates a stable connection-boundary error without exposing credentials.
  * @param code The machine-readable connection mismatch category.
@@ -33,7 +46,7 @@ function connectionMismatch(
 
 /**
  * Derives the required database and role directly from a reviewed accounting URL.
- * @param databaseUrl The direct PostgreSQL connection URL.
+ * @param databaseUrl The runtime or direct PostgreSQL connection URL.
  * @returns The exact database and login role the live connection must report.
  * @throws When the URL is not an exact accounting target.
  */
@@ -90,9 +103,10 @@ function connectionTargetFromUrl(databaseUrl: string): ConnectionTarget {
  * @returns A promise that resolves after the connection identity is verified.
  * @throws When PostgreSQL reports an unexpected or over-privileged connection.
  */
-async function validateDirectConnection(
+async function validateConnection(
   sql: postgres.Sql,
   target: ConnectionTarget,
+  mode: "direct" | "runtime",
 ): Promise<void> {
   const [probe] = await sql<
     Array<{
@@ -127,33 +141,122 @@ async function validateDirectConnection(
     where database.datname = current_database()
   `;
 
-  if (probe?.database_name !== target.databaseName) {
+  const connection: ConnectionProbe | undefined = probe
+    ? {
+        bypassRls: probe.bypass_rls,
+        canCreateDatabase: probe.can_create_database,
+        canCreateRole: probe.can_create_role,
+        databaseName: probe.database_name,
+        databaseOwner: probe.database_owner,
+        hasMemberships: probe.has_memberships,
+        inheritsPrivileges: probe.inherits_privileges,
+        replication: probe.replication,
+        roleName: probe.role_name,
+        superuser: probe.superuser,
+      }
+    : undefined;
+  if (connection?.databaseName !== target.databaseName) {
     throw connectionMismatch(
       "ACCOUNTING_DATABASE_MISMATCH",
-      `Accounting connection reached database ${probe?.database_name ?? "unknown"}; expected ${target.databaseName}.`,
+      `Accounting connection reached database ${connection?.databaseName ?? "unknown"}; expected ${target.databaseName}.`,
     );
   }
-  if (probe.role_name !== target.roleName) {
+  if (connection.roleName !== target.roleName) {
     throw connectionMismatch(
       "ACCOUNTING_ROLE_MISMATCH",
-      `Accounting connection reached role ${probe.role_name}; expected ${target.roleName}.`,
+      `Accounting connection reached role ${connection.roleName}; expected ${target.roleName}.`,
     );
   }
 
   const unsafeRole =
-    probe.superuser ||
-    probe.can_create_database ||
-    probe.can_create_role ||
-    probe.replication ||
-    probe.bypass_rls ||
-    probe.inherits_privileges ||
-    probe.has_memberships;
-  if (unsafeRole || probe.database_owner !== probe.role_name) {
+    connection.superuser ||
+    connection.canCreateDatabase ||
+    connection.canCreateRole ||
+    connection.replication ||
+    connection.bypassRls ||
+    connection.inheritsPrivileges ||
+    connection.hasMemberships;
+  const wrongOwnership =
+    mode === "direct"
+      ? connection.databaseOwner !== connection.roleName
+      : connection.databaseOwner === connection.roleName;
+  if (unsafeRole || wrongOwnership) {
     throw connectionMismatch(
       "ACCOUNTING_PRIVILEGE_MISMATCH",
-      "Accounting direct role does not satisfy the reviewed ownership and inheritance boundary.",
+      `Accounting ${mode} role does not satisfy the reviewed ownership and inheritance boundary.`,
     );
   }
+}
+
+/**
+ * Opens and verifies an accounting PostgreSQL connection.
+ * @param databaseUrl The credential-bearing connection URL.
+ * @param poolMax The maximum client-side connection count.
+ * @param mode Whether to enforce the runtime or direct ownership boundary.
+ * @param onnotice Optional PostgreSQL notice handler for migration commands.
+ * @returns A validated PostgreSQL client configured without prepared statements.
+ * @throws When the URL, role, database, or privilege probe is invalid.
+ */
+async function createValidatedClient(
+  databaseUrl: string,
+  poolMax: number,
+  mode: "direct" | "runtime",
+  onnotice?: (notice: postgres.Notice) => void,
+): Promise<postgres.Sql> {
+  const target = connectionTargetFromUrl(databaseUrl);
+  const sql = postgres(normalizePostgresConnectionString(databaseUrl), {
+    ...buildPostgresOptions(databaseUrl),
+    max: poolMax,
+    onnotice,
+    prepare: false,
+  });
+  try {
+    await validateConnection(sql, target, mode);
+    return sql;
+  } catch (error) {
+    await sql.end({ timeout: 1 });
+    throw error;
+  }
+}
+
+/**
+ * Creates a transaction-pool-safe accounting runtime client and verifies its target.
+ * @param input Runtime URL plus optional database, role, and pool assertions.
+ * @returns A validated PostgreSQL client configured without prepared statements.
+ * @throws When configuration is invalid or the connection violates the runtime boundary.
+ */
+export async function createAccountingRuntimeClient(input: {
+  readonly databaseUrl: string;
+  readonly expectedDatabaseName?: string;
+  readonly expectedRole?: string;
+  readonly poolMax?: number;
+}): Promise<postgres.Sql> {
+  const poolMax = input.poolMax ?? 3;
+  if (!Number.isInteger(poolMax) || poolMax < 1 || poolMax > 20) {
+    throw new Error(
+      "Accounting runtime poolMax must be an integer from 1 to 20.",
+    );
+  }
+  const target = connectionTargetFromUrl(input.databaseUrl);
+  if (
+    input.expectedDatabaseName !== undefined &&
+    input.expectedDatabaseName !== target.databaseName
+  ) {
+    throw connectionMismatch(
+      "ACCOUNTING_DATABASE_MISMATCH",
+      "Accounting runtime database expectation does not match the connection URL.",
+    );
+  }
+  if (
+    input.expectedRole !== undefined &&
+    input.expectedRole !== target.roleName
+  ) {
+    throw connectionMismatch(
+      "ACCOUNTING_ROLE_MISMATCH",
+      "Accounting runtime role expectation does not match the connection URL.",
+    );
+  }
+  return createValidatedClient(input.databaseUrl, poolMax, "runtime");
 }
 
 /**
@@ -188,20 +291,10 @@ export async function createAccountingDirectClient(input: {
     );
   }
 
-  const sql = postgres(
-    normalizePostgresConnectionString(input.directDatabaseUrl),
-    {
-      ...buildPostgresOptions(input.directDatabaseUrl),
-      max: 1,
-      onnotice: input.onnotice,
-      prepare: false,
-    },
+  return createValidatedClient(
+    input.directDatabaseUrl,
+    1,
+    "direct",
+    input.onnotice,
   );
-  try {
-    await validateDirectConnection(sql, target);
-    return sql;
-  } catch (error) {
-    await sql.end({ timeout: 1 });
-    throw error;
-  }
 }

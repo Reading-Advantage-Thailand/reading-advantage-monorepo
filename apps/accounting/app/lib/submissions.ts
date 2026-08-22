@@ -3,8 +3,8 @@
  * domain functions to a Postgres-backed `AccountingSubmissionRepository`.
  *
  * The database client is created lazily on first use from
- * `ACCOUNTING_DIRECT_DATABASE_URL` through the reviewed accounting
- * direct-client boundary, so importing this module never opens a connection.
+ * `ACCOUNTING_DATABASE_URL` through the reviewed accounting runtime-client
+ * boundary, so importing this module never opens a connection.
  * Domain `invalid-input` rejections are translated here into a route-ready
  * error carrying `fieldErrors`, keeping the API route thin.
  */
@@ -18,23 +18,27 @@ import {
   type AccountingSubmissionInput,
   type AccountingSubmissionRepository,
 } from "@reading-advantage/backend/accounting";
-import { createAccountingDirectClient } from "@reading-advantage/db/accounting/runtime";
+import {
+  createAccountingRuntimeClient,
+  createAccountingRuntimeConfig,
+} from "@reading-advantage/db/accounting/runtime";
 import type { ZodIssue } from "zod";
 
 let repositoryPromise: Promise<AccountingSubmissionRepository> | undefined;
 
 /**
  * Returns the lazily created Postgres-backed submission repository.
- * @returns The shared repository backed by the accounting direct client.
- * @throws When `ACCOUNTING_DIRECT_DATABASE_URL` is not configured.
+ * @returns The shared repository backed by the accounting runtime client.
+ * @throws When the strict accounting runtime database configuration is invalid.
  */
 function getSubmissionRepository(): Promise<AccountingSubmissionRepository> {
   repositoryPromise ??= (async () => {
-    const directDatabaseUrl = process.env.ACCOUNTING_DIRECT_DATABASE_URL;
-    if (!directDatabaseUrl) {
-      throw new Error("ACCOUNTING_DIRECT_DATABASE_URL_REQUIRED");
-    }
-    const sql = await createAccountingDirectClient({ directDatabaseUrl });
+    const config = createAccountingRuntimeConfig({
+      ACCOUNTING_DATABASE_URL: process.env.ACCOUNTING_DATABASE_URL,
+      ACCOUNTING_DATABASE_POOL_MAX:
+        process.env.ACCOUNTING_DATABASE_POOL_MAX,
+    });
+    const sql = await createAccountingRuntimeClient(config);
     return createPostgresAccountingSubmissionRepository({ sql });
   })();
   return repositoryPromise;

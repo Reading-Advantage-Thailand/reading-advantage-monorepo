@@ -122,11 +122,15 @@ function evidenceFile(): File {
 
 function postRequest(
   fields: Record<string, string>,
-  options: { readonly file?: File; readonly idempotencyKey?: string } = {},
+  options: {
+    readonly file?: File;
+    readonly files?: readonly File[];
+    readonly idempotencyKey?: string;
+  } = {},
 ): Request {
   const form = new FormData();
-  if (options.file) {
-    form.set("evidence", options.file);
+  for (const file of options.files ?? (options.file ? [options.file] : [])) {
+    form.append("evidence", file);
   }
   for (const [name, value] of Object.entries(fields)) {
     form.set(name, value);
@@ -258,6 +262,30 @@ describe("POST /api/submissions", () => {
 
   it("returns 400 with field errors when the evidence file is missing", async () => {
     const response = await POST(postRequest(expenseFields));
+
+    expect(response.status).toBe(400);
+    const body = (await response.json()) as {
+      readonly message: string;
+      readonly fieldErrors: Record<string, readonly string[]>;
+    };
+    expect(body.message).toMatch(/evidence/i);
+    expect(Object.keys(body.fieldErrors)).toContain("evidence");
+    expect(mocks.putPrivateEvidence).not.toHaveBeenCalled();
+    expect(mocks.submitAccountingSubmission).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    [
+      "multiple evidence files",
+      [evidenceFile(), evidenceFile()],
+    ],
+    ["an empty evidence file", [new File([], "empty.pdf", { type: "application/pdf" })]],
+    [
+      "an unsupported evidence MIME type",
+      [new File(["receipt"], "receipt.txt", { type: "text/plain" })],
+    ],
+  ] as const)("returns 400 with field errors for %s", async (_case, files) => {
+    const response = await POST(postRequest(expenseFields, { files }));
 
     expect(response.status).toBe(400);
     const body = (await response.json()) as {
