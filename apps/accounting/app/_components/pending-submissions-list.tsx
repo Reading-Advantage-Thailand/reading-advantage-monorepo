@@ -12,6 +12,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@reading-advantage/ui";
+import { derivedRate } from "@/app/lib/derived-rate";
 
 /** Props for the pending submissions list. */
 export interface PendingSubmissionsListProps {
@@ -68,28 +69,6 @@ function actionErrorMessage(status: number, body: unknown): string {
     return messageFromBody(body, "Submission not found");
   }
   return messageFromBody(body, "We could not update this submission.");
-}
-
-/**
- * Returns settled THB ÷ source-amount as a 2dp half-up decimal string.
- * Local display helper until Task 4 extracts `@/app/lib/derived-rate`.
- * @param sourceAmountMinor Positive integer source amount in minor units.
- * @param settledThbMinor Positive integer settled THB amount in minor units.
- * @returns The derived rate as a fixed 2dp decimal string, or empty on bad input.
- */
-function derivedRate(sourceAmountMinor: string, settledThbMinor: string): string {
-  if (!/^[1-9][0-9]*$/u.test(sourceAmountMinor)) {
-    return "";
-  }
-  if (!/^[1-9][0-9]*$/u.test(settledThbMinor)) {
-    return "";
-  }
-  const source = BigInt(sourceAmountMinor);
-  const settled = BigInt(settledThbMinor);
-  const hundredths = (settled * 100n + source / 2n) / source;
-  const integerPart = hundredths / 100n;
-  const fractionPart = hundredths % 100n;
-  return `${integerPart}.${fractionPart.toString().padStart(2, "0")}`;
 }
 
 /** Returns only pending submissions from a visible list. */
