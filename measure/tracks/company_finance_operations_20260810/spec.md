@@ -1,3 +1,5 @@
+> **Frozen 2026-08-22 (accounting_product_simplification_20260822):** the foundation is frozen at the five symbols the accounting module consumes (`financeMoneyInputSchema`, `financeOperationScopeSchema`, `privateEvidenceReferenceSchema`, `FinanceMoneyInput`, `FinanceOperationScope`). The records, controlled-imports, THB-valuation, ports, and persistence surface are deleted. The THB policy is the owner decision of 2026-08-20, implemented as the `settledThbAmount` column. Two known defects (batch-digest framing in controlled-imports.ts; non-atomic 'allowed' audit ordering) were present in the deleted code and are removed with it.
+
 # Finance Operations foundation specification
 
 ## Objective

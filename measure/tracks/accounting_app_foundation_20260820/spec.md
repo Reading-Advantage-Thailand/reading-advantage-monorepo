@@ -1,3 +1,5 @@
+> **Amended 2026-08-22 (accounting_product_simplification_20260822):** S5 (ledger), S6 (VAT/tax invoices), and S7 (WHT) are cut as build items pending the accountant tool decision (FlowAccount/PEAK). S8 reduces to a CSV export of approved submissions. The separate accounting database is collapsed into the main stream; the tenant-registry NFR is satisfied by EXEMPT classification. Approval with audit ships in the simplification track; the owner review UI remains future work.
+
 # Accounting App Foundation
 
 ## Overview
