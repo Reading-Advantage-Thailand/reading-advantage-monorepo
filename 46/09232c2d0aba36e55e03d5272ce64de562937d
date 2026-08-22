@@ -1,0 +1,5 @@
+Task 1: Red tests for the restructured review page.
+
+Created a PendingSubmissionsList stub and failing role-aware review tests covering OWNER display/approve/reject, STAFF/ACCOUNTANT read-only, pending-only filtering, and hidden THB derived rate.
+
+Files: apps/accounting/app/_components/pending-submissions-list.tsx, apps/accounting/app/_components/pending-submissions-list.test.tsx
