@@ -98,11 +98,12 @@ thin approval API routes. It deletes far more than it adds.
 
 ## Acceptance criteria
 
-1. `controlled-imports.ts` emits a 64-hex batch digest for multi-record
-   batches, and a red test proves the old shape failed the durable-job
-   digest grammar.
-2. A recording-double test proves the "allowed" audit lands after the atomic
-   commit, and a failed "allowed" append does not fail the operation.
+1. FR-1/FR-2 (orchestrator amendment): the batch-digest framing and
+   non-atomic "allowed"-audit defects are resolved by deletion - their
+   carrier code is removed by FR-3, recorded in the frozen-foundation
+   notice. No repair tests exist because the code is gone.
+2. Superseded by amendment 1: the "allowed"-audit carrier code is deleted;
+   the audit ordering requirement no longer applies.
 3. `grep` finds no import of any deleted finance-operations symbol anywhere
    in `apps/`, `packages/`, or `services/`. The accounting module still
    compiles against the five kept symbols, unchanged in behavior.
