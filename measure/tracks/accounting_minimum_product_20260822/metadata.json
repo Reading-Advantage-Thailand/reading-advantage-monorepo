@@ -1,0 +1,10 @@
+{
+  "track_id": "accounting_minimum_product_20260822",
+  "type": "feature",
+  "status": "complete",
+  "created_at": "2026-08-22T00:00:00Z",
+  "updated_at": "2026-08-22T10:41:40Z",
+  "description": "Land the remaining owner-facing surface of the accounting app on top of the simplification track: a role-aware review page with approve/reject, a derived-rate display for non-THB bills, and a BOM-free CSV export of approved submissions for the external accountant.",
+  "estimated_tasks": 7,
+  "actual_tasks": 7
+}

@@ -81,11 +81,9 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
   consumed symbols, collapse the accounting database, and add audit-backed
   approval. Ledger/VAT/WHT cut pending the accountant tool decision. **Completed 2026-08-22**
 
-- [ ] **Track: Accounting Minimum Product** *Link: [./tracks/accounting_minimum_product_20260822/](./tracks/accounting_minimum_product_20260822/)*
-  The remaining product path after simplification: owner review UI with
-  audit-backed approve/reject, settlement-derived rate display, and S8-lite
-  CSV export of approved submissions. Ledger/VAT/WHT stay cut pending the
-  accountant tool decision; no new tables or packages.
+- [x] **Track: Accounting Minimum Product** *Link: [./tracks/accounting_minimum_product_20260822/](./tracks/accounting_minimum_product_20260822/)*
+  Owner review & approve/reject UI, derived-rate display, and CSV export
+  of approved submissions for the external accountant. **Completed 2026-08-22**
 
 - [~] **Track: Small-Company Admin Privilege Simplification** *Link: [./tracks/small_company_admin_privileges_20260722/](./tracks/small_company_admin_privileges_20260722/)*
   Make `COMPANY_ADMIN` the intentional owner/operator role with exact inherited
