@@ -25,7 +25,14 @@
         },
         "loop": "two translation gates lead to flight growth, a timed boss phase, and one result",
         "steps": ["gate-selection", "flight-growth", "boss-resolution"],
-        "capabilities": ["arcade-physics", "camera", "timers", "tweens"],
+        "capabilities": [
+          "capability:input-action-normalization",
+          "capability:language-target-progression",
+          "capability:nonempty-content-precondition",
+          "capability:result-accounting",
+          "capability:single-completion-emission",
+          "capability:time-and-frame-loop"
+        ],
         "spawn_interval_ms": 1250,
         "frame_delta_ms": 1250,
         "keyboard": { "ArrowLeft": "move-left", "ArrowRight": "move-right" }
@@ -68,7 +75,14 @@
         },
         "loop": "three lane selection resolves falling word orbs in sentence order before victory or defeat",
         "steps": ["orb-scroll", "lane-collection", "ordered-sentence-result"],
-        "capabilities": ["timers", "tweens"],
+        "capabilities": [
+          "capability:input-action-normalization",
+          "capability:language-target-progression",
+          "capability:nonempty-content-precondition",
+          "capability:result-accounting",
+          "capability:single-completion-emission",
+          "capability:time-and-frame-loop"
+        ],
         "spawn_interval_ms": 2000,
         "frame_delta_ms": 2000,
         "keyboard": {
@@ -123,7 +137,14 @@
           "ordered-crystals",
           "gate-transition"
         ],
-        "capabilities": ["arcade-physics", "camera", "timers"],
+        "capabilities": [
+          "capability:input-action-normalization",
+          "capability:language-target-progression",
+          "capability:nonempty-content-precondition",
+          "capability:result-accounting",
+          "capability:single-completion-emission",
+          "capability:time-and-frame-loop"
+        ],
         "spawn_interval_ms": 1500,
         "frame_delta_ms": 1500,
         "keyboard": {
@@ -180,7 +201,14 @@
           "goblin-hazard",
           "sentence-transition"
         ],
-        "capabilities": ["arcade-physics", "camera", "tweens"],
+        "capabilities": [
+          "capability:input-action-normalization",
+          "capability:language-target-progression",
+          "capability:nonempty-content-precondition",
+          "capability:result-accounting",
+          "capability:single-completion-emission",
+          "capability:time-and-frame-loop"
+        ],
         "spawn_interval_ms": 1000,
         "frame_delta_ms": 1000,
         "keyboard": {
@@ -237,7 +265,14 @@
           "gate-collision",
           "ordered-result"
         ],
-        "capabilities": ["camera", "timers", "tweens"],
+        "capabilities": [
+          "capability:input-action-normalization",
+          "capability:language-target-progression",
+          "capability:nonempty-content-precondition",
+          "capability:result-accounting",
+          "capability:single-completion-emission",
+          "capability:time-and-frame-loop"
+        ],
         "spawn_interval_ms": 2000,
         "frame_delta_ms": 2000,
         "keyboard": {

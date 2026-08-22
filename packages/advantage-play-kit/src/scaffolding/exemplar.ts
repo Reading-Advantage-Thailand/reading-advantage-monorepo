@@ -117,7 +117,7 @@ export interface ExemplarPublicApiSurface {
   /** Validated exemplar cartridge definition. */
   readonly definition: ExemplarCartridgeDefinition;
   /** Owner-approved semantic role/state requirements. */
-  readonly semanticAssetRequirements: readonly SemanticAssetRequirement[];
+  readonly requiredAssetBindings: readonly SemanticAssetRequirement[];
   /** Validated default authoring/QC controls. */
   readonly qcControls: QcControls;
   /** Compact and wide browser verification viewports. */
@@ -140,7 +140,6 @@ export function buildExemplarCartridgeDefinition(): ExemplarCartridgeDefinition 
     id: EXEMPLAR_CARTRIDGE_ID,
     title: "Exemplar Vocabulary Match",
     description: "A representative cartridge built entirely through public APK APIs.",
-    version: "0.1.0",
     runtimeApiVersion: "1.0.0",
     inputMode: "vocabulary",
     capabilities: [
@@ -150,7 +149,7 @@ export function buildExemplarCartridgeDefinition(): ExemplarCartridgeDefinition 
       "capability:result-accounting",
     ],
     standardPackBinding: ACCEPTED_STANDARD_PACK_BINDING,
-    semanticAssetRequirements: [
+    requiredAssetBindings: [
       "top-down/32x32/characters/hero-01",
       "effects/32x32/combat/hit-01",
       "ui/16x16/controls/gamepad-buttons",
@@ -184,7 +183,7 @@ export function buildExemplarCartridgeDefinition(): ExemplarCartridgeDefinition 
 export function buildExemplarPublicApiSurface(): ExemplarPublicApiSurface {
   return Object.freeze({
     definition: buildExemplarCartridgeDefinition(),
-    semanticAssetRequirements: EXEMPLAR_SEMANTIC_ASSET_REQUIREMENTS,
+    requiredAssetBindings: EXEMPLAR_SEMANTIC_ASSET_REQUIREMENTS,
     qcControls: parseQcControls({}),
     browserViewports: Object.freeze([
       Object.freeze({ width: 390, height: 844 }),

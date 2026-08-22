@@ -151,9 +151,69 @@ describe("mountCartridge", () => {
     complete?.({ accuracy: 200 });
 
     expect(hostComplete).toHaveBeenCalledTimes(1);
-    expect(hostComplete).toHaveBeenCalledWith(validResults);
+    expect(hostComplete).toHaveBeenCalledWith(validResults, "complete");
     expect(handle.getDiagnostics().completionCount).toBe(1);
     await handle.destroy();
+  });
+
+  it.each(["tutorial", "demo"] as const)(
+    "suppresses completion authority for a %s session",
+    async (sessionMode) => {
+      let complete: ((result: unknown) => void) | undefined;
+      const hostComplete = vi.fn();
+      const diagnostic = vi.fn();
+      const factory: GameFactory = vi.fn(async (context) => {
+        expect(context.sessionMode).toBe(sessionMode);
+        complete = context.complete;
+        return { destroy: vi.fn() };
+      });
+      const handle = await mountCartridge(
+        {
+          container: document.createElement("div"),
+          cartridge: createRuntimeCartridge(),
+          input: [{ term: "river", translation: "riviere" }],
+          edition: createRuntimeEdition(),
+          host: { complete: hostComplete, diagnostic },
+          sessionMode,
+        },
+        factory,
+      );
+
+      complete?.(validResults);
+
+      expect(hostComplete).not.toHaveBeenCalled();
+      expect(handle.getDiagnostics().completionCount).toBe(0);
+      expect(diagnostic).toHaveBeenCalledWith(expect.objectContaining({
+        code: "NON_AUTHORITATIVE_COMPLETION_SUPPRESSED",
+      }));
+      expect(diagnostic).toHaveBeenCalledWith(expect.objectContaining({
+        details: { sessionMode },
+      }));
+      await handle.destroy();
+    },
+  );
+
+  it("refuses a cartridge whose manifest fails the load-path contract", async () => {
+    const cartridge = createRuntimeCartridge();
+    const factory: GameFactory = vi.fn(async () => ({ destroy: vi.fn() }));
+    const mount = (manifest: Record<string, unknown>) => mountCartridge(
+      {
+        container: document.createElement("div"),
+        cartridge: { ...cartridge, manifest } as typeof cartridge,
+        input: [{ term: "river", translation: "riviere" }],
+        edition: createRuntimeEdition(),
+        host: { complete: vi.fn(), diagnostic: vi.fn() },
+      },
+      factory,
+    );
+
+    await expect(mount({ ...cartridge.manifest, capabilities: ["arcade-physics"] }))
+      .rejects.toMatchObject({ code: "INVALID_CARTRIDGE_MANIFEST" });
+    await expect(mount({ ...cartridge.manifest, requiredAssetBindings: ["ui/16x16/coin.png"] }))
+      .rejects.toMatchObject({ code: "INVALID_CARTRIDGE_MANIFEST" });
+    await expect(mount({ ...cartridge.manifest, id: "Not Kebab Case" }))
+      .rejects.toMatchObject({ code: "INVALID_CARTRIDGE_MANIFEST" });
+    expect(factory, "an invalid manifest must never reach the renderer").not.toHaveBeenCalled();
   });
 
   it("reports invalid results as structured runtime errors", async () => {

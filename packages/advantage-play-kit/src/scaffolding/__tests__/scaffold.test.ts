@@ -17,7 +17,7 @@ describe("noninteractive cartridge scaffold generator", () => {
       "capability:single-completion-emission",
       "capability:result-accounting",
     ],
-    semanticAssetRequirements: ["ui/16x16/icons/coin"],
+    requiredAssetBindings: ["ui/16x16/icons/coin"],
     semanticStateRequirements: [{ role: "player", state: "walk" }],
   };
 
@@ -32,6 +32,16 @@ describe("noninteractive cartridge scaffold generator", () => {
     expect(scaffold.manifest.selectedUnionMaterialization).toBe(
       "accepted-cartridge-selected-union-only",
     );
+    expect(scaffold.manifest.tutorial).toMatchObject({
+      schemaVersion: 1,
+      lifecycle: {
+        complete: { to: "playing" },
+        productionEffects: {
+          emitGameResults: false,
+          persistProgress: false,
+        },
+      },
+    });
   });
 
   it("generates file contents without copying another game's source tree", () => {
@@ -43,9 +53,13 @@ describe("noninteractive cartridge scaffold generator", () => {
       "scene.ts",
       "responsive.ts",
       "presentation.tsx",
+      "experience.ts",
+      "cartridge.ts",
+      "index.ts",
       "assets.ts",
       "attribution.ts",
       "logic.test.ts",
+      "experience.test.ts",
       "browser.test.ts",
       "qc-registration.json",
     ]);
@@ -76,6 +90,68 @@ describe("noninteractive cartridge scaffold generator", () => {
     expect(logic?.content).toMatch(/validateNonEmptyContent|createLanguageTargetProgression/);
   });
 
+  it("generates runnable Phaser scene and config code without placeholder boundaries", () => {
+    const scaffold = generateCartridgeScaffold(options);
+    const scene = scaffold.files.find((file) => file.path === "scene.ts");
+    const runtimeSource = scaffold.files
+      .filter((file) => !file.path.endsWith(".test.ts") && !file.path.endsWith(".test.tsx"))
+      .map((file) => file.content)
+      .join("\n");
+
+    expect(runtimeSource).not.toMatch(/TODO|goes here|scene stub|placeholder|throw new Error/i);
+    expect(runtimeSource).not.toMatch(/from\s+["'][^"']*(?:^|\/)(?:next|app|database)(?:\/|["'])/i);
+    expect(scene?.content).toContain('import type Phaser from "phaser";');
+    expect(scene?.content).toMatch(/Phaser\.Types\.Core\.GameConfig/);
+    expect(scene?.content).toMatch(/createScaffoldedVocabGameConfig/);
+    expect(scene?.content).toMatch(/scene:\s*createScaffoldedVocabGameScene/);
+    expect(scene?.content).toMatch(/add\.text/);
+    expect(scene?.content).toMatch(/setInteractive/);
+    expect(scene?.content).toMatch(/pointerdown/);
+    expect(scene?.content).toMatch(/keydown/);
+    expect(scene?.content).toMatch(/keyboard:\s*true/);
+    expect(scene?.content).toMatch(/mouse:\s*true/);
+    expect(scene?.content).toMatch(/touch:\s*true/);
+    expect(scene?.content).toMatch(/currentIndex % choices\.length/);
+    expect(scene?.content).toMatch(/events\.once\("shutdown"/);
+    expect(scene?.content).toMatch(/keyboard\?\.off\("keydown"/);
+    expect(scene?.content).toMatch(/completion\.sealWithoutDelivery\(\)/);
+  });
+
+  it("generates shared attempt accounting and exactly-once GameResults wiring", () => {
+    const scaffold = generateCartridgeScaffold(options);
+    const scene = scaffold.files.find((file) => file.path === "scene.ts");
+
+    expect(scene?.content).toMatch(/createLanguageTargetProgression/);
+    expect(scene?.content).toMatch(/items\.map\(\(item\) => item\.translation\)/);
+    expect(scene?.content).toMatch(/createResultAccountant/);
+    expect(scene?.content).toMatch(/recordAttempt\(\{ correct: isCorrect \}\)/);
+    expect(scene?.content).toMatch(/correctAnswers/);
+    expect(scene?.content).toMatch(/totalAttempts/);
+    expect(scene?.content).toMatch(/createCompletionLatch<GameResults>/);
+    expect(scene?.content).toMatch(/completion\.complete\(result\)/);
+    expect(scene?.content).toMatch(/context\.complete/);
+  });
+
+  it("generates a loadable cartridge entry point and complete standard experience", () => {
+    const scaffold = generateCartridgeScaffold(options);
+    const experience = scaffold.files.find((file) => file.path === "experience.ts");
+    const cartridge = scaffold.files.find((file) => file.path === "cartridge.ts");
+    const index = scaffold.files.find((file) => file.path === "index.ts");
+
+    expect(experience?.content).toMatch(/STANDARD_EXPERIENCE/);
+    expect(experience?.content).toMatch(/briefing/);
+    expect(experience?.content).toMatch(/tutorial/);
+    expect(experience?.content).toMatch(/debrief/);
+    expect(experience?.content).toMatch(/createScaffoldedVocabGameStandardExperience/);
+    expect(experience?.content).toMatch(/createTutorialActionDriver/);
+    expect(cartridge?.content).toMatch(/StandardExperienceCartridge/);
+    expect(cartridge?.content).toMatch(/createScaffoldedVocabGameCartridge/);
+    expect(cartridge?.content).toMatch(/standardExperience/);
+    expect(cartridge?.content).toMatch(/createScaffoldedVocabGameConfig/);
+    expect(index?.content).toMatch(/\.\/cartridge\.js/);
+    expect(index?.content).toMatch(/\.\/experience\.js/);
+  });
+
   it("generates descriptor-driven asset selection from semantic role/state requests", () => {
     const scaffold = generateCartridgeScaffold(options);
     const assets = scaffold.files.find((file) => file.path === "assets.ts");
@@ -98,20 +174,17 @@ describe("noninteractive cartridge scaffold generator", () => {
     expect(qc?.content).toMatch(/\/qc/);
   });
 
-  it("rejects a scaffold request with an unsupported capability", () => {
+  it("rejects a scaffold request with a malformed capability id", () => {
     expect(() =>
-      generateCartridgeScaffold({
-        ...options,
-        capabilities: ["capability:title-specific-boss-fight"],
-      }),
-    ).toThrow(/validation failed|capability/i);
+      generateCartridgeScaffold({ ...options, capabilities: ["arcade-physics"] }),
+    ).toThrow(/capability/i);
   });
 
   it("rejects a scaffold request with a physical path in semantic requirements", () => {
     expect(() =>
       generateCartridgeScaffold({
         ...options,
-        semanticAssetRequirements: ["ui/16x16/icons/coin.png"],
+        requiredAssetBindings: ["ui/16x16/icons/coin.png"],
       }),
     ).toThrow(/semantic/i);
   });

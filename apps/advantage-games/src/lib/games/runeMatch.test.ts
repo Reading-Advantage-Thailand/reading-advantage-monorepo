@@ -305,6 +305,8 @@ describe("shuffleGrid", () => {
     state.specialMoves.shuffle = 1;
     const originalGrid = state.grid;
     const newState = shuffleGrid(state);
+    // A shuffle must produce a new grid rather than mutate the old one.
+    expect(newState.grid).not.toBe(originalGrid);
     expect(newState.specialMoves.shuffle).toBe(0);
     expect(newState.floatingTexts.some((ft) => ft.text === "SHUFFLE!")).toBe(true);
   });

@@ -4,17 +4,22 @@ import {
   type GameResults,
 } from "@reading-advantage/game-contracts";
 import {
+  createActorSpriteLayer,
   createBoundedFrameScheduler,
   createCompletionLatch,
   createInputActionNormalizer,
   createResultAccountant,
   finalizeResult,
+  preloadAssetBindings,
   validateNonEmptyContent,
+  type ActorSpriteLayer,
+  type ActorSpriteLike,
   type APKInputController,
   type APKSessionMode,
   type CartridgeGameConfigContext,
   type GameTerminalOutcome,
   type InputActionId,
+  type RuntimeEdition,
 } from "@reading-advantage/advantage-play-kit";
 import type { StandardExperienceCartridge } from "@reading-advantage/advantage-play-kit/presentation";
 
@@ -215,6 +220,7 @@ interface GriffinSkyJoustTarget {
 }
 
 interface GriffinSkyJoustSceneContext {
+  readonly edition: RuntimeEdition;
   readonly controller: GriffinSkyJoustController;
   readonly inputController: APKInputController;
   readonly composition: CartridgeGameConfigContext["composition"];
@@ -243,6 +249,14 @@ interface PhaserSceneLike {
   add?: {
     graphics(): PhaserGraphicsLike;
     text(x: number, y: number, value: string, style?: Readonly<Record<string, unknown>>): PhaserTextLike;
+    image?(x: number, y: number, key: string, frame?: number): ActorSpriteLike;
+    sprite?(x: number, y: number, key: string, frame?: number): ActorSpriteLike;
+    tileSprite?(x: number, y: number, width: number, height: number, key: string): ActorSpriteLike;
+  };
+  load?: {
+    image?(key: string, url: string): unknown;
+    spritesheet?(key: string, url: string, config: { frameWidth: number; frameHeight: number }): unknown;
+    audio?(key: string, urls: string | string[]): unknown;
   };
   events?: { once(event: string, listener: () => void): void };
   game?: { readonly canvas?: { getBoundingClientRect?(): { readonly left: number; readonly width: number } } };
@@ -250,6 +264,7 @@ interface PhaserSceneLike {
 }
 
 interface GriffinSkyJoustSceneResources {
+  readonly art: ActorSpriteLayer;
   readonly graphics: PhaserGraphicsLike;
   readonly title: PhaserTextLike;
   readonly prompt: PhaserTextLike;
@@ -875,7 +890,7 @@ function createScene(context: GriffinSkyJoustSceneContext): Readonly<Record<stri
     const pulse = Math.sin(animationMs / 2_000 * Math.PI * 2) * 3;
 
     activeResources.graphics.clear();
-    activeResources.graphics.fillStyle(0x071b3d, 1).fillRect(0, 0, width, height);
+    if (!activeResources.art.ground("world:ground", width, height)) activeResources.graphics.fillStyle(0x071b3d, 1).fillRect(0, 0, width, height);
     activeResources.graphics.fillStyle(0x0d4f82, 1).fillCircle(worldX(110), worldY(100), 54 * scale);
     activeResources.graphics.fillStyle(0x12689a, 1).fillCircle(worldX(820), worldY(160), 72 * scale);
     activeResources.graphics.fillStyle(0x184e77, 0.9).fillTriangle(
@@ -892,15 +907,23 @@ function createScene(context: GriffinSkyJoustSceneContext): Readonly<Record<stri
       const knightX = worldX(knight.x);
       const knightY = worldY(knight.y);
       const targetKnight = knight.wordIndex === state.targetIndex;
-      activeResources.graphics.fillStyle(targetKnight ? 0xfbbf24 : 0x64748b, 1)
-        .fillCircle(knightX, knightY, knight.radius * scale);
-      activeResources.graphics.lineStyle(3 * scale, targetKnight ? 0xfff7ae : 0xcbd5e1, 0.9)
-        .strokeRoundedRect(knightX - knight.radius * scale, knightY - knight.radius * scale, knight.radius * 2 * scale, knight.radius * 2 * scale, 10 * scale);
-      activeResources.graphics.fillStyle(0xe2e8f0, 1).fillTriangle(
-        knightX - 6 * scale, knightY - 8 * scale,
-        knightX + 8 * scale, knightY - 5 * scale,
-        knightX, knightY + 10 * scale,
-      );
+      if (!activeResources.art.place(`knight:${index}`, "enemy:idle", {
+        x: knightX,
+        y: knightY,
+        width: knight.radius * 2.6 * scale,
+        depth: 7,
+        alpha: targetKnight ? 1 : 0.85,
+      })) {
+        activeResources.graphics.fillStyle(targetKnight ? 0xfbbf24 : 0x64748b, 1)
+          .fillCircle(knightX, knightY, knight.radius * scale);
+        activeResources.graphics.lineStyle(3 * scale, targetKnight ? 0xfff7ae : 0xcbd5e1, 0.9)
+          .strokeRoundedRect(knightX - knight.radius * scale, knightY - knight.radius * scale, knight.radius * 2 * scale, knight.radius * 2 * scale, 10 * scale);
+        activeResources.graphics.fillStyle(0xe2e8f0, 1).fillTriangle(
+          knightX - 6 * scale, knightY - 8 * scale,
+          knightX + 8 * scale, knightY - 5 * scale,
+          knightX, knightY + 10 * scale,
+        );
+      }
       activeResources.knightLabels[index]?.setText(knight.word).setPosition(
         knightX - knight.radius * scale,
         knightY + knight.radius * scale + 4,
@@ -911,18 +934,27 @@ function createScene(context: GriffinSkyJoustSceneContext): Readonly<Record<stri
     const playerX = worldX(state.player.x);
     const playerY = worldY(state.player.y) + pulse;
     const invulnerable = state.gameTime < state.player.invulnerableUntil;
-    activeResources.graphics.fillStyle(invulnerable ? 0xf8fafc : 0x38d9ff, 0.95)
-      .fillCircle(playerX, playerY, state.player.radius * scale);
-    activeResources.graphics.fillStyle(0xffd166, 1).fillTriangle(
-      playerX + 14 * scale, playerY,
-      playerX + 42 * scale, playerY + 8 * scale,
-      playerX + 14 * scale, playerY + 15 * scale,
-    );
-    activeResources.graphics.fillStyle(0x8ef0ff, 0.9).fillTriangle(
-      playerX - 10 * scale, playerY - 3 * scale,
-      playerX - 70 * scale, playerY - 35 * scale,
-      playerX - 42 * scale, playerY + 22 * scale,
-    );
+    if (!activeResources.art.place("player", "player:idle", {
+      x: playerX,
+      y: playerY,
+      width: state.player.radius * 2.8 * scale,
+      depth: 8,
+      alpha: invulnerable ? 0.6 : 1,
+    })) {
+      activeResources.graphics.fillStyle(invulnerable ? 0xf8fafc : 0x38d9ff, 0.95)
+        .fillCircle(playerX, playerY, state.player.radius * scale);
+      activeResources.graphics.fillStyle(0xffd166, 1).fillTriangle(
+        playerX + 14 * scale, playerY,
+        playerX + 42 * scale, playerY + 8 * scale,
+        playerX + 14 * scale, playerY + 15 * scale,
+      );
+      activeResources.graphics.fillStyle(0x8ef0ff, 0.9).fillTriangle(
+        playerX - 10 * scale, playerY - 3 * scale,
+        playerX - 70 * scale, playerY - 35 * scale,
+        playerX - 42 * scale, playerY + 22 * scale,
+      );
+    }
+    activeResources.art.sweep();
 
     activeResources.title.setText("GRIFFIN SKY-JOUST").setPosition(36, 28);
     activeResources.prompt.setText(`Target: ${state.targetWord}  •  ${state.prompt}`).setPosition(36, 66);
@@ -959,11 +991,24 @@ function createScene(context: GriffinSkyJoustSceneContext): Readonly<Record<stri
     previousKeys = new Set<string>();
   };
 
+
+  const artKeys = ["world:ground", "player:idle", "enemy:idle"] as const;
+
+  const preload = function (this: PhaserSceneLike): void {
+    if (!this.load) return;
+    preloadAssetBindings(
+      this.load,
+      context.edition,
+      artKeys.filter((key) => context.edition.bindings[key]),
+    );
+  };
+
   const create = function (this: PhaserSceneLike): void {
     if (!this.add) throw new Error("Griffin Sky-Joust requires Phaser display services");
     const style = { fontFamily: "Arial", color: "#f8fbff", fontSize: "18px" };
     resources = {
       graphics: this.add.graphics(),
+      art: createActorSpriteLayer(this, context.edition),
       title: this.add.text(0, 0, "", { ...style, fontSize: "28px", fontStyle: "bold" }),
       prompt: this.add.text(0, 0, "", { ...style, fontSize: "21px" }),
       progress: this.add.text(0, 0, "", { ...style, fontSize: "15px", color: "#bae6fd" }),
@@ -1008,6 +1053,7 @@ function createScene(context: GriffinSkyJoustSceneContext): Readonly<Record<stri
 
   return {
     key: "griffin-sky-joust",
+    preload,
     create,
     update,
     extend: {
@@ -1049,20 +1095,19 @@ export function createGriffinSkyJoustCartridge(): StandardExperienceCartridge {
       id: "griffin-sky-joust",
       title: "Griffin Sky-Joust",
       description: "Ride a griffin through the clouds and strike airborne word knights in sentence order.",
-      version: "0.1.0",
       runtimeApiVersion: "1.0.0",
       inputMode: "sentence",
       requiredAssetBindings: ["griffin-sky-joust/player-griffin"],
       capabilities: [
-        "aerial-physics",
-        "moving-word-knights",
-        "collision-classification",
-        "bounded-frame-delta",
-        "input-action-normalization",
-        "language-target-progression",
-        "nonempty-content-precondition",
-        "result-accounting",
-        "single-completion-emission",
+        "capability:aerial-physics",
+        "capability:moving-word-knights",
+        "capability:collision-classification",
+        "capability:bounded-frame-delta",
+        "capability:input-action-normalization",
+        "capability:language-target-progression",
+        "capability:nonempty-content-precondition",
+        "capability:result-accounting",
+        "capability:single-completion-emission",
       ],
     },
     standardExperience,
@@ -1087,6 +1132,7 @@ export function createGriffinSkyJoustCartridge(): StandardExperienceCartridge {
         render: { antialias: false, pixelArt: true },
         scene: createScene({
           controller,
+          edition: context.edition,
           inputController: context.inputController,
           composition: context.composition,
           sessionMode,

@@ -78,7 +78,8 @@ export function withMultiplayer<P extends object>(
   WrappedComponent: React.ComponentType<P>
 ): React.FC<P & MultiplayerGameWrapperProps> {
   return function WithMultiplayerComponent(props: P & MultiplayerGameWrapperProps) {
-    const { children, ...wrapperProps } = props;
+    // children is omitted on purpose: the wrapped component renders instead.
+    const { children: _children, ...wrapperProps } = props;
 
     return (
       <MultiplayerGameWrapper {...wrapperProps}>

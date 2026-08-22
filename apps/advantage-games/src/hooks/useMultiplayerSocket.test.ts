@@ -10,10 +10,10 @@ class MockWebSocket {
   
   readyState = MockWebSocket.CONNECTING;
   url: string;
-  onopen: ((event?: any) => void) | null = null;
-  onclose: ((event?: any) => void) | null = null;
-  onerror: ((event?: any) => void) | null = null;
-  onmessage: ((event?: any) => void) | null = null;
+  onopen: ((event?: Event) => void) | null = null;
+  onclose: ((event?: CloseEvent) => void) | null = null;
+  onerror: ((event?: Event) => void) | null = null;
+  onmessage: ((event?: MessageEvent) => void) | null = null;
 
   constructor(url: string) {
     this.url = url;
@@ -49,7 +49,7 @@ describe('useMultiplayerSocket', () => {
 
   beforeAll(() => {
     originalWebSocket = global.WebSocket;
-    global.WebSocket = MockWebSocket as any;
+    global.WebSocket = MockWebSocket as unknown as typeof WebSocket;
   });
 
   afterAll(() => {
@@ -152,7 +152,7 @@ describe('useMultiplayerSocket', () => {
     });
 
     act(() => {
-      (result.current.socket as any).simulateMessage('{"type": "test"}');
+      (result.current.socket as unknown as MockWebSocket).simulateMessage('{"type": "test"}');
     });
 
     expect(messageHandler).toHaveBeenCalledWith('{"type": "test"}');
@@ -172,7 +172,7 @@ describe('useMultiplayerSocket', () => {
     });
 
     act(() => {
-      (result.current.socket as any).simulateError();
+      (result.current.socket as unknown as MockWebSocket).simulateError();
     });
 
     expect(errorHandler).toHaveBeenCalled();

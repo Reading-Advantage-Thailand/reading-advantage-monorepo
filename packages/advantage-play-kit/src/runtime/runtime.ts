@@ -5,6 +5,7 @@ import {
 } from "@reading-advantage/game-contracts";
 
 import { validateEdition } from "../editions/editions.js";
+import { validateRuntimeCartridgeManifest } from "./cartridge-manifest.js";
 import { APKRuntimeError, toAPKRuntimeError } from "./errors.js";
 import { createInputController } from "./input.js";
 import {
@@ -20,6 +21,7 @@ import {
   type APKRuntimeStatus,
   type GameFactory,
   type GameInput,
+  type GameTerminalOutcome,
   type MountCartridgeOptions,
 } from "./types.js";
 
@@ -35,6 +37,15 @@ export async function mountCartridge(
   factory: GameFactory,
 ): Promise<APKGameHandle> {
   const { cartridge, container, host } = options;
+  const sessionMode = options.sessionMode ?? "playing";
+  try {
+    validateRuntimeCartridgeManifest(cartridge.manifest);
+  } catch (error) {
+    throw new APKRuntimeError(
+      "INVALID_CARTRIDGE_MANIFEST",
+      error instanceof Error ? error.message : "Cartridge manifest validation failed",
+    );
+  }
   if (cartridge.manifest.runtimeApiVersion !== APK_RUNTIME_API_VERSION) {
     throw new APKRuntimeError(
       "INCOMPATIBLE_RUNTIME",
@@ -98,6 +109,7 @@ export async function mountCartridge(
     muted,
     width,
     height,
+    sessionMode,
     ...(composition ? { layoutProfile: composition.profile, inputMode: composition.inputMode } : {}),
     ...(lastEvent ? { lastEvent } : {}),
   });
@@ -142,8 +154,17 @@ export async function mountCartridge(
     }
   };
 
-  const complete = (candidate: unknown): void => {
+  const complete = (candidate: unknown, outcome: GameTerminalOutcome = "complete"): void => {
     if (destroyed || completionCount > 0) return;
+    if (sessionMode !== "playing") {
+      diagnostic({
+        level: "info",
+        code: "NON_AUTHORITATIVE_COMPLETION_SUPPRESSED",
+        message: `Completion was suppressed for the ${sessionMode} session`,
+        details: { sessionMode },
+      });
+      return;
+    }
     const parsed = gameResultsSchema.safeParse(candidate);
     if (!parsed.success) {
       diagnostic({
@@ -154,10 +175,13 @@ export async function mountCartridge(
       });
       return;
     }
+    const terminalOutcome: GameTerminalOutcome = outcome === "victory" || outcome === "defeat" || outcome === "complete"
+      ? outcome
+      : "complete";
     completionCount = 1;
     status = "completed";
     diagnostic({ level: "info", code: "GAME_COMPLETED", message: "Game result accepted" });
-    void Promise.resolve(host.complete(parsed.data)).catch((error: unknown) => {
+    void Promise.resolve(host.complete(parsed.data, terminalOutcome)).catch((error: unknown) => {
       diagnostic({
         level: "error",
         code: "HOST_COMPLETION_FAILED",
@@ -177,6 +201,7 @@ export async function mountCartridge(
         complete,
         diagnostic: (event) => diagnostic(event),
         inputController,
+        sessionMode,
         ...(composition ? { composition } : {}),
         ...(options.seed === undefined ? {} : { seed: options.seed }),
       });

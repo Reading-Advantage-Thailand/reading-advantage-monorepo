@@ -194,7 +194,7 @@ describe('contentPackSchema', () => {
         packId: 'test-pack',
         version: '1.0.0',
         items: [{ term: 'hello', translation: 'world' }],
-        difficulty: 'impossible' as any,
+        difficulty: 'impossible' as never,
       }
       const errors = validateContentPackMetadata(pack)
       expect(errors).toContain('Content pack difficulty must be one of: easy, normal, hard, extreme')
@@ -205,7 +205,7 @@ describe('contentPackSchema', () => {
         packId: 'test-pack',
         version: '1.0.0',
         items: [{ term: 'hello', translation: 'world' }],
-        gameType: 'puzzle' as any,
+        gameType: 'puzzle' as never,
       }
       const errors = validateContentPackMetadata(pack)
       expect(errors).toContain('Content pack gameType must be one of: vocabulary, sentence')
@@ -217,7 +217,7 @@ describe('contentPackSchema', () => {
         version: '1.0.0',
         items: [{ term: 'hello', translation: 'world' }],
         unknownField: 'should error',
-      } as any
+      } as never
       const errors = validateContentPackMetadata(pack)
       expect(errors).toContain('Content pack has unknown field: unknownField')
     })

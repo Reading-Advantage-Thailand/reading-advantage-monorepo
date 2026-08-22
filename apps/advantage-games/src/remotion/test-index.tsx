@@ -1,5 +1,5 @@
 import { registerRoot } from 'remotion';
-import { Composition, Still } from 'remotion';
+import { Still } from 'remotion';
 import { WizardZombiePromo } from './compositions/WizardZombiePromo';
 
 registerRoot(() => (

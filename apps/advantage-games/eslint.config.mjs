@@ -11,8 +11,11 @@ export default [
       "@typescript-eslint/no-explicit-any": "warn",
       "prefer-const": "warn",
       "no-constant-binary-expression": "warn",
-      "no-undef": "warn",
-      "react/no-unknown-property": "warn",
+      // TypeScript itself resolves identifiers, and no-undef cannot see type-only
+      // names such as FrameRequestCallback. typescript-eslint documents turning it
+      // off for TS files for exactly this reason.
+      "no-undef": "off",
+      "react/no-unknown-property": ["warn", { ignore: ["jsx", "global"] }],
     },
   },
   {
@@ -36,6 +39,7 @@ export default [
       globals: {
         ...globals.jest,
         ...globals.node,
+        ...globals.browser,
       },
     },
   },

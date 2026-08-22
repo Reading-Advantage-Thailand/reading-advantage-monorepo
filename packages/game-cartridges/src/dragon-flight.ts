@@ -10,15 +10,25 @@ import {
   createLanguageTargetProgression,
   createResultAccountant,
   finalizeResult,
+  preloadAssetBindings,
+  resolveAssetBinding,
   validateNonEmptyContent,
   type APKInputController,
   type CartridgeGameConfigContext,
   type CompletionDelivery,
   type InputActionId,
+  type RuntimeEdition,
 } from "@reading-advantage/advantage-play-kit";
 import type { StandardExperienceCartridge } from "@reading-advantage/advantage-play-kit/presentation";
 
 import { createCartridgeStandardExperience } from "./standard-experience.js";
+import {
+  createFlightParallax,
+  destroyFlightParallax,
+  preloadFlightParallax,
+  tickFlightParallax,
+  type FlightParallaxLayers,
+} from "./flight-parallax.js";
 
 /** Stable public identifier for the Dragon Flight cartridge. */
 export const DRAGON_FLIGHT_ID = "dragon-flight" as const;
@@ -117,6 +127,19 @@ interface PhaserGraphicsLike {
 interface PhaserTextLike {
   setPosition(x: number, y: number): this;
   setText(value: string): this;
+  setDepth?(depth: number): this;
+  destroy(): void;
+}
+
+/** Minimal Phaser image surface used by flight art. */
+interface PhaserImageLike {
+  setOrigin?(x: number, y: number): this;
+  setDisplaySize?(width: number, height: number): this;
+  setDepth?(depth: number): this;
+  setPosition?(x: number, y: number): this;
+  setAlpha?(alpha: number): this;
+  setTilePosition?(x: number, y: number): this;
+  tilePositionY?: number;
   destroy(): void;
 }
 
@@ -127,9 +150,16 @@ interface PhaserCanvasLike {
 
 /** Minimal Phaser scene surface used by this cartridge. */
 interface PhaserSceneLike {
+  load?: {
+    image?(key: string, url: string): unknown;
+    spritesheet?(key: string, url: string, config: { frameWidth: number; frameHeight: number }): unknown;
+  };
   add?: {
     graphics(): PhaserGraphicsLike;
     text(x: number, y: number, value: string, style?: Readonly<Record<string, unknown>>): PhaserTextLike;
+    image?(x: number, y: number, key: string, frame?: number): PhaserImageLike;
+    sprite?(x: number, y: number, key: string, frame?: number): PhaserImageLike;
+    tileSprite?(x: number, y: number, width: number, height: number, key: string): PhaserImageLike;
   };
   events?: {
     once(event: string, listener: () => void): void;
@@ -148,6 +178,9 @@ interface SceneResources {
   readonly rightGate: PhaserTextLike;
   readonly feedback: PhaserTextLike;
   readonly instructions: PhaserTextLike;
+  dragon?: PhaserImageLike;
+  leftGateArt?: PhaserImageLike;
+  rightGateArt?: PhaserImageLike;
 }
 
 /** Current Phaser scene options passed to the renderer. */
@@ -157,6 +190,7 @@ interface DragonFlightSceneContext {
   readonly composition: CartridgeGameConfigContext["composition"];
   readonly totalTargets: number;
   readonly sessionMode: CartridgeGameConfigContext["sessionMode"];
+  readonly edition: RuntimeEdition;
 }
 
 function cycledDistinctValue(values: readonly string[], startIndex: number): string {
@@ -303,11 +337,22 @@ export function chooseGateFromPointer(pointerX: number, sceneWidth: number): Dra
   return pointerX < sceneWidth / 2 ? "left" : "right";
 }
 
+/**
+ * Returns whether the edition includes generated top-down dragon flight art.
+ * @param edition Audience edition supplied by the host.
+ * @returns True when a dragon idle sprite is present.
+ */
+function usesFlightArt(edition: RuntimeEdition): boolean {
+  return Boolean(edition.pack.files["dragon-flight-idle"] || edition.pack.files["dragon-rider-idle"]);
+}
+
 function createScene(context: DragonFlightSceneContext): Readonly<Record<string, unknown>> {
   let resources: SceneResources | undefined;
   let animationMs = 0;
   let composition = context.composition;
   let previousKeys = new Set<string>();
+  const flightArt = usesFlightArt(context.edition);
+  let parallax: FlightParallaxLayers = { sprites: [], scrollY: 0 };
   const normalize = createInputActionNormalizer({
     keyboard: DRAGON_FLIGHT_KEYBOARD_BINDINGS,
     pointerTap: { action: "confirm" },
@@ -341,22 +386,53 @@ function createScene(context: DragonFlightSceneContext): Readonly<Record<string,
     const pulse = Math.sin(animationMs / 2000 * Math.PI * 2) * 4;
 
     resources.graphics.clear();
-    resources.graphics.fillStyle(0x08152b, 1).fillRect(0, 0, width, height);
-    resources.graphics.fillStyle(0x122b4d, 1).fillCircle(width * 0.12, height * 0.18, 46);
-    resources.graphics.fillStyle(0x1b3b63, 1).fillCircle(width * 0.84, height * 0.22, 62);
-    resources.graphics.fillStyle(0x234f70, 1).fillTriangle(0, height, width * 0.28, height * 0.55, width * 0.55, height);
-    resources.graphics.fillStyle(0x173a5d, 1).fillTriangle(width * 0.4, height, width * 0.7, height * 0.48, width, height);
-    resources.graphics.fillStyle(0x63d8ff, 1).fillCircle(centerX, height * 0.34 + pulse, 34);
-    resources.graphics.fillStyle(0x8ef0ff, 1).fillTriangle(centerX - 20, height * 0.32 + pulse, centerX - 100, height * 0.2 + pulse, centerX - 72, height * 0.4 + pulse);
-    resources.graphics.fillStyle(0x8ef0ff, 1).fillTriangle(centerX + 20, height * 0.32 + pulse, centerX + 100, height * 0.2 + pulse, centerX + 72, height * 0.4 + pulse);
-    resources.graphics.fillStyle(0x101a2c, 1).fillCircle(centerX + 12, height * 0.33 + pulse, 5);
-    resources.graphics.fillStyle(0xffd166, 1).fillTriangle(centerX + 26, height * 0.36 + pulse, centerX + 48, height * 0.37 + pulse, centerX + 26, height * 0.4 + pulse);
-    resources.graphics.fillStyle(0xff8c42, 0.9).fillTriangle(centerX - 38, height * 0.44 + pulse, centerX - 58, height * 0.5 + pulse, centerX - 25, height * 0.48 + pulse);
-
-    resources.graphics.fillStyle(0x255f86, 1).fillRoundedRect(leftX, gateY, gateWidth, gateHeight, 18);
-    resources.graphics.fillStyle(0x255f86, 1).fillRoundedRect(rightX, gateY, gateWidth, gateHeight, 18);
-    resources.graphics.lineStyle(4, 0x8ef0ff, 0.9).strokeRoundedRect(leftX, gateY, gateWidth, gateHeight, 18);
-    resources.graphics.lineStyle(4, 0xffd166, 0.9).strokeRoundedRect(rightX, gateY, gateWidth, gateHeight, 18);
+    if (flightArt) {
+      if (parallax.sprites.length === 0) {
+        parallax = createFlightParallax(scene, context.edition, width, height);
+      }
+      if (parallax.sprites.length === 0) {
+        resources.graphics.fillStyle(0x6eb6e8, 1).fillRect(0, 0, width, height);
+      }
+      const gateKey = context.edition.bindings["prop:gate"]
+        ? resolveAssetBinding(context.edition, "prop:gate").textureKey
+        : undefined;
+      const dragonKey = context.edition.bindings["player:idle"]
+        ? resolveAssetBinding(context.edition, "player:idle").textureKey
+        : undefined;
+      const place = (current: PhaserImageLike | undefined, x: number, y: number, key: string, size: number): PhaserImageLike | undefined => {
+        const image = current
+          ?? scene.add?.sprite?.(x, y, key)
+          ?? scene.add?.image?.(x, y, key);
+        image?.setOrigin?.(0.5, 0.5);
+        image?.setPosition?.(x, y);
+        image?.setDisplaySize?.(size, size);
+        image?.setDepth?.(6);
+        return image;
+      };
+      if (gateKey) {
+        resources.leftGateArt = place(resources.leftGateArt, leftX + gateWidth / 2, gateY + gateHeight / 2, gateKey, 120);
+        resources.rightGateArt = place(resources.rightGateArt, rightX + gateWidth / 2, gateY + gateHeight / 2, gateKey, 120);
+      }
+      if (dragonKey) {
+        resources.dragon = place(resources.dragon, centerX, height * 0.82 + pulse, dragonKey, 96);
+      }
+    } else {
+      resources.graphics.fillStyle(0x08152b, 1).fillRect(0, 0, width, height);
+      resources.graphics.fillStyle(0x122b4d, 1).fillCircle(width * 0.12, height * 0.18, 46);
+      resources.graphics.fillStyle(0x1b3b63, 1).fillCircle(width * 0.84, height * 0.22, 62);
+      resources.graphics.fillStyle(0x234f70, 1).fillTriangle(0, height, width * 0.28, height * 0.55, width * 0.55, height);
+      resources.graphics.fillStyle(0x173a5d, 1).fillTriangle(width * 0.4, height, width * 0.7, height * 0.48, width, height);
+      resources.graphics.fillStyle(0x63d8ff, 1).fillCircle(centerX, height * 0.34 + pulse, 34);
+      resources.graphics.fillStyle(0x8ef0ff, 1).fillTriangle(centerX - 20, height * 0.32 + pulse, centerX - 100, height * 0.2 + pulse, centerX - 72, height * 0.4 + pulse);
+      resources.graphics.fillStyle(0x8ef0ff, 1).fillTriangle(centerX + 20, height * 0.32 + pulse, centerX + 100, height * 0.2 + pulse, centerX + 72, height * 0.4 + pulse);
+      resources.graphics.fillStyle(0x101a2c, 1).fillCircle(centerX + 12, height * 0.33 + pulse, 5);
+      resources.graphics.fillStyle(0xffd166, 1).fillTriangle(centerX + 26, height * 0.36 + pulse, centerX + 48, height * 0.37 + pulse, centerX + 26, height * 0.4 + pulse);
+      resources.graphics.fillStyle(0xff8c42, 0.9).fillTriangle(centerX - 38, height * 0.44 + pulse, centerX - 58, height * 0.5 + pulse, centerX - 25, height * 0.48 + pulse);
+      resources.graphics.fillStyle(0x255f86, 1).fillRoundedRect(leftX, gateY, gateWidth, gateHeight, 18);
+      resources.graphics.fillStyle(0x255f86, 1).fillRoundedRect(rightX, gateY, gateWidth, gateHeight, 18);
+      resources.graphics.lineStyle(4, 0x8ef0ff, 0.9).strokeRoundedRect(leftX, gateY, gateWidth, gateHeight, 18);
+      resources.graphics.lineStyle(4, 0xffd166, 0.9).strokeRoundedRect(rightX, gateY, gateWidth, gateHeight, 18);
+    }
 
     resources.title.setText("DRAGON FLIGHT");
     resources.prompt.setText(`Which gate means: ${state.prompt}?`);
@@ -377,6 +453,10 @@ function createScene(context: DragonFlightSceneContext): Readonly<Record<string,
     frameScheduler.cancel();
     if (!resources) return;
     context.controller.destroy();
+    destroyFlightParallax(parallax);
+    resources.dragon?.destroy();
+    resources.leftGateArt?.destroy();
+    resources.rightGateArt?.destroy();
     resources.graphics.destroy();
     resources.title.destroy();
     resources.prompt.destroy();
@@ -387,6 +467,13 @@ function createScene(context: DragonFlightSceneContext): Readonly<Record<string,
     resources.instructions.destroy();
     resources = undefined;
     previousKeys = new Set<string>();
+  };
+
+  const preload = function (this: PhaserSceneLike): void {
+    if (!this.load || !flightArt) return;
+    preloadFlightParallax(this, context.edition);
+    const keys = ["player:idle", "prop:gate"].filter((key) => Boolean(context.edition.bindings[key]));
+    if (keys.length) preloadAssetBindings(this.load, context.edition, keys);
   };
 
   const create = function (this: PhaserSceneLike): void {
@@ -409,6 +496,7 @@ function createScene(context: DragonFlightSceneContext): Readonly<Record<string,
 
   const update = function (this: PhaserSceneLike, _time: number, delta: number): void {
     frameScheduler.tick(delta);
+    tickFlightParallax(parallax, delta);
     if (context.sessionMode === "playing") {
       const input = context.inputController.snapshot();
       const pressed = input.pressed ?? input.keys.filter((key) => !previousKeys.has(key));
@@ -432,6 +520,7 @@ function createScene(context: DragonFlightSceneContext): Readonly<Record<string,
 
   return {
     key: DRAGON_FLIGHT_ID,
+    preload,
     create,
     update,
     extend: {
@@ -474,7 +563,6 @@ export function createDragonFlightCartridge(): StandardExperienceCartridge {
       id: DRAGON_FLIGHT_ID,
       title: "Dragon Flight",
       description: "Choose the correct translation gate to guide a dragon through the clouds.",
-      version: "0.1.0",
       runtimeApiVersion: "1.0.0",
       inputMode: "vocabulary",
       requiredAssetBindings: [],
@@ -508,6 +596,7 @@ export function createDragonFlightCartridge(): StandardExperienceCartridge {
           composition: context.composition,
           totalTargets: input.length,
           sessionMode: context.sessionMode ?? "playing",
+          edition: context.edition,
         }),
       };
     },

@@ -15,6 +15,9 @@ import type {
 /** Current browser runtime contract understood by the APK package. */
 export const APK_RUNTIME_API_VERSION = "1.0.0";
 
+/** Terminal presentation outcome supplied with an authoritative game result. */
+export type GameTerminalOutcome = "victory" | "defeat" | "complete";
+
 /** Canonical learning content accepted by a cartridge launch. */
 export type GameInput = VocabularyInput | SentenceInput;
 
@@ -209,8 +212,6 @@ export interface RuntimeCartridgeManifest {
   title: string;
   /** Short catalog description of the mechanic. */
   description: string;
-  /** Independently releasable cartridge version. */
-  version: string;
   /** APK runtime API version required by the cartridge. */
   runtimeApiVersion: string;
   /** Educational input mode. */
@@ -234,16 +235,21 @@ export interface CartridgeGameConfigContext {
   /** Validated audience edition. */
   edition: RuntimeEdition;
   /** Fire-once validated completion callback. */
-  complete: (result: unknown) => void;
+  complete: (result: unknown, outcome?: GameTerminalOutcome) => void;
   /** Runtime diagnostics callback. */
   diagnostic: (event: APKDiagnosticInput) => void;
   /** Normalized live browser input. */
   inputController: APKInputController;
+  /** Whether this mount is authoritative gameplay or a safe preview. */
+  sessionMode?: APKSessionMode;
   /** Initial responsive composition when the host enables responsive runtime ownership. */
   composition?: SupportedResponsiveComposition;
   /** Optional deterministic session seed. */
   seed?: number;
 }
+
+/** Runtime authority assigned to one mounted cartridge session. */
+export type APKSessionMode = "playing" | "tutorial" | "demo";
 
 /** Phaser-native cartridge entry point consumed by the runtime. */
 export interface RuntimeCartridge {
@@ -274,7 +280,7 @@ export interface APKDiagnosticEvent {
 /** Host callbacks available to the browser runtime. */
 export interface APKHostAdapter {
   /** Receives exactly one validated display result per mounted session. */
-  complete(result: GameResults): void | Promise<void>;
+  complete(result: GameResults, outcome?: GameTerminalOutcome): void | Promise<void>;
   /** Receives diagnostics without coupling cartridges to app telemetry. */
   diagnostic?(event: APKDiagnosticEvent): void;
   /** Optional host navigation boundary. */
@@ -313,6 +319,8 @@ export interface APKRuntimeDiagnostics {
   layoutProfile?: "compact" | "wide";
   /** Current independently resolved input mode when responsive ownership is enabled. */
   inputMode?: ResponsiveInputMode;
+  /** Runtime authority assigned to this session. */
+  sessionMode: APKSessionMode;
   /** Most recent diagnostic event. */
   lastEvent?: APKDiagnosticEvent;
 }
@@ -348,11 +356,13 @@ export interface GameFactoryContext {
   /** Validated audience edition. */
   edition: RuntimeEdition;
   /** Fire-once completion callback. */
-  complete: (result: unknown) => void;
+  complete: (result: unknown, outcome?: GameTerminalOutcome) => void;
   /** Runtime diagnostic emitter. */
   diagnostic: (event: APKDiagnosticInput) => void;
   /** Normalized browser input controller. */
   inputController: APKInputController;
+  /** Whether this mount is authoritative gameplay or a safe preview. */
+  sessionMode: APKSessionMode;
   /** Initial responsive composition when host-owned responsive configuration is present. */
   composition?: SupportedResponsiveComposition;
   /** Optional deterministic seed. */
@@ -390,6 +400,8 @@ export interface MountCartridgeOptions {
   edition: RuntimeEdition;
   /** Host-controlled result, navigation, and diagnostics callbacks. */
   host: APKHostAdapter;
+  /** Runtime authority for this mount. Defaults to authoritative gameplay. */
+  sessionMode?: APKSessionMode;
   /** Optional deterministic seed. */
   seed?: number;
   /** Optional responsive runtime ownership; omitted for legacy fixed-composition cartridges. */

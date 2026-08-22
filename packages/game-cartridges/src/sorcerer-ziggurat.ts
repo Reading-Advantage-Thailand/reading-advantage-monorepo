@@ -4,17 +4,22 @@ import {
   type GameResults,
 } from "@reading-advantage/game-contracts";
 import {
+  createActorSpriteLayer,
   createBoundedFrameScheduler,
   createCompletionLatch,
   createInputActionNormalizer,
   createLanguageTargetProgression,
   createResultAccountant,
   finalizeResult,
+  preloadAssetBindings,
   validateNonEmptyContent,
+  type ActorSpriteLayer,
+  type ActorSpriteLike,
   type APKInputController,
   type CartridgeGameConfigContext,
   type CompletionDelivery,
   type InputActionId,
+  type RuntimeEdition,
 } from "@reading-advantage/advantage-play-kit";
 import type { StandardExperienceCartridge } from "@reading-advantage/advantage-play-kit/presentation";
 
@@ -142,6 +147,14 @@ interface PhaserSceneLike {
   add?: {
     graphics(): PhaserGraphicsLike;
     text(x: number, y: number, value: string, style?: Readonly<Record<string, unknown>>): PhaserTextLike;
+    image?(x: number, y: number, key: string, frame?: number): ActorSpriteLike;
+    sprite?(x: number, y: number, key: string, frame?: number): ActorSpriteLike;
+    tileSprite?(x: number, y: number, width: number, height: number, key: string): ActorSpriteLike;
+  };
+  load?: {
+    image?(key: string, url: string): unknown;
+    spritesheet?(key: string, url: string, config: { frameWidth: number; frameHeight: number }): unknown;
+    audio?(key: string, urls: string | string[]): unknown;
   };
   events?: {
     once(event: string, listener: () => void): void;
@@ -152,6 +165,7 @@ interface PhaserSceneLike {
 
 /** Resources owned by one active ziggurat scene. */
 interface SceneResources {
+  readonly art: ActorSpriteLayer;
   readonly graphics: PhaserGraphicsLike;
   readonly title: PhaserTextLike;
   readonly prompt: PhaserTextLike;
@@ -165,6 +179,7 @@ interface SceneResources {
 
 /** Current Phaser scene options passed to the ziggurat renderer. */
 interface SorcererZigguratSceneContext {
+  readonly edition: RuntimeEdition;
   readonly controller: SorcererZigguratController;
   readonly inputController: APKInputController;
   readonly composition: CartridgeGameConfigContext["composition"];
@@ -450,7 +465,7 @@ function createScene(context: SorcererZigguratSceneContext): Readonly<Record<str
     const glow = 0.65 + Math.sin(animationMs / 500) * 0.2;
 
     resources.graphics.clear();
-    resources.graphics.fillStyle(0x120d28, 1).fillRect(0, 0, width, height);
+    if (!resources.art.ground("world:ground", width, height)) resources.graphics.fillStyle(0x120d28, 1).fillRect(0, 0, width, height);
     resources.graphics.fillStyle(0x30224c, 1).fillTriangle(0, height, width * 0.5, height * 0.12, width, height);
     resources.graphics.fillStyle(0x21183a, 1).fillTriangle(width * 0.08, height, width * 0.5, height * 0.26, width * 0.92, height);
     for (let level = 0; level < 4; level += 1) {
@@ -466,9 +481,12 @@ function createScene(context: SorcererZigguratSceneContext): Readonly<Record<str
       resources.graphics.lineStyle(3, 0xd2bad4, 0.92).strokeRoundedRect(x - cubeWidth / 2, cubeY - cubeHeight / 2, cubeWidth, cubeHeight, 14);
       resources.graphics.fillStyle(0xb9a0c4, 0.8).fillCircle(x, cubeY - 18, 11);
     }
-    resources.graphics.fillStyle(0xf5d66d, 1).fillCircle(width / 2, playerY - 14, 16);
-    resources.graphics.fillStyle(0x498cbf, 1).fillTriangle(width / 2 - 22, playerY + 16, width / 2, playerY - 52, width / 2 + 22, playerY + 16);
-    resources.graphics.fillStyle(0xead6ff, 0.8).fillTriangle(width / 2 - 32, playerY - 35, width / 2, playerY - 76, width / 2 + 32, playerY - 35);
+    if (!resources.art.place("player", "player:idle", { x: width / 2, y: playerY - 14, width: 66, depth: 8 })) {
+      resources.graphics.fillStyle(0xf5d66d, 1).fillCircle(width / 2, playerY - 14, 16);
+      resources.graphics.fillStyle(0x498cbf, 1).fillTriangle(width / 2 - 22, playerY + 16, width / 2, playerY - 52, width / 2 + 22, playerY + 16);
+      resources.graphics.fillStyle(0xead6ff, 0.8).fillTriangle(width / 2 - 32, playerY - 35, width / 2, playerY - 76, width / 2 + 32, playerY - 35);
+    }
+    resources.art.sweep();
 
     resources.title.setText("THE SORCERER'S ZIGGURAT").setPosition(28, 20);
     resources.prompt.setText(`Complete the ritual for: ${state.prompt}`).setPosition(28, 60);
@@ -526,11 +544,24 @@ function createScene(context: SorcererZigguratSceneContext): Readonly<Record<str
     previousKeys = new Set<string>();
   };
 
+
+  const artKeys = ["world:ground", "player:idle", "enemy:idle"] as const;
+
+  const preload = function (this: PhaserSceneLike): void {
+    if (!this.load) return;
+    preloadAssetBindings(
+      this.load,
+      context.edition,
+      artKeys.filter((key) => context.edition.bindings[key]),
+    );
+  };
+
   const create = function (this: PhaserSceneLike): void {
     if (!this.add) throw new Error("The Sorcerer's Ziggurat requires Phaser display services");
     const textStyle = { fontFamily: "Arial", color: "#fff8e7", fontSize: "20px" };
     resources = {
       graphics: this.add.graphics(),
+      art: createActorSpriteLayer(this, context.edition),
       title: this.add.text(28, 20, "THE SORCERER'S ZIGGURAT", { ...textStyle, fontSize: "29px", fontStyle: "bold" }),
       prompt: this.add.text(28, 60, "", { ...textStyle, fontSize: "23px", wordWrap: { width: 860 } }),
       progress: this.add.text(28, 96, "", { ...textStyle, fontSize: "16px", color: "#ead6ff" }),
@@ -571,6 +602,7 @@ function createScene(context: SorcererZigguratSceneContext): Readonly<Record<str
 
   return {
     key: SORCERER_ZIGGURAT_ID,
+    preload,
     create,
     update,
     extend: {
@@ -616,7 +648,6 @@ export function createSorcererZigguratCartridge(): StandardExperienceCartridge {
       id: SORCERER_ZIGGURAT_ID,
       title: "The Sorcerer's Ziggurat",
       description: "Climb adjacent rune cubes to rebuild each sentence in order.",
-      version: "0.1.0",
       runtimeApiVersion: "1.0.0",
       inputMode: "sentence",
       requiredAssetBindings: [],
@@ -650,6 +681,7 @@ export function createSorcererZigguratCartridge(): StandardExperienceCartridge {
         render: { antialias: true, pixelArt: false },
         scene: createScene({
           controller,
+          edition: context.edition,
           inputController: context.inputController,
           composition: context.composition,
           totalSentences: input.length,

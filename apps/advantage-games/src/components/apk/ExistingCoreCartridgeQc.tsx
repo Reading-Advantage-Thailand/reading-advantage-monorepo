@@ -114,7 +114,7 @@ function selectedAssetsFor(
   preview: StandardPackQcPreview,
 ): readonly StandardPackQcAsset[] {
   if (!cartridge) return [];
-  return cartridge.manifest.semanticAssetRequirements.map((key) => {
+  return cartridge.manifest.requiredAssetBindings.map((key) => {
     const asset = preview.assets.find((candidate) => candidate.key === key);
     if (!asset) throw new Error(`QC preview does not contain accepted selected-union key ${key}`);
     return asset;

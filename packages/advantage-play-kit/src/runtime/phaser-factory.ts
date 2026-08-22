@@ -45,9 +45,11 @@ export function createPhaserGameFactory(
       complete: context.complete,
       diagnostic: context.diagnostic,
       inputController: context.inputController,
+      sessionMode: context.sessionMode,
       ...(context.composition ? { composition: context.composition } : {}),
       ...(context.seed === undefined ? {} : { seed: context.seed }),
     });
+    const scene = cartridgeConfig.scene;
     const game = new Phaser.Game({
       type: Phaser.AUTO,
       backgroundColor: "#101827",
@@ -56,6 +58,11 @@ export function createPhaserGameFactory(
         autoCenter: Phaser.Scale?.CENTER_BOTH,
       },
       ...cartridgeConfig,
+      scene,
+      ...(context.composition ? {
+        width: context.composition.safeRect.width,
+        height: context.composition.safeRect.height,
+      } : {}),
       parent: context.container,
     });
 

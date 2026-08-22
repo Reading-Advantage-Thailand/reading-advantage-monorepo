@@ -80,11 +80,10 @@ export function createRuntimeCartridge(): RuntimeCartridge {
       id: "test-gate-runner",
       title: "Test Gate Runner",
       description: "A deterministic test cartridge",
-      version: "0.1.0",
       runtimeApiVersion: "1.0.0",
       inputMode: "vocabulary",
       requiredAssetBindings: ["player.hero.top.idle.down"],
-      capabilities: [],
+      capabilities: ["capability:single-completion-emission"],
     },
     createGameConfig: () => ({ scene: [] }),
   };

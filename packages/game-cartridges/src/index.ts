@@ -1,5 +1,13 @@
-/** Empty public catalog used while APK cartridges are rebuilt correctly. */
+/** Public Phaser cartridge catalog and lazy cartridge loaders. */
 export * from "./catalog";
+export {
+  createCatalogStandardEdition,
+  listCatalogStandardArtDecisions,
+} from "./catalog-standard-art.js";
+export type {
+  CatalogArtDecision,
+  CatalogTitleArtDecision,
+} from "./catalog-standard-art.js";
 
 /**
  * Per-title semantic-adoption candidates for the existing-core cutover

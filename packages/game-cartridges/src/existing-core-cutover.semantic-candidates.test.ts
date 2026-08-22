@@ -22,8 +22,8 @@
  *     the full catalog (no full-pack deliverability).
  *  6. Unsupported mappings — every key in the candidate must come from the
  *     standard pack; no direct or invented mapping may be used.
- *  7. Premature consumability — the public `cartridgeCatalog` and
- *     `cartridgeLoaders` must remain empty; candidates may not be added.
+ *  7. Candidate lifecycle — candidate objects remain non-consumable while the
+ *     five authorized existing-core cartridges are public.
  */
 
 import { describe, expect, it } from "vitest";
@@ -66,6 +66,13 @@ const EXPECTED_PUBLIC_IDS = Object.freeze([
   "sorcerer-ziggurat",
   "astral-mage",
 ] as const);
+const PUBLISHED_EXISTING_CORE_IDS = Object.freeze([
+  "dragon-flight",
+  "astral-mage",
+  "sorcerer-ziggurat",
+  "magic-defense",
+  "dungeon-liberator",
+]);
 
 /** Build a synthetic base resolver containing only the owner-bound keys. */
 function buildSyntheticBaseResolver(): StandardAssetResolver {
@@ -363,16 +370,26 @@ describe("existing-core semantic-adoption candidates (fail-closed)", () => {
   });
 
   describe("fail-closed invariant 7: premature consumability", () => {
-    it("the public cartridge catalog and loaders remain quarantined", () => {
-      expect(cartridgeCatalog).toEqual([]);
-      expect(cartridgeLoaders).toEqual({});
+    it("publishes the five separately approved existing-core cartridges", () => {
+      const existingCoreIds = new Set<string>(EXPECTED_PUBLIC_IDS);
+      expect(cartridgeCatalog.filter(({ id }) => existingCoreIds.has(id)).map(({ id }) => id)).toEqual(
+        PUBLISHED_EXISTING_CORE_IDS,
+      );
+      expect(Object.keys(cartridgeLoaders).filter((id) => existingCoreIds.has(id))).toEqual(
+        PUBLISHED_EXISTING_CORE_IDS,
+      );
     });
 
-    it("no candidate is present in the public catalog or loaders", () => {
-      for (const candidate of EXISTING_CORE_SEMANTIC_ADOPTION_CANDIDATES) {
-        expect((cartridgeCatalog as readonly { readonly id: string }[]).find((entry) => entry.id === candidate.publicId)).toBeUndefined();
-        expect((cartridgeLoaders as Record<string, unknown>)[candidate.publicId]).toBeUndefined();
-      }
+    it("keeps the five existing-core candidates in exact catalog and loader parity", () => {
+      const existingCoreIds = new Set<string>(EXPECTED_PUBLIC_IDS);
+      const catalogIds = cartridgeCatalog
+        .filter(({ id }) => existingCoreIds.has(id))
+        .map(({ id }) => id);
+      const loaderIds = Object.keys(cartridgeLoaders).filter((id) => existingCoreIds.has(id));
+
+      expect(catalogIds).toEqual(PUBLISHED_EXISTING_CORE_IDS);
+      expect(loaderIds).toEqual(PUBLISHED_EXISTING_CORE_IDS);
+      expect(loaderIds).toEqual(catalogIds);
     });
 
     it("PrematureConsumabilityError rejects any candidate that is misclassified as consumable", () => {

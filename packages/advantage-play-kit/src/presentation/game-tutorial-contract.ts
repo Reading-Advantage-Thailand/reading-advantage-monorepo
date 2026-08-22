@@ -251,8 +251,22 @@ export interface GameTutorialActionDriverContext {
   readonly diagnostics: GameTutorialActionDiagnostics;
 }
 
+/** Input supplied on each demonstration frame of a tutorial step. */
+export interface GameTutorialActionDriverFrameContext extends GameTutorialActionDriverContext {
+  /** Milliseconds elapsed since the demonstration of this step started. */
+  readonly elapsedMs: number;
+  /** Demonstration completion from 0 at the start to 1 at the end. */
+  readonly progress: number;
+}
+
 /** Executes one validated tutorial action through the cartridge's real mechanic. */
 export interface GameTutorialActionDriver {
   /** Executes the selected action without completion, persistence, DOM, or navigation authority. */
   execute(context: GameTutorialActionDriverContext): void | Promise<void>;
+  /**
+   * Advances the demonstration by one frame across the declared demonstration window.
+   * A cartridge that shows motion implements this method. A cartridge that shows one
+   * discrete state change omits it, and the runtime waits out the demonstration window.
+   */
+  advanceFrame?(context: GameTutorialActionDriverFrameContext): void | Promise<void>;
 }

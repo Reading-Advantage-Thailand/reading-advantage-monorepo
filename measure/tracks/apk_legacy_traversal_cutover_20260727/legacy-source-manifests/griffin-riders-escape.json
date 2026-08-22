@@ -23,7 +23,7 @@
     },
     {
       "path": "apps/advantage-games/src/components/games/sentence/griffin-riders-escape/GriffinRidersEscapeGame.tsx",
-      "presence": "missing-at-head",
+      "presence": "present-at-head",
       "role": "responsive",
       "classification": "history",
       "evidence_locator": {
@@ -31,11 +31,12 @@
         "json_pointer": "/claims/7",
         "claim_id": "GRF-RESP-001"
       },
-      "disposition": "evidence-only"
+      "disposition": "evidence-only",
+      "sha256": "325c717461583e85a0394cadf4196240c1b591032a66a76963fa76622730ea3b"
     },
     {
       "path": "apps/advantage-games/src/lib/games/griffinRidersEscape.ts",
-      "presence": "missing-at-head",
+      "presence": "present-at-head",
       "role": "scene-state",
       "classification": "history",
       "evidence_locator": {
@@ -43,11 +44,12 @@
         "json_pointer": "/claims/1",
         "claim_id": "GRF-STATE-001"
       },
-      "disposition": "evidence-only"
+      "disposition": "evidence-only",
+      "sha256": "5a1b7140c5a424364394caeaf782499fada38818b781ff18cac46712bda966a8"
     },
     {
       "path": "apps/advantage-games/src/lib/games/griffinRidersEscapeConfig.ts",
-      "presence": "missing-at-head",
+      "presence": "present-at-head",
       "role": "world",
       "classification": "history",
       "evidence_locator": {
@@ -55,7 +57,8 @@
         "json_pointer": "/claims/0",
         "claim_id": "GRF-WORLD-001"
       },
-      "disposition": "evidence-only"
+      "disposition": "evidence-only",
+      "sha256": "1621d4eb37c332b503cde2bfa4f92aaad36307e11e501e451894ac9177e843aa"
     },
     {
       "path": "packages/game-cartridges/src/cartridges/griffin-riders-escape/scene.ts",

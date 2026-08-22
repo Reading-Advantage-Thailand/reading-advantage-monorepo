@@ -5,15 +5,20 @@ import {
   type SentenceInput,
 } from "@reading-advantage/game-contracts";
 import {
+  createActorSpriteLayer,
   createBoundedFrameScheduler,
   createCompletionLatch,
   createInputActionNormalizer,
   createResultAccountant,
   finalizeResult,
+  preloadAssetBindings,
+  type ActorSpriteLayer,
+  type ActorSpriteLike,
   type APKInputController,
   type CartridgeGameConfigContext,
   type GameTerminalOutcome,
   type InputActionId,
+  type RuntimeEdition,
 } from "@reading-advantage/advantage-play-kit";
 import type { StandardExperienceCartridge } from "@reading-advantage/advantage-play-kit/presentation";
 
@@ -297,6 +302,14 @@ interface PhaserSceneLike {
   add?: {
     graphics(): PhaserGraphicsLike;
     text(x: number, y: number, value: string, style?: Readonly<Record<string, unknown>>): PhaserTextLike;
+    image?(x: number, y: number, key: string, frame?: number): ActorSpriteLike;
+    sprite?(x: number, y: number, key: string, frame?: number): ActorSpriteLike;
+    tileSprite?(x: number, y: number, width: number, height: number, key: string): ActorSpriteLike;
+  };
+  load?: {
+    image?(key: string, url: string): unknown;
+    spritesheet?(key: string, url: string, config: { frameWidth: number; frameHeight: number }): unknown;
+    audio?(key: string, urls: string | string[]): unknown;
   };
   events?: { once(event: string, listener: () => void): void };
   game?: { readonly canvas?: { getBoundingClientRect?(): { readonly left: number; readonly top?: number; readonly width: number; readonly height?: number } } };
@@ -305,6 +318,7 @@ interface PhaserSceneLike {
 
 interface SceneResources {
   readonly graphics: PhaserGraphicsLike;
+  readonly art: ActorSpriteLayer;
   readonly title: PhaserTextLike;
   readonly prompt: PhaserTextLike;
   readonly progress: PhaserTextLike;
@@ -316,6 +330,7 @@ interface SceneResources {
 
 interface VillageGuardianSceneContext {
   readonly controller: VillageGuardianController;
+  readonly edition: RuntimeEdition;
   readonly inputController: APKInputController;
   readonly composition: CartridgeGameConfigContext["composition"];
   readonly sessionMode: NonNullable<CartridgeGameConfigContext["sessionMode"]>;
@@ -1302,7 +1317,8 @@ function createVillageGuardianScene(context: VillageGuardianSceneContext): Reado
     };
 
     activeResources.graphics.clear();
-    activeResources.graphics.fillStyle(0x071b2d, 1).fillRect(0, 0, width, height);
+    const hasGround = activeResources.art.ground("world:ground", width, height);
+    if (!hasGround) activeResources.graphics.fillStyle(0x071b2d, 1).fillRect(0, 0, width, height);
     activeResources.graphics.fillStyle(0x123d37, 1).fillRoundedRect(24, 72, width * 0.76, height * 0.75, 22);
     activeResources.graphics.lineStyle(2, 0x2dd4bf, 0.35).strokeRoundedRect(24, 72, width * 0.76, height * 0.75, 22);
 
@@ -1348,13 +1364,31 @@ function createVillageGuardianScene(context: VillageGuardianSceneContext): Reado
       label.destroy();
       activeResources.villagerLabels.delete(id);
     }
-    for (const monster of state.monsters) {
+    const artScale = Math.min(scaleX, scaleY);
+    state.monsters.forEach((monster, index) => {
       const position = renderPosition(monster);
-      activeResources.graphics.fillStyle(0xef4444, 0.9).fillCircle(position.x, position.y, MONSTER_RADIUS * Math.min(scaleX, scaleY));
-    }
+      const drawn = activeResources.art.place(`monster:${index}`, "enemy:idle", {
+        x: position.x,
+        y: position.y,
+        width: MONSTER_RADIUS * 2.6 * artScale,
+        depth: 7,
+      });
+      if (!drawn) {
+        activeResources.graphics.fillStyle(0xef4444, 0.9).fillCircle(position.x, position.y, MONSTER_RADIUS * artScale);
+      }
+    });
     const player = renderPosition(state.player);
-    activeResources.graphics.fillStyle(0xfde047, 1).fillCircle(player.x, player.y, PLAYER_RADIUS * Math.min(scaleX, scaleY));
-    activeResources.graphics.lineStyle(3, 0xfef08a, 0.9).strokeRoundedRect(player.x - 14, player.y - 14, 28, 28, 8);
+    const playerDrawn = activeResources.art.place("player", "player:idle", {
+      x: player.x,
+      y: player.y,
+      width: PLAYER_RADIUS * 2.8 * artScale,
+      depth: 8,
+    });
+    if (!playerDrawn) {
+      activeResources.graphics.fillStyle(0xfde047, 1).fillCircle(player.x, player.y, PLAYER_RADIUS * artScale);
+      activeResources.graphics.lineStyle(3, 0xfef08a, 0.9).strokeRoundedRect(player.x - 14, player.y - 14, 28, 28, 8);
+    }
+    activeResources.art.sweep();
 
     dpadButtons.forEach((button, index) => {
       activeResources.graphics.fillStyle(0x1e293b, 0.95).fillRoundedRect(
@@ -1425,6 +1459,18 @@ function createVillageGuardianScene(context: VillageGuardianSceneContext): Reado
     for (const text of activeResources.dpad) text.destroy();
     for (const label of activeResources.villagerLabels.values()) label.destroy();
     activeResources.villagerLabels.clear();
+    activeResources.art.destroy();
+  };
+
+  const artKeys = ["world:ground", "player:idle", "enemy:idle"] as const;
+
+  const preload = function (this: PhaserSceneLike): void {
+    if (!this.load) return;
+    preloadAssetBindings(
+      this.load,
+      context.edition,
+      artKeys.filter((key) => context.edition.bindings[key]),
+    );
   };
 
   const create = function (this: PhaserSceneLike): void {
@@ -1433,6 +1479,7 @@ function createVillageGuardianScene(context: VillageGuardianSceneContext): Reado
     const textStyle = { fontFamily: "Arial", color: "#ffffff", fontSize: "18px", wordWrap: { width: textWidth } };
     resources = {
       graphics: this.add.graphics(),
+      art: createActorSpriteLayer(this, context.edition),
       title: this.add.text(0, 0, "", { ...textStyle, fontSize: "28px", fontStyle: "bold" }),
       prompt: this.add.text(0, 0, "", { ...textStyle, fontSize: "21px" }),
       progress: this.add.text(0, 0, "", { ...textStyle, fontSize: "16px", color: "#d1fae5" }),
@@ -1488,6 +1535,7 @@ function createVillageGuardianScene(context: VillageGuardianSceneContext): Reado
 
   return {
     key: VILLAGE_GUARDIAN_ID,
+    preload,
     create,
     update,
     extend: {
@@ -1532,7 +1580,6 @@ export function createVillageGuardianCartridge(): StandardExperienceCartridge {
       id: VILLAGE_GUARDIAN_ID,
       title: "Village Guardian",
       description: "Guide ordered villagers through danger and into sanctuary.",
-      version: "0.1.0",
       runtimeApiVersion: "1.0.0",
       inputMode: "sentence",
       requiredAssetBindings: ["village-guardian/sanctuary-guide"],
@@ -1572,6 +1619,7 @@ export function createVillageGuardianCartridge(): StandardExperienceCartridge {
         render: { antialias: true, pixelArt: false },
         scene: createVillageGuardianScene({
           controller,
+          edition: context.edition,
           inputController: context.inputController,
           composition: context.composition,
           sessionMode,

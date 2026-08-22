@@ -17,7 +17,7 @@ import type {
 } from "../game-tutorial-runtime.js";
 import { APKGameHost, type APKGameHostProps } from "../../react/apk-game-host.js";
 import { createMockGameFactory } from "../../testing/test-kit.js";
-import { createRuntimeCartridge, createRuntimeEdition } from "../../testing/fixtures.js";
+import { createRuntimeCartridge, createRuntimeEdition, validResults } from "../../testing/fixtures.js";
 import type { GameFactory, GameFactoryContext } from "../../runtime/types.js";
 
 afterEach(cleanup);
@@ -449,16 +449,22 @@ describe("shared tutorial controller", () => {
       seed: tutorialSeed,
     });
 
+    // The declared advance policy is sequential, so draining the clock runs every step.
     await harness.clock.runAll();
-    expect(harness.driver.runs).toEqual([{
+    expect(harness.driver.runs.map(({ stepId }) => stepId)).toEqual([
+      "step:notice-answer",
+      "step:choose-river",
+      "step:review-feedback",
+    ]);
+    expect(harness.driver.runs[0]).toEqual({
       stepId: "step:notice-answer",
       targetId: "control:answer-choice",
       actionId: "action:highlight-answer",
       consequence: "neutral",
       seed: tutorialSeed,
-    }]);
+    });
     expect(harness.diagnostics.mock.calls.map(([diagnostic]) => diagnostic.event)).toEqual(
-      expect.arrayContaining(["started", "demonstrated"]),
+      expect.arrayContaining(["started", "demonstrated", "advanced", "completed"]),
     );
     expect(harness.snapshots).toHaveBeenCalledWith(expect.objectContaining({ mode: "tutorial" }));
   });
@@ -493,7 +499,9 @@ describe("shared tutorial controller", () => {
     await harness.controller.start();
     expect(await harness.controller.advance(), "advance before demonstration must not jump").toBeUndefined();
     expect(harness.controller.getSnapshot().currentStepId).toBe("step:notice-answer");
-    await harness.clock.runAll();
+
+    // Each step takes 10 ms lead-in and 5 ms demonstration, so 15 ms demonstrates one step.
+    await harness.clock.advanceBy(15);
     await harness.controller.advance();
     expect(harness.controller.getSnapshot()).toMatchObject({
       phase: "tutorial",
@@ -503,9 +511,9 @@ describe("shared tutorial controller", () => {
     });
     expect(harness.controller.getSnapshot().currentStepId).not.toBe("step:review-feedback");
 
-    await harness.clock.runAll();
+    await harness.clock.advanceBy(15);
     await harness.controller.advance();
-    await harness.clock.runAll();
+    await harness.clock.advanceBy(15);
     await harness.controller.advance();
     await harness.controller.advance();
 
@@ -521,6 +529,38 @@ describe("shared tutorial controller", () => {
       status: "complete",
       progress: { completed: 3, total: 3 },
     });
+  });
+
+  it("advances through every step on its own, because the declared advance policy is sequential", async () => {
+    const harness = await createHarness();
+
+    await harness.controller.start();
+    await harness.clock.runAll();
+
+    expect(harness.driver.runs.map(({ stepId }) => stepId), "no host command was issued").toEqual([
+      "step:notice-answer",
+      "step:choose-river",
+      "step:review-feedback",
+    ]);
+    expect(harness.transitions).toHaveBeenCalledTimes(1);
+    expect(harness.controller.getSnapshot()).toMatchObject({
+      phase: "playing",
+      status: "complete",
+      progress: { completed: 3, total: 3 },
+    });
+    expectNoProductionEffects(harness.effects);
+  });
+
+  it("publishes a snapshot when a step demonstrates, so a host can enable its advance control", async () => {
+    const harness = await createHarness();
+
+    await harness.controller.start();
+    harness.snapshots.mockClear();
+    await harness.clock.advanceBy(15);
+
+    expect(harness.snapshots).toHaveBeenCalledWith(
+      expect.objectContaining({ currentStepId: "step:notice-answer", currentStepDemonstrated: true }),
+    );
   });
 
   it("replays with the same seed and the same cartridge action sequence", async () => {
@@ -662,8 +702,9 @@ describe("APKGameHost tutorial integration", () => {
 
     fireEvent.click(await screen.findByRole("button", { name: "Begin quest" }));
     await waitFor(() => expect(hostFactory.base.contexts).toHaveLength(1));
+    // One step takes 10 ms lead-in and 5 ms demonstration. Stop before the sequential advance.
     await act(async () => {
-      await clock.runAll();
+      await clock.advanceBy(15);
     });
 
     expect(transitions).toHaveBeenCalledWith({ from: "briefing", event: "start", to: "tutorial" });
@@ -679,8 +720,31 @@ describe("APKGameHost tutorial integration", () => {
       currentTarget: { id: "control:answer-choice" },
       progress: { completed: 0, total: 3 },
     }));
+    expect(screen.getByRole("region", { name: "Temple Word Quest tutorial" })).toBeInTheDocument();
     expect(document.querySelectorAll("[data-apk-canvas-host] canvas")).toHaveLength(1);
+
+    act(() => hostFactory.base.contexts[0]?.complete(validResults));
     expect(onComplete).not.toHaveBeenCalled();
+    expect(screen.queryByRole("region", { name: "Game result" })).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "Next tutorial step" }));
+    await act(async () => clock.advanceBy(15));
+    fireEvent.click(screen.getByRole("button", { name: "Next tutorial step" }));
+    await act(async () => clock.advanceBy(15));
+    fireEvent.click(screen.getByRole("button", { name: "Next tutorial step" }));
+
+    await waitFor(() => expect(hostFactory.base.contexts).toHaveLength(2));
+    expect(hostFactory.base.contexts[0]?.sessionMode).toBe("tutorial");
+    expect(hostFactory.base.contexts[1]?.sessionMode).toBe("playing");
+    expect(hostFactory.base.instances[0]?.destroy).toHaveBeenCalledOnce();
+    expect(hostFactory.base.liveInstances).toBe(1);
+    expect(document.querySelectorAll("[data-apk-canvas-host] canvas")).toHaveLength(1);
+    expect(screen.queryByRole("region", { name: "Temple Word Quest tutorial" })).not.toBeInTheDocument();
+
+    act(() => hostFactory.base.contexts[1]?.complete(validResults));
+    expect(await screen.findByRole("region", { name: "Game result" })).toBeInTheDocument();
+    expect(screen.getByText("Pixel art assets by ElvGames")).toBeInTheDocument();
+    expect(onComplete).toHaveBeenCalledOnce();
   });
 
   it("routes pause, resume, advance, replay, and skip host controls through tutorial commands", async () => {
@@ -694,16 +758,13 @@ describe("APKGameHost tutorial integration", () => {
     fireEvent.click(await screen.findByRole("button", { name: "Begin quest" }));
     await waitFor(() => expect(hostFactory.base.contexts).toHaveLength(1));
     await act(async () => {
-      await clock.runAll();
+      await clock.advanceBy(15);
     });
 
     fireEvent.click(screen.getByRole("button", { name: "Pause tutorial" }));
     expect(snapshots).toHaveBeenLastCalledWith(expect.objectContaining({ status: "paused" }));
     fireEvent.click(screen.getByRole("button", { name: "Resume tutorial" }));
     fireEvent.click(screen.getByRole("button", { name: "Next tutorial step" }));
-    await act(async () => {
-      await clock.runAll();
-    });
     expect(snapshots).toHaveBeenLastCalledWith(expect.objectContaining({
       currentStepId: "step:choose-river",
       currentTarget: { id: "learning-item:river" },
@@ -718,7 +779,7 @@ describe("APKGameHost tutorial integration", () => {
       seed: tutorialSeed,
     })));
     await act(async () => {
-      await clock.runAll();
+      await clock.advanceBy(15);
     });
     expect(driver.runs.at(-1)).toEqual(firstRun);
     expect(document.querySelectorAll("[data-apk-canvas-host] canvas")).toHaveLength(1);
@@ -752,7 +813,7 @@ describe("APKGameHost tutorial integration", () => {
     fireEvent.click(await screen.findByRole("button", { name: "Begin quest" }));
     await waitFor(() => expect(hostFactory.base.contexts).toHaveLength(1));
     await act(async () => {
-      await clock.runAll();
+      await clock.advanceBy(15);
     });
     expect(hostFactory.attempts()).toBe(2);
     expect(document.querySelectorAll("[data-apk-canvas-host] canvas")).toHaveLength(1);

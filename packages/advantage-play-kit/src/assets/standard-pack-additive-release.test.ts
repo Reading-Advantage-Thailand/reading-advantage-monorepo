@@ -1,9 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import {
-  createStandardPackAdditiveReleaseReceipt,
-  serializeStandardPackAdditiveReleaseReceiptPayload,
-} from "./standard-pack-additive-release.js";
+import { createStandardPackAdditiveReleaseReceipt } from "./standard-pack-additive-release.js";
 import {
   createStandardAssetCatalog,
   serializeStandardAssetCatalogPayload,

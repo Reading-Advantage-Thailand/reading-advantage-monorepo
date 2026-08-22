@@ -28,6 +28,23 @@ export type {
   PresentationShellProps,
 } from "./game-presentation.js";
 
+/** Standard briefing, guided tutorial, gameplay, and debrief contract. */
+export {
+  hasStandardGameExperience,
+  STANDARD_GAME_REQUIRED_CREDIT,
+  standardGameDebriefSchema,
+  standardGameExperienceDefinitionSchema,
+  validateStandardGameExperienceDefinition,
+} from "./standard-game-experience.js";
+
+/** Public standard game experience types. */
+export type {
+  StandardExperienceCartridge,
+  StandardGameDebrief,
+  StandardGameExperienceDefinition,
+  StandardGameExperienceRuntime,
+} from "./standard-game-experience.js";
+
 /** Public guided tutorial contract schemas and validator. */
 export {
   gameTutorialActionConsequenceSchema,
@@ -86,6 +103,7 @@ export type {
   GameTutorialActionDiagnostics,
   GameTutorialActionDriver,
   GameTutorialActionDriverContext,
+  GameTutorialActionDriverFrameContext,
   GameTutorialCommand,
   GameTutorialDefinition,
   GameTutorialLabels,

@@ -27,7 +27,7 @@
   },
   "files": ["dist"],
   "scripts": {
-    "build": "tsup src/index.ts src/catalog.ts src/existing-core-cutover-semantic-candidates.ts src/existing-core-cutover-qc.ts --format esm && tsc -p tsconfig.build.json --emitDeclarationOnly",
+    "build": "tsup src/index.ts src/catalog.ts src/dragon-flight.ts src/astral-mage.ts src/sorcerer-ziggurat.ts src/legacy-traversal-cartridges.ts src/castle-defense.ts src/magic-defense.ts src/rpg-battle.ts src/wizard-vs-zombie.ts src/enchanted-library.ts src/rune-match.ts src/alchemists-synthesis.ts src/potion-rush.ts src/dungeon-liberator.ts src/rune-forge-chamber.ts src/village-guardian.ts src/abyssal-well.ts src/archers-revenge.ts src/storm-castle-tower.ts src/griffin-sky-joust.ts src/realm-carver.ts src/paladins-twin-soul.ts src/devourer-slime.ts src/haunted-library.ts src/gryphon-patrol.ts src/existing-core-cutover-semantic-candidates.ts src/existing-core-cutover-qc.ts --format esm && tsc -p tsconfig.build.json --emitDeclarationOnly",
     "check-types": "tsc --noEmit",
     "lint": "eslint src/",
     "test": "vitest run",

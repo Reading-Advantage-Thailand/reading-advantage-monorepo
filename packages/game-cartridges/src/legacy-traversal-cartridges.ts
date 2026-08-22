@@ -10,15 +10,25 @@ import {
   createLanguageTargetProgression,
   createResultAccountant,
   finalizeResult,
+  preloadAssetBindings,
+  resolveAssetBinding,
   validateNonEmptyContent,
   type APKInputController,
   type CartridgeGameConfigContext,
   type CompletionDelivery,
   type InputActionId,
+  type RuntimeEdition,
 } from "@reading-advantage/advantage-play-kit";
 import type { StandardExperienceCartridge } from "@reading-advantage/advantage-play-kit/presentation";
 
 import { createCartridgeStandardExperience } from "./standard-experience.js";
+import {
+  createFlightParallax,
+  destroyFlightParallax,
+  preloadFlightParallax,
+  tickFlightParallax,
+  type FlightParallaxLayers,
+} from "./flight-parallax.js";
 
 interface TraversalCartridgeOptions {
   readonly id: string;
@@ -88,10 +98,28 @@ interface PhaserCanvasLike {
   getBoundingClientRect?(): { readonly left: number; readonly width: number };
 }
 
+interface PhaserImageLike {
+  setOrigin?(x: number, y: number): this;
+  setDisplaySize?(width: number, height: number): this;
+  setDepth?(depth: number): this;
+  setPosition?(x: number, y: number): this;
+  setAlpha?(alpha: number): this;
+  setTilePosition?(x: number, y: number): this;
+  tilePositionY?: number;
+  destroy(): void;
+}
+
 interface PhaserSceneLike {
+  load?: {
+    image?(key: string, url: string): unknown;
+    spritesheet?(key: string, url: string, config: { frameWidth: number; frameHeight: number }): unknown;
+  };
   add?: {
     graphics(): PhaserGraphicsLike;
     text(x: number, y: number, value: string, style?: Readonly<Record<string, unknown>>): PhaserTextLike;
+    image?(x: number, y: number, key: string, frame?: number): PhaserImageLike;
+    sprite?(x: number, y: number, key: string, frame?: number): PhaserImageLike;
+    tileSprite?(x: number, y: number, width: number, height: number, key: string): PhaserImageLike;
   };
   events?: { once(event: string, listener: () => void): void };
   game?: { readonly canvas?: PhaserCanvasLike };
@@ -226,10 +254,16 @@ function createScene(
   initialComposition: CartridgeGameConfigContext["composition"],
   sessionMode: CartridgeGameConfigContext["sessionMode"],
   diagnostic: CartridgeGameConfigContext["diagnostic"],
+  edition: RuntimeEdition,
 ): Readonly<Record<string, unknown>> {
   let resources: SceneResources | undefined;
   let composition = initialComposition;
   let previousKeys = new Set<string>();
+  let dragonSprite: PhaserImageLike | undefined;
+  let leftGateSprite: PhaserImageLike | undefined;
+  let rightGateSprite: PhaserImageLike | undefined;
+  const flightArt = Boolean(edition.pack.files["dragon-rider-idle"] || edition.pack.files["dragon-flight-idle"]);
+  let parallax: FlightParallaxLayers = { sprites: [], scrollY: 0 };
   const normalize = createInputActionNormalizer({
     keyboard: options.keyboardBindings,
     pointerTap: { action: "confirm" },
@@ -278,18 +312,49 @@ function createScene(
     const choiceY = height * 0.62;
 
     activeResources.graphics.clear();
-    activeResources.graphics.fillStyle(options.colors.background, 1).fillRect(0, 0, width, height);
-    activeResources.graphics.fillStyle(options.colors.panel, 0.9)
-      .fillRoundedRect(width * 0.08, height * 0.18, width * 0.84, height * 0.66, 28);
-    activeResources.graphics.fillStyle(options.colors.player, 1).fillCircle(width / 2, height * 0.48, 26);
+    const flightArt = Boolean(edition.pack.files["dragon-rider-idle"] || edition.pack.files["dragon-flight-idle"]);
+    if (flightArt) {
+      if (parallax.sprites.length === 0) {
+        parallax = createFlightParallax(scene, edition, width, height);
+      }
+      if (parallax.sprites.length === 0) {
+        activeResources.graphics.fillStyle(0x6eb6e8, 1).fillRect(0, 0, width, height);
+      }
+      const place = (current: PhaserImageLike | undefined, x: number, y: number, key: string, size: number): PhaserImageLike | undefined => {
+        const image = current ?? scene.add?.sprite?.(x, y, key) ?? scene.add?.image?.(x, y, key);
+        image?.setOrigin?.(0.5, 0.5);
+        image?.setPosition?.(x, y);
+        image?.setDisplaySize?.(size, size);
+        image?.setDepth?.(6);
+        return image;
+      };
+      if (edition.bindings["prop:gate"]) {
+        const gateKey = resolveAssetBinding(edition, "prop:gate").textureKey;
+        leftGateSprite = place(leftGateSprite, width * 0.28, height * 0.48, gateKey, 120);
+        rightGateSprite = place(rightGateSprite, width * 0.72, height * 0.48, gateKey, 120);
+      }
+      if (edition.bindings["player:idle"]) {
+        const dragonKey = resolveAssetBinding(edition, "player:idle").textureKey;
+        dragonSprite = place(dragonSprite, width / 2, height * 0.82, dragonKey, 96);
+      }
+    } else {
+      activeResources.graphics.fillStyle(options.colors.background, 1).fillRect(0, 0, width, height);
+      activeResources.graphics.fillStyle(options.colors.panel, 0.9)
+        .fillRoundedRect(width * 0.08, height * 0.18, width * 0.84, height * 0.66, 28);
+      activeResources.graphics.fillStyle(options.colors.player, 1).fillCircle(width / 2, height * 0.48, 26);
+    }
     options.actions.forEach((action, index) => {
       const x = rowStart + index * (choiceWidth + choiceGap);
-      activeResources.graphics.fillStyle(options.colors.accent, 0.85)
-        .fillRoundedRect(x, choiceY, choiceWidth, 82, 14);
-      activeResources.graphics.lineStyle(3, 0xffffff, 0.7)
-        .strokeRoundedRect(x, choiceY, choiceWidth, 82, 14);
-      const label = `${ACTION_LABELS[action]} route`;
-      activeResources.choices[index]?.setText(label).setPosition(x + 14, choiceY + 28);
+      if (!flightArt) {
+        activeResources.graphics.fillStyle(options.colors.accent, 0.85)
+          .fillRoundedRect(x, choiceY, choiceWidth, 82, 14);
+        activeResources.graphics.lineStyle(3, 0xffffff, 0.7)
+          .strokeRoundedRect(x, choiceY, choiceWidth, 82, 14);
+        activeResources.choices[index]?.setText(`${ACTION_LABELS[action]} route`).setPosition(x + 14, choiceY + 28);
+      } else {
+        const gateX = index === 0 ? width * 0.28 : width * 0.72;
+        activeResources.choices[index]?.setText(ACTION_LABELS[action] ?? action).setPosition(gateX - 24, height * 0.62);
+      }
     });
     activeResources.title.setText(options.title.toUpperCase()).setPosition(28, 20);
     activeResources.prompt
@@ -306,6 +371,13 @@ function createScene(
 
   const cleanup = (): void => {
     controller.destroy();
+    destroyFlightParallax(parallax);
+    dragonSprite?.destroy();
+    leftGateSprite?.destroy();
+    rightGateSprite?.destroy();
+    dragonSprite = undefined;
+    leftGateSprite = undefined;
+    rightGateSprite = undefined;
     if (!resources) return;
     resources.graphics.destroy();
     resources.title.destroy();
@@ -316,6 +388,13 @@ function createScene(
     for (const choice of resources.choices) choice.destroy();
     resources = undefined;
     previousKeys = new Set<string>();
+  };
+
+  const preload = function (this: PhaserSceneLike): void {
+    if (!this.load || !flightArt) return;
+    preloadFlightParallax(this, edition);
+    const keys = ["player:idle", "prop:gate"].filter((key) => Boolean(edition.bindings[key]));
+    if (keys.length) preloadAssetBindings(this.load, edition, keys);
   };
 
   const create = function (this: PhaserSceneLike): void {
@@ -335,8 +414,9 @@ function createScene(
     updateView(this);
   };
 
-  const update = function (this: PhaserSceneLike): void {
+  const update = function (this: PhaserSceneLike, _time = 0, delta = 16): void {
     if (!resources) return;
+    tickFlightParallax(parallax, delta);
     if ((sessionMode ?? "playing") === "playing") {
       const input = inputController.snapshot();
       const pressed = input.pressed ?? input.keys.filter((key) => !previousKeys.has(key));
@@ -354,6 +434,7 @@ function createScene(
 
   return {
     key: options.id,
+    preload,
     create,
     update,
     extend: {
@@ -397,7 +478,6 @@ function createLegacyTraversalCartridge(options: TraversalCartridgeOptions): Sta
       id: options.id,
       title: options.title,
       description: options.description,
-      version: "0.1.0",
       runtimeApiVersion: "1.0.0",
       inputMode: options.inputMode,
       requiredAssetBindings: [options.assetBinding],
@@ -427,11 +507,27 @@ function createLegacyTraversalCartridge(options: TraversalCartridgeOptions): Sta
           context.composition,
           context.sessionMode ?? "playing",
           context.diagnostic,
+          context.edition,
         ),
       };
     },
   };
 }
+
+/**
+ * The shared systems that every traversal title uses.
+ *
+ * The earlier list named Phaser features (arcade physics, camera, timers, tweens)
+ * that these titles never call. This list names the APK systems they do call.
+ */
+const TRAVERSAL_CAPABILITIES: readonly string[] = Object.freeze([
+  "capability:input-action-normalization",
+  "capability:language-target-progression",
+  "capability:nonempty-content-precondition",
+  "capability:result-accounting",
+  "capability:single-completion-emission",
+  "capability:time-and-frame-loop",
+]);
 
 const DRAGON_RIDER_OPTIONS: TraversalCartridgeOptions = {
   id: "dragon-rider",
@@ -443,7 +539,7 @@ const DRAGON_RIDER_OPTIONS: TraversalCartridgeOptions = {
   keyboardKeys: ["A", "Left Arrow", "D", "Right Arrow"],
   keyboardBindings: { ArrowLeft: "move-left", KeyA: "move-left", ArrowRight: "move-right", KeyD: "move-right" },
   actions: ["move-left", "move-right"],
-  capabilities: ["arcade-physics", "camera", "timers", "tweens"],
+  capabilities: TRAVERSAL_CAPABILITIES,
   assetBinding: "dragon-rider/player-flight",
   colors: { background: 0x10283d, panel: 0x1e4d65, accent: 0xd97706, player: 0x67e8f9 },
 };
@@ -458,7 +554,7 @@ const SPELLWEAVERS_RUN_OPTIONS: TraversalCartridgeOptions = {
   keyboardKeys: ["A", "Left Arrow", "S", "Down Arrow", "D", "Right Arrow"],
   keyboardBindings: { ArrowLeft: "move-left", KeyA: "move-left", ArrowDown: "confirm", KeyS: "confirm", ArrowRight: "move-right", KeyD: "move-right" },
   actions: ["move-left", "confirm", "move-right"],
-  capabilities: ["timers", "tweens"],
+  capabilities: TRAVERSAL_CAPABILITIES,
   assetBinding: "spellweavers-run/player-lane",
   colors: { background: 0x10261f, panel: 0x1f4a3d, accent: 0x7c3aed, player: 0xf0abfc },
 };
@@ -473,7 +569,7 @@ const SHADOW_GATE_DUNGEON_OPTIONS: TraversalCartridgeOptions = {
   keyboardKeys: ["W", "A", "S", "D", "Arrow keys"],
   keyboardBindings: { ArrowUp: "move-up", KeyW: "move-up", ArrowDown: "move-down", KeyS: "move-down", ArrowLeft: "move-left", KeyA: "move-left", ArrowRight: "move-right", KeyD: "move-right" },
   actions: ["move-left", "move-up", "move-down", "move-right"],
-  capabilities: ["arcade-physics", "camera", "timers"],
+  capabilities: TRAVERSAL_CAPABILITIES,
   assetBinding: "shadow-gate-dungeon/player",
   colors: { background: 0x090b16, panel: 0x181b2d, accent: 0x4338ca, player: 0xa78bfa },
 };
@@ -488,7 +584,7 @@ const LABYRINTH_GOBLIN_KING_OPTIONS: TraversalCartridgeOptions = {
   keyboardKeys: ["W", "A", "S", "D", "Arrow keys"],
   keyboardBindings: { ArrowUp: "move-up", KeyW: "move-up", ArrowDown: "move-down", KeyS: "move-down", ArrowLeft: "move-left", KeyA: "move-left", ArrowRight: "move-right", KeyD: "move-right" },
   actions: ["move-left", "move-up", "move-down", "move-right"],
-  capabilities: ["arcade-physics", "camera", "tweens"],
+  capabilities: TRAVERSAL_CAPABILITIES,
   assetBinding: "labyrinth-goblin-king/player",
   colors: { background: 0x17210f, panel: 0x30401f, accent: 0x65a30d, player: 0xfacc15 },
 };
@@ -503,7 +599,7 @@ const GRIFFIN_RIDERS_ESCAPE_OPTIONS: TraversalCartridgeOptions = {
   keyboardKeys: ["A", "Left Arrow", "D", "Right Arrow"],
   keyboardBindings: { ArrowLeft: "move-left", KeyA: "move-left", ArrowRight: "move-right", KeyD: "move-right" },
   actions: ["move-left", "move-right"],
-  capabilities: ["camera", "timers", "tweens"],
+  capabilities: TRAVERSAL_CAPABILITIES,
   assetBinding: "griffin-riders-escape/player-lane",
   colors: { background: 0x10233f, panel: 0x21466f, accent: 0x0284c7, player: 0xfef3c7 },
 };

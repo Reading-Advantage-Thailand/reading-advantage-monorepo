@@ -1,6 +1,8 @@
 import {
+  STANDARD_GAME_REQUIRED_CREDIT,
   validateStandardGameExperienceDefinition,
   type GameTutorialActionDriverContext,
+  type GameTutorialActionDriverFrameContext,
   type StandardGameExperienceRuntime,
 } from "@reading-advantage/advantage-play-kit/presentation";
 
@@ -8,8 +10,8 @@ import {
 export const STANDARD_POINTER_TOUCH_ACTION =
   "Tap or click to perform the action shown in the game." as const;
 
-/** Debrief credit used until a cartridge loads credited pixel art. */
-export const STANDARD_DEBRIEF_CREDIT = "" as const;
+/** Debrief credit shown by every cartridge that loads standard-pack pixel art. */
+export const STANDARD_DEBRIEF_CREDIT = STANDARD_GAME_REQUIRED_CREDIT;
 
 /** Configuration for a cartridge's standard guided experience. */
 export interface CartridgeStandardExperienceOptions {
@@ -29,6 +31,11 @@ export interface CartridgeStandardExperienceOptions {
   readonly keyboardKeys: readonly [string, ...string[]];
   /** Executes a safe action through the active cartridge mechanic. */
   readonly executeTutorialAction: (actionId: string) => void;
+  /**
+   * Advances a demonstration by one frame for a mechanic that shows motion.
+   * A cartridge whose action is one discrete choice omits this option.
+   */
+  readonly advanceTutorialAction?: (actionId: string, progress: number) => void;
   /** Optional debrief credit for art that this cartridge actually loads. */
   readonly requiredCredit?: string;
 }
@@ -135,10 +142,15 @@ export function createCartridgeStandardExperience(
     },
   });
 
+  const advanceTutorialAction = options.advanceTutorialAction;
   return Object.freeze({
     definition,
     createTutorialActionDriver: () => ({
       execute: ({ step }: GameTutorialActionDriverContext) => options.executeTutorialAction(step.actionId),
+      ...(advanceTutorialAction === undefined ? {} : {
+        advanceFrame: ({ step, progress }: GameTutorialActionDriverFrameContext) =>
+          advanceTutorialAction(step.actionId, progress),
+      }),
     }),
   });
 }

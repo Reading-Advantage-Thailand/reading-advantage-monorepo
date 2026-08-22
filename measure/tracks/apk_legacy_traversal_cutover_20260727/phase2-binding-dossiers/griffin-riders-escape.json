@@ -5,7 +5,7 @@
   "status": "candidate",
   "source_manifest": {
     "path": "measure/tracks/apk_legacy_traversal_cutover_20260727/legacy-source-manifests/griffin-riders-escape.json",
-    "sha256": "84cd3297a74043f5dd5919da747ecc4652f44d478af95fd7810215f40852fdd7",
+    "sha256": "137a1e59bc98b54fde4d248eebb2777ab96f0e912a0f591ad6eea9523b1f0307",
     "evidence_binding": "accepted_traversal_batch_b",
     "status": "evidence-only"
   },
@@ -62,12 +62,28 @@
         "clips": [
           {
             "id": "walk",
-            "frames": [{ "column": 0, "row": 0 }],
-            "timing": { "fps": 8, "loop": true }
+            "frames": [
+              {
+                "column": 0,
+                "row": 0
+              }
+            ],
+            "timing": {
+              "fps": 8,
+              "loop": true
+            }
           }
         ],
-        "directions": [{ "direction": "down", "clipId": "walk" }],
-        "anchor": { "x": 0.5, "y": 1 },
+        "directions": [
+          {
+            "direction": "down",
+            "clipId": "walk"
+          }
+        ],
+        "anchor": {
+          "x": 0.5,
+          "y": 1
+        },
         "renderScale": 1,
         "collisionEnvelope": {
           "x": 0.2,
@@ -127,12 +143,28 @@
         "clips": [
           {
             "id": "walk",
-            "frames": [{ "column": 0, "row": 0 }],
-            "timing": { "fps": 8, "loop": true }
+            "frames": [
+              {
+                "column": 0,
+                "row": 0
+              }
+            ],
+            "timing": {
+              "fps": 8,
+              "loop": true
+            }
           }
         ],
-        "directions": [{ "direction": "down", "clipId": "walk" }],
-        "anchor": { "x": 0.5, "y": 1 },
+        "directions": [
+          {
+            "direction": "down",
+            "clipId": "walk"
+          }
+        ],
+        "anchor": {
+          "x": 0.5,
+          "y": 1
+        },
         "renderScale": 1,
         "collisionEnvelope": {
           "x": 0.2,
@@ -192,12 +224,28 @@
         "clips": [
           {
             "id": "walk",
-            "frames": [{ "column": 0, "row": 0 }],
-            "timing": { "fps": 8, "loop": true }
+            "frames": [
+              {
+                "column": 0,
+                "row": 0
+              }
+            ],
+            "timing": {
+              "fps": 8,
+              "loop": true
+            }
           }
         ],
-        "directions": [{ "direction": "down", "clipId": "walk" }],
-        "anchor": { "x": 0.5, "y": 1 },
+        "directions": [
+          {
+            "direction": "down",
+            "clipId": "walk"
+          }
+        ],
+        "anchor": {
+          "x": 0.5,
+          "y": 1
+        },
         "renderScale": 1,
         "collisionEnvelope": {
           "x": 0.2,
@@ -253,12 +301,28 @@
         "clips": [
           {
             "id": "walk",
-            "frames": [{ "column": 0, "row": 0 }],
-            "timing": { "fps": 8, "loop": true }
+            "frames": [
+              {
+                "column": 0,
+                "row": 0
+              }
+            ],
+            "timing": {
+              "fps": 8,
+              "loop": true
+            }
           }
         ],
-        "directions": [{ "direction": "down", "clipId": "walk" }],
-        "anchor": { "x": 0.5, "y": 1 },
+        "directions": [
+          {
+            "direction": "down",
+            "clipId": "walk"
+          }
+        ],
+        "anchor": {
+          "x": 0.5,
+          "y": 1
+        },
         "renderScale": 1,
         "collisionEnvelope": {
           "x": 0.2,
@@ -295,12 +359,28 @@
         "clips": [
           {
             "id": "walk",
-            "frames": [{ "column": 0, "row": 0 }],
-            "timing": { "fps": 8, "loop": true }
+            "frames": [
+              {
+                "column": 0,
+                "row": 0
+              }
+            ],
+            "timing": {
+              "fps": 8,
+              "loop": true
+            }
           }
         ],
-        "directions": [{ "direction": "down", "clipId": "walk" }],
-        "anchor": { "x": 0.5, "y": 1 },
+        "directions": [
+          {
+            "direction": "down",
+            "clipId": "walk"
+          }
+        ],
+        "anchor": {
+          "x": 0.5,
+          "y": 1
+        },
         "renderScale": 1,
         "collisionEnvelope": {
           "x": 0.2,
@@ -337,12 +417,28 @@
         "clips": [
           {
             "id": "walk",
-            "frames": [{ "column": 0, "row": 0 }],
-            "timing": { "fps": 8, "loop": true }
+            "frames": [
+              {
+                "column": 0,
+                "row": 0
+              }
+            ],
+            "timing": {
+              "fps": 8,
+              "loop": true
+            }
           }
         ],
-        "directions": [{ "direction": "down", "clipId": "walk" }],
-        "anchor": { "x": 0.5, "y": 1 },
+        "directions": [
+          {
+            "direction": "down",
+            "clipId": "walk"
+          }
+        ],
+        "anchor": {
+          "x": 0.5,
+          "y": 1
+        },
         "renderScale": 1,
         "collisionEnvelope": {
           "x": 0.2,
@@ -360,9 +456,9 @@
   "decisions": [
     {
       "role_id": "player-lane",
-      "outcome": "blocked",
-      "rationale": "Accepted evidence does not establish suitable physical asset adoption.",
-      "selected_asset_key": null,
+      "outcome": "ingest-canonical",
+      "rationale": "Dossier-bound legacy source bytes are missing; creation or ingestion of a canonical asset matching the dossier descriptor is required before use; approval does not claim ingestion complete.",
+      "selected_asset_key": "griffin-riders-escape/player-lane",
       "evidence": [
         {
           "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/griffin-riders-escape/claim-evidence-ledger-v2.json",
@@ -383,9 +479,9 @@
     },
     {
       "role_id": "target-gate",
-      "outcome": "blocked",
-      "rationale": "Accepted evidence does not establish suitable physical asset adoption.",
-      "selected_asset_key": null,
+      "outcome": "ingest-canonical",
+      "rationale": "Dossier-bound legacy source bytes are missing; creation or ingestion of a canonical asset matching the dossier descriptor is required before use; approval does not claim ingestion complete.",
+      "selected_asset_key": "griffin-riders-escape/target-gate",
       "evidence": [
         {
           "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/griffin-riders-escape/claim-evidence-ledger-v2.json",
@@ -406,9 +502,9 @@
     },
     {
       "role_id": "learning-feedback",
-      "outcome": "blocked",
-      "rationale": "Accepted evidence does not establish suitable physical asset adoption.",
-      "selected_asset_key": null,
+      "outcome": "ingest-canonical",
+      "rationale": "Dossier-bound legacy source bytes are missing; creation or ingestion of a canonical asset matching the dossier descriptor is required before use; approval does not claim ingestion complete.",
+      "selected_asset_key": "griffin-riders-escape/learning-feedback",
       "evidence": [
         {
           "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/sentence/griffin-riders-escape/claim-evidence-ledger-v2.json",
@@ -430,14 +526,20 @@
   ],
   "delivery": {
     "materialization": "selected-union-only",
-    "selected_union_keys": [],
+    "selected_union_keys": [
+      "griffin-riders-escape/player-lane",
+      "griffin-riders-escape/target-gate",
+      "griffin-riders-escape/learning-feedback"
+    ],
     "whole_pack_default": false,
     "app_local_asset_copies": false,
     "fallback": "none"
   },
   "owner_acceptance": {
-    "status": "pending",
+    "status": "accepted",
     "required_before_green": true,
-    "receipt": null
+    "receipt": {
+      "path": "measure/tracks/apk_legacy_traversal_cutover_20260727/phase2-binding-owner-receipt-20260817.json"
+    }
   }
 }

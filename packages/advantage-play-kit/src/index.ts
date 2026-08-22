@@ -15,8 +15,6 @@ export * from "./guards/index.js";
 /** Cartridge manifest schema, scaffold generator, and exemplar. */
 export * from "./scaffolding/index.js";
 
-/** Versioned developer-kit API and compatibility plan. */
-export * from "./compatibility/index.js";
 
 /** Structured diagnostics for blocked scopes and unsupported capabilities. */
 export * from "./diagnostics/index.js";

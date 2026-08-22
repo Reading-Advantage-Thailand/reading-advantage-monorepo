@@ -10,11 +10,14 @@ import {
   createLanguageTargetProgression,
   createResultAccountant,
   finalizeResult,
+  preloadAssetBindings,
+  resolveAssetBinding,
   validateNonEmptyContent,
   type APKInputController,
   type CartridgeGameConfigContext,
   type GameTerminalOutcome,
   type InputActionId,
+  type RuntimeEdition,
 } from "@reading-advantage/advantage-play-kit";
 import type { StandardExperienceCartridge } from "@reading-advantage/advantage-play-kit/presentation";
 
@@ -211,9 +214,11 @@ interface PhaserGraphicsLike {
   fillStyle(color: number, alpha?: number): this;
   fillRect(x: number, y: number, width: number, height: number): this;
   fillCircle(x: number, y: number, radius: number): this;
+  fillEllipse?(x: number, y: number, width: number, height: number): this;
   fillRoundedRect(x: number, y: number, width: number, height: number, radius?: number): this;
   lineStyle(lineWidth: number, color: number, alpha?: number): this;
   strokeRoundedRect(x: number, y: number, width: number, height: number, radius?: number): this;
+  setDepth?(depth: number): this;
   destroy(): void;
 }
 
@@ -221,6 +226,18 @@ interface PhaserGraphicsLike {
 interface PhaserTextLike {
   setPosition(x: number, y: number): this;
   setText(value: string): this;
+  setDepth?(depth: number): this;
+  destroy(): void;
+}
+
+/** Minimal Phaser image or sprite surface used by arena art. */
+interface PhaserImageLike {
+  setOrigin?(x: number, y: number): this;
+  setDisplaySize?(width: number, height: number): this;
+  setDepth?(depth: number): this;
+  setPosition?(x: number, y: number): this;
+  setVisible?(visible: boolean): this;
+  setFlipX?(value: boolean): this;
   destroy(): void;
 }
 
@@ -236,9 +253,17 @@ interface PhaserCanvasLike {
 
 /** Minimal Phaser scene surface owned by the RPG Battle cartridge. */
 interface PhaserSceneLike {
+  load?: {
+    image?(key: string, url: string): unknown;
+    spritesheet?(key: string, url: string, config: { frameWidth: number; frameHeight: number }): unknown;
+    audio?(key: string, urls: string | string[]): unknown;
+  };
   add?: {
     graphics(): PhaserGraphicsLike;
     text(x: number, y: number, value: string, style?: Readonly<Record<string, unknown>>): PhaserTextLike;
+    image?(x: number, y: number, key: string, frame?: number): PhaserImageLike;
+    sprite?(x: number, y: number, key: string, frame?: number): PhaserImageLike;
+    tileSprite?(x: number, y: number, width: number, height: number, key: string): PhaserImageLike;
   };
   events?: { once(event: string, listener: () => void): void };
   game?: { readonly canvas?: PhaserCanvasLike };
@@ -256,6 +281,12 @@ interface SceneResources {
   readonly feedback: PhaserTextLike;
   readonly instructions: PhaserTextLike;
   readonly choices: readonly PhaserTextLike[];
+  ground?: PhaserImageLike;
+  readonly worldSprites: PhaserImageLike[];
+  playerSprite?: PhaserImageLike;
+  enemySprite?: PhaserImageLike;
+  worldWidth: number;
+  worldHeight: number;
 }
 
 /** Inputs and presentation state supplied to one RPG Battle scene. */
@@ -265,6 +296,12 @@ interface RpgBattleSceneContext {
   readonly composition: CartridgeGameConfigContext["composition"];
   readonly diagnostic: CartridgeGameConfigContext["diagnostic"];
   readonly sessionMode: NonNullable<CartridgeGameConfigContext["sessionMode"]>;
+  readonly edition: RuntimeEdition;
+}
+
+interface ResolvedArenaTexture {
+  readonly textureKey: string;
+  readonly frame?: number;
 }
 
 /** Deterministic setup used to reproduce one RPG Battle session. */
@@ -401,6 +438,38 @@ function assertFiniteDelta(deltaMs: number): void {
  * @param choiceCount Number of rendered answer choices.
  * @returns The touched choice index, or undefined outside the answer cards.
  */
+/**
+ * Returns the command-menu rectangle for one translation choice.
+ * @param sceneWidth Current scene width.
+ * @param sceneHeight Current scene height.
+ * @param index Zero-based choice index.
+ * @returns Pixel rectangle used for drawing and hit testing.
+ */
+export function rpgBattleChoiceRect(
+  sceneWidth: number,
+  sceneHeight: number,
+  index: number,
+): { x: number; y: number; width: number; height: number } {
+  const width = Math.min(420, sceneWidth * 0.46);
+  const height = Math.min(40, sceneHeight * 0.068);
+  const gap = Math.min(8, sceneHeight * 0.012);
+  return {
+    x: sceneWidth * 0.5,
+    y: sceneHeight * 0.705 + index * (height + gap),
+    width,
+    height,
+  };
+}
+
+/**
+ * Maps a pointer position to one visible translation choice.
+ * @param pointerX Pointer x in scene pixels.
+ * @param pointerY Pointer y in scene pixels.
+ * @param sceneWidth Current scene width.
+ * @param sceneHeight Current scene height.
+ * @param choiceCount Number of visible choices.
+ * @returns The matching choice index, or undefined when the pointer misses.
+ */
 export function getRpgBattleChoiceIndex(
   pointerX: number,
   pointerY: number,
@@ -409,18 +478,18 @@ export function getRpgBattleChoiceIndex(
   choiceCount = 3,
 ): number | undefined {
   if (choiceCount <= 0 || sceneWidth <= 0 || sceneHeight <= 0) return undefined;
-  const cardWidth = Math.min(560, sceneWidth * 0.84);
-  const cardHeight = Math.min(52, sceneHeight * 0.095);
-  const gap = Math.min(10, sceneHeight * 0.018);
-  const startX = (sceneWidth - cardWidth) / 2;
-  const startY = sceneHeight * 0.53;
-  if (pointerX < startX || pointerX > startX + cardWidth) return undefined;
-  const relativeY = pointerY - startY;
-  const step = cardHeight + gap;
-  const index = Math.floor(relativeY / step);
-  if (index < 0 || index >= choiceCount) return undefined;
-  if (relativeY - index * step > cardHeight) return undefined;
-  return index;
+  for (let index = 0; index < choiceCount; index += 1) {
+    const card = rpgBattleChoiceRect(sceneWidth, sceneHeight, index);
+    if (
+      pointerX >= card.x
+      && pointerX <= card.x + card.width
+      && pointerY >= card.y
+      && pointerY <= card.y + card.height
+    ) {
+      return index;
+    }
+  }
+  return undefined;
 }
 
 function characterForKeyboardCode(code: string): string | undefined {
@@ -915,11 +984,175 @@ function pointerInScene(
   };
 }
 
+const ARENA_ART_KEYS = Object.freeze([
+  "world:ground",
+  "world:platform",
+  "prop:tree",
+  "player:idle",
+  "enemy:idle",
+]);
+
+const SHRUB_TILE = Object.freeze({ width: 44, height: 48 });
+const FIGHTER_GROUND_Y_RATIO = 0.56;
+
+/**
+ * Returns whether the edition supplies outdoor arena art for RPG Battle.
+ * @param edition Audience edition supplied by the host.
+ * @returns True when grass ground art is bound.
+ */
+function usesArenaArt(edition: RuntimeEdition): boolean {
+  return Boolean(edition.bindings["world:ground"]);
+}
+
+/**
+ * Resolves one named arena texture when the edition binds that role.
+ * @param edition Audience edition supplied by the host.
+ * @param key Semantic binding key.
+ * @returns Texture key and optional frame, or undefined when the role is unbound.
+ */
+function arenaTexture(edition: RuntimeEdition, key: string): ResolvedArenaTexture | undefined {
+  if (!edition.bindings[key]) return undefined;
+  const resolved = resolveAssetBinding(edition, key);
+  return { textureKey: resolved.textureKey, frame: resolved.binding.frame };
+}
+
+/**
+ * Places one image or sprite in the arena.
+ * @param scene Active Phaser scene.
+ * @param x Horizontal display position.
+ * @param y Vertical display position.
+ * @param texture Resolved pack texture.
+ * @param displayWidth Drawn width.
+ * @param displayHeight Drawn height.
+ * @param depth Draw order.
+ * @param originX Horizontal origin.
+ * @param originY Vertical origin.
+ * @returns The created image, when Phaser display services exist.
+ */
+function placeImage(
+  scene: PhaserSceneLike,
+  x: number,
+  y: number,
+  texture: ResolvedArenaTexture,
+  displayWidth: number,
+  displayHeight: number,
+  depth: number,
+  originX = 0.5,
+  originY = 1,
+): PhaserImageLike | undefined {
+  const image = scene.add?.sprite?.(x, y, texture.textureKey, texture.frame ?? 0)
+    ?? scene.add?.image?.(x, y, texture.textureKey, texture.frame ?? 0);
+  image?.setOrigin?.(originX, originY);
+  image?.setDisplaySize?.(displayWidth, displayHeight);
+  image?.setDepth?.(depth);
+  return image;
+}
+
+/**
+ * Destroys persistent grass and tree sprites.
+ * @param resources Live scene resource bag.
+ * @returns Nothing. Clears world sprite ownership.
+ */
+function destroyWorldLayer(resources: SceneResources): void {
+  resources.ground?.destroy();
+  resources.ground = undefined;
+  for (const sprite of resources.worldSprites) sprite.destroy();
+  resources.worldSprites.length = 0;
+  resources.worldWidth = 0;
+  resources.worldHeight = 0;
+}
+
+/**
+ * Builds grass and a tiled shrubbery hedge once per canvas size.
+ * @param scene Active Phaser scene.
+ * @param resources Live scene resource bag.
+ * @param edition Audience edition supplied by the host.
+ * @param width Current scene width.
+ * @param height Current scene height.
+ * @returns Nothing. Creates world sprites when missing.
+ */
+function ensureWorldLayer(
+  scene: PhaserSceneLike,
+  resources: SceneResources,
+  edition: RuntimeEdition,
+  width: number,
+  height: number,
+): void {
+  if (resources.worldWidth === width && resources.worldHeight === height && resources.ground) return;
+  destroyWorldLayer(resources);
+  resources.worldWidth = width;
+  resources.worldHeight = height;
+
+  const ground = arenaTexture(edition, "world:ground");
+  if (ground) {
+    if (scene.add?.tileSprite) {
+      const tileWidth = 16 * Math.ceil(width / 16);
+      const tileHeight = 16 * Math.ceil(height / 16);
+      const tiled = scene.add.tileSprite(0, 0, tileWidth, tileHeight, ground.textureKey);
+      tiled.setOrigin?.(0, 0);
+      tiled.setDepth?.(-25);
+      resources.ground = tiled;
+    } else {
+      const image = placeImage(scene, width / 2, height / 2, ground, width, height, -25, 0.5, 0.5);
+      if (image) resources.ground = image;
+    }
+  }
+
+  const tree = arenaTexture(edition, "prop:tree");
+  if (tree) {
+    const hedgeWidth = SHRUB_TILE.width * Math.ceil(width / SHRUB_TILE.width);
+    const horizonY = height * 0.4;
+    if (scene.add?.tileSprite) {
+      const hedge = scene.add.tileSprite(0, horizonY, hedgeWidth, SHRUB_TILE.height, tree.textureKey);
+      hedge.setOrigin?.(0, 1);
+      hedge.setDepth?.(3);
+      resources.worldSprites.push(hedge);
+    } else {
+      for (let x = SHRUB_TILE.width / 2; x < hedgeWidth; x += SHRUB_TILE.width) {
+        const image = placeImage(scene, x, horizonY, tree, SHRUB_TILE.width, SHRUB_TILE.height, 3, 0.5, 1);
+        if (image) resources.worldSprites.push(image);
+      }
+    }
+  }
+}
+
+/**
+ * Moves or creates one fighter sprite on a battle platform.
+ * @param scene Active Phaser scene.
+ * @param current Existing sprite, when already created.
+ * @param x Horizontal display position.
+ * @param y Vertical display position.
+ * @param texture Resolved pack texture.
+ * @param size Drawn size.
+ * @param depth Draw order.
+ * @param flipX Whether the sprite faces left.
+ * @returns The live sprite, when Phaser display services exist.
+ */
+function syncFighter(
+  scene: PhaserSceneLike,
+  current: PhaserImageLike | undefined,
+  x: number,
+  y: number,
+  texture: ResolvedArenaTexture,
+  size: number,
+  depth: number,
+  flipX: boolean,
+): PhaserImageLike | undefined {
+  const sprite = current ?? placeImage(scene, x, y, texture, size, size, depth);
+  sprite?.setPosition?.(x, y);
+  sprite?.setDisplaySize?.(size, size);
+  sprite?.setDepth?.(depth);
+  sprite?.setFlipX?.(flipX);
+  sprite?.setVisible?.(true);
+  return sprite;
+}
+
 function createScene(context: RpgBattleSceneContext): Readonly<Record<string, unknown>> {
   let resources: SceneResources | undefined;
   let composition = context.composition;
   let previousKeys = new Set<string>();
   let animationMs = 0;
+  const arenaArt = usesArenaArt(context.edition);
   const normalize = createInputActionNormalizer({
     keyboard: RPG_BATTLE_KEYBOARD_BINDINGS,
     pointerTap: { action: "confirm" },
@@ -929,62 +1162,106 @@ function createScene(context: RpgBattleSceneContext): Readonly<Record<string, un
     context.controller.advanceTime(deltaMs);
   });
 
-  const answerPoint = (scene: PhaserSceneLike, index: number): { x: number; y: number; width: number; height: number } => {
-    const { width, height } = dimensions(scene);
-    const cardWidth = Math.min(560, width * 0.84);
-    const cardHeight = Math.min(52, height * 0.095);
-    const gap = Math.min(10, height * 0.018);
-    return {
-      x: (width - cardWidth) / 2,
-      y: height * 0.53 + index * (cardHeight + gap),
-      width: cardWidth,
-      height: cardHeight,
-    };
-  };
-
   const updateView = (scene: PhaserSceneLike): void => {
     if (!resources) return;
     const active = resources;
     const { width, height } = dimensions(scene);
     const state = context.controller.snapshot();
     const pulse = Math.sin(animationMs / 2_000 * Math.PI * 2) * 3;
-    const playerBarWidth = width * 0.34;
-    const enemyBarWidth = width * 0.34;
-    const barY = height * 0.27;
+    const playerX = width * 0.24;
+    const enemyX = width * 0.76;
+    const fighterY = height * FIGHTER_GROUND_Y_RATIO;
+    const commandY = height * 0.66;
 
     active.graphics.clear();
-    active.graphics.fillStyle(0x160f2a, 1).fillRect(0, 0, width, height);
-    active.graphics.fillStyle(0x2b1d4a, 0.96).fillRoundedRect(width * 0.05, height * 0.12, width * 0.9, height * 0.78, 24);
-    active.graphics.fillStyle(0x3a2861, 1).fillCircle(width * 0.28, height * 0.4 + pulse, Math.min(width, height) * 0.1);
-    active.graphics.fillStyle(0xc94c62, 1).fillCircle(width * 0.72, height * 0.4 - pulse, Math.min(width, height) * 0.1);
-    active.graphics.fillStyle(0x111827, 1).fillRoundedRect(width * 0.08, barY, playerBarWidth, 16, 8);
-    active.graphics.fillStyle(0x52d273, 1).fillRoundedRect(width * 0.08, barY, playerBarWidth * (state.playerHealth / state.playerMaxHealth), 16, 8);
-    active.graphics.fillStyle(0x111827, 1).fillRoundedRect(width * 0.58, barY, enemyBarWidth, 16, 8);
-    active.graphics.fillStyle(0xf26d78, 1).fillRoundedRect(width * 0.58, barY, enemyBarWidth * (state.enemyHealth / state.enemyMaxHealth), 16, 8);
+    if (arenaArt) {
+      ensureWorldLayer(scene, active, context.edition, width, height);
+      active.graphics.fillStyle(0x7ec8e3, 1).fillRect(0, 0, width, height * 0.4);
+      active.graphics.fillStyle(0x6bbf4e, 0.35).fillRect(0, height * 0.36, width, height * 0.08);
+      const platform = { y: fighterY + 8, w: 200, h: 52 };
+      active.graphics.fillStyle(0x6b4423, 1);
+      if (active.graphics.fillEllipse) {
+        active.graphics.fillEllipse(playerX, platform.y, platform.w, platform.h);
+        active.graphics.fillEllipse(enemyX, platform.y, platform.w, platform.h);
+        active.graphics.fillStyle(0x8b6914, 1);
+        active.graphics.fillEllipse(playerX, platform.y - 4, platform.w * 0.82, platform.h * 0.55);
+        active.graphics.fillEllipse(enemyX, platform.y - 4, platform.w * 0.82, platform.h * 0.55);
+      } else {
+        active.graphics.fillRect(playerX - platform.w / 2, platform.y - platform.h / 2, platform.w, platform.h);
+        active.graphics.fillRect(enemyX - platform.w / 2, platform.y - platform.h / 2, platform.w, platform.h);
+      }
+      const playerTexture = arenaTexture(context.edition, "player:idle");
+      const enemyTexture = arenaTexture(context.edition, "enemy:idle");
+      const playerPulse = state.turn === "player" ? pulse : 0;
+      const enemyPulse = state.turn === "enemy" ? pulse : 0;
+      if (playerTexture) {
+        active.playerSprite = syncFighter(scene, active.playerSprite, playerX, fighterY + playerPulse, playerTexture, 88, 6, false);
+      }
+      if (enemyTexture) {
+        active.enemySprite = syncFighter(scene, active.enemySprite, enemyX, fighterY + enemyPulse, enemyTexture, 88, 6, true);
+      }
+      active.graphics.fillStyle(0xf8f1d0, 0.96).fillRoundedRect(width * 0.04, height * 0.05, 280, 78, 10);
+      active.graphics.lineStyle(3, 0x2068a8, 1).strokeRoundedRect(width * 0.04, height * 0.05, 280, 78, 10);
+      active.graphics.fillStyle(0xf8f1d0, 0.96).fillRoundedRect(width * 0.66, height * 0.05, 300, 78, 10);
+      active.graphics.lineStyle(3, 0x2068a8, 1).strokeRoundedRect(width * 0.66, height * 0.05, 300, 78, 10);
+      active.graphics.fillStyle(0x111827, 1).fillRoundedRect(width * 0.07, height * 0.1, 220, 12, 6);
+      active.graphics.fillStyle(0xf26d78, 1).fillRoundedRect(width * 0.07, height * 0.1, 220 * (state.enemyHealth / state.enemyMaxHealth), 12, 6);
+      active.graphics.fillStyle(0x111827, 1).fillRoundedRect(width * 0.69, height * 0.1, 240, 12, 6);
+      active.graphics.fillStyle(0x52d273, 1).fillRoundedRect(width * 0.69, height * 0.1, 240 * (state.playerHealth / state.playerMaxHealth), 12, 6);
+      active.graphics.fillStyle(0x1e4b8c, 0.96).fillRoundedRect(width * 0.03, commandY, width * 0.94, height * 0.31, 12);
+      active.graphics.lineStyle(4, 0xf8d030, 1).strokeRoundedRect(width * 0.03, commandY, width * 0.94, height * 0.31, 12);
+    } else {
+      const playerBarWidth = width * 0.34;
+      const enemyBarWidth = width * 0.34;
+      const barY = height * 0.27;
+      active.graphics.fillStyle(0x160f2a, 1).fillRect(0, 0, width, height);
+      active.graphics.fillStyle(0x2b1d4a, 0.96).fillRoundedRect(width * 0.05, height * 0.12, width * 0.9, height * 0.78, 24);
+      active.graphics.fillStyle(0x3a2861, 1).fillCircle(width * 0.28, height * 0.4 + pulse, Math.min(width, height) * 0.1);
+      active.graphics.fillStyle(0xc94c62, 1).fillCircle(width * 0.72, height * 0.4 - pulse, Math.min(width, height) * 0.1);
+      active.graphics.fillStyle(0x111827, 1).fillRoundedRect(width * 0.08, barY, playerBarWidth, 16, 8);
+      active.graphics.fillStyle(0x52d273, 1).fillRoundedRect(width * 0.08, barY, playerBarWidth * (state.playerHealth / state.playerMaxHealth), 16, 8);
+      active.graphics.fillStyle(0x111827, 1).fillRoundedRect(width * 0.58, barY, enemyBarWidth, 16, 8);
+      active.graphics.fillStyle(0xf26d78, 1).fillRoundedRect(width * 0.58, barY, enemyBarWidth * (state.enemyHealth / state.enemyMaxHealth), 16, 8);
+    }
     state.answerChoices.forEach((_choice, index) => {
-      const card = answerPoint(scene, index);
-      active.graphics.fillStyle(state.inputLocked ? 0x475569 : 0x5b3a91, 0.92)
+      const card = rpgBattleChoiceRect(width, height, index);
+      active.graphics.fillStyle(state.inputLocked ? 0x475569 : arenaArt ? 0x2f6fad : 0x5b3a91, 0.92)
         .fillRoundedRect(card.x, card.y, card.width, card.height, 12);
-      active.graphics.lineStyle(2, 0xbda4ff, 0.8)
+      active.graphics.lineStyle(2, arenaArt ? 0xf8d030 : 0xbda4ff, 0.9)
         .strokeRoundedRect(card.x, card.y, card.width, card.height, 12);
       active.choices[index]
         ?.setText(`${index + 1}. ${state.answerChoices[index]}  [${state.answerChoicePowers[index]}]`)
-        .setPosition(card.x + 18, card.y + 16);
+        .setPosition(card.x + 14, card.y + 10);
     });
 
-    active.title.setText("RPG BATTLE").setPosition(28, 20);
-    active.prompt.setText(`Translate to attack: ${state.prompt}`).setPosition(28, 64);
-    active.health
-      .setText(`Hero ${state.playerHealth}/${state.playerMaxHealth}   |   Enemy ${state.enemyHealth}/${state.enemyMaxHealth}`)
-      .setPosition(28, barY - 28);
-    active.progress
-      .setText(`${composition?.profile === "compact" ? "Compact duel" : "Turn duel"}  |  Target ${Math.min(state.targetIndex + 1, state.targetCount)} of ${state.targetCount}  |  Score ${state.score}  |  Streak ${state.streak}`)
-      .setPosition(28, height * 0.49);
-    active.buffer.setText(`Typed: ${state.typedAnswer || "_"}`).setPosition(28, height * 0.79);
-    active.feedback.setText(state.feedback).setPosition(28, height * 0.84);
-    active.instructions
-      .setText("Type with the keyboard and press Enter, or tap a translation choice.")
-      .setPosition(28, height - 30);
+    if (arenaArt) {
+      active.title.setText("WILD BEAST").setPosition(width * 0.07, height * 0.06);
+      active.prompt.setText("What will HERO do?").setPosition(width * 0.05, commandY + 14);
+      active.health.setText(`HP ${state.enemyHealth}/${state.enemyMaxHealth}`).setPosition(width * 0.07, height * 0.125);
+      active.progress.setText("HERO").setPosition(width * 0.69, height * 0.06);
+      active.buffer.setText(`HP ${state.playerHealth}/${state.playerMaxHealth}`).setPosition(width * 0.69, height * 0.125);
+      active.feedback.setText(`Translate: ${state.prompt}`).setPosition(width * 0.05, commandY + 48);
+      active.instructions.setText(state.typedAnswer
+        ? `Typed: ${state.typedAnswer}`
+        : state.lastOutcome
+          ? state.feedback
+          : "").setPosition(width * 0.05, commandY + 82);
+    } else {
+      const barY = height * 0.27;
+      active.title.setText("RPG BATTLE").setPosition(28, 20);
+      active.prompt.setText(`Translate to attack: ${state.prompt}`).setPosition(28, 64);
+      active.health
+        .setText(`Hero ${state.playerHealth}/${state.playerMaxHealth}   |   Enemy ${state.enemyHealth}/${state.enemyMaxHealth}`)
+        .setPosition(28, barY - 28);
+      active.progress
+        .setText(`${composition?.profile === "compact" ? "Compact duel" : "Turn duel"}  |  Target ${Math.min(state.targetIndex + 1, state.targetCount)} of ${state.targetCount}  |  Score ${state.score}  |  Streak ${state.streak}`)
+        .setPosition(28, height * 0.49);
+      active.buffer.setText(`Typed: ${state.typedAnswer || "_"}`).setPosition(28, height * 0.79);
+      active.feedback.setText(state.feedback).setPosition(28, height * 0.84);
+      active.instructions
+        .setText("Type with the keyboard and press Enter, or tap a translation choice.")
+        .setPosition(28, height - 30);
+    }
   };
 
   const processAnswer = (answer: string | number): void => {
@@ -1014,6 +1291,9 @@ function createScene(context: RpgBattleSceneContext): Readonly<Record<string, un
     if (!resources) return;
     const active = resources;
     resources = undefined;
+    destroyWorldLayer(active);
+    active.playerSprite?.destroy();
+    active.enemySprite?.destroy();
     active.graphics.destroy();
     active.title.destroy();
     active.prompt.destroy();
@@ -1026,19 +1306,47 @@ function createScene(context: RpgBattleSceneContext): Readonly<Record<string, un
     previousKeys = new Set<string>();
   };
 
+  const preload = function (this: PhaserSceneLike): void {
+    if (!this.load || !arenaArt) return;
+    const keys = ARENA_ART_KEYS.filter((key) => Boolean(context.edition.bindings[key]));
+    if (keys.length === 0) return;
+    preloadAssetBindings(this.load, context.edition, keys);
+  };
+
   const create = function (this: PhaserSceneLike): void {
     if (!this.add) throw new Error("RPG Battle requires Phaser display services");
-    const style = { fontFamily: "Arial", color: "#ffffff", fontSize: "18px" };
+    const style = {
+      fontFamily: "Arial",
+      color: "#ffffff",
+      fontSize: "18px",
+      ...(arenaArt ? { stroke: "#0b1220", strokeThickness: 4 } : {}),
+    };
+    const graphics = this.add.graphics();
+    graphics.setDepth?.(2);
+    const title = this.add.text(0, 0, "", { ...style, fontSize: "22px", fontStyle: "bold", color: arenaArt ? "#1f2937" : "#ffffff" });
+    const prompt = this.add.text(0, 0, "", { ...style, fontSize: arenaArt ? "18px" : "24px" });
+    const health = this.add.text(0, 0, "", { ...style, fontSize: "15px", color: arenaArt ? "#1f2937" : "#d9f99d" });
+    const progress = this.add.text(0, 0, "", { ...style, fontSize: "15px", color: arenaArt ? "#1f2937" : "#ddd6fe" });
+    const buffer = this.add.text(0, 0, "", { ...style, fontSize: "19px", color: arenaArt ? "#1f2937" : "#fef3c7" });
+    const feedback = this.add.text(0, 0, "", { ...style, fontSize: "16px", color: arenaArt ? "#fef3c7" : "#fcd34d" });
+    const instructions = this.add.text(0, 0, "", { ...style, fontSize: "14px", color: arenaArt ? "#e2e8f0" : "#c4b5fd" });
+    const choices = [0, 1, 2].map(() => this.add!.text(0, 0, "", { ...style, fontSize: "17px" }));
+    for (const text of [title, prompt, health, progress, buffer, feedback, instructions, ...choices]) {
+      text.setDepth?.(20);
+    }
     resources = {
-      graphics: this.add.graphics(),
-      title: this.add.text(0, 0, "", { ...style, fontSize: "30px", fontStyle: "bold" }),
-      prompt: this.add.text(0, 0, "", { ...style, fontSize: "24px" }),
-      health: this.add.text(0, 0, "", { ...style, fontSize: "15px", color: "#d9f99d" }),
-      progress: this.add.text(0, 0, "", { ...style, fontSize: "15px", color: "#ddd6fe" }),
-      buffer: this.add.text(0, 0, "", { ...style, fontSize: "19px", color: "#fef3c7" }),
-      feedback: this.add.text(0, 0, "", { ...style, fontSize: "16px", color: "#fcd34d" }),
-      instructions: this.add.text(0, 0, "", { ...style, fontSize: "14px", color: "#c4b5fd" }),
-      choices: [0, 1, 2].map(() => this.add!.text(0, 0, "", { ...style, fontSize: "17px" })),
+      graphics,
+      title,
+      prompt,
+      health,
+      progress,
+      buffer,
+      feedback,
+      instructions,
+      choices,
+      worldSprites: [],
+      worldWidth: 0,
+      worldHeight: 0,
     };
     this.events?.once("shutdown", cleanup);
     this.events?.once("destroy", cleanup);
@@ -1082,6 +1390,7 @@ function createScene(context: RpgBattleSceneContext): Readonly<Record<string, un
 
   return {
     key: RPG_BATTLE_ID,
+    preload,
     create,
     update,
     extend: {
@@ -1129,7 +1438,6 @@ export function createRpgBattleCartridge(): StandardExperienceCartridge {
       id: RPG_BATTLE_ID,
       title: "RPG Battle",
       description: "Defeat a fantasy enemy by translating vocabulary in a turn-based duel.",
-      version: "0.1.0",
       runtimeApiVersion: "1.0.0",
       inputMode: "vocabulary",
       requiredAssetBindings: ["legacy-catalog/rpg-battle/arena"],
@@ -1176,6 +1484,7 @@ export function createRpgBattleCartridge(): StandardExperienceCartridge {
           composition: context.composition,
           diagnostic: context.diagnostic,
           sessionMode,
+          edition: context.edition,
         }),
       };
     },

@@ -64,12 +64,24 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
   policy decided by the owner 2026-08-20 (settlement-derived rate, 2dp half-up);
   close/accountant policy list and pilot data remain pending.
 
+- [x] **Track: APK Common Look and Enforcement — COMPLETED** *Link: [./tracks/apk_common_look_enforcement_20260822/](./tracks/apk_common_look_enforcement_20260822/)*
+  Bind standard-pack art to gameplay actors across all 18 wallpaper titles, make
+  `mountCartridge` enforce the cartridge manifest, repair the tutorial runtime so
+  demonstrations advance and show motion, and remove the unenforced version
+  numbers. Recorded retroactively at owner direction. Completed 2026-08-22.
 - [ ] **Track: Accounting App Foundation** *Link: [./tracks/accounting_app_foundation_20260820/](./tracks/accounting_app_foundation_20260820/)*
   Build `apps/accounting` on the Finance Operations foundation: Accounts SSO
   sign-in, staff expense/bill submission with evidence, owner approval with
   immutable audit, full double-entry ledger on a standard Thai SME chart of
   accounts, Thai statutory support (VAT, WHT, tax invoices), and accountant
   export. Story-shaped spec, 8 phases (S1–S8).
+
+- [~] **Track: Accounting Product Simplification** *Link: [./tracks/accounting_product_simplification_20260822/](./tracks/accounting_product_simplification_20260822/)*
+  Cut the finance-accounting tail-chasing found by the 2026-08-22 deep review:
+  delete the dead 96% finance-operations surface, collapse the separate
+  accounting database into the main stream, add audit-backed approve/reject,
+  and freeze the foundation at its five consumed symbols. Ledger/VAT/WHT are
+  cut as build items pending the accountant tool decision (FlowAccount/PEAK).
 
 - [~] **Track: Small-Company Admin Privilege Simplification** *Link: [./tracks/small_company_admin_privileges_20260722/](./tracks/small_company_admin_privileges_20260722/)*
   Make `COMPANY_ADMIN` the intentional owner/operator role with exact inherited

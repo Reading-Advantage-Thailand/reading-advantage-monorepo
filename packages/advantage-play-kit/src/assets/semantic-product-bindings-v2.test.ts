@@ -10,7 +10,7 @@ import {
   OWNER_APPROVED_CANONICAL_BINDINGS,
   createDescriptorAwareSemanticAssetResolver,
 } from "./semantic-product-bindings.js";
-import type { StandardAssetCatalog, StandardAssetResolver } from "./standard-pack-release.js";
+import type { StandardAssetResolver } from "./standard-pack-release.js";
 
 const REQUIRED_CREDIT = "Pixel art assets by ElvGames" as const;
 

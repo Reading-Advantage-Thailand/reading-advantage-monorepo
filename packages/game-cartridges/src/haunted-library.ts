@@ -5,16 +5,21 @@ import {
   type SentenceInput,
 } from "@reading-advantage/game-contracts";
 import {
+  createActorSpriteLayer,
   createBoundedFrameScheduler,
   createCompletionLatch,
   createInputActionNormalizer,
   createResultAccountant,
   finalizeResult,
+  preloadAssetBindings,
   validateNonEmptyContent,
+  type ActorSpriteLayer,
+  type ActorSpriteLike,
   type APKInputController,
   type CartridgeGameConfigContext,
   type GameTerminalOutcome,
   type InputActionId,
+  type RuntimeEdition,
 } from "@reading-advantage/advantage-play-kit";
 import type { StandardExperienceCartridge } from "@reading-advantage/advantage-play-kit/presentation";
 
@@ -409,6 +414,14 @@ interface PhaserSceneLike {
   add?: {
     graphics(): PhaserGraphicsLike;
     text(x: number, y: number, value: string, style?: Readonly<Record<string, unknown>>): PhaserTextLike;
+    image?(x: number, y: number, key: string, frame?: number): ActorSpriteLike;
+    sprite?(x: number, y: number, key: string, frame?: number): ActorSpriteLike;
+    tileSprite?(x: number, y: number, width: number, height: number, key: string): ActorSpriteLike;
+  };
+  load?: {
+    image?(key: string, url: string): unknown;
+    spritesheet?(key: string, url: string, config: { frameWidth: number; frameHeight: number }): unknown;
+    audio?(key: string, urls: string | string[]): unknown;
   };
   events?: { once(event: string, listener: () => void): void };
   game?: { readonly canvas?: PhaserCanvasLike };
@@ -417,6 +430,7 @@ interface PhaserSceneLike {
 
 /** Resources owned by one active library scene. */
 interface SceneResources {
+  readonly art: ActorSpriteLayer;
   readonly graphics: PhaserGraphicsLike;
   readonly title: PhaserTextLike;
   readonly prompt: PhaserTextLike;
@@ -428,6 +442,7 @@ interface SceneResources {
 
 /** Context passed from the cartridge factory to the procedural scene. */
 interface HauntedLibrarySceneContext {
+  readonly edition: RuntimeEdition;
   readonly controller: HauntedLibraryController;
   readonly inputController: APKInputController;
   readonly composition: CartridgeGameConfigContext["composition"];
@@ -1295,7 +1310,7 @@ function createScene(context: HauntedLibrarySceneContext): Readonly<Record<strin
     const dpad = getHauntedLibraryDpadLayout(width, height);
     const pulse = Math.sin(animationMs / 2_000 * Math.PI * 2) * 3;
     activeResources.graphics.clear();
-    activeResources.graphics.fillStyle(0x100e24, 1).fillRect(0, 0, width, height);
+    if (!activeResources.art.ground("world:ground", width, height)) activeResources.graphics.fillStyle(0x100e24, 1).fillRect(0, 0, width, height);
     activeResources.graphics.fillStyle(0x21183a, 1).fillRect(0, height * 0.15, width, height * 0.68);
     for (const floor of state.floors) {
       const y = worldY(floor.y, height);
@@ -1328,24 +1343,40 @@ function createScene(context: HauntedLibrarySceneContext): Readonly<Record<strin
       activeResources.graphics.lineStyle(2, door.wordIndex === state.wordIndex ? 0xffd166 : 0xc4b5fd, 0.9)
         .strokeRoundedRect(x - DOOR_WIDTH * width / GAME_WIDTH / 2, y, DOOR_WIDTH * width / GAME_WIDTH, DOOR_HEIGHT * height / GAME_HEIGHT, 8);
     }
-    for (const ghost of state.ghosts) {
+    state.ghosts.forEach((ghost, index) => {
       const x = worldX(ghost.x, width);
       const y = worldY(state.floors[ghost.floor]!.y - 42, height);
-      activeResources.graphics.fillStyle(ghost.stunMs > 0 ? 0x93c5fd : 0xe879f9, 0.95).fillCircle(x, y, 20 * width / GAME_WIDTH);
-    }
+      const radius = 20 * width / GAME_WIDTH;
+      if (activeResources.art.place(`ghost:${index}`, "enemy:idle", {
+        x,
+        y,
+        width: radius * 2.4,
+        depth: 7,
+        alpha: ghost.stunMs > 0 ? 0.6 : 1,
+      })) return;
+      activeResources.graphics.fillStyle(ghost.stunMs > 0 ? 0x93c5fd : 0xe879f9, 0.95).fillCircle(x, y, radius);
+    });
     for (const bat of state.bats) {
       const x = worldX(bat.x, width);
       const y = worldY(state.floors[bat.floor]!.y - 70, height);
       activeResources.graphics.fillStyle(0xf97316, 0.95).fillCircle(x, y, 13 * width / GAME_WIDTH);
     }
-    activeResources.graphics.fillStyle(state.invulnerableMs > 0 ? 0xffffff : 0xc4b5fd, 1)
-      .fillRoundedRect(
-        worldX(state.player.x, width) - PLAYER_WIDTH * width / GAME_WIDTH / 2,
-        worldY(state.player.y, height) + pulse,
-        PLAYER_WIDTH * width / GAME_WIDTH,
-        PLAYER_HEIGHT * height / GAME_HEIGHT,
-        4,
-      );
+    const playerDrawWidth = PLAYER_WIDTH * width / GAME_WIDTH;
+    const playerDrawHeight = PLAYER_HEIGHT * height / GAME_HEIGHT;
+    const playerLeft = worldX(state.player.x, width) - playerDrawWidth / 2;
+    const playerTop = worldY(state.player.y, height) + pulse;
+    if (!activeResources.art.place("player", "player:idle", {
+      x: playerLeft + playerDrawWidth / 2,
+      y: playerTop + playerDrawHeight / 2,
+      width: playerDrawWidth * 1.6,
+      height: playerDrawHeight * 1.2,
+      depth: 8,
+      alpha: state.invulnerableMs > 0 ? 0.6 : 1,
+    })) {
+      activeResources.graphics.fillStyle(state.invulnerableMs > 0 ? 0xffffff : 0xc4b5fd, 1)
+        .fillRoundedRect(playerLeft, playerTop, playerDrawWidth, playerDrawHeight, 4);
+    }
+    activeResources.art.sweep();
     for (const button of dpad) {
       activeResources.graphics.fillStyle(button.action === "confirm" ? 0x4c1d95 : 0x6d4c88, 1)
         .fillRoundedRect(button.x, button.y, button.width, button.height, 10);
@@ -1394,12 +1425,25 @@ function createScene(context: HauntedLibrarySceneContext): Readonly<Record<strin
     for (const door of activeResources.doors) door.destroy();
     previousKeys = new Set<string>();
   };
+
+  const artKeys = ["world:ground", "player:idle", "enemy:idle"] as const;
+
+  const preload = function (this: PhaserSceneLike): void {
+    if (!this.load) return;
+    preloadAssetBindings(
+      this.load,
+      context.edition,
+      artKeys.filter((key) => context.edition.bindings[key]),
+    );
+  };
+
   const create = function (this: PhaserSceneLike): void {
     if (cleaned) return;
     if (!this.add) throw new Error("The Haunted Library requires Phaser display services");
     const textStyle = { fontFamily: "Arial", color: "#fff8e7", fontSize: "18px" };
     resources = {
       graphics: this.add.graphics(),
+      art: createActorSpriteLayer(this, context.edition),
       title: this.add.text(18, 18, "THE HAUNTED LIBRARY", { ...textStyle, fontSize: "26px", fontStyle: "bold" }),
       prompt: this.add.text(18, 58, "", { ...textStyle, fontSize: "20px", wordWrap: { width: 354 } }),
       progress: this.add.text(18, 98, "", { ...textStyle, fontSize: "14px", color: "#e9d5ff" }),
@@ -1449,6 +1493,7 @@ function createScene(context: HauntedLibrarySceneContext): Readonly<Record<strin
   };
   return {
     key: HAUNTED_LIBRARY_ID,
+    preload,
     create,
     update,
     extend: {
@@ -1508,7 +1553,6 @@ export function createHauntedLibraryCartridge(): StandardExperienceCartridge {
       id: HAUNTED_LIBRARY_ID,
       title: "The Haunted Library",
       description: "Open ordered word doors across haunted library floors while avoiding ghosts and bats.",
-      version: "0.1.0",
       runtimeApiVersion: "1.0.0",
       inputMode: "sentence",
       requiredAssetBindings: ["haunted-library/player"],
@@ -1550,6 +1594,7 @@ export function createHauntedLibraryCartridge(): StandardExperienceCartridge {
         render: { antialias: false, pixelArt: true },
         scene: createScene({
           controller,
+          edition: context.edition,
           inputController: context.inputController,
           composition: context.composition,
           diagnostic: context.diagnostic,

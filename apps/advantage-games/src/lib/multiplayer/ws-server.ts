@@ -89,7 +89,7 @@ export function createWebSocketServer(httpServer: Server): WebSocketServer {
           if (room.status !== 'expired') {
             sendPlayerListUpdate(wss, room);
           }
-        } catch (error) {
+        } catch {
           // Room may already be expired
         }
       }

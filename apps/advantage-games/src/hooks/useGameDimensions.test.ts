@@ -20,7 +20,7 @@ describe('useGameDimensions', () => {
       observe = observeMock
       disconnect = disconnectMock
     }
-    ;(global as any).ResizeObserver = ResizeObserverMock
+    ;(globalThis as unknown as { ResizeObserver: unknown }).ResizeObserver = ResizeObserverMock
 
     const containerRef = {
       current: document.createElement('div'),

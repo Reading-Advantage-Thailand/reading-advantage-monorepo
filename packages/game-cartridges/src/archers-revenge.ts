@@ -5,16 +5,21 @@ import {
   type VocabularyItem,
 } from "@reading-advantage/game-contracts";
 import {
+  createActorSpriteLayer,
   createBoundedFrameScheduler,
   createCompletionLatch,
   createInputActionNormalizer,
   createResultAccountant,
   finalizeResult,
+  preloadAssetBindings,
   validateNonEmptyContent,
+  type ActorSpriteLayer,
+  type ActorSpriteLike,
   type APKInputController,
   type CartridgeGameConfigContext,
   type GameTerminalOutcome,
   type InputActionId,
+  type RuntimeEdition,
 } from "@reading-advantage/advantage-play-kit";
 import type { StandardExperienceCartridge } from "@reading-advantage/advantage-play-kit/presentation";
 
@@ -360,6 +365,14 @@ interface PhaserSceneLike {
   add?: {
     graphics(): PhaserGraphicsLike;
     text(x: number, y: number, value: string, style?: Readonly<Record<string, unknown>>): PhaserTextLike;
+    image?(x: number, y: number, key: string, frame?: number): ActorSpriteLike;
+    sprite?(x: number, y: number, key: string, frame?: number): ActorSpriteLike;
+    tileSprite?(x: number, y: number, width: number, height: number, key: string): ActorSpriteLike;
+  };
+  load?: {
+    image?(key: string, url: string): unknown;
+    spritesheet?(key: string, url: string, config: { frameWidth: number; frameHeight: number }): unknown;
+    audio?(key: string, urls: string | string[]): unknown;
   };
   events?: { once(event: string, listener: () => void): void };
   game?: { readonly canvas?: PhaserCanvasLike };
@@ -367,6 +380,7 @@ interface PhaserSceneLike {
 }
 
 interface SceneResources {
+  readonly art: ActorSpriteLayer;
   readonly graphics: PhaserGraphicsLike;
   readonly title: PhaserTextLike;
   readonly prompt: PhaserTextLike;
@@ -377,6 +391,7 @@ interface SceneResources {
 }
 
 interface SceneContext {
+  readonly edition: RuntimeEdition;
   readonly controller: ArchersRevengeController;
   readonly inputController: APKInputController;
   readonly composition: CartridgeGameConfigContext["composition"];
@@ -1351,7 +1366,7 @@ function createScene(context: SceneContext): Readonly<Record<string, unknown>> {
     const pulse = Math.sin(animationMs / 2_000 * Math.PI * 2) * 3;
 
     activeResources.graphics.clear();
-    activeResources.graphics.fillStyle(0x07131f, 1).fillRect(0, 0, width, height);
+    if (!activeResources.art.ground("world:ground", width, height)) activeResources.graphics.fillStyle(0x07131f, 1).fillRect(0, 0, width, height);
     activeResources.graphics.fillStyle(0x102b3d, 0.96)
       .fillRoundedRect(width * 0.04, height * 0.23, width * 0.92, height * 0.61, 22);
     activeResources.graphics.fillStyle(0x1d5160, 0.72)
@@ -1362,10 +1377,19 @@ function createScene(context: SceneContext): Readonly<Record<string, unknown>> {
       const y = enemy.y * scaleY + pulse;
       const enemyWidth = Math.min(130, width * 0.13);
       const enemyHeight = 46 * scaleY;
-      activeResources.graphics.fillStyle(enemy.shielded ? 0x273849 : 0x147d6e, 1)
-        .fillRoundedRect(x - enemyWidth / 2, y - enemyHeight / 2, enemyWidth, enemyHeight, 12);
-      activeResources.graphics.lineStyle(3, enemy.shielded ? 0x6d8190 : 0xf9d65c, 0.95)
-        .strokeRoundedRect(x - enemyWidth / 2, y - enemyHeight / 2, enemyWidth, enemyHeight, 12);
+      if (!activeResources.art.place(`enemy:${index}`, "enemy:idle", {
+        x,
+        y,
+        width: enemyWidth * 0.8,
+        height: enemyHeight * 1.4,
+        depth: 7,
+        alpha: enemy.shielded ? 0.7 : 1,
+      })) {
+        activeResources.graphics.fillStyle(enemy.shielded ? 0x273849 : 0x147d6e, 1)
+          .fillRoundedRect(x - enemyWidth / 2, y - enemyHeight / 2, enemyWidth, enemyHeight, 12);
+        activeResources.graphics.lineStyle(3, enemy.shielded ? 0x6d8190 : 0xf9d65c, 0.95)
+          .strokeRoundedRect(x - enemyWidth / 2, y - enemyHeight / 2, enemyWidth, enemyHeight, 12);
+      }
       activeResources.enemyLabels[index]
         ?.setText(enemy.translation)
         .setPosition(x - enemyWidth / 2 + 8, y + enemyHeight / 2 + 7);
@@ -1379,8 +1403,16 @@ function createScene(context: SceneContext): Readonly<Record<string, unknown>> {
       activeResources.graphics.fillStyle(0xf06a5d, 1)
         .fillCircle(projectile.x * scaleX, projectile.y * scaleY, Math.max(5, 8 * scaleX));
     }
-    activeResources.graphics.fillStyle(0xf5a742, 1)
-      .fillCircle(columnX(state.aimColumn) * scaleX, PLAYER_Y * scaleY, Math.max(15, 22 * scaleX));
+    if (!activeResources.art.place("player", "player:idle", {
+      x: columnX(state.aimColumn) * scaleX,
+      y: PLAYER_Y * scaleY,
+      width: Math.max(38, 56 * scaleX),
+      depth: 8,
+    })) {
+      activeResources.graphics.fillStyle(0xf5a742, 1)
+        .fillCircle(columnX(state.aimColumn) * scaleX, PLAYER_Y * scaleY, Math.max(15, 22 * scaleX));
+    }
+    activeResources.art.sweep();
     activeResources.graphics.lineStyle(3, 0xffe7a3, 1)
       .strokeRoundedRect(
         columnX(state.aimColumn) * scaleX - 30 * scaleX,
@@ -1435,11 +1467,24 @@ function createScene(context: SceneContext): Readonly<Record<string, unknown>> {
     previousKeys = new Set<string>();
   };
 
+
+  const artKeys = ["world:ground", "player:idle", "enemy:idle"] as const;
+
+  const preload = function (this: PhaserSceneLike): void {
+    if (!this.load) return;
+    preloadAssetBindings(
+      this.load,
+      context.edition,
+      artKeys.filter((key) => context.edition.bindings[key]),
+    );
+  };
+
   const create = function (this: PhaserSceneLike): void {
     if (!this.add) throw new Error("Archer's Revenge requires Phaser display services");
     const textStyle = { fontFamily: "Arial", color: "#f8fbff", fontSize: "20px" };
     resources = {
       graphics: this.add.graphics(),
+      art: createActorSpriteLayer(this, context.edition),
       title: this.add.text(28, 20, "ARCHER'S REVENGE", { ...textStyle, fontSize: "30px", fontStyle: "bold" }),
       prompt: this.add.text(28, 62, "", { ...textStyle, fontSize: "25px" }),
       progress: this.add.text(28, 103, "", { ...textStyle, fontSize: "16px", color: "#bde9ed" }),
@@ -1498,6 +1543,7 @@ function createScene(context: SceneContext): Readonly<Record<string, unknown>> {
 
   return {
     key: ARCHERS_REVENGE_ID,
+    preload,
     create,
     update,
     extend: {
@@ -1546,7 +1592,6 @@ export function createArchersRevengeCartridge(): StandardExperienceCartridge {
       id: ARCHERS_REVENGE_ID,
       title: "Archer's Revenge",
       description: "Aim a precision archer at the translation target and break enemy formations.",
-      version: "0.1.0",
       runtimeApiVersion: "1.0.0",
       inputMode: "vocabulary",
       requiredAssetBindings: ["archers-revenge/player-bow"],
@@ -1588,6 +1633,7 @@ export function createArchersRevengeCartridge(): StandardExperienceCartridge {
         render: { antialias: true, pixelArt: false },
         scene: createScene({
           controller,
+          edition: context.edition,
           inputController: context.inputController,
           composition: context.composition,
           diagnostic: context.diagnostic,

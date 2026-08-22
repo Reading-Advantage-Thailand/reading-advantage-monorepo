@@ -84,7 +84,7 @@ describe("magicDefenseConfig", () => {
     });
 
     it("defaults to normal for unknown difficulty", () => {
-      expect(getInitialSettings("unknown" as any)).toEqual(
+      expect(getInitialSettings("unknown" as never)).toEqual(
         DIFFICULTY_SETTINGS.normal,
       );
     });

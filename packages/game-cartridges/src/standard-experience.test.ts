@@ -54,13 +54,12 @@ describe("createCartridgeStandardExperience", () => {
     expect(touch?.action).not.toBe(KEYBOARD_INSTRUCTION);
   });
 
-  it("omits the ElvGames pixel-art credit until a cartridge supplies loaded art", () => {
+  it("shows the ElvGames pixel-art credit in every cartridge debrief", () => {
     const defaultExperience = createExperience();
     const creditedExperience = createExperience(vi.fn(), "Pixel art assets by ElvGames");
 
-    expect(STANDARD_DEBRIEF_CREDIT).toBe("");
-    expect(defaultExperience.definition.debrief.requiredCredit).toBe(STANDARD_DEBRIEF_CREDIT);
-    expect(defaultExperience.definition.debrief.requiredCredit).not.toBe(
+    expect(STANDARD_DEBRIEF_CREDIT).toBe("Pixel art assets by ElvGames");
+    expect(defaultExperience.definition.debrief.requiredCredit).toBe(
       "Pixel art assets by ElvGames",
     );
     expect(creditedExperience.definition.debrief.requiredCredit).toBe(
@@ -77,6 +76,8 @@ describe("createCartridgeStandardExperience", () => {
       tutorial: runtime.definition.tutorial,
       step,
       seed: runtime.definition.tutorial.seed,
+      mode: "tutorial",
+      diagnostics: { report: vi.fn() },
     });
 
     expect(executeTutorialAction).toHaveBeenCalledWith(step.actionId);

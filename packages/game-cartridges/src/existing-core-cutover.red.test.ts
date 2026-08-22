@@ -1,9 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 
 import {
-  DEVELOPER_KIT_API_VERSION,
-} from "@reading-advantage/advantage-play-kit/compatibility";
-import {
   ACCEPTED_STANDARD_ASSET_RELEASE,
 } from "@reading-advantage/advantage-play-kit/assets";
 import {
@@ -29,6 +26,13 @@ const EXPECTED_TITLES = Object.freeze([
   { id: "sorcerer-ziggurat", inputMode: "sentence", temporalScope: "historical-source-only" },
   { id: "astral-mage", inputMode: "sentence", temporalScope: "historical-source-only" },
 ] as const);
+const PUBLISHED_EXISTING_CORE_IDS = Object.freeze([
+  "dragon-flight",
+  "astral-mage",
+  "sorcerer-ziggurat",
+  "magic-defense",
+  "dungeon-liberator",
+]);
 
 function numberAt(snapshot: ExistingCoreMechanicSnapshot, key: keyof ExistingCoreMechanicSnapshot): number {
   const value = snapshot[key];
@@ -133,9 +137,14 @@ const mechanicAssertions: Readonly<Record<string, (mechanic: ExistingCoreEvidenc
 };
 
 describe("existing core Advantage Games QC cutover task", () => {
-  it("keeps every production cartridge surface quarantined", () => {
-    expect(cartridgeCatalog).toEqual([]);
-    expect(cartridgeLoaders).toEqual({});
+  it("publishes the five owner-authorized existing-core cartridges", () => {
+    const existingCoreIds = new Set(EXPECTED_TITLES.map(({ id }) => id));
+    expect(cartridgeCatalog.filter(({ id }) => existingCoreIds.has(id as never)).map(({ id }) => id)).toEqual(
+      PUBLISHED_EXISTING_CORE_IDS,
+    );
+    expect(Object.keys(cartridgeLoaders).filter((id) => existingCoreIds.has(id as never))).toEqual(
+      PUBLISHED_EXISTING_CORE_IDS,
+    );
   });
 
   it("binds exactly the accepted task-3 receipt and five-title QC registry", () => {
@@ -175,7 +184,6 @@ describe("existing core Advantage Games QC cutover task", () => {
     expect(cartridge.manifest).toMatchObject({
       id,
       inputMode,
-      developerKitApiVersion: DEVELOPER_KIT_API_VERSION,
       resultAbi: ["accuracy", "xp", "score", "correctAnswers", "totalAttempts"],
       selectedUnionMaterialization: "accepted-cartridge-selected-union-only",
       responsive: {
@@ -205,7 +213,7 @@ describe("existing core Advantage Games QC cutover task", () => {
   it.each(EXPECTED_TITLES)("uses selected-union semantic assets without full-pack delivery for $id", async ({ id }) => {
     const cartridge = await loadExistingCoreQcCartridge(id);
     const selected = cartridge.semanticAdoption.selectedStandardPackOutput;
-    expect(selected).toEqual(cartridge.manifest.semanticAssetRequirements);
+    expect(selected).toEqual(cartridge.manifest.requiredAssetBindings);
     expect(selected.length).toBeGreaterThan(0);
     expect(selected.length).toBeLessThanOrEqual(4);
     expect(selected.length).toBeLessThan(ACCEPTED_STANDARD_ASSET_RELEASE.acceptanceEvidence.assetCount);

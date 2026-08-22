@@ -741,19 +741,41 @@ describe("Enchanted Library bespoke cartridge", () => {
     const scene = config.scene as {
       extend: { apkCaptureResponsiveState: () => { game: EnchantedLibrarySnapshot } };
     };
-    const execute = (stepIndex: number): void => {
+    const context = (stepIndex: number) => {
       const step = definition.tutorial.steps[stepIndex];
       if (!step) throw new Error("Expected tutorial step");
-      driver.execute({
+      return {
         tutorial: definition.tutorial,
         step,
         seed: definition.tutorial.seed,
-        mode: "tutorial",
+        mode: "tutorial" as const,
         diagnostics: { report: vi.fn() },
-      });
+      };
+    };
+    // The runtime plans on execute, then replays the route across the demonstration window.
+    const execute = (stepIndex: number, frames = 1): void => {
+      driver.execute(context(stepIndex));
+      for (let frame = 1; frame <= frames; frame += 1) {
+        driver.advanceFrame?.({
+          ...context(stepIndex),
+          elapsedMs: frame,
+          progress: frame / frames,
+        });
+      }
     };
 
-    execute(0);
+    // A demonstration that stops halfway must leave the player between the start and the book.
+    const start = scene.extend.apkCaptureResponsiveState().game.player;
+    driver.execute(context(0));
+    driver.advanceFrame?.({ ...context(0), elapsedMs: 1, progress: 0.5 });
+    const halfway = scene.extend.apkCaptureResponsiveState().game;
+    expect(halfway.totalAttempts, "a halfway demonstration must not score yet").toBe(0);
+    expect(
+      halfway.player.x !== start.x || halfway.player.y !== start.y,
+      "a halfway demonstration must move the player",
+    ).toBe(true);
+    driver.advanceFrame?.({ ...context(0), elapsedMs: 2, progress: 1 });
+
     expect(scene.extend.apkCaptureResponsiveState().game).toMatchObject({
       phase: "playing",
       targetIndex: 0,
@@ -803,14 +825,16 @@ describe("Enchanted Library bespoke cartridge", () => {
       const step = definition.tutorial.steps[actionIndex];
       if (!step) throw new Error("Expected tutorial step");
       const driver = cartridge.standardExperience.createTutorialActionDriver();
+      const context = {
+        tutorial: definition.tutorial,
+        step,
+        seed: definition.tutorial.seed,
+        mode: "tutorial" as const,
+        diagnostics: { report: vi.fn() },
+      };
       for (let attempt = 0; attempt < attempts; attempt += 1) {
-        driver.execute({
-          tutorial: definition.tutorial,
-          step,
-          seed: definition.tutorial.seed,
-          mode: "tutorial",
-          diagnostics: { report: vi.fn() },
-        });
+        driver.execute(context);
+        driver.advanceFrame?.({ ...context, elapsedMs: 1, progress: 1 });
       }
       return complete;
     };

@@ -3,9 +3,6 @@ import {
   OWNER_APPROVED_CANONICAL_BINDINGS,
 } from "@reading-advantage/advantage-play-kit/assets";
 import {
-  DEVELOPER_KIT_API_VERSION,
-} from "@reading-advantage/advantage-play-kit/compatibility";
-import {
   DEFAULT_RESPONSIVE_LAYOUT_CONFIG,
   resolveResponsiveComposition,
   type ResponsiveComposition,
@@ -149,7 +146,6 @@ export interface ExistingCoreQcRegistryEntry {
 
 /** T11 manifest additions required by the explicit Task 4 QC adapter. */
 export interface ExistingCoreQcManifest extends CartridgeManifest {
-  readonly developerKitApiVersion: typeof DEVELOPER_KIT_API_VERSION;
   readonly resultAbi: readonly ["accuracy", "xp", "score", "correctAnswers", "totalAttempts"];
   readonly inputSupport: Readonly<{ keyboard: true; pointer: true; touch: true }>;
 }
@@ -422,14 +418,13 @@ function selectedSemanticKeys(candidate: ExistingCoreSemanticAdoptionCandidate):
 
 function createManifest(
   candidate: ExistingCoreSemanticAdoptionCandidate,
-  semanticAssetRequirements: readonly string[],
+  requiredAssetBindings: readonly string[],
 ): ExistingCoreQcManifest {
   const manifest = validateCartridgeManifest({
     schemaVersion: 1,
     id: candidate.publicId,
     title: candidate.title,
     description: `Evidence-bounded ${candidate.title} mechanic adapter for Advantage Games QC only.`,
-    version: "0.1.0",
     runtimeApiVersion: "1.0.0",
     inputMode: candidate.inputMode,
     capabilities: [
@@ -439,7 +434,7 @@ function createManifest(
       "capability:single-completion-emission",
     ],
     standardPackBinding: ACCEPTED_STANDARD_PACK_BINDING,
-    semanticAssetRequirements,
+    requiredAssetBindings,
     responsive: {
       profiles: ["compact", "wide"],
       compactStrategy: "reflow",
@@ -455,7 +450,6 @@ function createManifest(
   });
   return Object.freeze({
     ...manifest,
-    developerKitApiVersion: DEVELOPER_KIT_API_VERSION,
     resultAbi: Object.freeze(["accuracy", "xp", "score", "correctAnswers", "totalAttempts"] as const),
     inputSupport: Object.freeze({ keyboard: true, pointer: true, touch: true } as const),
   });

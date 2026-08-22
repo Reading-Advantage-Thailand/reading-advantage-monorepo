@@ -4,17 +4,22 @@ import {
   type GameResults,
 } from "@reading-advantage/game-contracts";
 import {
+  createActorSpriteLayer,
   createBoundedFrameScheduler,
   createCompletionLatch,
   createInputActionNormalizer,
   createLanguageTargetProgression,
   createResultAccountant,
   finalizeResult,
+  preloadAssetBindings,
   validateNonEmptyContent,
+  type ActorSpriteLayer,
+  type ActorSpriteLike,
   type APKInputController,
   type CartridgeGameConfigContext,
   type CompletionDelivery,
   type InputActionId,
+  type RuntimeEdition,
 } from "@reading-advantage/advantage-play-kit";
 import type { StandardExperienceCartridge } from "@reading-advantage/advantage-play-kit/presentation";
 
@@ -151,6 +156,14 @@ interface PhaserSceneLike {
   add?: {
     graphics(): PhaserGraphicsLike;
     text(x: number, y: number, value: string, style?: Readonly<Record<string, unknown>>): PhaserTextLike;
+    image?(x: number, y: number, key: string, frame?: number): ActorSpriteLike;
+    sprite?(x: number, y: number, key: string, frame?: number): ActorSpriteLike;
+    tileSprite?(x: number, y: number, width: number, height: number, key: string): ActorSpriteLike;
+  };
+  load?: {
+    image?(key: string, url: string): unknown;
+    spritesheet?(key: string, url: string, config: { frameWidth: number; frameHeight: number }): unknown;
+    audio?(key: string, urls: string | string[]): unknown;
   };
   events?: {
     once(event: string, listener: () => void): void;
@@ -161,6 +174,7 @@ interface PhaserSceneLike {
 
 /** Resources owned by one active Astral Mage scene. */
 interface SceneResources {
+  readonly art: ActorSpriteLayer;
   readonly graphics: PhaserGraphicsLike;
   readonly title: PhaserTextLike;
   readonly prompt: PhaserTextLike;
@@ -177,6 +191,7 @@ interface AstralMageResponsiveState {
 
 /** Current Phaser scene options passed to the Astral Mage renderer. */
 interface AstralMageSceneContext {
+  readonly edition: RuntimeEdition;
   readonly controller: AstralMageController;
   readonly inputController: APKInputController;
   readonly composition: CartridgeGameConfigContext["composition"];
@@ -514,7 +529,7 @@ function createScene(context: AstralMageSceneContext): Readonly<Record<string, u
     const mageY = mage.y * height;
 
     resources.graphics.clear();
-    resources.graphics.fillStyle(0x07091d, 1).fillRect(0, 0, width, height);
+    if (!resources.art.ground("world:ground", width, height)) resources.graphics.fillStyle(0x07091d, 1).fillRect(0, 0, width, height);
     for (let index = 0; index < 20; index += 1) {
       const starX = ((index * 151) % 997) / 997 * width;
       const starY = ((index * 89) % 541) / 541 * height;
@@ -529,9 +544,12 @@ function createScene(context: AstralMageSceneContext): Readonly<Record<string, u
       resources.graphics.fillStyle(0xf5e8ff, 0.75).fillCircle(point.x, point.y - 5 - pulse, 5);
       targetLabels[index]?.setPosition(point.x - 42, point.y + 24);
     }
-    resources.graphics.fillStyle(0x9c70ff, 0.95).fillCircle(mageX, mageY, 22);
-    resources.graphics.fillStyle(0xeee4ff, 1).fillCircle(mageX, mageY - 18, 13);
-    resources.graphics.fillStyle(0x42d4ff, 0.9).fillTriangle(mageX - 25, mageY + 18, mageX, mageY - 58, mageX + 25, mageY + 18);
+    if (!resources.art.place("player", "player:idle", { x: mageX, y: mageY, width: 62, depth: 8 })) {
+      resources.graphics.fillStyle(0x9c70ff, 0.95).fillCircle(mageX, mageY, 22);
+      resources.graphics.fillStyle(0xeee4ff, 1).fillCircle(mageX, mageY - 18, 13);
+      resources.graphics.fillStyle(0x42d4ff, 0.9).fillTriangle(mageX - 25, mageY + 18, mageX, mageY - 58, mageX + 25, mageY + 18);
+    }
+    resources.art.sweep();
     resources.title.setText("ASTRAL MAGE").setPosition(28, 20);
     resources.prompt.setText(`Cast the sentence for: ${state.prompt}`).setPosition(28, 60);
     resources.progress
@@ -592,11 +610,24 @@ function createScene(context: AstralMageSceneContext): Readonly<Record<string, u
     previousKeys = new Set<string>();
   };
 
+
+  const artKeys = ["world:ground", "player:idle", "enemy:idle"] as const;
+
+  const preload = function (this: PhaserSceneLike): void {
+    if (!this.load) return;
+    preloadAssetBindings(
+      this.load,
+      context.edition,
+      artKeys.filter((key) => context.edition.bindings[key]),
+    );
+  };
+
   const create = function (this: PhaserSceneLike): void {
     if (!this.add) throw new Error("Astral Mage requires Phaser display services");
     const textStyle = { fontFamily: "Arial", color: "#f8fbff", fontSize: "20px" };
     resources = {
       graphics: this.add.graphics(),
+      art: createActorSpriteLayer(this, context.edition),
       title: this.add.text(28, 20, "ASTRAL MAGE", { ...textStyle, fontSize: "30px", fontStyle: "bold" }),
       prompt: this.add.text(28, 60, "", { ...textStyle, fontSize: "24px", wordWrap: { width: 860 } }),
       progress: this.add.text(28, 96, "", { ...textStyle, fontSize: "16px", color: "#b8c9ff" }),
@@ -653,6 +684,7 @@ function createScene(context: AstralMageSceneContext): Readonly<Record<string, u
 
   return {
     key: ASTRAL_MAGE_ID,
+    preload,
     create,
     update,
     extend: {
@@ -704,7 +736,6 @@ export function createAstralMageCartridge(): StandardExperienceCartridge {
       id: ASTRAL_MAGE_ID,
       title: "Astral Mage",
       description: "Move a mage through a star arena and cast sentence words in order.",
-      version: "0.1.0",
       runtimeApiVersion: "1.0.0",
       inputMode: "sentence",
       requiredAssetBindings: [],
@@ -734,6 +765,7 @@ export function createAstralMageCartridge(): StandardExperienceCartridge {
         render: { antialias: true, pixelArt: false },
         scene: createScene({
           controller,
+          edition: context.edition,
           inputController: context.inputController,
           composition: context.composition,
           totalSentences: input.length,

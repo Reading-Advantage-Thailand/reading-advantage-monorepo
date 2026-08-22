@@ -12,12 +12,11 @@ describe("cartridge manifest schema", () => {
     id: "exemplar-vocab-match",
     title: "Exemplar Vocabulary Match",
     description: "A representative cartridge built entirely through public APK APIs.",
-    version: "0.1.0",
     runtimeApiVersion: "1.0.0",
     inputMode: "vocabulary",
     capabilities: ["capability:nonempty-content-precondition", "capability:language-target-progression"],
     standardPackBinding: ACCEPTED_STANDARD_PACK_BINDING,
-    semanticAssetRequirements: [],
+    requiredAssetBindings: [],
     attributionRegistration: {
       requiredCredit: "Pixel art assets by ElvGames",
       placement: "end-screen",
@@ -105,13 +104,13 @@ describe("cartridge manifest schema", () => {
     ).toThrow(/accepted release/i);
   });
 
-  it("rejects a manifest listing a capability outside the accepted registry", () => {
+  it("rejects a capability id that does not use the capability namespace", () => {
     expect(() =>
-      validateCartridgeManifest({
-        ...validManifest,
-        capabilities: ["capability:title-specific-boss-fight"],
-      }),
-    ).toThrow(/validation failed|capability/i);
+      validateCartridgeManifest({ ...validManifest, capabilities: ["arcade-physics"] }),
+    ).toThrow(/capability/i);
+    expect(() =>
+      validateCartridgeManifest({ ...validManifest, capabilities: [] }),
+    ).toThrow(/validation failed/i);
   });
 
   it("rejects a manifest with missing attribution registration", () => {
@@ -148,7 +147,7 @@ describe("cartridge manifest schema", () => {
     expect(() =>
       validateCartridgeManifest({
         ...validManifest,
-        semanticAssetRequirements: ["ui/16x16/icons/coin.png"],
+        requiredAssetBindings: ["ui/16x16/icons/coin.png"],
       }),
     ).toThrow(/semantic/i);
   });
@@ -156,9 +155,9 @@ describe("cartridge manifest schema", () => {
   it("accepts semantic asset requirements that are semantic keys", () => {
     const manifest = validateCartridgeManifest({
       ...validManifest,
-      semanticAssetRequirements: ["ui/16x16/icons/coin"],
+      requiredAssetBindings: ["ui/16x16/icons/coin"],
     });
-    expect(manifest.semanticAssetRequirements).toContain("ui/16x16/icons/coin");
+    expect(manifest.requiredAssetBindings).toContain("ui/16x16/icons/coin");
   });
 
   it("exposes the frozen accepted standard-pack binding for cartridges to pin", () => {

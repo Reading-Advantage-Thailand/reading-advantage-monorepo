@@ -4,17 +4,22 @@ import {
   type GameResults,
 } from "@reading-advantage/game-contracts";
 import {
+  createActorSpriteLayer,
   createBoundedFrameScheduler,
   createCompletionLatch,
   createInputActionNormalizer,
   createLanguageTargetProgression,
   createResultAccountant,
   finalizeResult,
+  preloadAssetBindings,
   validateNonEmptyContent,
+  type ActorSpriteLayer,
+  type ActorSpriteLike,
   type APKInputController,
   type CartridgeGameConfigContext,
   type GameTerminalOutcome,
   type InputActionId,
+  type RuntimeEdition,
 } from "@reading-advantage/advantage-play-kit";
 import type { StandardExperienceCartridge } from "@reading-advantage/advantage-play-kit/presentation";
 
@@ -269,6 +274,14 @@ interface PhaserSceneLike {
   add?: {
     graphics(): PhaserGraphicsLike;
     text(x: number, y: number, value: string, style?: Readonly<Record<string, unknown>>): PhaserTextLike;
+    image?(x: number, y: number, key: string, frame?: number): ActorSpriteLike;
+    sprite?(x: number, y: number, key: string, frame?: number): ActorSpriteLike;
+    tileSprite?(x: number, y: number, width: number, height: number, key: string): ActorSpriteLike;
+  };
+  load?: {
+    image?(key: string, url: string): unknown;
+    spritesheet?(key: string, url: string, config: { frameWidth: number; frameHeight: number }): unknown;
+    audio?(key: string, urls: string | string[]): unknown;
   };
   events?: { once(event: string, listener: () => void): void };
   game?: { readonly canvas?: PhaserCanvasLike };
@@ -277,6 +290,7 @@ interface PhaserSceneLike {
 
 /** Display objects owned by one active scene. */
 interface SceneResources {
+  readonly art: ActorSpriteLayer;
   readonly graphics: PhaserGraphicsLike;
   readonly title: PhaserTextLike;
   readonly prompt: PhaserTextLike;
@@ -288,6 +302,7 @@ interface SceneResources {
 
 /** Context passed from the cartridge to its procedural scene. */
 interface AbyssalWellSceneContext {
+  readonly edition: RuntimeEdition;
   readonly controller: AbyssalWellController;
   readonly inputController: APKInputController;
   readonly composition: CartridgeGameConfigContext["composition"];
@@ -1103,44 +1118,63 @@ function createScene(context: AbyssalWellSceneContext): Readonly<Record<string, 
 
   const updateView = (scene: PhaserSceneLike): void => {
     if (!resources) return;
+    const view = resources;
+    const art = view.art;
     const { width, height } = dimensions(scene);
     const state = context.controller.snapshot();
     const center = getLanePosition(0, 0, width, height);
     const pulse = Math.sin(animationMs / 2_000 * Math.PI * 2) * 3;
     syncEnemyLabels(scene, state);
-    resources.graphics.clear();
-    resources.graphics.fillStyle(0x080b1a, 1).fillRect(0, 0, width, height);
-    resources.graphics.fillStyle(0x17143b, 0.95).fillCircle(center.x, center.y, Math.min(width, height) * 0.43);
+    view.graphics.clear();
+    if (!art.ground("world:ground", width, height)) view.graphics.fillStyle(0x080b1a, 1).fillRect(0, 0, width, height);
+    view.graphics.fillStyle(0x17143b, 0.95).fillCircle(center.x, center.y, Math.min(width, height) * 0.43);
     for (let ring = 4; ring >= 1; ring -= 1) {
-      resources.graphics.fillStyle(ring % 2 === 0 ? 0x24205a : 0x1c1948, 0.92)
+      view.graphics.fillStyle(ring % 2 === 0 ? 0x24205a : 0x1c1948, 0.92)
         .fillCircle(center.x, center.y, Math.min(width, height) * (0.08 + ring * 0.085));
     }
     for (let lane = 0; lane < ABYSSAL_WELL_LANES; lane += 1) {
       const point = getLanePosition(lane, 0.82, width, height);
-      resources.graphics.fillStyle(lane === state.player.lane ? 0x2dd4bf : 0x52608a, lane === state.player.lane ? 0.32 : 0.16)
+      view.graphics.fillStyle(lane === state.player.lane ? 0x2dd4bf : 0x52608a, lane === state.player.lane ? 0.32 : 0.16)
         .fillCircle(point.x, point.y, 10);
     }
     for (const projectile of state.projectiles) {
       const point = getLanePosition(projectile.lane, projectile.depth, width, height);
-      resources.graphics.fillStyle(0x67e8f9, 0.96).fillCircle(point.x, point.y, 7);
+      view.graphics.fillStyle(0x67e8f9, 0.96).fillCircle(point.x, point.y, 7);
     }
-    for (const enemy of state.enemies) {
+    state.enemies.forEach((enemy, index) => {
       const point = getLanePosition(enemy.lane, enemy.depth, width, height);
       const radius = 13 + enemy.depth * 10;
       const target = enemy.wordIndex === state.targetIndex;
-      resources.graphics.fillStyle(target ? 0xf59e0b : 0x8b5cf6, 0.96).fillCircle(point.x, point.y, radius);
-      resources.graphics.lineStyle(3, target ? 0xfef3c7 : 0xc4b5fd, 0.9).strokeRoundedRect(point.x - radius, point.y - radius, radius * 2, radius * 2, radius);
-      resources.enemyLabels.get(enemy.id)?.setPosition(point.x - 48, point.y + radius + 4);
-    }
+      const drawn = art.place(`enemy:${index}`, "enemy:idle", {
+        x: point.x,
+        y: point.y,
+        width: radius * 2.4,
+        depth: 7,
+        alpha: target ? 1 : 0.9,
+      });
+      if (!drawn) {
+        view.graphics.fillStyle(target ? 0xf59e0b : 0x8b5cf6, 0.96).fillCircle(point.x, point.y, radius);
+        view.graphics.lineStyle(3, target ? 0xfef3c7 : 0xc4b5fd, 0.9).strokeRoundedRect(point.x - radius, point.y - radius, radius * 2, radius * 2, radius);
+      }
+      view.enemyLabels.get(enemy.id)?.setPosition(point.x - 48, point.y + radius + 4);
+    });
     const player = getLanePosition(state.player.lane, 1, width, height);
-    resources.graphics.fillStyle(0x22d3ee, 1).fillCircle(player.x, player.y + pulse, 18);
-    resources.graphics.lineStyle(3, 0xa5f3fc, 1).strokeRoundedRect(player.x - 22, player.y - 22 + pulse, 44, 44, 22);
-    resources.title.setText("THE ABYSSAL WELL").setPosition(28, 18);
-    resources.prompt.setText(`Defend the rim: ${state.sentence.translation}`).setPosition(28, 58);
-    resources.progress
+    if (!art.place("player", "player:idle", {
+      x: player.x,
+      y: player.y + pulse,
+      width: 46,
+      depth: 8,
+    })) {
+      view.graphics.fillStyle(0x22d3ee, 1).fillCircle(player.x, player.y + pulse, 18);
+    }
+    art.sweep();
+    view.graphics.lineStyle(3, 0xa5f3fc, 1).strokeRoundedRect(player.x - 22, player.y - 22 + pulse, 44, 44, 22);
+    view.title.setText("THE ABYSSAL WELL").setPosition(28, 18);
+    view.prompt.setText(`Defend the rim: ${state.sentence.translation}`).setPosition(28, 58);
+    view.progress
       .setText(`${composition?.profile === "compact" ? "Compact well" : "Radial well"}  |  Target ${Math.min(state.targetIndex + 1, state.words.length)} of ${state.words.length}  |  Word ${state.words[state.targetIndex] ?? "complete"}  |  Lives ${state.player.lives}`)
       .setPosition(28, 94);
-    resources.feedback
+    view.feedback
       .setText(state.phase === "victory"
         ? "The ordered words sealed the well."
         : state.phase === "defeat"
@@ -1149,7 +1183,7 @@ function createScene(context: AbyssalWellSceneContext): Readonly<Record<string, 
             ? "That orb fades. Keep the current word in order."
             : "Rotate to a lane, then fire at the next word.")
       .setPosition(28, height - 70);
-    resources.instructions
+    view.instructions
       .setText("Keyboard: A / ←, D / →, Space  •  Touch: left / center / right")
       .setPosition(28, height - 36);
   };
@@ -1173,12 +1207,25 @@ function createScene(context: AbyssalWellSceneContext): Readonly<Record<string, 
     previousKeys = new Set<string>();
   };
 
+
+  const artKeys = ["world:ground", "player:idle", "enemy:idle"] as const;
+
+  const preload = function (this: PhaserSceneLike): void {
+    if (!this.load) return;
+    preloadAssetBindings(
+      this.load,
+      context.edition,
+      artKeys.filter((key) => context.edition.bindings[key]),
+    );
+  };
+
   const create = function (this: PhaserSceneLike): void {
     if (resources) return;
     if (!this.add) throw new Error("The Abyssal Well requires Phaser display services");
     const textStyle = { fontFamily: "Arial", color: "#f8fbff", fontSize: "20px" };
     resources = {
       graphics: this.add.graphics(),
+      art: createActorSpriteLayer(this, context.edition),
       title: this.add.text(28, 18, "THE ABYSSAL WELL", { ...textStyle, fontSize: "29px", fontStyle: "bold" }),
       prompt: this.add.text(28, 58, "", { ...textStyle, fontSize: "23px", wordWrap: { width: 860 } }),
       progress: this.add.text(28, 94, "", { ...textStyle, fontSize: "16px", color: "#b7d9ff" }),
@@ -1219,6 +1266,7 @@ function createScene(context: AbyssalWellSceneContext): Readonly<Record<string, 
 
   return {
     key: ABYSSAL_WELL_ID,
+    preload,
     create,
     update,
     extend: {
@@ -1281,7 +1329,6 @@ export function createAbyssalWellCartridge(): StandardExperienceCartridge {
       id: ABYSSAL_WELL_ID,
       title: "The Abyssal Well",
       description: "Rotate around a dark well and shoot ordered word enemies before they reach the rim.",
-      version: "0.1.0",
       runtimeApiVersion: "1.0.0",
       inputMode: "sentence",
       requiredAssetBindings: ["abyssal-well/rim-and-enemies"],
@@ -1314,6 +1361,7 @@ export function createAbyssalWellCartridge(): StandardExperienceCartridge {
         render: { antialias: false, pixelArt: true },
         scene: createScene({
           controller,
+          edition: context.edition,
           inputController: context.inputController,
           composition: context.composition,
           diagnostic: context.diagnostic,

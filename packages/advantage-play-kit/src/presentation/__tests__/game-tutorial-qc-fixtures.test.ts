@@ -248,7 +248,8 @@ describe("guided tutorial QC fixtures", () => {
     ]);
 
     await fixture.controller.start();
-    await fixture.clock.runAll();
+    // One step takes 10 ms lead-in and 20 ms demonstration. Stop before the sequential advance.
+    await fixture.clock.advanceBy(30);
     const snapshot = fixture.controller.getSnapshot();
     render(
       createElement(GameTutorialScreen, {

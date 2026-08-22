@@ -5,7 +5,6 @@ import {
   getCirclePosition,
   calculateXP,
   isPointInCircle,
-  type RuneForgeChamberState,
 } from './runeForgeChamber'
 import { RUNE_FORGE_CHAMBER_CONFIG, GAME_WIDTH, GAME_HEIGHT } from './runeForgeChamberConfig'
 import type { VocabularyItem } from '@/store/useGameStore'

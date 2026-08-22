@@ -4,16 +4,21 @@ import {
   type GameResults,
 } from "@reading-advantage/game-contracts";
 import {
+  createActorSpriteLayer,
   createBoundedFrameScheduler,
   createCompletionLatch,
   createInputActionNormalizer,
   createResultAccountant,
   finalizeResult,
+  preloadAssetBindings,
   validateNonEmptyContent,
+  type ActorSpriteLayer,
+  type ActorSpriteLike,
   type APKInputController,
   type CartridgeGameConfigContext,
   type GameTerminalOutcome,
   type InputActionId,
+  type RuntimeEdition,
 } from "@reading-advantage/advantage-play-kit";
 import type { StandardExperienceCartridge } from "@reading-advantage/advantage-play-kit/presentation";
 
@@ -427,6 +432,14 @@ interface PhaserSceneLike {
   add?: {
     graphics(): PhaserGraphicsLike;
     text(x: number, y: number, value: string, style?: Readonly<Record<string, unknown>>): PhaserTextLike;
+    image?(x: number, y: number, key: string, frame?: number): ActorSpriteLike;
+    sprite?(x: number, y: number, key: string, frame?: number): ActorSpriteLike;
+    tileSprite?(x: number, y: number, width: number, height: number, key: string): ActorSpriteLike;
+  };
+  load?: {
+    image?(key: string, url: string): unknown;
+    spritesheet?(key: string, url: string, config: { frameWidth: number; frameHeight: number }): unknown;
+    audio?(key: string, urls: string | string[]): unknown;
   };
   events?: { once(event: string, listener: () => void): void };
   game?: { readonly canvas?: PhaserCanvasLike };
@@ -434,6 +447,7 @@ interface PhaserSceneLike {
 }
 
 interface SceneResources {
+  readonly art: ActorSpriteLayer;
   readonly graphics: PhaserGraphicsLike;
   readonly title: PhaserTextLike;
   readonly prompt: PhaserTextLike;
@@ -444,6 +458,7 @@ interface SceneResources {
 }
 
 interface SceneContext {
+  readonly edition: RuntimeEdition;
   readonly controller: DungeonLiberatorController;
   readonly inputController: APKInputController;
   readonly composition: CartridgeGameConfigContext["composition"];
@@ -1292,6 +1307,7 @@ function createScene(context: SceneContext): Readonly<Record<string, unknown>> {
 
   const updateView = (scene: PhaserSceneLike): void => {
     if (!resources) return;
+    const art = resources.art;
     const { width, height } = dimensions(scene);
     const state = context.controller.snapshot();
     syncWordLabels(scene, state);
@@ -1304,7 +1320,7 @@ function createScene(context: SceneContext): Readonly<Record<string, unknown>> {
     const graphics = resources.graphics;
 
     graphics.clear();
-    graphics.fillStyle(0x0b1020, 1).fillRect(0, 0, width, height);
+    if (!art.ground("world:ground", width, height)) graphics.fillStyle(0x0b1020, 1).fillRect(0, 0, width, height);
     graphics.fillStyle(0x1d2638, 0.96).fillRoundedRect(width * 0.04, height * 0.13, width * 0.92, height * 0.68, 22);
     graphics.lineStyle(3, 0x7c4a28, 0.9).strokeRoundedRect(width * 0.04, height * 0.13, width * 0.92, height * 0.68, 22);
     graphics.fillStyle(0xf59e0b, 0.24).fillCircle(width * 0.12, height * 0.22, Math.max(18, width * 0.035));
@@ -1329,14 +1345,30 @@ function createScene(context: SceneContext): Readonly<Record<string, unknown>> {
       const label = wordLabels[state.prisoners.indexOf(prisoner)];
       label?.setPosition(point.x - 40, point.y + 24);
     }
-    for (const monster of state.monsters) {
+    const artScale = Math.min(scaleX, scaleY);
+    state.monsters.forEach((monster, index) => {
       const point = toScene(monster);
-      graphics.fillStyle(0xef4444, 0.9).fillCircle(point.x, point.y, monster.radius * Math.min(scaleX, scaleY));
+      const drawn = art.place(`monster:${index}`, "enemy:idle", {
+        x: point.x,
+        y: point.y,
+        width: monster.radius * 2.6 * artScale,
+        depth: 7,
+      });
+      if (drawn) return;
+      graphics.fillStyle(0xef4444, 0.9).fillCircle(point.x, point.y, monster.radius * artScale);
       graphics.fillStyle(0xfee2e2, 0.85).fillCircle(point.x - 6, point.y - 4, 4);
       graphics.fillStyle(0xfee2e2, 0.85).fillCircle(point.x + 6, point.y - 4, 4);
+    });
+    if (!art.place("player", "player:idle", {
+      x: playerPoint.x,
+      y: playerPoint.y,
+      width: state.player.radius * 2.8 * artScale,
+      depth: 8,
+    })) {
+      graphics.fillStyle(0x38bdf8, 1).fillCircle(playerPoint.x, playerPoint.y, state.player.radius * artScale);
+      graphics.fillStyle(0xe0f2fe, 0.9).fillCircle(playerPoint.x, playerPoint.y - 8, 7 * artScale);
     }
-    graphics.fillStyle(0x38bdf8, 1).fillCircle(playerPoint.x, playerPoint.y, state.player.radius * Math.min(scaleX, scaleY));
-    graphics.fillStyle(0xe0f2fe, 0.9).fillCircle(playerPoint.x, playerPoint.y - 8, 7 * Math.min(scaleX, scaleY));
+    art.sweep();
 
     resources.title.setText("DUNGEON LIBERATOR").setPosition(28, 18);
     resources.prompt.setText(`Rescue in order: ${state.prompt}`).setPosition(28, 57);
@@ -1403,12 +1435,25 @@ function createScene(context: SceneContext): Readonly<Record<string, unknown>> {
     previousKeys = new Set<string>();
   };
 
+
+  const artKeys = ["world:ground", "player:idle", "enemy:idle"] as const;
+
+  const preload = function (this: PhaserSceneLike): void {
+    if (!this.load) return;
+    preloadAssetBindings(
+      this.load,
+      context.edition,
+      artKeys.filter((key) => context.edition.bindings[key]),
+    );
+  };
+
   const create = function (this: PhaserSceneLike): void {
     if (!this.add) throw new Error("Dungeon Liberator requires Phaser display services");
     const textWidth = Math.max(220, (context.composition?.safeRect?.width ?? DUNGEON_LIBERATOR_CANVAS.width) - 56);
     const style = { fontFamily: "Arial", color: "#f8fbff", fontSize: "18px", wordWrap: { width: textWidth } };
     resources = {
       graphics: this.add.graphics(),
+      art: createActorSpriteLayer(this, context.edition),
       title: this.add.text(28, 18, "", { ...style, fontSize: "29px", fontStyle: "bold" }),
       prompt: this.add.text(28, 57, "", { ...style, fontSize: "23px", wordWrap: { width: 860 } }),
       progress: this.add.text(28, 94, "", { ...style, fontSize: "16px", color: "#bae6fd" }),
@@ -1468,6 +1513,7 @@ function createScene(context: SceneContext): Readonly<Record<string, unknown>> {
 
   return {
     key: DUNGEON_LIBERATOR_ID,
+    preload,
     create,
     update,
     extend: {
@@ -1509,7 +1555,6 @@ export function createDungeonLiberatorCartridge(): StandardExperienceCartridge {
       id: DUNGEON_LIBERATOR_ID,
       title: "Dungeon Liberator",
       description: "Move through a torchlit dungeon and rescue sentence prisoners in order.",
-      version: "0.1.0",
       runtimeApiVersion: "1.0.0",
       inputMode: "sentence",
       requiredAssetBindings: ["dungeon-liberator/prisoner-rescue"],
@@ -1537,6 +1582,7 @@ export function createDungeonLiberatorCartridge(): StandardExperienceCartridge {
         render: { antialias: false, pixelArt: true },
         scene: createScene({
           controller,
+          edition: context.edition,
           inputController: context.inputController,
           composition: context.composition,
           diagnostic: context.diagnostic,

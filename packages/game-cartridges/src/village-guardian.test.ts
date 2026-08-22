@@ -11,6 +11,7 @@ import { gameResultsSchema } from "@reading-advantage/game-contracts";
 import { describe, expect, it, vi } from "vitest";
 
 import { PHASE3_RUNTIME_EDITION } from "./legacy-traversal-phase3-test-helpers.js";
+import { createCatalogStandardEdition } from "./catalog-standard-art.js";
 import {
   VILLAGE_GUARDIAN_CANVAS,
   VILLAGE_GUARDIAN_INITIAL_LIVES,
@@ -109,11 +110,36 @@ function sceneHost() {
     texts.push(text);
     return text;
   };
+  const sprites: Array<Record<string, ReturnType<typeof vi.fn>>> = [];
+  const createSprite = () => {
+    const sprite: Record<string, ReturnType<typeof vi.fn>> = {
+      setOrigin: vi.fn(() => sprite),
+      setDisplaySize: vi.fn(() => sprite),
+      setDepth: vi.fn(() => sprite),
+      setPosition: vi.fn(() => sprite),
+      setVisible: vi.fn(() => sprite),
+      setFlipX: vi.fn(() => sprite),
+      setAngle: vi.fn(() => sprite),
+      setAlpha: vi.fn(() => sprite),
+      destroy: vi.fn(),
+    };
+    sprites.push(sprite);
+    return sprite;
+  };
+  const loadedImages: string[] = [];
   const listeners = new Map<string, () => void>();
   const host = {
     add: {
       graphics: vi.fn(() => graphics),
       text: vi.fn(() => createText()),
+      sprite: vi.fn(() => createSprite()),
+      image: vi.fn(() => createSprite()),
+      tileSprite: vi.fn(() => createSprite()),
+    },
+    load: {
+      image: vi.fn((key: string) => loadedImages.push(key)),
+      spritesheet: vi.fn((key: string) => loadedImages.push(key)),
+      audio: vi.fn(),
     },
     events: {
       once: vi.fn((event: string, listener: () => void) => listeners.set(event, listener)),
@@ -130,6 +156,8 @@ function sceneHost() {
     host,
     graphics,
     texts,
+    sprites,
+    loadedImages,
     emit(event: string): void {
       listeners.get(event)?.();
     },
@@ -864,4 +892,39 @@ describe("Village Guardian bespoke cartridge", () => {
       { term: " ", translation: "blank" },
     ], vi.fn())).toThrow(/blank/i);
   });
+
+  it("moves the standard-pack player sprite with the player, and never pins it to a fixed corner", () => {
+    const inputController = mutableInputController();
+    const cartridge = createVillageGuardianCartridge();
+    const config = cartridge.createGameConfig({
+      input: [...SENTENCES],
+      edition: createCatalogStandardEdition(["world:ground", "player:idle", "enemy:idle"], "/pack", "village-guardian"),
+      complete: vi.fn(),
+      diagnostic: vi.fn(),
+      inputController,
+      seed: 5,
+    });
+    const scene = config.scene as {
+      preload: (this: unknown) => void;
+      create: (this: unknown) => void;
+      update: (this: unknown, time?: number, delta?: number) => void;
+      extend: { apkCaptureResponsiveState: () => VillageGuardianSnapshot };
+    };
+    const host = sceneHost();
+    scene.preload.call(host.host);
+    scene.create.call(host.host);
+
+    expect(host.loadedImages.length, "the cartridge must load its own art").toBeGreaterThan(0);
+    const playerSprite = host.sprites.find((sprite) => sprite.setPosition.mock.calls.length > 0);
+    expect(playerSprite, "the player must own a sprite").toBeDefined();
+    const before = playerSprite!.setPosition.mock.calls.at(-1);
+
+    inputController.setSnapshot(inputSnapshot({ pressed: ["ArrowRight"] }));
+    scene.update.call(host.host, 0, 16);
+    const after = playerSprite!.setPosition.mock.calls.at(-1);
+
+    expect(after, "the sprite must follow the player").not.toEqual(before);
+    expect(scene.extend.apkCaptureResponsiveState().player.x).toBeGreaterThan(0);
+  });
+
 });

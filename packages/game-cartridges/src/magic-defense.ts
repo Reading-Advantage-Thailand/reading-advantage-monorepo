@@ -9,12 +9,15 @@ import {
   createInputActionNormalizer,
   createResultAccountant,
   finalizeResult,
+  preloadAssetBindings,
+  resolveAssetBinding,
   validateNonEmptyContent,
   type APKInputController,
   type APKInputSnapshot,
   type CartridgeGameConfigContext,
   type GameTerminalOutcome,
   type InputActionId,
+  type RuntimeEdition,
 } from "@reading-advantage/advantage-play-kit";
 import type { StandardExperienceCartridge } from "@reading-advantage/advantage-play-kit/presentation";
 
@@ -236,14 +239,26 @@ interface PhaserGraphicsLike {
   fillRect(x: number, y: number, width: number, height: number): this;
   fillCircle(x: number, y: number, radius: number): this;
   fillRoundedRect(x: number, y: number, width: number, height: number, radius?: number): this;
+  fillTriangle?(x0: number, y0: number, x1: number, y1: number, x2: number, y2: number): this;
   lineStyle(lineWidth: number, color: number, alpha?: number): this;
   strokeRoundedRect(x: number, y: number, width: number, height: number, radius?: number): this;
+  setDepth?(depth: number): this;
   destroy(): void;
 }
 
 interface PhaserTextLike {
   setPosition(x: number, y: number): this;
   setText(value: string): this;
+  setDepth?(depth: number): this;
+  destroy(): void;
+}
+
+interface PhaserImageLike {
+  setOrigin?(x: number, y: number): this;
+  setDisplaySize?(width: number, height: number): this;
+  setDepth?(depth: number): this;
+  setPosition?(x: number, y: number): this;
+  setVisible?(visible: boolean): this;
   destroy(): void;
 }
 
@@ -257,9 +272,16 @@ interface PhaserCanvasLike {
 }
 
 interface PhaserSceneLike {
+  load?: {
+    image?(key: string, url: string): unknown;
+    spritesheet?(key: string, url: string, config: { frameWidth: number; frameHeight: number }): unknown;
+  };
   add?: {
     graphics(): PhaserGraphicsLike;
     text(x: number, y: number, value: string, style?: Readonly<Record<string, unknown>>): PhaserTextLike;
+    image?(x: number, y: number, key: string, frame?: number): PhaserImageLike;
+    sprite?(x: number, y: number, key: string, frame?: number): PhaserImageLike;
+    tileSprite?(x: number, y: number, width: number, height: number, key: string): PhaserImageLike;
   };
   events?: { once(event: string, listener: () => void): void };
   game?: { readonly canvas?: PhaserCanvasLike };
@@ -267,6 +289,7 @@ interface PhaserSceneLike {
 }
 
 interface SceneResources {
+  readonly worldGraphics: PhaserGraphicsLike;
   readonly graphics: PhaserGraphicsLike;
   readonly title: PhaserTextLike;
   readonly prompt: PhaserTextLike;
@@ -277,6 +300,11 @@ interface SceneResources {
   readonly storm: PhaserTextLike;
   readonly choices: readonly PhaserTextLike[];
   readonly missiles: Map<string, PhaserTextLike>;
+  ground?: PhaserImageLike;
+  readonly worldSprites: PhaserImageLike[];
+  readonly unitSprites: Map<string, PhaserImageLike>;
+  worldWidth: number;
+  worldHeight: number;
 }
 
 interface MagicDefenseSceneContext {
@@ -285,15 +313,346 @@ interface MagicDefenseSceneContext {
   readonly composition: CartridgeGameConfigContext["composition"];
   readonly diagnostic: CartridgeGameConfigContext["diagnostic"];
   readonly sessionMode: NonNullable<CartridgeGameConfigContext["sessionMode"]>;
+  readonly edition: RuntimeEdition;
+}
+
+interface ResolvedFieldTexture {
+  readonly textureKey: string;
+  readonly frame?: number;
+}
+
+interface MagicDefenseApproachPose {
+  readonly x: number;
+  readonly y: number;
+  readonly size: number;
 }
 
 const CASTLE_X: Readonly<Record<MagicDefenseCastleId, number>> = Object.freeze({
-  left: 0.2,
+  left: 0.22,
   center: 0.5,
-  right: 0.8,
+  right: 0.78,
 });
 
+/** Horizon line as a fraction of canvas height. Enemies spawn here. */
+export const MAGIC_DEFENSE_HORIZON_Y_RATIO = 0.28;
+
+/** Keep baseline at the bottom edge of the canvas. */
+export const MAGIC_DEFENSE_TOWER_Y_RATIO = 1;
+
+/** Choice row as a fraction of canvas height. Boxes draw in front of the keeps. */
+export const MAGIC_DEFENSE_CHOICE_Y_RATIO = 0.84;
+
+/** Drawn size of one side-view keep at the near damage line. */
+export const MAGIC_DEFENSE_TOWER_DISPLAY = Object.freeze({ width: 108, height: 112 });
+
+/** Drawn width of an enemy that has reached a tower. */
+export const MAGIC_DEFENSE_ENEMY_NEAR_SIZE = 56;
+
+/** Perspective depth at the horizon. */
+export const MAGIC_DEFENSE_ENEMY_Z_FAR = 6;
+
+/** Perspective depth at the towers. */
+export const MAGIC_DEFENSE_ENEMY_Z_NEAR = 1;
+
+const FIELD_ART_KEYS = Object.freeze([
+  "world:ground",
+  "world:road",
+  "prop:tower",
+  "prop:tree",
+  "player:idle",
+  "enemy:idle",
+]);
+
+const HORIZON_TREE_X = Object.freeze([0.05, 0.12, 0.2, 0.31, 0.69, 0.8, 0.88, 0.95]);
+const MID_TREE_POSITIONS = Object.freeze([
+  Object.freeze({ x: 0.08, y: 0.46 }),
+  Object.freeze({ x: 0.16, y: 0.5 }),
+  Object.freeze({ x: 0.84, y: 0.5 }),
+  Object.freeze({ x: 0.92, y: 0.46 }),
+]);
+
 const DISTRACTOR_FALLBACKS = Object.freeze(["arcane ward", "moon shield", "storm light"]);
+
+/**
+ * Returns the 2.5D screen pose of one approaching enemy.
+ * Horizon enemies stay small. Tower enemies are large.
+ * @param progress Normalized walk from the horizon through the tower line.
+ * @param castleId Lane that this enemy walks.
+ * @param width Current scene width.
+ * @param height Current scene height.
+ * @returns Screen position and drawn size.
+ */
+export function magicDefenseApproachPose(
+  progress: number,
+  castleId: MagicDefenseCastleId,
+  width: number,
+  height: number,
+): MagicDefenseApproachPose {
+  const t = Math.min(1, Math.max(0, Number.isFinite(progress) ? progress : 0));
+  const z = MAGIC_DEFENSE_ENEMY_Z_FAR
+    + t * (MAGIC_DEFENSE_ENEMY_Z_NEAR - MAGIC_DEFENSE_ENEMY_Z_FAR);
+  const vanishX = width * 0.5;
+  const vanishY = height * MAGIC_DEFENSE_HORIZON_Y_RATIO;
+  const destX = width * CASTLE_X[castleId];
+  const destY = height * MAGIC_DEFENSE_TOWER_Y_RATIO;
+  return Object.freeze({
+    x: vanishX + (destX - vanishX) * t,
+    y: vanishY + (destY - vanishY) * t,
+    size: MAGIC_DEFENSE_ENEMY_NEAR_SIZE * (MAGIC_DEFENSE_ENEMY_Z_NEAR / z),
+  });
+}
+
+/**
+ * Returns whether the edition supplies outdoor field art for Magic Defense.
+ * @param edition Audience edition supplied by the host.
+ * @returns True when a ground tile is bound.
+ */
+function usesFieldArt(edition: RuntimeEdition): boolean {
+  return Boolean(edition.bindings?.["world:ground"]);
+}
+
+/**
+ * Resolves one named field texture when the edition binds that role.
+ * @param edition Audience edition supplied by the host.
+ * @param key Semantic binding key.
+ * @returns Texture key and optional frame, or undefined when the role is unbound.
+ */
+function fieldTexture(edition: RuntimeEdition, key: string): ResolvedFieldTexture | undefined {
+  if (!edition.bindings?.[key]) return undefined;
+  const resolved = resolveAssetBinding(edition, key);
+  return { textureKey: resolved.textureKey, frame: resolved.binding.frame };
+}
+
+/**
+ * Places one image or sprite at a world position.
+ * @param scene Active Phaser scene.
+ * @param x Horizontal display position.
+ * @param y Vertical display position.
+ * @param texture Resolved pack texture.
+ * @param displayWidth Drawn width.
+ * @param displayHeight Drawn height.
+ * @param depth Draw order.
+ * @param originX Horizontal origin.
+ * @param originY Vertical origin.
+ * @returns The created image, when Phaser display services exist.
+ */
+function placeImage(
+  scene: PhaserSceneLike,
+  x: number,
+  y: number,
+  texture: ResolvedFieldTexture,
+  displayWidth: number,
+  displayHeight: number,
+  depth: number,
+  originX = 0.5,
+  originY = 1,
+): PhaserImageLike | undefined {
+  const image = scene.add?.sprite?.(x, y, texture.textureKey, texture.frame ?? 0)
+    ?? scene.add?.image?.(x, y, texture.textureKey, texture.frame ?? 0);
+  image?.setOrigin?.(originX, originY);
+  image?.setDisplaySize?.(displayWidth, displayHeight);
+  image?.setDepth?.(depth);
+  return image;
+}
+
+/**
+ * Draws one trapezoid lane from the horizon to a tower.
+ * @param graphics World graphics layer.
+ * @param farX Horizon center of the lane.
+ * @param farY Horizon y.
+ * @param farWidth Lane width at the horizon.
+ * @param nearX Tower baseline x.
+ * @param nearY Tower baseline y.
+ * @param nearWidth Lane width at the towers.
+ * @returns Nothing. Fills two triangles when the API exists.
+ */
+function fillLane(
+  graphics: PhaserGraphicsLike,
+  farX: number,
+  farY: number,
+  farWidth: number,
+  nearX: number,
+  nearY: number,
+  nearWidth: number,
+): void {
+  if (!graphics.fillTriangle) return;
+  graphics.fillTriangle(
+    farX - farWidth / 2,
+    farY,
+    farX + farWidth / 2,
+    farY,
+    nearX - nearWidth / 2,
+    nearY,
+  );
+  graphics.fillTriangle(
+    farX + farWidth / 2,
+    farY,
+    nearX + nearWidth / 2,
+    nearY,
+    nearX - nearWidth / 2,
+    nearY,
+  );
+}
+
+/**
+ * Destroys persistent grass and tree sprites.
+ * @param resources Live scene resource bag.
+ * @returns Nothing. Clears world sprite ownership.
+ */
+function destroyWorldLayer(resources: SceneResources): void {
+  resources.ground?.destroy();
+  resources.ground = undefined;
+  for (const sprite of resources.worldSprites) sprite.destroy();
+  resources.worldSprites.length = 0;
+  resources.worldWidth = 0;
+  resources.worldHeight = 0;
+}
+
+/**
+ * Builds grass, dirt lanes, horizon trees, towers, and the mage once per size.
+ * @param scene Active Phaser scene.
+ * @param resources Live scene resource bag.
+ * @param edition Audience edition supplied by the host.
+ * @param width Current scene width.
+ * @param height Current scene height.
+ * @returns Nothing. Creates world sprites when missing.
+ */
+function ensureWorldLayer(
+  scene: PhaserSceneLike,
+  resources: SceneResources,
+  edition: RuntimeEdition,
+  width: number,
+  height: number,
+): void {
+  if (resources.worldWidth === width && resources.worldHeight === height && resources.ground) return;
+  destroyWorldLayer(resources);
+  resources.worldWidth = width;
+  resources.worldHeight = height;
+
+  const horizonY = height * MAGIC_DEFENSE_HORIZON_Y_RATIO;
+  const towerY = height * MAGIC_DEFENSE_TOWER_Y_RATIO;
+  const ground = fieldTexture(edition, "world:ground");
+  if (ground) {
+    const fieldHeight = Math.max(16, height - horizonY);
+    if (scene.add?.tileSprite) {
+      const tileWidth = 16 * Math.ceil(width / 16);
+      const tileHeight = 16 * Math.ceil(fieldHeight / 16);
+      const tiled = scene.add.tileSprite(0, horizonY, tileWidth, tileHeight, ground.textureKey);
+      tiled.setOrigin?.(0, 0);
+      tiled.setDepth?.(-25);
+      resources.ground = tiled;
+    } else {
+      const image = placeImage(scene, width / 2, horizonY, ground, width, fieldHeight, -25, 0.5, 0);
+      if (image) resources.ground = image;
+    }
+  }
+
+  const road = fieldTexture(edition, "world:road");
+  if (road) {
+    for (const castleId of MAGIC_DEFENSE_CASTLES) {
+      for (let step = 0; step <= 12; step += 1) {
+        const pose = magicDefenseApproachPose(step / 12, castleId, width, height);
+        const tile = Math.max(8, pose.size * 0.55);
+        const image = placeImage(scene, pose.x, pose.y, road, tile, tile, -16, 0.5, 0.5);
+        if (image) resources.worldSprites.push(image);
+      }
+    }
+  }
+
+  const tree = fieldTexture(edition, "prop:tree");
+  if (tree) {
+    for (const xRatio of HORIZON_TREE_X) {
+      const image = placeImage(scene, width * xRatio, horizonY + 6, tree, 22, 24, -12);
+      if (image) resources.worldSprites.push(image);
+    }
+    for (const position of MID_TREE_POSITIONS) {
+      const image = placeImage(
+        scene,
+        width * position.x,
+        height * position.y,
+        tree,
+        36,
+        40,
+        -6,
+      );
+      if (image) resources.worldSprites.push(image);
+    }
+  }
+
+  const tower = fieldTexture(edition, "prop:tower");
+  if (tower) {
+    for (const castleId of MAGIC_DEFENSE_CASTLES) {
+      const image = placeImage(
+        scene,
+        width * CASTLE_X[castleId],
+        towerY,
+        tower,
+        MAGIC_DEFENSE_TOWER_DISPLAY.width,
+        MAGIC_DEFENSE_TOWER_DISPLAY.height,
+        6,
+      );
+      if (image) resources.worldSprites.push(image);
+    }
+  }
+
+  const mage = fieldTexture(edition, "player:idle");
+  if (mage) {
+    const mageY = height * MAGIC_DEFENSE_CHOICE_Y_RATIO;
+    const image = placeImage(scene, width * CASTLE_X.center, mageY, mage, 56, 56, 10);
+    if (image) resources.worldSprites.push(image);
+  }
+}
+
+/**
+ * Moves or creates one approaching enemy sprite.
+ * @param scene Active Phaser scene.
+ * @param sprites Owned unit sprites.
+ * @param liveIds Identifiers still present this frame.
+ * @param id Stable sprite identifier.
+ * @param x Horizontal display position.
+ * @param y Vertical display position.
+ * @param texture Resolved pack texture.
+ * @param size Drawn size.
+ * @param depth Draw order.
+ * @returns Nothing. Updates sprite ownership.
+ */
+function syncUnitSprite(
+  scene: PhaserSceneLike,
+  sprites: Map<string, PhaserImageLike>,
+  liveIds: Set<string>,
+  id: string,
+  x: number,
+  y: number,
+  texture: ResolvedFieldTexture,
+  size: number,
+  depth: number,
+): void {
+  liveIds.add(id);
+  let sprite = sprites.get(id);
+  if (!sprite) {
+    sprite = placeImage(scene, x, y, texture, size, size, depth);
+    if (!sprite) return;
+    sprites.set(id, sprite);
+  }
+  sprite.setPosition?.(x, y);
+  sprite.setDisplaySize?.(size, size);
+  sprite.setDepth?.(depth);
+  sprite.setVisible?.(true);
+}
+
+/**
+ * Destroys unit sprites that are no longer in the current snapshot.
+ * @param sprites Owned unit sprites.
+ * @param liveIds Identifiers still present this frame.
+ * @returns Nothing. Removes stale sprites.
+ */
+function pruneUnitSprites(sprites: Map<string, PhaserImageLike>, liveIds: Set<string>): void {
+  for (const [id, sprite] of sprites) {
+    if (liveIds.has(id)) continue;
+    sprite.destroy();
+    sprites.delete(id);
+  }
+}
 
 /**
  * Returns the default session timer for a vocabulary deck.
@@ -862,6 +1221,7 @@ function createScene(context: MagicDefenseSceneContext): Readonly<Record<string,
   let composition = context.composition;
   let previousKeys = new Set<string>();
   let animationMs = 0;
+  const fieldArt = usesFieldArt(context.edition);
   const normalize = createInputActionNormalizer({
     keyboard: MAGIC_DEFENSE_KEYBOARD_BINDINGS,
     pointerTap: { action: "confirm" },
@@ -875,34 +1235,71 @@ function createScene(context: MagicDefenseSceneContext): Readonly<Record<string,
     const { width, height } = sceneDimensions(scene);
     const state = context.controller.snapshot();
     const active = resources;
-    const choiceY = height * 0.73;
+    const horizonY = height * MAGIC_DEFENSE_HORIZON_Y_RATIO;
+    const towerY = height * MAGIC_DEFENSE_TOWER_Y_RATIO;
+    const vanishX = width * 0.5;
+    const choiceY = height * MAGIC_DEFENSE_CHOICE_Y_RATIO;
     const choiceWidth = Math.min(250, width * 0.27);
     const choiceGap = Math.min(24, width * 0.035);
     const choicesWidth = choiceWidth * 3 + choiceGap * 2;
     const choiceStart = (width - choicesWidth) / 2;
-    const pulse = Math.sin(animationMs / 2_000 * Math.PI * 2) * 3;
+    const pulse = Math.sin(animationMs / 2_000 * Math.PI * 2) * 2;
+    const enemyTexture = fieldTexture(context.edition, "enemy:idle");
 
+    active.worldGraphics.clear();
     active.graphics.clear();
-    active.graphics.fillStyle(0x160d2b, 1).fillRect(0, 0, width, height);
-    active.graphics.fillStyle(0x35205f, 0.94).fillRoundedRect(width * 0.04, height * 0.16, width * 0.92, height * 0.72, 24);
-    for (const castle of state.castles) {
-      const x = CASTLE_X[castle.id] * width;
-      const castleWidth = Math.min(142, width * 0.17);
-      const castleHeight = Math.min(76, height * 0.14);
-      const y = height * 0.57;
-      active.graphics.fillStyle(castle.health > 0 ? 0x8b5cf6 : 0x475569, 1).fillRoundedRect(x - castleWidth / 2, y, castleWidth, castleHeight, 12);
-      active.graphics.lineStyle(3, castle.health === castle.maxHealth ? 0xfde68a : 0xf97316, 0.9).strokeRoundedRect(x - castleWidth / 2, y, castleWidth, castleHeight, 12);
-      active.graphics.fillStyle(0x0f172a, 0.9).fillRect(x - castleWidth / 2, y + castleHeight + 7, castleWidth, 9);
-      active.graphics.fillStyle(0x4ade80, 1).fillRect(x - castleWidth / 2, y + castleHeight + 7, castleWidth * castle.health / castle.maxHealth, 9);
+    active.worldGraphics.fillStyle(0x87b8e8, 1).fillRect(0, 0, width, horizonY);
+    if (fieldArt) {
+      ensureWorldLayer(scene, active, context.edition, width, height);
+    } else {
+      active.worldGraphics.fillStyle(0xcfe8a8, 1).fillRect(0, horizonY, width, height - horizonY);
     }
+    active.worldGraphics.fillStyle(0x6b8f3a, 0.35);
+    for (const castleId of MAGIC_DEFENSE_CASTLES) {
+      fillLane(
+        active.worldGraphics,
+        vanishX,
+        horizonY,
+        10,
+        width * CASTLE_X[castleId],
+        towerY,
+        96,
+      );
+    }
+    if (!fieldArt) {
+      for (const castle of state.castles) {
+        const x = CASTLE_X[castle.id] * width;
+        const castleWidth = Math.min(72, width * 0.1);
+        const castleHeight = MAGIC_DEFENSE_TOWER_DISPLAY.height;
+        const y = towerY - castleHeight;
+        active.worldGraphics.fillStyle(castle.health > 0 ? 0x8b5cf6 : 0x475569, 1)
+          .fillRoundedRect(x - castleWidth / 2, y, castleWidth, castleHeight, 8);
+      }
+    }
+    const liveIds = new Set<string>();
     for (const missile of state.activeMissiles) {
-      const x = CASTLE_X[missile.targetCastleId] * width;
-      const y = height * 0.23 + missile.progress * height * 0.3;
-      active.graphics.fillStyle(0xf97316, 0.92).fillCircle(x, y + pulse, 18);
-      active.graphics.lineStyle(2, 0xfef3c7, 0.85).strokeRoundedRect(x - 54, y - 39, 108, 30, 8);
+      const pose = magicDefenseApproachPose(missile.progress, missile.targetCastleId, width, height);
+      const size = pose.size + pulse * (0.2 + missile.progress);
+      if (enemyTexture) {
+        syncUnitSprite(
+          scene,
+          active.unitSprites,
+          liveIds,
+          missile.id,
+          pose.x,
+          pose.y,
+          enemyTexture,
+          size,
+          -4 + missile.progress * 16,
+        );
+      } else {
+        active.worldGraphics.fillStyle(0x38bdf8, 0.95).fillCircle(pose.x, pose.y - size / 2, size / 2);
+      }
       const label = active.missiles.get(missile.id);
-      label?.setText(missile.prompt).setPosition(x - 48, y - 34);
+      label?.setText(missile.prompt).setPosition(pose.x - 40, pose.y - size - 18);
+      label?.setDepth?.(20);
     }
+    pruneUnitSprites(active.unitSprites, liveIds);
     const existingIds = new Set(state.activeMissiles.map((missile) => missile.id));
     for (const [id, label] of active.missiles) {
       if (!existingIds.has(id)) {
@@ -912,31 +1309,41 @@ function createScene(context: MagicDefenseSceneContext): Readonly<Record<string,
     }
     for (const missile of state.activeMissiles) {
       if (!active.missiles.has(missile.id)) {
-        active.missiles.set(missile.id, scene.add.text(0, 0, missile.prompt, { fontFamily: "Arial", color: "#fff7ed", fontSize: "14px" }));
+        const label = scene.add.text(0, 0, missile.prompt, { fontFamily: "Arial", color: "#1f2937", fontSize: "14px" });
+        label.setDepth?.(20);
+        active.missiles.set(missile.id, label);
       }
+    }
+    for (const castle of state.castles) {
+      const x = CASTLE_X[castle.id] * width;
+      const barY = towerY - MAGIC_DEFENSE_TOWER_DISPLAY.height - 8;
+      active.graphics.fillStyle(0x0f172a, 0.85).fillRect(x - 28, barY, 56, 8);
+      active.graphics.fillStyle(castle.health > 0 ? 0x4ade80 : 0x64748b, 1)
+        .fillRect(x - 28, barY, 56 * castle.health / castle.maxHealth, 8);
     }
     for (let index = 0; index < 3; index += 1) {
       const x = choiceStart + index * (choiceWidth + choiceGap);
-      active.graphics.fillStyle(0xc084fc, 0.92).fillRoundedRect(x, choiceY, choiceWidth, 66, 12);
-      active.graphics.lineStyle(2, 0xfde68a, 0.82).strokeRoundedRect(x, choiceY, choiceWidth, 66, 12);
-      active.choices[index]?.setText(state.answerChoices[index] ?? "").setPosition(x + 14, choiceY + 23);
+      active.graphics.fillStyle(0xf8fafc, 0.92).fillRoundedRect(x, choiceY, choiceWidth, 56, 10);
+      active.graphics.lineStyle(2, 0x1e3a5f, 0.85).strokeRoundedRect(x, choiceY, choiceWidth, 56, 10);
+      active.choices[index]?.setText(state.answerChoices[index] ?? "").setPosition(x + 14, choiceY + 18);
     }
-    active.graphics.fillStyle(state.mana >= MAGIC_DEFENSE_MAX_MANA ? 0xfacc15 : 0x64748b, 0.95).fillRoundedRect(width * 0.74, 28, width * 0.22, 38, 10);
-    active.title.setText("MAGIC DEFENSE").setPosition(24, 20);
-    active.prompt.setText(`Type the translation for: ${state.prompt}`).setPosition(24, 66);
+    active.graphics.fillStyle(state.mana >= MAGIC_DEFENSE_MAX_MANA ? 0xfacc15 : 0x64748b, 0.95)
+      .fillRoundedRect(width * 0.74, 28, width * 0.22, 38, 10);
+    active.title.setText("MAGIC DEFENSE").setPosition(24, 16);
+    active.prompt.setText(`Type the translation for: ${state.prompt}`).setPosition(24, 52);
     active.hud.setText(
       `${composition?.profile === "compact" ? "Compact ward" : "Arcane ward"}  •  ${state.targetIndex}/${state.targetCount}  •  Score ${state.score}  •  Combo ${state.combo}  •  Mana ${state.mana}/${MAGIC_DEFENSE_MAX_MANA}  •  Time ${Math.ceil(state.timeRemaining)}`,
-    ).setPosition(24, 105);
-    active.buffer.setText(`Spell: ${state.typingBuffer || "_"}`).setPosition(24, height * 0.42);
+    ).setPosition(24, 86);
+    active.buffer.setText(`Spell: ${state.typingBuffer || "_"}`).setPosition(24, choiceY - 32);
     active.storm.setText(state.mana >= MAGIC_DEFENSE_MAX_MANA ? "STORM READY" : "STORM").setPosition(width * 0.77, 39);
     active.feedback.setText(
       state.phase === "victory"
         ? "Every vocabulary threat is destroyed!"
         : state.phase === "defeat"
           ? state.defeatReason === "timer" ? "Time has run out." : "All castles have fallen."
-          : state.lastOutcome === "incorrect" ? "That translation misses. Try again." : state.lastOutcome === "missed" ? "A missile hit its castle." : "Defend the castles with a translation.",
-    ).setPosition(24, height - 65);
-    active.instructions.setText("Type + Enter  •  Backspace erases  •  Tap a choice  •  Space uses storm").setPosition(24, height - 34);
+          : state.lastOutcome === "incorrect" ? "That translation misses. Try again." : state.lastOutcome === "missed" ? "A spirit reached a tower." : "Defend the towers. Enemies grow as they approach.",
+    ).setPosition(24, height - 48);
+    active.instructions.setText("Type + Enter  •  Backspace erases  •  Tap a choice  •  Space uses storm").setPosition(24, height - 26);
   };
 
   const choosePointer = (scene: PhaserSceneLike, input: APKInputSnapshot): void => {
@@ -947,7 +1354,7 @@ function createScene(context: MagicDefenseSceneContext): Readonly<Record<string,
       context.controller.activateStorm();
       return;
     }
-    if (pointer.y < height * 0.69 || pointer.y > height * 0.86) return;
+    if (pointer.y < height * MAGIC_DEFENSE_CHOICE_Y_RATIO || pointer.y > height * MAGIC_DEFENSE_CHOICE_Y_RATIO + 56) return;
     const choiceWidth = Math.min(250, width * 0.27);
     const choiceGap = Math.min(24, width * 0.035);
     const choicesWidth = choiceWidth * 3 + choiceGap * 2;
@@ -986,6 +1393,7 @@ function createScene(context: MagicDefenseSceneContext): Readonly<Record<string,
     if (!resources) return;
     const active = resources;
     resources = undefined;
+    active.worldGraphics.destroy();
     active.graphics.destroy();
     active.title.destroy();
     active.prompt.destroy();
@@ -997,25 +1405,55 @@ function createScene(context: MagicDefenseSceneContext): Readonly<Record<string,
     for (const choice of active.choices) choice.destroy();
     for (const missile of active.missiles.values()) missile.destroy();
     active.missiles.clear();
+    destroyWorldLayer(active);
+    for (const sprite of active.unitSprites.values()) sprite.destroy();
+    active.unitSprites.clear();
     previousKeys = new Set<string>();
+  };
+
+  const preload = function (this: PhaserSceneLike): void {
+    const keys = FIELD_ART_KEYS.filter((key) => Boolean(context.edition.bindings?.[key]));
+    if (!this.load || keys.length === 0) return;
+    preloadAssetBindings(this.load, context.edition, keys);
   };
 
   const create = function (this: PhaserSceneLike): void {
     if (!this.add) throw new Error("Magic Defense requires Phaser display services");
     const textWidth = Math.max(220, (context.composition?.safeRect?.width ?? MAGIC_DEFENSE_CANVAS.width) - 48);
-    const style = { fontFamily: "Arial", color: "#ffffff", fontSize: "18px", wordWrap: { width: textWidth } };
+    const style = { fontFamily: "Arial", color: "#0f172a", fontSize: "18px", wordWrap: { width: textWidth } };
+    const worldGraphics = this.add.graphics();
+    worldGraphics.setDepth?.(-18);
+    const hudGraphics = this.add.graphics();
+    hudGraphics.setDepth?.(50);
     resources = {
-      graphics: this.add.graphics(),
-      title: this.add.text(24, 20, "", { ...style, fontSize: "30px", fontStyle: "bold" }),
-      prompt: this.add.text(24, 66, "", { ...style, fontSize: "24px" }),
-      hud: this.add.text(24, 105, "", { ...style, fontSize: "15px", color: "#ddd6fe" }),
-      buffer: this.add.text(24, 0, "", { ...style, fontSize: "25px", color: "#fde68a" }),
-      feedback: this.add.text(24, 0, "", { ...style, fontSize: "17px", color: "#fef3c7" }),
-      instructions: this.add.text(24, 0, "", { ...style, fontSize: "14px", color: "#cbd5e1" }),
-      storm: this.add.text(0, 0, "", { ...style, fontSize: "14px", fontStyle: "bold" }),
-      choices: [0, 1, 2].map(() => this.add!.text(0, 0, "", { ...style, fontSize: "17px" })),
+      worldGraphics,
+      graphics: hudGraphics,
+      title: this.add.text(24, 20, "", { ...style, fontSize: "28px", fontStyle: "bold" }),
+      prompt: this.add.text(24, 66, "", { ...style, fontSize: "22px" }),
+      hud: this.add.text(24, 105, "", { ...style, fontSize: "14px", color: "#1e3a5f" }),
+      buffer: this.add.text(24, 0, "", { ...style, fontSize: "22px", color: "#7c2d12" }),
+      feedback: this.add.text(24, 0, "", { ...style, fontSize: "16px", color: "#1f2937" }),
+      instructions: this.add.text(24, 0, "", { ...style, fontSize: "13px", color: "#334155" }),
+      storm: this.add.text(0, 0, "", { ...style, fontSize: "14px", fontStyle: "bold", color: "#0f172a" }),
+      choices: [0, 1, 2].map(() => this.add!.text(0, 0, "", { ...style, fontSize: "16px" })),
       missiles: new Map(),
+      worldSprites: [],
+      unitSprites: new Map(),
+      worldWidth: 0,
+      worldHeight: 0,
     };
+    for (const text of [
+      resources.title,
+      resources.prompt,
+      resources.hud,
+      resources.buffer,
+      resources.feedback,
+      resources.instructions,
+      resources.storm,
+      ...resources.choices,
+    ]) {
+      text.setDepth?.(60);
+    }
     this.events?.once("shutdown", cleanup);
     this.events?.once("destroy", cleanup);
     updateView(this);
@@ -1035,6 +1473,7 @@ function createScene(context: MagicDefenseSceneContext): Readonly<Record<string,
 
   return {
     key: MAGIC_DEFENSE_ID,
+    preload,
     create,
     update,
     extend: {
@@ -1077,7 +1516,6 @@ export function createMagicDefenseCartridge(): StandardExperienceCartridge {
       id: MAGIC_DEFENSE_ID,
       title: "Magic Defense",
       description: "Choose translation lanes to protect the castle from incoming magic.",
-      version: "0.1.0",
       runtimeApiVersion: "1.0.0",
       inputMode: "vocabulary",
       requiredAssetBindings: ["legacy-catalog/magic-defense/arcane-castle"],
@@ -1113,6 +1551,7 @@ export function createMagicDefenseCartridge(): StandardExperienceCartridge {
           composition: context.composition,
           diagnostic: context.diagnostic,
           sessionMode,
+          edition: context.edition,
         }),
       };
     },

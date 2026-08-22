@@ -99,6 +99,8 @@ function HostShell({
 
 function LocaleReader() {
   // useCurrentLocale is expected to read from GamesLocaleContext.
+  // Lazy require on purpose: the locale client must resolve after jest.mock runs.
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { useCurrentLocale } = require('@/locales/client')
   return <span data-testid="locale-value">{useCurrentLocale()}</span>
 }
@@ -188,6 +190,8 @@ describe('HauntedLibrary import harness — Phase 5', () => {
     })
 
     it('positive control: en catalog is reachable and returns a non-empty translation', () => {
+      // Lazy require on purpose: the locale client must resolve after jest.mock runs.
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { useScopedI18n } = require('@/locales/client')
       const t = useScopedI18n('pages.student.gamesPage')
       const result = t('loading')

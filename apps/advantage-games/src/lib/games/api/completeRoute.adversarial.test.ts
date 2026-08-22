@@ -165,7 +165,6 @@ describe("adversarial: route handler does NOT mutate or persist", () => {
     const dbUpdateSpy = jest.fn();
     const dbDeleteSpy = jest.fn();
 
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
     jest.doMock("@reading-advantage/db", () => ({
       __esModule: true,
       insert: dbInsertSpy,

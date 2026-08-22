@@ -9,12 +9,15 @@ import {
   createInputActionNormalizer,
   createResultAccountant,
   finalizeResult,
+  preloadAssetBindings,
+  resolveAssetBinding,
   validateNonEmptyContent,
   type APKInputController,
   type APKSessionMode,
   type CartridgeGameConfigContext,
   type GameTerminalOutcome,
   type InputActionId,
+  type RuntimeEdition,
 } from "@reading-advantage/advantage-play-kit";
 import type {
   StandardExperienceCartridge,
@@ -317,19 +320,38 @@ interface PhaserGraphicsLike {
   fillRoundedRect(x: number, y: number, width: number, height: number, radius?: number): this;
   lineStyle(width: number, color: number, alpha?: number): this;
   strokeRoundedRect(x: number, y: number, width: number, height: number, radius?: number): this;
+  setDepth?(depth: number): this;
   destroy(): void;
 }
 
 interface PhaserTextLike {
   setPosition(x: number, y: number): this;
   setText(value: string): this;
+  setDepth?(depth: number): this;
+  destroy(): void;
+}
+
+interface PhaserImageLike {
+  setOrigin?(x: number, y: number): this;
+  setDisplaySize?(width: number, height: number): this;
+  setDepth?(depth: number): this;
+  setPosition?(x: number, y: number): this;
+  setVisible?(visible: boolean): this;
   destroy(): void;
 }
 
 interface PhaserSceneLike {
+  load?: {
+    image?(key: string, url: string): unknown;
+    spritesheet?(key: string, url: string, config: { frameWidth: number; frameHeight: number }): unknown;
+    audio?(key: string, urls: string | string[]): unknown;
+  };
   add?: {
     graphics(): PhaserGraphicsLike;
     text(x: number, y: number, value: string, style?: Readonly<Record<string, unknown>>): PhaserTextLike;
+    image?(x: number, y: number, key: string, frame?: number): PhaserImageLike;
+    sprite?(x: number, y: number, key: string, frame?: number): PhaserImageLike;
+    tileSprite?(x: number, y: number, width: number, height: number, key: string): PhaserImageLike;
   };
   events?: { once(event: string, listener: () => void): void };
   game?: { canvas?: { getBoundingClientRect?(): { readonly left: number; readonly top?: number; readonly width: number; readonly height?: number } } };
@@ -342,6 +364,7 @@ interface CastleDefenseSceneContext {
   readonly composition: CartridgeGameConfigContext["composition"];
   readonly diagnostic: CartridgeGameConfigContext["diagnostic"];
   readonly sessionMode: APKSessionMode;
+  readonly edition: RuntimeEdition;
 }
 
 interface SceneResources {
@@ -352,6 +375,16 @@ interface SceneResources {
   readonly feedback: PhaserTextLike;
   readonly instructions: PhaserTextLike;
   readonly wordLabels: Map<string, PhaserTextLike>;
+  ground?: PhaserImageLike;
+  readonly worldSprites: PhaserImageLike[];
+  readonly unitSprites: Map<string, PhaserImageLike>;
+  worldWidth: number;
+  worldHeight: number;
+}
+
+interface ResolvedFieldTexture {
+  readonly textureKey: string;
+  readonly frame?: number;
 }
 
 const MOVE_STEP = 64;
@@ -381,6 +414,28 @@ const CASTLE_DEFENSE_ACTIONS: readonly InputActionId[] = Object.freeze([
   "move-up",
   "move-down",
   "confirm",
+]);
+
+const FIELD_ART_KEYS = Object.freeze([
+  "world:ground",
+  "world:road",
+  "prop:keep",
+  "prop:gate",
+  "prop:tower",
+  "prop:tree",
+  "prop:prisoner",
+  "player:idle",
+  "enemy:idle",
+]);
+
+const TREE_POSITIONS = Object.freeze([
+  Object.freeze({ x: 48, y: 56 }),
+  Object.freeze({ x: 360, y: 52 }),
+  Object.freeze({ x: 780, y: 56 }),
+  Object.freeze({ x: 48, y: 180 }),
+  Object.freeze({ x: 48, y: 510 }),
+  Object.freeze({ x: 500, y: 512 }),
+  Object.freeze({ x: 910, y: 512 }),
 ]);
 
 const CASTLE_DEFENSE_ROUTES: readonly (readonly CastleDefenseRoutePoint[])[] = Object.freeze([
@@ -1134,12 +1189,271 @@ function directionToPoint(
   return vertical > 0 ? "move-down" : "move-up";
 }
 
+/**
+ * Returns whether the edition supplies outdoor field art for Castle Defense.
+ * @param edition Audience edition supplied by the host.
+ * @returns True when grass ground art is bound.
+ */
+function usesFieldArt(edition: RuntimeEdition): boolean {
+  return Boolean(edition.bindings["world:ground"]);
+}
+
+/**
+ * Resolves one named field texture when the edition binds that role.
+ * @param edition Audience edition supplied by the host.
+ * @param key Semantic binding key.
+ * @returns Texture key and optional frame, or undefined when the role is unbound.
+ */
+function fieldTexture(edition: RuntimeEdition, key: string): ResolvedFieldTexture | undefined {
+  if (!edition.bindings[key]) return undefined;
+  const resolved = resolveAssetBinding(edition, key);
+  return { textureKey: resolved.textureKey, frame: resolved.binding.frame };
+}
+
+/**
+ * Places one image or sprite at a world position.
+ * @param scene Active Phaser scene.
+ * @param x Horizontal display position.
+ * @param y Vertical display position.
+ * @param texture Resolved pack texture.
+ * @param displayWidth Drawn width.
+ * @param displayHeight Drawn height.
+ * @param depth Draw order.
+ * @param originX Horizontal origin.
+ * @param originY Vertical origin.
+ * @returns The created image, when Phaser display services exist.
+ */
+function placeImage(
+  scene: PhaserSceneLike,
+  x: number,
+  y: number,
+  texture: ResolvedFieldTexture,
+  displayWidth: number,
+  displayHeight: number,
+  depth: number,
+  originX = 0.5,
+  originY = 1,
+): PhaserImageLike | undefined {
+  const image = scene.add?.sprite?.(x, y, texture.textureKey, texture.frame ?? 0)
+    ?? scene.add?.image?.(x, y, texture.textureKey, texture.frame ?? 0);
+  image?.setOrigin?.(originX, originY);
+  image?.setDisplaySize?.(displayWidth, displayHeight);
+  image?.setDepth?.(depth);
+  return image;
+}
+
+/**
+ * Stamps dirt tiles along one axis-aligned enemy route.
+ * @param scene Active Phaser scene.
+ * @param route Logical route points.
+ * @param texture Dirt tile texture.
+ * @param scaleX Horizontal canvas scale.
+ * @param scaleY Vertical canvas scale.
+ * @param sprites Collection that owns the created tiles.
+ * @returns Nothing. Mutates sprites.
+ */
+function stampRoute(
+  scene: PhaserSceneLike,
+  route: readonly CastleDefenseRoutePoint[],
+  texture: ResolvedFieldTexture,
+  scaleX: number,
+  scaleY: number,
+  sprites: PhaserImageLike[],
+): void {
+  const tile = 32 * Math.min(scaleX, scaleY);
+  for (let index = 0; index < route.length - 1; index += 1) {
+    const start = route[index]!;
+    const end = route[index + 1]!;
+    const length = distance(start.x, start.y, end.x, end.y);
+    const steps = Math.max(1, Math.ceil(length / 20));
+    for (let step = 0; step <= steps; step += 1) {
+      const t = step / steps;
+      const image = placeImage(
+        scene,
+        (start.x + (end.x - start.x) * t) * scaleX,
+        (start.y + (end.y - start.y) * t) * scaleY,
+        texture,
+        tile,
+        tile,
+        -15,
+        0.5,
+        0.5,
+      );
+      if (image) sprites.push(image);
+    }
+  }
+}
+
+/**
+ * Destroys persistent grass, road, keep, gate, and tree sprites.
+ * @param resources Live scene resource bag.
+ * @returns Nothing. Clears world sprite ownership.
+ */
+function destroyWorldLayer(resources: SceneResources): void {
+  resources.ground?.destroy();
+  resources.ground = undefined;
+  for (const sprite of resources.worldSprites) sprite.destroy();
+  resources.worldSprites.length = 0;
+  resources.worldWidth = 0;
+  resources.worldHeight = 0;
+}
+
+/**
+ * Builds grass, dirt roads, trees, gate, and keep once per canvas size.
+ * @param scene Active Phaser scene.
+ * @param resources Live scene resource bag.
+ * @param edition Audience edition supplied by the host.
+ * @param width Current scene width.
+ * @param height Current scene height.
+ * @param scaleX Horizontal canvas scale.
+ * @param scaleY Vertical canvas scale.
+ * @returns Nothing. Creates world sprites when missing.
+ */
+function ensureWorldLayer(
+  scene: PhaserSceneLike,
+  resources: SceneResources,
+  edition: RuntimeEdition,
+  width: number,
+  height: number,
+  scaleX: number,
+  scaleY: number,
+): void {
+  if (resources.worldWidth === width && resources.worldHeight === height && resources.ground) return;
+  destroyWorldLayer(resources);
+  resources.worldWidth = width;
+  resources.worldHeight = height;
+
+  const ground = fieldTexture(edition, "world:ground");
+  if (ground) {
+    if (scene.add?.tileSprite) {
+      const tileWidth = 16 * Math.ceil(width / 16);
+      const tileHeight = 16 * Math.ceil(height / 16);
+      const tiled = scene.add.tileSprite(0, 0, tileWidth, tileHeight, ground.textureKey);
+      tiled.setOrigin?.(0, 0);
+      tiled.setDepth?.(-25);
+      resources.ground = tiled;
+    } else {
+      const image = placeImage(scene, width / 2, height / 2, ground, width, height, -25, 0.5, 0.5);
+      if (image) resources.ground = image;
+    }
+  }
+
+  const road = fieldTexture(edition, "world:road");
+  if (road) {
+    for (const route of CASTLE_DEFENSE_ROUTES) {
+      stampRoute(scene, route, road, scaleX, scaleY, resources.worldSprites);
+    }
+  }
+
+  const tree = fieldTexture(edition, "prop:tree");
+  if (tree) {
+    const treeWidth = 44 * Math.min(scaleX, scaleY);
+    const treeHeight = 48 * Math.min(scaleX, scaleY);
+    for (const position of TREE_POSITIONS) {
+      const image = placeImage(
+        scene,
+        position.x * scaleX,
+        position.y * scaleY,
+        tree,
+        treeWidth,
+        treeHeight,
+        -8,
+      );
+      if (image) resources.worldSprites.push(image);
+    }
+  }
+
+  const gate = fieldTexture(edition, "prop:gate");
+  if (gate) {
+    const image = placeImage(
+      scene,
+      GATE_POSITION.x * scaleX,
+      GATE_POSITION.y * scaleY,
+      gate,
+      48 * scaleX,
+      64 * scaleY,
+      -4,
+    );
+    if (image) resources.worldSprites.push(image);
+  }
+
+  const keep = fieldTexture(edition, "prop:keep");
+  if (keep) {
+    const keepWidth = 40 * scaleX;
+    const keepHeight = 100 * scaleY;
+    const baseX = BASE_POSITION.x * scaleX;
+    const baseY = BASE_POSITION.y * scaleY;
+    for (const offset of [-22, 22]) {
+      const tower = placeImage(scene, baseX + offset * scaleX, baseY, keep, keepWidth, keepHeight, -3);
+      if (tower) resources.worldSprites.push(tower);
+    }
+    if (gate) {
+      const door = placeImage(scene, baseX, baseY, gate, 36 * scaleX, 48 * scaleY, -2);
+      if (door) resources.worldSprites.push(door);
+    }
+  }
+}
+
+/**
+ * Moves or creates one unit sprite and records it as live.
+ * @param scene Active Phaser scene.
+ * @param sprites Owned unit sprites.
+ * @param liveIds Identifiers still present this frame.
+ * @param id Stable sprite identifier.
+ * @param x Horizontal display position.
+ * @param y Vertical display position.
+ * @param texture Resolved pack texture.
+ * @param displayWidth Drawn width.
+ * @param displayHeight Drawn height.
+ * @param depth Draw order.
+ * @returns Nothing. Updates sprite ownership.
+ */
+function syncUnitSprite(
+  scene: PhaserSceneLike,
+  sprites: Map<string, PhaserImageLike>,
+  liveIds: Set<string>,
+  id: string,
+  x: number,
+  y: number,
+  texture: ResolvedFieldTexture,
+  displayWidth: number,
+  displayHeight: number,
+  depth: number,
+): void {
+  liveIds.add(id);
+  let sprite = sprites.get(id);
+  if (!sprite) {
+    sprite = placeImage(scene, x, y, texture, displayWidth, displayHeight, depth);
+    if (!sprite) return;
+    sprites.set(id, sprite);
+  }
+  sprite.setPosition?.(x, y);
+  sprite.setDisplaySize?.(displayWidth, displayHeight);
+  sprite.setDepth?.(depth);
+  sprite.setVisible?.(true);
+}
+
+/**
+ * Destroys unit sprites that are no longer in the current snapshot.
+ * @param sprites Owned unit sprites.
+ * @param liveIds Identifiers still present this frame.
+ * @returns Nothing. Removes stale sprites.
+ */
+function pruneUnitSprites(sprites: Map<string, PhaserImageLike>, liveIds: Set<string>): void {
+  for (const [id, sprite] of sprites) {
+    if (liveIds.has(id)) continue;
+    sprite.destroy();
+    sprites.delete(id);
+  }
+}
+
 function createScene(context: CastleDefenseSceneContext): Readonly<Record<string, unknown>> {
   let resources: SceneResources | undefined;
   let composition = context.composition;
   let previousKeys = new Set<string>();
   let animationMs = 0;
   let cleaned = false;
+  const fieldArt = usesFieldArt(context.edition);
   const normalize = createInputActionNormalizer({
     keyboard: CASTLE_DEFENSE_KEYBOARD_BINDINGS,
     pointerTap: { action: "confirm" },
@@ -1161,40 +1475,63 @@ function createScene(context: CastleDefenseSceneContext): Readonly<Record<string
     const { width, height } = dimensions(scene);
     const scaleX = width / CASTLE_DEFENSE_CANVAS.width;
     const scaleY = height / CASTLE_DEFENSE_CANVAS.height;
+    const scale = Math.min(scaleX, scaleY);
     const point = (x: number, y: number) => ({ x: x * scaleX, y: y * scaleY });
     const state = context.controller.snapshot();
-    active.graphics.clear().fillStyle(0x101b2d, 1).fillRect(0, 0, width, height);
-    active.graphics.fillStyle(0x243b53, 0.95).fillRoundedRect(width * 0.04, height * 0.12, width * 0.92, height * 0.78, 20);
-    const route = state.enemies[0]?.route
-      ?? routeFor(state.seed, Math.min(state.waveIndex, Math.max(0, state.waveCount - 1)), 0);
-    const roadWidth = 34 * Math.min(scaleX, scaleY);
-    active.graphics.fillStyle(0x4b5563, 1);
-    for (let index = 0; index < route.length - 1; index += 1) {
-      const start = point(route[index]!.x, route[index]!.y);
-      const end = point(route[index + 1]!.x, route[index + 1]!.y);
-      if (start.y === end.y) {
-        active.graphics.fillRect(Math.min(start.x, end.x), start.y - roadWidth / 2, Math.abs(end.x - start.x), roadWidth);
-      } else {
-        active.graphics.fillRect(start.x - roadWidth / 2, Math.min(start.y, end.y), roadWidth, Math.abs(end.y - start.y));
+    active.graphics.clear();
+    if (fieldArt) {
+      ensureWorldLayer(scene, active, context.edition, width, height, scaleX, scaleY);
+    } else {
+      active.graphics.fillStyle(0x101b2d, 1).fillRect(0, 0, width, height);
+      active.graphics.fillStyle(0x243b53, 0.95).fillRoundedRect(width * 0.04, height * 0.12, width * 0.92, height * 0.78, 20);
+    }
+    if (!fieldArt) {
+      const route = state.enemies[0]?.route
+        ?? routeFor(state.seed, Math.min(state.waveIndex, Math.max(0, state.waveCount - 1)), 0);
+      const roadWidth = 34 * scale;
+      active.graphics.fillStyle(0x4b5563, 1);
+      for (let index = 0; index < route.length - 1; index += 1) {
+        const start = point(route[index]!.x, route[index]!.y);
+        const end = point(route[index + 1]!.x, route[index + 1]!.y);
+        if (start.y === end.y) {
+          active.graphics.fillRect(Math.min(start.x, end.x), start.y - roadWidth / 2, Math.abs(end.x - start.x), roadWidth);
+        } else {
+          active.graphics.fillRect(start.x - roadWidth / 2, Math.min(start.y, end.y), roadWidth, Math.abs(end.y - start.y));
+        }
       }
     }
 
+    const liveIds = new Set<string>();
+    const towerTexture = fieldTexture(context.edition, "prop:tower");
+    const prisonerTexture = fieldTexture(context.edition, "prop:prisoner");
+    const playerTexture = fieldTexture(context.edition, "player:idle");
+    const enemyTexture = fieldTexture(context.edition, "enemy:idle");
+
     for (const slot of state.towerSlots) {
       const position = point(slot.x, slot.y);
-      active.graphics.fillStyle(slot.occupied ? 0xe0a458 : 0x64748b, slot.occupied ? 0.95 : 0.65).fillCircle(position.x, position.y, slot.radius * Math.min(scaleX, scaleY));
-      active.graphics.lineStyle(2, 0xf8fafc, 0.65).strokeRoundedRect(position.x - 30 * scaleX, position.y - 30 * scaleY, 60 * scaleX, 60 * scaleY, 8);
+      if (!slot.occupied) {
+        active.graphics.fillStyle(0x57534e, 0.85).fillCircle(position.x, position.y, slot.radius * scale);
+        active.graphics.lineStyle(2, 0xd6d3d1, 0.7).strokeRoundedRect(position.x - 30 * scaleX, position.y - 30 * scaleY, 60 * scaleX, 60 * scaleY, 8);
+      }
     }
     for (const word of state.words) {
       if (word.collected) continue;
       const position = point(word.x, word.y);
-      active.graphics.fillStyle(0x9b5de5, 0.9).fillRoundedRect(position.x - 36 * scaleX, position.y - 24 * scaleY, 72 * scaleX, 48 * scaleY, 10);
-      active.graphics.lineStyle(2, 0xfef3c7, 0.85).strokeRoundedRect(position.x - 36 * scaleX, position.y - 24 * scaleY, 72 * scaleX, 48 * scaleY, 10);
+      if (fieldArt && prisonerTexture) {
+        syncUnitSprite(scene, active.unitSprites, liveIds, word.id, position.x, position.y, prisonerTexture, 40 * scale, 40 * scale, 4);
+        active.graphics.fillStyle(0x1f2937, 0.82).fillRoundedRect(position.x - 32 * scaleX, position.y - 58 * scaleY, 64 * scaleX, 20 * scaleY, 6);
+      } else {
+        active.graphics.fillStyle(0x9b5de5, 0.9).fillRoundedRect(position.x - 36 * scaleX, position.y - 24 * scaleY, 72 * scaleX, 48 * scaleY, 10);
+        active.graphics.lineStyle(2, 0xfef3c7, 0.85).strokeRoundedRect(position.x - 36 * scaleX, position.y - 24 * scaleY, 72 * scaleX, 48 * scaleY, 10);
+      }
       let label = active.wordLabels.get(word.id);
       if (!label) {
         label = scene.add?.text(0, 0, word.term, { fontFamily: "Arial", color: "#fff7ed", fontSize: "14px", align: "center", wordWrap: { width: 64 } });
+        label?.setDepth?.(8);
         if (label) active.wordLabels.set(word.id, label);
       }
-      label?.setText(word.term).setPosition(position.x - 30 * scaleX, position.y - 8 * scaleY);
+      const labelY = fieldArt && prisonerTexture ? position.y - 56 * scaleY : position.y - 8 * scaleY;
+      label?.setText(word.term).setPosition(position.x - 30 * scaleX, labelY);
     }
     const visibleWordIds = new Set(state.words.filter((word) => !word.collected).map((word) => word.id));
     for (const [id, label] of active.wordLabels) {
@@ -1204,17 +1541,33 @@ function createScene(context: CastleDefenseSceneContext): Readonly<Record<string
     }
     for (const tower of state.towers) {
       const position = point(tower.x, tower.y);
-      active.graphics.fillStyle(0xf59e0b, 1).fillCircle(position.x, position.y, 19 * Math.min(scaleX, scaleY));
+      if (fieldArt && towerTexture) {
+        syncUnitSprite(scene, active.unitSprites, liveIds, tower.id, position.x, position.y, towerTexture, 40 * scale, 100 * scale, 3);
+      } else {
+        active.graphics.fillStyle(0xf59e0b, 1).fillCircle(position.x, position.y, 19 * scale);
+      }
     }
     for (const enemy of state.enemies) {
       const position = point(enemy.x, enemy.y);
-      active.graphics.fillStyle(enemy.type === "boss" ? 0xef4444 : enemy.type === "tank" ? 0xf97316 : 0xdc2626, 1).fillCircle(position.x, position.y, 16 * Math.min(scaleX, scaleY));
+      const enemySize = (enemy.type === "boss" ? 60 : enemy.type === "tank" ? 52 : 44) * scale;
+      if (fieldArt && enemyTexture) {
+        syncUnitSprite(scene, active.unitSprites, liveIds, enemy.id, position.x, position.y, enemyTexture, enemySize, enemySize, 5);
+      } else {
+        active.graphics.fillStyle(enemy.type === "boss" ? 0xef4444 : enemy.type === "tank" ? 0xf97316 : 0xdc2626, 1).fillCircle(position.x, position.y, 16 * scale);
+      }
     }
     const base = point(state.base.x, state.base.y);
-    active.graphics.fillStyle(0x38bdf8, 1).fillCircle(base.x, base.y, 33 * Math.min(scaleX, scaleY));
+    if (!fieldArt) {
+      active.graphics.fillStyle(0x38bdf8, 1).fillCircle(base.x, base.y, 33 * scale);
+    }
     const player = point(state.player.x, state.player.y);
     const pulse = Math.sin(animationMs / 2_000 * Math.PI * 2) * 2;
-    active.graphics.fillStyle(0x7bdff2, 1).fillCircle(player.x, player.y + pulse, PLAYER_RADIUS * Math.min(scaleX, scaleY));
+    if (fieldArt && playerTexture) {
+      syncUnitSprite(scene, active.unitSprites, liveIds, "player", player.x, player.y + pulse, playerTexture, 48 * scale, 48 * scale, 6);
+    } else {
+      active.graphics.fillStyle(0x7bdff2, 1).fillCircle(player.x, player.y + pulse, PLAYER_RADIUS * scale);
+    }
+    pruneUnitSprites(active.unitSprites, liveIds);
 
     active.title.setText("CASTLE DEFENSE").setPosition(24, 18);
     active.prompt.setText(`Prisoners: ${state.prompt}`).setPosition(24, 56);
@@ -1279,6 +1632,9 @@ function createScene(context: CastleDefenseSceneContext): Readonly<Record<string
     resources = undefined;
     previousKeys = new Set<string>();
     if (!active) return;
+    destroyWorldLayer(active);
+    for (const sprite of active.unitSprites.values()) sprite.destroy();
+    active.unitSprites.clear();
     active.graphics.destroy();
     active.title.destroy();
     active.prompt.destroy();
@@ -1289,19 +1645,48 @@ function createScene(context: CastleDefenseSceneContext): Readonly<Record<string
     active.wordLabels.clear();
   };
 
+  const preload = function (this: PhaserSceneLike): void {
+    if (!this.load || !fieldArt) return;
+    const keys = FIELD_ART_KEYS.filter((key) => Boolean(context.edition.bindings[key]));
+    if (keys.length === 0) return;
+    preloadAssetBindings(this.load, context.edition, keys);
+  };
+
   const create = function (this: PhaserSceneLike): void {
     if (resources) return;
     if (!this.add) throw new Error("Castle Defense requires Phaser display services");
     const textWidth = Math.max(220, (context.composition?.safeRect?.width ?? CASTLE_DEFENSE_CANVAS.width) - 48);
-    const style = { fontFamily: "Arial", color: "#ffffff", fontSize: "18px", wordWrap: { width: textWidth } };
+    const style = {
+      fontFamily: "Arial",
+      color: "#ffffff",
+      fontSize: "18px",
+      wordWrap: { width: textWidth },
+      ...(fieldArt ? { stroke: "#0b1220", strokeThickness: 5 } : {}),
+    };
+    const title = this.add.text(0, 0, "", { ...style, fontSize: "29px", fontStyle: "bold" });
+    const prompt = this.add.text(0, 0, "", { ...style, fontSize: "22px" });
+    const status = this.add.text(0, 0, "", { ...style, fontSize: "15px", color: "#dbeafe" });
+    const feedback = this.add.text(0, 0, "", { ...style, fontSize: "16px", color: "#fde68a" });
+    const instructions = this.add.text(0, 0, "", { ...style, fontSize: "14px", color: "#cbd5e1" });
+    title.setDepth?.(20);
+    prompt.setDepth?.(20);
+    status.setDepth?.(20);
+    feedback.setDepth?.(20);
+    instructions.setDepth?.(20);
+    const graphics = this.add.graphics();
+    graphics.setDepth?.(1);
     resources = {
-      graphics: this.add.graphics(),
-      title: this.add.text(0, 0, "", { ...style, fontSize: "29px", fontStyle: "bold" }),
-      prompt: this.add.text(0, 0, "", { ...style, fontSize: "22px" }),
-      status: this.add.text(0, 0, "", { ...style, fontSize: "15px", color: "#dbeafe" }),
-      feedback: this.add.text(0, 0, "", { ...style, fontSize: "16px", color: "#fde68a" }),
-      instructions: this.add.text(0, 0, "", { ...style, fontSize: "14px", color: "#cbd5e1" }),
+      graphics,
+      title,
+      prompt,
+      status,
+      feedback,
+      instructions,
       wordLabels: new Map(),
+      worldSprites: [],
+      unitSprites: new Map(),
+      worldWidth: 0,
+      worldHeight: 0,
     };
     this.events?.once("shutdown", cleanup);
     this.events?.once("destroy", cleanup);
@@ -1320,6 +1705,7 @@ function createScene(context: CastleDefenseSceneContext): Readonly<Record<string
 
   return {
     key: "castle-defense",
+    preload,
     create,
     update,
     extend: {
@@ -1368,7 +1754,6 @@ export function createCastleDefenseCartridge(): StandardExperienceCartridge {
       id: "castle-defense",
       title: "Castle Defense",
       description: "Build a castle defense by placing sentence words in order.",
-      version: "0.1.0",
       runtimeApiVersion: "1.0.0",
       inputMode: "sentence",
       requiredAssetBindings: ["legacy-catalog/castle-defense/fortress"],
@@ -1409,6 +1794,7 @@ export function createCastleDefenseCartridge(): StandardExperienceCartridge {
           composition: context.composition,
           diagnostic: context.diagnostic,
           sessionMode,
+          edition: context.edition,
         }),
       };
     },

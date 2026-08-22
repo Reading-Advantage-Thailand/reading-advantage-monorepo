@@ -5,17 +5,22 @@ import {
   type VocabularyItem,
 } from "@reading-advantage/game-contracts";
 import {
+  createActorSpriteLayer,
   createBoundedFrameScheduler,
   createCompletionLatch,
   createInputActionNormalizer,
   createLanguageTargetProgression,
   createResultAccountant,
   finalizeResult,
+  preloadAssetBindings,
   validateNonEmptyContent,
+  type ActorSpriteLayer,
+  type ActorSpriteLike,
   type APKInputController,
   type CartridgeGameConfigContext,
   type GameTerminalOutcome,
   type InputActionId,
+  type RuntimeEdition,
 } from "@reading-advantage/advantage-play-kit";
 import type { StandardExperienceCartridge } from "@reading-advantage/advantage-play-kit/presentation";
 
@@ -309,6 +314,14 @@ interface PhaserSceneLike {
   add?: {
     graphics(): PhaserGraphicsLike;
     text(x: number, y: number, value: string, style?: Readonly<Record<string, unknown>>): PhaserTextLike;
+    image?(x: number, y: number, key: string, frame?: number): ActorSpriteLike;
+    sprite?(x: number, y: number, key: string, frame?: number): ActorSpriteLike;
+    tileSprite?(x: number, y: number, width: number, height: number, key: string): ActorSpriteLike;
+  };
+  load?: {
+    image?(key: string, url: string): unknown;
+    spritesheet?(key: string, url: string, config: { frameWidth: number; frameHeight: number }): unknown;
+    audio?(key: string, urls: string | string[]): unknown;
   };
   events?: { once(event: string, listener: () => void): void };
   game?: { readonly canvas?: PhaserCanvasLike };
@@ -316,6 +329,7 @@ interface PhaserSceneLike {
 }
 
 interface SceneResources {
+  readonly art: ActorSpriteLayer;
   readonly graphics: PhaserGraphicsLike;
   readonly title: PhaserTextLike;
   readonly prompt: PhaserTextLike;
@@ -330,6 +344,7 @@ interface PaladinsTwinSoulResponsiveState {
 }
 
 interface PaladinsTwinSoulSceneContext {
+  readonly edition: RuntimeEdition;
   readonly controller: PaladinsTwinSoulController;
   readonly inputController: APKInputController;
   readonly composition: CartridgeGameConfigContext["composition"];
@@ -619,6 +634,8 @@ function createScene(context: PaladinsTwinSoulSceneContext): Readonly<Record<str
 
   const updateView = (scene: PhaserSceneLike): void => {
     if (!resources) return;
+    const view = resources;
+    const art = view.art;
     const { width, height } = getDimensions(scene);
     const state = context.controller.snapshot();
     const scaleX = width / PALADINS_TWIN_SOUL_CANVAS.width;
@@ -629,56 +646,73 @@ function createScene(context: PaladinsTwinSoulSceneContext): Readonly<Record<str
     const sceneX = (value: number) => offsetX + value * scale;
     const sceneY = (value: number) => offsetY + value * scale;
 
-    resources.graphics.clear().fillStyle(0x020617, 1).fillRect(0, 0, width, height);
-    resources.graphics.fillStyle(0x0f1d3b, 0.95).fillRoundedRect(sceneX(80), sceneY(70), 800 * scale, 400 * scale, 24 * scale);
+    view.graphics.clear();
+    if (!art.ground("world:ground", width, height)) view.graphics.fillStyle(0x020617, 1).fillRect(0, 0, width, height);
+    view.graphics.fillStyle(0x0f1d3b, 0.95).fillRoundedRect(sceneX(80), sceneY(70), 800 * scale, 400 * scale, 24 * scale);
     for (let index = 0; index < 18; index += 1) {
-      resources.graphics.fillStyle(index % 2 === 0 ? 0x93c5fd : 0xfef3c7, 0.45).fillCircle(
+      view.graphics.fillStyle(index % 2 === 0 ? 0x93c5fd : 0xfef3c7, 0.45).fillCircle(
         sceneX((index * 173) % PALADINS_TWIN_SOUL_CANVAS.width),
         sceneY((index * 97) % 440),
         Math.max(1, scale * (index % 3 + 1)),
       );
     }
-    for (const enemy of state.enemies) {
+    state.enemies.forEach((enemy, index) => {
       const x = sceneX(enemy.x);
       const y = sceneY(enemy.y);
-      resources.graphics
-        .fillStyle(enemy.hasCapturedTwin ? 0xfbbf24 : enemy.isCapturing ? 0xa855f7 : 0xdc2626, 1)
-        .fillRoundedRect(x - 34 * scale, y - 24 * scale, 68 * scale, 48 * scale, 8 * scale);
-      if (enemy.hasCapturedTwin) {
-        resources.graphics.fillStyle(0xfef3c7, 0.9).fillCircle(x, y, 10 * scale);
+      if (!art.place(`enemy:${index}`, "enemy:idle", {
+        x,
+        y,
+        width: 68 * scale,
+        height: 60 * scale,
+        depth: 7,
+      })) {
+        view.graphics
+          .fillStyle(enemy.hasCapturedTwin ? 0xfbbf24 : enemy.isCapturing ? 0xa855f7 : 0xdc2626, 1)
+          .fillRoundedRect(x - 34 * scale, y - 24 * scale, 68 * scale, 48 * scale, 8 * scale);
       }
-    }
+      if (enemy.hasCapturedTwin) {
+        view.graphics.fillStyle(0xfef3c7, 0.9).fillCircle(x, y, 10 * scale);
+      }
+    });
     for (const bullet of state.bullets) {
-      resources.graphics
+      view.graphics
         .fillStyle(bullet.isPlayer ? 0xfde047 : 0xfb7185, 1)
         .fillRoundedRect(sceneX(bullet.x) - 3 * scale, sceneY(bullet.y) - 10 * scale, 6 * scale, 20 * scale, 3 * scale);
     }
     for (const [index, enemy] of state.enemies.entries()) {
-      resources.enemyLabels[index]
+      view.enemyLabels[index]
         ?.setText(enemy.term)
         .setPosition(sceneX(enemy.x) - 34 * scale, sceneY(enemy.y) + 30 * scale);
     }
-    resources.enemyLabels.slice(state.enemies.length).forEach((label) => label.setText(""));
-    resources.graphics.fillStyle(0xf59e0b, 1).fillRoundedRect(
-      sceneX(state.player.x) - 22 * scale,
-      sceneY(PALADINS_TWIN_SOUL_RULES.playerY) - 22 * scale,
-      44 * scale,
-      44 * scale,
-      10 * scale,
-    );
+    view.enemyLabels.slice(state.enemies.length).forEach((label) => label.setText(""));
+    if (!art.place("player", "player:idle", {
+      x: sceneX(state.player.x),
+      y: sceneY(PALADINS_TWIN_SOUL_RULES.playerY),
+      width: 52 * scale,
+      depth: 8,
+    })) {
+      view.graphics.fillStyle(0xf59e0b, 1).fillRoundedRect(
+        sceneX(state.player.x) - 22 * scale,
+        sceneY(PALADINS_TWIN_SOUL_RULES.playerY) - 22 * scale,
+        44 * scale,
+        44 * scale,
+        10 * scale,
+      );
+    }
+    art.sweep();
     if (state.player.hasTwinSoul) {
-      resources.graphics.fillStyle(0xfef3c7, 0.9).fillCircle(
+      view.graphics.fillStyle(0xfef3c7, 0.9).fillCircle(
         sceneX(state.player.x) + 30 * scale,
         sceneY(PALADINS_TWIN_SOUL_RULES.playerY),
         16 * scale,
       );
     }
-    resources.title.setText("PALADIN'S TWIN-SOUL").setPosition(28, 18);
-    resources.prompt.setText(`Translation prompt: ${state.prompt}`).setPosition(28, 54);
-    resources.progress.setText(
+    view.title.setText("PALADIN'S TWIN-SOUL").setPosition(28, 18);
+    view.prompt.setText(`Translation prompt: ${state.prompt}`).setPosition(28, 54);
+    view.progress.setText(
       `${composition?.profile === "compact" ? "Compact formation" : "Twin-Soul formation"}  •  Wave ${Math.min(state.wave, state.targetCount)} of ${state.targetCount}  •  HP ${state.player.hp}/${state.player.maxHp}  •  Fire x${state.player.fireStrength}`,
     ).setPosition(28, 88);
-    resources.feedback.setText(
+    view.feedback.setText(
       state.phase === "victory"
         ? "Every target wave is clear."
         : state.phase === "defeat"
@@ -689,7 +723,7 @@ function createScene(context: PaladinsTwinSoulSceneContext): Readonly<Record<str
             ? "Wrong enemy hit. The target remains active and counterfire is incoming."
               : "Move beneath the matching enemy and confirm a shot.",
     ).setPosition(28, height - 68);
-    resources.instructions.setText("Keyboard: A/D or arrows move • Space confirms a shot • Touch or click to move and fire").setPosition(28, height - 36);
+    view.instructions.setText("Keyboard: A/D or arrows move • Space confirms a shot • Touch or click to move and fire").setPosition(28, height - 36);
   };
 
   const cleanup = (): void => {
@@ -710,6 +744,18 @@ function createScene(context: PaladinsTwinSoulSceneContext): Readonly<Record<str
     previousKeys = new Set<string>();
   };
 
+
+  const artKeys = ["world:ground", "player:idle", "enemy:idle"] as const;
+
+  const preload = function (this: PhaserSceneLike): void {
+    if (!this.load) return;
+    preloadAssetBindings(
+      this.load,
+      context.edition,
+      artKeys.filter((key) => context.edition.bindings[key]),
+    );
+  };
+
   const create = function (this: PhaserSceneLike): void {
     if (!this.add) throw new Error("Paladin's Twin-Soul requires Phaser display services");
     currentDimensions = getDimensions(this);
@@ -718,6 +764,7 @@ function createScene(context: PaladinsTwinSoulSceneContext): Readonly<Record<str
     const add = this.add;
     resources = {
       graphics: add.graphics(),
+      art: createActorSpriteLayer(this, context.edition),
       title: add.text(28, 18, "PALADIN'S TWIN-SOUL", { ...textStyle, fontSize: "30px", fontStyle: "bold" }),
       prompt: add.text(28, 54, "", { ...textStyle, fontSize: "22px" }),
       progress: add.text(28, 88, "", { ...textStyle, fontSize: "16px", color: "#bfdbfe" }),
@@ -743,6 +790,7 @@ function createScene(context: PaladinsTwinSoulSceneContext): Readonly<Record<str
 
   return {
     key: PALADINS_TWIN_SOUL_ID,
+    preload,
     create,
     update,
     extend: {
@@ -1333,7 +1381,6 @@ export function createPaladinsTwinSoulCartridge(): StandardExperienceCartridge {
       id: PALADINS_TWIN_SOUL_ID,
       title: "Paladin's Twin-Soul",
       description: "Move a paladin beneath a vocabulary formation and rescue the captured twin.",
-      version: "0.1.0",
       runtimeApiVersion: "1.0.0",
       inputMode: "vocabulary",
       requiredAssetBindings: ["paladins-twin-soul/player"],
@@ -1371,6 +1418,7 @@ export function createPaladinsTwinSoulCartridge(): StandardExperienceCartridge {
         render: { antialias: true, pixelArt: false },
         scene: createScene({
           controller,
+          edition: context.edition,
           inputController: context.inputController,
           composition: context.composition,
           diagnostic: context.diagnostic,

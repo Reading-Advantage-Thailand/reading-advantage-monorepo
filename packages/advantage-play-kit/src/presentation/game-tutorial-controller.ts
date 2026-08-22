@@ -44,7 +44,13 @@ export function createGameTutorialController(
   options: CreateGameTutorialControllerOptions,
 ): GameTutorialController {
   const tutorial = validateGameTutorialDefinition(options.tutorial);
-  const runtime = createGameTutorialRuntime({ ...options, tutorial });
+  const runtime = createGameTutorialRuntime({
+    ...options,
+    tutorial,
+    // The runtime demonstrates and advances on its own timers. Republish so the host
+    // sees each demonstration and each sequential step change.
+    onChange: () => publish(),
+  });
 
   const getSnapshot = (): GameTutorialControllerSnapshot => {
     const snapshot = runtime.getSnapshot();

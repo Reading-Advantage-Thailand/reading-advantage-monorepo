@@ -72,7 +72,6 @@ describe("legacy traversal Phase 3 adversarial contracts", () => {
         id: "dragon-rider",
         title: "Fake Dragon Rider",
         description: "Fake capability declaration",
-        version: "0.0.0",
         runtimeApiVersion: "1.0.0",
         inputMode: "vocabulary",
         requiredAssetBindings: ["fake.binding"],

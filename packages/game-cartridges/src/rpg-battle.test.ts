@@ -20,9 +20,11 @@ import {
   createRpgBattleCartridge,
   createRpgBattleController,
   getRpgBattleChoiceIndex,
+  rpgBattleChoiceRect,
   type RpgBattleController,
   type RpgBattleSnapshot,
 } from "./rpg-battle.js";
+import { createCatalogStandardEdition } from "./catalog-standard-art.js";
 import { PHASE3_RUNTIME_EDITION } from "./legacy-traversal-phase3-test-helpers.js";
 
 const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "../../..");
@@ -81,6 +83,7 @@ function createSceneHost() {
     fillStyle: vi.fn(),
     fillRect: vi.fn(),
     fillCircle: vi.fn(),
+    fillEllipse: vi.fn(),
     fillRoundedRect: vi.fn(),
     lineStyle: vi.fn(),
     strokeRoundedRect: vi.fn(),
@@ -90,6 +93,7 @@ function createSceneHost() {
   graphics.fillStyle.mockReturnValue(graphics);
   graphics.fillRect.mockReturnValue(graphics);
   graphics.fillCircle.mockReturnValue(graphics);
+  graphics.fillEllipse.mockReturnValue(graphics);
   graphics.fillRoundedRect.mockReturnValue(graphics);
   graphics.lineStyle.mockReturnValue(graphics);
   graphics.strokeRoundedRect.mockReturnValue(graphics);
@@ -153,6 +157,11 @@ function releaseWrongAnswerLock(controller: RpgBattleController): void {
   controller.advanceTime(RPG_BATTLE_FEEDBACK_LOCK_MS);
 }
 
+function choiceHitPoint(index: number): { x: number; y: number } {
+  const card = rpgBattleChoiceRect(RPG_BATTLE_CANVAS.width, RPG_BATTLE_CANVAS.height, index);
+  return { x: card.x + card.width / 2, y: card.y + card.height / 2 };
+}
+
 describe("RPG Battle bespoke cartridge", () => {
   it("covers semantic aliases, empty submissions, and pointer boundary validation", () => {
     const controller = createRpgBattleController(VOCABULARY, vi.fn(), { rng: () => 0.25 });
@@ -168,9 +177,10 @@ describe("RPG Battle bespoke cartridge", () => {
 
     expect(getRpgBattleChoiceIndex(0, 0, RPG_BATTLE_CANVAS.width, RPG_BATTLE_CANVAS.height)).toBeUndefined();
     expect(getRpgBattleChoiceIndex(480, 100, RPG_BATTLE_CANVAS.width, RPG_BATTLE_CANVAS.height, 0)).toBeUndefined();
-    expect(getRpgBattleChoiceIndex(480, 400, RPG_BATTLE_CANVAS.width, RPG_BATTLE_CANVAS.height)).toBeUndefined();
-    expect(getRpgBattleChoiceIndex(480, 500, RPG_BATTLE_CANVAS.width, RPG_BATTLE_CANVAS.height)).toBeUndefined();
-    expect(getRpgBattleChoiceIndex(480, 540 * 0.53 + 51.3 + 4, RPG_BATTLE_CANVAS.width, RPG_BATTLE_CANVAS.height)).toBeUndefined();
+    expect(getRpgBattleChoiceIndex(100, 400, RPG_BATTLE_CANVAS.width, RPG_BATTLE_CANVAS.height)).toBeUndefined();
+    expect(getRpgBattleChoiceIndex(100, 500, RPG_BATTLE_CANVAS.width, RPG_BATTLE_CANVAS.height)).toBeUndefined();
+    const firstCard = rpgBattleChoiceRect(RPG_BATTLE_CANVAS.width, RPG_BATTLE_CANVAS.height, 0);
+    expect(getRpgBattleChoiceIndex(firstCard.x + 10, firstCard.y + firstCard.height + 2, RPG_BATTLE_CANVAS.width, RPG_BATTLE_CANVAS.height)).toBeUndefined();
     expect(() => controller.advanceTime(Number.NaN)).toThrow(/finite nonnegative/u);
   });
 
@@ -191,7 +201,7 @@ describe("RPG Battle bespoke cartridge", () => {
           productionEffects: { emitGameResults: false, persistProgress: false },
         },
       },
-      debrief: { outcome: "complete", requiredCredit: "" },
+      debrief: { outcome: "complete", requiredCredit: "Pixel art assets by ElvGames" },
     });
     expect(controller.snapshot()).toMatchObject({
       phase: "playing",
@@ -560,9 +570,9 @@ describe("RPG Battle bespoke cartridge", () => {
 
     const currentState = scene.extend.apkCaptureResponsiveState();
     const choiceIndex = currentState.correctChoiceIndex;
-    const choiceY = 540 * 0.53 + choiceIndex * (Math.min(52, 540 * 0.095) + Math.min(10, 540 * 0.018)) + 10;
-    expect(getRpgBattleChoiceIndex(480, choiceY, RPG_BATTLE_CANVAS.width, RPG_BATTLE_CANVAS.height)).toBe(choiceIndex);
-    inputController.setSnapshot(inputSnapshot({ pointer: { released: true, x: 480, y: choiceY } }));
+    const hit = choiceHitPoint(choiceIndex);
+    expect(getRpgBattleChoiceIndex(hit.x, hit.y, RPG_BATTLE_CANVAS.width, RPG_BATTLE_CANVAS.height)).toBe(choiceIndex);
+    inputController.setSnapshot(inputSnapshot({ pointer: { released: true, x: hit.x, y: hit.y } }));
     scene.update.call(host.host, 0, 0);
     expect(scene.extend.apkCaptureResponsiveState()).toMatchObject({ phase: "victory", totalAttempts: 2 });
     expect(complete).toHaveBeenCalledWith(expect.any(Object), "victory");
@@ -586,8 +596,8 @@ describe("RPG Battle bespoke cartridge", () => {
 
     const initial = createRpgBattleController(VOCABULARY, vi.fn()).snapshot();
     const wrongIndex = initial.answerChoices.findIndex((choice) => choice !== initial.answer);
-    const wrongY = 540 * 0.53 + wrongIndex * (Math.min(52, 540 * 0.095) + Math.min(10, 540 * 0.018)) + 10;
-    inputController.setSnapshot(inputSnapshot({ pointer: { released: true, x: 480, y: wrongY } }));
+    const wrongHit = choiceHitPoint(wrongIndex);
+    inputController.setSnapshot(inputSnapshot({ pointer: { released: true, x: wrongHit.x, y: wrongHit.y } }));
     scene.update.call(host.host, 0, 0);
     expect(diagnostic).toHaveBeenCalledWith(expect.objectContaining({ code: "RPG_BATTLE_TURN" }));
 
@@ -596,12 +606,12 @@ describe("RPG Battle bespoke cartridge", () => {
       scene.update.call(host.host, 0, 50);
     }
     const state = (config.scene as { extend: { apkCaptureResponsiveState: () => RpgBattleSnapshot } }).extend.apkCaptureResponsiveState();
-    const correctY = 540 * 0.53 + state.correctChoiceIndex * (Math.min(52, 540 * 0.095) + Math.min(10, 540 * 0.018)) + 10;
-    inputController.setSnapshot(inputSnapshot({ pointer: { released: true, x: 480, y: correctY } }));
+    const correctHit = choiceHitPoint(state.correctChoiceIndex);
+    inputController.setSnapshot(inputSnapshot({ pointer: { released: true, x: correctHit.x, y: correctHit.y } }));
     scene.update.call(host.host, 0, 0);
     const finalState = (config.scene as { extend: { apkCaptureResponsiveState: () => RpgBattleSnapshot } }).extend.apkCaptureResponsiveState();
-    const finalY = 540 * 0.53 + finalState.correctChoiceIndex * (Math.min(52, 540 * 0.095) + Math.min(10, 540 * 0.018)) + 10;
-    inputController.setSnapshot(inputSnapshot({ pointer: { released: true, x: 480, y: finalY } }));
+    const finalHit = choiceHitPoint(finalState.correctChoiceIndex);
+    inputController.setSnapshot(inputSnapshot({ pointer: { released: true, x: finalHit.x, y: finalHit.y } }));
     scene.update.call(host.host, 0, 0);
     expect(diagnostic).toHaveBeenCalledWith(expect.objectContaining({ code: "RPG_BATTLE_TERMINAL" }));
   });
@@ -752,6 +762,97 @@ describe("RPG Battle bespoke cartridge", () => {
       score: RPG_BATTLE_SCORE_PER_CORRECT,
     });
     expect(complete).not.toHaveBeenCalled();
+  });
+
+  it("paints a grass arena, platforms, and fighter sprites from the catalog edition", () => {
+    const edition = createCatalogStandardEdition(
+      ["legacy-catalog/rpg-battle/arena"],
+      "/assets/apk/standard-pack-qc/",
+      "rpg-battle",
+    );
+    const config = createRpgBattleCartridge().createGameConfig({
+      input: VOCABULARY,
+      edition,
+      complete: vi.fn(),
+      diagnostic: vi.fn(),
+      inputController: createMutableInputController(),
+      seed: 11,
+    });
+    const scene = config.scene as {
+      preload: (this: unknown) => void;
+      create: (this: unknown) => void;
+    };
+
+    const loadedImages: string[] = [];
+    const loadedSheets: string[] = [];
+    const placedKeys: string[] = [];
+    const spritePositions: Array<{ key: string; x: number; y: number }> = [];
+    const tileSprites: Array<{ key: string; width: number; height: number }> = [];
+    const makeImage = (key: string) => {
+      const image = {
+        setOrigin: vi.fn(() => image),
+        setDisplaySize: vi.fn(() => image),
+        setDepth: vi.fn(() => image),
+        setPosition: vi.fn((x: number, y: number) => {
+          spritePositions.push({ key, x, y });
+          return image;
+        }),
+        setVisible: vi.fn(() => image),
+        setFlipX: vi.fn(() => image),
+        destroy: vi.fn(),
+      };
+      placedKeys.push(key);
+      return image;
+    };
+    const host = createSceneHost();
+    Object.assign(host.host, {
+      load: {
+        image: vi.fn((key: string) => {
+          loadedImages.push(key);
+        }),
+        spritesheet: vi.fn((key: string) => {
+          loadedSheets.push(key);
+        }),
+      },
+    });
+    Object.assign(host.host.add, {
+      image: vi.fn((_x: number, _y: number, key: string) => makeImage(key)),
+      sprite: vi.fn((x: number, y: number, key: string) => {
+        spritePositions.push({ key, x, y });
+        return makeImage(key);
+      }),
+      tileSprite: vi.fn((_x: number, _y: number, width: number, height: number, key: string) => {
+        tileSprites.push({ key, width, height });
+        return makeImage(key);
+      }),
+    });
+    scene.preload.call(host.host);
+    scene.create.call(host.host);
+
+    expect(loadedImages).toEqual(expect.arrayContaining([
+      "apk:catalog-standard-pack:tile-grass",
+      "apk:catalog-standard-pack:tile-dirt",
+      "apk:catalog-standard-pack:prop-tree",
+    ]));
+    expect(loadedSheets).toEqual(expect.arrayContaining([
+      "apk:catalog-standard-pack:player-knight",
+      "apk:catalog-standard-pack:enemy-beast",
+    ]));
+    expect(placedKeys).toEqual(expect.arrayContaining([
+      "apk:catalog-standard-pack:tile-grass",
+      "apk:catalog-standard-pack:prop-tree",
+      "apk:catalog-standard-pack:player-knight",
+      "apk:catalog-standard-pack:enemy-beast",
+    ]));
+    expect(tileSprites).toEqual(expect.arrayContaining([
+      expect.objectContaining({ key: "apk:catalog-standard-pack:prop-tree", height: 48 }),
+    ]));
+    const player = spritePositions.find((entry) => entry.key === "apk:catalog-standard-pack:player-knight");
+    const enemy = spritePositions.find((entry) => entry.key === "apk:catalog-standard-pack:enemy-beast");
+    expect(player?.y).toBe(enemy?.y);
+    expect(host.graphics.fillRect).not.toHaveBeenCalledWith(0, 0, 960, 540);
+    expect(host.graphics.fillCircle).not.toHaveBeenCalled();
+    expect(host.graphics.fillEllipse).toHaveBeenCalled();
   });
 
   it("keeps the bespoke source independent from shared legacy catalog factories and providers", () => {

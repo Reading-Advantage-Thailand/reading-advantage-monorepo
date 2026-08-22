@@ -1,0 +1,12 @@
+{
+  "track_id": "apk_common_look_enforcement_20260822",
+  "type": "feature",
+  "status": "complete",
+  "created_at": "2026-08-22T00:00:00Z",
+  "updated_at": "2026-08-22T00:00:00Z",
+  "description": "Bind standard-pack art to gameplay actors, enforce the cartridge manifest at the load path, repair the tutorial runtime, and remove the unenforced version numbers.",
+  "estimated_tasks": 5,
+  "actual_tasks": 5,
+  "depends_on": [],
+  "deviation_notes": "Recorded retroactively. The owner directed the five steps directly in session and approved committing the result to master without a branch. The work was executed and verified before this track file existed, so there is no spec-first history to claim."
+}

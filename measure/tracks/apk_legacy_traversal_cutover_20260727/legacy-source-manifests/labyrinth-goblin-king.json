@@ -11,7 +11,7 @@
   "legacy_source_paths": [
     {
       "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/labyrinth-goblin-king/page.tsx",
-      "presence": "present-at-head",
+      "presence": "missing-at-head",
       "role": "route-api",
       "classification": "current-source",
       "evidence_locator": {
@@ -19,8 +19,7 @@
         "json_pointer": "/claim_atoms/10",
         "claim_id": "LGK-ROUTE-001"
       },
-      "disposition": "evidence-only",
-      "sha256": "9a09c4388ed6cde50b9263d35fa224a6203003b3caf15a3d92dee47db190fa08"
+      "disposition": "evidence-only"
     },
     {
       "path": "apps/advantage-games/src/components/games/sentence/labyrinth-goblin-king/LabyrinthGoblinKingGame.tsx",

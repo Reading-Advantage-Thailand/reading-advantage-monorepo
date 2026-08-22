@@ -11,7 +11,7 @@
   "legacy_source_paths": [
     {
       "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/shadow-gate-dungeon/page.tsx",
-      "presence": "present-at-head",
+      "presence": "missing-at-head",
       "role": "route-data",
       "classification": "current-source",
       "evidence_locator": {
@@ -19,8 +19,7 @@
         "json_pointer": "/claims/15",
         "claim_id": "SGD-ROUTE-001"
       },
-      "disposition": "evidence-only",
-      "sha256": "9b38502cd057f2d54772c25963ce97017346b2dd11d04361f09404039060406a"
+      "disposition": "evidence-only"
     },
     {
       "path": "apps/advantage-games/src/app/api/v1/games/shadow-gate-dungeon/sentences/route.ts",

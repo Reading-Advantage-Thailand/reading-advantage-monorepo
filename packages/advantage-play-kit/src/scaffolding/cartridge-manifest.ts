@@ -1,20 +1,20 @@
 /**
- * Zod schema for a cartridge manifest that pins the accepted canonical
- * standard-pack release, declares only accepted capabilities, registers
- * attribution, and materializes only the cartridge's selected union.
+ * Zod schema for a scaffolded cartridge manifest.
  *
- * Cartridges request semantic roles/states and cannot import physical files,
- * vendor filenames, or private pack trees. The manifest is the single pinning
- * surface for the canonical standard-pack version, catalog digest, and
- * source-receipt digest.
+ * This schema extends the runtime manifest that mountCartridge enforces, so the
+ * shared fields have one definition. It adds the fields that only the scaffold
+ * and the QC route need.
+ *
+ * Cartridges request semantic roles and states. They cannot import physical
+ * files, vendor filenames, or private pack trees.
  */
 
 import { z } from "zod";
 
 import { ACCEPTED_STANDARD_ASSET_RELEASE } from "../assets/accepted-standard-pack-release.js";
-import { ACCEPTED_CAPABILITY_IDS } from "../systems/capability-manifest.js";
 import { assertAcceptedStandardPackBinding } from "../guards/accepted-inputs.js";
 import { gameTutorialDefinitionSchema } from "../presentation/game-tutorial-contract.js";
+import { runtimeCartridgeManifestSchema } from "../runtime/cartridge-manifest.js";
 import type { StandardAssetReleaseBinding } from "../assets/standard-pack-release.js";
 
 /** Frozen standard-pack binding that pins the accepted 2026.07.23 release. */
@@ -23,13 +23,6 @@ export const ACCEPTED_STANDARD_PACK_BINDING: StandardAssetReleaseBinding = Objec
   catalogDigest: ACCEPTED_STANDARD_ASSET_RELEASE.catalogDigest,
   sourceReceiptDigest: ACCEPTED_STANDARD_ASSET_RELEASE.sourceReceiptDigest,
 });
-
-const semanticKeySchema = z
-  .string()
-  .min(1)
-  .refine((value) => !value.includes(".") && !value.endsWith("/") && !value.startsWith("/"), {
-    message: "Semantic asset requirements must be semantic keys, not physical paths",
-  });
 
 const standardPackBindingSchema = z
   .object({
@@ -57,23 +50,11 @@ const attributionRegistrationSchema = z
   })
   .strict();
 
-/** Zod schema for a cartridge manifest bound to the accepted developer kit. */
-export const cartridgeManifestSchema = z
-  .object({
+/** Zod schema for a scaffolded cartridge manifest bound to the accepted developer kit. */
+export const cartridgeManifestSchema = runtimeCartridgeManifestSchema
+  .extend({
     schemaVersion: z.literal(1),
-    id: z.string().min(1).regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/u, {
-      message: "Cartridge id must be lowercase kebab-case",
-    }),
-    title: z.string().min(1),
-    description: z.string().min(1),
-    version: z.string().regex(/^\d+\.\d+\.\d+$/u, {
-      message: "Cartridge version must be semver",
-    }),
-    runtimeApiVersion: z.string().min(1),
-    inputMode: z.enum(["vocabulary", "sentence"]),
-    capabilities: z.array(z.enum([...ACCEPTED_CAPABILITY_IDS] as [string, ...string[]])).min(1),
     standardPackBinding: standardPackBindingSchema,
-    semanticAssetRequirements: z.array(semanticKeySchema),
     responsive: z.object({
       profiles: z.tuple([z.literal("compact"), z.literal("wide")]),
       compactStrategy: z.enum(["reveal", "follow", "reflow", "stage", "panel", "fixed-mechanic"]),

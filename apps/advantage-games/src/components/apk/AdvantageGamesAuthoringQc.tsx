@@ -195,7 +195,7 @@ export function AdvantageGamesAuthoringQc({ preview }: AdvantageGamesAuthoringQc
     [fixture],
   );
   const overlays = composition.supported ? createResponsiveDebugOverlays(composition) : [];
-  const selectedUnion = exemplar.definition.manifest.semanticAssetRequirements;
+  const selectedUnion = exemplar.definition.manifest.requiredAssetBindings;
   const briefingLayoutProfile = profile === "wide"
     ? "wide"
     : profile === "compact"
@@ -485,7 +485,7 @@ export function AdvantageGamesAuthoringQc({ preview }: AdvantageGamesAuthoringQc
             <h2 className="mt-1 font-serif text-xl font-bold">Exemplar bindings</h2>
           </div>
           <ul className="space-y-3">
-            {exemplar.semanticAssetRequirements.map((requirement) => {
+            {exemplar.requiredAssetBindings.map((requirement) => {
               const binding = OWNER_APPROVED_CANONICAL_BINDINGS.bindings.find((candidate) => candidate.role === requirement.role && candidate.state === requirement.state);
               return (
                 <li key={`${requirement.role}:${requirement.state}`} className="border-l-2 border-[#f3c969] pl-3">

@@ -43,10 +43,6 @@
       "types": "./dist/scaffolding/index.d.ts",
       "import": "./dist/scaffolding/index.js"
     },
-    "./compatibility": {
-      "types": "./dist/compatibility/index.d.ts",
-      "import": "./dist/compatibility/index.js"
-    },
     "./diagnostics": {
       "types": "./dist/diagnostics/index.d.ts",
       "import": "./dist/diagnostics/index.js"

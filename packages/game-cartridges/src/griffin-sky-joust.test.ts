@@ -176,9 +176,9 @@ describe("Griffin Sky-Joust bespoke aerial cartridge", () => {
       runtimeApiVersion: "1.0.0",
     });
     expect(cartridge.manifest.capabilities).toEqual(expect.arrayContaining([
-      "aerial-physics",
-      "moving-word-knights",
-      "collision-classification",
+      "capability:aerial-physics",
+      "capability:moving-word-knights",
+      "capability:collision-classification",
     ]));
   });
 

@@ -5,16 +5,21 @@ import {
   type VocabularyItem,
 } from "@reading-advantage/game-contracts";
 import {
+  createActorSpriteLayer,
   createBoundedFrameScheduler,
   createCompletionLatch,
   createInputActionNormalizer,
   createResultAccountant,
   finalizeResult,
+  preloadAssetBindings,
   validateNonEmptyContent,
+  type ActorSpriteLayer,
+  type ActorSpriteLike,
   type APKInputController,
   type CartridgeGameConfigContext,
   type CompletionDelivery,
   type InputActionId,
+  type RuntimeEdition,
 } from "@reading-advantage/advantage-play-kit";
 import type { StandardExperienceCartridge } from "@reading-advantage/advantage-play-kit/presentation";
 
@@ -367,37 +372,62 @@ function directionVector(direction: EnchantedLibraryDirection): EnchantedLibrary
   return { x: 0, y: 1 };
 }
 
-function moveToSelectedBook(controller: EnchantedLibraryController, correct: boolean): void {
+function nextDirectionToward(
+  player: EnchantedLibraryPoint,
+  book: EnchantedLibraryPoint,
+  horizontalFirst: boolean,
+): EnchantedLibraryDirection {
+  const horizontalDistance = Math.abs(book.x - player.x);
+  const verticalDistance = Math.abs(book.y - player.y);
+  const horizontal: EnchantedLibraryDirection = book.x >= player.x ? "move-right" : "move-left";
+  const vertical: EnchantedLibraryDirection = book.y >= player.y ? "move-down" : "move-up";
+  const reach = PLAYER_RADIUS + BOOK_RADIUS;
+  if (horizontalFirst) {
+    if (horizontalDistance > reach) return horizontal;
+    if (verticalDistance > reach) return vertical;
+  } else {
+    if (verticalDistance > reach) return vertical;
+    if (horizontalDistance > reach) return horizontal;
+  }
+  return directionActionFor(player, book) as EnchantedLibraryDirection;
+}
+
+/**
+ * Plans the moves that reach the selected book and restores the starting state.
+ * @param controller The active library controller.
+ * @param correct True to reach the correct book, false to reach an incorrect book.
+ * @returns The ordered moves, or an empty list when no route reaches the book.
+ */
+function planRouteToSelectedBook(
+  controller: EnchantedLibraryController,
+  correct: boolean,
+): readonly EnchantedLibraryDirection[] {
   const initial = controller.capture();
   const target = initial.books.find((book) => book.isCorrect === correct);
-  if (!target) return;
+  if (!target) return [];
 
   for (const horizontalFirst of [true, false]) {
     controller.restore(initial);
+    const route: EnchantedLibraryDirection[] = [];
     for (let attempt = 0; attempt < 150; attempt += 1) {
       const state = controller.snapshot();
       const book = state.books.find((candidate) => candidate.id === target.id);
       if (!book) break;
 
-      const horizontalDistance = Math.abs(book.x - state.player.x);
-      const verticalDistance = Math.abs(book.y - state.player.y);
-      const horizontal = book.x >= state.player.x ? "move-right" : "move-left";
-      const vertical = book.y >= state.player.y ? "move-down" : "move-up";
-      const direction: EnchantedLibraryDirection = horizontalFirst
-        ? horizontalDistance > PLAYER_RADIUS + BOOK_RADIUS ? horizontal
-          : verticalDistance > PLAYER_RADIUS + BOOK_RADIUS ? vertical
-            : directionActionFor(state.player, book) as EnchantedLibraryDirection
-        : verticalDistance > PLAYER_RADIUS + BOOK_RADIUS ? vertical
-          : horizontalDistance > PLAYER_RADIUS + BOOK_RADIUS ? horizontal
-            : directionActionFor(state.player, book) as EnchantedLibraryDirection;
+      const direction = nextDirectionToward(state.player, book, horizontalFirst);
+      route.push(direction);
       const result = controller.move(direction);
       if (result.event === "book-correct" || result.event === "book-wrong" || result.terminal) {
-        if (result.correct === correct) return;
+        if (result.correct === correct) {
+          controller.restore(initial);
+          return Object.freeze(route);
+        }
         break;
       }
     }
   }
   controller.restore(initial);
+  return [];
 }
 
 function freezeBook(book: EnchantedLibraryBook): EnchantedLibraryBook {
@@ -1111,6 +1141,14 @@ interface PhaserSceneLike {
   add?: {
     graphics(): PhaserGraphicsLike;
     text(x: number, y: number, value: string, style?: Readonly<Record<string, unknown>>): PhaserTextLike;
+    image?(x: number, y: number, key: string, frame?: number): ActorSpriteLike;
+    sprite?(x: number, y: number, key: string, frame?: number): ActorSpriteLike;
+    tileSprite?(x: number, y: number, width: number, height: number, key: string): ActorSpriteLike;
+  };
+  load?: {
+    image?(key: string, url: string): unknown;
+    spritesheet?(key: string, url: string, config: { frameWidth: number; frameHeight: number }): unknown;
+    audio?(key: string, urls: string | string[]): unknown;
   };
   events?: { once(event: string, listener: () => void): void };
   game?: { readonly canvas?: PhaserCanvasLike };
@@ -1119,6 +1157,7 @@ interface PhaserSceneLike {
 
 /** Resources owned by one active library scene. */
 interface EnchantedLibrarySceneResources {
+  readonly art: ActorSpriteLayer;
   readonly graphics: PhaserGraphicsLike;
   readonly title: PhaserTextLike;
   readonly prompt: PhaserTextLike;
@@ -1132,6 +1171,7 @@ interface EnchantedLibrarySceneResources {
 
 /** Context passed from the cartridge factory to the procedural scene. */
 interface EnchantedLibrarySceneContext {
+  readonly edition: RuntimeEdition;
   readonly controller: EnchantedLibraryController;
   readonly inputController: APKInputController;
   readonly composition: CartridgeGameConfigContext["composition"];
@@ -1173,7 +1213,7 @@ function sceneFor(context: EnchantedLibrarySceneContext): Readonly<Record<string
     const bookWidth = Math.min(172, width * 0.19);
     const bookHeight = Math.min(68, height * 0.14);
     resources.graphics.clear();
-    resources.graphics.fillStyle(0x100c22, 1).fillRect(0, 0, width, height);
+    if (!resources.art.ground("world:ground", width, height)) resources.graphics.fillStyle(0x100c22, 1).fillRect(0, 0, width, height);
     resources.graphics.fillStyle(0x2a1b4d, 0.96).fillRoundedRect(width * 0.04, height * 0.17, width * 0.92, height * 0.72, 26);
     resources.graphics.lineStyle(3, 0xb78cff, 0.42).strokeRoundedRect(width * 0.04, height * 0.17, width * 0.92, height * 0.72, 26);
 
@@ -1190,17 +1230,35 @@ function sceneFor(context: EnchantedLibrarySceneContext): Readonly<Record<string
       resources.books[index]?.setText("");
     }
 
+    const art = resources.art;
+    const artScale = Math.min(scaleX, scaleY);
     const playerX = state.player.x * scaleX;
     const playerY = state.player.y * scaleY;
-    resources.graphics.fillStyle(0xffd166, 1).fillCircle(playerX, playerY, Math.max(14, state.player.radius * Math.min(scaleX, scaleY)));
+    const playerRadius = Math.max(14, state.player.radius * artScale);
+    if (!art.place("player", "player:idle", {
+      x: playerX,
+      y: playerY,
+      width: playerRadius * 2.6,
+      depth: 8,
+    })) {
+      resources.graphics.fillStyle(0xffd166, 1).fillCircle(playerX, playerY, playerRadius);
+    }
     if (state.shieldActive) {
       resources.graphics.lineStyle(5, 0x42d4ff, 0.88)
         .strokeRoundedRect(playerX - 34, playerY - 34, 68, 68, 34);
     }
-    for (const spirit of state.spirits) {
-      resources.graphics.fillStyle(0xff6b9e, 0.9)
-        .fillCircle(spirit.x * scaleX, spirit.y * scaleY, Math.max(11, spirit.radius * Math.min(scaleX, scaleY)));
-    }
+    state.spirits.forEach((spirit, index) => {
+      const spiritRadius = Math.max(11, spirit.radius * artScale);
+      if (art.place(`spirit:${index}`, "enemy:idle", {
+        x: spirit.x * scaleX,
+        y: spirit.y * scaleY,
+        width: spiritRadius * 2.6,
+        depth: 7,
+      })) return;
+      resources!.graphics.fillStyle(0xff6b9e, 0.9)
+        .fillCircle(spirit.x * scaleX, spirit.y * scaleY, spiritRadius);
+    });
+    art.sweep();
 
     resources.title.setText("ENCHANTED LIBRARY").setPosition(28, 18);
     resources.prompt.setText(`Find the translation for: ${state.targetTerm}`).setPosition(28, 58);
@@ -1247,11 +1305,24 @@ function sceneFor(context: EnchantedLibrarySceneContext): Readonly<Record<string
     previousKeys = new Set<string>();
   };
 
+
+  const artKeys = ["world:ground", "player:idle", "enemy:idle"] as const;
+
+  const preload = function (this: PhaserSceneLike): void {
+    if (!this.load) return;
+    preloadAssetBindings(
+      this.load,
+      context.edition,
+      artKeys.filter((key) => context.edition.bindings[key]),
+    );
+  };
+
   const create = function (this: PhaserSceneLike): void {
     if (!this.add) throw new Error("Enchanted Library requires Phaser display services");
     const style = { fontFamily: "Arial", color: "#fff8ef", fontSize: "18px" };
     resources = {
       graphics: this.add.graphics(),
+      art: createActorSpriteLayer(this, context.edition),
       title: this.add.text(28, 18, "ENCHANTED LIBRARY", { ...style, fontSize: "29px", fontStyle: "bold" }),
       prompt: this.add.text(28, 58, "", { ...style, fontSize: "23px" }),
       target: this.add.text(28, 93, "", { ...style, fontSize: "18px", color: "#ffd166" }),
@@ -1332,6 +1403,7 @@ function sceneFor(context: EnchantedLibrarySceneContext): Readonly<Record<string
 
   return {
     key: ENCHANTED_LIBRARY_ID,
+    preload,
     create,
     update,
     extend: {
@@ -1359,6 +1431,8 @@ function sceneFor(context: EnchantedLibrarySceneContext): Readonly<Record<string
  */
 export function createEnchantedLibraryCartridge(): StandardExperienceCartridge {
   let activeController: EnchantedLibraryController | undefined;
+  let tutorialRoute: readonly EnchantedLibraryDirection[] = [];
+  let tutorialRouteApplied = 0;
   const standardExperience = createCartridgeStandardExperience({
     id: ENCHANTED_LIBRARY_ID,
     title: "Enchanted Library",
@@ -1370,8 +1444,21 @@ export function createEnchantedLibraryCartridge(): StandardExperienceCartridge {
     executeTutorialAction: (actionId) => {
       const controller = activeController;
       if (!controller) return;
-      if (actionId === "action:select-correct") moveToSelectedBook(controller, true);
-      if (actionId === "action:select-incorrect") moveToSelectedBook(controller, false);
+      // Plan only. The runtime replays the route across the demonstration window
+      // so the learner sees the player walk instead of jump.
+      tutorialRoute = planRouteToSelectedBook(controller, actionId === "action:select-correct");
+      tutorialRouteApplied = 0;
+    },
+    advanceTutorialAction: (_actionId, progress) => {
+      const controller = activeController;
+      if (!controller) return;
+      const due = Math.min(tutorialRoute.length, Math.ceil(progress * tutorialRoute.length));
+      while (tutorialRouteApplied < due) {
+        const direction = tutorialRoute[tutorialRouteApplied];
+        tutorialRouteApplied += 1;
+        if (direction === undefined) return;
+        controller.move(direction);
+      }
     },
   });
 
@@ -1380,7 +1467,6 @@ export function createEnchantedLibraryCartridge(): StandardExperienceCartridge {
       id: ENCHANTED_LIBRARY_ID,
       title: "Enchanted Library",
       description: "Collect translated books, restore mana, and protect the stacks from spirits.",
-      version: "0.1.0",
       runtimeApiVersion: "1.0.0",
       inputMode: "vocabulary",
       requiredAssetBindings: ["enchanted-library/arcane-shelves"],
@@ -1421,6 +1507,7 @@ export function createEnchantedLibraryCartridge(): StandardExperienceCartridge {
         render: { antialias: true, pixelArt: false },
         scene: sceneFor({
           controller,
+          edition: context.edition,
           inputController: context.inputController,
           composition: context.composition,
           diagnostic: context.diagnostic,

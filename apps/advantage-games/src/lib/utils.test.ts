@@ -10,6 +10,8 @@ describe('cn', () => {
   });
 
   it('ignores falsey values', () => {
+    // The constant `false` is the point of this test: cn must drop falsey input.
+    // eslint-disable-next-line no-constant-binary-expression
     expect(cn('text-sm', false && 'hidden', undefined)).toBe('text-sm');
   });
 });

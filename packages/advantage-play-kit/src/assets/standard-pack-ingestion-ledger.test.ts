@@ -669,6 +669,8 @@ describe("standard-pack append-only ingestion ledger", () => {
       [createLedgerEvidenceBundle(evidence)],
       rehydratedIndex,
     );
+    // A rehydrated index must validate to the same ledger as the original index.
+    expect(rehydratedLedger).toEqual(acceptedOriginal);
     const issuedReceipt = await createStandardPackAdditiveReleaseReceipt(rehydratedLedger, b1Catalog);
     const rehydratedReceipt = await rehydrateStandardPackAdditiveReleaseReceipt(
       structuredClone(issuedReceipt),

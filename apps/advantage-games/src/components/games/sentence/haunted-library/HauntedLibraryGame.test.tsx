@@ -306,7 +306,7 @@ describe('HauntedLibraryGame — Phase 5 embeddable runtime + onNavigate (Group 
       <HauntedLibraryGame
         sentences={mockSentences}
         onComplete={jest.fn()}
-        {...({ onNavigate } as any)}
+        {...{ onNavigate }}
       />,
     )
 

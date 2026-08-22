@@ -4,17 +4,22 @@ import {
   type GameResults,
 } from "@reading-advantage/game-contracts";
 import {
+  createActorSpriteLayer,
   createBoundedFrameScheduler,
   createCompletionLatch,
   createInputActionNormalizer,
   createLanguageTargetProgression,
   createResultAccountant,
   finalizeResult,
+  preloadAssetBindings,
   validateNonEmptyContent,
+  type ActorSpriteLayer,
+  type ActorSpriteLike,
   type APKInputController,
   type CartridgeGameConfigContext,
   type GameTerminalOutcome,
   type InputActionId,
+  type RuntimeEdition,
 } from "@reading-advantage/advantage-play-kit";
 import type { StandardExperienceCartridge } from "@reading-advantage/advantage-play-kit/presentation";
 
@@ -337,6 +342,14 @@ interface PhaserSceneLike {
   add?: {
     graphics(): PhaserGraphicsLike;
     text(x: number, y: number, value: string, style?: Readonly<Record<string, unknown>>): PhaserTextLike;
+    image?(x: number, y: number, key: string, frame?: number): ActorSpriteLike;
+    sprite?(x: number, y: number, key: string, frame?: number): ActorSpriteLike;
+    tileSprite?(x: number, y: number, width: number, height: number, key: string): ActorSpriteLike;
+  };
+  load?: {
+    image?(key: string, url: string): unknown;
+    spritesheet?(key: string, url: string, config: { frameWidth: number; frameHeight: number }): unknown;
+    audio?(key: string, urls: string | string[]): unknown;
   };
   events?: { once(event: string, listener: () => void): void };
   game?: { readonly canvas?: PhaserCanvasLike };
@@ -344,6 +357,7 @@ interface PhaserSceneLike {
 }
 
 interface SceneResources {
+  readonly art: ActorSpriteLayer;
   readonly graphics: PhaserGraphicsLike;
   readonly title: PhaserTextLike;
   readonly prompt: PhaserTextLike;
@@ -355,6 +369,7 @@ interface SceneResources {
 }
 
 interface GryphonPatrolSceneContext {
+  readonly edition: RuntimeEdition;
   readonly controller: GryphonPatrolController;
   readonly inputController: APKInputController;
   readonly composition: CartridgeGameConfigContext["composition"];
@@ -1162,28 +1177,43 @@ function createScene(context: GryphonPatrolSceneContext): Readonly<Record<string
     };
     const pulse = Math.sin(animationMs / 2_000 * Math.PI * 2) * 3;
     activeResources.graphics.clear();
-    activeResources.graphics.fillStyle(0x071b36, 1).fillRect(0, 0, width, height);
+    if (!activeResources.art.ground("world:ground", width, height)) activeResources.graphics.fillStyle(0x071b36, 1).fillRect(0, 0, width, height);
     activeResources.graphics.fillStyle(0x0d3357, 0.72).fillRect(0, height * 0.2, width, height * 0.62);
     activeResources.graphics.lineStyle(2, 0x55b9e8, 0.35).strokeRoundedRect(10, height * 0.18, width - 20, height * 0.64, 22);
     for (const projectile of state.projectiles) {
       activeResources.graphics.fillStyle(0xffe08a, 1).fillCircle(worldToScreen(projectile.x), projectile.y, 5);
     }
-    for (const enemy of state.enemies) {
-      if (!enemy.isActive) continue;
+    state.enemies.forEach((enemy, enemyIndex) => {
+      if (!enemy.isActive) return;
       const enemyX = worldToScreen(enemy.x);
+      if (activeResources.art.place(`enemy:${enemyIndex}`, "enemy:idle", {
+        x: enemyX,
+        y: enemy.y,
+        width: enemy.size * 1.3,
+        depth: 7,
+      })) return;
       activeResources.graphics.fillStyle(enemy.isTarget ? 0x6cf0a7 : 0xec6876, 0.95).fillCircle(enemyX, enemy.y, enemy.size / 2);
       activeResources.graphics.lineStyle(2, enemy.isTarget ? 0xfff3a6 : 0x531b39, 0.9)
         .strokeRoundedRect(enemyX - enemy.size / 2, enemy.y - enemy.size / 2, enemy.size, enemy.size, 8);
-    }
+    });
     for (const orb of state.orbs) {
       if (!orb.isActive) continue;
       const orbX = worldToScreen(orb.x);
       activeResources.graphics.fillStyle(0xffffff, 0.88 + pulse / 30).fillCircle(orbX, orb.y, orb.size / 2);
     }
     const playerX = worldToScreen(state.player.x);
-    activeResources.graphics.fillStyle(0xf1c40f, state.player.invulnerableMs > 0 ? 0.45 : 1)
-      .fillCircle(playerX, state.player.y, state.player.size / 2);
-    activeResources.graphics.fillStyle(0xfff5bc, 1).fillCircle(playerX + 14, state.player.y - 9, 7);
+    if (!activeResources.art.place("player", "player:idle", {
+      x: playerX,
+      y: state.player.y,
+      width: state.player.size * 1.4,
+      depth: 8,
+      alpha: state.player.invulnerableMs > 0 ? 0.45 : 1,
+    })) {
+      activeResources.graphics.fillStyle(0xf1c40f, state.player.invulnerableMs > 0 ? 0.45 : 1)
+        .fillCircle(playerX, state.player.y, state.player.size / 2);
+      activeResources.graphics.fillStyle(0xfff5bc, 1).fillCircle(playerX + 14, state.player.y - 9, 7);
+    }
+    activeResources.art.sweep();
     activeResources.graphics.fillStyle(0xffcc66, 0.95).fillRoundedRect(width - 150, height - 82, 120, 54, 14);
     activeResources.graphics.lineStyle(2, 0xffffff, 0.8).strokeRoundedRect(width - 150, height - 82, 120, 54, 14);
 
@@ -1260,11 +1290,24 @@ function createScene(context: GryphonPatrolSceneContext): Readonly<Record<string
     for (const label of activeResources.enemies) label.destroy();
     for (const label of activeResources.orbs) label.destroy();
   };
+
+  const artKeys = ["world:ground", "player:idle", "enemy:idle"] as const;
+
+  const preload = function (this: PhaserSceneLike): void {
+    if (!this.load) return;
+    preloadAssetBindings(
+      this.load,
+      context.edition,
+      artKeys.filter((key) => context.edition.bindings[key]),
+    );
+  };
+
   const create = function (this: PhaserSceneLike): void {
     if (!this.add) throw new Error("Gryphon Patrol requires Phaser display services");
     const style = { fontFamily: "Arial", color: "#f4fbff", fontSize: "17px" };
     resources = {
       graphics: this.add.graphics(),
+      art: createActorSpriteLayer(this, context.edition),
       title: this.add.text(0, 0, "", { ...style, fontSize: "30px", fontStyle: "bold" }),
       prompt: this.add.text(0, 0, "", { ...style, fontSize: "23px", wordWrap: { width: 860 } }),
       progress: this.add.text(0, 0, "", { ...style, fontSize: "16px", color: "#bde8ff" }),
@@ -1286,6 +1329,7 @@ function createScene(context: GryphonPatrolSceneContext): Readonly<Record<string
   };
   return {
     key: GRYPHON_PATROL_ID,
+    preload,
     create,
     update,
     extend: {
@@ -1335,7 +1379,6 @@ export function createGryphonPatrolCartridge(): StandardExperienceCartridge {
       id: GRYPHON_PATROL_ID,
       title: "Gryphon Patrol",
       description: "Fly a gryphon through a wrapped sky, shoot word-marked enemies, and collect their orbs.",
-      version: "0.1.0",
       runtimeApiVersion: "1.0.0",
       inputMode: "sentence",
       requiredAssetBindings: ["gryphon-patrol/player"],
@@ -1377,6 +1420,7 @@ export function createGryphonPatrolCartridge(): StandardExperienceCartridge {
         render: { antialias: true, pixelArt: false },
         scene: createScene({
           controller,
+          edition: context.edition,
           inputController: context.inputController,
           composition: context.composition,
           sessionMode,

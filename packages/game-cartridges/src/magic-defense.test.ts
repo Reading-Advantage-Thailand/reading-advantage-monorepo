@@ -1,12 +1,18 @@
 import { gameResultsSchema } from "@reading-advantage/game-contracts";
 import { describe, expect, it, vi } from "vitest";
 
+import { createCatalogStandardEdition } from "./catalog-standard-art.js";
 import {
+  MAGIC_DEFENSE_CHOICE_Y_RATIO,
+  MAGIC_DEFENSE_ENEMY_NEAR_SIZE,
+  MAGIC_DEFENSE_HORIZON_Y_RATIO,
   MAGIC_DEFENSE_MAX_CASTLE_HEALTH,
   MAGIC_DEFENSE_MAX_MANA,
   MAGIC_DEFENSE_MISSILE_SPAWN_INTERVAL_MS,
+  MAGIC_DEFENSE_TOWER_Y_RATIO,
   createMagicDefenseCartridge,
   createMagicDefenseController,
+  magicDefenseApproachPose,
   type MagicDefenseController,
   type MagicDefenseSnapshot,
 } from "./magic-defense.js";
@@ -32,9 +38,23 @@ function createText(value = "") {
     destroyed: false,
     setPosition: vi.fn(() => text),
     setText: vi.fn((next: string) => { text.value = next; return text; }),
+    setDepth: vi.fn(() => text),
     destroy: vi.fn(() => { text.destroyed = true; }),
   };
   return text;
+}
+
+function createImage() {
+  const image = {
+    destroyed: false,
+    setOrigin: vi.fn(() => image),
+    setDisplaySize: vi.fn(() => image),
+    setDepth: vi.fn(() => image),
+    setPosition: vi.fn(() => image),
+    setVisible: vi.fn(() => image),
+    destroy: vi.fn(() => { image.destroyed = true; }),
+  };
+  return image;
 }
 
 function createSceneHarness() {
@@ -45,8 +65,10 @@ function createSceneHarness() {
     fillRect: vi.fn(() => graphics),
     fillCircle: vi.fn(() => graphics),
     fillRoundedRect: vi.fn(() => graphics),
+    fillTriangle: vi.fn(() => graphics),
     lineStyle: vi.fn(() => graphics),
     strokeRoundedRect: vi.fn(() => graphics),
+    setDepth: vi.fn(() => graphics),
     destroy: vi.fn(),
   };
   const texts: ReturnType<typeof createText>[] = [];
@@ -66,13 +88,33 @@ function createSceneHarness() {
     },
     destroyed: false,
   };
+  const images: ReturnType<typeof createImage>[] = [];
   const scene = {
+    load: {
+      image: vi.fn(),
+      spritesheet: vi.fn(),
+    },
     add: {
       graphics: vi.fn(() => graphics),
       text: vi.fn((_x: number, _y: number, value: string) => {
         const text = createText(value);
         texts.push(text);
         return text;
+      }),
+      image: vi.fn(() => {
+        const image = createImage();
+        images.push(image);
+        return image;
+      }),
+      sprite: vi.fn(() => {
+        const image = createImage();
+        images.push(image);
+        return image;
+      }),
+      tileSprite: vi.fn(() => {
+        const image = createImage();
+        images.push(image);
+        return image;
       }),
     },
     events: { once: vi.fn((event: string, listener: () => void) => events.set(event, listener)) },
@@ -93,6 +135,7 @@ function createSceneHarness() {
     inputController,
     graphics,
     texts,
+    images,
     inputSnapshotCalls: () => inputSnapshotCalls,
     setInput(input: {
       readonly keys?: readonly string[];
@@ -151,7 +194,7 @@ describe("Magic Defense cartridge", () => {
     expect(cartridge.standardExperience.definition).toMatchObject({
       briefing: { startPhase: "tutorial", learningPreview: { heading: "Words to learn" } },
       tutorial: { lifecycle: { complete: { to: "playing" } } },
-      debrief: { outcome: "complete", requiredCredit: "" },
+      debrief: { outcome: "complete", requiredCredit: "Pixel art assets by ElvGames" },
     });
     expect(snapshot).toMatchObject({
       phase: "playing",
@@ -450,7 +493,7 @@ describe("Magic Defense cartridge", () => {
     harness.setInput({
       keys: [],
       pressed: [],
-      pointer: { released: true, x: (current + 0.5) * (960 / 3), y: 440 },
+      pointer: { released: true, x: (current + 0.5) * (960 / 3), y: 470 },
     });
     const inputSnapshotCallsBeforePointer = harness.inputSnapshotCalls();
     scene.update.call(harness.scene, 0, 0);
@@ -459,7 +502,7 @@ describe("Magic Defense cartridge", () => {
     expect(harness.graphics.clear).toHaveBeenCalled();
 
     harness.shutdown();
-    expect(harness.graphics.destroy).toHaveBeenCalledOnce();
+    expect(harness.graphics.destroy).toHaveBeenCalledTimes(2);
     expect(harness.texts.every((text) => text.destroyed)).toBe(true);
     expect((scene.extend.apkCaptureResponsiveState() as { destroyed: boolean }).destroyed).toBe(true);
   });
@@ -622,5 +665,54 @@ describe("Magic Defense cartridge", () => {
     expect(terminal).toMatchObject({ accepted: true, terminal: true, reason: "timer" });
     expect(terminal.snapshot).toMatchObject({ phase: "defeat", timeRemaining: 0, defeatReason: "timer" });
     expect(deliver).toHaveBeenCalledWith(expect.any(Object), "defeat");
+  });
+
+  it("grows enemies from the horizon to the tower line", () => {
+    const far = magicDefenseApproachPose(0, "center", 960, 540);
+    const mid = magicDefenseApproachPose(0.5, "left", 960, 540);
+    const near = magicDefenseApproachPose(1, "left", 960, 540);
+    expect(far.y).toBe(540 * MAGIC_DEFENSE_HORIZON_Y_RATIO);
+    expect(near.y).toBe(540 * MAGIC_DEFENSE_TOWER_Y_RATIO);
+    expect(MAGIC_DEFENSE_TOWER_Y_RATIO).toBe(1);
+    expect(MAGIC_DEFENSE_CHOICE_Y_RATIO).toBeLessThan(MAGIC_DEFENSE_TOWER_Y_RATIO);
+    expect(far.size).toBeLessThan(mid.size);
+    expect(mid.size).toBeLessThan(near.size);
+    expect(near.size).toBe(MAGIC_DEFENSE_ENEMY_NEAR_SIZE);
+    expect(Math.abs(far.x - 480)).toBeLessThan(1);
+    expect(near.x).toBeLessThan(far.x);
+  });
+
+  it("owns a 2.5D grass field and scales catalog spirits toward the towers", () => {
+    const harness = createSceneHarness();
+    const cartridge = createMagicDefenseCartridge();
+    const edition = createCatalogStandardEdition(
+      ["legacy-catalog/magic-defense/arcane-castle"],
+      "/assets/apk/standard-pack-qc/",
+      "magic-defense",
+    );
+    const config = cartridge.createGameConfig({
+      input: VOCABULARY,
+      edition,
+      complete: vi.fn(),
+      diagnostic: vi.fn(),
+      inputController: harness.inputController,
+      sessionMode: "playing",
+      composition: { profile: "wide", width: 960, height: 540 },
+    } as never);
+    const scene = config.scene as {
+      preload: () => void;
+      create: () => void;
+      update: (_time: number, delta: number) => void;
+    };
+    scene.preload.call(harness.scene);
+    scene.create.call(harness.scene);
+    scene.update.call(harness.scene, 0, 2000);
+    expect(harness.scene.add.tileSprite).toHaveBeenCalled();
+    expect(harness.images.length).toBeGreaterThan(8);
+    const sizes = harness.images
+      .map((image) => image.setDisplaySize.mock.calls[0] as unknown as [number, number] | undefined)
+      .filter((call): call is [number, number] => call !== undefined && Math.abs(call[0] - call[1]) < 1)
+      .map((call) => call[0]);
+    expect(Math.max(...sizes)).toBeGreaterThan(Math.min(...sizes));
   });
 });

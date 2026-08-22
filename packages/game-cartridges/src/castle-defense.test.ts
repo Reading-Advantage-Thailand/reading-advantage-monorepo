@@ -16,6 +16,7 @@ import {
   type CastleDefenseController,
   type CastleDefenseSnapshot,
 } from "./castle-defense.js";
+import { createCatalogStandardEdition } from "./catalog-standard-art.js";
 import { PHASE3_RUNTIME_EDITION } from "./legacy-traversal-phase3-test-helpers.js";
 
 const SENTENCES = [
@@ -132,10 +133,26 @@ interface FakeText {
   destroy(): void;
 }
 
+interface FakeImage {
+  setOrigin: ReturnType<typeof vi.fn>;
+  setDisplaySize: ReturnType<typeof vi.fn>;
+  setDepth: ReturnType<typeof vi.fn>;
+  setPosition: ReturnType<typeof vi.fn>;
+  setVisible: ReturnType<typeof vi.fn>;
+  destroy: ReturnType<typeof vi.fn>;
+}
+
 interface FakeScene {
   add: {
     graphics(): FakeGraphics;
     text(x: number, y: number, value: string, style?: Readonly<Record<string, unknown>>): FakeText;
+    image?: (x: number, y: number, key: string, frame?: number) => FakeImage;
+    sprite?: (x: number, y: number, key: string, frame?: number) => FakeImage;
+    tileSprite?: (x: number, y: number, width: number, height: number, key: string) => FakeImage;
+  };
+  load?: {
+    image?: (key: string, url: string) => unknown;
+    spritesheet?: (key: string, url: string, config?: { frameWidth: number; frameHeight: number }) => unknown;
   };
   events: { once(event: string, listener: () => void): void };
   game: { canvas: { getBoundingClientRect(): { left: number; top?: number; width: number; height?: number } } };
@@ -220,7 +237,7 @@ describe("Castle Defense bespoke APK cartridge", () => {
           productionEffects: { emitGameResults: false, persistProgress: false, awardAuthoritativeXp: false },
         },
       },
-      debrief: { outcome: "complete", requiredCredit: "" },
+      debrief: { outcome: "complete", requiredCredit: "Pixel art assets by ElvGames" },
     });
   });
 
@@ -731,5 +748,99 @@ describe("Castle Defense bespoke APK cartridge", () => {
     scene.update.call(fake.scene, 64, 16);
     expect(scene.extend.apkCaptureResponsiveState()).toMatchObject({ phase: "defending", towers: [{ slotId: "slot-0" }] });
     expect(diagnostic).toHaveBeenCalledWith(expect.objectContaining({ code: "CASTLE_DEFENSE_READY" }));
+  });
+
+  it("paints grass, a dirt road, keep, gate, and unit sprites from the catalog edition", () => {
+    const edition = createCatalogStandardEdition(
+      ["legacy-catalog/castle-defense/fortress"],
+      "/assets/apk/standard-pack-qc/",
+      "castle-defense",
+    );
+    const inputController = createMutableInputController();
+    const config = createCastleDefenseCartridge().createGameConfig({
+      input: SENTENCES,
+      edition,
+      complete: vi.fn(),
+      diagnostic: vi.fn(),
+      inputController,
+      seed: 17,
+      sessionMode: "playing",
+      composition: { profile: "wide", safeRect: { width: 960 } } as never,
+    });
+    const scene = config.scene as {
+      key: string;
+      preload(this: FakeScene): void;
+      create(this: FakeScene): void;
+      update(this: FakeScene, time?: number, delta?: number): void;
+    };
+
+    const imageKeys: string[] = [];
+    const spriteKeys: string[] = [];
+    const tileKeys: string[] = [];
+    const loadedImages: Array<[string, string]> = [];
+    const loadedSheets: Array<[string, string]> = [];
+    const makeImage = (key: string) => {
+      const image = {
+        key,
+        setOrigin: vi.fn(() => image),
+        setDisplaySize: vi.fn(() => image),
+        setDepth: vi.fn(() => image),
+        setPosition: vi.fn(() => image),
+        setVisible: vi.fn(() => image),
+        destroy: vi.fn(),
+      };
+      return image;
+    };
+    const fake = createFakeScene();
+    fake.scene.load = {
+      image: vi.fn((key: string, url: string) => {
+        loadedImages.push([key, url]);
+      }),
+      spritesheet: vi.fn((key: string, url: string) => {
+        loadedSheets.push([key, url]);
+      }),
+    };
+    fake.scene.add.image = vi.fn((x: number, y: number, key: string) => {
+      imageKeys.push(key);
+      return makeImage(key);
+    });
+    fake.scene.add.sprite = vi.fn((x: number, y: number, key: string) => {
+      spriteKeys.push(key);
+      return makeImage(key);
+    });
+    fake.scene.add.tileSprite = vi.fn((x: number, y: number, width: number, height: number, key: string) => {
+      tileKeys.push(key);
+      return makeImage(key);
+    });
+
+    scene.preload.call(fake.scene);
+    scene.create.call(fake.scene);
+
+    expect(loadedImages.map(([key]) => key)).toEqual(expect.arrayContaining([
+      "apk:catalog-standard-pack:tile-grass",
+      "apk:catalog-standard-pack:tile-dirt",
+      "apk:catalog-standard-pack:prop-keep",
+      "apk:catalog-standard-pack:prop-gate",
+      "apk:catalog-standard-pack:prop-tower",
+      "apk:catalog-standard-pack:prop-tree",
+    ]));
+    expect(loadedSheets.map(([key]) => key)).toEqual(expect.arrayContaining([
+      "apk:catalog-standard-pack:player-knight",
+      "apk:catalog-standard-pack:enemy-beast",
+      "apk:catalog-standard-pack:player-mage",
+    ]));
+    expect(tileKeys).toContain("apk:catalog-standard-pack:tile-grass");
+    expect(imageKeys.concat(spriteKeys)).toEqual(expect.arrayContaining([
+      "apk:catalog-standard-pack:tile-dirt",
+      "apk:catalog-standard-pack:prop-keep",
+      "apk:catalog-standard-pack:prop-gate",
+      "apk:catalog-standard-pack:prop-tree",
+      "apk:catalog-standard-pack:player-knight",
+      "apk:catalog-standard-pack:enemy-beast",
+      "apk:catalog-standard-pack:player-mage",
+    ]));
+    expect(fake.graphics.fillRect).not.toHaveBeenCalledWith(0, 0, 960, 540);
+    const circleRadii = vi.mocked(fake.graphics.fillCircle).mock.calls.map((call) => call[2]);
+    expect(circleRadii.every((radius) => radius === 36)).toBe(true);
   });
 });

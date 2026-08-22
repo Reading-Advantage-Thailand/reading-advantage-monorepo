@@ -22,6 +22,8 @@ export interface GameTutorialQcInputSequence {
 export interface GameTutorialQcClock extends GameTutorialClock {
   /** Runs all callbacks that are pending when each callback completes. */
   readonly runAll: () => Promise<void>;
+  /** Runs every timer that is due within the supplied duration. */
+  readonly advanceBy: (durationMs: number) => Promise<void>;
   /** Returns the pending callback count. */
   readonly pendingCount: () => number;
 }
@@ -82,6 +84,17 @@ function createTutorialQcClock(): GameTutorialQcClock {
         now = next[1].at;
         await next[1].callback();
       }
+    },
+    advanceBy: async (durationMs) => {
+      const target = now + durationMs;
+      while (true) {
+        const next = nextTimer();
+        if (!next || next[1].at > target) break;
+        timers.delete(next[0]);
+        now = next[1].at;
+        await next[1].callback();
+      }
+      now = target;
     },
   };
 }

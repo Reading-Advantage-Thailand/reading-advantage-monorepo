@@ -1,5 +1,6 @@
 /** Stable error codes emitted by the APK runtime boundary. */
 export type APKRuntimeErrorCode =
+  | "INVALID_CARTRIDGE_MANIFEST"
   | "INVALID_GAME_INPUT"
   | "INVALID_GAME_RESULTS"
   | "INVALID_EDITION"

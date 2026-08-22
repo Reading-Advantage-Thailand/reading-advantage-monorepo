@@ -22,7 +22,7 @@ import {
   ACCEPTED_STANDARD_ASSET_RELEASE,
   createAcceptedStandardAssetResolver,
 } from "./accepted-standard-pack-release.js";
-import { createStandardAssetResolver, type StandardAssetCatalog } from "./standard-pack-release.js";
+import { createStandardAssetResolver } from "./standard-pack-release.js";
 import {
   serializeStandardPackCohortSuitabilityBindingPayload,
   standardPackCohortSuitabilityEvidenceSchema,

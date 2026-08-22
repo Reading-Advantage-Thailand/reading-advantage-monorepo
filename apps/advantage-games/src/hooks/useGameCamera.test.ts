@@ -23,7 +23,7 @@ describe('useGameCamera', () => {
         observe = observeMock
         disconnect = disconnectMock
       }
-      ;(global as any).ResizeObserver = ResizeObserverMock
+      ;(globalThis as unknown as { ResizeObserver: unknown }).ResizeObserver = ResizeObserverMock
 
       const containerRef = {
         current: document.createElement('div'),
@@ -45,7 +45,7 @@ describe('useGameCamera', () => {
         current: {
           getBoundingClientRect: () => ({ width: 390, height: 844 }),
         },
-      } as any
+      } as never
 
       const { result } = renderHook(() =>
         useGameCamera(containerRef, 390, 844)
@@ -61,7 +61,7 @@ describe('useGameCamera', () => {
         current: {
           getBoundingClientRect: () => ({ width: 390, height: 844 }),
         },
-      } as any
+      } as never
 
       const { result } = renderHook(() =>
         useGameCamera(containerRef, 390, 844)

@@ -4,11 +4,26 @@ export { mountCartridge } from "./runtime.js";
 /** Public Phaser renderer boundary. */
 export { createPhaserGameFactory } from "./phaser-factory.js";
 
+/** Shared actor sprite layer that binds standard-pack art to gameplay actors. */
+export { createActorSpriteLayer } from "./actor-sprites.js";
+export type {
+  ActorSpriteLayer,
+  ActorSpriteLike,
+  ActorSpritePlacement,
+  ActorSpriteSceneLike,
+} from "./actor-sprites.js";
+
 /** Public normalized input factory. */
 export { createInputController } from "./input.js";
 
 /** Public runtime errors. */
 export { APKRuntimeError, toAPKRuntimeError } from "./errors.js";
+
+/** Load-path cartridge manifest contract enforced by mountCartridge. */
+export {
+  runtimeCartridgeManifestSchema,
+  validateRuntimeCartridgeManifest,
+} from "./cartridge-manifest.js";
 
 /** Public runtime constants. */
 export { APK_RUNTIME_API_VERSION } from "./types.js";
@@ -22,6 +37,7 @@ export type {
   APKHostAdapter,
   APKRuntimeDiagnostics,
   APKRuntimeStatus,
+  APKSessionMode,
   AssetAnimation,
   AssetCollisionBox,
   AssetOrigin,
@@ -33,6 +49,7 @@ export type {
   GameFactory,
   GameFactoryContext,
   FrameGrid,
+  GameTerminalOutcome,
   GameInput,
   MountCartridgeOptions,
   RuntimeCartridge,

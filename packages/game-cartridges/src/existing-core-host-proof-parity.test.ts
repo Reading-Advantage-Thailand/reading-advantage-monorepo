@@ -11,6 +11,14 @@ import {
 } from "./existing-core-cutover-qc.js";
 import { cartridgeCatalog, cartridgeLoaders } from "./catalog.js";
 
+const PUBLISHED_EXISTING_CORE_IDS = Object.freeze([
+  "dragon-flight",
+  "astral-mage",
+  "sorcerer-ziggurat",
+  "magic-defense",
+  "dungeon-liberator",
+]);
+
 /**
  * Task 5 binding-parity guard: the quarantined Advantage Games QC registry
  * (accepted Task-4 bytes) and the shared Reading/Primary host-proof contract
@@ -48,7 +56,7 @@ describe("existing-core host-proof binding parity (Task 5)", () => {
       expect([...cartridge.semanticAdoption.selectedStandardPackOutput]).toEqual(
         [...binding.selectedStandardPackOutput],
       );
-      expect([...cartridge.manifest.semanticAssetRequirements]).toEqual(
+      expect([...cartridge.manifest.requiredAssetBindings]).toEqual(
         [...binding.selectedStandardPackOutput],
       );
       expect(cartridge.manifest.id).toBe(binding.id);
@@ -68,8 +76,13 @@ describe("existing-core host-proof binding parity (Task 5)", () => {
     }
   });
 
-  it("production catalog and loaders stay quarantined", () => {
-    expect(cartridgeCatalog).toEqual([]);
-    expect(Object.keys(cartridgeLoaders)).toEqual([]);
+  it("production catalog and loaders publish exactly the five approved existing-core cartridges", () => {
+    const existingCoreIds = new Set(EXISTING_CORE_HOST_PROOF_BINDINGS.map(({ id }) => id));
+    expect(cartridgeCatalog.filter(({ id }) => existingCoreIds.has(id as never)).map(({ id }) => id)).toEqual(
+      PUBLISHED_EXISTING_CORE_IDS,
+    );
+    expect(Object.keys(cartridgeLoaders).filter((id) => existingCoreIds.has(id as never))).toEqual(
+      PUBLISHED_EXISTING_CORE_IDS,
+    );
   });
 });

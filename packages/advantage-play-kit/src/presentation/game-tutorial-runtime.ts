@@ -1,10 +1,15 @@
 import {
   validateGameTutorialDefinition,
   type GameTutorialActionDriver,
+  type GameTutorialActionDriverContext,
   type GameTutorialDefinition,
   type GameTutorialProgress,
+  type GameTutorialStep,
 } from "./game-tutorial-contract.js";
 import type { GameLifecycleTransition } from "./game-briefing-contract.js";
+
+/** Interval between demonstration frames for a driver that shows motion. */
+const DEMONSTRATION_FRAME_MS = 16;
 
 /** Provides deterministic time operations for one tutorial run. */
 export interface GameTutorialClock {
@@ -34,6 +39,8 @@ export interface GameTutorialRuntimeSnapshot {
   readonly status: "idle" | "running" | "paused" | "complete" | "skipped" | "exited" | "interrupted" | "destroyed";
   /** The active step identifier when tutorial playback is active. */
   readonly currentStepId?: string;
+  /** True after the active step finishes its demonstration. */
+  readonly currentStepDemonstrated: boolean;
   /** The completed and total step counts. */
   readonly progress: GameTutorialProgress;
   /** The fixed run seed. */
@@ -84,6 +91,8 @@ export interface CreateGameTutorialRuntimeOptions {
   readonly onLifecycleTransition: (transition: GameLifecycleTransition) => void;
   /** Receives local, non-persistent diagnostics. */
   readonly onDiagnostic?: (diagnostic: GameTutorialDiagnostic) => void;
+  /** Receives a notification after the runtime changes state without a host command. */
+  readonly onChange?: () => void;
 }
 
 /** Controls one isolated tutorial run. */
@@ -113,7 +122,7 @@ export interface GameTutorialRuntime {
 /** Creates a deterministic, host-neutral tutorial runner for a real cartridge mechanic. */
 export function createGameTutorialRuntime(options: CreateGameTutorialRuntimeOptions): GameTutorialRuntime {
   const tutorial = validateGameTutorialDefinition(options.tutorial);
-  const { actionDriver, clock, onDiagnostic, onLifecycleTransition } = options;
+  const { actionDriver, clock, onChange, onDiagnostic, onLifecycleTransition } = options;
   // Tutorial execution has no production authority. This reference makes that boundary explicit.
   void options.effects;
 
@@ -123,7 +132,9 @@ export function createGameTutorialRuntime(options: CreateGameTutorialRuntimeOpti
   let completed = 0;
   let timer: number | undefined;
   let deadline: number | undefined;
+  let pendingContinuation: (() => void | Promise<void>) | undefined;
   let pausedRemainingMs: number | undefined;
+  let pausedContinuation: (() => void | Promise<void>) | undefined;
   let currentStepDemonstrated = false;
   let driverDestroyed = false;
 
@@ -132,10 +143,13 @@ export function createGameTutorialRuntime(options: CreateGameTutorialRuntimeOpti
     onDiagnostic?.({ event, ...(step ? { stepId: step.id } : {}), ...(message ? { message } : {}), at: clock.now() });
   };
 
+  const notify = (): void => onChange?.();
+
   const cancelTimer = (): void => {
     if (timer !== undefined) clock.clearTimeout(timer);
     timer = undefined;
     deadline = undefined;
+    pendingContinuation = undefined;
   };
 
   const releaseDriver = async (): Promise<void> => {
@@ -150,26 +164,57 @@ export function createGameTutorialRuntime(options: CreateGameTutorialRuntimeOpti
     report("cleaned");
   };
 
-  const schedule = (delayMs: number): void => {
+  const schedule = (delayMs: number, next: () => void | Promise<void>): void => {
+    pendingContinuation = next;
     deadline = clock.now() + delayMs;
     timer = clock.setTimeout(async () => {
       timer = undefined;
       deadline = undefined;
+      pendingContinuation = undefined;
       if (status !== "running" || phase !== "tutorial") return;
-      const step = tutorial.steps[currentStepIndex];
-      if (!step) return;
-      if (currentStepDemonstrated) return;
-      await actionDriver.execute({
-        tutorial,
-        step,
-        seed: tutorial.seed,
-        mode: "tutorial",
-        diagnostics: { report: (message) => report("demonstrated", message) },
-      });
-      currentStepDemonstrated = true;
-      report("demonstrated");
-      schedule(step.timing.demonstrationMs + step.timing.lingerMs);
+      await next();
     }, delayMs);
+  };
+
+  const driverContext = (step: GameTutorialStep): GameTutorialActionDriverContext => ({
+    tutorial,
+    step,
+    seed: tutorial.seed,
+    mode: "tutorial",
+    diagnostics: { report: (message) => report("demonstrated", message) },
+  });
+
+  const finishDemonstration = (step: GameTutorialStep): void => {
+    currentStepDemonstrated = true;
+    report("demonstrated");
+    notify();
+    // The declared lifecycle advance policy is sequential, so the runtime advances by itself.
+    schedule(step.timing.lingerMs, advance);
+  };
+
+  const driveFrames = async (step: GameTutorialStep, elapsedMs: number): Promise<void> => {
+    const total = step.timing.demonstrationMs;
+    const next = Math.min(total, elapsedMs + DEMONSTRATION_FRAME_MS);
+    await actionDriver.advanceFrame?.({
+      ...driverContext(step),
+      elapsedMs: next,
+      progress: total === 0 ? 1 : next / total,
+    });
+    if (next >= total) {
+      finishDemonstration(step);
+      return;
+    }
+    schedule(DEMONSTRATION_FRAME_MS, () => driveFrames(step, next));
+  };
+
+  const demonstrate = async (step: GameTutorialStep): Promise<void> => {
+    if (currentStepDemonstrated) return;
+    await actionDriver.execute(driverContext(step));
+    if (actionDriver.advanceFrame === undefined || step.timing.demonstrationMs === 0) {
+      schedule(step.timing.demonstrationMs, () => finishDemonstration(step));
+      return;
+    }
+    await driveFrames(step, 0);
   };
 
   const start = (): void => {
@@ -180,13 +225,14 @@ export function createGameTutorialRuntime(options: CreateGameTutorialRuntimeOpti
     status = "running";
     currentStepDemonstrated = false;
     driverDestroyed = false;
-    schedule(step.timing.leadInMs);
+    schedule(step.timing.leadInMs, () => demonstrate(step));
     report("started");
   };
 
   const pause = (): void => {
     if (status !== "running" || phase !== "tutorial") return;
     pausedRemainingMs = deadline === undefined ? undefined : Math.max(0, deadline - clock.now());
+    pausedContinuation = pendingContinuation;
     cancelTimer();
     status = "paused";
     report("paused");
@@ -195,9 +241,11 @@ export function createGameTutorialRuntime(options: CreateGameTutorialRuntimeOpti
   const resume = (): void => {
     if (status !== "paused" || phase !== "tutorial") return;
     const remaining = pausedRemainingMs;
+    const continuation = pausedContinuation;
     pausedRemainingMs = undefined;
+    pausedContinuation = undefined;
     status = "running";
-    if (remaining !== undefined) schedule(remaining);
+    if (remaining !== undefined && continuation !== undefined) schedule(remaining, continuation);
     report("resumed");
   };
 
@@ -211,14 +259,16 @@ export function createGameTutorialRuntime(options: CreateGameTutorialRuntimeOpti
       status = "complete";
       onLifecycleTransition({ from: "tutorial", event: "tutorial-complete", to: destination });
       report("completed");
+      notify();
       return;
     }
     currentStepIndex += 1;
     currentStepDemonstrated = false;
     const nextStep = tutorial.steps[currentStepIndex];
     if (!nextStep) return;
-    schedule(nextStep.timing.leadInMs);
+    schedule(nextStep.timing.leadInMs, () => demonstrate(nextStep));
     report("advanced");
+    notify();
   };
 
   const replay = async (): Promise<void> => {
@@ -230,6 +280,8 @@ export function createGameTutorialRuntime(options: CreateGameTutorialRuntimeOpti
     completed = 0;
     currentStepDemonstrated = false;
     driverDestroyed = false;
+    pausedRemainingMs = undefined;
+    pausedContinuation = undefined;
     report("replayed");
   };
 
@@ -256,6 +308,7 @@ export function createGameTutorialRuntime(options: CreateGameTutorialRuntimeOpti
       phase,
       status,
       ...(phase === "tutorial" ? { currentStepId: tutorial.steps[currentStepIndex]?.id } : {}),
+      currentStepDemonstrated,
       progress: { completed, total: tutorial.steps.length },
       seed: tutorial.seed,
       resources: { listeners: 0, inputHandlers: 0, phaserObjects: 0 },
