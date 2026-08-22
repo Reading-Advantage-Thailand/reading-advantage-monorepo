@@ -9,8 +9,10 @@
  */
 import {
   AccountingSubmissionError,
+  approveAccountingSubmission as approveDomainAccountingSubmission,
   createPostgresAccountingSubmissionRepository,
   listAccountingSubmissions as listDomainAccountingSubmissions,
+  rejectAccountingSubmission as rejectDomainAccountingSubmission,
   submitAccountingSubmission as submitDomainAccountingSubmission,
   type AccountingActor,
   type AccountingSubmission,
@@ -112,6 +114,65 @@ export async function listAccountingSubmissions(
     return await listDomainAccountingSubmissions({
       repository,
       actor: request.actor,
+    });
+  } catch (error) {
+    translateDomainError(error);
+  }
+}
+
+/** Request for approving a pending submission. */
+export interface ApproveAccountingSubmissionRequest {
+  /** Session-derived actor carrying the company scope. */
+  readonly actor: AccountingActor;
+  /** Identifier of the submission to approve. */
+  readonly submissionId: string;
+}
+
+/**
+ * Approves a pending submission via the Postgres-backed repository.
+ * @param request Actor and submission identifier.
+ * @returns The approved submission.
+ * @throws An AccountingSubmissionError-named error for invalid input, forbidden, or not-found.
+ */
+export async function approveAccountingSubmission(
+  request: ApproveAccountingSubmissionRequest,
+): Promise<AccountingSubmission> {
+  try {
+    return await approveDomainAccountingSubmission({
+      repository,
+      actor: request.actor,
+      submissionId: request.submissionId,
+    });
+  } catch (error) {
+    translateDomainError(error);
+  }
+}
+
+/** Request for rejecting a pending submission. */
+export interface RejectAccountingSubmissionRequest {
+  /** Session-derived actor carrying the company scope. */
+  readonly actor: AccountingActor;
+  /** Identifier of the submission to reject. */
+  readonly submissionId: string;
+  /** Reason for the rejection. */
+  readonly reason: string;
+}
+
+/**
+ * Rejects a pending submission via the Postgres-backed repository.
+ * @param request Actor, submission identifier, and rejection reason.
+ * @returns The rejected submission.
+ * @throws An AccountingSubmissionError-named error for invalid input, forbidden, or not-found.
+ */
+export async function rejectAccountingSubmission(
+  request: RejectAccountingSubmissionRequest,
+): Promise<AccountingSubmission> {
+  try {
+    return await rejectDomainAccountingSubmission({
+      repository,
+      actor: request.actor,
+      submissionId: request.submissionId,
+      reason: request.reason,
     });
   } catch (error) {
     translateDomainError(error);

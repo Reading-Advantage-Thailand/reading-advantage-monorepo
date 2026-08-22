@@ -215,7 +215,7 @@ describe("PostgreSQL accounting submission repository", () => {
   it("rejects a malformed stored row during repository revalidation", async () => {
     const database = sqlDouble([[{
       ...rawRowFor(thbSubmission()),
-      status: "approved",
+      status: "archived",
     }]]);
     const repository = createPostgresAccountingSubmissionRepository({
       sql: database.sql,

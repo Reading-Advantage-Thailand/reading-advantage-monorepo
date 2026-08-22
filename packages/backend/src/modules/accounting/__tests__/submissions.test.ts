@@ -124,11 +124,13 @@ function createFakeRepository(
 }
 
 describe("accounting submissions module boundary", () => {
-  it("exports only submission and listing behavior — no approval or mutation functions", () => {
+  it("exports submission, listing, and approval behavior", () => {
     return import("../submissions.js").then((module) => {
       expect(Object.keys(module).sort()).toEqual([
         "AccountingSubmissionError",
+        "approveAccountingSubmission",
         "listAccountingSubmissions",
+        "rejectAccountingSubmission",
         "submitAccountingSubmission",
       ]);
     });

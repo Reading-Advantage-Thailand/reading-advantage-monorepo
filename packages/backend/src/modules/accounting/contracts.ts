@@ -48,17 +48,61 @@ export type AccountingSubmissionKind = z.infer<
   typeof accountingSubmissionKindSchema
 >;
 
-/**
- * Lifecycle status of an accounting submission. Modelled as a single-member enum
- * (rather than a literal) so the approval workflow can append members in a later
- * phase without changing the schema's shape.
- */
-export const accountingSubmissionStatusSchema = z.enum(["pending"]);
+/** Lifecycle status of an accounting submission. */
+export const accountingSubmissionStatusSchema = z.enum([
+  "pending",
+  "approved",
+  "rejected",
+]);
 
 /** Validated accounting submission status. */
 export type AccountingSubmissionStatus = z.infer<
   typeof accountingSubmissionStatusSchema
 >;
+
+/** Validated action recorded in the submission audit trail. */
+export const accountingSubmissionActionSchema = z.enum([
+  "submit",
+  "approve",
+  "reject",
+]);
+
+/** Validated accounting submission audit action. */
+export type AccountingSubmissionAction = z.infer<
+  typeof accountingSubmissionActionSchema
+>;
+
+/**
+ * Runtime contract for an append-only accounting submission audit event.
+ */
+export const accountingSubmissionAuditEventSchema = z.strictObject({
+  id: z.string().uuid(),
+  submissionId: z.string().uuid(),
+  action: accountingSubmissionActionSchema,
+  actorAccountId: z.string().uuid(),
+  actorRole: z.string().min(1),
+  reason: z
+    .string()
+    .min(1)
+    .max(1024)
+    .regex(/\S/u)
+    .refine(hasNoControlCharacters, "Control characters are not allowed")
+    .optional(),
+  createdAt: z.string().datetime({ offset: true }),
+});
+
+/** Immutable audit event for the accounting submission lifecycle. */
+export type AccountingSubmissionAuditEvent = z.infer<
+  typeof accountingSubmissionAuditEventSchema
+>;
+
+/** Validated reason for rejecting a submission. */
+export const rejectReasonSchema = z
+  .string()
+  .min(1)
+  .max(1024)
+  .regex(/\S/u)
+  .refine(hasNoControlCharacters, "Control characters are not allowed");
 
 const accountingSubmissionInputShape = {
   kind: accountingSubmissionKindSchema,
