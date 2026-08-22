@@ -1,0 +1,5 @@
+Task 3: Implement PendingSubmissionsList with role-aware controls.
+
+OWNER can approve/reject pending rows with in-flight disabling and a reject reason. STAFF/ACCOUNTANT stay read-only. CSV export link is shown to OWNER and ACCOUNTANT. Derived rate is a local display helper until Task 4.
+
+File: apps/accounting/app/_components/pending-submissions-list.tsx
