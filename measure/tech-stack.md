@@ -77,7 +77,7 @@ decision, canonical import with attribution, and a pinned successor pack before 
 | Sessions | Cookie-based DB sessions via `@reading-advantage/auth` (username/password) |
 | Firebase Functions | reading-advantage (legacy, being deprecated) |
 | AI SDK (`ai ^5.x`, `@ai-sdk/openai ^2.x`, `@ai-sdk/google ^2.x`, `@ai-sdk/google-vertex ^3.x`) | Selected in `ai_sdk_major_migration` track. `Google + OpenAI providers across all apps`, all routed through the internal adapter `@reading-advantage/ai` (no direct `@ai-sdk/*` imports in `apps/**` source — enforced by `packages/ai/src/__tests__/phase-arch-no-direct-sdk.test.ts`). See `measure/tracks/ai_sdk_major_migration/` for the spec, plan, and test strategy. `AIClient` exposes `generateObject` / `generateObjectFromMedia` (multimodal audio/image/video → structured object, single-pass; OpenRouterProvider primary with `nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free`, GoogleProvider secondary, MockProvider canned, OpenAIProvider throws `UnsupportedError`) / `generateImage` / `generateText` / `streamText`. Added in `sales_advantage_mvp_20260622` Phase 0. |
-| `@reading-advantage/storage` | S3-compatible storage adapter (GCS S3 interop, R2, MinIO, S3) |
+| `@reading-advantage/storage` | S3-compatible storage adapter for GCS S3 interop, R2, MinIO, and AWS S3. Floci is the selected local and CI protocol emulator. |
 | `@reading-advantage/integrations-github` | GitHub App REST client (issues, installation tokens, repos) |
 
 ## Testing
@@ -88,6 +88,7 @@ decision, canonical import with attribution, and a pinned successor pack before 
 | Jest 30.x | Unit tests (advantage-games, reading-advantage). Out of scope: `@reading-advantage/scripts` (jest@^29.7.0, legacy scripts package; see `jest30-audit.md` §1). |
 | Playwright | E2E tests (all apps) |
 | PGlite (`@electric-sql/pglite`) | **Test-only, dev dependency.** In-process PostgreSQL (real Postgres compiled to WASM) used to run model/query tests against genuine SQL semantics — real JOIN fan-out, `LIMIT`/`OFFSET`, `COUNT` — with no server, Docker, or `DATABASE_URL`. Added 2026-06-26 (track `review_findings_followup_20260626`) so the migrated primary-advantage model tests are behavioral, not DB-mock shape assertions. **Never used in production:** lives in `devDependencies` and is imported only from `__tests__/helpers/testDb.ts`; production continues to use the managed Postgres via `@reading-advantage/db` (`postgres-js`). The harness `importOriginal`s `@reading-advantage/db` and overrides only the `db` client with a PGlite-backed drizzle instance. Not bit-identical to the managed PG instance (PG16 WASM), so it complements — does not replace — the `DATABASE_URL`-gated live integration tests. |
+| Floci 1.7.0 | Planned local and CI S3 protocol emulator. Compose provides shared local state. CI uses memory mode. Unit tests remain container-independent. Selected by `storage_hardening_20260611`. |
 
 ## DevOps
 
@@ -126,7 +127,7 @@ reading-advantage-monorepo/
 │   │   └── github/       # GitHub App REST client
 │   ├── storage/          # S3-compatible storage adapter
 │   └── reading-advantage-scripts/  # Legacy scripts package
-├── docker-compose.yml    # Local PostgreSQL + PgBouncer (transaction-mode pooler)
+├── docker-compose.yml    # Local PostgreSQL and PgBouncer; Floci is planned
 ├── turbo.json
 ├── pnpm-workspace.yaml
 └── package.json
@@ -158,12 +159,13 @@ Those features MUST use `DIRECT_DATABASE_URL`. App query paths MUST use
 
 ### Local topology
 
-`docker-compose.yml` runs both services so dev mirrors production:
+`docker-compose.yml` will run these local services:
 
 | Service | Port | Notes |
 |---|---|---|
 | `postgres` (postgres:16-alpine) | `5432` | The actual DB. `DIRECT_DATABASE_URL` points here. |
 | `pgbouncer` (bitnami/pgbouncer:1.23.1, transaction mode) | `6432` | Sits in front of `postgres`. `DATABASE_URL` points here. |
+| `floci` (Floci 1.7.0 compat image, planned) | `4566` | Local S3 protocol emulator. Application `STORAGE_ENDPOINT` values point here. |
 
 Sizing math: postgres default `max_connections=100`. Pgbouncer `default_pool_size=20`
 × 4 distinct (db, user) pairs = 80 worst-case backend conns, leaving ~20 headroom

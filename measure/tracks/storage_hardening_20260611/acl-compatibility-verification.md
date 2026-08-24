@@ -31,3 +31,10 @@ This checkpoint completes only Plan Tasks 4 and 8 plus the related
 `PutOptions.public` documentation line. Signed-upload URLs, narrowed existence
 errors, URL encoding, configuration diagnostics, and broad app adoption remain
 open in the active storage-hardening track.
+
+## 2026-08-24 Rebaseline Note
+
+The scope statement above records the 2026-07-18 plan. The rebased track no
+longer adds signed-upload URLs without a consumer. It also defers broad legacy
+app adoption under the portfolio hold policy. The accepted ACL result and live
+GCS evidence remain current.

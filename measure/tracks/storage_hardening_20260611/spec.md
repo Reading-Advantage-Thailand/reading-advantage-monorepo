@@ -1,159 +1,196 @@
-# Specification: Storage Package Hardening + Adoption
+# Specification: Storage Hardening and Floci Verification
 
 ## Overview
 
-Close the correctness and security gaps identified in the June 2026 audit of
-`packages/storage`, then complete the adoption the original
-`storage_package_20260603` track left unfinished: the package currently has
-**zero consumers** (graph probe: `getStorageClient` — 0 callers), while
-reading-advantage and primary-advantage still each carry their own
-`@google-cloud/storage` client (`utils/storage.ts`) across 10 call-site files.
+This track hardens the shared S3 adapter and adds local protocol verification.
+The 2026-08-24 rebaseline replaces assumptions from the original 2026-06-11
+specification.
 
-The two serious driver bugs (FR-1, FR-2) must land before adoption — they
-would bite the first consumer.
+The adapter now has production consumers. Sales stores roleplay audio,
+Accounting stores private evidence, and Reading uses the adapter for cleanup.
+Marketing also re-exports the shared factory.
+
+Local development has no declared S3 service. Current examples reference MinIO
+on port 9000, but `docker-compose.yml` does not provide MinIO.
+
+Floci 1.7.0 will provide the local and CI S3 protocol boundary. It supports the
+operations used by `StorageClient` and accepts the driver's path-style requests.
+
+## Rebaseline
+
+### Completed Work
+
+1. `getSignedUrl` signs `GetObjectCommand`. The original overwrite-capable URL
+   defect is fixed in `packages/storage/src/drivers/s3.ts`.
+2. Private and default uploads omit object ACLs. Commit `2bf39841f` completed
+   this change with focused tests and live GCS evidence.
+3. Provider errors from `put`, `delete`, and `getSignedUrl` become
+   `StorageOperationError` instances.
+4. New consumers disproved the original zero-consumer claim.
+
+### Open Work
+
+1. `exists()` returns `false` for every provider failure.
+2. `getUrl()` does not encode object-key path segments.
+3. Configuration errors do not identify invalid fields.
+4. Endpoint and public-base trailing slashes can produce malformed URLs.
+5. Storage package tests do not run in the current root CI test step.
+6. The repository has no local S3-compatible service.
+7. The adapter has no emulator-backed lifecycle test.
+
+### Scope Correction
+
+The original Reading and Primary migration is deferred. Both apps retain live
+legacy GCS dependencies, and the portfolio policy holds legacy cutovers behind
+product need and explicit approval.
+
+This track does not remove `@google-cloud/storage` from either legacy app. It
+also does not rewrite their existing public object URLs.
 
 ## Functional Requirements
 
-### FR-1: `getSignedUrl` Must Sign a GET, Not a PUT
+### FR-1: Preserve Signed Read Semantics
 
-**Problem:** `drivers/s3.ts:76-82` signs a `PutObjectCommand`. The interface
-doc ("temporary access") and the README example
-(`storage.getSignedUrl("private/report.pdf", 3600)`) clearly intend read
-access — but the produced URL fails for GET and instead grants anyone holding
-it the ability to **overwrite** the object. The existing test only asserts
-the result is a string, so the bug is invisible.
+`getSignedUrl` must continue to sign `GetObjectCommand` for temporary reads.
+Unit tests must assert the command type. The Floci lifecycle test must fetch the
+stored bytes through the signed URL.
 
-**Change:**
-- `getSignedUrl` signs a `GetObjectCommand`.
-- Add a separate `getSignedUploadUrl(key, opts?: { expiresIn?, contentType? })`
-  to `StorageClient` for the presigned-upload use case (signs `PutObjectCommand`
-  with optional `ContentType` condition).
-- Tests assert the signed command type for both methods.
+Floci verification must enable signature validation. A signed request must
+succeed, and the same URL with a changed signature must fail.
 
----
+This track will not add `getSignedUploadUrl`. No current consumer requires that
+capability.
 
-### FR-2: Remove the Default `public-read` ACL
+### FR-2: Preserve Private-By-Default Uploads
 
-**Problem:** `drivers/s3.ts:56` sends `ACL: "public-read"` unless
-`opts.public === false`. (a) AWS S3 buckets created since April 2023 have
-ACLs disabled by default (Object Ownership = bucket owner enforced) and
-reject any PutObject carrying an ACL with `AccessControlListNotSupported`;
-Cloudflare R2 — a README-supported provider — does not support the
-`public-read` ACL either. A plain `storage.put(key, buf)` therefore fails on
-the most likely production backends. (b) Public-by-default is the wrong
-security posture for a layer that will hold student-facing files.
+`put(key, body)` and `put(key, body, { public: false })` must omit the ACL
+header. `{ public: true }` remains an explicit legacy ACL option.
 
-**Change:**
-- `put` sends **no ACL header by default**.
-- `opts.public === true` opts in to `ACL: "public-read"` for backends that
-  support it; document that public access should normally come from bucket
-  policy / R2 public-bucket config instead.
-- `PutOptions.public` JSDoc updated (no longer "defaults to true").
-- Non-breaking in practice: the package has zero consumers (FR-6 adds the
-  first ones against the new semantics).
+The accepted evidence remains
+`acl-compatibility-verification.md` and commit `2bf39841f`.
 
----
+### FR-3: Distinguish Missing Objects From Provider Failures
 
-### FR-3: `exists()` Must Not Swallow Infrastructure Errors
+`exists()` must return `false` only for a confirmed HTTP 404 or equivalent
+not-found provider response.
 
-**Problem:** `drivers/s3.ts:101-112` catches every error and returns `false`.
-Bad credentials, network failure, or a permissions problem are
-indistinguishable from "object missing" — a caller could conclude data is
-gone and regenerate/overwrite it during an outage.
+Authentication, authorization, network, and service failures must throw
+`StorageOperationError` with code `STORAGE_EXISTS_FAILED`. The original provider
+error must remain available as the cause.
 
-**Change:** Return `false` only when the error is a 404
-(`error.name === "NotFound"` or `$metadata.httpStatusCode === 404`); rethrow
-everything else.
+### FR-4: Produce Safe Public URLs
 
----
+`getUrl()` must encode each object-key path segment. It must preserve slash
+separators between segments.
 
-### FR-4: `getUrl()` Must URL-Encode the Key
+Endpoint and public-base configuration must remove trailing slashes before URL
+construction. The result must contain one separator before the bucket and key.
 
-**Problem:** `drivers/s3.ts:66-68` interpolates the raw key. Keys containing
-spaces, `#`, `?`, or non-ASCII produce broken or truncated URLs.
+Both `getStorageClient()` and `createStorageClient()` must apply the same
+validation and normalization. Direct `S3StorageDriver` construction must not
+bypass URL normalization.
 
-**Change:** Encode each path segment
-(`key.split("/").map(encodeURIComponent).join("/")`).
+### FR-5: Report Safe Configuration Diagnostics
 
----
+`ProviderNotConfiguredError` must identify invalid configuration fields. The
+message must not include configured values.
 
-### FR-5: Configuration Diagnostics and URL Hygiene
+Diagnostics may include Zod issue messages and field names. They must not expose
+access keys, secret keys, endpoint values, bucket names, or public URLs.
 
-**Problems:**
-- `ProviderNotConfiguredError` discards the Zod issues — a malformed
-  `STORAGE_ENDPOINT` produces the same "set the env vars" message as missing
-  vars.
-- `publicBaseUrl` fallback `${endpoint}/${bucket}` yields a double slash when
-  the endpoint has a trailing slash.
+### FR-6: Provide Floci for Local Development
 
-**Changes:**
-- `ProviderNotConfiguredError` accepts and includes a field-level summary
-  (field names + issue messages only — never values, which include secrets).
-- `storageConfigSchema` trims trailing slashes from `endpoint` and
-  `publicBaseUrl` via `.transform`.
-- `getSignedUrl` test in `s3-driver.test.ts` upgraded per FR-1 (asserts
-  command type).
+The root Compose stack must provide Floci at `http://localhost:4566`.
 
----
+The local image must use the pinned
+`docker.io/floci/floci:1.7.0-compat` reference. The full image name supports the
+repository's Docker and rootless Podman environments.
 
-### FR-6: Adopt `@reading-advantage/storage` in reading-advantage and primary-advantage
+Local Floci must use a named volume and `hybrid` storage mode. An idempotent
+ready hook must create only these active local buckets:
 
-**Problem:** The package's reason to exist — replacing the duplicated
-`@google-cloud/storage` usage — never happened. 10 files still use the
-app-local GCS clients; primary-advantage additionally hand-rolls a duplicate
-`getStorageUrl` in `lib/storage-config.ts`.
+- `sales-advantage`
+- `accounting`
 
-**Change:**
-- Migrate the 3 reading-advantage files (`server/controllers/
-  {stories-assistant,validator,assistant}-controller.ts`) and the 7
-  primary-advantage files (`lib/test.ts`, `actions/test.ts`,
-  `server/models/articleModel.ts`, `server/utils/genaretors/{audio-word,
-  audio-flashcard,image,audio}-generator.ts`) from `utils/storage.ts` to the
-  shared `StorageClient`.
-- Replace primary-advantage's `lib/storage-config.ts` URL builder with the
-  package's `getStorageUrl`.
-- Delete both apps' `utils/storage.ts`; remove `@google-cloud/storage` from
-  both `package.json`s.
-- Add the `STORAGE_*` env vars (GCS S3-interoperability endpoint + HMAC keys)
-  to both apps' `.env.example` with setup instructions; local dev uses MinIO
-  (per the package README).
-- Buckets use uniform bucket-level access for public objects — no per-object
-  ACLs (consistent with FR-2).
+Compose must mount the volume at `/app/data`. It must set
+`FLOCI_STORAGE_PERSISTENT_PATH=/app/data` and mount ready hooks at
+`/etc/floci/init/ready.d`.
+
+The health check must wait for the `/_floci/init` ready phase. A successful port
+connection alone is insufficient.
+
+S3 runs inside Floci, so the service must not mount the Docker socket.
+Application code must not create buckets automatically.
+
+### FR-7: Add Emulator-Backed Integration Tests
+
+The storage package must have a separate Vitest integration command. Normal
+unit tests must not require Docker, Podman, Floci, or a fixed host port.
+
+The integration suite must connect through a declared Floci endpoint. It must
+create a unique bucket and verify this lifecycle through `S3StorageDriver`:
+
+1. Upload an object with a content type.
+2. Confirm that the object exists.
+3. Read the object through a signed URL.
+4. Compare the returned bytes.
+5. Delete the object.
+6. Confirm that the object no longer exists.
+7. Change the signed URL signature and confirm that access fails.
+
+The suite may use the AWS SDK directly for test setup and cleanup. Production
+application code must continue to use the shared storage adapter.
+
+The test service must set `FLOCI_AUTH_VALIDATE_SIGNATURES=true`. Its presign
+secret must match the SDK test secret.
+
+### FR-8: Run Storage Tests in CI
+
+The existing CI workflow must run storage unit and integration commands
+explicitly. The root `pnpm test` command currently runs only four Codecamp
+tests, so it cannot provide this gate.
+
+CI must use pinned Floci 1.7.0 in memory mode. The integration harness must use
+a bounded readiness retry instead of a fixed sleep.
+
+The workflow path filter must include `docker-compose.yml` and `docker/floci/**`.
 
 ## Non-Functional Requirements
 
-- Every FR lands with a test that fails before and passes after.
-- `packages/storage` keeps ≥ 80% coverage.
-- FR-1..5 are pure package changes; FR-6 must not change the public URLs the
-  apps emit for existing objects (URL parity verified per app before deleting
-  the old helpers).
-- Production cutover of env vars (HMAC keys in Secret Manager) is an ops step
-  documented in the plan but not blocked on — the code path falls back to
-  failing fast with the FR-5 diagnostics if unconfigured.
+- Keep AWS SDK imports inside the storage driver and test files.
+- Keep the existing provider-neutral `StorageClient` contract.
+- Keep normal package unit tests independent from containers.
+- Pin Floci image versions. Do not use `latest`.
+- Do not add `@floci/testcontainers` in this track.
+- Keep Floci test data ephemeral in CI.
+- Keep local Floci state inside a named Compose volume.
+- Maintain at least 80 percent coverage for changed package code.
+- Add and run an explicit storage coverage command.
 
 ## Acceptance Criteria
 
-1. A presigned URL from `getSignedUrl` performs an HTTP GET successfully
-   against MinIO and cannot PUT; `getSignedUploadUrl` does the inverse.
-2. `put(key, body)` with no options sends no ACL header (asserted via
-   aws-sdk-client-mock); `put(key, body, { public: true })` sends
-   `public-read`.
-3. `exists()` rethrows on a simulated 403/500 and returns false only on 404.
-4. `getUrl("a b/c#d.png")` returns a URL whose path decodes back to the key.
-5. `ProviderNotConfiguredError` for a malformed endpoint names the
-   `endpoint` field without leaking any configured value.
-6. No file in reading-advantage or primary-advantage imports
-   `@google-cloud/storage`; both `utils/storage.ts` files are deleted; both
-   apps type-check and build.
-7. All `packages/storage` tests pass; suites of both migrated apps pass at
-   their pre-track baseline or better.
+1. `exists()` returns `false` for 404 responses.
+2. `exists()` normalizes 403, 500, and network failures.
+3. `getUrl("a b/c#d.png")` returns encoded path segments.
+4. Trailing configuration slashes do not create duplicate separators.
+5. Configuration diagnostics name invalid fields without values.
+6. Explicit and environment factories apply identical URL normalization.
+7. `docker compose up -d floci` starts the pinned local service.
+8. Local startup creates the Sales and Accounting buckets idempotently.
+9. The Floci integration lifecycle passes through the production driver.
+10. A changed signed URL signature fails against Floci.
+11. Normal storage unit tests pass without a running container service.
+12. CI runs both storage test commands before its existing root test step.
+13. Storage unit, coverage, type, lint, and integration gates pass.
 
 ## Out of Scope
 
-- science-advantage / codecamp-advantage storage usage (neither currently
-  stores objects).
-- A `list()` operation and multipart upload support (add when a consumer
-  needs them).
-- Production Secret Manager provisioning of HMAC keys (ops runbook step,
-  documented in plan Phase 4).
-- www-reading-advantage (static marketing site, no storage).
+- Reading Advantage or Primary Advantage GCS migration.
+- Removal of hardcoded legacy GCS public URLs.
+- A generic object `get()` method.
+- Signed upload URLs.
+- Object listing or multipart upload APIs.
+- Production bucket provisioning or secret management.
+- Real-provider IAM, CORS, lifecycle, encryption, or retention verification.
+- Testcontainers adoption.
+- Application upload-limit, retention, or orphan-cleanup changes.

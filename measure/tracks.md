@@ -812,9 +812,13 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
   **Extended 2026-06-11** with the `packages/auth-client` audit: login response missing required `AuthUser` fields hidden by `as` cast (FR-12), mount-session-check/login race (FR-13), logout swallowing server failure (FR-14), state-derivation + dependency hygiene (FR-15), and aligning `register()`/reading-advantage signup with the FR-6 gate (FR-16).
   *Closed 2026-06-12 by `post_24h_audit_remediation_20260612` Phase 2: session cap hardened (non-expired count), Session type cleaned (token removed), deleteSession uses returning(), audit events logged, handleResetPassword single requireRole + credential check, handleRegister instanceof AuthError, crypto test timeout increased, role casts replaced with typed Role.*
 
-- [ ] **Track: Storage Package Hardening + Adoption**
+- [~] **Track: Storage Hardening and Floci Verification**
   *Link: [./tracks/storage_hardening_20260611/](./tracks/storage_hardening_20260611/)*
-  Close the June 2026 `packages/storage` audit findings: `getSignedUrl` signs a PutObjectCommand — produces an overwrite-capable upload URL where the contract promises read access (FR-1); default `ACL: public-read` breaks `put()` on modern AWS S3 (ACLs disabled by default since 2023) and Cloudflare R2, and is the wrong security default (FR-2); `exists()` swallows infra errors as "missing" (FR-3); `getUrl()` doesn't URL-encode keys (FR-4); config error diagnostics (FR-5). Then complete the adoption `storage_package_20260603` never did — the package has **zero consumers** while reading-advantage and primary-advantage still run their own `@google-cloud/storage` clients across 10 files (FR-6, migrate + delete `utils/storage.ts` + GCS S3-interop envs).
+  Finish `exists()` error classification, URL encoding, and safe configuration
+  diagnostics. Add pinned Floci 1.7.0 for local development and explicit storage
+  integration gates in CI. Signed GET and private-by-default uploads are complete.
+  Sales, Accounting, and Reading now consume the adapter. Legacy Reading and
+  Primary GCS cutovers remain deferred under the portfolio hold policy.
 
 - [x] **Track: DB Migration Ledger Integrity + Hardening** ⚠️ **Critical**
   *Link: [./archive/db_migration_ledger_20260611/](./archive/db_migration_ledger_20260611/)*
