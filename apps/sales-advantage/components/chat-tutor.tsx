@@ -105,7 +105,12 @@ export function ChatTutor({
             }}
             disabled={streaming}
           />
-          <Button onClick={send} disabled={streaming || !input.trim()} size="icon">
+          <Button
+            aria-label={t("send")}
+            onClick={send}
+            disabled={streaming || !input.trim()}
+            size="icon"
+          >
             {streaming ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
           </Button>
         </div>
