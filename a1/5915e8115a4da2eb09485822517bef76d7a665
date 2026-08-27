@@ -1,0 +1,1 @@
+Decision: Two independent reviews rejected the Phase 5 changes. The active plan still requires approved pricing, comparison, and legal copy. This commit restores the exact five-file state before 82dcc556c. No Phase 5 acceptance is claimed.
