@@ -57,8 +57,8 @@ export async function generateMetadata({
   if (pageNumber === 1) return {};
 
   const t = await getScopedI18n("pages.blog");
-  const title = `${t("title")} - Page ${pageNumber}`;
-  const description = `${t("description")} Page ${pageNumber}.`;
+  const title = t("numberedTitle", { page: pageNumber });
+  const description = t("numberedDescription", { page: pageNumber });
 
   return buildMarketingMetadata({
     alternateLocales: getBlogPostLocales(),
@@ -84,11 +84,13 @@ export default async function BlogPaginatedPage({ params }: PageProps) {
 
   const allPosts = await getAllPosts(effectiveLocale);
   const { posts } = await getPaginatedPosts(pageNumber, 9, allPosts);
+  const t = await getScopedI18n("pages.blog");
+  const title = t("numberedTitle", { page: pageNumber });
 
   return (
     <main>
       <HeroSection
-        title={`Blog - Page ${pageNumber}`}
+        title={title}
         description="Educational insights, learning strategies, and product updates from Reading Advantage."
         ctaButton={{
           text: "Contact Us",

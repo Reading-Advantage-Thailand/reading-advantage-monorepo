@@ -6,8 +6,16 @@ import BlogPaginatedPage, {
   generateMetadata as generateBlogPaginationMetadata,
   generateStaticParams,
 } from "@/app/[locale]/(marketing)/blog/page/[page]/page";
+import enMessages from "@/locales/en";
+import thMessages from "@/locales/th";
+import zhMessages from "@/locales/zh";
+import { getScopedI18n } from "@/locales/server";
 import { notFound, permanentRedirect } from "next/navigation";
-import { getAllPosts, getBlogPostTotalPages } from "@/lib/blog";
+import {
+  getAllPosts,
+  getBlogPostLocales,
+  getBlogPostTotalPages,
+} from "@/lib/blog";
 import type { BlogListItem } from "@/types/blog";
 
 const localeState = vi.hoisted(() => ({ current: "en" }));
@@ -58,6 +66,27 @@ const mockPosts: BlogListItem[] = Array.from({ length: 19 }, (_, index) => ({
   readingTime: 1,
 }));
 
+type Translator = Awaited<ReturnType<typeof getScopedI18n>>;
+type BlogMessages = Record<keyof typeof enMessages.pages.blog, string>;
+
+const blogMessages: Record<"en" | "th" | "zh", BlogMessages> = {
+  en: enMessages.pages.blog,
+  th: thMessages.pages.blog,
+  zh: zhMessages.pages.blog,
+};
+
+function createTranslator(scope: string, messages: BlogMessages): Translator {
+  return ((key: string, values?: Record<string, unknown>) => {
+    const message = messages[key as keyof BlogMessages];
+    if (typeof message !== "string") return `${scope}.${key}`;
+
+    return message.replace(/\{(\w+)\}/g, (_, name: string) =>
+      String(values?.[name] ?? `{${name}}`),
+    );
+  }) as Translator;
+}
+
+const getScopedI18nMock = vi.mocked(getScopedI18n);
 const getAllPostsMock = vi.mocked(getAllPosts);
 const getBlogPostTotalPagesMock = vi.mocked(getBlogPostTotalPages);
 const notFoundMock = vi.mocked(notFound);
@@ -65,6 +94,14 @@ const permanentRedirectMock = vi.mocked(permanentRedirect);
 
 beforeEach(() => {
   localeState.current = "en";
+  getScopedI18nMock.mockImplementation((scope) =>
+    Promise.resolve(
+      createTranslator(
+        String(scope),
+        blogMessages[localeState.current as "en" | "th" | "zh"],
+      ),
+    ),
+  );
   getAllPostsMock.mockResolvedValue(mockPosts);
   getBlogPostTotalPagesMock.mockReturnValue(3);
   notFoundMock.mockReset();
@@ -87,7 +124,7 @@ describe("blog pagination routes", () => {
       expect(root.getByText(`Post ${postNumber}`)).toBeDefined();
     }
     expect(root.queryByText("Post 10")).toBeNull();
-    expect(root.getByRole("heading", { name: "pages.blog.title" })).toBeDefined();
+    expect(root.getByRole("heading", { name: "บล็อก" })).toBeDefined();
     expect(
       root.getByRole("navigation", { name: "components.pagination.page" }),
     ).toBeDefined();
@@ -105,11 +142,10 @@ describe("blog pagination routes", () => {
     );
 
     cleanup();
-    localeState.current = "en";
 
     const pageTwo = render(
       await BlogPaginatedPage({
-        params: Promise.resolve({ locale: "en", page: "2" }),
+        params: Promise.resolve({ locale: "th", page: "2" }),
       }),
     );
 
@@ -118,22 +154,23 @@ describe("blog pagination routes", () => {
     }
     expect(pageTwo.queryByText("Post 9")).toBeNull();
     expect(pageTwo.queryByText("Post 19")).toBeNull();
-    expect(pageTwo.getByRole("heading", { name: "Blog - Page 2" })).toBeDefined();
+    expect(pageTwo.getByRole("heading", { name: "บล็อก - หน้า 2" })).toBeDefined();
     expect(
       pageTwo.getByRole("navigation", { name: "components.pagination.page" }),
     ).toBeDefined();
     expect(
       pageTwo.getByRole("link", { name: "components.pagination.previous" }),
-    ).toHaveAttribute("href", "/en/blog");
+    ).toHaveAttribute("href", "/th/blog");
     expect(
       pageTwo.getByRole("link", { name: "components.pagination.next" }),
-    ).toHaveAttribute("href", "/en/blog/page/3");
+    ).toHaveAttribute("href", "/th/blog/page/3");
     expect(pageTwo.getByRole("link", { name: "2" })).toHaveAttribute(
       "aria-current",
       "page",
     );
 
     cleanup();
+    localeState.current = "en";
 
     const lastPage = render(
       await BlogPaginatedPage({
@@ -158,6 +195,39 @@ describe("blog pagination routes", () => {
       "aria-disabled",
       "true",
     );
+  });
+
+  it("uses localized numbered metadata", async () => {
+    localeState.current = "th";
+    const metadata = await generateBlogPaginationMetadata({
+      params: Promise.resolve({ locale: "th", page: "2" }),
+    });
+    const title = thMessages.pages.blog.numberedTitle.replace("{page}", "2");
+    const description = thMessages.pages.blog.numberedDescription.replace(
+      "{page}",
+      "2",
+    );
+    const canonical = "https://reading-advantage.com/th/blog/page/2";
+    const languages = Object.fromEntries(
+      getBlogPostLocales().map((locale) => [
+        locale,
+        `https://reading-advantage.com/${locale}/blog/page/2`,
+      ]),
+    );
+
+    expect(metadata).toMatchObject({
+      title,
+      description,
+      alternates: {
+        canonical,
+        languages,
+      },
+      openGraph: {
+        title,
+        description,
+        url: canonical,
+      },
+    });
   });
 
   it("permanently redirects page one to the locale-aware blog root", async () => {
