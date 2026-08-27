@@ -81,7 +81,8 @@ export default function HeroSection({
   customGradient,
   className = "",
 }: HeroProps) {
-  const gradientStyles = customGradient || "bg-sky-50";
+  const gradientStyles =
+    customGradient || "bg-gradient-to-br from-amber-50 via-orange-50 to-sky-50";
   const heightStyles = getHeightStyles(height);
   const isCenter = alignment === "center";
   const bgRef = useRef<HTMLDivElement>(null);
