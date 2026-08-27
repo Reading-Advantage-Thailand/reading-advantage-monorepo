@@ -55,11 +55,11 @@ function translateDomainError(error: unknown): never {
     error instanceof AccountingSubmissionError &&
     error.reason === "invalid-input"
   ) {
-    throw Object.assign(new Error("Submission validation failed"), {
-      name: "AccountingSubmissionError",
-      reason: "invalid-input" as const,
+    error.message = "Submission validation failed";
+    Object.assign(error, {
       fieldErrors: fieldErrorsFromIssues(error.issues ?? []),
     });
+    throw error;
   }
   throw error;
 }

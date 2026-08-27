@@ -18,6 +18,7 @@ import {
   listAccountingSubmissions,
   submitAccountingSubmissionWithOutcome,
 } from "@/app/lib/submissions";
+import { AccountingSubmissionError } from "@reading-advantage/backend/accounting";
 import type {
   AccountingActor,
   AccountingSubmissionInput,
@@ -74,7 +75,9 @@ type AccountingErrorSnapshot =
 /** Safely snapshots owned accounting error fields for route decisions. */
 function snapshotAccountingError(error: unknown): AccountingErrorSnapshot {
   try {
-    if (!(error instanceof Error)) return { reason: "unknown" };
+    if (!(error instanceof AccountingSubmissionError)) {
+      return { reason: "unknown" };
+    }
 
     const name = error.name;
     const reason = (error as { readonly reason?: unknown }).reason;
@@ -101,13 +104,22 @@ function snapshotAccountingError(error: unknown): AccountingErrorSnapshot {
       }
       const fieldErrorEntries: Array<[string, string[]]> = [];
       for (const [field, messages] of Object.entries(rawFieldErrors)) {
-        if (
-          !Array.isArray(messages) ||
-          !messages.every((messageValue) => typeof messageValue === "string")
-        ) {
+        if (!Array.isArray(messages)) {
           return { reason: "unknown" };
         }
-        fieldErrorEntries.push([field, [...messages]]);
+        const messageCount = messages.length;
+        if (!Number.isSafeInteger(messageCount) || messageCount < 0) {
+          return { reason: "unknown" };
+        }
+        const copiedMessages: string[] = [];
+        for (let index = 0; index < messageCount; index += 1) {
+          const messageValue = messages[index];
+          if (typeof messageValue !== "string") {
+            return { reason: "unknown" };
+          }
+          copiedMessages.push(messageValue);
+        }
+        fieldErrorEntries.push([field, copiedMessages]);
       }
       return {
         reason,
@@ -134,8 +146,8 @@ function haveSameBytes(left: Uint8Array, right: Uint8Array): boolean {
 type ReconciliationEvent = "cleanup_failed" | "outcome_unresolved";
 
 /** Returns a safe error name without exposing error details. */
-function safeErrorName(error: unknown): string {
-  return error instanceof Error ? "Error" : "UnknownError";
+function safeErrorName(): "Error" {
+  return "Error";
 }
 
 /** Returns the opaque upload identifier from a generated evidence reference. */
@@ -163,10 +175,10 @@ function logReconciliation(input: {
       operation: "submit_accounting_submission",
       companyId: input.companyId,
       requestId: evidenceUploadId(input.evidenceReference),
-      errorName: safeErrorName(input.error),
+      errorName: safeErrorName(),
       ...(input.secondaryError === undefined
         ? {}
-        : { secondaryErrorName: safeErrorName(input.secondaryError) }),
+        : { secondaryErrorName: safeErrorName() }),
     };
     console.error(JSON.stringify(record));
   } catch {

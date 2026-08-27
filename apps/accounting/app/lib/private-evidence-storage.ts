@@ -101,8 +101,8 @@ function privateEvidenceKey(
 }
 
 /** Returns a safe error name for private reconciliation logs. */
-function safeErrorName(error: unknown): string {
-  return error instanceof Error ? "Error" : "UnknownError";
+function safeErrorName(): "Error" {
+  return "Error";
 }
 
 /** Emits one private reconciliation record for an uncertain evidence cleanup. */
@@ -118,8 +118,8 @@ function logCleanupFailure(input: {
       event: "cleanup_failed",
       companyId: input.companyId,
       evidenceUploadId: input.evidenceUploadId,
-      errorName: safeErrorName(input.error),
-      secondaryErrorName: safeErrorName(input.cleanupError),
+      errorName: safeErrorName(),
+      secondaryErrorName: safeErrorName(),
     };
     console.error(JSON.stringify(record));
   } catch {

@@ -246,6 +246,45 @@ describe("private evidence reconciliation", () => {
       consoleError.mockRestore();
     }
   });
+
+  it("logs fixed labels without inspecting provider proxies", async () => {
+    const request = upload();
+    const putError = new Proxy(
+      {},
+      {
+        getPrototypeOf() {
+          throw new Error("provider proxy inspected");
+        },
+      },
+    );
+    const cleanupError = new Proxy(
+      {},
+      {
+        getPrototypeOf() {
+          throw new Error("cleanup proxy inspected");
+        },
+      },
+    );
+    request.storage.put.mockRejectedValue(putError);
+    request.storage.delete.mockRejectedValue(cleanupError);
+    const consoleError = vi
+      .spyOn(console, "error")
+      .mockImplementation(() => undefined);
+
+    try {
+      await expect(putPrivateEvidence(request)).rejects.toBe(putError);
+
+      expect(consoleError).toHaveBeenCalledTimes(1);
+      const [serializedRecord] = consoleError.mock.calls[0] as [string];
+      const record = JSON.parse(serializedRecord) as Record<string, unknown>;
+      expect(record.errorName).toBe("Error");
+      expect(record.secondaryErrorName).toBe("Error");
+      expect(serializedRecord).not.toContain("provider proxy inspected");
+      expect(serializedRecord).not.toContain("cleanup proxy inspected");
+    } finally {
+      consoleError.mockRestore();
+    }
+  });
 });
 
 describe("readPrivateEvidence", () => {

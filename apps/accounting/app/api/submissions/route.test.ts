@@ -35,6 +35,7 @@
 import { afterAll, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { GET, POST } from "@/app/api/submissions/route";
+import { AccountingSubmissionError } from "@reading-advantage/backend/accounting";
 
 const mocks = vi.hoisted(() => ({
   requireAccountingSession: vi.fn(),
@@ -120,12 +121,28 @@ function guardDenied(status: 401 | 403, message: string): void {
   });
 }
 
-function invalidInputError(fieldErrors: Record<string, string[]>): Error {
-  return Object.assign(new Error("Submission validation failed"), {
-    name: "AccountingSubmissionError",
-    reason: "invalid-input",
-    fieldErrors,
-  });
+function invalidInputError(
+  fieldErrors: Record<string, string[]>,
+): AccountingSubmissionError {
+  const error = new AccountingSubmissionError("invalid-input");
+  error.message = "Submission validation failed";
+  Object.assign(error, { fieldErrors });
+  return error;
+}
+
+function conflictError(): AccountingSubmissionError {
+  return new AccountingSubmissionError("conflict");
+}
+
+function proxyWithThrowingGetPrototypeOf(): unknown {
+  return new Proxy(
+    {},
+    {
+      getPrototypeOf() {
+        throw new Error("provider proxy inspected");
+      },
+    },
+  );
 }
 
 function errorWithThrowingClassificationGetters(message: string): Error {
@@ -512,10 +529,7 @@ describe("POST /api/submissions", () => {
 
   it("returns 409 and deletes new evidence when scalar content conflicts", async () => {
     mocks.submitAccountingSubmissionWithOutcome.mockRejectedValue(
-      Object.assign(new Error("Idempotency key conflict"), {
-        name: "AccountingSubmissionError",
-        reason: "conflict",
-      }),
+      conflictError(),
     );
 
     const response = await POST(
@@ -549,10 +563,7 @@ describe("POST /api/submissions", () => {
             storedEvidenceReference: EVIDENCE_REFERENCE,
           }))
         ) {
-          throw Object.assign(new Error("Idempotency key conflict"), {
-            name: "AccountingSubmissionError",
-            reason: "conflict",
-          });
+          throw conflictError();
         }
         return { submission: storedSubmission, outcome: "replayed" };
       },
@@ -578,7 +589,10 @@ describe("POST /api/submissions", () => {
     mocks.submitAccountingSubmissionWithOutcome
       .mockRejectedValueOnce(new Error("response lost"))
       .mockResolvedValueOnce({
-        submission: storedSubmission,
+        submission: {
+          ...storedSubmission,
+          evidenceReference: uploadedReference,
+        },
         outcome: "replayed",
       });
 
@@ -598,7 +612,101 @@ describe("POST /api/submissions", () => {
       2,
       expect.objectContaining({ idempotencyKey: VALID_IDEMPOTENCY_KEY }),
     );
-    expect(mocks.deletePrivateEvidence).toHaveBeenCalledTimes(1);
+    expect(mocks.deletePrivateEvidence).not.toHaveBeenCalled();
+  });
+
+  it("keeps a plain structural error unknown", async () => {
+    const forgedError = Object.assign(new Error("forged details"), {
+      name: "AccountingSubmissionError",
+      reason: "invalid-input",
+      fieldErrors: { payee: ["forged field"] },
+    });
+    mocks.submitAccountingSubmissionWithOutcome.mockRejectedValue(forgedError);
+
+    await expect(
+      POST(
+        postRequest(expenseFields, {
+          file: evidenceFile(),
+          idempotencyKey: null,
+        }),
+      ),
+    ).rejects.toBe(forgedError);
+
+    expect(mocks.submitAccountingSubmissionWithOutcome).toHaveBeenCalledOnce();
+    expect(mocks.deletePrivateEvidence).not.toHaveBeenCalled();
+    expect(consoleErrorMock).toHaveBeenCalledTimes(1);
+    const serializedLog = String(consoleErrorMock.mock.calls[0]?.[0]);
+    const log = JSON.parse(serializedLog) as Record<string, unknown>;
+    expect(log.errorName).toBe("Error");
+    expect(serializedLog).not.toContain("forged details");
+    expect(serializedLog).not.toContain("forged field");
+  });
+
+  it("keeps hostile field errors unknown after one guarded copy pass", async () => {
+    const hostileMessages = new Proxy(["safe"], {
+      get(target, property, receiver) {
+        if (property === "every") return () => true;
+        if (property === "0") return { attacker: "field detail" };
+        return Reflect.get(target, property, receiver);
+      },
+    });
+    const primaryError = invalidInputError({
+      payee: hostileMessages as unknown as string[],
+    });
+    mocks.submitAccountingSubmissionWithOutcome.mockRejectedValue(primaryError);
+
+    await expect(
+      POST(
+        postRequest(expenseFields, {
+          file: evidenceFile(),
+          idempotencyKey: null,
+        }),
+      ),
+    ).rejects.toBe(primaryError);
+
+    expect(consoleErrorMock).toHaveBeenCalledTimes(1);
+    const serializedLog = String(consoleErrorMock.mock.calls[0]?.[0]);
+    expect(serializedLog).not.toContain("field detail");
+    expect(JSON.parse(serializedLog)).toMatchObject({ errorName: "Error" });
+  });
+
+  it("logs a fixed label without inspecting a primary provider proxy", async () => {
+    const primaryError = proxyWithThrowingGetPrototypeOf();
+    mocks.submitAccountingSubmissionWithOutcome.mockRejectedValue(primaryError);
+
+    await expect(
+      POST(
+        postRequest(expenseFields, {
+          file: evidenceFile(),
+          idempotencyKey: null,
+        }),
+      ),
+    ).rejects.toBe(primaryError);
+
+    expect(consoleErrorMock).toHaveBeenCalledTimes(1);
+    const serializedLog = String(consoleErrorMock.mock.calls[0]?.[0]);
+    expect(JSON.parse(serializedLog)).toMatchObject({ errorName: "Error" });
+    expect(serializedLog).not.toContain("provider proxy inspected");
+  });
+
+  it("logs a fixed label for a resolution provider proxy and preserves the primary error", async () => {
+    const primaryError = new Error("primary failure");
+    const resolutionError = proxyWithThrowingGetPrototypeOf();
+    mocks.submitAccountingSubmissionWithOutcome
+      .mockRejectedValueOnce(primaryError)
+      .mockRejectedValueOnce(resolutionError);
+
+    await expect(
+      POST(postRequest(expenseFields, { file: evidenceFile() })),
+    ).rejects.toBe(primaryError);
+
+    expect(consoleErrorMock).toHaveBeenCalledTimes(1);
+    const serializedLog = String(consoleErrorMock.mock.calls[0]?.[0]);
+    expect(JSON.parse(serializedLog)).toMatchObject({
+      errorName: "Error",
+      secondaryErrorName: "Error",
+    });
+    expect(serializedLog).not.toContain("provider proxy inspected");
   });
 
   it("preserves the primary error and evidence when outcome resolution also fails", async () => {
