@@ -12,6 +12,17 @@ import type { StorageConfig } from "../client.js";
 import { StorageOperationError } from "../factory.js";
 
 /**
+ * Identifies provider errors that confirm an object is absent.
+ * @param error The provider error.
+ * @returns True for provider NotFound or HTTP 404 errors.
+ */
+function isConfirmedNotFound(error: unknown): boolean {
+  if (error instanceof Error && error.name === "NotFound") return true;
+  if (typeof error !== "object" || error === null) return false;
+  return (error as { $metadata?: { httpStatusCode?: unknown } }).$metadata?.httpStatusCode === 404;
+}
+
+/**
  * S3-compatible storage driver.
  * Works with AWS S3, GCS (S3 interoperability), Cloudflare R2, and MinIO.
  */
@@ -153,6 +164,7 @@ export class S3StorageDriver implements StorageClient {
    * Check whether an object exists in S3.
    * @param key The object key.
    * @returns True if the object exists, false otherwise.
+   * @throws {StorageOperationError} When the provider failure does not confirm absence.
    */
   async exists(key: string): Promise<boolean> {
     try {
@@ -162,8 +174,13 @@ export class S3StorageDriver implements StorageClient {
       });
       await this.client.send(command);
       return true;
-    } catch {
-      return false;
+    } catch (err) {
+      if (isConfirmedNotFound(err)) return false;
+      throw new StorageOperationError(
+        "Storage exists check failed for object key",
+        "STORAGE_EXISTS_FAILED",
+        err,
+      );
     }
   }
 }

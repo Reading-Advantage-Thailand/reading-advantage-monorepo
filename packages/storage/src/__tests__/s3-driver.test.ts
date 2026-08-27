@@ -11,6 +11,7 @@ import {
 } from "@aws-sdk/client-s3";
 import { S3StorageDriver } from "../drivers/s3";
 import type { StorageConfig } from "../client";
+import { StorageOperationError } from "../factory";
 
 const s3Mock = mockClient(S3Client);
 
@@ -136,12 +137,40 @@ describe("S3StorageDriver", () => {
       expect(await driver.exists("present-key")).toBe(true);
     });
 
-    it("returns false when object does not exist", async () => {
-      s3Mock.on(HeadObjectCommand).rejects(
-        new Error("NotFound")
-      );
+    it("returns false for a provider NotFound error", async () => {
+      const notFound = Object.assign(new Error("Object not found"), { name: "NotFound" });
+      s3Mock.on(HeadObjectCommand).rejects(notFound);
       const driver = new S3StorageDriver(testConfig);
+
       expect(await driver.exists("missing-key")).toBe(false);
+    });
+
+    it("returns false for an HTTP 404 response", async () => {
+      const notFound = Object.assign(new Error("Missing object"), {
+        $metadata: { httpStatusCode: 404 },
+      });
+      s3Mock.on(HeadObjectCommand).rejects(notFound);
+      const driver = new S3StorageDriver(testConfig);
+
+      expect(await driver.exists("missing-key")).toBe(false);
+    });
+
+    it.each([
+      ["HTTP 403", Object.assign(new Error("Access denied"), { $metadata: { httpStatusCode: 403 } })],
+      ["HTTP 500", Object.assign(new Error("Provider failed"), { $metadata: { httpStatusCode: 500 } })],
+      ["network", new Error("socket hang up")],
+    ])("normalizes %s failures and retains the provider cause", async (_label, cause) => {
+      s3Mock.on(HeadObjectCommand).rejects(cause);
+      const driver = new S3StorageDriver(testConfig);
+
+      const error = await driver.exists("uncertain-key").then(
+        () => null,
+        (failure: unknown) => failure,
+      );
+
+      expect(error).toBeInstanceOf(StorageOperationError);
+      expect(error).toMatchObject({ code: "STORAGE_EXISTS_FAILED" });
+      expect((error as StorageOperationError).cause).toBe(cause);
     });
   });
 });
