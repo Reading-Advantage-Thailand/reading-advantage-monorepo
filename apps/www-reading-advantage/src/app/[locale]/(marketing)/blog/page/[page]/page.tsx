@@ -11,7 +11,7 @@ import { BlogPagination } from "@/components/blog/blog-pagination";
 import { BlogListItem } from "@/types/blog";
 import HeroSection from "@/components/marketing/hero-section";
 import { getScopedI18n } from "@/locales/server";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { buildMarketingMetadata } from "@/lib/seo";
 
 interface PageProps {
@@ -36,8 +36,8 @@ function parsePageNumber(page: string, totalPages: number): number | null {
 export async function generateStaticParams(): Promise<Array<{ page: string }>> {
   const posts = await getAllPosts();
   const totalPages = Math.ceil(posts.length / 9);
-  return Array.from({ length: totalPages }, (_, i) => ({
-    page: String(i + 1),
+  return Array.from({ length: Math.max(totalPages - 1, 0) }, (_, i) => ({
+    page: String(i + 2),
   }));
 }
 
@@ -54,6 +54,7 @@ export async function generateMetadata({
   const totalPages = getBlogPostTotalPages(effectiveLocale, 9);
   const pageNumber = parsePageNumber(page, totalPages);
   if (pageNumber === null) return {};
+  if (pageNumber === 1) return {};
 
   const t = await getScopedI18n("pages.blog");
   const title = `${t("title")} - Page ${pageNumber}`;
@@ -79,6 +80,7 @@ export default async function BlogPaginatedPage({ params }: PageProps) {
   const totalPages = getBlogPostTotalPages(effectiveLocale, 9);
   const pageNumber = parsePageNumber(page, totalPages);
   if (pageNumber === null) notFound();
+  if (pageNumber === 1) redirect(`/${effectiveLocale}/blog`);
 
   const allPosts = await getAllPosts(effectiveLocale);
   const { posts } = await getPaginatedPosts(pageNumber, 9, allPosts);

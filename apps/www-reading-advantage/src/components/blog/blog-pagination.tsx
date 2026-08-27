@@ -9,6 +9,14 @@ interface BlogPaginationProps {
   baseUrl?: string;
 }
 
+/**
+ * Renders translated navigation for a paginated blog list.
+ * @param props The current page, total pages, and optional base path.
+ * @param props.currentPage The active page number.
+ * @param props.totalPages The total number of pages.
+ * @param props.baseUrl The base path for pagination links.
+ * @returns The pagination navigation or null when one page exists.
+ */
 export function BlogPagination({
   currentPage,
   totalPages,
@@ -63,12 +71,12 @@ export function BlogPagination({
 
   return (
     <nav
-      className="flex items-center justify-center gap-2 py-8"
-      aria-label="Pagination"
+      className="flex flex-wrap items-center justify-center gap-2 py-8"
+      aria-label={t("page")}
     >
       {currentPage > 1 ? (
         <Link
-          href={`${baseUrl}/page/${currentPage - 1}`}
+          href={currentPage === 2 ? baseUrl : `${baseUrl}/page/${currentPage - 1}`}
           className="px-4 py-2 rounded-md border border-input bg-background hover:bg-accent hover:text-accent-foreground"
           scroll={false}
         >
@@ -87,12 +95,13 @@ export function BlogPagination({
         typeof page === "number" ? (
           <Link
             key={`page-${page}-${index}`}
-            href={`${baseUrl}/page/${page}`}
+            href={page === 1 ? baseUrl : `${baseUrl}/page/${page}`}
             className={`px-4 py-2 rounded-md border ${
               page === currentPage
                 ? "bg-primary text-primary-foreground border-primary"
                 : "border-input bg-background hover:bg-accent hover:text-accent-foreground"
             }`}
+            aria-current={page === currentPage ? "page" : undefined}
             scroll={false}
           >
             {page}

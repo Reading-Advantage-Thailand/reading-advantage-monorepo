@@ -1,9 +1,16 @@
+import type { AnchorHTMLAttributes, ReactNode } from "react";
 import { cleanup, render } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import BlogPage from "@/app/[locale]/(marketing)/blog/page";
-import BlogPaginatedPage from "@/app/[locale]/(marketing)/blog/page/[page]/page";
-import { getAllPosts } from "@/lib/blog";
+import BlogPaginatedPage, {
+  generateMetadata as generateBlogPaginationMetadata,
+  generateStaticParams,
+} from "@/app/[locale]/(marketing)/blog/page/[page]/page";
+import { notFound, redirect } from "next/navigation";
+import { getAllPosts, getBlogPostTotalPages } from "@/lib/blog";
 import type { BlogListItem } from "@/types/blog";
+
+const localeState = vi.hoisted(() => ({ current: "en" }));
 
 vi.mock("@/lib/blog", async () => {
   const actual =
@@ -12,15 +19,33 @@ vi.mock("@/lib/blog", async () => {
   return {
     ...actual,
     getAllPosts: vi.fn(),
+    getBlogPostTotalPages: vi.fn(() => 3),
   };
 });
+
+type MockLinkProps = Omit<
+  AnchorHTMLAttributes<HTMLAnchorElement>,
+  "href"
+> & {
+  children: ReactNode;
+  href: string;
+  scroll?: boolean;
+};
+
+vi.mock("@/locales/navigation", () => ({
+  Link: ({ href, children, scroll: _scroll, ...props }: MockLinkProps) => (
+    <a href={`/${localeState.current}${href}`} {...props}>
+      {children}
+    </a>
+  ),
+}));
 
 vi.mock("@/components/blog/blog-card", () => ({
   BlogCard: ({ post }: { post: BlogListItem }) => <article>{post.title}</article>,
 }));
 
 vi.mock("@/components/marketing/hero-section", () => ({
-  default: () => <div data-testid="hero" />,
+  default: ({ title }: { title: string }) => <h1>{title}</h1>,
 }));
 
 const mockPosts: BlogListItem[] = Array.from({ length: 19 }, (_, index) => ({
@@ -34,9 +59,16 @@ const mockPosts: BlogListItem[] = Array.from({ length: 19 }, (_, index) => ({
 }));
 
 const getAllPostsMock = vi.mocked(getAllPosts);
+const getBlogPostTotalPagesMock = vi.mocked(getBlogPostTotalPages);
+const notFoundMock = vi.mocked(notFound);
+const redirectMock = vi.mocked(redirect);
 
 beforeEach(() => {
+  localeState.current = "en";
   getAllPostsMock.mockResolvedValue(mockPosts);
+  getBlogPostTotalPagesMock.mockReturnValue(3);
+  notFoundMock.mockReset();
+  redirectMock.mockReset();
 });
 
 afterEach(() => {
@@ -45,18 +77,31 @@ afterEach(() => {
 });
 
 describe("blog pagination routes", () => {
-  it("links the root and numbered pages to adjacent blog pages", async () => {
+  it("uses locale-aware links for root, middle, and last pages", async () => {
+    localeState.current = "th";
     const root = render(
-      await BlogPage({ params: Promise.resolve({ locale: "en" }) }),
+      await BlogPage({ params: Promise.resolve({ locale: "th" }) }),
     );
 
-    expect(root.getByRole("navigation", { name: "Pagination" })).toBeDefined();
+    expect(root.getByRole("heading", { name: "pages.blog.title" })).toBeDefined();
+    expect(
+      root.getByRole("navigation", { name: "components.pagination.page" }),
+    ).toBeDefined();
+    expect(root.getByRole("link", { name: "1" })).toHaveAttribute(
+      "href",
+      "/th/blog",
+    );
+    expect(root.getByRole("link", { name: "1" })).toHaveAttribute(
+      "aria-current",
+      "page",
+    );
     expect(root.getByRole("link", { name: "components.pagination.next" })).toHaveAttribute(
       "href",
-      "/blog/page/2",
+      "/th/blog/page/2",
     );
 
     cleanup();
+    localeState.current = "en";
 
     const pageTwo = render(
       await BlogPaginatedPage({
@@ -64,12 +109,88 @@ describe("blog pagination routes", () => {
       }),
     );
 
-    expect(pageTwo.getByRole("navigation", { name: "Pagination" })).toBeDefined();
+    expect(pageTwo.getByRole("heading", { name: "Blog - Page 2" })).toBeDefined();
+    expect(
+      pageTwo.getByRole("navigation", { name: "components.pagination.page" }),
+    ).toBeDefined();
     expect(
       pageTwo.getByRole("link", { name: "components.pagination.previous" }),
-    ).toHaveAttribute("href", "/blog/page/1");
+    ).toHaveAttribute("href", "/en/blog");
     expect(
       pageTwo.getByRole("link", { name: "components.pagination.next" }),
-    ).toHaveAttribute("href", "/blog/page/3");
+    ).toHaveAttribute("href", "/en/blog/page/3");
+    expect(pageTwo.getByRole("link", { name: "2" })).toHaveAttribute(
+      "aria-current",
+      "page",
+    );
+
+    cleanup();
+
+    const lastPage = render(
+      await BlogPaginatedPage({
+        params: Promise.resolve({ locale: "en", page: "3" }),
+      }),
+    );
+
+    expect(lastPage.getByRole("heading", { name: "Blog - Page 3" })).toBeDefined();
+    expect(
+      lastPage.getByRole("link", { name: "components.pagination.previous" }),
+    ).toHaveAttribute("href", "/en/blog/page/2");
+    expect(lastPage.getByRole("link", { name: "1" })).toHaveAttribute(
+      "href",
+      "/en/blog",
+    );
+    expect(
+      lastPage.queryByRole("link", { name: "components.pagination.next" }),
+    ).toBeNull();
+    expect(lastPage.getByText("components.pagination.next")).toHaveAttribute(
+      "aria-disabled",
+      "true",
+    );
+  });
+
+  it("redirects page one to the locale-aware blog root", async () => {
+    const redirectError = new Error("NEXT_REDIRECT");
+    redirectMock.mockImplementation(() => {
+      throw redirectError;
+    });
+
+    await expect(
+      BlogPaginatedPage({
+        params: Promise.resolve({ locale: "zh", page: "1" }),
+      }),
+    ).rejects.toBe(redirectError);
+    expect(redirectMock).toHaveBeenCalledWith("/zh/blog");
+  });
+
+  it("excludes page one from metadata and static parameters", async () => {
+    await expect(
+      generateBlogPaginationMetadata({
+        params: Promise.resolve({ locale: "en", page: "1" }),
+      }),
+    ).resolves.toEqual({});
+    await expect(generateStaticParams()).resolves.toEqual([
+      { page: "2" },
+      { page: "3" },
+    ]);
+  });
+
+  it("not-founds page zero and out-of-range pages", async () => {
+    const notFoundError = new Error("NEXT_NOT_FOUND");
+    notFoundMock.mockImplementation(() => {
+      throw notFoundError;
+    });
+
+    await expect(
+      BlogPaginatedPage({
+        params: Promise.resolve({ locale: "en", page: "0" }),
+      }),
+    ).rejects.toBe(notFoundError);
+    await expect(
+      BlogPaginatedPage({
+        params: Promise.resolve({ locale: "en", page: "4" }),
+      }),
+    ).rejects.toBe(notFoundError);
+    expect(notFoundMock).toHaveBeenCalledTimes(2);
   });
 });

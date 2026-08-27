@@ -10,8 +10,33 @@ describe("BlogPagination", () => {
   it("renders pagination nav", () => {
     render(<BlogPagination currentPage={1} totalPages={3} />);
     expect(
-      screen.getByRole("navigation", { name: "Pagination" }),
+      screen.getByRole("navigation", {
+        name: "components.pagination.page",
+      }),
     ).toBeDefined();
+  });
+
+  it("links page one to the root and marks the current page", () => {
+    render(<BlogPagination currentPage={1} totalPages={3} />);
+
+    expect(screen.getByRole("link", { name: "1" })).toHaveAttribute(
+      "href",
+      "/blog",
+    );
+    expect(screen.getByRole("link", { name: "1" })).toHaveAttribute(
+      "aria-current",
+      "page",
+    );
+  });
+
+  it("wraps pagination controls on narrow screens", () => {
+    render(<BlogPagination currentPage={1} totalPages={6} />);
+
+    expect(
+      screen.getByRole("navigation", {
+        name: "components.pagination.page",
+      }),
+    ).toHaveClass("flex-wrap");
   });
 
   it("renders previous and next links", () => {
