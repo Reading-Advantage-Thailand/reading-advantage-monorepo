@@ -164,8 +164,8 @@ describe("S3StorageDriver", () => {
     it.each([
       ["HTTP 403", Object.assign(new Error("Access denied"), { $metadata: { httpStatusCode: 403 } })],
       ["HTTP 500", Object.assign(new Error("Provider failed"), { $metadata: { httpStatusCode: 500 } })],
-      ["NotFound with HTTP 403", Object.assign(new Error("Access denied"), { name: "NotFound", $metadata: { httpStatusCode: 403 } })],
-      ["NotFound with HTTP 500", Object.assign(new Error("Provider failed"), { name: "NotFound", $metadata: { httpStatusCode: 500 } })],
+      ["NotFound with HTTP 403", new S3ServiceException({ name: "NotFound", $fault: "client", message: "Access denied", $metadata: { httpStatusCode: 403 } })],
+      ["NotFound with HTTP 500", new S3ServiceException({ name: "NotFound", $fault: "server", message: "Provider failed", $metadata: { httpStatusCode: 500 } })],
       ["generic named NotFound", Object.assign(new Error("Object not found"), { name: "NotFound" })],
       ["network", new Error("socket hang up")],
     ])("normalizes %s failures and retains the provider cause", async (_label, cause) => {
