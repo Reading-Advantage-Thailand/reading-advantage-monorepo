@@ -1,5 +1,1 @@
-Red: Next rejected the named RepDetailContent export from the admin page.
-
-Green: The component moved to a client module. Admin localization and layout tests passed with 9 tests. TypeScript and ESLint passed. The graph update and staged diff check passed.
-
-User behavior: Sales administrators can open per-representative reporting through a buildable production route. Reporting behavior remains unchanged.
+Accepted Sales admin page-export repair. Review A found only missing JSDoc tags; follow-up ec72d8a03 fixed them, and re-review found no remaining finding. Focused admin localization tests passed 6/6. The webpack build compiled and passed TypeScript, confirming the invalid page export is gone. A later Sales knowledge runtime failure is separate and has its own repair.
