@@ -1,0 +1,1 @@
+Restored the exact default HeroSection gradient and preserved customGradient overrides. Red: Hero test failed on bg-sky-50. Green: Hero 5/5; Phase 3/4 regressions 23/23; Phase 3 i18n 5/5 with 180s timeout; type-check, focused ESLint, webpack build, graph update, and diff check passed. Webpack emitted pre-existing Link export warnings.
