@@ -33,6 +33,7 @@ const toneCases = [
   { serviceIndex: 0, className: "bg-amber-100 text-amber-700" },
   { serviceIndex: 1, className: "bg-slate-200 text-slate-700" },
   { serviceIndex: 2, className: "bg-green-100 text-green-700" },
+  { serviceIndex: 3, className: "bg-green-100 text-green-700" },
 ] as const;
 
 afterEach(() => {
