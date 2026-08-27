@@ -8,6 +8,7 @@ import {
   DeleteObjectCommand,
   GetObjectCommand,
   HeadObjectCommand,
+  S3ServiceException,
 } from "@aws-sdk/client-s3";
 import { S3StorageDriver } from "../drivers/s3";
 import type { StorageConfig } from "../client";
@@ -137,8 +138,13 @@ describe("S3StorageDriver", () => {
       expect(await driver.exists("present-key")).toBe(true);
     });
 
-    it("returns false for a provider NotFound error", async () => {
-      const notFound = Object.assign(new Error("Object not found"), { name: "NotFound" });
+    it("returns false for a genuine provider NotFound error without a status", async () => {
+      const notFound = new S3ServiceException({
+        name: "NotFound",
+        $fault: "client",
+        message: "Object not found",
+        $metadata: {},
+      });
       s3Mock.on(HeadObjectCommand).rejects(notFound);
       const driver = new S3StorageDriver(testConfig);
 
@@ -158,6 +164,9 @@ describe("S3StorageDriver", () => {
     it.each([
       ["HTTP 403", Object.assign(new Error("Access denied"), { $metadata: { httpStatusCode: 403 } })],
       ["HTTP 500", Object.assign(new Error("Provider failed"), { $metadata: { httpStatusCode: 500 } })],
+      ["NotFound with HTTP 403", Object.assign(new Error("Access denied"), { name: "NotFound", $metadata: { httpStatusCode: 403 } })],
+      ["NotFound with HTTP 500", Object.assign(new Error("Provider failed"), { name: "NotFound", $metadata: { httpStatusCode: 500 } })],
+      ["generic named NotFound", Object.assign(new Error("Object not found"), { name: "NotFound" })],
       ["network", new Error("socket hang up")],
     ])("normalizes %s failures and retains the provider cause", async (_label, cause) => {
       s3Mock.on(HeadObjectCommand).rejects(cause);

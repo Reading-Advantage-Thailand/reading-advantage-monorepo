@@ -4,6 +4,7 @@ import {
   DeleteObjectCommand,
   HeadObjectCommand,
   GetObjectCommand,
+  S3ServiceException,
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import type { Readable } from "stream";
@@ -14,12 +15,13 @@ import { StorageOperationError } from "../factory.js";
 /**
  * Identifies provider errors that confirm an object is absent.
  * @param error The provider error.
- * @returns True for provider NotFound or HTTP 404 errors.
+ * @returns True for HTTP 404 or a status-free S3 NotFound exception.
  */
 function isConfirmedNotFound(error: unknown): boolean {
-  if (error instanceof Error && error.name === "NotFound") return true;
   if (typeof error !== "object" || error === null) return false;
-  return (error as { $metadata?: { httpStatusCode?: unknown } }).$metadata?.httpStatusCode === 404;
+  const status = (error as { $metadata?: { httpStatusCode?: unknown } }).$metadata?.httpStatusCode;
+  if (status !== undefined) return status === 404;
+  return error instanceof S3ServiceException && error.name === "NotFound";
 }
 
 /**
