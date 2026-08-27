@@ -60,7 +60,7 @@ export function ChatTutor({
     } catch (err) {
       setMessages((m) => {
         const copy = [...m];
-        copy[copy.length - 1] = { role: "assistant", content: t("unavailableError") };
+        copy[copy.length - 1] = { role: "assistant", content: "[Error: chat unavailable]" };
         return copy;
       });
     } finally {
@@ -78,7 +78,7 @@ export function ChatTutor({
       <CardContent>
         <div className="mb-3 max-h-96 space-y-3 overflow-y-auto">
           {messages.length === 0 && (
-            <p className="text-sm text-muted-foreground">{t("emptyState")}</p>
+            <p className="text-sm text-muted-foreground">Ask anything about sales technique.</p>
           )}
           {messages.map((m, i) => (
             <div
