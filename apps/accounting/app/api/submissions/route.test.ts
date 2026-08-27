@@ -446,7 +446,7 @@ describe("POST /api/submissions", () => {
 
   it("compares legacy stored evidence bytes and deletes the replay upload", async () => {
     const uploadedReference = `private-evidence://${COMPANY_ID}/submissions/00000000-0000-4000-8000-000000000003/evidence`;
-    const legacyStoredReference = `private-evidence://${COMPANY_ID}/submissions/receipt-0001.pdf`;
+    const legacyStoredReference = `private-evidence://${COMPANY_ID}/submissions/00000000-0000-4000-8000-000000000004/receipt-0001.pdf`;
     const replayedSubmission = {
       ...storedSubmission,
       evidenceReference: legacyStoredReference,
@@ -620,7 +620,7 @@ describe("POST /api/submissions", () => {
       operation: "submit_accounting_submission",
       companyId: COMPANY_ID,
       requestId: "00000000-0000-4000-8000-000000000001",
-      errorName: "PrimaryFailure",
+      errorName: "Error",
     });
   });
 
@@ -628,7 +628,10 @@ describe("POST /api/submissions", () => {
     mocks.submitAccountingSubmissionWithOutcome.mockRejectedValue(
       invalidInputError({ payee: ["Payee is required"] }),
     );
-    mocks.deletePrivateEvidence.mockRejectedValue(new Error("cleanup failed"));
+    const cleanupError = Object.assign(new Error("cleanup failed"), {
+      name: "SensitiveCleanupError",
+    });
+    mocks.deletePrivateEvidence.mockRejectedValue(cleanupError);
 
     const response = await POST(
       postRequest(expenseFields, { file: evidenceFile() }),
@@ -651,7 +654,34 @@ describe("POST /api/submissions", () => {
       errorName: "Error",
     });
     expect(log).not.toHaveProperty("evidenceReference");
+    expect(JSON.stringify(log)).not.toContain("SensitiveCleanupError");
     expect(JSON.stringify(log)).not.toContain("Payee is required");
+  });
+
+  it("preserves a known response when the cleanup error name getter throws", async () => {
+    mocks.submitAccountingSubmissionWithOutcome.mockRejectedValue(
+      invalidInputError({ payee: ["Payee is required"] }),
+    );
+    const cleanupError = new Error("cleanup failed");
+    Object.defineProperty(cleanupError, "name", {
+      configurable: true,
+      get() {
+        throw new Error("name access failed");
+      },
+    });
+    mocks.deletePrivateEvidence.mockRejectedValue(cleanupError);
+
+    const response = await POST(
+      postRequest(expenseFields, { file: evidenceFile() }),
+    );
+
+    expect(response.status).toBe(400);
+    expect(consoleErrorMock).toHaveBeenCalledTimes(1);
+    const log = JSON.parse(
+      String(consoleErrorMock.mock.calls[0]?.[0]),
+    ) as Record<string, unknown>;
+    expect(log.errorName).toBe("Error");
+    expect(JSON.stringify(log)).not.toContain("name access failed");
   });
 
   it("preserves the primary error and logs one safe record when outcome resolution also fails", async () => {
@@ -682,8 +712,8 @@ describe("POST /api/submissions", () => {
       operation: "submit_accounting_submission",
       companyId: COMPANY_ID,
       requestId: "00000000-0000-4000-8000-000000000001",
-      errorName: "PrimaryFailure",
-      secondaryErrorName: "ResolutionFailure",
+      errorName: "Error",
+      secondaryErrorName: "Error",
     });
     expect(log).not.toHaveProperty("evidenceReference");
     expect(JSON.stringify(log)).not.toContain("response lost");

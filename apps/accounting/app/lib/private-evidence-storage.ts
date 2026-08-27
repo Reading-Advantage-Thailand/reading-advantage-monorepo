@@ -18,6 +18,8 @@ import { privateEvidenceReferenceSchema } from "@reading-advantage/backend/finan
 
 /** Scheme prefix of every private evidence reference. */
 const PRIVATE_EVIDENCE_SCHEME = "private-evidence://";
+const LEGACY_UPLOAD_ID_PATTERN =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/u;
 
 /** Input for one private evidence upload. */
 export interface PutPrivateEvidenceInput {
@@ -82,7 +84,9 @@ function privateEvidenceKey(
     accountingSubmissionEvidenceReferenceSchema.safeParse(
       evidenceReference,
     ).success;
-  const isLegacyReference = segments.length === 3;
+  const isLegacyReference =
+    segments.length === 3 ||
+    (segments.length === 4 && LEGACY_UPLOAD_ID_PATTERN.test(segments[2] ?? ""));
   if (
     (!isGeneratedReference && (!allowLegacy || !isLegacyReference)) ||
     segments[0] !== companyId ||
@@ -98,7 +102,7 @@ function privateEvidenceKey(
 
 /** Returns a safe error name for private reconciliation logs. */
 function safeErrorName(error: unknown): string {
-  return error instanceof Error && error.name ? error.name : "UnknownError";
+  return error instanceof Error ? "Error" : "UnknownError";
 }
 
 /** Emits one private reconciliation record for an uncertain evidence cleanup. */
@@ -108,15 +112,15 @@ function logCleanupFailure(input: {
   readonly error: unknown;
   readonly cleanupError: unknown;
 }): void {
-  const record = {
-    operation: "put_private_evidence",
-    event: "cleanup_failed",
-    companyId: input.companyId,
-    evidenceUploadId: input.evidenceUploadId,
-    errorName: safeErrorName(input.error),
-    secondaryErrorName: safeErrorName(input.cleanupError),
-  };
   try {
+    const record = {
+      operation: "put_private_evidence",
+      event: "cleanup_failed",
+      companyId: input.companyId,
+      evidenceUploadId: input.evidenceUploadId,
+      errorName: safeErrorName(input.error),
+      secondaryErrorName: safeErrorName(input.cleanupError),
+    };
     console.error(JSON.stringify(record));
   } catch {
     // Logging must not replace the provider error.

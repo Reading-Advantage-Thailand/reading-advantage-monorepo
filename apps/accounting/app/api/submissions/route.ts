@@ -102,7 +102,7 @@ type ReconciliationEvent = "cleanup_failed" | "outcome_unresolved";
 
 /** Returns a safe error name without exposing error details. */
 function safeErrorName(error: unknown): string {
-  return error instanceof Error && error.name ? error.name : "UnknownError";
+  return error instanceof Error ? "Error" : "UnknownError";
 }
 
 /** Returns the opaque upload identifier from a generated evidence reference. */
@@ -123,18 +123,18 @@ function logReconciliation(input: {
   readonly error: unknown;
   readonly secondaryError?: unknown;
 }): void {
-  const record = {
-    level: "error",
-    event: `accounting_submission_${input.event === "cleanup_failed" ? "cleanup_failed" : "outcome_unresolved"}`,
-    operation: "submit_accounting_submission",
-    companyId: input.companyId,
-    requestId: evidenceUploadId(input.evidenceReference),
-    errorName: safeErrorName(input.error),
-    ...(input.secondaryError === undefined
-      ? {}
-      : { secondaryErrorName: safeErrorName(input.secondaryError) }),
-  };
   try {
+    const record = {
+      level: "error",
+      event: `accounting_submission_${input.event === "cleanup_failed" ? "cleanup_failed" : "outcome_unresolved"}`,
+      operation: "submit_accounting_submission",
+      companyId: input.companyId,
+      requestId: evidenceUploadId(input.evidenceReference),
+      errorName: safeErrorName(input.error),
+      ...(input.secondaryError === undefined
+        ? {}
+        : { secondaryErrorName: safeErrorName(input.secondaryError) }),
+    };
     console.error(JSON.stringify(record));
   } catch {
     // Logging must not replace the primary route result.

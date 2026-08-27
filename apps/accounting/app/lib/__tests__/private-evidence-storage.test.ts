@@ -206,10 +206,14 @@ describe("private evidence reconciliation", () => {
   it("logs one private record when upload and cleanup both fail", async () => {
     const request = upload();
     const putError = Object.assign(new Error("put details"), {
-      name: "ProviderPutError",
+      name: "SensitivePutError",
     });
-    const deleteError = Object.assign(new Error("delete details"), {
-      name: "ProviderDeleteError",
+    const deleteError = new Error("delete details");
+    Object.defineProperty(deleteError, "name", {
+      configurable: true,
+      get() {
+        throw new Error("name access failed");
+      },
     });
     request.storage.put.mockRejectedValue(putError);
     request.storage.delete.mockRejectedValue(deleteError);
@@ -230,9 +234,11 @@ describe("private evidence reconciliation", () => {
         evidenceUploadId: expect.stringMatching(
           /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/u,
         ),
-        errorName: "ProviderPutError",
-        secondaryErrorName: "ProviderDeleteError",
+        errorName: "Error",
+        secondaryErrorName: "Error",
       });
+      expect(serializedRecord).not.toContain("SensitivePutError");
+      expect(serializedRecord).not.toContain("name access failed");
       expect(serializedRecord).not.toContain("put details");
       expect(serializedRecord).not.toContain("delete details");
       expect(serializedRecord).not.toContain("receipt");
@@ -278,6 +284,25 @@ describe("readPrivateEvidence", () => {
     expect(result).toEqual(expected);
     expect(request.storage.get).toHaveBeenCalledWith(
       `${COMPANY_ID}/submissions/receipt-0001.pdf`,
+    );
+  });
+
+  it("reads an accepted legacy four-segment reference for the caller's company", async () => {
+    expect(readPrivateEvidence).toBeTypeOf("function");
+    if (!readPrivateEvidence) return;
+    const request = upload();
+    const expected = new Uint8Array([0x05, 0x06]);
+    request.storage.get.mockResolvedValue(expected);
+
+    const result = await readPrivateEvidence({
+      storage: request.storage,
+      companyId: COMPANY_ID,
+      evidenceReference: `private-evidence://${COMPANY_ID}/submissions/00000000-0000-4000-8000-000000000004/receipt-0001.pdf`,
+    });
+
+    expect(result).toEqual(expected);
+    expect(request.storage.get).toHaveBeenCalledWith(
+      `${COMPANY_ID}/submissions/00000000-0000-4000-8000-000000000004/receipt-0001.pdf`,
     );
   });
 
