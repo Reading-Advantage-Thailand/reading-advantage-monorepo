@@ -39,6 +39,20 @@ const descriptionSchema = z
 
 // Positive non-zero THB minor units; a bank/card settlement total is never zero or negative.
 const settledThbMinorUnitSchema = z.string().regex(/^[1-9][0-9]*$/u);
+const accountingSubmissionEvidenceReferencePattern =
+  /^private-evidence:\/\/[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\/submissions\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\/evidence$/u;
+
+/** Validates the optional request identity used for safe submission retries. */
+export const accountingSubmissionIdempotencyKeySchema = z
+  .string()
+  .trim()
+  .min(1)
+  .max(256);
+
+/** Validates the strict filename-free evidence reference for new submissions. */
+export const accountingSubmissionEvidenceReferenceSchema = z
+  .string()
+  .regex(accountingSubmissionEvidenceReferencePattern);
 
 /** Kind of staff accounting submission: an out-of-pocket expense or a vendor bill. */
 export const accountingSubmissionKindSchema = z.enum(["expense", "bill"]);
@@ -110,8 +124,13 @@ const accountingSubmissionInputShape = {
   category: categorySchema,
   description: descriptionSchema.optional(),
   money: financeMoneyInputSchema,
-  evidenceReference: privateEvidenceReferenceSchema,
+  evidenceReference: accountingSubmissionEvidenceReferenceSchema,
   settledThbAmount: settledThbMinorUnitSchema.optional(),
+} satisfies z.ZodRawShape;
+
+const accountingSubmissionStoredShape = {
+  ...accountingSubmissionInputShape,
+  evidenceReference: privateEvidenceReferenceSchema,
 } satisfies z.ZodRawShape;
 
 function addSettledThbIssues(
@@ -169,7 +188,7 @@ export const accountingSubmissionSchema = z
     status: accountingSubmissionStatusSchema,
     submittedByAccountId: z.string().uuid(),
     submittedAt: z.string().datetime({ offset: true }),
-    ...accountingSubmissionInputShape,
+    ...accountingSubmissionStoredShape,
   })
   .superRefine(addSettledThbIssues);
 
@@ -178,5 +197,18 @@ export type AccountingSubmission = Readonly<
   Omit<z.infer<typeof accountingSubmissionSchema>, "money" | "scope"> & {
     readonly money: Readonly<FinanceMoneyInput>;
     readonly scope: Readonly<FinanceOperationScope>;
+  }
+>;
+
+/** Runtime contract for a created or replayed accounting submission. */
+export const accountingSubmissionResultSchema = z.strictObject({
+  submission: accountingSubmissionSchema,
+  outcome: z.enum(["created", "replayed"]),
+});
+
+/** Lifecycle result for one submission request. */
+export type AccountingSubmissionResult = Readonly<
+  Omit<z.infer<typeof accountingSubmissionResultSchema>, "submission"> & {
+    readonly submission: AccountingSubmission;
   }
 >;

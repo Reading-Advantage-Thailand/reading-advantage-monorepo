@@ -6,12 +6,15 @@ import type {
   AccountingSubmission,
   AccountingSubmissionAuditEvent,
 } from "../contracts.js";
+import { accountingSubmissionResultSchema } from "../contracts.js";
 import { createPostgresAccountingSubmissionRepository } from "../postgres-submission-repository.js";
 
 const COMPANY_ID = "company-amber";
 const ACCOUNT_ID = "10000000-0000-4000-8000-000000000001";
 const SUBMISSION_ID = "20000000-0000-4000-8000-000000000001";
 const EVIDENCE_REFERENCE =
+  "private-evidence://company-amber/submissions/00000000-0000-4000-8000-000000000001/evidence";
+const LEGACY_EVIDENCE_REFERENCE =
   "private-evidence://company-amber/submissions/receipt-0001.pdf";
 
 interface SqlCall {
@@ -25,34 +28,36 @@ function sqlDouble(
 ): { readonly calls: SqlCall[]; readonly sql: postgres.Sql } {
   const pending = [...responses];
   const calls: SqlCall[] = [];
-  const tagged = vi.fn(async (
-    strings: TemplateStringsArray,
-    ...values: readonly unknown[]
-  ) => {
-    calls.push({ statement: strings.join("?"), values });
-    const response = pending.shift();
-    if (response === undefined) throw new Error("Unexpected SQL statement.");
-    return response;
-  });
+  const tagged = vi.fn(
+    async (strings: TemplateStringsArray, ...values: readonly unknown[]) => {
+      calls.push({ statement: strings.join("?"), values });
+      const response = pending.shift();
+      if (response === undefined) throw new Error("Unexpected SQL statement.");
+      return response;
+    },
+  );
   return { calls, sql: tagged as unknown as postgres.Sql };
 }
 
 /** Creates a transactional tagged-SQL double that captures `sql.begin` and inner queries. */
 function transactionalSqlDouble(
   responses: readonly (readonly Record<string, unknown>[])[],
-): { readonly calls: SqlCall[]; readonly beginCalls: number; readonly sql: postgres.Sql } {
+): {
+  readonly calls: SqlCall[];
+  readonly beginCalls: number;
+  readonly sql: postgres.Sql;
+} {
   const pending = [...responses];
   const calls: SqlCall[] = [];
   let beginCalls = 0;
-  const tagged = vi.fn(async (
-    strings: TemplateStringsArray,
-    ...values: readonly unknown[]
-  ) => {
-    calls.push({ statement: strings.join("?"), values });
-    const response = pending.shift();
-    if (response === undefined) throw new Error("Unexpected SQL statement.");
-    return response;
-  });
+  const tagged = vi.fn(
+    async (strings: TemplateStringsArray, ...values: readonly unknown[]) => {
+      calls.push({ statement: strings.join("?"), values });
+      const response = pending.shift();
+      if (response === undefined) throw new Error("Unexpected SQL statement.");
+      return response;
+    },
+  );
   (tagged as unknown as { begin: unknown }).begin = vi.fn(
     async (callback: (tx: postgres.Sql) => Promise<unknown>) => {
       beginCalls += 1;
@@ -141,11 +146,15 @@ function submitAuditEvent(): AccountingSubmissionAuditEvent {
 describe("PostgreSQL accounting submission repository", () => {
   it("maps snake_case rows to the validated domain submission", async () => {
     const submission = usdSubmission();
-    const database = sqlDouble([[{
-      ...rawRowFor(submission),
-      submitted_at: new Date(submission.submittedAt),
-      idempotency_key: "submission-request-0001",
-    }]]);
+    const database = sqlDouble([
+      [
+        {
+          ...rawRowFor(submission),
+          submitted_at: new Date(submission.submittedAt),
+          idempotency_key: "submission-request-0001",
+        },
+      ],
+    ]);
     const repository = createPostgresAccountingSubmissionRepository({
       sql: database.sql,
     });
@@ -159,9 +168,42 @@ describe("PostgreSQL accounting submission repository", () => {
     ).resolves.toEqual(submission);
   });
 
+  it("maps a legacy stored evidence reference into a valid replay result", async () => {
+    const submission = {
+      ...usdSubmission(),
+      evidenceReference: LEGACY_EVIDENCE_REFERENCE,
+    };
+    const database = sqlDouble([
+      [
+        {
+          ...rawRowFor(submission),
+          submitted_at: new Date(submission.submittedAt),
+          idempotency_key: "submission-request-0001",
+        },
+      ],
+    ]);
+    const repository = createPostgresAccountingSubmissionRepository({
+      sql: database.sql,
+    });
+
+    const stored = await repository.findByIdempotencyKey({
+      scope: { companyId: COMPANY_ID },
+      submittedByAccountId: ACCOUNT_ID,
+      idempotencyKey: "submission-request-0001",
+    });
+
+    expect(stored).toEqual(submission);
+    expect(
+      accountingSubmissionResultSchema.safeParse({
+        submission: stored,
+        outcome: "replayed",
+      }).success,
+    ).toBe(true);
+  });
+
   it("maps domain fields and optional values to insert bindings", async () => {
     const submission = thbSubmission();
-    const database = sqlDouble([[rawRowFor(submission)], [{}]]);
+    const database = transactionalSqlDouble([[rawRowFor(submission)], [{}]]);
     const repository = createPostgresAccountingSubmissionRepository({
       sql: database.sql,
     });
@@ -198,9 +240,14 @@ describe("PostgreSQL accounting submission repository", () => {
 
   it("returns the stored winner when a concurrent keyed insert loses the unique race", async () => {
     const submission = thbSubmission();
-    const database = sqlDouble([
+    const database = transactionalSqlDouble([
       [],
-      [{ ...rawRowFor(submission), idempotency_key: "submission-request-0001" }],
+      [
+        {
+          ...rawRowFor(submission),
+          idempotency_key: "submission-request-0001",
+        },
+      ],
     ]);
     const repository = createPostgresAccountingSubmissionRepository({
       sql: database.sql,
@@ -216,6 +263,23 @@ describe("PostgreSQL accounting submission repository", () => {
     expect(database.calls).toHaveLength(2);
     expect(database.calls[1]?.statement.toLowerCase()).toContain("select");
     expect(database.calls[1]?.statement).toContain("idempotency_key");
+  });
+
+  it("fails closed when insert has no transaction callback", async () => {
+    const submission = thbSubmission();
+    const database = sqlDouble([[rawRowFor(submission)], [{}]]);
+    const repository = createPostgresAccountingSubmissionRepository({
+      sql: database.sql,
+    });
+
+    await expect(
+      repository.insert(
+        submission,
+        "submission-request-0001",
+        submitAuditEvent(),
+      ),
+    ).rejects.toThrow(/transaction/i);
+    expect(database.calls).toHaveLength(0);
   });
 
   it("scopes idempotency lookup by company, submitter, and key", async () => {
@@ -250,29 +314,56 @@ describe("PostgreSQL accounting submission repository", () => {
       sql: database.sql,
     });
 
-    await expect(repository.listByScope({ companyId: COMPANY_ID })).resolves.toEqual([
-      thb,
-      usd,
-    ]);
+    await expect(
+      repository.listByScope({ companyId: COMPANY_ID }),
+    ).resolves.toEqual([thb, usd]);
     expect(database.calls[0]?.values).toEqual([COMPANY_ID]);
     expect(database.calls[0]?.statement).toContain("where scope_company_id");
   });
 
   it("rejects a malformed stored row during repository revalidation", async () => {
-    const database = sqlDouble([[{
-      ...rawRowFor(thbSubmission()),
-      status: "archived",
-    }]]);
+    const database = sqlDouble([
+      [
+        {
+          ...rawRowFor(thbSubmission()),
+          status: "archived",
+        },
+      ],
+    ]);
     const repository = createPostgresAccountingSubmissionRepository({
       sql: database.sql,
     });
 
-    await expect(repository.listByScope({ companyId: COMPANY_ID })).rejects.toBeInstanceOf(
-      ZodError,
-    );
+    await expect(
+      repository.listByScope({ companyId: COMPANY_ID }),
+    ).rejects.toBeInstanceOf(ZodError);
   });
 
   describe("transition transaction boundary (red - Task 7)", () => {
+    it("fails closed when transition has no transaction callback", async () => {
+      const database = sqlDouble([]);
+      const repository = createPostgresAccountingSubmissionRepository({
+        sql: database.sql,
+      });
+
+      await expect(
+        repository.transition({
+          scope: { companyId: COMPANY_ID },
+          submissionId: SUBMISSION_ID,
+          status: "approved",
+          auditEvent: {
+            id: "aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee",
+            submissionId: SUBMISSION_ID,
+            action: "approve",
+            actorAccountId: ACCOUNT_ID,
+            actorRole: "OWNER",
+            createdAt: "2026-08-20T02:04:05.678Z",
+          },
+        }),
+      ).rejects.toThrow(/transaction/i);
+      expect(database.calls).toHaveLength(0);
+    });
+
     it("transitions a pending submission to approved and inserts an audit event in one transaction", async () => {
       const submission = thbSubmission();
       const updatedRow = rawRowFor({ ...submission, status: "approved" });
@@ -285,7 +376,11 @@ describe("PostgreSQL accounting submission repository", () => {
         typeof (repository as unknown as { transition?: unknown }).transition,
         "transition is missing - red phase expected",
       ).toBe("function");
-      if (typeof (repository as unknown as { transition?: unknown }).transition !== "function") return;
+      if (
+        typeof (repository as unknown as { transition?: unknown })
+          .transition !== "function"
+      )
+        return;
 
       const auditEvent = {
         id: "aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee",
@@ -298,7 +393,9 @@ describe("PostgreSQL accounting submission repository", () => {
 
       const result = await (
         repository as unknown as {
-          transition: (input: unknown) => Promise<AccountingSubmission | undefined>;
+          transition: (
+            input: unknown,
+          ) => Promise<AccountingSubmission | undefined>;
         }
       ).transition({
         scope: { companyId: COMPANY_ID },
@@ -312,7 +409,9 @@ describe("PostgreSQL accounting submission repository", () => {
       expect(database.calls).toHaveLength(2);
       const [updateCall, insertCall] = database.calls;
       expect(updateCall?.statement.toLowerCase()).toContain("update");
-      expect(updateCall?.statement.toLowerCase()).toContain("accounting_submissions");
+      expect(updateCall?.statement.toLowerCase()).toContain(
+        "accounting_submissions",
+      );
       expect(updateCall?.statement.toLowerCase()).toContain("where");
       expect(updateCall?.statement).toContain("?");
       expect(updateCall?.values).toEqual(
@@ -320,7 +419,9 @@ describe("PostgreSQL accounting submission repository", () => {
       );
       expect(updateCall?.statement.toLowerCase()).toContain("returning");
       expect(insertCall?.statement.toLowerCase()).toContain("insert into");
-      expect(insertCall?.statement.toLowerCase()).toContain("accounting_submission_audit_events");
+      expect(insertCall?.statement.toLowerCase()).toContain(
+        "accounting_submission_audit_events",
+      );
     });
 
     it("transitions a pending submission to rejected with reason in one transaction", async () => {
@@ -335,7 +436,11 @@ describe("PostgreSQL accounting submission repository", () => {
         typeof (repository as unknown as { transition?: unknown }).transition,
         "transition is missing - red phase expected",
       ).toBe("function");
-      if (typeof (repository as unknown as { transition?: unknown }).transition !== "function") return;
+      if (
+        typeof (repository as unknown as { transition?: unknown })
+          .transition !== "function"
+      )
+        return;
 
       const auditEvent = {
         id: "bbbbbbbb-cccc-4ddd-8eee-ffffffffffff",
@@ -349,7 +454,9 @@ describe("PostgreSQL accounting submission repository", () => {
 
       const result = await (
         repository as unknown as {
-          transition: (input: unknown) => Promise<AccountingSubmission | undefined>;
+          transition: (
+            input: unknown,
+          ) => Promise<AccountingSubmission | undefined>;
         }
       ).transition({
         scope: { companyId: COMPANY_ID },

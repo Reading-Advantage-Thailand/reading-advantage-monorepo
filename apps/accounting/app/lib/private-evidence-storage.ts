@@ -2,7 +2,7 @@
  * Private-evidence write port for the accounting submissions route.
  *
  * `@reading-advantage/storage` ships a generic `StorageClient.put`; this
- * adapter is the single place that turns an untrusted upload into a
+ * adapter is the single place that turns an upload into a
  * company-scoped `private-evidence://` reference and stores the bytes under
  * exactly that key. Callers receive back only the opaque reference; they never
  * build storage keys themselves.
@@ -13,38 +13,11 @@ import {
   getStorageClient,
   type StorageClient,
 } from "@reading-advantage/storage";
+import { accountingSubmissionEvidenceReferenceSchema } from "@reading-advantage/backend/accounting";
+import { privateEvidenceReferenceSchema } from "@reading-advantage/backend/finance-operations";
 
 /** Scheme prefix of every private evidence reference. */
 const PRIVATE_EVIDENCE_SCHEME = "private-evidence://";
-
-/**
- * Characters allowed in one reference path segment by the DB-enforced
- * reference grammar (`[A-Za-z0-9._~-]`).
- */
-const SAFE_SEGMENT_CHARACTER = /^[A-Za-z0-9._~-]$/u;
-
-/**
- * Reduces an untrusted upload file name to one safe reference segment.
- * Path separators are collapsed to the final segment, control characters are
- * dropped, every other disallowed character becomes `-`, and a result that is
- * empty or a traversal segment (`.`/`..`) falls back to a fixed safe name.
- * @param fileName Original, untrusted upload file name.
- * @returns A single path segment safe for a private evidence reference.
- */
-function sanitizeFileName(fileName: string): string {
-  const segments = fileName.split(/[\\/]+/u);
-  const baseName = segments[segments.length - 1] ?? "";
-  let sanitized = "";
-  for (const character of baseName) {
-    const codePoint = character.codePointAt(0) ?? 0;
-    if (codePoint <= 0x1f || codePoint === 0x7f) continue;
-    sanitized += SAFE_SEGMENT_CHARACTER.test(character) ? character : "-";
-  }
-  if (sanitized === "" || sanitized === "." || sanitized === "..") {
-    return "evidence";
-  }
-  return sanitized;
-}
 
 /** Input for one private evidence upload. */
 export interface PutPrivateEvidenceInput {
@@ -56,8 +29,6 @@ export interface PutPrivateEvidenceInput {
   readonly storage?: StorageClient;
   /** Trusted company scope from the session actor; roots the reference. */
   readonly companyId: string;
-  /** Original upload file name (untrusted input; sanitized). */
-  readonly fileName: string;
   /** Declared MIME type of the upload. */
   readonly contentType: string;
   /** File bytes to store. */
@@ -90,16 +61,6 @@ export interface ReadPrivateEvidenceInput {
   readonly evidenceReference: string;
 }
 
-/** Checks whether a reference path segment is safe for a storage key. */
-function isSafeReferenceSegment(segment: string): boolean {
-  return (
-    segment !== "" &&
-    segment !== "." &&
-    segment !== ".." &&
-    [...segment].every((character) => SAFE_SEGMENT_CHARACTER.test(character))
-  );
-}
-
 /**
  * Converts a private evidence reference to a company-scoped storage key.
  * @param companyId Trusted company scope.
@@ -111,15 +72,18 @@ function privateEvidenceKey(
   companyId: string,
   evidenceReference: string,
 ): string {
-  const key = evidenceReference.startsWith(PRIVATE_EVIDENCE_SCHEME)
-    ? evidenceReference.slice(PRIVATE_EVIDENCE_SCHEME.length)
+  const parsed = privateEvidenceReferenceSchema.safeParse(evidenceReference);
+  const key = parsed.success
+    ? parsed.data.slice(PRIVATE_EVIDENCE_SCHEME.length)
     : "";
   const segments = key.split("/");
   if (
     segments.length !== 4 ||
     segments[0] !== companyId ||
     segments[1] !== "submissions" ||
-    segments.some((segment) => !isSafeReferenceSegment(segment))
+    segments.some(
+      (segment) => segment === "" || segment === "." || segment === "..",
+    )
   ) {
     throw new Error("Evidence reference is outside the caller's company scope");
   }
@@ -139,12 +103,24 @@ export async function putPrivateEvidence(
   input: PutPrivateEvidenceInput,
 ): Promise<PutPrivateEvidenceResult> {
   const storage = input.storage ?? getStorageClient();
-  const key = `${input.companyId}/submissions/${randomUUID()}/${sanitizeFileName(input.fileName)}`;
-  await storage.put(key, input.body, {
-    contentType: input.contentType,
-    public: false,
-  });
-  return { evidenceReference: `${PRIVATE_EVIDENCE_SCHEME}${key}` };
+  const evidenceReference = `${PRIVATE_EVIDENCE_SCHEME}${input.companyId}/submissions/${randomUUID()}/evidence`;
+  const key = accountingSubmissionEvidenceReferenceSchema
+    .parse(evidenceReference)
+    .slice(PRIVATE_EVIDENCE_SCHEME.length);
+  try {
+    await storage.put(key, input.body, {
+      contentType: input.contentType,
+      public: false,
+    });
+  } catch (error) {
+    try {
+      await storage.delete(key);
+    } catch {
+      // Cleanup must not replace the provider error.
+    }
+    throw error;
+  }
+  return { evidenceReference };
 }
 
 /** Deletes one uploaded private evidence object within the caller's company scope.

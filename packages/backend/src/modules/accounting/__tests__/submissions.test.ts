@@ -40,6 +40,7 @@ import {
   AccountingSubmissionError,
   listAccountingSubmissions,
   submitAccountingSubmission,
+  submitAccountingSubmissionWithOutcome,
   type AccountingActor,
   type AccountingSubmissionRepository,
 } from "../submissions.js";
@@ -50,7 +51,7 @@ const OTHER_STAFF_ACCOUNT_ID = "22222222-2222-4222-8222-222222222222";
 const SUBMISSION_ID = "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa";
 const OTHER_SUBMISSION_ID = "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb";
 const EVIDENCE_REFERENCE =
-  "private-evidence://reading-advantage/submissions/receipt-0001.pdf";
+  "private-evidence://reading-advantage/submissions/00000000-0000-4000-8000-000000000001/evidence";
 
 const staffActor: AccountingActor = {
   accountId: STAFF_ACCOUNT_ID,
@@ -133,6 +134,7 @@ describe("accounting submissions module boundary", () => {
         "listAccountingSubmissions",
         "rejectAccountingSubmission",
         "submitAccountingSubmission",
+        "submitAccountingSubmissionWithOutcome",
       ]);
     });
   });
@@ -159,6 +161,20 @@ describe("submitAccountingSubmission", () => {
     const persisted = vi.mocked(repository.insert).mock.calls[0]?.[0];
     expect(accountingSubmissionSchema.safeParse(persisted).success).toBe(true);
     expect(persisted?.scope.companyId).toBe(COMPANY_ID);
+  });
+
+  it("returns a typed created outcome for a new submission", async () => {
+    const repository = createFakeRepository();
+
+    const result = await submitAccountingSubmissionWithOutcome({
+      repository,
+      actor: staffActor,
+      input: thbExpenseInput,
+      idempotencyKey: "submission-request-0001",
+    });
+
+    expect(result.outcome).toBe("created");
+    expect(result.submission.scope).toEqual({ companyId: COMPANY_ID });
   });
 
   it.each(["OWNER", "ACCOUNTANT"] as const)(
@@ -200,6 +216,24 @@ describe("submitAccountingSubmission", () => {
       repository,
       actor: staffActor,
       input: input as AccountingSubmissionInput,
+    }).catch((caught: unknown) => caught);
+
+    expect(error).toBeInstanceOf(AccountingSubmissionError);
+    expect(error).toMatchObject({ reason: "invalid-input" });
+    expect(repository.insert).not.toHaveBeenCalled();
+  });
+
+  it("rejects a legacy or non-generated evidence reference for new input", async () => {
+    const repository = createFakeRepository();
+
+    const error = await submitAccountingSubmission({
+      repository,
+      actor: staffActor,
+      input: {
+        ...thbExpenseInput,
+        evidenceReference:
+          "private-evidence://reading-advantage/submissions/receipt-0001.pdf",
+      },
     }).catch((caught: unknown) => caught);
 
     expect(error).toBeInstanceOf(AccountingSubmissionError);
@@ -288,7 +322,7 @@ describe("submitAccountingSubmission", () => {
     const replayInput = {
       ...thbExpenseInput,
       evidenceReference:
-        "private-evidence://reading-advantage/submissions/retry-0002.pdf",
+        "private-evidence://reading-advantage/submissions/00000000-0000-4000-8000-000000000002/evidence",
     };
 
     const original = await submitAccountingSubmission({
@@ -322,6 +356,22 @@ describe("submitAccountingSubmission", () => {
     });
   });
 
+  it("returns a typed replayed outcome for an idempotent replay", async () => {
+    const repository = createFakeRepository();
+    const original = storedSubmission();
+    vi.mocked(repository.findByIdempotencyKey).mockResolvedValue(original);
+
+    const result = await submitAccountingSubmissionWithOutcome({
+      repository,
+      actor: staffActor,
+      input: thbExpenseInput,
+      idempotencyKey: "submission-request-0001",
+    });
+
+    expect(result).toEqual({ submission: original, outcome: "replayed" });
+    expect(repository.insert).not.toHaveBeenCalled();
+  });
+
   it("rejects a replay with different evidence when the comparator returns false", async () => {
     const repository = createFakeRepository();
     const original = storedSubmission();
@@ -334,7 +384,7 @@ describe("submitAccountingSubmission", () => {
       input: {
         ...thbExpenseInput,
         evidenceReference:
-          "private-evidence://reading-advantage/submissions/retry-0002.pdf",
+          "private-evidence://reading-advantage/submissions/00000000-0000-4000-8000-000000000002/evidence",
       },
       idempotencyKey: "submission-request-0001",
       compareEvidence,
@@ -358,7 +408,7 @@ describe("submitAccountingSubmission", () => {
       input: {
         ...thbExpenseInput,
         evidenceReference:
-          "private-evidence://reading-advantage/submissions/retry-0002.pdf",
+          "private-evidence://reading-advantage/submissions/00000000-0000-4000-8000-000000000002/evidence",
       },
       idempotencyKey: "submission-request-0001",
     }).catch((caught: unknown) => caught);
@@ -395,7 +445,7 @@ describe("submitAccountingSubmission", () => {
       input: {
         ...thbExpenseInput,
         evidenceReference:
-          "private-evidence://another-company/submissions/receipt.pdf",
+          "private-evidence://another-company/submissions/00000000-0000-4000-8000-000000000002/evidence",
       },
       idempotencyKey: "submission-request-0001",
     }).catch((caught: unknown) => caught);
@@ -430,7 +480,7 @@ describe("submitAccountingSubmission", () => {
     const compareEvidence = vi.fn(async () => true);
     const winner = storedSubmission({
       evidenceReference:
-        "private-evidence://reading-advantage/submissions/winner.pdf",
+        "private-evidence://reading-advantage/submissions/00000000-0000-4000-8000-000000000003/evidence",
     });
     vi.mocked(repository.insert).mockResolvedValue(winner);
 
@@ -505,8 +555,12 @@ describe("submitAccountingSubmission", () => {
       input: thbExpenseInput,
     });
 
-    expect((repository as unknown as { auditEvents: unknown[] }).auditEvents).toHaveLength(1);
-    expect((repository as unknown as { auditEvents: unknown[] }).auditEvents[0]).toMatchObject({
+    expect(
+      (repository as unknown as { auditEvents: unknown[] }).auditEvents,
+    ).toHaveLength(1);
+    expect(
+      (repository as unknown as { auditEvents: unknown[] }).auditEvents[0],
+    ).toMatchObject({
       action: "submit",
     });
   });

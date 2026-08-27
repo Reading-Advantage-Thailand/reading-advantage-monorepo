@@ -18,8 +18,14 @@ const pendingSubmission = {
   settledThbAmount: "520500",
 };
 
-const approvedSubmission = { ...pendingSubmission, status: "approved" as const };
-const rejectedSubmission = { ...pendingSubmission, status: "rejected" as const };
+const approvedSubmission = {
+  ...pendingSubmission,
+  status: "approved" as const,
+};
+const rejectedSubmission = {
+  ...pendingSubmission,
+  status: "rejected" as const,
+};
 
 const navigation = vi.hoisted(() => ({
   refresh: vi.fn(),
@@ -53,7 +59,9 @@ function fillValidExpenseForm(): void {
   });
   fireEvent.change(screen.getByLabelText("Evidence file"), {
     target: {
-      files: [new File(["receipt"], "receipt.pdf", { type: "application/pdf" })],
+      files: [
+        new File(["receipt"], "receipt.pdf", { type: "application/pdf" }),
+      ],
     },
   });
 }
@@ -140,7 +148,9 @@ describe("NewSubmissionForm", () => {
     fireEvent.submit(screen.getByRole("form", { name: "Submission form" }));
 
     expect(
-      await screen.findByRole("status", { name: "Submission already approved." }),
+      await screen.findByRole("status", {
+        name: "Submission already approved.",
+      }),
     ).toBeInTheDocument();
     expect(screen.queryByRole("alert")).not.toBeInTheDocument();
   });
@@ -153,7 +163,9 @@ describe("NewSubmissionForm", () => {
     fireEvent.submit(screen.getByRole("form", { name: "Submission form" }));
 
     expect(
-      await screen.findByRole("status", { name: "Submission already rejected." }),
+      await screen.findByRole("status", {
+        name: "Submission already rejected.",
+      }),
     ).toBeInTheDocument();
     expect(screen.queryByRole("alert")).not.toBeInTheDocument();
   });
@@ -186,7 +198,7 @@ describe("NewSubmissionForm", () => {
     expect(secondKey).toBe(firstKey);
   });
 
-  it("rotates the idempotency key after editing a failed form", async () => {
+  it("keeps the idempotency key after editing and restoring a failed form", async () => {
     fetchMock
       .mockResolvedValueOnce(
         jsonResponse(
@@ -204,6 +216,41 @@ describe("NewSubmissionForm", () => {
     fireEvent.change(screen.getByLabelText("Payee"), {
       target: { value: "Updated Taxi Cooperative" },
     });
+    fireEvent.change(screen.getByLabelText("Payee"), {
+      target: { value: "Bangkok Taxi Cooperative" },
+    });
+    fireEvent.submit(form);
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(2));
+
+    const firstRequest = fetchMock.mock.calls[0]?.[1] as RequestInit;
+    const secondRequest = fetchMock.mock.calls[1]?.[1] as RequestInit;
+    const firstKey = (firstRequest.headers as Record<string, string>)[
+      "idempotency-key"
+    ];
+    const secondKey = (secondRequest.headers as Record<string, string>)[
+      "idempotency-key"
+    ];
+    expect(secondKey).toBe(firstKey);
+  });
+
+  it("clears the idempotency key after a confirmed conflict", async () => {
+    fetchMock
+      .mockResolvedValueOnce(
+        jsonResponse(
+          {
+            message:
+              "The idempotency key is already used for different content",
+          },
+          409,
+        ),
+      )
+      .mockResolvedValueOnce(jsonResponse(pendingSubmission, 201));
+    render(<NewSubmissionForm />);
+    fillValidExpenseForm();
+    const form = screen.getByRole("form", { name: "Submission form" });
+
+    fireEvent.submit(form);
+    await screen.findByRole("alert");
     fireEvent.submit(form);
     await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(2));
 
@@ -279,9 +326,12 @@ describe("NewSubmissionForm", () => {
     fireEvent.change(screen.getByLabelText("Currency (3-letter code)"), {
       target: { value: "usd" },
     });
-    fireEvent.change(screen.getByLabelText("Settled THB amount in minor units"), {
-      target: { value: "520500" },
-    });
+    fireEvent.change(
+      screen.getByLabelText("Settled THB amount in minor units"),
+      {
+        target: { value: "520500" },
+      },
+    );
 
     fireEvent.submit(screen.getByRole("form", { name: "Submission form" }));
 
@@ -299,7 +349,9 @@ describe("NewSubmissionForm", () => {
       jsonResponse(
         {
           message: "Submission validation failed",
-          fieldErrors: { "money.currency": ["Currency must be uppercase ISO-4217"] },
+          fieldErrors: {
+            "money.currency": ["Currency must be uppercase ISO-4217"],
+          },
         },
         400,
       ),
@@ -309,13 +361,18 @@ describe("NewSubmissionForm", () => {
     fireEvent.change(screen.getByLabelText("Currency (3-letter code)"), {
       target: { value: "USD" },
     });
-    fireEvent.change(screen.getByLabelText("Settled THB amount in minor units"), {
-      target: { value: "520500" },
-    });
+    fireEvent.change(
+      screen.getByLabelText("Settled THB amount in minor units"),
+      {
+        target: { value: "520500" },
+      },
+    );
     fireEvent.submit(screen.getByRole("form", { name: "Submission form" }));
 
     expect(
-      await screen.findByRole("alert", { name: "Submission validation failed" }),
+      await screen.findByRole("alert", {
+        name: "Submission validation failed",
+      }),
     ).toBeInTheDocument();
     expect(
       screen.getByText("Currency must be uppercase ISO-4217"),
@@ -339,7 +396,9 @@ describe("NewSubmissionForm", () => {
         name: "Submission received. It is pending review.",
       }),
     ).not.toBeInTheDocument();
-    expect(screen.getByLabelText("Payee")).toHaveValue("Bangkok Taxi Cooperative");
+    expect(screen.getByLabelText("Payee")).toHaveValue(
+      "Bangkok Taxi Cooperative",
+    );
     expect(screen.queryByText("15000 THB")).not.toBeInTheDocument();
     expect(navigation.refresh).not.toHaveBeenCalled();
   });

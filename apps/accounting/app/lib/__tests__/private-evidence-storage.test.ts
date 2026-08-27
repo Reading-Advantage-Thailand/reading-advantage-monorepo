@@ -9,7 +9,6 @@
  *   putPrivateEvidence({
  *     storage,        // generic StorageClient-shaped port (faked here)
  *     companyId,      // trusted company scope from the session actor
- *     fileName,       // original upload file name (untrusted input)
  *     contentType,    // declared MIME type of the upload
  *     body,           // file bytes
  *   }): Promise<{ evidenceReference: string }>
@@ -20,8 +19,7 @@
  * - stores the object under the reference's key (reference minus the
  *   `private-evidence://` scheme) via `storage.put` exactly once;
  * - never opts in to a public ACL, regardless of input;
- * - sanitizes untrusted file names so `..`/`.` segments and control
- *   characters can never reach the reference.
+ * - generates a strict filename-free reference with one UUID upload segment.
  */
 import { describe, expect, it, vi } from "vitest";
 
@@ -31,7 +29,7 @@ import { putPrivateEvidence } from "@/app/lib/private-evidence-storage";
 
 const COMPANY_ID = "33333333-3333-4333-8333-333333333333";
 const EVIDENCE_REFERENCE_PATTERN = new RegExp(
-  "^private-evidence://[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?(/[A-Za-z0-9._~-]+)+$",
+  "^private-evidence://[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?/submissions/[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/evidence$",
 );
 
 function createFakeStorage() {
@@ -49,7 +47,6 @@ function upload(overrides: Record<string, unknown> = {}) {
   return {
     storage: createFakeStorage(),
     companyId: COMPANY_ID,
-    fileName: "receipt.pdf",
     contentType: "application/pdf",
     body: new Uint8Array([0x25, 0x50, 0x44, 0x46]),
     ...overrides,
@@ -111,20 +108,36 @@ describe("putPrivateEvidence", () => {
     expect(request.storage.getSignedUrl).not.toHaveBeenCalled();
   });
 
-  it("sanitizes traversal segments and control characters out of the file name", async () => {
-    const request = upload({ fileName: "../../etc/passwd\u0007" });
+  it("does not include the untrusted file name in the generated reference", async () => {
+    const request = upload();
 
     const result = await putPrivateEvidence(request);
 
     const segments = result.evidenceReference
       .slice("private-evidence://".length)
       .split("/");
-    expect(segments).not.toContain("..");
-    expect(segments).not.toContain(".");
+    expect(segments).toHaveLength(4);
+    expect(segments[1]).toBe("submissions");
+    expect(segments[3]).toBe("evidence");
+    expect(result.evidenceReference).not.toContain("receipt.pdf");
     expect(result.evidenceReference).toMatch(EVIDENCE_REFERENCE_PATTERN);
-    // eslint-disable-next-line no-control-regex
-    expect(result.evidenceReference).not.toMatch(/[\u0000-\u001f\u007f]/u);
     expect(request.storage.put).toHaveBeenCalledTimes(1);
+  });
+
+  it("deletes the preallocated object when storage rejects and preserves the put error", async () => {
+    const request = upload();
+    const putError = new Error("provider response lost");
+    request.storage.put.mockRejectedValue(putError);
+
+    await expect(putPrivateEvidence(request)).rejects.toBe(putError);
+
+    const key = request.storage.put.mock.calls[0]?.[0];
+    expect(key).toEqual(
+      expect.stringMatching(
+        /^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\/submissions\/[0-9a-f-]{36}\/evidence$/u,
+      ),
+    );
+    expect(request.storage.delete).toHaveBeenCalledWith(key);
   });
 
   it("scopes every reference to the caller's company, never a request-supplied tenant", async () => {
@@ -185,30 +198,33 @@ describe("readPrivateEvidence", () => {
     const result = await readPrivateEvidence({
       storage: request.storage,
       companyId: COMPANY_ID,
-      evidenceReference: `private-evidence://${COMPANY_ID}/submissions/upload-0001/receipt.pdf`,
+      evidenceReference: `private-evidence://${COMPANY_ID}/submissions/00000000-0000-4000-8000-000000000001/evidence`,
     });
 
     expect(result).toEqual(expected);
     expect(request.storage.get).toHaveBeenCalledWith(
-      `${COMPANY_ID}/submissions/upload-0001/receipt.pdf`,
+      `${COMPANY_ID}/submissions/00000000-0000-4000-8000-000000000001/evidence`,
     );
   });
 
   it.each([
     `private-evidence://${COMPANY_ID}/submissions/receipt.pdf`,
     `private-evidence://${COMPANY_ID}/submissions/upload-0001/nested/receipt.pdf`,
-  ])("rejects a reference that is not an exact generated path: %s", async (evidenceReference) => {
-    expect(readPrivateEvidence).toBeTypeOf("function");
-    if (!readPrivateEvidence) return;
-    const request = upload();
+  ])(
+    "rejects a reference that is not an exact generated path: %s",
+    async (evidenceReference) => {
+      expect(readPrivateEvidence).toBeTypeOf("function");
+      if (!readPrivateEvidence) return;
+      const request = upload();
 
-    await expect(
-      readPrivateEvidence({
-        storage: request.storage,
-        companyId: COMPANY_ID,
-        evidenceReference,
-      }),
-    ).rejects.toThrow(/company/i);
-    expect(request.storage.get).not.toHaveBeenCalled();
-  });
+      await expect(
+        readPrivateEvidence({
+          storage: request.storage,
+          companyId: COMPANY_ID,
+          evidenceReference,
+        }),
+      ).rejects.toThrow(/company/i);
+      expect(request.storage.get).not.toHaveBeenCalled();
+    },
+  );
 });

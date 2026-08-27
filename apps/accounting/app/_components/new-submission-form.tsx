@@ -93,7 +93,10 @@ function fieldErrorsFromBody(body: unknown): FieldErrors {
 
   const fieldErrors: FieldErrors = {};
   for (const [field, messages] of Object.entries(body.fieldErrors)) {
-    if (Array.isArray(messages) && messages.every((message) => typeof message === "string")) {
+    if (
+      Array.isArray(messages) &&
+      messages.every((message) => typeof message === "string")
+    ) {
       fieldErrors[field] = messages;
     }
   }
@@ -123,7 +126,10 @@ function successMessage(status: Submission["status"]): string {
 }
 
 /** Returns all server errors that correspond to one form control. */
-function errorsForField(field: string, fieldErrors: FieldErrors): readonly string[] {
+function errorsForField(
+  field: string,
+  fieldErrors: FieldErrors,
+): readonly string[] {
   const keys =
     field === "amountMinor"
       ? ["amountMinor", "money.amountMinor"]
@@ -165,15 +171,12 @@ export function NewSubmissionForm() {
   const [formMessage, setFormMessage] = useState<FormMessage | null>(null);
   const idempotencyKeyRef = useRef<string | null>(null);
 
-  /** Rotates the request identity after a meaningful form edit. */
-  function rotateIdempotencyKey(): void {
-    idempotencyKeyRef.current = null;
-  }
-
   const isNonThbCurrency = currency.length === 3 && currency !== "THB";
 
   /** Sends one submission as multipart form data to the existing API route. */
-  async function handleSubmit(event: FormEvent<HTMLFormElement>): Promise<void> {
+  async function handleSubmit(
+    event: FormEvent<HTMLFormElement>,
+  ): Promise<void> {
     event.preventDefault();
     setIsSubmitting(true);
     setFieldErrors({});
@@ -228,6 +231,19 @@ export function NewSubmissionForm() {
         return;
       }
 
+      if (response.status === 409) {
+        idempotencyKeyRef.current = null;
+        setFormMessage({
+          kind: "error",
+          text: responseErrorMessage(
+            response.status,
+            body,
+            "This submission conflicts with an earlier request. Review the details and try again.",
+          ),
+        });
+        return;
+      }
+
       setFormMessage({
         kind: "error",
         text: responseErrorMessage(
@@ -258,7 +274,6 @@ export function NewSubmissionForm() {
         <form
           aria-label="Submission form"
           className="space-y-6"
-          onChange={rotateIdempotencyKey}
           onSubmit={handleSubmit}
         >
           {formMessage ? (
@@ -277,11 +292,18 @@ export function NewSubmissionForm() {
           ) : null}
 
           <fieldset className="space-y-4">
-            <legend className="mb-4 text-sm font-semibold">Submission details</legend>
+            <legend className="mb-4 text-sm font-semibold">
+              Submission details
+            </legend>
 
             <div className="space-y-2">
               <Label htmlFor="kind">Submission kind</Label>
-              <select id="kind" name="kind" defaultValue="expense" className={controlClassName}>
+              <select
+                id="kind"
+                name="kind"
+                defaultValue="expense"
+                className={controlClassName}
+              >
                 <option value="expense">Expense</option>
                 <option value="bill">Bill</option>
               </select>
@@ -321,7 +343,9 @@ export function NewSubmissionForm() {
                       ? "category-error"
                       : undefined
                   }
-                  aria-invalid={errorsForField("category", fieldErrors).length > 0}
+                  aria-invalid={
+                    errorsForField("category", fieldErrors).length > 0
+                  }
                   className={
                     errorsForField("category", fieldErrors).length > 0
                       ? invalidControlClassName
@@ -346,7 +370,9 @@ export function NewSubmissionForm() {
                       ? "amountMinor-error"
                       : undefined
                   }
-                  aria-invalid={errorsForField("amountMinor", fieldErrors).length > 0}
+                  aria-invalid={
+                    errorsForField("amountMinor", fieldErrors).length > 0
+                  }
                   className={
                     errorsForField("amountMinor", fieldErrors).length > 0
                       ? invalidControlClassName
@@ -370,13 +396,17 @@ export function NewSubmissionForm() {
                   autoCapitalize="characters"
                   autoComplete="currency"
                   pattern="[A-Z]{3}"
-                  onChange={(event) => setCurrency(event.target.value.toUpperCase())}
+                  onChange={(event) =>
+                    setCurrency(event.target.value.toUpperCase())
+                  }
                   aria-describedby={
                     errorsForField("currency", fieldErrors).length > 0
                       ? "currency-error"
                       : undefined
                   }
-                  aria-invalid={errorsForField("currency", fieldErrors).length > 0}
+                  aria-invalid={
+                    errorsForField("currency", fieldErrors).length > 0
+                  }
                   className={
                     errorsForField("currency", fieldErrors).length > 0
                       ? invalidControlClassName
@@ -415,7 +445,10 @@ export function NewSubmissionForm() {
                 <p className="text-xs text-muted-foreground">
                   Enter the THB total settled by the bank or card.
                 </p>
-                <FieldError field="settledThbAmount" fieldErrors={fieldErrors} />
+                <FieldError
+                  field="settledThbAmount"
+                  fieldErrors={fieldErrors}
+                />
               </div>
             ) : null}
 
@@ -431,7 +464,9 @@ export function NewSubmissionForm() {
                     ? "description-error"
                     : undefined
                 }
-                aria-invalid={errorsForField("description", fieldErrors).length > 0}
+                aria-invalid={
+                  errorsForField("description", fieldErrors).length > 0
+                }
               />
               <FieldError field="description" fieldErrors={fieldErrors} />
             </div>
@@ -449,7 +484,9 @@ export function NewSubmissionForm() {
                     ? "evidence-error"
                     : undefined
                 }
-                  aria-invalid={errorsForField("evidence", fieldErrors).length > 0}
+                aria-invalid={
+                  errorsForField("evidence", fieldErrors).length > 0
+                }
                 className={
                   errorsForField("evidence", fieldErrors).length > 0
                     ? invalidControlClassName
@@ -463,7 +500,11 @@ export function NewSubmissionForm() {
             </div>
           </fieldset>
 
-          <Button type="submit" disabled={isSubmitting} className="w-full sm:w-auto">
+          <Button
+            type="submit"
+            disabled={isSubmitting}
+            className="w-full sm:w-auto"
+          >
             {isSubmitting ? "Submitting…" : "Submit for review"}
           </Button>
           {isSubmitting ? (

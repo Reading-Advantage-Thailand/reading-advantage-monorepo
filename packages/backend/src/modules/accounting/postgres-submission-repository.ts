@@ -33,6 +33,20 @@ interface AccountingSubmissionRow {
   readonly idempotency_key: string | null;
 }
 
+type TransactionalPostgresSql = postgres.Sql & {
+  begin<T>(callback: (transaction: postgres.Sql) => Promise<T>): Promise<T>;
+};
+
+/** Requires the database client to expose a transaction callback. */
+function requireTransaction(database: postgres.Sql): TransactionalPostgresSql {
+  if (
+    typeof (database as unknown as { begin?: unknown }).begin !== "function"
+  ) {
+    throw new Error("Accounting submission writes require a transaction");
+  }
+  return database as TransactionalPostgresSql;
+}
+
 /**
  * Normalizes a timestamptz driver value to an ISO-8601 string with offset.
  * @param value Driver-surfaced timestamp (`Date`, or a parseable string).
@@ -195,13 +209,14 @@ export function createPostgresAccountingSubmissionRepository(input: {
       idempotencyKey: string | undefined,
       auditEvent: AccountingSubmissionAuditEvent,
     ): Promise<AccountingSubmission> {
-      const hasBegin = typeof (sql as unknown as { begin?: unknown }).begin === "function";
-      if (hasBegin) {
-        return (sql as unknown as { begin: (cb: (tx: postgres.Sql) => Promise<AccountingSubmission>) => Promise<AccountingSubmission> }).begin(
-          (tx) => insertSubmission(tx, submission, idempotencyKey, auditEvent),
-        );
-      }
-      return insertSubmission(sql, submission, idempotencyKey, auditEvent);
+      return requireTransaction(sql).begin((transaction) =>
+        insertSubmission(
+          transaction as unknown as postgres.Sql,
+          submission,
+          idempotencyKey,
+          auditEvent,
+        ),
+      );
     },
 
     async findByIdempotencyKey(
@@ -254,9 +269,8 @@ export function createPostgresAccountingSubmissionRepository(input: {
       readonly status: "approved" | "rejected";
       readonly auditEvent: AccountingSubmissionAuditEvent;
     }): Promise<AccountingSubmission | undefined> {
-      const hasBegin = typeof (sql as unknown as { begin?: unknown }).begin === "function";
-      if (!hasBegin) {
-        const rows = await sql<AccountingSubmissionRow[]>`
+      return requireTransaction(sql).begin(async (transaction) => {
+        const rows = await transaction<AccountingSubmissionRow[]>`
           update accounting_submissions
           set status = ${input.status}
           where id = ${input.submissionId}
@@ -269,7 +283,7 @@ export function createPostgresAccountingSubmissionRepository(input: {
         `;
         const [row] = rows;
         if (row === undefined) return undefined;
-        await sql`
+        await transaction`
           insert into accounting_submission_audit_events (
             id, submission_id, action, actor_account_id, actor_role, reason, created_at
           ) values (
@@ -283,38 +297,7 @@ export function createPostgresAccountingSubmissionRepository(input: {
           )
         `;
         return toAccountingSubmission(row as AccountingSubmissionRow);
-      }
-      return (sql as unknown as { begin: (cb: (tx: postgres.Sql) => Promise<AccountingSubmission | undefined>) => Promise<AccountingSubmission | undefined> }).begin(
-        async (tx) => {
-          const rows = await tx<AccountingSubmissionRow[]>`
-            update accounting_submissions
-            set status = ${input.status}
-            where id = ${input.submissionId}
-              and scope_company_id = ${input.scope.companyId}
-              and status = ${"pending"}
-            returning
-              id, kind, payee, category, description, amount_minor, currency,
-              settled_thb_amount_minor, evidence_reference, scope_company_id,
-              status, submitted_by_account_id, submitted_at, idempotency_key
-          `;
-          const [row] = rows;
-          if (row === undefined) return undefined;
-          await tx`
-            insert into accounting_submission_audit_events (
-              id, submission_id, action, actor_account_id, actor_role, reason, created_at
-            ) values (
-              ${input.auditEvent.id},
-              ${input.auditEvent.submissionId},
-              ${input.auditEvent.action},
-              ${input.auditEvent.actorAccountId},
-              ${input.auditEvent.actorRole},
-              ${input.auditEvent.reason ?? null},
-              ${input.auditEvent.createdAt}
-            )
-          `;
-          return toAccountingSubmission(row as AccountingSubmissionRow);
-        },
-      );
+      });
     },
   };
 }

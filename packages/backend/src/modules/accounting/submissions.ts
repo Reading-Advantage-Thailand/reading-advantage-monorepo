@@ -6,12 +6,15 @@ import type { ZodIssue } from "zod";
 import type { FinanceOperationScope } from "../finance-operations/contracts.js";
 import {
   accountingSubmissionAuditEventSchema,
+  accountingSubmissionIdempotencyKeySchema,
   accountingSubmissionInputSchema,
+  accountingSubmissionResultSchema,
   accountingSubmissionSchema,
   rejectReasonSchema,
   type AccountingSubmission,
   type AccountingSubmissionAuditEvent,
   type AccountingSubmissionInput,
+  type AccountingSubmissionResult,
 } from "./contracts.js";
 
 /**
@@ -131,7 +134,6 @@ const ACCOUNTING_ROLES: ReadonlySet<string> = new Set([
   "ACCOUNTANT",
 ]);
 const PRIVATE_EVIDENCE_REFERENCE_PREFIX = "private-evidence://";
-const idempotencyKeySchema = z.string().trim().min(1).max(256);
 
 type CompareAccountingSubmissionEvidence = (input: {
   readonly candidateEvidenceReference: string;
@@ -190,19 +192,18 @@ function hasSameSubmissionContent(
 
 /**
  * Validates, authorizes, and persists one expense or bill submission under the
- * actor's company scope. A replay with the same actor and idempotency key
- * returns the original submission without a second insert.
+ * actor's company scope, with a typed created or replayed result.
  * @param request Repository port, actor, submission input, and optional idempotency key.
- * @returns The stored pending submission, or the original on an idempotent replay.
+ * @returns The stored submission and whether this request created or replayed it.
  * @throws AccountingSubmissionError when the actor lacks an accounting role or the input is invalid.
  */
-export async function submitAccountingSubmission(request: {
+export async function submitAccountingSubmissionWithOutcome(request: {
   readonly repository: AccountingSubmissionRepository;
   readonly actor: AccountingActor;
   readonly input: AccountingSubmissionInput;
   readonly idempotencyKey?: string;
   readonly compareEvidence?: CompareAccountingSubmissionEvidence;
-}): Promise<AccountingSubmission> {
+}): Promise<AccountingSubmissionResult> {
   requireAccountingRole(request.actor);
 
   const parsed = accountingSubmissionInputSchema.safeParse(request.input);
@@ -210,15 +211,21 @@ export async function submitAccountingSubmission(request: {
     throw new AccountingSubmissionError("invalid-input", parsed.error.issues);
   }
 
-  if (!evidenceBelongsToCompany(parsed.data.evidenceReference, request.actor.companyId)) {
+  if (
+    !evidenceBelongsToCompany(
+      parsed.data.evidenceReference,
+      request.actor.companyId,
+    )
+  ) {
     throw new AccountingSubmissionError("forbidden");
   }
 
   let idempotencyKey: string | undefined;
   if (request.idempotencyKey !== undefined) {
-    const parsedIdempotencyKey = idempotencyKeySchema.safeParse(
-      request.idempotencyKey,
-    );
+    const parsedIdempotencyKey =
+      accountingSubmissionIdempotencyKeySchema.safeParse(
+        request.idempotencyKey,
+      );
     if (!parsedIdempotencyKey.success) {
       throw new AccountingSubmissionError(
         "invalid-input",
@@ -245,7 +252,10 @@ export async function submitAccountingSubmission(request: {
       ) {
         throw new AccountingSubmissionError("conflict");
       }
-      return existing;
+      return accountingSubmissionResultSchema.parse({
+        submission: existing,
+        outcome: "replayed",
+      });
     }
   }
 
@@ -280,7 +290,27 @@ export async function submitAccountingSubmission(request: {
   ) {
     throw new AccountingSubmissionError("conflict");
   }
-  return stored;
+  return accountingSubmissionResultSchema.parse({
+    submission: stored,
+    outcome: stored.id === submission.id ? "created" : "replayed",
+  });
+}
+
+/**
+ * Validates, authorizes, and persists one expense or bill submission.
+ * @param request Repository port, actor, submission input, and optional idempotency key.
+ * @returns The stored pending submission, or the original on an idempotent replay.
+ * @throws AccountingSubmissionError when the actor lacks an accounting role or the input is invalid.
+ */
+export async function submitAccountingSubmission(request: {
+  readonly repository: AccountingSubmissionRepository;
+  readonly actor: AccountingActor;
+  readonly input: AccountingSubmissionInput;
+  readonly idempotencyKey?: string;
+  readonly compareEvidence?: CompareAccountingSubmissionEvidence;
+}): Promise<AccountingSubmission> {
+  const result = await submitAccountingSubmissionWithOutcome(request);
+  return result.submission;
 }
 
 /**
@@ -378,7 +408,10 @@ export async function rejectAccountingSubmission(request: {
 
   const parsedReason = rejectReasonSchema.safeParse(request.reason);
   if (!parsedReason.success) {
-    throw new AccountingSubmissionError("invalid-input", parsedReason.error.issues);
+    throw new AccountingSubmissionError(
+      "invalid-input",
+      parsedReason.error.issues,
+    );
   }
 
   const auditEvent = accountingSubmissionAuditEventSchema.parse({

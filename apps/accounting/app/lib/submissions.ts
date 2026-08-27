@@ -14,14 +14,18 @@ import {
   listAccountingSubmissions as listDomainAccountingSubmissions,
   rejectAccountingSubmission as rejectDomainAccountingSubmission,
   submitAccountingSubmission as submitDomainAccountingSubmission,
+  submitAccountingSubmissionWithOutcome as submitDomainAccountingSubmissionWithOutcome,
   type AccountingActor,
   type AccountingSubmission,
   type AccountingSubmissionInput,
+  type AccountingSubmissionResult,
 } from "@reading-advantage/backend/accounting";
 import { client } from "@reading-advantage/db/client";
 import type { ZodIssue } from "zod";
 
-const repository = createPostgresAccountingSubmissionRepository({ sql: client });
+const repository = createPostgresAccountingSubmissionRepository({
+  sql: client,
+});
 
 /**
  * Groups Zod issues into a field-path → messages map for 400 responses.
@@ -88,6 +92,33 @@ export async function submitAccountingSubmission(
 ): Promise<AccountingSubmission> {
   try {
     return await submitDomainAccountingSubmission({
+      repository,
+      actor: request.actor,
+      input: request.input,
+      ...(request.idempotencyKey === undefined
+        ? {}
+        : { idempotencyKey: request.idempotencyKey }),
+      ...(request.compareEvidence === undefined
+        ? {}
+        : { compareEvidence: request.compareEvidence }),
+    });
+  } catch (error) {
+    translateDomainError(error);
+  }
+}
+
+/**
+ * Submits one record and returns whether the operation created or replayed it.
+ * @param request Actor, submission input, idempotency key, and evidence comparator.
+ * @returns The stored submission and its creation or replay outcome.
+ * @throws An `AccountingSubmissionError`-named error with `fieldErrors` when
+ *   the domain rejects the input.
+ */
+export async function submitAccountingSubmissionWithOutcome(
+  request: SubmitAccountingSubmissionRequest,
+): Promise<AccountingSubmissionResult> {
+  try {
+    return await submitDomainAccountingSubmissionWithOutcome({
       repository,
       actor: request.actor,
       input: request.input,

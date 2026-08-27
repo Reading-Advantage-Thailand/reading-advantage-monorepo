@@ -16,13 +16,16 @@ import {
 } from "@/app/lib/private-evidence-storage";
 import {
   listAccountingSubmissions,
-  submitAccountingSubmission,
+  submitAccountingSubmissionWithOutcome,
 } from "@/app/lib/submissions";
 import type {
   AccountingActor,
   AccountingSubmissionInput,
 } from "@reading-advantage/backend/accounting";
-import { z } from "zod";
+import {
+  accountingSubmissionEvidenceReferenceSchema,
+  accountingSubmissionIdempotencyKeySchema,
+} from "@reading-advantage/backend/accounting";
 
 /** Session user projection produced by the accounting guard. */
 type AccountingSessionUser = NonNullable<
@@ -102,11 +105,20 @@ function safeErrorName(error: unknown): string {
   return error instanceof Error && error.name ? error.name : "UnknownError";
 }
 
+/** Returns the opaque upload identifier from a generated evidence reference. */
+function evidenceUploadId(evidenceReference: string): string {
+  const parsed =
+    accountingSubmissionEvidenceReferenceSchema.safeParse(evidenceReference);
+  if (!parsed.success) return "unknown";
+  return (
+    parsed.data.slice("private-evidence://".length).split("/")[2] ?? "unknown"
+  );
+}
+
 /** Emits one structured reconciliation record without exposing request data. */
 function logReconciliation(input: {
   readonly event: ReconciliationEvent;
   readonly companyId: string;
-  readonly idempotencyKey: string;
   readonly evidenceReference: string;
   readonly error: unknown;
   readonly secondaryError?: unknown;
@@ -116,8 +128,7 @@ function logReconciliation(input: {
     event: `accounting_submission_${input.event === "cleanup_failed" ? "cleanup_failed" : "outcome_unresolved"}`,
     operation: "submit_accounting_submission",
     companyId: input.companyId,
-    idempotencyKey: input.idempotencyKey,
-    evidenceReference: input.evidenceReference,
+    requestId: evidenceUploadId(input.evidenceReference),
     errorName: safeErrorName(input.error),
     ...(input.secondaryError === undefined
       ? {}
@@ -133,7 +144,6 @@ function logReconciliation(input: {
 /** Deletes unused evidence without masking the primary route result. */
 async function cleanupUploadedEvidence(input: {
   readonly companyId: string;
-  readonly idempotencyKey: string;
   readonly evidenceReference: string;
 }): Promise<void> {
   try {
@@ -153,8 +163,6 @@ function idempotencyConflictResponse(): Response {
     409,
   );
 }
-
-const idempotencyKeySchema = z.string().uuid();
 
 /**
  * Reads one scalar form field as a string.
@@ -181,8 +189,8 @@ function isSupportedEvidenceType(contentType: string): boolean {
  * required evidence file. Evidence is stored through the private-evidence
  * port and the domain receives only the storage-issued reference; any
  * caller-supplied `evidenceReference` form field is ignored.
- * @param request Multipart form request with a valid UUID Idempotency-Key header.
- * @returns 201 with the stored submission, the guard's 401/403, or 400 with
+ * @param request Multipart form request with an optional idempotency key header.
+ * @returns 201 for a new submission, 200 for a replay, the guard's 401/403, or 400 with
  *   `{ message, fieldErrors }` for missing evidence or invalid input.
  */
 export async function POST(request: Request): Promise<Response> {
@@ -190,23 +198,26 @@ export async function POST(request: Request): Promise<Response> {
   if (!guard.ok) return guard.response;
   const actor = actorFromUser(guard.session.user);
 
-  const parsedIdempotencyKey = idempotencyKeySchema.safeParse(
-    request.headers.get("idempotency-key"),
-  );
-  if (!parsedIdempotencyKey.success) {
-    return jsonResponse(
-      {
-        message: "A valid UUID idempotency key is required",
-        fieldErrors: {
-          idempotencyKey: [
-            "Send a valid UUID in the Idempotency-Key header",
-          ],
+  const rawIdempotencyKey = request.headers.get("idempotency-key");
+  let idempotencyKey: string | undefined;
+  if (rawIdempotencyKey !== null) {
+    const parsedIdempotencyKey =
+      accountingSubmissionIdempotencyKeySchema.safeParse(rawIdempotencyKey);
+    if (!parsedIdempotencyKey.success) {
+      return jsonResponse(
+        {
+          message: "The idempotency key is invalid",
+          fieldErrors: {
+            idempotencyKey: [
+              "Send a nonblank idempotency key with at most 256 characters",
+            ],
+          },
         },
-      },
-      400,
-    );
+        400,
+      );
+    }
+    idempotencyKey = parsedIdempotencyKey.data;
   }
-  const idempotencyKey = parsedIdempotencyKey.data;
 
   let form: FormData;
   try {
@@ -240,7 +251,6 @@ export async function POST(request: Request): Promise<Response> {
   const evidenceBody = new Uint8Array(await evidence.arrayBuffer());
   const { evidenceReference } = await putPrivateEvidence({
     companyId: actor.companyId,
-    fileName: evidence.name,
     contentType: evidence.type || "application/octet-stream",
     body: evidenceBody,
   });
@@ -263,7 +273,7 @@ export async function POST(request: Request): Promise<Response> {
   } as AccountingSubmissionInput;
 
   const submit = () =>
-    submitAccountingSubmission({
+    submitAccountingSubmissionWithOutcome({
       actor,
       input,
       idempotencyKey,
@@ -280,14 +290,15 @@ export async function POST(request: Request): Promise<Response> {
       },
     });
 
-  let submission: Awaited<ReturnType<typeof submitAccountingSubmission>>;
+  let submissionResult: Awaited<
+    ReturnType<typeof submitAccountingSubmissionWithOutcome>
+  >;
   try {
-    submission = await submit();
+    submissionResult = await submit();
   } catch (error) {
     if (isInvalidInputError(error)) {
       await cleanupUploadedEvidence({
         companyId: actor.companyId,
-        idempotencyKey,
         evidenceReference,
       });
       return jsonResponse(
@@ -298,7 +309,6 @@ export async function POST(request: Request): Promise<Response> {
     if (hasAccountingReason(error, "conflict")) {
       await cleanupUploadedEvidence({
         companyId: actor.companyId,
-        idempotencyKey,
         evidenceReference,
       });
       return idempotencyConflictResponse();
@@ -306,19 +316,26 @@ export async function POST(request: Request): Promise<Response> {
     if (hasAccountingReason(error, "forbidden")) {
       await cleanupUploadedEvidence({
         companyId: actor.companyId,
-        idempotencyKey,
         evidenceReference,
+      });
+      throw error;
+    }
+    if (idempotencyKey === undefined) {
+      logReconciliation({
+        event: "outcome_unresolved",
+        companyId: actor.companyId,
+        evidenceReference,
+        error,
       });
       throw error;
     }
 
     try {
-      submission = await submit();
+      submissionResult = await submit();
     } catch (resolutionError) {
       if (hasAccountingReason(resolutionError, "conflict")) {
         await cleanupUploadedEvidence({
           companyId: actor.companyId,
-          idempotencyKey,
           evidenceReference,
         });
         return idempotencyConflictResponse();
@@ -326,7 +343,6 @@ export async function POST(request: Request): Promise<Response> {
       logReconciliation({
         event: "outcome_unresolved",
         companyId: actor.companyId,
-        idempotencyKey,
         evidenceReference,
         error,
         secondaryError: resolutionError,
@@ -335,14 +351,16 @@ export async function POST(request: Request): Promise<Response> {
     }
   }
 
-  if (submission.evidenceReference !== evidenceReference) {
+  if (submissionResult.submission.evidenceReference !== evidenceReference) {
     await cleanupUploadedEvidence({
       companyId: actor.companyId,
-      idempotencyKey,
       evidenceReference,
     });
   }
-  return jsonResponse(submission, 201);
+  return jsonResponse(
+    submissionResult.submission,
+    submissionResult.outcome === "created" ? 201 : 200,
+  );
 }
 
 /**
