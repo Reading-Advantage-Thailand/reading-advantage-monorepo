@@ -281,9 +281,9 @@ export async function mountCartridge(
       instance?.pause?.();
       if (completionCount === 0) status = "paused";
       diagnostic({ level: "info", code: "VISIBILITY_PAUSED", message: "Game paused in background" });
-    } else {
+    } else if (completionCount === 0) {
       instance?.resume?.();
-      status = completionCount > 0 ? "completed" : "running";
+      status = "running";
       diagnostic({ level: "info", code: "VISIBILITY_RESUMED", message: "Game resumed" });
     }
   };

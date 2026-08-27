@@ -6,9 +6,27 @@ import { APKGameHost } from "./apk-game-host.js";
 import { DEFAULT_RESPONSIVE_LAYOUT_CONFIG } from "../responsive/responsive-composition.js";
 import { createMockGameFactory } from "../testing/test-kit.js";
 import { createRuntimeCartridge, createRuntimeEdition, validResults } from "../testing/fixtures.js";
-import type { GameFactory } from "../runtime/types.js";
+import type { APKHostAdapter, GameFactory } from "../runtime/types.js";
 
-afterEach(cleanup);
+const mountHostObserver = vi.hoisted(() => ({
+  capture: undefined as ((host: APKHostAdapter) => void) | undefined,
+}));
+
+vi.mock("../runtime/runtime.js", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("../runtime/runtime.js")>();
+  return {
+    ...actual,
+    mountCartridge: (...args: Parameters<typeof actual.mountCartridge>) => {
+      mountHostObserver.capture?.(args[0].host);
+      return actual.mountCartridge(...args);
+    },
+  };
+});
+
+afterEach(() => {
+  mountHostObserver.capture = undefined;
+  cleanup();
+});
 
 const briefing = {
   title: "Temple Word Quest",
@@ -23,6 +41,45 @@ const learningInput = [
   { term: "แม่น้ำ", translation: "river" },
   { term: "ภูเขา", translation: "mountain" },
 ] as const;
+
+const tutorial = {
+  schemaVersion: 1,
+  id: "temple-word-quest-tutorial",
+  title: "Temple Word Quest tutorial",
+  seed: 29,
+  labels: {
+    progress: "Tutorial progress",
+    pause: "Pause tutorial",
+    resume: "Resume tutorial",
+    advance: "Next tutorial step",
+    replay: "Replay tutorial",
+    skip: "Skip tutorial",
+  },
+  targets: [{ id: "mechanic:choice", kind: "mechanic" }],
+  actions: [{ id: "action:choose", deterministic: true, consequence: "correct" }],
+  steps: [{
+    id: "step:choose",
+    title: "Choose the correct answer",
+    explanation: "The tutorial chooses one matching answer.",
+    targetId: "mechanic:choice",
+    actionId: "action:choose",
+    timing: { leadInMs: 0, demonstrationMs: 0, lingerMs: 0 },
+  }],
+  lifecycle: {
+    pause: "freeze-current-step",
+    advance: "sequential",
+    replay: "restart-with-same-seed",
+    skip: { enabled: true, to: "playing" },
+    complete: { to: "playing" },
+    productionEffects: {
+      emitGameResults: false,
+      persistProgress: false,
+      awardAuthoritativeXp: false,
+      writeLeaderboard: false,
+      applyFailureConsequences: false,
+    },
+  },
+} as const;
 
 describe("APKGameHost", () => {
   it("passes a compact host composition to the game factory", async () => {
@@ -282,6 +339,63 @@ describe("APKGameHost", () => {
     expect(successfulFactory.contexts).toHaveLength(1);
     expect(successfulFactory.liveInstances).toBe(1);
     expect(document.querySelectorAll("[data-apk-canvas-host] canvas")).toHaveLength(1);
+  });
+
+  it("rejects every callback retained by a failed mount after its retry succeeds", async () => {
+    const successfulFactory = createMockGameFactory();
+    const capturedHosts: APKHostAdapter[] = [];
+    const onComplete = vi.fn();
+    const onNavigate = vi.fn();
+    const onDiagnostic = vi.fn();
+    let attempts = 0;
+    let failedMountPoint: HTMLElement | undefined;
+    mountHostObserver.capture = (host) => capturedHosts.push(host);
+    const factory: GameFactory = async (context) => {
+      attempts += 1;
+      if (attempts === 1) {
+        failedMountPoint = context.container;
+        throw new Error("renderer startup failed");
+      }
+      return successfulFactory(context);
+    };
+    render(
+      <APKGameHost
+        cartridge={createRuntimeCartridge()}
+        input={learningInput}
+        edition={createRuntimeEdition()}
+        factory={factory}
+        briefing={briefing}
+        onComplete={onComplete}
+        onNavigate={onNavigate}
+        onDiagnostic={onDiagnostic}
+      />,
+    );
+
+    fireEvent.click(await screen.findByRole("button", { name: "Begin quest" }));
+    expect(await screen.findByRole("alert")).toHaveTextContent("renderer startup failed");
+    fireEvent.click(screen.getByRole("button", { name: "Begin quest" }));
+    await screen.findByText("Game ready");
+    expect(capturedHosts).toHaveLength(2);
+    expect(successfulFactory.contexts[0]?.container).toBe(failedMountPoint);
+    onDiagnostic.mockClear();
+
+    await act(async () => {
+      await capturedHosts[0]?.complete(validResults, "victory");
+      capturedHosts[0]?.navigate?.("catalog");
+      capturedHosts[0]?.diagnostic?.({
+        level: "warning",
+        code: "FAILED_MOUNT_CALLBACK",
+        message: "A failed mount retained a callback",
+        timestamp: 1,
+      });
+    });
+
+    expect(successfulFactory.instances[0]?.pause).not.toHaveBeenCalled();
+    expect(onComplete).not.toHaveBeenCalled();
+    expect(onNavigate).not.toHaveBeenCalled();
+    expect(onDiagnostic).not.toHaveBeenCalled();
+    expect(screen.getByText("Game ready")).toBeInTheDocument();
+    expect(screen.queryByText("Game complete")).not.toBeInTheDocument();
   });
 
   it("cleans up a completed briefing-enabled session before returning to briefing and creating one fresh replay mount", async () => {
@@ -624,6 +738,52 @@ describe("APKGameHost", () => {
       expect(screen.getByRole("button", { name: label })).toHaveClass("min-h-11");
       expect(screen.getByRole("button", { name: label })).toHaveStyle({ minHeight: "44px" });
     }
+  });
+
+  it("omits End demonstration when a direct demo has no briefing destination", async () => {
+    const factory = createMockGameFactory();
+    render(
+      <APKGameHost
+        cartridge={createRuntimeCartridge()}
+        input={learningInput}
+        edition={createRuntimeEdition()}
+        factory={factory}
+        launchPhase="demo"
+      />,
+    );
+
+    await screen.findByText("Class demonstration ready");
+    expect(screen.queryByRole("button", { name: "End demonstration" })).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Restart demonstration" })).toBeEnabled();
+  });
+
+  it("retries a failed direct demo through the visible Restart game action", async () => {
+    const successfulFactory = createMockGameFactory();
+    let attempts = 0;
+    const factory: GameFactory = async (context) => {
+      attempts += 1;
+      if (attempts === 1) throw new Error("direct demo mount failed");
+      return successfulFactory(context);
+    };
+    render(
+      <APKGameHost
+        cartridge={createRuntimeCartridge()}
+        input={learningInput}
+        edition={createRuntimeEdition()}
+        factory={factory}
+        launchPhase="demo"
+      />,
+    );
+
+    expect(await screen.findByRole("alert")).toHaveTextContent("direct demo mount failed");
+    const retry = screen.getByRole("button", { name: "Restart game" });
+    expect(retry).toBeEnabled();
+    fireEvent.click(retry);
+
+    await screen.findByText("Class demonstration ready");
+    expect(attempts).toBe(2);
+    expect(successfulFactory.contexts[0]?.sessionMode).toBe("demo");
+    expect(successfulFactory.liveInstances).toBe(1);
   });
 
   it("returns from a class demonstration to the briefing without a scored session", async () => {
@@ -987,6 +1147,58 @@ describe("APKGameHost", () => {
     expect(factory.instances[1]?.destroy).not.toHaveBeenCalled();
   });
 
+  it("does not let delayed stale mount cleanup overwrite a replacement demo", async () => {
+    let releaseCleanup: () => void = () => undefined;
+    const cleanupPending = new Promise<void>((resolve) => {
+      releaseCleanup = resolve;
+    });
+    const tutorialDestroy = vi.fn(() => cleanupPending);
+    const successfulFactory = createMockGameFactory();
+    let attempts = 0;
+    const factory: GameFactory = async (context) => {
+      attempts += 1;
+      if (attempts === 1) throw new Error("tutorial renderer failed");
+      return successfulFactory(context);
+    };
+    const cartridge = createRuntimeCartridge();
+    const edition = createRuntimeEdition();
+    const { rerender } = render(
+      <APKGameHost
+        cartridge={cartridge}
+        input={learningInput}
+        edition={edition}
+        factory={factory}
+        briefing={{ ...briefing, startPhase: "tutorial" }}
+        tutorial={tutorial}
+        tutorialActionDriver={{ execute: vi.fn(), destroy: tutorialDestroy }}
+      />,
+    );
+
+    fireEvent.click(await screen.findByRole("button", { name: "Begin quest" }));
+    await waitFor(() => expect(tutorialDestroy).toHaveBeenCalledOnce());
+
+    rerender(
+      <APKGameHost
+        cartridge={cartridge}
+        input={[{ term: "mountain", translation: "montagne" }]}
+        edition={edition}
+        factory={factory}
+        launchPhase="demo"
+      />,
+    );
+    await screen.findByText("Class demonstration ready");
+
+    await act(async () => {
+      releaseCleanup();
+      await Promise.resolve();
+    });
+
+    expect(screen.getByText("Class demonstration ready")).toBeInTheDocument();
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Pause demonstration" })).toBeEnabled();
+    expect(successfulFactory.instances[0]?.destroy).not.toHaveBeenCalled();
+  });
+
   it("ignores a stale demo teardown rejection after a replacement mount starts", async () => {
     const factory = createMockGameFactory();
     let rejectDestroy: (reason?: unknown) => void = () => undefined;
@@ -1090,6 +1302,43 @@ describe("APKGameHost", () => {
     expect(await screen.findByRole("alert")).toHaveTextContent("scored pause failed");
     expect(pause).toHaveBeenCalledOnce();
     expect(destroy).toHaveBeenCalledOnce();
+    expect(await screen.findByRole("button", { name: "Begin quest" })).toBeEnabled();
+  });
+
+  it("suppresses completion when scored resume emits complete before throwing", async () => {
+    const demoFactory = createMockGameFactory();
+    const onComplete = vi.fn();
+    const destroy = vi.fn();
+    const factory: GameFactory = async (context) => {
+      if (context.sessionMode === "demo") return demoFactory(context);
+      return {
+        pause: vi.fn(),
+        resume: vi.fn(() => {
+          context.complete(validResults, "victory");
+          throw new Error("scored resume failed");
+        }),
+        destroy,
+      };
+    };
+    render(
+      <APKGameHost
+        cartridge={createRuntimeCartridge()}
+        input={learningInput}
+        edition={createRuntimeEdition()}
+        factory={factory}
+        briefing={briefing}
+        onComplete={onComplete}
+      />,
+    );
+
+    fireEvent.click(await screen.findByRole("button", { name: "Demonstrate for class" }));
+    await screen.findByText("Class demonstration ready");
+    fireEvent.click(screen.getByRole("button", { name: "Advance demonstration" }));
+
+    expect(await screen.findByRole("alert")).toHaveTextContent("scored resume failed");
+    expect(destroy).toHaveBeenCalledOnce();
+    expect(onComplete).not.toHaveBeenCalled();
+    expect(screen.queryByText("Game complete")).not.toBeInTheDocument();
     expect(await screen.findByRole("button", { name: "Begin quest" })).toBeEnabled();
   });
 

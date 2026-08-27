@@ -225,6 +225,7 @@ export function APKGameHost({
     message: string,
   ): void => {
     if (!isCurrentMount(mountPoint, generation)) return;
+    mountGenerationRef.current = generation + 1;
     handleRef.current = undefined;
     playingGenerationRef.current = undefined;
     mountPoint.replaceChildren();
@@ -397,6 +398,7 @@ export function APKGameHost({
     } catch (mountError: unknown) {
       if (!isCurrentMount(mountPoint, generation)) return undefined;
       await destroyTutorialController().catch(() => undefined);
+      if (!isCurrentMount(mountPoint, generation)) return undefined;
       mountPoint.replaceChildren();
       if (sessionMode === "demo") {
         setDemoActive(false);
@@ -669,11 +671,11 @@ export function APKGameHost({
       );
       return;
     }
-    if (!isCurrentMount(mountPoint, generation)) return;
-    playingGenerationRef.current = generation;
     try {
-      setStatus("ready");
       mounted.resume();
+      if (!isCurrentMount(mountPoint, generation)) return;
+      playingGenerationRef.current = generation;
+      setStatus("ready");
     } catch (resumeError) {
       await discardMountedHandle(
         mountPoint,
@@ -862,6 +864,11 @@ export function APKGameHost({
   const restart = async () => {
     if (demoActive) {
       await restartDemo();
+      return;
+    }
+    if (launchPhase === "demo" && effectiveBriefing === undefined && handleRef.current === undefined) {
+      setError(undefined);
+      await mountDemoSession();
       return;
     }
     if (effectiveBriefing !== undefined) {
@@ -1056,9 +1063,11 @@ export function APKGameHost({
             <button type="button" className="min-h-11" style={DEMO_CONTROL_STYLE} onClick={() => void restartDemo()} disabled={status === "loading" || status === "error"}>
               Restart demonstration
             </button>
-            <button type="button" className="min-h-11" style={DEMO_CONTROL_STYLE} onClick={() => void endDemo()} disabled={status === "loading" || status === "error"}>
-              End demonstration
-            </button>
+            {effectiveBriefing !== undefined ? (
+              <button type="button" className="min-h-11" style={DEMO_CONTROL_STYLE} onClick={() => void endDemo()} disabled={status === "loading" || status === "error"}>
+                End demonstration
+              </button>
+            ) : null}
             <button type="button" className="min-h-11" style={DEMO_CONTROL_STYLE} onClick={() => void advanceDemo()} disabled={status === "loading" || status === "error"}>
               Advance demonstration
             </button>

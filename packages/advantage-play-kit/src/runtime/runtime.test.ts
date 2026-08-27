@@ -185,6 +185,40 @@ describe("mountCartridge", () => {
     await handle.destroy();
   });
 
+  it("does not resume a completed renderer after visibility restoration", async () => {
+    let complete: ((result: unknown) => void) | undefined;
+    const instance: APKGameInstance = {
+      pause: vi.fn(),
+      resume: vi.fn(),
+      destroy: vi.fn(),
+    };
+    const handle = await mountCartridge(
+      {
+        container: document.createElement("div"),
+        cartridge: createRuntimeCartridge(),
+        input: [{ term: "river", translation: "riviere" }],
+        edition: createRuntimeEdition(),
+        host: { complete: vi.fn() },
+      },
+      async (context) => {
+        complete = context.complete;
+        return instance;
+      },
+    );
+
+    complete?.(validResults);
+    Object.defineProperty(document, "visibilityState", { configurable: true, value: "hidden" });
+    document.dispatchEvent(new Event("visibilitychange"));
+    expect(instance.pause).toHaveBeenCalledOnce();
+    expect(handle.getDiagnostics().status).toBe("completed");
+
+    Object.defineProperty(document, "visibilityState", { configurable: true, value: "visible" });
+    document.dispatchEvent(new Event("visibilitychange"));
+    expect(instance.resume).not.toHaveBeenCalled();
+    expect(handle.getDiagnostics().status).toBe("completed");
+    await handle.destroy();
+  });
+
   it("destroys the production adapter with its canvas and input listeners", async () => {
     const canvas = document.createElement("canvas");
     const destroy = vi.fn((removeCanvas?: boolean) => {
