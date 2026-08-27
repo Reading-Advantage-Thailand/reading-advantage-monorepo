@@ -1,0 +1,7 @@
+Track: sales_advantage_golive_20260701
+
+Red: The Thai ChatTutor test failed because the icon-only send button had no accessible name.
+
+Green: The focused component test, 13-test chat API regression, ESLint, and Sales TypeScript checks passed.
+
+User behavior: Screen readers now identify the send control as ส่ง in Thai and Send in English.
