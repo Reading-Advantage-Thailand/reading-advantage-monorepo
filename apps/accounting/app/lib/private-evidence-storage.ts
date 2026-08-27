@@ -71,14 +71,20 @@ export interface ReadPrivateEvidenceInput {
 function privateEvidenceKey(
   companyId: string,
   evidenceReference: string,
+  allowLegacy: boolean,
 ): string {
   const parsed = privateEvidenceReferenceSchema.safeParse(evidenceReference);
   const key = parsed.success
     ? parsed.data.slice(PRIVATE_EVIDENCE_SCHEME.length)
     : "";
   const segments = key.split("/");
+  const isGeneratedReference =
+    accountingSubmissionEvidenceReferenceSchema.safeParse(
+      evidenceReference,
+    ).success;
+  const isLegacyReference = segments.length === 3;
   if (
-    segments.length !== 4 ||
+    (!isGeneratedReference && (!allowLegacy || !isLegacyReference)) ||
     segments[0] !== companyId ||
     segments[1] !== "submissions" ||
     segments.some(
@@ -88,6 +94,33 @@ function privateEvidenceKey(
     throw new Error("Evidence reference is outside the caller's company scope");
   }
   return key;
+}
+
+/** Returns a safe error name for private reconciliation logs. */
+function safeErrorName(error: unknown): string {
+  return error instanceof Error && error.name ? error.name : "UnknownError";
+}
+
+/** Emits one private reconciliation record for an uncertain evidence cleanup. */
+function logCleanupFailure(input: {
+  readonly companyId: string;
+  readonly evidenceUploadId: string;
+  readonly error: unknown;
+  readonly cleanupError: unknown;
+}): void {
+  const record = {
+    operation: "put_private_evidence",
+    event: "cleanup_failed",
+    companyId: input.companyId,
+    evidenceUploadId: input.evidenceUploadId,
+    errorName: safeErrorName(input.error),
+    secondaryErrorName: safeErrorName(input.cleanupError),
+  };
+  try {
+    console.error(JSON.stringify(record));
+  } catch {
+    // Logging must not replace the provider error.
+  }
 }
 
 /**
@@ -115,8 +148,13 @@ export async function putPrivateEvidence(
   } catch (error) {
     try {
       await storage.delete(key);
-    } catch {
-      // Cleanup must not replace the provider error.
+    } catch (cleanupError) {
+      logCleanupFailure({
+        companyId: input.companyId,
+        evidenceUploadId: key.split("/")[2] ?? "unknown",
+        error,
+        cleanupError,
+      });
     }
     throw error;
   }
@@ -132,7 +170,7 @@ export async function deletePrivateEvidence(
   input: DeletePrivateEvidenceInput,
 ): Promise<void> {
   await (input.storage ?? getStorageClient()).delete(
-    privateEvidenceKey(input.companyId, input.evidenceReference),
+    privateEvidenceKey(input.companyId, input.evidenceReference, false),
   );
 }
 
@@ -146,6 +184,6 @@ export async function readPrivateEvidence(
   input: ReadPrivateEvidenceInput,
 ): Promise<Uint8Array> {
   return (input.storage ?? getStorageClient()).get(
-    privateEvidenceKey(input.companyId, input.evidenceReference),
+    privateEvidenceKey(input.companyId, input.evidenceReference, true),
   );
 }

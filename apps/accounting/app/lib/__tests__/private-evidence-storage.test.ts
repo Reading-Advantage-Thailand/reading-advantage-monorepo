@@ -185,6 +185,61 @@ describe("deletePrivateEvidence", () => {
     ).rejects.toThrow(/company/i);
     expect(request.storage.delete).not.toHaveBeenCalled();
   });
+
+  it("rejects a legacy reference for deletion", async () => {
+    expect(deletePrivateEvidence).toBeTypeOf("function");
+    if (!deletePrivateEvidence) return;
+    const request = upload();
+
+    await expect(
+      deletePrivateEvidence({
+        storage: request.storage,
+        companyId: COMPANY_ID,
+        evidenceReference: `private-evidence://${COMPANY_ID}/submissions/receipt-0001.pdf`,
+      }),
+    ).rejects.toThrow(/company/i);
+    expect(request.storage.delete).not.toHaveBeenCalled();
+  });
+});
+
+describe("private evidence reconciliation", () => {
+  it("logs one private record when upload and cleanup both fail", async () => {
+    const request = upload();
+    const putError = Object.assign(new Error("put details"), {
+      name: "ProviderPutError",
+    });
+    const deleteError = Object.assign(new Error("delete details"), {
+      name: "ProviderDeleteError",
+    });
+    request.storage.put.mockRejectedValue(putError);
+    request.storage.delete.mockRejectedValue(deleteError);
+    const consoleError = vi
+      .spyOn(console, "error")
+      .mockImplementation(() => undefined);
+
+    try {
+      await expect(putPrivateEvidence(request)).rejects.toBe(putError);
+
+      expect(consoleError).toHaveBeenCalledTimes(1);
+      const [serializedRecord] = consoleError.mock.calls[0] as [string];
+      const record = JSON.parse(serializedRecord) as Record<string, unknown>;
+      expect(record).toEqual({
+        operation: "put_private_evidence",
+        event: "cleanup_failed",
+        companyId: COMPANY_ID,
+        evidenceUploadId: expect.stringMatching(
+          /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/u,
+        ),
+        errorName: "ProviderPutError",
+        secondaryErrorName: "ProviderDeleteError",
+      });
+      expect(serializedRecord).not.toContain("put details");
+      expect(serializedRecord).not.toContain("delete details");
+      expect(serializedRecord).not.toContain("receipt");
+    } finally {
+      consoleError.mockRestore();
+    }
+  });
 });
 
 describe("readPrivateEvidence", () => {
@@ -207,8 +262,27 @@ describe("readPrivateEvidence", () => {
     );
   });
 
+  it("reads an accepted legacy three-segment reference for the caller's company", async () => {
+    expect(readPrivateEvidence).toBeTypeOf("function");
+    if (!readPrivateEvidence) return;
+    const request = upload();
+    const expected = new Uint8Array([0x03, 0x04]);
+    request.storage.get.mockResolvedValue(expected);
+
+    const result = await readPrivateEvidence({
+      storage: request.storage,
+      companyId: COMPANY_ID,
+      evidenceReference: `private-evidence://${COMPANY_ID}/submissions/receipt-0001.pdf`,
+    });
+
+    expect(result).toEqual(expected);
+    expect(request.storage.get).toHaveBeenCalledWith(
+      `${COMPANY_ID}/submissions/receipt-0001.pdf`,
+    );
+  });
+
   it.each([
-    `private-evidence://${COMPANY_ID}/submissions/receipt.pdf`,
+    `private-evidence://${COMPANY_ID}/submissions`,
     `private-evidence://${COMPANY_ID}/submissions/upload-0001/nested/receipt.pdf`,
   ])(
     "rejects a reference that is not an exact generated path: %s",

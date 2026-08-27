@@ -444,6 +444,53 @@ describe("POST /api/submissions", () => {
     expect(mocks.deletePrivateEvidence).toHaveBeenCalledTimes(1);
   });
 
+  it("compares legacy stored evidence bytes and deletes the replay upload", async () => {
+    const uploadedReference = `private-evidence://${COMPANY_ID}/submissions/00000000-0000-4000-8000-000000000003/evidence`;
+    const legacyStoredReference = `private-evidence://${COMPANY_ID}/submissions/receipt-0001.pdf`;
+    const replayedSubmission = {
+      ...storedSubmission,
+      evidenceReference: legacyStoredReference,
+    };
+    mocks.putPrivateEvidence.mockResolvedValue({
+      evidenceReference: uploadedReference,
+    });
+    mocks.submitAccountingSubmissionWithOutcome.mockResolvedValue({
+      submission: replayedSubmission,
+      outcome: "replayed",
+    });
+
+    const response = await POST(
+      postRequest(expenseFields, {
+        file: evidenceFile(),
+        idempotencyKey: "66666666-6666-4666-8666-666666666666",
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    const domainCall = mocks.submitAccountingSubmissionWithOutcome.mock
+      .calls[0]?.[0] as {
+      readonly compareEvidence?: (input: {
+        readonly candidateEvidenceReference: string;
+        readonly storedEvidenceReference: string;
+      }) => Promise<boolean>;
+    };
+    expect(domainCall.compareEvidence).toBeTypeOf("function");
+    await expect(
+      domainCall.compareEvidence?.({
+        candidateEvidenceReference: uploadedReference,
+        storedEvidenceReference: legacyStoredReference,
+      }),
+    ).resolves.toBe(true);
+    expect(mocks.readPrivateEvidence).toHaveBeenCalledWith({
+      companyId: COMPANY_ID,
+      evidenceReference: legacyStoredReference,
+    });
+    expect(mocks.deletePrivateEvidence).toHaveBeenCalledWith({
+      companyId: COMPANY_ID,
+      evidenceReference: uploadedReference,
+    });
+  });
+
   it("returns 409 and deletes new evidence when scalar content conflicts", async () => {
     mocks.submitAccountingSubmissionWithOutcome.mockRejectedValue(
       Object.assign(new Error("Idempotency key conflict"), {

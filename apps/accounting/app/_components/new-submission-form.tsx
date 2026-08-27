@@ -232,14 +232,9 @@ export function NewSubmissionForm() {
       }
 
       if (response.status === 409) {
-        idempotencyKeyRef.current = null;
         setFormMessage({
           kind: "error",
-          text: responseErrorMessage(
-            response.status,
-            body,
-            "This submission conflicts with an earlier request. Review the details and try again.",
-          ),
+          text: "This submission conflicts with an earlier request. Reload the page to start a separate submission.",
         });
         return;
       }
