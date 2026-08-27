@@ -3,9 +3,9 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { getPublicOrigin, getPublicUrl } from "../public-url";
 
 const candidateOrigin =
-  "https://sso-candidate---codecamp-advantage-codecamp-advantage.as.a.run.app";
+  "https://sso-candidate---codecamp-advantage-123456789012.asia-southeast1.run.app";
 const rollbackOrigin =
-  "https://legacy-rollback---codecamp-advantage-codecamp-advantage.as.a.run.app";
+  "https://legacy-rollback---codecamp-advantage-123456789012.asia-southeast1.run.app";
 
 describe("public URL helpers", () => {
   afterEach(() => {
@@ -57,7 +57,7 @@ describe("public URL helpers", () => {
     });
 
     expect(getPublicUrl(request, "/en/admin").href).toBe(
-      "https://sso-candidate---codecamp-advantage-codecamp-advantage.as.a.run.app:8443/en/admin",
+      "https://sso-candidate---codecamp-advantage-123456789012.asia-southeast1.run.app:8443/en/admin",
     );
   });
 
@@ -92,7 +92,7 @@ describe("public URL helpers", () => {
     const request = new Request("http://codecamp-internal:8080/", {
       headers: {
         "x-forwarded-host":
-          "sso-candidate---codecamp-advantage-other-project.as.a.run.app",
+          "sso-candidate---codecamp-advantage-999999999999.asia-southeast1.run.app",
         "x-forwarded-proto": "https",
       },
     });

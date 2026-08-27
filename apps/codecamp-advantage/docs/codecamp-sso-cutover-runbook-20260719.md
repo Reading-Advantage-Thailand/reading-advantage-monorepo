@@ -113,7 +113,8 @@ DIGEST=$(gcloud run revisions describe "$REVISION" \
   --format='value(imageDigest)')
 
 # 3.2 Exercise the candidate via the tagged URL
-TAG_URL="https://sso-candidate---codecamp-advantage-$(gcloud config get-value project | tr -d '\\n').as.a.run.app"
+CODECAMP_PN=$(gcloud projects describe codecamp-advantage --format='value(projectNumber)')
+TAG_URL="https://sso-candidate---codecamp-advantage-${CODECAMP_PN}.asia-southeast1.run.app"
 curl -sf "$TAG_URL/api/auth/mode" | python3 -m json.tool  # expect {"mode":"company"}
 curl -sf -o /dev/null -w '%{http_code}\n' -X POST "$TAG_URL/api/auth/login"  # expect 401/403/409
 curl -sf -o /dev/null -w '%{http_code}\n' -X POST "$TAG_URL/api/auth/password-reset"  # expect 409
@@ -128,6 +129,9 @@ Reject the build and roll forward to Phase 6 if `/api/auth/mode` does not
 return `company`, if `/api/auth/login` returns 200 (the company-mode guard
 must reject product-local login before the shared handlers run), or if the
 Accounts discovery probe fails.
+
+Codecamp company SSO requires HTTPS for local browser verification because
+every `__Host-` cookie must be Secure.
 
 ## Phase 4 - Compatibility legacy rollback (required by the fail-closed gate)
 
