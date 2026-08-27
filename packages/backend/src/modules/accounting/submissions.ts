@@ -49,8 +49,8 @@ export interface AccountingSubmissionRepository {
    */
   insert(
     submission: AccountingSubmission,
-    idempotencyKey?: string,
-    auditEvent?: AccountingSubmissionAuditEvent,
+    idempotencyKey: string | undefined,
+    auditEvent: AccountingSubmissionAuditEvent,
   ): Promise<AccountingSubmission>;
 
   /**
@@ -130,6 +130,13 @@ const ACCOUNTING_ROLES: ReadonlySet<string> = new Set([
   "OWNER",
   "ACCOUNTANT",
 ]);
+const PRIVATE_EVIDENCE_REFERENCE_PREFIX = "private-evidence://";
+const idempotencyKeySchema = z.string().trim().min(1).max(256);
+
+type CompareAccountingSubmissionEvidence = (input: {
+  readonly candidateEvidenceReference: string;
+  readonly storedEvidenceReference: string;
+}) => Promise<boolean>;
 
 function requireAccountingRole(actor: AccountingActor): void {
   if (!ACCOUNTING_ROLES.has(actor.role)) {
@@ -141,6 +148,16 @@ function actorScope(actor: AccountingActor): Readonly<FinanceOperationScope> {
   return { companyId: actor.companyId };
 }
 
+/** Checks whether a validated evidence reference belongs to the actor's company. */
+function evidenceBelongsToCompany(
+  evidenceReference: string,
+  companyId: string,
+): boolean {
+  return evidenceReference.startsWith(
+    `${PRIVATE_EVIDENCE_REFERENCE_PREFIX}${companyId}/`,
+  );
+}
+
 /**
  * Compares the request content that an idempotency key represents.
  * @param input Validated submission input.
@@ -150,16 +167,25 @@ function actorScope(actor: AccountingActor): Readonly<FinanceOperationScope> {
 function hasSameSubmissionContent(
   input: AccountingSubmissionInput,
   stored: AccountingSubmission,
-): boolean {
-  return (
+  compareEvidence?: CompareAccountingSubmissionEvidence,
+): Promise<boolean> {
+  const hasSameScalarContent =
     input.kind === stored.kind &&
     input.payee === stored.payee &&
     input.category === stored.category &&
     input.description === stored.description &&
     input.money.amountMinor === stored.money.amountMinor &&
     input.money.currency === stored.money.currency &&
-    input.settledThbAmount === stored.settledThbAmount
-  );
+    input.settledThbAmount === stored.settledThbAmount;
+  if (!hasSameScalarContent) return Promise.resolve(false);
+  if (input.evidenceReference === stored.evidenceReference) {
+    return Promise.resolve(true);
+  }
+  if (compareEvidence === undefined) return Promise.resolve(false);
+  return compareEvidence({
+    candidateEvidenceReference: input.evidenceReference,
+    storedEvidenceReference: stored.evidenceReference,
+  });
 }
 
 /**
@@ -175,6 +201,7 @@ export async function submitAccountingSubmission(request: {
   readonly actor: AccountingActor;
   readonly input: AccountingSubmissionInput;
   readonly idempotencyKey?: string;
+  readonly compareEvidence?: CompareAccountingSubmissionEvidence;
 }): Promise<AccountingSubmission> {
   requireAccountingRole(request.actor);
 
@@ -183,15 +210,39 @@ export async function submitAccountingSubmission(request: {
     throw new AccountingSubmissionError("invalid-input", parsed.error.issues);
   }
 
-  const scope = actorScope(request.actor);
+  if (!evidenceBelongsToCompany(parsed.data.evidenceReference, request.actor.companyId)) {
+    throw new AccountingSubmissionError("forbidden");
+  }
+
+  let idempotencyKey: string | undefined;
   if (request.idempotencyKey !== undefined) {
+    const parsedIdempotencyKey = idempotencyKeySchema.safeParse(
+      request.idempotencyKey,
+    );
+    if (!parsedIdempotencyKey.success) {
+      throw new AccountingSubmissionError(
+        "invalid-input",
+        parsedIdempotencyKey.error.issues,
+      );
+    }
+    idempotencyKey = parsedIdempotencyKey.data;
+  }
+
+  const scope = actorScope(request.actor);
+  if (idempotencyKey !== undefined) {
     const existing = await request.repository.findByIdempotencyKey({
       scope,
       submittedByAccountId: request.actor.accountId,
-      idempotencyKey: request.idempotencyKey,
+      idempotencyKey,
     });
     if (existing !== undefined) {
-      if (!hasSameSubmissionContent(parsed.data, existing)) {
+      if (
+        !(await hasSameSubmissionContent(
+          parsed.data,
+          existing,
+          request.compareEvidence,
+        ))
+      ) {
         throw new AccountingSubmissionError("conflict");
       }
       return existing;
@@ -216,12 +267,16 @@ export async function submitAccountingSubmission(request: {
   });
   const stored = await request.repository.insert(
     submission,
-    request.idempotencyKey,
+    idempotencyKey,
     auditEvent,
   );
   if (
-    request.idempotencyKey !== undefined &&
-    !hasSameSubmissionContent(parsed.data, stored)
+    idempotencyKey !== undefined &&
+    !(await hasSameSubmissionContent(
+      parsed.data,
+      stored,
+      request.compareEvidence,
+    ))
   ) {
     throw new AccountingSubmissionError("conflict");
   }

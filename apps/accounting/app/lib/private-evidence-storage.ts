@@ -116,7 +116,7 @@ function privateEvidenceKey(
     : "";
   const segments = key.split("/");
   if (
-    segments.length < 3 ||
+    segments.length !== 4 ||
     segments[0] !== companyId ||
     segments[1] !== "submissions" ||
     segments.some((segment) => !isSafeReferenceSegment(segment))

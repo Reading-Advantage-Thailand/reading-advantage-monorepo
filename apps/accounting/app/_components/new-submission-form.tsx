@@ -16,7 +16,7 @@ import {
 
 type Submission = {
   readonly id: string;
-  readonly status: "pending";
+  readonly status: "pending" | "approved" | "rejected";
   readonly submittedAt: string;
   readonly kind: "expense" | "bill";
   readonly payee: string;
@@ -45,7 +45,7 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
 }
 
-/** Checks whether an unknown value matches the displayed pending submission shape. */
+/** Checks whether an unknown value matches the displayed submission shape. */
 function isSubmission(value: unknown): value is Submission {
   if (!isRecord(value) || !isRecord(value.money)) {
     return false;
@@ -53,7 +53,9 @@ function isSubmission(value: unknown): value is Submission {
 
   return (
     typeof value.id === "string" &&
-    value.status === "pending" &&
+    (value.status === "pending" ||
+      value.status === "approved" ||
+      value.status === "rejected") &&
     typeof value.submittedAt === "string" &&
     (value.kind === "expense" || value.kind === "bill") &&
     typeof value.payee === "string" &&
@@ -111,6 +113,13 @@ function responseErrorMessage(
     return "You do not have permission to use the accounting workspace.";
   }
   return messageFromBody(body, fallback);
+}
+
+/** Maps a stored submission status to a success message. */
+function successMessage(status: Submission["status"]): string {
+  if (status === "approved") return "Submission already approved.";
+  if (status === "rejected") return "Submission already rejected.";
+  return "Submission received. It is pending review.";
 }
 
 /** Returns all server errors that correspond to one form control. */
@@ -200,7 +209,7 @@ export function NewSubmissionForm() {
         }
         setFormMessage({
           kind: "success",
-          text: "Submission received. It is pending review.",
+          text: successMessage(body.status),
         });
         setFieldErrors({});
         router.refresh();

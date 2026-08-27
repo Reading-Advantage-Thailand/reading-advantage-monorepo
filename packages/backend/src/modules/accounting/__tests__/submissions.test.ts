@@ -32,6 +32,7 @@ import { describe, expect, it, vi } from "vitest";
 
 import {
   accountingSubmissionSchema,
+  type AccountingSubmissionAuditEvent,
   type AccountingSubmission,
   type AccountingSubmissionInput,
 } from "../contracts.js";
@@ -103,10 +104,10 @@ function createFakeRepository(
     insert: vi.fn(
       async (
         submission: AccountingSubmission,
-        _idempotencyKey?: string,
-        auditEvent?: unknown,
+        _idempotencyKey: string | undefined,
+        auditEvent: AccountingSubmissionAuditEvent,
       ) => {
-        if (auditEvent !== undefined) auditEvents.push(auditEvent);
+        auditEvents.push(auditEvent);
         submissions.push(submission);
         return submission;
       },
@@ -283,6 +284,7 @@ describe("submitAccountingSubmission", () => {
   it("returns the original submission on an idempotent replay without a second insert", async () => {
     const repository = createFakeRepository();
     const idempotencyKey = "submission-request-0001";
+    const compareEvidence = vi.fn(async () => true);
     const replayInput = {
       ...thbExpenseInput,
       evidenceReference:
@@ -302,6 +304,7 @@ describe("submitAccountingSubmission", () => {
       actor: staffActor,
       input: replayInput,
       idempotencyKey,
+      compareEvidence,
     });
 
     expect(replay).toEqual(original);
@@ -313,6 +316,56 @@ describe("submitAccountingSubmission", () => {
         idempotencyKey,
       }),
     );
+    expect(compareEvidence).toHaveBeenCalledWith({
+      candidateEvidenceReference: replayInput.evidenceReference,
+      storedEvidenceReference: thbExpenseInput.evidenceReference,
+    });
+  });
+
+  it("rejects a replay with different evidence when the comparator returns false", async () => {
+    const repository = createFakeRepository();
+    const original = storedSubmission();
+    const compareEvidence = vi.fn(async () => false);
+    vi.mocked(repository.findByIdempotencyKey).mockResolvedValue(original);
+
+    const error = await submitAccountingSubmission({
+      repository,
+      actor: staffActor,
+      input: {
+        ...thbExpenseInput,
+        evidenceReference:
+          "private-evidence://reading-advantage/submissions/retry-0002.pdf",
+      },
+      idempotencyKey: "submission-request-0001",
+      compareEvidence,
+    }).catch((caught: unknown) => caught);
+
+    expect(error).toBeInstanceOf(AccountingSubmissionError);
+    expect(error).toMatchObject({ reason: "conflict" });
+    expect(compareEvidence).toHaveBeenCalledTimes(1);
+    expect(repository.insert).not.toHaveBeenCalled();
+  });
+
+  it("rejects a replay with different evidence when no comparator is available", async () => {
+    const repository = createFakeRepository();
+    vi.mocked(repository.findByIdempotencyKey).mockResolvedValue(
+      storedSubmission(),
+    );
+
+    const error = await submitAccountingSubmission({
+      repository,
+      actor: staffActor,
+      input: {
+        ...thbExpenseInput,
+        evidenceReference:
+          "private-evidence://reading-advantage/submissions/retry-0002.pdf",
+      },
+      idempotencyKey: "submission-request-0001",
+    }).catch((caught: unknown) => caught);
+
+    expect(error).toBeInstanceOf(AccountingSubmissionError);
+    expect(error).toMatchObject({ reason: "conflict" });
+    expect(repository.insert).not.toHaveBeenCalled();
   });
 
   it("rejects a reused key when scalar content conflicts with the original", async () => {
@@ -333,8 +386,48 @@ describe("submitAccountingSubmission", () => {
     expect(repository.submissions).toEqual([]);
   });
 
+  it("rejects evidence owned by another company before idempotency lookup or insert", async () => {
+    const repository = createFakeRepository();
+
+    const error = await submitAccountingSubmission({
+      repository,
+      actor: staffActor,
+      input: {
+        ...thbExpenseInput,
+        evidenceReference:
+          "private-evidence://another-company/submissions/receipt.pdf",
+      },
+      idempotencyKey: "submission-request-0001",
+    }).catch((caught: unknown) => caught);
+
+    expect(error).toBeInstanceOf(AccountingSubmissionError);
+    expect(error).toMatchObject({ reason: "forbidden" });
+    expect(repository.findByIdempotencyKey).not.toHaveBeenCalled();
+    expect(repository.insert).not.toHaveBeenCalled();
+  });
+
+  it.each(["   ", "a".repeat(257)])(
+    "rejects an idempotency key that is blank or overlong: %s",
+    async (idempotencyKey) => {
+      const repository = createFakeRepository();
+
+      const error = await submitAccountingSubmission({
+        repository,
+        actor: staffActor,
+        input: thbExpenseInput,
+        idempotencyKey,
+      }).catch((caught: unknown) => caught);
+
+      expect(error).toBeInstanceOf(AccountingSubmissionError);
+      expect(error).toMatchObject({ reason: "invalid-input" });
+      expect(repository.findByIdempotencyKey).not.toHaveBeenCalled();
+      expect(repository.insert).not.toHaveBeenCalled();
+    },
+  );
+
   it("returns the concurrent winner when the repository resolves an insert race", async () => {
     const repository = createFakeRepository();
+    const compareEvidence = vi.fn(async () => true);
     const winner = storedSubmission({
       evidenceReference:
         "private-evidence://reading-advantage/submissions/winner.pdf",
@@ -347,8 +440,13 @@ describe("submitAccountingSubmission", () => {
         actor: staffActor,
         input: thbExpenseInput,
         idempotencyKey: "submission-request-0001",
+        compareEvidence,
       }),
     ).resolves.toEqual(winner);
+    expect(compareEvidence).toHaveBeenCalledWith({
+      candidateEvidenceReference: thbExpenseInput.evidenceReference,
+      storedEvidenceReference: winner.evidenceReference,
+    });
   });
 
   it("rejects a concurrent winner with conflicting scalar content", async () => {

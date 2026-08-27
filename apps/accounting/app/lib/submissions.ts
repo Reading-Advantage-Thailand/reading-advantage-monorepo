@@ -68,12 +68,17 @@ export interface SubmitAccountingSubmissionRequest {
   readonly input: AccountingSubmissionInput;
   /** Optional caller request identity for idempotent replay. */
   readonly idempotencyKey?: string;
+  /** Compares candidate evidence bytes with stored evidence when references differ. */
+  readonly compareEvidence?: (input: {
+    readonly candidateEvidenceReference: string;
+    readonly storedEvidenceReference: string;
+  }) => Promise<boolean>;
 }
 
 /**
  * Validates, authorizes, and persists one submission under the actor's
  * company scope via the Postgres-backed repository.
- * @param request Actor, submission input, and optional idempotency key.
+ * @param request Actor, submission input, idempotency key, and evidence comparator.
  * @returns The stored pending submission, or the original on replay.
  * @throws An `AccountingSubmissionError`-named error with `fieldErrors` when
  *   the domain rejects the input.
@@ -89,6 +94,9 @@ export async function submitAccountingSubmission(
       ...(request.idempotencyKey === undefined
         ? {}
         : { idempotencyKey: request.idempotencyKey }),
+      ...(request.compareEvidence === undefined
+        ? {}
+        : { compareEvidence: request.compareEvidence }),
     });
   } catch (error) {
     translateDomainError(error);

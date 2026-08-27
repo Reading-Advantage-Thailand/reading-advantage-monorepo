@@ -18,6 +18,9 @@ const pendingSubmission = {
   settledThbAmount: "520500",
 };
 
+const approvedSubmission = { ...pendingSubmission, status: "approved" as const };
+const rejectedSubmission = { ...pendingSubmission, status: "rejected" as const };
+
 const navigation = vi.hoisted(() => ({
   refresh: vi.fn(),
 }));
@@ -127,6 +130,32 @@ describe("NewSubmissionForm", () => {
       }),
     ).toBeInTheDocument();
     expect(navigation.refresh).toHaveBeenCalledTimes(1);
+  });
+
+  it("accepts an approved replay and shows approved success text", async () => {
+    fetchMock.mockResolvedValueOnce(jsonResponse(approvedSubmission, 201));
+    render(<NewSubmissionForm />);
+    fillValidExpenseForm();
+
+    fireEvent.submit(screen.getByRole("form", { name: "Submission form" }));
+
+    expect(
+      await screen.findByRole("status", { name: "Submission already approved." }),
+    ).toBeInTheDocument();
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+  });
+
+  it("accepts a rejected replay and shows rejected success text", async () => {
+    fetchMock.mockResolvedValueOnce(jsonResponse(rejectedSubmission, 201));
+    render(<NewSubmissionForm />);
+    fillValidExpenseForm();
+
+    fireEvent.submit(screen.getByRole("form", { name: "Submission form" }));
+
+    expect(
+      await screen.findByRole("status", { name: "Submission already rejected." }),
+    ).toBeInTheDocument();
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
   });
 
   it("reuses the idempotency key after a failed request", async () => {

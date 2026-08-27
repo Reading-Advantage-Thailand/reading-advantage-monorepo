@@ -95,15 +95,54 @@ function haveSameBytes(left: Uint8Array, right: Uint8Array): boolean {
   return true;
 }
 
+type ReconciliationEvent = "cleanup_failed" | "outcome_unresolved";
+
+/** Returns a safe error name without exposing error details. */
+function safeErrorName(error: unknown): string {
+  return error instanceof Error && error.name ? error.name : "UnknownError";
+}
+
+/** Emits one structured reconciliation record without exposing request data. */
+function logReconciliation(input: {
+  readonly event: ReconciliationEvent;
+  readonly companyId: string;
+  readonly idempotencyKey: string;
+  readonly evidenceReference: string;
+  readonly error: unknown;
+  readonly secondaryError?: unknown;
+}): void {
+  const record = {
+    level: "error",
+    event: `accounting_submission_${input.event === "cleanup_failed" ? "cleanup_failed" : "outcome_unresolved"}`,
+    operation: "submit_accounting_submission",
+    companyId: input.companyId,
+    idempotencyKey: input.idempotencyKey,
+    evidenceReference: input.evidenceReference,
+    errorName: safeErrorName(input.error),
+    ...(input.secondaryError === undefined
+      ? {}
+      : { secondaryErrorName: safeErrorName(input.secondaryError) }),
+  };
+  try {
+    console.error(JSON.stringify(record));
+  } catch {
+    // Logging must not replace the primary route result.
+  }
+}
+
 /** Deletes unused evidence without masking the primary route result. */
 async function cleanupUploadedEvidence(input: {
   readonly companyId: string;
+  readonly idempotencyKey: string;
   readonly evidenceReference: string;
 }): Promise<void> {
   try {
-    await deletePrivateEvidence(input);
-  } catch {
-    // Cleanup is best effort after a known rejection or resolved replay.
+    await deletePrivateEvidence({
+      companyId: input.companyId,
+      evidenceReference: input.evidenceReference,
+    });
+  } catch (error) {
+    logReconciliation({ event: "cleanup_failed", ...input, error });
   }
 }
 
@@ -228,6 +267,17 @@ export async function POST(request: Request): Promise<Response> {
       actor,
       input,
       idempotencyKey,
+      compareEvidence: async ({
+        candidateEvidenceReference,
+        storedEvidenceReference,
+      }) => {
+        if (candidateEvidenceReference !== evidenceReference) return false;
+        const originalEvidence = await readPrivateEvidence({
+          companyId: actor.companyId,
+          evidenceReference: storedEvidenceReference,
+        });
+        return haveSameBytes(evidenceBody, originalEvidence);
+      },
     });
 
   let submission: Awaited<ReturnType<typeof submitAccountingSubmission>>;
@@ -237,6 +287,7 @@ export async function POST(request: Request): Promise<Response> {
     if (isInvalidInputError(error)) {
       await cleanupUploadedEvidence({
         companyId: actor.companyId,
+        idempotencyKey,
         evidenceReference,
       });
       return jsonResponse(
@@ -247,6 +298,7 @@ export async function POST(request: Request): Promise<Response> {
     if (hasAccountingReason(error, "conflict")) {
       await cleanupUploadedEvidence({
         companyId: actor.companyId,
+        idempotencyKey,
         evidenceReference,
       });
       return idempotencyConflictResponse();
@@ -254,6 +306,7 @@ export async function POST(request: Request): Promise<Response> {
     if (hasAccountingReason(error, "forbidden")) {
       await cleanupUploadedEvidence({
         companyId: actor.companyId,
+        idempotencyKey,
         evidenceReference,
       });
       throw error;
@@ -265,37 +318,29 @@ export async function POST(request: Request): Promise<Response> {
       if (hasAccountingReason(resolutionError, "conflict")) {
         await cleanupUploadedEvidence({
           companyId: actor.companyId,
+          idempotencyKey,
           evidenceReference,
         });
         return idempotencyConflictResponse();
       }
+      logReconciliation({
+        event: "outcome_unresolved",
+        companyId: actor.companyId,
+        idempotencyKey,
+        evidenceReference,
+        error,
+        secondaryError: resolutionError,
+      });
       throw error;
     }
   }
 
-  if (submission.evidenceReference === evidenceReference) {
-    return jsonResponse(submission, 201);
-  }
-
-  let originalEvidence: Uint8Array;
-  try {
-    originalEvidence = await readPrivateEvidence({
-      companyId: actor.companyId,
-      evidenceReference: submission.evidenceReference,
-    });
-  } catch (error) {
+  if (submission.evidenceReference !== evidenceReference) {
     await cleanupUploadedEvidence({
       companyId: actor.companyId,
+      idempotencyKey,
       evidenceReference,
     });
-    throw error;
-  }
-  await cleanupUploadedEvidence({
-    companyId: actor.companyId,
-    evidenceReference,
-  });
-  if (!haveSameBytes(evidenceBody, originalEvidence)) {
-    return idempotencyConflictResponse();
   }
   return jsonResponse(submission, 201);
 }

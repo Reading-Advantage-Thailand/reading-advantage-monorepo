@@ -32,7 +32,7 @@
  *   visibility rule is enforced by the domain, so the route only forwards the
  *   actor.
  */
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterAll, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { GET, POST } from "@/app/api/submissions/route";
 
@@ -44,6 +44,14 @@ const mocks = vi.hoisted(() => ({
   readPrivateEvidence: vi.fn(),
   deletePrivateEvidence: vi.fn(),
 }));
+
+const consoleErrorMock = vi
+  .spyOn(console, "error")
+  .mockImplementation(() => undefined);
+
+afterAll(() => {
+  consoleErrorMock.mockRestore();
+});
 
 vi.mock("@/app/lib/auth", () => ({
   requireAccountingSession: mocks.requireAccountingSession,
@@ -156,6 +164,7 @@ function postRequest(
 describe("POST /api/submissions", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    consoleErrorMock.mockReset();
     authenticated();
     mocks.putPrivateEvidence.mockResolvedValue({
       evidenceReference: EVIDENCE_REFERENCE,
@@ -365,6 +374,19 @@ describe("POST /api/submissions", () => {
     );
 
     expect(response.status).toBe(201);
+    const domainCall = mocks.submitAccountingSubmission.mock.calls[0]?.[0] as {
+      readonly compareEvidence?: (input: {
+        readonly candidateEvidenceReference: string;
+        readonly storedEvidenceReference: string;
+      }) => Promise<boolean>;
+    };
+    expect(domainCall.compareEvidence).toBeTypeOf("function");
+    await expect(
+      domainCall.compareEvidence?.({
+        candidateEvidenceReference: uploadedReference,
+        storedEvidenceReference: EVIDENCE_REFERENCE,
+      }),
+    ).resolves.toBe(true);
     expect(mocks.readPrivateEvidence).toHaveBeenCalledWith({
       companyId: COMPANY_ID,
       evidenceReference: EVIDENCE_REFERENCE,
@@ -401,6 +423,24 @@ describe("POST /api/submissions", () => {
       evidenceReference: uploadedReference,
     });
     mocks.readPrivateEvidence.mockResolvedValue(new Uint8Array([0x00]));
+    mocks.submitAccountingSubmission.mockImplementationOnce(async (input) => {
+      const request = input as {
+        readonly compareEvidence?: (input: {
+          readonly candidateEvidenceReference: string;
+          readonly storedEvidenceReference: string;
+        }) => Promise<boolean>;
+      };
+      if (!(await request.compareEvidence?.({
+        candidateEvidenceReference: uploadedReference,
+        storedEvidenceReference: EVIDENCE_REFERENCE,
+      }))) {
+        throw Object.assign(new Error("Idempotency key conflict"), {
+          name: "AccountingSubmissionError",
+          reason: "conflict",
+        });
+      }
+      return storedSubmission;
+    });
 
     const response = await POST(
       postRequest(expenseFields, { file: evidenceFile() }),
@@ -466,6 +506,56 @@ describe("POST /api/submissions", () => {
     await expect(response.json()).resolves.toMatchObject({
       message: "Submission validation failed",
     });
+    expect(consoleErrorMock).toHaveBeenCalledTimes(1);
+    const log = JSON.parse(String(consoleErrorMock.mock.calls[0]?.[0])) as Record<
+      string,
+      unknown
+    >;
+    expect(log).toEqual({
+      level: "error",
+      event: "accounting_submission_cleanup_failed",
+      operation: "submit_accounting_submission",
+      companyId: COMPANY_ID,
+      idempotencyKey: VALID_IDEMPOTENCY_KEY,
+      evidenceReference: EVIDENCE_REFERENCE,
+      errorName: "Error",
+    });
+    expect(JSON.stringify(log)).not.toContain("Payee is required");
+  });
+
+  it("preserves the primary error and logs one safe record when outcome resolution also fails", async () => {
+    const primaryError = Object.assign(new Error("response lost"), {
+      name: "PrimaryFailure",
+    });
+    const resolutionError = Object.assign(new Error("database still unavailable"), {
+      name: "ResolutionFailure",
+    });
+    mocks.submitAccountingSubmission
+      .mockRejectedValueOnce(primaryError)
+      .mockRejectedValueOnce(resolutionError);
+
+    await expect(
+      POST(postRequest(expenseFields, { file: evidenceFile() })),
+    ).rejects.toBe(primaryError);
+    expect(mocks.deletePrivateEvidence).not.toHaveBeenCalled();
+    expect(consoleErrorMock).toHaveBeenCalledTimes(1);
+    const log = JSON.parse(String(consoleErrorMock.mock.calls[0]?.[0])) as Record<
+      string,
+      unknown
+    >;
+    expect(log).toEqual({
+      level: "error",
+      event: "accounting_submission_outcome_unresolved",
+      operation: "submit_accounting_submission",
+      companyId: COMPANY_ID,
+      idempotencyKey: VALID_IDEMPOTENCY_KEY,
+      evidenceReference: EVIDENCE_REFERENCE,
+      errorName: "PrimaryFailure",
+      secondaryErrorName: "ResolutionFailure",
+    });
+    expect(JSON.stringify(log)).not.toContain("response lost");
+    expect(JSON.stringify(log)).not.toContain("database still unavailable");
+    expect(JSON.stringify(log)).not.toContain("Bangkok Taxi Cooperative");
   });
 
   it("returns 400 with field errors for a non-THB submission missing settledThbAmount", async () => {

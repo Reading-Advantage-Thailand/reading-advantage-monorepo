@@ -185,12 +185,30 @@ describe("readPrivateEvidence", () => {
     const result = await readPrivateEvidence({
       storage: request.storage,
       companyId: COMPANY_ID,
-      evidenceReference: `private-evidence://${COMPANY_ID}/submissions/receipt.pdf`,
+      evidenceReference: `private-evidence://${COMPANY_ID}/submissions/upload-0001/receipt.pdf`,
     });
 
     expect(result).toEqual(expected);
     expect(request.storage.get).toHaveBeenCalledWith(
-      `${COMPANY_ID}/submissions/receipt.pdf`,
+      `${COMPANY_ID}/submissions/upload-0001/receipt.pdf`,
     );
+  });
+
+  it.each([
+    `private-evidence://${COMPANY_ID}/submissions/receipt.pdf`,
+    `private-evidence://${COMPANY_ID}/submissions/upload-0001/nested/receipt.pdf`,
+  ])("rejects a reference that is not an exact generated path: %s", async (evidenceReference) => {
+    expect(readPrivateEvidence).toBeTypeOf("function");
+    if (!readPrivateEvidence) return;
+    const request = upload();
+
+    await expect(
+      readPrivateEvidence({
+        storage: request.storage,
+        companyId: COMPANY_ID,
+        evidenceReference,
+      }),
+    ).rejects.toThrow(/company/i);
+    expect(request.storage.get).not.toHaveBeenCalled();
   });
 });

@@ -112,8 +112,8 @@ async function findSubmissionByIdempotencyKey(
 async function insertSubmission(
   database: postgres.Sql,
   submission: AccountingSubmission,
-  idempotencyKey?: string,
-  auditEvent?: AccountingSubmissionAuditEvent,
+  idempotencyKey: string | undefined,
+  auditEvent: AccountingSubmissionAuditEvent,
 ): Promise<AccountingSubmission> {
   const [row] = await database<AccountingSubmissionRow[]>`
     insert into accounting_submissions (
@@ -160,21 +160,19 @@ async function insertSubmission(
     return winner;
   }
 
-  if (auditEvent) {
-    await database`
-      insert into accounting_submission_audit_events (
-        id, submission_id, action, actor_account_id, actor_role, reason, created_at
-      ) values (
-        ${auditEvent.id},
-        ${auditEvent.submissionId},
-        ${auditEvent.action},
-        ${auditEvent.actorAccountId},
-        ${auditEvent.actorRole},
-        ${auditEvent.reason ?? null},
-        ${auditEvent.createdAt}
-      )
-    `;
-  }
+  await database`
+    insert into accounting_submission_audit_events (
+      id, submission_id, action, actor_account_id, actor_role, reason, created_at
+    ) values (
+      ${auditEvent.id},
+      ${auditEvent.submissionId},
+      ${auditEvent.action},
+      ${auditEvent.actorAccountId},
+      ${auditEvent.actorRole},
+      ${auditEvent.reason ?? null},
+      ${auditEvent.createdAt}
+    )
+  `;
   return toAccountingSubmission(row);
 }
 
@@ -194,8 +192,8 @@ export function createPostgresAccountingSubmissionRepository(input: {
   return {
     async insert(
       submission: AccountingSubmission,
-      idempotencyKey?: string,
-      auditEvent?: AccountingSubmissionAuditEvent,
+      idempotencyKey: string | undefined,
+      auditEvent: AccountingSubmissionAuditEvent,
     ): Promise<AccountingSubmission> {
       const hasBegin = typeof (sql as unknown as { begin?: unknown }).begin === "function";
       if (hasBegin) {

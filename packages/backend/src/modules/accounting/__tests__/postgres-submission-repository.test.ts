@@ -2,7 +2,10 @@ import type postgres from "postgres";
 import { ZodError } from "zod";
 import { describe, expect, it, vi } from "vitest";
 
-import type { AccountingSubmission } from "../contracts.js";
+import type {
+  AccountingSubmission,
+  AccountingSubmissionAuditEvent,
+} from "../contracts.js";
 import { createPostgresAccountingSubmissionRepository } from "../postgres-submission-repository.js";
 
 const COMPANY_ID = "company-amber";
@@ -123,6 +126,18 @@ function rawRowFor(
   };
 }
 
+/** Creates the required submit audit event for repository insert tests. */
+function submitAuditEvent(): AccountingSubmissionAuditEvent {
+  return {
+    id: "aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee",
+    submissionId: SUBMISSION_ID,
+    action: "submit",
+    actorAccountId: ACCOUNT_ID,
+    actorRole: "STAFF",
+    createdAt: "2026-08-20T02:04:05.678Z",
+  };
+}
+
 describe("PostgreSQL accounting submission repository", () => {
   it("maps snake_case rows to the validated domain submission", async () => {
     const submission = usdSubmission();
@@ -146,13 +161,17 @@ describe("PostgreSQL accounting submission repository", () => {
 
   it("maps domain fields and optional values to insert bindings", async () => {
     const submission = thbSubmission();
-    const database = sqlDouble([[rawRowFor(submission)]]);
+    const database = sqlDouble([[rawRowFor(submission)], [{}]]);
     const repository = createPostgresAccountingSubmissionRepository({
       sql: database.sql,
     });
 
     await expect(
-      repository.insert(submission, "submission-request-0001"),
+      repository.insert(
+        submission,
+        "submission-request-0001",
+        submitAuditEvent(),
+      ),
     ).resolves.toEqual(submission);
     expect(database.calls[0]?.values).toEqual([
       SUBMISSION_ID,
@@ -172,6 +191,9 @@ describe("PostgreSQL accounting submission repository", () => {
     ]);
     expect(database.calls[0]?.statement.toLowerCase()).toContain("on conflict");
     expect(database.calls[0]?.statement.toLowerCase()).toContain("do nothing");
+    expect(database.calls[1]?.statement.toLowerCase()).toContain(
+      "accounting_submission_audit_events",
+    );
   });
 
   it("returns the stored winner when a concurrent keyed insert loses the unique race", async () => {
@@ -185,7 +207,11 @@ describe("PostgreSQL accounting submission repository", () => {
     });
 
     await expect(
-      repository.insert(submission, "submission-request-0001"),
+      repository.insert(
+        submission,
+        "submission-request-0001",
+        submitAuditEvent(),
+      ),
     ).resolves.toEqual(submission);
     expect(database.calls).toHaveLength(2);
     expect(database.calls[1]?.statement.toLowerCase()).toContain("select");
