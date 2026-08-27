@@ -3,7 +3,12 @@
 import { use } from "react";
 import { RepDetailContent } from "../rep-detail-content";
 
-/** Resolves the locale route parameter before rendering representative detail. */
+/**
+ * Resolves the locale route parameter before rendering representative detail.
+ * @param props Page properties.
+ * @param props.params The route parameters for the selected representative.
+ * @returns The representative detail page.
+ */
 export default function RepDetailPage({
   params,
 }: {
