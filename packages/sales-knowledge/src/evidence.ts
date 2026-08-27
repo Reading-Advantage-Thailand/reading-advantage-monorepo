@@ -1,5 +1,7 @@
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 
 import { z } from "zod";
 
@@ -105,6 +107,16 @@ export interface SalesRuntimeVerificationRequest {
   seedBytes?: Uint8Array;
 }
 
+function resolvePackagedEvidencePath(evidenceUrl: URL): string {
+  if (evidenceUrl.protocol === "file:") {
+    return fileURLToPath(evidenceUrl);
+  }
+  return resolve(
+    __dirname,
+    evidenceUrl.pathname.replace(/^\/_next\//, ""),
+  );
+}
+
 /** Loads exact package-contained source evidence for runtime release validation.
  * @returns All three immutable owner-approved evidence byte streams.
  */
@@ -115,13 +127,19 @@ export function loadPackagedSalesEvidenceBytes(): {
 } {
   return {
     releaseCandidateBytes: readFileSync(
-      new URL("./data/evidence/release-candidate.json", import.meta.url),
+      resolvePackagedEvidencePath(
+        new URL("./data/evidence/release-candidate.json", import.meta.url),
+      ),
     ),
     approvalBytes: readFileSync(
-      new URL("./data/evidence/owner-approval.json", import.meta.url),
+      resolvePackagedEvidencePath(
+        new URL("./data/evidence/owner-approval.json", import.meta.url),
+      ),
     ),
     seedBytes: readFileSync(
-      new URL("./data/evidence/static-seed.ts.txt", import.meta.url),
+      resolvePackagedEvidencePath(
+        new URL("./data/evidence/static-seed.ts.txt", import.meta.url),
+      ),
     ),
   };
 }
