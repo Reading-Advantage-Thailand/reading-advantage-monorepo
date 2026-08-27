@@ -1,0 +1,1 @@
+Root verification: APK host suite passed 39/39 after commit. The change keeps demo mounts deterministic, orders cleanup before lifecycle transitions, preserves completed results across callback rerenders, pauses gameplay before debrief, and provides 44px demo controls. Independent final review remains required.
