@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import {
   getAllPosts,
-  getBlogPostLocales,
   getPaginatedPosts,
   normalizeBlogLocale,
 } from "@/lib/blog";
@@ -11,6 +10,7 @@ import { BlogListItem } from "@/types/blog";
 import HeroSection from "@/components/marketing/hero-section";
 import { getScopedI18n } from "@/locales/server";
 import { buildMarketingMetadata } from "@/lib/seo";
+import { routing } from "@/i18n/routing";
 
 interface PageProps {
   params: Promise<{ locale: string }>;
@@ -29,7 +29,7 @@ export async function generateMetadata({
   const t = await getScopedI18n("pages.blog");
 
   return buildMarketingMetadata({
-    alternateLocales: Array.from(new Set([...getBlogPostLocales(), effectiveLocale])),
+    alternateLocales: routing.locales,
     description: t("description"),
     locale: effectiveLocale,
     path: "/blog",

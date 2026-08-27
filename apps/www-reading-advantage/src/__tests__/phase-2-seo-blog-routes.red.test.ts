@@ -84,8 +84,12 @@ function readLocaleMessage(
 
 function mockLocaleDictionary(messages: LocaleMessages): void {
   getScopedI18nMock.mockImplementation((scope) => {
-    const translator = ((key: string) =>
-      readLocaleMessage(messages, String(scope), key)) as Translator;
+    const translator = ((key: string, values?: Record<string, unknown>) => {
+      const message = readLocaleMessage(messages, String(scope), key);
+      return message.replace(/\{(\w+)\}/g, (_, name: string) =>
+        String(values?.[name] ?? `{${name}}`),
+      );
+    }) as Translator;
 
     return Promise.resolve(translator);
   });
@@ -108,7 +112,7 @@ function localesWithMarkdown(slug?: string): SupportedLocale[] {
   });
 }
 
-function expectedLanguages(locales: SupportedLocale[], path: string) {
+function expectedLanguages(locales: readonly SupportedLocale[], path: string) {
   return Object.fromEntries(
     locales.map((locale) => [locale, `${SITE_ORIGIN}/${locale}${path}`]),
   );
@@ -240,7 +244,7 @@ describe("Wave 5 dynamic blog SEO metadata Red", () => {
         title,
         description: description as string,
         canonical,
-        languages: expectedLanguages(realBlogLocales, path),
+        languages: expectedLanguages(SUPPORTED_LOCALES, path),
         openGraphLocale: openGraphLocale(locale),
         image: OPEN_GRAPH_IMAGE,
       });
@@ -252,34 +256,38 @@ describe("Wave 5 dynamic blog SEO metadata Red", () => {
 
   it("uses dictionary copy and page-aware metadata for valid pagination", async () => {
     const generateMetadata = await loadBlogPagination();
-    const realBlogLocales = localesWithMarkdown();
     helperMock.mockClear();
 
-    for (const requestedLocale of ["en", "th"] as const) {
-      const messages = requestedLocale === "th" ? thMessages : enMessages;
+    for (const requestedLocale of SUPPORTED_LOCALES) {
+      const messages = {
+        en: enMessages,
+        th: thMessages,
+        zh: zhMessages,
+      }[requestedLocale];
       mockLocaleDictionary(messages);
       const metadata = await generateMetadata({
         params: Promise.resolve({ locale: requestedLocale, page: "2" }),
       });
-      const title = `${messages.pages.blog.title} - Page 2`;
-      const description = metadata.description;
+      const title = messages.pages.blog.numberedTitle.replace("{page}", "2");
+      const description = messages.pages.blog.numberedDescription.replace(
+        "{page}",
+        "2",
+      );
       const path = "/blog/page/2";
       const canonical = `${SITE_ORIGIN}/${requestedLocale}${path}`;
 
-      expect(typeof description).toBe("string");
-      expect(description).toContain("2");
       assertMetadata(metadata, {
         title,
-        description: description as string,
+        description,
         canonical,
-        languages: expectedLanguages(realBlogLocales, path),
+        languages: expectedLanguages(SUPPORTED_LOCALES, path),
         openGraphLocale: openGraphLocale(requestedLocale),
         image: OPEN_GRAPH_IMAGE,
       });
-      assertHelperCall(path, title, description as string);
+      assertHelperCall(path, title, description);
     }
 
-    expect(helperMock).toHaveBeenCalledTimes(2);
+    expect(helperMock).toHaveBeenCalledTimes(SUPPORTED_LOCALES.length);
   });
 
   it.each([

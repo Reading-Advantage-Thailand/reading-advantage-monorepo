@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import {
   getAllPosts,
-  getBlogPostLocales,
   getBlogPostTotalPages,
   getPaginatedPosts,
   normalizeBlogLocale,
@@ -13,6 +12,7 @@ import HeroSection from "@/components/marketing/hero-section";
 import { getScopedI18n } from "@/locales/server";
 import { notFound, permanentRedirect } from "next/navigation";
 import { buildMarketingMetadata } from "@/lib/seo";
+import { routing } from "@/i18n/routing";
 
 interface PageProps {
   params: Promise<{ locale: string; page: string }>;
@@ -33,12 +33,18 @@ function parsePageNumber(page: string, totalPages: number): number | null {
  * Lists the statically generated blog page parameters.
  * @returns The available pagination parameters.
  */
-export async function generateStaticParams(): Promise<Array<{ page: string }>> {
-  const posts = await getAllPosts();
-  const totalPages = Math.ceil(posts.length / 9);
-  return Array.from({ length: Math.max(totalPages - 1, 0) }, (_, i) => ({
-    page: String(i + 2),
-  }));
+export async function generateStaticParams(): Promise<
+  Array<{ locale: string; page: string }>
+> {
+  return routing.locales.flatMap((locale) =>
+    Array.from(
+      { length: Math.max(getBlogPostTotalPages(locale, 9) - 1, 0) },
+      (_, i) => ({
+        locale,
+        page: String(i + 2),
+      }),
+    ),
+  );
 }
 
 /**
@@ -61,7 +67,7 @@ export async function generateMetadata({
   const description = t("numberedDescription", { page: pageNumber });
 
   return buildMarketingMetadata({
-    alternateLocales: Array.from(new Set([...getBlogPostLocales(), effectiveLocale])),
+    alternateLocales: routing.locales,
     description,
     locale: effectiveLocale,
     path: `/blog/page/${pageNumber}`,

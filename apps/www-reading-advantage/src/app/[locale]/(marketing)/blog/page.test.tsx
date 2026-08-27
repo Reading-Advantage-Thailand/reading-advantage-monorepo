@@ -232,38 +232,44 @@ describe("blog pagination routes", () => {
     });
   });
 
-  it("includes Chinese in root and numbered metadata alternates", async () => {
-    localeState.current = "zh";
-    const rootMetadata = await generateBlogMetadata({
-      params: Promise.resolve({ locale: "zh" }),
-    });
-    const numberedMetadata = await generateBlogPaginationMetadata({
-      params: Promise.resolve({ locale: "zh", page: "2" }),
-    });
+  it.each(["en", "th", "zh"] as const)(
+    "uses every supported locale in %s metadata alternates",
+    async (locale) => {
+      localeState.current = locale;
+      const rootMetadata = await generateBlogMetadata({
+        params: Promise.resolve({ locale }),
+      });
+      const numberedMetadata = await generateBlogPaginationMetadata({
+        params: Promise.resolve({ locale, page: "2" }),
+      });
+      const rootCanonical = `https://reading-advantage.com/${locale}/blog`;
+      const numberedCanonical =
+        `https://reading-advantage.com/${locale}/blog/page/2`;
+      const rootLanguages = {
+        en: "https://reading-advantage.com/en/blog",
+        th: "https://reading-advantage.com/th/blog",
+        zh: "https://reading-advantage.com/zh/blog",
+      };
+      const numberedLanguages = {
+        en: "https://reading-advantage.com/en/blog/page/2",
+        th: "https://reading-advantage.com/th/blog/page/2",
+        zh: "https://reading-advantage.com/zh/blog/page/2",
+      };
 
-    expect(rootMetadata).toMatchObject({
-      alternates: {
-        canonical: "https://reading-advantage.com/zh/blog",
-        languages: {
-          zh: "https://reading-advantage.com/zh/blog",
-        },
-      },
-      openGraph: {
-        url: "https://reading-advantage.com/zh/blog",
-      },
-    });
-    expect(numberedMetadata).toMatchObject({
-      alternates: {
-        canonical: "https://reading-advantage.com/zh/blog/page/2",
-        languages: {
-          zh: "https://reading-advantage.com/zh/blog/page/2",
-        },
-      },
-      openGraph: {
-        url: "https://reading-advantage.com/zh/blog/page/2",
-      },
-    });
-  });
+      expect(rootMetadata.alternates).toEqual({
+        canonical: rootCanonical,
+        languages: rootLanguages,
+      });
+      expect(rootMetadata.openGraph).toMatchObject({ url: rootCanonical });
+      expect(numberedMetadata.alternates).toEqual({
+        canonical: numberedCanonical,
+        languages: numberedLanguages,
+      });
+      expect(numberedMetadata.openGraph).toMatchObject({
+        url: numberedCanonical,
+      });
+    },
+  );
 
   it("permanently redirects page one to the locale-aware blog root", async () => {
     const redirectError = new Error("NEXT_REDIRECT");
@@ -286,8 +292,12 @@ describe("blog pagination routes", () => {
       }),
     ).resolves.toEqual({});
     await expect(generateStaticParams()).resolves.toEqual([
-      { page: "2" },
-      { page: "3" },
+      { locale: "en", page: "2" },
+      { locale: "en", page: "3" },
+      { locale: "th", page: "2" },
+      { locale: "th", page: "3" },
+      { locale: "zh", page: "2" },
+      { locale: "zh", page: "3" },
     ]);
   });
 
