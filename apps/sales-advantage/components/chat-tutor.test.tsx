@@ -45,9 +45,13 @@ describe("ChatTutor accessibility", () => {
 
   it("submits the enabled button to the chat API", async () => {
     activeChatCopy = thMessages.chat;
+    let resolveFetch!: (response: Response) => void;
+    const pendingFetch = new Promise<Response>((resolve) => {
+      resolveFetch = resolve;
+    });
     const fetchMock = vi
       .spyOn(globalThis, "fetch")
-      .mockResolvedValue({ ok: false, body: null } as Response);
+      .mockReturnValue(pendingFetch);
 
     render(<ChatTutor />);
     const input = screen.getByPlaceholderText(activeChatCopy.placeholder);
@@ -64,6 +68,18 @@ describe("ChatTutor accessibility", () => {
           expect.objectContaining({ method: "POST" }),
         );
       },
+      { timeout: 1000 },
+    );
+    expect((button as HTMLButtonElement).disabled).toBe(true);
+
+    fireEvent.click(button);
+
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+
+    resolveFetch({ ok: false, body: null } as Response);
+
+    await waitFor(
+      () => expect((input as HTMLInputElement).disabled).toBe(false),
       { timeout: 1000 },
     );
   });
