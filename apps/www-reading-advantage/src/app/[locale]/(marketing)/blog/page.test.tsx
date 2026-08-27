@@ -1,7 +1,9 @@
 import type { AnchorHTMLAttributes, ReactNode } from "react";
 import { cleanup, render } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import BlogPage from "@/app/[locale]/(marketing)/blog/page";
+import BlogPage, {
+  generateMetadata as generateBlogMetadata,
+} from "@/app/[locale]/(marketing)/blog/page";
 import BlogPaginatedPage, {
   generateMetadata as generateBlogPaginationMetadata,
   generateStaticParams,
@@ -226,6 +228,39 @@ describe("blog pagination routes", () => {
         title,
         description,
         url: canonical,
+      },
+    });
+  });
+
+  it("includes Chinese in root and numbered metadata alternates", async () => {
+    localeState.current = "zh";
+    const rootMetadata = await generateBlogMetadata({
+      params: Promise.resolve({ locale: "zh" }),
+    });
+    const numberedMetadata = await generateBlogPaginationMetadata({
+      params: Promise.resolve({ locale: "zh", page: "2" }),
+    });
+
+    expect(rootMetadata).toMatchObject({
+      alternates: {
+        canonical: "https://reading-advantage.com/zh/blog",
+        languages: {
+          zh: "https://reading-advantage.com/zh/blog",
+        },
+      },
+      openGraph: {
+        url: "https://reading-advantage.com/zh/blog",
+      },
+    });
+    expect(numberedMetadata).toMatchObject({
+      alternates: {
+        canonical: "https://reading-advantage.com/zh/blog/page/2",
+        languages: {
+          zh: "https://reading-advantage.com/zh/blog/page/2",
+        },
+      },
+      openGraph: {
+        url: "https://reading-advantage.com/zh/blog/page/2",
       },
     });
   });

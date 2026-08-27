@@ -29,7 +29,7 @@ export async function generateMetadata({
   const t = await getScopedI18n("pages.blog");
 
   return buildMarketingMetadata({
-    alternateLocales: getBlogPostLocales(),
+    alternateLocales: Array.from(new Set([...getBlogPostLocales(), effectiveLocale])),
     description: t("description"),
     locale: effectiveLocale,
     path: "/blog",

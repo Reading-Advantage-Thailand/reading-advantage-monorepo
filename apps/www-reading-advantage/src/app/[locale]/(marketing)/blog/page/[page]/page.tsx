@@ -61,7 +61,7 @@ export async function generateMetadata({
   const description = t("numberedDescription", { page: pageNumber });
 
   return buildMarketingMetadata({
-    alternateLocales: getBlogPostLocales(),
+    alternateLocales: Array.from(new Set([...getBlogPostLocales(), effectiveLocale])),
     description,
     locale: effectiveLocale,
     path: `/blog/page/${pageNumber}`,
