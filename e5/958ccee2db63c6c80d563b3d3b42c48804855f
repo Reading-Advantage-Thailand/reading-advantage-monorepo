@@ -1,0 +1,1 @@
+Restored the Managed Service overview 7/5 desktop layout with only the requested grid and span classes. Red: focused layout test failed on equal md:grid-cols-2 columns. Green: focused test 1/1; Phase 2 SEO 4/4; TypeScript and ESLint passed; graph update and staged diff check passed.
