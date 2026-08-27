@@ -34,7 +34,7 @@ export const en = {
         "The white-glove solution: We provide the technology AND the teacher for complete English department outsourcing.",
       features: [
         "Fully outsourced English department",
-        "Structured implementation",
+        "Zero implementation risk",
         "Certified Reading Advantage teachers",
         "Complete curriculum and materials",
         "Progress tracking and reporting",
@@ -49,7 +49,7 @@ export const en = {
       status: "Available Now",
       statusBadge: "ACTIVE",
       description:
-        "Structured implementation support for your school.",
+        "Comprehensive implementation support to ensure your school gets the most from Reading Advantage.",
       features: [
         "Account setup and configuration",
         "Student and teacher enrollment",
@@ -123,7 +123,7 @@ export const th = {
         "โซลูชันแบบไขมือขาว: เรามอบทั้งเทคโนโลยีและครูสำหรับการจัดการแผนกวิชาภาษาอังกฤษแบบครบวงจรภายนอก",
       features: [
         "แผนกวิชาภาษาอังกฤษแบบจัดการภายนอกทั้งหมด",
-        "การเริ่มต้นที่มีโครงสร้าง",
+        "ความเสี่ยงต่อการนำไปใช้งานเป็นศูนย์",
         "ครู Reading Advantage ที่ได้รับการรับรอง",
         "หลักสูตรและวัสดุครบถ้วน",
         "การติดตามความก้าวหน้าและรายงาน",
@@ -138,7 +138,7 @@ export const th = {
       status: "พร้อมใช้งานแล้ว",
       statusBadge: "ใช้งาน",
       description:
-        "การเริ่มต้นที่มีโครงสร้างสำหรับโรงเรียนของคุณ",
+        "การสนับสนุนการนำไปใช้งานแบบครบถ้วนเพื่อให้มั่นใจว่าโรงเรียนของคุณได้ประโยชนจาก Reading Advantage มากที่สุด",
       features: [
         "การตั้งค่าและการกำหนดบัญชี",
         "การลงทะเบียนนักเรียนและครู",
@@ -212,7 +212,7 @@ export const zh = {
         "白手套解决方案：我们同时提供技术和教师，实现完整的英语部门外包。",
       features: [
         "完全外包英语部门",
-        "结构化实施",
+        "零实施风险",
         "经过认证的阅读优势教师",
         "完整的课程和材料",
         "进度跟踪和报告",
@@ -226,7 +226,7 @@ export const zh = {
       name: "入职和设置",
       status: "现在可用",
       statusBadge: "活跃",
-      description: "提供结构化实施支持，帮助学校使用 Reading Advantage。",
+      description: "全面的实施支持，确保您的学校从阅读优势中获得最大价值。",
       features: [
         "账户设置和配置",
         "学生和教师注册",

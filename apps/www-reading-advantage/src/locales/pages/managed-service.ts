@@ -9,7 +9,7 @@ export const en = {
     secondaryCta: "Get Notified",
   },
   overview: {
-    badge: "STRUCTURED ONBOARDING",
+    badge: "LOW-RISK ONBOARDING",
     title: "Fully Outsourced English Department",
     heading: "Technology + Teachers",
     description:
@@ -33,14 +33,14 @@ export const en = {
       "Certified Reading Advantage teachers",
       "Progress tracking and reporting",
       "Regular quality assurance",
-      "Structured implementation with guided onboarding",
+      "Low-risk implementation with structured onboarding",
     ],
   },
   benefits: {
     badge: "PROVEN RESULTS",
     title: "Measurable Outcomes",
     description:
-      "Managed service programs include comprehensive tracking and quality assurance for measurable outcomes.",
+      "Every managed service program includes comprehensive tracking and quality assurance to ensure student success.",
     items: [
       "Progress tracking with detailed dashboards",
       "Regular quality assurance observations",
@@ -79,7 +79,7 @@ export const th = {
     secondaryCta: "รับการแจ้งเตือน",
   },
   overview: {
-    badge: "การเริ่มต้นที่มีโครงสร้าง",
+    badge: "ความเสี่ยงต่ำในการเริ่มต้น",
     title: "แผนกวิชาภาษาอังกฤษแบบจัดการภายนอกทั้งหมด",
     heading: "เทคโนโลยีและครู",
     description:
@@ -103,14 +103,14 @@ export const th = {
       "ครู Reading Advantage ที่ได้รับการรับรอง",
       "การติดตามความก้าวหน้าและรายงาน",
       "การรับรองคุณภาพอย่างสม่ำเสมอ",
-      "การเริ่มต้นที่มีโครงสร้าง",
+      "การเริ่มต้นที่มีโครงสร้างและความเสี่ยงต่ำ",
     ],
   },
   benefits: {
     badge: "ผลลัพธ์ที่พิสูจน์ได้",
     title: "ผลลัพธ์ที่วัดได้",
     description:
-      "โปรแกรมบริการจัดการแบบครบวงจรรวมการติดตามความก้าวหน้าและรับรองคุณภาพอย่างสม่ำเสมอ",
+      "โปรแกรมบริการจัดการแบบครบวงจรแต่ละหนังมีการติดตามความก้าวหน้าและรับรองคุณภาพอย่างสม่ำเสมอเพื่อให้มั่นใจว่านักเรียนจะประสบความสำเร็จ",
     items: [
       "การติดตามความก้าวหน้าด้วยแดชบอร์ดที่ละเอียด",
       "การสังเกตคุณภาพอย่างสม่ำเสมอ",
@@ -148,7 +148,7 @@ export const zh = {
     secondaryCta: "获取通知",
   },
   overview: {
-    badge: "结构化实施",
+    badge: "零风险",
     title: "完全外包的英语部门",
     heading: "技术+教师",
     description:
@@ -171,13 +171,13 @@ export const zh = {
       "经过认证的阅读优势教师",
       "进度跟踪和报告",
       "定期质量保证",
-      "结构化实施流程",
+      "结构化、低风险的入门流程",
     ],
   },
   benefits: {
     badge: "经过验证的结果",
     title: "可衡量的成果",
-    description: "托管服务项目包含全面的进度跟踪和质量保证。",
+    description: "每个托管服务项目都包含全面的跟踪和质量保证，以确保学生成功。",
     items: [
       "通过详细仪表板进行进度跟踪",
       "定期质量保证观察",

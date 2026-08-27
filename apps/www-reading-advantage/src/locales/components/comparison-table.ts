@@ -1,7 +1,6 @@
 export const en = {
   title: "Reading Program Comparison",
-  lastUpdated: "Last updated: August 2026",
-  currentPricing: "Contact us for current pricing",
+  lastUpdated: "Last updated: July 2026",
   tableHeaders: {
     feature: "Feature",
     readingAdvantage: "Reading Advantage",
@@ -77,8 +76,7 @@ export const en = {
 
 export const th = {
   title: "การเปรียบเทียบโปรแกรมการอ่าน",
-  lastUpdated: "อัปเดตล่าสุด: สิงหาคม 2026",
-  currentPricing: "ติดต่อเราเพื่อสอบถามราคาปัจจุบัน",
+  lastUpdated: "อัปเดตล่าสุด: กรกฎาคม 2026",
   tableHeaders: {
     feature: "คุณสมบัติ",
     readingAdvantage: "Reading Advantage",
@@ -154,8 +152,7 @@ export const th = {
 
 export const zh = {
   title: "阅读程序比较",
-  lastUpdated: "最后更新：2026年8月",
-  currentPricing: "联系我们获取当前价格",
+  lastUpdated: "最后更新：2026年7月",
   tableHeaders: {
     feature: "功能",
     readingAdvantage: "Reading Advantage",
