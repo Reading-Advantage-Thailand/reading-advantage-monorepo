@@ -1,0 +1,5 @@
+Red: Clean commit lacked the public URL implementation. Callback expiry lacked Secure. Role-less and malformed callbacks lacked complete cleanup.
+
+Green: Focused callback, Phase 2/3, related auth, baseline, type check, owned-file lint, production build, and diff checks pass.
+
+User behavior: Authorized callbacks create sessions. Role-less identities revoke Accounts sessions and redirect to /?error=forbidden. Malformed callbacks redirect to /?error=sso and expire the transaction cookie.
