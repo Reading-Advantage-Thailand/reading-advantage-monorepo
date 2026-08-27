@@ -41,6 +41,7 @@ const mocks = vi.hoisted(() => ({
   submitAccountingSubmission: vi.fn(),
   listAccountingSubmissions: vi.fn(),
   putPrivateEvidence: vi.fn(),
+  readPrivateEvidence: vi.fn(),
   deletePrivateEvidence: vi.fn(),
 }));
 
@@ -53,6 +54,7 @@ vi.mock("@/app/lib/submissions", () => ({
 }));
 vi.mock("@/app/lib/private-evidence-storage", () => ({
   putPrivateEvidence: mocks.putPrivateEvidence,
+  readPrivateEvidence: mocks.readPrivateEvidence,
   deletePrivateEvidence: mocks.deletePrivateEvidence,
 }));
 
@@ -60,6 +62,7 @@ const ROUTE_URL = "http://localhost/api/submissions";
 const COMPANY_ID = "33333333-3333-4333-8333-333333333333";
 const STAFF_ACCOUNT_ID = "11111111-1111-4111-8111-111111111111";
 const EVIDENCE_REFERENCE = `private-evidence://${COMPANY_ID}/submissions/0001/receipt.pdf`;
+const VALID_IDEMPOTENCY_KEY = "44444444-4444-4444-8444-444444444444";
 
 const staffUser = {
   id: STAFF_ACCOUNT_ID,
@@ -127,7 +130,7 @@ function postRequest(
   options: {
     readonly file?: File;
     readonly files?: readonly File[];
-    readonly idempotencyKey?: string;
+    readonly idempotencyKey?: string | null;
   } = {},
 ): Request {
   const form = new FormData();
@@ -137,10 +140,14 @@ function postRequest(
   for (const [name, value] of Object.entries(fields)) {
     form.set(name, value);
   }
+  const idempotencyKey =
+    options.idempotencyKey === undefined
+      ? VALID_IDEMPOTENCY_KEY
+      : options.idempotencyKey;
   return new Request(ROUTE_URL, {
     method: "POST",
-    headers: options.idempotencyKey
-      ? { "idempotency-key": options.idempotencyKey }
+    headers: idempotencyKey !== null
+      ? { "idempotency-key": idempotencyKey }
       : undefined,
     body: form,
   });
@@ -153,6 +160,9 @@ describe("POST /api/submissions", () => {
     mocks.putPrivateEvidence.mockResolvedValue({
       evidenceReference: EVIDENCE_REFERENCE,
     });
+    mocks.readPrivateEvidence.mockResolvedValue(
+      new Uint8Array([0x25, 0x50, 0x44, 0x46]),
+    );
     mocks.deletePrivateEvidence.mockResolvedValue(undefined);
     mocks.submitAccountingSubmission.mockResolvedValue(storedSubmission);
   });
@@ -252,14 +262,14 @@ describe("POST /api/submissions", () => {
     const response = await POST(
       postRequest(expenseFields, {
         file: evidenceFile(),
-        idempotencyKey: "submission-request-0001",
+        idempotencyKey: VALID_IDEMPOTENCY_KEY,
       }),
     );
 
     expect(response.status).toBe(201);
     expect(mocks.submitAccountingSubmission).toHaveBeenCalledWith(
       expect.objectContaining({
-        idempotencyKey: "submission-request-0001",
+        idempotencyKey: VALID_IDEMPOTENCY_KEY,
       }),
     );
   });
@@ -274,6 +284,20 @@ describe("POST /api/submissions", () => {
     };
     expect(body.message).toMatch(/evidence/i);
     expect(Object.keys(body.fieldErrors)).toContain("evidence");
+    expect(mocks.putPrivateEvidence).not.toHaveBeenCalled();
+    expect(mocks.submitAccountingSubmission).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    ["missing", null],
+    ["blank", ""],
+    ["malformed", "submission-request-0001"],
+  ] as const)("returns 400 for a %s idempotency key before upload", async (_case, idempotencyKey) => {
+    const response = await POST(
+      postRequest(expenseFields, { file: evidenceFile(), idempotencyKey }),
+    );
+
+    expect(response.status).toBe(400);
     expect(mocks.putPrivateEvidence).not.toHaveBeenCalled();
     expect(mocks.submitAccountingSubmission).not.toHaveBeenCalled();
   });
@@ -336,27 +360,111 @@ describe("POST /api/submissions", () => {
     const response = await POST(
       postRequest(expenseFields, {
         file: evidenceFile(),
-        idempotencyKey: "retry-1",
+        idempotencyKey: "55555555-5555-4555-8555-555555555555",
       }),
     );
 
     expect(response.status).toBe(201);
+    expect(mocks.readPrivateEvidence).toHaveBeenCalledWith({
+      companyId: COMPANY_ID,
+      evidenceReference: EVIDENCE_REFERENCE,
+    });
     expect(mocks.deletePrivateEvidence).toHaveBeenCalledWith({
       companyId: COMPANY_ID,
       evidenceReference: uploadedReference,
     });
+    expect(mocks.deletePrivateEvidence).toHaveBeenCalledTimes(1);
   });
 
-  it("deletes newly uploaded evidence when the domain submission fails", async () => {
-    const submissionError = new Error("Accounting service unavailable");
-    mocks.submitAccountingSubmission.mockRejectedValue(submissionError);
+  it("returns 409 and deletes new evidence when scalar content conflicts", async () => {
+    mocks.submitAccountingSubmission.mockRejectedValue(
+      Object.assign(new Error("Idempotency key conflict"), {
+        name: "AccountingSubmissionError",
+        reason: "conflict",
+      }),
+    );
 
-    await expect(
-      POST(postRequest(expenseFields, { file: evidenceFile() })),
-    ).rejects.toThrow("Accounting service unavailable");
+    const response = await POST(
+      postRequest(expenseFields, { file: evidenceFile() }),
+    );
+
+    expect(response.status).toBe(409);
     expect(mocks.deletePrivateEvidence).toHaveBeenCalledWith({
       companyId: COMPANY_ID,
       evidenceReference: EVIDENCE_REFERENCE,
+    });
+  });
+
+  it("returns 409 when replay evidence bytes differ", async () => {
+    const uploadedReference = `private-evidence://${COMPANY_ID}/submissions/retry/uploaded.pdf`;
+    mocks.putPrivateEvidence.mockResolvedValue({
+      evidenceReference: uploadedReference,
+    });
+    mocks.readPrivateEvidence.mockResolvedValue(new Uint8Array([0x00]));
+
+    const response = await POST(
+      postRequest(expenseFields, { file: evidenceFile() }),
+    );
+
+    expect(response.status).toBe(409);
+    expect(mocks.deletePrivateEvidence).toHaveBeenCalledWith({
+      companyId: COMPANY_ID,
+      evidenceReference: uploadedReference,
+    });
+    expect(mocks.deletePrivateEvidence).toHaveBeenCalledTimes(1);
+  });
+
+  it("resolves a commit-succeeded-response-failed outcome with the same idempotency key", async () => {
+    const uploadedReference = `private-evidence://${COMPANY_ID}/submissions/retry/uploaded.pdf`;
+    mocks.putPrivateEvidence.mockResolvedValue({
+      evidenceReference: uploadedReference,
+    });
+    mocks.submitAccountingSubmission
+      .mockRejectedValueOnce(new Error("response lost"))
+      .mockResolvedValueOnce(storedSubmission);
+
+    const response = await POST(
+      postRequest(expenseFields, { file: evidenceFile() }),
+    );
+
+    expect(response.status).toBe(201);
+    expect(mocks.submitAccountingSubmission).toHaveBeenCalledTimes(2);
+    expect(mocks.submitAccountingSubmission).toHaveBeenNthCalledWith(
+      1,
+      expect.objectContaining({ idempotencyKey: VALID_IDEMPOTENCY_KEY }),
+    );
+    expect(mocks.submitAccountingSubmission).toHaveBeenNthCalledWith(
+      2,
+      expect.objectContaining({ idempotencyKey: VALID_IDEMPOTENCY_KEY }),
+    );
+    expect(mocks.deletePrivateEvidence).toHaveBeenCalledTimes(1);
+  });
+
+  it("preserves the primary error and evidence when outcome resolution also fails", async () => {
+    const primaryError = new Error("response lost");
+    mocks.submitAccountingSubmission
+      .mockRejectedValueOnce(primaryError)
+      .mockRejectedValueOnce(new Error("database still unavailable"));
+
+    await expect(
+      POST(postRequest(expenseFields, { file: evidenceFile() })),
+    ).rejects.toThrow("response lost");
+    expect(mocks.deletePrivateEvidence).not.toHaveBeenCalled();
+  });
+
+  it("does not replace a known rejection when evidence cleanup fails", async () => {
+    mocks.submitAccountingSubmission.mockRejectedValue(
+      invalidInputError({ payee: ["Payee is required"] }),
+    );
+    mocks.deletePrivateEvidence.mockRejectedValue(new Error("cleanup failed"));
+
+    const response = await POST(
+      postRequest(expenseFields, { file: evidenceFile() }),
+    );
+
+    expect(response.status).toBe(400);
+    await expect(response.json()).resolves.toMatchObject({
+      message: "Submission validation failed",
     });
   });
 

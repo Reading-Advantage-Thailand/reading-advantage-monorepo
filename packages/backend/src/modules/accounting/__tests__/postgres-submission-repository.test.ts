@@ -170,6 +170,26 @@ describe("PostgreSQL accounting submission repository", () => {
       submission.submittedAt,
       "submission-request-0001",
     ]);
+    expect(database.calls[0]?.statement.toLowerCase()).toContain("on conflict");
+    expect(database.calls[0]?.statement.toLowerCase()).toContain("do nothing");
+  });
+
+  it("returns the stored winner when a concurrent keyed insert loses the unique race", async () => {
+    const submission = thbSubmission();
+    const database = sqlDouble([
+      [],
+      [{ ...rawRowFor(submission), idempotency_key: "submission-request-0001" }],
+    ]);
+    const repository = createPostgresAccountingSubmissionRepository({
+      sql: database.sql,
+    });
+
+    await expect(
+      repository.insert(submission, "submission-request-0001"),
+    ).resolves.toEqual(submission);
+    expect(database.calls).toHaveLength(2);
+    expect(database.calls[1]?.statement.toLowerCase()).toContain("select");
+    expect(database.calls[1]?.statement).toContain("idempotency_key");
   });
 
   it("scopes idempotency lookup by company, submitter, and key", async () => {

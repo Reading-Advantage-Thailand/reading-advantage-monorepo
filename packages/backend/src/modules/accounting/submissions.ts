@@ -98,7 +98,8 @@ export interface AccountingSubmissionRepository {
 export type AccountingSubmissionErrorReason =
   | "invalid-input"
   | "forbidden"
-  | "not-found";
+  | "not-found"
+  | "conflict";
 
 /** Structured failure from an accounting submission operation. */
 export class AccountingSubmissionError extends Error {
@@ -141,6 +142,27 @@ function actorScope(actor: AccountingActor): Readonly<FinanceOperationScope> {
 }
 
 /**
+ * Compares the request content that an idempotency key represents.
+ * @param input Validated submission input.
+ * @param stored Previously stored submission.
+ * @returns True when all request fields match, excluding the generated evidence reference.
+ */
+function hasSameSubmissionContent(
+  input: AccountingSubmissionInput,
+  stored: AccountingSubmission,
+): boolean {
+  return (
+    input.kind === stored.kind &&
+    input.payee === stored.payee &&
+    input.category === stored.category &&
+    input.description === stored.description &&
+    input.money.amountMinor === stored.money.amountMinor &&
+    input.money.currency === stored.money.currency &&
+    input.settledThbAmount === stored.settledThbAmount
+  );
+}
+
+/**
  * Validates, authorizes, and persists one expense or bill submission under the
  * actor's company scope. A replay with the same actor and idempotency key
  * returns the original submission without a second insert.
@@ -169,6 +191,9 @@ export async function submitAccountingSubmission(request: {
       idempotencyKey: request.idempotencyKey,
     });
     if (existing !== undefined) {
+      if (!hasSameSubmissionContent(parsed.data, existing)) {
+        throw new AccountingSubmissionError("conflict");
+      }
       return existing;
     }
   }
@@ -189,11 +214,18 @@ export async function submitAccountingSubmission(request: {
     actorRole: request.actor.role,
     createdAt: new Date().toISOString(),
   });
-  return request.repository.insert(
+  const stored = await request.repository.insert(
     submission,
     request.idempotencyKey,
     auditEvent,
   );
+  if (
+    request.idempotencyKey !== undefined &&
+    !hasSameSubmissionContent(parsed.data, stored)
+  ) {
+    throw new AccountingSubmissionError("conflict");
+  }
+  return stored;
 }
 
 /**

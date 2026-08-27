@@ -80,6 +80,16 @@ export interface DeletePrivateEvidenceInput {
   readonly evidenceReference: string;
 }
 
+/** Input for reading one private evidence object. */
+export interface ReadPrivateEvidenceInput {
+  /** Storage port to read through. Defaults to the process-wide singleton. */
+  readonly storage?: StorageClient;
+  /** Trusted company scope from the session actor. */
+  readonly companyId: string;
+  /** Private evidence reference returned by the upload port. */
+  readonly evidenceReference: string;
+}
+
 /** Checks whether a reference path segment is safe for a storage key. */
 function isSafeReferenceSegment(segment: string): boolean {
   return (
@@ -88,6 +98,32 @@ function isSafeReferenceSegment(segment: string): boolean {
     segment !== ".." &&
     [...segment].every((character) => SAFE_SEGMENT_CHARACTER.test(character))
   );
+}
+
+/**
+ * Converts a private evidence reference to a company-scoped storage key.
+ * @param companyId Trusted company scope.
+ * @param evidenceReference Private evidence reference to validate.
+ * @returns The validated storage key.
+ * @throws When the reference is outside the caller's company scope.
+ */
+function privateEvidenceKey(
+  companyId: string,
+  evidenceReference: string,
+): string {
+  const key = evidenceReference.startsWith(PRIVATE_EVIDENCE_SCHEME)
+    ? evidenceReference.slice(PRIVATE_EVIDENCE_SCHEME.length)
+    : "";
+  const segments = key.split("/");
+  if (
+    segments.length < 3 ||
+    segments[0] !== companyId ||
+    segments[1] !== "submissions" ||
+    segments.some((segment) => !isSafeReferenceSegment(segment))
+  ) {
+    throw new Error("Evidence reference is outside the caller's company scope");
+  }
+  return key;
 }
 
 /**
@@ -119,18 +155,21 @@ export async function putPrivateEvidence(
 export async function deletePrivateEvidence(
   input: DeletePrivateEvidenceInput,
 ): Promise<void> {
-  const key = input.evidenceReference.startsWith(PRIVATE_EVIDENCE_SCHEME)
-    ? input.evidenceReference.slice(PRIVATE_EVIDENCE_SCHEME.length)
-    : "";
-  const segments = key.split("/");
-  if (
-    segments.length !== 4 ||
-    segments[0] !== input.companyId ||
-    segments[1] !== "submissions" ||
-    segments.some((segment) => !isSafeReferenceSegment(segment))
-  ) {
-    throw new Error("Evidence reference is outside the caller's company scope");
-  }
+  await (input.storage ?? getStorageClient()).delete(
+    privateEvidenceKey(input.companyId, input.evidenceReference),
+  );
+}
 
-  await (input.storage ?? getStorageClient()).delete(key);
+/**
+ * Reads one private evidence object within the caller's company scope.
+ * @param input Storage port, trusted company scope, and evidence reference.
+ * @returns The stored evidence bytes.
+ * @throws When the reference is outside the caller's company scope or storage rejects the read.
+ */
+export async function readPrivateEvidence(
+  input: ReadPrivateEvidenceInput,
+): Promise<Uint8Array> {
+  return (input.storage ?? getStorageClient()).get(
+    privateEvidenceKey(input.companyId, input.evidenceReference),
+  );
 }

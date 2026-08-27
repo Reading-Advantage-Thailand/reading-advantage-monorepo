@@ -49,6 +49,14 @@ export interface StorageClient {
   ): Promise<void>;
 
   /**
+   * Read an object as bytes.
+   * @param key The object key (path).
+   * @returns The object content.
+   * @throws StorageOperationError when the provider rejects the read.
+   */
+  get(key: string): Promise<Uint8Array>;
+
+  /**
    * Construct the public URL for an object. No network call.
    * @param key The object key.
    * @returns The public URL string.

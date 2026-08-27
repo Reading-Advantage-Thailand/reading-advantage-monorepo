@@ -72,6 +72,113 @@ function toAccountingSubmission(
 }
 
 /**
+ * Finds one submission by its actor-scoped idempotency identity.
+ * @param database PostgreSQL client or transaction.
+ * @param companyId Company scope.
+ * @param submittedByAccountId Submitting account.
+ * @param idempotencyKey Request identity.
+ * @returns The stored submission, or undefined when the key is unused.
+ */
+async function findSubmissionByIdempotencyKey(
+  database: postgres.Sql,
+  companyId: string,
+  submittedByAccountId: string,
+  idempotencyKey: string,
+): Promise<AccountingSubmission | undefined> {
+  const rows = await database<AccountingSubmissionRow[]>`
+    select
+      id, kind, payee, category, description, amount_minor, currency,
+      settled_thb_amount_minor, evidence_reference, scope_company_id,
+      status, submitted_by_account_id, submitted_at, idempotency_key
+    from accounting_submissions
+    where scope_company_id = ${companyId}
+      and submitted_by_account_id = ${submittedByAccountId}
+      and idempotency_key = ${idempotencyKey}
+    limit 1
+  `;
+  const [row] = rows;
+  return row === undefined ? undefined : toAccountingSubmission(row);
+}
+
+/**
+ * Inserts a submission and returns the committed winner for a keyed race.
+ * @param database PostgreSQL client or transaction.
+ * @param submission Submission snapshot to insert.
+ * @param idempotencyKey Request identity to store, when given.
+ * @param auditEvent Submit audit event for a newly inserted submission.
+ * @returns The new submission or the existing winner.
+ * @throws When PostgreSQL returns no row without a usable idempotency key.
+ */
+async function insertSubmission(
+  database: postgres.Sql,
+  submission: AccountingSubmission,
+  idempotencyKey?: string,
+  auditEvent?: AccountingSubmissionAuditEvent,
+): Promise<AccountingSubmission> {
+  const [row] = await database<AccountingSubmissionRow[]>`
+    insert into accounting_submissions (
+      id, kind, payee, category, description, amount_minor, currency,
+      settled_thb_amount_minor, evidence_reference, scope_company_id,
+      status, submitted_by_account_id, submitted_at, idempotency_key
+    ) values (
+      ${submission.id},
+      ${submission.kind},
+      ${submission.payee},
+      ${submission.category},
+      ${submission.description ?? null},
+      ${submission.money.amountMinor},
+      ${submission.money.currency},
+      ${submission.settledThbAmount ?? null},
+      ${submission.evidenceReference},
+      ${submission.scope.companyId},
+      ${submission.status},
+      ${submission.submittedByAccountId},
+      ${submission.submittedAt},
+      ${idempotencyKey ?? null}
+    )
+    on conflict (scope_company_id, submitted_by_account_id, idempotency_key)
+    do nothing
+    returning
+      id, kind, payee, category, description, amount_minor, currency,
+      settled_thb_amount_minor, evidence_reference, scope_company_id,
+      status, submitted_by_account_id, submitted_at, idempotency_key
+  `;
+
+  if (row === undefined) {
+    if (idempotencyKey === undefined) {
+      throw new Error("Accounting submission insert returned no row");
+    }
+    const winner = await findSubmissionByIdempotencyKey(
+      database,
+      submission.scope.companyId,
+      submission.submittedByAccountId,
+      idempotencyKey,
+    );
+    if (winner === undefined) {
+      throw new Error("Accounting submission winner was not found");
+    }
+    return winner;
+  }
+
+  if (auditEvent) {
+    await database`
+      insert into accounting_submission_audit_events (
+        id, submission_id, action, actor_account_id, actor_role, reason, created_at
+      ) values (
+        ${auditEvent.id},
+        ${auditEvent.submissionId},
+        ${auditEvent.action},
+        ${auditEvent.actorAccountId},
+        ${auditEvent.actorRole},
+        ${auditEvent.reason ?? null},
+        ${auditEvent.createdAt}
+      )
+    `;
+  }
+  return toAccountingSubmission(row);
+}
+
+/**
  * Creates the PostgreSQL-backed accounting submission repository over the
  * reviewed accounting database client. Rows are mapped snake↔camel at the
  * boundary and revalidated against the domain schema on every read, so a
@@ -93,112 +200,21 @@ export function createPostgresAccountingSubmissionRepository(input: {
       const hasBegin = typeof (sql as unknown as { begin?: unknown }).begin === "function";
       if (hasBegin) {
         return (sql as unknown as { begin: (cb: (tx: postgres.Sql) => Promise<AccountingSubmission>) => Promise<AccountingSubmission> }).begin(
-          async (tx) => {
-            const [row] = await tx<AccountingSubmissionRow[]>`
-              insert into accounting_submissions (
-                id, kind, payee, category, description, amount_minor, currency,
-                settled_thb_amount_minor, evidence_reference, scope_company_id,
-                status, submitted_by_account_id, submitted_at, idempotency_key
-              ) values (
-                ${submission.id},
-                ${submission.kind},
-                ${submission.payee},
-                ${submission.category},
-                ${submission.description ?? null},
-                ${submission.money.amountMinor},
-                ${submission.money.currency},
-                ${submission.settledThbAmount ?? null},
-                ${submission.evidenceReference},
-                ${submission.scope.companyId},
-                ${submission.status},
-                ${submission.submittedByAccountId},
-                ${submission.submittedAt},
-                ${idempotencyKey ?? null}
-              )
-              returning
-                id, kind, payee, category, description, amount_minor, currency,
-                settled_thb_amount_minor, evidence_reference, scope_company_id,
-                status, submitted_by_account_id, submitted_at, idempotency_key
-            `;
-            if (auditEvent) {
-              await tx`
-                insert into accounting_submission_audit_events (
-                  id, submission_id, action, actor_account_id, actor_role, reason, created_at
-                ) values (
-                  ${auditEvent.id},
-                  ${auditEvent.submissionId},
-                  ${auditEvent.action},
-                  ${auditEvent.actorAccountId},
-                  ${auditEvent.actorRole},
-                  ${auditEvent.reason ?? null},
-                  ${auditEvent.createdAt}
-                )
-              `;
-            }
-            return toAccountingSubmission(row as AccountingSubmissionRow);
-          },
+          (tx) => insertSubmission(tx, submission, idempotencyKey, auditEvent),
         );
       }
-      const [row] = await sql<AccountingSubmissionRow[]>`
-        insert into accounting_submissions (
-          id, kind, payee, category, description, amount_minor, currency,
-          settled_thb_amount_minor, evidence_reference, scope_company_id,
-          status, submitted_by_account_id, submitted_at, idempotency_key
-        ) values (
-          ${submission.id},
-          ${submission.kind},
-          ${submission.payee},
-          ${submission.category},
-          ${submission.description ?? null},
-          ${submission.money.amountMinor},
-          ${submission.money.currency},
-          ${submission.settledThbAmount ?? null},
-          ${submission.evidenceReference},
-          ${submission.scope.companyId},
-          ${submission.status},
-          ${submission.submittedByAccountId},
-          ${submission.submittedAt},
-          ${idempotencyKey ?? null}
-        )
-        returning
-          id, kind, payee, category, description, amount_minor, currency,
-          settled_thb_amount_minor, evidence_reference, scope_company_id,
-          status, submitted_by_account_id, submitted_at, idempotency_key
-      `;
-      if (auditEvent) {
-        await sql`
-          insert into accounting_submission_audit_events (
-            id, submission_id, action, actor_account_id, actor_role, reason, created_at
-          ) values (
-            ${auditEvent.id},
-            ${auditEvent.submissionId},
-            ${auditEvent.action},
-            ${auditEvent.actorAccountId},
-            ${auditEvent.actorRole},
-            ${auditEvent.reason ?? null},
-            ${auditEvent.createdAt}
-          )
-        `;
-      }
-      return toAccountingSubmission(row as AccountingSubmissionRow);
+      return insertSubmission(sql, submission, idempotencyKey, auditEvent);
     },
 
     async findByIdempotencyKey(
       identity: AccountingSubmissionIdempotencyIdentity,
     ): Promise<AccountingSubmission | undefined> {
-      const rows = await sql<AccountingSubmissionRow[]>`
-        select
-          id, kind, payee, category, description, amount_minor, currency,
-          settled_thb_amount_minor, evidence_reference, scope_company_id,
-          status, submitted_by_account_id, submitted_at, idempotency_key
-        from accounting_submissions
-        where scope_company_id = ${identity.scope.companyId}
-          and submitted_by_account_id = ${identity.submittedByAccountId}
-          and idempotency_key = ${identity.idempotencyKey}
-        limit 1
-      `;
-      const [row] = rows;
-      return row === undefined ? undefined : toAccountingSubmission(row);
+      return findSubmissionByIdempotencyKey(
+        sql,
+        identity.scope.companyId,
+        identity.submittedByAccountId,
+        identity.idempotencyKey,
+      );
     },
 
     async listByScope(

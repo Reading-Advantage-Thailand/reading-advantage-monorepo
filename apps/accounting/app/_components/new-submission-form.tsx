@@ -156,6 +156,11 @@ export function NewSubmissionForm() {
   const [formMessage, setFormMessage] = useState<FormMessage | null>(null);
   const idempotencyKeyRef = useRef<string | null>(null);
 
+  /** Rotates the request identity after a meaningful form edit. */
+  function rotateIdempotencyKey(): void {
+    idempotencyKeyRef.current = null;
+  }
+
   const isNonThbCurrency = currency.length === 3 && currency !== "THB";
 
   /** Sends one submission as multipart form data to the existing API route. */
@@ -244,6 +249,7 @@ export function NewSubmissionForm() {
         <form
           aria-label="Submission form"
           className="space-y-6"
+          onChange={rotateIdempotencyKey}
           onSubmit={handleSubmit}
         >
           {formMessage ? (

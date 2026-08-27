@@ -37,6 +37,7 @@ const EVIDENCE_REFERENCE_PATTERN = new RegExp(
 function createFakeStorage() {
   return {
     put: vi.fn<StorageClient["put"]>(async () => {}),
+    get: vi.fn<StorageClient["get"]>(async () => new Uint8Array()),
     getUrl: vi.fn(() => ""),
     getSignedUrl: vi.fn(async () => ""),
     delete: vi.fn(async () => {}),
@@ -61,9 +62,19 @@ type DeletePrivateEvidence = (input: {
   readonly evidenceReference: string;
 }) => Promise<void>;
 
+type ReadPrivateEvidence = (input: {
+  readonly storage: StorageClient;
+  readonly companyId: string;
+  readonly evidenceReference: string;
+}) => Promise<Uint8Array>;
+
 const deletePrivateEvidence = (
   privateEvidenceStorage as unknown as Record<string, unknown>
 ).deletePrivateEvidence as DeletePrivateEvidence | undefined;
+
+const readPrivateEvidence = (
+  privateEvidenceStorage as unknown as Record<string, unknown>
+).readPrivateEvidence as ReadPrivateEvidence | undefined;
 
 describe("putPrivateEvidence", () => {
   it("stores the bytes once through the storage port and returns a company-scoped private evidence reference", async () => {
@@ -160,5 +171,26 @@ describe("deletePrivateEvidence", () => {
       }),
     ).rejects.toThrow(/company/i);
     expect(request.storage.delete).not.toHaveBeenCalled();
+  });
+});
+
+describe("readPrivateEvidence", () => {
+  it("reads the object bytes for the caller's company", async () => {
+    expect(readPrivateEvidence).toBeTypeOf("function");
+    if (!readPrivateEvidence) return;
+    const request = upload();
+    const expected = new Uint8Array([0x01, 0x02]);
+    request.storage.get.mockResolvedValue(expected);
+
+    const result = await readPrivateEvidence({
+      storage: request.storage,
+      companyId: COMPANY_ID,
+      evidenceReference: `private-evidence://${COMPANY_ID}/submissions/receipt.pdf`,
+    });
+
+    expect(result).toEqual(expected);
+    expect(request.storage.get).toHaveBeenCalledWith(
+      `${COMPANY_ID}/submissions/receipt.pdf`,
+    );
   });
 });

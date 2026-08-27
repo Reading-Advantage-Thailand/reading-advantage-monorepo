@@ -11,6 +11,7 @@ import { requireAccountingSession } from "@/app/lib/auth";
 import type { accountingSessionUser } from "@/app/lib/company-oidc";
 import {
   deletePrivateEvidence,
+  readPrivateEvidence,
   putPrivateEvidence,
 } from "@/app/lib/private-evidence-storage";
 import {
@@ -21,6 +22,7 @@ import type {
   AccountingActor,
   AccountingSubmissionInput,
 } from "@reading-advantage/backend/accounting";
+import { z } from "zod";
 
 /** Session user projection produced by the accounting guard. */
 type AccountingSessionUser = NonNullable<
@@ -72,18 +74,48 @@ function isInvalidInputError(
   );
 }
 
-/** Checks whether a domain result retains the evidence uploaded for this request. */
-function usesUploadedEvidence(
-  submission: unknown,
-  evidenceReference: string,
+/** Checks whether a thrown value carries one known accounting rejection reason. */
+function hasAccountingReason(
+  error: unknown,
+  reason: "conflict" | "forbidden",
 ): boolean {
   return (
-    typeof submission === "object" &&
-    submission !== null &&
-    "evidenceReference" in submission &&
-    submission.evidenceReference === evidenceReference
+    error instanceof Error &&
+    error.name === "AccountingSubmissionError" &&
+    (error as { readonly reason?: unknown }).reason === reason
   );
 }
+
+/** Compares two evidence byte arrays without creating a derived artifact. */
+function haveSameBytes(left: Uint8Array, right: Uint8Array): boolean {
+  if (left.byteLength !== right.byteLength) return false;
+  for (let index = 0; index < left.byteLength; index += 1) {
+    if (left[index] !== right[index]) return false;
+  }
+  return true;
+}
+
+/** Deletes unused evidence without masking the primary route result. */
+async function cleanupUploadedEvidence(input: {
+  readonly companyId: string;
+  readonly evidenceReference: string;
+}): Promise<void> {
+  try {
+    await deletePrivateEvidence(input);
+  } catch {
+    // Cleanup is best effort after a known rejection or resolved replay.
+  }
+}
+
+/** Returns a 409 response for a key that conflicts with stored content. */
+function idempotencyConflictResponse(): Response {
+  return jsonResponse(
+    { message: "The idempotency key is already used for different content" },
+    409,
+  );
+}
+
+const idempotencyKeySchema = z.string().uuid();
 
 /**
  * Reads one scalar form field as a string.
@@ -110,7 +142,7 @@ function isSupportedEvidenceType(contentType: string): boolean {
  * required evidence file. Evidence is stored through the private-evidence
  * port and the domain receives only the storage-issued reference; any
  * caller-supplied `evidenceReference` form field is ignored.
- * @param request Multipart form request with optional Idempotency-Key header.
+ * @param request Multipart form request with a valid UUID Idempotency-Key header.
  * @returns 201 with the stored submission, the guard's 401/403, or 400 with
  *   `{ message, fieldErrors }` for missing evidence or invalid input.
  */
@@ -118,6 +150,24 @@ export async function POST(request: Request): Promise<Response> {
   const guard = await requireAccountingSession(request);
   if (!guard.ok) return guard.response;
   const actor = actorFromUser(guard.session.user);
+
+  const parsedIdempotencyKey = idempotencyKeySchema.safeParse(
+    request.headers.get("idempotency-key"),
+  );
+  if (!parsedIdempotencyKey.success) {
+    return jsonResponse(
+      {
+        message: "A valid UUID idempotency key is required",
+        fieldErrors: {
+          idempotencyKey: [
+            "Send a valid UUID in the Idempotency-Key header",
+          ],
+        },
+      },
+      400,
+    );
+  }
+  const idempotencyKey = parsedIdempotencyKey.data;
 
   let form: FormData;
   try {
@@ -148,11 +198,12 @@ export async function POST(request: Request): Promise<Response> {
     );
   }
 
+  const evidenceBody = new Uint8Array(await evidence.arrayBuffer());
   const { evidenceReference } = await putPrivateEvidence({
     companyId: actor.companyId,
     fileName: evidence.name,
     contentType: evidence.type || "application/octet-stream",
-    body: new Uint8Array(await evidence.arrayBuffer()),
+    body: evidenceBody,
   });
 
   const description = textField(form, "description");
@@ -172,34 +223,81 @@ export async function POST(request: Request): Promise<Response> {
     ...(settledThbAmount === undefined ? {} : { settledThbAmount }),
   } as AccountingSubmissionInput;
 
-  const idempotencyKey = request.headers.get("idempotency-key") ?? undefined;
-
-  try {
-    const submission = await submitAccountingSubmission({
+  const submit = () =>
+    submitAccountingSubmission({
       actor,
       input,
-      ...(idempotencyKey === undefined ? {} : { idempotencyKey }),
+      idempotencyKey,
     });
-    if (!usesUploadedEvidence(submission, evidenceReference)) {
-      await deletePrivateEvidence({
+
+  let submission: Awaited<ReturnType<typeof submitAccountingSubmission>>;
+  try {
+    submission = await submit();
+  } catch (error) {
+    if (isInvalidInputError(error)) {
+      await cleanupUploadedEvidence({
         companyId: actor.companyId,
         evidenceReference,
       });
-    }
-    return jsonResponse(submission, 201);
-  } catch (error) {
-    await deletePrivateEvidence({
-      companyId: actor.companyId,
-      evidenceReference,
-    });
-    if (isInvalidInputError(error)) {
       return jsonResponse(
         { message: error.message, fieldErrors: error.fieldErrors },
         400,
       );
     }
+    if (hasAccountingReason(error, "conflict")) {
+      await cleanupUploadedEvidence({
+        companyId: actor.companyId,
+        evidenceReference,
+      });
+      return idempotencyConflictResponse();
+    }
+    if (hasAccountingReason(error, "forbidden")) {
+      await cleanupUploadedEvidence({
+        companyId: actor.companyId,
+        evidenceReference,
+      });
+      throw error;
+    }
+
+    try {
+      submission = await submit();
+    } catch (resolutionError) {
+      if (hasAccountingReason(resolutionError, "conflict")) {
+        await cleanupUploadedEvidence({
+          companyId: actor.companyId,
+          evidenceReference,
+        });
+        return idempotencyConflictResponse();
+      }
+      throw error;
+    }
+  }
+
+  if (submission.evidenceReference === evidenceReference) {
+    return jsonResponse(submission, 201);
+  }
+
+  let originalEvidence: Uint8Array;
+  try {
+    originalEvidence = await readPrivateEvidence({
+      companyId: actor.companyId,
+      evidenceReference: submission.evidenceReference,
+    });
+  } catch (error) {
+    await cleanupUploadedEvidence({
+      companyId: actor.companyId,
+      evidenceReference,
+    });
     throw error;
   }
+  await cleanupUploadedEvidence({
+    companyId: actor.companyId,
+    evidenceReference,
+  });
+  if (!haveSameBytes(evidenceBody, originalEvidence)) {
+    return idempotencyConflictResponse();
+  }
+  return jsonResponse(submission, 201);
 }
 
 /**

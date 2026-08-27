@@ -283,6 +283,11 @@ describe("submitAccountingSubmission", () => {
   it("returns the original submission on an idempotent replay without a second insert", async () => {
     const repository = createFakeRepository();
     const idempotencyKey = "submission-request-0001";
+    const replayInput = {
+      ...thbExpenseInput,
+      evidenceReference:
+        "private-evidence://reading-advantage/submissions/retry-0002.pdf",
+    };
 
     const original = await submitAccountingSubmission({
       repository,
@@ -295,7 +300,7 @@ describe("submitAccountingSubmission", () => {
     const replay = await submitAccountingSubmission({
       repository,
       actor: staffActor,
-      input: thbExpenseInput,
+      input: replayInput,
       idempotencyKey,
     });
 
@@ -308,6 +313,59 @@ describe("submitAccountingSubmission", () => {
         idempotencyKey,
       }),
     );
+  });
+
+  it("rejects a reused key when scalar content conflicts with the original", async () => {
+    const repository = createFakeRepository();
+    const original = storedSubmission();
+    vi.mocked(repository.findByIdempotencyKey).mockResolvedValue(original);
+
+    const error = await submitAccountingSubmission({
+      repository,
+      actor: staffActor,
+      input: { ...thbExpenseInput, payee: "Different Vendor" },
+      idempotencyKey: "submission-request-0001",
+    }).catch((caught: unknown) => caught);
+
+    expect(error).toBeInstanceOf(AccountingSubmissionError);
+    expect(error).toMatchObject({ reason: "conflict" });
+    expect(repository.insert).not.toHaveBeenCalled();
+    expect(repository.submissions).toEqual([]);
+  });
+
+  it("returns the concurrent winner when the repository resolves an insert race", async () => {
+    const repository = createFakeRepository();
+    const winner = storedSubmission({
+      evidenceReference:
+        "private-evidence://reading-advantage/submissions/winner.pdf",
+    });
+    vi.mocked(repository.insert).mockResolvedValue(winner);
+
+    await expect(
+      submitAccountingSubmission({
+        repository,
+        actor: staffActor,
+        input: thbExpenseInput,
+        idempotencyKey: "submission-request-0001",
+      }),
+    ).resolves.toEqual(winner);
+  });
+
+  it("rejects a concurrent winner with conflicting scalar content", async () => {
+    const repository = createFakeRepository();
+    vi.mocked(repository.insert).mockResolvedValue(
+      storedSubmission({ payee: "Different Vendor" }),
+    );
+
+    const error = await submitAccountingSubmission({
+      repository,
+      actor: staffActor,
+      input: thbExpenseInput,
+      idempotencyKey: "submission-request-0001",
+    }).catch((caught: unknown) => caught);
+
+    expect(error).toBeInstanceOf(AccountingSubmissionError);
+    expect(error).toMatchObject({ reason: "conflict" });
   });
 
   it("scopes idempotency keys per actor so another staff member's key inserts anew", async () => {

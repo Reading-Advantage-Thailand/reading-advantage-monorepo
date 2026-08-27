@@ -6,7 +6,7 @@
  *
  * Guards two properties of the storage adapter boundary:
  *   1. `StorageClient` exposes the required provider-agnostic semantics:
- *      put, getUrl, getSignedUrl, delete, and exists.
+ *      put, get, getUrl, getSignedUrl, delete, and exists.
  *   2. Rejected / failed operations must throw adapter-normalized errors,
  *      not leak provider-specific error types (e.g. AWS S3 exceptions).
  *
@@ -61,7 +61,7 @@ function isProviderSpecificError(error: unknown): boolean {
 describe("Wave 2 Phase 2 — storage adapter contract", () => {
   it("StorageClient exposes required provider-agnostic semantics", () => {
     const driver: StorageClient = new S3StorageDriver(testConfig);
-    const methods = ["put", "getUrl", "getSignedUrl", "delete", "exists"] as const;
+    const methods = ["put", "get", "getUrl", "getSignedUrl", "delete", "exists"] as const;
 
     const missing = methods.filter((m) => typeof (driver as unknown as Record<string, unknown>)[m] !== "function");
 

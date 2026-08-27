@@ -71,6 +71,32 @@ export class S3StorageDriver implements StorageClient {
   }
 
   /**
+   * Read an object from S3.
+   * @param key The object key.
+   * @returns The object content as bytes.
+   * @throws {StorageOperationError} When the S3 client rejects the request.
+   */
+  async get(key: string): Promise<Uint8Array> {
+    const command = new GetObjectCommand({
+      Bucket: this.bucket,
+      Key: key,
+    });
+    try {
+      const response = await this.client.send(command);
+      if (response.Body === undefined) {
+        throw new Error("Storage response did not include an object body");
+      }
+      return await response.Body.transformToByteArray();
+    } catch (err) {
+      throw new StorageOperationError(
+        `Storage get failed for object key`,
+        "STORAGE_GET_FAILED",
+        err,
+      );
+    }
+  }
+
+  /**
    * Construct the public URL for an object.
    * @param key The object key.
    * @returns The public URL.

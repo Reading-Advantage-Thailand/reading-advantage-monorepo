@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, beforeEach } from "vitest";
 import {
   mockClient,
 } from "aws-sdk-client-mock";
@@ -6,6 +6,7 @@ import {
   S3Client,
   PutObjectCommand,
   DeleteObjectCommand,
+  GetObjectCommand,
   HeadObjectCommand,
 } from "@aws-sdk/client-s3";
 import { S3StorageDriver } from "../drivers/s3";
@@ -104,6 +105,26 @@ describe("S3StorageDriver", () => {
       expect(calls[0].args[0].input).toMatchObject({
         Bucket: "test-bucket",
         Key: "to-delete",
+      });
+    });
+  });
+
+  describe("get", () => {
+    it("returns object bytes from GetObjectCommand", async () => {
+      s3Mock.on(GetObjectCommand).resolves({
+        Body: {
+          transformToByteArray: async () => new Uint8Array([1, 2, 3]),
+        } as never,
+      });
+      const driver = new S3StorageDriver(testConfig);
+
+      await expect(driver.get("receipt-key")).resolves.toEqual(
+        new Uint8Array([1, 2, 3]),
+      );
+      const calls = s3Mock.commandCalls(GetObjectCommand);
+      expect(calls[0].args[0].input).toMatchObject({
+        Bucket: "test-bucket",
+        Key: "receipt-key",
       });
     });
   });

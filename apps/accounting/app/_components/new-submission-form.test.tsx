@@ -157,6 +157,38 @@ describe("NewSubmissionForm", () => {
     expect(secondKey).toBe(firstKey);
   });
 
+  it("rotates the idempotency key after editing a failed form", async () => {
+    fetchMock
+      .mockResolvedValueOnce(
+        jsonResponse(
+          { message: "Submission validation failed", fieldErrors: {} },
+          400,
+        ),
+      )
+      .mockResolvedValueOnce(jsonResponse(pendingSubmission, 201));
+    render(<NewSubmissionForm />);
+    fillValidExpenseForm();
+    const form = screen.getByRole("form", { name: "Submission form" });
+
+    fireEvent.submit(form);
+    await screen.findByRole("alert", { name: "Submission validation failed" });
+    fireEvent.change(screen.getByLabelText("Payee"), {
+      target: { value: "Updated Taxi Cooperative" },
+    });
+    fireEvent.submit(form);
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(2));
+
+    const firstRequest = fetchMock.mock.calls[0]?.[1] as RequestInit;
+    const secondRequest = fetchMock.mock.calls[1]?.[1] as RequestInit;
+    const firstKey = (firstRequest.headers as Record<string, string>)[
+      "idempotency-key"
+    ];
+    const secondKey = (secondRequest.headers as Record<string, string>)[
+      "idempotency-key"
+    ];
+    expect(secondKey).not.toBe(firstKey);
+  });
+
   it("generates a new idempotency key after a successful submission", async () => {
     fetchMock.mockResolvedValue(jsonResponse(pendingSubmission, 201));
     render(<NewSubmissionForm />);
