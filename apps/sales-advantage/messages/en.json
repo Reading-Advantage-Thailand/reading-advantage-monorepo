@@ -88,6 +88,8 @@
     "placeholder": "Ask a question...",
     "title": "Sales Coach AI",
     "send": "Send",
+    "emptyState": "Ask anything about sales technique.",
+    "unavailableError": "[Error: chat unavailable]",
     "systemPrompt": "You are a sales coaching expert for Reading Advantage. Answer questions about sales techniques, objection handling, and product positioning."
   },
   "admin": {
