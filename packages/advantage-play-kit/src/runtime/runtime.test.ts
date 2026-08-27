@@ -219,6 +219,68 @@ describe("mountCartridge", () => {
     await handle.destroy();
   });
 
+  it("does not resume a completed renderer after host pause and resume", async () => {
+    let complete: ((result: unknown) => void) | undefined;
+    const instance: APKGameInstance = {
+      pause: vi.fn(),
+      resume: vi.fn(),
+      destroy: vi.fn(),
+    };
+    const handle = await mountCartridge(
+      {
+        container: document.createElement("div"),
+        cartridge: createRuntimeCartridge(),
+        input: [{ term: "river", translation: "riviere" }],
+        edition: createRuntimeEdition(),
+        host: { complete: vi.fn() },
+      },
+      async (context) => {
+        complete = context.complete;
+        return instance;
+      },
+    );
+
+    complete?.(validResults);
+    handle.pause();
+    handle.resume();
+
+    expect(instance.pause).toHaveBeenCalledOnce();
+    expect(instance.resume).not.toHaveBeenCalled();
+    expect(handle.getDiagnostics().status).toBe("completed");
+    await handle.destroy();
+  });
+
+  it("keeps completion status when a paused renderer completes during resume", async () => {
+    let complete: ((result: unknown) => void) | undefined;
+    const hostComplete = vi.fn();
+    const instance: APKGameInstance = {
+      pause: vi.fn(),
+      resume: vi.fn(),
+      destroy: vi.fn(),
+    };
+    const handle = await mountCartridge(
+      {
+        container: document.createElement("div"),
+        cartridge: createRuntimeCartridge(),
+        input: [{ term: "river", translation: "riviere" }],
+        edition: createRuntimeEdition(),
+        host: { complete: hostComplete },
+      },
+      async (context) => {
+        complete = context.complete;
+        return instance;
+      },
+    );
+
+    handle.pause();
+    instance.resume.mockImplementation(() => complete?.(validResults));
+    handle.resume();
+
+    expect(hostComplete).toHaveBeenCalledOnce();
+    expect(handle.getDiagnostics().status).toBe("completed");
+    await handle.destroy();
+  });
+
   it("destroys the production adapter with its canvas and input listeners", async () => {
     const canvas = document.createElement("canvas");
     const destroy = vi.fn((removeCanvas?: boolean) => {

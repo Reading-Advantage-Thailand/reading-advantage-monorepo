@@ -311,7 +311,7 @@ export async function mountCartridge(
       diagnostic({ level: "info", code: "HOST_PAUSED", message: "Game paused by host" });
     },
     resume: () => {
-      if (destroyed) return;
+      if (destroyed || completionCount > 0) return;
       explicitlyPaused = false;
       instance?.resume?.();
       status = completionCount > 0 ? "completed" : "running";
