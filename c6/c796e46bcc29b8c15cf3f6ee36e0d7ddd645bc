@@ -1,0 +1,1 @@
+Decision: Independent review found the Sales localization task blocked in the active plan. This commit restores the exact four-file state before a3b1046c4. No localization acceptance is claimed. The separate administrator build repair remains authorized under the Sales go-live track.
