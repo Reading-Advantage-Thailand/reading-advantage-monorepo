@@ -6,7 +6,7 @@ import BlogPaginatedPage, {
   generateMetadata as generateBlogPaginationMetadata,
   generateStaticParams,
 } from "@/app/[locale]/(marketing)/blog/page/[page]/page";
-import { notFound, redirect } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { getAllPosts, getBlogPostTotalPages } from "@/lib/blog";
 import type { BlogListItem } from "@/types/blog";
 
@@ -61,14 +61,14 @@ const mockPosts: BlogListItem[] = Array.from({ length: 19 }, (_, index) => ({
 const getAllPostsMock = vi.mocked(getAllPosts);
 const getBlogPostTotalPagesMock = vi.mocked(getBlogPostTotalPages);
 const notFoundMock = vi.mocked(notFound);
-const redirectMock = vi.mocked(redirect);
+const permanentRedirectMock = vi.mocked(permanentRedirect);
 
 beforeEach(() => {
   localeState.current = "en";
   getAllPostsMock.mockResolvedValue(mockPosts);
   getBlogPostTotalPagesMock.mockReturnValue(3);
   notFoundMock.mockReset();
-  redirectMock.mockReset();
+  permanentRedirectMock.mockReset();
 });
 
 afterEach(() => {
@@ -160,9 +160,9 @@ describe("blog pagination routes", () => {
     );
   });
 
-  it("redirects page one to the locale-aware blog root", async () => {
+  it("permanently redirects page one to the locale-aware blog root", async () => {
     const redirectError = new Error("NEXT_REDIRECT");
-    redirectMock.mockImplementation(() => {
+    permanentRedirectMock.mockImplementation(() => {
       throw redirectError;
     });
 
@@ -171,7 +171,7 @@ describe("blog pagination routes", () => {
         params: Promise.resolve({ locale: "zh", page: "1" }),
       }),
     ).rejects.toBe(redirectError);
-    expect(redirectMock).toHaveBeenCalledWith("/zh/blog");
+    expect(permanentRedirectMock).toHaveBeenCalledWith("/zh/blog");
   });
 
   it("excludes page one from metadata and static parameters", async () => {
