@@ -6,28 +6,12 @@ import type { NextRequest } from "next/server";
 
 import { routing } from "./i18n/routing";
 import { isLegacyCodecampAuthEnabled } from "./lib/auth-mode";
+import { resolveRequestLocale } from "./lib/locale-resolution";
+import { getPublicOrigin, getPublicUrl } from "./lib/public-url";
+import { buildSignInHref } from "./lib/sign-in-href";
 
 const CODECAMP_SESSION_COOKIE = "__Host-ra_codecamp_session";
 const intlMiddleware = createIntlMiddleware(routing);
-
-/**
- * Builds a public redirect URL that honors the trusted Cloud Run forwarding hop.
- * @param request Incoming browser request.
- * @param pathname Public destination pathname.
- * @returns Public redirect URL.
- */
-function getPublicUrl(request: NextRequest, pathname: string): URL {
-  const url = request.nextUrl.clone();
-  const forwardedProto = request.headers.get("x-forwarded-proto");
-  const forwardedHost = request.headers.get("x-forwarded-host");
-
-  url.protocol = forwardedProto ? `${forwardedProto}:` : url.protocol;
-  url.host = forwardedHost ?? url.host;
-  if (forwardedHost && !forwardedHost.includes(":")) url.port = "";
-  url.pathname = pathname;
-  url.search = "";
-  return url;
-}
 
 /**
  * Identifies Codecamp administrator routes across supported locales.
@@ -60,12 +44,11 @@ export async function proxy(request: NextRequest): Promise<NextResponse> {
     const legacyMode = isLegacyCodecampAuthEnabled();
     const sessionCookie = legacyMode ? SESSION_COOKIE_NAME : CODECAMP_SESSION_COOKIE;
     const sessionToken = request.cookies.get(sessionCookie)?.value;
-    const redirectTarget = pathname + search;
-
     if (!sessionToken) {
-      const homeUrl = getPublicUrl(request, "/");
-      homeUrl.searchParams.set("redirectTo", redirectTarget);
-      return NextResponse.redirect(homeUrl);
+      if (legacyMode) return NextResponse.redirect(getPublicUrl(request, "/"));
+      return NextResponse.redirect(
+        new URL(buildSignInHref(pathname, search), getPublicOrigin(request)),
+      );
     }
 
     if (legacyMode) {
@@ -78,9 +61,7 @@ export async function proxy(request: NextRequest): Promise<NextResponse> {
           return NextResponse.redirect(homeUrl);
         }
         if (error instanceof AuthError && error.code === "UNAUTHORIZED") {
-          const homeUrl = getPublicUrl(request, "/");
-          homeUrl.searchParams.set("redirectTo", redirectTarget);
-          const response = NextResponse.redirect(homeUrl);
+          const response = NextResponse.redirect(getPublicUrl(request, "/"));
           response.cookies.set(SESSION_COOKIE_NAME, "", {
             path: "/",
             maxAge: 0,
@@ -106,16 +87,19 @@ export async function proxy(request: NextRequest): Promise<NextResponse> {
     (locale) => pathname === `/${locale}` || pathname.startsWith(`/${locale}/`),
   );
   if (!hasLocalePrefix) {
+    const { locale, fromCookie } = resolveRequestLocale(request);
     const localeUrl = getPublicUrl(
       request,
-      `/${routing.defaultLocale}${pathname === "/" ? "/" : pathname}`,
+      `/${locale}${pathname === "/" ? "" : pathname}`,
     );
     localeUrl.search = search;
     const response = NextResponse.redirect(localeUrl);
-    response.cookies.set("NEXT_LOCALE", routing.defaultLocale, {
-      path: "/",
-      sameSite: "lax",
-    });
+    if (!fromCookie) {
+      response.cookies.set("NEXT_LOCALE", locale, {
+        path: "/",
+        sameSite: "lax",
+      });
+    }
     return response;
   }
 

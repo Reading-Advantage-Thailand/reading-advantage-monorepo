@@ -1,6 +1,8 @@
 "use client";
 
+import { Suspense } from "react";
 import { useTranslations } from "next-intl";
+import { useSearchParams } from "next/navigation";
 import { trpc } from "@/lib/trpc";
 import { AuthEntry } from "@/components/auth-entry";
 import { useAuth } from "@reading-advantage/auth-client";
@@ -11,6 +13,31 @@ const DashboardContent = dynamic(() => import("./dashboard-content"), {
   ssr: false,
   loading: () => <DashboardSkeleton />,
 });
+
+/**
+ * Renders an approved sign-in error from the current query.
+ * @returns A localized alert or nothing.
+ */
+function SignInErrorMessage(): React.ReactNode {
+  const t = useTranslations("login");
+  const error = useSearchParams().get("error");
+  const messageKey =
+    error === "sso"
+      ? "signInErrorSso"
+      : error === "forbidden"
+        ? "signInErrorForbidden"
+        : error === "session_check_failed"
+          ? "signInErrorSessionCheckFailed"
+          : error === "legacy_auth_active"
+            ? "signInErrorLegacyAuthActive"
+            : undefined;
+
+  return messageKey ? (
+    <p role="alert" className="mb-4 text-sm text-destructive">
+      {t(messageKey)}
+    </p>
+  ) : null;
+}
 
 function DashboardSkeleton() {
   return (
@@ -35,7 +62,11 @@ function DashboardSkeleton() {
   );
 }
 
-export default function HomePage() {
+/**
+ * Renders the Codecamp landing page.
+ * @returns The loading, sign-in, or dashboard view.
+ */
+export default function HomePage(): React.ReactNode {
   const t = useTranslations("dashboard");
   const tl = useTranslations("login");
   const { isAuthenticated, isLoading: authLoading } = useAuth();
@@ -64,6 +95,9 @@ export default function HomePage() {
           <div className="rounded-lg border bg-card p-8 text-card-foreground">
             <Lock className="mx-auto mb-4 h-10 w-10 text-muted-foreground" />
             <h2 className="mb-2 text-xl font-semibold">{tl("loginTitle")}</h2>
+            <Suspense fallback={null}>
+              <SignInErrorMessage />
+            </Suspense>
             <AuthEntry variant="panel" />
           </div>
         </div>

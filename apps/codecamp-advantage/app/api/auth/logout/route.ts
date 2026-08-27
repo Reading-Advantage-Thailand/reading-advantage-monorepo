@@ -8,6 +8,7 @@ import {
   getCodecampOidcClient,
   readCodecampCookie,
 } from "@/lib/company-oidc";
+import { getPublicOrigin } from "@/lib/public-url";
 
 /**
  * Revokes and clears the session selected by the explicit Codecamp authentication mode.
@@ -15,7 +16,7 @@ import {
  * @returns Successful logout response with only the active-mode cookie expired.
  */
 export async function POST(request: NextRequest): Promise<NextResponse> {
-  if (request.headers.get("origin") !== request.nextUrl.origin) {
+  if (request.headers.get("origin") !== getPublicOrigin(request).origin) {
     return NextResponse.json(
       { message: "Invalid request origin" },
       { status: 403 },

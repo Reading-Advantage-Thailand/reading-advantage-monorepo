@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, type FormEvent } from "react";
+import { Suspense, useEffect, useState, type FormEvent } from "react";
 import { useAuth } from "@reading-advantage/auth-client";
 import {
   Button,
@@ -13,6 +13,9 @@ import {
   Label,
 } from "@reading-advantage/ui";
 import { useTranslations } from "next-intl";
+import { usePathname, useSearchParams } from "next/navigation";
+
+import { buildSignInHref } from "@/lib/sign-in-href";
 
 type AuthEntryVariant = "header" | "panel";
 
@@ -92,6 +95,33 @@ function LegacyCredentialForm({
 }
 
 /**
+ * Renders the company sign-in link for the current browser location.
+ * @param props Auth entry presentation.
+ * @returns Company sign-in control.
+ */
+function CompanySignInLink({
+  variant,
+}: {
+  readonly variant: AuthEntryVariant;
+}): React.ReactNode {
+  const t = useTranslations("login");
+  const pathname = usePathname();
+  const query = useSearchParams().toString();
+  const href = buildSignInHref(pathname, query ? `?${query}` : "");
+
+  return (
+    <Button
+      variant={variant === "header" ? "outline" : "default"}
+      size={variant === "header" ? "sm" : "default"}
+      className={variant === "panel" ? "mt-6" : undefined}
+      asChild
+    >
+      <a href={href}>{t("login")}</a>
+    </Button>
+  );
+}
+
+/**
  * Renders an auth entry that reveals local credentials only in validated legacy mode.
  * @param props Header-dialog or inline-panel presentation.
  * @returns Fail-closed sign-in control for the active server mode.
@@ -137,9 +167,9 @@ export function AuthEntry({
 
   if (mode === "company") {
     return (
-      <Button variant={variant === "header" ? "outline" : "default"} size={variant === "header" ? "sm" : "default"} className={variant === "panel" ? "mt-6" : undefined} asChild>
-        <a href="/api/auth/company/start">{t("login")}</a>
-      </Button>
+      <Suspense fallback={null}>
+        <CompanySignInLink variant={variant} />
+      </Suspense>
     );
   }
 

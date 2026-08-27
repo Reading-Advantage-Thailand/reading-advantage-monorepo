@@ -1,38 +1,53 @@
 /**
- * Public URL helpers for the Codecamp proxy and every auth route.
- *
- * The proxy and every auth route must share this helper and never duplicate
- * it. Duplicating the forwarding logic in one caller and omitting it in
- * another is the bug this module exists to prevent.
+ * Gets the first value from a forwarded header.
+ * @param value Forwarded header value.
+ * @returns The first header value, if present.
  */
+function firstForwardedValue(value: string | null): string | undefined {
+  const forwardedValue = value?.split(",")[0]?.trim();
+  return forwardedValue || undefined;
+}
 
 /**
- * Builds the public origin for a request, honoring the trusted Cloud Run
- * forwarding hop.
- *
- * Precedence: the `x-forwarded-proto` and `x-forwarded-host` headers take
- * precedence over the request URL. The port is stripped only when the
- * forwarded host carries none.
+ * Reports whether a forwarded host has an explicit port.
+ * @param host Forwarded host value.
+ * @returns Whether the host has a port.
+ */
+function hasExplicitPort(host: string): boolean {
+  return host.startsWith("[") ? host.includes("]:") : host.includes(":");
+}
+
+/**
+ * Builds the browser-visible origin for a request.
  *
  * @param request Incoming browser request.
  * @returns Public origin URL.
  */
 export function getPublicOrigin(request: Request): URL {
-  throw new Error(`Not implemented: getPublicOrigin(${request.method ?? "GET"}) implemented in Phase 3`);
+  const publicOrigin = new URL(request.url);
+  const forwardedProto = firstForwardedValue(request.headers.get("x-forwarded-proto"));
+  const forwardedHost = firstForwardedValue(request.headers.get("x-forwarded-host"));
+
+  if (forwardedProto) publicOrigin.protocol = `${forwardedProto}:`;
+  if (forwardedHost) {
+    publicOrigin.host = forwardedHost;
+    if (!hasExplicitPort(forwardedHost)) publicOrigin.port = "";
+  }
+  publicOrigin.pathname = "/";
+  publicOrigin.search = "";
+  publicOrigin.hash = "";
+  return publicOrigin;
 }
 
 /**
- * Builds a public redirect URL that honors the trusted Cloud Run forwarding
- * hop.
- *
- * Precedence: the `x-forwarded-proto` and `x-forwarded-host` headers take
- * precedence over the request URL. The port is stripped only when the
- * forwarded host carries none.
+ * Builds a public redirect URL for a pathname.
  *
  * @param request Incoming browser request.
  * @param pathname Public destination pathname.
  * @returns Public redirect URL.
  */
 export function getPublicUrl(request: Request, pathname: string): URL {
-  throw new Error(`Not implemented: getPublicUrl(${request.method ?? "GET"}, ${pathname}) implemented in Phase 3`);
+  const publicUrl = getPublicOrigin(request);
+  publicUrl.pathname = pathname;
+  return publicUrl;
 }

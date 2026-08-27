@@ -5,6 +5,7 @@ const mocks = vi.hoisted(() => ({
   codecampSessionRole: vi.fn(),
   legacyMode: vi.fn(),
   exchange: vi.fn(),
+  logout: vi.fn(),
   readCookie: vi.fn(),
 }));
 
@@ -15,16 +16,20 @@ vi.mock("@/lib/company-oidc", () => ({
   CODECAMP_SESSION_COOKIE: "__Host-ra_codecamp_session",
   CODECAMP_TRANSACTION_COOKIE: "__Host-ra_codecamp_oidc_tx",
   codecampSessionRole: mocks.codecampSessionRole,
-  getCodecampOidcClient: () => ({ exchange: mocks.exchange }),
+  getCodecampOidcClient: () => ({
+    exchange: mocks.exchange,
+    logout: mocks.logout,
+  }),
   readCodecampCookie: mocks.readCookie,
 }));
 
 import { GET } from "./route";
 
 /** Creates a representative OIDC callback request. */
-function request(): Request {
+function request(headers?: HeadersInit): Request {
   return new Request(
     "https://codecamp.reading-advantage.com/api/auth/callback?code=code&state=state",
+    { headers },
   );
 }
 
@@ -46,6 +51,7 @@ describe("GET /api/auth/callback", () => {
     mocks.legacyMode.mockReturnValue(false);
     mocks.codecampSessionRole.mockReturnValue("INTERN");
     mocks.readCookie.mockReturnValue("sealed-transaction");
+    mocks.logout.mockResolvedValue(true);
     mocks.exchange.mockResolvedValue({
       accessToken: "company-token",
       expiresAt: new Date(Date.now() + 60_000).toISOString(),
@@ -76,6 +82,7 @@ describe("GET /api/auth/callback", () => {
     expect(response.headers.get("set-cookie")).toContain(
       "Expires=Thu, 01 Jan 1970 00:00:00 GMT",
     );
+    expect(response.headers.get("set-cookie")).toContain("Secure");
     expect(mocks.exchange).not.toHaveBeenCalled();
   });
 
@@ -121,6 +128,10 @@ describe("GET /api/auth/callback", () => {
     expect(response.headers.get("location")).toBe(
       "https://codecamp.reading-advantage.com/?error=sso",
     );
+    expect(response.headers.get("set-cookie")).toContain(
+      "__Host-ra_codecamp_oidc_tx=;",
+    );
+    expect(response.headers.get("set-cookie")).toContain("Secure");
   });
 
   it("secures a session cookie for forwarded https", async () => {
@@ -144,7 +155,9 @@ describe("GET /api/auth/callback", () => {
       identity,
     });
 
-    const response = await GET(request());
+    const response = await GET(
+      request({ cookie: "__Host-ra_codecamp_session=prior-session" }),
+    );
     const setCookie = response.headers.get("set-cookie") ?? "";
 
     expect(response.headers.get("location")).toBe(
@@ -152,7 +165,58 @@ describe("GET /api/auth/callback", () => {
     );
     expect(setCookie).toContain("__Host-ra_codecamp_oidc_tx=");
     expect(setCookie).toContain("Expires=Thu, 01 Jan 1970 00:00:00 GMT");
+    expect(setCookie).toContain("__Host-ra_codecamp_session=;");
+    expect(setCookie).toContain("Secure");
+    expect(setCookie).toContain("HttpOnly");
+    expect(setCookie).toContain("Path=/");
+    expect(setCookie).toContain("SameSite=lax");
+    expect(setCookie).toContain("Max-Age=0");
     expect(setCookie).not.toContain("__Host-ra_codecamp_session=company-token");
+    expect(mocks.logout).toHaveBeenCalledWith("company-token");
     expect(mocks.codecampSessionRole).toHaveBeenCalledWith(identity);
+  });
+
+  it("does not issue a session cookie when role-less session revocation fails", async () => {
+    const identity = {
+      aud: "codecamp",
+      roles: ["SALES_REP"],
+    };
+    mocks.codecampSessionRole.mockImplementation(() => {
+      throw new Error("Accounts session has no recognized Codecamp role.");
+    });
+    mocks.logout.mockRejectedValueOnce(new Error("Accounts logout failed"));
+    mocks.exchange.mockResolvedValue({
+      accessToken: "company-token",
+      expiresAt: new Date(Date.now() + 60_000).toISOString(),
+      returnTo: "/en/module/intro",
+      identity,
+    });
+
+    const response = await GET(request());
+    const setCookie = response.headers.get("set-cookie") ?? "";
+
+    expect(response.headers.get("location")).toBe(
+      "https://codecamp.reading-advantage.com/?error=forbidden",
+    );
+    expect(mocks.logout).toHaveBeenCalledWith("company-token");
+    expect(setCookie).not.toContain(
+      "__Host-ra_codecamp_session=company-token",
+    );
+  });
+
+  it("expires the transaction cookie for a malformed callback", async () => {
+    const response = await GET(
+      new Request("https://codecamp.reading-advantage.com/api/auth/callback"),
+    );
+    const setCookie = response.headers.get("set-cookie") ?? "";
+
+    expect(response.headers.get("location")).toBe(
+      "https://codecamp.reading-advantage.com/?error=sso",
+    );
+    expect(setCookie).toContain("__Host-ra_codecamp_oidc_tx=;");
+    expect(setCookie).toContain("Expires=Thu, 01 Jan 1970 00:00:00 GMT");
+    expect(setCookie).toContain("Secure");
+    expect(setCookie).toContain("Max-Age=0");
+    expect(mocks.exchange).not.toHaveBeenCalled();
   });
 });
