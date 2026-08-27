@@ -6,7 +6,7 @@ import enMessages from "../../../messages/en.json";
 import thMessages from "../../../messages/th.json";
 import AdminPage from "./page";
 import CreateRepPage from "./create-rep/page";
-import { RepDetailContent } from "./[repId]/page";
+import { RepDetailContent } from "./rep-detail-content";
 
 const mocks = vi.hoisted(() => ({
   cohortOverview: vi.fn(),
