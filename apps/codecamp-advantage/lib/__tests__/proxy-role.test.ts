@@ -18,6 +18,12 @@ vi.mock("@reading-advantage/db", () => ({
   db: {},
 }));
 
+vi.mock("@/lib/company-oidc", () => ({
+  CODECAMP_SESSION_COOKIE: "__Host-ra_codecamp_session",
+  codecampSessionRole: vi.fn(),
+  getCodecampOidcClient: () => ({ introspect: vi.fn() }),
+}));
+
 vi.mock("next-intl/middleware", async () => {
   const { NextResponse } = await import("next/server");
   return {

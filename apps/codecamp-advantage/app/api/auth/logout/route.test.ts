@@ -1,6 +1,6 @@
 // @vitest-environment node
 import { NextRequest, NextResponse } from "next/server";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
   handleLogout: vi.fn(),
@@ -47,7 +47,12 @@ describe("POST /api/auth/logout", () => {
     vi.clearAllMocks();
     mocks.legacyMode.mockReturnValue(false);
     mocks.readCookie.mockReturnValue("company-token");
+    mocks.oidcLogout.mockResolvedValue(true);
     mocks.handleLogout.mockResolvedValue(NextResponse.json({ success: true }));
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
   });
 
   it("revokes only the Accounts application session in company mode", async () => {
@@ -56,6 +61,26 @@ describe("POST /api/auth/logout", () => {
     expect(response.status).toBe(200);
     expect(mocks.oidcLogout).toHaveBeenCalledWith("company-token");
     expect(mocks.handleLogout).not.toHaveBeenCalled();
+  });
+
+  it("returns revocation failure while always clearing the company session cookie", async () => {
+    mocks.oidcLogout.mockResolvedValue(false);
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => undefined);
+
+    const response = await POST(request());
+    const setCookie = response.headers.get("set-cookie") ?? "";
+
+    expect(response.status).toBe(502);
+    await expect(response.json()).resolves.toEqual({ success: false });
+    expect(setCookie).toBe(
+      "__Host-ra_codecamp_session=; Path=/; " +
+        "Expires=Thu, 01 Jan 1970 00:00:00 GMT; Max-Age=0; " +
+        "Secure; HttpOnly; SameSite=lax",
+    );
+    expect(errorSpy).toHaveBeenCalledWith(
+      expect.stringContaining('"event":"codecamp_logout_revocation_failed"'),
+    );
+    expect(String(errorSpy.mock.calls[0]?.[0])).not.toContain("company-token");
   });
 
   it("uses only the local session adapter in explicit legacy mode", async () => {

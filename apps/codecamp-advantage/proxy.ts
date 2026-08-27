@@ -6,12 +6,28 @@ import type { NextRequest } from "next/server";
 
 import { routing } from "./i18n/routing";
 import { isLegacyCodecampAuthEnabled } from "./lib/auth-mode";
+import {
+  CODECAMP_SESSION_COOKIE,
+  codecampSessionRole,
+  getCodecampOidcClient,
+} from "./lib/company-oidc";
 import { resolveRequestLocale } from "./lib/locale-resolution";
 import { getPublicOrigin, getPublicUrl } from "./lib/public-url";
 import { buildSignInHref } from "./lib/sign-in-href";
 
-const CODECAMP_SESSION_COOKIE = "__Host-ra_codecamp_session";
 const intlMiddleware = createIntlMiddleware(routing);
+
+/** Expires the Codecamp session cookie with its original host-only attributes. */
+function expireCodecampSessionCookie(response: NextResponse, secure: boolean): void {
+  response.cookies.set(CODECAMP_SESSION_COOKIE, "", {
+    expires: new Date(0),
+    httpOnly: true,
+    maxAge: 0,
+    path: "/",
+    sameSite: "lax",
+    secure,
+  });
+}
 
 /**
  * Identifies Codecamp administrator routes across supported locales.
@@ -79,6 +95,40 @@ export async function proxy(request: NextRequest): Promise<NextResponse> {
         const homeUrl = getPublicUrl(request, "/");
         homeUrl.searchParams.set("error", "session_check_failed");
         return NextResponse.redirect(homeUrl);
+      }
+    }
+
+    if (!legacyMode) {
+      const publicOrigin = getPublicOrigin(request);
+      const secureCookie =
+        process.env.NODE_ENV === "production" || publicOrigin.protocol === "https:";
+      try {
+        const session = await getCodecampOidcClient().introspect(sessionToken);
+        if (!session) {
+          const response = NextResponse.redirect(
+            new URL(buildSignInHref(pathname, search), publicOrigin),
+          );
+          expireCodecampSessionCookie(response, secureCookie);
+          return response;
+        }
+        if (codecampSessionRole(session.identity) !== "ADMIN") {
+          const homeUrl = new URL("/", publicOrigin);
+          homeUrl.searchParams.set("error", "forbidden");
+          return NextResponse.redirect(homeUrl);
+        }
+      } catch (error) {
+        console.error(
+          JSON.stringify({
+            level: "error",
+            event: "codecamp_proxy_session_check_failed",
+            errorName: error instanceof Error ? error.name : "UnknownError",
+          }),
+        );
+        const homeUrl = new URL("/", publicOrigin);
+        homeUrl.searchParams.set("error", "session_check_failed");
+        const response = NextResponse.redirect(homeUrl);
+        expireCodecampSessionCookie(response, secureCookie);
+        return response;
       }
     }
   }

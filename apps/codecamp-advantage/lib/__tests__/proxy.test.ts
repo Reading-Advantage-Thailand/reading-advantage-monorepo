@@ -1,6 +1,8 @@
 import { afterEach, beforeEach, describe, it, expect, vi } from "vitest";
 
-const { requireRoleMock } = vi.hoisted(() => ({
+const { codecampSessionRoleMock, introspectMock, requireRoleMock } = vi.hoisted(() => ({
+  codecampSessionRoleMock: vi.fn(),
+  introspectMock: vi.fn(),
   requireRoleMock: vi.fn(),
 }));
 
@@ -15,6 +17,12 @@ vi.mock("@reading-advantage/auth", async () => {
 });
 
 vi.mock("@reading-advantage/db", () => ({ db: {} }));
+
+vi.mock("@/lib/company-oidc", () => ({
+  CODECAMP_SESSION_COOKIE: "__Host-ra_codecamp_session",
+  codecampSessionRole: codecampSessionRoleMock,
+  getCodecampOidcClient: () => ({ introspect: introspectMock }),
+}));
 
 vi.mock("next-intl/middleware", async () => {
   const { NextResponse } = await import("next/server");
@@ -54,7 +62,10 @@ function createRequest(pathname: string, cookies?: Record<string, string>, heade
 
 describe("proxy", () => {
   beforeEach(() => {
+    vi.clearAllMocks();
     vi.stubEnv("CODECAMP_AUTH_MODE", "legacy");
+    introspectMock.mockResolvedValue({ identity: { roles: ["ADMIN"] } });
+    codecampSessionRoleMock.mockReturnValue("ADMIN");
   });
 
   afterEach(() => {
@@ -205,6 +216,77 @@ describe("proxy", () => {
     expect(location.pathname).toBe("/api/auth/company/start");
     expect(location.searchParams.getAll("returnTo")).toEqual(["/en/admin?tab=users"]);
     expect(location.searchParams.get("redirectTo")).toBeNull();
+  });
+
+  it("allows only a verified company ADMIN session through to admin", async () => {
+    vi.stubEnv("CODECAMP_AUTH_MODE", "company");
+    const req = createRequest("/en/admin", {
+      "__Host-ra_codecamp_session": "admin-token",
+    });
+
+    const res = await proxy(req);
+
+    expect(res.status).toBe(200);
+    expect(introspectMock).toHaveBeenCalledWith("admin-token");
+    expect(codecampSessionRoleMock).toHaveBeenCalledWith({ roles: ["ADMIN"] });
+  });
+
+  it.each(["INTERN", "STUDENT"])(
+    "denies a verified company %s session from admin",
+    async (role) => {
+      vi.stubEnv("CODECAMP_AUTH_MODE", "company");
+      introspectMock.mockResolvedValue({ identity: { roles: [role] } });
+      codecampSessionRoleMock.mockReturnValue(role);
+      const req = createRequest("/en/admin", {
+        "__Host-ra_codecamp_session": "user-token",
+      });
+
+      const res = await proxy(req);
+
+      expect(res.status).toBe(307);
+      expect(res.headers.get("location")).toBe(
+        "http://localhost:3000/?error=forbidden",
+      );
+    },
+  );
+
+  it("denies a malformed company session and clears its cookie", async () => {
+    vi.stubEnv("CODECAMP_AUTH_MODE", "company");
+    introspectMock.mockResolvedValue({ identity: { roles: ["UNKNOWN"] } });
+    codecampSessionRoleMock.mockImplementation(() => {
+      throw new Error("Accounts session has no recognized Codecamp role.");
+    });
+    const req = createRequest("/en/admin", {
+      "__Host-ra_codecamp_session": "malformed-token",
+    });
+
+    const res = await proxy(req);
+
+    expect(res.status).toBe(307);
+    expect(res.headers.get("location")).toBe(
+      "http://localhost:3000/?error=session_check_failed",
+    );
+    expect(res.headers.get("set-cookie")).toContain(
+      "__Host-ra_codecamp_session=;",
+    );
+  });
+
+  it("denies an invalid company session and restarts sign-in", async () => {
+    vi.stubEnv("CODECAMP_AUTH_MODE", "company");
+    introspectMock.mockResolvedValue(null);
+    const req = createRequest("/en/admin", {
+      "__Host-ra_codecamp_session": "invalid-token",
+    });
+
+    const res = await proxy(req);
+    const location = new URL(res.headers.get("location")!);
+
+    expect(res.status).toBe(307);
+    expect(location.pathname).toBe("/api/auth/company/start");
+    expect(location.searchParams.get("returnTo")).toBe("/en/admin");
+    expect(res.headers.get("set-cookie")).toContain(
+      "__Host-ra_codecamp_session=;",
+    );
   });
 
   it("exports a matcher config", () => {

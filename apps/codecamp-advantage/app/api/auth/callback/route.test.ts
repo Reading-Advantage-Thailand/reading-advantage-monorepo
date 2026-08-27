@@ -66,6 +66,7 @@ describe("GET /api/auth/callback", () => {
 
   afterEach(() => {
     vi.unstubAllEnvs();
+    vi.restoreAllMocks();
   });
 
   it("never exchanges Accounts credentials in explicit legacy mode", async () => {
@@ -199,6 +200,38 @@ describe("GET /api/auth/callback", () => {
       "https://codecamp.reading-advantage.com/?error=forbidden",
     );
     expect(mocks.logout).toHaveBeenCalledWith("company-token");
+    expect(setCookie).not.toContain(
+      "__Host-ra_codecamp_session=company-token",
+    );
+  });
+
+  it("records false role-less session revocation without issuing a session cookie", async () => {
+    const identity = {
+      aud: "codecamp",
+      roles: ["SALES_REP"],
+    };
+    mocks.codecampSessionRole.mockImplementation(() => {
+      throw new Error("Accounts session has no recognized Codecamp role.");
+    });
+    mocks.logout.mockResolvedValueOnce(false);
+    mocks.exchange.mockResolvedValue({
+      accessToken: "company-token",
+      expiresAt: new Date(Date.now() + 60_000).toISOString(),
+      returnTo: "/en/module/intro",
+      identity,
+    });
+
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    const response = await GET(request());
+    const setCookie = response.headers.get("set-cookie") ?? "";
+
+    expect(response.headers.get("location")).toBe(
+      "https://codecamp.reading-advantage.com/?error=forbidden",
+    );
+    expect(mocks.logout).toHaveBeenCalledWith("company-token");
+    expect(errorSpy).toHaveBeenCalledWith(
+      expect.stringContaining('"event":"codecamp_callback_revocation_failed"'),
+    );
     expect(setCookie).not.toContain(
       "__Host-ra_codecamp_session=company-token",
     );

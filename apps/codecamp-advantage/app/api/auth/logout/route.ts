@@ -10,13 +10,26 @@ import {
 } from "@/lib/company-oidc";
 import { getPublicOrigin } from "@/lib/public-url";
 
+/** Expires the Codecamp session cookie with its original host-only attributes. */
+function expireCodecampSessionCookie(response: NextResponse, secure: boolean): void {
+  response.cookies.set(CODECAMP_SESSION_COOKIE, "", {
+    expires: new Date(0),
+    httpOnly: true,
+    maxAge: 0,
+    path: "/",
+    sameSite: "lax",
+    secure,
+  });
+}
+
 /**
  * Revokes and clears the session selected by the explicit Codecamp authentication mode.
  * @param request Same-origin browser logout request.
  * @returns Successful logout response with only the active-mode cookie expired.
  */
 export async function POST(request: NextRequest): Promise<NextResponse> {
-  if (request.headers.get("origin") !== getPublicOrigin(request).origin) {
+  const publicOrigin = getPublicOrigin(request);
+  if (request.headers.get("origin") !== publicOrigin.origin) {
     return NextResponse.json(
       { message: "Invalid request origin" },
       { status: 403 },
@@ -25,8 +38,37 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   if (isLegacyCodecampAuthEnabled()) return handleLogout(request);
 
   const token = readCodecampCookie(request, CODECAMP_SESSION_COOKIE);
-  if (token) await getCodecampOidcClient().logout(token);
-  const response = NextResponse.json({ success: true });
-  response.cookies.delete(CODECAMP_SESSION_COOKIE);
+  let revocationFailed = false;
+  if (token) {
+    try {
+      const revoked = await getCodecampOidcClient().logout(token);
+      if (!revoked) {
+        revocationFailed = true;
+        console.error(
+          JSON.stringify({
+            level: "error",
+            event: "codecamp_logout_revocation_failed",
+          }),
+        );
+      }
+    } catch (error) {
+      revocationFailed = true;
+      console.error(
+        JSON.stringify({
+          level: "error",
+          event: "codecamp_logout_revocation_error",
+          errorName: error instanceof Error ? error.name : "UnknownError",
+        }),
+      );
+    }
+  }
+  const response = NextResponse.json(
+    { success: !revocationFailed },
+    { status: revocationFailed ? 502 : 200 },
+  );
+  expireCodecampSessionCookie(
+    response,
+    process.env.NODE_ENV === "production" || publicOrigin.protocol === "https:",
+  );
   return response;
 }

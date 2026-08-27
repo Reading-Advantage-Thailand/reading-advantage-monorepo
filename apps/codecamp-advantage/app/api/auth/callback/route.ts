@@ -58,9 +58,23 @@ export async function GET(request: Request): Promise<NextResponse> {
       codecampSessionRole(session.identity);
     } catch {
       try {
-        await client.logout(session.accessToken);
-      } catch {
-        // The callback never issues a local session after a failed revocation.
+        const revoked = await client.logout(session.accessToken);
+        if (!revoked) {
+          console.error(
+            JSON.stringify({
+              level: "error",
+              event: "codecamp_callback_revocation_failed",
+            }),
+          );
+        }
+      } catch (error) {
+        console.error(
+          JSON.stringify({
+            level: "error",
+            event: "codecamp_callback_revocation_error",
+            errorName: error instanceof Error ? error.name : "UnknownError",
+          }),
+        );
       }
       const response = NextResponse.redirect(
         new URL("/?error=forbidden", publicOrigin),
