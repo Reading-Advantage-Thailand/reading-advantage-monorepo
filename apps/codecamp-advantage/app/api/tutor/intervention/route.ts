@@ -11,6 +11,7 @@ import {
   persistTutorIntervention,
   recordTutorResourceUse,
   resolveCodecampTutorModel,
+  tutorModeSchema,
 } from "@reading-advantage/domain/codecamp";
 import { z } from "zod";
 import { generateCodecampTutorIntervention } from "@/lib/tutor-intervention";
@@ -23,6 +24,7 @@ const tutorRequestSchema = z.discriminatedUnion("action", [
     message: z.string().trim().min(1).max(4_000),
     locale: z.enum(["th", "en"]),
     stepId: z.string().trim().min(1).max(256).nullable().optional(),
+    mode: tutorModeSchema.default("remediate"),
   }).strict(),
   z.object({
     action: z.literal("resource_use"),
@@ -65,7 +67,7 @@ export async function POST(request: NextRequest): Promise<Response> {
       db: tenantDb,
       user: session.user,
       tenant,
-      input: { activitySessionId: input.activitySessionId, locale: input.locale, stepId: input.stepId },
+      input: { activitySessionId: input.activitySessionId, locale: input.locale, stepId: input.stepId, mode: input.mode },
     });
     const tutorModel = resolveCodecampTutorModel();
     const generated = process.env.OPENROUTER_API_KEY

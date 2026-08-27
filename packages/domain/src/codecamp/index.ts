@@ -21,6 +21,7 @@ export {
   CODECAMP_TUTOR_RESPONSE_SCHEMA_VERSION,
   DEFAULT_CODECAMP_TUTOR_MODEL,
   tutorInterventionLevelSchema,
+  tutorModeSchema,
   tutorResourceActionSchema,
   curatedTutorResourceSchema,
   tutorResourceReferenceSchema,

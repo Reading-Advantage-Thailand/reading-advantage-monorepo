@@ -124,6 +124,22 @@ describe("Codecamp tutor persistence boundaries", () => {
     }));
   });
 
+  it("stores an ask answer at the existing maximum database level", async () => {
+    const saved = { id: interventionId, requestId: "55555555-5555-4555-8555-555555555555" };
+    const { db, insertValues } = createTutorPersistenceDb([[], [{ id: sessionId }]], saved);
+
+    await expect(persistTutorIntervention({
+      db: createTenantDB(db as unknown as DB, globalTenant), user: learner, tenant: globalTenant,
+      input: {
+        requestId: saved.requestId, activitySessionId: sessionId,
+        context: { ...tutorContext(), mode: "ask" },
+        intervention: { message: "Set the stage position before starting the game.", level: "answer", diagnosticQuestion: null, misconceptionTags: [], resource: null },
+        provenance: { modelAlias: "test-model", resolvedModel: "test-model" },
+      },
+    })).resolves.toEqual(saved);
+    expect(insertValues).toHaveBeenCalledWith(expect.objectContaining({ interventionLevel: 4 }));
+  });
+
   it("records a resource use only when it matches the learner-owned recommendation", async () => {
     const { db, insertValues } = createTutorPersistenceDb([[{ id: interventionId, recommendedResourceId: "diagram:apk.boundaries" }]], { id: "resource-use" });
 
