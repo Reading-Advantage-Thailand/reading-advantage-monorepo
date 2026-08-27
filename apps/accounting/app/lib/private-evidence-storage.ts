@@ -70,6 +70,26 @@ export interface PutPrivateEvidenceResult {
   readonly evidenceReference: string;
 }
 
+/** Input for deleting one private evidence upload. */
+export interface DeletePrivateEvidenceInput {
+  /** Storage port to delete through. Defaults to the process-wide singleton. */
+  readonly storage?: StorageClient;
+  /** Trusted company scope from the session actor. */
+  readonly companyId: string;
+  /** Private evidence reference returned by the upload port. */
+  readonly evidenceReference: string;
+}
+
+/** Checks whether a reference path segment is safe for a storage key. */
+function isSafeReferenceSegment(segment: string): boolean {
+  return (
+    segment !== "" &&
+    segment !== "." &&
+    segment !== ".." &&
+    [...segment].every((character) => SAFE_SEGMENT_CHARACTER.test(character))
+  );
+}
+
 /**
  * Stores upload bytes once through the storage port and returns the
  * company-scoped `private-evidence://` reference for the stored object. The
@@ -89,4 +109,28 @@ export async function putPrivateEvidence(
     public: false,
   });
   return { evidenceReference: `${PRIVATE_EVIDENCE_SCHEME}${key}` };
+}
+
+/** Deletes one uploaded private evidence object within the caller's company scope.
+ * @param input Storage port, trusted company scope, and uploaded evidence reference.
+ * @returns A promise that resolves after the object is deleted.
+ * @throws When the reference does not identify one object created for the company.
+ */
+export async function deletePrivateEvidence(
+  input: DeletePrivateEvidenceInput,
+): Promise<void> {
+  const key = input.evidenceReference.startsWith(PRIVATE_EVIDENCE_SCHEME)
+    ? input.evidenceReference.slice(PRIVATE_EVIDENCE_SCHEME.length)
+    : "";
+  const segments = key.split("/");
+  if (
+    segments.length !== 4 ||
+    segments[0] !== input.companyId ||
+    segments[1] !== "submissions" ||
+    segments.some((segment) => !isSafeReferenceSegment(segment))
+  ) {
+    throw new Error("Evidence reference is outside the caller's company scope");
+  }
+
+  await (input.storage ?? getStorageClient()).delete(key);
 }

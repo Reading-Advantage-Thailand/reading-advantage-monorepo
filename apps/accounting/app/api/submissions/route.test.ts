@@ -41,6 +41,7 @@ const mocks = vi.hoisted(() => ({
   submitAccountingSubmission: vi.fn(),
   listAccountingSubmissions: vi.fn(),
   putPrivateEvidence: vi.fn(),
+  deletePrivateEvidence: vi.fn(),
 }));
 
 vi.mock("@/app/lib/auth", () => ({
@@ -52,6 +53,7 @@ vi.mock("@/app/lib/submissions", () => ({
 }));
 vi.mock("@/app/lib/private-evidence-storage", () => ({
   putPrivateEvidence: mocks.putPrivateEvidence,
+  deletePrivateEvidence: mocks.deletePrivateEvidence,
 }));
 
 const ROUTE_URL = "http://localhost/api/submissions";
@@ -151,6 +153,7 @@ describe("POST /api/submissions", () => {
     mocks.putPrivateEvidence.mockResolvedValue({
       evidenceReference: EVIDENCE_REFERENCE,
     });
+    mocks.deletePrivateEvidence.mockResolvedValue(undefined);
     mocks.submitAccountingSubmission.mockResolvedValue(storedSubmission);
   });
 
@@ -224,6 +227,7 @@ describe("POST /api/submissions", () => {
         }),
       }),
     );
+    expect(mocks.deletePrivateEvidence).not.toHaveBeenCalled();
   });
 
   it("ignores a caller-supplied evidenceReference form field", async () => {
@@ -317,6 +321,43 @@ describe("POST /api/submissions", () => {
       readonly fieldErrors: Record<string, readonly string[]>;
     };
     expect(Object.keys(body.fieldErrors)).toContain("money.currency");
+    expect(mocks.deletePrivateEvidence).toHaveBeenCalledWith({
+      companyId: COMPANY_ID,
+      evidenceReference: EVIDENCE_REFERENCE,
+    });
+  });
+
+  it("deletes newly uploaded evidence when the domain replays an existing submission", async () => {
+    const uploadedReference = `private-evidence://${COMPANY_ID}/submissions/retry/uploaded.pdf`;
+    mocks.putPrivateEvidence.mockResolvedValue({
+      evidenceReference: uploadedReference,
+    });
+
+    const response = await POST(
+      postRequest(expenseFields, {
+        file: evidenceFile(),
+        idempotencyKey: "retry-1",
+      }),
+    );
+
+    expect(response.status).toBe(201);
+    expect(mocks.deletePrivateEvidence).toHaveBeenCalledWith({
+      companyId: COMPANY_ID,
+      evidenceReference: uploadedReference,
+    });
+  });
+
+  it("deletes newly uploaded evidence when the domain submission fails", async () => {
+    const submissionError = new Error("Accounting service unavailable");
+    mocks.submitAccountingSubmission.mockRejectedValue(submissionError);
+
+    await expect(
+      POST(postRequest(expenseFields, { file: evidenceFile() })),
+    ).rejects.toThrow("Accounting service unavailable");
+    expect(mocks.deletePrivateEvidence).toHaveBeenCalledWith({
+      companyId: COMPANY_ID,
+      evidenceReference: EVIDENCE_REFERENCE,
+    });
   });
 
   it("returns 400 with field errors for a non-THB submission missing settledThbAmount", async () => {

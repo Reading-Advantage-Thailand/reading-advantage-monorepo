@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import type { FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import {
@@ -154,6 +154,7 @@ export function NewSubmissionForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [formMessage, setFormMessage] = useState<FormMessage | null>(null);
+  const idempotencyKeyRef = useRef<string | null>(null);
 
   const isNonThbCurrency = currency.length === 3 && currency !== "THB";
 
@@ -172,10 +173,14 @@ export function NewSubmissionForm() {
     if (!isNonThbCurrency) {
       formData.delete("settledThbAmount");
     }
+    const idempotencyKey =
+      idempotencyKeyRef.current ??
+      (idempotencyKeyRef.current = globalThis.crypto.randomUUID());
 
     try {
       const response = await fetch("/api/submissions", {
         method: "POST",
+        headers: { "idempotency-key": idempotencyKey },
         body: formData,
       });
       const body = await readJson(response);
@@ -196,6 +201,7 @@ export function NewSubmissionForm() {
         router.refresh();
         form.reset();
         setCurrency("THB");
+        idempotencyKeyRef.current = null;
         return;
       }
 
@@ -428,7 +434,7 @@ export function NewSubmissionForm() {
                     ? "evidence-error"
                     : undefined
                 }
-                aria-invalid={errorsForField("evidence", fieldErrors).length > 0}
+                  aria-invalid={errorsForField("evidence", fieldErrors).length > 0}
                 className={
                   errorsForField("evidence", fieldErrors).length > 0
                     ? invalidControlClassName

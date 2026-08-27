@@ -9,7 +9,10 @@
  */
 import { requireAccountingSession } from "@/app/lib/auth";
 import type { accountingSessionUser } from "@/app/lib/company-oidc";
-import { putPrivateEvidence } from "@/app/lib/private-evidence-storage";
+import {
+  deletePrivateEvidence,
+  putPrivateEvidence,
+} from "@/app/lib/private-evidence-storage";
 import {
   listAccountingSubmissions,
   submitAccountingSubmission,
@@ -66,6 +69,19 @@ function isInvalidInputError(
     (error as { readonly reason?: unknown }).reason === "invalid-input" &&
     typeof (error as { readonly fieldErrors?: unknown }).fieldErrors ===
       "object"
+  );
+}
+
+/** Checks whether a domain result retains the evidence uploaded for this request. */
+function usesUploadedEvidence(
+  submission: unknown,
+  evidenceReference: string,
+): boolean {
+  return (
+    typeof submission === "object" &&
+    submission !== null &&
+    "evidenceReference" in submission &&
+    submission.evidenceReference === evidenceReference
   );
 }
 
@@ -164,8 +180,18 @@ export async function POST(request: Request): Promise<Response> {
       input,
       ...(idempotencyKey === undefined ? {} : { idempotencyKey }),
     });
+    if (!usesUploadedEvidence(submission, evidenceReference)) {
+      await deletePrivateEvidence({
+        companyId: actor.companyId,
+        evidenceReference,
+      });
+    }
     return jsonResponse(submission, 201);
   } catch (error) {
+    await deletePrivateEvidence({
+      companyId: actor.companyId,
+      evidenceReference,
+    });
     if (isInvalidInputError(error)) {
       return jsonResponse(
         { message: error.message, fieldErrors: error.fieldErrors },

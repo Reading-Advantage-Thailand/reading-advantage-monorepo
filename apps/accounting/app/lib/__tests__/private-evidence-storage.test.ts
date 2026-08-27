@@ -26,6 +26,7 @@
 import { describe, expect, it, vi } from "vitest";
 
 import type { StorageClient } from "@reading-advantage/storage";
+import * as privateEvidenceStorage from "@/app/lib/private-evidence-storage";
 import { putPrivateEvidence } from "@/app/lib/private-evidence-storage";
 
 const COMPANY_ID = "33333333-3333-4333-8333-333333333333";
@@ -53,6 +54,16 @@ function upload(overrides: Record<string, unknown> = {}) {
     ...overrides,
   };
 }
+
+type DeletePrivateEvidence = (input: {
+  readonly storage: StorageClient;
+  readonly companyId: string;
+  readonly evidenceReference: string;
+}) => Promise<void>;
+
+const deletePrivateEvidence = (
+  privateEvidenceStorage as unknown as Record<string, unknown>
+).deletePrivateEvidence as DeletePrivateEvidence | undefined;
 
 describe("putPrivateEvidence", () => {
   it("stores the bytes once through the storage port and returns a company-scoped private evidence reference", async () => {
@@ -114,5 +125,40 @@ describe("putPrivateEvidence", () => {
       result.evidenceReference.startsWith("private-evidence://other-company/"),
     ).toBe(true);
     expect(result.evidenceReference).not.toContain(COMPANY_ID);
+  });
+});
+
+describe("deletePrivateEvidence", () => {
+  it("deletes the uploaded object for the caller's company", async () => {
+    expect(deletePrivateEvidence).toBeTypeOf("function");
+    if (!deletePrivateEvidence) return;
+    const request = upload();
+    const result = await putPrivateEvidence(request);
+
+    await deletePrivateEvidence({
+      storage: request.storage,
+      companyId: COMPANY_ID,
+      evidenceReference: result.evidenceReference,
+    });
+
+    expect(request.storage.delete).toHaveBeenCalledWith(
+      result.evidenceReference.slice("private-evidence://".length),
+    );
+  });
+
+  it("rejects an evidence reference outside the caller's company", async () => {
+    expect(deletePrivateEvidence).toBeTypeOf("function");
+    if (!deletePrivateEvidence) return;
+    const request = upload();
+
+    await expect(
+      deletePrivateEvidence({
+        storage: request.storage,
+        companyId: COMPANY_ID,
+        evidenceReference:
+          "private-evidence://other-company/submissions/0001/receipt.pdf",
+      }),
+    ).rejects.toThrow(/company/i);
+    expect(request.storage.delete).not.toHaveBeenCalled();
   });
 });

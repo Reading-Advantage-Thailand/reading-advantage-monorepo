@@ -129,6 +129,61 @@ describe("NewSubmissionForm", () => {
     expect(navigation.refresh).toHaveBeenCalledTimes(1);
   });
 
+  it("reuses the idempotency key after a failed request", async () => {
+    fetchMock
+      .mockRejectedValueOnce(new Error("network unavailable"))
+      .mockResolvedValueOnce(jsonResponse(pendingSubmission, 201));
+    render(<NewSubmissionForm />);
+    fillValidExpenseForm();
+    const form = screen.getByRole("form", { name: "Submission form" });
+
+    fireEvent.submit(form);
+    await screen.findByRole("alert", {
+      name: "We could not submit this record. Please try again later.",
+    });
+
+    fireEvent.submit(form);
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(2));
+
+    const firstRequest = fetchMock.mock.calls[0]?.[1] as RequestInit;
+    const secondRequest = fetchMock.mock.calls[1]?.[1] as RequestInit;
+    const firstKey = (firstRequest.headers as Record<string, string>)[
+      "idempotency-key"
+    ];
+    const secondKey = (secondRequest.headers as Record<string, string>)[
+      "idempotency-key"
+    ];
+    expect(firstKey).toEqual(expect.any(String));
+    expect(secondKey).toBe(firstKey);
+  });
+
+  it("generates a new idempotency key after a successful submission", async () => {
+    fetchMock.mockResolvedValue(jsonResponse(pendingSubmission, 201));
+    render(<NewSubmissionForm />);
+    fillValidExpenseForm();
+    const form = screen.getByRole("form", { name: "Submission form" });
+
+    fireEvent.submit(form);
+    await screen.findByRole("status", {
+      name: "Submission received. It is pending review.",
+    });
+
+    fillValidExpenseForm();
+    fireEvent.submit(form);
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(2));
+
+    const firstRequest = fetchMock.mock.calls[0]?.[1] as RequestInit;
+    const secondRequest = fetchMock.mock.calls[1]?.[1] as RequestInit;
+    const firstKey = (firstRequest.headers as Record<string, string>)[
+      "idempotency-key"
+    ];
+    const secondKey = (secondRequest.headers as Record<string, string>)[
+      "idempotency-key"
+    ];
+    expect(secondKey).toEqual(expect.any(String));
+    expect(secondKey).not.toBe(firstKey);
+  });
+
   it("shows a submit state while the multipart request is pending", async () => {
     let resolvePost: (response: Response) => void = () => undefined;
     const postResponse = new Promise<Response>((resolve) => {
