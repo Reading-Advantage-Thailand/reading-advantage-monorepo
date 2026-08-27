@@ -11,7 +11,12 @@ import {
   CardTitle,
 } from "@reading-advantage/ui";
 
-/** Renders complete administrator reporting for one tenant-owned Sales rep. */
+/**
+ * Renders complete administrator reporting for one tenant-owned Sales rep.
+ * @param props Component properties.
+ * @param props.repId Tenant-owned Sales representative identifier.
+ * @returns The administrator detail view.
+ */
 export function RepDetailContent({ repId }: { repId: string }) {
   const t = useTranslations("admin");
   const locale = useLocale();
