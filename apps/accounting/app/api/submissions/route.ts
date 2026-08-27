@@ -59,34 +59,67 @@ function jsonResponse(body: unknown, status: number): Response {
   });
 }
 
-/**
- * Narrows an unknown thrown value to the route-ready domain `invalid-input`
- * rejection produced by `@/app/lib/submissions`.
- * @param error Unknown thrown value.
- * @returns True when the error carries a `fieldErrors` map to return as 400.
- */
-function isInvalidInputError(
-  error: unknown,
-): error is Error & { readonly fieldErrors: Record<string, string[]> } {
-  return (
-    error instanceof Error &&
-    error.name === "AccountingSubmissionError" &&
-    (error as { readonly reason?: unknown }).reason === "invalid-input" &&
-    typeof (error as { readonly fieldErrors?: unknown }).fieldErrors ===
-      "object"
-  );
-}
+type AccountingErrorSnapshot =
+  | {
+      readonly reason: "invalid-input";
+      readonly message: string;
+      readonly fieldErrors: Record<string, string[]>;
+    }
+  | {
+      readonly reason: "conflict" | "forbidden";
+      readonly message: string;
+    }
+  | { readonly reason: "unknown" };
 
-/** Checks whether a thrown value carries one known accounting rejection reason. */
-function hasAccountingReason(
-  error: unknown,
-  reason: "conflict" | "forbidden",
-): boolean {
-  return (
-    error instanceof Error &&
-    error.name === "AccountingSubmissionError" &&
-    (error as { readonly reason?: unknown }).reason === reason
-  );
+/** Safely snapshots owned accounting error fields for route decisions. */
+function snapshotAccountingError(error: unknown): AccountingErrorSnapshot {
+  try {
+    if (!(error instanceof Error)) return { reason: "unknown" };
+
+    const name = error.name;
+    const reason = (error as { readonly reason?: unknown }).reason;
+    const message = error.message;
+    if (
+      name !== "AccountingSubmissionError" ||
+      (reason !== "invalid-input" &&
+        reason !== "conflict" &&
+        reason !== "forbidden") ||
+      typeof message !== "string"
+    ) {
+      return { reason: "unknown" };
+    }
+
+    if (reason === "invalid-input") {
+      const rawFieldErrors = (error as { readonly fieldErrors?: unknown })
+        .fieldErrors;
+      if (
+        typeof rawFieldErrors !== "object" ||
+        rawFieldErrors === null ||
+        Array.isArray(rawFieldErrors)
+      ) {
+        return { reason: "unknown" };
+      }
+      const fieldErrorEntries: Array<[string, string[]]> = [];
+      for (const [field, messages] of Object.entries(rawFieldErrors)) {
+        if (
+          !Array.isArray(messages) ||
+          !messages.every((messageValue) => typeof messageValue === "string")
+        ) {
+          return { reason: "unknown" };
+        }
+        fieldErrorEntries.push([field, [...messages]]);
+      }
+      return {
+        reason,
+        message,
+        fieldErrors: Object.fromEntries(fieldErrorEntries),
+      };
+    }
+
+    return { reason, message };
+  } catch {
+    return { reason: "unknown" };
+  }
 }
 
 /** Compares two evidence byte arrays without creating a derived artifact. */
@@ -296,24 +329,28 @@ export async function POST(request: Request): Promise<Response> {
   try {
     submissionResult = await submit();
   } catch (error) {
-    if (isInvalidInputError(error)) {
+    const errorSnapshot = snapshotAccountingError(error);
+    if (errorSnapshot.reason === "invalid-input") {
       await cleanupUploadedEvidence({
         companyId: actor.companyId,
         evidenceReference,
       });
       return jsonResponse(
-        { message: error.message, fieldErrors: error.fieldErrors },
+        {
+          message: errorSnapshot.message,
+          fieldErrors: errorSnapshot.fieldErrors,
+        },
         400,
       );
     }
-    if (hasAccountingReason(error, "conflict")) {
+    if (errorSnapshot.reason === "conflict") {
       await cleanupUploadedEvidence({
         companyId: actor.companyId,
         evidenceReference,
       });
       return idempotencyConflictResponse();
     }
-    if (hasAccountingReason(error, "forbidden")) {
+    if (errorSnapshot.reason === "forbidden") {
       await cleanupUploadedEvidence({
         companyId: actor.companyId,
         evidenceReference,
@@ -333,7 +370,8 @@ export async function POST(request: Request): Promise<Response> {
     try {
       submissionResult = await submit();
     } catch (resolutionError) {
-      if (hasAccountingReason(resolutionError, "conflict")) {
+      const resolutionSnapshot = snapshotAccountingError(resolutionError);
+      if (resolutionSnapshot.reason === "conflict") {
         await cleanupUploadedEvidence({
           companyId: actor.companyId,
           evidenceReference,

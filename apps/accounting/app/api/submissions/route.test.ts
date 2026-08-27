@@ -128,6 +128,25 @@ function invalidInputError(fieldErrors: Record<string, string[]>): Error {
   });
 }
 
+function errorWithThrowingClassificationGetters(message: string): Error {
+  const error = new Error(message);
+  Object.defineProperties(error, {
+    name: {
+      configurable: true,
+      get() {
+        throw new Error("sensitive name getter");
+      },
+    },
+    reason: {
+      configurable: true,
+      get() {
+        throw new Error("sensitive reason getter");
+      },
+    },
+  });
+  return error;
+}
+
 function evidenceFile(): File {
   return new File([new Uint8Array([0x25, 0x50, 0x44, 0x46])], "receipt.pdf", {
     type: "application/pdf",
@@ -719,6 +738,75 @@ describe("POST /api/submissions", () => {
     expect(JSON.stringify(log)).not.toContain("response lost");
     expect(JSON.stringify(log)).not.toContain("database still unavailable");
     expect(JSON.stringify(log)).not.toContain("Bangkok Taxi Cooperative");
+  });
+
+  it("retries with the same key when primary error classification getters throw", async () => {
+    const primaryError =
+      errorWithThrowingClassificationGetters("primary details");
+    let calls = 0;
+    mocks.submitAccountingSubmissionWithOutcome.mockImplementation(async () => {
+      calls += 1;
+      if (calls === 1) throw primaryError;
+      return { submission: storedSubmission, outcome: "replayed" };
+    });
+
+    const response = await POST(
+      postRequest(expenseFields, { file: evidenceFile() }),
+    );
+
+    expect(response.status).toBe(200);
+    expect(mocks.submitAccountingSubmissionWithOutcome).toHaveBeenCalledTimes(
+      2,
+    );
+    expect(mocks.submitAccountingSubmissionWithOutcome).toHaveBeenNthCalledWith(
+      1,
+      expect.objectContaining({ idempotencyKey: VALID_IDEMPOTENCY_KEY }),
+    );
+    expect(mocks.submitAccountingSubmissionWithOutcome).toHaveBeenNthCalledWith(
+      2,
+      expect.objectContaining({ idempotencyKey: VALID_IDEMPOTENCY_KEY }),
+    );
+    expect(consoleErrorMock).not.toHaveBeenCalled();
+  });
+
+  it("preserves the primary error when resolution classification getters throw", async () => {
+    const primaryError =
+      errorWithThrowingClassificationGetters("primary details");
+    const resolutionError =
+      errorWithThrowingClassificationGetters("resolution details");
+    let calls = 0;
+    mocks.submitAccountingSubmissionWithOutcome.mockImplementation(async () => {
+      calls += 1;
+      if (calls === 1) throw primaryError;
+      throw resolutionError;
+    });
+
+    await expect(
+      POST(postRequest(expenseFields, { file: evidenceFile() })),
+    ).rejects.toBe(primaryError);
+    expect(mocks.submitAccountingSubmissionWithOutcome).toHaveBeenCalledTimes(
+      2,
+    );
+    expect(mocks.submitAccountingSubmissionWithOutcome).toHaveBeenNthCalledWith(
+      1,
+      expect.objectContaining({ idempotencyKey: VALID_IDEMPOTENCY_KEY }),
+    );
+    expect(mocks.submitAccountingSubmissionWithOutcome).toHaveBeenNthCalledWith(
+      2,
+      expect.objectContaining({ idempotencyKey: VALID_IDEMPOTENCY_KEY }),
+    );
+    expect(mocks.deletePrivateEvidence).not.toHaveBeenCalled();
+    expect(consoleErrorMock).toHaveBeenCalledTimes(1);
+    const serializedLog = String(consoleErrorMock.mock.calls[0]?.[0]);
+    const log = JSON.parse(serializedLog) as Record<string, unknown>;
+    expect(log).toMatchObject({
+      errorName: "Error",
+      secondaryErrorName: "Error",
+    });
+    expect(serializedLog).not.toContain("sensitive name getter");
+    expect(serializedLog).not.toContain("sensitive reason getter");
+    expect(serializedLog).not.toContain("primary details");
+    expect(serializedLog).not.toContain("resolution details");
   });
 
   it("returns 400 with field errors for a non-THB submission missing settledThbAmount", async () => {
