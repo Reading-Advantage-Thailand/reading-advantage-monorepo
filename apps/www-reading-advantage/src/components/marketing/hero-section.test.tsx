@@ -60,12 +60,10 @@ describe("HeroSection", () => {
       "from-violet-500",
       "to-fuchsia-500",
     );
-    expect(gradient).not.toHaveClass(
-      "bg-gradient-to-br",
-      "from-amber-50",
-      "via-orange-50",
-      "to-sky-50",
-    );
+    expect(gradient).not.toHaveClass("bg-gradient-to-br");
+    expect(gradient).not.toHaveClass("from-amber-50");
+    expect(gradient).not.toHaveClass("via-orange-50");
+    expect(gradient).not.toHaveClass("to-sky-50");
   });
 
   it("renders the CTA button with correct href when ctaButton prop is provided", () => {
