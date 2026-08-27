@@ -1,0 +1,5 @@
+Red: role-less verified Accounts identity test failed before the callback role gate.
+
+Green: callback 6/6; original focused set 58/58 plus new case 59/59; related auth and locale set 24/24; TypeScript and Next build passed.
+
+User behavior: role-less identities redirect to the public /?error=forbidden target, expire the transaction cookie, and receive no Codecamp session cookie. Authorized callbacks retain forwarded-origin redirects and session creation.
