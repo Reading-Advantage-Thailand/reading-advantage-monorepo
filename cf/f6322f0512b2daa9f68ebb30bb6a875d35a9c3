@@ -5,3 +5,10 @@ Red: The Thai ChatTutor test failed because the icon-only send button had no acc
 Green: The focused component test, 13-test chat API regression, ESLint, and Sales TypeScript checks passed.
 
 User behavior: Screen readers now identify the send control as ส่ง in Thai and Send in English.
+
+Acceptance 2026-08-28
+
+Product: ChatTutor exposes a localized send label and blocks duplicate sends during a pending request.
+Tests: Focused Vitest passed 3 tests. Sales TypeScript, ESLint, graph update, and diff checks passed.
+Review: Two independent final reviews found no actionable Critical, High, or Medium findings.
+Commits: cff6322f0, de4872ba0, 8025fb7fe, fc07792d9.
