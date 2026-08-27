@@ -51,7 +51,7 @@ vi.mock("@/components/marketing/hero-section", () => ({
 const mockPosts: BlogListItem[] = Array.from({ length: 19 }, (_, index) => ({
   slug: `post-${index + 1}`,
   title: `Post ${index + 1}`,
-  date: "2024-01-01",
+  date: `2024-01-${String(19 - index).padStart(2, "0")}`,
   excerpt: `Excerpt ${index + 1}`,
   author: "Author",
   tags: ["reading"],
@@ -83,6 +83,10 @@ describe("blog pagination routes", () => {
       await BlogPage({ params: Promise.resolve({ locale: "th" }) }),
     );
 
+    for (let postNumber = 1; postNumber <= 9; postNumber += 1) {
+      expect(root.getByText(`Post ${postNumber}`)).toBeDefined();
+    }
+    expect(root.queryByText("Post 10")).toBeNull();
     expect(root.getByRole("heading", { name: "pages.blog.title" })).toBeDefined();
     expect(
       root.getByRole("navigation", { name: "components.pagination.page" }),
@@ -109,6 +113,11 @@ describe("blog pagination routes", () => {
       }),
     );
 
+    for (let postNumber = 10; postNumber <= 18; postNumber += 1) {
+      expect(pageTwo.getByText(`Post ${postNumber}`)).toBeDefined();
+    }
+    expect(pageTwo.queryByText("Post 9")).toBeNull();
+    expect(pageTwo.queryByText("Post 19")).toBeNull();
     expect(pageTwo.getByRole("heading", { name: "Blog - Page 2" })).toBeDefined();
     expect(
       pageTwo.getByRole("navigation", { name: "components.pagination.page" }),
@@ -132,6 +141,8 @@ describe("blog pagination routes", () => {
       }),
     );
 
+    expect(lastPage.getByText("Post 19")).toBeDefined();
+    expect(lastPage.queryByText("Post 18")).toBeNull();
     expect(lastPage.getByRole("heading", { name: "Blog - Page 3" })).toBeDefined();
     expect(
       lastPage.getByRole("link", { name: "components.pagination.previous" }),
