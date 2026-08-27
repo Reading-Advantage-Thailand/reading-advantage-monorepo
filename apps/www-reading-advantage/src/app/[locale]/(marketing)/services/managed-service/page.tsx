@@ -99,9 +99,9 @@ export default async function ManagedService() {
       {/* Overview — Image left, Features right */}
       <section className="py-24 bg-white" id="overview">
         <div className="container mx-auto px-4 max-w-6xl">
-          <div className="grid md:grid-cols-2 gap-16">
+          <div className="grid lg:grid-cols-12 gap-16">
             {/* Left — Image & Overview */}
-            <div>
+            <div className="lg:col-span-7">
               <Image
                 src="/images/teacher-assisting-students.png"
                 alt={t("images.teacherAssistAlt")}
@@ -153,7 +153,7 @@ export default async function ManagedService() {
             </div>
 
             {/* Right — Features List */}
-            <div>
+            <div className="lg:col-span-5">
               <span className="uppercase tracking-widest text-xs font-semibold text-amber-600">
                 {t("features.badge")}
               </span>
