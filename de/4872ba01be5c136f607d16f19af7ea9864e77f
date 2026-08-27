@@ -1,0 +1,7 @@
+Track: sales_advantage_golive_20260701
+
+Change: Added Google-style ChatTutor JSDoc and generalized English and Thai send-button coverage.
+
+Green: Component and chat API tests passed with 16 tests; Sales TypeScript passed; ESLint exited 0 with one untouched warning; graph and diff checks passed.
+
+User behavior: Both locale labels name the send control, empty input disables it, entered text enables it, and the click uses /api/chat.
