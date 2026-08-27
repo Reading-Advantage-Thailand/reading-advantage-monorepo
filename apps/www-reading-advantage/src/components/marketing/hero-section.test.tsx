@@ -45,6 +45,29 @@ describe("HeroSection", () => {
     );
   });
 
+  it("replaces the default gradient with a custom gradient", () => {
+    const rendered = render(
+      <HeroSection
+        title="Test Title"
+        description="Test description"
+        customGradient="bg-gradient-to-r from-violet-500 to-fuchsia-500"
+      />,
+    );
+    const gradient = rendered.container.querySelector("div.absolute.inset-0");
+
+    expect(gradient).toHaveClass(
+      "bg-gradient-to-r",
+      "from-violet-500",
+      "to-fuchsia-500",
+    );
+    expect(gradient).not.toHaveClass(
+      "bg-gradient-to-br",
+      "from-amber-50",
+      "via-orange-50",
+      "to-sky-50",
+    );
+  });
+
   it("renders the CTA button with correct href when ctaButton prop is provided", () => {
     render(
       <HeroSection
