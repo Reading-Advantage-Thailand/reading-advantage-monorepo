@@ -7,6 +7,7 @@ import {
   normalizeBlogLocale,
 } from "@/lib/blog";
 import { BlogCard } from "@/components/blog/blog-card";
+import { BlogPagination } from "@/components/blog/blog-pagination";
 import { BlogListItem } from "@/types/blog";
 import HeroSection from "@/components/marketing/hero-section";
 import { getScopedI18n } from "@/locales/server";
@@ -100,6 +101,7 @@ export default async function BlogPaginatedPage({ params }: PageProps) {
             <BlogCard key={post.slug} post={post} locale={effectiveLocale} />
           ))}
         </div>
+        <BlogPagination currentPage={pageNumber} totalPages={totalPages} />
       </div>
     </main>
   );

@@ -6,6 +6,7 @@ import {
   normalizeBlogLocale,
 } from "@/lib/blog";
 import { BlogCard } from "@/components/blog/blog-card";
+import { BlogPagination } from "@/components/blog/blog-pagination";
 import { BlogListItem } from "@/types/blog";
 import HeroSection from "@/components/marketing/hero-section";
 import { getScopedI18n } from "@/locales/server";
@@ -45,7 +46,7 @@ export default async function BlogPage({ params }: PageProps) {
   const { locale } = await params;
   const t = await getScopedI18n("pages.blog");
   const allPosts = await getAllPosts(locale as "en" | "th" | "zh");
-  const { posts } = await getPaginatedPosts(1, 9, allPosts);
+  const { posts, totalPages } = await getPaginatedPosts(1, 9, allPosts);
 
   return (
     <main>
@@ -65,6 +66,7 @@ export default async function BlogPage({ params }: PageProps) {
             <BlogCard key={post.slug} post={post} locale={locale} />
           ))}
         </div>
+        <BlogPagination currentPage={1} totalPages={totalPages} />
       </div>
     </main>
   );
