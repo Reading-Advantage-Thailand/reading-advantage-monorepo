@@ -1,0 +1,1 @@
+APK public demo Green. Public arcade hosts now pass launchPhase=demo only for ?mode=demo. Existing catalog-standard edition wiring remains intact. Evidence: PublicCartridgeHost Jest 8/8 passed; advantage-games TypeScript check passed; focused ESLint passed; git diff --check passed. Exact scope: PublicCartridgeHost.tsx and PublicCartridgeHost.test.tsx.
