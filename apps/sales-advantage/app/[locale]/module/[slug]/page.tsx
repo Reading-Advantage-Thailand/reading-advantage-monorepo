@@ -107,7 +107,7 @@ export default function ModulePage({
                     {idx + 1}. {lesson.title}
                   </CardTitle>
                   <CardDescription className="text-xs uppercase tracking-wide">
-                    {lesson.type}
+                    {t(lesson.type)}
                   </CardDescription>
                 </div>
                 {lesson.bestScore != null && (
