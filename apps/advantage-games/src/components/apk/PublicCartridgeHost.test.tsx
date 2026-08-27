@@ -9,6 +9,7 @@ import { PublicCartridgeHost, publicArcadeNavigation } from "./PublicCartridgeHo
 const mockCartridgeLoader = jest.fn();
 const mockStartMusic = jest.fn();
 const mockStopMusic = jest.fn();
+const mockUseSearchParams = jest.fn(() => null as { get: (key: string) => string | null } | null);
 const mockUseBackgroundMusic = jest.fn(() => ({
   start: mockStartMusic,
   stop: mockStopMusic,
@@ -41,11 +42,19 @@ jest.mock("next/dynamic", () => ({
   default: () => (props: { cartridge: { manifest: { id: string } }; input: unknown; edition: unknown; standardExperience?: unknown }) =>
     mockAPKGameHost(props),
 }));
+jest.mock("next/navigation", () => ({
+  useSearchParams: () => mockUseSearchParams(),
+}));
 jest.mock("@reading-advantage/game-cartridges", () => ({
   cartridgeLoaders: {
     "dragon-flight": (...args: unknown[]) => mockCartridgeLoader(...args),
     "astral-mage": (...args: unknown[]) => mockCartridgeLoader(...args),
   },
+  createCatalogStandardEdition: (_bindings: readonly string[], packRoot: string) => ({
+    id: "catalog-standard-pack",
+    pack: { id: "standard-pack-qc", root: packRoot, files: { "player-idle": {}, "enemy-idle": {} } },
+    bindings: { "player:idle": {}, "enemy:idle": {} },
+  }),
 }));
 jest.mock("@/lib/games-runtime", () => ({
   withBasePath: (path: string) => `/test-base${path}`,
@@ -68,6 +77,7 @@ describe("PublicCartridgeHost", () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+    mockUseSearchParams.mockReturnValue(null);
     const standardExperience = {
       definition: { briefing: {}, tutorial: {}, debrief: {} },
       createTutorialActionDriver: jest.fn(),
@@ -145,6 +155,26 @@ describe("PublicCartridgeHost", () => {
     expect(
       screen.getByText(/built-in sample content.*does not save progress/i),
     ).toBeInTheDocument();
+  });
+
+  it("opens the public cartridge in demo mode when the route requests demo", async () => {
+    mockUseSearchParams.mockReturnValue({
+      get: (key) => (key === "mode" ? "demo" : null),
+    });
+
+    render(
+      <PublicCartridgeHost
+        cartridgeId="dragon-flight"
+        description="Choose the correct gate."
+        inputMode="vocabulary"
+        title="Dragon Flight"
+      />,
+    );
+
+    await screen.findByTestId("apk-game-host");
+    expect(mockAPKGameHost).toHaveBeenCalledWith(
+      expect.objectContaining({ launchPhase: "demo" }),
+    );
   });
 
   it("uses sentence input for sentence cartridges", async () => {
