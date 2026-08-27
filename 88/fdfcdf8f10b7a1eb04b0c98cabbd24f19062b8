@@ -1,0 +1,9 @@
+Final review: accepted.
+
+Reviewed state: 88fdfcdf8 plus f665828f8.
+
+Review A found no Critical, High, or Medium issue in the SSO repair. Review B confirmed that its two Medium findings are resolved.
+
+Verification passed: focused Vitest 59/59, broader SSO Vitest 547/547, TypeScript, focused ESLint, production build, graph update, and git diff checks.
+
+Product check: tagged hosts hand off to the canonical origin before PKCE starts. Cloud Build, tests, and the runbook use one Cloud Run origin format. Local company SSO requires HTTPS. Live credentialed browser verification still requires deployment and Accounts identities.
