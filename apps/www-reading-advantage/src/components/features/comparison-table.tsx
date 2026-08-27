@@ -21,6 +21,7 @@ interface ComparisonRow {
 
 export function ComparisonTable() {
   const t = useScopedI18n("components.comparisonTable");
+  const omittedCompetitorValue: ComparisonCell = { value: "" };
 
   const renderComparisonValue = (cell: ComparisonCell) => {
     const isMark =
@@ -46,18 +47,18 @@ export function ComparisonTable() {
     {
       feature: t("features.gradeRange"),
       readingAdvantage: { value: "4-12" },
-      razKids: { value: "K-5" },
-      lexiaCore5: { value: "K-5" },
-      acceleratedReader: { value: "K-12" },
-      achieve3000: { value: "2-12" },
+      razKids: omittedCompetitorValue,
+      lexiaCore5: omittedCompetitorValue,
+      acceleratedReader: omittedCompetitorValue,
+      achieve3000: omittedCompetitorValue,
     },
     {
       feature: t("features.price"),
-      readingAdvantage: { value: "$36-120" },
-      razKids: { value: "$4.30 - $10" },
-      lexiaCore5: { value: "$40 - $60" },
-      acceleratedReader: { value: "$5 - $10" },
-      achieve3000: { value: "$45 - $60" },
+      readingAdvantage: { value: t("currentPricing") },
+      razKids: omittedCompetitorValue,
+      lexiaCore5: omittedCompetitorValue,
+      acceleratedReader: omittedCompetitorValue,
+      achieve3000: omittedCompetitorValue,
     },
     {
       feature: t("features.fiction"),
@@ -66,26 +67,10 @@ export function ComparisonTable() {
         title: t("descriptions.fiction.readingAdvantage"),
         className: "text-green-600",
       },
-      razKids: {
-        value: "✔",
-        title: t("descriptions.fiction.razKids"),
-        className: "text-green-600",
-      },
-      lexiaCore5: {
-        value: "⚬",
-        title: t("descriptions.fiction.lexiaCore5"),
-        className: "text-orange-500",
-      },
-      acceleratedReader: {
-        value: "✔",
-        title: t("descriptions.fiction.acceleratedReader"),
-        className: "text-green-600",
-      },
-      achieve3000: {
-        value: "⚬",
-        title: t("descriptions.fiction.achieve3000"),
-        className: "text-orange-500",
-      },
+      razKids: omittedCompetitorValue,
+      lexiaCore5: omittedCompetitorValue,
+      acceleratedReader: omittedCompetitorValue,
+      achieve3000: omittedCompetitorValue,
     },
     {
       feature: t("features.nonfiction"),
@@ -94,26 +79,10 @@ export function ComparisonTable() {
         title: t("descriptions.nonfiction.readingAdvantage"),
         className: "text-green-600",
       },
-      razKids: {
-        value: "✔",
-        title: t("descriptions.nonfiction.razKids"),
-        className: "text-green-600",
-      },
-      lexiaCore5: {
-        value: "⚬",
-        title: t("descriptions.nonfiction.lexiaCore5"),
-        className: "text-orange-500",
-      },
-      acceleratedReader: {
-        value: "✔",
-        title: t("descriptions.nonfiction.acceleratedReader"),
-        className: "text-green-600",
-      },
-      achieve3000: {
-        value: "✔",
-        title: t("descriptions.nonfiction.achieve3000"),
-        className: "text-green-600",
-      },
+      razKids: omittedCompetitorValue,
+      lexiaCore5: omittedCompetitorValue,
+      acceleratedReader: omittedCompetitorValue,
+      achieve3000: omittedCompetitorValue,
     },
     {
       feature: t("features.includesReadingMaterial"),
@@ -122,38 +91,20 @@ export function ComparisonTable() {
         title: t("descriptions.includesReadingMaterial.readingAdvantage"),
         className: "text-green-600",
       },
-      razKids: {
-        value: "✔",
-        title: t("descriptions.includesReadingMaterial.razKids"),
-        className: "text-green-600",
-      },
-      lexiaCore5: {
-        value: "✔",
-        title: t("descriptions.includesReadingMaterial.lexiaCore5"),
-        className: "text-green-600",
-      },
-      acceleratedReader: {
-        value: "✘",
-        title: t("descriptions.includesReadingMaterial.acceleratedReader"),
-        className: "text-red-600",
-      },
-      achieve3000: {
-        value: "✔",
-        title: t("descriptions.includesReadingMaterial.achieve3000"),
-        className: "text-green-600",
-      },
+      razKids: omittedCompetitorValue,
+      lexiaCore5: omittedCompetitorValue,
+      acceleratedReader: omittedCompetitorValue,
+      achieve3000: omittedCompetitorValue,
     },
     {
       feature: t("features.deviceCompatibility"),
       readingAdvantage: {
         value: t("descriptions.deviceCompatibility.readingAdvantage"),
       },
-      razKids: { value: t("descriptions.deviceCompatibility.razKids") },
-      lexiaCore5: { value: t("descriptions.deviceCompatibility.lexiaCore5") },
-      acceleratedReader: {
-        value: t("descriptions.deviceCompatibility.acceleratedReader"),
-      },
-      achieve3000: { value: t("descriptions.deviceCompatibility.achieve3000") },
+      razKids: omittedCompetitorValue,
+      lexiaCore5: omittedCompetitorValue,
+      acceleratedReader: omittedCompetitorValue,
+      achieve3000: omittedCompetitorValue,
     },
     {
       feature: t("features.audioSupport"),
@@ -162,26 +113,10 @@ export function ComparisonTable() {
         title: t("descriptions.audioSupport.readingAdvantage"),
         className: "text-green-600",
       },
-      razKids: {
-        value: "✔",
-        title: t("descriptions.audioSupport.razKids"),
-        className: "text-green-600",
-      },
-      lexiaCore5: {
-        value: "⚬",
-        title: t("descriptions.audioSupport.lexiaCore5"),
-        className: "text-orange-500",
-      },
-      acceleratedReader: {
-        value: "✘",
-        title: t("descriptions.audioSupport.acceleratedReader"),
-        className: "text-red-600",
-      },
-      achieve3000: {
-        value: "✔",
-        title: t("descriptions.audioSupport.achieve3000"),
-        className: "text-green-600",
-      },
+      razKids: omittedCompetitorValue,
+      lexiaCore5: omittedCompetitorValue,
+      acceleratedReader: omittedCompetitorValue,
+      achieve3000: omittedCompetitorValue,
     },
     {
       feature: t("features.aiAssistant"),
@@ -190,22 +125,20 @@ export function ComparisonTable() {
         title: t("descriptions.aiAssistant.readingAdvantage"),
         className: "text-green-600",
       },
-      razKids: { value: "✘", className: "text-red-600" },
-      lexiaCore5: { value: "✘", className: "text-red-600" },
-      acceleratedReader: { value: "✘", className: "text-red-600" },
-      achieve3000: { value: "✘", className: "text-red-600" },
+      razKids: omittedCompetitorValue,
+      lexiaCore5: omittedCompetitorValue,
+      acceleratedReader: omittedCompetitorValue,
+      achieve3000: omittedCompetitorValue,
     },
     {
       feature: t("features.ellSupport"),
       readingAdvantage: {
         value: t("descriptions.ellSupport.readingAdvantage"),
       },
-      razKids: { value: t("descriptions.ellSupport.razKids") },
-      lexiaCore5: { value: t("descriptions.ellSupport.lexiaCore5") },
-      acceleratedReader: {
-        value: t("descriptions.ellSupport.acceleratedReader"),
-      },
-      achieve3000: { value: t("descriptions.ellSupport.achieve3000") },
+      razKids: omittedCompetitorValue,
+      lexiaCore5: omittedCompetitorValue,
+      acceleratedReader: omittedCompetitorValue,
+      achieve3000: omittedCompetitorValue,
     },
   ];
 

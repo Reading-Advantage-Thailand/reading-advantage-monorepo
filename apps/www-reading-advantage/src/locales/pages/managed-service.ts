@@ -40,7 +40,7 @@ export const en = {
     badge: "PROVEN RESULTS",
     title: "Measurable Outcomes",
     description:
-      "Every managed service program includes comprehensive tracking and quality assurance to ensure student success.",
+      "Managed service programs include comprehensive tracking and quality assurance for measurable outcomes.",
     items: [
       "Progress tracking with detailed dashboards",
       "Regular quality assurance observations",
@@ -110,7 +110,7 @@ export const th = {
     badge: "ผลลัพธ์ที่พิสูจน์ได้",
     title: "ผลลัพธ์ที่วัดได้",
     description:
-      "โปรแกรมบริการจัดการแบบครบวงจรแต่ละหนังมีการติดตามความก้าวหน้าและรับรองคุณภาพอย่างสม่ำเสมอเพื่อให้มั่นใจว่านักเรียนจะประสบความสำเร็จ",
+      "โปรแกรมบริการจัดการแบบครบวงจรรวมการติดตามความก้าวหน้าและรับรองคุณภาพอย่างสม่ำเสมอ",
     items: [
       "การติดตามความก้าวหน้าด้วยแดชบอร์ดที่ละเอียด",
       "การสังเกตคุณภาพอย่างสม่ำเสมอ",
@@ -148,7 +148,7 @@ export const zh = {
     secondaryCta: "获取通知",
   },
   overview: {
-    badge: "零风险",
+    badge: "低风险实施",
     title: "完全外包的英语部门",
     heading: "技术+教师",
     description:
@@ -177,7 +177,7 @@ export const zh = {
   benefits: {
     badge: "经过验证的结果",
     title: "可衡量的成果",
-    description: "每个托管服务项目都包含全面的跟踪和质量保证，以确保学生成功。",
+    description: "托管服务项目包含全面的进度跟踪和质量保证。",
     items: [
       "通过详细仪表板进行进度跟踪",
       "定期质量保证观察",
