@@ -1,0 +1,5 @@
+Red: Company proxy trusted session-cookie presence, logout used implicit cookie deletion, false Accounts revocation was ignored, and public redirects reflected arbitrary forwarded origins.
+
+Green: Verified company sessions through Accounts introspection and codecampSessionRole; allowed only ADMIN; handled null, malformed, and false revocations; emitted complete host-only cookie expiry; accepted canonical Codecamp, tagged Cloud Run, and local-development origins only.
+
+Evidence: Focused auth-routing tests passed 54/54; Codecamp type check, owned-file lint, production build, graph update, and diff checks passed. The build retained one existing tutor NFT tracing warning.
