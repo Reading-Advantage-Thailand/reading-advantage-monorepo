@@ -51,15 +51,18 @@ function fieldErrorsFromIssues(
  * @returns Never returns; always throws.
  */
 function translateDomainError(error: unknown): never {
-  if (
-    error instanceof AccountingSubmissionError &&
-    error.reason === "invalid-input"
-  ) {
-    error.message = "Submission validation failed";
-    Object.assign(error, {
-      fieldErrors: fieldErrorsFromIssues(error.issues ?? []),
-    });
-    throw error;
+  try {
+    if (
+      error instanceof AccountingSubmissionError &&
+      error.reason === "invalid-input"
+    ) {
+      error.message = "Submission validation failed";
+      Object.assign(error, {
+        fieldErrors: fieldErrorsFromIssues(error.issues ?? []),
+      });
+    }
+  } catch {
+    // Preserve the original provider value when classification or enrichment traps.
   }
   throw error;
 }
