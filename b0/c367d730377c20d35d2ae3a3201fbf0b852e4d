@@ -1,0 +1,1 @@
+Restored the Blended Learning overview 7/5 desktop layout with only the requested grid and span classes. Red: focused layout test failed on the equal lg:grid-cols-2 grid. Green: focused test 1/1; Phase 2 SEO 4/4; TypeScript, ESLint, webpack build, graph update, and diff check passed. Webpack retained pre-existing Link export warnings.
