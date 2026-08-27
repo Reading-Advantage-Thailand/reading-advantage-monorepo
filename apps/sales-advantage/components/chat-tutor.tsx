@@ -9,6 +9,13 @@ import { MessageCircle, Send, Loader2 } from "lucide-react";
 
 type Message = { role: "user" | "assistant"; content: string };
 
+/**
+ * Renders the sales chat tutor.
+ * @param props Component options.
+ * @param props.lessonId Optional lesson identifier for the chat request.
+ * @param props.moduleId Optional module identifier for the chat request.
+ * @returns The chat tutor interface.
+ */
 export function ChatTutor({
   lessonId,
   moduleId,

@@ -1,12 +1,20 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import enMessages from "../messages/en.json";
 import thMessages from "../messages/th.json";
 import { ChatTutor } from "./chat-tutor";
 
-const thaiChatCopy = thMessages.chat;
+type ChatCopy = typeof enMessages.chat;
+
+const localeCopies: Array<{ locale: string; copy: ChatCopy }> = [
+  { locale: "English", copy: enMessages.chat },
+  { locale: "Thai", copy: thMessages.chat },
+];
+
+let activeChatCopy: ChatCopy = enMessages.chat;
 
 vi.mock("next-intl", () => ({
-  useTranslations: () => (key: keyof typeof thaiChatCopy) => thaiChatCopy[key],
+  useTranslations: () => (key: keyof ChatCopy) => activeChatCopy[key],
 }));
 
 describe("ChatTutor accessibility", () => {
@@ -18,11 +26,45 @@ describe("ChatTutor accessibility", () => {
     });
   });
 
-  it("exposes the Thai send label to assistive technology", () => {
-    render(<ChatTutor />);
+  it.each(localeCopies)(
+    "uses the $locale send label and state",
+    ({ copy }) => {
+      activeChatCopy = copy;
+      render(<ChatTutor />);
 
-    expect(
-      screen.getByRole("button", { name: thaiChatCopy.send }),
-    ).toBeTruthy();
+      const button = screen.getByRole("button", { name: copy.send });
+      const input = screen.getByPlaceholderText(copy.placeholder);
+
+      expect((button as HTMLButtonElement).disabled).toBe(true);
+
+      fireEvent.change(input, { target: { value: "How should I open?" } });
+
+      expect((button as HTMLButtonElement).disabled).toBe(false);
+    },
+  );
+
+  it("submits the enabled button to the chat API", async () => {
+    activeChatCopy = thMessages.chat;
+    const fetchMock = vi
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValue({ ok: false, body: null } as Response);
+
+    render(<ChatTutor />);
+    const input = screen.getByPlaceholderText(activeChatCopy.placeholder);
+    const button = screen.getByRole("button", { name: activeChatCopy.send });
+
+    fireEvent.change(input, { target: { value: "How should I open?" } });
+    expect((button as HTMLButtonElement).disabled).toBe(false);
+    fireEvent.click(button);
+
+    await waitFor(
+      () => {
+        expect(fetchMock).toHaveBeenCalledWith(
+          "/api/chat",
+          expect.objectContaining({ method: "POST" }),
+        );
+      },
+      { timeout: 1000 },
+    );
   });
 });
