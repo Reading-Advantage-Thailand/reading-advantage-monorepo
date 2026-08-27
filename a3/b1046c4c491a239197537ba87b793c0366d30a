@@ -1,0 +1,1 @@
+Product: The Sales chat now localizes its empty and unavailable states in English and Thai.\n\nChecks: The new Thai tests passed 2 tests. The existing Sales suite passed 33 tests. The pre-build type check passed. The compile step passed. The full build stopped on an unrelated clean admin page export. The four-file diff check passed.
