@@ -110,7 +110,69 @@ describe("Codecamp tutor mode policy", () => {
     expect(generatedRemediate.ok).toBe(true);
     expect(interventionResponseSchema.parse(generatedRemediate.intervention)).toEqual(remediateResponse);
 
-    expect(interventionResponseSchema.parse(createSafeTutorFallback(askContext.locale))).toBeTruthy();
-    expect(interventionResponseSchema.parse(createSafeTutorFallback(remediateContext.locale))).toBeTruthy();
+    const askFallback = interventionResponseSchema.parse(createSafeTutorFallback(askContext.locale, "ask"));
+    const remediateFallback = interventionResponseSchema.parse(createSafeTutorFallback(remediateContext.locale, "remediate"));
+    expect(askFallback).toMatchObject({ level: "answer", diagnosticQuestion: null });
+    expect(remediateFallback).toMatchObject({ level: "diagnostic", diagnosticQuestion: expect.any(String) });
+  });
+
+  it("uses the direct ask fallback when the model returns a diagnostic response", async () => {
+    const diagnosticResponse = {
+      message: "What do you think the next step does?",
+      level: "diagnostic" as const,
+      diagnosticQuestion: "What do you think the next step does?",
+      misconceptionTags: [],
+      resource: null,
+    };
+    const result = await generateTutorIntervention({
+      context: { ...baseContext, mode: "ask" },
+      learnerMessage: "How do I start?",
+      generate: async () => diagnosticResponse,
+      provenance: { modelAlias: "test-model", resolvedModel: "test-model" },
+    });
+
+    const askFallback = createSafeTutorFallback("en", "ask");
+    expect(result.ok).toBe(false);
+    expect(result.intervention).toEqual(askFallback);
+    expect(interventionResponseSchema.parse(result.intervention)).toMatchObject({ level: "answer", diagnosticQuestion: null });
+  });
+
+  it("uses the direct ask fallback when generation fails", async () => {
+    const result = await generateTutorIntervention({
+      context: { ...baseContext, mode: "ask" },
+      learnerMessage: "How do I start?",
+      generate: async () => {
+        throw new Error("provider unavailable");
+      },
+      provenance: { modelAlias: "test-model", resolvedModel: "test-model" },
+    });
+
+    const askFallback = createSafeTutorFallback("en", "ask");
+    expect(result.ok).toBe(false);
+    expect(result.intervention).toEqual(askFallback);
+    expect(interventionResponseSchema.parse(result.intervention)).toMatchObject({ level: "answer", diagnosticQuestion: null });
+  });
+
+  it("keeps independent ask requests on the remediation policy", async () => {
+    const independentAskContext = assembleTutorContext({
+      ...baseContext,
+      mode: "ask",
+      activity: { ...baseContext.activity, mode: "independent" },
+    });
+    const policy = selectTutorInterventionPolicy(independentAskContext, "How do I start?");
+    const result = await generateTutorIntervention({
+      context: independentAskContext,
+      learnerMessage: "How do I start?",
+      generate: async () => answer,
+      provenance: { modelAlias: "test-model", resolvedModel: "test-model" },
+    });
+
+    expect(policy.maximumLevel).toBe("partial_scaffold");
+    expect(policy.disallowSubmissionReadyAnswer).toBe(true);
+    expect(result.ok).toBe(false);
+    expect(interventionResponseSchema.parse(result.intervention)).toMatchObject({
+      level: "diagnostic",
+      diagnosticQuestion: expect.any(String),
+    });
   });
 });

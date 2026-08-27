@@ -11,6 +11,7 @@ import {
   persistTutorIntervention,
   recordTutorResourceUse,
   resolveCodecampTutorModel,
+  selectTutorInterventionPolicy,
   tutorModeSchema,
 } from "@reading-advantage/domain/codecamp";
 import { z } from "zod";
@@ -70,6 +71,9 @@ export async function POST(request: NextRequest): Promise<Response> {
       input: { activitySessionId: input.activitySessionId, locale: input.locale, stepId: input.stepId, mode: input.mode },
     });
     const tutorModel = resolveCodecampTutorModel();
+    const fallbackMode = selectTutorInterventionPolicy(context, input.message).maximumLevel === "answer"
+      ? context.mode
+      : "remediate";
     const generated = process.env.OPENROUTER_API_KEY
       ? await generateCodecampTutorIntervention({
         context,
@@ -79,7 +83,7 @@ export async function POST(request: NextRequest): Promise<Response> {
       })
       : {
         ok: false,
-        intervention: createSafeTutorFallback(context.locale),
+        intervention: createSafeTutorFallback(context.locale, fallbackMode),
         resource: null,
         evidence: null,
         provenance: {

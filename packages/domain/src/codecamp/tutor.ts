@@ -462,6 +462,15 @@ export function selectTutorInterventionPolicy(
   context: TutorContext,
   learnerMessage: string,
 ): TutorInterventionPolicy {
+  const asksForSolution = /(?:full|complete|entire|submit|submission|solution|answer)/i.test(learnerMessage);
+  if (context.activity.mode === "independent" && (asksForSolution || context.mode === "ask")) {
+    return {
+      maximumLevel: "partial_scaffold",
+      disallowSubmissionReadyAnswer: true,
+      learnerExplanation: "I can help you diagnose the next step, but I will not provide a ready-to-submit solution for independent work.",
+    };
+  }
+
   if (context.mode === "ask") {
     return {
       maximumLevel: "answer",
@@ -470,19 +479,10 @@ export function selectTutorInterventionPolicy(
     };
   }
 
-  const asksForSolution = /(?:full|complete|entire|submit|submission|solution|answer)/i.test(learnerMessage);
   const failedAttempts = context.attempts.filter((attempt) => attempt.status === "failed").length;
   const latestLevel = context.scaffoldHistory.at(-1) ?? "diagnostic";
   const nextLevel = (Object.entries(levelRank).find(([, rank]) => rank === Math.min(levelRank[latestLevel] + (failedAttempts > 0 ? 1 : 0), 4))?.[0]
     ?? "diagnostic") as InterventionResponse["level"];
-
-  if (context.activity.mode === "independent" && asksForSolution) {
-    return {
-      maximumLevel: "partial_scaffold",
-      disallowSubmissionReadyAnswer: true,
-      learnerExplanation: "I can help you diagnose the next step, but I will not provide a ready-to-submit solution for independent work.",
-    };
-  }
 
   return {
     maximumLevel: nextLevel,
@@ -524,9 +524,25 @@ export function buildTutorPrompt(
 /**
  * Creates a safe, non-evidentiary response after generation or semantic validation fails.
  * @param locale Learner locale for the fallback message.
- * @returns A diagnostic-only response with no resource action.
+ * @param mode Tutor mode for the fallback response.
+ * @returns A mode-specific response with no resource action.
  */
-export function createSafeTutorFallback(locale: TutorContext["locale"]): InterventionResponse {
+export function createSafeTutorFallback(
+  locale: TutorContext["locale"],
+  mode: TutorContext["mode"] = "remediate",
+): InterventionResponse {
+  if (mode === "ask") {
+    return {
+      message: locale === "th"
+        ? "ขออภัย ตอนนี้ยังสร้างคำตอบโดยตรงที่ตรวจสอบได้ไม่ได้"
+        : "I could not safely prepare a direct answer.",
+      level: "answer",
+      diagnosticQuestion: null,
+      misconceptionTags: [],
+      resource: null,
+    };
+  }
+
   return {
     message: locale === "th"
       ? "ขออภัย ตอนนี้ยังสร้างคำแนะนำที่ตรวจสอบได้ไม่ได้ ลองบอกสิ่งที่คุณคาดว่าจะเกิดขึ้นในขั้นตอนถัดไป"
@@ -576,6 +592,9 @@ export async function generateTutorIntervention(input: {
     if (levelRank[intervention.level] > levelRank[policy.maximumLevel]) {
       throw new Error("The tutor exceeded the allowed intervention level.");
     }
+    if (context.mode === "ask" && policy.maximumLevel === "answer" && (intervention.level !== "answer" || intervention.diagnosticQuestion !== null)) {
+      throw new Error("Ask mode requires a direct answer.");
+    }
     if (intervention.level === "diagnostic" && intervention.diagnosticQuestion === null) {
       throw new Error("A diagnostic intervention must include a follow-up question.");
     }
@@ -586,7 +605,10 @@ export async function generateTutorIntervention(input: {
   } catch {
     return {
       ok: false,
-      intervention: createSafeTutorFallback(context.locale),
+      intervention: createSafeTutorFallback(
+        context.locale,
+        context.mode === "ask" && policy.maximumLevel === "answer" ? "ask" : "remediate",
+      ),
       resource: null,
       evidence: null,
       provenance: enrichedProvenance,
