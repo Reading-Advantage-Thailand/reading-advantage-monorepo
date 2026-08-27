@@ -8,10 +8,26 @@ import { buildMarketingMetadata } from "@/lib/seo";
 import type { Metadata } from "next";
 
 type ServiceConfigList = readonly [
-  { serviceIndex: 0; featureIndexes: readonly [0, 1, 2, 3, 4, 5] },
-  { serviceIndex: 1; featureIndexes: readonly [0, 1, 2, 3, 4, 5] },
-  { serviceIndex: 2; featureIndexes: readonly [0, 1, 2, 3, 4, 5] },
-  { serviceIndex: 3; featureIndexes: readonly [0, 1, 2, 3] },
+  {
+    serviceIndex: 0;
+    featureIndexes: readonly [0, 1, 2, 3, 4, 5];
+    statusTone: "upcoming";
+  },
+  {
+    serviceIndex: 1;
+    featureIndexes: readonly [0, 1, 2, 3, 4, 5];
+    statusTone: "roadmap";
+  },
+  {
+    serviceIndex: 2;
+    featureIndexes: readonly [0, 1, 2, 3, 4, 5];
+    statusTone: "active";
+  },
+  {
+    serviceIndex: 3;
+    featureIndexes: readonly [0, 1, 2, 3];
+    statusTone: "active";
+  },
 ];
 
 /**
@@ -42,15 +58,32 @@ export async function generateMetadata(props: {
 export default async function Services() {
   const t = await getScopedI18n("pages.services");
   const serviceConfigs: ServiceConfigList = [
-    { serviceIndex: 0, featureIndexes: [0, 1, 2, 3, 4, 5] },
-    { serviceIndex: 1, featureIndexes: [0, 1, 2, 3, 4, 5] },
-    { serviceIndex: 2, featureIndexes: [0, 1, 2, 3, 4, 5] },
-    { serviceIndex: 3, featureIndexes: [0, 1, 2, 3] },
+    {
+      serviceIndex: 0,
+      featureIndexes: [0, 1, 2, 3, 4, 5],
+      statusTone: "upcoming",
+    },
+    {
+      serviceIndex: 1,
+      featureIndexes: [0, 1, 2, 3, 4, 5],
+      statusTone: "roadmap",
+    },
+    {
+      serviceIndex: 2,
+      featureIndexes: [0, 1, 2, 3, 4, 5],
+      statusTone: "active",
+    },
+    {
+      serviceIndex: 3,
+      featureIndexes: [0, 1, 2, 3],
+      statusTone: "active",
+    },
   ];
   const services = serviceConfigs.map((serviceConfig) => ({
     name: t(`services.${serviceConfig.serviceIndex}.name`),
     status: t(`services.${serviceConfig.serviceIndex}.status`),
     statusBadge: t(`services.${serviceConfig.serviceIndex}.statusBadge`),
+    statusTone: serviceConfig.statusTone,
     description: t(`services.${serviceConfig.serviceIndex}.description`),
     features:
       serviceConfig.serviceIndex === 3
@@ -110,9 +143,9 @@ export default async function Services() {
                   <div className="absolute top-4 right-4 z-10">
                     <div
                       className={`px-3 py-1 rounded-full text-xs font-bold ${
-                        service.statusBadge === "ACTIVE"
+                        service.statusTone === "active"
                           ? "bg-green-100 text-green-700"
-                          : service.statusBadge === "COMING SOON"
+                          : service.statusTone === "upcoming"
                             ? "bg-amber-100 text-amber-700"
                             : "bg-slate-200 text-slate-700"
                       }`}
