@@ -11,14 +11,14 @@ import {
 import { getPublicOrigin } from "@/lib/public-url";
 
 /** Expires the Codecamp session cookie with its original host-only attributes. */
-function expireCodecampSessionCookie(response: NextResponse, secure: boolean): void {
+function expireCodecampSessionCookie(response: NextResponse): void {
   response.cookies.set(CODECAMP_SESSION_COOKIE, "", {
     expires: new Date(0),
     httpOnly: true,
     maxAge: 0,
     path: "/",
     sameSite: "lax",
-    secure,
+    secure: true,
   });
 }
 
@@ -66,9 +66,6 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     { success: !revocationFailed },
     { status: revocationFailed ? 502 : 200 },
   );
-  expireCodecampSessionCookie(
-    response,
-    process.env.NODE_ENV === "production" || publicOrigin.protocol === "https:",
-  );
+  expireCodecampSessionCookie(response);
   return response;
 }

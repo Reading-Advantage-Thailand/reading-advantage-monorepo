@@ -269,6 +269,7 @@ describe("proxy", () => {
     expect(res.headers.get("set-cookie")).toContain(
       "__Host-ra_codecamp_session=;",
     );
+    expect(res.headers.get("set-cookie")).toContain("Secure");
   });
 
   it("denies an invalid company session and restarts sign-in", async () => {

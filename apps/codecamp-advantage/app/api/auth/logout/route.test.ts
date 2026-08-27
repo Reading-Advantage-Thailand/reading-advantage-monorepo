@@ -42,6 +42,13 @@ function forwardedRequest(): NextRequest {
   });
 }
 
+function loopbackRequest(): NextRequest {
+  return new NextRequest("http://localhost:3000/api/auth/logout", {
+    method: "POST",
+    headers: { origin: "http://localhost:3000" },
+  });
+}
+
 describe("POST /api/auth/logout", () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -99,5 +106,11 @@ describe("POST /api/auth/logout", () => {
 
     expect(response.status).toBe(200);
     expect(mocks.oidcLogout).toHaveBeenCalledWith("company-token");
+  });
+
+  it("secures the expired session cookie for HTTP loopback development", async () => {
+    const response = await POST(loopbackRequest());
+
+    expect(response.headers.get("set-cookie")).toContain("Secure");
   });
 });

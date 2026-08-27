@@ -14,7 +14,6 @@ import { getPublicOrigin } from "@/lib/public-url";
 function expireHostCookie(
   response: NextResponse,
   name: string,
-  secure: boolean,
 ): void {
   response.cookies.set(name, "", {
     expires: new Date(0),
@@ -22,7 +21,7 @@ function expireHostCookie(
     maxAge: 0,
     path: "/",
     sameSite: "lax",
-    secure,
+    secure: true,
   });
 }
 
@@ -30,13 +29,11 @@ function expireHostCookie(
 export async function GET(request: Request): Promise<NextResponse> {
   const url = new URL(request.url);
   const publicOrigin = getPublicOrigin(request);
-  const secureCookie =
-    process.env.NODE_ENV === "production" || publicOrigin.protocol === "https:";
   if (isLegacyCodecampAuthEnabled()) {
     const response = NextResponse.redirect(
       new URL("/?error=legacy_auth_active", publicOrigin),
     );
-    expireHostCookie(response, CODECAMP_TRANSACTION_COOKIE, secureCookie);
+    expireHostCookie(response, CODECAMP_TRANSACTION_COOKIE);
     return response;
   }
   const transaction = readCodecampCookie(request, CODECAMP_TRANSACTION_COOKIE);
@@ -44,7 +41,7 @@ export async function GET(request: Request): Promise<NextResponse> {
   const state = url.searchParams.get("state");
   if (!transaction || !code || !state) {
     const response = NextResponse.redirect(new URL("/?error=sso", publicOrigin));
-    expireHostCookie(response, CODECAMP_TRANSACTION_COOKIE, secureCookie);
+    expireHostCookie(response, CODECAMP_TRANSACTION_COOKIE);
     return response;
   }
   const client = getCodecampOidcClient();
@@ -79,25 +76,25 @@ export async function GET(request: Request): Promise<NextResponse> {
       const response = NextResponse.redirect(
         new URL("/?error=forbidden", publicOrigin),
       );
-      expireHostCookie(response, CODECAMP_SESSION_COOKIE, secureCookie);
-      expireHostCookie(response, CODECAMP_TRANSACTION_COOKIE, secureCookie);
+      expireHostCookie(response, CODECAMP_SESSION_COOKIE);
+      expireHostCookie(response, CODECAMP_TRANSACTION_COOKIE);
       return response;
     }
     const response = NextResponse.redirect(new URL(session.returnTo, publicOrigin));
     response.cookies.set(CODECAMP_SESSION_COOKIE, session.accessToken, {
       httpOnly: true,
-      secure: secureCookie,
+      secure: true,
       sameSite: "lax",
       path: "/",
       maxAge: Math.max(1, Math.floor(
         (new Date(session.expiresAt).getTime() - Date.now()) / 1000,
       )),
     });
-    expireHostCookie(response, CODECAMP_TRANSACTION_COOKIE, secureCookie);
+    expireHostCookie(response, CODECAMP_TRANSACTION_COOKIE);
     return response;
   } catch {
     const response = NextResponse.redirect(new URL("/?error=sso", publicOrigin));
-    expireHostCookie(response, CODECAMP_TRANSACTION_COOKIE, secureCookie);
+    expireHostCookie(response, CODECAMP_TRANSACTION_COOKIE);
     return response;
   }
 }

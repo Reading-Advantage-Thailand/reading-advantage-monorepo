@@ -36,6 +36,12 @@ function forwardedRequest(returnTo = "/en/module/intro"): Request {
   );
 }
 
+function loopbackRequest(): Request {
+  return new Request(
+    "http://localhost:3000/api/auth/company/start?returnTo=%2Fen%2Fmodule%2Fintro",
+  );
+}
+
 describe("GET /api/auth/company/start", () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -45,6 +51,10 @@ describe("GET /api/auth/company/start", () => {
       sealedTransaction: "sealed-transaction",
     });
     vi.stubEnv("NODE_ENV", "test");
+    vi.stubEnv(
+      "COMPANY_AUTH_OIDC_REDIRECT_URI",
+      "https://codecamp.reading-advantage.com/api/auth/callback",
+    );
   });
 
   afterEach(() => {
@@ -71,6 +81,37 @@ describe("GET /api/auth/company/start", () => {
 
   it("secures the transaction cookie for forwarded https", async () => {
     const response = await GET(forwardedRequest());
+
+    expect(response.headers.get("set-cookie")).toContain("Secure");
+  });
+
+  it("hands tagged starts to the canonical callback origin without starting a transaction", async () => {
+    vi.stubEnv(
+      "CODECAMP_PREVIEW_ORIGINS",
+      "https://sso-candidate---codecamp-advantage-codecamp-advantage.as.a.run.app",
+    );
+    const response = await GET(
+      new Request(
+        "https://sso-candidate---codecamp-advantage-codecamp-advantage.as.a.run.app/api/auth/company/start?returnTo=%2Fen%2Fadmin%3Ftab%3Dusers",
+      ),
+    );
+    const location = new URL(response.headers.get("location")!);
+
+    expect(response.status).toBe(307);
+    expect(location.origin).toBe("https://codecamp.reading-advantage.com");
+    expect(location.pathname).toBe("/api/auth/company/start");
+    expect(location.searchParams.get("returnTo")).toBe("/en/admin?tab=users");
+    expect(response.headers.get("set-cookie")).toBeNull();
+    expect(mocks.start).not.toHaveBeenCalled();
+  });
+
+  it("secures the transaction cookie for HTTP loopback development", async () => {
+    vi.stubEnv(
+      "COMPANY_AUTH_OIDC_REDIRECT_URI",
+      "http://localhost:3000/api/auth/callback",
+    );
+
+    const response = await GET(loopbackRequest());
 
     expect(response.headers.get("set-cookie")).toContain("Secure");
   });

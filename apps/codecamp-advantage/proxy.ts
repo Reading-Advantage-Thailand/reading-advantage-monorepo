@@ -18,14 +18,14 @@ import { buildSignInHref } from "./lib/sign-in-href";
 const intlMiddleware = createIntlMiddleware(routing);
 
 /** Expires the Codecamp session cookie with its original host-only attributes. */
-function expireCodecampSessionCookie(response: NextResponse, secure: boolean): void {
+function expireCodecampSessionCookie(response: NextResponse): void {
   response.cookies.set(CODECAMP_SESSION_COOKIE, "", {
     expires: new Date(0),
     httpOnly: true,
     maxAge: 0,
     path: "/",
     sameSite: "lax",
-    secure,
+    secure: true,
   });
 }
 
@@ -100,15 +100,13 @@ export async function proxy(request: NextRequest): Promise<NextResponse> {
 
     if (!legacyMode) {
       const publicOrigin = getPublicOrigin(request);
-      const secureCookie =
-        process.env.NODE_ENV === "production" || publicOrigin.protocol === "https:";
       try {
         const session = await getCodecampOidcClient().introspect(sessionToken);
         if (!session) {
           const response = NextResponse.redirect(
             new URL(buildSignInHref(pathname, search), publicOrigin),
           );
-          expireCodecampSessionCookie(response, secureCookie);
+          expireCodecampSessionCookie(response);
           return response;
         }
         if (codecampSessionRole(session.identity) !== "ADMIN") {
@@ -127,7 +125,7 @@ export async function proxy(request: NextRequest): Promise<NextResponse> {
         const homeUrl = new URL("/", publicOrigin);
         homeUrl.searchParams.set("error", "session_check_failed");
         const response = NextResponse.redirect(homeUrl);
-        expireCodecampSessionCookie(response, secureCookie);
+        expireCodecampSessionCookie(response);
         return response;
       }
     }

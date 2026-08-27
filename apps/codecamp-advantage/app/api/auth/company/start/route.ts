@@ -6,7 +6,7 @@ import {
   CODECAMP_TRANSACTION_COOKIE,
   getCodecampOidcClient,
 } from "@/lib/company-oidc";
-import { getPublicOrigin } from "@/lib/public-url";
+import { getCodecampCallbackOrigin, getPublicOrigin } from "@/lib/public-url";
 
 /**
  * Starts the Codecamp PKCE handoff only while company mode owns authentication.
@@ -20,8 +20,15 @@ export async function GET(request: Request): Promise<NextResponse> {
       { status: 409 },
     );
   }
-  const returnTo = new URL(request.url).searchParams.get("returnTo") ?? "/";
+  const requestUrl = new URL(request.url);
+  const returnTo = requestUrl.searchParams.get("returnTo") ?? "/";
   const publicOrigin = getPublicOrigin(request);
+  const callbackOrigin = getCodecampCallbackOrigin();
+  if (publicOrigin.origin !== callbackOrigin.origin) {
+    const handoffUrl = new URL(requestUrl.pathname, callbackOrigin);
+    handoffUrl.searchParams.set("returnTo", returnTo);
+    return NextResponse.redirect(handoffUrl);
+  }
   const client = getCodecampOidcClient();
   let started;
   try {
@@ -34,7 +41,7 @@ export async function GET(request: Request): Promise<NextResponse> {
   const response = NextResponse.redirect(started.authorizationUrl);
   response.cookies.set(CODECAMP_TRANSACTION_COOKIE, started.sealedTransaction, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production" || publicOrigin.protocol === "https:",
+    secure: true,
     sameSite: "lax",
     path: "/",
     maxAge: 600,

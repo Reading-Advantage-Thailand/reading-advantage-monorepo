@@ -105,5 +105,12 @@ export default function HomePage(): React.ReactNode {
     );
   }
 
-  return <DashboardContent dashboard={dashboard} />;
+  return (
+    <>
+      <Suspense fallback={null}>
+        <SignInErrorMessage />
+      </Suspense>
+      <DashboardContent dashboard={dashboard} />
+    </>
+  );
 }

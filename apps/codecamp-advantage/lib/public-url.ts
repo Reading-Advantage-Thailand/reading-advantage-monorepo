@@ -1,7 +1,5 @@
 const DEFAULT_CODECAMP_ORIGIN = "https://codecamp.reading-advantage.com";
 const LOCAL_HOSTNAMES = new Set(["127.0.0.1", "::1", "localhost"]);
-const CLOUD_RUN_TAG_HOST_PATTERN =
-  /^sso-candidate---codecamp-advantage-[a-z][a-z0-9-]{4,28}[a-z0-9]\.as\.a\.run\.app$/;
 
 /**
  * Gets the first value from a forwarded header.
@@ -39,6 +37,41 @@ function configuredOrigin(value: string | undefined): string | undefined {
 }
 
 /**
+ * Parses the configured exact preview origins.
+ * @param value Semicolon-separated preview origins.
+ * @returns Exact configured preview origins.
+ * @throws When a configured preview entry is not an HTTPS origin.
+ */
+function configuredPreviewOrigins(value: string | undefined): Set<string> {
+  if (!value) return new Set();
+
+  const origins = new Set<string>();
+  for (const rawEntry of value.split(";")) {
+    const entry = rawEntry.trim();
+    if (!entry) throw new Error("PUBLIC_ORIGIN_INVALID");
+
+    let url: URL;
+    try {
+      url = new URL(entry);
+    } catch {
+      throw new Error("PUBLIC_ORIGIN_INVALID");
+    }
+    if (
+      url.protocol !== "https:" ||
+      url.username ||
+      url.password ||
+      url.pathname !== "/" ||
+      url.search ||
+      url.hash
+    ) {
+      throw new Error("PUBLIC_ORIGIN_INVALID");
+    }
+    origins.add(url.origin);
+  }
+  return origins;
+}
+
+/**
  * Reports whether an origin is an approved Codecamp browser origin.
  * @param origin Candidate public origin.
  * @returns Whether the origin is canonical, a tagged service, or local development.
@@ -60,10 +93,28 @@ function isApprovedOrigin(origin: URL): boolean {
       configuredOrigin(process.env.COMPANY_AUTH_OIDC_REDIRECT_URI),
     ].filter((value): value is string => value !== undefined),
   );
+  const previewOrigins = configuredPreviewOrigins(
+    process.env.CODECAMP_PREVIEW_ORIGINS,
+  );
   return (
     canonicalOrigins.has(origin.origin) ||
-    CLOUD_RUN_TAG_HOST_PATTERN.test(origin.hostname)
+    previewOrigins.has(origin.origin)
   );
+}
+
+/**
+ * Gets the configured Codecamp OIDC callback origin.
+ * @returns The callback origin used by Accounts.
+ * @throws When the callback URL configuration is malformed.
+ */
+export function getCodecampCallbackOrigin(): URL {
+  const callbackOrigin = configuredOrigin(
+    process.env.COMPANY_AUTH_OIDC_REDIRECT_URI,
+  );
+  if (process.env.COMPANY_AUTH_OIDC_REDIRECT_URI && !callbackOrigin) {
+    throw new Error("PUBLIC_ORIGIN_INVALID");
+  }
+  return new URL(callbackOrigin ?? DEFAULT_CODECAMP_ORIGIN);
 }
 
 /**

@@ -2,12 +2,13 @@ import { render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
+  auth: { isAuthenticated: false, isLoading: false },
   dashboardQuery: vi.fn(),
   useSearchParams: vi.fn(),
 }));
 
 vi.mock("@reading-advantage/auth-client", () => ({
-  useAuth: () => ({ isAuthenticated: false, isLoading: false }),
+  useAuth: () => mocks.auth,
 }));
 vi.mock("@/components/auth-entry", () => ({
   AuthEntry: () => <div>auth-entry</div>,
@@ -40,6 +41,8 @@ const approvedErrors = [
 describe("Codecamp landing sign-in errors", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mocks.auth.isAuthenticated = false;
+    mocks.auth.isLoading = false;
     mocks.dashboardQuery.mockReturnValue({ data: undefined, isLoading: false });
   });
 
@@ -59,5 +62,14 @@ describe("Codecamp landing sign-in errors", () => {
     render(<HomePage />);
 
     expect(screen.queryByRole("alert")).toBeNull();
+  });
+
+  it("renders forbidden feedback for an authenticated landing-page user", () => {
+    mocks.auth.isAuthenticated = true;
+    mocks.useSearchParams.mockReturnValue(new URLSearchParams("error=forbidden"));
+
+    render(<HomePage />);
+
+    expect(screen.getByRole("alert")).toHaveTextContent("signInErrorForbidden");
   });
 });

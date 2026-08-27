@@ -45,6 +45,12 @@ function forwardedRequest(): Request {
   );
 }
 
+function loopbackRequest(): Request {
+  return new Request(
+    "http://localhost:3000/api/auth/callback?code=code&state=state",
+  );
+}
+
 describe("GET /api/auth/callback", () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -139,6 +145,14 @@ describe("GET /api/auth/callback", () => {
     const response = await GET(forwardedRequest());
 
     expect(response.headers.get("set-cookie")).toContain("Secure");
+  });
+
+  it("secures a session cookie for HTTP loopback development", async () => {
+    const response = await GET(loopbackRequest());
+    const setCookie = response.headers.get("set-cookie") ?? "";
+
+    expect(setCookie).toContain("__Host-ra_codecamp_session=company-token");
+    expect(setCookie).toContain("Secure");
   });
 
   it("redirects a valid Accounts identity without a Codecamp role", async () => {
