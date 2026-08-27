@@ -107,8 +107,8 @@ export default async function BlendedLearning() {
       <section className="relative py-24 bg-white" id="overview">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
-            <div className="grid lg:grid-cols-2 gap-16 items-center animate-in fade-in slide-in-from-bottom-8 duration-700">
-              <div>
+            <div className="grid lg:grid-cols-12 gap-16 items-center animate-in fade-in slide-in-from-bottom-8 duration-700">
+              <div className="lg:col-span-7">
                 <span className="uppercase tracking-widest text-xs font-semibold text-sky-600 mb-4 block">
                   {t("overview.title")}
                 </span>
@@ -123,7 +123,7 @@ export default async function BlendedLearning() {
                   {t("overview.strongText")}
                 </p>
               </div>
-              <div className="relative">
+              <div className="relative lg:col-span-5">
                 <div className="absolute inset-0 bg-gradient-to-br from-sky-100 to-blue-100 rounded-3xl blur-3xl -translate-y-4 -translate-x-4" />
                 <div className="relative bg-gradient-to-br from-sky-50 to-blue-50 rounded-3xl p-8">
                   <Image
