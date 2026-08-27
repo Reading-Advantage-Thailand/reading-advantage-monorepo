@@ -1,0 +1,1 @@
+Included the effective current locale in root and numbered blog metadata alternates. Focused route tests: 6 passed. TypeScript, ESLint, graph update, and diff check passed.
