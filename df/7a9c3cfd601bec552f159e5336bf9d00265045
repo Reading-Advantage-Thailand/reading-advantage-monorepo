@@ -1,0 +1,5 @@
+Red: Next rejected the named RepDetailContent export from the admin page.
+
+Green: The component moved to a client module. Admin localization and layout tests passed with 9 tests. TypeScript and ESLint passed. The graph update and staged diff check passed.
+
+User behavior: Sales administrators can open per-representative reporting through a buildable production route. Reporting behavior remains unchanged.
