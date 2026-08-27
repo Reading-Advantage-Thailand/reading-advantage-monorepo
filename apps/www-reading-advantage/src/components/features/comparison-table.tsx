@@ -13,15 +13,10 @@ interface ComparisonCell {
 interface ComparisonRow {
   feature: string;
   readingAdvantage: ComparisonCell;
-  razKids: ComparisonCell;
-  lexiaCore5: ComparisonCell;
-  acceleratedReader: ComparisonCell;
-  achieve3000: ComparisonCell;
 }
 
 export function ComparisonTable() {
   const t = useScopedI18n("components.comparisonTable");
-  const omittedCompetitorValue: ComparisonCell = { value: "" };
 
   const renderComparisonValue = (cell: ComparisonCell) => {
     const isMark =
@@ -47,18 +42,10 @@ export function ComparisonTable() {
     {
       feature: t("features.gradeRange"),
       readingAdvantage: { value: "4-12" },
-      razKids: omittedCompetitorValue,
-      lexiaCore5: omittedCompetitorValue,
-      acceleratedReader: omittedCompetitorValue,
-      achieve3000: omittedCompetitorValue,
     },
     {
       feature: t("features.price"),
       readingAdvantage: { value: t("currentPricing") },
-      razKids: omittedCompetitorValue,
-      lexiaCore5: omittedCompetitorValue,
-      acceleratedReader: omittedCompetitorValue,
-      achieve3000: omittedCompetitorValue,
     },
     {
       feature: t("features.fiction"),
@@ -67,10 +54,6 @@ export function ComparisonTable() {
         title: t("descriptions.fiction.readingAdvantage"),
         className: "text-green-600",
       },
-      razKids: omittedCompetitorValue,
-      lexiaCore5: omittedCompetitorValue,
-      acceleratedReader: omittedCompetitorValue,
-      achieve3000: omittedCompetitorValue,
     },
     {
       feature: t("features.nonfiction"),
@@ -79,10 +62,6 @@ export function ComparisonTable() {
         title: t("descriptions.nonfiction.readingAdvantage"),
         className: "text-green-600",
       },
-      razKids: omittedCompetitorValue,
-      lexiaCore5: omittedCompetitorValue,
-      acceleratedReader: omittedCompetitorValue,
-      achieve3000: omittedCompetitorValue,
     },
     {
       feature: t("features.includesReadingMaterial"),
@@ -91,20 +70,12 @@ export function ComparisonTable() {
         title: t("descriptions.includesReadingMaterial.readingAdvantage"),
         className: "text-green-600",
       },
-      razKids: omittedCompetitorValue,
-      lexiaCore5: omittedCompetitorValue,
-      acceleratedReader: omittedCompetitorValue,
-      achieve3000: omittedCompetitorValue,
     },
     {
       feature: t("features.deviceCompatibility"),
       readingAdvantage: {
         value: t("descriptions.deviceCompatibility.readingAdvantage"),
       },
-      razKids: omittedCompetitorValue,
-      lexiaCore5: omittedCompetitorValue,
-      acceleratedReader: omittedCompetitorValue,
-      achieve3000: omittedCompetitorValue,
     },
     {
       feature: t("features.audioSupport"),
@@ -113,10 +84,6 @@ export function ComparisonTable() {
         title: t("descriptions.audioSupport.readingAdvantage"),
         className: "text-green-600",
       },
-      razKids: omittedCompetitorValue,
-      lexiaCore5: omittedCompetitorValue,
-      acceleratedReader: omittedCompetitorValue,
-      achieve3000: omittedCompetitorValue,
     },
     {
       feature: t("features.aiAssistant"),
@@ -125,20 +92,12 @@ export function ComparisonTable() {
         title: t("descriptions.aiAssistant.readingAdvantage"),
         className: "text-green-600",
       },
-      razKids: omittedCompetitorValue,
-      lexiaCore5: omittedCompetitorValue,
-      acceleratedReader: omittedCompetitorValue,
-      achieve3000: omittedCompetitorValue,
     },
     {
       feature: t("features.ellSupport"),
       readingAdvantage: {
         value: t("descriptions.ellSupport.readingAdvantage"),
       },
-      razKids: omittedCompetitorValue,
-      lexiaCore5: omittedCompetitorValue,
-      acceleratedReader: omittedCompetitorValue,
-      achieve3000: omittedCompetitorValue,
     },
   ];
 
@@ -155,18 +114,6 @@ export function ComparisonTable() {
             <th className="px-6 py-4 text-center">
               {t("tableHeaders.readingAdvantage")}
             </th>
-            <th className="px-6 py-4 text-center">
-              {t("tableHeaders.razKids")}
-            </th>
-            <th className="px-6 py-4 text-center">
-              {t("tableHeaders.lexiaCore5")}
-            </th>
-            <th className="px-6 py-4 text-center">
-              {t("tableHeaders.acceleratedReader")}
-            </th>
-            <th className="px-6 py-4 text-center">
-              {t("tableHeaders.achieve3000")}
-            </th>
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-200">
@@ -178,30 +125,6 @@ export function ComparisonTable() {
                 title={row.readingAdvantage.title}
               >
                 {renderComparisonValue(row.readingAdvantage)}
-              </td>
-              <td
-                className={`px-6 py-4 text-center ${row.razKids.className}`}
-                title={row.razKids.title}
-              >
-                {renderComparisonValue(row.razKids)}
-              </td>
-              <td
-                className={`px-6 py-4 text-center ${row.lexiaCore5.className}`}
-                title={row.lexiaCore5.title}
-              >
-                {renderComparisonValue(row.lexiaCore5)}
-              </td>
-              <td
-                className={`px-6 py-4 text-center ${row.acceleratedReader.className}`}
-                title={row.acceleratedReader.title}
-              >
-                {renderComparisonValue(row.acceleratedReader)}
-              </td>
-              <td
-                className={`px-6 py-4 text-center ${row.achieve3000.className}`}
-                title={row.achieve3000.title}
-              >
-                {renderComparisonValue(row.achieve3000)}
               </td>
             </tr>
           ))}

@@ -1,22 +1,10 @@
-const currentUtcDate = new Date();
-const currentUtcYear = currentUtcDate.getUTCFullYear();
-const currentUtcMonthNumber = currentUtcDate.getUTCMonth() + 1;
-const currentEnglishMonth = new Intl.DateTimeFormat("en-US", {
-    month: "long",
-    timeZone: "UTC",
-}).format(currentUtcDate);
-const currentThaiMonth = new Intl.DateTimeFormat("th-TH", {
-    month: "long",
-    timeZone: "UTC",
-}).format(currentUtcDate);
-
 export const en = {
     hero: {
         title: "Platform Features",
         description: "Compare Reading Advantage with other leading reading programs",
     },
     table: {
-        lastUpdated: `Last updated: ${currentEnglishMonth} ${currentUtcYear}`,
+        lastUpdated: "Last updated: August 2026",
         title: "Feature",
         basicTier: "Basic Tier",
         aiEnhancedTier: "AI Enhanced Tier",
@@ -188,7 +176,7 @@ export const th = {
         description: "เปรียบเทียบ Reading Advantage กับโปรแกรมการอ่านชั้นนำอื่น ๆ",
     },
     table: {
-        lastUpdated: `อัปเดตล่าสุด: ${currentThaiMonth} ${currentUtcYear}`,
+        lastUpdated: "อัปเดตล่าสุด: สิงหาคม 2026",
         title: "ฟีเจอร์",
         basicTier: "ระดับพื้นฐาน",
         aiEnhancedTier: "ระดับ AI พิเศษ",
@@ -360,7 +348,7 @@ export const zh = {
         description: "比较 Reading Advantage 与其他领先的阅读项目",
     },
     table: {
-        lastUpdated: `最后更新时间：${currentUtcYear}年${currentUtcMonthNumber}月`,
+        lastUpdated: "最后更新时间：2026年8月",
         title: "功能",
         basicTier: "基础版",
         aiEnhancedTier: "AI 增强版",

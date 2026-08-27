@@ -34,7 +34,7 @@ export const en = {
         "The white-glove solution: We provide the technology AND the teacher for complete English department outsourcing.",
       features: [
         "Fully outsourced English department",
-        "Low-risk implementation",
+        "Structured implementation",
         "Certified Reading Advantage teachers",
         "Complete curriculum and materials",
         "Progress tracking and reporting",
@@ -123,7 +123,7 @@ export const th = {
         "โซลูชันแบบไขมือขาว: เรามอบทั้งเทคโนโลยีและครูสำหรับการจัดการแผนกวิชาภาษาอังกฤษแบบครบวงจรภายนอก",
       features: [
         "แผนกวิชาภาษาอังกฤษแบบจัดการภายนอกทั้งหมด",
-        "การเริ่มต้นที่มีความเสี่ยงต่ำ",
+        "การเริ่มต้นที่มีโครงสร้าง",
         "ครู Reading Advantage ที่ได้รับการรับรอง",
         "หลักสูตรและวัสดุครบถ้วน",
         "การติดตามความก้าวหน้าและรายงาน",
@@ -212,7 +212,7 @@ export const zh = {
         "白手套解决方案：我们同时提供技术和教师，实现完整的英语部门外包。",
       features: [
         "完全外包英语部门",
-        "低风险实施",
+        "结构化实施",
         "经过认证的阅读优势教师",
         "完整的课程和材料",
         "进度跟踪和报告",

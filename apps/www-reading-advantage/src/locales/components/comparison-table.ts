@@ -1,18 +1,6 @@
-const currentUtcDate = new Date();
-const currentUtcYear = currentUtcDate.getUTCFullYear();
-const currentUtcMonthNumber = currentUtcDate.getUTCMonth() + 1;
-const currentEnglishMonth = new Intl.DateTimeFormat("en-US", {
-  month: "long",
-  timeZone: "UTC",
-}).format(currentUtcDate);
-const currentThaiMonth = new Intl.DateTimeFormat("th-TH", {
-  month: "long",
-  timeZone: "UTC",
-}).format(currentUtcDate);
-
 export const en = {
   title: "Reading Program Comparison",
-  lastUpdated: `Last updated: ${currentEnglishMonth} ${currentUtcYear}`,
+  lastUpdated: "Last updated: August 2026",
   currentPricing: "Contact us for current pricing",
   tableHeaders: {
     feature: "Feature",
@@ -89,7 +77,7 @@ export const en = {
 
 export const th = {
   title: "การเปรียบเทียบโปรแกรมการอ่าน",
-  lastUpdated: `อัปเดตล่าสุด: ${currentThaiMonth} ${currentUtcYear}`,
+  lastUpdated: "อัปเดตล่าสุด: สิงหาคม 2026",
   currentPricing: "ติดต่อเราเพื่อสอบถามราคาปัจจุบัน",
   tableHeaders: {
     feature: "คุณสมบัติ",
@@ -166,7 +154,7 @@ export const th = {
 
 export const zh = {
   title: "阅读程序比较",
-  lastUpdated: `最后更新：${currentUtcYear}年${currentUtcMonthNumber}月`,
+  lastUpdated: "最后更新：2026年8月",
   currentPricing: "联系我们获取当前价格",
   tableHeaders: {
     feature: "功能",
