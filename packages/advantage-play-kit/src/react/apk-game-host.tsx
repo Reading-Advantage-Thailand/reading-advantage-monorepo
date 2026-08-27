@@ -112,6 +112,15 @@ type ProvisionalCompletion = {
   outcome: GameTerminalOutcome;
 };
 
+type TutorialSession = {
+  token: object;
+  controller: GameTutorialController;
+  tutorial: GameTutorialDefinition;
+  standardExperience: StandardGameExperienceRuntime | undefined;
+  tutorialActionDriver: GameTutorialActionDriver | undefined;
+  tutorialClock: GameTutorialClock | undefined;
+};
+
 /**
  * Creates the real-time browser clock used by guided tutorials.
  * @returns A cancellable clock backed by the current browser window.
@@ -169,6 +178,8 @@ export function APKGameHost({
   const resumingGenerationRef = useRef<number | undefined>(undefined);
   const provisionalPlayingGenerationRef = useRef<number | undefined>(undefined);
   const provisionalCompletionRef = useRef<ProvisionalCompletion | undefined>(undefined);
+  const tutorialSessionRef = useRef<TutorialSession | undefined>(undefined);
+  const tutorialTransitionTokenRef = useRef<object | undefined>(undefined);
   const briefingStartGuardRef = useRef(false);
   const demoTeardownRef = useRef(false);
   const lifecycleErrorRef = useRef<string | undefined>(undefined);
@@ -211,17 +222,44 @@ export function APKGameHost({
     && briefingValidation?.success === true
     && inputValidation?.success === true
     && !briefingStarted;
+  const tutorialControlsReady = status !== "tutorial"
+    || (
+      tutorialSessionRef.current?.controller === tutorialControllerRef.current
+      && tutorialSessionRef.current?.tutorial === effectiveTutorial
+      && tutorialSessionRef.current?.standardExperience === standardExperience
+      && tutorialSessionRef.current?.tutorialActionDriver === tutorialActionDriver
+      && tutorialSessionRef.current?.tutorialClock === tutorialClock
+    );
   const controlsHidden = (effectiveBriefing !== undefined
     && (!briefingStarted
       || status === "briefing"
       || status === "error"
       || (!demoActive && (status === "loading" || status === "countdown"))))
-    || status === "complete";
+    || status === "complete"
+    || !tutorialControlsReady;
 
-  const destroyTutorialController = async (): Promise<void> => {
+  const detachTutorialController = (): GameTutorialController | undefined => {
     const controller = tutorialControllerRef.current;
     tutorialControllerRef.current = undefined;
-    await controller?.destroy();
+    return controller;
+  };
+
+  const cleanupTutorialSession = async (
+    controller: GameTutorialController | undefined,
+    handle: APKGameHandle | undefined,
+  ): Promise<void> => {
+    const cleanupResults = await Promise.allSettled([
+      Promise.resolve().then(() => controller?.destroy()),
+      Promise.resolve().then(() => handle?.destroy()),
+    ]);
+    const firstFailure = cleanupResults.find(
+      (cleanupResult): cleanupResult is PromiseRejectedResult => cleanupResult.status === "rejected",
+    );
+    if (firstFailure) throw firstFailure.reason;
+  };
+
+  const destroyTutorialController = async (): Promise<void> => {
+    await cleanupTutorialSession(detachTutorialController(), undefined);
   };
 
   const isCurrentMount = (mountPoint: HTMLDivElement, generation: number): boolean =>
@@ -251,6 +289,8 @@ export function APKGameHost({
     resumingGenerationRef.current = undefined;
     provisionalPlayingGenerationRef.current = undefined;
     provisionalCompletionRef.current = undefined;
+    tutorialSessionRef.current = undefined;
+    tutorialTransitionTokenRef.current = undefined;
     mountPoint.replaceChildren();
     setDemoActive(false);
     sessionModeRef.current = "playing";
@@ -577,21 +617,21 @@ export function APKGameHost({
     mountPoint: HTMLDivElement,
     generation: number,
     transition: GameLifecycleTransition,
+    token: object,
+    controller: GameTutorialController,
   ): Promise<void> => {
     if (!isCurrentMount(mountPoint, generation)) return;
     if (transition.to !== "playing" && transition.to !== "countdown") return;
+    if (tutorialTransitionTokenRef.current !== token || tutorialSessionRef.current?.controller !== controller) return;
 
     setStatus("loading");
     const previewHandle = handleRef.current;
     handleRef.current = undefined;
     playingGenerationRef.current = undefined;
+    tutorialSessionRef.current = undefined;
+    const activeController = detachTutorialController();
     try {
-      await destroyTutorialController();
-      if (!isCurrentMount(mountPoint, generation)) {
-        await previewHandle?.destroy().catch(() => undefined);
-        return;
-      }
-      await previewHandle?.destroy();
+      await cleanupTutorialSession(activeController, previewHandle);
     } catch (cleanupError) {
       if (!isCurrentMount(mountPoint, generation)) return;
       returnToBriefing(
@@ -619,11 +659,27 @@ export function APKGameHost({
     await activatePlayingMount(mountPoint, generation, mounted, playingTransitions);
   };
 
-  const startTutorial = async (mountPoint: HTMLDivElement, generation: number): Promise<void> => {
-    const actionDriver = standardExperience?.createTutorialActionDriver() ?? tutorialActionDriver;
-    if (effectiveTutorial === undefined || actionDriver === undefined) {
-      setError("The tutorial phase is not available in this host yet. The cartridge remains gated until its phase controller is available.");
-      setStatus("error");
+  const startTutorial = async (
+    mountPoint: HTMLDivElement,
+    generation: number,
+    startTransition?: GameLifecycleTransition,
+  ): Promise<void> => {
+    if (effectiveTutorial === undefined) {
+      const message = "The tutorial phase is not available in this host yet. The cartridge remains gated until its phase controller is available.";
+      if (isCurrentMount(mountPoint, generation)) returnToBriefing(mountPoint, generation, message);
+      return;
+    }
+    let actionDriver: GameTutorialActionDriver | undefined;
+    try {
+      actionDriver = standardExperience?.createTutorialActionDriver() ?? tutorialActionDriver;
+    } catch (actionDriverError) {
+      const message = actionDriverError instanceof Error ? actionDriverError.message : "The tutorial phase is not available in this host yet.";
+      if (isCurrentMount(mountPoint, generation)) returnToBriefing(mountPoint, generation, message);
+      return;
+    }
+    if (actionDriver === undefined) {
+      const message = "The tutorial phase is not available in this host yet. The cartridge remains gated until its phase controller is available.";
+      if (isCurrentMount(mountPoint, generation)) returnToBriefing(mountPoint, generation, message);
       return;
     }
     const effects: GameTutorialEffects = {
@@ -634,13 +690,29 @@ export function APKGameHost({
       writeLeaderboard: () => undefined,
       applyFailureConsequences: () => undefined,
     };
+    const token = {};
     const controller = createGameTutorialController({
       tutorial: effectiveTutorial,
       actionDriver,
       clock: tutorialClock ?? createBrowserTutorialClock(),
       effects,
       onLifecycleTransition: (transition) => {
-        void enterPlayingFromTutorial(mountPoint, generation, transition);
+        const activeSession = tutorialSessionRef.current;
+        if (
+          !isCurrentMount(mountPoint, generation)
+          || activeSession?.token !== token
+          || tutorialTransitionTokenRef.current !== undefined
+        ) return;
+        const transitionGeneration = mountGenerationRef.current + 1;
+        mountGenerationRef.current = transitionGeneration;
+        tutorialTransitionTokenRef.current = token;
+        void enterPlayingFromTutorial(
+          mountPoint,
+          transitionGeneration,
+          transition,
+          token,
+          activeSession.controller,
+        );
       },
       onDiagnostic: undefined,
       onSnapshot: (snapshot) => {
@@ -657,9 +729,34 @@ export function APKGameHost({
       },
     });
     tutorialControllerRef.current = controller;
-    const mounted = await mountGame(mountPoint, generation, "tutorial");
+    tutorialSessionRef.current = {
+      token,
+      controller,
+      tutorial: effectiveTutorial,
+      standardExperience,
+      tutorialActionDriver,
+      tutorialClock,
+    };
+    tutorialTransitionTokenRef.current = undefined;
+    const mounted = await mountGame(mountPoint, generation, "tutorial", false, true);
     if (!mounted || generation !== mountGenerationRef.current) return;
-    await controller.start();
+    const recoverTutorialStart = async (message: string): Promise<void> => {
+      tutorialSessionRef.current = undefined;
+      const activeController = detachTutorialController();
+      await cleanupTutorialSession(activeController, mounted).catch(() => undefined);
+      if (isCurrentMount(mountPoint, generation)) returnToBriefing(mountPoint, generation, message);
+    };
+    try {
+      await controller.start();
+    } catch (startError) {
+      const message = startError instanceof Error ? startError.message : "The tutorial could not start.";
+      await recoverTutorialStart(message);
+      return;
+    }
+    if (!isCurrentMount(mountPoint, generation) || tutorialSessionRef.current?.controller !== controller) return;
+    if (startTransition !== undefined && !emitLifecycleTransition(startTransition)) {
+      await recoverTutorialStart(lifecycleErrorRef.current ?? "The tutorial could not start.");
+    }
   };
 
   /**
@@ -891,14 +988,30 @@ export function APKGameHost({
       resumingGenerationRef.current = undefined;
       provisionalPlayingGenerationRef.current = undefined;
       provisionalCompletionRef.current = undefined;
-      void destroyTutorialController().catch(() => undefined);
+      tutorialSessionRef.current = undefined;
+      tutorialTransitionTokenRef.current = undefined;
+      const mountedController = detachTutorialController();
       if (mountPointRef.current === mountPoint) mountPointRef.current = undefined;
       mountPoint.remove();
-      if (mountedHandle) void mountedHandle.destroy().catch(() => undefined);
+      void cleanupTutorialSession(mountedController, mountedHandle).catch(() => undefined);
     };
     // The mount branch intentionally preserves the legacy immediate-launch behavior.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cartridge, edition, factory, input, responsive, seed, effectiveBriefing, validationError, launchPhase]);
+  }, [
+    cartridge,
+    edition,
+    factory,
+    input,
+    responsive,
+    seed,
+    effectiveBriefing,
+    effectiveTutorial,
+    standardExperience,
+    tutorialActionDriver,
+    tutorialClock,
+    validationError,
+    launchPhase,
+  ]);
 
   const startBriefing = async (): Promise<void> => {
     if (
@@ -921,8 +1034,10 @@ export function APKGameHost({
       to: resolvedStartPhase,
     });
     if (!transitionResult.success) {
+      briefingStartGuardRef.current = false;
+      setBriefingStarted(false);
       setError("The briefing could not continue because its lifecycle transition is invalid.");
-      setStatus("error");
+      setStatus("briefing");
       return;
     }
 
@@ -956,39 +1071,32 @@ export function APKGameHost({
       return;
     }
 
-    if (!emitLifecycleTransition(transitionResult.data)) {
-      if (resolvedStartPhase === "playing") {
-        const mountPoint = mountPointRef.current;
-        const message = lifecycleErrorRef.current ?? "The game could not start.";
-        if (mountPoint) {
-          returnToBriefing(mountPoint, mountGenerationRef.current, message);
-        } else {
-          briefingStartGuardRef.current = false;
-          setBriefingStarted(false);
-          setError(message);
-          setStatus("briefing");
-        }
-      }
-      return;
-    }
     if (resolvedStartPhase === "tutorial") {
       const mountPoint = mountPointRef.current;
       if (!mountPoint) {
+        briefingStartGuardRef.current = false;
+        setBriefingStarted(false);
         setError("The game surface is not ready. Try again.");
-        setStatus("error");
+        setStatus("briefing");
         return;
       }
       setResult(undefined);
       setResultOutcome("complete");
       setStatus("loading");
-      void startTutorial(mountPoint, mountGenerationRef.current);
+      await startTutorial(mountPoint, mountGenerationRef.current, transitionResult.data);
       return;
     }
     if (resolvedStartPhase !== "playing") {
-      setError(
-        `The ${resolvedStartPhase} phase is not available in this host yet. The cartridge remains gated until its phase controller is available.`,
-      );
-      setStatus("error");
+      const message = `The ${resolvedStartPhase} phase is not available in this host yet. The cartridge remains gated until its phase controller is available.`;
+      const mountPoint = mountPointRef.current;
+      if (mountPoint) {
+        returnToBriefing(mountPoint, mountGenerationRef.current, message);
+      } else {
+        briefingStartGuardRef.current = false;
+        setBriefingStarted(false);
+        setError(message);
+        setStatus("briefing");
+      }
       return;
     }
 
@@ -1005,7 +1113,9 @@ export function APKGameHost({
     setResultOutcome("complete");
     setStatus("loading");
     const generation = mountGenerationRef.current;
-    void mountGame(mountPoint, generation, "playing", false, true);
+    const mounted = await mountGame(mountPoint, generation, "playing", true, true);
+    if (!mounted || !isCurrentMount(mountPoint, generation)) return;
+    await activatePlayingMount(mountPoint, generation, mounted, [transitionResult.data]);
   };
 
   const togglePause = () => {
@@ -1068,16 +1178,18 @@ export function APKGameHost({
       const mountPoint = mountPointRef.current;
       const generation = mountGenerationRef.current + 1;
       mountGenerationRef.current = generation;
+      const activeController = detachTutorialController();
+      tutorialSessionRef.current = undefined;
+      tutorialTransitionTokenRef.current = undefined;
       playingGenerationRef.current = undefined;
       resumingGenerationRef.current = undefined;
       provisionalPlayingGenerationRef.current = undefined;
       provisionalCompletionRef.current = undefined;
       handleRef.current = undefined;
       sessionModeRef.current = "playing";
-      await destroyTutorialController().catch(() => undefined);
 
       try {
-        await activeHandle?.destroy();
+        await cleanupTutorialSession(activeController, activeHandle);
       } catch (restartError) {
         if (mountPoint && isCurrentMount(mountPoint, generation)) {
           returnToBriefing(
@@ -1131,22 +1243,20 @@ export function APKGameHost({
   const replayTutorial = async (): Promise<void> => {
     const mountPoint = mountPointRef.current;
     if (!mountPoint) return;
+    const generation = mountGenerationRef.current + 1;
+    mountGenerationRef.current = generation;
     const activeHandle = handleRef.current;
     handleRef.current = undefined;
-    clearProvisionalPlaying(mountGenerationRef.current);
-    mountGenerationRef.current += 1;
-    const generation = mountGenerationRef.current;
+    const activeController = detachTutorialController();
+    tutorialSessionRef.current = undefined;
+    tutorialTransitionTokenRef.current = undefined;
+    clearProvisionalPlaying(generation - 1);
     playingGenerationRef.current = undefined;
     provisionalCompletionRef.current = undefined;
     setStatus("loading");
     setTutorialSnapshot(undefined);
     try {
-      await destroyTutorialController();
-      if (!isCurrentMount(mountPoint, generation)) {
-        await activeHandle?.destroy().catch(() => undefined);
-        return;
-      }
-      await activeHandle?.destroy();
+      await cleanupTutorialSession(activeController, activeHandle);
     } catch (cleanupError) {
       if (!isCurrentMount(mountPoint, generation)) return;
       returnToBriefing(
@@ -1215,6 +1325,7 @@ export function APKGameHost({
       {status === "tutorial"
         && effectiveTutorial
         && tutorialSnapshot
+        && tutorialControlsReady
         && tutorialControllerRef.current ? (
           <GameTutorialScreen
             tutorial={effectiveTutorial}

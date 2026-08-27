@@ -150,6 +150,7 @@ describe("mountCartridge", () => {
     complete?.(validResults);
     complete?.({ ...validResults, score: 999 });
     complete?.({ accuracy: 200 });
+    await Promise.resolve();
 
     expect(hostComplete).toHaveBeenCalledTimes(1);
     expect(hostComplete).toHaveBeenCalledWith(validResults, "complete");
@@ -275,6 +276,7 @@ describe("mountCartridge", () => {
     handle.pause();
     instance.resume.mockImplementation(() => complete?.(validResults));
     handle.resume();
+    await Promise.resolve();
 
     expect(hostComplete).toHaveBeenCalledOnce();
     expect(handle.getDiagnostics().status).toBe("completed");
@@ -530,5 +532,132 @@ describe("mountCartridge", () => {
     for (const observer of ResizeObserverStub.instances) {
       expect(observer.disconnect).toHaveBeenCalledOnce();
     }
+  });
+
+  it("does not deliver a factory completion when the factory throws", async () => {
+    const hostComplete = vi.fn();
+
+    await expect(mountCartridge({
+      container: document.createElement("div"),
+      cartridge: createRuntimeCartridge(),
+      input: [{ term: "river", translation: "riviere" }],
+      edition: createRuntimeEdition(),
+      host: { complete: hostComplete },
+    }, async ({ complete }) => {
+      complete(validResults);
+      throw new Error("factory failed after completion");
+    })).rejects.toThrow("factory failed after completion");
+
+    expect(hostComplete).not.toHaveBeenCalled();
+  });
+
+  it("flushes one factory completion after a successful mount", async () => {
+    const hostComplete = vi.fn();
+    const handle = await mountCartridge({
+      container: document.createElement("div"),
+      cartridge: createRuntimeCartridge(),
+      input: [{ term: "river", translation: "riviere" }],
+      edition: createRuntimeEdition(),
+      host: { complete: hostComplete },
+    }, async ({ complete }) => {
+      complete(validResults, "victory");
+      return { destroy: vi.fn() };
+    });
+
+    await Promise.resolve();
+    expect(hostComplete).toHaveBeenCalledOnce();
+    expect(hostComplete).toHaveBeenCalledWith(validResults, "victory");
+    expect(handle.getDiagnostics().status).toBe("completed");
+    await handle.destroy();
+  });
+
+  it("ignores a completion callback retained from a renderer generation after restart", async () => {
+    const callbacks: Array<(result: unknown) => void> = [];
+    const hostComplete = vi.fn();
+    let attempts = 0;
+    const factory: GameFactory = vi.fn(async ({ complete }) => {
+      callbacks.push(complete);
+      attempts += 1;
+      return { destroy: vi.fn(), ...(attempts === 1 ? {} : { resume: vi.fn() }) };
+    });
+    const handle = await mountCartridge({
+      container: document.createElement("div"),
+      cartridge: createRuntimeCartridge(),
+      input: [{ term: "river", translation: "riviere" }],
+      edition: createRuntimeEdition(),
+      host: { complete: hostComplete },
+    }, factory);
+
+    await handle.restart();
+    callbacks[0]?.(validResults);
+    expect(hostComplete).not.toHaveBeenCalled();
+    callbacks[1]?.(validResults);
+    await Promise.resolve();
+    expect(hostComplete).toHaveBeenCalledOnce();
+    await handle.destroy();
+  });
+
+  it("recovers the restart queue after a failed restart", async () => {
+    let attempts = 0;
+    const factory: GameFactory = vi.fn(async () => {
+      attempts += 1;
+      if (attempts === 2) throw new Error("restart factory failed");
+      return { destroy: vi.fn() };
+    });
+    const handle = await mountCartridge({
+      container: document.createElement("div"),
+      cartridge: createRuntimeCartridge(),
+      input: [{ term: "river", translation: "riviere" }],
+      edition: createRuntimeEdition(),
+      host: { complete: vi.fn() },
+    }, factory);
+
+    await expect(handle.restart()).rejects.toThrow("restart factory failed");
+    await expect(handle.restart()).resolves.toBeUndefined();
+    expect(factory).toHaveBeenCalledTimes(3);
+    await handle.destroy();
+  });
+
+  it("contains diagnostic observer failures during runtime work", async () => {
+    const diagnostic = vi.fn(() => {
+      throw new Error("diagnostic observer failed");
+    });
+    const handle = await mountCartridge({
+      container: document.createElement("div"),
+      cartridge: createRuntimeCartridge(),
+      input: [{ term: "river", translation: "riviere" }],
+      edition: createRuntimeEdition(),
+      host: { complete: vi.fn(), diagnostic },
+    }, async () => ({ destroy: vi.fn() }));
+
+    handle.pause();
+    handle.resume();
+    await handle.restart();
+    expect(diagnostic).toHaveBeenCalled();
+    await handle.destroy();
+  });
+
+  it("handles a synchronous host completion failure as a rejected continuation", async () => {
+    const hostComplete = vi.fn(() => {
+      throw new Error("host completion failed");
+    });
+    const diagnostic = vi.fn();
+    let complete: ((result: unknown) => void) | undefined;
+    const handle = await mountCartridge({
+      container: document.createElement("div"),
+      cartridge: createRuntimeCartridge(),
+      input: [{ term: "river", translation: "riviere" }],
+      edition: createRuntimeEdition(),
+      host: { complete: hostComplete, diagnostic },
+    }, async (context) => {
+      complete = context.complete;
+      return { destroy: vi.fn() };
+    });
+
+    expect(() => complete?.(validResults)).not.toThrow();
+    await Promise.resolve();
+    await Promise.resolve();
+    expect(diagnostic).toHaveBeenCalledWith(expect.objectContaining({ code: "HOST_COMPLETION_FAILED" }));
+    await handle.destroy();
   });
 });

@@ -179,9 +179,11 @@ describe("APKGameHost", () => {
     expect(factory.contexts).toHaveLength(0);
   });
 
-  it("emits the configured Start transition exactly once before mounting gameplay", async () => {
+  it("emits the configured Start transition exactly once after mounting gameplay", async () => {
     const factory = createMockGameFactory();
-    const onLifecycleTransition = vi.fn();
+    const onLifecycleTransition = vi.fn((transition) => {
+      if (transition.to === "playing") expect(factory.contexts).toHaveLength(1);
+    });
     render(
       <APKGameHost
         cartridge={createRuntimeCartridge()}
@@ -196,17 +198,17 @@ describe("APKGameHost", () => {
     const start = await screen.findByRole("button", { name: "Begin quest" });
     fireEvent.click(start);
     fireEvent.click(start);
-    expect(onLifecycleTransition).toHaveBeenCalledWith({
+    await waitFor(() => expect(onLifecycleTransition).toHaveBeenCalledWith({
       from: "briefing",
       event: "start",
       to: "playing",
-    });
+    }));
     expect(onLifecycleTransition).toHaveBeenCalledOnce();
     await screen.findByText("Game ready");
     expect(factory.contexts).toHaveLength(1);
   });
 
-  it("recovers a synchronous Start lifecycle callback failure to a fresh briefing without mounting gameplay", async () => {
+  it("recovers a synchronous Start lifecycle callback failure after cleaning up gameplay", async () => {
     const factory = createMockGameFactory();
     let failStart = true;
     const onLifecycleTransition = vi.fn(() => {
@@ -228,7 +230,8 @@ describe("APKGameHost", () => {
     fireEvent.click(await screen.findByRole("button", { name: "Begin quest" }));
 
     expect(await screen.findByRole("alert")).toHaveTextContent("The game start signal could not be delivered");
-    expect(factory.contexts).toHaveLength(0);
+    expect(factory.contexts).toHaveLength(1);
+    expect(factory.instances[0]?.destroy).toHaveBeenCalledOnce();
     expect(screen.queryByText("Game ready")).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Pause game" })).not.toBeInTheDocument();
 
@@ -238,10 +241,10 @@ describe("APKGameHost", () => {
     fireEvent.click(retryStart);
 
     expect(await screen.findByText("Game ready")).toBeInTheDocument();
-    expect(factory.contexts).toHaveLength(1);
+    expect(factory.contexts).toHaveLength(2);
   });
 
-  it("keeps a non-playing Start phase gated after emitting its transition", async () => {
+  it("keeps a non-playing Start phase gated until its tutorial is ready", async () => {
     const factory = createMockGameFactory();
     const onLifecycleTransition = vi.fn();
     render(
@@ -256,14 +259,10 @@ describe("APKGameHost", () => {
     );
 
     fireEvent.click(await screen.findByRole("button", { name: "Begin quest" }));
-    expect(onLifecycleTransition).toHaveBeenCalledWith({
-      from: "briefing",
-      event: "start",
-      to: "tutorial",
-    });
-    expect(onLifecycleTransition).toHaveBeenCalledOnce();
+    expect(await screen.findByRole("alert")).toHaveTextContent("tutorial phase is not available");
+    expect(onLifecycleTransition).not.toHaveBeenCalled();
     expect(factory.contexts).toHaveLength(0);
-    expect(screen.queryByRole("button", { name: "Pause game" })).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Begin quest" })).toBeEnabled();
   });
 
   it("returns an unavailable Start phase error to the briefing without mounting gameplay", async () => {
@@ -282,12 +281,8 @@ describe("APKGameHost", () => {
     expect(await screen.findByRole("alert")).toHaveTextContent("tutorial phase is not available");
     expect(factory.contexts).toHaveLength(0);
 
-    const returnToBriefing = screen.getByRole("button", { name: "Return to briefing" });
-    expect(returnToBriefing).toBeEnabled();
-    fireEvent.click(returnToBriefing);
-
-    expect(await screen.findByRole("button", { name: "Begin quest" })).toBeEnabled();
-    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Begin quest" })).toBeEnabled();
+    expect(screen.queryByRole("button", { name: "Return to briefing" })).not.toBeInTheDocument();
     expect(factory.contexts).toHaveLength(0);
     expect(screen.queryByRole("button", { name: "Pause game" })).not.toBeInTheDocument();
   });
@@ -341,6 +336,128 @@ describe("APKGameHost", () => {
     expect(document.querySelectorAll("[data-apk-canvas-host] canvas")).toHaveLength(1);
   });
 
+  it("does not emit a playing Start transition when the playing mount fails", async () => {
+    const factory = createMockGameFactory();
+    const onLifecycleTransition = vi.fn();
+    render(
+      <APKGameHost
+        cartridge={createRuntimeCartridge()}
+        input={learningInput}
+        edition={createRuntimeEdition()}
+        factory={async (context) => {
+          if (context.sessionMode === "playing") throw new Error("playing mount failed");
+          return factory(context);
+        }}
+        briefing={briefing}
+        onLifecycleTransition={onLifecycleTransition}
+      />,
+    );
+
+    fireEvent.click(await screen.findByRole("button", { name: "Begin quest" }));
+
+    expect(await screen.findByRole("alert")).toHaveTextContent("playing mount failed");
+    expect(onLifecycleTransition).not.toHaveBeenCalled();
+    expect(screen.getByRole("button", { name: "Begin quest" })).toBeEnabled();
+  });
+
+  it("does not emit a tutorial Start transition when the tutorial mount fails", async () => {
+    const factory = createMockGameFactory();
+    const onLifecycleTransition = vi.fn();
+    render(
+      <APKGameHost
+        cartridge={createRuntimeCartridge()}
+        input={learningInput}
+        edition={createRuntimeEdition()}
+        factory={async (context) => {
+          if (context.sessionMode === "tutorial") throw new Error("tutorial mount failed");
+          return factory(context);
+        }}
+        briefing={{ ...briefing, startPhase: "tutorial" }}
+        tutorial={tutorial}
+        tutorialActionDriver={{ execute: vi.fn() }}
+        onLifecycleTransition={onLifecycleTransition}
+      />,
+    );
+
+    fireEvent.click(await screen.findByRole("button", { name: "Begin quest" }));
+
+    expect(await screen.findByRole("alert")).toHaveTextContent("tutorial mount failed");
+    expect(onLifecycleTransition).not.toHaveBeenCalled();
+    expect(screen.getByRole("button", { name: "Begin quest" })).toBeEnabled();
+  });
+
+  it("keeps tutorial Start transactional when controller start fails", async () => {
+    const factory = createMockGameFactory();
+    const tutorialActionDriver = {
+      execute: vi.fn(),
+      destroy: vi.fn(),
+    };
+    const onLifecycleTransition = vi.fn();
+    const tutorialClock = {
+      now: vi.fn(() => 0),
+      setTimeout: vi.fn(() => {
+        throw new Error("tutorial scheduling failed");
+      }),
+      clearTimeout: vi.fn(),
+    };
+    render(
+      <APKGameHost
+        cartridge={createRuntimeCartridge()}
+        input={learningInput}
+        edition={createRuntimeEdition()}
+        factory={factory}
+        briefing={{ ...briefing, startPhase: "tutorial" }}
+        tutorial={tutorial}
+        tutorialActionDriver={tutorialActionDriver}
+        tutorialClock={tutorialClock}
+        onLifecycleTransition={onLifecycleTransition}
+      />,
+    );
+
+    fireEvent.click(await screen.findByRole("button", { name: "Begin quest" }));
+
+    expect(await screen.findByRole("alert")).toHaveTextContent("tutorial scheduling failed");
+    expect(onLifecycleTransition).not.toHaveBeenCalled();
+    expect(tutorialActionDriver.destroy).toHaveBeenCalledOnce();
+    expect(factory.instances[0]?.destroy).toHaveBeenCalledOnce();
+    expect(await screen.findByRole("button", { name: "Begin quest" })).toBeEnabled();
+  });
+
+  it("cleans tutorial resources when the external Start transition fails", async () => {
+    const factory = createMockGameFactory();
+    const tutorialActionDriver = {
+      execute: vi.fn(),
+      destroy: vi.fn(),
+    };
+    const onLifecycleTransition = vi.fn(() => {
+      throw new Error("tutorial start signal failed");
+    });
+    render(
+      <APKGameHost
+        cartridge={createRuntimeCartridge()}
+        input={learningInput}
+        edition={createRuntimeEdition()}
+        factory={factory}
+        briefing={{ ...briefing, startPhase: "tutorial" }}
+        tutorial={tutorial}
+        tutorialActionDriver={tutorialActionDriver}
+        onLifecycleTransition={onLifecycleTransition}
+      />,
+    );
+
+    fireEvent.click(await screen.findByRole("button", { name: "Begin quest" }));
+
+    expect(await screen.findByRole("alert")).toHaveTextContent("tutorial start signal failed");
+    expect(onLifecycleTransition).toHaveBeenCalledWith({
+      from: "briefing",
+      event: "start",
+      to: "tutorial",
+    });
+    expect(tutorialActionDriver.destroy).toHaveBeenCalledOnce();
+    expect(factory.instances[0]?.destroy).toHaveBeenCalledOnce();
+    expect(await screen.findByRole("button", { name: "Begin quest" })).toBeEnabled();
+  });
+
   it("rejects every callback retained by a failed mount after its retry succeeds", async () => {
     const successfulFactory = createMockGameFactory();
     const capturedHosts: APKHostAdapter[] = [];
@@ -378,6 +495,7 @@ describe("APKGameHost", () => {
     expect(capturedHosts).toHaveLength(2);
     expect(successfulFactory.contexts[0]?.container).toBe(failedMountPoint);
     onDiagnostic.mockClear();
+    const replacementPauseCalls = successfulFactory.instances[0]?.pause.mock.calls.length ?? 0;
 
     await act(async () => {
       await capturedHosts[0]?.complete(validResults, "victory");
@@ -390,7 +508,7 @@ describe("APKGameHost", () => {
       });
     });
 
-    expect(successfulFactory.instances[0]?.pause).not.toHaveBeenCalled();
+    expect(successfulFactory.instances[0]?.pause).toHaveBeenCalledTimes(replacementPauseCalls);
     expect(onComplete).not.toHaveBeenCalled();
     expect(onNavigate).not.toHaveBeenCalled();
     expect(onDiagnostic).not.toHaveBeenCalled();
@@ -568,7 +686,7 @@ describe("APKGameHost", () => {
     fireEvent.click(screen.getByRole("button", { name: "Restart game" }));
     await screen.findByText("Game ready");
 
-    act(() => factory.contexts[0]?.complete(validResults));
+    act(() => factory.contexts[1]?.complete(validResults));
     expect(await screen.findByText("Game complete")).toBeInTheDocument();
     expect(screen.getByRole("region", { name: "Game result" })).toBeInTheDocument();
     expect(screen.getByText("120")).toBeInTheDocument();
@@ -1519,6 +1637,115 @@ describe("APKGameHost", () => {
       to: "playing",
     });
     expect(factory.contexts).toHaveLength(1);
+  });
+
+  it("attempts controller and renderer cleanup when both tutorial cleanups reject", async () => {
+    const factory = createMockGameFactory();
+    const controllerError = new Error("tutorial controller cleanup failed");
+    const rendererError = new Error("tutorial renderer cleanup failed");
+    const tutorialActionDriver = {
+      execute: vi.fn(),
+      destroy: vi.fn(() => {
+        throw controllerError;
+      }),
+    };
+    render(
+      <APKGameHost
+        cartridge={createRuntimeCartridge()}
+        input={learningInput}
+        edition={createRuntimeEdition()}
+        factory={factory}
+        briefing={{ ...briefing, startPhase: "tutorial" }}
+        tutorial={tutorial}
+        tutorialActionDriver={tutorialActionDriver}
+      />,
+    );
+
+    fireEvent.click(await screen.findByRole("button", { name: "Begin quest" }));
+    await screen.findByRole("button", { name: "Replay tutorial" });
+    factory.instances[0]?.destroy.mockRejectedValue(rendererError);
+    fireEvent.click(screen.getByRole("button", { name: "Replay tutorial" }));
+
+    expect(await screen.findByRole("alert")).toHaveTextContent(controllerError.message);
+    expect(tutorialActionDriver.destroy).toHaveBeenCalledOnce();
+    expect(factory.instances[0]?.destroy).toHaveBeenCalledOnce();
+    expect(screen.getByRole("button", { name: "Begin quest" })).toBeEnabled();
+  });
+
+  it("ignores an overlapping tutorial terminal callback after the first invalidates the preview", async () => {
+    const factory = createMockGameFactory();
+    let releaseDestroy: () => void = () => undefined;
+    const destroyPending = new Promise<void>((resolve) => {
+      releaseDestroy = resolve;
+    });
+    const tutorialActionDriver = {
+      execute: vi.fn(),
+      destroy: vi.fn(() => destroyPending),
+    };
+    render(
+      <APKGameHost
+        cartridge={createRuntimeCartridge()}
+        input={learningInput}
+        edition={createRuntimeEdition()}
+        factory={factory}
+        briefing={{ ...briefing, startPhase: "tutorial" }}
+        tutorial={tutorial}
+        tutorialActionDriver={tutorialActionDriver}
+      />,
+    );
+
+    fireEvent.click(await screen.findByRole("button", { name: "Begin quest" }));
+    await screen.findByRole("button", { name: "Skip tutorial" });
+    fireEvent.click(screen.getByRole("button", { name: "Skip tutorial" }));
+    fireEvent.click(screen.getByRole("button", { name: "Skip tutorial" }));
+
+    await waitFor(() => expect(tutorialActionDriver.destroy).toHaveBeenCalledOnce());
+    await act(async () => {
+      releaseDestroy();
+      await Promise.resolve();
+    });
+
+    await screen.findByText("Game ready");
+    expect(factory.contexts).toHaveLength(2);
+    expect(factory.instances[1]?.destroy).not.toHaveBeenCalled();
+  });
+
+  it("tears down tutorial playback when its host dependencies change", async () => {
+    const factory = createMockGameFactory();
+    const cartridge = createRuntimeCartridge();
+    const edition = createRuntimeEdition();
+    const tutorialBriefing = { ...briefing, startPhase: "tutorial" } as const;
+    const firstDriver = { execute: vi.fn() };
+    const secondDriver = { execute: vi.fn() };
+    const { rerender } = render(
+      <APKGameHost
+        cartridge={cartridge}
+        input={learningInput}
+        edition={edition}
+        factory={factory}
+        briefing={tutorialBriefing}
+        tutorial={tutorial}
+        tutorialActionDriver={firstDriver}
+      />,
+    );
+
+    fireEvent.click(await screen.findByRole("button", { name: "Begin quest" }));
+    await screen.findByRole("button", { name: "Pause tutorial" });
+    rerender(
+      <APKGameHost
+        cartridge={cartridge}
+        input={learningInput}
+        edition={edition}
+        factory={factory}
+        briefing={tutorialBriefing}
+        tutorial={tutorial}
+        tutorialActionDriver={secondDriver}
+      />,
+    );
+
+    expect(await screen.findByRole("button", { name: "Begin quest" })).toBeEnabled();
+    expect(factory.instances[0]?.destroy).toHaveBeenCalledOnce();
+    expect(screen.queryByRole("button", { name: "Pause tutorial" })).not.toBeInTheDocument();
   });
 
   it("does not let replay continue on a detached mount after a prop replacement", async () => {

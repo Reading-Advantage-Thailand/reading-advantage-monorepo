@@ -1,6 +1,7 @@
 import {
   gameResultsSchema,
   sentenceInputSchema,
+  type GameResults,
   vocabularyInputSchema,
 } from "@reading-advantage/game-contracts";
 
@@ -24,6 +25,12 @@ import {
   type GameTerminalOutcome,
   type MountCartridgeOptions,
 } from "./types.js";
+
+type PendingCompletion = {
+  generation: number;
+  result: GameResults;
+  outcome: GameTerminalOutcome;
+};
 
 /**
  * Mounts one cartridge with deterministic browser lifecycle ownership.
@@ -80,6 +87,9 @@ export async function mountCartridge(
   let lastEvent: APKDiagnosticEvent | undefined;
   let composition: SupportedResponsiveComposition | undefined;
   let operation = Promise.resolve();
+  let rendererGeneration = 0;
+  let mountedRendererGeneration: number | undefined;
+  let pendingCompletion: PendingCompletion | undefined;
   const previousTouchAction = container.style.touchAction;
   const inputController = createInputController(container);
 
@@ -118,7 +128,11 @@ export async function mountCartridge(
     event: Omit<APKDiagnosticEvent, "timestamp"> & { timestamp?: number },
   ): void => {
     lastEvent = { ...event, timestamp: event.timestamp ?? Date.now() };
-    host.diagnostic?.(lastEvent);
+    try {
+      host.diagnostic?.(lastEvent);
+    } catch {
+      // Host diagnostics must not interrupt runtime work.
+    }
   };
 
   const reportCleanupFailure = (stage: string, error: unknown): void => {
@@ -154,8 +168,32 @@ export async function mountCartridge(
     }
   };
 
-  const complete = (candidate: unknown, outcome: GameTerminalOutcome = "complete"): void => {
-    if (destroyed || completionCount > 0) return;
+  const notifyHostComplete = (
+    generation: number,
+    result: GameResults,
+    outcome: GameTerminalOutcome,
+  ): void => {
+    void Promise.resolve()
+      .then(() => {
+        if (destroyed || generation !== rendererGeneration) return;
+        return host.complete(result, outcome);
+      })
+      .catch((error: unknown) => {
+        if (destroyed || generation !== rendererGeneration) return;
+        diagnostic({
+          level: "error",
+          code: "HOST_COMPLETION_FAILED",
+          message: error instanceof Error ? error.message : "Host completion failed",
+        });
+      });
+  };
+
+  const completeForGeneration = (
+    generation: number,
+    candidate: unknown,
+    outcome: GameTerminalOutcome = "complete",
+  ): void => {
+    if (destroyed || generation !== rendererGeneration || completionCount > 0) return;
     if (sessionMode !== "playing") {
       diagnostic({
         level: "info",
@@ -181,24 +219,33 @@ export async function mountCartridge(
     completionCount = 1;
     status = "completed";
     diagnostic({ level: "info", code: "GAME_COMPLETED", message: "Game result accepted" });
-    void Promise.resolve(host.complete(parsed.data, terminalOutcome)).catch((error: unknown) => {
-      diagnostic({
-        level: "error",
-        code: "HOST_COMPLETION_FAILED",
-        message: error instanceof Error ? error.message : "Host completion failed",
-      });
-    });
+    const completion = { generation, result: parsed.data, outcome: terminalOutcome };
+    if (mountedRendererGeneration === generation) {
+      notifyHostComplete(completion.generation, completion.result, completion.outcome);
+    } else {
+      pendingCompletion = completion;
+    }
+  };
+
+  const takePendingCompletion = (): PendingCompletion | undefined => {
+    const completion = pendingCompletion;
+    pendingCompletion = undefined;
+    return completion;
   };
 
   const createInstance = async (): Promise<void> => {
     if (destroyed) throw new APKRuntimeError("RUNTIME_DESTROYED", "Runtime is destroyed");
+    const generation = rendererGeneration + 1;
+    rendererGeneration = generation;
+    mountedRendererGeneration = undefined;
+    pendingCompletion = undefined;
     try {
       instance = await factory({
         container,
         cartridge,
         input,
         edition,
-        complete,
+        complete: (candidate, outcome = "complete") => completeForGeneration(generation, candidate, outcome),
         diagnostic: (event) => diagnostic(event),
         inputController,
         sessionMode,
@@ -207,10 +254,17 @@ export async function mountCartridge(
       });
       instance.setMuted?.(muted);
       if (width > 0 && height > 0) instance.resize?.(width, height);
-      status = explicitlyPaused ? "paused" : "running";
+      status = completionCount > 0 ? "completed" : explicitlyPaused ? "paused" : "running";
       if (explicitlyPaused) instance.pause?.();
       diagnostic({ level: "info", code: "RUNTIME_READY", message: "Game runtime ready" });
+      mountedRendererGeneration = generation;
+      const completion = takePendingCompletion();
+      if (completion?.generation === generation && completionCount > 0) {
+        notifyHostComplete(completion.generation, completion.result, completion.outcome);
+      }
     } catch (error) {
+      mountedRendererGeneration = undefined;
+      pendingCompletion = undefined;
       status = "error";
       const runtimeError = toAPKRuntimeError(error, "MOUNT_FAILED", "Game renderer failed to mount");
       try {
@@ -318,11 +372,15 @@ export async function mountCartridge(
       diagnostic({ level: "info", code: "HOST_RESUMED", message: "Game resumed by host" });
     },
     restart: async () => {
-      operation = operation.then(async () => {
+      operation = operation.catch(() => undefined).then(async () => {
         if (destroyed) throw new APKRuntimeError("RUNTIME_DESTROYED", "Runtime is destroyed");
-        status = "restarting";
-        await instance?.destroy();
+        const previousInstance = instance;
+        rendererGeneration += 1;
+        mountedRendererGeneration = undefined;
+        pendingCompletion = undefined;
         instance = undefined;
+        status = "restarting";
+        await previousInstance?.destroy();
         completionCount = 0;
         restartCount += 1;
         await createInstance();
