@@ -3,12 +3,14 @@
 import dynamic from "next/dynamic";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import type { RuntimeCartridge } from "@reading-advantage/advantage-play-kit/runtime";
-import type { StandardExperienceCartridge } from "@reading-advantage/advantage-play-kit/presentation";
 import {
-  cartridgeLoaders,
-  createCatalogStandardEdition,
-} from "@reading-advantage/game-cartridges";
+  APK_RUNTIME_API_VERSION,
+  type RuntimeCartridge,
+  type RuntimeEdition,
+  type SemanticAssetBinding,
+} from "@reading-advantage/advantage-play-kit/runtime";
+import type { StandardExperienceCartridge } from "@reading-advantage/advantage-play-kit/presentation";
+import { cartridgeLoaders } from "@reading-advantage/game-cartridges";
 
 import {
   isGameMusicId,
@@ -43,6 +45,23 @@ const APKGameHost = dynamic(
     loading: () => <p className="p-6 text-sm text-muted-foreground">Loading game...</p>,
   },
 );
+
+const DEVELOPER_PREVIEW_ASSET = {
+  id: "developer-preview",
+  path: "asset-6aeab3f50c0f6be4.png",
+  kind: "image",
+  view: "screen",
+  width: 192,
+  height: 384,
+  format: "png",
+  alpha: true,
+  byteSize: 3670,
+  sha256: "6aeab3f50c0f6be436eeb5594e7d9c1ae31f8f19ac3bdfa04d7fbcbf856ba5e4",
+  provenance: {
+    source: "Advantage Games standard-pack QC preview",
+    license: "LicenseRef-Reading-Advantage-Original",
+  },
+} as const;
 
 /** Props for a public, local-only cartridge launch surface. */
 export interface PublicCartridgeHostProps {
@@ -79,12 +98,35 @@ function getCartridgeLoader(cartridgeId: string): CartridgeLoader {
  * @param cartridge Loaded public cartridge.
  * @returns A valid image-backed edition for every declared cartridge asset binding.
  */
-function createDeveloperEdition(cartridge: RuntimeCartridge) {
-  return createCatalogStandardEdition(
-    cartridge.manifest.requiredAssetBindings,
-    withBasePath("/assets/apk/standard-pack-qc/"),
-    cartridge.manifest.id,
-  );
+function createDeveloperEdition(cartridge: RuntimeCartridge): RuntimeEdition {
+  const bindings: Record<string, SemanticAssetBinding> = {};
+  for (const key of cartridge.manifest.requiredAssetBindings) {
+    bindings[key] = {
+      key,
+      file: DEVELOPER_PREVIEW_ASSET.id,
+      usage: "image",
+      view: DEVELOPER_PREVIEW_ASSET.view,
+    };
+  }
+
+  return {
+    id: "public-developer",
+    title: "Public developer preview",
+    runtimeApiVersion: APK_RUNTIME_API_VERSION,
+    pack: {
+      id: "standard-pack-qc",
+      version: "1.0.0",
+      root: withBasePath("/assets/apk/standard-pack-qc/"),
+      files: { [DEVELOPER_PREVIEW_ASSET.id]: DEVELOPER_PREVIEW_ASSET },
+    },
+    bindings,
+    tuning: {
+      speed: 1,
+      targetScale: 1,
+      collisionScale: 1,
+      intensity: 0.5,
+    },
+  };
 }
 
 /**

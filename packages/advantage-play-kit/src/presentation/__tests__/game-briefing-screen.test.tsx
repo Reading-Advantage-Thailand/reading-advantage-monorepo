@@ -197,4 +197,23 @@ describe("GameBriefingScreen", () => {
     fireEvent.click(screen.getByRole("button", { name: "Start game" }));
     expect(onStart).toHaveBeenCalledOnce();
   });
+
+  it("exposes a class demonstration action that does not start student play", () => {
+    const onStart = vi.fn();
+    const onDemonstrate = vi.fn();
+    render(
+      <GameBriefingScreen
+        briefing={briefing}
+        learningItems={[{ term: "แม่น้ำ", translation: "river" }]}
+        onStart={onStart}
+        onDemonstrate={onDemonstrate}
+      />,
+    );
+
+    const demonstrate = screen.getByRole("button", { name: "Demonstrate for class" });
+    fireEvent.click(demonstrate);
+    fireEvent.click(demonstrate);
+    expect(onDemonstrate).toHaveBeenCalledOnce();
+    expect(onStart).not.toHaveBeenCalled();
+  });
 });

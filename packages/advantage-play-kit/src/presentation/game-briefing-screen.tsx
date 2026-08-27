@@ -25,6 +25,10 @@ export type GameBriefingScreenProps = Omit<
   readonly learningItems: readonly VocabularyItem[];
   /** Requests one transition from briefing into the host-selected next phase. */
   readonly onStart: () => void;
+  /** Requests a scored-session-free class demonstration of the real cartridge. */
+  readonly onDemonstrate?: () => void;
+  /** Accessible label for the class-demonstration action. */
+  readonly demonstrateLabel?: string;
   /** Spatial profile selected by the APK composition resolver. */
   readonly layoutProfile?: LayoutProfile;
   /** Input capabilities currently applicable to this briefing. */
@@ -69,12 +73,14 @@ function isControlApplicable(
 /**
  * Renders the complete accessible mission briefing shown before a cartridge accepts normal play input.
  * @param props Validated briefing content, learning items, host transition, and presentation options.
- * @returns A named briefing dialog with mission details, learning content, controls, and one Start action.
+ * @returns A named briefing dialog with mission details, learning content, controls, Start, and optional Demonstrate.
  */
 export function GameBriefingScreen({
   briefing,
   learningItems,
   onStart,
+  onDemonstrate,
+  demonstrateLabel = "Demonstrate for class",
   layoutProfile = "compact",
   inputMode,
   startPending = false,
@@ -100,6 +106,13 @@ export function GameBriefingScreen({
     startActivatedRef.current = true;
     setStartActivated(true);
     onStart();
+  };
+
+  const handleDemonstrate = () => {
+    if (startPending || startActivatedRef.current || onDemonstrate === undefined) return;
+    startActivatedRef.current = true;
+    setStartActivated(true);
+    onDemonstrate();
   };
 
   return (
@@ -318,6 +331,28 @@ export function GameBriefingScreen({
         }}
       >
         {extension ? <div data-apk-briefing-region="extension" style={{ flex: "1 1 12rem", minInlineSize: 0 }}>{extension}</div> : null}
+        {onDemonstrate ? (
+          <button
+            type="button"
+            data-apk-briefing-demo="true"
+            disabled={startPending || startActivated}
+            onClick={handleDemonstrate}
+            style={{
+              minBlockSize: "48px",
+              minInlineSize: "min(100%, 12rem)",
+              border: "1px solid var(--apk-briefing-border, #335c4b)",
+              borderRadius: "var(--apk-briefing-action-radius, 6px)",
+              background: "transparent",
+              color: "var(--apk-briefing-text, #f4f0dc)",
+              cursor: startPending || startActivated ? "wait" : "pointer",
+              font: "inherit",
+              fontWeight: 700,
+              padding: "0.75rem 1.25rem",
+            }}
+          >
+            {demonstrateLabel}
+          </button>
+        ) : null}
         <button
           type="button"
           aria-busy={startPending || startActivated || undefined}

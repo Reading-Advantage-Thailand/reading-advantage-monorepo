@@ -139,7 +139,7 @@ export const gameLifecycleTransitionSchema = z.discriminatedUnion("event", [
   z.object({
     from: z.literal("demo"),
     event: z.literal("demo-complete"),
-    to: z.enum(["tutorial", "countdown", "playing"]),
+    to: z.enum(["briefing", "tutorial", "countdown", "playing"]),
   }).strict(),
   z.object({
     from: z.literal("countdown"),

@@ -3,6 +3,7 @@ import { StrictMode } from "react";
 import { act, cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { APKGameHost } from "./apk-game-host.js";
+import { DEFAULT_RESPONSIVE_LAYOUT_CONFIG } from "../responsive/responsive-composition.js";
 import { createMockGameFactory } from "../testing/test-kit.js";
 import { createRuntimeCartridge, createRuntimeEdition, validResults } from "../testing/fixtures.js";
 import type { GameFactory } from "../runtime/types.js";
@@ -24,6 +25,42 @@ const learningInput = [
 ] as const;
 
 describe("APKGameHost", () => {
+  it("passes a compact host composition to the game factory", async () => {
+    const width = vi.spyOn(HTMLElement.prototype, "clientWidth", "get").mockReturnValue(390);
+    const height = vi.spyOn(HTMLElement.prototype, "clientHeight", "get").mockReturnValue(640);
+    const factory = createMockGameFactory();
+
+    try {
+      render(
+        <APKGameHost
+          cartridge={createRuntimeCartridge()}
+          input={learningInput}
+          edition={createRuntimeEdition()}
+          factory={factory}
+          responsive={{
+            config: DEFAULT_RESPONSIVE_LAYOUT_CONFIG,
+            safeArea: { top: 0, right: 0, bottom: 0, left: 0 },
+            inputCapabilities: { touch: true, pointer: true, keyboard: true },
+            accessibility: { textScale: 1, touchScale: 1 },
+          }}
+        />,
+      );
+
+      await screen.findByText("Game ready");
+      expect(document.querySelector("[data-apk-runtime-mount]")).toHaveStyle({
+        width: "100%",
+        height: "100%",
+      });
+      expect(factory.contexts[0]?.composition).toMatchObject({
+        profile: "compact",
+        safeRect: { width: 390, height: 640 },
+      });
+    } finally {
+      width.mockRestore();
+      height.mockRestore();
+    }
+  });
+
   it("does not create a cartridge until its briefing Start action is activated, then mounts exactly once", async () => {
     const factory = createMockGameFactory();
     render(
@@ -269,7 +306,7 @@ describe("APKGameHost", () => {
 
     act(() => factory.contexts[0]?.complete(validResults));
     await screen.findByText("Game complete");
-    fireEvent.click(screen.getByRole("button", { name: "Restart game" }));
+    fireEvent.click(screen.getByRole("button", { name: "Play again" }));
 
     await screen.findByRole("button", { name: "Begin quest" });
     expect(factory.instances[0]?.destroy).toHaveBeenCalledOnce();
@@ -315,8 +352,52 @@ describe("APKGameHost", () => {
 
     act(() => factory.contexts[0]?.complete(validResults));
     expect(await screen.findByText("Game complete")).toBeInTheDocument();
-    expect(screen.getByText("Score: 120")).toBeInTheDocument();
-    expect(onComplete).toHaveBeenCalledWith(validResults);
+    expect(screen.getByRole("region", { name: "Game result" })).toBeInTheDocument();
+    expect(screen.getByText("120")).toBeInTheDocument();
+    expect(screen.getByText("Pixel art assets by ElvGames")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Play again" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Exit" })).toBeInTheDocument();
+    expect(onComplete).toHaveBeenCalledWith(validResults, "complete");
+  });
+
+  it.each(["victory", "defeat"] as const)(
+    "propagates the %s terminal outcome with the validated result",
+    async (outcome) => {
+      const factory = createMockGameFactory();
+      const onComplete = vi.fn();
+      render(
+        <APKGameHost
+          cartridge={createRuntimeCartridge()}
+          input={[{ term: "river", translation: "riviere" }]}
+          edition={createRuntimeEdition()}
+          factory={factory}
+          onComplete={onComplete}
+        />,
+      );
+
+      await screen.findByText("Game ready");
+      act(() => factory.contexts[0]?.complete(validResults, outcome));
+
+      await waitFor(() => expect(onComplete).toHaveBeenCalledWith(validResults, outcome));
+    },
+  );
+
+  it("renders a defeat result when the cartridge supplies terminal outcome metadata", async () => {
+    const factory = createMockGameFactory();
+    render(
+      <APKGameHost
+        cartridge={createRuntimeCartridge()}
+        input={[{ term: "river", translation: "riviere" }]}
+        edition={createRuntimeEdition()}
+        factory={factory}
+      />,
+    );
+
+    await screen.findByText("Game ready");
+    act(() => factory.contexts[0]?.complete(validResults, "defeat"));
+
+    expect(await screen.findByText("Try again")).toBeInTheDocument();
+    expect(screen.queryByText("Complete")).not.toBeInTheDocument();
   });
 
   it("renders actionable startup failures outside the canvas", async () => {
@@ -404,5 +485,231 @@ describe("APKGameHost", () => {
     fireEvent.click(screen.getByRole("button", { name: "Begin quest" }));
     await screen.findByText("Game ready");
     expect(document.querySelectorAll("[data-apk-canvas-host] canvas")).toHaveLength(1);
+  });
+
+  it("mounts a class demonstration that cannot emit production completions", async () => {
+    const factory = createMockGameFactory();
+    const onComplete = vi.fn();
+    const onLifecycleTransition = vi.fn();
+    render(
+      <APKGameHost
+        cartridge={createRuntimeCartridge()}
+        input={learningInput}
+        edition={createRuntimeEdition()}
+        factory={factory}
+        briefing={briefing}
+        onComplete={onComplete}
+        onLifecycleTransition={onLifecycleTransition}
+      />,
+    );
+
+    fireEvent.click(await screen.findByRole("button", { name: "Demonstrate for class" }));
+    expect(await screen.findByText("Class demonstration ready")).toBeInTheDocument();
+    expect(screen.getByRole("status")).toHaveTextContent("scores are not saved");
+    expect(factory.contexts).toHaveLength(1);
+    expect(factory.contexts[0]?.sessionMode).toBe("demo");
+    expect(onLifecycleTransition).toHaveBeenCalledWith({
+      from: "briefing",
+      event: "start",
+      to: "demo",
+    });
+
+    act(() => factory.contexts[0]?.complete(validResults, "victory"));
+    expect(onComplete).not.toHaveBeenCalled();
+    expect(screen.queryByText("Game complete")).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Pause demonstration" })).toBeEnabled();
+    expect(screen.getByRole("button", { name: "Restart demonstration" })).toBeEnabled();
+    expect(screen.getByRole("button", { name: "Advance demonstration" })).toBeEnabled();
+  });
+
+  it("returns from a class demonstration to the briefing without a scored session", async () => {
+    const factory = createMockGameFactory();
+    const onLifecycleTransition = vi.fn();
+    render(
+      <APKGameHost
+        cartridge={createRuntimeCartridge()}
+        input={learningInput}
+        edition={createRuntimeEdition()}
+        factory={factory}
+        briefing={briefing}
+        onLifecycleTransition={onLifecycleTransition}
+      />,
+    );
+
+    fireEvent.click(await screen.findByRole("button", { name: "Demonstrate for class" }));
+    await screen.findByText("Class demonstration ready");
+    fireEvent.click(screen.getByRole("button", { name: "Advance demonstration" }));
+
+    expect(onLifecycleTransition).toHaveBeenCalledWith({
+      from: "demo",
+      event: "demo-complete",
+      to: "briefing",
+    });
+    expect(await screen.findByRole("button", { name: "Begin quest" })).toBeEnabled();
+    expect(screen.getByRole("button", { name: "Demonstrate for class" })).toBeEnabled();
+    expect(screen.queryByText("Class demonstration ready")).not.toBeInTheDocument();
+  });
+
+  it("opens a class demonstration immediately when launchPhase is demo", async () => {
+    const factory = createMockGameFactory();
+    const onComplete = vi.fn();
+    render(
+      <APKGameHost
+        cartridge={createRuntimeCartridge()}
+        input={learningInput}
+        edition={createRuntimeEdition()}
+        factory={factory}
+        briefing={briefing}
+        onComplete={onComplete}
+        launchPhase="demo"
+      />,
+    );
+
+    expect(await screen.findByText("Class demonstration ready")).toBeInTheDocument();
+    expect(factory.contexts[0]?.sessionMode).toBe("demo");
+    expect(screen.queryByRole("button", { name: "Begin quest" })).not.toBeInTheDocument();
+
+    act(() => factory.contexts[0]?.complete(validResults, "victory"));
+    expect(onComplete).not.toHaveBeenCalled();
+    expect(screen.queryByText("Game complete")).not.toBeInTheDocument();
+  });
+
+  it("renders Skip demonstration only in demo mode", async () => {
+    const factory = createMockGameFactory();
+    render(
+      <APKGameHost
+        cartridge={createRuntimeCartridge()}
+        input={learningInput}
+        edition={createRuntimeEdition()}
+        factory={factory}
+        briefing={briefing}
+      />,
+    );
+
+    expect(screen.queryByRole("button", { name: "Skip demonstration" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Advance demonstration" })).not.toBeInTheDocument();
+
+    fireEvent.click(await screen.findByRole("button", { name: "Demonstrate for class" }));
+    await screen.findByText("Class demonstration ready");
+    expect(screen.getByRole("button", { name: "Skip demonstration" })).toBeEnabled();
+    expect(screen.getByRole("button", { name: "Advance demonstration" })).toBeEnabled();
+  });
+
+  it("skips a class demonstration to countdown then playing and mounts authoritative gameplay", async () => {
+    const factory = createMockGameFactory();
+    const onLifecycleTransition = vi.fn();
+    render(
+      <APKGameHost
+        cartridge={createRuntimeCartridge()}
+        input={learningInput}
+        edition={createRuntimeEdition()}
+        factory={factory}
+        briefing={briefing}
+        onLifecycleTransition={onLifecycleTransition}
+      />,
+    );
+
+    fireEvent.click(await screen.findByRole("button", { name: "Demonstrate for class" }));
+    await screen.findByText("Class demonstration ready");
+    expect(factory.contexts).toHaveLength(1);
+    expect(factory.contexts[0]?.sessionMode).toBe("demo");
+
+    fireEvent.click(screen.getByRole("button", { name: "Skip demonstration" }));
+
+    await screen.findByText("Game ready");
+    expect(factory.instances[0]?.destroy).toHaveBeenCalledTimes(1);
+    expect(factory.contexts).toHaveLength(2);
+    expect(factory.contexts[1]?.sessionMode).toBe("playing");
+    expect(screen.queryByText("Class demonstration ready")).not.toBeInTheDocument();
+    expect(screen.queryByRole("status")).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Skip demonstration" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Advance demonstration" })).not.toBeInTheDocument();
+    expect(onLifecycleTransition).toHaveBeenCalledWith({
+      from: "demo",
+      event: "demo-complete",
+      to: "countdown",
+    });
+    expect(onLifecycleTransition).toHaveBeenCalledWith({
+      from: "countdown",
+      event: "countdown-complete",
+      to: "playing",
+    });
+  });
+
+  it("allows production completion after skipping the demonstration", async () => {
+    const factory = createMockGameFactory();
+    const onComplete = vi.fn();
+    render(
+      <APKGameHost
+        cartridge={createRuntimeCartridge()}
+        input={learningInput}
+        edition={createRuntimeEdition()}
+        factory={factory}
+        briefing={briefing}
+        onComplete={onComplete}
+      />,
+    );
+
+    fireEvent.click(await screen.findByRole("button", { name: "Demonstrate for class" }));
+    await screen.findByText("Class demonstration ready");
+
+    act(() => factory.contexts[0]?.complete(validResults, "victory"));
+    expect(onComplete).not.toHaveBeenCalled();
+
+    fireEvent.click(screen.getByRole("button", { name: "Skip demonstration" }));
+    await screen.findByText("Game ready");
+
+    act(() => factory.contexts[1]?.complete(validResults, "victory"));
+    await waitFor(() => expect(onComplete).toHaveBeenCalledWith(validResults, "victory"));
+    expect(await screen.findByText("Game complete")).toBeInTheDocument();
+  });
+
+  it("keeps Advance demonstration returning to briefing while Skip starts real play", async () => {
+    const factory = createMockGameFactory();
+    const onLifecycleTransition = vi.fn();
+    render(
+      <APKGameHost
+        cartridge={createRuntimeCartridge()}
+        input={learningInput}
+        edition={createRuntimeEdition()}
+        factory={factory}
+        briefing={briefing}
+        onLifecycleTransition={onLifecycleTransition}
+      />,
+    );
+
+    fireEvent.click(await screen.findByRole("button", { name: "Demonstrate for class" }));
+    await screen.findByText("Class demonstration ready");
+
+    fireEvent.click(screen.getByRole("button", { name: "Skip demonstration" }));
+    await screen.findByText("Game ready");
+
+    expect(onLifecycleTransition).not.toHaveBeenCalledWith({
+      from: "demo",
+      event: "demo-complete",
+      to: "briefing",
+    });
+    expect(screen.queryByRole("button", { name: "Begin quest" })).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Pause game" })).toBeInTheDocument();
+  });
+
+  it("does not show Skip demonstration outside demo mode and keeps tutorial and playing controls unchanged", async () => {
+    const factory = createMockGameFactory();
+    render(
+      <APKGameHost
+        cartridge={createRuntimeCartridge()}
+        input={learningInput}
+        edition={createRuntimeEdition()}
+        factory={factory}
+        briefing={briefing}
+      />,
+    );
+
+    fireEvent.click(await screen.findByRole("button", { name: "Begin quest" }));
+    await screen.findByText("Game ready");
+
+    expect(screen.queryByRole("button", { name: "Skip demonstration" })).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Pause game" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Advance demonstration" })).not.toBeInTheDocument();
   });
 });

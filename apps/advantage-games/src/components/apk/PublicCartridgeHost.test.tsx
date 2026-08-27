@@ -50,11 +50,6 @@ jest.mock("@reading-advantage/game-cartridges", () => ({
     "dragon-flight": (...args: unknown[]) => mockCartridgeLoader(...args),
     "astral-mage": (...args: unknown[]) => mockCartridgeLoader(...args),
   },
-  createCatalogStandardEdition: (_bindings: readonly string[], packRoot: string) => ({
-    id: "catalog-standard-pack",
-    pack: { id: "standard-pack-qc", root: packRoot, files: { "player-idle": {}, "enemy-idle": {} } },
-    bindings: { "player:idle": {}, "enemy:idle": {} },
-  }),
 }));
 jest.mock("@/lib/games-runtime", () => ({
   withBasePath: (path: string) => `/test-base${path}`,
