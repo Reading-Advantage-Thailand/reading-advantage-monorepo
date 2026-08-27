@@ -71,6 +71,7 @@ describe("ChatTutor accessibility", () => {
       { timeout: 1000 },
     );
     expect((button as HTMLButtonElement).disabled).toBe(true);
+    expect((input as HTMLInputElement).disabled).toBe(true);
 
     fireEvent.click(button);
 
