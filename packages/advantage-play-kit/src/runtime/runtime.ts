@@ -279,7 +279,7 @@ export async function mountCartridge(
     if (destroyed || explicitlyPaused) return;
     if (document.visibilityState === "hidden") {
       instance?.pause?.();
-      status = "paused";
+      if (completionCount === 0) status = "paused";
       diagnostic({ level: "info", code: "VISIBILITY_PAUSED", message: "Game paused in background" });
     } else {
       instance?.resume?.();
@@ -307,7 +307,7 @@ export async function mountCartridge(
       if (destroyed) return;
       explicitlyPaused = true;
       instance?.pause?.();
-      status = "paused";
+      if (completionCount === 0) status = "paused";
       diagnostic({ level: "info", code: "HOST_PAUSED", message: "Game paused by host" });
     },
     resume: () => {

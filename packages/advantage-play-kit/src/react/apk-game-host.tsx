@@ -105,6 +105,7 @@ const DEFAULT_DEBRIEF: StandardGameDebrief = Object.freeze({
 });
 
 const DEFAULT_DEMO_SEED = 1;
+const DEMO_CONTROL_STYLE = { minHeight: "44px" } as const;
 
 /**
  * Creates the real-time browser clock used by guided tutorials.
@@ -159,8 +160,10 @@ export function APKGameHost({
   const tutorialControllerRef = useRef<GameTutorialController | undefined>(undefined);
   const mountPointRef = useRef<HTMLDivElement | undefined>(undefined);
   const mountGenerationRef = useRef(0);
+  const playingGenerationRef = useRef<number | undefined>(undefined);
   const briefingStartGuardRef = useRef(false);
   const demoTeardownRef = useRef(false);
+  const lifecycleErrorRef = useRef<string | undefined>(undefined);
   const onCompleteRef = useRef(onComplete);
   const onLifecycleTransitionRef = useRef(onLifecycleTransition);
   const onDiagnosticRef = useRef(onDiagnostic);
@@ -201,7 +204,10 @@ export function APKGameHost({
     && inputValidation?.success === true
     && !briefingStarted;
   const controlsHidden = (effectiveBriefing !== undefined
-    && (!briefingStarted || status === "briefing" || status === "error"))
+    && (!briefingStarted
+      || status === "briefing"
+      || status === "error"
+      || (!demoActive && (status === "loading" || status === "countdown"))))
     || status === "complete";
 
   const destroyTutorialController = async (): Promise<void> => {
@@ -210,23 +216,52 @@ export function APKGameHost({
     await controller?.destroy();
   };
 
+  const isCurrentMount = (mountPoint: HTMLDivElement, generation: number): boolean =>
+    mountPointRef.current === mountPoint && mountGenerationRef.current === generation;
+
+  const returnToBriefing = (
+    mountPoint: HTMLDivElement,
+    generation: number,
+    message: string,
+  ): void => {
+    if (!isCurrentMount(mountPoint, generation)) return;
+    handleRef.current = undefined;
+    playingGenerationRef.current = undefined;
+    mountPoint.replaceChildren();
+    setDemoActive(false);
+    sessionModeRef.current = "playing";
+    briefingStartGuardRef.current = false;
+    setBriefingStarted(false);
+    setBriefingRevision((revision) => revision + 1);
+    setError(message);
+    setStatus(effectiveBriefing === undefined ? "error" : "briefing");
+  };
+
   const teardownDemo = async (failureMessage: string, endDemoState = true): Promise<boolean> => {
     if (demoTeardownRef.current) return false;
     demoTeardownRef.current = true;
+    const mountPoint = mountPointRef.current;
+    const generation = mountGenerationRef.current + 1;
     const activeHandle = handleRef.current;
     handleRef.current = undefined;
-    mountGenerationRef.current += 1;
+    playingGenerationRef.current = undefined;
+    mountGenerationRef.current = generation;
     setStatus("loading");
     try {
       await activeHandle?.destroy();
     } catch (teardownError) {
-      handleRef.current = activeHandle;
-      setError(teardownError instanceof Error ? teardownError.message : failureMessage);
-      setStatus("error");
-      demoTeardownRef.current = false;
+      if (mountPoint && isCurrentMount(mountPoint, generation)) {
+        returnToBriefing(
+          mountPoint,
+          generation,
+          teardownError instanceof Error ? teardownError.message : failureMessage,
+        );
+        demoTeardownRef.current = false;
+      }
       return false;
     }
-    mountPointRef.current?.replaceChildren();
+    if (!mountPoint || !isCurrentMount(mountPoint, generation)) return false;
+    mountPoint.replaceChildren();
     if (endDemoState) {
       setDemoActive(false);
       sessionModeRef.current = "playing";
@@ -236,20 +271,48 @@ export function APKGameHost({
   };
 
   const emitLifecycleTransition = (transition: GameLifecycleTransition): boolean => {
+    lifecycleErrorRef.current = undefined;
     try {
       onLifecycleTransitionRef.current?.(transition);
       return true;
     } catch (transitionError) {
-      setError(transitionError instanceof Error ? transitionError.message : "Game lifecycle signal failed");
+      lifecycleErrorRef.current = transitionError instanceof Error
+        ? transitionError.message
+        : "Game lifecycle signal failed";
+      setError(lifecycleErrorRef.current);
       setStatus("error");
       return false;
     }
+  };
+
+  const discardMountedHandle = async (
+    mountPoint: HTMLDivElement,
+    generation: number,
+    handle: APKGameHandle,
+    message: string,
+  ): Promise<void> => {
+    const isCurrent = isCurrentMount(mountPoint, generation);
+    const invalidatedGeneration = generation + 1;
+    if (isCurrent) {
+      handleRef.current = undefined;
+      playingGenerationRef.current = undefined;
+      mountGenerationRef.current = invalidatedGeneration;
+    }
+    try {
+      await handle.destroy();
+    } catch {
+      // The runtime marks the handle destroyed before renderer cleanup.
+    }
+    if (!isCurrent) return;
+    returnToBriefing(mountPoint, invalidatedGeneration, message);
   };
 
   const mountGame = async (
     mountPoint: HTMLDivElement,
     generation: number,
     sessionMode: "playing" | "tutorial" | "demo" = "playing",
+    pauseAfterMount = false,
+    recoverToBriefingOnFailure = false,
   ): Promise<APKGameHandle | undefined> => {
     sessionModeRef.current = sessionMode;
     const sessionSeed = sessionMode === "demo" && seed === undefined ? DEFAULT_DEMO_SEED : seed;
@@ -263,7 +326,11 @@ export function APKGameHost({
           sessionMode,
           host: {
             complete: async (nextResult, outcome = "complete") => {
-              if (generation !== mountGenerationRef.current || sessionMode !== "playing") return;
+              if (
+                !isCurrentMount(mountPoint, generation)
+                || sessionMode !== "playing"
+                || playingGenerationRef.current !== generation
+              ) return;
               handleRef.current?.pause();
               const transition = gameLifecycleTransitionSchema.parse({
                 from: "playing",
@@ -280,34 +347,68 @@ export function APKGameHost({
                 setError(completionError instanceof Error ? completionError.message : "Game result could not be saved");
               }
             },
-            navigate: (destination) => onNavigateRef.current?.(destination),
-            diagnostic: (event) => onDiagnosticRef.current?.(event),
+            navigate: (destination) => {
+              if (isCurrentMount(mountPoint, generation)) onNavigateRef.current?.(destination);
+            },
+            diagnostic: (event) => {
+              if (isCurrentMount(mountPoint, generation)) onDiagnosticRef.current?.(event);
+            },
           },
           ...(sessionSeed === undefined ? {} : { seed: sessionSeed }),
           ...(responsive === undefined ? {} : { responsive }),
         },
         factory ?? createPhaserGameFactory(),
       );
-      if (generation !== mountGenerationRef.current) {
-        await handle.destroy();
+      if (!isCurrentMount(mountPoint, generation)) {
+        try {
+          await handle.destroy();
+        } catch {
+          // A stale mount must not surface its cleanup failure in the replacement session.
+        }
         return undefined;
       }
+      if (pauseAfterMount) {
+        try {
+          handle.pause();
+        } catch (pauseError) {
+          try {
+            await handle.destroy();
+          } catch {
+            // The failed pause handle is discarded even when its cleanup rejects.
+          }
+          throw pauseError;
+        }
+      }
       handleRef.current = handle;
+      if (sessionMode === "playing" && !pauseAfterMount) {
+        playingGenerationRef.current = generation;
+      }
       setDemoActive(sessionMode === "demo");
       setStatus(
-        sessionMode === "tutorial" ? "tutorial" : sessionMode === "demo" ? "demo" : "ready",
+        sessionMode === "tutorial"
+          ? "tutorial"
+          : sessionMode === "demo"
+            ? "demo"
+            : pauseAfterMount
+              ? "countdown"
+              : "ready",
       );
       return handle;
     } catch (mountError: unknown) {
-      if (generation !== mountGenerationRef.current) return undefined;
-      await destroyTutorialController();
+      if (!isCurrentMount(mountPoint, generation)) return undefined;
+      await destroyTutorialController().catch(() => undefined);
       mountPoint.replaceChildren();
       if (sessionMode === "demo") {
         setDemoActive(false);
         sessionModeRef.current = "playing";
       }
-      setError(mountError instanceof Error ? mountError.message : "Game failed to start");
-      setStatus("error");
+      const message = mountError instanceof Error ? mountError.message : "Game failed to start";
+      setError(message);
+      if (recoverToBriefingOnFailure) {
+        returnToBriefing(mountPoint, generation, message);
+      } else {
+        setStatus("error");
+      }
       return undefined;
     }
   };
@@ -317,7 +418,7 @@ export function APKGameHost({
     generation: number,
     transition: GameLifecycleTransition,
   ): Promise<void> => {
-    if (generation !== mountGenerationRef.current) return;
+    if (!isCurrentMount(mountPoint, generation)) return;
     if (!emitLifecycleTransition(transition)) return;
     if (transition.to !== "playing" && transition.to !== "countdown") return;
 
@@ -336,7 +437,7 @@ export function APKGameHost({
     handleRef.current = undefined;
     await destroyTutorialController();
     await previewHandle?.destroy();
-    if (generation !== mountGenerationRef.current) return;
+    if (!isCurrentMount(mountPoint, generation)) return;
     mountPoint.replaceChildren();
     setTutorialSnapshot(undefined);
     await mountGame(mountPoint, generation, "playing");
@@ -395,7 +496,7 @@ export function APKGameHost({
     setResult(undefined);
     setResultOutcome("complete");
     setStatus("loading");
-    return mountGame(mountPoint, mountGenerationRef.current, "demo");
+    return mountGame(mountPoint, mountGenerationRef.current, "demo", false, true);
   };
 
   /**
@@ -426,17 +527,27 @@ export function APKGameHost({
       setStatus("error");
       return;
     }
+    const mountPoint = mountPointRef.current;
+    const generation = mountGenerationRef.current;
     const mounted = await mountDemoSession();
     if (!mounted) {
-      briefingStartGuardRef.current = false;
-      setBriefingStarted(false);
+      if (mountPoint && isCurrentMount(mountPoint, generation)) {
+        briefingStartGuardRef.current = false;
+        setBriefingStarted(false);
+        setStatus("briefing");
+      } else if (!mountPoint) {
+        briefingStartGuardRef.current = false;
+        setBriefingStarted(false);
+        setStatus("briefing");
+      }
       return;
     }
+    if (!mountPoint || !isCurrentMount(mountPoint, generation)) return;
     if (!emitLifecycleTransition(transitionResult.data)) {
-      await teardownDemo("The class demonstration could not start.");
-      briefingStartGuardRef.current = false;
-      setBriefingStarted(false);
-      setStatus("error");
+      const message = lifecycleErrorRef.current ?? "The class demonstration could not start.";
+      if (await teardownDemo(message) && mountPoint) {
+        returnToBriefing(mountPoint, mountGenerationRef.current, message);
+      }
       return;
     }
   };
@@ -448,12 +559,23 @@ export function APKGameHost({
   const endDemo = async (): Promise<void> => {
     if (demoTeardownRef.current) return;
     if (!await teardownDemo("The class demonstration could not end.")) return;
+    const mountPoint = mountPointRef.current;
+    const generation = mountGenerationRef.current;
     const transition = gameLifecycleTransitionSchema.parse({
       from: "demo",
       event: "demo-complete",
       to: "briefing",
     });
-    if (!emitLifecycleTransition(transition)) return;
+    if (!emitLifecycleTransition(transition)) {
+      if (mountPoint) {
+        returnToBriefing(
+          mountPoint,
+          generation,
+          lifecycleErrorRef.current ?? "The class demonstration could not end.",
+        );
+      }
+      return;
+    }
     briefingStartGuardRef.current = false;
     setBriefingStarted(false);
     setBriefingRevision((revision) => revision + 1);
@@ -473,27 +595,37 @@ export function APKGameHost({
 
   /**
    * Ends the class demonstration before navigating away from the host.
-  * @returns A promise that resolves after cleanup and optional navigation finish.
-  */
+   * @returns A promise that resolves after cleanup and optional navigation finish.
+   */
   const exitDemo = async (): Promise<void> => {
     if (demoTeardownRef.current || onNavigateRef.current === undefined) return;
     setError(undefined);
     if (!await teardownDemo("The class demonstration could not exit.")) return;
     const navigate = onNavigateRef.current;
-    if (navigate === undefined) return;
+    const mountPoint = mountPointRef.current;
+    const generation = mountGenerationRef.current;
+    if (navigate === undefined) {
+      if (mountPoint) returnToBriefing(mountPoint, generation, "Game navigation is unavailable.");
+      return;
+    }
     try {
       navigate(effectiveDebrief.exitDestination);
     } catch (navigationError) {
-      setError(navigationError instanceof Error ? navigationError.message : "Game navigation failed");
-      setStatus("error");
+      if (mountPoint) {
+        returnToBriefing(
+          mountPoint,
+          generation,
+          navigationError instanceof Error ? navigationError.message : "Game navigation failed",
+        );
+      }
     }
   };
 
   /**
-   * Skips the class demonstration and starts authoritative gameplay immediately.
+   * Advances the class demonstration into authoritative gameplay immediately.
    * @returns A promise that resolves after the demo session is replaced with a scored session.
    */
-  const skipDemo = async (): Promise<void> => {
+  const advanceDemo = async (): Promise<void> => {
     if (demoTeardownRef.current) return;
     const mountPoint = mountPointRef.current;
     if (!mountPoint) {
@@ -502,26 +634,54 @@ export function APKGameHost({
       return;
     }
     setError(undefined);
-    if (!await teardownDemo("The class demonstration could not be skipped.")) return;
+    if (!await teardownDemo("The class demonstration could not advance.")) return;
     const demoToCountdown = gameLifecycleTransitionSchema.parse({
       from: "demo",
       event: "demo-complete",
       to: "countdown",
     });
-    if (!emitLifecycleTransition(demoToCountdown)) return;
+    if (!emitLifecycleTransition(demoToCountdown)) {
+      returnToBriefing(
+        mountPoint,
+        mountGenerationRef.current,
+        lifecycleErrorRef.current ?? "The class demonstration could not advance.",
+      );
+      return;
+    }
     setStatus("countdown");
     const generation = mountGenerationRef.current;
     setTutorialSnapshot(undefined);
     setBriefingStarted(true);
     setStatus("loading");
-    const mounted = await mountGame(mountPoint, generation, "playing");
+    const mounted = await mountGame(mountPoint, generation, "playing", true, true);
     if (!mounted) return;
     const countdownToPlaying = gameLifecycleTransitionSchema.parse({
       from: "countdown",
       event: "countdown-complete",
       to: "playing",
     });
-    if (!emitLifecycleTransition(countdownToPlaying)) return;
+    if (!emitLifecycleTransition(countdownToPlaying)) {
+      await discardMountedHandle(
+        mountPoint,
+        generation,
+        mounted,
+        lifecycleErrorRef.current ?? "The game could not enter authoritative play.",
+      );
+      return;
+    }
+    if (!isCurrentMount(mountPoint, generation)) return;
+    playingGenerationRef.current = generation;
+    try {
+      setStatus("ready");
+      mounted.resume();
+    } catch (resumeError) {
+      await discardMountedHandle(
+        mountPoint,
+        generation,
+        mounted,
+        resumeError instanceof Error ? resumeError.message : "The game could not resume.",
+      );
+    }
   };
 
   useEffect(() => {
@@ -543,10 +703,13 @@ export function APKGameHost({
     setResult(undefined);
     setResultOutcome("complete");
 
+    demoTeardownRef.current = false;
+    playingGenerationRef.current = undefined;
+
     if (launchPhase === "demo") {
       setBriefingStarted(true);
       setStatus("loading");
-      void mountGame(mountPoint, generation, "demo");
+      void mountGame(mountPoint, generation, "demo", false, true);
     } else if (effectiveBriefing !== undefined) {
       if (validationError) {
         setStatus("error");
@@ -562,10 +725,11 @@ export function APKGameHost({
       mountGenerationRef.current += 1;
       const mountedHandle = handleRef.current;
       handleRef.current = undefined;
-      void destroyTutorialController();
-      mountPointRef.current = undefined;
+      playingGenerationRef.current = undefined;
+      void destroyTutorialController().catch(() => undefined);
+      if (mountPointRef.current === mountPoint) mountPointRef.current = undefined;
       mountPoint.remove();
-      void mountedHandle?.destroy();
+      if (mountedHandle) void mountedHandle.destroy().catch(() => undefined);
     };
     // The mount branch intentionally preserves the legacy immediate-launch behavior.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -598,22 +762,50 @@ export function APKGameHost({
     }
 
     if (resolvedStartPhase === "demo") {
-      const mounted = await mountDemoSession();
-      if (!mounted) {
+      const mountPoint = mountPointRef.current;
+      const generation = mountGenerationRef.current;
+      if (!mountPoint) {
         briefingStartGuardRef.current = false;
         setBriefingStarted(false);
+        setError("The game surface is not ready. Try again.");
+        setStatus("briefing");
+        return;
+      }
+      const mounted = await mountDemoSession();
+      if (!mounted) {
+        if (isCurrentMount(mountPoint, generation)) {
+          briefingStartGuardRef.current = false;
+          setBriefingStarted(false);
+        }
+        return;
+      }
+      if (!isCurrentMount(mountPoint, generation)) {
         return;
       }
       if (!emitLifecycleTransition(transitionResult.data)) {
-        await teardownDemo("The class demonstration could not start.");
-        briefingStartGuardRef.current = false;
-        setBriefingStarted(false);
-        setStatus("error");
+        const message = lifecycleErrorRef.current ?? "The class demonstration could not start.";
+        if (await teardownDemo(message) && isCurrentMount(mountPoint, mountGenerationRef.current)) {
+          returnToBriefing(mountPoint, mountGenerationRef.current, message);
+        }
       }
       return;
     }
 
-    if (!emitLifecycleTransition(transitionResult.data)) return;
+    if (!emitLifecycleTransition(transitionResult.data)) {
+      if (resolvedStartPhase === "playing") {
+        const mountPoint = mountPointRef.current;
+        const message = lifecycleErrorRef.current ?? "The game could not start.";
+        if (mountPoint) {
+          returnToBriefing(mountPoint, mountGenerationRef.current, message);
+        } else {
+          briefingStartGuardRef.current = false;
+          setBriefingStarted(false);
+          setError(message);
+          setStatus("briefing");
+        }
+      }
+      return;
+    }
     if (resolvedStartPhase === "tutorial") {
       const mountPoint = mountPointRef.current;
       if (!mountPoint) {
@@ -637,8 +829,10 @@ export function APKGameHost({
 
     const mountPoint = mountPointRef.current;
     if (!mountPoint) {
+      briefingStartGuardRef.current = false;
+      setBriefingStarted(false);
       setError("The game surface is not ready. Try again.");
-      setStatus("error");
+      setStatus("briefing");
       return;
     }
 
@@ -646,7 +840,7 @@ export function APKGameHost({
     setResultOutcome("complete");
     setStatus("loading");
     const generation = mountGenerationRef.current;
-    void mountGame(mountPoint, generation, "playing");
+    void mountGame(mountPoint, generation, "playing", false, true);
   };
 
   const togglePause = () => {
@@ -687,25 +881,35 @@ export function APKGameHost({
       setResult(undefined);
       setResultOutcome("complete");
       setStatus("loading");
-      mountGenerationRef.current += 1;
-      await destroyTutorialController();
+      const mountPoint = mountPointRef.current;
+      const generation = mountGenerationRef.current + 1;
+      mountGenerationRef.current = generation;
+      playingGenerationRef.current = undefined;
       handleRef.current = undefined;
-      mountPointRef.current?.replaceChildren();
+      sessionModeRef.current = "playing";
+      await destroyTutorialController().catch(() => undefined);
 
       try {
         await activeHandle?.destroy();
       } catch (restartError) {
-        setError(restartError instanceof Error ? restartError.message : "Game failed to restart");
-        setStatus("error");
+        if (mountPoint && isCurrentMount(mountPoint, generation)) {
+          returnToBriefing(
+            mountPoint,
+            generation,
+            restartError instanceof Error ? restartError.message : "Game failed to restart",
+          );
+        }
         return;
       }
 
-      const mountPoint = mountPointRef.current;
-      if (!mountPoint) {
-        setError("The game surface is not ready. Try again.");
-        setStatus("error");
+      if (!mountPoint || !isCurrentMount(mountPoint, generation)) {
+        if (!mountPoint) {
+          setError("The game surface is not ready. Try again.");
+          setStatus("error");
+        }
         return;
       }
+      mountPoint.replaceChildren();
       if (replayEntry === "tutorial") {
         setBriefingStarted(true);
         await startTutorial(mountPoint, mountGenerationRef.current);
@@ -713,7 +917,7 @@ export function APKGameHost({
       }
       if (replayEntry === "playing") {
         setBriefingStarted(true);
-        await mountGame(mountPoint, mountGenerationRef.current, "playing");
+        await mountGame(mountPoint, generation, "playing", false, true);
         return;
       }
 
@@ -832,31 +1036,37 @@ export function APKGameHost({
       >
         {tutorialSnapshot?.phase === "tutorial" ? (
           <>
-            <button type="button" onClick={() => runTutorialCommand(tutorialSnapshot.status === "paused" ? "resume" : "pause")}>
+            <button
+              type="button"
+              className="min-h-11"
+              style={DEMO_CONTROL_STYLE}
+              onClick={() => runTutorialCommand(tutorialSnapshot.status === "paused" ? "resume" : "pause")}
+            >
               {tutorialSnapshot.status === "paused" ? effectiveTutorial?.labels.resume : effectiveTutorial?.labels.pause}
             </button>
-            <button type="button" onClick={() => runTutorialCommand("advance")}>{effectiveTutorial?.labels.advance}</button>
-            <button type="button" onClick={() => runTutorialCommand("replay")}>{effectiveTutorial?.labels.replay}</button>
-            <button type="button" onClick={() => runTutorialCommand("skip")}>{effectiveTutorial?.labels.skip}</button>
+            <button type="button" className="min-h-11" style={DEMO_CONTROL_STYLE} onClick={() => runTutorialCommand("advance")}>{effectiveTutorial?.labels.advance}</button>
+            <button type="button" className="min-h-11" style={DEMO_CONTROL_STYLE} onClick={() => runTutorialCommand("replay")}>{effectiveTutorial?.labels.replay}</button>
+            <button type="button" className="min-h-11" style={DEMO_CONTROL_STYLE} onClick={() => runTutorialCommand("skip")}>{effectiveTutorial?.labels.skip}</button>
           </>
         ) : demoActive ? (
           <>
-            <button type="button" className="min-h-11" onClick={togglePause} disabled={status === "loading" || status === "error"}>
+            <button type="button" className="min-h-11" style={DEMO_CONTROL_STYLE} onClick={togglePause} disabled={status === "loading" || status === "error"}>
               {status === "paused" ? "Resume demonstration" : "Pause demonstration"}
             </button>
-            <button type="button" className="min-h-11" onClick={() => void restartDemo()} disabled={status === "loading" || status === "error"}>
+            <button type="button" className="min-h-11" style={DEMO_CONTROL_STYLE} onClick={() => void restartDemo()} disabled={status === "loading" || status === "error"}>
               Restart demonstration
             </button>
-            <button type="button" className="min-h-11" onClick={() => void endDemo()} disabled={status === "loading" || status === "error"}>
+            <button type="button" className="min-h-11" style={DEMO_CONTROL_STYLE} onClick={() => void endDemo()} disabled={status === "loading" || status === "error"}>
               End demonstration
             </button>
-            <button type="button" className="min-h-11" onClick={() => void skipDemo()} disabled={status === "loading" || status === "error"}>
-              Skip demonstration
+            <button type="button" className="min-h-11" style={DEMO_CONTROL_STYLE} onClick={() => void advanceDemo()} disabled={status === "loading" || status === "error"}>
+              Advance demonstration
             </button>
             {onNavigate ? (
               <button
                 type="button"
                 className="min-h-11"
+                style={DEMO_CONTROL_STYLE}
                 onClick={() => void exitDemo()}
                 disabled={status === "loading" || status === "error"}
               >
@@ -865,15 +1075,15 @@ export function APKGameHost({
             ) : null}
           </>
         ) : (
-          <button type="button" onClick={togglePause} disabled={status === "loading" || status === "error" || controlsHidden}>
+          <button type="button" className="min-h-11" style={DEMO_CONTROL_STYLE} onClick={togglePause} disabled={status === "loading" || status === "error" || controlsHidden}>
             {status === "paused" ? "Resume game" : "Pause game"}
           </button>
         )}
-        <button type="button" onClick={toggleMute} disabled={status === "loading" || status === "error" || controlsHidden}>
+        <button type="button" className="min-h-11" style={DEMO_CONTROL_STYLE} onClick={toggleMute} disabled={status === "loading" || status === "error" || controlsHidden}>
           {muted ? "Unmute game" : "Mute game"}
         </button>
         {!demoActive && !(launchPhase === "demo" && briefingStarted) ? (
-          <button type="button" onClick={() => void restart()} disabled={status === "loading"}>
+          <button type="button" className="min-h-11" style={DEMO_CONTROL_STYLE} onClick={() => void restart()} disabled={status === "loading"}>
             Restart game
           </button>
         ) : null}

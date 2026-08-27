@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { mountCartridge, type APKGameInstance, type GameFactory } from "./runtime.js";
+import { createPhaserGameFactory } from "./phaser-factory.js";
 import { APKRuntimeError } from "./errors.js";
 import { createRuntimeCartridge, createRuntimeEdition, validResults } from "../testing/fixtures.js";
 import { DEFAULT_RESPONSIVE_LAYOUT_CONFIG } from "../responsive/responsive-composition.js";
@@ -154,6 +155,79 @@ describe("mountCartridge", () => {
     expect(hostComplete).toHaveBeenCalledWith(validResults, "complete");
     expect(handle.getDiagnostics().completionCount).toBe(1);
     await handle.destroy();
+  });
+
+  it("preserves completed diagnostics when the host pauses the renderer for debrief", async () => {
+    let complete: ((result: unknown) => void) | undefined;
+    const instance: APKGameInstance = { pause: vi.fn(), destroy: vi.fn() };
+    const handle = await mountCartridge(
+      {
+        container: document.createElement("div"),
+        cartridge: createRuntimeCartridge(),
+        input: [{ term: "river", translation: "riviere" }],
+        edition: createRuntimeEdition(),
+        host: { complete: vi.fn() },
+      },
+      async (context) => {
+        complete = context.complete;
+        return instance;
+      },
+    );
+
+    complete?.(validResults);
+    expect(handle.getDiagnostics().status).toBe("completed");
+
+    handle.pause();
+
+    expect(instance.pause).toHaveBeenCalledOnce();
+    expect(handle.getDiagnostics().status).toBe("completed");
+    expect(handle.getDiagnostics().lastEvent?.code).toBe("HOST_PAUSED");
+    await handle.destroy();
+  });
+
+  it("destroys the production adapter with its canvas and input listeners", async () => {
+    const canvas = document.createElement("canvas");
+    const destroy = vi.fn((removeCanvas?: boolean) => {
+      if (removeCanvas) canvas.remove();
+    });
+    const game = {
+      destroy,
+      scene: { getScenes: () => [] },
+      scale: { refresh: vi.fn() },
+    };
+    const Game = vi.fn(function MockPhaserGame(config: Readonly<Record<string, unknown>>) {
+      (config.parent as HTMLElement).append(canvas);
+      return game;
+    });
+    const loadPhaser = vi.fn(async () => ({ AUTO: 0, Game }));
+    const factory = createPhaserGameFactory(loadPhaser);
+    const container = document.createElement("div");
+    const removeContainerListener = vi.spyOn(container, "removeEventListener");
+    const removeWindowListener = vi.spyOn(window, "removeEventListener");
+
+    const handle = await mountCartridge(
+      {
+        container,
+        cartridge: createRuntimeCartridge(),
+        input: [{ term: "river", translation: "riviere" }],
+        edition: createRuntimeEdition(),
+        host: { complete: vi.fn() },
+      },
+      factory,
+    );
+
+    await handle.destroy();
+
+    expect(loadPhaser).toHaveBeenCalledOnce();
+    expect(destroy).toHaveBeenCalledWith(true);
+    expect(container.querySelector("canvas")).toBeNull();
+    expect(removeWindowListener).toHaveBeenCalledWith("keydown", expect.any(Function));
+    expect(removeWindowListener).toHaveBeenCalledWith("keyup", expect.any(Function));
+    expect(removeContainerListener).toHaveBeenCalledWith("pointerdown", expect.any(Function));
+    expect(removeContainerListener).toHaveBeenCalledWith("pointermove", expect.any(Function));
+    expect(removeContainerListener).toHaveBeenCalledWith("pointerup", expect.any(Function));
+    expect(removeContainerListener).toHaveBeenCalledWith("pointercancel", expect.any(Function));
+    expect(removeContainerListener).toHaveBeenCalledWith("contextmenu", expect.any(Function));
   });
 
   it.each(["tutorial", "demo"] as const)(

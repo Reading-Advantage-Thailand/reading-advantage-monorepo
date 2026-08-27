@@ -151,8 +151,11 @@ describe("APKGameHost", () => {
 
   it("recovers a synchronous Start lifecycle callback failure to a fresh briefing without mounting gameplay", async () => {
     const factory = createMockGameFactory();
+    let failStart = true;
     const onLifecycleTransition = vi.fn(() => {
-      throw new Error("The game start signal could not be delivered. Return to the briefing and try again.");
+      if (failStart) {
+        throw new Error("The game start signal could not be delivered. Return to the briefing and try again.");
+      }
     });
     render(
       <APKGameHost
@@ -172,14 +175,13 @@ describe("APKGameHost", () => {
     expect(screen.queryByText("Game ready")).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Pause game" })).not.toBeInTheDocument();
 
-    const returnToBriefing = screen.getByRole("button", { name: "Return to briefing" });
-    expect(returnToBriefing).toBeEnabled();
-    fireEvent.click(returnToBriefing);
+    const retryStart = await screen.findByRole("button", { name: "Begin quest" });
+    expect(retryStart).toBeEnabled();
+    failStart = false;
+    fireEvent.click(retryStart);
 
-    expect(await screen.findByRole("button", { name: "Begin quest" })).toBeEnabled();
-    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
-    expect(factory.contexts).toHaveLength(0);
-    expect(screen.queryByText("Game ready")).not.toBeInTheDocument();
+    expect(await screen.findByText("Game ready")).toBeInTheDocument();
+    expect(factory.contexts).toHaveLength(1);
   });
 
   it("keeps a non-playing Start phase gated after emitting its transition", async () => {
@@ -270,13 +272,8 @@ describe("APKGameHost", () => {
     expect(attempts).toBe(1);
     expect(document.querySelectorAll("[data-apk-canvas-host] canvas")).toHaveLength(0);
 
-    const returnToBriefing = screen.getByRole("button", { name: "Return to briefing" });
-    expect(returnToBriefing).toBeEnabled();
-    fireEvent.click(returnToBriefing);
-
     const retryStart = await screen.findByRole("button", { name: "Begin quest" });
     expect(retryStart).toBeEnabled();
-    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
     expect(document.querySelectorAll("[data-apk-canvas-host] canvas")).toHaveLength(0);
 
     fireEvent.click(retryStart);
@@ -416,6 +413,45 @@ describe("APKGameHost", () => {
     expect(screen.getByText("Game complete")).toBeInTheDocument();
     expect(factory.contexts).toHaveLength(1);
     expect(factory.instances[0]?.destroy).not.toHaveBeenCalled();
+  });
+
+  it("rejects diagnostics from an old mount after a replacement mount starts", async () => {
+    const factory = createMockGameFactory();
+    const onDiagnostic = vi.fn();
+    const cartridge = createRuntimeCartridge();
+    const edition = createRuntimeEdition();
+    const firstInput = [{ term: "river", translation: "riviere" }] as const;
+    const replacementInput = [{ term: "mountain", translation: "montagne" }] as const;
+    const { rerender } = render(
+      <APKGameHost
+        cartridge={cartridge}
+        input={firstInput}
+        edition={edition}
+        factory={factory}
+        onDiagnostic={onDiagnostic}
+      />,
+    );
+
+    await screen.findByText("Game ready");
+    const oldDiagnostic = factory.contexts[0]?.diagnostic;
+    rerender(
+      <APKGameHost
+        cartridge={cartridge}
+        input={replacementInput}
+        edition={edition}
+        factory={factory}
+        onDiagnostic={onDiagnostic}
+      />,
+    );
+    await screen.findByText("Game ready");
+    expect(factory.instances[0]?.destroy).toHaveBeenCalledOnce();
+    onDiagnostic.mockClear();
+
+    oldDiagnostic?.({ level: "warning", code: "OLD_SESSION", message: "old session" });
+    expect(onDiagnostic).not.toHaveBeenCalled();
+
+    factory.contexts[1]?.diagnostic({ level: "info", code: "CURRENT_SESSION", message: "current session" });
+    expect(onDiagnostic).toHaveBeenCalledWith(expect.objectContaining({ code: "CURRENT_SESSION" }));
   });
 
   it.each(["victory", "defeat"] as const)(
@@ -582,9 +618,11 @@ describe("APKGameHost", () => {
       "Pause demonstration",
       "Restart demonstration",
       "End demonstration",
-      "Skip demonstration",
+      "Advance demonstration",
+      "Mute game",
     ]) {
       expect(screen.getByRole("button", { name: label })).toHaveClass("min-h-11");
+      expect(screen.getByRole("button", { name: label })).toHaveStyle({ minHeight: "44px" });
     }
   });
 
@@ -649,6 +687,36 @@ describe("APKGameHost", () => {
     expect(screen.queryByText("Class demonstration ready")).not.toBeInTheDocument();
     expect(screen.queryByRole("status")).not.toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Begin quest" })).toBeEnabled();
+  });
+
+  it("does not claim a demo when the configured Start demo mount fails", async () => {
+    const factory = createMockGameFactory();
+    const failingFactory: GameFactory = async (context) => {
+      if (context.sessionMode === "demo") throw new Error("configured demo mount failed");
+      return factory(context);
+    };
+    const onLifecycleTransition = vi.fn();
+    render(
+      <APKGameHost
+        cartridge={createRuntimeCartridge()}
+        input={learningInput}
+        edition={createRuntimeEdition()}
+        factory={failingFactory}
+        briefing={{ ...briefing, startPhase: "demo" }}
+        onLifecycleTransition={onLifecycleTransition}
+      />,
+    );
+
+    fireEvent.click(await screen.findByRole("button", { name: "Begin quest" }));
+
+    expect(await screen.findByRole("alert")).toHaveTextContent("configured demo mount failed");
+    expect(onLifecycleTransition).not.toHaveBeenCalledWith({
+      from: "briefing",
+      event: "start",
+      to: "demo",
+    });
+    expect(screen.queryByText("Class demonstration ready")).not.toBeInTheDocument();
+    expect(await screen.findByRole("button", { name: "Begin quest" })).toBeEnabled();
   });
 
   it("opens a class demonstration immediately when launchPhase is demo", async () => {
@@ -750,9 +818,9 @@ describe("APKGameHost", () => {
   it.each([
     "End demonstration",
     "Restart demonstration",
-    "Skip demonstration",
+    "Advance demonstration",
     "Exit demonstration",
-  ] as const)("keeps the demo active when %s teardown rejects", async (control) => {
+  ] as const)("returns to a usable briefing when %s teardown rejects", async (control) => {
     const factory = createMockGameFactory();
     const onNavigate = vi.fn();
     const onLifecycleTransition = vi.fn();
@@ -776,7 +844,9 @@ describe("APKGameHost", () => {
 
     expect(await screen.findByRole("alert")).toHaveTextContent("demo teardown failed");
     expect(factory.contexts).toHaveLength(1);
-    expect(screen.getByRole("status")).toHaveTextContent("scores are not saved");
+    expect(screen.queryByRole("status")).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Begin quest" })).toBeEnabled();
+    expect(screen.queryByText("Class demonstration ready")).not.toBeInTheDocument();
     expect(screen.queryByText("Game ready")).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Restart game" })).not.toBeInTheDocument();
     expect(onNavigate).not.toHaveBeenCalled();
@@ -787,6 +857,11 @@ describe("APKGameHost", () => {
         to: "briefing",
       });
     }
+    expect(onLifecycleTransition).not.toHaveBeenCalledWith({
+      from: "countdown",
+      event: "countdown-complete",
+      to: "playing",
+    });
   });
 
   it("does not emit playing when the skipped gameplay mount fails", async () => {
@@ -809,7 +884,7 @@ describe("APKGameHost", () => {
 
     fireEvent.click(await screen.findByRole("button", { name: "Demonstrate for class" }));
     await screen.findByText("Class demonstration ready");
-    fireEvent.click(screen.getByRole("button", { name: "Skip demonstration" }));
+    fireEvent.click(screen.getByRole("button", { name: "Advance demonstration" }));
 
     expect(await screen.findByRole("alert")).toHaveTextContent("scored mount failed");
     expect(onLifecycleTransition).toHaveBeenCalledWith({
@@ -853,8 +928,9 @@ describe("APKGameHost", () => {
 
     expect(screen.getByRole("button", { name: "Pause demonstration" })).toBeDisabled();
     expect(screen.getByRole("button", { name: "Restart demonstration" })).toBeDisabled();
-    expect(screen.getByRole("button", { name: "Skip demonstration" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Advance demonstration" })).toBeDisabled();
     expect(screen.getByRole("button", { name: "Exit demonstration" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Mute game" })).toBeDisabled();
     expect(screen.queryByRole("button", { name: "Restart game" })).not.toBeInTheDocument();
     expect(factory.contexts).toHaveLength(1);
 
@@ -862,6 +938,220 @@ describe("APKGameHost", () => {
       releaseDestroy();
     });
     expect(await screen.findByRole("button", { name: "Begin quest" })).toBeEnabled();
+  });
+
+  it("does not let stale demo teardown clear a replacement mount", async () => {
+    const factory = createMockGameFactory();
+    let releaseDestroy: () => void = () => undefined;
+    const destroyPending = new Promise<void>((resolve) => {
+      releaseDestroy = resolve;
+    });
+    const cartridge = createRuntimeCartridge();
+    const edition = createRuntimeEdition();
+    const { rerender } = render(
+      <APKGameHost
+        cartridge={cartridge}
+        input={learningInput}
+        edition={edition}
+        factory={factory}
+        briefing={briefing}
+      />,
+    );
+
+    fireEvent.click(await screen.findByRole("button", { name: "Demonstrate for class" }));
+    await screen.findByText("Class demonstration ready");
+    factory.instances[0]?.destroy.mockImplementation(() => destroyPending);
+    fireEvent.click(screen.getByRole("button", { name: "End demonstration" }));
+    await waitFor(() => expect(factory.instances[0]?.destroy).toHaveBeenCalledOnce());
+
+    rerender(
+      <APKGameHost
+        cartridge={cartridge}
+        input={[{ term: "mountain", translation: "montagne" }]}
+        edition={edition}
+        factory={factory}
+        briefing={briefing}
+        launchPhase="demo"
+      />,
+    );
+    await screen.findByText("Class demonstration ready");
+    expect(factory.contexts).toHaveLength(2);
+
+    await act(async () => {
+      releaseDestroy();
+      await Promise.resolve();
+    });
+
+    expect(screen.getByText("Class demonstration ready")).toBeInTheDocument();
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+    expect(factory.instances[1]?.destroy).not.toHaveBeenCalled();
+  });
+
+  it("ignores a stale demo teardown rejection after a replacement mount starts", async () => {
+    const factory = createMockGameFactory();
+    let rejectDestroy: (reason?: unknown) => void = () => undefined;
+    const destroyPending = new Promise<void>((_resolve, reject) => {
+      rejectDestroy = reject;
+    });
+    const cartridge = createRuntimeCartridge();
+    const edition = createRuntimeEdition();
+    const { rerender } = render(
+      <APKGameHost
+        cartridge={cartridge}
+        input={learningInput}
+        edition={edition}
+        factory={factory}
+        briefing={briefing}
+      />,
+    );
+
+    fireEvent.click(await screen.findByRole("button", { name: "Demonstrate for class" }));
+    await screen.findByText("Class demonstration ready");
+    factory.instances[0]?.destroy.mockImplementation(() => destroyPending);
+    fireEvent.click(screen.getByRole("button", { name: "End demonstration" }));
+    await waitFor(() => expect(factory.instances[0]?.destroy).toHaveBeenCalledOnce());
+
+    rerender(
+      <APKGameHost
+        cartridge={cartridge}
+        input={[{ term: "mountain", translation: "montagne" }]}
+        edition={edition}
+        factory={factory}
+        briefing={briefing}
+        launchPhase="demo"
+      />,
+    );
+    await screen.findByText("Class demonstration ready");
+
+    await act(async () => {
+      rejectDestroy(new Error("stale teardown failed"));
+      await Promise.resolve();
+    });
+
+    expect(screen.getByRole("button", { name: "Pause demonstration" })).toBeEnabled();
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+    expect(factory.instances[1]?.destroy).not.toHaveBeenCalled();
+  });
+
+  it("cleans up a scored mount when the playing transition callback fails", async () => {
+    const factory = createMockGameFactory();
+    const onLifecycleTransition = vi.fn((transition) => {
+      if (transition.to === "playing") throw new Error("playing transition failed");
+    });
+    render(
+      <APKGameHost
+        cartridge={createRuntimeCartridge()}
+        input={learningInput}
+        edition={createRuntimeEdition()}
+        factory={factory}
+        briefing={briefing}
+        onLifecycleTransition={onLifecycleTransition}
+      />,
+    );
+
+    fireEvent.click(await screen.findByRole("button", { name: "Demonstrate for class" }));
+    await screen.findByText("Class demonstration ready");
+    fireEvent.click(screen.getByRole("button", { name: "Advance demonstration" }));
+
+    expect(await screen.findByRole("alert")).toHaveTextContent("playing transition failed");
+    expect(factory.instances[1]?.pause).toHaveBeenCalledOnce();
+    expect(factory.instances[1]?.resume).not.toHaveBeenCalled();
+    expect(factory.instances[1]?.destroy).toHaveBeenCalledOnce();
+    expect(await screen.findByRole("button", { name: "Begin quest" })).toBeEnabled();
+    expect(screen.queryByText("Game ready")).not.toBeInTheDocument();
+  });
+
+  it("destroys a scored handle when pausing it for the countdown fails", async () => {
+    const baseFactory = createMockGameFactory();
+    const pause = vi.fn(() => {
+      throw new Error("scored pause failed");
+    });
+    const destroy = vi.fn();
+    const factory: GameFactory = async (context) => {
+      if (context.sessionMode === "playing") {
+        return { pause, destroy };
+      }
+      return baseFactory(context);
+    };
+    render(
+      <APKGameHost
+        cartridge={createRuntimeCartridge()}
+        input={learningInput}
+        edition={createRuntimeEdition()}
+        factory={factory}
+        briefing={briefing}
+      />,
+    );
+
+    fireEvent.click(await screen.findByRole("button", { name: "Demonstrate for class" }));
+    await screen.findByText("Class demonstration ready");
+    fireEvent.click(screen.getByRole("button", { name: "Advance demonstration" }));
+
+    expect(await screen.findByRole("alert")).toHaveTextContent("scored pause failed");
+    expect(pause).toHaveBeenCalledOnce();
+    expect(destroy).toHaveBeenCalledOnce();
+    expect(await screen.findByRole("button", { name: "Begin quest" })).toBeEnabled();
+  });
+
+  it("does not accept completion before the scored playing transition succeeds", async () => {
+    const baseFactory = createMockGameFactory();
+    const onComplete = vi.fn();
+    const factory: GameFactory = async (context) => {
+      const instance = await baseFactory(context);
+      if (context.sessionMode === "playing") context.complete(validResults, "victory");
+      return instance;
+    };
+    render(
+      <APKGameHost
+        cartridge={createRuntimeCartridge()}
+        input={learningInput}
+        edition={createRuntimeEdition()}
+        factory={factory}
+        briefing={briefing}
+        onComplete={onComplete}
+      />,
+    );
+
+    fireEvent.click(await screen.findByRole("button", { name: "Demonstrate for class" }));
+    await screen.findByText("Class demonstration ready");
+    fireEvent.click(screen.getByRole("button", { name: "Advance demonstration" }));
+
+    await screen.findByText("Game ready");
+    expect(onComplete).not.toHaveBeenCalled();
+    expect(screen.queryByText("Game complete")).not.toBeInTheDocument();
+  });
+
+  it("returns to briefing and permits retry after a scored mount failure", async () => {
+    const successfulFactory = createMockGameFactory();
+    let playingAttempts = 0;
+    const factory: GameFactory = async (context) => {
+      if (context.sessionMode === "playing") {
+        playingAttempts += 1;
+        if (playingAttempts === 1) throw new Error("scored mount failed");
+      }
+      return successfulFactory(context);
+    };
+    render(
+      <APKGameHost
+        cartridge={createRuntimeCartridge()}
+        input={learningInput}
+        edition={createRuntimeEdition()}
+        factory={factory}
+        briefing={briefing}
+      />,
+    );
+
+    fireEvent.click(await screen.findByRole("button", { name: "Demonstrate for class" }));
+    await screen.findByText("Class demonstration ready");
+    fireEvent.click(screen.getByRole("button", { name: "Advance demonstration" }));
+
+    expect(await screen.findByRole("alert")).toHaveTextContent("scored mount failed");
+    const retry = await screen.findByRole("button", { name: "Begin quest" });
+    expect(retry).toBeEnabled();
+    fireEvent.click(retry);
+    await screen.findByText("Game ready");
+    expect(playingAttempts).toBe(2);
+    expect(successfulFactory.contexts).toHaveLength(2);
   });
 
   it("uses a fixed seed for every demo when the caller omits one", async () => {
@@ -907,7 +1197,7 @@ describe("APKGameHost", () => {
     expect(factory.contexts[1]?.seed).toBe(73);
   });
 
-  it("renders Skip demonstration only in demo mode", async () => {
+  it("renders Advance demonstration only in demo mode", async () => {
     const factory = createMockGameFactory();
     render(
       <APKGameHost
@@ -919,12 +1209,12 @@ describe("APKGameHost", () => {
       />,
     );
 
-    expect(screen.queryByRole("button", { name: "Skip demonstration" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Advance demonstration" })).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "End demonstration" })).not.toBeInTheDocument();
 
     fireEvent.click(await screen.findByRole("button", { name: "Demonstrate for class" }));
     await screen.findByText("Class demonstration ready");
-    expect(screen.getByRole("button", { name: "Skip demonstration" })).toBeEnabled();
+    expect(screen.getByRole("button", { name: "Advance demonstration" })).toBeEnabled();
     expect(screen.getByRole("button", { name: "End demonstration" })).toBeEnabled();
   });
 
@@ -951,7 +1241,7 @@ describe("APKGameHost", () => {
     expect(factory.contexts).toHaveLength(1);
     expect(factory.contexts[0]?.sessionMode).toBe("demo");
 
-    fireEvent.click(screen.getByRole("button", { name: "Skip demonstration" }));
+    fireEvent.click(screen.getByRole("button", { name: "Advance demonstration" }));
 
     await screen.findByText("Game ready");
     expect(factory.instances[0]?.destroy).toHaveBeenCalledTimes(1);
@@ -959,7 +1249,7 @@ describe("APKGameHost", () => {
     expect(factory.contexts[1]?.sessionMode).toBe("playing");
     expect(screen.queryByText("Class demonstration ready")).not.toBeInTheDocument();
     expect(screen.queryByRole("status")).not.toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: "Skip demonstration" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Advance demonstration" })).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "End demonstration" })).not.toBeInTheDocument();
     expect(onLifecycleTransition).toHaveBeenCalledWith({
       from: "demo",
@@ -993,7 +1283,7 @@ describe("APKGameHost", () => {
     act(() => factory.contexts[0]?.complete(validResults, "victory"));
     expect(onComplete).not.toHaveBeenCalled();
 
-    fireEvent.click(screen.getByRole("button", { name: "Skip demonstration" }));
+    fireEvent.click(screen.getByRole("button", { name: "Advance demonstration" }));
     await screen.findByText("Game ready");
 
     act(() => factory.contexts[1]?.complete(validResults, "victory"));
@@ -1001,7 +1291,7 @@ describe("APKGameHost", () => {
     expect(await screen.findByText("Game complete")).toBeInTheDocument();
   });
 
-  it("keeps End demonstration returning to briefing while Skip starts real play", async () => {
+  it("keeps End demonstration returning to briefing while Advance starts real play", async () => {
     const factory = createMockGameFactory();
     const onLifecycleTransition = vi.fn();
     render(
@@ -1018,7 +1308,7 @@ describe("APKGameHost", () => {
     fireEvent.click(await screen.findByRole("button", { name: "Demonstrate for class" }));
     await screen.findByText("Class demonstration ready");
 
-    fireEvent.click(screen.getByRole("button", { name: "Skip demonstration" }));
+    fireEvent.click(screen.getByRole("button", { name: "Advance demonstration" }));
     await screen.findByText("Game ready");
 
     expect(onLifecycleTransition).not.toHaveBeenCalledWith({
@@ -1030,7 +1320,7 @@ describe("APKGameHost", () => {
     expect(screen.getByRole("button", { name: "Pause game" })).toBeInTheDocument();
   });
 
-  it("does not show Skip demonstration outside demo mode and keeps tutorial and playing controls unchanged", async () => {
+  it("does not show Advance demonstration outside demo mode and keeps tutorial and playing controls unchanged", async () => {
     const factory = createMockGameFactory();
     render(
       <APKGameHost
@@ -1045,7 +1335,7 @@ describe("APKGameHost", () => {
     fireEvent.click(await screen.findByRole("button", { name: "Begin quest" }));
     await screen.findByText("Game ready");
 
-    expect(screen.queryByRole("button", { name: "Skip demonstration" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Advance demonstration" })).not.toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Pause game" })).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "End demonstration" })).not.toBeInTheDocument();
   });
