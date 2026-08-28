@@ -1053,6 +1053,64 @@ describe("APKGameHost", () => {
     expect(destroy).not.toHaveBeenCalled();
   });
 
+  it("settles and cleans an in-flight mount before a prop replacement starts", async () => {
+    let releaseFirstMount: () => void = () => undefined;
+    const firstMountPending = new Promise<void>((resolve) => {
+      releaseFirstMount = resolve;
+    });
+    const destroyers: Array<ReturnType<typeof vi.fn>> = [];
+    let attempts = 0;
+    let liveRenderers = 0;
+    const factory: GameFactory = vi.fn(async ({ container }) => {
+      attempts += 1;
+      const canvas = document.createElement("canvas");
+      container.append(canvas);
+      liveRenderers += 1;
+      let destroyed = false;
+      const destroy = vi.fn(() => {
+        if (destroyed) return;
+        destroyed = true;
+        liveRenderers -= 1;
+        canvas.remove();
+      });
+      destroyers.push(destroy);
+      if (attempts === 1) await firstMountPending;
+      return { destroy };
+    });
+    const cartridge = createRuntimeCartridge();
+    const edition = createRuntimeEdition();
+    const { rerender } = render(
+      <APKGameHost
+        cartridge={cartridge}
+        input={[{ term: "river", translation: "riviere" }]}
+        edition={edition}
+        factory={factory}
+      />,
+    );
+    await waitFor(() => expect(factory).toHaveBeenCalledOnce());
+
+    rerender(
+      <APKGameHost
+        cartridge={cartridge}
+        input={[{ term: "mountain", translation: "montagne" }]}
+        edition={edition}
+        factory={factory}
+      />,
+    );
+    await act(() => Promise.resolve());
+    expect(factory).toHaveBeenCalledOnce();
+    expect(liveRenderers).toBe(1);
+
+    await act(async () => {
+      releaseFirstMount();
+    });
+    await screen.findByText("Game ready");
+    expect(factory).toHaveBeenCalledTimes(2);
+    expect(destroyers[0]).toHaveBeenCalledOnce();
+    expect(liveRenderers).toBe(1);
+    expect(document.querySelectorAll("[data-apk-canvas-host] canvas")).toHaveLength(1);
+  });
+
   it("keeps StrictMode briefing-gated until Start, then displays one canvas", async () => {
     let mounts = 0;
     const factory: GameFactory = async ({ container }) => {

@@ -130,6 +130,7 @@ type TutorialCommandGate = {
 type PendingHostCleanup = {
   mountPoint: HTMLDivElement | undefined;
   controller?: GameTutorialController;
+  driver?: GameTutorialActionDriver & { readonly destroy?: () => void | Promise<void> };
   handle?: APKGameHandle;
 };
 
@@ -197,6 +198,7 @@ export function APKGameHost({
   const tutorialCommandGateRef = useRef<TutorialCommandGate | undefined>(undefined);
   const pendingCleanupRef = useRef<PendingHostCleanup | undefined>(undefined);
   const cleanupAttemptRef = useRef<Promise<void> | undefined>(undefined);
+  const mountQueueRef = useRef<Promise<void>>(Promise.resolve());
   const briefingStartGuardRef = useRef(false);
   const demoTeardownRef = useRef(false);
   const lifecycleErrorRef = useRef<string | undefined>(undefined);
@@ -270,18 +272,21 @@ export function APKGameHost({
     mountPoint: HTMLDivElement | undefined,
     controller: GameTutorialController | undefined,
     handle: APKGameHandle | undefined,
+    driver?: GameTutorialActionDriver & { readonly destroy?: () => void | Promise<void> },
   ): void => {
-    if (controller === undefined && handle === undefined) return;
+    if (controller === undefined && handle === undefined && driver === undefined) return;
     const owner = pendingCleanupRef.current;
     if (owner) {
       owner.mountPoint ??= mountPoint;
       owner.controller ??= controller;
+      owner.driver ??= driver;
       owner.handle ??= handle;
       return;
     }
     pendingCleanupRef.current = {
       mountPoint,
       ...(controller ? { controller } : {}),
+      ...(driver ? { driver } : {}),
       ...(handle ? { handle } : {}),
     };
   };
@@ -291,23 +296,27 @@ export function APKGameHost({
     const owner = pendingCleanupRef.current;
     if (!owner) return;
     const controller = owner.controller;
+    const driver = owner.driver;
     const handle = owner.handle;
     const cleanup = (async (): Promise<void> => {
-      const [controllerResult, handleResult] = await Promise.allSettled([
+      const [controllerResult, driverResult, handleResult] = await Promise.allSettled([
         Promise.resolve().then(() => controller?.destroy()),
+        Promise.resolve().then(() => driver?.destroy?.()),
         Promise.resolve().then(() => handle?.destroy()),
       ]);
       if (pendingCleanupRef.current === owner) {
         if (controllerResult.status === "fulfilled" && owner.controller === controller) {
           owner.controller = undefined;
         }
+        if (driverResult.status === "fulfilled" && owner.driver === driver) owner.driver = undefined;
         if (handleResult.status === "fulfilled" && owner.handle === handle) owner.handle = undefined;
-        if (owner.controller === undefined && owner.handle === undefined) {
+        if (owner.controller === undefined && owner.driver === undefined && owner.handle === undefined) {
           pendingCleanupRef.current = undefined;
           owner.mountPoint?.replaceChildren();
         }
       }
       if (controllerResult.status === "rejected") throw controllerResult.reason;
+      if (driverResult.status === "rejected") throw driverResult.reason;
       if (handleResult.status === "rejected") throw handleResult.reason;
     })();
     cleanupAttemptRef.current = cleanup;
@@ -322,8 +331,9 @@ export function APKGameHost({
     mountPoint: HTMLDivElement | undefined,
     controller: GameTutorialController | undefined,
     handle: APKGameHandle | undefined,
+    driver?: GameTutorialActionDriver & { readonly destroy?: () => void | Promise<void> },
   ): Promise<void> => {
-    retainCleanupOwnership(mountPoint, controller, handle);
+    retainCleanupOwnership(mountPoint, controller, handle, driver);
     await cleanupPendingResources();
   };
 
@@ -477,7 +487,9 @@ export function APKGameHost({
     try {
       await onCompleteRef.current?.(nextResult, outcome);
     } catch (completionError) {
-      setError(completionError instanceof Error ? completionError.message : "Game result could not be saved");
+      if (isCurrentMount(mountPoint, generation)) {
+        setError(completionError instanceof Error ? completionError.message : "Game result could not be saved");
+      }
     }
     return true;
   };
@@ -574,6 +586,14 @@ export function APKGameHost({
     pauseAfterMount = false,
     recoverToBriefingOnFailure = false,
   ): Promise<APKGameHandle | undefined> => {
+    const previousMount = mountQueueRef.current;
+    let releaseMount: () => void = () => undefined;
+    const currentMount = new Promise<void>((resolve) => {
+      releaseMount = resolve;
+    });
+    mountQueueRef.current = currentMount;
+    await previousMount.catch(() => undefined);
+    try {
     try {
       await cleanupPendingResources();
     } catch (cleanupError) {
@@ -679,6 +699,10 @@ export function APKGameHost({
         setStatus("error");
       }
       return undefined;
+    }
+    } finally {
+      releaseMount();
+      if (mountQueueRef.current === currentMount) mountQueueRef.current = Promise.resolve();
     }
   };
 
@@ -818,11 +842,7 @@ export function APKGameHost({
           },
         });
       } catch (constructionError) {
-        try {
-          await actionDriver?.destroy?.();
-        } catch {
-          // A construction cleanup failure must not hide the original controller error.
-        }
+        await cleanupTutorialSession(mountPoint, undefined, undefined, actionDriver).catch(() => undefined);
         const message = constructionError instanceof Error
           ? constructionError.message
           : "The tutorial could not be prepared.";
@@ -1039,7 +1059,11 @@ export function APKGameHost({
   useEffect(() => {
     const surface = surfaceRef.current;
     if (!surface) return;
-    const mountPoint = document.createElement("div");
+    const existingMountPoint = surface.firstElementChild;
+    const mountPoint = existingMountPoint instanceof HTMLDivElement
+      && existingMountPoint.dataset.apkRuntimeMount === "true"
+      ? existingMountPoint
+      : document.createElement("div");
     mountPoint.dataset.apkRuntimeMount = "true";
     mountPoint.style.width = "100%";
     mountPoint.style.height = "100%";
@@ -1090,7 +1114,6 @@ export function APKGameHost({
       resetTutorialCommandOwnership();
       const mountedController = detachTutorialController();
       if (mountPointRef.current === mountPoint) mountPointRef.current = undefined;
-      mountPoint.remove();
       void cleanupTutorialSession(mountPoint, mountedController, mountedHandle).catch(() => undefined);
     };
     // The mount branch intentionally preserves the legacy immediate-launch behavior.
@@ -1366,10 +1389,14 @@ export function APKGameHost({
     setResultOutcome("complete");
     setStatus("loading");
     const activeHandle = handleRef.current;
+    const mountPoint = mountPointRef.current;
+    const generation = mountGenerationRef.current;
     try {
       await activeHandle?.restart();
+      if (!mountPoint || !isCurrentMount(mountPoint, generation) || handleRef.current !== activeHandle) return;
       if (activeHandle?.getDiagnostics().status !== "completed") setStatus("ready");
     } catch (restartError) {
+      if (!mountPoint || !isCurrentMount(mountPoint, generation) || handleRef.current !== activeHandle) return;
       setError(restartError instanceof Error ? restartError.message : "Game failed to restart");
       setStatus("error");
     }
@@ -1450,7 +1477,21 @@ export function APKGameHost({
     const trackCommand = (commandPromise: Promise<void>): void => {
       tutorialCommandQueueRef.current = commandPromise;
       tutorialCommandPendingRef.current = true;
-      void commandPromise.catch(() => undefined);
+      void commandPromise.catch((commandError: unknown) => {
+        const mountPoint = mountPointRef.current;
+        const generation = mountGenerationRef.current;
+        if (
+          !mountPoint
+          || !isCurrentMount(mountPoint, generation)
+          || tutorialControllerRef.current !== controller
+          || tutorialSessionRef.current?.token !== token
+        ) return;
+        returnToBriefing(
+          mountPoint,
+          generation,
+          commandError instanceof Error ? commandError.message : "The tutorial control failed.",
+        );
+      });
       void commandPromise
         .finally(() => {
           if (tutorialCommandQueueRef.current === commandPromise) {
