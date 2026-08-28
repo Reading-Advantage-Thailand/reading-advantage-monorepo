@@ -137,6 +137,7 @@ export function createGameTutorialRuntime(options: CreateGameTutorialRuntimeOpti
   let pausedContinuation: (() => void | Promise<void>) | undefined;
   let currentStepDemonstrated = false;
   let driverDestroyed = false;
+  let driverDestroyOperation: Promise<void> | undefined;
 
   const report = (event: GameTutorialDiagnostic["event"], message?: string): void => {
     const step = tutorial.steps[currentStepIndex];
@@ -154,8 +155,15 @@ export function createGameTutorialRuntime(options: CreateGameTutorialRuntimeOpti
 
   const releaseDriver = async (): Promise<void> => {
     if (driverDestroyed) return;
-    driverDestroyed = true;
-    await actionDriver.destroy?.();
+    if (driverDestroyOperation) return driverDestroyOperation;
+    const cleanup = Promise.resolve().then(() => actionDriver.destroy?.());
+    driverDestroyOperation = cleanup;
+    try {
+      await cleanup;
+      driverDestroyed = true;
+    } finally {
+      if (driverDestroyOperation === cleanup) driverDestroyOperation = undefined;
+    }
   };
 
   const clean = async (): Promise<void> => {

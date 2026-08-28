@@ -697,4 +697,30 @@ describe("guided gameplay tutorial runtime", () => {
     expect(remount.driver.destroy).toHaveBeenCalledTimes(2);
     expectNoProductionEffects(remount.effects);
   });
+
+  it("retries rejected driver cleanup and coalesces concurrent attempts", async () => {
+    const harness = await createHarness();
+    let rejectCleanup: (reason?: unknown) => void = () => undefined;
+    const cleanupPending = new Promise<void>((_resolve, reject) => {
+      rejectCleanup = reject;
+    });
+    harness.driver.destroy.mockImplementationOnce(() => cleanupPending);
+    await harness.runtime.start();
+    await harness.clock.advanceBy(25);
+
+    const firstDestroy = Promise.resolve(harness.runtime.destroy());
+    const concurrentDestroy = Promise.resolve(harness.runtime.destroy());
+    await Promise.resolve();
+    expect(harness.driver.destroy).toHaveBeenCalledOnce();
+    rejectCleanup(new Error("tutorial driver cleanup failed"));
+    await expect(firstDestroy).rejects.toThrow("tutorial driver cleanup failed");
+    await expect(concurrentDestroy).rejects.toThrow("tutorial driver cleanup failed");
+    expect(harness.runtime.getSnapshot().phase).toBe("tutorial");
+    expect(harness.driver.resources()).toEqual({ listeners: 1, inputHandlers: 1, phaserObjects: 1 });
+
+    await harness.runtime.destroy();
+    expect(harness.driver.destroy).toHaveBeenCalledTimes(2);
+    expect(harness.runtime.getSnapshot().phase).toBe("destroyed");
+    expectCleanResources(harness);
+  });
 });
