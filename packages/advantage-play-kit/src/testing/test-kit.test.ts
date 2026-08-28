@@ -24,7 +24,8 @@ describe("APK test kit", () => {
       factory,
     );
     factory.contexts[0]?.complete(validResults);
-    expect(host.complete).toHaveBeenCalledWith(validResults);
+    await Promise.resolve();
+    expect(host.complete).toHaveBeenCalledWith(validResults, "complete");
     expect(factory.liveInstances).toBe(1);
     await handle.destroy();
     expect(factory.liveInstances).toBe(0);
