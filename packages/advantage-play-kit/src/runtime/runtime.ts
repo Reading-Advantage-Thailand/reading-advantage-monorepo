@@ -212,6 +212,19 @@ export async function mountCartridge(
     }
   };
 
+  const failVisibilityCommand = (action: "pause" | "resume", error: unknown): void => {
+    rendererGeneration += 1;
+    mountedRendererGeneration = undefined;
+    pendingCompletion = undefined;
+    status = "error";
+    diagnostic({
+      level: "error",
+      code: "VISIBILITY_COMMAND_FAILED",
+      message: `Game ${action} failed after browser visibility changed. Restart the game.`,
+      details: { action, cause: error instanceof Error ? error.message : String(error) },
+    });
+  };
+
   const notifyHostComplete = (
     generation: number,
     result: GameResults,
@@ -219,7 +232,7 @@ export async function mountCartridge(
   ): void => {
     void Promise.resolve()
       .then(() => {
-        if (closeRequested || destroyed || generation !== rendererGeneration) return;
+        if (closeRequested || destroyed || status === "error" || generation !== rendererGeneration) return;
         return host.complete(result, outcome);
       })
       .catch((error: unknown) => {
@@ -237,7 +250,7 @@ export async function mountCartridge(
     candidate: unknown,
     outcome: GameTerminalOutcome = "complete",
   ): void => {
-    if (closeRequested || destroyed || generation !== rendererGeneration || completionCount > 0) return;
+    if (closeRequested || destroyed || status === "error" || generation !== rendererGeneration || completionCount > 0) return;
     if (sessionMode !== "playing") {
       diagnostic({
         level: "info",
@@ -386,13 +399,23 @@ export async function mountCartridge(
   let resizeObserver: ResizeObserver | undefined;
 
   const onVisibilityChange = (): void => {
-    if (closeRequested || destroyed || explicitlyPaused) return;
+    if (closeRequested || destroyed || status === "error" || explicitlyPaused) return;
     if (document.visibilityState === "hidden") {
-      instance?.pause?.();
+      try {
+        instance?.pause?.();
+      } catch (error) {
+        failVisibilityCommand("pause", error);
+        return;
+      }
       if (completionCount === 0) status = "paused";
       diagnostic({ level: "info", code: "VISIBILITY_PAUSED", message: "Game paused in background" });
     } else if (completionCount === 0) {
-      instance?.resume?.();
+      try {
+        instance?.resume?.();
+      } catch (error) {
+        failVisibilityCommand("resume", error);
+        return;
+      }
       status = "running";
       diagnostic({ level: "info", code: "VISIBILITY_RESUMED", message: "Game resumed" });
     }

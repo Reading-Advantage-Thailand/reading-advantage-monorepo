@@ -71,6 +71,83 @@ describe("mountCartridge", () => {
     expect(handle.getDiagnostics().status).toBe("destroyed");
   });
 
+  it("contains a hidden-state pause failure until the host restarts the renderer", async () => {
+    const complete = vi.fn();
+    const diagnostic = vi.fn();
+    const factory: GameFactory = vi.fn(async () => ({
+      pause: () => {
+        throw new Error("hidden pause failed");
+      },
+      destroy: vi.fn(),
+    }));
+    const handle = await mountCartridge(
+      {
+        container: document.createElement("div"),
+        cartridge: createRuntimeCartridge(),
+        input: [{ term: "river", translation: "riviere" }],
+        edition: createRuntimeEdition(),
+        host: { complete, diagnostic },
+      },
+      factory,
+    );
+
+    Object.defineProperty(document, "visibilityState", { configurable: true, value: "hidden" });
+    expect(() => document.dispatchEvent(new Event("visibilitychange"))).not.toThrow();
+    expect(handle.getDiagnostics().status).toBe("error");
+    expect(diagnostic).toHaveBeenCalledWith(expect.objectContaining({
+      level: "error",
+      code: "VISIBILITY_COMMAND_FAILED",
+      message: "Game pause failed after browser visibility changed. Restart the game.",
+      details: { action: "pause", cause: "hidden pause failed" },
+    }));
+
+    await handle.restart();
+    expect(factory).toHaveBeenCalledTimes(2);
+    await handle.destroy();
+  });
+
+  it("contains a visible-state resume failure and rejects completion from that renderer", async () => {
+    let firstComplete: ((result: unknown) => void) | undefined;
+    const complete = vi.fn();
+    const diagnostic = vi.fn();
+    const factory: GameFactory = vi.fn(async (context) => {
+      if (!firstComplete) firstComplete = context.complete;
+      return {
+        pause: vi.fn(),
+        resume: () => {
+          throw new Error("visible resume failed");
+        },
+        destroy: vi.fn(),
+      };
+    });
+    const handle = await mountCartridge(
+      {
+        container: document.createElement("div"),
+        cartridge: createRuntimeCartridge(),
+        input: [{ term: "river", translation: "riviere" }],
+        edition: createRuntimeEdition(),
+        host: { complete, diagnostic },
+      },
+      factory,
+    );
+
+    Object.defineProperty(document, "visibilityState", { configurable: true, value: "hidden" });
+    document.dispatchEvent(new Event("visibilitychange"));
+    Object.defineProperty(document, "visibilityState", { configurable: true, value: "visible" });
+    expect(() => document.dispatchEvent(new Event("visibilitychange"))).not.toThrow();
+    firstComplete?.(validResults);
+    await Promise.resolve();
+
+    expect(handle.getDiagnostics().status).toBe("error");
+    expect(complete).not.toHaveBeenCalled();
+    expect(diagnostic).toHaveBeenCalledWith(expect.objectContaining({
+      level: "error",
+      code: "VISIBILITY_COMMAND_FAILED",
+      details: { action: "resume", cause: "visible resume failed" },
+    }));
+    await handle.destroy();
+  });
+
   it("revokes callbacks immediately and retries a rejected renderer destroy", async () => {
     const container = document.createElement("div");
     const canvas = document.createElement("canvas");
