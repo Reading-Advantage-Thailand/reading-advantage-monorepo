@@ -465,6 +465,7 @@ export async function mountCartridge(
           await cleanupRenderer(container, previousInstance);
           if (instance === previousInstance) instance = undefined;
         }
+        container.replaceChildren();
         completionCount = 0;
         restartCount += 1;
         await createInstance();

@@ -326,6 +326,7 @@ export function APKGameHost({
     } finally {
       if (cleanupAttemptRef.current === cleanup) cleanupAttemptRef.current = undefined;
     }
+    if (pendingCleanupRef.current) await cleanupPendingResources();
   };
 
   const cleanupTutorialSession = async (

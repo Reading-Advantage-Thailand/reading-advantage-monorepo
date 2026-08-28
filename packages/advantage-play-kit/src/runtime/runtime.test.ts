@@ -71,6 +71,33 @@ describe("mountCartridge", () => {
     expect(handle.getDiagnostics().status).toBe("destroyed");
   });
 
+  it("clears renderer DOM before a successful restart mounts its replacement", async () => {
+    const canvases: HTMLCanvasElement[] = [];
+    const factory: GameFactory = vi.fn(async ({ container }) => {
+      const canvas = document.createElement("canvas");
+      canvases.push(canvas);
+      container.append(canvas);
+      return { destroy: vi.fn() };
+    });
+    const container = document.createElement("div");
+    const handle = await mountCartridge(
+      {
+        container,
+        cartridge: createRuntimeCartridge(),
+        input: [{ term: "river", translation: "riviere" }],
+        edition: createRuntimeEdition(),
+        host: { complete: vi.fn() },
+      },
+      factory,
+    );
+
+    await handle.restart();
+    expect(factory).toHaveBeenCalledTimes(2);
+    expect(canvases[0]?.parentElement).toBeNull();
+    expect(container.querySelectorAll("canvas")).toHaveLength(1);
+    await handle.destroy();
+  });
+
   it("contains a hidden-state pause failure until the host restarts the renderer", async () => {
     const complete = vi.fn();
     const diagnostic = vi.fn();
