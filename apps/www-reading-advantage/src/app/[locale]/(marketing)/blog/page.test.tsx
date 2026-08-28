@@ -271,6 +271,33 @@ describe("blog pagination routes", () => {
     },
   );
 
+  it("filters numbered alternates by each locale page count", async () => {
+    getBlogPostTotalPagesMock.mockImplementation((locale) =>
+      locale === "en" ? 3 : locale === "th" ? 2 : 1,
+    );
+
+    const enMetadata = await generateBlogPaginationMetadata({
+      params: Promise.resolve({ locale: "en", page: "2" }),
+    });
+    localeState.current = "th";
+    const thMetadata = await generateBlogPaginationMetadata({
+      params: Promise.resolve({ locale: "th", page: "2" }),
+    });
+
+    const languages = {
+      en: "https://reading-advantage.com/en/blog/page/2",
+      th: "https://reading-advantage.com/th/blog/page/2",
+    };
+    expect(enMetadata.alternates).toEqual({
+      canonical: languages.en,
+      languages,
+    });
+    expect(thMetadata.alternates).toEqual({
+      canonical: languages.th,
+      languages,
+    });
+  });
+
   it("permanently redirects page one to the locale-aware blog root", async () => {
     const redirectError = new Error("NEXT_REDIRECT");
     permanentRedirectMock.mockImplementation(() => {
