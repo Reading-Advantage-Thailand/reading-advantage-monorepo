@@ -1402,6 +1402,37 @@ describe("APKGameHost", () => {
     expect(successfulFactory.contexts[0]?.sessionMode).toBe("playing");
   });
 
+  it("ignores a completion save failure after a direct restart", async () => {
+    const factory = createMockGameFactory();
+    let rejectSave: (reason?: unknown) => void = () => undefined;
+    const savePending = new Promise<void>((_resolve, reject) => {
+      rejectSave = reject;
+    });
+    const onComplete = vi.fn(() => savePending);
+    render(
+      <APKGameHost
+        cartridge={createRuntimeCartridge()}
+        input={learningInput}
+        edition={createRuntimeEdition()}
+        factory={factory}
+        onComplete={onComplete}
+      />,
+    );
+
+    await screen.findByText("Game ready");
+    act(() => factory.contexts[0]?.complete(validResults, "victory"));
+    await screen.findByText("Game complete");
+    fireEvent.click(screen.getByRole("button", { name: "Play again" }));
+    await screen.findByText("Game ready");
+
+    await act(async () => {
+      rejectSave(new Error("old result save failed"));
+      await Promise.resolve();
+    });
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+    expect(screen.getByText("Game ready")).toBeInTheDocument();
+  });
+
   it("resumes a demonstration with demonstration status", async () => {
     const factory = createMockGameFactory();
     render(
