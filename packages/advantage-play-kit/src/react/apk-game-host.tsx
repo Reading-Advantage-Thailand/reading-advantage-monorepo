@@ -321,10 +321,12 @@ export function APKGameHost({
       if (handleResult.status === "rejected") throw handleResult.reason;
     })();
     cleanupAttemptRef.current = cleanup;
+    let cleanupFailed = false;
     let cleanupFailure: unknown;
     try {
       await cleanup;
     } catch (error) {
+      cleanupFailed = true;
       cleanupFailure = error;
     } finally {
       if (cleanupAttemptRef.current === cleanup) cleanupAttemptRef.current = undefined;
@@ -339,10 +341,11 @@ export function APKGameHost({
       try {
         await cleanupPendingResources();
       } catch (error) {
-        cleanupFailure ??= error;
+        if (!cleanupFailed) cleanupFailure = error;
+        cleanupFailed = true;
       }
     }
-    if (cleanupFailure !== undefined) throw cleanupFailure;
+    if (cleanupFailed) throw cleanupFailure;
   };
 
   const cleanupTutorialSession = async (
