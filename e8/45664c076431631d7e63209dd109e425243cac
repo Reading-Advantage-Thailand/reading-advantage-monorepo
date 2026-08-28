@@ -1,1 +1,3 @@
 Acceptance 2026-08-28. Product: APK lifecycle recovery preserves cleanup ownership, serializes mounts, contains browser control failures, and blocks stale callbacks. Tests: 187 focused APK tests passed; the final host rerun passed 82 tests. Checks: TypeScript, build, targeted ESLint, graph update, and commit checks passed. Reviews: two independent final reviews found no Critical, High, or Medium defects. Browser: unavailable because the WebBridge extension was disconnected.
+
+Package sweep: 583 tests passed. Three dirty-tree tests remain outside this chain: a receipt digest, an archived-input path, and an untracked scaffold check.
