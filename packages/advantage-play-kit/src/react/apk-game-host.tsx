@@ -191,6 +191,7 @@ export function APKGameHost({
   const resumingGenerationRef = useRef<number | undefined>(undefined);
   const provisionalPlayingGenerationRef = useRef<number | undefined>(undefined);
   const provisionalCompletionRef = useRef<ProvisionalCompletion | undefined>(undefined);
+  const completionAuthorityRef = useRef(0);
   const tutorialSessionRef = useRef<TutorialSession | undefined>(undefined);
   const tutorialTransitionTokenRef = useRef<object | undefined>(undefined);
   const tutorialCommandQueueRef = useRef<Promise<void>>(Promise.resolve());
@@ -484,10 +485,12 @@ export function APKGameHost({
     setResult(nextResult);
     setResultOutcome(outcome);
     setStatus("complete");
+    const completionAuthority = completionAuthorityRef.current + 1;
+    completionAuthorityRef.current = completionAuthority;
     try {
       await onCompleteRef.current?.(nextResult, outcome);
     } catch (completionError) {
-      if (isCurrentMount(mountPoint, generation)) {
+      if (isCurrentMount(mountPoint, generation) && completionAuthorityRef.current === completionAuthority) {
         setError(completionError instanceof Error ? completionError.message : "Game result could not be saved");
       }
     }
@@ -1391,6 +1394,7 @@ export function APKGameHost({
     const activeHandle = handleRef.current;
     const mountPoint = mountPointRef.current;
     const generation = mountGenerationRef.current;
+    completionAuthorityRef.current += 1;
     try {
       await activeHandle?.restart();
       if (!mountPoint || !isCurrentMount(mountPoint, generation) || handleRef.current !== activeHandle) return;
