@@ -71,6 +71,103 @@ describe("mountCartridge", () => {
     expect(handle.getDiagnostics().status).toBe("destroyed");
   });
 
+  it("revokes callbacks immediately and retries a rejected renderer destroy", async () => {
+    const container = document.createElement("div");
+    const canvas = document.createElement("canvas");
+    const hostComplete = vi.fn();
+    let complete: ((result: unknown) => void) | undefined;
+    let liveRenderers = 0;
+    const destroy = vi.fn(() => {
+      if (destroy.mock.calls.length === 1) throw new Error("renderer destroy failed");
+      liveRenderers -= 1;
+      canvas.remove();
+    });
+    const factory: GameFactory = vi.fn(async (context) => {
+      complete = context.complete;
+      context.container.append(canvas);
+      liveRenderers += 1;
+      return { destroy };
+    });
+    const handle = await mountCartridge(
+      {
+        container,
+        cartridge: createRuntimeCartridge(),
+        input: [{ term: "river", translation: "riviere" }],
+        edition: createRuntimeEdition(),
+        host: { complete: hostComplete },
+      },
+      factory,
+    );
+
+    await expect(handle.destroy()).rejects.toThrow("renderer destroy failed");
+    complete?.(validResults, "victory");
+    await Promise.resolve();
+    expect(hostComplete).not.toHaveBeenCalled();
+    expect(factory).toHaveBeenCalledOnce();
+    expect(liveRenderers).toBe(1);
+    expect(container.querySelectorAll("canvas")).toHaveLength(1);
+
+    await handle.destroy();
+    expect(destroy).toHaveBeenCalledTimes(2);
+    expect(liveRenderers).toBe(0);
+    expect(container.querySelectorAll("canvas")).toHaveLength(0);
+    expect(handle.getDiagnostics().status).toBe("destroyed");
+  });
+
+  it("retains an initialization-failed renderer until cleanup succeeds before retrying restart", async () => {
+    const container = document.createElement("div");
+    const events: string[] = [];
+    let attempts = 0;
+    let liveRenderers = 0;
+    const factory: GameFactory = vi.fn(async (context) => {
+      attempts += 1;
+      events.push(`factory-${attempts}`);
+      const canvas = document.createElement("canvas");
+      context.container.append(canvas);
+      liveRenderers += 1;
+      const destroy = vi.fn(() => {
+        events.push(`destroy-${attempts}-${destroy.mock.calls.length}`);
+        if (attempts === 2 && destroy.mock.calls.length === 1) {
+          throw new Error("restart renderer cleanup failed");
+        }
+        liveRenderers -= 1;
+        canvas.remove();
+      });
+      if (attempts === 2) {
+        return {
+          setMuted: () => {
+            throw new Error("restart initialization failed");
+          },
+          destroy,
+        };
+      }
+      return { destroy };
+    });
+    const handle = await mountCartridge(
+      {
+        container,
+        cartridge: createRuntimeCartridge(),
+        input: [{ term: "river", translation: "riviere" }],
+        edition: createRuntimeEdition(),
+        host: { complete: vi.fn() },
+      },
+      factory,
+    );
+
+    await expect(handle.restart()).rejects.toThrow("restart initialization failed");
+    expect(factory).toHaveBeenCalledTimes(2);
+    expect(liveRenderers).toBe(1);
+
+    await handle.restart();
+    expect(events.slice(-2)).toEqual(["destroy-2-2", "factory-3"]);
+    expect(factory).toHaveBeenCalledTimes(3);
+    expect(liveRenderers).toBe(1);
+    expect(container.querySelectorAll("canvas")).toHaveLength(1);
+
+    await handle.destroy();
+    expect(liveRenderers).toBe(0);
+  });
+
   it("retries rejected renderer cleanup before creating a replacement and rejects stale completion callbacks", async () => {
     const container = document.createElement("div");
     const capturedContexts: Array<Parameters<GameFactory>[0]> = [];
@@ -124,13 +221,15 @@ describe("mountCartridge", () => {
       "Initial audio binding is unavailable",
     );
     const cleanupError = new Error("Renderer cleanup failed");
+    const failedCanvas = document.createElement("canvas");
     const destroy = vi.fn(() => {
-      throw cleanupError;
+      if (destroy.mock.calls.length === 1) throw cleanupError;
+      failedCanvas.remove();
     });
     const diagnostic = vi.fn();
     const container = document.createElement("div");
     const factory: GameFactory = async ({ container: mountContainer }) => {
-      mountContainer.append(document.createElement("canvas"));
+      mountContainer.append(failedCanvas);
       return {
         setMuted: () => {
           throw originalInitializationError;
@@ -154,7 +253,7 @@ describe("mountCartridge", () => {
     });
 
     expect(destroy).toHaveBeenCalledOnce();
-    expect(container.childElementCount).toBe(0);
+    expect(container.childElementCount).toBe(1);
     expect(diagnostic).toHaveBeenNthCalledWith(
       1,
       expect.objectContaining({
@@ -174,6 +273,28 @@ describe("mountCartridge", () => {
         }),
       }),
     );
+
+    const replacementCanvas = document.createElement("canvas");
+    const replacementDestroy = vi.fn(() => replacementCanvas.remove());
+    const replacementFactory: GameFactory = vi.fn(async ({ container: mountContainer }) => {
+      expect(destroy).toHaveBeenCalledTimes(2);
+      mountContainer.append(replacementCanvas);
+      return { destroy: replacementDestroy };
+    });
+    const replacement = await mountCartridge(
+      {
+        container,
+        cartridge: createRuntimeCartridge(),
+        input: [{ term: "river", translation: "riviere" }],
+        edition: createRuntimeEdition(),
+        host: { complete: vi.fn() },
+      },
+      replacementFactory,
+    );
+
+    expect(replacementFactory).toHaveBeenCalledOnce();
+    expect(container.querySelectorAll("canvas")).toHaveLength(1);
+    await replacement.destroy();
   });
 
   it("validates completion and emits it exactly once", async () => {

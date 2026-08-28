@@ -1014,7 +1014,7 @@ describe("APKGameHost", () => {
     await waitFor(() => expect(screen.getByRole("alert")).toHaveTextContent("WebGL unavailable"));
   });
 
-  it("keeps one canvas when StrictMode remounts during async renderer startup", async () => {
+  it("starts one renderer when StrictMode remounts during async renderer startup", async () => {
     const pending: Array<() => void> = [];
     const destroy = vi.fn();
     const factory: GameFactory = async ({ container }) => {
@@ -1040,7 +1040,7 @@ describe("APKGameHost", () => {
       </StrictMode>,
     );
 
-    await waitFor(() => expect(pending).toHaveLength(2));
+    await waitFor(() => expect(pending).toHaveLength(1));
     expect(document.querySelectorAll("[data-apk-canvas-host] canvas")).toHaveLength(1);
 
     await act(async () => {
@@ -1050,7 +1050,7 @@ describe("APKGameHost", () => {
 
     await screen.findByText("Game ready");
     expect(document.querySelectorAll("[data-apk-canvas-host] canvas")).toHaveLength(1);
-    expect(destroy).toHaveBeenCalledTimes(1);
+    expect(destroy).not.toHaveBeenCalled();
   });
 
   it("keeps StrictMode briefing-gated until Start, then displays one canvas", async () => {
@@ -1396,6 +1396,43 @@ describe("APKGameHost", () => {
     expect(screen.queryByRole("button", { name: "Exit demonstration" })).not.toBeInTheDocument();
   });
 
+  it("retries failed demonstration cleanup before returning to briefing", async () => {
+    const factory = createMockGameFactory();
+    render(
+      <APKGameHost
+        cartridge={createRuntimeCartridge()}
+        input={learningInput}
+        edition={createRuntimeEdition()}
+        factory={factory}
+        briefing={briefing}
+      />,
+    );
+
+    fireEvent.click(await screen.findByRole("button", { name: "Demonstrate for class" }));
+    await screen.findByText("Class demonstration ready");
+    factory.instances[0]?.destroy.mockImplementationOnce(() => {
+      throw new Error("demo renderer cleanup failed");
+    });
+
+    fireEvent.click(screen.getByRole("button", { name: "End demonstration" }));
+
+    expect(await screen.findByRole("alert")).toHaveTextContent("demo renderer cleanup failed");
+    expect(factory.contexts).toHaveLength(1);
+    expect(factory.liveInstances).toBe(1);
+    const retry = await screen.findByRole("button", { name: "Return to briefing" });
+    fireEvent.click(retry);
+
+    await screen.findByRole("button", { name: "Begin quest" });
+    expect(factory.instances[0]?.destroy).toHaveBeenCalledTimes(2);
+    expect(factory.liveInstances).toBe(0);
+    expect(factory.contexts).toHaveLength(1);
+
+    fireEvent.click(screen.getByRole("button", { name: "Begin quest" }));
+    await screen.findByText("Game ready");
+    expect(factory.contexts).toHaveLength(2);
+    expect(factory.liveInstances).toBe(1);
+  });
+
   it("does not render Exit demonstration without navigation", async () => {
     const factory = createMockGameFactory();
     render(
@@ -1412,6 +1449,60 @@ describe("APKGameHost", () => {
     await screen.findByText("Class demonstration ready");
 
     expect(screen.queryByRole("button", { name: "Exit demonstration" })).not.toBeInTheDocument();
+  });
+
+  it("recovers a thrown pause command without escaping React", async () => {
+    const factory = createMockGameFactory();
+    render(
+      <APKGameHost
+        cartridge={createRuntimeCartridge()}
+        input={learningInput}
+        edition={createRuntimeEdition()}
+        factory={factory}
+      />,
+    );
+
+    await screen.findByText("Game ready");
+    factory.instances[0]?.pause.mockImplementationOnce(() => {
+      throw new Error("pause command failed");
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Pause game" }));
+
+    expect(await screen.findByRole("alert")).toHaveTextContent("pause command failed");
+    expect(factory.instances[0]?.destroy).toHaveBeenCalledOnce();
+    const retry = await screen.findByRole("button", { name: "Restart game" });
+    fireEvent.click(retry);
+    await screen.findByText("Game ready");
+    expect(factory.contexts).toHaveLength(2);
+    expect(factory.liveInstances).toBe(1);
+  });
+
+  it("recovers a thrown resume command without escaping React", async () => {
+    const factory = createMockGameFactory();
+    render(
+      <APKGameHost
+        cartridge={createRuntimeCartridge()}
+        input={learningInput}
+        edition={createRuntimeEdition()}
+        factory={factory}
+      />,
+    );
+
+    await screen.findByText("Game ready");
+    fireEvent.click(screen.getByRole("button", { name: "Pause game" }));
+    await screen.findByRole("button", { name: "Resume game" });
+    factory.instances[0]?.resume.mockImplementationOnce(() => {
+      throw new Error("resume command failed");
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Resume game" }));
+
+    expect(await screen.findByRole("alert")).toHaveTextContent("resume command failed");
+    expect(factory.instances[0]?.destroy).toHaveBeenCalledOnce();
+    const retry = await screen.findByRole("button", { name: "Restart game" });
+    fireEvent.click(retry);
+    await screen.findByText("Game ready");
+    expect(factory.contexts).toHaveLength(2);
+    expect(factory.liveInstances).toBe(1);
   });
 
   it.each([
@@ -1573,14 +1664,15 @@ describe("APKGameHost", () => {
         launchPhase="demo"
       />,
     );
-    await screen.findByText("Class demonstration ready");
-    expect(factory.contexts).toHaveLength(2);
+    expect(factory.contexts).toHaveLength(1);
 
     await act(async () => {
       releaseDestroy();
       await Promise.resolve();
     });
 
+    await screen.findByText("Class demonstration ready");
+    expect(factory.contexts).toHaveLength(2);
     expect(screen.getByText("Class demonstration ready")).toBeInTheDocument();
     expect(screen.queryByRole("alert")).not.toBeInTheDocument();
     expect(factory.instances[1]?.destroy).not.toHaveBeenCalled();
@@ -1625,13 +1717,14 @@ describe("APKGameHost", () => {
         launchPhase="demo"
       />,
     );
-    await screen.findByText("Class demonstration ready");
+    expect(successfulFactory.contexts).toHaveLength(0);
 
     await act(async () => {
       releaseCleanup();
       await Promise.resolve();
     });
 
+    await screen.findByText("Class demonstration ready");
     expect(screen.getByText("Class demonstration ready")).toBeInTheDocument();
     expect(screen.queryByRole("alert")).not.toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Pause demonstration" })).toBeEnabled();
@@ -1950,13 +2043,14 @@ describe("APKGameHost", () => {
         launchPhase="demo"
       />,
     );
-    await screen.findByText("Class demonstration ready");
+    expect(factory.contexts).toHaveLength(1);
 
     await act(async () => {
       releaseCleanup();
       await Promise.resolve();
     });
 
+    await screen.findByText("Class demonstration ready");
     expect(screen.getByText("Class demonstration ready")).toBeInTheDocument();
     expect(factory.contexts).toHaveLength(2);
     expect(factory.contexts[1]?.sessionMode).toBe("demo");
@@ -1982,7 +2076,7 @@ describe("APKGameHost", () => {
 
     fireEvent.click(await screen.findByRole("button", { name: "Demonstrate for class" }));
     await screen.findByText("Class demonstration ready");
-    factory.instances[0]?.destroy.mockImplementation(() => destroyPending);
+    factory.instances[0]?.destroy.mockImplementationOnce(() => destroyPending);
     fireEvent.click(screen.getByRole("button", { name: "End demonstration" }));
     await waitFor(() => expect(factory.instances[0]?.destroy).toHaveBeenCalledOnce());
 
@@ -1996,13 +2090,17 @@ describe("APKGameHost", () => {
         launchPhase="demo"
       />,
     );
-    await screen.findByText("Class demonstration ready");
+    expect(factory.contexts).toHaveLength(1);
 
     await act(async () => {
       rejectDestroy(new Error("stale teardown failed"));
       await Promise.resolve();
     });
 
+    expect(await screen.findByRole("alert")).toHaveTextContent("stale teardown failed");
+    fireEvent.click(screen.getByRole("button", { name: "Return to briefing" }));
+    fireEvent.click(await screen.findByRole("button", { name: "Demonstrate for class" }));
+    await screen.findByText("Class demonstration ready");
     expect(screen.getByRole("button", { name: "Pause demonstration" })).toBeEnabled();
     expect(screen.queryByRole("alert")).not.toBeInTheDocument();
     expect(factory.instances[1]?.destroy).not.toHaveBeenCalled();

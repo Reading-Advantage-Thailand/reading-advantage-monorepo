@@ -32,6 +32,40 @@ type PendingCompletion = {
   outcome: GameTerminalOutcome;
 };
 
+type PendingRendererCleanup = {
+  instance: APKGameInstance;
+  promise?: Promise<void>;
+};
+
+const pendingRendererCleanupByContainer = new WeakMap<HTMLElement, PendingRendererCleanup>();
+
+const cleanupRenderer = (container: HTMLElement, instance: APKGameInstance): Promise<void> => {
+  let owner = pendingRendererCleanupByContainer.get(container);
+  if (owner && owner.instance !== instance) {
+    return cleanupRenderer(container, owner.instance).then(() => cleanupRenderer(container, instance));
+  }
+  if (!owner) {
+    owner = { instance };
+    pendingRendererCleanupByContainer.set(container, owner);
+  }
+  if (owner.promise) return owner.promise;
+  const cleanup = Promise.resolve()
+    .then(() => instance.destroy())
+    .then(
+      () => {
+        if (pendingRendererCleanupByContainer.get(container) === owner) {
+          pendingRendererCleanupByContainer.delete(container);
+        }
+      },
+      (error: unknown) => {
+        if (pendingRendererCleanupByContainer.get(container) === owner) owner.promise = undefined;
+        throw error;
+      },
+    );
+  owner.promise = cleanup;
+  return cleanup;
+};
+
 /**
  * Mounts one cartridge with deterministic browser lifecycle ownership.
  * @param options Cartridge, strict input array, edition, host, and container.
@@ -81,7 +115,10 @@ export async function mountCartridge(
   let completionCount = 0;
   let muted = false;
   let explicitlyPaused = false;
+  let closeRequested = false;
   let destroyed = false;
+  let runtimeResourcesReleased = false;
+  let destroyOperation: Promise<void> | undefined;
   let width = container.clientWidth;
   let height = container.clientHeight;
   let lastEvent: APKDiagnosticEvent | undefined;
@@ -153,13 +190,20 @@ export async function mountCartridge(
 
   const cleanupFailedRenderer = async (): Promise<void> => {
     const failedInstance = instance;
-    instance = undefined;
-    if (failedInstance) {
+    if (failedInstance === undefined) {
       try {
-        await failedInstance.destroy();
+        container.replaceChildren();
       } catch (error) {
-        reportCleanupFailure("renderer destroy", error);
+        reportCleanupFailure("runtime container clear", error);
       }
+      return;
+    }
+    try {
+      await cleanupRenderer(container, failedInstance);
+      if (instance === failedInstance) instance = undefined;
+    } catch (error) {
+      reportCleanupFailure("renderer destroy", error);
+      return;
     }
     try {
       container.replaceChildren();
@@ -175,11 +219,11 @@ export async function mountCartridge(
   ): void => {
     void Promise.resolve()
       .then(() => {
-        if (destroyed || generation !== rendererGeneration) return;
+        if (closeRequested || destroyed || generation !== rendererGeneration) return;
         return host.complete(result, outcome);
       })
       .catch((error: unknown) => {
-        if (destroyed || generation !== rendererGeneration) return;
+        if (closeRequested || destroyed || generation !== rendererGeneration) return;
         diagnostic({
           level: "error",
           code: "HOST_COMPLETION_FAILED",
@@ -193,7 +237,7 @@ export async function mountCartridge(
     candidate: unknown,
     outcome: GameTerminalOutcome = "complete",
   ): void => {
-    if (destroyed || generation !== rendererGeneration || completionCount > 0) return;
+    if (closeRequested || destroyed || generation !== rendererGeneration || completionCount > 0) return;
     if (sessionMode !== "playing") {
       diagnostic({
         level: "info",
@@ -234,7 +278,18 @@ export async function mountCartridge(
   };
 
   const createInstance = async (): Promise<void> => {
-    if (destroyed) throw new APKRuntimeError("RUNTIME_DESTROYED", "Runtime is destroyed");
+    if (closeRequested || destroyed) throw new APKRuntimeError("RUNTIME_DESTROYED", "Runtime is destroyed");
+    const pendingRenderer = pendingRendererCleanupByContainer.get(container);
+    if (pendingRenderer) {
+      await cleanupRenderer(container, pendingRenderer.instance);
+      if (closeRequested || destroyed) throw new APKRuntimeError("RUNTIME_DESTROYED", "Runtime is destroyed");
+      try {
+        container.replaceChildren();
+      } catch (error) {
+        reportCleanupFailure("runtime container clear", error);
+        throw error;
+      }
+    }
     const generation = rendererGeneration + 1;
     rendererGeneration = generation;
     mountedRendererGeneration = undefined;
@@ -252,6 +307,7 @@ export async function mountCartridge(
         ...(composition ? { composition } : {}),
         ...(options.seed === undefined ? {} : { seed: options.seed }),
       });
+      if (closeRequested || destroyed) throw new APKRuntimeError("RUNTIME_DESTROYED", "Runtime is destroyed");
       instance.setMuted?.(muted);
       if (width > 0 && height > 0) instance.resize?.(width, height);
       status = completionCount > 0 ? "completed" : explicitlyPaused ? "paused" : "running";
@@ -330,7 +386,7 @@ export async function mountCartridge(
   let resizeObserver: ResizeObserver | undefined;
 
   const onVisibilityChange = (): void => {
-    if (destroyed || explicitlyPaused) return;
+    if (closeRequested || destroyed || explicitlyPaused) return;
     if (document.visibilityState === "hidden") {
       instance?.pause?.();
       if (completionCount === 0) status = "paused";
@@ -349,38 +405,41 @@ export async function mountCartridge(
     composition = resolveComposition();
     await createInstance();
   } catch (error) {
-    document.removeEventListener("visibilitychange", onVisibilityChange);
-    resizeObserver?.disconnect();
-    inputController.destroy();
-    container.style.touchAction = previousTouchAction;
+    if (!runtimeResourcesReleased) {
+      runtimeResourcesReleased = true;
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+      resizeObserver?.disconnect();
+      inputController.destroy();
+      container.style.touchAction = previousTouchAction;
+    }
     throw error;
   }
 
   return {
     pause: () => {
-      if (destroyed) return;
-      explicitlyPaused = true;
+      if (closeRequested || destroyed) return;
       instance?.pause?.();
+      explicitlyPaused = true;
       if (completionCount === 0) status = "paused";
       diagnostic({ level: "info", code: "HOST_PAUSED", message: "Game paused by host" });
     },
     resume: () => {
-      if (destroyed || completionCount > 0) return;
-      explicitlyPaused = false;
+      if (closeRequested || destroyed || completionCount > 0) return;
       instance?.resume?.();
+      explicitlyPaused = false;
       status = completionCount > 0 ? "completed" : "running";
       diagnostic({ level: "info", code: "HOST_RESUMED", message: "Game resumed by host" });
     },
     restart: async () => {
       operation = operation.catch(() => undefined).then(async () => {
-        if (destroyed) throw new APKRuntimeError("RUNTIME_DESTROYED", "Runtime is destroyed");
+        if (closeRequested || destroyed) throw new APKRuntimeError("RUNTIME_DESTROYED", "Runtime is destroyed");
         const previousInstance = instance;
         rendererGeneration += 1;
         mountedRendererGeneration = undefined;
         pendingCompletion = undefined;
         status = "restarting";
         if (previousInstance) {
-          await previousInstance.destroy();
+          await cleanupRenderer(container, previousInstance);
           if (instance === previousInstance) instance = undefined;
         }
         completionCount = 0;
@@ -390,7 +449,7 @@ export async function mountCartridge(
       return operation;
     },
     setMuted: (nextMuted) => {
-      if (destroyed) return;
+      if (closeRequested || destroyed) return;
       muted = nextMuted;
       instance?.setMuted?.(muted);
       diagnostic({
@@ -402,16 +461,33 @@ export async function mountCartridge(
     getDiagnostics: diagnostics,
     destroy: async () => {
       if (destroyed) return;
-      destroyed = true;
-      document.removeEventListener("visibilitychange", onVisibilityChange);
-      resizeObserver?.disconnect();
-      inputController.destroy();
-      container.style.touchAction = previousTouchAction;
-      await operation.catch(() => undefined);
-      await instance?.destroy();
-      instance = undefined;
-      status = "destroyed";
-      diagnostic({ level: "info", code: "RUNTIME_DESTROYED", message: "Game runtime destroyed" });
+      closeRequested = true;
+      if (destroyOperation) return destroyOperation;
+      const cleanup = (async (): Promise<void> => {
+        if (!runtimeResourcesReleased) {
+          runtimeResourcesReleased = true;
+          document.removeEventListener("visibilitychange", onVisibilityChange);
+          resizeObserver?.disconnect();
+          inputController.destroy();
+          container.style.touchAction = previousTouchAction;
+        }
+        await operation.catch(() => undefined);
+        const activeInstance = instance;
+        if (activeInstance) {
+          await cleanupRenderer(container, activeInstance);
+          if (instance === activeInstance) instance = undefined;
+        }
+        destroyed = true;
+        status = "destroyed";
+        diagnostic({ level: "info", code: "RUNTIME_DESTROYED", message: "Game runtime destroyed" });
+      })();
+      destroyOperation = cleanup;
+      try {
+        await cleanup;
+      } catch (error) {
+        destroyOperation = undefined;
+        throw error;
+      }
     },
   };
 }

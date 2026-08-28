@@ -127,6 +127,12 @@ type TutorialCommandGate = {
   promise: Promise<void>;
 };
 
+type PendingHostCleanup = {
+  mountPoint: HTMLDivElement | undefined;
+  controller?: GameTutorialController;
+  handle?: APKGameHandle;
+};
+
 /**
  * Creates the real-time browser clock used by guided tutorials.
  * @returns A cancellable clock backed by the current browser window.
@@ -189,6 +195,8 @@ export function APKGameHost({
   const tutorialCommandQueueRef = useRef<Promise<void>>(Promise.resolve());
   const tutorialCommandPendingRef = useRef(false);
   const tutorialCommandGateRef = useRef<TutorialCommandGate | undefined>(undefined);
+  const pendingCleanupRef = useRef<PendingHostCleanup | undefined>(undefined);
+  const cleanupAttemptRef = useRef<Promise<void> | undefined>(undefined);
   const briefingStartGuardRef = useRef(false);
   const demoTeardownRef = useRef(false);
   const lifecycleErrorRef = useRef<string | undefined>(undefined);
@@ -258,22 +266,69 @@ export function APKGameHost({
     return controller;
   };
 
+  const retainCleanupOwnership = (
+    mountPoint: HTMLDivElement | undefined,
+    controller: GameTutorialController | undefined,
+    handle: APKGameHandle | undefined,
+  ): void => {
+    if (controller === undefined && handle === undefined) return;
+    const owner = pendingCleanupRef.current;
+    if (owner) {
+      owner.mountPoint ??= mountPoint;
+      owner.controller ??= controller;
+      owner.handle ??= handle;
+      return;
+    }
+    pendingCleanupRef.current = {
+      mountPoint,
+      ...(controller ? { controller } : {}),
+      ...(handle ? { handle } : {}),
+    };
+  };
+
+  const cleanupPendingResources = async (): Promise<void> => {
+    if (cleanupAttemptRef.current) return cleanupAttemptRef.current;
+    const owner = pendingCleanupRef.current;
+    if (!owner) return;
+    const controller = owner.controller;
+    const handle = owner.handle;
+    const cleanup = (async (): Promise<void> => {
+      const [controllerResult, handleResult] = await Promise.allSettled([
+        Promise.resolve().then(() => controller?.destroy()),
+        Promise.resolve().then(() => handle?.destroy()),
+      ]);
+      if (pendingCleanupRef.current === owner) {
+        if (controllerResult.status === "fulfilled" && owner.controller === controller) {
+          owner.controller = undefined;
+        }
+        if (handleResult.status === "fulfilled" && owner.handle === handle) owner.handle = undefined;
+        if (owner.controller === undefined && owner.handle === undefined) {
+          pendingCleanupRef.current = undefined;
+          owner.mountPoint?.replaceChildren();
+        }
+      }
+      if (controllerResult.status === "rejected") throw controllerResult.reason;
+      if (handleResult.status === "rejected") throw handleResult.reason;
+    })();
+    cleanupAttemptRef.current = cleanup;
+    try {
+      await cleanup;
+    } finally {
+      if (cleanupAttemptRef.current === cleanup) cleanupAttemptRef.current = undefined;
+    }
+  };
+
   const cleanupTutorialSession = async (
+    mountPoint: HTMLDivElement | undefined,
     controller: GameTutorialController | undefined,
     handle: APKGameHandle | undefined,
   ): Promise<void> => {
-    const cleanupResults = await Promise.allSettled([
-      Promise.resolve().then(() => controller?.destroy()),
-      Promise.resolve().then(() => handle?.destroy()),
-    ]);
-    const firstFailure = cleanupResults.find(
-      (cleanupResult): cleanupResult is PromiseRejectedResult => cleanupResult.status === "rejected",
-    );
-    if (firstFailure) throw firstFailure.reason;
+    retainCleanupOwnership(mountPoint, controller, handle);
+    await cleanupPendingResources();
   };
 
   const destroyTutorialController = async (): Promise<void> => {
-    await cleanupTutorialSession(detachTutorialController(), undefined);
+    await cleanupTutorialSession(mountPointRef.current, detachTutorialController(), undefined);
   };
 
   const isCurrentMount = (mountPoint: HTMLDivElement, generation: number): boolean =>
@@ -297,6 +352,7 @@ export function APKGameHost({
     message: string,
   ): void => {
     if (!isCurrentMount(mountPoint, generation)) return;
+    retainCleanupOwnership(mountPoint, detachTutorialController(), handleRef.current);
     mountGenerationRef.current = generation + 1;
     handleRef.current = undefined;
     playingGenerationRef.current = undefined;
@@ -306,7 +362,6 @@ export function APKGameHost({
     tutorialSessionRef.current = undefined;
     tutorialTransitionTokenRef.current = undefined;
     resetTutorialCommandOwnership();
-    mountPoint.replaceChildren();
     setDemoActive(false);
     sessionModeRef.current = "playing";
     briefingStartGuardRef.current = false;
@@ -322,6 +377,7 @@ export function APKGameHost({
     const mountPoint = mountPointRef.current;
     const generation = mountGenerationRef.current + 1;
     const activeHandle = handleRef.current;
+    retainCleanupOwnership(mountPoint, undefined, activeHandle);
     handleRef.current = undefined;
     playingGenerationRef.current = undefined;
     resumingGenerationRef.current = undefined;
@@ -330,7 +386,7 @@ export function APKGameHost({
     mountGenerationRef.current = generation;
     setStatus("loading");
     try {
-      await activeHandle?.destroy();
+      await cleanupPendingResources();
     } catch (teardownError) {
       demoTeardownRef.current = false;
       if (mountPoint && isCurrentMount(mountPoint, generation)) {
@@ -442,11 +498,7 @@ export function APKGameHost({
       provisionalCompletionRef.current = undefined;
       mountGenerationRef.current = invalidatedGeneration;
     }
-    try {
-      await handle.destroy();
-    } catch {
-      // The runtime marks the handle destroyed before renderer cleanup.
-    }
+    await cleanupTutorialSession(mountPoint, undefined, handle).catch(() => undefined);
     if (!isCurrent) return;
     returnToBriefing(mountPoint, invalidatedGeneration, message);
   };
@@ -522,6 +574,17 @@ export function APKGameHost({
     pauseAfterMount = false,
     recoverToBriefingOnFailure = false,
   ): Promise<APKGameHandle | undefined> => {
+    try {
+      await cleanupPendingResources();
+    } catch (cleanupError) {
+      if (!isCurrentMount(mountPoint, generation)) return undefined;
+      const message = cleanupError instanceof Error ? cleanupError.message : "Game cleanup failed";
+      setError(message);
+      if (recoverToBriefingOnFailure) returnToBriefing(mountPoint, generation, message);
+      else setStatus("error");
+      return undefined;
+    }
+    if (!isCurrentMount(mountPoint, generation)) return undefined;
     sessionModeRef.current = sessionMode;
     if (sessionMode === "playing") {
       provisionalPlayingGenerationRef.current = generation;
@@ -572,22 +635,14 @@ export function APKGameHost({
       );
       if (!isCurrentMount(mountPoint, generation)) {
         clearProvisionalPlaying(generation);
-        try {
-          await handle.destroy();
-        } catch {
-          // A stale mount must not surface its cleanup failure in the replacement session.
-        }
+        await cleanupTutorialSession(mountPoint, undefined, handle).catch(() => undefined);
         return undefined;
       }
       if (pauseAfterMount) {
         try {
           handle.pause();
         } catch (pauseError) {
-          try {
-            await handle.destroy();
-          } catch {
-            // The failed pause handle is discarded even when its cleanup rejects.
-          }
+          await cleanupTutorialSession(mountPoint, undefined, handle).catch(() => undefined);
           throw pauseError;
         }
       }
@@ -612,7 +667,6 @@ export function APKGameHost({
       clearProvisionalPlaying(generation);
       await destroyTutorialController().catch(() => undefined);
       if (!isCurrentMount(mountPoint, generation)) return undefined;
-      mountPoint.replaceChildren();
       if (sessionMode === "demo") {
         setDemoActive(false);
         sessionModeRef.current = "playing";
@@ -647,7 +701,7 @@ export function APKGameHost({
     resetTutorialCommandOwnership();
     const activeController = detachTutorialController();
     try {
-      await cleanupTutorialSession(activeController, previewHandle);
+      await cleanupTutorialSession(mountPoint, activeController, previewHandle);
     } catch (cleanupError) {
       if (!isCurrentMount(mountPoint, generation)) return;
       returnToBriefing(
@@ -685,6 +739,14 @@ export function APKGameHost({
       if (isCurrentMount(mountPoint, generation)) returnToBriefing(mountPoint, generation, message);
       return;
     }
+    try {
+      await cleanupPendingResources();
+    } catch (cleanupError) {
+      const message = cleanupError instanceof Error ? cleanupError.message : "The previous game could not close.";
+      if (isCurrentMount(mountPoint, generation)) returnToBriefing(mountPoint, generation, message);
+      return;
+    }
+    if (!isCurrentMount(mountPoint, generation)) return;
     let actionDriver: (GameTutorialActionDriver & {
       readonly destroy?: () => void | Promise<void>;
     }) | undefined;
@@ -786,7 +848,7 @@ export function APKGameHost({
       tutorialSessionRef.current = undefined;
       resetTutorialCommandOwnership();
       const activeController = detachTutorialController();
-      await cleanupTutorialSession(activeController, mounted).catch(() => undefined);
+      await cleanupTutorialSession(mountPoint, activeController, mounted).catch(() => undefined);
       if (isCurrentMount(mountPoint, generation)) returnToBriefing(mountPoint, generation, message);
     };
     try {
@@ -1029,7 +1091,7 @@ export function APKGameHost({
       const mountedController = detachTutorialController();
       if (mountPointRef.current === mountPoint) mountPointRef.current = undefined;
       mountPoint.remove();
-      void cleanupTutorialSession(mountedController, mountedHandle).catch(() => undefined);
+      void cleanupTutorialSession(mountPoint, mountedController, mountedHandle).catch(() => undefined);
     };
     // The mount branch intentionally preserves the legacy immediate-launch behavior.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -1154,14 +1216,45 @@ export function APKGameHost({
     await activatePlayingMount(mountPoint, generation, mounted, [transitionResult.data]);
   };
 
-  const togglePause = () => {
-    if (status === "paused") {
-      handleRef.current?.resume();
-      setStatus(sessionModeRef.current === "demo" ? "demo" : "ready");
-    } else {
-      handleRef.current?.pause();
-      setStatus("paused");
+  const togglePause = async (): Promise<void> => {
+    const handle = handleRef.current;
+    const mountPoint = mountPointRef.current;
+    const generation = mountGenerationRef.current;
+    if (!handle || !mountPoint || !isCurrentMount(mountPoint, generation)) return;
+    const authoritative = sessionModeRef.current === "playing"
+      && playingGenerationRef.current === generation;
+    if (authoritative) {
+      playingGenerationRef.current = undefined;
+      provisionalPlayingGenerationRef.current = generation;
+      resumingGenerationRef.current = generation;
+      provisionalCompletionRef.current = undefined;
     }
+    try {
+      if (status === "paused") handle.resume();
+      else handle.pause();
+    } catch (commandError) {
+      clearProvisionalPlaying(generation);
+      await discardMountedHandle(
+        mountPoint,
+        generation,
+        handle,
+        commandError instanceof Error ? commandError.message : "The game control failed.",
+      );
+      return;
+    }
+    if (!isCurrentMount(mountPoint, generation)) return;
+    const completedDuringCommand = provisionalCompletionRef.current?.generation === generation;
+    if (authoritative) {
+      resumingGenerationRef.current = undefined;
+      playingGenerationRef.current = generation;
+      provisionalPlayingGenerationRef.current = undefined;
+      if (completedDuringCommand) {
+        await flushProvisionalCompletion(mountPoint, generation);
+        return;
+      }
+    }
+    if (handle.getDiagnostics().status === "completed") return;
+    setStatus(status === "paused" ? (sessionModeRef.current === "demo" ? "demo" : "ready") : "paused");
   };
 
   const toggleMute = () => {
@@ -1225,7 +1318,7 @@ export function APKGameHost({
       resetTutorialCommandOwnership();
 
       try {
-        await cleanupTutorialSession(activeController, activeHandle);
+        await cleanupTutorialSession(mountPoint, activeController, activeHandle);
       } catch (restartError) {
         if (mountPoint && isCurrentMount(mountPoint, generation)) {
           returnToBriefing(
@@ -1299,7 +1392,7 @@ export function APKGameHost({
     setStatus("loading");
     setTutorialSnapshot(undefined);
     try {
-      await cleanupTutorialSession(activeController, activeHandle);
+      await cleanupTutorialSession(mountPoint, activeController, activeHandle);
     } catch (cleanupError) {
       if (!isCurrentMount(mountPoint, generation)) return;
       returnToBriefing(
@@ -1411,7 +1504,9 @@ export function APKGameHost({
       {(validationError ?? error) && (
         <div role="alert">
           Game could not start: {validationError ?? error}
-          {effectiveBriefing !== undefined && briefingStarted && error ? (
+          {effectiveBriefing !== undefined
+            && error
+            && (briefingStarted || pendingCleanupRef.current !== undefined) ? (
             <button type="button" onClick={() => void restart()}>
               Return to briefing
             </button>
@@ -1480,7 +1575,7 @@ export function APKGameHost({
           </>
         ) : demoActive ? (
           <>
-            <button type="button" className="min-h-11" style={DEMO_CONTROL_STYLE} onClick={togglePause} disabled={status === "loading" || status === "error"}>
+            <button type="button" className="min-h-11" style={DEMO_CONTROL_STYLE} onClick={() => void togglePause()} disabled={status === "loading" || status === "error"}>
               {status === "paused" ? "Resume demonstration" : "Pause demonstration"}
             </button>
             <button type="button" className="min-h-11" style={DEMO_CONTROL_STYLE} onClick={() => void restartDemo()} disabled={status === "loading" || status === "error"}>
@@ -1507,7 +1602,7 @@ export function APKGameHost({
             ) : null}
           </>
         ) : (
-          <button type="button" className="min-h-11" style={DEMO_CONTROL_STYLE} onClick={togglePause} disabled={status === "loading" || status === "error" || controlsHidden}>
+          <button type="button" className="min-h-11" style={DEMO_CONTROL_STYLE} onClick={() => void togglePause()} disabled={status === "loading" || status === "error" || controlsHidden}>
             {status === "paused" ? "Resume game" : "Pause game"}
           </button>
         )}
