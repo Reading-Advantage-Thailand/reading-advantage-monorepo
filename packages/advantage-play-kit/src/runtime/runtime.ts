@@ -501,6 +501,7 @@ export async function mountCartridge(
           await cleanupRenderer(container, activeInstance);
           if (instance === activeInstance) instance = undefined;
         }
+        container.replaceChildren();
         destroyed = true;
         status = "destroyed";
         diagnostic({ level: "info", code: "RUNTIME_DESTROYED", message: "Game runtime destroyed" });

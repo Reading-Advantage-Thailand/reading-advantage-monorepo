@@ -96,6 +96,7 @@ describe("mountCartridge", () => {
     expect(canvases[0]?.parentElement).toBeNull();
     expect(container.querySelectorAll("canvas")).toHaveLength(1);
     await handle.destroy();
+    expect(container.querySelectorAll("canvas")).toHaveLength(0);
   });
 
   it("contains a hidden-state pause failure until the host restarts the renderer", async () => {

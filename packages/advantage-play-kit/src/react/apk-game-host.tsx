@@ -321,12 +321,28 @@ export function APKGameHost({
       if (handleResult.status === "rejected") throw handleResult.reason;
     })();
     cleanupAttemptRef.current = cleanup;
+    let cleanupFailure: unknown;
     try {
       await cleanup;
+    } catch (error) {
+      cleanupFailure = error;
     } finally {
       if (cleanupAttemptRef.current === cleanup) cleanupAttemptRef.current = undefined;
     }
-    if (pendingCleanupRef.current) await cleanupPendingResources();
+    const remaining = pendingCleanupRef.current;
+    const hasUnattemptedResource = remaining !== undefined && (
+      (remaining.controller !== undefined && remaining.controller !== controller)
+      || (remaining.driver !== undefined && remaining.driver !== driver)
+      || (remaining.handle !== undefined && remaining.handle !== handle)
+    );
+    if (hasUnattemptedResource) {
+      try {
+        await cleanupPendingResources();
+      } catch (error) {
+        cleanupFailure ??= error;
+      }
+    }
+    if (cleanupFailure !== undefined) throw cleanupFailure;
   };
 
   const cleanupTutorialSession = async (
