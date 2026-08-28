@@ -728,8 +728,16 @@ describe("APKGameHost tutorial integration", () => {
     expect(screen.queryByRole("region", { name: "Game result" })).not.toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: "Next tutorial step" }));
+    await waitFor(() => expect(snapshots).toHaveBeenLastCalledWith(expect.objectContaining({
+      currentStepId: "step:choose-river",
+      currentTarget: { id: "learning-item:river" },
+    })));
     await act(async () => clock.advanceBy(15));
     fireEvent.click(screen.getByRole("button", { name: "Next tutorial step" }));
+    await waitFor(() => expect(snapshots).toHaveBeenLastCalledWith(expect.objectContaining({
+      currentStepId: "step:review-feedback",
+      currentTarget: { id: "feedback:incorrect-choice" },
+    })));
     await act(async () => clock.advanceBy(15));
     fireEvent.click(screen.getByRole("button", { name: "Next tutorial step" }));
 
@@ -739,7 +747,7 @@ describe("APKGameHost tutorial integration", () => {
     expect(hostFactory.base.instances[0]?.destroy).toHaveBeenCalledOnce();
     expect(hostFactory.base.liveInstances).toBe(1);
     expect(document.querySelectorAll("[data-apk-canvas-host] canvas")).toHaveLength(1);
-    expect(screen.queryByRole("region", { name: "Temple Word Quest tutorial" })).not.toBeInTheDocument();
+    await waitFor(() => expect(screen.queryByRole("region", { name: "Temple Word Quest tutorial" })).not.toBeInTheDocument());
 
     act(() => hostFactory.base.contexts[1]?.complete(validResults));
     expect(await screen.findByRole("region", { name: "Game result" })).toBeInTheDocument();
@@ -762,14 +770,15 @@ describe("APKGameHost tutorial integration", () => {
     });
 
     fireEvent.click(screen.getByRole("button", { name: "Pause tutorial" }));
-    expect(snapshots).toHaveBeenLastCalledWith(expect.objectContaining({ status: "paused" }));
+    await waitFor(() => expect(snapshots).toHaveBeenLastCalledWith(expect.objectContaining({ status: "paused" })));
     fireEvent.click(screen.getByRole("button", { name: "Resume tutorial" }));
+    await waitFor(() => expect(snapshots).toHaveBeenLastCalledWith(expect.objectContaining({ status: "running" })));
     fireEvent.click(screen.getByRole("button", { name: "Next tutorial step" }));
-    expect(snapshots).toHaveBeenLastCalledWith(expect.objectContaining({
+    await waitFor(() => expect(snapshots).toHaveBeenLastCalledWith(expect.objectContaining({
       currentStepId: "step:choose-river",
       currentTarget: { id: "learning-item:river" },
       progress: { completed: 1, total: 3 },
-    }));
+    })));
 
     const firstRun = driver.runs[0];
     fireEvent.click(screen.getByRole("button", { name: "Replay tutorial" }));
@@ -809,7 +818,6 @@ describe("APKGameHost tutorial integration", () => {
     expect(document.querySelectorAll("[data-apk-canvas-host] canvas")).toHaveLength(0);
     expect(driver.resources()).toEqual({ listeners: 0, inputHandlers: 0, phaserObjects: 0 });
 
-    fireEvent.click(screen.getByRole("button", { name: "Return to briefing" }));
     fireEvent.click(await screen.findByRole("button", { name: "Begin quest" }));
     await waitFor(() => expect(hostFactory.base.contexts).toHaveLength(1));
     await act(async () => {

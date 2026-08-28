@@ -121,6 +121,12 @@ type TutorialSession = {
   tutorialClock: GameTutorialClock | undefined;
 };
 
+type TutorialCommandGate = {
+  controller: GameTutorialController;
+  token: object;
+  promise: Promise<void>;
+};
+
 /**
  * Creates the real-time browser clock used by guided tutorials.
  * @returns A cancellable clock backed by the current browser window.
@@ -180,6 +186,9 @@ export function APKGameHost({
   const provisionalCompletionRef = useRef<ProvisionalCompletion | undefined>(undefined);
   const tutorialSessionRef = useRef<TutorialSession | undefined>(undefined);
   const tutorialTransitionTokenRef = useRef<object | undefined>(undefined);
+  const tutorialCommandQueueRef = useRef<Promise<void>>(Promise.resolve());
+  const tutorialCommandPendingRef = useRef(false);
+  const tutorialCommandGateRef = useRef<TutorialCommandGate | undefined>(undefined);
   const briefingStartGuardRef = useRef(false);
   const demoTeardownRef = useRef(false);
   const lifecycleErrorRef = useRef<string | undefined>(undefined);
@@ -193,6 +202,11 @@ export function APKGameHost({
   onDiagnosticRef.current = onDiagnostic;
   onNavigateRef.current = onNavigate;
   onTutorialSnapshotRef.current = onTutorialSnapshot;
+  const resetTutorialCommandOwnership = (): void => {
+    tutorialCommandQueueRef.current = Promise.resolve();
+    tutorialCommandPendingRef.current = false;
+    tutorialCommandGateRef.current = undefined;
+  };
   const [status, setStatus] = useState<
     "loading" | "briefing" | "tutorial" | "demo" | "countdown" | "ready" | "paused" | "complete" | "error"
   >("loading");
@@ -291,6 +305,7 @@ export function APKGameHost({
     provisionalCompletionRef.current = undefined;
     tutorialSessionRef.current = undefined;
     tutorialTransitionTokenRef.current = undefined;
+    resetTutorialCommandOwnership();
     mountPoint.replaceChildren();
     setDemoActive(false);
     sessionModeRef.current = "playing";
@@ -629,6 +644,7 @@ export function APKGameHost({
     handleRef.current = undefined;
     playingGenerationRef.current = undefined;
     tutorialSessionRef.current = undefined;
+    resetTutorialCommandOwnership();
     const activeController = detachTutorialController();
     try {
       await cleanupTutorialSession(activeController, previewHandle);
@@ -669,7 +685,9 @@ export function APKGameHost({
       if (isCurrentMount(mountPoint, generation)) returnToBriefing(mountPoint, generation, message);
       return;
     }
-    let actionDriver: GameTutorialActionDriver | undefined;
+    let actionDriver: (GameTutorialActionDriver & {
+      readonly destroy?: () => void | Promise<void>;
+    }) | undefined;
     try {
       actionDriver = standardExperience?.createTutorialActionDriver() ?? tutorialActionDriver;
     } catch (actionDriverError) {
@@ -691,43 +709,67 @@ export function APKGameHost({
       applyFailureConsequences: () => undefined,
     };
     const token = {};
-    const controller = createGameTutorialController({
-      tutorial: effectiveTutorial,
-      actionDriver,
-      clock: tutorialClock ?? createBrowserTutorialClock(),
-      effects,
-      onLifecycleTransition: (transition) => {
-        const activeSession = tutorialSessionRef.current;
-        if (
-          !isCurrentMount(mountPoint, generation)
-          || activeSession?.token !== token
-          || tutorialTransitionTokenRef.current !== undefined
-        ) return;
-        const transitionGeneration = mountGenerationRef.current + 1;
-        mountGenerationRef.current = transitionGeneration;
-        tutorialTransitionTokenRef.current = token;
-        void enterPlayingFromTutorial(
-          mountPoint,
-          transitionGeneration,
-          transition,
-          token,
-          activeSession.controller,
-        );
-      },
-      onDiagnostic: undefined,
-      onSnapshot: (snapshot) => {
-        if (generation !== mountGenerationRef.current) return;
-        setTutorialSnapshot(snapshot);
+    const controller = await (async (): Promise<GameTutorialController | undefined> => {
+      try {
+        return createGameTutorialController({
+          tutorial: effectiveTutorial,
+          actionDriver,
+          clock: tutorialClock ?? createBrowserTutorialClock(),
+          effects,
+          onLifecycleTransition: (transition) => {
+            const activeSession = tutorialSessionRef.current;
+            if (
+              !isCurrentMount(mountPoint, generation)
+              || activeSession?.token !== token
+              || tutorialTransitionTokenRef.current !== undefined
+            ) return;
+            const transitionGeneration = mountGenerationRef.current + 1;
+            mountGenerationRef.current = transitionGeneration;
+            tutorialTransitionTokenRef.current = token;
+            const commandGate = tutorialCommandGateRef.current;
+            const enterPlaying = async (): Promise<void> => {
+              await enterPlayingFromTutorial(
+                mountPoint,
+                transitionGeneration,
+                transition,
+                token,
+                activeSession.controller,
+              );
+            };
+            void (commandGate?.controller === activeSession.controller && commandGate.token === token
+              ? commandGate.promise
+              : Promise.resolve()
+            ).then(enterPlaying).catch(() => undefined);
+          },
+          onDiagnostic: undefined,
+          onSnapshot: (snapshot) => {
+            if (generation !== mountGenerationRef.current) return;
+            setTutorialSnapshot(snapshot);
+            try {
+              onTutorialSnapshotRef.current?.({
+                ...snapshot,
+                ...(snapshot.currentTarget === undefined ? {} : { currentTarget: { id: snapshot.currentTarget.id } }),
+              } as GameTutorialControllerSnapshot);
+            } catch {
+              // Owner tutorial observers cannot interrupt tutorial lifecycle work.
+            }
+          },
+        });
+      } catch (constructionError) {
         try {
-          onTutorialSnapshotRef.current?.({
-            ...snapshot,
-            ...(snapshot.currentTarget === undefined ? {} : { currentTarget: { id: snapshot.currentTarget.id } }),
-          } as GameTutorialControllerSnapshot);
+          await actionDriver?.destroy?.();
         } catch {
-          // Owner tutorial observers cannot interrupt tutorial lifecycle work.
+          // A construction cleanup failure must not hide the original controller error.
         }
-      },
-    });
+        const message = constructionError instanceof Error
+          ? constructionError.message
+          : "The tutorial could not be prepared.";
+        if (isCurrentMount(mountPoint, generation)) returnToBriefing(mountPoint, generation, message);
+        return undefined;
+      }
+    })();
+    if (controller === undefined) return;
+    resetTutorialCommandOwnership();
     tutorialControllerRef.current = controller;
     tutorialSessionRef.current = {
       token,
@@ -742,6 +784,7 @@ export function APKGameHost({
     if (!mounted || generation !== mountGenerationRef.current) return;
     const recoverTutorialStart = async (message: string): Promise<void> => {
       tutorialSessionRef.current = undefined;
+      resetTutorialCommandOwnership();
       const activeController = detachTutorialController();
       await cleanupTutorialSession(activeController, mounted).catch(() => undefined);
       if (isCurrentMount(mountPoint, generation)) returnToBriefing(mountPoint, generation, message);
@@ -911,21 +954,12 @@ export function APKGameHost({
       return;
     }
     setError(undefined);
-    if (!await teardownDemo("The class demonstration could not advance.")) return;
+    if (!await teardownDemo("The class demonstration could not advance.", false)) return;
     const demoToCountdown = gameLifecycleTransitionSchema.parse({
       from: "demo",
       event: "demo-complete",
       to: "countdown",
     });
-    if (!emitLifecycleTransition(demoToCountdown)) {
-      returnToBriefing(
-        mountPoint,
-        mountGenerationRef.current,
-        lifecycleErrorRef.current ?? "The class demonstration could not advance.",
-      );
-      return;
-    }
-    setStatus("countdown");
     const generation = mountGenerationRef.current;
     setTutorialSnapshot(undefined);
     setBriefingStarted(true);
@@ -937,7 +971,7 @@ export function APKGameHost({
       event: "countdown-complete",
       to: "playing",
     });
-    await activatePlayingMount(mountPoint, generation, mounted, [countdownToPlaying]);
+    await activatePlayingMount(mountPoint, generation, mounted, [demoToCountdown, countdownToPlaying]);
   };
 
   useEffect(() => {
@@ -964,6 +998,7 @@ export function APKGameHost({
     resumingGenerationRef.current = undefined;
     provisionalPlayingGenerationRef.current = undefined;
     provisionalCompletionRef.current = undefined;
+    resetTutorialCommandOwnership();
 
     if (launchPhase === "demo") {
       setBriefingStarted(true);
@@ -990,6 +1025,7 @@ export function APKGameHost({
       provisionalCompletionRef.current = undefined;
       tutorialSessionRef.current = undefined;
       tutorialTransitionTokenRef.current = undefined;
+      resetTutorialCommandOwnership();
       const mountedController = detachTutorialController();
       if (mountPointRef.current === mountPoint) mountPointRef.current = undefined;
       mountPoint.remove();
@@ -1161,14 +1197,13 @@ export function APKGameHost({
     if (effectiveBriefing !== undefined) {
       const activeHandle = handleRef.current;
       const replayEntry = result ? effectiveDebrief.replayEntry : "briefing";
-      if (result) {
-        const transition = gameLifecycleTransitionSchema.parse({
+      const replayTransition = result
+        ? gameLifecycleTransitionSchema.parse({
           from: "results",
           event: "replay",
           to: replayEntry,
-        });
-        if (!emitLifecycleTransition(transition)) return;
-      }
+        })
+        : undefined;
       briefingStartGuardRef.current = true;
       setBriefingStarted(true);
       setError(undefined);
@@ -1187,6 +1222,7 @@ export function APKGameHost({
       provisionalCompletionRef.current = undefined;
       handleRef.current = undefined;
       sessionModeRef.current = "playing";
+      resetTutorialCommandOwnership();
 
       try {
         await cleanupTutorialSession(activeController, activeHandle);
@@ -1211,12 +1247,16 @@ export function APKGameHost({
       mountPoint.replaceChildren();
       if (replayEntry === "tutorial") {
         setBriefingStarted(true);
-        await startTutorial(mountPoint, mountGenerationRef.current);
+        await startTutorial(mountPoint, generation, replayTransition);
         return;
       }
       if (replayEntry === "playing") {
         setBriefingStarted(true);
-        await mountGame(mountPoint, generation, "playing", false, true);
+        const mounted = await mountGame(mountPoint, generation, "playing", true, true);
+        if (!mounted || !isCurrentMount(mountPoint, generation)) return;
+        if (replayTransition !== undefined) {
+          await activatePlayingMount(mountPoint, generation, mounted, [replayTransition]);
+        }
         return;
       }
 
@@ -1224,6 +1264,7 @@ export function APKGameHost({
       setBriefingStarted(false);
       setBriefingRevision((revision) => revision + 1);
       setStatus("briefing");
+      if (replayTransition !== undefined) emitLifecycleTransition(replayTransition);
       return;
     }
 
@@ -1231,9 +1272,10 @@ export function APKGameHost({
     setResult(undefined);
     setResultOutcome("complete");
     setStatus("loading");
+    const activeHandle = handleRef.current;
     try {
-      await handleRef.current?.restart();
-      setStatus("ready");
+      await activeHandle?.restart();
+      if (activeHandle?.getDiagnostics().status !== "completed") setStatus("ready");
     } catch (restartError) {
       setError(restartError instanceof Error ? restartError.message : "Game failed to restart");
       setStatus("error");
@@ -1250,6 +1292,7 @@ export function APKGameHost({
     const activeController = detachTutorialController();
     tutorialSessionRef.current = undefined;
     tutorialTransitionTokenRef.current = undefined;
+    resetTutorialCommandOwnership();
     clearProvisionalPlaying(generation - 1);
     playingGenerationRef.current = undefined;
     provisionalCompletionRef.current = undefined;
@@ -1271,14 +1314,85 @@ export function APKGameHost({
     await startTutorial(mountPoint, generation);
   };
 
-  const runTutorialCommand = (command: "pause" | "resume" | "advance" | "replay" | "skip") => {
-    const controller = tutorialControllerRef.current;
-    if (controller === undefined) return;
-    if (command === "replay") {
-      void replayTutorial();
+  const queueTutorialCommand = (
+    controller: GameTutorialController,
+    token: object,
+    command: () => void | Promise<void>,
+  ): void => {
+    let releaseGate: () => void = () => undefined;
+    const gate = new Promise<void>((resolve) => {
+      releaseGate = resolve;
+    });
+
+    const executeCommand = (): Promise<void> | undefined => {
+      if (
+        tutorialControllerRef.current !== controller
+        || tutorialSessionRef.current?.token !== token
+      ) {
+        releaseGate();
+        return undefined;
+      }
+      tutorialCommandGateRef.current = { controller, token, promise: gate };
+      let commandResult: void | Promise<void>;
+      try {
+        commandResult = command();
+      } catch (commandError) {
+        if (tutorialCommandGateRef.current?.promise === gate) tutorialCommandGateRef.current = undefined;
+        releaseGate();
+        throw commandError;
+      }
+      if (commandResult === undefined) {
+        if (tutorialCommandGateRef.current?.promise === gate) tutorialCommandGateRef.current = undefined;
+        releaseGate();
+        return undefined;
+      }
+      const settledCommand = Promise.resolve(commandResult).finally(() => {
+        if (tutorialCommandGateRef.current?.promise === gate) tutorialCommandGateRef.current = undefined;
+        releaseGate();
+      });
+      void settledCommand.catch(() => undefined);
+      return settledCommand;
+    };
+
+    const trackCommand = (commandPromise: Promise<void>): void => {
+      tutorialCommandQueueRef.current = commandPromise;
+      tutorialCommandPendingRef.current = true;
+      void commandPromise.catch(() => undefined);
+      void commandPromise
+        .finally(() => {
+          if (tutorialCommandQueueRef.current === commandPromise) {
+            tutorialCommandPendingRef.current = false;
+          }
+        })
+        .catch(() => undefined);
+    };
+
+    if (!tutorialCommandPendingRef.current) {
+      try {
+        const commandPromise = executeCommand();
+        if (commandPromise !== undefined) trackCommand(commandPromise);
+        else tutorialCommandQueueRef.current = Promise.resolve();
+      } catch (commandError) {
+        const failedCommand: Promise<void> = Promise.reject(commandError);
+        trackCommand(failedCommand);
+      }
       return;
     }
-    void controller[command]();
+
+    const previous = tutorialCommandQueueRef.current;
+    const queuedCommand = previous.catch(() => undefined).then(() => executeCommand());
+    trackCommand(queuedCommand);
+  };
+
+  const runTutorialCommand = (command: "pause" | "resume" | "advance" | "replay" | "skip") => {
+    const controller = tutorialControllerRef.current;
+    const session = tutorialSessionRef.current;
+    if (controller === undefined || session?.controller !== controller) return;
+    if (command === "replay") {
+      queueTutorialCommand(controller, session.token, replayTutorial);
+      return;
+    }
+    queueTutorialCommand(controller, session.token, () => controller[command]());
   };
 
   return (

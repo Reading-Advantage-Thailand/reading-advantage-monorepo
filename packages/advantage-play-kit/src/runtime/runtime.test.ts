@@ -71,6 +71,53 @@ describe("mountCartridge", () => {
     expect(handle.getDiagnostics().status).toBe("destroyed");
   });
 
+  it("retries rejected renderer cleanup before creating a replacement and rejects stale completion callbacks", async () => {
+    const container = document.createElement("div");
+    const capturedContexts: Array<Parameters<GameFactory>[0]> = [];
+    const firstCanvas = document.createElement("canvas");
+    const secondCanvas = document.createElement("canvas");
+    const firstDestroy = vi.fn(() => {
+      if (firstDestroy.mock.calls.length === 1) throw new Error("first renderer cleanup failed");
+      firstCanvas.remove();
+    });
+    const secondDestroy = vi.fn(() => secondCanvas.remove());
+    const hostComplete = vi.fn();
+    const factory: GameFactory = vi.fn(async (context) => {
+      capturedContexts.push(context);
+      const canvas = capturedContexts.length === 1 ? firstCanvas : secondCanvas;
+      context.container.append(canvas);
+      return { destroy: capturedContexts.length === 1 ? firstDestroy : secondDestroy };
+    });
+    const handle = await mountCartridge(
+      {
+        container,
+        cartridge: createRuntimeCartridge(),
+        input: [{ term: "river", translation: "riviere" }],
+        edition: createRuntimeEdition(),
+        host: { complete: hostComplete },
+      },
+      factory,
+    );
+
+    await expect(handle.restart()).rejects.toThrow("first renderer cleanup failed");
+    expect(factory).toHaveBeenCalledOnce();
+    expect(container.querySelectorAll("canvas")).toHaveLength(1);
+
+    capturedContexts[0]?.complete(validResults, "victory");
+    await Promise.resolve();
+    expect(hostComplete).not.toHaveBeenCalled();
+
+    await handle.restart();
+    expect(firstDestroy).toHaveBeenCalledTimes(2);
+    expect(factory).toHaveBeenCalledTimes(2);
+    expect(container.querySelectorAll("canvas")).toHaveLength(1);
+
+    capturedContexts[0]?.complete(validResults, "victory");
+    await Promise.resolve();
+    expect(hostComplete).not.toHaveBeenCalled();
+    await handle.destroy();
+  });
+
   it("preserves a post-factory initialization failure when renderer cleanup also fails", async () => {
     const originalInitializationError = new APKRuntimeError(
       "MISSING_ASSET_SLOT",

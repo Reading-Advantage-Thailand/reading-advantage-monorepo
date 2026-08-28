@@ -378,9 +378,11 @@ export async function mountCartridge(
         rendererGeneration += 1;
         mountedRendererGeneration = undefined;
         pendingCompletion = undefined;
-        instance = undefined;
         status = "restarting";
-        await previousInstance?.destroy();
+        if (previousInstance) {
+          await previousInstance.destroy();
+          if (instance === previousInstance) instance = undefined;
+        }
         completionCount = 0;
         restartCount += 1;
         await createInstance();
