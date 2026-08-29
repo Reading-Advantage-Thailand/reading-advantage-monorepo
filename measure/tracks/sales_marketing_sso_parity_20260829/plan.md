@@ -216,7 +216,7 @@ Red-phase commits contain ONLY the new test files and Measure document edits.
 Record a commit SHA only after the commit is an ancestor of HEAD.
 
 - Phase 1 contracts: acc483cdb
-- Phase 2 Red: <pending-red-commit>
+- Phase 2 Red: 7be5fdb231d325ed216941e67f3154f05f4efd4f
 - Phase 3 Green:
 - Phase 4 docs and doctor:
 
