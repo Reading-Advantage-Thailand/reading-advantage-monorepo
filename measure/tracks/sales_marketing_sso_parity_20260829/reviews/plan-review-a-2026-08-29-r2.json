@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "status": "fail",
+  "summary": "The revision resolves four prior findings. Six blocking contract gaps remain in legacy mode, denial handling, candidate origins, demo controls, Marketing coverage, and documentation.",
+  "blocking_findings": [
+    {
+      "id": "RA-A-R2-1",
+      "severity": "High",
+      "summary": "The Sales legacy contract uses an invalid mode and still omits the start-route gate.",
+      "evidence": "spec.md:122-124 and plan.md:86,154 use SALES_AUTH_MODE=legacy. auth-mode.ts:2,13-16 accepts only company or legacy-school. The Sales start route has no legacy gate."
+    },
+    {
+      "id": "RA-A-R2-2",
+      "severity": "High",
+      "summary": "The role-denial contract still permits an implementation that cannot show the forbidden message.",
+      "evidence": "spec.md:100-104 requires a callback redirect and a session denial. plan.md:55 and 91 allow either one. No client task converts a session denial into ?error=forbidden."
+    },
+    {
+      "id": "RA-A-R2-3",
+      "severity": "High",
+      "summary": "The approved-origin plan cannot prove authenticated behavior on the no-traffic candidate revisions.",
+      "evidence": "plan.md:30-35 defines no preview-origin source. Its blast radius excludes both cloudbuild files. Current candidate deployments set no preview-origin variable. Codecamp sets CODECAMP_PREVIEW_ORIGINS and performs a callback-origin handoff. The revised plan specifies neither equivalent handoff. Marketing callback and logout origin changes also lack Red tests."
+    },
+    {
+      "id": "RA-A-R2-4",
+      "severity": "High",
+      "summary": "The demo credential contract still lacks minimum entropy and expiry controls.",
+      "evidence": "spec.md:106-114 and plan.md:60-66 require a cryptographic source and 32 characters. They define no minimum random bytes, account expiry, role expiry, or disable-by date. company-identity/schema/index.ts:441 provides role expiry support."
+    },
+    {
+      "id": "RA-A-R2-5",
+      "severity": "Medium",
+      "summary": "The Marketing Red plan does not prove every login redirect preserves its destination.",
+      "evidence": "FR-1 and plan.md:44-47 cover every redirect. plan.md:98-102 tests only one page. Current redirects also exist in settings/page.tsx, campaigns/[id]/page.tsx, and campaigns/[id]/video/page.tsx."
+    },
+    {
+      "id": "RA-A-R2-6",
+      "severity": "Medium",
+      "summary": "The documentation task names a Sales deployment runbook that does not exist.",
+      "evidence": "plan.md:165-168 says to update the Sales deployment runbook and the same document. No runbook exists under apps/sales-advantage, and the plan gives no creation path."
+    }
+  ],
+  "nonblocking_findings": [
+    {
+      "id": "RA-A-R2-7",
+      "severity": "Medium",
+      "summary": "The draft overstates parity with the Codecamp origin rule.",
+      "evidence": "spec.md:80-88 and plan.md:34,76 require fallback for an unapproved forwarded origin. Codecamp public-url.ts:146 and its test at lines 64-73 reject that origin."
+    },
+    {
+      "id": "RA-A-R2-8",
+      "severity": "Medium",
+      "summary": "Marketing transaction-cookie expiry remains absent from one planned error path.",
+      "evidence": "The NFR at spec.md:120-121 covers all error paths. Sales has test and implementation tasks at plan.md:90,133. Marketing has neither. Its callback returns early at lines 18-20 without deleting the cookie."
+    },
+    {
+      "id": "RA-A-R2-9",
+      "severity": "Low",
+      "summary": "The Marketing validation wording diverges from the proven client-error flow.",
+      "evidence": "plan.md:48-51 requires validation before the OIDC client. Codecamp start route.ts:35-40 catches the client ZodError. The shared validator is private at client.ts:74-87."
+    }
+  ],
+  "evidence": [
+    "RA-A-001 is resolved. FR-1 and plan.md:44-47,98-102,140-144 add Marketing destination recovery. campaigns/page.tsx:48-50 and login/page.tsx:38-40 confirm the cited defect.",
+    "RA-A-002 is partly resolved. FR-4 adds origin approval and includes Marketing callback and logout work. RA-A-R2-3 records the remaining candidate contract gap.",
+    "RA-A-003 is not fully resolved. The draft adds a forbidden producer decision, but its either-or wording does not guarantee a visible producer.",
+    "RA-A-004 is partly resolved. FR-6 removes dead codes. The Sales start route still lacks a legacy gate, and the draft names the wrong mode value.",
+    "RA-A-005 is resolved. spec.md:138-140 expects a 307 to the Accounts authorize URL after client.start('/'). Codecamp route.ts:35-41 and its test at lines 119-140 confirm this behavior. Marketing no longer has a language criterion.",
+    "RA-A-006 is not fully resolved. Generated passwords, no administrator, rotation, disable, and output checks are present. Entropy and expiry remain unspecified.",
+    "RA-A-007 is resolved. spec.md:24 cites client.ts:87 and 293 correctly. spec.md:31 limits the browser audit claim to findings F1-F4.",
+    "RA-A-008 is resolved for named app surfaces. plan.md:21-28 now lists Sales and Marketing pages, routes, locale files, scripts, and Accounts seed work.",
+    "The Sales callback at lines 21-38 exchanges and stores a session without an app-role check. The session route at lines 7-12 returns a silent null session.",
+    "The Sales logout origin comparison remains at route.ts:18-23. Marketing compares the request origin at logout route.ts:11-12.",
+    "The plan has 34 top-level tasks, matching metadata.json:8. All four phases have manual verification tasks and checkpoints.",
+    "The plan preserves contract-first phases, Red-only rules, candidate verification, scope exclusions, and the named tech-debt owner daniebo.",
+    "Baseline HEAD equals 582adf0cd482c3efdd32f6564745fa2d71b73565. The worktree contains unrelated owner changes."
+  ],
+  "commands": [
+    "git status --short && git rev-parse HEAD: passed; HEAD matched the baseline and showed unrelated owner work.",
+    "build-graph stats ./graph.db: passed; 3,833 files and 37,255 nodes were indexed.",
+    "build-graph inspect ./graph.db getMarketingPublicOrigin: passed; the helper is at apps/marketing/app/lib/company-oidc.ts:38-40.",
+    "build-graph inspect ./graph.db getSalesPublicOrigin: passed; the helper is at apps/sales-advantage/lib/company-oidc.ts:94-96.",
+    "rg -c '^- \\[ \\] Task:' measure/tracks/sales_marketing_sso_parity_20260829/plan.md: passed; returned 34.",
+    "node -e JSON.parse(...) plan-review-a-2026-08-29-r2.json: passed; the result artifact is valid JSON.",
+    "git status --short -- plan-review-a-2026-08-29-r2.json: passed; only the result artifact appeared in the scoped check.",
+    "No test suite ran. This review used source, contract, and plan inspection."
+  ],
+  "changed_files": [
+    "measure/tracks/sales_marketing_sso_parity_20260829/reviews/plan-review-a-2026-08-29-r2.json"
+  ],
+  "retry_recommendation": "retry_audit",
+  "confidence": "high"
+}

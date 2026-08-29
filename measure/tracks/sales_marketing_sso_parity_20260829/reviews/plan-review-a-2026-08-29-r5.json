@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "RA-A-R4-1 is resolved. Both apps use the Codecamp callback-origin handoff, and the plan remains consistent.",
+  "blocking_findings": [],
+  "nonblocking_findings": [],
+  "evidence": [
+    "spec.md:82-98 sends an approved preview start request to the configured callback origin. It keeps the transaction, callback, and session cookie on that origin.",
+    "spec.md:90-95 states that the candidate flow needs no second registered callback.",
+    "plan.md:34-42 defines the Sales callback-origin handoff. plan.md:103-111 and 156-163 provide its Red test and implementation tasks.",
+    "plan.md:120-125 and 168-174 provide the equivalent Marketing Red test and implementation tasks.",
+    "spec.md:170-185 and plan.md:195-201 require candidate start checks, callback-origin sign-in completion, promotion, and the production authenticated matrix.",
+    "The acceptance text does not require a preview callback or a preview-host session cookie.",
+    "The mechanism matches apps/codecamp-advantage/app/api/auth/company/start/route.ts:23-31 and apps/codecamp-advantage/lib/public-url.ts:104-151.",
+    "The plan has 37 top-level tasks, matching metadata.json. Four phases, four manual checks, and four checkpoints remain intact.",
+    "FR-1 through FR-8 map to contract, Red, implementation, and acceptance work without a new contradiction.",
+    "HEAD matches the baseline SHA. The worktree contains unrelated owner changes."
+  ],
+  "commands": [
+    "git status --short && git rev-parse HEAD && rg -c '^- \\[ \\] Task:' measure/tracks/sales_marketing_sso_parity_20260829/plan.md: passed; HEAD was 582adf0cd482c3efdd32f6564745fa2d71b73565 and the task count was 37.",
+    "node -e JSON.parse(...) plan-review-a-2026-08-29-r5.json: passed; the result artifact was valid JSON.",
+    "No test suite ran. This report-only review inspected the revised track and the Codecamp reference mechanism."
+  ],
+  "changed_files": [
+    "measure/tracks/sales_marketing_sso_parity_20260829/reviews/plan-review-a-2026-08-29-r5.json"
+  ],
+  "retry_recommendation": "none",
+  "confidence": "high"
+}

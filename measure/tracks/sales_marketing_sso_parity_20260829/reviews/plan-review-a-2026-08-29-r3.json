@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "status": "fail",
+  "summary": "The revision resolves four prior blockers. Candidate acceptance and demo expiry remain blocked by contract contradictions.",
+  "blocking_findings": [
+    {
+      "id": "RA-A-R3-1",
+      "severity": "High",
+      "summary": "The plan still cannot guarantee authenticated acceptance before a traffic shift.",
+      "evidence": "spec.md:88-92 names preview origins and a callback-origin handoff. plan.md:84-120 has no Red test for a preview start handoff. plan.md:138-166 has no explicit handoff implementation. Both cloudbuild.yaml files promote immediately after their candidate checks. spec.md:135-136 permits only Marketing preview-origin wiring, while plan.md:183-187 requires browser acceptance before promotion."
+    },
+    {
+      "id": "RA-A-R3-2",
+      "severity": "High",
+      "summary": "The expiry contract cannot expire the no-role identity as written.",
+      "evidence": "spec.md:113-118 and plan.md:70-77 require three identities, including one no-role identity. They require every identity to expire through role expiry. packages/db/src/company-identity/schema/index.ts:428-482 places expiresAt only on role assignments. A no-role identity has no role assignment to expire."
+    }
+  ],
+  "nonblocking_findings": [
+    {
+      "id": "RA-A-R3-3",
+      "severity": "Medium",
+      "summary": "The Sales legacy redirect target remains unnamed.",
+      "evidence": "spec.md:129-132 and plan.md:49-52 require a redirect to the legacy sign-in path. plan.md:100-103 tests that phrase without an exact path. Sales has no login page route; the legacy form renders on app/[locale]/page.tsx."
+    },
+    {
+      "id": "RA-A-R3-4",
+      "severity": "Medium",
+      "summary": "The Sales session denial response has no exact contract.",
+      "evidence": "spec.md:105-109 and plan.md:62-66 require an explicit denial state. plan.md:100-105 does not define its status code or response body. The current route returns HTTP 200 with session null."
+    },
+    {
+      "id": "RA-A-R3-5",
+      "severity": "Low",
+      "summary": "The draft still overstates Codecamp origin parity.",
+      "evidence": "spec.md:84-87 and plan.md:37-40 reject the forwarded origin and use the configured origin. Codecamp public-url.ts:146 throws PUBLIC_ORIGIN_INVALID instead of using a fallback."
+    }
+  ],
+  "evidence": [
+    "RA-A-R2-1 is resolved. spec.md:32 and 129-132 use company and legacy-school. plan.md:49-52, 98, 102, 152, and 177 add the start gate and legacy test coverage. auth-mode.ts:2,13-16 confirms both valid values.",
+    "RA-A-R2-2 is resolved. spec.md:105-109 requires both the callback redirect and the session denial. plan.md:62-66, 104-105, and 154-155 require both behaviors. Acceptance at spec.md:155 requires the visible forbidden message.",
+    "RA-A-R2-3 is not resolved. The draft adds both preview variables and both cloudbuild files to the blast radius. It does not add the required handoff test, implementation, or pre-promotion gate.",
+    "RA-A-R2-4 is partly resolved. spec.md:113-121 and plan.md:70-77 add at least 24 random bytes, a 90-day limit, disable, and rotation. RA-A-R3-2 records the remaining no-role expiry contradiction.",
+    "RA-A-R2-5 is resolved. plan.md:53-57, 112-115, and 161-166 cover the campaigns list, campaign detail, campaign video, and settings page. Source inspection found 14 login redirects across those four files.",
+    "RA-A-R2-6 is resolved. No Sales runbook exists. plan.md:188-190 now creates apps/sales-advantage/docs/sales-sso-deploy-runbook-20260829.md.",
+    "RA-A-R2-8 is resolved. spec.md:127-128, plan.md:119, and plan.md:165 cover Marketing early-return cookie expiry.",
+    "RA-A-R2-9 is resolved. plan.md:58-61 and 164 catch the validation error thrown by the shared client.",
+    "The plan has 36 top-level tasks, matching metadata.json:8. Each phase ends with manual verification, and all four checkpoints exist.",
+    "The FRs map to contract, Red, implementation, and candidate tasks. The two blocking findings prevent full acceptance testability.",
+    "Baseline HEAD is 582adf0cd482c3efdd32f6564745fa2d71b73565. The worktree contains unrelated owner changes."
+  ],
+  "commands": [
+    "git status --short && git rev-parse HEAD && rg -c '^- \\[ \\] Task:' measure/tracks/sales_marketing_sso_parity_20260829/plan.md: passed; HEAD matched the baseline and the task count was 36.",
+    "build-graph inspect ./graph.db getPublicOrigin && build-graph inspect ./graph.db getPublicUrl: passed; Codecamp getPublicOrigin and both getPublicUrl symbols were found.",
+    "node -e JSON.parse(...) plan-review-a-2026-08-29-r3.json: passed; the result artifact is valid JSON.",
+    "git status --short -- plan-review-a-2026-08-29-r3.json: passed; only the result artifact appeared in the scoped check.",
+    "No test suite ran. This report-only review used source, contract, deployment, and plan inspection."
+  ],
+  "changed_files": [
+    "measure/tracks/sales_marketing_sso_parity_20260829/reviews/plan-review-a-2026-08-29-r3.json"
+  ],
+  "retry_recommendation": "retry_audit",
+  "confidence": "high"
+}

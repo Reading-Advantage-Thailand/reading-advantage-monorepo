@@ -1,0 +1,110 @@
+{
+  "schema_version": 1,
+  "status": "fail",
+  "summary": "The plan fails review because Marketing recovery, forwarding safety, role denial, acceptance contracts, evidence, and demo credential controls are incomplete.",
+  "blocking_findings": [
+    {
+      "id": "RA-A-001",
+      "severity": "High",
+      "summary": "Marketing loses deep-link destinations, and the plan has no task that preserves them.",
+      "evidence": "No Marketing proxy or middleware exists. campaigns/page.tsx:48-50 redirects to /login. login/page.tsx:38-40 hardcodes the start route. plan.md:84-88 tests only errors."
+    },
+    {
+      "id": "RA-A-002",
+      "severity": "High",
+      "summary": "The forwarding-origin work neither ports the Codecamp safety contract nor covers Marketing routes.",
+      "evidence": "plan.md:27-30 trusts forwarded headers without origin approval. Codecamp public-url.ts:45-103,126-150 validates origins. Marketing callback:14 and logout:11 remain outside plan tasks."
+    },
+    {
+      "id": "RA-A-003",
+      "severity": "High",
+      "summary": "Sales cannot produce the planned forbidden message for a no-role demo account.",
+      "evidence": "Sales callback route.ts:21-38 sets a session without a role check. Sales session route.ts:7-12 returns HTTP 200 with null. plan.md:115-118 only renders codes."
+    },
+    {
+      "id": "RA-A-004",
+      "severity": "High",
+      "summary": "The Sales legacy and error-code contracts contain dead behavior.",
+      "evidence": "Sales company/start route.ts:9-20 has no legacy-mode gate. Sales sources emit only error=sso. plan.md:40 enumerates forbidden, session_check_failed, and legacy_auth_active without producer tasks."
+    },
+    {
+      "id": "RA-A-005",
+      "severity": "Medium",
+      "summary": "Several acceptance criteria state incorrect or ambiguous observable results.",
+      "evidence": "spec.md:112-113 expects a 307 to /. A safe fallback starts Accounts authorization and stores returnTo=/. spec.md:116-117 requires a requested language for Marketing, which has no locale routing."
+    },
+    {
+      "id": "RA-A-006",
+      "severity": "High",
+      "summary": "FR-7 does not establish strong or controlled production demo credentials.",
+      "evidence": "plan.md:49-54 accepts predictable 20-character, three-class passwords and creates a Sales admin. It defines no entropy, expiry, disable, rotation, script command, or stderr leak test."
+    },
+    {
+      "id": "RA-A-007",
+      "severity": "Medium",
+      "summary": "The audit evidence claim is false, and the Zod throw line is wrong.",
+      "evidence": "ux-browser-audit-20260829.md has F1-F4 only; line 108 assigns Sales and Marketing elsewhere. client.ts:87 defines validation; client.ts:293 executes the throwing parse."
+    },
+    {
+      "id": "RA-A-008",
+      "severity": "Medium",
+      "summary": "The blast-radius note omits required Marketing and Sales surfaces.",
+      "evidence": "plan.md:21-24 omits Marketing login redirects, callback, logout, login API, Sales landing page, LoginForm, auth routes, locale files, and package scripts."
+    }
+  ],
+  "nonblocking_findings": [
+    {
+      "id": "RA-A-009",
+      "severity": "Medium",
+      "summary": "The callback error plan omits transaction-cookie expiry coverage present in Codecamp.",
+      "evidence": "Codecamp callback route.ts:36,44,79-80,93,97 expires host cookies. Sales callback:18-20 and Marketing callback:18-20 return without expiry."
+    },
+    {
+      "id": "RA-A-010",
+      "severity": "Low",
+      "summary": "The main plan structure and task estimate are correct.",
+      "evidence": "The plan has 32 top-level tasks. metadata.json:8 says 32. All four phases end with manual verification. Red rules and checkpoints are present."
+    },
+    {
+      "id": "RA-A-011",
+      "severity": "Low",
+      "summary": "Both app test runners can host the planned Red suites.",
+      "evidence": "Sales and Marketing package.json files define vitest scripts. Both have vitest.config.ts. Sales login-form.test.tsx exists. plan.md:88 explicitly names the new Marketing page test."
+    },
+    {
+      "id": "RA-A-012",
+      "severity": "Low",
+      "summary": "The deferred shared-helper work has no named owner yet.",
+      "evidence": "spec.md:128-129 defers the package. plan.md:148 promises an owner later but identifies no accountable owner now."
+    }
+  ],
+  "evidence": [
+    "Baseline HEAD equals 582adf0cd482c3efdd32f6564745fa2d71b73565.",
+    "Sales proxy.ts:52 writes redirectTo. Lines 70-73 overwrite NEXT_LOCALE. routing.ts:5 sets Thai as the default.",
+    "Both start routes read returnTo at line 10 and pass it to the OIDC client at line 11.",
+    "Sales callback lines 19 and 50 target /?error=sso. Marketing callback lines 19 and 40 target /login?error=sso.",
+    "Sales logout exists at app/api/auth/logout/route.ts and compares Origin with request.nextUrl.origin at lines 17-23.",
+    "The root .gitignore lines 17-19 ignore .env forms. git check-ignore confirmed apps/accounts/.env and .env.local.",
+    "apps/accounts/scripts/bootstrap-contract.ts exists. Its current schema covers production owner and client bootstrap only.",
+    "The metadata is a classic bug record with no sprint key. The track is absent from tracks.md.",
+    "The Codecamp knowledge check fails only at apk-blueprint.ts:147 because version is not a RuntimeCartridgeManifest key.",
+    "Codecamp, Accounts issuer changes, the shared helper package, and the Codecamp knowledge repair are excluded from implementation scope."
+  ],
+  "commands": [
+    "git status --short && git rev-parse HEAD: passed; HEAD matched the baseline and showed unrelated owner work.",
+    "build-graph stats ./graph.db: passed; 3,833 files and 37,255 nodes indexed.",
+    "build-graph inspect ./graph.db getMarketingPublicOrigin: passed; one exported function found.",
+    "build-graph inspect ./graph.db getSalesPublicOrigin: passed; one exported function found.",
+    "rg -c '^- \\[ \\] Task:' measure/tracks/sales_marketing_sso_parity_20260829/plan.md: passed; returned 32.",
+    "git check-ignore -v .env apps/accounts/.env apps/accounts/.env.local: passed; all paths are ignored.",
+    "pnpm --filter @reading-advantage/codecamp-knowledge run check-types: failed as documented; exit 2 at apk-blueprint.ts:147.",
+    "CI=true pnpm --filter sales-advantage exec vitest run components/login-form.test.tsx: blocked before tests; dependency recovery timed out on registry access.",
+    "CI=true pnpm --filter marketing exec vitest run app/__tests__/phase-1-boot.test.ts: blocked before tests; dependency recovery timed out on registry access.",
+    "node -e JSON.parse(...) plan-review-a-2026-08-29.json: passed; the result artifact is valid JSON."
+  ],
+  "changed_files": [
+    "measure/tracks/sales_marketing_sso_parity_20260829/reviews/plan-review-a-2026-08-29.json"
+  ],
+  "retry_recommendation": "retry_audit",
+  "confidence": "high"
+}

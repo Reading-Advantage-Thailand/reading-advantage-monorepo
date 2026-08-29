@@ -1,0 +1,11 @@
+{
+  "track_id": "sales_marketing_sso_parity_20260829",
+  "type": "bug",
+  "status": "new",
+  "created_at": "2026-08-29T00:00:00Z",
+  "updated_at": "2026-08-29T00:00:00Z",
+  "description": "Port the Codecamp SSO redirect repair to Sales and Marketing, add the role-denial message, and provision demo-only acceptance accounts with generated credentials.",
+  "estimated_tasks": 37,
+  "actual_tasks": null,
+  "deviation_notes": ""
+}

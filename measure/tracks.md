@@ -408,6 +408,9 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 - [~] **Track: Codecamp SSO Redirect Repair** *Link: [./tracks/codecamp_sso_redirect_repair_20260820/](./tracks/codecamp_sso_redirect_repair_20260820/)*
   Repair the company SSO redirect chain: carry the destination through sign-in, stop overwriting the learner's language cookie, honor the Cloud Run forwarding hop in every auth route, and surface sign-in errors.
 
+- [ ] **Track: Sales and Marketing SSO Parity and Demo Accounts** *Link: [./tracks/sales_marketing_sso_parity_20260829/](./tracks/sales_marketing_sso_parity_20260829/)*
+  Port the Codecamp SSO redirect repair to Sales and Marketing: carry the destination through sign-in, stop overwriting the language cookie, port the forwarding-origin approval with the Codecamp callback-origin handoff, fail cleanly on unsafe return paths, surface sign-in errors, deny no-role sessions, and provision demo-only acceptance accounts with generated credentials. Part of the five-app launch program; this is the SSO hard gate. Plan reviewed and approved 2026-08-29 (reviews/plan-review-a-2026-08-29-r5.json: pass).
+
 - [ ] **Track: Codecamp Tutor Consolidation** *Link: [./tracks/codecamp_tutor_consolidation_20260820/](./tracks/codecamp_tutor_consolidation_20260820/)*
   Retire the stateless /api/chat route and extend the intervention tutor with an ask mode, so all 88 lessons gain conversation memory, lesson-content grounding, curated resources, and support telemetry.
 

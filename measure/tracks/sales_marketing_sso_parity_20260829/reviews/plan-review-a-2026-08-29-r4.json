@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "status": "fail",
+  "summary": "The expiry and prior nonblocking contracts are resolved. The preview authentication plan still lacks a viable cross-host OIDC handoff.",
+  "blocking_findings": [
+    {
+      "id": "RA-A-R4-1",
+      "severity": "High",
+      "summary": "The revised plan still cannot complete authenticated acceptance on either no-traffic candidate host.",
+      "evidence": "spec.md:89-94 and 166-175 require authenticated candidate flows. plan.md:104 and 157 add the Sales handoff test and implementation. plan.md:172 adds the Marketing implementation, but plan.md:119-123 does not test the Marketing start handoff. plan.md:181-184 adds both promotion gates, consistent with spec.md:142-144. However, the shared client always uses its configured redirect URI for authorization and exchange at packages/auth/src/company-identity/client.ts:303-313,327-339. The bootstrap registers only the production callbacks at apps/accounts/scripts/bootstrap-contract.ts:20-24. Accounts requires an exact client and callback match at packages/backend/src/modules/company-identity/service.ts:529-538. The plan adds no preview callback registration, cross-host session bridge, or equivalent handoff. The candidates therefore cannot receive the callback and host-local session required by acceptance."
+    }
+  ],
+  "nonblocking_findings": [],
+  "evidence": [
+    "RA-A-R3-2 is resolved. spec.md:119-123 puts expiry on the two role assignments and disables the no-role identity after acceptance.",
+    "The disable step is acceptance criteria at spec.md:169 and the final acceptance step at plan.md:197.",
+    "The schema supports role expiry at packages/db/src/company-identity/schema/index.ts:428-482 and account suspension at lines 145-170.",
+    "The legacy target is the locale-prefixed landing page at spec.md:135-139 and plan.md:50-53,105,156.",
+    "The session denial is HTTP 403 with the exact JSON body at spec.md:107-112 and plan.md:63-67,102-110,154-161.",
+    "Origin rejection now mirrors the Codecamp throw. The caller fallback is defined at spec.md:82-94 and plan.md:34-40,86-91.",
+    "The plan has 37 top-level tasks, matching metadata.json:8. Four phases, four manual checks, and four checkpoints exist.",
+    "The functional requirements map to contract, Red, implementation, and candidate acceptance tasks. RA-A-R4-1 blocks the candidate acceptance path.",
+    "All referenced existing source files checked during this review exist. Planned new files are identified as creation tasks.",
+    "HEAD is 582adf0cd482c3efdd32f6564745fa2d71b73565. The worktree contains unrelated owner changes."
+  ],
+  "commands": [
+    "git status --short && git rev-parse HEAD && rg -c '^- \\[ \\] Task:' measure/tracks/sales_marketing_sso_parity_20260829/plan.md: passed; HEAD matched and the task count was 37.",
+    "build-graph search ./graph.db getMarketingPublic && build-graph search ./graph.db getPublicOrigin: passed; the Marketing and Codecamp origin helpers were found.",
+    "build-graph inspect ./graph.db getMarketingPublicOrigin && build-graph inspect ./graph.db getPublicOrigin: passed.",
+    "test -e checks for the existing files named by the specification and plan: passed.",
+    "node -e JSON.parse(...) plan-review-a-2026-08-29-r4.json: passed; the result artifact is valid JSON.",
+    "No test suite ran. This report-only review used source, schema, deployment, contract, and plan inspection."
+  ],
+  "changed_files": [
+    "measure/tracks/sales_marketing_sso_parity_20260829/reviews/plan-review-a-2026-08-29-r4.json"
+  ],
+  "retry_recommendation": "retry_audit",
+  "confidence": "high"
+}
