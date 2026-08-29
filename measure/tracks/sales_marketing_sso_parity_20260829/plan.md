@@ -241,7 +241,7 @@ Record a commit SHA only after the commit is an ancestor of HEAD.
 - Phase 1 contracts: acc483cdb
 - Phase 2 Red: 7be5fdb231d325ed216941e67f3154f05f4efd4f
 - Phase 3 Green: `25d719b09`
-- Phase 4 docs and doctor:
+- Phase 4 docs and doctor: `ad7385b9d78f9069922ac10b228633223c81e08e`
 
 ### Phase 2 Red execution record (2026-08-29)
 
