@@ -1047,10 +1047,10 @@ export function APKGameHost({
   };
 
   /**
-   * Advances the class demonstration into authoritative gameplay immediately.
+   * Skips the class demonstration and starts authoritative gameplay immediately.
    * @returns A promise that resolves after the demo session is replaced with a scored session.
    */
-  const advanceDemo = async (): Promise<void> => {
+  const skipDemo = async (): Promise<void> => {
     if (demoTeardownRef.current) return;
     const mountPoint = mountPointRef.current;
     if (!mountPoint) {
@@ -1059,7 +1059,7 @@ export function APKGameHost({
       return;
     }
     setError(undefined);
-    if (!await teardownDemo("The class demonstration could not advance.", false)) return;
+    if (!await teardownDemo("The class demonstration could not be skipped.", false)) return;
     const demoToCountdown = gameLifecycleTransitionSchema.parse({
       from: "demo",
       event: "demo-complete",
@@ -1648,11 +1648,11 @@ export function APKGameHost({
             </button>
             {effectiveBriefing !== undefined ? (
               <button type="button" className="min-h-11" style={DEMO_CONTROL_STYLE} onClick={() => void endDemo()} disabled={status === "loading" || status === "error"}>
-                End demonstration
+                Advance demonstration
               </button>
             ) : null}
-            <button type="button" className="min-h-11" style={DEMO_CONTROL_STYLE} onClick={() => void advanceDemo()} disabled={status === "loading" || status === "error"}>
-              Advance demonstration
+            <button type="button" className="min-h-11" style={DEMO_CONTROL_STYLE} onClick={() => void skipDemo()} disabled={status === "loading" || status === "error"}>
+              Skip demonstration
             </button>
             {onNavigate ? (
               <button
