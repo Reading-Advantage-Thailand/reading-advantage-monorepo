@@ -16,7 +16,9 @@
     "username": "Username",
     "password": "Password",
     "submit": "Sign In",
-    "error": "Invalid username or password"
+    "error": "Invalid username or password",
+    "errorSso": "Company sign-in failed. Please try again.",
+    "errorForbidden": "Your company account does not have Sales access."
   },
   "dashboard": {
     "title": "Your Dashboard",

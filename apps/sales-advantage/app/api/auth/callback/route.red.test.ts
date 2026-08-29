@@ -64,6 +64,7 @@ describe("GET /api/auth/callback", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mocks.readSalesCookie.mockReturnValue("sealed-transaction");
+    mocks.salesSessionRole.mockReturnValue("SALES_REP");
     mocks.logout.mockResolvedValue(true);
     mocks.exchange.mockResolvedValue({
       accessToken: "company-token",

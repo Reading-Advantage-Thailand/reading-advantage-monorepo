@@ -17,15 +17,19 @@ describe("GET /api/auth/session", () => {
     mocks.authenticateSalesRequest.mockResolvedValue(null);
   });
 
-  it("returns an anonymous session when the selected adapter denies access", async () => {
+  it("returns the contracted denial when the selected adapter denies access", async () => {
     const request = new Request(
       "https://sales.reading-advantage.com/api/auth/session",
     );
     const response = await GET(request);
 
     expect(mocks.authenticateSalesRequest).toHaveBeenCalledWith(request);
-    expect(response.status).toBe(200);
-    await expect(response.json()).resolves.toEqual({ session: null });
+    // The SSO parity contract makes a missing app role an explicit denial.
+    expect(response.status).toBe(403);
+    await expect(response.json()).resolves.toEqual({
+      session: null,
+      denied: true,
+    });
   });
 
   it("returns the principal from the explicitly selected auth adapter", async () => {

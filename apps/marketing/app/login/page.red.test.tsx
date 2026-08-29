@@ -29,7 +29,7 @@ describe("Marketing login sign-in errors", () => {
 
       const alerts = screen.getAllByRole("alert");
       expect(alerts).toHaveLength(1);
-      expect(alerts[0]).toHaveTextContent(messageKey);
+      expect(alerts[0]?.textContent).toContain(messageKey);
     },
   );
 

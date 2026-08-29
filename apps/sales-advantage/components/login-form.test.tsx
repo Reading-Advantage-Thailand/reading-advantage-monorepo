@@ -11,6 +11,10 @@ vi.mock("@reading-advantage/auth-client", () => ({
 vi.mock("next-intl", () => ({
   useTranslations: () => (key: string) => key,
 }));
+vi.mock("next/navigation", () => ({
+  usePathname: () => "/en",
+  useSearchParams: () => new URLSearchParams(),
+}));
 
 import { LoginForm } from "./login-form";
 
@@ -70,7 +74,10 @@ describe("Sales LoginForm auth mode", () => {
     render(<LoginForm />);
 
     const link = await screen.findByRole("link", { name: "submit" });
-    expect(link.getAttribute("href")).toBe("/api/auth/company/start");
+    // Company sign-in now preserves the current locale-prefixed destination.
+    expect(link.getAttribute("href")).toBe(
+      "/api/auth/company/start?returnTo=%2Fen",
+    );
     expect(screen.queryByLabelText("Username")).toBeNull();
   });
 });

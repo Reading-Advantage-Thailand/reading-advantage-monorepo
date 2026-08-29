@@ -1,6 +1,8 @@
+import { readFileSync } from "node:fs";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-vi.mock("node:crypto", () => ({
+vi.mock("node:crypto", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("node:crypto")>()),
   randomBytes: vi.fn(() => Buffer.alloc(32)),
 }));
 
@@ -15,6 +17,12 @@ import {
   upsertDemoIdentity,
 } from "./demo-accounts";
 
+const randomBytesMock = vi.mocked(randomBytes);
+const demoAccountsSource = readFileSync(
+  new URL("./demo-accounts.ts", import.meta.url),
+  "utf8",
+);
+
 const demoEnv = {
   NODE_ENV: "test",
   DEMO_SALES_REP_USERNAME: "demo-sales-rep",
@@ -28,14 +36,14 @@ const demoEnv = {
 describe("demo account seed", () => {
   afterEach(() => {
     vi.restoreAllMocks();
-    randomBytes.mockClear();
+    randomBytesMock.mockClear();
   });
 
   it("derives each password from at least 24 random bytes of the cryptographic generator", () => {
     const password = generateDemoPassword();
 
-    expect(randomBytes).toHaveBeenCalled();
-    const bytes = randomBytes.mock.calls[0]?.[0];
+    expect(randomBytesMock).toHaveBeenCalled();
+    const bytes = randomBytesMock.mock.calls[0]?.[0];
     expect(typeof bytes === "number" && bytes >= DEMO_PASSWORD_RANDOM_BYTES).toBe(
       true,
     );
@@ -45,7 +53,7 @@ describe("demo account seed", () => {
 
   it("rejects an owner-supplied password path by generating its own", () => {
     generateDemoPassword();
-    expect(randomBytes).toHaveBeenCalled();
+    expect(randomBytesMock).toHaveBeenCalled();
   });
 
   it("performs an idempotent upsert on a second run", async () => {
@@ -76,8 +84,14 @@ describe("demo account seed", () => {
     err.mockRestore();
   });
 
-  it("creates no administrator identity", async () => {
-    await upsertDemoIdentity(demoEnv);
+  it("removes company roles and creates no administrator identity", async () => {
+    expect(demoAccountsSource).toMatch(
+      /delete from company_role_assignments\s+where membership_id = \$\{membership\.id\}/,
+    );
+    expect(demoAccountsSource).not.toContain("role_key = 'COMPANY_ADMIN'");
+    expect(demoAccountsSource).not.toMatch(
+      /insert into company_role_assignments/,
+    );
   });
 
   it("disables the no-role identity as the final acceptance step", async () => {

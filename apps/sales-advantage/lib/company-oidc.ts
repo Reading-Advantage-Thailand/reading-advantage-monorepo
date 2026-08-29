@@ -48,6 +48,20 @@ function hasSalesRole(identity: CompanyOidcIdentity): boolean {
 }
 
 /**
+ * Selects the exact Sales application role from verified audience claims.
+ * @param identity Verified Sales audience identity.
+ * @returns Highest-authority recognized Sales role.
+ * @throws When the identity has no recognized Sales role.
+ */
+export function salesSessionRole(identity: CompanyOidcIdentity) {
+  const role = (["SALES_ADMIN", "SALES_REP"] as const).find((candidate) =>
+    identity.roles.includes(candidate),
+  );
+  if (!role) throw new Error("Accounts session has no recognized Sales role.");
+  return role;
+}
+
+/**
  * Attempts durable role removal without making anonymous access depend on PostgreSQL.
  * @param identity Verified Accounts identity whose Sales role is absent.
  * Each later no-role request schedules another best-effort attempt; no durable queue is used.

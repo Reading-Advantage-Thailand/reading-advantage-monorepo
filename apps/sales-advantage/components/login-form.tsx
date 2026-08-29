@@ -11,10 +11,19 @@ import {
   CardTitle,
 } from "@reading-advantage/ui";
 import { Mic } from "lucide-react";
+import { usePathname, useSearchParams } from "next/navigation";
+
+import { buildSignInHref } from "@/lib/sign-in-href";
 
 export function LoginForm() {
   const t = useTranslations("login");
   const { login } = useAuth();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const signInHref = buildSignInHref(
+    pathname,
+    searchParams.size > 0 ? `?${searchParams.toString()}` : "",
+  );
   const [legacyMode, setLegacyMode] = useState<boolean | null>(null);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -108,7 +117,7 @@ export function LoginForm() {
                 Use your Reading Advantage company account to continue.
               </p>
               <Button asChild className="w-full">
-                <a href="/api/auth/company/start">{t("submit")}</a>
+                <a href={signInHref}>{t("submit")}</a>
               </Button>
             </>
           )}

@@ -14,9 +14,12 @@ import {
 } from "@reading-advantage/ui";
 import { Badge } from "@reading-advantage/ui";
 import { BookOpen, Lock } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 
 export default function HomePage() {
   const t = useTranslations("dashboard");
+  const loginT = useTranslations("login");
+  const signInError = useSearchParams().get("error");
   const { isAuthenticated, isLoading: authLoading } = useAuth();
   const { data, isLoading, error } = trpc.sales.dashboard.useQuery(undefined, {
     enabled: isAuthenticated,
@@ -31,7 +34,22 @@ export default function HomePage() {
   }
 
   if (!isAuthenticated) {
-    return <LoginForm />;
+    const messageKey =
+      signInError === "sso"
+        ? "errorSso"
+        : signInError === "forbidden"
+          ? "errorForbidden"
+          : null;
+    return (
+      <>
+        {messageKey ? (
+          <p role="alert" className="mx-auto mt-6 max-w-sm text-destructive">
+            {loginT(messageKey)}
+          </p>
+        ) : null}
+        <LoginForm />
+      </>
+    );
   }
 
   if (error) {

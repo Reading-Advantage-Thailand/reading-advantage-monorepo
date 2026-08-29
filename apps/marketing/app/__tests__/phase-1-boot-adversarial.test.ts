@@ -187,7 +187,11 @@ describe("Phase 1 Adversarial: Vinext Scaffold hardening", () => {
     it("login page has one Accounts handoff and no product-local credential form", async () => {
       const { default: LoginPage } = await import("@/login/page");
       const src = readText("app/login/page.tsx");
-      expect(src).toMatch(/href\s*=\s*["']\/api\/auth\/company\/start["']/);
+      // The single Accounts handoff now carries the preserved return path.
+      expect(src).toContain(
+        "const startHref = `/api/auth/company/start?${new URLSearchParams({ returnTo }).toString()}`",
+      );
+      expect(src).toContain("href={startHref}");
       expect(src.match(/\/api\/auth\/company\/start/g)).toHaveLength(1);
       expect(src).not.toMatch(/type\s*=\s*["']password["']/);
       expect(src).not.toMatch(/onSubmit|handleSubmit|useAuth|await\s+login/);

@@ -11,6 +11,7 @@ import {
 import { scriptSchema } from "@/lib/script-schema";
 import { APPS, APP_NAMES } from "@/lib/apps";
 import { getMarketingAppName, getMarketingMessage as t } from "@/lib/i18n";
+import { redirectToLogin } from "@/lib/login-redirect";
 
 interface Topic {
   id: string;
@@ -74,7 +75,9 @@ export default function VideoProductionPage() {
     try {
       const res = await fetch(`/api/campaigns/${id}`);
       if (res.status === 401) {
-        window.location.href = "/login";
+        window.location.href = redirectToLogin(
+          `${window.location.pathname}${window.location.search}`,
+        );
         return;
       }
       if (res.status === 403) {
@@ -109,7 +112,9 @@ export default function VideoProductionPage() {
         `/api/video/projects?campaignId=${encodeURIComponent(campaignId)}`,
       );
       if (res.status === 401) {
-        window.location.href = "/login";
+        window.location.href = redirectToLogin(
+          `${window.location.pathname}${window.location.search}`,
+        );
         return;
       }
       if (res.status === 403) {
@@ -183,7 +188,9 @@ export default function VideoProductionPage() {
         body: JSON.stringify({ app: selectedApp }),
       });
       if (res.status === 401) {
-        window.location.href = "/login";
+        window.location.href = redirectToLogin(
+          `${window.location.pathname}${window.location.search}`,
+        );
         return;
       }
       if (res.status === 403) {
@@ -257,7 +264,9 @@ export default function VideoProductionPage() {
         }),
       });
       if (res.status === 401) {
-        window.location.href = "/login";
+        window.location.href = redirectToLogin(
+          `${window.location.pathname}${window.location.search}`,
+        );
         return;
       }
       if (res.status === 403) {
@@ -291,7 +300,9 @@ export default function VideoProductionPage() {
         body: JSON.stringify({ app: selectedApp, topic: topic.text }),
       });
       if (res.status === 401) {
-        window.location.href = "/login";
+        window.location.href = redirectToLogin(
+          `${window.location.pathname}${window.location.search}`,
+        );
         return;
       }
       if (res.status === 403) {
@@ -360,7 +371,9 @@ export default function VideoProductionPage() {
         }),
       });
       if (res.status === 401) {
-        window.location.href = "/login";
+        window.location.href = redirectToLogin(
+          `${window.location.pathname}${window.location.search}`,
+        );
         return;
       }
       if (res.status === 403) {

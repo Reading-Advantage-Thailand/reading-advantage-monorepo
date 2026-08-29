@@ -8,6 +8,7 @@ import {
   getMarketingMessage as t,
   getMarketingStatusLabel,
 } from "@/lib/i18n";
+import { redirectToLogin } from "@/lib/login-redirect";
 
 interface Campaign {
   id: string;
@@ -47,7 +48,9 @@ export default function CampaignDetailPage() {
     try {
       const res = await fetch(`/api/campaigns/${id}`);
       if (res.status === 401) {
-        window.location.href = "/login";
+        window.location.href = redirectToLogin(
+          `${window.location.pathname}${window.location.search}`,
+        );
         return;
       }
       if (res.status === 403) {
@@ -84,7 +87,9 @@ export default function CampaignDetailPage() {
         body: JSON.stringify({ status: newStatus }),
       });
       if (res.status === 401) {
-        window.location.href = "/login";
+        window.location.href = redirectToLogin(
+          `${window.location.pathname}${window.location.search}`,
+        );
         return;
       }
       if (res.status === 403) {

@@ -22,6 +22,7 @@ const messages = {
     "login.description":
       "Continue to Accounts with your company username and password.",
     "login.continue": "CONTINUE WITH ACCOUNTS",
+    "login.errorSso": "Company sign-in failed. Please try again.",
     "settings.adminView":
       "Administrator access is required to view Marketing settings.",
     "settings.loadFailed":

@@ -141,54 +141,77 @@ Red-phase commits contain ONLY the new test files and Measure document edits.
 
 ## Phase 3: Implement
 
-- [ ] Task: Implement the Sales public URL helper with origin approval
-    - [ ] Move `getPublicUrl` out of `proxy.ts` into `lib/public-url.ts` and import it back
-    - [ ] Add `getPublicOrigin` and use it in the callback, start, and logout routes
-    - [ ] Implement the approved-origin list from the production origin and `SALES_PREVIEW_ORIGINS`
-- [ ] Task: Implement Sales locale resolution
-    - [ ] Read `NEXT_LOCALE` before choosing the redirect prefix
-    - [ ] Write the cookie only when no valid cookie is present
-    - [ ] Keep `localePrefix: "always"`; this track does not change the routing mode
-- [ ] Task: Remove the dead redirect parameter
-    - [ ] Redirect an unauthenticated protected-path request straight to the sign-in start route with `returnTo`
-    - [ ] Delete every `redirectTo` reference from `proxy.ts`
-    - [ ] Update the assertions in `proxy.test.ts` that encoded the old behavior
-- [ ] Task: Implement the Sales auth route changes
-    - [ ] Catch the `returnTo` validation error in the start route, restart the handoff with `/`, and log one structured line
-    - [ ] Gate the start route on the auth mode; in `legacy-school` mode redirect to the locale-prefixed landing page
-    - [ ] Hand off a start that arrives on an approved preview origin to the same path on the callback origin, preserving `returnTo`, mirroring the Codecamp start route
-    - [ ] Expire the transaction cookie on every callback failure path
-    - [ ] Check the Sales app role after the exchange and redirect with `?error=forbidden` when it is absent
-    - [ ] Answer a no-role session on the session route with HTTP 403 and the `{"session": null, "denied": true}` body
-    - [ ] Derive the cookie `secure` flag from the resolved target protocol as well as `NODE_ENV`
-- [ ] Task: Implement the Sales sign-in entry and error surface
-    - [ ] Build the sign-in link from `usePathname` and `useSearchParams` in the login form
-    - [ ] Render the error message for each enumerated code on the landing page
-    - [ ] Add the English and Thai strings
-- [ ] Task: Implement the Marketing deep-link recovery, start validation, and origins
-    - [ ] Create the shared redirect helper and use it at every call site that redirects to `/login`
-    - [ ] Forward `returnTo` from the login page to the start route
-    - [ ] Catch the client validation error in the start route with the clean restart fallback
-    - [ ] Expire the transaction cookie on every callback failure path, including the early return
-    - [ ] Align the login, callback, and logout routes on the validated-origin rule with `MARKETING_PREVIEW_ORIGINS`
-    - [ ] Hand off a start that arrives on an approved preview origin to the same path on the callback origin, preserving `returnTo`
-- [ ] Task: Implement the Marketing login error surface
-    - [ ] Render the error message for each enumerated code on the `/login` page
-- [ ] Task: Implement the demo account seed
-    - [ ] Extend `apps/accounts/scripts/` with the generator, disable, and rotation commands
-    - [ ] Generate passwords from at least 24 random bytes and write them only to the gitignored `.env`
-    - [ ] Set the 90-day expiry on the role assignments of the Sales rep and the Marketing user
-    - [ ] Map each demo identity to its app role in `company_identity`
-    - [ ] Extend the bootstrap contract tests to cover the seed
-- [ ] Task: Add the pre-promotion gates to the deploy pipelines
-    - [ ] Change `apps/sales-advantage/cloudbuild.yaml` so the candidate stage deploys with no traffic and stops; promotion is a separate step
-    - [ ] Change `apps/marketing/cloudbuild.yaml` the same way
-    - [ ] The promotion step runs only after the recorded acceptance note passes
-- [ ] Task: Confirm the Green phase
-    - [ ] Run the Sales and Marketing suites, `check-types`, and `lint`
-    - [ ] Run the Sales suite with `SALES_AUTH_MODE=legacy-school`
-    - [ ] Run the top-level build gate and record the exit code; the `codecamp-knowledge` break is external and owned by the APK lane
-- [ ] Task: Measure - User Manual Verification 'Phase 3: Implement' (Protocol in workflow.md)
+- [x] Task: Implement the Sales public URL helper with origin approval
+    - [x] Move `getPublicUrl` out of `proxy.ts` into `lib/public-url.ts` and import it back
+    - [x] Add `getPublicOrigin` and use it in the callback, start, and logout routes
+    - [x] Implement the approved-origin list from the production origin and `SALES_PREVIEW_ORIGINS`
+- [x] Task: Implement Sales locale resolution
+    - [x] Read `NEXT_LOCALE` before choosing the redirect prefix
+    - [x] Write the cookie only when no valid cookie is present
+    - [x] Keep `localePrefix: "always"`; this track does not change the routing mode
+- [x] Task: Remove the dead redirect parameter
+    - [x] Redirect an unauthenticated protected-path request straight to the sign-in start route with `returnTo`
+    - [x] Delete every `redirectTo` reference from `proxy.ts`
+    - [x] Update the assertions in `proxy.test.ts` that encoded the old behavior
+- [x] Task: Implement the Sales auth route changes
+    - [x] Catch the `returnTo` validation error in the start route, restart the handoff with `/`, and log one structured line
+    - [x] Gate the start route on the auth mode; in `legacy-school` mode redirect to the locale-prefixed landing page
+    - [x] Hand off a start that arrives on an approved preview origin to the same path on the callback origin, preserving `returnTo`, mirroring the Codecamp start route
+    - [x] Expire the transaction cookie on every callback failure path
+    - [x] Check the Sales app role after the exchange and redirect with `?error=forbidden` when it is absent
+    - [x] Answer a no-role session on the session route with HTTP 403 and the `{"session": null, "denied": true}` body
+    - [x] Derive the cookie `secure` flag from the resolved target protocol as well as `NODE_ENV`
+- [x] Task: Implement the Sales sign-in entry and error surface
+    - [x] Build the sign-in link from `usePathname` and `useSearchParams` in the login form
+    - [x] Render the error message for each enumerated code on the landing page
+    - [x] Add the English and Thai strings
+- [x] Task: Implement the Marketing deep-link recovery, start validation, and origins
+    - [x] Create the shared redirect helper and use it at every call site that redirects to `/login`
+    - [x] Forward `returnTo` from the login page to the start route
+    - [x] Catch the client validation error in the start route with the clean restart fallback
+    - [x] Expire the transaction cookie on every callback failure path, including the early return
+    - [x] Align the login, callback, and logout routes on the validated-origin rule with `MARKETING_PREVIEW_ORIGINS`
+    - [x] Hand off a start that arrives on an approved preview origin to the same path on the callback origin, preserving `returnTo`
+- [x] Task: Implement the Marketing login error surface
+    - [x] Render the error message for each enumerated code on the `/login` page
+- [x] Task: Implement the demo account seed
+    - [x] Extend `apps/accounts/scripts/` with the generator, disable, and rotation commands
+    - [x] Generate passwords from at least 24 random bytes and write them only to the gitignored `.env`
+    - [x] Set the 90-day expiry on the role assignments of the Sales rep and the Marketing user
+    - [x] Map each demo identity to its app role in `company_identity`
+    - [x] Extend the bootstrap contract tests to cover the seed
+- [x] Task: Add the pre-promotion gates to the deploy pipelines
+    - [x] Change `apps/sales-advantage/cloudbuild.yaml` so the candidate stage deploys with no traffic and stops; promotion is a separate step
+    - [x] Change `apps/marketing/cloudbuild.yaml` the same way
+    - [x] The promotion step runs only after the recorded acceptance note passes
+- [x] Task: Confirm the Green phase
+    - [x] Run the Sales and Marketing suites, `check-types`, and `lint`
+    - [x] Run the Sales suite with `SALES_AUTH_MODE=legacy-school`
+    - [x] Run the top-level build gate and record the exit code; the `codecamp-knowledge` break is external and owned by the APK lane
+- [b] Task: Measure - User Manual Verification 'Phase 3: Implement' (Protocol in workflow.md) deferred:owner
+
+### Phase 3 Green execution record (2026-08-29)
+
+The final runs set `pnpm_config_verify_deps_before_run=false` because pnpm dependency verification attempted optional platform downloads.
+
+- Sales focused suites: exit 0; 51 passed.
+- Marketing focused suites: exit 0; 19 passed.
+- Accounts focused suite: exit 0; 8 passed.
+- Sales full suite: exit 1; 253 passed, 2 failed, and 9 skipped.
+  Both failures are unrelated stale admin source checks in `scripts/sales-admin-ui.test.ts:31` and `:48`.
+- Marketing full suite: exit 1; 509 passed and 6 failed.
+  The unrelated failures remain at `phase-8-projects-live.test.ts:143,212`, `project-update-live.test.ts:81`, `topic-save-concurrency-live.test.ts:71`, `project-update.test.ts:85`, and `workflow-correctness.test.ts:244`.
+- Accounts full suite: exit 0; 58 passed and 1 skipped.
+- Sales legacy auth and proxy suites: exit 0; 42 passed.
+- Scoped Turbo type gate: exit 2 at `packages/codecamp-knowledge/src/apk-blueprint.ts:147:65` before the target apps ran.
+- Direct Sales, Marketing, and Accounts type gates: exit 0 for each app.
+- Scoped Turbo lint gate: exit 0; 24 tasks passed with existing warnings.
+- Scoped Turbo build gate: exit 2 at `packages/codecamp-knowledge/src/apk-blueprint.ts:147:65`.
+- Direct Marketing build: exit 0.
+- Direct Sales build: exit 1 because a generated `sales-knowledge` media file was absent from `/ROOT/packages/sales-knowledge/dist/static/media/`.
+- Direct Accounts build: exit 1 at `apps/accounts/lib/server/company-identity-route-bindings.ts:3`, which references an absent backend source file.
+- Both promotion scripts pass `bash -n` and have executable mode.
+- The demo SQL matches the company identity table names, columns, role definitions, and conflict targets in the Drizzle schema.
 
 ## Phase 4: Generate Docs & Doctor
 

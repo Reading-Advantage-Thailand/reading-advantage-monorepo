@@ -1,10 +1,17 @@
+"use client";
+
 import { getMarketingMessage as t } from "@/lib/i18n";
+import { useSearchParams } from "next/navigation";
 
 /**
  * Renders the single company-account handoff for Marketing.
  * @returns The company-account handoff interface.
  */
 export default function LoginPage() {
+  const searchParams = useSearchParams();
+  const returnTo = searchParams.get("returnTo") ?? "/";
+  const error = searchParams.get("error");
+  const startHref = `/api/auth/company/start?${new URLSearchParams({ returnTo }).toString()}`;
   return (
     <div
       style={{
@@ -35,8 +42,13 @@ export default function LoginPage() {
         <p style={{ marginBottom: "24px", textAlign: "center" }}>
           {t("login.description")}
         </p>
+        {error === "sso" ? (
+          <p role="alert" style={{ marginBottom: "16px", color: "#b91c1c" }}>
+            {t("login.errorSso")}
+          </p>
+        ) : null}
         <a
-          href="/api/auth/company/start"
+          href={startHref}
           style={{
             width: "100%",
             padding: "12px",

@@ -27,6 +27,10 @@ vi.mock("@/i18n/navigation", () => ({
   ),
 }));
 
+vi.mock("next/navigation", () => ({
+  useSearchParams: () => new URLSearchParams(),
+}));
+
 /**
  * Creates a dashboard module fixture with the requested lesson progress.
  * @param completedLessons Number of completed lessons.

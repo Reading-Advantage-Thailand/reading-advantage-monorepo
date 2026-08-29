@@ -19,6 +19,10 @@ const marketingRoot = resolve(import.meta.dirname, "..");
 const cloudbuild = parse(
   readFileSync(resolve(marketingRoot, "cloudbuild.yaml"), "utf8"),
 ) as CloudBuildConfig;
+const promotion = readFileSync(
+  resolve(marketingRoot, "scripts/promote-marketing-candidate.sh"),
+  "utf8",
+);
 const serviceName = "marketing";
 const exampleBuildId = "579b730f-5203-419a-b428-5c336a34657a";
 const expectedCandidateTag = `c${exampleBuildId.split("-", 1)[0]}`;
@@ -40,7 +44,6 @@ describe("Marketing staged Cloud Run release contract", () => {
     const deploy = requireStep("deploy-candidate");
     const capture = requireStep("capture-candidate");
     const verify = requireStep("verify-candidate");
-    const promote = requireStep("promote-candidate");
 
     expect(ids.indexOf("runtime-db-contract")).toBeLessThan(
       ids.indexOf("capture-current-release"),
@@ -57,9 +60,9 @@ describe("Marketing staged Cloud Run release contract", () => {
     expect(ids.indexOf("capture-candidate")).toBeLessThan(
       ids.indexOf("verify-candidate"),
     );
-    expect(ids.indexOf("verify-candidate")).toBeLessThan(
-      ids.indexOf("promote-candidate"),
-    );
+    // Cloud Build now stops after candidate verification for owner acceptance.
+    expect(ids.at(-1)).toBe("verify-candidate");
+    expect(ids).not.toContain("promote-candidate");
     const deployCommand = deploy.args?.join(" ") ?? "";
     const captureCommand = capture.args?.join(" ") ?? "";
     const candidateTagDerivation = 'candidate_tag="c$${build_id%%-*}"';
@@ -79,50 +82,34 @@ describe("Marketing staged Cloud Run release contract", () => {
     expect(deployCommand).not.toContain("SHORT_SHA");
     expect(captureCommand).not.toContain("SHORT_SHA");
     expect(verify.args?.join(" ")).toContain("verify-marketing-release.ts");
-    expect(promote.args?.join(" ")).toContain(
-      '--to-revisions="$$candidate_revision=100"',
-    );
+    expect(promotion).toContain('^status: pass$');
+    expect(promotion).toContain('--to-revisions="$CANDIDATE_REVISION=100"');
     expect(cloudbuild.substitutions?._RELEASE_COMMIT_SHA).toBe(
       "REQUIRED_RELEASE_COMMIT_SHA",
     );
   });
 
-  it("verifies the mapped domain, release dependencies, smoke, and rollback evidence", () => {
+  it("keeps domain checks, smoke, and ledger evidence in manual promotion", () => {
     const ids = cloudbuild.steps?.map((step) => step.id) ?? [];
-    const mapping = requireStep("verify-domain-mapping");
-    const domain = requireStep("verify-custom-domain");
-    const evidence = requireStep("record-release-evidence");
-
-    expect(ids.indexOf("promote-candidate")).toBeLessThan(
-      ids.indexOf("verify-domain-mapping"),
+    expect(ids).not.toContain("verify-domain-mapping");
+    expect(ids).not.toContain("verify-custom-domain");
+    expect(ids).not.toContain("record-release-evidence");
+    expect(promotion).toContain("marketing.reading-advantage.com");
+    expect(promotion).toContain("value(spec.routeName)");
+    expect(promotion).toContain("value(status.mappedRouteName)");
+    expect(promotion).toContain(
+      "status.conditions.filter('type=$condition').extract(status).flatten(show=values)",
     );
-    expect(ids.indexOf("verify-domain-mapping")).toBeLessThan(
-      ids.indexOf("verify-custom-domain"),
-    );
-    expect(ids.indexOf("verify-custom-domain")).toBeLessThan(
-      ids.indexOf("record-release-evidence"),
-    );
-    expect(mapping.args?.join(" ")).toContain(
-      "marketing.reading-advantage.com",
-    );
-    expect(mapping.args?.join(" ")).toContain("value(spec.routeName)");
-    expect(mapping.args?.join(" ")).toContain("value(status.mappedRouteName)");
-    expect(mapping.args?.join(" ")).toContain(
-      "status.conditions.filter('type=$$condition').extract(status).flatten(show=values)",
-    );
-    expect(mapping.args?.join(" ")).not.toContain("metadata.annotations");
-    expect(mapping.args?.join(" ")).not.toContain("status.conditions[?type=");
-    expect(mapping.args?.join(" ")).toContain("CertificateProvisioned");
-    expect(domain.args?.join(" ")).toContain("verify-marketing-release.ts");
-    expect(domain.args?.join(" ")).toContain("marketing-smoke.sh");
-    expect(evidence.args?.join(" ")).toContain(".marketing-previous.revision");
-    expect(evidence.args?.join(" ")).toContain(".marketing-candidate.revision");
-    expect(evidence.args?.join(" ")).toContain(
+    expect(promotion).not.toContain("metadata.annotations");
+    expect(promotion).not.toContain("status.conditions[?type=");
+    expect(promotion).toContain("CertificateProvisioned");
+    expect(promotion).toContain("verify-marketing-release.ts");
+    expect(promotion).toContain("marketing-smoke.sh");
+    expect(promotion).toContain(
       "status.traffic.filter('percent=100').extract(revisionName).flatten(show=values)",
     );
-    expect(evidence.args?.join(" ")).not.toContain(
-      "status.traffic[?percent=100]",
-    );
-    expect(evidence.args?.join(" ")).toContain("_RELEASE_COMMIT_SHA");
+    expect(promotion).not.toContain("status.traffic[?percent=100]");
+    expect(promotion).toContain("RELEASE_COMMIT_SHA");
+    expect(promotion).toContain("rollbackCommand");
   });
 });

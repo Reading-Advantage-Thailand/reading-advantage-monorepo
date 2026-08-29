@@ -112,18 +112,22 @@ const oidcCallback = readFileSync(
   resolve(appRoot, "app/api/auth/callback/route.ts"),
   "utf8",
 );
+const candidatePromotion = readFileSync(
+  resolve(appRoot, "scripts/promote-sales-candidate.sh"),
+  "utf8",
+);
 
 describe("Sales production readiness", () => {
   it("redirects callbacks through the registered public Sales origin", () => {
-    expect(oidcCallback).toContain("getSalesPublicOrigin");
+    expect(oidcCallback).toContain("getPublicOrigin");
     expect(oidcCallback).toContain("new URL(session.returnTo, publicOrigin)");
     expect(oidcCallback).not.toContain("session.returnTo, url.origin");
   });
 
   it("verifies compatibility and company candidates before traffic cutover", () => {
-    expect(cloudbuild.match(/node:22-slim/g)).toHaveLength(11);
+    expect(cloudbuild.match(/node:22-slim/g)).toHaveLength(10);
     expect(cloudbuild.match(/cloud-sql-proxy\/v2\.15\.1/g)).toHaveLength(6);
-    expect(cloudbuild.match(/pnpm@11\.8\.0/g)).toHaveLength(8);
+    expect(cloudbuild.match(/pnpm@11\.8\.0/g)).toHaveLength(7);
     const ordered = [
       "validate-release-inputs",
       "verify-curriculum-backup",
@@ -142,8 +146,6 @@ describe("Sales production readiness", () => {
       "allow-public-invoker",
       "capture-company-candidate",
       "verify-company-candidate",
-      "shift-company-traffic",
-      "verify-custom-domain",
     ].map((id) => cloudbuild.indexOf(`id: "${id}"`));
     expect(ordered.every((position) => position >= 0)).toBe(true);
     expect(ordered).toEqual([...ordered].sort((left, right) => left - right));
@@ -224,14 +226,15 @@ describe("Sales production readiness", () => {
     );
     expect(companyCandidate).not.toContain("SALES_LEGACY_DATABASE_URL:latest");
     expect(companyCandidate).not.toContain("AUTH_SECRET=");
-    expect(cloudbuild.indexOf('id: "verify-company-candidate"')).toBeLessThan(
-      cloudbuild.indexOf('id: "shift-company-traffic"'),
+    // The candidate pipeline now stops before the acceptance-gated traffic shift.
+    expect(cloudbuild).not.toContain('id: "shift-company-traffic"');
+    expect(cloudbuild).not.toContain('id: "verify-custom-domain"');
+    expect(cloudbuild).not.toContain("--to-revisions=");
+    expect(candidatePromotion).toContain('^status: pass$');
+    expect(candidatePromotion).toContain(
+      '--to-revisions="$CANDIDATE_REVISION=100"',
     );
-    expect(cloudbuild.indexOf('id: "shift-company-traffic"')).toBeLessThan(
-      cloudbuild.indexOf('id: "verify-custom-domain"'),
-    );
-    expect(cloudbuild).toContain('--to-revisions="$$candidate_revision=100"');
-    expect(cloudbuild).toContain(
+    expect(candidatePromotion).toContain(
       "SALES_RELEASE_BASE_URL=https://sales.reading-advantage.com",
     );
     expect(cloudbuild).toContain(

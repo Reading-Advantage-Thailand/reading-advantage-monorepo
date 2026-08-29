@@ -8,6 +8,7 @@ import {
   preservesExistingMarketingSecret,
 } from "@/lib/settings-update";
 import { getMarketingMessage as t } from "@/lib/i18n";
+import { redirectToLogin } from "@/lib/login-redirect";
 
 const OPENROUTER_DEFAULT_MODEL = "nvidia/nemotron-3-ultra-550b-a55b:free";
 
@@ -44,7 +45,9 @@ export default function SettingsPage() {
   useEffect(() => {
     if (isAuthLoading) return;
     if (!isAuthenticated) {
-      window.location.href = "/login";
+      window.location.href = redirectToLogin(
+        `${window.location.pathname}${window.location.search}`,
+      );
       return;
     }
     if (role !== "ADMIN") return;
@@ -53,7 +56,9 @@ export default function SettingsPage() {
       try {
         const res = await fetch("/api/settings");
         if (res.status === 401) {
-          window.location.href = "/login";
+          window.location.href = redirectToLogin(
+            `${window.location.pathname}${window.location.search}`,
+          );
           return;
         }
         if (res.status === 403) {
@@ -113,7 +118,9 @@ export default function SettingsPage() {
         body: JSON.stringify({ provider, modelName, apiKey }),
       });
       if (res.status === 401) {
-        window.location.href = "/login";
+        window.location.href = redirectToLogin(
+          `${window.location.pathname}${window.location.search}`,
+        );
         return;
       }
       if (res.status === 403) {
@@ -160,7 +167,9 @@ export default function SettingsPage() {
         body: JSON.stringify(settingsUpdate),
       });
       if (res.status === 401) {
-        window.location.href = "/login";
+        window.location.href = redirectToLogin(
+          `${window.location.pathname}${window.location.search}`,
+        );
         return;
       }
       if (res.status === 403) {

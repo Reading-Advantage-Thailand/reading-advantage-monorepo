@@ -138,7 +138,7 @@ describe("Marketing Cloud Run production contract", () => {
   );
 
   it("redirects callbacks through the registered public Marketing origin", () => {
-    expect(oidcCallback).toContain("getMarketingPublicOrigin");
+    expect(oidcCallback).toContain("getPublicOrigin");
     expect(oidcCallback).toContain("new URL(session.returnTo, publicOrigin)");
     expect(oidcCallback).not.toContain("session.returnTo, url.origin");
   });
@@ -160,9 +160,14 @@ describe("Marketing Cloud Run production contract", () => {
     expect(deployCommand).toContain(
       "marketing-cloud-run@$PROJECT_ID.iam.gserviceaccount.com",
     );
+    // Candidate deployments now include their approved preview origin.
     expect(deployCommand).toContain(
-      "NEXT_PUBLIC_API_URL=https://marketing.reading-advantage.com,AI_PROVIDER=openai",
+      "NEXT_PUBLIC_API_URL=https://marketing.reading-advantage.com",
     );
+    expect(deployCommand).toContain(
+      "MARKETING_PREVIEW_ORIGINS=$$candidate_origin",
+    );
+    expect(deployCommand).toContain("AI_PROVIDER=openai");
     expect(deployCommand).toContain(
       "COMPANY_AUTH_ISSUER_URL=https://accounts.reading-advantage.com",
     );

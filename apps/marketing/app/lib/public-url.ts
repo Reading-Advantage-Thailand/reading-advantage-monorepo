@@ -1,4 +1,4 @@
-const DEFAULT_SALES_ORIGIN = "https://sales.reading-advantage.com";
+const DEFAULT_MARKETING_ORIGIN = "https://marketing.reading-advantage.com";
 const LOCAL_HOSTNAMES = new Set(["127.0.0.1", "::1", "localhost"]);
 
 /**
@@ -44,12 +44,10 @@ function configuredOrigin(value: string | undefined): string | undefined {
  */
 function configuredPreviewOrigins(value: string | undefined): Set<string> {
   if (!value) return new Set();
-
   const origins = new Set<string>();
   for (const rawEntry of value.split(";")) {
     const entry = rawEntry.trim();
     if (!entry) throw new Error("PUBLIC_ORIGIN_INVALID");
-
     let url: URL;
     try {
       url = new URL(entry);
@@ -72,9 +70,9 @@ function configuredPreviewOrigins(value: string | undefined): Set<string> {
 }
 
 /**
- * Reports whether an origin is an approved Sales browser origin.
+ * Reports whether an origin is an approved Marketing browser origin.
  * @param origin Candidate public origin.
- * @returns Whether the origin is canonical, a tagged service, or local development.
+ * @returns Whether the origin is canonical, configured, or local development.
  */
 function isApprovedOrigin(origin: URL): boolean {
   if (
@@ -85,35 +83,32 @@ function isApprovedOrigin(origin: URL): boolean {
     return true;
   }
   if (origin.protocol !== "https:") return false;
-
   const canonicalOrigins = new Set(
     [
-      DEFAULT_SALES_ORIGIN,
+      DEFAULT_MARKETING_ORIGIN,
       configuredOrigin(process.env.NEXT_PUBLIC_API_URL),
       configuredOrigin(process.env.COMPANY_AUTH_OIDC_REDIRECT_URI),
     ].filter((value): value is string => value !== undefined),
   );
   const previewOrigins = configuredPreviewOrigins(
-    process.env.SALES_PREVIEW_ORIGINS,
+    process.env.MARKETING_PREVIEW_ORIGINS,
   );
-  return (
-    canonicalOrigins.has(origin.origin) || previewOrigins.has(origin.origin)
-  );
+  return canonicalOrigins.has(origin.origin) || previewOrigins.has(origin.origin);
 }
 
 /**
- * Gets the configured Sales OIDC callback origin.
+ * Gets the configured Marketing OIDC callback origin.
  * @returns The callback origin used by Accounts.
  * @throws When the callback URL configuration is malformed.
  */
-export function getSalesCallbackOrigin(): URL {
+export function getMarketingCallbackOrigin(): URL {
   const callbackOrigin = configuredOrigin(
     process.env.COMPANY_AUTH_OIDC_REDIRECT_URI,
   );
   if (process.env.COMPANY_AUTH_OIDC_REDIRECT_URI && !callbackOrigin) {
     throw new Error("PUBLIC_ORIGIN_INVALID");
   }
-  return new URL(callbackOrigin ?? DEFAULT_SALES_ORIGIN);
+  return new URL(callbackOrigin ?? DEFAULT_MARKETING_ORIGIN);
 }
 
 /**
@@ -130,7 +125,6 @@ export function getPublicOrigin(request: Request): URL {
   const forwardedHost = firstForwardedValue(
     request.headers.get("x-forwarded-host"),
   );
-
   try {
     if (forwardedProto) {
       const protocol = forwardedProto.toLowerCase();
@@ -151,17 +145,4 @@ export function getPublicOrigin(request: Request): URL {
   publicOrigin.search = "";
   publicOrigin.hash = "";
   return publicOrigin;
-}
-
-/**
- * Builds a public redirect URL for a pathname.
- * @param request Incoming browser request.
- * @param pathname Public destination pathname.
- * @returns Public redirect URL.
- * @throws When the resolved origin is not approved.
- */
-export function getPublicUrl(request: Request, pathname: string): URL {
-  const publicUrl = getPublicOrigin(request);
-  publicUrl.pathname = pathname;
-  return publicUrl;
 }

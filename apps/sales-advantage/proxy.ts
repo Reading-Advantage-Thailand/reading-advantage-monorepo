@@ -3,26 +3,13 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { routing } from "./i18n/routing";
 import { isLegacySalesAuthEnabled } from "./lib/auth-mode";
+import { resolveRequestLocale } from "./lib/locale-resolution";
+import { getPublicOrigin, getPublicUrl } from "./lib/public-url";
+import { buildSignInHref } from "./lib/sign-in-href";
 
 const SALES_SESSION_COOKIE = "__Host-ra_sales_session";
 const LEGACY_SESSION_COOKIE = "session_token";
 const intlMiddleware = createIntlMiddleware(routing);
-
-function getPublicUrl(request: NextRequest, pathname: string) {
-  const url = request.nextUrl.clone();
-  const forwardedProto = request.headers.get("x-forwarded-proto");
-  const forwardedHost = request.headers.get("x-forwarded-host");
-
-  url.protocol = forwardedProto ? `${forwardedProto}:` : url.protocol;
-  url.host = forwardedHost ?? url.host;
-  if (forwardedHost && !forwardedHost.includes(":")) {
-    url.port = "";
-  }
-  url.pathname = pathname;
-  url.search = "";
-
-  return url;
-}
 
 function isProtectedPath(lowerPath: string): boolean {
   return /^\/(?:th|en)?\/?(?:admin|module|lesson)(?:\/|$)/.test(lowerPath);
@@ -45,12 +32,13 @@ export async function proxy(request: NextRequest) {
       ? LEGACY_SESSION_COOKIE
       : SALES_SESSION_COOKIE;
     const sessionToken = request.cookies.get(sessionCookie)?.value;
-    const redirectTarget = pathname + search;
-
     if (!sessionToken) {
-      const homeUrl = getPublicUrl(request, "/");
-      homeUrl.searchParams.set("redirectTo", redirectTarget);
-      return NextResponse.redirect(homeUrl);
+      if (isLegacySalesAuthEnabled()) {
+        return NextResponse.redirect(getPublicUrl(request, "/"));
+      }
+      return NextResponse.redirect(
+        new URL(buildSignInHref(pathname, search), getPublicOrigin(request)),
+      );
     }
 
     // The proxy performs only a routing hint from cookie presence. Exact
@@ -61,16 +49,19 @@ export async function proxy(request: NextRequest) {
     (locale) => pathname === `/${locale}` || pathname.startsWith(`/${locale}/`),
   );
   if (!hasLocalePrefix) {
+    const { locale, fromCookie } = resolveRequestLocale(request);
     const localeUrl = getPublicUrl(
       request,
-      `/${routing.defaultLocale}${pathname === "/" ? "/" : pathname}`,
+      `/${locale}${pathname === "/" ? "/" : pathname}`,
     );
     localeUrl.search = search;
     const response = NextResponse.redirect(localeUrl);
-    response.cookies.set("NEXT_LOCALE", routing.defaultLocale, {
-      path: "/",
-      sameSite: "lax",
-    });
+    if (!fromCookie) {
+      response.cookies.set("NEXT_LOCALE", locale, {
+        path: "/",
+        sameSite: "lax",
+      });
+    }
     return response;
   }
 

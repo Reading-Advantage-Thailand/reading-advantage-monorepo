@@ -3,15 +3,24 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
   exchange: vi.fn(),
+  logout: vi.fn(),
   readSalesCookie: vi.fn(),
+  salesSessionRole: vi.fn(),
 }));
 
 vi.mock("@/lib/company-oidc", () => ({
   SALES_SESSION_COOKIE: "__Host-ra_sales_session",
   SALES_TRANSACTION_COOKIE: "__Host-ra_sales_oidc_tx",
-  getSalesOidcClient: () => ({ exchange: mocks.exchange }),
-  getSalesPublicOrigin: () => "https://sales.reading-advantage.com",
+  getSalesOidcClient: () => ({
+    exchange: mocks.exchange,
+    logout: mocks.logout,
+  }),
   readSalesCookie: mocks.readSalesCookie,
+  salesSessionRole: mocks.salesSessionRole,
+}));
+
+vi.mock("@/lib/public-url", () => ({
+  getPublicOrigin: () => new URL("https://sales.reading-advantage.com"),
 }));
 
 import { GET } from "./route";
@@ -20,6 +29,7 @@ describe("GET /api/auth/callback", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mocks.readSalesCookie.mockReturnValue("private-transaction");
+    mocks.salesSessionRole.mockReturnValue("SALES_REP");
   });
 
   it("logs a safe structured callback failure with request correlation only", async () => {

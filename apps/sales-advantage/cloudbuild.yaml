@@ -132,7 +132,7 @@ steps:
       - "--allow-unauthenticated"
       - "--service-account=sales-cloud-run@$PROJECT_ID.iam.gserviceaccount.com"
       - "--add-cloudsql-instances=reading-advantage:asia-southeast1:cloud-sql"
-      - "--set-env-vars=NODE_ENV=production,SALES_AUTH_MODE=company,NEXT_PUBLIC_API_URL=https://sales.reading-advantage.com,COMPANY_AUTH_ISSUER_URL=https://accounts.reading-advantage.com,COMPANY_AUTH_OIDC_CLIENT_ID=sales-web,COMPANY_AUTH_OIDC_REDIRECT_URI=https://sales.reading-advantage.com/api/auth/callback,COMPANY_AUTH_EXPECTED_AUDIENCE=sales,COMPANY_AUTH_CLOCK_SKEW_SECONDS=30"
+      - "--set-env-vars=NODE_ENV=production,SALES_AUTH_MODE=company,NEXT_PUBLIC_API_URL=https://sales.reading-advantage.com,SALES_PREVIEW_ORIGINS=https://candidate---sales-advantage-$PROJECT_NUMBER.asia-southeast1.run.app,COMPANY_AUTH_ISSUER_URL=https://accounts.reading-advantage.com,COMPANY_AUTH_OIDC_CLIENT_ID=sales-web,COMPANY_AUTH_OIDC_REDIRECT_URI=https://sales.reading-advantage.com/api/auth/callback,COMPANY_AUTH_EXPECTED_AUDIENCE=sales,COMPANY_AUTH_CLOCK_SKEW_SECONDS=30"
       - "--min-instances=1"
       - "--max-instances=100"
       - "--concurrency=80"
@@ -166,20 +166,6 @@ steps:
     args:
       - "-c"
       - 'set -euo pipefail && corepack enable && corepack prepare pnpm@11.8.0 --activate && pnpm install --frozen-lockfile && export SALES_RELEASE_BASE_URL="$$(tr -d "\r\n" < /workspace/.sales-company-candidate.url)" && export SALES_RELEASE_EXPECTED_MODE=company && pnpm --filter sales-advantage exec tsx scripts/verify-sales-release.ts'
-
-  - name: "gcr.io/cloud-builders/gcloud"
-    id: "shift-company-traffic"
-    entrypoint: "bash"
-    args:
-      - "-c"
-      - 'set -euo pipefail && candidate_revision="$$(tr -d "\r\n" < /workspace/.sales-company-candidate.revision)" && gcloud run services update-traffic sales-advantage --region=asia-southeast1 --platform=managed --to-revisions="$$candidate_revision=100"'
-
-  - name: "node:22-slim"
-    id: "verify-custom-domain"
-    entrypoint: "bash"
-    args:
-      - "-c"
-      - 'set -euo pipefail && corepack enable && corepack prepare pnpm@11.8.0 --activate && pnpm install --frozen-lockfile && export SALES_RELEASE_BASE_URL=https://sales.reading-advantage.com && export SALES_RELEASE_EXPECTED_MODE=company && verified=false && for attempt in $$(seq 1 12); do if pnpm --filter sales-advantage exec tsx scripts/verify-sales-release.ts; then verified=true; break; fi; sleep 5; done && test "$$verified" = true && rm -f /workspace/.sales-company-candidate.url /workspace/.sales-company-candidate.revision'
 
 images:
   - "asia-southeast1-docker.pkg.dev/$PROJECT_ID/sales-advantage/sales-advantage:$BUILD_ID"

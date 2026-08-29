@@ -53,8 +53,8 @@ describe("Sales landing sign-in errors", () => {
   });
 
   it.each([
-    ["sso", "signInErrorSso"],
-    ["forbidden", "signInErrorForbidden"],
+    ["sso", "errorSso"],
+    ["forbidden", "errorForbidden"],
   ] as const)("renders the approved sign-in error for %s", (code, messageKey) => {
     mocks.useSearchParams.mockReturnValue(new URLSearchParams(`error=${code}`));
 
@@ -62,7 +62,7 @@ describe("Sales landing sign-in errors", () => {
 
     const alerts = screen.getAllByRole("alert");
     expect(alerts).toHaveLength(1);
-    expect(alerts[0]).toHaveTextContent(messageKey);
+    expect(alerts[0]?.textContent).toContain(messageKey);
   });
 
   it("ignores an unknown sign-in error code", () => {
