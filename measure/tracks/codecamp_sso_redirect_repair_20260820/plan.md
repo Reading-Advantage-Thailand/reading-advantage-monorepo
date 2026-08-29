@@ -73,29 +73,29 @@ Red-phase commits contain ONLY the new test files and Measure document edits.
 
 ## Phase 3: Implement
 
-- [ ] Task: Implement the public URL helper
-    - [ ] Move `getPublicUrl` out of `proxy.ts` into `lib/public-url.ts` and import it back
-    - [ ] Leave `apps/sales-advantage/proxy.ts` untouched
-- [ ] Task: Implement locale resolution
-    - [ ] Read `NEXT_LOCALE` before choosing the redirect prefix
-    - [ ] Write the cookie only when no valid cookie is present
-    - [ ] Keep `localePrefix: "always"`; this track does not change the routing mode
-- [ ] Task: Remove the dead redirect parameter
-    - [ ] Redirect an unauthenticated administrator request straight to the sign-in start route with `returnTo`
-    - [ ] Delete every `redirectTo` reference from `proxy.ts`
-    - [ ] Update the assertions in `proxy.test.ts` that encoded the old behavior
-- [ ] Task: Implement the auth route changes
-    - [ ] Use the public origin in the callback, start, and logout routes
-    - [ ] Catch the `returnTo` validation error in the start route, fall back to `/`, and log one structured line
-    - [ ] Derive the cookie `secure` flag from the resolved target protocol as well as `NODE_ENV`
-- [ ] Task: Implement the sign-in entry and error surface
-    - [ ] Use `usePathname` and `useSearchParams` in `AuthEntry` to build the sign-in link
-    - [ ] Render the error message for each of the four codes on the landing page
-    - [ ] Add the English and Thai strings
-- [ ] Task: Confirm the Green phase
-    - [ ] Run the Codecamp suite, `check-types`, and `lint`
-    - [ ] Run the top-level build, because it is the supervisor gate
-    - [ ] Confirm the legacy mode path by running the suite with `CODECAMP_AUTH_MODE=legacy`
+- [x] Task: Implement the public URL helper
+    - [x] Move `getPublicUrl` out of `proxy.ts` into `lib/public-url.ts` and import it back
+    - [x] Leave `apps/sales-advantage/proxy.ts` untouched
+- [x] Task: Implement locale resolution
+    - [x] Read `NEXT_LOCALE` before choosing the redirect prefix
+    - [x] Write the cookie only when no valid cookie is present
+    - [x] Keep `localePrefix: "always"`; this track does not change the routing mode
+- [x] Task: Remove the dead redirect parameter
+    - [x] Redirect an unauthenticated administrator request straight to the sign-in start route with `returnTo`
+    - [x] Delete every `redirectTo` reference from `proxy.ts`
+    - [x] Update the assertions in `proxy.test.ts` that encoded the old behavior
+- [x] Task: Implement the auth route changes
+    - [x] Use the public origin in the callback, start, and logout routes
+    - [x] Catch the `returnTo` validation error in the start route, fall back to `/`, and log one structured line
+    - [x] Derive the cookie `secure` flag from the resolved target protocol as well as `NODE_ENV`
+- [x] Task: Implement the sign-in entry and error surface
+    - [x] Use `usePathname` and `useSearchParams` in `AuthEntry` to build the sign-in link
+    - [x] Render the error message for each of the four codes on the landing page
+    - [x] Add the English and Thai strings
+- [~] Task: Confirm the Green phase
+    - [x] Run the Codecamp suite, `check-types`, and `lint`
+    - [ ] Run the top-level build, because it is the supervisor gate (blocked by a cross-track `codecamp-knowledge` regression; see the Phase 3 record)
+    - [x] Confirm the legacy mode path by running the suite with `CODECAMP_AUTH_MODE=legacy`
 - [ ] Task: Measure - User Manual Verification 'Phase 3: Implement' (Protocol in workflow.md)
 
 ## Phase 4: Generate Docs & Doctor
@@ -123,7 +123,7 @@ Record a commit SHA only after the commit is an ancestor of HEAD.
 
 - Phase 1 contracts: 5fb43e1bc
 - Phase 2 Red: 2d93e79c0
-- Phase 3 Green:
+- Phase 3 Green: f665828f8
 - Phase 4 docs and doctor:
 
 ### Phase 2 Red execution record (2026-08-20)
@@ -141,3 +141,41 @@ Record a commit SHA only after the commit is an ancestor of HEAD.
 - `pnpm turbo run lint --filter=codecamp-advantage`: failed on the existing `components/tutor-coach.tsx:150` hook violation. This track did not modify that file.
 - The tests cover seven acceptance cases. The specification calls browser acceptance six cases.
 - Red test commit: `2d93e79c0`.
+
+### Phase 3 Green gate closeout record (2026-08-29)
+
+Baseline HEAD for this closeout: `6feed85e989bf19cf494cb2b32fb0cb64025f65f`.
+The Phase 3 implementation landed across `525cfd8ef`, `55e9b2030`, `7ddb5d955`,
+`88fdfcdf8`, and `f665828f8`; the checkpoint records the last of them. No
+implementation file needed repair at closeout: every SSO test passed against
+HEAD as committed.
+
+- `CI=true pnpm --filter codecamp-advantage exec vitest run` over the eleven
+  SSO suites (public-url, locale-resolution, sign-in-href, proxy, proxy-role,
+  callback, company/start, logout, auth-entry, landing page, i18n-key-parity):
+  **11 files, 547 tests, all passed, exit 0.**
+- `pnpm turbo run check-types --filter=codecamp-advantage`: **failed, exit 2**,
+  solely in `@reading-advantage/codecamp-knowledge`
+  (`src/apk-blueprint.ts(147,65)`: `"version"` is not assignable to `keyof
+  RuntimeCartridgeManifest`). Root cause is a cross-track regression: APK-track
+  commit `ab3812707` (2026-08-22, `apk_common_look_enforcement_20260822`)
+  removed the `version` field from `RuntimeCartridgeManifest` without updating
+  `codecamp-knowledge`, which last synced in July (`a55c33370`). At this track's
+  Red commit `2d93e79c0` the field still existed and check-types passed. The
+  app's own type check (`pnpm --filter codecamp-advantage exec tsc --noEmit`)
+  **passed, exit 0**. Repairing `packages/codecamp-knowledge` belongs to the
+  APK track; this track did not touch it.
+- `pnpm turbo run build --filter=codecamp-advantage`: **failed, exit 2**, same
+  single cause (`codecamp-knowledge#build`, same file and line); 16 of 18 tasks
+  succeeded. The supervisor build gate cannot pass until the APK track repairs
+  `codecamp-knowledge`.
+- `pnpm turbo run lint --filter=codecamp-advantage`: **failed, exit 1**, on
+  exactly one error: the pre-existing `components/tutor-coach.tsx:150` React
+  Hook violation (file last modified in July by `codecamp_intervention_tutor_20260710`,
+  untouched by this track), plus 4 unused-variable warnings. No SSO file has a
+  lint error.
+- Live browser audit (materialized at `ux-browser-audit-20260829.md`): the
+  production revision still runs the pre-repair proxy (verdict FAIL). The
+  failure is a deployment gap, not a code gap; Phase 4 deploy tasks remain
+  unchecked and owner-gated.
+- No deploy occurred during this closeout.
