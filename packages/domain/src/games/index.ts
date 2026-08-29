@@ -18,6 +18,17 @@ export {
   leaderboardEntrySchema,
   leaderboardResponseSchema,
 } from "./schema.js";
+export {
+  gameLearningContentInputSchema,
+  gameLearningContentLocaleSchema,
+  gameLearningContentModeSchema,
+  gameLearningContentResultSchema,
+  listGameLearningContent,
+} from "./learning-content.js";
+export type {
+  GameLearningContentInput,
+  GameLearningContentResult,
+} from "./learning-content.js";
 
 // Inferred types
 export type {
