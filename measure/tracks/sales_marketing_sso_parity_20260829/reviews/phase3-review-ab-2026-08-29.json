@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "Phase 3 Green implements the spec faithfully. All 8 reported test failures and all 3 build issues are pre-existing or external, with commit-level evidence. The security review of the OIDC handoff, origin validation, cookie handling, role denial, demo seed, and promote gates found no defects. The legacy-school regression claim of 42 passed was reproduced exactly.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    {
+      "id": "RAB-1",
+      "severity": "low",
+      "summary": "Sales failures at scripts/sales-admin-ui.test.ts:31,48 are pre-existing stale source-grep checks, not introduced by this phase.",
+      "evidence": "The test reads app/[locale]/admin/{page,[repId]/page,create-rep/page}.tsx. git log eb110834b..045a11940 shows zero commits touching the test or those admin pages. The test last changed in 2ec48b0f2 and the admin sources in 2350ef665/df7a9c3cf, both ancestors of baseline eb110834b. The assertions expect useTranslations(\"admin\") in pages that now delegate to content components. Identical inputs at baseline produce the identical failure."
+    },
+    {
+      "id": "RAB-2",
+      "severity": "low",
+      "summary": "All 6 Marketing failures are pre-existing and outside the track footprint.",
+      "evidence": "project-update.test.ts:85 and workflow-correctness.test.ts:244 fail on createdBy/updatedBy audit fields added by b95bbd6a6 (wave5_public_surface_completion_20260628), an ancestor of baseline; the tests were never updated. phase-8-projects-live.test.ts:143,212, project-update-live.test.ts:81, and topic-save-concurrency-live.test.ts:71 fail with PGlite 500s in the same project/topic persistence area. git log eb110834b..045a11940 shows zero commits touching any of the 5 failing test files, app/api/video/projects/route.ts, or app/api/video/*-topics/route.ts. The track diff touches no file these tests import."
+    },
+    {
+      "id": "RAB-3",
+      "severity": "low",
+      "summary": "codecamp-knowledge apk-blueprint.ts:147 break is the documented external APK-lane artifact.",
+      "evidence": "Reproduced: tsc --noEmit on @reading-advantage/codecamp-knowledge fails with src/apk-blueprint.ts(147,65) TS2322 Type '\"version\"' is not assignable to type 'keyof RuntimeCartridgeManifest'. The 'version' field was deleted by APK commit ab3812707 (apk_common_look_enforcement_20260822), an ancestor of baseline. git diff eb110834b..045a11940 --stat -- packages/codecamp-knowledge is empty."
+    },
+    {
+      "id": "RAB-4",
+      "severity": "low",
+      "summary": "Sales build failure on missing sales-knowledge media file pre-dates the track.",
+      "evidence": "Reproduced: pnpm --filter sales-advantage run build exits 1 with ENOENT on /ROOT/packages/sales-knowledge/dist/static/media/release-candidate.2n2zxfu1f-c-b.json while collecting /[locale]/admin/[repId]. packages/sales-knowledge last changed in b86b137ff (ancestor of baseline); its build script (tsc + copy-data.mjs) never emits dist/static/media. The track changed no file in the sales-knowledge or admin-page dependency chain."
+    },
+    {
+      "id": "RAB-5",
+      "severity": "low",
+      "summary": "Accounts build failure on the backend route-adapter import pre-dates the track.",
+      "evidence": "Reproduced: pnpm --filter accounts run build exits 1, module-not-found at apps/accounts/lib/server/company-identity-route-bindings.ts:3 importing packages/backend/src/modules/company-identity/internal-route-adapter.js. The bindings file last changed in 9355abf62 (ancestor of baseline). The track touched neither apps/accounts/lib nor packages/backend."
+    },
+    {
+      "id": "RAB-6",
+      "severity": "info",
+      "summary": "Session route 403 also covers anonymous callers, not only no-role sessions.",
+      "evidence": "authenticateSalesRequest returns null for a missing cookie and for a failed introspection alike; app/api/auth/session/route.ts returns 403 {session:null,denied:true} for both. Spec FR-7 replaces the silent 200-null response wholesale, the legacy rollback verifier passes a valid token and still receives 200, and no in-app code calls the session route anonymously. Behavior matches the written contract."
+    },
+    {
+      "id": "RAB-7",
+      "severity": "info",
+      "summary": "Promotion gates are process gates an operator can satisfy by writing a note file.",
+      "evidence": "Both promote scripts require ACCEPTANCE_NOTE to be non-empty and to contain an anchored '^status: pass$' line before update-traffic runs. This matches the plan requirement that promotion runs only after a recorded passing acceptance note; it is not a cryptographic control and cannot stop the operator who runs the script. Design matches spec."
+    },
+    {
+      "id": "RAB-8",
+      "severity": "info",
+      "summary": "Demo credentials land in .env.local rather than the spec's literal .env; the file is gitignored and mode 0600.",
+      "evidence": "demo-accounts.ts writes apps/accounts/.env.local; git check-ignore confirms .gitignore:18 covers .env.local. writeDemoEnvironment and writeRotatedPassword apply mode 0o600. .env.example lists variable names without values. No password reaches stdout, stderr, git, or test output."
+    }
+  ],
+  "evidence": [
+    "Sales full suite rerun: 253 passed, 2 failed (scripts/sales-admin-ui.test.ts:31,48 only), 9 skipped; exit 1. Matches the implementer record exactly.",
+    "Marketing full suite rerun: 509 passed, 6 failed (phase-8-projects-live.test.ts:143,212; project-update-live.test.ts:81; topic-save-concurrency-live.test.ts:71; project-update.test.ts:85; workflow-correctness.test.ts:244); exit 1. Matches the implementer record exactly.",
+    "Accounts full suite rerun: 58 passed, 1 skipped; exit 0.",
+    "Legacy regression rerun with SALES_AUTH_MODE=legacy-school over the 12 auth, proxy, login-form, and landing suites: 42 passed, exit 0. The implementer claim is reproduced exactly. The full sales suite under legacy mode shows the same 2 pre-existing admin failures and no new failure.",
+    "Start-route handoff mirrors Codecamp: getPublicOrigin validates the forwarded origin against the approved list (production origin, configured origins, *_PREVIEW_ORIGINS); a mismatch with the configured callback origin redirects to the same path on the callback origin with returnTo preserved; the handoff target is never attacker-controlled, so no open redirect exists. Sales lib/public-url.ts is functionally identical to the Codecamp helper (diff shows formatting only).",
+    "Preview-origin parsing is https-only and exact-match: configuredPreviewOrigins rejects non-https, credentials, paths, query, hash, and empty entries with PUBLIC_ORIGIN_INVALID; getPublicOrigin rejects unapproved origins and non-http(s) forwarded protocols with PUBLIC_ORIGIN_INVALID.",
+    "Cookie handling: all callback failure paths, including the Marketing early return, expire the transaction cookie with httpOnly, host-only (no domain), path=/, sameSite=lax, expires epoch, maxAge 0, and secure derived from the validated origin protocol. The session cookie is set only on success with the same attributes.",
+    "Sales callback role denial: salesSessionRole throws when no SALES_ADMIN/SALES_REP role exists; the route then attempts revocation through the OIDC client logout, logs structured revocation failures, expires both cookies, redirects to /?error=forbidden, and never sets a session cookie on denial.",
+    "Session route contract: 403 with JSON {\"session\": null, \"denied\": true} and Cache-Control no-store, matching FR-7.",
+    "demo-accounts.ts: passwords derive from randomBytes(24) base64url; no owner-supplied password path exists; only usernames print to stdout/stderr; roles are SALES_REP and marketing MEMBER (verified against app/lib/marketing-permissions.ts) with a 90-day expires_at; no administrator identity is created; upsert is keyed on normalized_username; disable and rotate commands change only the intended rows; NODE_ENV=test guards prevent any live database execution in tests.",
+    "Both promote scripts pass the acceptance-note gate with an anchored '^status: pass$' grep before any gcloud update-traffic call; Marketing keeps domain-mapping, smoke, and ledger evidence inside the promote script.",
+    "Secrets scan of the full diff (passwords, keys, tokens, bearer strings, private keys, argon2 hashes) found no credential material.",
+    "Contract fidelity spot-checks: proxy.ts contains zero redirectTo references; all 13 Marketing login-redirect call sites across campaigns list, campaign detail, campaign video, and settings use the shared redirectToLogin helper; the Sales legacy-school gate is present in the start route and the proxy; errorSso/errorForbidden keys exist in both messages/en.json and messages/th.json; login.errorSso exists in Marketing i18n; packages/auth/src/company-identity/client.ts is unchanged.",
+    "Working tree carried 304 unrelated uncommitted changes from the advantage-games lane during test runs; none intersect the reviewed apps' code under test, so results reflect commits 25d719b09 and 045a11940."
+  ],
+  "commands": [
+    "git log --oneline eb110834b..045a11940",
+    "git diff eb110834b..045a11940 --stat",
+    "CI=true pnpm --filter sales-advantage exec vitest run (exit 1: 253 passed, 2 failed, 9 skipped)",
+    "CI=true pnpm --filter marketing exec vitest run (exit 1: 509 passed, 6 failed)",
+    "CI=true pnpm --filter accounts exec vitest run (exit 0: 58 passed, 1 skipped)",
+    "CI=true SALES_AUTH_MODE=legacy-school pnpm --filter sales-advantage exec vitest run <12 auth/proxy/login/landing suites> (exit 0: 42 passed)",
+    "git log --oneline eb110834b..045a11940 -- <each failing test file and source under test> (empty for all)",
+    "git merge-base --is-ancestor b95bbd6a6 eb110834b (audit-actor fields pre-date baseline)",
+    "git merge-base --is-ancestor ab3812707 eb110834b (APK break pre-dates baseline)",
+    "git merge-base --is-ancestor 9355abf62 eb110834b (accounts bindings pre-date baseline)",
+    "pnpm --filter @reading-advantage/codecamp-knowledge exec tsc --noEmit (exit 2: apk-blueprint.ts(147,65) TS2322)",
+    "pnpm --filter sales-advantage run build (exit 1: ENOENT sales-knowledge dist/static/media)",
+    "pnpm --filter accounts run build (exit 1: module-not-found internal-route-adapter.js)",
+    "git check-ignore -v apps/accounts/.env.local (.gitignore:18)",
+    "grep -c redirectTo apps/sales-advantage/proxy.ts (0)"
+  ],
+  "changed_files": [
+    "measure/tracks/sales_marketing_sso_parity_20260829/reviews/phase3-review-ab-2026-08-29.json"
+  ],
+  "retry_recommendation": "none",
+  "confidence": "high"
+}

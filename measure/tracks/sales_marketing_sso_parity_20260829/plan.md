@@ -215,24 +215,24 @@ The final runs set `pnpm_config_verify_deps_before_run=false` because pnpm depen
 
 ## Phase 4: Generate Docs & Doctor
 
-- [ ] Task: Verify against the candidate revisions
+- [b] Task: Verify against the candidate revisions deferred:owner
     - [ ] Deploy the Sales candidate tag and the Marketing candidate with no traffic shift, wired with the preview origins
     - [ ] Run the unauthenticated cases and the start-route cases, including the callback-origin handoff and the completed sign-in with its session cookie, against the candidate URLs
     - [ ] Capture the redirect chain for each case and attach it to the verification note
     - [ ] Run the promotion step only after the candidate acceptance note passes
     - [ ] After promotion, run the authenticated matrix with the demo accounts on production with the rollback anchor ready
     - [ ] Disable the no-role identity with the disable command as the final step of the run
-- [ ] Task: Create documentation
-    - [ ] Create `apps/sales-advantage/docs/sales-sso-deploy-runbook-20260829.md` with the redirect-chain section, the rollback anchor revision, and the preview-origin steps
-    - [ ] Record the demo account lifecycle commands in the same runbook
-- [ ] Task: Run the generated-facts and architecture gates
-    - [ ] Run `measure/generate.sh`
-    - [ ] Run `measure/doctor.sh`
-    - [ ] Run `build-graph update ./graph.db` for the changed files
-- [ ] Task: Retrospective
-    - [ ] Add a lesson: SSO redirect helpers must be ported to every consumer at repair time, never left as per-app copies
-    - [ ] Open a `tech-debt.md` row for a shared cross-app redirect helper package, owner daniebo
-- [ ] Task: Measure - User Manual Verification 'Phase 4: Generate Docs & Doctor' (Protocol in workflow.md)
+- [x] Task: Create documentation
+     - [x] Create `apps/sales-advantage/docs/sales-sso-deploy-runbook-20260829.md` with the redirect-chain section, the rollback anchor revision, and the preview-origin steps
+     - [x] Record the demo account lifecycle commands in the same runbook
+- [x] Task: Run the generated-facts and architecture gates (generate exit: 0, wrote architecture and route facts; doctor exit: 1, nine pre-existing deprecated `[ ]` markers in unrelated plans; build-graph update exit: 0, 41 files, 194 → 263 nodes, 331 → 345 edges)
+     - [x] Run `measure/generate.sh`
+     - [x] Run `measure/doctor.sh`
+     - [x] Run `build-graph update ./graph.db` for the changed files
+- [x] Task: Retrospective
+     - [x] Add a lesson: SSO redirect helpers must be ported to every consumer at repair time, never left as per-app copies
+     - [x] Open a `tech-debt.md` row for a shared cross-app redirect helper package, owner daniebo
+- [b] Task: Measure - User Manual Verification 'Phase 4: Generate Docs & Doctor' (Protocol in workflow.md) deferred:owner
 
 ## Checkpoints
 
