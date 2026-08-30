@@ -9,7 +9,36 @@ SELECT format(
 
 GRANT USAGE ON SCHEMA public TO marketing_runtime;
 
-REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA public FROM marketing_runtime;
+DO $$
+DECLARE
+  table_record record;
+BEGIN
+  FOR table_record IN
+    SELECT class.relname, pg_get_userbyid(class.relowner) AS owner_name
+    FROM pg_class AS class
+    INNER JOIN pg_namespace AS namespace ON namespace.oid = class.relnamespace
+    WHERE namespace.nspname = 'public'
+      AND class.relkind IN ('r', 'p', 'v', 'm', 'f')
+    ORDER BY class.relname
+  LOOP
+    IF table_record.relname IN (
+      'durable_job_audit_events',
+      'review_job_adoption_audit_events'
+    ) OR table_record.owner_name = 'durable_job_audit_owner' THEN
+      RAISE NOTICE 'Skipping runtime revoke for public.% (owner: %)',
+        table_record.relname,
+        table_record.owner_name;
+    ELSE
+      EXECUTE format(
+        'REVOKE ALL PRIVILEGES ON TABLE %I.%I FROM %I',
+        'public',
+        table_record.relname,
+        'marketing_runtime'
+      );
+    END IF;
+  END LOOP;
+END
+$$;
 REVOKE ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public FROM marketing_runtime;
 
 GRANT SELECT, INSERT, UPDATE ON TABLE campaigns TO marketing_runtime;

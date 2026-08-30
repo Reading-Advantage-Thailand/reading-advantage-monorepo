@@ -214,6 +214,11 @@ describe("Marketing Cloud Run production contract", () => {
     expect(runtimeContract.args?.join(" ")).toContain(
       "marketing-runtime-probe.sql",
     );
+    expect(grantsSql).toMatch(/DO \$\$/);
+    expect(grantsSql).toContain("durable_job_audit_owner");
+    expect(grantsSql).not.toMatch(
+      /REVOKE\s+ALL\s+PRIVILEGES\s+ON\s+ALL\s+TABLES\s+IN\s+SCHEMA\s+public\s+FROM\s+marketing_runtime;/i,
+    );
 
     for (const table of [
       "campaigns",
@@ -235,6 +240,15 @@ describe("Marketing Cloud Run production contract", () => {
         new RegExp(`GRANT[^;]+ON TABLE ${table}\\b`, "i"),
       );
       expect(probeSql).toContain(`'${table}'`);
+    }
+    for (const table of [
+      "durable_job_audit_events",
+      "review_job_adoption_audit_events",
+    ]) {
+      expect(grantsSql).toContain(table);
+      expect(grantsSql).not.toMatch(
+        new RegExp(`GRANT[^;]+ON TABLE ${table}\\b`, "i"),
+      );
     }
     for (const privilege of [
       "SELECT",
