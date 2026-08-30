@@ -216,8 +216,28 @@ describe("Marketing Cloud Run production contract", () => {
     );
     expect(grantsSql).toMatch(/DO \$\$/);
     expect(grantsSql).toContain("durable_job_audit_owner");
+    expect(grantsSql).toContain("durable_job_queue_runtime");
+    expect(grantsSql).toMatch(
+      /owner_name\s+IN\s*\(\s*'durable_job_audit_owner'\s*,\s*'durable_job_queue_runtime'\s*\)/,
+    );
+    expect(
+      grantsSql.match(
+        /\bowner_name\s+IN\s*\(\s*'durable_job_audit_owner'\s*,\s*'durable_job_queue_runtime'\s*\)/g,
+      ),
+    ).toHaveLength(2);
+    expect(grantsSql).toMatch(
+      /attached_table_owner_name\s+IN\s*\(\s*'durable_job_audit_owner'\s*,\s*'durable_job_queue_runtime'\s*\)/,
+    );
+    expect(grantsSql).toContain("pg_depend");
+    expect(grantsSql).toContain("attached_table_owner_name");
+    expect(grantsSql).not.toMatch(
+      /\bON\s+ALL\b/i,
+    );
     expect(grantsSql).not.toMatch(
       /REVOKE\s+ALL\s+PRIVILEGES\s+ON\s+ALL\s+TABLES\s+IN\s+SCHEMA\s+public\s+FROM\s+marketing_runtime;/i,
+    );
+    expect(grantsSql).not.toMatch(
+      /REVOKE\s+ALL\s+PRIVILEGES\s+ON\s+ALL\s+(?:FUNCTIONS|ROUTINES|SEQUENCES)\s+IN\s+SCHEMA\s+public\s+FROM\s+marketing_runtime;/i,
     );
 
     for (const table of [
