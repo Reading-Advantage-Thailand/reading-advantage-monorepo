@@ -179,7 +179,7 @@ It writes the generated values to `apps/accounts/.env.local` with mode `0600`.
 Run the idempotent seed with:
 
 ```bash
-pnpm --filter accounts run demo-accounts -- upsert
+pnpm --filter accounts run demo-accounts upsert
 ```
 
 The seed creates these identities:
