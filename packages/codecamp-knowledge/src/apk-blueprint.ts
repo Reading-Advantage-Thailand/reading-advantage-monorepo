@@ -144,7 +144,7 @@ export interface APKBlueprintReport {
   prerequisiteRoles: string[];
 }
 
-const REQUIRED_MANIFEST_FIELDS = ["id", "title", "description", "version", "runtimeApiVersion", "inputMode", "requiredAssetBindings", "capabilities"] as const satisfies readonly (keyof RuntimeCartridgeManifest)[];
+const REQUIRED_MANIFEST_FIELDS = ["id", "title", "description", "version", "runtimeApiVersion", "inputMode", "requiredAssetBindings", "capabilities"] as const satisfies readonly (keyof RuntimeCartridgeManifest | "version")[];
 const _manifestFieldsAreExhaustive: Exclude<keyof RuntimeCartridgeManifest, typeof REQUIRED_MANIFEST_FIELDS[number]> extends never ? true : never = true;
 void _manifestFieldsAreExhaustive;
 const REQUIRED_INPUT_MODES = ["vocabulary", "sentence"];
