@@ -274,6 +274,30 @@ describe("Task 6 Red durable-jobs schema and migration contract", () => {
 
   it("declares database-owned append-only replay and control audit privileges and triggers", () => {
     expect(normalizedSql).toMatch(/CREATE ROLE "?durable_job_audit_owner"?[^;]*NOLOGIN/i);
+    const ownershipTransfers = [
+      'ALTER TABLE "durable_job_audit_events" OWNER TO durable_job_audit_owner;',
+      'ALTER TABLE "review_job_adoption_audit_events" OWNER TO durable_job_audit_owner;',
+      "ALTER FUNCTION durable_job_reject_audit_mutation() OWNER TO durable_job_audit_owner;",
+    ];
+    const schemaCreateGrants = normalizedSql.match(
+      /GRANT CREATE ON SCHEMA public TO [^;]+;/gi,
+    ) ?? [];
+    const schemaCreateRevokes = normalizedSql.match(
+      /REVOKE CREATE ON SCHEMA public FROM [^;]+;/gi,
+    ) ?? [];
+
+    expect(schemaCreateGrants).toEqual([
+      "GRANT CREATE ON SCHEMA public TO durable_job_audit_owner;",
+    ]);
+    expect(schemaCreateRevokes).toEqual([
+      "REVOKE CREATE ON SCHEMA public FROM durable_job_audit_owner;",
+    ]);
+    expect(normalizedSql.indexOf(schemaCreateGrants[0]!)).toBeLessThan(
+      normalizedSql.indexOf(ownershipTransfers[0]!),
+    );
+    expect(normalizedSql.indexOf(schemaCreateRevokes[0]!)).toBeGreaterThan(
+      normalizedSql.indexOf(ownershipTransfers.at(-1)!),
+    );
     for (const tableName of [
       "durable_job_audit_events",
       "review_job_adoption_audit_events",
