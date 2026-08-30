@@ -1,0 +1,1 @@
+Phase 2 Red tests for the Accounting dedicated database launch. Added 18 focused test files and recorded exact intended failures. Accounting has 11 failed and 40 passed tests. Database has 5 failed and 15 passed tests. Domain has 1 failed and 2 passed tests. Focused lint and type checks pass.
