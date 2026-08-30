@@ -215,13 +215,51 @@ The final runs set `pnpm_config_verify_deps_before_run=false` because pnpm depen
 
 ## Phase 4: Generate Docs & Doctor
 
-- [b] Task: Verify against the candidate revisions deferred:owner
-    - [ ] Deploy the Sales candidate tag and the Marketing candidate with no traffic shift, wired with the preview origins
-    - [ ] Run the unauthenticated cases and the start-route cases, including the callback-origin handoff and the completed sign-in with its session cookie, against the candidate URLs
-    - [ ] Capture the redirect chain for each case and attach it to the verification note
-    - [ ] Run the promotion step only after the candidate acceptance note passes
-    - [ ] After promotion, run the authenticated matrix with the demo accounts on production with the rollback anchor ready
-    - [ ] Disable the no-role identity with the disable command as the final step of the run
+- [b] Task: Verify the candidate revisions and complete the owner gates deferred:owner
+    - [x] Deploy the Sales candidate tag with no traffic shift
+    - [x] Deploy the Marketing candidate with no traffic shift, wired with both preview-origin URL forms
+    - [x] Run the Sales and Marketing candidate-hop unauthenticated and start-route cases
+    - [x] Record the exact candidate-hop status, redirect, browser, and database evidence below
+    - [ ] Owner gate: review the candidate evidence and approve an acceptance note for each application
+    - [ ] Owner gate: run each promotion script only after its candidate acceptance note passes
+    - [ ] Owner gate: run the production authenticated matrix with the demo accounts and rollback anchors ready
+    - [ ] Owner gate: disable the no-role identity as the final acceptance step
+
+### Phase 4 Sales candidate smoke record (2026-08-30)
+
+- Release commit: `3532d7b6a917323850c3c4cad4ada48eb0e1e378`.
+- Build: `30fcbcc8-2d16-49c0-95e2-4f34cadff411`; backup: `1788102368401`.
+- Candidate: `sales-advantage-00011-vis` at `https://candidate---sales-advantage-hxamzdhgwa-as.a.run.app`, 0% traffic.
+- Production remained `sales-advantage-00005-yas` at 100% traffic.
+- The `legacy-rollback` tag now points to `sales-advantage-00009-yas`, created at `2026-08-30T15:19:48.251714Z`.
+- Revision `sales-advantage-00011-vis` approves both Cloud Run candidate URL forms in `SALES_PREVIEW_ORIGINS`.
+- Orchestrator adjudication: HTTP 307 is the Sales redirect contract; the protected English and Thai paths passed with their path, query, and locale preserved in `returnTo`.
+- Orchestrator adjudication: the candidate start route correctly preserved malformed `returnTo` during its callback-origin handoff. Safe restart validation runs at the callback-origin start route, so full-chain acceptance remains post-promotion.
+- Orchestrator adjudication: Sales has no `/login` route. The observed 404 is expected because the SSO entry is the locale landing page and `login-form`.
+- The valid candidate start request passed its HTTP 307 callback-origin handoff.
+- Browser acceptance and promotion remain pending.
+
+### Phase 4 Marketing candidate verification record (2026-08-30)
+
+- Release commit: `7f8940d9aeb27d8692de1cf76f052abd41ee6954`; build: `032b2903-6a46-44f5-8069-94e042f887a2`.
+- Candidate: `marketing-00017-nof` at `https://c032b2903---marketing-hxamzdhgwa-as.a.run.app`, 0% traffic.
+- Production remained `marketing-00013-jil` at 100% traffic.
+- `MARKETING_PREVIEW_ORIGINS=https://c032b2903---marketing-hxamzdhgwa-as.a.run.app;https://c032b2903---marketing-1090865515742.asia-southeast1.run.app`.
+- `GET /campaigns?tab=notes` returned HTTP 200 with no `Location` header.
+- `GET /api/campaigns` returned HTTP 401 with no `Location` header; the client started the login redirect.
+- The browser reached `/login?returnTo=%2Fcampaigns%3Ftab%3Dnotes`, which returned HTTP 200 with no `Location` header.
+- The login page linked to `/api/auth/company/start?returnTo=%2Fcampaigns%3Ftab%3Dnotes`.
+- The valid start hop returned HTTP 307 with `Location: https://marketing.reading-advantage.com/api/auth/company/start?returnTo=%2Fcampaigns%3Ftab%3Dnotes`.
+- The malformed start hop returned HTTP 307 with `Location: https://marketing.reading-advantage.com/api/auth/company/start?returnTo=https%3A%2F%2Fevil.example` and no 500.
+- Full-chain authentication was not verifiable before promotion because the candidate hands authorization to the production callback origin by design.
+- The database identity was `marketing_migration` on `marketing`; its journal tip was `1787392211854`.
+- The `0052` journal row at `1786685217468` had count 1.
+- All six tables exist: `durable_job_audit_events`, `durable_jobs`, `review_job_adoption_audit_events`, `review_job_durable_adoption`, `review_job_durable_bindings`, and `review_job_migration_issues`.
+- Both audit tables and `durable_job_reject_audit_mutation()` are owned by `durable_job_audit_owner`.
+- The audit owner has no residual `CREATE` on `public`.
+- `marketing_runtime` has no effective protected audit-table or function privilege.
+- No durable-owned sequences exist, so `marketing_runtime` has no durable sequence privilege.
+- Both audit tables have enabled update/delete and truncate rejection triggers.
 - [x] Task: Create documentation
      - [x] Create `apps/sales-advantage/docs/sales-sso-deploy-runbook-20260829.md` with the redirect-chain section, the rollback anchor revision, and the preview-origin steps
      - [x] Record the demo account lifecycle commands in the same runbook
