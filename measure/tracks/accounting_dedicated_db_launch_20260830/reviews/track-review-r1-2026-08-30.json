@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "status": "fail",
+  "summary": "The track is well-structured: 20 of 22 spot-checked evidence rows verified, the pipeline mirrors the Sales candidate/no-traffic plus manual-promotion pattern exactly, traceability is complete (40 tasks == estimated_tasks, all FR-1..FR-9 covered, 7 owner-gated steps), and the Accounts zero-change claim is confirmed (accounting-web client at bootstrap-contract.ts:24, OWNER role at bootstrap-production.ts:77, ACCOUNTING_COMPANY_AUTH_OIDC_CLIENT_SECRET already in apps/accounts/cloudbuild.yaml:48,101-102). Two blocking defects: (1) the session-route evidence row is false - apps/accounting/app/api/auth/session/route.ts already returns HTTP 403 for a no-role identity, so the 'silent 200' defect does not exist and FR-5 targets a stale premise; (2) the main-journal snapshot analysis is wrong - removing the accounting tables from src/schema/index.ts will make the next drizzle-kit generate emit DROP TABLE statements against meta/0056_snapshot.json (repo precedent: 0056_great_clint_barton.sql), so the plan's 'no accounting-statement diff' Red gate is impossible as specified and the corresponding NFR misstates drizzle-kit behavior.",
+  "blocking_findings": [
+    {
+      "id": "R1-1",
+      "severity": "blocking",
+      "summary": "Stale evidence: the session route already denies no-role identities with HTTP 403; the 'silent 200 null session' defect does not exist. FR-5's premise ('instead of a silent 200') and the Phase 2 Red test built on it misdescribe current behavior. The true delta is only adding the 'denied: true' body field. Evidence row and FR-5 must be corrected to the actual state.",
+      "evidence": "spec.md:41 claims '200 path, no 403 denial state'; actual apps/accounting/app/api/auth/session/route.ts returns status `!session ? 401 : !user ? 403 : 200` with body { session: null } (verified by reading the file). accountingSessionUser at apps/accounting/app/lib/company-oidc.ts:103 returns null without an Accounting role, driving the existing 403."
+    },
+    {
+      "id": "R1-2",
+      "severity": "blocking",
+      "summary": "Main-journal generate hazard unhandled. The latest snapshot packages/db/drizzle/meta/0056_snapshot.json contains both accounting tables. Once the re-export is removed from packages/db/src/schema/index.ts:27, the next `drizzle-kit generate` diffs schema against that snapshot and emits DROP TABLE for both accounting tables (repo precedent: packages/db/drizzle/0056_great_clint_barton.sql dropped finance_records exactly this way). The spec NFR 'excluded from the main drizzle config input so a future main-journal generate never emits Accounting statements' is the opposite of drizzle-kit behavior, and the Phase 2 Red test / Phase 3 step asserting 'a main-journal generate produces no accounting-statement diff' will fail as written. The plan must add an explicit mechanism (e.g., snapshot surgery on the meta snapshot, or a reviewed hand-edited empty migration) that guarantees no DROP diff is ever generated or applied.",
+      "evidence": "packages/db/drizzle/meta/0056_snapshot.json contains accounting table entries (grep count 48 for 'accounting'); packages/db/drizzle.config.ts:22 schema input ./src/schema/index.ts; packages/db/drizzle/0056_great_clint_barton.sql shows DROP TABLE emitted when tables leave the schema; plan.md:106 and plan.md:151 assert a zero-diff generate; spec.md:182-185 NFR misstates the mechanism."
+    }
+  ],
+  "nonblocking_findings": [
+    {
+      "id": "R1-3",
+      "severity": "major",
+      "summary": "Secret naming contradicts the stated per-app convention. FR-8 and the Phase 1 secrets contract list unprefixed Secret Manager names STORAGE_ENDPOINT..STORAGE_PUBLIC_BASE_URL while claiming to follow 'the per-app secret naming of the sibling deployments'. The sibling pattern prefixes secret names per app (SALES_STORAGE_ENDPOINT mapped to env STORAGE_ENDPOINT, apps/sales-advantage/cloudbuild.yaml:145). Implemented literally, the plan creates project-global unprefixed secrets. The contract should name ACCOUNTING_STORAGE_* secrets mapped to the STORAGE_* env vars that packages/storage/src/factory.ts:56-61 reads.",
+      "evidence": "spec.md:153-157; plan.md:79; apps/sales-advantage/cloudbuild.yaml:145 (SALES_STORAGE_ENDPOINT secret -> STORAGE_ENDPOINT env); packages/storage/src/factory.ts:56-61 reads unprefixed STORAGE_* env vars."
+    },
+    {
+      "id": "R1-4",
+      "severity": "major",
+      "summary": "Append-only audit enforcement is not carried into the new journal contract. Main journal 0055 ends with a hand-written DO block revoking UPDATE/DELETE on accounting_submission_audit_events from the app role. A drizzle-kit-generated 0000 will not reproduce it, and neither FR-1 nor the journal contract task mentions preserving the append-only invariant on the dedicated database. The runtime grants file may compensate (grant only SELECT, INSERT on the audit table), but the plan must state that explicitly.",
+      "evidence": "packages/db/drizzle/0055_eminent_nuke.sql trailing DO $$ ... REVOKE UPDATE, DELETE ON accounting_submission_audit_events FROM app_user block; plan.md:51 requires only 'exact constraints and index' parity with 0054/0055; plan.md:53 grants-file contract does not enumerate the audit-table privilege set."
+    },
+    {
+      "id": "R1-5",
+      "severity": "minor",
+      "summary": "The plan does not mention updating apps/accounting/app/lib/submissions.test.ts, which mocks '@reading-advantage/db/client' (line 17). When submissions.ts switches to the accounting runtime factory, this mock target disappears and the suite breaks; the task should name the test-file update.",
+      "evidence": "apps/accounting/app/lib/submissions.test.ts:17 vi.mock('@reading-advantage/db/client'); plan.md:152-155 changes only submissions.ts."
+    },
+    {
+      "id": "R1-6",
+      "severity": "minor",
+      "summary": "Small evidence imprecisions: row citing 'commands.ts' refers to a directory packages/db/src/company-identity/commands/; row 45 says 'not a host query parameter' but packages/db/src/connection-options.ts:14 reads the socket path from the host query parameter (the plan's own task text states this correctly); row 35's bootstrap-production.ts:78 is line 77.",
+      "evidence": "ls packages/db/src/company-identity/ shows commands/ directory; packages/db/src/connection-options.ts:14-16; sed -n 74,82p apps/accounts/scripts/bootstrap-production.ts."
+    }
+  ],
+  "evidence": [
+    "Verified 20/22 spot-checked evidence rows: apps/accounting has Dockerfile, no cloudbuild.yaml, no scripts/ (ls exit codes); submissions.ts:23 imports client from @reading-advantage/db/client; 0054/0055 create the two accounting tables with the cited checks/indexes; schema/index.ts:27 re-export; tenant-registry.ts:194-195 EXEMPT registration; postgres-submission-repository.ts raw SQL at ~107,133,241,257,274; company-identity tree (drizzle.config.ts, drizzle/0000..0003, src/company-identity/{client,migration,environment,runtime}.ts, commands/, COMPANY_AUTH_DIRECT_DATABASE_URL); sales cloudbuild.yaml:98,134 and marketing:80 and accounts:69 cloud-sql attachments; sales/marketing grants files and docs/deployment/sales-database-role-provisioning.md exist; SKILL.md Core Rule + step 9 one-database-per-app; bootstrap-contract.ts:24 accounting-web registration; bootstrap-production.ts:77 accounting OWNER role; accounts cloudbuild.yaml:48,101-102 ACCOUNTING_COMPANY_AUTH_OIDC_CLIENT_SECRET; proxy.ts:6-20 inline getPublicUrl; start route lines 10-11 uncaught returnTo; login page static href; callback ?error=sso redirects with login page rendering no message; sales public-url.ts and sales start route 25-41 handoff+ZodError catch; sales cloudbuild.yaml:123-146 --tag=candidate --no-traffic; promote-sales-candidate.sh:4-13 acceptance-note gate; private-evidence-storage.ts via factory.ts:56-61 STORAGE_* env; connection-options.ts socket extraction.",
+    "Blast radius: only apps/accounting/app/lib/submissions.ts (+ its test mock), packages/domain/src/tenant-registry.ts:169-170, and packages/db/src/schema/index.ts:27 reference the accounting schema/client; the domain repository uses raw SQL strings, so client injection is the only change. Plan coverage is complete except the test mock (R1-5).",
+    "Pipeline mirroring: planned cloudbuild matches the Sales candidate/no-traffic + gated promotion pattern; no pipeline step shifts traffic, and a Red test asserts absence of traffic-shift commands.",
+    "Traceability: grep counted 40 Task lines == metadata estimated_tasks 40; 7 [b] deferred:owner tasks; FR-1..FR-9 each map to contract, Red-test, and implementation tasks; acceptance criteria are falsifiable; non-goals explicit; track registered Draft in measure/tracks.md:414.",
+    "Env completeness: app code reads COMPANY_AUTH_* (6), NODE_ENV, STORAGE_* (6 via factory), plus the two new DB URLs and ACCOUNTING_PREVIEW_ORIGINS; FR-8 covers all of them (nine secrets match the Phase 4 count)."
+  ],
+  "commands": [
+    "ls apps/accounting/ && test -f apps/accounting/cloudbuild.yaml; test -f apps/accounting/Dockerfile",
+    "sed -n 20,30p apps/accounting/app/lib/submissions.ts",
+    "grep -n accounting packages/db/drizzle/0054_chunky_dazzler.sql packages/db/drizzle/0055_eminent_nuke.sql; cat both files",
+    "grep -n accounting packages/db/src/schema/index.ts; sed -n 160,200p packages/domain/src/tenant-registry.ts",
+    "sed -n 105,276p packages/backend/src/modules/accounting/postgres-submission-repository.ts",
+    "ls packages/db/company-identity/ packages/db/src/company-identity/; cat packages/db/company-identity/drizzle.config.ts",
+    "grep -n cloud-sql apps/sales-advantage/cloudbuild.yaml apps/marketing/cloudbuild.yaml apps/accounts/cloudbuild.yaml; grep -n ACCOUNTING_COMPANY_AUTH_OIDC_CLIENT_SECRET apps/accounts/cloudbuild.yaml",
+    "sed -n 20,30p apps/accounts/scripts/bootstrap-contract.ts; sed -n 74,82p apps/accounts/scripts/bootstrap-production.ts",
+    "cat apps/accounting/proxy.ts apps/accounting/app/api/auth/company/start/route.ts apps/accounting/app/login/page.tsx apps/accounting/app/api/auth/callback/route.ts apps/accounting/app/api/auth/session/route.ts",
+    "sed -n 95,130p apps/accounting/app/lib/company-oidc.ts",
+    "head -80 apps/sales-advantage/lib/public-url.ts; sed -n 20,45p apps/sales-advantage/app/api/auth/company/start/route.ts; sed -n 123,170p apps/sales-advantage/cloudbuild.yaml; sed -n 1,20p apps/sales-advantage/scripts/promote-sales-candidate.sh",
+    "cat apps/accounting/app/lib/private-evidence-storage.ts; sed -n 45,70p packages/storage/src/factory.ts",
+    "grep -rn 'schema/accounting|accountingSubmissions|accounting_submissions' packages apps (excluding node_modules/dist)",
+    "grep -c 'accounting' packages/db/drizzle/meta/0054-0056_snapshot.json; cat packages/db/drizzle/0056_great_clint_barton.sql",
+    "sed -n 1,45p .agents/skills/gcp-cloud-run-monorepo-deploy/SKILL.md; grep -n cloudsql packages/db/src/connection-options.ts",
+    "grep -c '^- \\[.\\] Task:' plan.md (40); grep -n deferred:owner plan.md (7); grep -n accounting_dedicated_db_launch measure/tracks.md",
+    "grep -rhn 'process.env.[A-Z_]*' apps/accounting | sort -u",
+    "sed -n 1,60p packages/db/package.json"
+  ],
+  "changed_files": [
+    "measure/tracks/accounting_dedicated_db_launch_20260830/reviews/track-review-r1-2026-08-30.json"
+  ],
+  "retry_recommendation": "retry_authoring",
+  "confidence": "high"
+}

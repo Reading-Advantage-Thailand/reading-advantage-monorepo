@@ -411,6 +411,9 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 - [ ] **Track: Sales and Marketing SSO Parity and Demo Accounts** *Link: [./tracks/sales_marketing_sso_parity_20260829/](./tracks/sales_marketing_sso_parity_20260829/)*
   Port the Codecamp SSO redirect repair to Sales and Marketing: carry the destination through sign-in, stop overwriting the language cookie, port the forwarding-origin approval with the Codecamp callback-origin handoff, fail cleanly on unsafe return paths, surface sign-in errors, deny no-role sessions, and provision demo-only acceptance accounts with generated credentials. Part of the five-app launch program; this is the SSO hard gate. Plan reviewed and approved 2026-08-29 (reviews/plan-review-a-2026-08-29-r5.json: pass).
 
+- [ ] **Track: Accounting Dedicated Database Launch** *Link: [./tracks/accounting_dedicated_db_launch_20260830/](./tracks/accounting_dedicated_db_launch_20260830/)*
+  Take `apps/accounting`, the only one of the five company apps with no Cloud Run deployment, to production on its own dedicated database: a separate `accounting` database on the shared Cloud SQL instance following the company-identity layout (own drizzle journal, runtime client, migration/runtime roles, secrets), SSO origin-approval and redirect parity with the Sales repair, a candidate no-traffic Cloud Build pipeline with a manual acceptance-gated promotion script, and DNS for accounting.reading-advantage.com. Status: Draft 2026-08-30.
+
 - [ ] **Track: Codecamp Tutor Consolidation** *Link: [./tracks/codecamp_tutor_consolidation_20260820/](./tracks/codecamp_tutor_consolidation_20260820/)*
   Retire the stateless /api/chat route and extend the intervention tutor with an ask mode, so all 88 lessons gain conversation memory, lesson-content grounding, curated resources, and support telemetry.
 

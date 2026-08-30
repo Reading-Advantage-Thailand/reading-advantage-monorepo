@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "All r1 findings are remediated and verified against the repository. R1-1: the session-route evidence row now states the true 401/403/200 behavior and FR-5, the Phase 1 contract task, the Phase 2 Red test, and the acceptance criteria consistently target only the denied:true delta on the 403 body, explicitly preserving the 401 and 200 bodies; the cited Sales target contract exists (403 body { session: null, denied: true } at apps/sales-advantage/app/api/auth/session/route.ts:10). R1-2: FR-1a adds a snapshot-pruning procedure for the chain tip plus a CI guard test; 0056_snapshot.json is confirmed as the tip (journal idx 56, no successor snapshots exist), so pruning the tip suffices at execution time, and the guard's 0054/0055 exemption boundary is correct because those entries legitimately create the tables. R1-3: secrets are now ACCOUNTING_STORAGE_* mapped to unprefixed STORAGE_* env vars, matching the Sales syntax verified at apps/sales-advantage/cloudbuild.yaml:139 (STORAGE_ENDPOINT=SALES_STORAGE_ENDPOINT:latest) and the adapter read sites at packages/storage/src/factory.ts:56-61. R1-4: the grant set matches the repository's actual SQL (submissions: select/insert/update at lines 107/133/241/257/274; audit events: insert only at 178/287, no update/delete/select), and the negative-probe requirements (audit UPDATE/DELETE denied, INSERT allowed, DDL denied) are testable as specified. R1-5: submissions.test.ts mock update task is present (plan.md:160). R1-6: evidence imprecisions corrected (commands/ directory, connection-options.ts:14 host-param description). The author's dispute of the bootstrap-production.ts citation is upheld: grep -n shows line 78 is exactly { applicationKey: \"accounting\", roleKey: \"OWNER\" }; the r1 objection is withdrawn. Sweep: no residual 'silent 200' or 'zero-diff' claims; task count 40 == metadata estimated_tasks; tracks.md registration intact at line 414.",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    {
+      "id": "R2-1",
+      "severity": "minor",
+      "summary": "The FR-1a snapshot pruning is hand-surgery on a generated artifact (packages/db/drizzle/meta/0056_snapshot.json). The risk is accepted because the plan makes it a reviewed procedure, the guard test and the generate-into-temp Red gate detect any miss, and the Phase 4 runbook task (plan.md:217) documents the procedure for future relocations. No change required; recorded for the implementer's attention.",
+      "evidence": "plan.md:50,108-110,155-157,217; packages/db/drizzle/meta/_journal.json tip is idx 56 (0056_great_clint_barton)."
+    },
+    {
+      "id": "R2-2",
+      "severity": "minor",
+      "summary": "The audit-table grant includes SELECT although the current repository only INSERTs into accounting_submission_audit_events (lines 178, 287) and never selects from it. The grant is harmless and future-proofing, and the append-only invariant (no UPDATE/DELETE) is the part the probes enforce. No change required.",
+      "evidence": "grep of packages/backend/src/modules/accounting/postgres-submission-repository.ts shows no 'from accounting_submission_audit_events' and no delete; plan.md:54 grants SELECT, INSERT on the audit table."
+    }
+  ],
+  "evidence": [
+    "R1-1 verification: apps/accounting/app/api/auth/session/route.ts:21 returns `!session ? 401 : !user ? 403 : 200` with body { session: user ? { user } : null }; apps/sales-advantage/app/api/auth/session/route.ts:10 returns 403 with { session: null, denied: true }; spec.md:41 (evidence), spec.md:152-161 (FR-5), plan.md:68 (Phase 1 contract), plan.md:123 (Red test), spec.md:266 (acceptance) all consistently scope the delta to denied:true and preserve the 401/200 bodies.",
+    "R1-2 verification: packages/db/drizzle/meta/ listing shows 0056_snapshot.json as the highest snapshot and _journal.json ends at idx 56 (0056_great_clint_barton); no successor snapshots exist, so pruning the tip is sufficient; FR-1a (spec.md:102-114) and plan.md:50,106-110,155-157 define the pruning plus guard test; the guard exempts 0054/0055, which legitimately create the tables (verified content in r1); the Red gate is achievable because drizzle-kit generate diffs only against the tip snapshot.",
+    "R1-3 verification: apps/sales-advantage/cloudbuild.yaml:139 contains STORAGE_ENDPOINT=SALES_STORAGE_ENDPOINT:latest (mapping syntax precedent); packages/storage/src/factory.ts:56-61 reads unprefixed STORAGE_* env vars; spec.md:183-200 (FR-8) and plan.md:81,202 now specify ACCOUNTING_STORAGE_* secrets mapped to unprefixed env vars, nine secrets total, matching the Phase 4 provisioning count.",
+    "R1-4 verification: repository SQL inventory - insert into accounting_submissions (line 133), select from accounting_submissions (lines 107, 241, 257), update accounting_submissions (line 274), insert into accounting_submission_audit_events (lines 178, 287), zero update/delete/select on the audit table; the planned grant set (SELECT,INSERT,UPDATE on submissions; SELECT,INSERT on audit events) matches; plan.md:57,135,166 require probes proving audit UPDATE and DELETE denied, INSERT allowed, and DDL denied - all testable via psql as accounting_runtime.",
+    "R1-5 verification: plan.md:160 names apps/accounting/app/lib/submissions.test.ts:17 and its mock migration to the new runtime client module.",
+    "R1-6 verification: spec.md:31 cites the commands/ directory correctly; spec.md:49 correctly states connection-options.ts:14 reads the host query parameter and converts /cloudsql/... into the postgres.js socket path option.",
+    "Disputed claim resolution: grep -n \"OWNER\" apps/accounts/scripts/bootstrap-production.ts returns line 78: { applicationKey: \"accounting\", roleKey: \"OWNER\" }. The author's counter-evidence holds; the r1 line-77 objection is withdrawn.",
+    "Sweep: grep for 'silent 200' and 'zero-diff' across spec.md and plan.md returns nothing; task count is 40 (grep -c '^- \\[.\\] Task:'); metadata.json estimated_tasks is 40; measure/tracks.md:414 registration intact.",
+    "New evidence rows 41-45 and 48-50 spot-checked accurate: callback sets the session cookie without a role check (apps/accounting/app/api/auth/callback/route.ts, verified in r1); 0056_snapshot.json has 48 accounting references (r1 count); 0055_eminent_nuke.sql carries the trailing DO $$ REVOKE block (r1); marketing-runtime-grants.sql revokes all then grants per-table with default-privilege handling (r1); submissions.test.ts:17 mocks @reading-advantage/db/client (r1)."
+  ],
+  "commands": [
+    "grep -n denied apps/sales-advantage/app/api/auth/session/route.ts apps/accounting/app/api/auth/session/route.ts",
+    "sed -n 1,20p apps/sales-advantage/app/api/auth/session/route.ts",
+    "grep -n STORAGE_ENDPOINT apps/sales-advantage/cloudbuild.yaml",
+    "grep -n 'audit_events\\|insert into\\|update \\|delete \\|from accounting_submission_audit_events' packages/backend/src/modules/accounting/postgres-submission-repository.ts",
+    "ls packages/db/drizzle/meta/; tail -12 packages/db/drizzle/meta/_journal.json",
+    "grep -n OWNER apps/accounts/scripts/bootstrap-production.ts",
+    "grep -rni 'silent 200\\|zero-diff\\|zero diff' spec.md plan.md",
+    "grep -c '^- \\[.\\] Task:' plan.md; grep -n estimated_tasks metadata.json; grep -n accounting_dedicated_db_launch measure/tracks.md"
+  ],
+  "changed_files": [
+    "measure/tracks/accounting_dedicated_db_launch_20260830/reviews/track-review-r2-2026-08-30.json"
+  ],
+  "retry_recommendation": "none",
+  "confidence": "high"
+}
