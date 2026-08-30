@@ -254,6 +254,6 @@ provide the behavior.
 Record a commit SHA only after the commit is an ancestor of HEAD.
 
 - Phase 1 contracts: `e6a78d274`
-- Phase 2 Red: pending
+- Phase 2 Red: `6471822de`
 - Phase 3 Green: pending
 - Phase 4 docs and doctor: pending
