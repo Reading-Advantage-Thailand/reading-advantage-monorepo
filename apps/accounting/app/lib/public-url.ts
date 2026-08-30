@@ -29,7 +29,15 @@ function configuredOrigin(value: string | undefined): string | undefined {
   if (!value) return undefined;
   try {
     const url = new URL(value);
-    if (url.username || url.password || url.search || url.hash) return undefined;
+    if (
+      url.protocol !== "https:" ||
+      url.username ||
+      url.password ||
+      url.search ||
+      url.hash
+    ) {
+      return undefined;
+    }
     return url.origin;
   } catch {
     return undefined;
@@ -89,7 +97,6 @@ function isApprovedOrigin(origin: URL): boolean {
   const canonicalOrigins = new Set(
     [
       DEFAULT_ACCOUNTING_ORIGIN,
-      configuredOrigin(process.env.NEXT_PUBLIC_API_URL),
       configuredOrigin(process.env.COMPANY_AUTH_OIDC_REDIRECT_URI),
     ].filter((value): value is string => value !== undefined),
   );

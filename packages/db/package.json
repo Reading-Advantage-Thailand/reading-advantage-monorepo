@@ -34,10 +34,10 @@
       "import": "./dist/company-identity/runtime.js",
       "default": "./dist/company-identity/runtime.js"
     },
-    "./accounting": {
-      "types": "./dist/accounting/index.d.ts",
-      "import": "./dist/accounting/index.js",
-      "default": "./dist/accounting/index.js"
+    "./accounting/schema": {
+      "types": "./dist/accounting/schema/index.d.ts",
+      "import": "./dist/accounting/schema/index.js",
+      "default": "./dist/accounting/schema/index.js"
     },
     "./accounting/runtime": {
       "types": "./dist/accounting/runtime.d.ts",

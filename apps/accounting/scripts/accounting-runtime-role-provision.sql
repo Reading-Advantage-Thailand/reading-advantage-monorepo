@@ -8,26 +8,28 @@
 
 -- Migration role owns the accounting objects and runs migrations. It must not
 -- be able to create other databases or roles, and must not inherit grants.
-SELECT format(
-  'CREATE ROLE accounting_migration LOGIN PASSWORD %L NOCREATEDB NOCREATEROLE NOINHERIT',
-  current_setting('accounting_migration_password', true)
-) \gexec
+
 \if :{?accounting_migration_password}
 \else
-  -- Fallback when the password variable is absent: create the role without
-  -- LOGIN so the operator supplies credentials before the first migration.
-  CREATE ROLE accounting_migration NOCREATEDB NOCREATEROLE NOINHERIT;
+  \echo 'accounting_migration_password is required' >&2
+  \quit 2
 \endif
+\if :{?accounting_runtime_password}
+\else
+  \echo 'accounting_runtime_password is required' >&2
+  \quit 2
+\endif
+
+SELECT format(
+  'CREATE ROLE accounting_migration LOGIN PASSWORD %L NOCREATEDB NOCREATEROLE NOINHERIT',
+  :'accounting_migration_password'
+) \gexec
 
 -- Runtime role is non-owning and least-privilege.
 SELECT format(
   'CREATE ROLE accounting_runtime LOGIN PASSWORD %L NOCREATEDB NOCREATEROLE NOINHERIT',
-  current_setting('accounting_runtime_password', true)
+  :'accounting_runtime_password'
 ) \gexec
-\if :{?accounting_runtime_password}
-\else
-  CREATE ROLE accounting_runtime NOCREATEDB NOCREATEROLE NOINHERIT;
-\endif
 
 -- The migration role owns the database so migrations can create and alter objects.
 ALTER DATABASE accounting OWNER TO accounting_migration;

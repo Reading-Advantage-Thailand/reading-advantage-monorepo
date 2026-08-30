@@ -10,6 +10,8 @@ SELECT format(
 ) \gexec
 
 GRANT USAGE ON SCHEMA public TO accounting_runtime;
+REVOKE CREATE ON SCHEMA public FROM PUBLIC;
+REVOKE CREATE ON SCHEMA public FROM accounting_runtime;
 
 REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA public FROM accounting_runtime;
 REVOKE ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public FROM accounting_runtime;

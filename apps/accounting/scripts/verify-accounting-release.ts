@@ -29,34 +29,6 @@ export interface AccountingReleaseVerificationResult {
 }
 
 /**
- * Fetches and validates one public Accounting release response.
- * @param fetchImplementation Fetch implementation used for the request.
- * @param url Exact endpoint URL.
- * @param schema Runtime contract for the untrusted response body.
- * @param requestId Correlation identifier forwarded to the service.
- * @returns The validated response body.
- * @throws When transport, status, JSON parsing, or schema validation fails.
- */
-async function fetchValidated<T>(
-  fetchImplementation: typeof fetch,
-  url: URL,
-  schema: z.ZodType<T>,
-  requestId: string,
-): Promise<T> {
-  const response = await fetchImplementation(url, {
-    cache: "no-store",
-    headers: { Accept: "application/json", "X-Request-Id": requestId },
-    signal: AbortSignal.timeout(15_000),
-  });
-  if (!response.ok) {
-    throw new Error(`${url.pathname} returned HTTP ${response.status}.`);
-  }
-  return schema.parse(await response.json());
-}
-
-const loginPageSchema = z.object({ status: z.literal(200) });
-
-/**
  * Verifies the Accounting login page, unauthenticated API, and safe return-to.
  * @param input Release origin to verify.
  * @param fetchImplementation Fetch implementation used for transport and tests.
@@ -82,8 +54,6 @@ export async function verifyAccountingRelease(
   if (!loginResponse.ok) {
     throw new Error(`/login returned HTTP ${loginResponse.status}.`);
   }
-  loginPageSchema.parse({ status: loginResponse.status as 200 });
-
   // An unauthenticated API call must return 401, never 500.
   const sessionResponse = await fetchImplementation(
     new URL("/api/auth/session", baseUrl),
@@ -136,14 +106,20 @@ async function main(): Promise<void> {
   );
 }
 
-main().catch((error: unknown) => {
-  process.stderr.write(
-    `${JSON.stringify({
-      level: "error",
-      operation: "accounting_release_verification",
-      errorName: error instanceof Error ? error.name : "UnknownError",
-      errorMessage: error instanceof Error ? error.message : "Unknown error",
-    })}\n`,
-  );
-  process.exitCode = 1;
-});
+const isDirectExecution =
+  process.argv[1] !== undefined &&
+  import.meta.url === pathToFileURL(resolve(process.argv[1])).href;
+
+if (isDirectExecution) {
+  main().catch((error: unknown) => {
+    process.stderr.write(
+      `${JSON.stringify({
+        level: "error",
+        operation: "accounting_release_verification",
+        errorName: error instanceof Error ? error.name : "UnknownError",
+        errorMessage: error instanceof Error ? error.message : "Unknown error",
+      })}\n`,
+    );
+    process.exitCode = 1;
+  });
+}
