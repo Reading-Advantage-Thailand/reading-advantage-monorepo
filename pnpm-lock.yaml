@@ -1018,9 +1018,6 @@ importers:
       '@radix-ui/react-tooltip':
         specifier: 'catalog:'
         version: 1.2.10(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      '@reading-advantage/advantage-play-kit':
-        specifier: workspace:*
-        version: link:../../packages/advantage-play-kit
       '@reading-advantage/ai':
         specifier: workspace:*
         version: link:../../packages/ai
