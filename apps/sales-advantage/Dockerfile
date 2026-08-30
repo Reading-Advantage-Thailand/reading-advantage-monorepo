@@ -38,6 +38,7 @@ RUN addgroup --system --gid 1001 nodejs && \
 
 COPY --from=builder --chown=nextjs:nodejs /app/apps/sales-advantage/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/apps/sales-advantage/.next/static ./apps/sales-advantage/.next/static
+COPY --from=builder --chown=nextjs:nodejs /app/apps/sales-advantage/.next/server/assets ./apps/sales-advantage/.next/server/assets
 
 USER nextjs
 

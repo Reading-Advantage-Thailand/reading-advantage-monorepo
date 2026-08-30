@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { basename, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { z } from "zod";
@@ -108,6 +108,15 @@ export interface SalesRuntimeVerificationRequest {
 }
 
 function resolvePackagedEvidencePath(evidenceUrl: URL): string {
+  if (evidenceUrl.pathname.includes("/static/media/")) {
+    return resolve(
+      process.cwd(),
+      process.env.NODE_ENV === "development"
+        ? ".next/dev/server/assets"
+        : ".next/server/assets",
+      basename(evidenceUrl.pathname),
+    );
+  }
   if (evidenceUrl.protocol === "file:") {
     return fileURLToPath(evidenceUrl);
   }
