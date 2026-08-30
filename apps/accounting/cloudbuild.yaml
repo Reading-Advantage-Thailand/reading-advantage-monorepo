@@ -1,0 +1,121 @@
+steps:
+  - name: "gcr.io/cloud-builders/docker"
+    id: "build-image"
+    args:
+      - "build"
+      - "-f"
+      - "apps/accounting/Dockerfile"
+      - "-t"
+      - "asia-southeast1-docker.pkg.dev/$PROJECT_ID/accounting/accounting:$BUILD_ID"
+      - "."
+
+  - name: "gcr.io/cloud-builders/docker"
+    id: "push-image"
+    args:
+      - "push"
+      - "asia-southeast1-docker.pkg.dev/$PROJECT_ID/accounting/accounting:$BUILD_ID"
+
+  - name: "node:22-slim"
+    id: "migrate-db"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - 'set -euo pipefail && apt-get update -qq && apt-get install -y -qq curl ca-certificates >/dev/null && curl -sSfL -o /usr/local/bin/cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.15.1/cloud-sql-proxy.linux.amd64 && chmod +x /usr/local/bin/cloud-sql-proxy && mkdir -p /cloudsql && (cloud-sql-proxy --unix-socket /cloudsql reading-advantage:asia-southeast1:cloud-sql &) && sleep 5 && corepack enable && corepack prepare pnpm@11.8.0 --activate && pnpm install --frozen-lockfile && export ACCOUNTING_DIRECT_DATABASE_URL="$$ACCOUNTING_DIRECT_DATABASE_URL" && pnpm --filter @reading-advantage/db accounting:migrate'
+    secretEnv:
+      - "ACCOUNTING_DIRECT_DATABASE_URL"
+
+  - name: "node:22-slim"
+    id: "doctor-check"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - 'set -euo pipefail && apt-get update -qq && apt-get install -y -qq curl ca-certificates >/dev/null && curl -sSfL -o /usr/local/bin/cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.15.1/cloud-sql-proxy.linux.amd64 && chmod +x /usr/local/bin/cloud-sql-proxy && mkdir -p /cloudsql && (cloud-sql-proxy --unix-socket /cloudsql reading-advantage:asia-southeast1:cloud-sql &) && sleep 5 && corepack enable && corepack prepare pnpm@11.8.0 --activate && pnpm install --frozen-lockfile && export ACCOUNTING_DIRECT_DATABASE_URL="$$ACCOUNTING_DIRECT_DATABASE_URL" && pnpm --filter @reading-advantage/db accounting:doctor'
+    secretEnv:
+      - "ACCOUNTING_DIRECT_DATABASE_URL"
+
+  - name: "node:22-slim"
+    id: "runtime-db-contract"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - 'set -euo pipefail && apt-get update -qq && apt-get install -y -qq curl ca-certificates postgresql-client >/dev/null && curl -sSfL -o /usr/local/bin/cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.15.1/cloud-sql-proxy.linux.amd64 && chmod +x /usr/local/bin/cloud-sql-proxy && mkdir -p /cloudsql && (cloud-sql-proxy --unix-socket /cloudsql reading-advantage:asia-southeast1:cloud-sql &) && sleep 5 && cleanup() { psql "$$ACCOUNTING_DIRECT_DATABASE_URL" -f apps/accounting/scripts/accounting-runtime-probe-cleanup.sql; } && trap cleanup EXIT && psql "$$ACCOUNTING_DIRECT_DATABASE_URL" -f apps/accounting/scripts/accounting-runtime-grants.sql && psql "$$ACCOUNTING_DATABASE_URL" -f apps/accounting/scripts/accounting-runtime-probe.sql && cleanup && trap - EXIT'
+    secretEnv:
+      - "ACCOUNTING_DIRECT_DATABASE_URL"
+      - "ACCOUNTING_DATABASE_URL"
+
+  - name: "gcr.io/cloud-builders/gcloud"
+    id: "deploy-company-candidate"
+    args:
+      - "run"
+      - "deploy"
+      - "accounting"
+      - "--image=asia-southeast1-docker.pkg.dev/$PROJECT_ID/accounting/accounting:$BUILD_ID"
+      - "--region=asia-southeast1"
+      - "--platform=managed"
+      - "--allow-unauthenticated"
+      - "--service-account=accounting-cloud-run@$PROJECT_ID.iam.gserviceaccount.com"
+      - "--add-cloudsql-instances=reading-advantage:asia-southeast1:cloud-sql"
+      - "--set-env-vars=NODE_ENV=production,COMPANY_AUTH_ISSUER_URL=https://accounts.reading-advantage.com,COMPANY_AUTH_OIDC_CLIENT_ID=accounting-web,COMPANY_AUTH_OIDC_REDIRECT_URI=https://accounting.reading-advantage.com/api/auth/callback,COMPANY_AUTH_EXPECTED_AUDIENCE=accounting,COMPANY_AUTH_CLOCK_SKEW_SECONDS=30,ACCOUNTING_PREVIEW_ORIGINS=https://candidate---accounting-$PROJECT_NUMBER.asia-southeast1.run.app"
+      - "--min-instances=1"
+      - "--max-instances=10"
+      - "--concurrency=80"
+      - "--set-secrets=ACCOUNTING_DATABASE_URL=ACCOUNTING_DATABASE_URL:latest,COMPANY_AUTH_OIDC_CLIENT_SECRET=ACCOUNTING_COMPANY_AUTH_OIDC_CLIENT_SECRET:latest,STORAGE_ENDPOINT=ACCOUNTING_STORAGE_ENDPOINT:latest,STORAGE_REGION=ACCOUNTING_STORAGE_REGION:latest,STORAGE_BUCKET=ACCOUNTING_STORAGE_BUCKET:latest,STORAGE_ACCESS_KEY=ACCOUNTING_STORAGE_ACCESS_KEY:latest,STORAGE_SECRET_KEY=ACCOUNTING_STORAGE_SECRET_KEY:latest,STORAGE_PUBLIC_BASE_URL=ACCOUNTING_STORAGE_PUBLIC_BASE_URL:latest"
+      - "--tag=candidate"
+      - "--no-traffic"
+
+  - name: "gcr.io/cloud-builders/gcloud"
+    id: "allow-public-invoker"
+    args:
+      - "run"
+      - "services"
+      - "add-iam-policy-binding"
+      - "accounting"
+      - "--region=asia-southeast1"
+      - "--member=allUsers"
+      - "--role=roles/run.invoker"
+
+  - name: "gcr.io/cloud-builders/gcloud"
+    id: "capture-company-candidate"
+    entrypoint: "bash"
+    args:
+      - "apps/accounting/scripts/capture-accounting-cloud-run-tag.sh"
+      - "candidate"
+      - "asia-southeast1-docker.pkg.dev/$PROJECT_ID/accounting/accounting:$BUILD_ID"
+      - "/workspace/.accounting-company-candidate"
+
+  - name: "node:22-slim"
+    id: "verify-company-candidate"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - 'set -euo pipefail && corepack enable && corepack prepare pnpm@11.8.0 --activate && pnpm install --frozen-lockfile && export ACCOUNTING_RELEASE_BASE_URL="$$(tr -d "\r\n" < /workspace/.accounting-company-candidate.url)" && pnpm --filter accounting exec tsx scripts/verify-accounting-release.ts'
+
+images:
+  - "asia-southeast1-docker.pkg.dev/$PROJECT_ID/accounting/accounting:$BUILD_ID"
+
+availableSecrets:
+  secretManager:
+    - versionName: "projects/$PROJECT_ID/secrets/ACCOUNTING_DIRECT_DATABASE_URL/versions/latest"
+      env: "ACCOUNTING_DIRECT_DATABASE_URL"
+    - versionName: "projects/$PROJECT_ID/secrets/ACCOUNTING_DATABASE_URL/versions/latest"
+      env: "ACCOUNTING_DATABASE_URL"
+    - versionName: "projects/$PROJECT_ID/secrets/ACCOUNTING_COMPANY_AUTH_OIDC_CLIENT_SECRET/versions/latest"
+      env: "ACCOUNTING_COMPANY_AUTH_OIDC_CLIENT_SECRET"
+    - versionName: "projects/$PROJECT_ID/secrets/ACCOUNTING_STORAGE_ENDPOINT/versions/latest"
+      env: "ACCOUNTING_STORAGE_ENDPOINT"
+    - versionName: "projects/$PROJECT_ID/secrets/ACCOUNTING_STORAGE_REGION/versions/latest"
+      env: "ACCOUNTING_STORAGE_REGION"
+    - versionName: "projects/$PROJECT_ID/secrets/ACCOUNTING_STORAGE_BUCKET/versions/latest"
+      env: "ACCOUNTING_STORAGE_BUCKET"
+    - versionName: "projects/$PROJECT_ID/secrets/ACCOUNTING_STORAGE_ACCESS_KEY/versions/latest"
+      env: "ACCOUNTING_STORAGE_ACCESS_KEY"
+    - versionName: "projects/$PROJECT_ID/secrets/ACCOUNTING_STORAGE_SECRET_KEY/versions/latest"
+      env: "ACCOUNTING_STORAGE_SECRET_KEY"
+    - versionName: "projects/$PROJECT_ID/secrets/ACCOUNTING_STORAGE_PUBLIC_BASE_URL/versions/latest"
+      env: "ACCOUNTING_STORAGE_PUBLIC_BASE_URL"
+
+options:
+  env:
+    - "pnpm_config_verify_deps_before_run=warn"
+  logging: CLOUD_LOGGING_ONLY
+  machineType: E2_HIGHCPU_8
