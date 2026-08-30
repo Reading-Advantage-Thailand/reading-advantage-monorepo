@@ -285,6 +285,18 @@ describe("Task 6 Red durable-jobs schema and migration contract", () => {
     const schemaCreateRevokes = normalizedSql.match(
       /REVOKE CREATE ON SCHEMA public FROM [^;]+;/gi,
     ) ?? [];
+    const preTransferStatements = [
+      'REVOKE ALL PRIVILEGES ON TABLE "durable_job_audit_events" FROM PUBLIC;',
+      'REVOKE ALL PRIVILEGES ON TABLE "review_job_adoption_audit_events" FROM PUBLIC;',
+      'GRANT INSERT, SELECT ON TABLE "durable_job_audit_events" TO durable_job_queue_runtime;',
+      'GRANT INSERT, SELECT ON TABLE "review_job_adoption_audit_events" TO durable_job_queue_runtime;',
+      "CREATE OR REPLACE FUNCTION durable_job_reject_audit_mutation()",
+      "REVOKE EXECUTE ON FUNCTION durable_job_reject_audit_mutation() FROM PUBLIC;",
+      'CREATE TRIGGER "durable_job_audit_events_reject_update_delete"',
+      'CREATE TRIGGER "durable_job_audit_events_reject_truncate"',
+      'CREATE TRIGGER "review_job_adoption_audit_events_reject_update_delete"',
+      'CREATE TRIGGER "review_job_adoption_audit_events_reject_truncate"',
+    ];
 
     expect(schemaCreateGrants).toEqual([
       "GRANT CREATE ON SCHEMA public TO durable_job_audit_owner;",
@@ -297,6 +309,18 @@ describe("Task 6 Red durable-jobs schema and migration contract", () => {
     );
     expect(normalizedSql.indexOf(schemaCreateRevokes[0]!)).toBeGreaterThan(
       normalizedSql.indexOf(ownershipTransfers.at(-1)!),
+    );
+    for (const statement of preTransferStatements) {
+      expect(normalizedSql.indexOf(statement), `Missing ${statement}`).toBeGreaterThan(-1);
+      expect(normalizedSql.indexOf(statement), `${statement} must run before ownership transfer.`)
+        .toBeLessThan(normalizedSql.indexOf(ownershipTransfers[0]!));
+    }
+    const ownershipWindow = normalizedSql.slice(
+      normalizedSql.indexOf(schemaCreateGrants[0]!),
+      normalizedSql.indexOf(schemaCreateRevokes[0]!) + schemaCreateRevokes[0]!.length,
+    );
+    expect(ownershipWindow).toMatch(
+      /^GRANT CREATE ON SCHEMA public TO durable_job_audit_owner;\s*--> statement-breakpoint\s*ALTER TABLE "durable_job_audit_events" OWNER TO durable_job_audit_owner;\s*ALTER TABLE "review_job_adoption_audit_events" OWNER TO durable_job_audit_owner;\s*ALTER FUNCTION durable_job_reject_audit_mutation\(\) OWNER TO durable_job_audit_owner;\s*--> statement-breakpoint\s*REVOKE CREATE ON SCHEMA public FROM durable_job_audit_owner;$/,
     );
     for (const tableName of [
       "durable_job_audit_events",
@@ -321,6 +345,18 @@ describe("Task 6 Red durable-jobs schema and migration contract", () => {
     expect(normalizedSql).toMatch(/SET search_path\s*=\s*pg_catalog/i);
     expect(normalizedSql).toMatch(/REVOKE EXECUTE ON FUNCTION[^;]+FROM PUBLIC/i);
     expect(normalizedSql).not.toMatch(/GRANT (?:UPDATE|DELETE|TRUNCATE)[^;]+durable_job_[a-z_]+_runtime/i);
+    for (const roleName of [
+      "durable_job_audit_owner",
+      "durable_job_queue_runtime",
+    ]) {
+      expect(normalizedSql).toContain(
+        `IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = '${roleName}') THEN CREATE ROLE ${roleName} NOLOGIN; ALTER ROLE ${roleName} NOINHERIT; END IF;`,
+      );
+      expect(
+        normalizedSql.match(new RegExp(`ALTER ROLE ${roleName} NOINHERIT;`, "g")),
+      ).toHaveLength(1);
+    }
+    expect(migrationSql).not.toMatch(/\b(?:SUPERUSER|NOSUPERUSER)\b/i);
   });
 
   it("classifies every mixed-scope queue/adoption table as REFERENTIAL", () => {

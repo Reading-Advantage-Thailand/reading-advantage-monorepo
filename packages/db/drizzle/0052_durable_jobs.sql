@@ -211,11 +211,6 @@ BEGIN
 END
 $$;
 --> statement-breakpoint
--- The migration role must own public or hold CREATE WITH GRANT OPTION.
-GRANT CREATE ON SCHEMA public TO durable_job_audit_owner;
---> statement-breakpoint
-ALTER TABLE "durable_job_audit_events" OWNER TO durable_job_audit_owner;
-ALTER TABLE "review_job_adoption_audit_events" OWNER TO durable_job_audit_owner;
 REVOKE ALL PRIVILEGES ON TABLE "durable_job_audit_events" FROM PUBLIC;
 REVOKE ALL PRIVILEGES ON TABLE "review_job_adoption_audit_events" FROM PUBLIC;
 GRANT INSERT, SELECT ON TABLE "durable_job_audit_events" TO durable_job_queue_runtime;
@@ -232,9 +227,6 @@ BEGIN
 END;
 $$;
 --> statement-breakpoint
-ALTER FUNCTION durable_job_reject_audit_mutation() OWNER TO durable_job_audit_owner;
---> statement-breakpoint
-REVOKE CREATE ON SCHEMA public FROM durable_job_audit_owner;
 REVOKE EXECUTE ON FUNCTION durable_job_reject_audit_mutation() FROM PUBLIC;
 CREATE TRIGGER "durable_job_audit_events_reject_update_delete"
 BEFORE UPDATE OR DELETE ON "durable_job_audit_events"
@@ -248,3 +240,12 @@ FOR EACH ROW EXECUTE FUNCTION durable_job_reject_audit_mutation();
 CREATE TRIGGER "review_job_adoption_audit_events_reject_truncate"
 BEFORE TRUNCATE ON "review_job_adoption_audit_events"
 FOR EACH STATEMENT EXECUTE FUNCTION durable_job_reject_audit_mutation();
+--> statement-breakpoint
+-- The migration role must own public or hold CREATE WITH GRANT OPTION.
+GRANT CREATE ON SCHEMA public TO durable_job_audit_owner;
+--> statement-breakpoint
+ALTER TABLE "durable_job_audit_events" OWNER TO durable_job_audit_owner;
+ALTER TABLE "review_job_adoption_audit_events" OWNER TO durable_job_audit_owner;
+ALTER FUNCTION durable_job_reject_audit_mutation() OWNER TO durable_job_audit_owner;
+--> statement-breakpoint
+REVOKE CREATE ON SCHEMA public FROM durable_job_audit_owner;
