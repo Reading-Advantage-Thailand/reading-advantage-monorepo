@@ -435,7 +435,17 @@ describe("Sales production readiness", () => {
     for (const contract of [grants, legacyGrants]) {
       expect(contract).not.toMatch(/GRANT\s+ALL\s+PRIVILEGES/i);
       expect(contract).not.toMatch(/GRANT[^;]+ON\s+ALL\s+TABLES/i);
+      expect(contract).toMatch(/DO \$\$/);
+      expect(contract).toContain("durable_job_audit_events");
+      expect(contract).toContain("review_job_adoption_audit_events");
+      expect(contract).toContain("durable_job_audit_owner");
     }
+    expect(grants).not.toMatch(
+      /REVOKE\s+ALL\s+PRIVILEGES\s+ON\s+ALL\s+TABLES\s+IN\s+SCHEMA\s+public\s+FROM\s+sales_runtime;/i,
+    );
+    expect(legacyGrants).not.toMatch(
+      /REVOKE\s+ALL\s+PRIVILEGES\s+ON\s+ALL\s+TABLES\s+IN\s+SCHEMA\s+public\s+FROM\s+sales_legacy_runtime;/i,
+    );
     expect(grants).toContain("GRANT SELECT ON TABLE users TO sales_runtime;");
     expect(grants).toContain(
       "GRANT SELECT ON TABLE company_product_principals TO sales_runtime;",
@@ -451,6 +461,17 @@ describe("Sales production readiness", () => {
         new RegExp(
           `has_table_privilege\\(\\s*current_user, '${relation}', 'SELECT,INSERT,UPDATE,DELETE,TRUNCATE'`,
         ),
+      );
+    }
+    for (const relation of [
+      "durable_job_audit_events",
+      "review_job_adoption_audit_events",
+    ]) {
+      expect(grants).not.toMatch(
+        new RegExp(`GRANT[^;]+TABLE ${relation}`, "i"),
+      );
+      expect(legacyGrants).not.toMatch(
+        new RegExp(`GRANT[^;]+TABLE ${relation}`, "i"),
       );
     }
     expect(grants).not.toMatch(/GRANT[^;]+UPDATE[^;]+TABLE users/i);
