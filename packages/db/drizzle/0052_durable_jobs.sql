@@ -180,18 +180,14 @@ DO $$
 BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'durable_job_audit_owner') THEN
     CREATE ROLE durable_job_audit_owner NOLOGIN;
+    ALTER ROLE durable_job_audit_owner NOINHERIT;
   END IF;
   IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'durable_job_queue_runtime') THEN
     CREATE ROLE durable_job_queue_runtime NOLOGIN;
+    ALTER ROLE durable_job_queue_runtime NOINHERIT;
   END IF;
 END
 $$;
---> statement-breakpoint
-ALTER ROLE durable_job_audit_owner
-  NOSUPERUSER NOCREATEDB NOCREATEROLE NOLOGIN NOINHERIT NOREPLICATION NOBYPASSRLS;
---> statement-breakpoint
-ALTER ROLE durable_job_queue_runtime
-  NOSUPERUSER NOCREATEDB NOCREATEROLE NOLOGIN NOINHERIT NOREPLICATION NOBYPASSRLS;
 --> statement-breakpoint
 DO $$
 BEGIN
