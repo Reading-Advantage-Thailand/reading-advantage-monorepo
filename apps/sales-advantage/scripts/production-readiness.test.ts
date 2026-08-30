@@ -439,12 +439,36 @@ describe("Sales production readiness", () => {
       expect(contract).toContain("durable_job_audit_events");
       expect(contract).toContain("review_job_adoption_audit_events");
       expect(contract).toContain("durable_job_audit_owner");
+      expect(contract).toContain("durable_job_queue_runtime");
+      expect(contract).toMatch(
+        /owner_name\s+IN\s*\(\s*'durable_job_audit_owner'\s*,\s*'durable_job_queue_runtime'\s*\)/,
+      );
+      expect(
+        contract.match(
+          /\bowner_name\s+IN\s*\(\s*'durable_job_audit_owner'\s*,\s*'durable_job_queue_runtime'\s*\)/g,
+        ),
+      ).toHaveLength(3);
+      expect(contract).toMatch(
+        /attached_table_owner_name\s+IN\s*\(\s*'durable_job_audit_owner'\s*,\s*'durable_job_queue_runtime'\s*\)/,
+      );
+      expect(contract).toContain("pg_proc");
+      expect(contract).toContain("pg_depend");
+      expect(contract).toContain("attached_table_owner_name");
+      expect(contract).not.toMatch(
+        /\bON\s+ALL\b/i,
+      );
     }
     expect(grants).not.toMatch(
       /REVOKE\s+ALL\s+PRIVILEGES\s+ON\s+ALL\s+TABLES\s+IN\s+SCHEMA\s+public\s+FROM\s+sales_runtime;/i,
     );
     expect(legacyGrants).not.toMatch(
       /REVOKE\s+ALL\s+PRIVILEGES\s+ON\s+ALL\s+TABLES\s+IN\s+SCHEMA\s+public\s+FROM\s+sales_legacy_runtime;/i,
+    );
+    expect(grants).not.toMatch(
+      /REVOKE\s+ALL\s+PRIVILEGES\s+ON\s+ALL\s+(?:FUNCTIONS|ROUTINES|SEQUENCES)\s+IN\s+SCHEMA\s+public\s+FROM\s+sales_runtime;/i,
+    );
+    expect(legacyGrants).not.toMatch(
+      /REVOKE\s+ALL\s+PRIVILEGES\s+ON\s+ALL\s+(?:FUNCTIONS|ROUTINES|SEQUENCES)\s+IN\s+SCHEMA\s+public\s+FROM\s+sales_legacy_runtime;/i,
     );
     expect(grants).toContain("GRANT SELECT ON TABLE users TO sales_runtime;");
     expect(grants).toContain(
