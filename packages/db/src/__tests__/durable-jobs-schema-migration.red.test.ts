@@ -8,10 +8,15 @@ import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
 import { durableJobInvalidRowFixtures } from "./fixtures/durable-job-transition-counterexamples.js";
+import { splitPostgresMigration } from "../migration-files.js";
 
 const PACKAGE_ROOT = resolve(import.meta.dirname, "../..");
 const REPOSITORY_ROOT = resolve(PACKAGE_ROOT, "../..");
 const DRIZZLE_ROOT = resolve(PACKAGE_ROOT, "drizzle");
+const CONSTRAINT_MIGRATION_PATH = resolve(
+  DRIZZLE_ROOT,
+  "0054_chunky_dazzler.sql",
+);
 const SCHEMA_PATH = resolve(PACKAGE_ROOT, "src/schema/jobs.ts");
 const SCHEMA_BARREL_PATH = resolve(PACKAGE_ROOT, "src/schema/index.ts");
 const TENANT_REGISTRY_PATH = resolve(
@@ -33,6 +38,9 @@ const migrationSql = migrationPath === undefined
   ? ""
   : readFileSync(migrationPath, "utf8");
 const normalizedSql = migrationSql.replace(/\s+/g, " ");
+const constraintMigrationStatements = splitPostgresMigration(
+  readFileSync(CONSTRAINT_MIGRATION_PATH, "utf8"),
+).map((statement) => statement.trim()).filter(Boolean);
 const schemaSource = existsSync(SCHEMA_PATH) ? readFileSync(SCHEMA_PATH, "utf8") : "";
 const schemaBarrel = readFileSync(SCHEMA_BARREL_PATH, "utf8");
 const tenantRegistry = readFileSync(TENANT_REGISTRY_PATH, "utf8");
@@ -357,6 +365,58 @@ describe("Task 6 Red durable-jobs schema and migration contract", () => {
       ).toHaveLength(1);
     }
     expect(migrationSql).not.toMatch(/\b(?:SUPERUSER|NOSUPERUSER)\b/i);
+  });
+
+  it("scopes every 0054 audit constraint change to a tight owner-role window", () => {
+    const protectedStatement = /^ALTER TABLE "(?:durable_job_audit_events|review_job_adoption_audit_events)" (?:DROP|ADD) CONSTRAINT /;
+    const setRoleIndexes = constraintMigrationStatements.reduce<number[]>(
+      (indexes, statement, index) => {
+        if (statement === "SET ROLE durable_job_audit_owner;") indexes.push(index);
+        return indexes;
+      },
+      [],
+    );
+    const resetRoleIndexes = constraintMigrationStatements.reduce<number[]>(
+      (indexes, statement, index) => {
+        if (statement === "RESET ROLE;") indexes.push(index);
+        return indexes;
+      },
+      [],
+    );
+
+    expect(setRoleIndexes).toHaveLength(4);
+    expect(resetRoleIndexes).toHaveLength(4);
+
+    const windows = setRoleIndexes.map((start, windowIndex) => {
+      const end = constraintMigrationStatements.indexOf("RESET ROLE;", start + 1);
+      const nextStart = setRoleIndexes[windowIndex + 1] ?? constraintMigrationStatements.length;
+
+      expect(end, "Each owner role window must close with RESET ROLE.").toBeGreaterThan(start);
+      expect(end, "A RESET ROLE must close before another owner role window starts.").toBeLessThan(nextStart);
+
+      const statements = constraintMigrationStatements.slice(start + 1, end);
+      expect(statements, "Each owner role window must contain four protected constraints.").toHaveLength(4);
+      for (const statement of statements) {
+        expect(statement, "Owner role windows may contain only protected constraints.").toMatch(protectedStatement);
+      }
+
+      return { start, end };
+    });
+
+    const protectedStatementIndexes = constraintMigrationStatements.reduce<number[]>(
+      (indexes, statement, index) => {
+        if (protectedStatement.test(statement)) indexes.push(index);
+        return indexes;
+      },
+      [],
+    );
+    expect(protectedStatementIndexes).toHaveLength(16);
+    for (const statementIndex of protectedStatementIndexes) {
+      expect(
+        windows.some(({ start, end }) => statementIndex > start && statementIndex < end),
+        "Protected audit constraints must not execute outside an owner role window.",
+      ).toBe(true);
+    }
   });
 
   it("classifies every mixed-scope queue/adoption table as REFERENTIAL", () => {
