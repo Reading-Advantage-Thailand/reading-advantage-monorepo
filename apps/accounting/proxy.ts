@@ -1,23 +1,8 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { getPublicUrl } from "./app/lib/public-url";
 
 const ACCOUNTING_SESSION_COOKIE = "__Host-ra_accounting_session";
-
-function getPublicUrl(request: NextRequest, pathname: string) {
-  const url = request.nextUrl.clone();
-  const forwardedProto = request.headers.get("x-forwarded-proto");
-  const forwardedHost = request.headers.get("x-forwarded-host");
-
-  url.protocol = forwardedProto ? `${forwardedProto}:` : url.protocol;
-  url.host = forwardedHost ?? url.host;
-  if (forwardedHost && !forwardedHost.includes(":")) {
-    url.port = "";
-  }
-  url.pathname = pathname;
-  url.search = "";
-
-  return url;
-}
 
 /**
  * Routes unauthenticated browsers hitting protected Accounting pages to the
@@ -44,7 +29,15 @@ export async function proxy(request: NextRequest) {
 
   const sessionToken = request.cookies.get(ACCOUNTING_SESSION_COOKIE)?.value;
   if (!sessionToken) {
-    const loginUrl = getPublicUrl(request, "/login");
+    let loginUrl: URL;
+    try {
+      loginUrl = getPublicUrl(request, "/login");
+    } catch {
+      loginUrl = new URL(
+        "/login",
+        "https://accounting.reading-advantage.com",
+      );
+    }
     loginUrl.searchParams.set("returnTo", pathname + search);
     return NextResponse.redirect(loginUrl);
   }

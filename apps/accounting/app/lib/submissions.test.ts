@@ -2,6 +2,10 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const submitDomainAccountingSubmission = vi.hoisted(() => vi.fn());
+const accountingRuntimeClient = vi.hoisted(() => ({}));
+const createAccountingRuntimeClient = vi.hoisted(() =>
+  vi.fn().mockResolvedValue(accountingRuntimeClient),
+);
 
 vi.mock("@reading-advantage/backend/accounting", async (importOriginal) => {
   const actual =
@@ -14,7 +18,9 @@ vi.mock("@reading-advantage/backend/accounting", async (importOriginal) => {
   };
 });
 
-vi.mock("@reading-advantage/db/client", () => ({ client: {} }));
+vi.mock("@reading-advantage/db/accounting/runtime", () => ({
+  createAccountingRuntimeClient,
+}));
 
 import {
   submitAccountingSubmission,

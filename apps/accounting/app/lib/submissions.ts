@@ -2,10 +2,9 @@
  * Application adapter wiring the `@reading-advantage/backend/accounting`
  * domain functions to a Postgres-backed `AccountingSubmissionRepository`.
  *
- * The repository uses the shared main database client
- * (`@reading-advantage/db/client`); the separate accounting database stream
- * is gone. Domain `invalid-input` rejections are translated here into a
- * route-ready error carrying `fieldErrors`, keeping the API route thin.
+ * The repository uses the dedicated Accounting runtime client. Domain
+ * `invalid-input` rejections are translated here into a route-ready error
+ * carrying `fieldErrors`, keeping the API route thin.
  */
 import {
   AccountingSubmissionError,
@@ -20,12 +19,35 @@ import {
   type AccountingSubmissionInput,
   type AccountingSubmissionResult,
 } from "@reading-advantage/backend/accounting";
-import { client } from "@reading-advantage/db/client";
+import { createAccountingRuntimeClient } from "@reading-advantage/db/accounting/runtime";
 import type { ZodIssue } from "zod";
 
-const repository = createPostgresAccountingSubmissionRepository({
-  sql: client,
-});
+type AccountingRepository = ReturnType<
+  typeof createPostgresAccountingSubmissionRepository
+>;
+
+let repositoryPromise: Promise<AccountingRepository> | undefined;
+
+/**
+ * Creates the process-local repository against the dedicated Accounting database.
+ * @returns A repository backed by the validated Accounting runtime connection.
+ * @throws When the runtime URL or connection target is invalid.
+ */
+async function createRepository(): Promise<AccountingRepository> {
+  const sql = await createAccountingRuntimeClient({
+    databaseUrl: process.env.ACCOUNTING_DATABASE_URL ?? "",
+  });
+  return createPostgresAccountingSubmissionRepository({ sql });
+}
+
+/**
+ * Returns the process-local Accounting repository.
+ * @returns The shared repository promise for this process.
+ */
+function getRepository(): Promise<AccountingRepository> {
+  repositoryPromise ??= createRepository();
+  return repositoryPromise;
+}
 
 /**
  * Groups Zod issues into a field-path → messages map for 400 responses.
@@ -95,7 +117,7 @@ export async function submitAccountingSubmission(
 ): Promise<AccountingSubmission> {
   try {
     return await submitDomainAccountingSubmission({
-      repository,
+      repository: await getRepository(),
       actor: request.actor,
       input: request.input,
       ...(request.idempotencyKey === undefined
@@ -122,7 +144,7 @@ export async function submitAccountingSubmissionWithOutcome(
 ): Promise<AccountingSubmissionResult> {
   try {
     return await submitDomainAccountingSubmissionWithOutcome({
-      repository,
+      repository: await getRepository(),
       actor: request.actor,
       input: request.input,
       ...(request.idempotencyKey === undefined
@@ -154,7 +176,7 @@ export async function listAccountingSubmissions(
 ): Promise<readonly AccountingSubmission[]> {
   try {
     return await listDomainAccountingSubmissions({
-      repository,
+      repository: await getRepository(),
       actor: request.actor,
     });
   } catch (error) {
@@ -181,7 +203,7 @@ export async function approveAccountingSubmission(
 ): Promise<AccountingSubmission> {
   try {
     return await approveDomainAccountingSubmission({
-      repository,
+      repository: await getRepository(),
       actor: request.actor,
       submissionId: request.submissionId,
     });
@@ -211,7 +233,7 @@ export async function rejectAccountingSubmission(
 ): Promise<AccountingSubmission> {
   try {
     return await rejectDomainAccountingSubmission({
-      repository,
+      repository: await getRepository(),
       actor: request.actor,
       submissionId: request.submissionId,
       reason: request.reason,

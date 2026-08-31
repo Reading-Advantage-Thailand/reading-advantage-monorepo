@@ -15,7 +15,7 @@ import { dirname, join, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { getTableConfig, PgDialect } from "drizzle-orm/pg-core";
 import { describe, expect, it } from "vitest";
-import * as schema from "../schema/index.js";
+import * as schema from "../accounting/schema/index.js";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = resolve(HERE, "../../../..");
@@ -46,7 +46,10 @@ describe("accounting submission audit events schema (red - Task 7)", () => {
   it("classifies both accounting tables as EXEMPT", async () => {
     // classifyTable keys on object identity. Load the built package tables
     // so the objects match the ones tenant-registry registers.
-    const dbIndex = join(REPO_ROOT, "packages/db/dist/index.js");
+    const dbIndex = join(
+      REPO_ROOT,
+      "packages/db/dist/accounting/schema/index.js",
+    );
     const db = (await import(/* @vite-ignore */ pathToFileURL(dbIndex).href)) as Record<
       string,
       unknown

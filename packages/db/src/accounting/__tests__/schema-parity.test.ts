@@ -9,10 +9,6 @@ import {
   accountingSubmissions,
   accountingSubmissionAuditEvents,
 } from "../schema/index.js";
-import {
-  accountingSubmissions as currentAccountingSubmissions,
-  accountingSubmissionAuditEvents as currentAccountingSubmissionAuditEvents,
-} from "../../schema/accounting.js";
 
 const dialect = new PgDialect();
 
@@ -66,15 +62,65 @@ describe("Accounting schema entrypoint parity", () => {
   });
 
   it("preserves every submissions column, constraint, and index", () => {
-    expect(tableContract(accountingSubmissions)).toEqual(
-      tableContract(currentAccountingSubmissions),
-    );
+    expect(tableContract(accountingSubmissions)).toEqual({
+      checks: [
+        { name: "accounting_submissions_kind_check", sql: '"accounting_submissions"."kind" IN (\'expense\', \'bill\')' },
+        { name: "accounting_submissions_payee_check", sql: 'char_length("accounting_submissions"."payee") between 1 and 256 AND "accounting_submissions"."payee" ~ \'[^[:space:]]\'' },
+        { name: "accounting_submissions_category_check", sql: 'char_length("accounting_submissions"."category") between 1 and 128 AND "accounting_submissions"."category" ~ \'[^[:space:]]\'' },
+        { name: "accounting_submissions_description_check", sql: '"accounting_submissions"."description" IS NULL OR (char_length("accounting_submissions"."description") between 1 and 1024 AND "accounting_submissions"."description" ~ \'[^[:space:]]\')' },
+        { name: "accounting_submissions_amount_minor_check", sql: '"accounting_submissions"."amount_minor" ~ \'^[0-9]+$\'' },
+        { name: "accounting_submissions_currency_check", sql: '"accounting_submissions"."currency" ~ \'^[A-Z]{3}$\'' },
+        { name: "accounting_submissions_settled_thb_amount_minor_check", sql: '"accounting_submissions"."settled_thb_amount_minor" IS NULL OR "accounting_submissions"."settled_thb_amount_minor" ~ \'^[1-9][0-9]*$\'' },
+        { name: "accounting_submissions_settled_thb_currency_check", sql: '("accounting_submissions"."currency" = \'THB\' AND "accounting_submissions"."settled_thb_amount_minor" IS NULL) OR ("accounting_submissions"."currency" <> \'THB\' AND "accounting_submissions"."settled_thb_amount_minor" IS NOT NULL)' },
+        { name: "accounting_submissions_evidence_reference_check", sql: '"accounting_submissions"."evidence_reference" ~ \'^private-evidence://[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?(/[A-Za-z0-9._~-]+)+$\' AND "accounting_submissions"."evidence_reference" NOT LIKE \'%/../%\' AND "accounting_submissions"."evidence_reference" NOT LIKE \'%/./%\' AND "accounting_submissions"."evidence_reference" NOT LIKE \'%/..\' AND "accounting_submissions"."evidence_reference" NOT LIKE \'%/.\'' },
+        { name: "accounting_submissions_status_check", sql: '"accounting_submissions"."status" IN (\'pending\', \'approved\', \'rejected\')' },
+      ],
+      columns: [
+        { dataType: "string", hasDefault: true, name: "id", notNull: true, primary: true, sqlType: "uuid" },
+        { dataType: "string", hasDefault: false, name: "kind", notNull: true, primary: false, sqlType: "text" },
+        { dataType: "string", hasDefault: false, name: "payee", notNull: true, primary: false, sqlType: "text" },
+        { dataType: "string", hasDefault: false, name: "category", notNull: true, primary: false, sqlType: "text" },
+        { dataType: "string", hasDefault: false, name: "description", notNull: false, primary: false, sqlType: "text" },
+        { dataType: "string", hasDefault: false, name: "amount_minor", notNull: true, primary: false, sqlType: "text" },
+        { dataType: "string", hasDefault: false, name: "currency", notNull: true, primary: false, sqlType: "char(3)" },
+        { dataType: "string", hasDefault: false, name: "settled_thb_amount_minor", notNull: false, primary: false, sqlType: "text" },
+        { dataType: "string", hasDefault: false, name: "evidence_reference", notNull: true, primary: false, sqlType: "text" },
+        { dataType: "string", hasDefault: false, name: "scope_company_id", notNull: true, primary: false, sqlType: "uuid" },
+        { dataType: "string", hasDefault: true, name: "status", notNull: true, primary: false, sqlType: "text" },
+        { dataType: "string", hasDefault: false, name: "submitted_by_account_id", notNull: true, primary: false, sqlType: "uuid" },
+        { dataType: "date", hasDefault: true, name: "submitted_at", notNull: true, primary: false, sqlType: "timestamp with time zone" },
+        { dataType: "string", hasDefault: false, name: "idempotency_key", notNull: false, primary: false, sqlType: "text" },
+        { dataType: "date", hasDefault: true, name: "created_at", notNull: true, primary: false, sqlType: "timestamp with time zone" },
+      ],
+      indexes: [
+        { columns: ["scope_company_id", "status"], name: "accounting_submissions_scope_company_status_idx", unique: false },
+        { columns: ["submitted_by_account_id"], name: "accounting_submissions_submitted_by_idx", unique: false },
+        { columns: ["scope_company_id", "submitted_by_account_id", "idempotency_key"], name: "accounting_submissions_idempotency_key_idx", unique: true },
+      ],
+      name: "accounting_submissions",
+    });
   });
 
   it("preserves every audit-event column, constraint, and index", () => {
-    expect(tableContract(accountingSubmissionAuditEvents)).toEqual(
-      tableContract(currentAccountingSubmissionAuditEvents),
-    );
+    expect(tableContract(accountingSubmissionAuditEvents)).toEqual({
+      checks: [
+        { name: "accounting_submission_audit_events_action_check", sql: '"accounting_submission_audit_events"."action" IN (\'submit\', \'approve\', \'reject\')' },
+        { name: "accounting_submission_audit_events_reason_check", sql: '"accounting_submission_audit_events"."reason" IS NULL OR "accounting_submission_audit_events"."reason" ~ \'[^[:space:]]\'' },
+      ],
+      columns: [
+        { dataType: "string", hasDefault: true, name: "id", notNull: true, primary: true, sqlType: "uuid" },
+        { dataType: "string", hasDefault: false, name: "submission_id", notNull: true, primary: false, sqlType: "uuid" },
+        { dataType: "string", hasDefault: false, name: "action", notNull: true, primary: false, sqlType: "text" },
+        { dataType: "string", hasDefault: false, name: "actor_account_id", notNull: true, primary: false, sqlType: "uuid" },
+        { dataType: "string", hasDefault: false, name: "actor_role", notNull: true, primary: false, sqlType: "text" },
+        { dataType: "string", hasDefault: false, name: "reason", notNull: false, primary: false, sqlType: "text" },
+        { dataType: "date", hasDefault: true, name: "created_at", notNull: true, primary: false, sqlType: "timestamp with time zone" },
+      ],
+      indexes: [
+        { columns: ["submission_id", "created_at"], name: "accounting_submission_audit_events_submission_idx", unique: false },
+      ],
+      name: "accounting_submission_audit_events",
+    });
   });
 
   it("creates the exact dedicated tables in one 0000 migration", () => {
@@ -93,7 +139,19 @@ describe("Accounting schema entrypoint parity", () => {
       'CREATE TABLE "accounting_submissions"',
       'CREATE TABLE "accounting_submission_audit_events"',
       'CONSTRAINT "accounting_submissions_status_check" CHECK',
+      'CONSTRAINT "accounting_submissions_kind_check" CHECK',
+      'CONSTRAINT "accounting_submissions_payee_check" CHECK',
+      'CONSTRAINT "accounting_submissions_category_check" CHECK',
+      'CONSTRAINT "accounting_submissions_description_check" CHECK',
+      'CONSTRAINT "accounting_submissions_amount_minor_check" CHECK',
+      'CONSTRAINT "accounting_submissions_currency_check" CHECK',
+      'CONSTRAINT "accounting_submissions_settled_thb_amount_minor_check" CHECK',
+      'CONSTRAINT "accounting_submissions_settled_thb_currency_check" CHECK',
+      'CONSTRAINT "accounting_submissions_evidence_reference_check" CHECK',
       'CONSTRAINT "accounting_submission_audit_events_action_check" CHECK',
+      'CONSTRAINT "accounting_submission_audit_events_reason_check" CHECK',
+      'CREATE INDEX "accounting_submissions_scope_company_status_idx"',
+      'CREATE INDEX "accounting_submissions_submitted_by_idx"',
       'CREATE UNIQUE INDEX "accounting_submissions_idempotency_key_idx"',
       'CREATE INDEX "accounting_submission_audit_events_submission_idx"',
     ]) {

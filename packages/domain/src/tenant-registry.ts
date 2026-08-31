@@ -166,9 +166,11 @@ import {
   companyProductPrincipals,
   standardPackSuccessorCommitments,
   standardPackSuccessorAdmissionReceipts,
-   accountingSubmissions,
-   accountingSubmissionAuditEvents,
 } from "@reading-advantage/db";
+import {
+  accountingSubmissions,
+  accountingSubmissionAuditEvents,
+} from "@reading-advantage/db/accounting/schema";
 
 // auth infrastructure — identifier/token/expires; not scoped to a school.
 register(verificationTokens, "EXEMPT");

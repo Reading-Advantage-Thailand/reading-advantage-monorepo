@@ -13,8 +13,123 @@ GRANT USAGE ON SCHEMA public TO accounting_runtime;
 REVOKE CREATE ON SCHEMA public FROM PUBLIC;
 REVOKE CREATE ON SCHEMA public FROM accounting_runtime;
 
-REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA public FROM accounting_runtime;
-REVOKE ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public FROM accounting_runtime;
+-- Prefer the concise revoke when this dedicated database contains only
+-- Accounting-owned objects. If durable infrastructure is added later, preserve
+-- privileges on its separately owned objects while revoking every other table.
+DO $$
+DECLARE
+  table_record record;
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_class AS class
+    INNER JOIN pg_namespace AS namespace ON namespace.oid = class.relnamespace
+    WHERE namespace.nspname = 'public'
+      AND class.relkind IN ('r', 'p', 'v', 'm', 'f')
+      AND pg_get_userbyid(class.relowner) IN (
+        'durable_job_audit_owner',
+        'durable_job_queue_runtime'
+      )
+  ) THEN
+    EXECUTE 'REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA public FROM accounting_runtime';
+  ELSE
+    FOR table_record IN
+      SELECT class.relname, pg_get_userbyid(class.relowner) AS owner_name
+      FROM pg_class AS class
+      INNER JOIN pg_namespace AS namespace ON namespace.oid = class.relnamespace
+      WHERE namespace.nspname = 'public'
+        AND class.relkind IN ('r', 'p', 'v', 'm', 'f')
+      ORDER BY class.relname
+    LOOP
+      IF table_record.relname IN (
+        'durable_job_audit_events',
+        'review_job_adoption_audit_events'
+      ) OR table_record.owner_name IN (
+        'durable_job_audit_owner',
+        'durable_job_queue_runtime'
+      ) THEN
+        RAISE NOTICE 'Skipping runtime revoke for public.% (owner: %)',
+          table_record.relname,
+          table_record.owner_name;
+      ELSE
+        EXECUTE format(
+          'REVOKE ALL PRIVILEGES ON TABLE %I.%I FROM %I',
+          'public',
+          table_record.relname,
+          'accounting_runtime'
+        );
+      END IF;
+    END LOOP;
+  END IF;
+END
+$$;
+
+DO $$
+DECLARE
+  sequence_record record;
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_class AS sequence_class
+    INNER JOIN pg_namespace AS namespace
+      ON namespace.oid = sequence_class.relnamespace
+    WHERE namespace.nspname = 'public'
+      AND sequence_class.relkind = 'S'
+      AND pg_get_userbyid(sequence_class.relowner) IN (
+        'durable_job_audit_owner',
+        'durable_job_queue_runtime'
+      )
+  ) THEN
+    EXECUTE 'REVOKE ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public FROM accounting_runtime';
+  ELSE
+    FOR sequence_record IN
+      SELECT
+        sequence_class.relname,
+        pg_get_userbyid(sequence_class.relowner) AS owner_name,
+        attached_table.relname AS attached_table_name,
+        pg_get_userbyid(attached_table.relowner) AS attached_table_owner_name
+      FROM pg_class AS sequence_class
+      INNER JOIN pg_namespace AS namespace
+        ON namespace.oid = sequence_class.relnamespace
+      LEFT JOIN pg_depend AS dependency
+        ON dependency.classid = 'pg_class'::regclass
+        AND dependency.objid = sequence_class.oid
+        AND dependency.refclassid = 'pg_class'::regclass
+        AND dependency.deptype IN ('a', 'i')
+      LEFT JOIN pg_class AS attached_table
+        ON attached_table.oid = dependency.refobjid
+      WHERE namespace.nspname = 'public'
+        AND sequence_class.relkind = 'S'
+      ORDER BY sequence_class.relname
+    LOOP
+      IF sequence_record.owner_name IN (
+        'durable_job_audit_owner',
+        'durable_job_queue_runtime'
+      ) OR sequence_record.attached_table_name IN (
+        'durable_job_audit_events',
+        'review_job_adoption_audit_events'
+      ) OR sequence_record.attached_table_owner_name IN (
+        'durable_job_audit_owner',
+        'durable_job_queue_runtime'
+      ) THEN
+        RAISE NOTICE
+          'Skipping runtime revoke for public.% (owner: %, attached table: %, attached owner: %)',
+          sequence_record.relname,
+          sequence_record.owner_name,
+          sequence_record.attached_table_name,
+          sequence_record.attached_table_owner_name;
+      ELSE
+        EXECUTE format(
+          'REVOKE ALL PRIVILEGES ON SEQUENCE %I.%I FROM %I',
+          'public',
+          sequence_record.relname,
+          'accounting_runtime'
+        );
+      END IF;
+    END LOOP;
+  END IF;
+END
+$$;
 
 -- The app may read, insert, and update submissions (approve/reject mutate status).
 GRANT SELECT, INSERT, UPDATE ON TABLE accounting_submissions TO accounting_runtime;

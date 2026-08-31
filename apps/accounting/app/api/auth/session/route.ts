@@ -16,7 +16,7 @@ export async function GET(request: Request): Promise<NextResponse> {
       : null;
     const user = session ? accountingSessionUser(session.identity) : null;
     return NextResponse.json(
-      { session: user ? { user } : null },
+      user ? { session: { user } } : session ? { session: null, denied: true } : { session: null },
       {
         status: !session ? 401 : !user ? 403 : 200,
         headers: { "Cache-Control": "no-store, private" },

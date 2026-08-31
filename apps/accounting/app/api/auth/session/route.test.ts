@@ -109,7 +109,10 @@ describe("GET /api/auth/session", () => {
     const response = await GET(sessionRequest());
 
     expect(response.status).toBe(403);
-    await expect(response.json()).resolves.toEqual({ session: null });
+    await expect(response.json()).resolves.toEqual({
+      session: null,
+      denied: true,
+    });
   });
 
   it("returns 401 with a null session when the SSO token was revoked or expired", async () => {
