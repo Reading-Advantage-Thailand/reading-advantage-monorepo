@@ -233,10 +233,13 @@ The final runs set `pnpm_config_verify_deps_before_run=false` because pnpm depen
     - [x] Deploy the Marketing candidate with no traffic shift, wired with both preview-origin URL forms
     - [x] Run the Sales and Marketing candidate-hop unauthenticated and start-route cases
     - [x] Record the exact candidate-hop status, redirect, browser, and database evidence below
-    - [ ] Owner gate: review the candidate evidence and approve an acceptance note for each application
-    - [ ] Owner gate: run each promotion script only after its candidate acceptance note passes
-    - [ ] Owner gate: run the production authenticated matrix with the demo accounts and rollback anchors ready
-    - [ ] Owner gate: disable the no-role identity as the final acceptance step
+    - [x] Owner gate: approve the Sales acceptance note after reviewing its candidate evidence
+    - [x] Owner gate: approve the Marketing acceptance note after reviewing its candidate evidence
+    - [x] Owner gate: promote Sales after its candidate acceptance note passes
+    - [x] Owner gate: promote Marketing in its separate approved run
+    - [x] Owner gate: run the Sales production authenticated matrix with the rollback anchor ready
+    - [x] Owner gate: run the Marketing production authenticated matrix with its rollback anchor ready
+    - [x] Owner gate: disable the no-role identity as the final acceptance step
 
 ### Phase 4 Sales candidate smoke record (2026-08-30)
 
@@ -250,7 +253,32 @@ The final runs set `pnpm_config_verify_deps_before_run=false` because pnpm depen
 - Orchestrator adjudication: the candidate start route correctly preserved malformed `returnTo` during its callback-origin handoff. Safe restart validation runs at the callback-origin start route, so full-chain acceptance remains post-promotion.
 - Orchestrator adjudication: Sales has no `/login` route. The observed 404 is expected because the SSO entry is the locale landing page and `login-form`.
 - The valid candidate start request passed its HTTP 307 callback-origin handoff.
-- Browser acceptance and promotion remain pending.
+- Sales promotion approval is recorded in `acceptance/sales-candidate-acceptance-20260830.md`.
+
+### Phase 4 Sales promotion and production matrix (2026-08-30)
+
+- The Sales acceptance note contains the exact `status: pass` gate.
+- Promotion moved 100% traffic to `sales-advantage-00011-vis`; `sales-advantage-00005-yas` now has 0%.
+- The `legacy-rollback` tag remains on `sales-advantage-00009-yas`.
+- The promotion script completed its traffic update before local pnpm synchronization reached the shell timeout.
+- The direct release verifier then passed with `sales_release_verified` checks `health` and `readiness`.
+- Malformed production start returned HTTP 307 to Accounts authorize and never returned 500.
+- Its authenticated callback returned HTTP 307 to `https://sales.reading-advantage.com/`, proving the safe `returnTo=/` restart.
+- English protected path returned HTTP 307 to `/api/auth/company/start?returnTo=%2Fen%2Fmodule%2Fintro%3Ftab%3Dnotes`.
+- English start returned HTTP 307 to Accounts authorize; unauthenticated authorize returned HTTP 307 to Accounts login.
+- The Accounts login page returned HTTP 200; credential submission returned HTTP 200 with no `Location`.
+- Authenticated authorize returned HTTP 307 to the Sales callback with its code and state redacted.
+- The English callback returned HTTP 307 to `/en/module/intro?tab=notes` and set the production Sales session cookie.
+- The English destination and Sales session endpoint each returned HTTP 200.
+- The no-role chain authenticated through Accounts, but its callback returned HTTP 307 to `/?error=forbidden`.
+- The no-role callback expired the Sales session cookie and set no live Sales session.
+- Locale redirects reached `/th?error=forbidden`, which returned HTTP 200 with the expected Thai forbidden message.
+- `GET /api/auth/session` returned HTTP 403 with `{"session":null,"denied":true}` for the no-role chain.
+- Thai protected path returned HTTP 307 to `/api/auth/company/start?returnTo=%2Fth%2Fmodule%2Fintro%3Ftab%3Dnotes`.
+- The Thai callback returned HTTP 307 to `/th/module/intro?tab=notes` and set the production Sales session cookie.
+- The Thai destination and Sales session endpoint each returned HTTP 200.
+- All cookies, credentials, authorization codes, state, nonce, and PKCE values stayed redacted.
+- Marketing remained unpromoted during the Sales-only run, and the no-role identity stayed enabled for its Marketing matrix.
 
 ### Phase 4 Marketing candidate verification record (2026-08-30)
 
@@ -273,6 +301,66 @@ The final runs set `pnpm_config_verify_deps_before_run=false` because pnpm depen
 - `marketing_runtime` has no effective protected audit-table or function privilege.
 - No durable-owned sequences exist, so `marketing_runtime` has no durable sequence privilege.
 - Both audit tables have enabled update/delete and truncate rejection triggers.
+
+### Phase 4 Marketing promotion and HTTP matrix (2026-08-30)
+
+- Marketing promotion approval is recorded in `acceptance/marketing-candidate-acceptance-20260830.md`.
+- Promotion moved 100% traffic to `marketing-00017-nof`; `marketing-00013-jil` now has 0%.
+- Rollback revision `marketing-00013-jil` remains ready with its recorded image digest.
+- The first promotion command updated traffic before stopping because the local gcloud installation lacked the beta component.
+- After beta installation, the complete promotion script passed its domain, release, smoke, traffic, and rollback checks.
+- The release verifier passed with `marketing_release_verified` checks `health` and `readiness`.
+- The smoke suite passed all seven public, session, database, settings, and campaigns checks.
+- Anonymous `GET /campaigns` returned HTTP 200 with no `Location`; `GET /api/campaigns` returned HTTP 401 with no `Location`.
+- The campaigns page performs its `/login?returnTo=%2Fcampaigns` redirect in browser JavaScript, so curl cannot prove that visible navigation.
+- The Marketing-user login page returned HTTP 200, and start returned HTTP 307 to Accounts authorize.
+- Unauthenticated authorize returned HTTP 307 to Accounts login; the Accounts page and credential submission each returned HTTP 200.
+- Authenticated authorize returned HTTP 307 to the Marketing callback with its code and state redacted.
+- The Marketing-user callback returned HTTP 307 to `/campaigns` and set the production Marketing session cookie.
+- The destination, session endpoint, and campaigns API each returned HTTP 200; the session role was `MEMBER`.
+- Malformed production start returned HTTP 307 to Accounts authorize and never returned 500.
+- Its authenticated callback returned HTTP 307 to `https://marketing.reading-advantage.com/`, proving the safe `returnTo=/` restart.
+- The no-role callback returned HTTP 307 to `/campaigns` and set a Marketing session cookie.
+- The no-role session endpoint returned HTTP 403 with `{"session":null}`.
+- The no-role campaigns API returned HTTP 403 with `{"message":"Marketing access required"}`.
+- The spec defines only `/login?error=sso`; it does not define `/login?error=forbidden` for Marketing.
+- The client-rendered Marketing shell owns the visible forbidden alert, which requires browser verification.
+- The accepted role-denial contract required clean-context browser verification; see the browser record below.
+- Sales remained untouched during this Marketing run.
+
+### Phase 4 clean-browser acceptance record (2026-08-30)
+
+- Playwright used system Chrome with a new empty context for every check; no owner browser state was used.
+- Marketing `/campaigns` redirected to `/login?returnTo=%2Fcampaigns` and displayed the forwarded Accounts handoff.
+- Screenshot: `acceptance/marketing-unauthenticated-deep-link-login-20260830.png`.
+- A fresh no-role Marketing chain returned to `/campaigns` and rendered the visible `Marketing access required` alert.
+- Screenshot: `acceptance/marketing-no-role-forbidden-alert-20260830.png`.
+- Orchestrator adjudication accepted: Marketing SSO failures use `/login?error=sso`; role denial uses the client alert after backend HTTP 403.
+- The Marketing browser matrix passed when combined with the recorded Marketing-user and malformed-return HTTP chains.
+- A fresh no-role Sales chain reached `/th?error=forbidden`, and the session endpoint returned HTTP 403.
+- The Sales page did not render the expected forbidden account message after hydration.
+- It rendered the Thai dashboard-unavailable alert instead, so the Sales visual acceptance check failed.
+- Failure screenshot: `acceptance/sales-no-role-forbidden-landing-failure-20260830.png`.
+- The no-role identity remains enabled for a Sales repair retest; final cleanup did not run.
+
+### Phase 4 Sales remediation release and final cleanup (2026-08-31)
+
+- Release commit: `3fdb1fd0be9d4363af5693b5bc116f077c380064`; remediation commit: `b494a8210`.
+- The clean detached worktree produced manifest SHA-256 `3e0464dbeb39c67ab00b1d5efa055ed3b38a54878cf1b358cb3a5b917f9c20ad`, then the worktree was removed.
+- Build `d0f50453-3ee0-4d89-bad2-a7f6c28f564d` failed at source validation because local directory submission applied `.gcloudignore`; it made no image, database, revision, or traffic change.
+- The exact verified tar submission used fresh ON_DEMAND backup `1788178142031` and passed as build `66e43022-7321-4024-ac85-d0600c80c5c2`.
+- Candidate `sales-advantage-00016-dij` used image digest `sha256:9e6e094e974547daa084fb398c1f784b86c9899f70db6c7cc16fed8e1a6ab72e` and both semicolon-separated candidate URL forms at zero traffic.
+- Both candidate URL forms returned HTTP 307 and preserved `returnTo=/th/module/1`.
+- Acceptance: `acceptance/sales-remediation-candidate-acceptance-20260831.md` contains one exact `status: pass` line.
+- Promotion moved 100% traffic to `sales-advantage-00016-dij`; the release verifier passed health and readiness.
+- The `legacy-rollback` tag remains on `sales-advantage-00013-jiy`.
+- A fresh system-Chrome Sales context retained the Thai forbidden alert after a 3.5-second hydration wait.
+- Sales screenshot: `acceptance/sales-no-role-forbidden-post-hydration-20260831.png`.
+- A separate fresh system-Chrome Marketing context reconfirmed the visible `Marketing access required` alert after 3.5 seconds.
+- Marketing screenshot: `acceptance/marketing-no-role-alert-reconfirmed-20260831.png`.
+- Marketing production remained `marketing-00017-nof` at 100%; no Marketing service configuration changed.
+- Both browser retests passed, so the exact demo-account disable command disabled only the no-role identity through the approved proxy.
+- The Sales-rep and Marketing-user identities remain enabled, and the local proxy stopped after cleanup.
 - [x] Task: Create documentation
      - [x] Create `apps/sales-advantage/docs/sales-sso-deploy-runbook-20260829.md` with the redirect-chain section, the rollback anchor revision, and the preview-origin steps
      - [x] Record the demo account lifecycle commands in the same runbook
