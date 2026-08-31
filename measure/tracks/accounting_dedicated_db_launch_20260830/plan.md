@@ -168,11 +168,11 @@ provide the behavior.
 
 ## Phase 3: Implement
 
-- [x] Task: Create the dedicated Accounting database package layout
+- [x] Task: Create the dedicated Accounting database package layout (`e5c789dff`)
     - [x] Add `packages/db/accounting/drizzle.config.ts` mirroring the company-identity config
     - [x] Add `packages/db/src/accounting/environment.ts`, the runtime client factory, and migrate/doctor commands mirroring `src/company-identity/`
     - [x] Add the `accounting:generate`, `accounting:migrate`, and `accounting:doctor` scripts and the runtime client export to `packages/db/package.json`
-- [x] Task: Move the Accounting schema, prune the main snapshot, and generate the initial journal
+- [x] Task: Move the Accounting schema, prune the main snapshot, and generate the initial journal (`e5c789dff`)
     - [x] Relocate the two table definitions to `packages/db/src/accounting/schema/index.ts` unchanged
     - [x] Remove the re-export from `packages/db/src/schema/index.ts` and delete the old `src/schema/accounting.ts`
     - [x] Point the tenant registry import at the new accounting schema entrypoint
@@ -180,36 +180,36 @@ provide the behavior.
     - [x] Prune the accounting table, index, and constraint entries from the main-journal snapshot chain tip (`packages/db/drizzle/meta/0056_snapshot.json`) in the same change, so drizzle-kit no longer sees the tables on either side of the diff
     - [x] Run a main `drizzle-kit generate` into a temporary output and confirm it produces no migration referencing either Accounting table; commit no main migration if the generate is empty
     - [x] Add `packages/db/src/__tests__/main-journal-accounting-guard.test.ts` scanning post-relocation main-journal SQL for accounting references
-- [x] Task: Point the Accounting app at the dedicated client
+- [x] Task: Point the Accounting app at the dedicated client (`e5c789dff`)
     - [x] Change `apps/accounting/app/lib/submissions.ts` to build its postgres.js client through the accounting runtime factory
     - [x] Update `apps/accounting/app/lib/submissions.test.ts:17`, which mocks `@reading-advantage/db/client`, to mock the new accounting runtime client module instead, and update any other test that stubs the shared client
     - [x] Keep the domain repository injection and raw SQL unchanged
     - [x] Verify the socket-path conversion in `connection-options.ts` serves the accounting URL form; extend it only if the accounting URL shape requires it
-- [x] Task: Implement the database role provisioning, grants, and probes
+- [x] Task: Implement the database role provisioning, grants, and probes (`e5c789dff`)
     - [x] Add `apps/accounting/scripts/accounting-runtime-role-provision.sql` for the one-off privileged creation of `accounting_migration` and `accounting_runtime`
     - [x] Add `accounting-runtime-grants.sql` mirroring the Marketing grants file: CONNECT and schema USAGE grants, REVOKE ALL on existing tables and sequences, `SELECT, INSERT, UPDATE` on `accounting_submissions`, `SELECT, INSERT` only on `accounting_submission_audit_events`, and default-privilege revokes; this is the append-only enforcement that replaces the `0055` DO block
     - [x] Add `accounting-runtime-probe.sql` (owner-namespaced setup, application query, audit insert allowed, audit UPDATE and DELETE denied, cleanup) and the negative DDL probe
-- [x] Task: Implement the Accounting public URL helper with origin approval
+- [x] Task: Implement the Accounting public URL helper with origin approval (`e5c789dff`)
     - [x] Create `apps/accounting/app/lib/public-url.ts` porting the Sales helper with the accounting canonical origin and `ACCOUNTING_PREVIEW_ORIGINS`
     - [x] Use the helper in the proxy, callback, start, and logout routes
-- [x] Task: Implement the auth route changes
+- [x] Task: Implement the auth route changes (`e5c789dff`)
     - [x] Catch the return-path validation error in the start route, restart with `/`, and log one structured warning
     - [x] Hand off a start that arrives on an approved preview origin to the callback origin, preserving `returnTo`
     - [x] Deny a no-role identity in the callback with `/login?error=forbidden` and expire the transaction cookie on every failure path
     - [x] Answer a no-role session on the session route with HTTP 403 and the `{"session": null, "denied": true}` body
     - [x] Derive the cookie `secure` flag from the resolved target protocol as well as `NODE_ENV`
-- [x] Task: Implement the login page and proxy changes
+- [x] Task: Implement the login page and proxy changes (`e5c789dff`)
     - [x] Build the sign-in link from the current path and query in the login page
     - [x] Render the visible message for `sso` and `forbidden`
     - [x] Route the proxy redirect through the public URL helper
-- [x] Task: Create the Cloud Build pipeline
+- [x] Task: Create the Cloud Build pipeline (`e5c789dff`)
     - [x] Add `apps/accounting/cloudbuild.yaml` per the pipeline contract: build, push, migrate, doctor, grants, probes, candidate deploy with no traffic, invoker binding, candidate capture, and candidate verification
     - [x] Add `apps/accounting/scripts/capture-accounting-cloud-run-tag.sh` mirroring the Sales capture script
     - [x] Wire all `availableSecrets` and the candidate environment from FR-8
-- [x] Task: Create the promotion script and release verifier
+- [x] Task: Create the promotion script and release verifier (`e5c789dff`)
     - [x] Add `apps/accounting/scripts/promote-accounting-candidate.sh` with the acceptance-note gate, traffic shift, and production verification
     - [x] Add `apps/accounting/scripts/verify-accounting-release.ts` with the login-page, 401, and safe-redirect checks
-- [x] Task: Confirm the Green phase
+- [x] Task: Confirm the Green phase (`e5c789dff`)
     - [x] Run the Accounting and `@reading-advantage/db` suites, `check-types`, and `lint`
     - [x] Run `bash -n` on every new shell script and confirm executable mode
     - [x] Run the focused Turbo build and test gates and record the exit codes honestly
