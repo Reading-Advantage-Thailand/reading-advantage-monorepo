@@ -213,6 +213,19 @@ The final runs set `pnpm_config_verify_deps_before_run=false` because pnpm depen
 - Both promotion scripts pass `bash -n` and have executable mode.
 - The demo SQL matches the company identity table names, columns, role definitions, and conflict targets in the Drizzle schema.
 
+### Phase 3 browser-acceptance remediation record (2026-08-31)
+
+- Defect: the Sales `forbidden` and `sso` landing alerts disappeared after the client session check, and the dashboard-unavailable alert replaced them.
+- Evidence: `acceptance/sales-no-role-forbidden-landing-failure-20260830.png`.
+- Red: `app/[locale]/page.red.test.tsx` failed both hydration cases because the rendered alert changed to `unavailableTitle` and `unavailableDescription`.
+- Fix commit: `b494a8210`.
+- Fix: approved sign-in errors now render before auth-loading, authenticated-dashboard, and dashboard-error branches.
+- Focused landing and login suites: exit 0; 4 files and 12 tests passed.
+- Legacy-school auth, proxy, login, and landing suites: exit 0; 8 files and 29 tests passed.
+- Sales typecheck: exit 0.
+- Sales lint: exit 0 with three existing warnings.
+- Sales aggregate suite: exit 1; 256 passed, 2 failed, and 9 skipped. The existing failures remain in `scripts/sales-admin-ui.test.ts:31` and `:48`.
+
 ## Phase 4: Generate Docs & Doctor
 
 - [b] Task: Verify the candidate revisions and complete the owner gates deferred:owner
