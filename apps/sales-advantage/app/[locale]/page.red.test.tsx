@@ -3,7 +3,7 @@ import { render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
-  auth: { isAuthenticated: false, isLoading: false },
+  auth: { isAuthenticated: false, isForbidden: false, isLoading: false },
   dashboardQuery: vi.fn(),
   useSearchParams: vi.fn(),
 }));
@@ -45,6 +45,7 @@ describe("Sales landing sign-in errors", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mocks.auth.isAuthenticated = false;
+    mocks.auth.isForbidden = false;
     mocks.auth.isLoading = false;
     mocks.dashboardQuery.mockReturnValue({
       data: undefined,
@@ -64,6 +65,31 @@ describe("Sales landing sign-in errors", () => {
     expect(alerts).toHaveLength(1);
     expect(alerts[0]?.textContent).toContain(messageKey);
   });
+
+  it.each([
+    ["sso", "errorSso", false],
+    ["forbidden", "errorForbidden", true],
+  ] as const)(
+    "keeps the %s sign-in error after the session check settles",
+    (code, messageKey, isForbidden) => {
+      mocks.useSearchParams.mockReturnValue(new URLSearchParams(`error=${code}`));
+      mocks.dashboardQuery.mockReturnValue({
+        data: undefined,
+        isLoading: false,
+        error: new Error("Dashboard unavailable"),
+      });
+
+      const { rerender } = render(<HomePage />);
+      expect(screen.getByRole("alert").textContent).toContain(messageKey);
+
+      mocks.auth.isAuthenticated = true;
+      mocks.auth.isForbidden = isForbidden;
+      rerender(<HomePage />);
+
+      expect(screen.getByRole("alert").textContent).toContain(messageKey);
+      expect(screen.queryByText("unavailableTitle")).toBeNull();
+    },
+  );
 
   it("ignores an unknown sign-in error code", () => {
     mocks.useSearchParams.mockReturnValue(new URLSearchParams("error=unknown"));

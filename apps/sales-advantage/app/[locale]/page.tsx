@@ -24,6 +24,23 @@ export default function HomePage() {
   const { data, isLoading, error } = trpc.sales.dashboard.useQuery(undefined, {
     enabled: isAuthenticated,
   });
+  const messageKey =
+    signInError === "sso"
+      ? "errorSso"
+      : signInError === "forbidden"
+        ? "errorForbidden"
+        : null;
+
+  if (messageKey) {
+    return (
+      <>
+        <p role="alert" className="mx-auto mt-6 max-w-sm text-destructive">
+          {loginT(messageKey)}
+        </p>
+        <LoginForm />
+      </>
+    );
+  }
 
   if (authLoading) {
     return (
@@ -34,22 +51,7 @@ export default function HomePage() {
   }
 
   if (!isAuthenticated) {
-    const messageKey =
-      signInError === "sso"
-        ? "errorSso"
-        : signInError === "forbidden"
-          ? "errorForbidden"
-          : null;
-    return (
-      <>
-        {messageKey ? (
-          <p role="alert" className="mx-auto mt-6 max-w-sm text-destructive">
-            {loginT(messageKey)}
-          </p>
-        ) : null}
-        <LoginForm />
-      </>
-    );
+    return <LoginForm />;
   }
 
   if (error) {
