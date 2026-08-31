@@ -168,51 +168,70 @@ provide the behavior.
 
 ## Phase 3: Implement
 
-- [ ] Task: Create the dedicated Accounting database package layout
-    - [ ] Add `packages/db/accounting/drizzle.config.ts` mirroring the company-identity config
-    - [ ] Add `packages/db/src/accounting/environment.ts`, the runtime client factory, and migrate/doctor commands mirroring `src/company-identity/`
-    - [ ] Add the `accounting:generate`, `accounting:migrate`, and `accounting:doctor` scripts and the runtime client export to `packages/db/package.json`
-- [ ] Task: Move the Accounting schema, prune the main snapshot, and generate the initial journal
-    - [ ] Relocate the two table definitions to `packages/db/src/accounting/schema/index.ts` unchanged
-    - [ ] Remove the re-export from `packages/db/src/schema/index.ts` and delete the old `src/schema/accounting.ts`
-    - [ ] Point the tenant registry import at the new accounting schema entrypoint
-    - [ ] Run `accounting:generate` to produce `packages/db/accounting/drizzle/0000_*.sql` and review it against journal entries `0054` and `0055`; confirm it creates both tables and does NOT carry the hand-written `DO $$ ... REVOKE` block
-    - [ ] Prune the accounting table, index, and constraint entries from the main-journal snapshot chain tip (`packages/db/drizzle/meta/0056_snapshot.json`) in the same change, so drizzle-kit no longer sees the tables on either side of the diff
-    - [ ] Run a main `drizzle-kit generate` into a temporary output and confirm it produces no migration referencing either Accounting table; commit no main migration if the generate is empty
-    - [ ] Add `packages/db/src/__tests__/main-journal-accounting-guard.test.ts` scanning post-relocation main-journal SQL for accounting references
-- [ ] Task: Point the Accounting app at the dedicated client
-    - [ ] Change `apps/accounting/app/lib/submissions.ts` to build its postgres.js client through the accounting runtime factory
-    - [ ] Update `apps/accounting/app/lib/submissions.test.ts:17`, which mocks `@reading-advantage/db/client`, to mock the new accounting runtime client module instead, and update any other test that stubs the shared client
-    - [ ] Keep the domain repository injection and raw SQL unchanged
-    - [ ] Verify the socket-path conversion in `connection-options.ts` serves the accounting URL form; extend it only if the accounting URL shape requires it
-- [ ] Task: Implement the database role provisioning, grants, and probes
-    - [ ] Add `apps/accounting/scripts/accounting-runtime-role-provision.sql` for the one-off privileged creation of `accounting_migration` and `accounting_runtime`
-    - [ ] Add `accounting-runtime-grants.sql` mirroring the Marketing grants file: CONNECT and schema USAGE grants, REVOKE ALL on existing tables and sequences, `SELECT, INSERT, UPDATE` on `accounting_submissions`, `SELECT, INSERT` only on `accounting_submission_audit_events`, and default-privilege revokes; this is the append-only enforcement that replaces the `0055` DO block
-    - [ ] Add `accounting-runtime-probe.sql` (owner-namespaced setup, application query, audit insert allowed, audit UPDATE and DELETE denied, cleanup) and the negative DDL probe
-- [ ] Task: Implement the Accounting public URL helper with origin approval
-    - [ ] Create `apps/accounting/app/lib/public-url.ts` porting the Sales helper with the accounting canonical origin and `ACCOUNTING_PREVIEW_ORIGINS`
-    - [ ] Use the helper in the proxy, callback, start, and logout routes
-- [ ] Task: Implement the auth route changes
-    - [ ] Catch the return-path validation error in the start route, restart with `/`, and log one structured warning
-    - [ ] Hand off a start that arrives on an approved preview origin to the callback origin, preserving `returnTo`
-    - [ ] Deny a no-role identity in the callback with `/login?error=forbidden` and expire the transaction cookie on every failure path
-    - [ ] Answer a no-role session on the session route with HTTP 403 and the `{"session": null, "denied": true}` body
-    - [ ] Derive the cookie `secure` flag from the resolved target protocol as well as `NODE_ENV`
-- [ ] Task: Implement the login page and proxy changes
-    - [ ] Build the sign-in link from the current path and query in the login page
-    - [ ] Render the visible message for `sso` and `forbidden`
-    - [ ] Route the proxy redirect through the public URL helper
-- [ ] Task: Create the Cloud Build pipeline
-    - [ ] Add `apps/accounting/cloudbuild.yaml` per the pipeline contract: build, push, migrate, doctor, grants, probes, candidate deploy with no traffic, invoker binding, candidate capture, and candidate verification
-    - [ ] Add `apps/accounting/scripts/capture-accounting-cloud-run-tag.sh` mirroring the Sales capture script
-    - [ ] Wire all `availableSecrets` and the candidate environment from FR-8
-- [ ] Task: Create the promotion script and release verifier
-    - [ ] Add `apps/accounting/scripts/promote-accounting-candidate.sh` with the acceptance-note gate, traffic shift, and production verification
-    - [ ] Add `apps/accounting/scripts/verify-accounting-release.ts` with the login-page, 401, and safe-redirect checks
-- [ ] Task: Confirm the Green phase
-    - [ ] Run the Accounting and `@reading-advantage/db` suites, `check-types`, and `lint`
-    - [ ] Run `bash -n` on every new shell script and confirm executable mode
-    - [ ] Run the focused Turbo build and test gates and record the exit codes honestly
+- [x] Task: Create the dedicated Accounting database package layout
+    - [x] Add `packages/db/accounting/drizzle.config.ts` mirroring the company-identity config
+    - [x] Add `packages/db/src/accounting/environment.ts`, the runtime client factory, and migrate/doctor commands mirroring `src/company-identity/`
+    - [x] Add the `accounting:generate`, `accounting:migrate`, and `accounting:doctor` scripts and the runtime client export to `packages/db/package.json`
+- [x] Task: Move the Accounting schema, prune the main snapshot, and generate the initial journal
+    - [x] Relocate the two table definitions to `packages/db/src/accounting/schema/index.ts` unchanged
+    - [x] Remove the re-export from `packages/db/src/schema/index.ts` and delete the old `src/schema/accounting.ts`
+    - [x] Point the tenant registry import at the new accounting schema entrypoint
+    - [x] Run `accounting:generate` to produce `packages/db/accounting/drizzle/0000_*.sql` and review it against journal entries `0054` and `0055`; confirm it creates both tables and does NOT carry the hand-written `DO $$ ... REVOKE` block
+    - [x] Prune the accounting table, index, and constraint entries from the main-journal snapshot chain tip (`packages/db/drizzle/meta/0056_snapshot.json`) in the same change, so drizzle-kit no longer sees the tables on either side of the diff
+    - [x] Run a main `drizzle-kit generate` into a temporary output and confirm it produces no migration referencing either Accounting table; commit no main migration if the generate is empty
+    - [x] Add `packages/db/src/__tests__/main-journal-accounting-guard.test.ts` scanning post-relocation main-journal SQL for accounting references
+- [x] Task: Point the Accounting app at the dedicated client
+    - [x] Change `apps/accounting/app/lib/submissions.ts` to build its postgres.js client through the accounting runtime factory
+    - [x] Update `apps/accounting/app/lib/submissions.test.ts:17`, which mocks `@reading-advantage/db/client`, to mock the new accounting runtime client module instead, and update any other test that stubs the shared client
+    - [x] Keep the domain repository injection and raw SQL unchanged
+    - [x] Verify the socket-path conversion in `connection-options.ts` serves the accounting URL form; extend it only if the accounting URL shape requires it
+- [x] Task: Implement the database role provisioning, grants, and probes
+    - [x] Add `apps/accounting/scripts/accounting-runtime-role-provision.sql` for the one-off privileged creation of `accounting_migration` and `accounting_runtime`
+    - [x] Add `accounting-runtime-grants.sql` mirroring the Marketing grants file: CONNECT and schema USAGE grants, REVOKE ALL on existing tables and sequences, `SELECT, INSERT, UPDATE` on `accounting_submissions`, `SELECT, INSERT` only on `accounting_submission_audit_events`, and default-privilege revokes; this is the append-only enforcement that replaces the `0055` DO block
+    - [x] Add `accounting-runtime-probe.sql` (owner-namespaced setup, application query, audit insert allowed, audit UPDATE and DELETE denied, cleanup) and the negative DDL probe
+- [x] Task: Implement the Accounting public URL helper with origin approval
+    - [x] Create `apps/accounting/app/lib/public-url.ts` porting the Sales helper with the accounting canonical origin and `ACCOUNTING_PREVIEW_ORIGINS`
+    - [x] Use the helper in the proxy, callback, start, and logout routes
+- [x] Task: Implement the auth route changes
+    - [x] Catch the return-path validation error in the start route, restart with `/`, and log one structured warning
+    - [x] Hand off a start that arrives on an approved preview origin to the callback origin, preserving `returnTo`
+    - [x] Deny a no-role identity in the callback with `/login?error=forbidden` and expire the transaction cookie on every failure path
+    - [x] Answer a no-role session on the session route with HTTP 403 and the `{"session": null, "denied": true}` body
+    - [x] Derive the cookie `secure` flag from the resolved target protocol as well as `NODE_ENV`
+- [x] Task: Implement the login page and proxy changes
+    - [x] Build the sign-in link from the current path and query in the login page
+    - [x] Render the visible message for `sso` and `forbidden`
+    - [x] Route the proxy redirect through the public URL helper
+- [x] Task: Create the Cloud Build pipeline
+    - [x] Add `apps/accounting/cloudbuild.yaml` per the pipeline contract: build, push, migrate, doctor, grants, probes, candidate deploy with no traffic, invoker binding, candidate capture, and candidate verification
+    - [x] Add `apps/accounting/scripts/capture-accounting-cloud-run-tag.sh` mirroring the Sales capture script
+    - [x] Wire all `availableSecrets` and the candidate environment from FR-8
+- [x] Task: Create the promotion script and release verifier
+    - [x] Add `apps/accounting/scripts/promote-accounting-candidate.sh` with the acceptance-note gate, traffic shift, and production verification
+    - [x] Add `apps/accounting/scripts/verify-accounting-release.ts` with the login-page, 401, and safe-redirect checks
+- [x] Task: Confirm the Green phase
+    - [x] Run the Accounting and `@reading-advantage/db` suites, `check-types`, and `lint`
+    - [x] Run `bash -n` on every new shell script and confirm executable mode
+    - [x] Run the focused Turbo build and test gates and record the exit codes honestly
+
+### Phase 3 Green execution record (2026-09-01)
+
+- Implementation checkpoint: `e5c789dff`.
+- Migration isolation: the temporary main-journal generate exited 0 and produced no Accounting migration references. The temporary config was deleted.
+- Focused Accounting command: `CI=true pnpm_config_verify_deps_before_run=false pnpm --filter accounting exec vitest run app/lib/__tests__/public-url.test.ts app/lib/__tests__/sign-in-href.test.ts app/api/auth/company/start/route.red.test.ts app/api/auth/callback/route.red.test.ts app/api/auth/logout/route.red.test.ts app/api/auth/session/route.red.test.ts app/login/page.red.test.tsx app/lib/__tests__/proxy.red.test.ts app/lib/__tests__/cloudbuild.red.test.ts app/lib/__tests__/database-access-contract.red.test.ts app/lib/__tests__/promotion.red.test.ts app/lib/__tests__/release-verifier.red.test.ts`; exit 0, 12 files and 51 tests passed.
+- Focused DB command: `CI=true pnpm_config_verify_deps_before_run=false pnpm --filter @reading-advantage/db exec vitest run src/accounting/__tests__/environment.test.ts src/accounting/__tests__/runtime-client.test.ts src/accounting/__tests__/schema-parity.test.ts src/__tests__/main-schema-accounting-exclusion.test.ts src/__tests__/main-journal-accounting-guard.test.ts`; exit 0, 5 files and 20 tests passed.
+- Focused domain command: `CI=true pnpm_config_verify_deps_before_run=false pnpm --filter @reading-advantage/domain exec vitest run src/__tests__/accounting-tenant-classification.test.ts`; exit 0, 1 file and 3 tests passed.
+- Full Accounting command: `CI=true pnpm_config_verify_deps_before_run=false pnpm --filter accounting exec vitest run`; exit 0, 29 files and 189 tests passed.
+- Type commands: `pnpm --filter accounting check-types`, `pnpm --filter @reading-advantage/db check-types`, and `pnpm --filter @reading-advantage/domain check-types`; each exited 0.
+- Lint commands: `pnpm --filter accounting lint`, `pnpm --filter @reading-advantage/db lint`, and `pnpm --filter @reading-advantage/domain lint`; each exited 0 with only existing warnings.
+- Shell command: `bash -n apps/accounting/scripts/capture-accounting-cloud-run-tag.sh apps/accounting/scripts/promote-accounting-candidate.sh`; exit 0. Both files pass `test -x`.
+- Turbo build command: `CI=true pnpm_config_verify_deps_before_run=false pnpm turbo run build --filter=accounting --filter=@reading-advantage/db --filter=@reading-advantage/domain --env-mode=loose`; exit 0, 20 tasks passed. The first strict-environment attempt stopped on unrelated `apps/primary-advantage/package.json` lockfile drift.
+- Turbo test command: `CI=true pnpm_config_verify_deps_before_run=false pnpm turbo run test --filter=accounting --filter=@reading-advantage/db --filter=@reading-advantage/domain --continue --env-mode=loose`; exit 1. Accounting passed. DB and domain retained baseline failures described below.
+- Baseline proof used clean detached worktree `/tmp/opencode/accounting-baseline-fa3f11` at `fa3f11edb7c55f260b2dd49dd990c05790dc8c3e`. Its status was clean.
+- The baseline DB suite exited 1 with the same `standard_pack_successor_commitments is append-only` signature.
+- The baseline domain suite exited 1 with the same phase-4, Sales Mastery append-only, and duplicate `users_pkey` signatures.
+- The implicated mastery, phase-4, users, games, and test-harness files have no diff from the baseline.
+- Authorized test corrections changed `packages/db/src/accounting/__tests__/schema-parity.test.ts`, `packages/db/src/__tests__/accounting-schema.test.ts`, and `apps/accounting/app/api/auth/session/route.test.ts` only. These corrections align stale expectations with the accepted contracts.
 - [b] Task: Measure - User Manual Verification 'Phase 3: Implement' (Protocol in workflow.md) deferred:owner
 
 ## Phase 4: Generate Docs & Doctor
