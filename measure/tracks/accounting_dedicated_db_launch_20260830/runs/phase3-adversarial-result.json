@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "role": "adversarial-testing",
+  "track": "accounting_dedicated_db_launch_20260830",
+  "phase": "Phase 3: Implement",
+  "audited_head": "fb9c60b9b",
+  "status": "pass",
+  "verdict": "pass",
+  "summary": "The remediated Unicode format-control returnTo case passes with the full Accounting suite.",
+  "defects_exposed": [
+    {
+      "id": "ADV-RETURNTO-UNICODE-CF",
+      "description": "Unicode format controls bypassed the returnTo root fallback.",
+      "evidence": "The prior assertion expected '/' but received '/safe\\u202eevil' at auth-routes.adversarial.test.ts:117.",
+      "remediation_commit": "2f18127c3",
+      "status": "remediated"
+    }
+  ],
+  "checks": [
+    {
+      "command": "CI=true pnpm_config_verify_deps_before_run=false pnpm --filter accounting exec vitest run",
+      "exit_code": 0,
+      "result": "pass",
+      "evidence": "32 test files and 225 tests passed."
+    }
+  ],
+  "blocking_findings": [],
+  "nonblocking_findings": [],
+  "evidence": [
+    "The adversarial U+202E case at auth-routes.adversarial.test.ts:98 now passes its root-fallback assertion at line 117.",
+    "packages/auth/src/company-identity/client.ts:76 rejects Unicode Cf characters before transactions are created.",
+    "The requested full Accounting Vitest command exited 0 with 225 passing tests."
+  ],
+  "commands": [
+    "CI=true pnpm_config_verify_deps_before_run=false pnpm --filter accounting exec vitest run"
+  ],
+  "changed_files": [
+    "measure/tracks/accounting_dedicated_db_launch_20260830/runs/phase3-adversarial-result.json",
+    "measure/tracks/accounting_dedicated_db_launch_20260830/runs/phase3-adversarial.log",
+    "measure/tracks/accounting_dedicated_db_launch_20260830/runs/phase3-adversarial-rerun.log"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high"
+}

@@ -1,0 +1,12 @@
+MEASURE_AGENT_RESULT
+role: adversarial-testing
+status: partial
+track: accounting_dedicated_db_launch_20260830
+phase: Phase 3: Implement
+commits: 6676362b9
+tests_run: Accounting Vitest failed on ADV-RETURNTO-UNICODE-CF.
+files_changed: Four adversarial test files.
+plan_updates: None.
+known_failures: The U+202E returnTo value bypassed the root fallback.
+handoff: Remediate the Unicode format-control returnTo validation defect.
+END_MEASURE_AGENT_RESULT
