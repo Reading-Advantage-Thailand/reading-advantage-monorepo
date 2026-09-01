@@ -245,6 +245,22 @@ provide the behavior.
 - Sales and Marketing tests used the current working tree. Their unrelated dirty start-route changes were not staged, committed, or reverted.
 - A built-package probe rejected U+202A–U+202E, U+2066–U+2069, and U+200B. The command exited 0.
 - The full DB suite retained its unrelated baseline failures: exit 1, 20 failed files, 67 passed files, and 10 skipped files.
+
+### Phase 3/4 candidate-build remediation record (2026-09-02)
+
+- Phase 4 exposed a provenance defect. Earlier Green gates used an uncommitted `parseCompanyOidcReturnTo` export from another lane's dirty auth file.
+- The dirty auth file contained the parser export and an internal `start()` refactor. Fix commit `d55da2939` extracted only the parser export.
+- The parser directly reuses the committed return-path Zod schema. The unrelated `start()` refactor remains dirty and unstaged.
+- `.gcloudignore` now includes `!apps/accounting` and `!apps/accounting/**`, matching the existing product-app allowlist pattern.
+- Cloud Build retains only `ACCOUNTING_DIRECT_DATABASE_URL` and `ACCOUNTING_DATABASE_URL` in `availableSecrets` because build steps consume only those values.
+- Removed declarations: `ACCOUNTING_COMPANY_AUTH_OIDC_CLIENT_SECRET`, `ACCOUNTING_STORAGE_ENDPOINT`, `ACCOUNTING_STORAGE_REGION`, `ACCOUNTING_STORAGE_BUCKET`, `ACCOUNTING_STORAGE_ACCESS_KEY`, `ACCOUNTING_STORAGE_SECRET_KEY`, and `ACCOUNTING_STORAGE_PUBLIC_BASE_URL`. Their Cloud Run mappings remain unchanged.
+- The pipeline contract suite exited 0 with 12 tests. `bash -n` exited 0 for both Accounting Cloud Build helper scripts.
+- Clean proof used detached worktree `/tmp/opencode/accounting-candidate-proof-d55` at `d55da29395a838be69b9628d55602145014283c4`.
+- Clean install exited 0. The first build attempts exposed missing package artifacts, so the Accounting dependency closure was built before final gates.
+- The final auth build exited 0. Its focused committed client suite exited 0 with 5 tests, and auth `check-types` exited 0.
+- The full Accounting suite exited 0 with 32 files and 226 tests. Accounting `check-types` exited 0.
+- The DB Accounting-focused suite exited 0 with 7 files and 24 tests.
+- The clean worktree had no tracked changes after verification and was removed.
 - [b] Task: Measure - User Manual Verification 'Phase 3: Implement' (Protocol in workflow.md) deferred:owner
 
 ## Phase 4: Generate Docs & Doctor
