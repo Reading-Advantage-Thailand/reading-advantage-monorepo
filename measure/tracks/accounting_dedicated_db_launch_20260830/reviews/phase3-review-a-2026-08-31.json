@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "role": "review-a-correctness",
+  "track": "accounting_dedicated_db_launch_20260830",
+  "phase": "Phase 3: Implement",
+  "audited_head": "9914d52d418d27d955a0750a1c8203830c86f0df",
+  "verdict": "pass",
+  "status": "pass",
+  "summary": "Correctness audit of the Phase 3 implementation diff fa3f11edb..9914d52d4 passed. The schema relocation is byte-faithful, the 0000 journal matches the terminal constraints of main-journal entries 0054 and 0055 without the DO REVOKE block, the tip snapshot pruning removed exactly the two accounting tables, the tenant registry repoints and keeps EXEMPT, the auth routes implement the returnTo fallback, preview handoff, role denial, complete cookie expiry, and session parity shapes, the app reads the dedicated runtime client, the three authorized test edits supersede without weakening, and the pipeline, grants, probes, promote, and verify artifacts match the Phase 1 contracts. The focused DB suite rerun exited 0 (18 tests) and the accounting auth suite rerun exited 0 (35 tests).",
+  "blocking_findings": [],
+  "nonblocking_findings": [
+    "Two detached baseline worktrees remain registered (/tmp/opencode/accounting-baseline-fa3f11, /tmp/opencode/sso-candidate-fix); anti-pattern A16 expects one shared master worktree. Process hygiene only; no production code impact.",
+    "The grants file replaces the literal blanket REVOKE ALL PRIVILEGES ON ALL TABLES with a conditional DO block that skips durable-owned objects. This mirrors apps/marketing/scripts/marketing-runtime-grants.sql, which the Phase 1 contract names as the pattern, and the dedicated database holds no durable-owned objects, so the runtime effect matches the contract.",
+    "Session and transaction cookies now derive the secure flag from NODE_ENV or the resolved target protocol, so local http development emits __Host- cookies without the Secure attribute, which browsers reject. The plan task explicitly required this derivation, and the Sales app uses the same pattern."
+  ],
+  "non_blocking_findings": [
+    "Two detached baseline worktrees remain registered; anti-pattern A16 expects one shared master worktree. Process hygiene only.",
+    "The grants file uses a conditional DO block instead of the literal blanket REVOKE; it mirrors the Marketing file named by the contract.",
+    "Cookie secure flag derivation leaves __Host- cookies without Secure on local http development; the plan task required this derivation and Sales uses the same pattern."
+  ],
+  "evidence": [
+    "Schema relocation fidelity: diff of baseline packages/db/src/schema/accounting.ts against packages/db/src/accounting/schema/index.ts shows only JSDoc comment changes; every column, check, and index is byte-identical.",
+    "packages/db/accounting/drizzle/0000_past_reavers.sql creates both tables with the terminal constraints of journal entries 0054 and 0055 (status check IN pending/approved/rejected, all ten submissions checks, both audit checks, three submissions indexes, one audit index) and does not carry the hand-written DO REVOKE block.",
+    "Snapshot pruning: packages/db/drizzle/meta/0056_snapshot.json is valid JSON with 131 tables (baseline 133), zero accounting references; the diff is a single removal hunk plus the closing brace, so no other entry was damaged.",
+    "Tenant registry repointed: packages/domain/src/tenant-registry.ts imports both accounting tables from @reading-advantage/db/accounting/schema and keeps EXEMPT registration; git grep at HEAD shows no other reference to the deleted module.",
+    "No import of @reading-advantage/db/client remains under apps/accounting; submissions.ts builds its postgres.js client through createAccountingRuntimeClient as a lazy process-local singleton, and submissions.test.ts mocks the new runtime module.",
+    "Start route validates returnTo through parseCompanyOidcReturnTo, catches ZodError, logs one structured warning, restarts with /, and hands off approved preview origins to the callback origin with returnTo preserved.",
+    "Callback denies no-role identities with /login?error=forbidden after revoking the exchanged token, and expires the transaction cookie on the missing-transaction, forbidden, exchange-error, and success paths.",
+    "Session route returns 401 {session: null}, 403 {session: null, denied: true}, 200 {session: {user}}; logout validates the origin through the approved-origin helper and expires the session cookie on success and failure.",
+    "apps/accounting/app/lib/public-url.ts fails closed: unapproved forwarded origins throw, and every caller falls back to the canonical or callback origin (logout answers 403), so no redirect targets an unapproved origin; the proxy redirect uses the helper with a canonical fallback.",
+    "Login page builds the sign-in link with the returnTo query value, renders visible sso and forbidden messages, and wraps useSearchParams in Suspense.",
+    "Authorized test edits supersede without weakening: session route.test.ts asserts the 403 body includes denied: true; accounting-schema.test.ts repoints to the new schema entrypoint and its built dist path; schema-parity.test.ts replaces the deleted-module comparison with explicit literal contracts and expands the 0000 SQL assertions from 5 to 15 required fragments.",
+    "cloudbuild.yaml matches the pipeline contract: build and push to the accounting registry, migrate and doctor through the pinned Cloud SQL Auth Proxy against reading-advantage:asia-southeast1:cloud-sql, grants and probe with a cleanup trap, candidate deploy with --tag=candidate --no-traffic and the FR-8 environment, invoker binding, candidate capture, and release verification; no step shifts traffic; availableSecrets names exactly the nine contract secrets with the unprefixed STORAGE_* mapping.",
+    "Grants file grants SELECT, INSERT, UPDATE on accounting_submissions and only SELECT, INSERT on accounting_submission_audit_events, sets default-privilege revokes, and contains no ALTER ROLE; the role-provision script creates both roles with NOCREATEDB NOCREATEROLE NOINHERIT.",
+    "Probe proves audit INSERT allowed and audit UPDATE and DELETE denied via insufficient_privilege, asserts DDL denial, and the privileged cleanup script removes the probe rows; promote script requires CANDIDATE_REVISION and an acceptance note containing an anchored status: pass line before shifting 100 percent of traffic; the release verifier asserts login 2xx, unauthenticated 401, and malformed-returnTo 307.",
+    "Gate plausibility confirmed by rerun: CI=true pnpm_config_verify_deps_before_run=false pnpm --filter @reading-advantage/db exec vitest run src/accounting/__tests__ src/__tests__/main-journal-accounting-guard.test.ts exited 0 (4 files, 18 tests), including the live drizzle-kit generate guard.",
+    "Additional rerun: the eight accounting auth, login, proxy, and public-url suites exited 0 (8 files, 35 tests), consistent with the Phase 3 Green record."
+  ],
+  "commands": [
+    "git diff fa3f11edb7c55f260b2dd49dd990c05790dc8c3e..9914d52d4 --stat",
+    "diff <(git show fa3f11edb:packages/db/src/schema/accounting.ts) packages/db/src/accounting/schema/index.ts",
+    "python3 -c \"import json; d=json.load(open('packages/db/drizzle/meta/0056_snapshot.json')); print(len(d['tables']))\"",
+    "git grep -n accountingSubmissions 9914d52d4 -- '*.ts' ':!**/dist/**'",
+    "grep -rn '@reading-advantage/db/client' apps/accounting --include='*.ts' --include='*.tsx'",
+    "CI=true pnpm_config_verify_deps_before_run=false pnpm --filter @reading-advantage/db exec vitest run src/accounting/__tests__ src/__tests__/main-journal-accounting-guard.test.ts",
+    "CI=true pnpm_config_verify_deps_before_run=false pnpm --filter accounting exec vitest run app/api/auth/company/start/route.red.test.ts app/api/auth/callback/route.red.test.ts app/api/auth/logout/route.red.test.ts app/api/auth/session/route.red.test.ts app/api/auth/session/route.test.ts app/login/page.red.test.tsx app/lib/__tests__/proxy.red.test.ts app/lib/__tests__/public-url.test.ts"
+  ],
+  "changed_files": [
+    "measure/tracks/accounting_dedicated_db_launch_20260830/reviews/phase3-review-a-2026-08-31.json",
+    "measure/tracks/accounting_dedicated_db_launch_20260830/runs/phase3-review-a.log"
+  ],
+  "retry_recommendation": "none",
+  "confidence": "high"
+}

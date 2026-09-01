@@ -1,0 +1,28 @@
+review-a-correctness run log for track accounting_dedicated_db_launch_20260830, Phase 3: Implement.
+
+Reviewed the diff fa3f11edb7c55f260b2dd49dd990c05790dc8c3e..9914d52d418d27d955a0750a1c8203830c86f0df
+(implementation commit e5c789dff + two docs commits) against the spec, plan, and
+anti-pattern catalog. Audited: schema relocation fidelity, 0000 journal correctness,
+snapshot pruning, tenant-registry repoint, auth route logic (start, callback, session,
+logout), public-url fail-closed origin approval, proxy wiring, login page, submissions
+runtime-client wiring, the three authorized test edits, cloudbuild.yaml, grants SQL,
+probes, promote and verify scripts, and caller impact of the deleted schema module.
+
+Spot-reran the focused DB suite: exit 0, 4 files and 18 tests passed, including the
+live drizzle-kit generate guard. Also reran the eight accounting auth, login, proxy,
+and public-url suites: exit 0, 8 files and 35 tests passed.
+
+Correctness audit result: PASS. No blocking findings. Three non-blocking observations
+recorded (retained detached baseline worktrees per A16 hygiene, grants DO-block
+conditional that mirrors the Marketing pattern, dev-only __Host- cookie secure flag
+that the plan task explicitly required).
+
+MEASURE_AGENT_RESULT
+role: review-a-correctness
+track: accounting_dedicated_db_launch_20260830
+phase: Phase 3: Implement
+audited_head: 9914d52d418d27d955a0750a1c8203830c86f0df
+status: pass
+result_file: measure/tracks/accounting_dedicated_db_launch_20260830/reviews/phase3-review-a-2026-08-31.json
+interphase_gate: pass
+END_MEASURE_AGENT_RESULT

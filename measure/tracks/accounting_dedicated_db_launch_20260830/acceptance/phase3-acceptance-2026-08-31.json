@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "role": "phase-acceptance",
+  "track": "accounting_dedicated_db_launch_20260830",
+  "phase": "Phase 3: Implement",
+  "audited_head": "775075e267bd5b9771f5e6401ff2b90120a9f0cb",
+  "verdict": "pass",
+  "status": "pass",
+  "summary": "Phase 3 acceptance passed after the plan records the Green checkpoint.",
+  "checks": [
+    {
+      "item": "Required implementation, checkpoint, remediation, and adversarial commits are ancestors of audited HEAD.",
+      "result": "pass",
+      "evidence": [
+        "git merge-base --is-ancestor returned exit 0 for e5c789dff, a1b2e81a3, 9914d52d4, 2f18127c3, fb9c60b9b, 6676362b9, and fda07992f against HEAD 775075e267bd5b9771f5e6401ff2b90120a9f0cb."
+      ]
+    },
+    {
+      "item": "Phase 3 plan state records complete work, required evidence, remediation, and the Green checkpoint.",
+      "result": "pass",
+      "evidence": [
+        "Every Phase 3 implementation task and subtask is marked [x] with e5c789dff evidence.",
+        "The sole Phase 3 [b] marker is the owner manual-verification task with deferred:owner at plan.md:248.",
+        "The remediation record exists at plan.md:236-247.",
+        "The Checkpoints section at plan.md:290 records `Phase 3 Green: e5c789dff` after commit 775075e26."
+      ]
+    },
+    {
+      "item": "Required review and adversarial artifacts report passing and remediated results.",
+      "result": "pass",
+      "evidence": [
+        "reviews/phase3-review-a-2026-08-31.json, phase3-review-b-2026-08-31.json, and phase3-review-c-2026-08-31.json exist and each has verdict and status pass.",
+        "runs/phase3-adversarial-result.json exists with verdict and status pass.",
+        "The adversarial result records ADV-RETURNTO-UNICODE-CF with remediation_commit 2f18127c3 and status remediated."
+      ]
+    },
+    {
+      "item": "Accounting test and type spot checks pass.",
+      "result": "pass",
+      "evidence": [
+        "CI=true pnpm_config_verify_deps_before_run=false pnpm --filter accounting exec vitest run exited 0 with 32 test files and 225 tests passed.",
+        "pnpm --filter accounting check-types exited 0."
+      ]
+    },
+    {
+      "item": "Phase 3 plan text contains no A5 false claim or A6 registry overstatement.",
+      "result": "pass",
+      "evidence": [
+        "Inspection of plan.md:169-248 found no unqualified all-checks-pass claim or registry readiness claim.",
+        "The Green and remediation records cite commands, outcomes, and disclosed unrelated failures."
+      ]
+    },
+    {
+      "item": "UX browser review applicability follows the Phase 3 plan design.",
+      "result": "pass",
+      "evidence": [
+        "The plan header states that unit tests on proxy.ts and auth routes alone do not close a phase.",
+        "Phase 4 defines live candidate acceptance for every browser case, including screenshots and redirect chains."
+      ]
+    }
+  ],
+  "ux_browser_review": "not-applicable-phase-4-by-plan",
+  "blocking_findings": [],
+  "nonblocking_findings": [],
+  "evidence": [
+    "Audited HEAD: 775075e267bd5b9771f5e6401ff2b90120a9f0cb.",
+    "Commit 775075e26 records the required Phase 3 Green checkpoint."
+  ],
+  "commands": [
+    "git merge-base --is-ancestor <required-commit> HEAD",
+    "CI=true pnpm_config_verify_deps_before_run=false pnpm --filter accounting exec vitest run",
+    "pnpm --filter accounting check-types"
+  ],
+  "changed_files": [
+    "measure/tracks/accounting_dedicated_db_launch_20260830/acceptance/phase3-acceptance-2026-08-31.json",
+    "measure/tracks/accounting_dedicated_db_launch_20260830/runs/phase3-acceptance.log"
+  ],
+  "test_strategy_violations": [],
+  "live_contract_violations": [],
+  "prod_wiring_violations": [],
+  "route_parity_violations": [],
+  "retry_recommendation": "none",
+  "confidence": "high"
+}

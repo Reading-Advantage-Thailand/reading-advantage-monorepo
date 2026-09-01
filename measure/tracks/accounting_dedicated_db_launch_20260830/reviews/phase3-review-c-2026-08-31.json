@@ -1,0 +1,63 @@
+{
+  "role": "review-c-ux-api",
+  "track": "accounting_dedicated_db_launch_20260830",
+  "phase": "Phase 3: Implement",
+  "audited_head": "9914d52d418d27d955a0750a1c8203830c86f0df",
+  "verdict": "pass",
+  "schema_version": 1,
+  "status": "pass",
+  "summary": "Accounting SSO/user-flow contract wiring matches the Phase 1 contract and Sales parity. Login page carries returnTo and renders sso/forbidden messages. Proxy uses approved-origin helper. Start, callback, logout, and session routes implement 307 handoffs, safe returnTo fallback, preview-origin handoff, no-role forbidden redirect, and the Sales-parity 403 body. Release verifier asserts the documented contract. All focused test suites pass.",
+  "blocking_findings": [],
+  "non_blocking_findings": [
+    "apps/accounting/app/login/page.tsx: login error messages are hardcoded in English. The accounting app has no i18n infrastructure, so this matches current conventions, but localization should be tracked if the app later adopts next-intl.",
+    "apps/accounting/app/lib/sign-in-href.ts: buildSignInHref is tested but unused in production code. The proxy and login page already satisfy the returnTo contract, so this is only dead utility code.",
+    "apps/accounting/app/api/auth/session/route.ts: adds a 503 response for introspection failures. The Phase 1 contract enumerates 401/403/200; the 503 is a defensive improvement that avoids a 500, but it is not part of the listed contract."
+  ],
+  "nonblocking_findings": [
+    "apps/accounting/app/login/page.tsx: login error messages are hardcoded in English. The accounting app has no i18n infrastructure, so this matches current conventions, but localization should be tracked if the app later adopts next-intl.",
+    "apps/accounting/app/lib/sign-in-href.ts: buildSignInHref is tested but unused in production code. The proxy and login page already satisfy the returnTo contract, so this is only dead utility code.",
+    "apps/accounting/app/api/auth/session/route.ts: adds a 503 response for introspection failures. The Phase 1 contract enumerates 401/403/200; the 503 is a defensive improvement that avoids a 500, but it is not part of the listed contract."
+  ],
+  "evidence": [
+    "apps/accounting/app/login/page.tsx: sign-in link reads returnTo from search params and carries it encoded to /api/auth/company/start; sso and forbidden messages render via role=alert; no dead links.",
+    "apps/accounting/proxy.ts: unauthenticated protected requests call getPublicUrl(request, '/login') to build the redirect and set returnTo=pathname+search; on helper failure it falls back to the canonical origin https://accounting.reading-advantage.com, so no redirect can target an unapproved forwarded host.",
+    "apps/accounting/app/api/auth/company/start/route.ts: returns 307 (NextResponse.redirect default for GET); parseCompanyOidcReturnTo validates returnTo; a ZodError restarts the handoff with returnTo=/ after one structured warning; preview-origin requests redirect to the callback origin with returnTo preserved.",
+    "apps/accounting/app/api/auth/callback/route.ts: after token exchange, resolveAccountingRole is checked; a no-role identity is redirected to /login?error=forbidden; every failure path expires the transaction cookie; successful flow sets the session cookie and expires the transaction cookie.",
+    "apps/accounting/app/api/auth/session/route.ts: missing token returns 401 {session: null}; valid token without Accounting role returns 403 {session: null, denied: true}; valid token with Accounting role returns 200 {session: {user}}.",
+    "apps/accounting/app/api/auth/logout/route.ts: origin is validated through getPublicOrigin; invalid origins return 403; successful logout expires the session cookie.",
+    "apps/accounting/scripts/verify-accounting-release.ts: asserts /login returns 2xx, /api/auth/session returns 401 for unauthenticated callers, and /api/auth/company/start?returnTo=https://evil.example.com returns 307 (never 500).",
+    "Sales parity: the Accounting 403 session body now matches apps/sales-advantage/app/api/auth/session/route.ts with {session: null, denied: true}.",
+    "Focused test runs passed: accounting suite 189 tests, @reading-advantage/db suite 20 tests, @reading-advantage/domain suite 3 tests."
+  ],
+  "commands": [
+    "git diff --name-only fa3f11edb7c55f260b2dd49dd990c05790dc8c3e HEAD",
+    "CI=true pnpm_config_verify_deps_before_run=false pnpm --filter accounting exec vitest run app/lib/__tests__/public-url.test.ts app/lib/__tests__/sign-in-href.test.ts app/api/auth/company/start/route.red.test.ts app/api/auth/callback/route.red.test.ts app/api/auth/logout/route.red.test.ts app/api/auth/session/route.red.test.ts app/login/page.red.test.tsx app/lib/__tests__/proxy.red.test.ts app/lib/__tests__/cloudbuild.red.test.ts app/lib/__tests__/database-access-contract.red.test.ts app/lib/__tests__/promotion.red.test.ts app/lib/__tests__/release-verifier.red.test.ts",
+    "CI=true pnpm_config_verify_deps_before_run=false pnpm --filter accounting exec vitest run",
+    "CI=true pnpm_config_verify_deps_before_run=false pnpm --filter @reading-advantage/db exec vitest run src/accounting/__tests__/environment.test.ts src/accounting/__tests__/runtime-client.test.ts src/accounting/__tests__/schema-parity.test.ts src/__tests__/main-schema-accounting-exclusion.test.ts src/__tests__/main-journal-accounting-guard.test.ts",
+    "CI=true pnpm_config_verify_deps_before_run=false pnpm --filter @reading-advantage/domain exec vitest run src/__tests__/accounting-tenant-classification.test.ts"
+  ],
+  "changed_files": [
+    "apps/accounting/app/api/auth/callback/route.ts",
+    "apps/accounting/app/api/auth/company/start/route.ts",
+    "apps/accounting/app/api/auth/logout/route.ts",
+    "apps/accounting/app/api/auth/session/route.test.ts",
+    "apps/accounting/app/api/auth/session/route.ts",
+    "apps/accounting/app/lib/submissions.test.ts",
+    "apps/accounting/app/lib/submissions.ts",
+    "apps/accounting/app/login/page.tsx",
+    "apps/accounting/proxy.ts",
+    "apps/accounting/scripts/accounting-runtime-grants.sql",
+    "measure/tracks/accounting_dedicated_db_launch_20260830/plan.md",
+    "packages/db/accounting/drizzle/0000_past_reavers.sql",
+    "packages/db/accounting/drizzle/meta/0000_snapshot.json",
+    "packages/db/accounting/drizzle/meta/_journal.json",
+    "packages/db/drizzle/meta/0056_snapshot.json",
+    "packages/db/src/__tests__/accounting-schema.test.ts",
+    "packages/db/src/accounting/__tests__/schema-parity.test.ts",
+    "packages/db/src/schema/accounting.ts",
+    "packages/db/src/schema/index.ts",
+    "packages/domain/src/tenant-registry.ts"
+  ],
+  "retry_recommendation": "none",
+  "confidence": "high"
+}
