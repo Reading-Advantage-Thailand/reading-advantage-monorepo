@@ -232,6 +232,19 @@ provide the behavior.
 - The baseline domain suite exited 1 with the same phase-4, Sales Mastery append-only, and duplicate `users_pkey` signatures.
 - The implicated mastery, phase-4, users, games, and test-harness files have no diff from the baseline.
 - Authorized test corrections changed `packages/db/src/accounting/__tests__/schema-parity.test.ts`, `packages/db/src/__tests__/accounting-schema.test.ts`, and `apps/accounting/app/api/auth/session/route.test.ts` only. These corrections align stale expectations with the accepted contracts.
+
+### Phase 3 adversarial remediation record (2026-09-01)
+
+- Adversarial commit `6676362b9` exposed a return-path spoofing defect. The shared validator accepted Unicode format characters.
+- Fix commit `2f18127c3` adds strict rejection for the Unicode `Cf` category in `packages/auth/src/company-identity/client.ts`.
+- The Accounting adversarial auth-route suite exited 0 with 14 tests. It preserves the existing 307, root fallback, and one-warning behavior.
+- The full Accounting suite exited 0 with 32 files and 225 tests.
+- The focused auth client suite exited 0 with 6 tests. The auth build and auth and Accounting type checks exited 0.
+- The full auth suite exited 1 only on four unrelated closeout assertions. Its other 302 tests passed, and 9 tests skipped.
+- The Sales auth-route suites exited 0 with 18 tests. The Marketing auth-route suites exited 0 with 9 tests; no Marketing session test exists.
+- Sales and Marketing tests used the current working tree. Their unrelated dirty start-route changes were not staged, committed, or reverted.
+- A built-package probe rejected U+202A–U+202E, U+2066–U+2069, and U+200B. The command exited 0.
+- The full DB suite retained its unrelated baseline failures: exit 1, 20 failed files, 67 passed files, and 10 skipped files.
 - [b] Task: Measure - User Manual Verification 'Phase 3: Implement' (Protocol in workflow.md) deferred:owner
 
 ## Phase 4: Generate Docs & Doctor
