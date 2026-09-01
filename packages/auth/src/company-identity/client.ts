@@ -89,6 +89,16 @@ const transactionSchema = z.strictObject({
   createdAt: z.number().int().positive(),
 });
 
+/**
+ * Validates a product-local return path without starting an OIDC transaction.
+ * @param value Candidate return path received from a product application.
+ * @returns The validated host-relative return path.
+ * @throws When the value can resolve outside the product origin.
+ */
+export function parseCompanyOidcReturnTo(value: string): string {
+  return transactionSchema.shape.returnTo.parse(value);
+}
+
 /** One signed-in product identity returned by Accounts introspection. */
 export type CompanyOidcIdentity = z.infer<typeof identitySchema>;
 

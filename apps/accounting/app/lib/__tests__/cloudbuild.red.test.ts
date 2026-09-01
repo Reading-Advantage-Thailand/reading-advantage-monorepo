@@ -7,17 +7,15 @@ const cloudbuild = readFileSync(
   "utf8",
 );
 
-const REQUIRED_SECRETS = [
-  "ACCOUNTING_COMPANY_AUTH_OIDC_CLIENT_SECRET",
+const BUILD_STEP_SECRETS = [
   "ACCOUNTING_DATABASE_URL",
   "ACCOUNTING_DIRECT_DATABASE_URL",
-  "ACCOUNTING_STORAGE_ACCESS_KEY",
-  "ACCOUNTING_STORAGE_BUCKET",
-  "ACCOUNTING_STORAGE_ENDPOINT",
-  "ACCOUNTING_STORAGE_PUBLIC_BASE_URL",
-  "ACCOUNTING_STORAGE_REGION",
-  "ACCOUNTING_STORAGE_SECRET_KEY",
 ];
+
+const gcloudignore = readFileSync(
+  new URL("../../../../../.gcloudignore", import.meta.url),
+  "utf8",
+);
 
 describe("Accounting Cloud Build candidate pipeline contract", () => {
   it("builds, pushes, migrates, checks, grants, probes, and verifies", () => {
@@ -43,13 +41,18 @@ describe("Accounting Cloud Build candidate pipeline contract", () => {
     expect(cloudbuild).not.toMatch(/--to-revisions=/u);
   });
 
-  it("declares exactly the nine Accounting secrets", () => {
+  it("declares only secrets consumed by Cloud Build steps", () => {
     const availableSecrets = Array.from(
       cloudbuild.matchAll(/^\s+env: "(ACCOUNTING_[A-Z0-9_]+)"$/gmu),
       (match) => match[1],
     ).sort();
 
-    expect(availableSecrets).toEqual(REQUIRED_SECRETS);
+    expect(availableSecrets).toEqual(BUILD_STEP_SECRETS);
+  });
+
+  it("includes the Accounting app in the Cloud Build source upload", () => {
+    expect(gcloudignore).toMatch(/^!apps\/accounting$/mu);
+    expect(gcloudignore).toMatch(/^!apps\/accounting\/\*\*$/mu);
   });
 
   it("maps app-prefixed secrets to the runtime adapter variables", () => {

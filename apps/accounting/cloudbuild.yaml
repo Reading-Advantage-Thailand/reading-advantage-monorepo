@@ -99,20 +99,6 @@ availableSecrets:
       env: "ACCOUNTING_DIRECT_DATABASE_URL"
     - versionName: "projects/$PROJECT_ID/secrets/ACCOUNTING_DATABASE_URL/versions/latest"
       env: "ACCOUNTING_DATABASE_URL"
-    - versionName: "projects/$PROJECT_ID/secrets/ACCOUNTING_COMPANY_AUTH_OIDC_CLIENT_SECRET/versions/latest"
-      env: "ACCOUNTING_COMPANY_AUTH_OIDC_CLIENT_SECRET"
-    - versionName: "projects/$PROJECT_ID/secrets/ACCOUNTING_STORAGE_ENDPOINT/versions/latest"
-      env: "ACCOUNTING_STORAGE_ENDPOINT"
-    - versionName: "projects/$PROJECT_ID/secrets/ACCOUNTING_STORAGE_REGION/versions/latest"
-      env: "ACCOUNTING_STORAGE_REGION"
-    - versionName: "projects/$PROJECT_ID/secrets/ACCOUNTING_STORAGE_BUCKET/versions/latest"
-      env: "ACCOUNTING_STORAGE_BUCKET"
-    - versionName: "projects/$PROJECT_ID/secrets/ACCOUNTING_STORAGE_ACCESS_KEY/versions/latest"
-      env: "ACCOUNTING_STORAGE_ACCESS_KEY"
-    - versionName: "projects/$PROJECT_ID/secrets/ACCOUNTING_STORAGE_SECRET_KEY/versions/latest"
-      env: "ACCOUNTING_STORAGE_SECRET_KEY"
-    - versionName: "projects/$PROJECT_ID/secrets/ACCOUNTING_STORAGE_PUBLIC_BASE_URL/versions/latest"
-      env: "ACCOUNTING_STORAGE_PUBLIC_BASE_URL"
 
 options:
   env:

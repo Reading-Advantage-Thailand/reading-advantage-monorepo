@@ -1,6 +1,8 @@
 .git
 .gitignore
 apps/*
+!apps/accounting
+!apps/accounting/**
 !apps/codecamp-advantage
 !apps/codecamp-advantage/**
 !apps/marketing
