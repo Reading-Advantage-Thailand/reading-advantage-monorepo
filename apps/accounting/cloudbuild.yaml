@@ -45,34 +45,46 @@ steps:
 
   - name: "gcr.io/cloud-builders/gcloud"
     id: "deploy-company-candidate"
+    entrypoint: "bash"
     args:
-      - "run"
-      - "deploy"
-      - "accounting"
-      - "--image=asia-southeast1-docker.pkg.dev/$PROJECT_ID/accounting/accounting:$BUILD_ID"
-      - "--region=asia-southeast1"
-      - "--platform=managed"
-      - "--allow-unauthenticated"
-      - "--service-account=accounting-cloud-run@$PROJECT_ID.iam.gserviceaccount.com"
-      - "--add-cloudsql-instances=reading-advantage:asia-southeast1:cloud-sql"
-      - "--set-env-vars=NODE_ENV=production,COMPANY_AUTH_ISSUER_URL=https://accounts.reading-advantage.com,COMPANY_AUTH_OIDC_CLIENT_ID=accounting-web,COMPANY_AUTH_OIDC_REDIRECT_URI=https://accounting.reading-advantage.com/api/auth/callback,COMPANY_AUTH_EXPECTED_AUDIENCE=accounting,COMPANY_AUTH_CLOCK_SKEW_SECONDS=30,ACCOUNTING_PREVIEW_ORIGINS=https://candidate---accounting-$PROJECT_NUMBER.asia-southeast1.run.app"
-      - "--min-instances=1"
-      - "--max-instances=10"
-      - "--concurrency=80"
-      - "--set-secrets=ACCOUNTING_DATABASE_URL=ACCOUNTING_DATABASE_URL:latest,COMPANY_AUTH_OIDC_CLIENT_SECRET=ACCOUNTING_COMPANY_AUTH_OIDC_CLIENT_SECRET:latest,STORAGE_ENDPOINT=ACCOUNTING_STORAGE_ENDPOINT:latest,STORAGE_REGION=ACCOUNTING_STORAGE_REGION:latest,STORAGE_BUCKET=ACCOUNTING_STORAGE_BUCKET:latest,STORAGE_ACCESS_KEY=ACCOUNTING_STORAGE_ACCESS_KEY:latest,STORAGE_SECRET_KEY=ACCOUNTING_STORAGE_SECRET_KEY:latest,STORAGE_PUBLIC_BASE_URL=ACCOUNTING_STORAGE_PUBLIC_BASE_URL:latest"
-      - "--tag=candidate"
-      - "--no-traffic"
+      - "-c"
+      - |
+        set -euo pipefail
+        deploy_args=(
+          run deploy accounting
+          "--image=asia-southeast1-docker.pkg.dev/$PROJECT_ID/accounting/accounting:$BUILD_ID"
+          "--region=asia-southeast1"
+          "--platform=managed"
+          "--service-account=accounting-cloud-run@$PROJECT_ID.iam.gserviceaccount.com"
+          "--add-cloudsql-instances=reading-advantage:asia-southeast1:cloud-sql"
+          "--set-env-vars=NODE_ENV=production,COMPANY_AUTH_ISSUER_URL=https://accounts.reading-advantage.com,COMPANY_AUTH_OIDC_CLIENT_ID=accounting-web,COMPANY_AUTH_OIDC_REDIRECT_URI=https://accounting.reading-advantage.com/api/auth/callback,COMPANY_AUTH_EXPECTED_AUDIENCE=accounting,COMPANY_AUTH_CLOCK_SKEW_SECONDS=30,ACCOUNTING_PREVIEW_ORIGINS=https://candidate---accounting-$PROJECT_NUMBER.asia-southeast1.run.app"
+          "--min-instances=1"
+          "--max-instances=10"
+          "--concurrency=80"
+          "--set-secrets=ACCOUNTING_DATABASE_URL=ACCOUNTING_DATABASE_URL:latest,COMPANY_AUTH_OIDC_CLIENT_SECRET=ACCOUNTING_COMPANY_AUTH_OIDC_CLIENT_SECRET:latest,STORAGE_ENDPOINT=ACCOUNTING_STORAGE_ENDPOINT:latest,STORAGE_REGION=ACCOUNTING_STORAGE_REGION:latest,STORAGE_BUCKET=ACCOUNTING_STORAGE_BUCKET:latest,STORAGE_ACCESS_KEY=ACCOUNTING_STORAGE_ACCESS_KEY:latest,STORAGE_SECRET_KEY=ACCOUNTING_STORAGE_SECRET_KEY:latest,STORAGE_PUBLIC_BASE_URL=ACCOUNTING_STORAGE_PUBLIC_BASE_URL:latest"
+        )
+        if gcloud run services describe accounting --region=asia-southeast1 --platform=managed >/dev/null 2>&1; then
+          touch /workspace/.accounting-service-existed
+          gcloud "$${deploy_args[@]}" --allow-unauthenticated --tag=candidate --no-traffic
+        else
+          gcloud "$${deploy_args[@]}" --tag=candidate
+        fi
 
   - name: "gcr.io/cloud-builders/gcloud"
     id: "allow-public-invoker"
+    entrypoint: "bash"
     args:
-      - "run"
-      - "services"
-      - "add-iam-policy-binding"
-      - "accounting"
-      - "--region=asia-southeast1"
-      - "--member=allUsers"
-      - "--role=roles/run.invoker"
+      - "-c"
+      - |
+        set -euo pipefail
+        if [[ -f /workspace/.accounting-service-existed ]]; then
+          gcloud run services add-iam-policy-binding accounting \
+            --region=asia-southeast1 \
+            --member=allUsers \
+            --role=roles/run.invoker
+        else
+          echo "First revision remains IAM-invoker-gated pending acceptance."
+        fi
 
   - name: "gcr.io/cloud-builders/gcloud"
     id: "capture-company-candidate"

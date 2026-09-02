@@ -34,9 +34,30 @@ describe("Accounting Cloud Build candidate pipeline contract", () => {
     }
   });
 
-  it("deploys a candidate without shifting production traffic", () => {
+  it("deploys existing and first-service candidates without an unsafe traffic shift", () => {
+    const deployStep = cloudbuild.match(
+      /id: "deploy-company-candidate"(?<body>[\s\S]*?)\n  - name:/u,
+    )?.groups?.body;
+    const deployBranches = deployStep?.match(
+      /if gcloud run services describe[^\n]+; then(?<existing>[\s\S]*?)\n        else(?<first>[\s\S]*?)\n        fi/u,
+    )?.groups;
+    const invokerStep = cloudbuild.match(
+      /id: "allow-public-invoker"(?<body>[\s\S]*?)\n  - name:/u,
+    )?.groups?.body;
+    const invokerBranches = invokerStep?.match(
+      /if \[\[ -f [^\n]+ \]\]; then(?<existing>[\s\S]*?)\n        else(?<first>[\s\S]*?)\n        fi/u,
+    )?.groups;
+
     expect(cloudbuild).toContain("--tag=candidate");
     expect(cloudbuild).toContain("--no-traffic");
+    expect(deployBranches?.existing).toContain("--tag=candidate --no-traffic");
+    // Cloud Run rejects --no-traffic when it creates a service's first revision.
+    expect(deployBranches?.first).toContain('"$${deploy_args[@]}" --tag=candidate');
+    expect(deployBranches?.first).not.toContain("--no-traffic");
+    expect(deployBranches?.first).not.toContain("--allow-unauthenticated");
+    expect(invokerBranches?.existing).toContain("add-iam-policy-binding");
+    expect(invokerBranches?.first).not.toContain("allUsers");
+    expect(invokerBranches?.first).not.toContain("roles/run.invoker");
     expect(cloudbuild).not.toContain("update-traffic");
     expect(cloudbuild).not.toMatch(/--to-revisions=/u);
   });
