@@ -71,6 +71,17 @@ steps:
         fi
 
   - name: "gcr.io/cloud-builders/gcloud"
+    id: "allow-build-invoker"
+    args:
+      - "run"
+      - "services"
+      - "add-iam-policy-binding"
+      - "accounting"
+      - "--region=asia-southeast1"
+      - "--member=serviceAccount:$PROJECT_NUMBER@cloudbuild.gserviceaccount.com"
+      - "--role=roles/run.invoker"
+
+  - name: "gcr.io/cloud-builders/gcloud"
     id: "allow-public-invoker"
     entrypoint: "bash"
     args:
@@ -100,7 +111,22 @@ steps:
     entrypoint: "bash"
     args:
       - "-c"
-      - 'set -euo pipefail && corepack enable && corepack prepare pnpm@11.8.0 --activate && pnpm install --frozen-lockfile && export ACCOUNTING_RELEASE_BASE_URL="$$(tr -d "\r\n" < /workspace/.accounting-company-candidate.url)" && pnpm --filter accounting exec tsx scripts/verify-accounting-release.ts'
+      - |
+        set -euo pipefail
+        corepack enable
+        corepack prepare pnpm@11.8.0 --activate
+        pnpm install --frozen-lockfile
+        export ACCOUNTING_RELEASE_BASE_URL="$$(tr -d '\r\n' < /workspace/.accounting-company-candidate.url)"
+        export ACCOUNTING_VERIFY_AUDIENCE="$$(tr -d '\r\n' < /workspace/.accounting-company-candidate.audience)"
+        export ACCOUNTING_VERIFY_IDENTITY_TOKEN="$$(node --input-type=module -e '
+          const endpoint = new URL("http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/identity");
+          endpoint.searchParams.set("audience", process.env.ACCOUNTING_VERIFY_AUDIENCE);
+          endpoint.searchParams.set("format", "full");
+          const response = await fetch(endpoint, { headers: { "Metadata-Flavor": "Google" } });
+          if (!response.ok) throw new Error(`Metadata identity token request returned HTTP $${response.status}.`);
+          process.stdout.write((await response.text()).trim());
+        ')"
+        pnpm --filter accounting exec tsx scripts/verify-accounting-release.ts
 
 images:
   - "asia-southeast1-docker.pkg.dev/$PROJECT_ID/accounting/accounting:$BUILD_ID"

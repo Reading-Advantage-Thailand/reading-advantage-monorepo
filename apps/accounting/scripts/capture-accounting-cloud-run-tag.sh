@@ -24,6 +24,12 @@ tagged_revision="$(
     --platform=managed \
     --format="value(status.traffic.filter(tag='${tag}').extract(revisionName).flatten())"
 )"
+service_url="$(
+  gcloud run services describe "$service" \
+    --region="$region" \
+    --platform=managed \
+    --format="value(status.url)"
+)"
 latest_created_revision="$(
   gcloud run services describe "$service" \
     --region="$region" \
@@ -50,6 +56,10 @@ if [[ -z "$tagged_revision" || "$tagged_revision" != "$latest_created_revision" 
   echo "Tagged Accounting revision is not the newly created revision" >&2
   exit 1
 fi
+if [[ "$service_url" != https://* ]]; then
+  echo "Canonical Accounting service URL is invalid" >&2
+  exit 1
+fi
 if [[ ! "$expected_digest" =~ ^sha256:[0-9a-f]{64}$ ]]; then
   echo "Expected Accounting image digest is invalid" >&2
   exit 1
@@ -61,3 +71,4 @@ fi
 
 printf '%s' "$tagged_url" > "${output_prefix}.url"
 printf '%s' "$tagged_revision" > "${output_prefix}.revision"
+printf '%s' "$service_url" > "${output_prefix}.audience"
