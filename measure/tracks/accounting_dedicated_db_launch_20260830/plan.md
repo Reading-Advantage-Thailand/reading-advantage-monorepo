@@ -289,6 +289,22 @@ provide the behavior.
 - A live active-user identity token passed Cloud Run IAM and `/login`. The verifier then found an application HTTP 500 on `/api/auth/session`.
 - Revision logs identify `{ DATABASE_URL is required in production runtime }`. The broad `@reading-advantage/auth` import initializes the main database client.
 - Local Cloud Build service-account impersonation lacked `iam.serviceAccounts.getAccessToken`. Cloud Build will mint its own token through its metadata identity endpoint.
+
+### Phase 4 runtime-environment coupling remediation record (2026-09-02)
+
+- Release `2e2d377b2` passed Cloud Run IAM and `/login`. Its `/api/auth/session` request returned application HTTP 500.
+- Revision `accounting-00001-dog` logged `{ DATABASE_URL is required in production runtime }` from the main database client.
+- The import chain was `company-oidc.ts` → `@reading-advantage/auth` → `auth/src/index.ts` → `auth/src/audit.ts` → `@reading-advantage/db` → `db/src/index.ts` → `db/src/client.ts`.
+- A repository scan found the same broad auth import in the company start route. No other Accounting TypeScript file used that root import.
+- The new import-surface test mocks `@reading-advantage/db` with a throwing sentinel. Both route-module checks failed during Red verification.
+- Fix commit `f211136f8` changes both imports to `@reading-advantage/auth/company-identity`. The existing package export contains every required symbol.
+- No `packages/auth` behavior or export changed. A follow-up scan found no broad auth import under `apps/accounting`.
+- The import-surface test passed with two tests after the fix. The full Accounting suite exited 0 with 33 files and 234 tests.
+- Accounting `check-types` exited 0. Focused lint for all three changed TypeScript files exited 0.
+- Full Accounting lint retained four `no-regex-spaces` errors in unchanged `cloudbuild.red.test.ts` and one unrelated warning.
+- `git show HEAD~:apps/accounting/app/lib/__tests__/cloudbuild.red.test.ts` produced the same four errors. The file matched `HEAD~` exactly.
+- A clean production module load omitted `DATABASE_URL` and set only `ACCOUNTING_DATABASE_URL` as an application database variable.
+- The load check called the session route and returned `{"session":null}` with HTTP 401. It confirmed `databaseUrlPresent: false`.
 - [b] Task: Measure - User Manual Verification 'Phase 3: Implement' (Protocol in workflow.md) deferred:owner
 
 ## Phase 4: Generate Docs & Doctor
