@@ -1,0 +1,14 @@
+Task: Remove Accounting main-database environment coupling
+
+Summary:
+- Replaced both Accounting root auth-package imports with the company-identity submodule.
+- Added an import-surface regression test for the session and company-start routes.
+- The test makes any main database package import fail immediately.
+
+Files:
+- apps/accounting/app/api/auth/company/start/route.ts
+- apps/accounting/app/lib/company-oidc.ts
+- apps/accounting/app/lib/__tests__/auth-import-surface.test.ts
+
+Reason:
+The root auth barrel evaluates its audit export, which imports the main database package. That package initializes its client and requires DATABASE_URL in production.
