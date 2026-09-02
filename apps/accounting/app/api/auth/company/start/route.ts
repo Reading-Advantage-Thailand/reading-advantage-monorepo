@@ -1,4 +1,4 @@
-import { parseCompanyOidcReturnTo } from "@reading-advantage/auth";
+import { parseCompanyOidcReturnTo } from "@reading-advantage/auth/company-identity";
 import { NextResponse } from "next/server";
 import { ZodError } from "zod";
 

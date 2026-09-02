@@ -2,7 +2,7 @@ import {
   createCompanyIdentityServiceAuthConfig,
   createCompanyOidcClient,
   type CompanyOidcIdentity,
-} from "@reading-advantage/auth";
+} from "@reading-advantage/auth/company-identity";
 
 /** Host-only opaque Accounting application-session cookie. */
 export const ACCOUNTING_SESSION_COOKIE = "__Host-ra_accounting_session";
