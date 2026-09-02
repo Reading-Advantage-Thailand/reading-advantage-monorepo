@@ -1,0 +1,18 @@
+Task: Remediate IAM-gated Accounting candidate verification
+
+Summary:
+- Added optional Cloud Run identity-token support to the release verifier.
+- Added the bearer header to every verifier request without adding an app session cookie.
+- Added clear Cloud Run IAM rejection errors while preserving the expected app session 401.
+- Captured the canonical Cloud Run service URL for the token audience.
+- Granted the default Cloud Build service account service-level run.invoker access before verification.
+- Minted the identity token from the Cloud Build metadata server inside the verification step.
+
+Files:
+- apps/accounting/app/lib/__tests__/release-verifier.red.test.ts
+- apps/accounting/cloudbuild.yaml
+- apps/accounting/scripts/capture-accounting-cloud-run-tag.sh
+- apps/accounting/scripts/verify-accounting-release.ts
+
+Reason:
+The first IAM-gated candidate deployed successfully, but tokenless verification stopped at Cloud Run with HTTP 403.
