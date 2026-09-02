@@ -272,6 +272,23 @@ provide the behavior.
 - The contract test verifies both branches, candidate tagging, first-service isolation, and the continued traffic-shift prohibition.
 - The focused pipeline suites exited 0 with 12 tests. The full Accounting suite exited 0 with 32 files and 226 tests.
 - Accounting `check-types` and the two Accounting helper-script syntax checks exited 0.
+
+### Phase 4 verifier-IAM remediation record (2026-09-02)
+
+- Cloud Build `ee00b524-2055-4c39-86d7-e552d3e12980` created revision `accounting-00001-dog`. Tokenless candidate verification then received Cloud Run HTTP 403.
+- Fix commit `873d51d04` adds optional `ACCOUNTING_VERIFY_IDENTITY_TOKEN` support. Tokenless verification remains the default for the public production URL.
+- Token mode sends one Cloud Run bearer token on all three requests. It does not send an application session cookie.
+- The verifier reports Cloud Run IAM 401 or 403 responses as infrastructure failures. It still requires the application session endpoint to return 401.
+- The capture script records the canonical Cloud Run service URL. The pipeline uses that URL as the tagged candidate token audience.
+- The verification step mints its identity token from the Cloud Build metadata server. It does not store or print the token.
+- The pipeline grants `roles/run.invoker` to `serviceAccount:$PROJECT_NUMBER@cloudbuild.gserviceaccount.com` before candidate verification.
+- The live service binding is `serviceAccount:1090865515742@cloudbuild.gserviceaccount.com` with `roles/run.invoker` on `accounting` in `asia-southeast1`.
+- The focused verifier and pipeline suites exited 0 with 17 tests. The full Accounting suite exited 0 with 32 files and 232 tests.
+- Accounting `check-types`, the capture-script syntax check, YAML parsing, and `git diff --check` each exited 0.
+- Accounting lint exited 1 on four existing `no-regex-spaces` errors in unchanged `cloudbuild.red.test.ts`. It also reported one existing unused-variable warning.
+- A live active-user identity token passed Cloud Run IAM and `/login`. The verifier then found an application HTTP 500 on `/api/auth/session`.
+- Revision logs identify `{ DATABASE_URL is required in production runtime }`. The broad `@reading-advantage/auth` import initializes the main database client.
+- Local Cloud Build service-account impersonation lacked `iam.serviceAccounts.getAccessToken`. Cloud Build will mint its own token through its metadata identity endpoint.
 - [b] Task: Measure - User Manual Verification 'Phase 3: Implement' (Protocol in workflow.md) deferred:owner
 
 ## Phase 4: Generate Docs & Doctor
