@@ -261,6 +261,17 @@ provide the behavior.
 - The full Accounting suite exited 0 with 32 files and 226 tests. Accounting `check-types` exited 0.
 - The DB Accounting-focused suite exited 0 with 7 files and 24 tests.
 - The clean worktree had no tracked changes after verification and was removed.
+
+### Phase 3/4 first-service bootstrap remediation record (2026-09-02)
+
+- Cloud Build `6b860185-4c28-41b0-ba6a-9fb0c9578125` failed because Cloud Run rejects `--no-traffic` when it creates a new service.
+- The owner approved an intent-equivalent bootstrap. Fix commit `0e8731579` tests whether the Accounting service exists before deployment.
+- Existing services receive the tagged candidate with `--no-traffic`. No pipeline step shifts existing traffic.
+- The first revision omits `--no-traffic` and public access. It remains IAM-gated without a domain mapping until acceptance and promotion.
+- The public invoker step uses the same existing-service marker, so it skips `allUsers` binding during first-service bootstrap.
+- The contract test verifies both branches, candidate tagging, first-service isolation, and the continued traffic-shift prohibition.
+- The focused pipeline suites exited 0 with 12 tests. The full Accounting suite exited 0 with 32 files and 226 tests.
+- Accounting `check-types` and the two Accounting helper-script syntax checks exited 0.
 - [b] Task: Measure - User Manual Verification 'Phase 3: Implement' (Protocol in workflow.md) deferred:owner
 
 ## Phase 4: Generate Docs & Doctor
@@ -275,7 +286,7 @@ provide the behavior.
     - [ ] Create the nine `ACCOUNTING_*` secrets from the secrets contract (`ACCOUNTING_DIRECT_DATABASE_URL`, `ACCOUNTING_DATABASE_URL`, `ACCOUNTING_COMPANY_AUTH_OIDC_CLIENT_SECRET`, six `ACCOUNTING_STORAGE_*`), mapping the storage secrets to unprefixed `STORAGE_*` env vars in Cloud Run
     - [ ] Confirm the `accounting-web` OIDC client secret value matches the Accounts bootstrap registration
 - [b] Task: Deploy the candidate and run candidate acceptance deferred:owner
-    - [ ] Submit `apps/accounting/cloudbuild.yaml` with the reviewed commit and wait for the no-traffic candidate
+    - [ ] Submit `apps/accounting/cloudbuild.yaml` and wait for the IAM-gated first candidate or the no-traffic subsequent candidate
     - [ ] Run the unauthenticated, malformed-return, and preview-handoff cases against the candidate URL and capture the redirect chains
     - [ ] Complete a sign-in with an Accounting identity through the callback origin and confirm the session cookie
     - [ ] Confirm the forbidden case with a no-role identity
