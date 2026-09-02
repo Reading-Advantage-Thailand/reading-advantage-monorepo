@@ -3,6 +3,8 @@
 apps/*
 !apps/accounting
 !apps/accounting/**
+!apps/accounting/scripts
+!apps/accounting/scripts/**
 !apps/codecamp-advantage
 !apps/codecamp-advantage/**
 !apps/marketing
