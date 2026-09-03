@@ -1,0 +1,18 @@
+Task: Repair Accounting candidate identity-token minting
+
+Summary:
+- Replaced unsupported default-account metadata token minting with gcloud impersonation.
+- Added a dedicated least-privilege Accounting build verifier identity.
+- Used the captured canonical Cloud Run service URL as the token audience.
+- Added mint, token-file, and empty-token fail-fast guards.
+- Treated whitespace-only optional verifier tokens as unset.
+- Added focused pipeline and verifier contracts.
+
+Files:
+- apps/accounting/cloudbuild.yaml
+- apps/accounting/scripts/verify-accounting-release.ts
+- apps/accounting/app/lib/__tests__/cloudbuild.red.test.ts
+- apps/accounting/app/lib/__tests__/release-verifier.red.test.ts
+
+Reason:
+Cloud Build's legacy default service account does not support direct metadata ID-token generation. The export assignment also masked the failed command substitution.
