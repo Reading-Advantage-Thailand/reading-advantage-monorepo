@@ -320,6 +320,26 @@ provide the behavior.
 - The Green pipeline and promotion suites exited 0 with 12 tests. They assert the complete private-build and promotion-order contracts.
 - The full Accounting suite exited 0 with 33 files and 235 tests. Accounting `check-types` exited 0.
 - Accounting lint, promotion shell syntax, YAML parsing, and `git diff --check` each exited 0. Lint retained one unrelated warning.
+
+### Phase 4 token-minting remediation record (2026-09-03)
+
+- Cloud Build `6fd873b7-d328-4bfb-8ca6-d3e848264915` deployed `accounting-00002-xuc` at zero traffic without public access.
+- Candidate verification then received HTTP 404 from the metadata identity endpoint. The verifier subsequently reported an empty-token Zod error.
+- The captured audience was the canonical service URL. The Node `URLSearchParams` call also encoded the audience correctly.
+- Cloud Build used the legacy default account because the build declared no user-specified service account.
+- Google Cloud documents that default Cloud Build service accounts do not support ID-token generation. This caused the metadata HTTP 404.
+- The `export VAR="$(command)"` form also masked the failed Node substitution. The shell continued with an empty token.
+- A self-binding attempt returned `NOT_FOUND` because the legacy build identity is not a user-managed service-account resource.
+- Provisioning created `accounting-build-verifier@reading-advantage.iam.gserviceaccount.com` as a dedicated token identity.
+- The legacy build account has `roles/iam.serviceAccountTokenCreator` on that verifier identity.
+- The verifier identity has `roles/run.invoker` on the Accounting Cloud Run service. The IAM Credentials API is enabled.
+- Fix commit `ef3c706ff` uses a gcloud mint step with explicit verifier impersonation and the captured canonical service audience.
+- The mint step validates the root `run.app` audience and sanitizes the token. Mint failures and empty tokens stop before verification.
+- The verification step also rejects a missing or empty token file before starting the verifier.
+- The verifier treats a whitespace-only optional identity-token value as unset, avoiding a secondary generic Zod error.
+- The Red pipeline and verifier run exited 1 with three expected failures. Fifteen existing tests passed.
+- The Green focused run exited 0 with 18 tests. The full Accounting suite exited 0 with 33 files and 236 tests.
+- Accounting `check-types`, lint, YAML parsing, promotion shell syntax, and `git diff --check` each exited 0. Lint retained one unrelated warning.
 - [b] Task: Measure - User Manual Verification 'Phase 3: Implement' (Protocol in workflow.md) deferred:owner
 
 ## Phase 4: Generate Docs & Doctor
