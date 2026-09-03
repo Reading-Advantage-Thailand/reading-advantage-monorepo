@@ -1,0 +1,18 @@
+Task: Keep Accounting IAM-gated until accepted promotion
+
+Summary:
+- Removed --allow-unauthenticated from candidate deployment.
+- Removed the Cloud Build allUsers invoker step.
+- Kept the Cloud Build service-account invoker binding for token verification.
+- Added the allUsers invoker binding to promotion after traffic shift and before verification.
+- Cleared any inherited identity token before tokenless production verification.
+- Added pipeline and promotion ordering contracts.
+
+Files:
+- apps/accounting/cloudbuild.yaml
+- apps/accounting/scripts/promote-accounting-candidate.sh
+- apps/accounting/app/lib/__tests__/cloudbuild.red.test.ts
+- apps/accounting/app/lib/__tests__/promotion.red.test.ts
+
+Reason:
+The prior existing-service pipeline could expose the service publicly before owner acceptance.
