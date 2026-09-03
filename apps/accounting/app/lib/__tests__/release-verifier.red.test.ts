@@ -83,6 +83,23 @@ describe("Accounting release verifier contract", () => {
     }
   });
 
+  it("treats an empty identity-token environment value as unset", async () => {
+    const requests: RequestInit[] = [];
+    await expect(
+      verifyAccountingRelease(
+        { baseUrl: BASE_URL, identityToken: " \r\n" },
+        stubFetch(contractResponses(), requests),
+      ),
+    ).resolves.toMatchObject({
+      checks: ["login-page", "unauthenticated-api", "safe-return-to"],
+    });
+    expect(
+      requests.every(
+        ({ headers }) => new Headers(headers).get("Authorization") === null,
+      ),
+    ).toBe(true);
+  });
+
   it("keeps enforcing app response contracts in identity-token mode", async () => {
     await expect(
       verifyAccountingRelease(
@@ -107,18 +124,40 @@ describe("Accounting release verifier contract", () => {
     );
   });
 
-  it("grants candidate access and mints a token for the canonical service audience", () => {
+  it("grants candidate access and fails fast around gcloud token minting", () => {
+    const mintStep = cloudbuild.indexOf('id: "mint-company-candidate-token"');
+    const mintFailure = cloudbuild.indexOf(
+      "Accounting identity token minting failed; verifier was not started.",
+    );
+    const emptyTokenGuard = cloudbuild.indexOf(
+      "Accounting identity token minting returned an empty token; verifier was not started.",
+    );
+    const verifyStep = cloudbuild.indexOf('id: "verify-company-candidate"');
+    const verifierCall = cloudbuild.indexOf(
+      "pnpm --filter accounting exec tsx scripts/verify-accounting-release.ts",
+      verifyStep,
+    );
+
     expect(captureScript).toContain('--format="value(status.url)"');
     expect(captureScript).toContain('"${output_prefix}.audience"');
     expect(cloudbuild).toContain('id: "allow-build-invoker"');
     expect(cloudbuild).toContain(
       "--member=serviceAccount:$PROJECT_NUMBER@cloudbuild.gserviceaccount.com",
     );
-    expect(cloudbuild).toContain("/service-accounts/default/identity");
+    expect(cloudbuild).toContain("gcloud auth print-identity-token");
+    expect(cloudbuild).toContain(
+      "--impersonate-service-account=accounting-build-verifier@$PROJECT_ID.iam.gserviceaccount.com",
+    );
+    expect(cloudbuild).toContain('--audiences="$${audience}"');
     expect(cloudbuild).toContain("ACCOUNTING_VERIFY_IDENTITY_TOKEN");
     expect(cloudbuild.indexOf('id: "allow-build-invoker"')).toBeLessThan(
-      cloudbuild.indexOf('id: "verify-company-candidate"'),
+      mintStep,
     );
+    expect(mintFailure).toBeGreaterThan(mintStep);
+    expect(emptyTokenGuard).toBeGreaterThan(mintFailure);
+    expect(verifyStep).toBeGreaterThan(emptyTokenGuard);
+    expect(verifierCall).toBeGreaterThan(verifyStep);
+    expect(cloudbuild).not.toContain("/service-accounts/default/identity");
   });
 
   it.each([

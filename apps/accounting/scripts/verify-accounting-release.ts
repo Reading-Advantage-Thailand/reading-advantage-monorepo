@@ -4,6 +4,11 @@ import { pathToFileURL } from "node:url";
 
 import { z } from "zod";
 
+const optionalIdentityTokenSchema = z.preprocess(
+  (value) => (typeof value === "string" && value.trim() === "" ? undefined : value),
+  z.string().trim().min(1).optional(),
+);
+
 const environmentSchema = z.object({
   ACCOUNTING_RELEASE_BASE_URL: z
     .string()
@@ -12,7 +17,7 @@ const environmentSchema = z.object({
       (value) => value.startsWith("https://"),
       "Accounting release URL must use HTTPS.",
     ),
-  ACCOUNTING_VERIFY_IDENTITY_TOKEN: z.string().trim().min(1).optional(),
+  ACCOUNTING_VERIFY_IDENTITY_TOKEN: optionalIdentityTokenSchema,
 });
 
 /** Inputs required to verify Accounting release dependencies. */

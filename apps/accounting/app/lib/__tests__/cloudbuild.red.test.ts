@@ -28,6 +28,7 @@ describe("Accounting Cloud Build candidate pipeline contract", () => {
       "accounting:doctor",
       "accounting-runtime-grants.sql",
       "accounting-runtime-probe.sql",
+      "mint-company-candidate-token",
       "verify-accounting-release.ts",
     ]) {
       expect(cloudbuild).toContain(requiredStep);

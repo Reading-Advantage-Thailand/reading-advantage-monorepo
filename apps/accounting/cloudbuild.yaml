@@ -89,6 +89,36 @@ steps:
       - "asia-southeast1-docker.pkg.dev/$PROJECT_ID/accounting/accounting:$BUILD_ID"
       - "/workspace/.accounting-company-candidate"
 
+  - name: "gcr.io/cloud-builders/gcloud"
+    id: "mint-company-candidate-token"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - |
+        set -euo pipefail
+        audience="$$(tr -d '\r\n' < /workspace/.accounting-company-candidate.audience)"
+        if [[ ! "$${audience}" =~ ^https://[^/]+\.run\.app$ ]]; then
+          echo "Accounting identity token audience must be the canonical run.app service URL." >&2
+          exit 1
+        fi
+        token_file=/workspace/.accounting-company-candidate.token
+        temporary_token_file="$${token_file}.tmp"
+        rm -f "$${token_file}" "$${temporary_token_file}"
+        if ! gcloud auth print-identity-token \
+          --impersonate-service-account=accounting-build-verifier@$PROJECT_ID.iam.gserviceaccount.com \
+          --audiences="$${audience}" > "$${temporary_token_file}"; then
+          echo "Accounting identity token minting failed; verifier was not started." >&2
+          rm -f "$${temporary_token_file}"
+          exit 1
+        fi
+        token="$$(tr -d '\r\n' < "$${temporary_token_file}")"
+        rm -f "$${temporary_token_file}"
+        if [[ -z "$${token}" ]]; then
+          echo "Accounting identity token minting returned an empty token; verifier was not started." >&2
+          exit 1
+        fi
+        printf '%s' "$${token}" > "$${token_file}"
+
   - name: "node:22-slim"
     id: "verify-company-candidate"
     entrypoint: "bash"
@@ -100,15 +130,16 @@ steps:
         corepack prepare pnpm@11.8.0 --activate
         pnpm install --frozen-lockfile
         export ACCOUNTING_RELEASE_BASE_URL="$$(tr -d '\r\n' < /workspace/.accounting-company-candidate.url)"
-        export ACCOUNTING_VERIFY_AUDIENCE="$$(tr -d '\r\n' < /workspace/.accounting-company-candidate.audience)"
-        export ACCOUNTING_VERIFY_IDENTITY_TOKEN="$$(node --input-type=module -e '
-          const endpoint = new URL("http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/identity");
-          endpoint.searchParams.set("audience", process.env.ACCOUNTING_VERIFY_AUDIENCE);
-          endpoint.searchParams.set("format", "full");
-          const response = await fetch(endpoint, { headers: { "Metadata-Flavor": "Google" } });
-          if (!response.ok) throw new Error(`Metadata identity token request returned HTTP $${response.status}.`);
-          process.stdout.write((await response.text()).trim());
-        ')"
+        if [[ ! -s /workspace/.accounting-company-candidate.token ]]; then
+          echo "Accounting identity token file is missing; verifier was not started." >&2
+          exit 1
+        fi
+        ACCOUNTING_VERIFY_IDENTITY_TOKEN="$$(tr -d '\r\n' < /workspace/.accounting-company-candidate.token)"
+        if [[ -z "$${ACCOUNTING_VERIFY_IDENTITY_TOKEN}" ]]; then
+          echo "Accounting identity token file is empty; verifier was not started." >&2
+          exit 1
+        fi
+        export ACCOUNTING_VERIFY_IDENTITY_TOKEN
         pnpm --filter accounting exec tsx scripts/verify-accounting-release.ts
 
 images:
