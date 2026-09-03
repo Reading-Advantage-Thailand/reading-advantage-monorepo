@@ -305,6 +305,21 @@ provide the behavior.
 - `git show HEAD~:apps/accounting/app/lib/__tests__/cloudbuild.red.test.ts` produced the same four errors. The file matched `HEAD~` exactly.
 - A clean production module load omitted `DATABASE_URL` and set only `ACCOUNTING_DATABASE_URL` as an application database variable.
 - The load check called the session route and returned `{"session":null}` with HTTP 401. It confirmed `databaseUrlPresent: false`.
+
+### Phase 4 pre-acceptance exposure remediation record (2026-09-02)
+
+- The deploy-lane audit found two pre-acceptance exposure paths in the existing-service pipeline.
+- Candidate deployment passed `--allow-unauthenticated`. A later Cloud Build step also granted `roles/run.invoker` to `allUsers`.
+- Either action could expose the serving IAM-gated revision before the owner accepted the candidate.
+- The Red pipeline and promotion run exited 1 with two expected failures. Ten existing assertions passed.
+- Fix commit `0cb4bc1ad` removes `--allow-unauthenticated` and the complete `allow-public-invoker` step from Cloud Build.
+- Cloud Build retains only its service-account `roles/run.invoker` binding. Identity-token candidate verification remains unchanged.
+- Existing-service deployment retains `--tag=candidate --no-traffic`. First-service deployment remains IAM-gated without `--no-traffic`.
+- Promotion now prints and grants the `allUsers` invoker binding after traffic shifts to the accepted revision.
+- Promotion clears any inherited identity token before the tokenless production verifier. A token cannot hide a failed public binding.
+- The Green pipeline and promotion suites exited 0 with 12 tests. They assert the complete private-build and promotion-order contracts.
+- The full Accounting suite exited 0 with 33 files and 235 tests. Accounting `check-types` exited 0.
+- Accounting lint, promotion shell syntax, YAML parsing, and `git diff --check` each exited 0. Lint retained one unrelated warning.
 - [b] Task: Measure - User Manual Verification 'Phase 3: Implement' (Protocol in workflow.md) deferred:owner
 
 ## Phase 4: Generate Docs & Doctor
