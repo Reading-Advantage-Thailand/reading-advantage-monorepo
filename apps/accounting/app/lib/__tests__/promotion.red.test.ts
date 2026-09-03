@@ -1,5 +1,5 @@
 // @vitest-environment node
-import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { spawnSync } from "node:child_process";
@@ -10,6 +10,7 @@ const script = new URL(
   import.meta.url,
 ).pathname;
 const temporaryDirectory = mkdtempSync(join(tmpdir(), "accounting-promote-"));
+const source = readFileSync(script, "utf8");
 
 afterAll(() => {
   rmSync(temporaryDirectory, { force: true, recursive: true });
@@ -26,6 +27,23 @@ function runPromotion(environment: Record<string, string>): number | null {
 describe("Accounting promotion gate contract", () => {
   it("passes a Bash syntax check", () => {
     expect(spawnSync("bash", ["-n", script]).status).toBe(0);
+  });
+
+  it("opens public access only after acceptance and traffic promotion", () => {
+    const acceptanceGate = source.indexOf("grep -Eq");
+    const trafficShift = source.indexOf("update-traffic");
+    const publicBinding = source.indexOf("add-iam-policy-binding");
+    const tokenRemoval = source.indexOf("unset ACCOUNTING_VERIFY_IDENTITY_TOKEN");
+    const productionVerification = source.indexOf("verify-accounting-release.ts");
+
+    expect(acceptanceGate).toBeGreaterThan(-1);
+    expect(trafficShift).toBeGreaterThan(acceptanceGate);
+    expect(publicBinding).toBeGreaterThan(trafficShift);
+    expect(tokenRemoval).toBeGreaterThan(publicBinding);
+    expect(productionVerification).toBeGreaterThan(tokenRemoval);
+    expect(source).toContain("--member=allUsers");
+    expect(source).toContain("--role=roles/run.invoker");
+    expect(source).toContain("Opening public Accounting access after acceptance.");
   });
 
   it("rejects a missing candidate revision", () => {

@@ -64,8 +64,7 @@ steps:
           "--set-secrets=ACCOUNTING_DATABASE_URL=ACCOUNTING_DATABASE_URL:latest,COMPANY_AUTH_OIDC_CLIENT_SECRET=ACCOUNTING_COMPANY_AUTH_OIDC_CLIENT_SECRET:latest,STORAGE_ENDPOINT=ACCOUNTING_STORAGE_ENDPOINT:latest,STORAGE_REGION=ACCOUNTING_STORAGE_REGION:latest,STORAGE_BUCKET=ACCOUNTING_STORAGE_BUCKET:latest,STORAGE_ACCESS_KEY=ACCOUNTING_STORAGE_ACCESS_KEY:latest,STORAGE_SECRET_KEY=ACCOUNTING_STORAGE_SECRET_KEY:latest,STORAGE_PUBLIC_BASE_URL=ACCOUNTING_STORAGE_PUBLIC_BASE_URL:latest"
         )
         if gcloud run services describe accounting --region=asia-southeast1 --platform=managed >/dev/null 2>&1; then
-          touch /workspace/.accounting-service-existed
-          gcloud "$${deploy_args[@]}" --allow-unauthenticated --tag=candidate --no-traffic
+          gcloud "$${deploy_args[@]}" --tag=candidate --no-traffic
         else
           gcloud "$${deploy_args[@]}" --tag=candidate
         fi
@@ -80,22 +79,6 @@ steps:
       - "--region=asia-southeast1"
       - "--member=serviceAccount:$PROJECT_NUMBER@cloudbuild.gserviceaccount.com"
       - "--role=roles/run.invoker"
-
-  - name: "gcr.io/cloud-builders/gcloud"
-    id: "allow-public-invoker"
-    entrypoint: "bash"
-    args:
-      - "-c"
-      - |
-        set -euo pipefail
-        if [[ -f /workspace/.accounting-service-existed ]]; then
-          gcloud run services add-iam-policy-binding accounting \
-            --region=asia-southeast1 \
-            --member=allUsers \
-            --role=roles/run.invoker
-        else
-          echo "First revision remains IAM-invoker-gated pending acceptance."
-        fi
 
   - name: "gcr.io/cloud-builders/gcloud"
     id: "capture-company-candidate"

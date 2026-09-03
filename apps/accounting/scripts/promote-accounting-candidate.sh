@@ -12,6 +12,13 @@ gcloud run services update-traffic accounting \
   --platform=managed \
   --to-revisions="$CANDIDATE_REVISION=100"
 
+echo "Opening public Accounting access after acceptance."
+gcloud run services add-iam-policy-binding accounting \
+  --region=asia-southeast1 \
+  --member=allUsers \
+  --role=roles/run.invoker
+
+unset ACCOUNTING_VERIFY_IDENTITY_TOKEN
 export ACCOUNTING_RELEASE_BASE_URL=https://accounting.reading-advantage.com
 verified=false
 for attempt in $(seq 1 12); do
