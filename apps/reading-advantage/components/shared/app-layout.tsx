@@ -85,7 +85,7 @@ export default async function AppLayout({
         <div className="container flex h-16 items-center justify-between py-4">
           <MainNav items={mainNavConfig} />
           {!disableProgressBar && (
-            <ProgressBar progress={user.xp} level={user.level!} />
+            <ProgressBar progress={user.xp ?? 0} level={user.level ?? 0} />
           )}
           <div className="flex space-x-2">
             <LocaleSwitcher />

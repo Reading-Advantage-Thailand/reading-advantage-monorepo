@@ -23,7 +23,7 @@
  * @jest-environment node
  */
 
-import { execSync } from "child_process";
+import { execFileSync } from "child_process";
 import { resolve } from "path";
 import { NextRequest } from "next/server";
 import type { ExtendedNextRequest } from "@/server/controllers/auth-controller";
@@ -35,6 +35,7 @@ var limitMock: jest.Mock;
 var updateMock: jest.Mock;
 var insertMock: jest.Mock;
 var returningMock: jest.Mock;
+let storedStatus = "NOT_STARTED";
 
 jest.mock("@reading-advantage/db", () => {
   const actual = jest.requireActual("@reading-advantage/db");
@@ -51,6 +52,7 @@ jest.mock("@reading-advantage/db", () => {
   mockDb.select = selectMock.mockImplementation(() => mockDb);
   mockDb.from = fromMock.mockImplementation(() => mockDb);
   mockDb.where = whereMock.mockImplementation(() => mockDb);
+  mockDb.innerJoin = jest.fn().mockImplementation(() => mockDb);
   mockDb.limit = limitMock.mockResolvedValue([]);
   mockDb.update = updateMock.mockImplementation(() => mockDb);
   mockDb.set = jest.fn().mockImplementation(() => mockDb);
@@ -90,6 +92,7 @@ function makeRequest(body: object): ExtendedNextRequest {
 describe("PB-4 assignment status shared enum & lifecycle (Red)", () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    storedStatus = "NOT_STARTED";
 
     // Teacher has access to classroom
     limitMock.mockImplementation(async () => {
@@ -98,8 +101,17 @@ describe("PB-4 assignment status shared enum & lifecycle (Red)", () => {
       if (lastFrom === schema.classroomTeachers) {
         return [{ teacherId: "teacher-1" }];
       }
+      if (lastFrom === schema.classrooms) {
+        return [{ id: "classroom-1" }];
+      }
       if (lastFrom === schema.assignments) {
         return [{ id: "assignment-1", classroomId: "classroom-1" }];
+      }
+      if (lastFrom === schema.classroomStudents) {
+        return [{ studentId: "student-1" }];
+      }
+      if (lastFrom === schema.studentAssignments) {
+        return [{ status: storedStatus }];
       }
       return [];
     });
@@ -149,14 +161,7 @@ describe("PB-4 assignment status shared enum & lifecycle (Red)", () => {
     // upsert RETURNING report the previous status as COMPLETED. The controller
     // currently writes the requested status without checking transitions, so
     // this returns 200; after the fix it must return 4xx.
-    returningMock.mockResolvedValue([
-      {
-        id: "student-assignment-1",
-        assignmentId: "assignment-1",
-        studentId: "student-1",
-        status: "COMPLETED",
-      },
-    ]);
+    storedStatus = "COMPLETED";
 
     const res = await updateAssignment(
       makeRequest({
@@ -175,11 +180,15 @@ describe("PB-4 assignment status shared enum & lifecycle (Red)", () => {
     let stdout = "";
     let stderr = "";
     try {
-      const result = execSync("pnpm check-types", {
+      const result = execFileSync(
+        process.execPath,
+        [resolve(__dirname, "../../../../node_modules/typescript/bin/tsc"), "--noEmit", "--pretty", "false"],
+        {
         cwd: resolve(__dirname, "../../../../packages/api"),
         encoding: "utf-8",
         env: { ...process.env, CI: "true" },
-      });
+        },
+      );
       exitCode = 0;
       stdout = result;
     } catch (err: any) {

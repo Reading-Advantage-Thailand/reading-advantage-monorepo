@@ -37,6 +37,24 @@ jest.mock("next/navigation", () => ({
   useRouter: () => ({ push: jest.fn() }),
 }));
 
+global.ResizeObserver = class ResizeObserver {
+  private callback: ResizeObserverCallback;
+
+  constructor(callback: ResizeObserverCallback) {
+    this.callback = callback;
+  }
+
+  observe() {
+    this.callback(
+      [{ contentRect: { width: 800, height: 600 } } as ResizeObserverEntry],
+      this,
+    );
+  }
+
+  unobserve() {}
+  disconnect() {}
+};
+
 Object.defineProperty(HTMLElement.prototype, "offsetWidth", {
   configurable: true,
   get: () => 800,
@@ -78,7 +96,7 @@ describe("PotionRushGame", () => {
     expect(await screen.findByText(/How to Play/i)).toBeInTheDocument();
     expect(screen.getByText(/Vocabulary List/i)).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: /start brewing/i }),
+      screen.getByRole("button", { name: "startButton" }),
     ).toBeInTheDocument();
   });
 });

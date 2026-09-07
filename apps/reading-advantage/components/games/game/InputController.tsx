@@ -11,6 +11,11 @@ interface InputControllerProps {
   mobile?: boolean;
 }
 
+/**
+ * Renders the spell input for desktop or mobile game layouts.
+ * @param props The input callback and layout mode.
+ * @returns The spell input control.
+ */
 export function InputController({
   onSubmit,
   mobile = false,
@@ -57,6 +62,7 @@ export function InputController({
           autoCorrect="off"
           autoCapitalize="none"
           spellCheck={false}
+          aria-label="Type spell"
           value={inputValue}
           onChange={handleChange}
           onKeyDown={handleKeyDown}
@@ -75,8 +81,9 @@ export function InputController({
         <button
           onPointerDown={(e) => {
             e.preventDefault();
-            handleSubmit();
           }}
+          onClick={handleSubmit}
+          aria-label="Submit spell"
           className="flex-shrink-0 flex items-center justify-center rounded-xl bg-purple-600 w-11 h-11 text-white shadow-[0_0_15px_rgba(147,51,234,0.4)] active:scale-95 transition-transform"
         >
           <SendHorizonal className="h-5 w-5" />
@@ -92,6 +99,7 @@ export function InputController({
       <input
         ref={inputRef}
         type="text"
+        aria-label="Type spell"
         value={inputValue}
         onChange={handleChange}
         onKeyDown={handleKeyDown}

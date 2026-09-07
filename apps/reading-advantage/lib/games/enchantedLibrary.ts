@@ -585,7 +585,12 @@ export const checkSpiritCollisions = (
 };
 
 /**
- * Main game loop - advances game state by one time step
+ * Advances the enchanted library state by one time step.
+ * @param state The current game state.
+ * @param input The active directional and shield controls.
+ * @param dt The elapsed time in milliseconds.
+ * @param config The optional vocabulary and random source.
+ * @returns The state after one time step.
  */
 export const advanceEnchantedLibraryTime = (
   state: EnchantedLibraryState,
@@ -674,7 +679,6 @@ export const advanceEnchantedLibraryTime = (
       x: newPlayerX,
       y: newPlayerY,
     },
-    gameTime: newState.gameTime + dt,
     spiritSpawnTimer: Math.max(0, newState.spiritSpawnTimer - dt),
   };
 

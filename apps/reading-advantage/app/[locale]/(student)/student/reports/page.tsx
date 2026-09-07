@@ -23,11 +23,11 @@ export default async function ReportsPage() {
             userId={user.id} 
             user={{
               id: user.id,
-              name: user.name || null,
+              name: user.display_name,
               email: user.email || "",
-              level: user.level,
+              level: user.level ?? 0,
               cefr_level: user.cefr_level,
-              xp: user.xp,
+              xp: user.xp ?? 0,
             }} 
           />
         </Suspense>

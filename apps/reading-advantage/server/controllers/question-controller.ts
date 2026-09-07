@@ -37,6 +37,10 @@ async function getUserLicenseLevel(userId: string): Promise<LicenseType> {
       return LicenseType.BASIC;
     }
 
+    if (user.expiredDate && user.expiredDate <= new Date()) {
+      return LicenseType.BASIC;
+    }
+
     if (user.licenseId) {
       const [license] = await db
         .select({ licenseType: licenses.licenseType })
@@ -46,16 +50,7 @@ async function getUserLicenseLevel(userId: string): Promise<LicenseType> {
       return (license?.licenseType as LicenseType) || LicenseType.BASIC;
     }
 
-    if (!user.expiredDate) {
-      return LicenseType.ENTERPRISE;
-    }
-
-    const now = new Date();
-    if (user.expiredDate > now) {
-      return LicenseType.ENTERPRISE;
-    } else {
-      return LicenseType.BASIC;
-    }
+    return LicenseType.BASIC;
   } catch (error) {
     console.error("Error getting user license level:", error);
     return LicenseType.BASIC;
@@ -608,7 +603,12 @@ export async function answerSAQuestion(
     const [question] = await db
       .select()
       .from(shortAnswerQuestions)
-      .where(eq(shortAnswerQuestions.id, question_id))
+      .where(
+        and(
+          eq(shortAnswerQuestions.id, question_id),
+          eq(shortAnswerQuestions.articleId, article_id),
+        ),
+      )
       .limit(1);
 
     if (!question) {
@@ -828,7 +828,12 @@ export async function answerMCQuestion(
     const [question] = await db
       .select()
       .from(multipleChoiceQuestions)
-      .where(eq(multipleChoiceQuestions.id, question_id))
+      .where(
+        and(
+          eq(multipleChoiceQuestions.id, question_id),
+          eq(multipleChoiceQuestions.articleId, article_id),
+        ),
+      )
       .limit(1);
 
     if (!question) {
@@ -1034,7 +1039,12 @@ export async function answerLAQuestion(
     const [question] = await db
       .select()
       .from(longAnswerQuestions)
-      .where(eq(longAnswerQuestions.id, question_id))
+      .where(
+        and(
+          eq(longAnswerQuestions.id, question_id),
+          eq(longAnswerQuestions.articleId, article_id),
+        ),
+      )
       .limit(1);
 
     if (!question) {

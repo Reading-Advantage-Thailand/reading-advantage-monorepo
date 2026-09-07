@@ -13,7 +13,7 @@ const mockCreateQcSession = jest.fn(() => ({
   resize: mockResize,
   snapshot: mockSnapshot,
 }));
-const mockLoadExistingCoreQcCartridge = jest.fn(async () => ({
+const mockLoadExistingCoreQcCartridge = jest.fn(async (_gameId: string) => ({
   createQcSession: mockCreateQcSession,
 }));
 
@@ -37,7 +37,7 @@ jest.mock("@reading-advantage/game-contracts", () => ({
 }));
 
 jest.mock("@reading-advantage/game-cartridges/qc", () => ({
-  loadExistingCoreQcCartridge: (...args: unknown[]) => mockLoadExistingCoreQcCartridge(...args),
+  loadExistingCoreQcCartridge: (gameId: string) => mockLoadExistingCoreQcCartridge(gameId),
 }));
 
 describe("HostProofGameClient", () => {

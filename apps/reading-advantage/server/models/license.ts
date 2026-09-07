@@ -45,14 +45,13 @@ export const createLicenseModel = ({
 
   return {
     key: randomUUID(),
-    total_licenses: totalLicense,
-    used_licenses: 0,
-    subscription_level: subscriptionLevel,
-    expiration_date: new Date(newDate).toISOString(),
-    user_id: userId,
-    updated_at: date,
-    created_at: date,
-    admin_id: adminId,
-    school_name: schoolName,
+    maxUsers: totalLicense,
+    usedLicenses: 0,
+    licenseType: subscriptionLevel,
+    expiresAt: new Date(newDate).toISOString(),
+    ownerUserId: adminId || userId,
+    updatedAt: date,
+    createdAt: date,
+    schoolName,
   };
 };

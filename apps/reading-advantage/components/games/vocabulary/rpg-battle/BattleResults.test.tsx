@@ -12,7 +12,7 @@ describe('BattleResults', () => {
       />
     )
 
-    expect(screen.getByText('Victory')).toBeInTheDocument()
+    expect(screen.getByText('common.victory')).toBeInTheDocument()
     expect(screen.getByText('7')).toBeInTheDocument()
     expect(screen.getByText('80%')).toBeInTheDocument()
   })
@@ -27,7 +27,7 @@ describe('BattleResults', () => {
       />
     )
 
-    expect(screen.getByText('Defeat')).toBeInTheDocument()
+    expect(screen.getByText('common.defeat')).toBeInTheDocument()
   })
 
   it('calls onRestart when the button is clicked', () => {
@@ -41,7 +41,7 @@ describe('BattleResults', () => {
       />
     )
 
-    fireEvent.click(screen.getByRole('button', { name: /play again/i }))
+    fireEvent.click(screen.getByRole('button', { name: 'common.playAgain' }))
     expect(onRestart).toHaveBeenCalled()
   })
 })

@@ -1,15 +1,23 @@
-import { NextRequest } from "next/server";
+import type { ExtendedNextRequest } from "./auth-controller";
 import { db, eq, and, gte, inArray } from "@reading-advantage/db";
 import { classroomTeachers, classroomStudents, userActivity, users } from "@reading-advantage/db/schema";
 
-export async function getClassAccuracy(req: NextRequest) {
-  const session = (req as any).session;
+/** A protected request with route parameters attached by the route adapter. */
+type ClassAccuracyRequest = ExtendedNextRequest & { params?: { classroomId: string } };
+
+/**
+ * Returns accuracy metrics for one authorized classroom.
+ * @param req The authenticated request with its classroom parameter.
+ * @returns The classroom metrics response.
+ */
+export async function getClassAccuracy(req: ClassAccuracyRequest) {
+  const session = req.session;
 
   if (!session || !session.user) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const classroomId = (req as any).params?.classroomId;
+  const classroomId = req.params?.classroomId;
   const { searchParams } = new URL(req.url);
   const timeframe = searchParams.get("timeframe") || "30d";
 

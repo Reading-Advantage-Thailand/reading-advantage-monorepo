@@ -173,7 +173,7 @@ async function createDemoLicense(schoolId: string): Promise<LicenseRow> {
 async function upsertDemoUser(input: {
   email: string;
   name: string;
-  role: Role;
+  role: Exclude<Role, "USER">;
   schoolId: string;
   licenseId: string;
   xp: number;

@@ -58,7 +58,7 @@ const RUN_RECORD_PATH = path.resolve(
   "..",
   "..",
   "measure",
-  "tracks",
+  "archive",
   "jest30_major_migration",
   "phase-5-full-run.json",
 );
@@ -69,7 +69,7 @@ const INVENTORY_PATH = path.resolve(
   "..",
   "..",
   "measure",
-  "tracks",
+  "archive",
   "jest30_major_migration",
   "phase-5-inventory.json",
 );

@@ -3,6 +3,10 @@ import type { ReactNode } from "react";
 import { DragonFlightGame } from "./DragonFlightGame";
 import type { VocabularyItem } from "@/store/useGameStore";
 
+jest.mock("@/hooks/useSound", () => ({
+  useSound: () => ({ playSound: jest.fn() }),
+}));
+
 jest.mock("react-konva", () => {
   const React = jest.requireActual("react");
   const Image = React.forwardRef(
@@ -74,6 +78,11 @@ beforeEach(() => {
   });
 });
 
+afterEach(() => {
+  jest.useRealTimers();
+  jest.restoreAllMocks();
+});
+
 describe("DragonFlightGame", () => {
   it("renders the running state with prompt and dragon count", () => {
     const randomSpy = mockRandomSequence([0.1, 0.9, 0.2]);
@@ -81,7 +90,9 @@ describe("DragonFlightGame", () => {
       <DragonFlightGame vocabulary={vocabulary} preloadedAssets={assets} />
     );
 
-    fireEvent.click(screen.getByRole("button", { name: /start game/i }));
+    fireEvent.click(
+      screen.getByRole("button", { name: "dragonFlight.start" }),
+    );
 
     expect(screen.getByText("Apple")).toBeInTheDocument();
     expect(screen.getByTestId("dragon-flight")).toHaveAttribute(
@@ -105,7 +116,9 @@ describe("DragonFlightGame", () => {
       <DragonFlightGame vocabulary={vocabulary} preloadedAssets={assets} />
     );
 
-    fireEvent.click(screen.getByRole("button", { name: /start game/i }));
+    fireEvent.click(
+      screen.getByRole("button", { name: "dragonFlight.start" }),
+    );
 
     fireEvent.keyDown(window, { key: "ArrowLeft" });
 
@@ -118,7 +131,36 @@ describe("DragonFlightGame", () => {
     );
 
     randomSpy.mockRestore();
-    jest.useRealTimers();
+  });
+
+  it("resets the start screen when vocabulary changes", () => {
+    const randomSpy = mockRandomSequence([0.1, 0.9, 0.2]);
+    const { rerender } = render(
+      <DragonFlightGame vocabulary={vocabulary} preloadedAssets={assets} />
+    );
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "dragonFlight.start" }),
+    );
+    expect(screen.getByTestId("dragon-flight")).toHaveAttribute(
+      "data-status",
+      "running"
+    );
+
+    rerender(
+      <DragonFlightGame
+        vocabulary={[
+          { term: "Pear", translation: "Pera" },
+          { term: "Grape", translation: "Uva" },
+        ]}
+        preloadedAssets={assets}
+      />
+    );
+
+    expect(
+      screen.getByRole("button", { name: "dragonFlight.start" }),
+    ).toBeInTheDocument();
+    randomSpy.mockRestore();
   });
 
   it("transitions from boss encounter to results screen", () => {
@@ -132,7 +174,9 @@ describe("DragonFlightGame", () => {
       />
     );
 
-    fireEvent.click(screen.getByRole("button", { name: /start game/i }));
+    fireEvent.click(
+      screen.getByRole("button", { name: "dragonFlight.start" }),
+    );
 
     act(() => {
       jest.advanceTimersByTime(120);
@@ -158,6 +202,5 @@ describe("DragonFlightGame", () => {
     expect(screen.getByTestId("dragon-flight-results")).toBeInTheDocument();
 
     randomSpy.mockRestore();
-    jest.useRealTimers();
   });
 });

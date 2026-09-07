@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, act } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import { EnchantedLibraryGame } from "./EnchantedLibraryGame";
 import { VocabularyItem } from "@/store/useGameStore";
 import type React from "react";
@@ -120,18 +120,18 @@ describe("EnchantedLibraryGame", () => {
     render(<EnchantedLibraryGame {...defaultProps} />);
     // Wait for assets to "load"
     const startButton = await screen.findByRole("button", {
-      name: /start game/i,
-    }); // startButtonText default is "Start Game"
+      name: "startButton",
+    });
     fireEvent.click(startButton);
   };
 
   it("renders the intro screen initially", async () => {
     render(<EnchantedLibraryGame {...defaultProps} />);
-    expect(await screen.findByText(/Enchanted Library/i)).toBeInTheDocument(); // Title changed in code to use translation key "title" which likely resolves to "Enchanted Library"
-    // The previous text "Mystic Studies" might be wrong if translations are used.
-    // Let's assume title is rendered.
     expect(
-      screen.getByRole("button", { name: /start game/i }),
+      await screen.findByRole("heading", { name: "title" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "startButton" }),
     ).toBeInTheDocument();
   });
 

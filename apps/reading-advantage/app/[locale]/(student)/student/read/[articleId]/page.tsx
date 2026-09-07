@@ -161,7 +161,7 @@ export default async function ArticleQuizPage({
             <LAQuestionCard
               userId={user.id}
               articleId={articleId}
-              userLevel={user.level}
+              userLevel={user.level ?? 0}
               articleTitle={articleResponse.article.title}
               articleLevel={articleResponse.article.ra_level}
               userLicenseLevel={

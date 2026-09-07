@@ -111,7 +111,7 @@ export async function getStudentDashboard(req: ExtendedNextRequest) {
       student: {
         id: student.id,
         name: student.name || "Unknown",
-        email: student.email,
+        email: student.email ?? "",
         level: student.level,
         cefrLevel: student.cefrLevel,
         xp: student.xp,

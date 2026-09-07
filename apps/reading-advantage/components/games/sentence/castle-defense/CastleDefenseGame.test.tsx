@@ -4,6 +4,17 @@ import { VocabularyItem } from "@/store/useGameStore";
 import * as castleDefense from "@/lib/games/castleDefense";
 import type React from "react";
 
+jest.mock("next-intl", () => {
+  const translate = (
+    key: string,
+    values?: { current?: number; killed?: number; total?: number },
+  ) =>
+    key === "hud.wave"
+      ? `${key}:${values?.current}:${values?.killed}:${values?.total}`
+      : key;
+  return { useTranslations: () => translate, useLocale: () => "en" };
+});
+
 jest.mock("@/lib/games/castleDefense", () => {
   const actual = jest.requireActual("@/lib/games/castleDefense");
   return {
@@ -93,7 +104,9 @@ describe("CastleDefenseGame", () => {
     render(
       <CastleDefenseGame vocabulary={vocabulary} onComplete={jest.fn()} />,
     );
-    const startButton = await screen.findByRole("button", {});
+    const startButton = await screen.findByRole("button", {
+      name: "startButton",
+    });
     fireEvent.click(startButton);
   };
 
@@ -102,11 +115,11 @@ describe("CastleDefenseGame", () => {
       <CastleDefenseGame vocabulary={vocabulary} onComplete={jest.fn()} />,
     );
     expect(
-      await screen.findByRole("heading", { name: /castle defense/i }),
+      await screen.findByRole("heading", { name: "title" }),
     ).toBeInTheDocument();
     expect(screen.getByText(/how to play/i)).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: /start defense/i }),
+      screen.getByRole("button", { name: "startButton" }),
     ).toBeInTheDocument();
   });
 
@@ -125,7 +138,7 @@ describe("CastleDefenseGame", () => {
       jest.advanceTimersByTime(1);
     });
 
-    const startButton = screen.getByRole("button", { name: /start defense/i });
+    const startButton = screen.getByRole("button", { name: "startButton" });
     fireEvent.click(startButton);
 
     await act(async () => {
@@ -151,7 +164,7 @@ describe("CastleDefenseGame", () => {
       jest.advanceTimersByTime(1);
     });
 
-    const startButton = screen.getByRole("button", { name: /start defense/i });
+    const startButton = screen.getByRole("button", { name: "startButton" });
     fireEvent.click(startButton);
 
     await act(async () => {
@@ -175,7 +188,7 @@ describe("CastleDefenseGame", () => {
       <CastleDefenseGame vocabulary={thaiVocabulary} onComplete={jest.fn()} />,
     );
     const startButton = await screen.findByRole("button", {
-      name: /start defense/i,
+      name: "startButton",
     });
     fireEvent.click(startButton);
 
@@ -209,7 +222,7 @@ describe("CastleDefenseGame", () => {
         />,
       );
       const startButton = await screen.findByRole("button", {
-        name: /start defense/i,
+        name: "startButton",
       });
       fireEvent.click(startButton);
 
@@ -217,7 +230,7 @@ describe("CastleDefenseGame", () => {
       expect(screen.getAllByText("The").length).toBeGreaterThan(0);
       expect(screen.getAllByText("cat").length).toBeGreaterThan(0);
       expect(screen.getAllByText("___").length).toBeGreaterThan(0);
-      expect(screen.getByText(/Wave 2\/6 - Enemies: 3\/8/)).toBeInTheDocument();
+      expect(screen.getByText("hud.wave:2:3:8")).toBeInTheDocument();
     } finally {
       createMock.mockImplementation(
         actualCastleDefense.createCastleDefenseState,
@@ -246,12 +259,12 @@ describe("CastleDefenseGame", () => {
         />,
       );
       const startButton = await screen.findByRole("button", {
-        name: /start defense/i,
+        name: "startButton",
       });
       fireEvent.click(startButton);
 
       expect(
-        await screen.findByText(/sentence complete - build tower!/i),
+        await screen.findByText("messages.sentenceComplete"),
       ).toBeInTheDocument();
     } finally {
       createMock.mockImplementation(
@@ -272,7 +285,7 @@ describe("CastleDefenseGame", () => {
       />,
     );
     const startButton = await screen.findByRole("button", {
-      name: /start defense/i,
+      name: "startButton",
     });
     fireEvent.click(startButton);
 
@@ -289,7 +302,7 @@ describe("CastleDefenseGame", () => {
       <CastleDefenseGame vocabulary={dpadVocabulary} onComplete={jest.fn()} />,
     );
     const startButton = await screen.findByRole("button", {
-      name: /start defense/i,
+      name: "startButton",
     });
     fireEvent.click(startButton);
 

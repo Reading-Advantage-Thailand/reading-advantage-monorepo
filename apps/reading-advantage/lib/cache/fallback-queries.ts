@@ -119,7 +119,7 @@ export async function getStudentVelocity(
   userId: string,
   options?: FallbackOptions
 ): Promise<any> {
-  return queryWithFallback(
+  return queryWithFallback<unknown>(
     'mv_student_velocity',
     // Materialized view query
     async () => {
@@ -223,7 +223,7 @@ export async function getAssignmentFunnel(
   assignmentId: string,
   options?: FallbackOptions
 ): Promise<any> {
-  return queryWithFallback(
+  return queryWithFallback<unknown>(
     'mv_assignment_funnel',
     // Materialized view query
     async () => {
@@ -309,7 +309,7 @@ export async function getDailyActivityRollups(
   endDate: Date,
   options?: FallbackOptions
 ): Promise<any> {
-  return queryWithFallback(
+  return queryWithFallback<unknown>(
     'mv_daily_activity_rollups',
     // Materialized view query
     async () => {

@@ -8,13 +8,13 @@ describe("host-proof server configuration", () => {
 
   afterEach(() => {
     process.env.HOST_PROOF_ENABLED = originalHostProofEnabled;
-    process.env.NODE_ENV = originalNodeEnv;
+    Reflect.set(process.env, "NODE_ENV", originalNodeEnv);
     jest.resetModules();
   });
 
   it("fails closed when the flag is absent, including production", async () => {
     delete process.env.HOST_PROOF_ENABLED;
-    process.env.NODE_ENV = "production";
+    Reflect.set(process.env, "NODE_ENV", "production");
 
     const { isHostProofEnabled } = await import("./host-proof-config");
 

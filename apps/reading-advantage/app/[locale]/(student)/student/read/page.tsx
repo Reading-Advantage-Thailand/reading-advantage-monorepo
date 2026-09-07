@@ -22,7 +22,7 @@ export default async function ReadPage({ params, searchParams }: Props) {
       <Header heading={t("articleSelection")} />
       <Select
         user={{
-          level: user?.level,
+          level: user.level ?? 0,
           name: user?.display_name,
           id: user?.id,
         }}
@@ -30,4 +30,3 @@ export default async function ReadPage({ params, searchParams }: Props) {
     </>
   );
 }
-

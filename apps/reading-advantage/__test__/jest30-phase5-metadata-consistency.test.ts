@@ -57,7 +57,7 @@ const METADATA_PATH = path.resolve(
   "..",
   "..",
   "measure",
-  "tracks",
+  "archive",
   "jest30_major_migration",
   "metadata.json",
 );

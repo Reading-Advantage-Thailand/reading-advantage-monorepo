@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from "@testing-library/react";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 import { StartScreen } from "./StartScreen";
 
 const mockVocab = [
@@ -7,6 +7,10 @@ const mockVocab = [
 ];
 
 describe("StartScreen", () => {
+  afterEach(() => {
+    jest.useRealTimers();
+  });
+
   it("renders the vocabulary list", () => {
     render(
       <StartScreen
@@ -23,6 +27,7 @@ describe("StartScreen", () => {
   });
 
   it("calls onStart when start button is clicked", () => {
+    jest.useFakeTimers();
     const onStart = jest.fn();
     render(
       <StartScreen
@@ -32,9 +37,12 @@ describe("StartScreen", () => {
       />,
     );
 
-    const startButton = screen.getByRole("button", { name: /start game/i });
+    const startButton = screen.getByRole("button", {
+      name: "magicDefense.startDefense",
+    });
     fireEvent.click(startButton);
+    act(() => jest.advanceTimersByTime(500));
 
-    expect(onStart).toHaveBeenCalled();
+    expect(onStart).toHaveBeenCalledWith("normal");
   });
 });

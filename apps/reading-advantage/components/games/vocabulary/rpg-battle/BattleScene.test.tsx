@@ -39,8 +39,11 @@ describe('BattleScene', () => {
     )
 
     const stage = screen.getByTestId('battle-stage')
+    expect(stage.style.backgroundImage).toContain('linear-gradient')
+    expect(stage.style.backgroundImage).toContain(
+      '/games/rpg-battle/background_forest_clearing.png',
+    )
     expect(stage).toHaveStyle({
-      backgroundImage: 'url(/games/rpg-battle/background_forest_clearing.png)',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
     })

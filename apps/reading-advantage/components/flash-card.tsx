@@ -6,7 +6,6 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import dayjs_plugin_isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import dayjs_plugin_isSameOrAfter from "dayjs/plugin/isSameOrAfter";
-import { v4 as uuidv4 } from "uuid";
 import { date_scheduler, State } from "ts-fsrs";
 import { filter } from "lodash";
 import { useRouter } from "next/navigation";
@@ -242,7 +241,7 @@ export default function FlashCard({
                 return (
                   <div
                     className="flex flex-col justify-center items-center space-x-3 gap-2"
-                    key={uuidv4()}
+                    key={sentence.id}
                   >
                     <div className="flex space-x-3 justify-center items-center">
                       {sentence.audioUrl && (

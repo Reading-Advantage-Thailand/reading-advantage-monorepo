@@ -98,7 +98,7 @@ function setQueue(queue: any[]) {
 
 function makeExtendedRequest(
   url: string,
-  options?: RequestInit
+  options?: ConstructorParameters<typeof NextRequest>[1],
 ): ExtendedNextRequest {
   return new NextRequest(url, options) as ExtendedNextRequest;
 }
@@ -162,7 +162,7 @@ describe("Zod input validation on reviewed routes (SEC-7 Red)", () => {
         }
       );
 
-      const res = await createLicenseKey(req);
+      const res = await createLicenseKey(req, {});
 
       expect(res.status).toBe(400);
     });
@@ -190,7 +190,7 @@ describe("Zod input validation on reviewed routes (SEC-7 Red)", () => {
         }
       );
 
-      const res = await createLicenseKey(req);
+      const res = await createLicenseKey(req, {});
 
       expect(res.status).toBe(200);
     });

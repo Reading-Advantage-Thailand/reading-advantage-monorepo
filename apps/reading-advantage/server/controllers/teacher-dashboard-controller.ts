@@ -125,7 +125,7 @@ export async function getTeacherOverview(req: ExtendedNextRequest) {
       : 0;
 
     const response: TeacherOverviewResponse = {
-      teacher: { id: teacher.id, name: teacher.name || "", email: teacher.email, schoolId: teacher.schoolId || undefined, schoolName },
+      teacher: { id: teacher.id, name: teacher.name || "", email: teacher.email ?? "", schoolId: teacher.schoolId || undefined, schoolName },
       summary: {
         totalClasses: classroomIds.length,
         totalStudents,

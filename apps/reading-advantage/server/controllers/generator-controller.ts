@@ -66,6 +66,68 @@ interface Context {
   }>;
 }
 
+/** Generated fields required to store a multiple-choice question. */
+export interface GeneratedMCQuestion {
+  question?: unknown;
+  correct_answer?: unknown;
+  distractor_1?: unknown;
+  distractor_2?: unknown;
+  distractor_3?: unknown;
+  textual_evidence?: unknown;
+}
+
+/**
+ * Converts a generated question into the required database row.
+ * @param question The generated question fields.
+ * @param articleId The owning article identifier.
+ * @returns The validated multiple-choice database row.
+ * @throws When the question, answer, or options are missing or ambiguous.
+ */
+export function transformMCQuestion(question: GeneratedMCQuestion, articleId: string) {
+  if (typeof question.question !== "string" || question.question.trim() === "") {
+    throw new Error("Generated multiple-choice question is missing");
+  }
+  if (
+    typeof question.correct_answer !== "string" ||
+    question.correct_answer.trim() === ""
+  ) {
+    throw new Error("Generated multiple-choice answer is missing");
+  }
+
+  const options = [
+    question.correct_answer,
+    question.distractor_1,
+    question.distractor_2,
+    question.distractor_3,
+  ];
+  if (options.some((option) => typeof option !== "string" || option.trim() === "")) {
+    throw new Error("Generated multiple-choice options are missing");
+  }
+
+  const shuffledOptions = [...options] as string[];
+  shuffledOptions.sort(() => Math.random() - 0.5);
+  const matches = shuffledOptions.reduce<number[]>(
+    (indexes, option, index) =>
+      option === question.correct_answer ? [...indexes, index] : indexes,
+    [],
+  );
+  if (matches.length !== 1) {
+    throw new Error("Generated multiple-choice answer is ambiguous");
+  }
+
+  return {
+    question: question.question,
+    options: shuffledOptions,
+    answer: question.correct_answer,
+    correctAnswer: matches[0],
+    textualEvidence:
+      typeof question.textual_evidence === "string"
+        ? question.textual_evidence
+        : "",
+    articleId,
+  };
+}
+
 // Helper function to retry DB operations
 async function retryPrismaOperation<T>(
   operation: () => Promise<T>,
@@ -406,35 +468,9 @@ async function queue(
 
       // Transform and save questions using Prisma (same approach as generateUserArticle)
       console.log(`[DEBUG] Starting question transformation...`);
-      const transformedMCQuestions = mcq.questions
-        .map((q: any) => {
-          const options = [
-            q.correct_answer,
-            q.distractor_1,
-            q.distractor_2,
-            q.distractor_3,
-          ].filter(Boolean);
-
-          if (options.length !== 4) return null;
-
-          const shuffledOptions = [...options].sort(() => Math.random() - 0.5);
-
-          return {
-            question: q.question,
-            options: shuffledOptions,
-            answer: q.correct_answer,
-            textualEvidence: q.textual_evidence || "",
-            articleId: articleId,
-          };
-        })
-        .filter(
-          (q): q is NonNullable<typeof q> =>
-            q !== null &&
-            q.question &&
-            q.options &&
-            q.options.length === 4 &&
-            q.answer
-        );
+      const transformedMCQuestions = mcq.questions.map((question) =>
+        transformMCQuestion(question, articleId),
+      );
 
       const transformedSAQuestions = saq.questions
         .map((q: any) => ({
@@ -869,37 +905,9 @@ export async function generateUserArticle(req: NextRequest) {
     //console.log("Saving questions...");
 
     // Transform and validate questions before saving
-    const transformedMCQuestions = mcq.questions
-      .map((q: any) => {
-        // Create options array with correct answer and distractors
-        const options = [
-          q.correct_answer,
-          q.distractor_1,
-          q.distractor_2,
-          q.distractor_3,
-        ].filter(Boolean); // Remove any undefined values
-
-        if (options.length !== 4) return null; // Must have exactly 4 options
-
-        // Shuffle the options
-        const shuffledOptions = [...options].sort(() => Math.random() - 0.5);
-
-        return {
-          question: q.question,
-          options: shuffledOptions,
-          answer: q.correct_answer, // Keep the correct answer as text
-          textualEvidence: q.textual_evidence || "",
-          articleId: articleId,
-        };
-      })
-      .filter(
-        (q): q is NonNullable<typeof q> =>
-          q !== null &&
-          q.question &&
-          q.options &&
-          q.options.length === 4 &&
-          q.answer
-      );
+    const transformedMCQuestions = mcq.questions.map((question) =>
+      transformMCQuestion(question, articleId),
+    );
 
     const transformedSAQuestions = saq.questions
       .map((q: any) => ({
@@ -1351,37 +1359,9 @@ export async function updateUserArticle(
     ]);
 
     // Transform and validate questions before saving (same as generateUserArticle)
-    const transformedMCQuestions = mcq.questions
-      .map((q: any) => {
-        // Create options array with correct answer and distractors
-        const options = [
-          q.correct_answer,
-          q.distractor_1,
-          q.distractor_2,
-          q.distractor_3,
-        ].filter(Boolean); // Remove any undefined values
-
-        if (options.length !== 4) return null; // Must have exactly 4 options
-
-        // Shuffle the options
-        const shuffledOptions = [...options].sort(() => Math.random() - 0.5);
-
-        return {
-          question: q.question,
-          options: shuffledOptions,
-          answer: q.correct_answer, // Keep the correct answer as text
-          textualEvidence: q.textual_evidence || "",
-          articleId: articleId,
-        };
-      })
-      .filter(
-        (q): q is NonNullable<typeof q> =>
-          q !== null &&
-          q.question &&
-          q.options &&
-          q.options.length === 4 &&
-          q.answer
-      );
+    const transformedMCQuestions = mcq.questions.map((question) =>
+      transformMCQuestion(question, articleId),
+    );
 
     const transformedSAQuestions = saq.questions
       .map((q: any) => ({

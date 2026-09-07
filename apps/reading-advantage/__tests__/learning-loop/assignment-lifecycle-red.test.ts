@@ -126,7 +126,8 @@ describe("PB-8 assignment lifecycle + overdue detection (Red)", () => {
 
     const assignment = body.assignments[0];
     expect(assignment).toBeDefined();
-    expect(assignment.status).toBe("OVERDUE");
+    expect(assignment.lifecycleStatus).toBe("OVERDUE");
+    expect(assignment.status).toBe(0);
   });
 
   it("does not flag a COMPLETED assignment as OVERDUE even when past due", async () => {
@@ -137,6 +138,7 @@ describe("PB-8 assignment lifecycle + overdue detection (Red)", () => {
 
     const assignment = body.assignments[0];
     expect(assignment).toBeDefined();
-    expect(assignment.status).toBe("COMPLETED");
+    expect(assignment.lifecycleStatus).toBe("COMPLETED");
+    expect(assignment.status).toBe(2);
   });
 });

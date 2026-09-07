@@ -77,10 +77,11 @@ const DISPOSITION_PATH = path.resolve(
   "..",
   "..",
   "measure",
-  "tracks",
+  "archive",
   "jest30_major_migration",
   "phase-5-scripts-disposition.json",
 );
+const WORKSPACE_PATH = path.resolve(__dirname, "..", "..", "..", "pnpm-workspace.yaml");
 
 interface Phase5ScriptsDisposition {
   created_at?: string;
@@ -91,6 +92,10 @@ interface Phase5ScriptsDisposition {
   rationale?: string;
 }
 
+/**
+ * Reads the resolved Jest version for the scripts package.
+ * @returns The package version, or null when the package is absent.
+ */
 function readScriptsPackageVersion(): string | null {
   if (!fs.existsSync(SCRIPTS_PACKAGE_PATH)) {
     return null;
@@ -98,7 +103,10 @@ function readScriptsPackageVersion(): string | null {
   const raw = JSON.parse(fs.readFileSync(SCRIPTS_PACKAGE_PATH, "utf8")) as {
     devDependencies?: Record<string, string>;
   };
-  return raw.devDependencies?.jest ?? null;
+  const version = raw.devDependencies?.jest ?? null;
+  if (version !== "catalog:") return version;
+  const workspace = fs.readFileSync(WORKSPACE_PATH, "utf8");
+  return workspace.match(/^\s*jest:\s*(\S+)$/m)?.[1] ?? null;
 }
 
 function readDispositionOrNull(): Phase5ScriptsDisposition | null {

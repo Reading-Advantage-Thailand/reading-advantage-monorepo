@@ -220,13 +220,13 @@ export default function SelectStory({ user }: Props) {
       <CardHeader>
         <CardTitle>
           {t("articleChoose", {
-            article: <b>{ta(getArticleCategory())}</b>,
+            article: ta(getArticleCategory()),
           })}
         </CardTitle>
         <CardDescription>
           {t("articleChooseDescription", {
-            level: <b>{user.level}</b>,
-            article: <b>{ta(getArticleCategory())}</b>,
+            level: user.level,
+            article: ta(getArticleCategory()),
           })}
         </CardDescription>
       </CardHeader>

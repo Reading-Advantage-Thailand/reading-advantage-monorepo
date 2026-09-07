@@ -1,10 +1,22 @@
 import "@testing-library/jest-dom";
 
 // Mock next-intl for component tests
-jest.mock("next-intl", () => ({
-  useTranslations: () => (key: string) => key,
-  useLocale: () => "en",
+jest.mock("next-intl", () => {
+  const translate = (key: string) => key;
+  return {
+    useTranslations: () => translate,
+    useLocale: () => "en",
+  };
+});
+jest.mock("next-intl/navigation", () => ({
+  createNavigation: () => ({
+    Link: "a",
+    redirect: jest.fn(),
+    usePathname: () => "/",
+    useRouter: () => ({ push: jest.fn(), replace: jest.fn(), refresh: jest.fn() }),
+  }),
 }));
+jest.mock("next-intl/routing", () => ({ defineRouting: (config: unknown) => config }));
 
 // Polyfill for Next.js server components in Node test environment
 import { TextEncoder, TextDecoder } from "util";

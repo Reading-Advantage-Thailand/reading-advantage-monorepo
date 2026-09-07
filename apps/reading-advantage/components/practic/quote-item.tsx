@@ -104,13 +104,13 @@ const Badges = styled.small`
 const getStyle = (
   provided: DraggableProvided,
   style?: CSSProperties | null
-) => {
+): CSSProperties | undefined => {
   if (!style) {
-    return provided.draggableProps.style;
+    return provided.draggableProps.style as CSSProperties | undefined;
   }
 
   return {
-    ...provided.draggableProps.style,
+    ...(provided.draggableProps.style as CSSProperties | undefined),
     ...style,
   };
 };

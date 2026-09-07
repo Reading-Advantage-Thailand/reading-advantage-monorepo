@@ -34,7 +34,7 @@ const Phase1Introduction: React.FC<Phase1IntroductionProps> = ({
   }, [onCompleteChange]);
 
   type Locale = "en" | "th" | "vn" | "cn" | "tw" | "vi";
-  const locale: Locale = useCurrentLocale();
+  const locale = useCurrentLocale() as Locale;
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">

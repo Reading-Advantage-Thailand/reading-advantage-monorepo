@@ -14,7 +14,7 @@ import { generateObject } from "@reading-advantage/ai/internal-sdk";
 import { openai, openaiModel } from "@/utils/openai";
 import { google, googleModelAudio } from "@/utils/google";
 import z from "zod";
-import { probeDurationSeconds, concatMp3Files } from "@reading-advantage/utils";
+import { probeDurationSeconds, concatMp3Files } from "@reading-advantage/utils/ffmpeg-process";
 import { db, eq } from "@reading-advantage/db";
 import { articles } from "@reading-advantage/db/schema";
 
@@ -232,4 +232,3 @@ export async function generateAudio({
     )}`;
   }
 }
-

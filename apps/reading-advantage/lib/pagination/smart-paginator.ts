@@ -19,8 +19,8 @@ import {
   desc,
   count,
   sql,
-  type SQL,
 } from "@reading-advantage/db";
+import type { SQL } from "drizzle-orm";
 import {
   userActivity,
   lessonRecords,

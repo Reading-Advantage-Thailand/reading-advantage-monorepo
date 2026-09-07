@@ -128,7 +128,7 @@ export async function getTeacherAssignments(req: ExtendedNextRequest) {
     const ctByClassroom = new Map<string, { teacherId: string; teacherName: string | null; teacherEmail: string }[]>();
     for (const r of ctRows) {
       if (!ctByClassroom.has(r.classroomId)) ctByClassroom.set(r.classroomId, []);
-      ctByClassroom.get(r.classroomId)!.push({ teacherId: r.teacherId, teacherName: r.teacherName, teacherEmail: r.teacherEmail });
+      ctByClassroom.get(r.classroomId)!.push({ teacherId: r.teacherId, teacherName: r.teacherName, teacherEmail: r.teacherEmail ?? "" });
     }
 
     const primaryTeacherMap = new Map(primaryTeacherRows.map((t) => [t.id, t]));
@@ -151,7 +151,7 @@ export async function getTeacherAssignments(req: ExtendedNextRequest) {
 
       const primaryTeacher = assignment.classroomTeacherId ? primaryTeacherMap.get(assignment.classroomTeacherId) : undefined;
       if (primaryTeacher && !allTeachers.some((t) => t.id === primaryTeacher.id)) {
-        allTeachers.push({ id: primaryTeacher.id, name: primaryTeacher.name, email: primaryTeacher.email });
+        allTeachers.push({ id: primaryTeacher.id, name: primaryTeacher.name, email: primaryTeacher.email ?? "" });
       }
 
       const assignmentSAs = saRows.filter((sa) => sa.assignmentId === assignment.id);

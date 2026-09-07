@@ -186,8 +186,9 @@ export function TeacherEffectiveness({
               <Scatter
                 data={teachers}
                 onClick={(data) => {
-                  setSelectedTeacher(data);
-                  onTeacherClick?.(data.teacherId);
+                  const teacher = data.payload as TeacherMetrics;
+                  setSelectedTeacher(teacher);
+                  onTeacherClick?.(teacher.teacherId);
                 }}
                 className="cursor-pointer"
               >

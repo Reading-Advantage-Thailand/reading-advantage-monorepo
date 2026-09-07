@@ -461,6 +461,8 @@ async function seedArticlesAndActivities(
         .values({
           classroomId: classroom.id,
           articleId: article.id,
+          teacherId: classroom.teacherId,
+          type: "ARTICLE",
           title: `Assignment ${i + 1} for ${classroom.name}`,
           description: `Read and complete the article`,
           dueDate: new Date(Date.now() + daysUntilDue * 24 * 60 * 60 * 1000),

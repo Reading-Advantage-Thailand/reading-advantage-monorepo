@@ -72,11 +72,12 @@ export function CreateLicenseForm() {
 
       // Create the licenses
       const response = await licenseService.licenses.createDoc({
-        total_licenses: data.total,
-        subscription_level: data.subscription_level,
-        school_name: data.school_name,
-        admin_id: data.admin_id,
-        expiration_date: data.expiration_date,
+        maxUsers: data.total,
+        usedLicenses: 0,
+        licenseType: data.subscription_level,
+        schoolName: data.school_name,
+        ownerUserId: data.admin_id,
+        expiresAt: data.expiration_date,
       });
       // Reset the form
       form.reset({

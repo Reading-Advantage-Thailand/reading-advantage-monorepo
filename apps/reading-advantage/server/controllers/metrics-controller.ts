@@ -294,7 +294,9 @@ export async function getAssignmentMetrics(req: ExtendedNextRequest) {
       studentAssignmentsByAssignment.set(studentAssignment.assignmentId, list);
     }
 
-    const assignmentMetrics: AssignmentMetrics[] = assignmentRows.map((assignment) => {
+    const assignmentMetrics: AssignmentMetrics[] = assignmentRows
+      .filter((assignment) => assignment.articleId !== null)
+      .map((assignment) => {
       const assignmentStudentAssignments = studentAssignmentsByAssignment.get(assignment.id) ?? [];
       const total = assignmentStudentAssignments.length;
       const completed = assignmentStudentAssignments.filter(
@@ -319,7 +321,7 @@ export async function getAssignmentMetrics(req: ExtendedNextRequest) {
 
       return {
         assignmentId: assignment.id,
-        articleId: assignment.articleId,
+        articleId: assignment.articleId!,
         title: assignment.title || 'Untitled Assignment',
         dueDate: assignment.dueDate?.toISOString(),
         assigned: total,

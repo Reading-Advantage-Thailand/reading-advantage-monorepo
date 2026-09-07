@@ -3,41 +3,25 @@
 import * as React from "react"
 import { ChevronLeftIcon, ChevronRightIcon } from "@radix-ui/react-icons"
 import { DayPicker, getDefaultClassNames } from "react-day-picker"
+import type { DateRange } from "react-day-picker"
 
 import { cn } from "@/lib/utils"
 import { buttonVariants } from "@/components/ui/button"
 
 export type CalendarProps = React.ComponentProps<typeof DayPicker>
 
-function Calendar({
+/**
+ * Renders a calendar with the supplied selection state.
+ * @param props The calendar display and selection properties.
+ * @returns The configured calendar.
+ */
+function CalendarContent({
   className,
   classNames,
   showOutsideDays = true,
   ...props
 }: CalendarProps) {
   const defaultClassNames = getDefaultClassNames()
-
-  const [internalRange, setInternalRange] = React.useState<
-    { from: Date | undefined; to: Date | undefined } | undefined
-  >()
-
-  const handleRangeSelect = React.useCallback(
-    (
-      range: { from: Date | undefined; to: Date | undefined } | undefined,
-      triggerDate: Date,
-      modifiers: any,
-      e: React.MouseEvent,
-    ) => {
-      setInternalRange(range)
-      props.onSelect?.(range, triggerDate, modifiers, e)
-    },
-    [props.onSelect],
-  )
-
-  const rangeProps =
-    props.mode === "range" && !props.selected
-      ? { selected: internalRange, onSelect: handleRangeSelect }
-      : {}
 
   return (
     <DayPicker
@@ -112,9 +96,32 @@ function Calendar({
           ),
       }}
       {...props}
-      {...rangeProps}
     />
   )
+}
+
+/**
+ * Renders a single-date or range calendar.
+ * @param props The calendar properties.
+ * @returns The configured calendar.
+ */
+function Calendar(props: CalendarProps) {
+  const [internalRange, setInternalRange] = React.useState<DateRange>()
+  if (props.mode === "range" && props.required !== true) {
+    const isControlled = Object.prototype.hasOwnProperty.call(props, "selected")
+    const handleSelect: NonNullable<typeof props.onSelect> = (range, triggerDate, modifiers, event) => {
+      if (!isControlled) setInternalRange(range)
+      props.onSelect?.(range, triggerDate, modifiers, event)
+    }
+    return (
+      <CalendarContent
+        {...props}
+        selected={isControlled ? props.selected : internalRange}
+        onSelect={handleSelect}
+      />
+    )
+  }
+  return <CalendarContent {...props} />
 }
 Calendar.displayName = "Calendar"
 

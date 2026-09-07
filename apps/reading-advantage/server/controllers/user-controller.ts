@@ -90,6 +90,10 @@ async function getUserLicenseLevel(userId: string): Promise<LicenseType> {
       return LicenseType.BASIC;
     }
 
+    if (user.expiredDate && user.expiredDate <= new Date()) {
+      return LicenseType.BASIC;
+    }
+
     if (user.licenseId) {
       const [license] = await db
         .select({ licenseType: licenses.licenseType })
@@ -99,16 +103,7 @@ async function getUserLicenseLevel(userId: string): Promise<LicenseType> {
       return (license?.licenseType as LicenseType) || LicenseType.BASIC;
     }
 
-    if (!user.expiredDate) {
-      return LicenseType.ENTERPRISE;
-    }
-
-    const now = new Date();
-    if (user.expiredDate > now) {
-      return LicenseType.ENTERPRISE;
-    } else {
-      return LicenseType.BASIC;
-    }
+    return LicenseType.BASIC;
   } catch (error) {
     console.error("Error getting user license level:", error);
     return LicenseType.BASIC;
@@ -119,6 +114,44 @@ interface RequestContext {
   params: Promise<{
     id: string;
   }>;
+}
+
+/**
+ * Normalizes an external activity type after validating its input shape.
+ * @param value The submitted activity type.
+ * @returns The recognized activity type, or null for invalid input.
+ */
+function parseActivityType(value: unknown): ActivityType | null {
+  if (typeof value !== "string" || value.trim() === "") return null;
+  const activityType = value.toUpperCase() as ActivityType;
+  return Object.values(ActivityType).includes(activityType) ? activityType : null;
+}
+
+/**
+ * Resolves a nonempty activity target from the supported caller fields.
+ * @param data The submitted activity data.
+ * @param activityType The validated activity type.
+ * @returns The resolved target identifier, or null when none exists.
+ */
+function resolveActivityTarget(
+  data: Record<string, any>,
+  activityType: ActivityType,
+): string | null {
+  const directTarget = [data.articleId, data.storyId, data.contentId].find(
+    (value) => typeof value === "string" && value.trim() !== "",
+  ) as string | undefined;
+  if (!directTarget) return null;
+
+  if (
+    activityType === ActivityType.ARTICLE_RATING &&
+    (directTarget.startsWith("cmesn") || directTarget.startsWith("cmeu")) &&
+    typeof data.details?.articleId === "string" &&
+    data.details.articleId.trim() !== ""
+  ) {
+    return data.details.articleId;
+  }
+
+  return directTarget;
 }
 
 export async function getUser(req: ExtendedNextRequest, ctx: RequestContext) {
@@ -229,33 +262,20 @@ export async function postActivityLog(
 
     const data = await req.json();
 
-    const activityType = data.activityType.toUpperCase() as ActivityType;
-
-    if (!Object.values(ActivityType).includes(activityType)) {
-      console.error("Invalid activity type:", activityType);
-      return NextResponse.json({
-        message: "Invalid activity type",
-        status: 400,
-      });
+    const activityType = parseActivityType(data.activityType);
+    if (!activityType) {
+      return NextResponse.json(
+        { message: "Invalid activity type" },
+        { status: 400 },
+      );
     }
 
-    const targetId = data.articleId || data.storyId || data.contentId || "";
-
-    let finalTargetId = targetId;
-    if (!finalTargetId && data.details?.articleId) {
-      finalTargetId = data.details.articleId;
-    }
-
-    if (
-      activityType === ActivityType.ARTICLE_RATING &&
-      finalTargetId &&
-      (finalTargetId.startsWith("cmesn") || finalTargetId.startsWith("cmeu"))
-    ) {
-      if (data.details?.articleId) {
-        finalTargetId = data.details.articleId;
-      } else if (data.articleId) {
-        finalTargetId = data.articleId;
-      }
+    const finalTargetId = resolveActivityTarget(data, activityType);
+    if (!finalTargetId) {
+      return NextResponse.json(
+        { message: "Target ID is required" },
+        { status: 400 },
+      );
     }
 
     let articleMetadata = {};
@@ -406,16 +426,10 @@ export async function postActivityLog(
         .where(eq(users.id, id));
     }
 
-    return NextResponse.json({
-      message: "Success",
-      status: 200,
-    });
+    return NextResponse.json({ message: "Success" }, { status: 200 });
   } catch (error) {
     console.error("postActivity => ", error);
-    return NextResponse.json({
-      message: "Error",
-      status: 500,
-    });
+    return NextResponse.json({ message: "Error" }, { status: 500 });
   }
 }
 
@@ -432,39 +446,21 @@ export async function putActivityLog(
     const id = routeId;
     const data = await req.json();
 
-    const activityType = data.activityType.toUpperCase() as ActivityType;
-
-    if (!Object.values(ActivityType).includes(activityType)) {
-      return NextResponse.json({
-        message: "Invalid activity type",
-        status: 400,
-      });
+    const activityType = parseActivityType(data.activityType);
+    if (!activityType) {
+      return NextResponse.json(
+        { message: "Invalid activity type" },
+        { status: 400 },
+      );
     }
 
-    const targetId = data.articleId || data.storyId || data.contentId || "";
-
-    let finalTargetId = targetId;
-    if (!finalTargetId && data.details?.articleId) {
-      finalTargetId = data.details.articleId;
-    }
-
-    if (
-      activityType === ActivityType.ARTICLE_RATING &&
-      finalTargetId &&
-      (finalTargetId.startsWith("cmesn") || finalTargetId.startsWith("cmeu"))
-    ) {
-      if (data.details?.articleId) {
-        finalTargetId = data.details.articleId;
-      } else if (data.articleId) {
-        finalTargetId = data.articleId;
-      }
-    }
+    const finalTargetId = resolveActivityTarget(data, activityType);
 
     if (!finalTargetId) {
-      return NextResponse.json({
-        message: "Target ID is required for update",
-        status: 400,
-      });
+      return NextResponse.json(
+        { message: "Target ID is required for update" },
+        { status: 400 },
+      );
     }
 
     let articleMetadata = {};

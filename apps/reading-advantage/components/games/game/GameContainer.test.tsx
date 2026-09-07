@@ -12,6 +12,9 @@ jest.mock('nanoid', () => ({
 }))
 
 const mockUseGameStore = useGameStore as unknown as jest.Mock
+const mockGetState = jest.fn()
+
+Object.assign(mockUseGameStore, { getState: mockGetState })
 
 describe('GameContainer', () => {
   it('renders StartScreen initially', () => {
@@ -25,7 +28,7 @@ describe('GameContainer', () => {
     })
 
     render(<GameContainer />)
-    expect(screen.getByText(/Missile Command: Vocab Edition/i)).toBeInTheDocument()
+    expect(screen.getByText('Magic Defense')).toBeInTheDocument()
   })
 
   it('renders GameEngine when status is playing', () => {
@@ -43,12 +46,11 @@ describe('GameContainer', () => {
     })
 
     render(<GameContainer />)
-    // GameEngine is rendered (has relative background)
-    // We can check for the input placeholder
-    expect(screen.getByPlaceholderText(/type translation/i)).toBeInTheDocument()
+    expect(screen.getByRole('textbox', { name: /type spell/i })).toBeInTheDocument()
   })
 
   it('renders ResultsScreen when status is game-over', () => {
+    mockGetState.mockReturnValue({ missedWords: [] })
     mockUseGameStore.mockReturnValue({
       status: 'game-over',
       vocabulary: [],
@@ -59,7 +61,7 @@ describe('GameContainer', () => {
     })
 
     render(<GameContainer />)
-    expect(screen.getByText(/Game Over/i)).toBeInTheDocument()
+    expect(screen.getByText('common.gameOver')).toBeInTheDocument()
     expect(screen.getByText('100')).toBeInTheDocument()
   })
 })

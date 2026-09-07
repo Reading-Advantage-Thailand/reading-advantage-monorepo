@@ -148,7 +148,7 @@ export async function generateStudentInsights(
       model: openai(openaiModel),
       prompt,
       temperature: 0.7,
-      maxTokens: 1500,
+      maxOutputTokens: 1500,
     });
 
     // Parse AI response
@@ -268,7 +268,7 @@ export async function generateTeacherInsights(
       model: openai(openaiModel),
       prompt,
       temperature: 0.7,
-      maxTokens: 2000,
+      maxOutputTokens: 2000,
     });
 
     // Parse AI response
@@ -368,7 +368,7 @@ export async function generateClassroomInsights(
       model: openai(openaiModel),
       prompt,
       temperature: 0.7,
-      maxTokens: 2000,
+      maxOutputTokens: 2000,
     });
 
     const insights = parseAIResponse(text, "CLASSROOM", undefined, classroomId);
@@ -442,7 +442,7 @@ export async function generateLicenseInsights(
       model: openai(openaiModel),
       prompt,
       temperature: 0.7,
-      maxTokens: 2500,
+      maxOutputTokens: 2500,
     });
 
     const insights = parseAIResponse(
@@ -1135,7 +1135,7 @@ Return ONLY the JSON array.`;
       model: openai(openaiModel),
       prompt,
       temperature: 0.7,
-      maxTokens: 2000,
+      maxOutputTokens: 2000,
     });
 
     const insights = parseAIResponse(text, "SYSTEM");

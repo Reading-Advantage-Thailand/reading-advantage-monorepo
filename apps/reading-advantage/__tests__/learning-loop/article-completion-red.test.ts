@@ -1,147 +1,187 @@
-/**
- * PB-8 Red Test — Article completion after required question types
- *
- * Evidence refs: Reading M-RA-PB-8; site-closures/M-RA-PB-8.md.
- *
- * Today `question-controller.ts::checkAndUpdateArticleCompletion` requires
- * 5 MC_QUESTION + 1 SA_QUESTION (BASIC/PREMIUM) or + 1 LA_QUESTION
- * (ENTERPRISE). The product-level learning loop must record an ARTICLE_READ
- * activity once the required question types are completed.
- *
- * This test calls `answerSAQuestion` with a mocked DB where the student has
- * already completed 5 MCQs for the article and has a BASIC license. After the
- * fix, the function must insert an ARTICLE_READ activity.
- *
- * Falsification condition:
- *  - If the ARTICLE_READ activity is not inserted, the assertion fails.
- *
- * @jest-environment node
- */
-
+/** @jest-environment node */
 import { NextRequest } from "next/server";
 import type { ExtendedNextRequest } from "@/server/controllers/auth-controller";
 
-const insertedActivityTypes: string[] = [];
+const activityWrites: Array<Record<string, unknown>> = [];
+let completedMcqCount = 5;
+let licenseId: string | null = null;
+let expiredDate: Date | null = null;
+let hasCompletedLaq = false;
+
+function containsValue(value: unknown, expected: string, seen = new WeakSet<object>()): boolean {
+  if (value === expected) return true;
+  if (!value || typeof value !== "object") return false;
+  if (seen.has(value)) return false;
+  seen.add(value);
+  return Object.values(value).some((child) => containsValue(child, expected, seen));
+}
 
 jest.mock("@reading-advantage/db", () => {
   const actual = jest.requireActual("@reading-advantage/db");
   const schema = jest.requireActual("@reading-advantage/db/schema");
 
-  function makeChain(returnValue: any) {
-    // Terminal: awaiting the chain resolves to returnValue.
-    const chain = Promise.resolve(returnValue) as any;
-    // Drizzle chains are also used synchronously (e.g. .where(...).limit(1)).
-    chain.where = () => chain;
-    chain.innerJoin = () => chain;
-    chain.orderBy = () => chain;
-    chain.limit = () => chain;
-    chain.values = () => chain;
-    chain.returning = () => Promise.resolve([{ id: "activity-new" }]);
+  function chainFor(table: unknown) {
+    let condition: unknown;
+    const resolveRows = () => {
+      if (table === schema.shortAnswerQuestions) {
+        return containsValue(condition, "saq-1") && containsValue(condition, "article-1")
+          ? [{ id: "saq-1", articleId: "article-1", question: "What?", answer: "That." }]
+          : [];
+      }
+      if (table === schema.users) {
+        return [{
+          id: "student-1",
+          xp: 0,
+          licenseId,
+          expiredDate,
+        }];
+      }
+      if (table === schema.licenses) return [{ licenseType: "ENTERPRISE" }];
+      if (table === schema.userActivity) {
+        if (containsValue(condition, "MC_QUESTION")) {
+          return Array.from({ length: completedMcqCount }, (_, index) => ({
+            id: `mcq-${index}`,
+            activityType: "MC_QUESTION",
+            completed: true,
+            details: { articleId: "article-1" },
+          }));
+        }
+        if (containsValue(condition, "SA_QUESTION")) {
+          return activityWrites.filter((row) => row.activityType === "SA_QUESTION");
+        }
+        if (containsValue(condition, "LA_QUESTION")) {
+          return hasCompletedLaq ? [{ id: "laq-1", completed: true }] : [];
+        }
+        if (containsValue(condition, "ARTICLE_READ")) {
+          return activityWrites.filter((row) => row.activityType === "ARTICLE_READ");
+        }
+      }
+      return [];
+    };
+    const chain: any = {
+      where(nextCondition: unknown) {
+        condition = nextCondition;
+        return chain;
+      },
+      limit() {
+        return Promise.resolve(resolveRows());
+      },
+      then(resolve: (rows: unknown[]) => unknown) {
+        return Promise.resolve(resolveRows()).then(resolve);
+      },
+    };
     return chain;
   }
 
-  const mockDb = new Proxy({} as any, {
-    get(_target, prop: string) {
-      if (prop === "select") {
-        return () => ({
-          from: (table: any) => {
-            if (table === schema.users) {
-              return makeChain([
-                {
-                  id: "student-1",
-                  licenseId: null,
-                  expiredDate: new Date(Date.now() - 24 * 60 * 60 * 1000),
-                },
-              ]);
-            }
-            if (table === schema.shortAnswerQuestions) {
-              return makeChain([
-                { id: "saq-1", question: "What?", answer: "That." },
-              ]);
-            }
-            if (table === schema.userActivity) {
-              return makeChain(
-                Array.from({ length: 5 }, (_, i) => ({
-                  id: `mcq-${i}`,
-                  userId: "student-1",
-                  activityType: "MC_QUESTION",
-                  details: { articleId: "article-1", isCorrect: true },
-                  completed: true,
-                }))
-              );
-            }
-            return makeChain([]);
-          },
-        });
-      }
-      if (prop === "insert") {
-        return (table: any) => {
-          let name = table?.name || String(table);
-          if (table === schema.userActivity) name = "user_activity";
-          else if (table === schema.xpLogs) name = "xp_logs";
-          insertedActivityTypes.push(name);
-          return makeChain([]);
-        };
-      }
-      if (prop === "update") {
-        return () => ({
-          set: () => ({
-            where: () => ({
-              returning: () => Promise.resolve([{ id: "updated" }]),
-            }),
-          }),
-        });
-      }
-      return () => makeChain([]);
-    },
-  });
-
-  return {
-    ...actual,
-    db: mockDb,
+  const db = {
+    select: jest.fn(() => ({ from: (table: unknown) => chainFor(table) })),
+    insert: jest.fn((table: unknown) => ({
+      values: (values: Record<string, unknown>) => {
+        if (table === schema.userActivity) activityWrites.push(values);
+        return { returning: async () => [{ id: `activity-${activityWrites.length}` }] };
+      },
+    })),
+    update: jest.fn(() => ({ set: () => ({ where: async () => [] }) })),
   };
+  return { ...actual, db };
 });
-
-jest.mock("@/lib/session", () => ({
-  getCurrentUser: jest.fn(),
-}));
 
 jest.mock("@/server/controllers/assistant-controller", () => ({
   getFeedbackWritter: jest.fn(),
 }));
+jest.mock("@/server/utils/generators/sa-question-generator", () => ({
+  generateSAQuestion: jest.fn(),
+}));
+jest.mock("@/server/utils/generators/mc-question-generator", () => ({
+  generateMCQuestion: jest.fn(),
+}));
+jest.mock("@/server/utils/generators/la-question-generator", () => ({
+  generateLAQuestion: jest.fn(),
+}));
 
 import { answerSAQuestion } from "@/server/controllers/question-controller";
 
-function makeRequest(body: object): ExtendedNextRequest {
-  return new NextRequest(
-    "http://localhost:3000/api/v1/articles/article-1/questions/saq-1/answer",
-    {
-      method: "POST",
-      body: JSON.stringify(body),
-    }
-  ) as ExtendedNextRequest;
+function request(): ExtendedNextRequest {
+  const req = new NextRequest("http://localhost.test/answer", {
+    method: "POST",
+    body: JSON.stringify({ answer: "That.", timeRecorded: 10 }),
+  }) as ExtendedNextRequest;
+  req.session = {
+    user: { id: "student-1", role: "STUDENT", schoolId: "school-1", xp: 0 },
+  } as never;
+  return req;
 }
 
-function makeContext(articleId: string, questionId: string) {
-  return { params: Promise.resolve({ article_id: articleId, question_id: questionId }) };
-}
-
-describe("PB-8 article completion after required question types (Red)", () => {
+describe("article completion requirements", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
-    insertedActivityTypes.length = 0;
+    activityWrites.length = 0;
+    completedMcqCount = 5;
+    licenseId = null;
+    expiredDate = null;
+    hasCompletedLaq = false;
   });
 
-  it("creates an ARTICLE_READ activity when required questions are completed", async () => {
-    const req = makeRequest({ answer: "Answer", timeRecorded: 10 });
-    (req as any).session = {
-      user: { id: "student-1", role: "STUDENT", schoolId: "school-a" },
-    };
+  it("does not complete an article with fewer than five MCQs", async () => {
+    completedMcqCount = 4;
 
-    await answerSAQuestion(req, makeContext("article-1", "saq-1"));
+    await answerSAQuestion(request(), {
+      params: Promise.resolve({ article_id: "article-1", question_id: "saq-1" }),
+    });
 
-    // The fix must insert an ARTICLE_READ activity. Today only SA_QUESTION
-    // and xp_logs are inserted.
-    expect(insertedActivityTypes).toContain("user_activity");
+    expect(activityWrites.some((row) => row.activityType === "ARTICLE_READ")).toBe(false);
+  });
+
+  it("creates one article completion after five MCQs and one SAQ", async () => {
+    const response = await answerSAQuestion(request(), {
+      params: Promise.resolve({ article_id: "article-1", question_id: "saq-1" }),
+    });
+
+    expect(response.status).toBe(200);
+    expect(activityWrites.filter((row) => row.activityType === "ARTICLE_READ")).toHaveLength(1);
+    expect(activityWrites).toContainEqual(
+      expect.objectContaining({
+        activityType: "ARTICLE_READ",
+        targetId: "article-1",
+        completed: true,
+      }),
+    );
+  });
+
+  it("does not repeat article completion when it already exists", async () => {
+    activityWrites.push({
+      id: "existing-read",
+      userId: "student-1",
+      activityType: "ARTICLE_READ",
+      targetId: "article-1",
+      completed: true,
+    });
+
+    await answerSAQuestion(request(), {
+      params: Promise.resolve({ article_id: "article-1", question_id: "saq-1" }),
+    });
+
+    expect(activityWrites.filter((row) => row.activityType === "ARTICLE_READ")).toHaveLength(1);
+  });
+
+  it("requires LAQ completion for a valid Enterprise license", async () => {
+    licenseId = "license-1";
+    expiredDate = new Date(Date.now() + 86_400_000);
+
+    await answerSAQuestion(request(), {
+      params: Promise.resolve({ article_id: "article-1", question_id: "saq-1" }),
+    });
+
+    expect(activityWrites.some((row) => row.activityType === "ARTICLE_READ")).toBe(false);
+  });
+
+  it("uses Basic requirements after an Enterprise license expires", async () => {
+    licenseId = "license-1";
+    expiredDate = new Date(Date.now() - 86_400_000);
+
+    await answerSAQuestion(request(), {
+      params: Promise.resolve({ article_id: "article-1", question_id: "saq-1" }),
+    });
+
+    expect(activityWrites.some((row) => row.activityType === "ARTICLE_READ")).toBe(true);
   });
 });

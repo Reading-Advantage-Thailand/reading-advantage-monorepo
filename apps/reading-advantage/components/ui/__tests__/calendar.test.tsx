@@ -27,8 +27,9 @@
  */
 
 import * as React from "react";
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import type { DateRange } from "react-day-picker";
 import { Calendar } from "../calendar";
 
 const FIXED_MONTH = new Date(2026, 5, 1); // June 2026 (month is 0-indexed)
@@ -145,6 +146,36 @@ describe("Calendar (range mode) – range-selection contract", () => {
     expect(lastCall.to).toBeInstanceOf(Date);
     expect(lastCall.from!.getDate()).toBe(5);
     expect(lastCall.to!.getDate()).toBe(10);
+  });
+
+  it("retains day focus when a controlled range gains and loses its selection", async () => {
+    const user = userEvent.setup();
+
+    function ControlledRangeCalendar() {
+      const [selected, setSelected] = React.useState<DateRange>();
+      return (
+        <>
+          <button onClick={() => setSelected(undefined)}>Clear range</button>
+          <Calendar
+            mode="range"
+            defaultMonth={FIXED_MONTH}
+            selected={selected}
+            onSelect={setSelected}
+          />
+        </>
+      );
+    }
+
+    render(<ControlledRangeCalendar />);
+    const day15 = screen.getByRole("gridcell", { name: /^15$/ }).querySelector("button")!;
+
+    await user.click(day15);
+    expect(day15.isConnected).toBe(true);
+    expect(day15).toHaveFocus();
+
+    fireEvent.click(screen.getByRole("button", { name: "Clear range" }));
+    expect(day15.isConnected).toBe(true);
+    expect(day15).toHaveFocus();
   });
 });
 

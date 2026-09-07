@@ -59,6 +59,7 @@ describe("RBAC Guards", () => {
     it("should return user context when authenticated", async () => {
       const mockUser = {
         id: "user-1",
+        username: "test-user",
         role: Role.STUDENT,
         email: "student@test.com",
         display_name: "Test Student",
@@ -88,6 +89,7 @@ describe("RBAC Guards", () => {
     it("should deny access when user has insufficient role", async () => {
       const mockUser = {
         id: "user-1",
+        username: "test-user",
         role: Role.STUDENT,
         email: "student@test.com",
         display_name: "Test Student",
@@ -120,6 +122,7 @@ describe("RBAC Guards", () => {
     it("should allow access when user has required role", async () => {
       const mockUser = {
         id: "admin-1",
+        username: "test-user",
         role: Role.ADMIN,
         email: "admin@test.com",
         display_name: "Test Admin",
@@ -148,6 +151,7 @@ describe("RBAC Guards", () => {
     it("should allow SYSTEM role to access any endpoint", async () => {
       const mockUser = {
         id: "system-1",
+        username: "test-user",
         role: Role.SYSTEM,
         email: "system@test.com",
         display_name: "System Admin",
@@ -180,6 +184,7 @@ describe("RBAC Guards", () => {
     it("should deny access when user is from different school", async () => {
       const mockUser = {
         id: "admin-1",
+        username: "test-user",
         role: Role.ADMIN,
         email: "admin@test.com",
         display_name: "Test Admin",
@@ -212,6 +217,7 @@ describe("RBAC Guards", () => {
     it("should allow SYSTEM role to access any school", async () => {
       const mockUser = {
         id: "system-1",
+        username: "test-user",
         role: Role.SYSTEM,
         email: "system@test.com",
         display_name: "System Admin",
@@ -241,6 +247,7 @@ describe("RBAC Guards", () => {
     it("should deny teacher access to unassigned classroom", async () => {
       const mockUser = {
         id: "teacher-1",
+        username: "test-user",
         role: Role.TEACHER,
         email: "teacher@test.com",
         display_name: "Test Teacher",
@@ -274,6 +281,7 @@ describe("RBAC Guards", () => {
     it("should allow teacher access to assigned classroom", async () => {
       const mockUser = {
         id: "teacher-1",
+        username: "test-user",
         role: Role.TEACHER,
         email: "teacher@test.com",
         display_name: "Test Teacher",
@@ -303,6 +311,7 @@ describe("RBAC Guards", () => {
     it("should deny student access to non-enrolled classroom", async () => {
       const mockUser = {
         id: "student-1",
+        username: "test-user",
         role: Role.STUDENT,
         email: "student@test.com",
         display_name: "Test Student",
@@ -336,6 +345,7 @@ describe("RBAC Guards", () => {
     it("should deny student access to another student's data", async () => {
       const mockUser = {
         id: "student-1",
+        username: "test-user",
         role: Role.STUDENT,
         email: "student@test.com",
         display_name: "Test Student",
@@ -367,6 +377,7 @@ describe("RBAC Guards", () => {
     it("should allow student access to own data", async () => {
       const mockUser = {
         id: "student-1",
+        username: "test-user",
         role: Role.STUDENT,
         email: "student@test.com",
         display_name: "Test Student",
@@ -411,6 +422,7 @@ describe("Authorization Helpers", () => {
     it("should allow teacher access to assigned classrooms", () => {
       const user = {
         id: "teacher-1",
+        username: "test-user",
         role: Role.TEACHER,
         teacher_class_ids: ["class-A", "class-B"],
       };
@@ -421,6 +433,7 @@ describe("Authorization Helpers", () => {
     it("should allow student access to enrolled classrooms", () => {
       const user = {
         id: "student-1",
+        username: "test-user",
         role: Role.STUDENT,
         student_class_ids: ["class-X"],
       };
@@ -450,6 +463,7 @@ describe("Authorization Helpers", () => {
     it("should return classroom filter for teachers", () => {
       const user = {
         id: "teacher-1",
+        username: "test-user",
         role: Role.TEACHER,
         teacher_class_ids: ["class-A", "class-B"],
       };

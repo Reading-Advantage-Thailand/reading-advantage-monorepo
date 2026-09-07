@@ -9,9 +9,8 @@
  * fallback. The fix must require an explicit, validated `targetId` and
  * remove the fallback chain.
  *
- * The license fallback portion is already conservative (missing/invalid
- * license resolves to LicenseType.BASIC in `getUserLicenseLevel`). This
- * test records that behavior so the task does not regress.
+ * The entitlement specification requires a Basic fallback for missing or
+ * invalid licenses. These tests also preserve valid and expired behavior.
  *
  * Falsification conditions:
  *  - If `postActivityLog` still accepts a request with no targetId fields,
@@ -128,6 +127,34 @@ describe("PB-6 activity target validation + license fallback (Red)", () => {
     expect(res.status).toBeGreaterThanOrEqual(400);
   });
 
+  it("returns HTTP 400 for a malformed activity type", async () => {
+    const response = await postActivityLog(
+      makeRequest("user-1", {
+        activityType: { value: "ARTICLE_READ" },
+        articleId: "article-1",
+      }),
+      makeContext("user-1"),
+    );
+
+    expect(response.status).toBe(400);
+    expect(insertMock).not.toHaveBeenCalled();
+  });
+
+  it("preserves the articleId caller field as the activity target", async () => {
+    await postActivityLog(
+      makeRequest("user-1", {
+        activityType: "ARTICLE_READ",
+        articleId: "article-1",
+        completed: true,
+      }),
+      makeContext("user-1"),
+    );
+
+    expect(valuesMock).toHaveBeenCalledWith(
+      expect.objectContaining({ targetId: "article-1" }),
+    );
+  });
+
   it("missing license data resolves to LicenseType.BASIC", async () => {
     const userId = "user-no-license";
 
@@ -158,5 +185,57 @@ describe("PB-6 activity target validation + license fallback (Red)", () => {
     const body = await res.json();
 
     expect(body.data.license_level).toBe("BASIC");
+  });
+
+  it("returns the type from a valid license", async () => {
+    const schema = jest.requireActual("@reading-advantage/db/schema");
+    limitMock.mockImplementation(async () => {
+      const lastFrom = fromMock.mock.calls[fromMock.mock.calls.length - 1]?.[0];
+      if (lastFrom === schema.users) {
+        return [{
+          id: "licensed-user",
+          licenseId: "license-1",
+          expiredDate: new Date(Date.now() + 86_400_000),
+          role: "STUDENT",
+          xp: 0,
+          level: 1,
+          cefrLevel: "A1",
+        }];
+      }
+      if (lastFrom === schema.licenses) return [{ licenseType: "ENTERPRISE" }];
+      return [];
+    });
+
+    const response = await getUser(
+      makeRequest("licensed-user", {}),
+      makeContext("licensed-user"),
+    );
+    expect((await response.json()).data.license_level).toBe("ENTERPRISE");
+  });
+
+  it("returns Basic for an expired license", async () => {
+    const schema = jest.requireActual("@reading-advantage/db/schema");
+    limitMock.mockImplementation(async () => {
+      const lastFrom = fromMock.mock.calls[fromMock.mock.calls.length - 1]?.[0];
+      if (lastFrom === schema.users) {
+        return [{
+          id: "expired-user",
+          licenseId: "license-1",
+          expiredDate: new Date(Date.now() - 86_400_000),
+          role: "STUDENT",
+          xp: 0,
+          level: 1,
+          cefrLevel: "A1",
+        }];
+      }
+      if (lastFrom === schema.licenses) return [{ licenseType: "ENTERPRISE" }];
+      return [];
+    });
+
+    const response = await getUser(
+      makeRequest("expired-user", {}),
+      makeContext("expired-user"),
+    );
+    expect((await response.json()).data.license_level).toBe("BASIC");
   });
 });

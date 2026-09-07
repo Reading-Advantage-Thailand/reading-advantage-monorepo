@@ -365,7 +365,7 @@ async function checkEnhancedAuthorization(
 
   switch (scope) {
     case "student":
-      if (userRow.role === "STUDENT" || userRow.role === "USER") {
+      if (userRow.role === "STUDENT") {
         if (userRow.id !== scopeId) {
           return {
             authorized: false,

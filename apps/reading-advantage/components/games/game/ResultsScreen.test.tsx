@@ -16,7 +16,7 @@ describe("ResultsScreen", () => {
 
     expect(screen.getByText("100")).toBeInTheDocument();
     expect(screen.getByText("80%")).toBeInTheDocument();
-    expect(screen.getByText("150 XP")).toBeInTheDocument();
+    expect(screen.getByText("150 common.xp")).toBeInTheDocument();
   });
 
   it("calls onRestart when button is clicked", () => {
@@ -32,7 +32,7 @@ describe("ResultsScreen", () => {
       />,
     );
 
-    fireEvent.click(screen.getByRole("button", { name: /try again/i }));
+    fireEvent.click(screen.getByRole("button", { name: "common.tryAgain" }));
     expect(onRestart).toHaveBeenCalled();
   });
 });

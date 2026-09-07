@@ -360,7 +360,7 @@ function LAQuestion({
           method: "POST",
           body: JSON.stringify({
             answer: dataForm.answer,
-            preferredLanguage: feedbackLanguage[currentLocale],
+            preferredLanguage: feedbackLanguage[currentLocale as keyof typeof feedbackLanguage],
           }),
         }
       );

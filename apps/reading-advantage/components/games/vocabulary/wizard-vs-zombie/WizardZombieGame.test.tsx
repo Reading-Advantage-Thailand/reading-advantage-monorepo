@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, act } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import { WizardZombieGame } from "./WizardZombieGame";
 import { VocabularyItem } from "@/store/useGameStore";
 import type React from "react";
@@ -83,7 +83,7 @@ describe("WizardZombieGame", () => {
     );
     // Wait for assets to "load"
     const startButton = await screen.findByRole("button", {
-      name: /start survival/i,
+      name: "common.startSurvival",
     });
     fireEvent.click(startButton);
   };
@@ -96,9 +96,9 @@ describe("WizardZombieGame", () => {
         difficulty="normal"
       />,
     );
-    expect(await screen.findByText(/Arcane Survival/i)).toBeInTheDocument();
+    expect(await screen.findByText("Game Rules")).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: /start survival/i }),
+      screen.getByRole("button", { name: "common.startSurvival" }),
     ).toBeInTheDocument();
   });
 

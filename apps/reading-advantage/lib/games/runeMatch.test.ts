@@ -28,33 +28,43 @@ const SAMPLE_VOCAB: VocabularyItem[] = [
 ];
 
 describe("advanceTime", () => {
-  it("increments attack timer", () => {
+  it("does not start the attack countdown before a monster appears", () => {
     const state = createRuneMatchState(SAMPLE_VOCAB);
     state.status = "playing";
     const newState = advanceTime(state, 1000);
-    expect(newState.nextAttackTimer).toBe(1000);
+    expect(newState.nextAttackTimer).toBe(3000);
   });
 
-  it("triggers monster attack when timer exceeds interval", () => {
-    const state = createRuneMatchState(SAMPLE_VOCAB);
+  it("decrements the attack countdown during an encounter", () => {
+    const state = createRuneMatchState(SAMPLE_VOCAB, { rng: () => 0 });
     state.status = "playing";
     state.monster = { type: "goblin", hp: 50, maxHp: 50, attack: 10, xp: 3 };
-    state.nextAttackTimer = 4500;
+
     const newState = advanceTime(state, 1000);
 
-    expect(newState.nextAttackTimer).toBe(500);
-    expect(newState.player.hp).toBeLessThan(100);
-    expect(newState.floatingTexts.some((ft) => ft.text.startsWith("-"))).toBe(
-      true,
+    expect(newState.nextAttackTimer).toBe(2000);
+  });
+
+  it("triggers a monster attack when the countdown expires", () => {
+    const state = createRuneMatchState(SAMPLE_VOCAB, { rng: () => 0 });
+    state.status = "playing";
+    state.monster = { type: "goblin", hp: 50, maxHp: 50, attack: 10, xp: 3 };
+    state.nextAttackTimer = 500;
+    const newState = advanceTime(state, 1000);
+
+    expect(newState.nextAttackTimer).toBe(3000);
+    expect(newState.player.hp).toBe(99);
+    expect(newState.floatingTexts).toContainEqual(
+      expect.objectContaining({ text: "-1" }),
     );
   });
 
   it("shield blocks monster attack and shows text", () => {
-    const state = createRuneMatchState(SAMPLE_VOCAB);
+    const state = createRuneMatchState(SAMPLE_VOCAB, { rng: () => 0 });
     state.status = "playing";
     state.monster = { type: "goblin", hp: 50, maxHp: 50, attack: 10, xp: 3 };
     state.player.hasShield = true;
-    state.nextAttackTimer = 4500;
+    state.nextAttackTimer = 500;
 
     const newState = advanceTime(state, 1000);
 
@@ -171,7 +181,7 @@ describe("combat logic", () => {
   });
 });
 
-describe("advanceTime", () => {
+describe("processMatches", () => {
   it("processes a single match and returns cascade count of 1", () => {
     const grid = initializeEmptyGrid(SAMPLE_VOCAB);
     const rune = {
@@ -180,8 +190,9 @@ describe("advanceTime", () => {
       wordId: "Hello",
       text: "สวัสดี",
     } as Rune;
-    grid[5][0] = rune;
-    grid[5][1] = rune;
+    const lastRow = RUNE_MATCH_CONFIG.grid.rows - 1;
+    grid[lastRow][0] = rune;
+    grid[lastRow][1] = rune;
 
     const result = processMatches(grid, SAMPLE_VOCAB);
     expect(result.cascades).toBe(1);

@@ -11,10 +11,10 @@ import {
   or,
   gte,
   lt,
-  lte,
   inArray,
   desc,
   ilike,
+  isNull,
   sql,
 } from "@reading-advantage/db";
 import {
@@ -26,6 +26,13 @@ import {
   studentAssignments,
   articles,
 } from "@reading-advantage/db/schema";
+import {
+  AssignmentStatus,
+  assignmentStatusSchema,
+  assertLegalAssignmentTransition,
+  IllegalAssignmentTransitionError,
+  type AssignmentStatus as AssignmentStatusValue,
+} from "@reading-advantage/types";
 
 interface StudentAssignment {
   id: string;
@@ -36,49 +43,98 @@ interface StudentAssignment {
   description: string | null;
   dueDate: string;
   status: number;
+  lifecycleStatus: AssignmentStatusValue;
   createdAt: string;
   userId: string | null;
   displayName?: string;
   teacherDisplayName?: string;
 }
 
+/**
+ * Returns the school identifier from current and legacy session fields.
+ * @param user The authenticated session user.
+ * @returns The school identifier when the session supplies one.
+ */
+function getActorSchoolId(user: unknown): string | undefined {
+  if (!user || typeof user !== "object") return undefined;
+  const fields = user as Record<string, unknown>;
+  const schoolId = fields.school_id ?? fields.schoolId;
+  return typeof schoolId === "string" ? schoolId : undefined;
+}
+
 async function checkClassroomAccess(classroomId: string, user: any) {
   if (!user || !user.role) return false;
   if (user.role === "SYSTEM") return true;
+  const schoolId = getActorSchoolId(user);
 
   if (user.role === "TEACHER") {
-    const [row] = await db
-      .select({ teacherId: classroomTeachers.teacherId })
-      .from(classroomTeachers)
+    if (!schoolId) return false;
+    const [[membership], [classroom]] = await Promise.all([
+      db
+        .select({ teacherId: classroomTeachers.teacherId })
+        .from(classroomTeachers)
+        .where(
+          and(
+            eq(classroomTeachers.classroomId, classroomId),
+            eq(classroomTeachers.teacherId, user.id),
+          ),
+        )
+        .limit(1),
+      db
+        .select({ id: classrooms.id })
+        .from(classrooms)
+        .where(
+          and(
+            eq(classrooms.id, classroomId),
+            eq(classrooms.schoolId, schoolId),
+          ),
+        )
+        .limit(1),
+    ]);
+    return !!membership && !!classroom;
+  } else if (user.role === "ADMIN") {
+    if (!schoolId) return false;
+    const [classroom] = await db
+      .select({ id: classrooms.id })
+      .from(classrooms)
       .where(
         and(
-          eq(classroomTeachers.classroomId, classroomId),
-          eq(classroomTeachers.teacherId, user.id),
+          eq(classrooms.id, classroomId),
+          eq(classrooms.schoolId, schoolId),
         ),
       )
       .limit(1);
-    return !!row;
-  } else if (user.role === "ADMIN") {
-    const [[dbUser], [classroom]] = await Promise.all([
-      db
-        .select({ schoolId: users.schoolId })
-        .from(users)
-        .where(eq(users.id, user.id))
-        .limit(1),
-      db
-        .select({ schoolId: classrooms.schoolId })
-        .from(classrooms)
-        .where(eq(classrooms.id, classroomId))
-        .limit(1),
-    ]);
-    return !!(
-      dbUser?.schoolId &&
-      classroom?.schoolId &&
-      dbUser.schoolId === classroom.schoolId
-    );
+    return !!classroom;
   }
 
   return false;
+}
+
+/**
+ * Converts a client or stored status into the shared lifecycle status.
+ * @param value The numeric or string status value.
+ * @returns The normalized lifecycle status, or null for invalid input.
+ */
+function normalizeAssignmentStatus(value: unknown): AssignmentStatusValue | null {
+  const numericStatuses: Record<number, AssignmentStatusValue> = {
+    0: AssignmentStatus.CREATED,
+    1: AssignmentStatus.IN_PROGRESS,
+    2: AssignmentStatus.COMPLETED,
+  };
+  if (typeof value === "number") return numericStatuses[value] ?? null;
+  if (value === "NOT_STARTED") return AssignmentStatus.CREATED;
+  if (typeof value !== "string") return null;
+  const parsed = assignmentStatusSchema.safeParse(value.toUpperCase());
+  return parsed.success ? parsed.data : null;
+}
+
+/**
+ * Converts a lifecycle status into the existing database representation.
+ * @param status The normalized lifecycle status.
+ * @returns The persisted assignment status.
+ */
+function toPersistedAssignmentStatus(status: AssignmentStatusValue): string {
+  return status === AssignmentStatus.CREATED ? "NOT_STARTED" : status;
 }
 
 const statusToInt = (status: string | null | undefined): number => {
@@ -104,7 +160,7 @@ export async function getAssignments(req: ExtendedNextRequest) {
     }
 
     const sessionUser = req.session?.user;
-    if (!sessionUser) {
+    if (!sessionUser?.id) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
@@ -305,7 +361,7 @@ export async function postAssignment(req: ExtendedNextRequest) {
     }
 
     const sessionUser = req.session?.user;
-    if (!sessionUser) {
+    if (!sessionUser?.id) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
@@ -339,11 +395,18 @@ export async function postAssignment(req: ExtendedNextRequest) {
     }
 
     // Check if classroom and article exist
+    const schoolId = getActorSchoolId(sessionUser);
+    const classroomCondition = sessionUser.role === "SYSTEM"
+      ? eq(classrooms.id, classroomId)
+      : and(
+          eq(classrooms.id, classroomId),
+          eq(classrooms.schoolId, schoolId as string),
+        );
     const [[classroom], [article]] = await Promise.all([
       db
         .select({ id: classrooms.id })
         .from(classrooms)
-        .where(eq(classrooms.id, classroomId))
+        .where(classroomCondition)
         .limit(1),
       db
         .select({ id: articles.id })
@@ -384,6 +447,8 @@ export async function postAssignment(req: ExtendedNextRequest) {
         .values({
           classroomId,
           articleId,
+          teacherId: sessionUser.id,
+          type: "ARTICLE",
           title: title || null,
           description: description || null,
           dueDate: dueDate ? new Date(dueDate) : null,
@@ -532,14 +597,82 @@ export async function updateAssignment(req: ExtendedNextRequest) {
         );
       }
 
+      const schoolId = getActorSchoolId(sessionUser);
+      const [studentMembership] = await db
+        .select({ studentId: classroomStudents.studentId })
+        .from(classroomStudents)
+        .innerJoin(users, eq(classroomStudents.studentId, users.id))
+        .where(
+          and(
+            eq(classroomStudents.classroomId, classroomId),
+            eq(classroomStudents.studentId, studentId),
+            sessionUser.role === "SYSTEM"
+              ? undefined
+              : eq(users.schoolId, schoolId as string),
+          ),
+        )
+        .limit(1);
+
+      if (!studentMembership) {
+        return NextResponse.json(
+          { message: "Student does not belong to the target classroom" },
+          { status: 403 },
+        );
+      }
+
       const studentAssignmentUpdates: any = {};
+      let observedStatus: string | null | undefined;
 
       if (Object.prototype.hasOwnProperty.call(updates, "status")) {
-        studentAssignmentUpdates.status = updates.status as string;
+        const requestedStatus = normalizeAssignmentStatus(updates.status);
+        if (!requestedStatus) {
+          return NextResponse.json(
+            { message: "Invalid assignment status" },
+            { status: 400 },
+          );
+        }
 
-        if (updates.status === "IN_PROGRESS" && !updates.startedAt) {
+        const [existingStudentAssignment] = await db
+          .select({ status: studentAssignments.status })
+          .from(studentAssignments)
+          .where(
+            and(
+              eq(studentAssignments.assignmentId, assignment.id),
+              eq(studentAssignments.studentId, studentId),
+            ),
+          )
+          .limit(1);
+        const currentStatus = normalizeAssignmentStatus(
+          existingStudentAssignment?.status ?? "NOT_STARTED",
+        );
+        observedStatus = existingStudentAssignment
+          ? existingStudentAssignment.status
+          : "NOT_STARTED";
+        if (!currentStatus) {
+          return NextResponse.json(
+            { message: "Stored assignment status is invalid" },
+            { status: 409 },
+          );
+        }
+
+        try {
+          assertLegalAssignmentTransition(currentStatus, requestedStatus);
+        } catch (error) {
+          if (error instanceof IllegalAssignmentTransitionError) {
+            return NextResponse.json(
+              { message: error.message },
+              { status: 409 },
+            );
+          }
+          throw error;
+        }
+
+        studentAssignmentUpdates.status = toPersistedAssignmentStatus(requestedStatus);
+        studentAssignmentUpdates.completed = requestedStatus === AssignmentStatus.COMPLETED;
+
+        if (requestedStatus === AssignmentStatus.IN_PROGRESS && !updates.startedAt) {
           studentAssignmentUpdates.startedAt = new Date();
-        } else if (updates.status === "COMPLETED" && !updates.completedAt) {
+        } else if (requestedStatus === AssignmentStatus.COMPLETED && !updates.completedAt) {
           studentAssignmentUpdates.completedAt = new Date();
         }
       }
@@ -578,8 +711,22 @@ export async function updateAssignment(req: ExtendedNextRequest) {
         .onConflictDoUpdate({
           target: [studentAssignments.assignmentId, studentAssignments.studentId],
           set: studentAssignmentUpdates,
+          ...(observedStatus === undefined
+            ? {}
+            : {
+                setWhere: observedStatus === null
+                  ? isNull(studentAssignments.status)
+                  : eq(studentAssignments.status, observedStatus),
+              }),
         })
         .returning();
+
+      if (!updatedStudentAssignment) {
+        return NextResponse.json(
+          { message: "Assignment status changed during the update" },
+          { status: 409 },
+        );
+      }
 
       return NextResponse.json(
         {
@@ -729,7 +876,14 @@ export async function getStudentAssignments(req: ExtendedNextRequest) {
       });
     }
 
-    const formattedAssignments: StudentAssignment[] = saRows.map((sa) => ({
+    const formattedAssignments: StudentAssignment[] = saRows.map((sa) => {
+      const storedStatus = normalizeAssignmentStatus(sa.status) ?? AssignmentStatus.CREATED;
+      const lifecycleStatus = storedStatus !== AssignmentStatus.COMPLETED
+        && sa.dueDate !== null
+        && sa.dueDate < new Date()
+        ? AssignmentStatus.OVERDUE
+        : storedStatus;
+      return {
       id: sa.id,
       assignmentId: sa.assignmentId,
       classroomId: sa.classroomId,
@@ -738,12 +892,14 @@ export async function getStudentAssignments(req: ExtendedNextRequest) {
       description: sa.assignmentDescription,
       dueDate: sa.dueDate ? sa.dueDate.toISOString() : "",
       status: statusToInt(sa.status),
+      lifecycleStatus,
       createdAt: sa.createdAt.toISOString(),
       userId: sa.studentId,
       displayName: sa.studentName || "Unknown User",
       teacherDisplayName:
         teacherNameMap.get(sa.classroomId) || "Unknown Teacher",
-    }));
+      };
+    });
 
     const totalPages = Math.ceil(totalCount / limit);
 
@@ -956,7 +1112,11 @@ export async function getAssignmentMetrics(req: ExtendedNextRequest) {
       saByAssignment.get(sa.assignmentId)!.push(sa);
     });
 
-    const assignmentMetrics: AssignmentMetrics[] = assignmentRows.map((a) => {
+    const assignmentMetrics: AssignmentMetrics[] = assignmentRows
+      .filter((assignment): assignment is typeof assignment & { articleId: string } =>
+        assignment.articleId !== null,
+      )
+      .map((a) => {
       const sas = saByAssignment.get(a.id) || [];
       const total = sas.length;
       const completed = sas.filter((sa) => sa.status === "COMPLETED").length;
@@ -986,7 +1146,7 @@ export async function getAssignmentMetrics(req: ExtendedNextRequest) {
         averageScore: Math.round(averageScore * 100) / 100,
         completionRate: Math.round(completionRate * 10) / 10,
       };
-    });
+      });
 
     const totalAssignments = assignmentMetrics.length;
     const averageCompletionRate =

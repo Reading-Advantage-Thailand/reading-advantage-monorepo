@@ -68,13 +68,17 @@ describe('useSound', () => {
     });
     lastOscillator = null;
     lastGain = null;
+    jest.restoreAllMocks();
   });
 
-  it('plays a success tone via Web Audio when available', () => {
+  it('does not add a synth tone when file playback returns no promise', () => {
     Object.defineProperty(window, 'AudioContext', {
       value: FakeAudioContext,
       configurable: true,
     });
+    jest
+      .spyOn(HTMLMediaElement.prototype, 'play')
+      .mockImplementation(() => undefined as unknown as Promise<void>);
 
     let playSound: PlaySoundFn | null = null;
     render(<SoundHarness onReady={(fn) => {
@@ -85,12 +89,35 @@ describe('useSound', () => {
       playSound?.('success');
     });
 
+    expect(lastOscillator).toBeNull();
+    expect(lastGain).toBeNull();
+  });
+
+  it('uses Web Audio when file playback fails', async () => {
+    Object.defineProperty(window, 'AudioContext', {
+      value: FakeAudioContext,
+      configurable: true,
+    });
+    jest
+      .spyOn(HTMLMediaElement.prototype, 'play')
+      .mockRejectedValue(new Error('file unavailable'));
+
+    let playSound: PlaySoundFn | null = null;
+    render(<SoundHarness onReady={(fn) => {
+      playSound = fn;
+    }} />);
+
+    await act(async () => {
+      playSound?.('success');
+      await Promise.resolve();
+    });
+
     expect(lastOscillator?.start).toHaveBeenCalledTimes(1);
     expect(lastOscillator?.stop).toHaveBeenCalledTimes(1);
     expect(lastGain?.gain.setValueAtTime).toHaveBeenCalled();
   });
 
-  it('no-ops safely when audio is unavailable', () => {
+  it('handles a file failure when Web Audio is unavailable', async () => {
     Object.defineProperty(window, 'AudioContext', {
       value: undefined,
       configurable: true,
@@ -99,16 +126,21 @@ describe('useSound', () => {
       value: undefined,
       configurable: true,
     });
+    jest
+      .spyOn(HTMLMediaElement.prototype, 'play')
+      .mockRejectedValue(new Error('file unavailable'));
 
     let playSound: PlaySoundFn | null = null;
     render(<SoundHarness onReady={(fn) => {
       playSound = fn;
     }} />);
 
-    expect(() => {
-      act(() => {
+    await expect(
+      act(async () => {
         playSound?.('error');
-      });
-    }).not.toThrow();
+        await Promise.resolve();
+      }),
+    ).resolves.toBeUndefined();
+    expect(HTMLMediaElement.prototype.play).toHaveBeenCalledTimes(1);
   });
 });

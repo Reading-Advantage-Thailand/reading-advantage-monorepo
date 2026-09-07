@@ -30,6 +30,7 @@ const envSchema = z.object({
   ACCESS_KEY: optionalString,
   NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
   NEXT_PHASE: optionalString,
+  HOST_PROOF_ENABLED: optionalString,
 
   // Public base URL — used by client-side fetchers. May be unset in tests.
   NEXT_PUBLIC_BASE_URL: z

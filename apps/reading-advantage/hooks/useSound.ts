@@ -8,6 +8,10 @@ declare global {
   }
 }
 
+/**
+ * Provides game sound playback with a synthesized fallback.
+ * @returns A callback that plays a named game sound.
+ */
 export function useSound() {
   const ctxRef = useRef<AudioContext | null>(null);
 
@@ -103,13 +107,14 @@ export function useSound() {
         | "cash-register",
     ) => {
       // Try to play file first
-      const audio = new Audio(`/games/sounds/${type}.mp3`);
-      audio.volume = 0.5;
-
-      audio.play().catch(() => {
-        // Fallback to synth if file missing or play blocked
+      try {
+        const audio = new Audio(`/games/sounds/${type}.mp3`);
+        audio.volume = 0.5;
+        const playback = audio.play();
+        void Promise.resolve(playback).catch(() => playSynth(type));
+      } catch {
         playSynth(type);
-      });
+      }
     },
     [playSynth],
   );

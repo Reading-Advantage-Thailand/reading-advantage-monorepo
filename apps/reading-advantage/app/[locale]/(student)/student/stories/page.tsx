@@ -22,7 +22,7 @@ export default async function ReadPage({ params, searchParams }: Props) {
       <Header heading={t("storySelection")} />
       <SelectStory
         user={{
-          level: user?.level,
+          level: user.level ?? 0,
           name: user?.display_name,
           id: user?.id,
           role: user?.role,

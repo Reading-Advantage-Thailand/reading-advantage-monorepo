@@ -429,6 +429,11 @@ const getActiveGatePair = (pairs: GatePair[]) => {
   );
 };
 
+/**
+ * Renders the dragon flight vocabulary game.
+ * @param props The vocabulary, duration, callbacks, and optional assets.
+ * @returns The dragon flight game interface.
+ */
 export function DragonFlightGame({
   vocabulary,
   durationMs,
@@ -478,7 +483,7 @@ export function DragonFlightGame({
         durationMs: settings.durationMs,
       }));
     }
-  }, [difficulty, hasStarted]);
+  }, [difficulty, hasStarted, DIFFICULTY_SETTINGS]);
   const { playSound } = useSound();
   const resultsTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pendingSelectionRef = useRef<PendingSelection | null>(null);
@@ -542,7 +547,7 @@ export function DragonFlightGame({
     setBossSequenceDone(false);
     pendingSelectionRef.current = null;
     playerTargetRef.current = null;
-  }, [vocabulary, difficulty, DIFFICULTY_SETTINGS]);
+  }, [vocabulary, difficulty, DIFFICULTY_SETTINGS, durationMs]);
 
   useEffect(() => {
     resetGame();
@@ -1052,7 +1057,14 @@ export function DragonFlightGame({
 
             {/* Center: Progress Bar */}
             <div className="mt-1 sm:mt-4 flex-1 max-w-2xl px-2 sm:px-4">
-              <div className="relative h-5 sm:h-6 w-full overflow-hidden rounded-full bg-black/30 backdrop-blur-sm border border-white/10">
+              <div
+                className="relative h-5 sm:h-6 w-full overflow-hidden rounded-full bg-black/30 backdrop-blur-sm border border-white/10"
+                role="progressbar"
+                aria-label="Run timer"
+                aria-valuemin={0}
+                aria-valuemax={100}
+                aria-valuenow={Math.round(remainingRatio * 100)}
+              >
                 <motion.div
                   className="absolute inset-0 bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 box-shadow-glow"
                   initial={{ width: "100%" }}
@@ -1080,6 +1092,7 @@ export function DragonFlightGame({
               </div>
               <motion.div
                 key={dragonCountDisplay}
+                data-testid="dragon-flight-dragon-count"
                 className="text-base sm:text-2xl font-bold text-white leading-none"
                 initial={{ scale: 0.9 }}
                 animate={{ scale: 1 }}

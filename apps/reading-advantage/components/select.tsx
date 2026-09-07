@@ -130,13 +130,13 @@ export default function Select({ user }: Props) {
       <CardHeader>
         <CardTitle>
           {t("articleChoose", {
-            article: <b>{ta(getArticleType())}</b>,
+            article: ta(getArticleType()),
           })}
         </CardTitle>
         <CardDescription>
           {t("articleChooseDescription", {
-            level: <b>{user.level}</b>,
-            article: <b>{ta(getArticleType())}</b>,
+            level: user.level,
+            article: ta(getArticleType()),
           })}
         </CardDescription>
       </CardHeader>
