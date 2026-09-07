@@ -5,6 +5,7 @@ import {
   createClassCode,
   getClassroomStudentForLogin,
 } from "@/server/models/classroomModel";
+import { currentUser } from "@/lib/session";
 
 export async function fetchStudentsByClassCode(code: string) {
   if (!code || typeof code !== "string") {
@@ -28,11 +29,20 @@ export async function fetchStudentsByClassCode(code: string) {
   };
 }
 
+/**
+ * Creates a code for a classroom that the authenticated actor can manage.
+ * @param classroomId The classroom identifier.
+ * @returns The code result.
+ */
 export async function createClassroomCode(classroomId: string) {
+  const actor = await currentUser();
+  if (!actor || !["TEACHER", "ADMIN", "SYSTEM"].includes(actor.role)) {
+    return { success: false, error: "Unauthorized" };
+  }
   const code = generateSecureCode();
-  const result = await createClassCode(classroomId, code);
+  const result = await createClassCode(classroomId, code, actor);
 
-  if (!result) {
+  if (!result || result instanceof Response) {
     return {
       success: false,
       error: "Failed to create classroom code",

@@ -41,7 +41,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { AddAdminDialog } from "./add-admin-dialog";
-import { useSession } from "@reading-advantage/auth-client";
+import { useAuth } from "@reading-advantage/auth-client";
 import { useRouter } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 
@@ -103,7 +103,7 @@ export function SchoolDetail({
   const currentUser = useCurrentUser();
   const [isDeleting, setIsDeleting] = useState(false);
   const [removingAdminId, setRemovingAdminId] = useState<string | null>(null);
-  const { user } = useSession();
+  const { user, refresh } = useAuth();
   const router = useRouter();
   const t = useTranslations("Settings.schoolProfile");
   const isOwner = currentUser?.id === school.ownerId;
@@ -121,10 +121,7 @@ export function SchoolDetail({
       }
 
       if (response.ok) {
-        await update({
-          ...session,
-          user: { ...session?.user, role: "User" },
-        });
+        await refresh();
       }
 
       toast.success("School deleted successfully!");

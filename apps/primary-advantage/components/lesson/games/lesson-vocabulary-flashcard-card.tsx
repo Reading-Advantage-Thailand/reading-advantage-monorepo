@@ -64,7 +64,7 @@ import { cn } from "@/lib/utils";
 import { reviewCard } from "@/actions/flashcard";
 import { QuizContext, QuizContextProvider } from "@/contexts/question-context";
 import { updateUserActivity } from "@/actions/user";
-import { useSession } from "@reading-advantage/auth-client";
+import { useAuth } from "@reading-advantage/auth-client";
 
 // FSRS Configuration
 const f = fsrs(generatorParameters({ enable_fuzz: true }));
@@ -142,7 +142,7 @@ function LessonVocabularyFlashcardCardContent({
     {},
   );
   const { timer, setPaused } = useContext(QuizContext);
-  const { user } = useSession();
+  const { user, refresh } = useAuth();
   // Computed values
   const currentCard = words[currentCardIndex];
 
@@ -233,11 +233,7 @@ function LessonVocabularyFlashcardCardContent({
                 score: UserXpEarned.VOCABULARY_FLASHCARDS,
               },
             );
-            update({
-              user: {
-                ...session?.user,
-              },
-            });
+            await refresh();
           } else {
             toast.error("Failed to save ratings");
           }

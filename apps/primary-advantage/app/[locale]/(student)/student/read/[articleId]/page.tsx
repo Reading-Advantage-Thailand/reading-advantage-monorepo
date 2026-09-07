@@ -44,11 +44,10 @@ export default async function ArticleQuizPage({ params }: { params: Params }) {
   const { articleId } = await params;
   const t = await getTranslations("Article");
   const { article } = await getArticleById(articleId);
+  const flashcardContent = article.sentencsAndWordsForFlashcard;
 
   const isAtLeastTeacher = (role: string) =>
-    role.includes("teacher") ||
-    role.includes("admin") ||
-    role.includes("system");
+    role === "TEACHER" || role === "ADMIN" || role === "SYSTEM";
 
   const isSaved = article.articleActivityLog.some(
     (activity) =>
@@ -56,16 +55,15 @@ export default async function ArticleQuizPage({ params }: { params: Params }) {
   );
 
   if (!isSaved) {
-    if (
-      article.articleActivityLog.some(
-        (activity) =>
-          activity.userId === user.id &&
-          activity.isLongAnswerQuestionCompleted === true &&
-          activity.isShortAnswerQuestionCompleted === true &&
-          activity.isMultipleChoiceQuestionCompleted === true,
-      )
-    ) {
-      await saveArticleToFlashcard(articleId, article.articleActivityLog[0].id);
+    const completedActivity = article.articleActivityLog.find(
+      (activity) =>
+        activity.userId === user.id &&
+        activity.isLongAnswerQuestionCompleted === true &&
+        activity.isShortAnswerQuestionCompleted === true &&
+        activity.isMultipleChoiceQuestionCompleted === true,
+    );
+    if (completedActivity) {
+      await saveArticleToFlashcard(articleId, completedActivity.id);
     }
   }
 
@@ -85,7 +83,9 @@ export default async function ArticleQuizPage({ params }: { params: Params }) {
                   articleId={params.articleId}
                   article={articleResponse.article}
                 /> */}
-                <AssignButton article={article} />
+                <AssignButton
+                  article={{ ...article, summary: article.summary ?? "" }}
+                />
               </>
             )}
             {/* {isAboveTeacher(user.role) && (
@@ -97,21 +97,16 @@ export default async function ArticleQuizPage({ params }: { params: Params }) {
 
             <WordList
               articleId={articleId}
-              words={article.sentencsAndWordsForFlashcard.flatMap(
-                (word) => word.words as unknown as WordListTimestamp[],
-              )}
-              audioUrl={
-                article.sentencsAndWordsForFlashcard[0].wordsUrl as string
+              words={
+                (flashcardContent?.words as WordListTimestamp[] | null) ?? []
               }
+              audioUrl={flashcardContent?.wordsUrl ?? ""}
             />
             <Sentence
-              sentences={article.sentencsAndWordsForFlashcard.flatMap(
-                (sentence) => sentence.sentence as unknown as SentenceType[],
-              )}
-              audioUrl={
-                article.sentencsAndWordsForFlashcard[0]
-                  .audioSentencesUrl as string
+              sentences={
+                (flashcardContent?.sentence as SentenceType[] | null) ?? []
               }
+              audioUrl={flashcardContent?.audioSentencesUrl ?? ""}
             />
             <Link href={`/student/lesson/${articleId}?type=article`}>
               <Button variant="default">

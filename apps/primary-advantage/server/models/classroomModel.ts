@@ -5,6 +5,7 @@ import {
   desc,
   asc,
   inArray,
+  or,
 } from '@reading-advantage/db';
 import {
   classrooms,
@@ -19,19 +20,104 @@ import {
 } from '@reading-advantage/db';
 import { NextResponse } from "next/server";
 import { addDays } from "date-fns";
-import { currentUser } from "@/lib/session";
-import { UserWithRoles } from "@/server/utils/auth";
+import type { Role } from "@reading-advantage/auth";
+import { generateSecureCode } from "@/lib/utils";
 
+type ClassroomActor = {
+  id: string;
+  role: Role;
+  schoolId: string | null;
+};
+
+type AccessibleClassroom = {
+  id: string;
+  name: string;
+  schoolId: string | null;
+  teacherId: string;
+};
+
+const CLASSROOM_ROLES: readonly Role[] = ["TEACHER", "ADMIN", "SYSTEM"];
+
+/**
+ * Loads a classroom only when the actor can access it.
+ * @param classroomId The classroom identifier.
+ * @param actor The authenticated actor.
+ * @returns The classroom access fields, or null when access is denied.
+ */
+async function getAccessibleClassroom(
+  classroomId: string,
+  actor: ClassroomActor,
+): Promise<AccessibleClassroom | null> {
+  if (!CLASSROOM_ROLES.includes(actor.role)) return null;
+  if (actor.role !== "SYSTEM" && !actor.schoolId) return null;
+
+  const classroomConditions = [eq(classrooms.id, classroomId)];
+  if (actor.role !== "SYSTEM") {
+    classroomConditions.push(eq(classrooms.schoolId, actor.schoolId!));
+  }
+
+  const [classroom] = await db
+    .select({
+      id: classrooms.id,
+      name: classrooms.name,
+      schoolId: classrooms.schoolId,
+      teacherId: classrooms.teacherId,
+    })
+    .from(classrooms)
+    .where(and(...classroomConditions))
+    .limit(1);
+
+  if (!classroom) return null;
+  if (actor.role === "SYSTEM") return classroom;
+  if (actor.role === "ADMIN") return classroom;
+  if (classroom.teacherId === actor.id) return classroom;
+
+  const [membership] = await db
+    .select({ id: classroomTeachers.id })
+    .from(classroomTeachers)
+    .where(
+      and(
+        eq(classroomTeachers.classroomId, classroomId),
+        eq(classroomTeachers.teacherId, actor.id),
+      ),
+    )
+    .limit(1);
+
+  return membership ? classroom : null;
+}
+
+/**
+ * Sets a supplied class code for an accessible classroom.
+ * @param classroomId The classroom identifier.
+ * @param classCode The new class code.
+ * @param actor The authenticated actor.
+ * @returns The updated classroom or a not-found response.
+ */
 export const createClassCode = async (
-  classrooomId: string,
+  classroomId: string,
   classCode: string,
+  actor: ClassroomActor,
 ) => {
   try {
+    const accessibleClassroom = await getAccessibleClassroom(classroomId, actor);
+    if (!accessibleClassroom) {
+      return NextResponse.json(
+        { error: "Classroom not found" },
+        { status: 404 },
+      );
+    }
     const expiresAt = addDays(new Date(), 1);
 
     const [classroom] = await db.select({ id: classrooms.id, name: classrooms.name })
       .from(classrooms)
-      .where(eq(classrooms.id, classrooomId))
+      .where(
+        and(
+          eq(classrooms.id, classroomId),
+          accessibleClassroom.schoolId
+            ? eq(classrooms.schoolId, accessibleClassroom.schoolId)
+            : undefined,
+        ),
+      )
       .limit(1);
 
     if (!classroom) {
@@ -45,7 +131,14 @@ export const createClassCode = async (
       // Update the existing classroom's expiration date
       const [updated] = await db.update(classrooms)
         .set({ classCode, codeExpiresAt: expiresAt, updatedAt: new Date() })
-        .where(eq(classrooms.id, classrooomId))
+        .where(
+          and(
+            eq(classrooms.id, classroomId),
+            accessibleClassroom.schoolId
+              ? eq(classrooms.schoolId, accessibleClassroom.schoolId)
+              : undefined,
+          ),
+        )
         .returning();
       return updated;
     }
@@ -54,72 +147,63 @@ export const createClassCode = async (
   }
 };
 
+/**
+ * Creates a classroom for an authorized actor.
+ * @param data The classroom fields and authenticated actor.
+ * @returns A success result after creation.
+ * @throws When the actor cannot create a classroom.
+ */
 export const createClassroom = async (data: {
   name: string;
-  teacherId?: string;
   classCode?: string;
   grade?: string;
-  role?: string;
+  actor: ClassroomActor;
 }) => {
   try {
-    let created = false;
+    if (!CLASSROOM_ROLES.includes(data.actor.role)) throw new Error("FORBIDDEN");
+    if (data.actor.role !== "SYSTEM" && !data.actor.schoolId) {
+      throw new Error("FORBIDDEN");
+    }
+
     await db.transaction(async (tx) => {
-      const [user] = await tx.select({ schoolId: users.schoolId })
-        .from(users)
-        .where(eq(users.id, data.teacherId as string))
-        .limit(1);
-
-      const schoolId = user?.schoolId ?? null;
-
-      if (data.role === "teacher" && data.teacherId) {
-        const [classroom] = await tx.insert(classrooms).values({
-          name: data.name,
-          classCode: data.classCode || null,
-          grade: data.grade ? parseInt(data.grade) : null,
-          schoolId: schoolId,
-        }).returning();
-
-        await tx.insert(classroomTeachers).values({
-          classroomId: classroom.id,
-          teacherId: data.teacherId,
-        });
-        created = true;
-        return;
-      }
-
-      if (data.role === "admin") {
-        await tx.insert(classrooms).values({
-          name: data.name,
-          classCode: data.classCode || null,
-          grade: data.grade ? parseInt(data.grade) : null,
-          schoolId: schoolId,
-        });
-        created = true;
-        return;
-      }
-
-      // system or other elevated roles: create without owner assignment; school optional
-      await tx.insert(classrooms).values({
+      const [classroom] = await tx.insert(classrooms).values({
         name: data.name,
         classCode: data.classCode || null,
         grade: data.grade ? parseInt(data.grade) : null,
-      });
-      created = true;
-    });
+        schoolId: data.actor.schoolId,
+        teacherId: data.actor.id,
+        createdBy: data.actor.id,
+      }).returning();
 
-    if (!created) throw new Error("FAILED_CREATE");
+      if (data.actor.role === "TEACHER") {
+        await tx.insert(classroomTeachers).values({
+          classroomId: classroom.id,
+          teacherId: data.actor.id,
+        });
+      }
+    });
     return { success: true, message: "Classroom created successfully" };
   } catch (error) {
     throw new Error("FAILED_CREATE");
   }
 };
 
-// Enroll a student in a classroom
+/**
+ * Enrolls a same-school student in an accessible classroom.
+ * @param studentId The student identifier.
+ * @param classroomId The classroom identifier.
+ * @param actor The authenticated actor.
+ * @returns The enrollment with student and classroom details.
+ */
 export const enrollStudentInClassroom = async (
   studentId: string,
   classroomId: string,
+  actor: ClassroomActor,
 ) => {
   try {
+    const classroom = await getAccessibleClassroom(classroomId, actor);
+    if (!classroom) throw new Error("Classroom not found or access denied");
+
     // Check if the student is already enrolled
     const [existingEnrollment] = await db.select().from(classroomStudents)
       .where(
@@ -134,23 +218,15 @@ export const enrollStudentInClassroom = async (
       throw new Error("Student is already enrolled in this classroom");
     }
 
-    // Check if classroom exists
-    const [classroom] = await db.select().from(classrooms)
-      .where(eq(classrooms.id, classroomId))
-      .limit(1);
-
-    if (!classroom) {
-      throw new Error("Classroom not found");
-    }
-
     // Check if student exists and has STUDENT role
     const [student] = await db.select().from(users)
-      .innerJoin(userRoles, eq(userRoles.userId, users.id))
-      .innerJoin(roles, eq(roles.id, userRoles.roleId))
       .where(
         and(
           eq(users.id, studentId),
-          eq(roles.name, "student"),
+          eq(users.role, "STUDENT"),
+          classroom.schoolId
+            ? eq(users.schoolId, classroom.schoolId)
+            : undefined,
         ),
       )
       .limit(1);
@@ -169,9 +245,9 @@ export const enrollStudentInClassroom = async (
     return {
       ...enrollment,
       student: {
-        id: student.users?.id ?? student.id,
-        name: student.users?.name,
-        email: student.users?.email,
+        id: student.id,
+        name: student.name,
+        email: student.email,
       },
       classroom: {
         id: classroom.id,
@@ -184,30 +260,21 @@ export const enrollStudentInClassroom = async (
   }
 };
 
-// Un-enroll a student from a classroom
+/**
+ * Removes a student from an accessible classroom.
+ * @param studentId The student identifier.
+ * @param classroomId The classroom identifier.
+ * @param actor The authenticated actor.
+ * @returns The removed enrollment with related records.
+ */
 export const unenrollStudentFromClassroom = async (
   studentId: string,
   classroomId: string,
-  teacherId?: string,
+  actor: ClassroomActor,
 ) => {
   try {
-    // If teacherId is provided, verify the teacher owns the classroom
-    if (teacherId) {
-      const [classroom] = await db.select({ id: classrooms.id })
-        .from(classrooms)
-        .innerJoin(classroomTeachers, eq(classroomTeachers.classroomId, classrooms.id))
-        .where(
-          and(
-            eq(classrooms.id, classroomId),
-            eq(classroomTeachers.teacherId, teacherId),
-          ),
-        )
-        .limit(1);
-
-      if (!classroom) {
-        throw new Error("Classroom not found or access denied");
-      }
-    }
+    const accessibleClassroom = await getAccessibleClassroom(classroomId, actor);
+    if (!accessibleClassroom) throw new Error("Classroom not found or access denied");
 
     // Check if the enrollment exists
     const [enrollment] = await db.select().from(classroomStudents)
@@ -261,29 +328,19 @@ export const unenrollStudentFromClassroom = async (
   }
 };
 
-// Get available students for enrollment (students not in the classroom)
+/**
+ * Gets same-school students who are available for enrollment.
+ * @param classroomId The classroom identifier.
+ * @param actor The authenticated actor.
+ * @returns The available students.
+ */
 export const getAvailableStudentsForClassroom = async (
   classroomId: string,
-  teacherId?: string,
+  actor: ClassroomActor,
 ) => {
   try {
-    // If teacherId is provided, verify the teacher owns the classroom
-    if (teacherId) {
-      const [classroom] = await db.select({ id: classrooms.id })
-        .from(classrooms)
-        .innerJoin(classroomTeachers, eq(classroomTeachers.classroomId, classrooms.id))
-        .where(
-          and(
-            eq(classrooms.id, classroomId),
-            eq(classroomTeachers.teacherId, teacherId),
-          ),
-        )
-        .limit(1);
-
-      if (!classroom) {
-        throw new Error("Classroom not found or access denied");
-      }
-    }
+    const classroom = await getAccessibleClassroom(classroomId, actor);
+    if (!classroom) throw new Error("Classroom not found or access denied");
 
     // Get all students who are not enrolled in this classroom.
     // We use a NOT IN subquery (anti-join) to mirror Prisma's
@@ -309,11 +366,12 @@ export const getAvailableStudentsForClassroom = async (
       level: users.level,
       xp: users.xp,
     })
-      .from(users)
-      .innerJoin(userRoles, eq(userRoles.userId, users.id))
-      .innerJoin(roles, eq(roles.id, userRoles.roleId));
+      .from(users);
 
-    const whereConditions: any[] = [eq(roles.name, "student")];
+    const whereConditions: any[] = [eq(users.role, "STUDENT")];
+    if (classroom.schoolId) {
+      whereConditions.push(eq(users.schoolId, classroom.schoolId));
+    }
     if (enrolledIds.length) {
       // Exclude enrolled students
       whereConditions.push(
@@ -354,51 +412,39 @@ export const getAvailableStudentsForClassroom = async (
 // growing the top-level import block in this file.
 import { notInArray as notInArrayFn } from '@reading-advantage/db';
 
-// Get all classrooms based on user role
-export const getAllClassrooms = async (userWithRoles: UserWithRoles) => {
+/**
+ * Gets classrooms within the authenticated actor's access scope.
+ * @param actor The authenticated actor.
+ * @returns The accessible classrooms with their teachers and students.
+ * @throws When the actor cannot read classrooms.
+ */
+export const getAllClassrooms = async (actor: ClassroomActor) => {
   try {
-    // Check user roles to determine access level
-    const isSystemAdmin = userWithRoles.roles.some(
-      (userRole) => userRole.role.name === "system",
-    );
-
-    const isAdmin = userWithRoles.roles.some(
-      (userRole) => userRole.role.name === "admin",
-    );
-
-    const isTeacher = userWithRoles.roles.some(
-      (userRole) => userRole.role.name === "teacher",
-    );
-
-    const isSchoolAdmin = userWithRoles.SchoolAdmins.length > 0;
-
-    // Build where clause based on user role
     const whereConditions: any[] = [];
-
-    if (isSystemAdmin) {
-      // System admins can see all classrooms across all schools
-      // No additional where clause needed
-    } else if (isAdmin || isSchoolAdmin) {
-      // Admins and school admins can see all classrooms in their school
-      if (userWithRoles.schoolId) {
-        whereConditions.push(eq(classrooms.schoolId, userWithRoles.schoolId));
-      }
-    } else if (isTeacher) {
-      // Teachers can only see classrooms they teach in
+    if (!CLASSROOM_ROLES.includes(actor.role)) {
+      throw new Error("Insufficient permissions to view classrooms");
+    }
+    if (actor.role !== "SYSTEM") {
+      if (!actor.schoolId) throw new Error("Insufficient permissions to view classrooms");
+      whereConditions.push(eq(classrooms.schoolId, actor.schoolId));
+    }
+    if (actor.role === "TEACHER") {
       const teacherClassroomIds = await db
         .select({ classroomId: classroomTeachers.classroomId })
         .from(classroomTeachers)
-        .where(eq(classroomTeachers.teacherId, userWithRoles.id));
+        .innerJoin(classrooms, eq(classrooms.id, classroomTeachers.classroomId))
+        .where(
+          and(
+            eq(classroomTeachers.teacherId, actor.id),
+            eq(classrooms.schoolId, actor.schoolId!),
+          ),
+        );
       const classroomIds = teacherClassroomIds.map((row) => row.classroomId);
-      if (classroomIds.length) {
-        whereConditions.push(inArray(classrooms.id, classroomIds));
-      } else {
-        // No classrooms assigned; return nothing.
-        whereConditions.push(eq(classrooms.id, "__never__"));
-      }
-    } else {
-      // Other roles (like students) cannot access classroom lists
-      throw new Error("Insufficient permissions to view classrooms");
+      whereConditions.push(
+        classroomIds.length
+          ? or(eq(classrooms.teacherId, actor.id), inArray(classrooms.id, classroomIds))
+          : eq(classrooms.teacherId, actor.id),
+      );
     }
 
     // Fetch classrooms with basic information first
@@ -471,7 +517,13 @@ export const getAllClassrooms = async (userWithRoles: UserWithRoles) => {
   }
 };
 
-// Update a classroom
+/**
+ * Updates an accessible classroom.
+ * @param id The classroom identifier.
+ * @param data The classroom changes.
+ * @param actor The authenticated actor.
+ * @returns The updated classroom, or null when access is denied.
+ */
 export const updateClassroom = async (
   id: string,
   data: {
@@ -479,15 +531,26 @@ export const updateClassroom = async (
     grade?: string;
     description?: string;
   },
+  actor: ClassroomActor,
 ) => {
   try {
+    const accessibleClassroom = await getAccessibleClassroom(id, actor);
+    if (!accessibleClassroom) return null;
+
     const [updatedClassroom] = await db.update(classrooms)
       .set({
         name: data.name,
         grade: data.grade ? parseInt(data.grade) : undefined,
         updatedAt: new Date(),
       })
-      .where(eq(classrooms.id, id))
+      .where(
+        and(
+          eq(classrooms.id, id),
+          accessibleClassroom.schoolId
+            ? eq(classrooms.schoolId, accessibleClassroom.schoolId)
+            : undefined,
+        ),
+      )
       .returning();
 
     if (!updatedClassroom) {
@@ -532,14 +595,23 @@ export const updateClassroom = async (
   }
 };
 
-// Delete a classroom
+/**
+ * Deletes an accessible classroom or removes a co-teacher.
+ * @param classroomId The classroom identifier.
+ * @param actor The authenticated actor.
+ * @returns The deletion result.
+ */
 export const deleteClassroom = async (
   classroomId: string,
-  teacherId: string,
-  role?: string,
+  actor: ClassroomActor,
 ) => {
   try {
-    if (role === "teacher") {
+    const classroom = await getAccessibleClassroom(classroomId, actor);
+    if (!classroom) {
+      return { success: false, error: "Classroom not found or access denied" };
+    }
+
+    if (actor.role === "TEACHER") {
       // First, verify the teacher is part of the classroom
       const teacherRows = await db.select({
         userId: classroomTeachers.teacherId,
@@ -565,7 +637,7 @@ export const deleteClassroom = async (
           .where(
             and(
               eq(classroomTeachers.classroomId, classroomId),
-              eq(classroomTeachers.teacherId, teacherId),
+              eq(classroomTeachers.teacherId, actor.id),
             ),
           );
         return { success: true, message: "Removed from classroom" };
@@ -576,8 +648,13 @@ export const deleteClassroom = async (
       }
     }
 
-    if (role === "admin" || role === "system") {
-      await db.delete(classrooms).where(eq(classrooms.id, classroomId));
+    if (actor.role === "ADMIN" || actor.role === "SYSTEM") {
+      await db.delete(classrooms).where(
+        and(
+          eq(classrooms.id, classroomId),
+          classroom.schoolId ? eq(classrooms.schoolId, classroom.schoolId) : undefined,
+        ),
+      );
       return { success: true };
     }
 
@@ -591,8 +668,16 @@ export const deleteClassroom = async (
   }
 };
 
-// Get all students for a teacher from their classrooms
-export const getAllStudentsByTeacher = async (teacherId: string) => {
+/**
+ * Gets students from a teacher's classrooms in one school.
+ * @param teacherId The teacher identifier.
+ * @param schoolId The authorized school identifier.
+ * @returns The teacher's students.
+ */
+export const getAllStudentsByTeacher = async (
+  teacherId: string,
+  schoolId: string,
+) => {
   try {
     // Get all classrooms for the teacher
     const teacherClassrooms = await db.select({
@@ -612,7 +697,12 @@ export const getAllStudentsByTeacher = async (teacherId: string) => {
       .innerJoin(classrooms, eq(classrooms.id, classroomTeachers.classroomId))
       .leftJoin(classroomStudents, eq(classroomStudents.classroomId, classrooms.id))
       .leftJoin(users, eq(users.id, classroomStudents.studentId))
-      .where(eq(classroomTeachers.teacherId, teacherId));
+      .where(
+        and(
+          eq(classroomTeachers.teacherId, teacherId),
+          eq(classrooms.schoolId, schoolId),
+        ),
+      );
 
     // Extract unique students across all classrooms
     const studentMap = new Map();
@@ -650,12 +740,25 @@ export const getAllStudentsByTeacher = async (teacherId: string) => {
   }
 };
 
-// Get all students by admin
-export const getAllStudentsByAdmin = async (adminId: string) => {
+/**
+ * Gets students for a school admin in the authorized school.
+ * @param adminId The admin identifier.
+ * @param schoolId The authorized school identifier.
+ * @returns The school's students.
+ */
+export const getAllStudentsByAdmin = async (
+  adminId: string,
+  schoolId: string,
+) => {
   try {
     const [schoolAdmin] = await db.select({ schoolId: schoolAdmins.schoolId })
       .from(schoolAdmins)
-      .where(eq(schoolAdmins.userId, adminId))
+      .where(
+        and(
+          eq(schoolAdmins.userId, adminId),
+          eq(schoolAdmins.schoolId, schoolId),
+        ),
+      )
       .limit(1);
 
     if (!schoolAdmin) {
@@ -807,20 +910,29 @@ export const getAllStudentsInSystem = async () => {
   }
 };
 
-// Get a specific classroom with its students
+/**
+ * Gets an accessible classroom and its student roster.
+ * @param classroomId The classroom identifier.
+ * @param actor The authenticated actor.
+ * @returns The classroom roster, or null when access is denied.
+ */
 export const getClassroomWithStudents = async (
   classroomId: string,
-  teacherId?: string,
+  actor: ClassroomActor,
 ) => {
   try {
-    // If teacherId is provided, verify the teacher owns the classroom
-    const whereConditions: any[] = [eq(classrooms.id, classroomId)];
-    if (teacherId) {
-      whereConditions.push(eq(classrooms.teacherId, teacherId));
-    }
+    const accessibleClassroom = await getAccessibleClassroom(classroomId, actor);
+    if (!accessibleClassroom) return null;
 
     const [classroom] = await db.select().from(classrooms)
-      .where(and(...whereConditions))
+      .where(
+        and(
+          eq(classrooms.id, classroomId),
+          accessibleClassroom.schoolId
+            ? eq(classrooms.schoolId, accessibleClassroom.schoolId)
+            : undefined,
+        ),
+      )
       .limit(1);
 
     if (!classroom) {
@@ -882,7 +994,7 @@ export const getClassroomWithStudents = async (
       .innerJoin(users, eq(users.id, classroomTeachers.teacherId))
       .where(eq(classroomTeachers.classroomId, classroomId));
 
-    const primaryTeacher = teacherRows[0]?.user;
+    const primaryTeacher = teacherRows[0];
 
     const formattedClassroom = {
       id: classroom.id,
@@ -891,7 +1003,7 @@ export const getClassroomWithStudents = async (
       passwordStudents: classroom.passwordStudents,
       codeExpiresAt: classroom.codeExpiresAt?.toISOString() || null,
       grade: classroom.grade,
-      teacherId: primaryTeacher?.id,
+      teacherId: primaryTeacher?.userId,
       archived: false, // Add this field based on your schema
       noOfStudents: studentRows.length,
     };
@@ -951,12 +1063,20 @@ export const getClassroomStudentForLogin = async (code: string) => {
   }
 };
 
-// Generate a unique class code for a classroom
+/**
+ * Generates a unique login code for an accessible classroom.
+ * @param classroomId The classroom identifier.
+ * @param actor The authenticated actor.
+ * @returns The updated classroom, or null when access is denied.
+ */
 export const generateClassCode = async (
   classroomId: string,
-  teacherId?: string,
+  actor: ClassroomActor,
 ) => {
   try {
+    const accessibleClassroom = await getAccessibleClassroom(classroomId, actor);
+    if (!accessibleClassroom) return null;
+
     // Get classroom with existing password
     const [classroom] = await db.select({
       id: classrooms.id,
@@ -965,7 +1085,14 @@ export const generateClassCode = async (
       codeExpiresAt: classrooms.codeExpiresAt,
     })
       .from(classrooms)
-      .where(eq(classrooms.id, classroomId))
+      .where(
+        and(
+          eq(classrooms.id, classroomId),
+          accessibleClassroom.schoolId
+            ? eq(classrooms.schoolId, accessibleClassroom.schoolId)
+            : undefined,
+        ),
+      )
       .limit(1);
 
     if (!classroom) {
@@ -974,15 +1101,7 @@ export const generateClassCode = async (
 
     const existingPassword = classroom.passwordStudents;
 
-    // Generate a unique 8-character alphanumeric code
-    const generateCode = () => {
-      const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-      let code = "";
-      for (let i = 0; i < 8; i++) {
-        code += chars.charAt(Math.floor(Math.random() * chars.length));
-      }
-      return code;
-    };
+    const generateCode = () => generateSecureCode(8).toUpperCase();
 
     // Function to check if password exists in database
     const isPasswordUnique = async (password: string): Promise<boolean> => {
@@ -1028,7 +1147,14 @@ export const generateClassCode = async (
         codeExpiresAt: expiresAt,
         updatedAt: new Date(),
       })
-      .where(eq(classrooms.id, classroomId))
+      .where(
+        and(
+          eq(classrooms.id, classroomId),
+          accessibleClassroom.schoolId
+            ? eq(classrooms.schoolId, accessibleClassroom.schoolId)
+            : undefined,
+        ),
+      )
       .returning({
         id: classrooms.id,
         name: classrooms.name,

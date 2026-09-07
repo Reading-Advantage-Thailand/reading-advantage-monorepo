@@ -77,7 +77,7 @@ export interface ArticleShowcase {
   is_read?: boolean;
   is_completed?: boolean;
   is_approved?: boolean;
-  type?: string;
+  type?: string | null;
   subGenre?: string | null;
   genre?: string | null;
   storyBible?: StoryBible;

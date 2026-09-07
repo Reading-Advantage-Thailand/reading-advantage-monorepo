@@ -36,91 +36,23 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "./ui/button";
 import { ArrowUpDown, Trash2 } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { deleteFlashcardCard } from "@/actions/flashcard";
 import { useFormatDate } from "@/lib/utils";
+import type { InferSelectModel } from "drizzle-orm";
+import { flashcardCards } from "@reading-advantage/db";
 
-type Sentence = {
-  id: string;
-  articleId: string | null;
-  createdAt: Date;
-  sentence: string | null;
-  due: Date;
-  //   sn: number;
-  //   timepoint: number;
-  //   translation: { th: string; cn: string; tw: string; vi: string };
-  //   userId: string;
-  //   due: Date; // Date when the card is next due for review
-  //   stability: number; // A measure of how well the information is retained
-  //   difficulty: number; // Reflects the inherent difficulty of the card content
-  //   elapsed_days: number; // Days since the card was last reviewed
-  //   scheduled_days: number; // The interval at which the card is next scheduled
-  //   reps: number; // Total number of times the card has been reviewed
-  //   lapses: number; // Times the card was forgotten or remembered incorrectly
-  //   state: State; // The current state of the card (New, Learning, Review, Relearning)
-  //   last_review?: Date; // The most recent review date, if applicable
-};
+type Sentence = InferSelectModel<typeof flashcardCards>;
 
 interface ManageTabProps {
   data: Sentence[];
-}
-
-function getSimpleDueText(
-  dueDate: Date,
-  t: ReturnType<typeof useTranslations<"sentencesCard.manage">>,
-): string {
-  const now = new Date();
-  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const due = new Date(
-    dueDate.getFullYear(),
-    dueDate.getMonth(),
-    dueDate.getDate(),
-  );
-
-  const diffDays = Math.ceil(
-    (due.getTime() - today.getTime()) / (1000 * 60 * 60 * 24),
-  );
-
-  if (diffDays < 0) {
-    const daysLate = Math.abs(diffDays);
-    return daysLate === 1
-      ? t("dueStatus.oneDayLate")
-      : t("dueStatus.daysLate", { count: daysLate });
-  } else if (diffDays === 0) {
-    return t("dueStatus.dueToday");
-  } else if (diffDays === 1) {
-    return t("dueStatus.dueTomorrow");
-  } else if (diffDays <= 7) {
-    return t("dueStatus.dueInDays", { count: diffDays });
-  } else {
-    return t("dueStatus.dueInWeeks", { count: Math.ceil(diffDays / 7) });
-  }
-}
-
-function getDueColor(dueDate: Date): "destructive" | "secondary" | "default" {
-  const now = new Date();
-  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const due = new Date(
-    dueDate.getFullYear(),
-    dueDate.getMonth(),
-    dueDate.getDate(),
-  );
-
-  const diffDays = Math.ceil(
-    (due.getTime() - today.getTime()) / (1000 * 60 * 60 * 24),
-  );
-
-  if (diffDays < 0) return "destructive"; // Overdue - red
-  if (diffDays === 0) return "secondary"; // Due today - orange/yellow
-  return "default"; // Future - blue/gray
 }
 
 export default function ManageTab({ data }: ManageTabProps) {
   const t = useTranslations("SentencesPage.manage");
   const formatDate = useFormatDate();
   const [sorting, setSorting] = React.useState<SortingState>([
-    { id: "due", desc: false },
+    { id: "createdAt", desc: true },
   ]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
@@ -129,10 +61,10 @@ export default function ManageTab({ data }: ManageTabProps) {
 
   const columns: ColumnDef<Sentence>[] = [
     {
-      accessorKey: "sentence",
+      accessorKey: "front",
       header: t("tableHeaders.sentence"),
       cell: ({ row }) => {
-        const sentence = row.getValue("sentence") as string;
+        const sentence = row.getValue("front") as string;
         return <div className="whitespace-pre-wrap">{sentence}</div>;
       },
     },
@@ -162,38 +94,11 @@ export default function ManageTab({ data }: ManageTabProps) {
       },
     },
     {
-      accessorKey: "due",
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            {t("tableHeaders.due")}
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        );
-      },
-      cell: ({ row }) => {
-        const due = row.getValue("due") as Date;
-        return (
-          <div className="gap- flex items-center">
-            <Badge
-              variant={getDueColor(due)}
-              className="flex items-center gap-1"
-            >
-              {getSimpleDueText(due, t)}
-            </Badge>
-          </div>
-        );
-      },
-    },
-    {
       accessorKey: "action",
       header: t("tableHeaders.action"),
       cell: ({ row }) => {
         const id = row.original.id;
-        const sentence = row.original.sentence;
+        const sentence = row.original.front;
         return (
           <AlertDialog>
             <AlertDialogTrigger asChild>
@@ -267,10 +172,10 @@ export default function ManageTab({ data }: ManageTabProps) {
           <Input
             placeholder={t("searchPlaceholder")}
             value={
-              (table.getColumn("sentence")?.getFilterValue() as string) ?? ""
+              (table.getColumn("front")?.getFilterValue() as string) ?? ""
             }
             onChange={(event) =>
-              table.getColumn("sentence")?.setFilterValue(event.target.value)
+              table.getColumn("front")?.setFilterValue(event.target.value)
             }
             className="max-w-sm"
           />

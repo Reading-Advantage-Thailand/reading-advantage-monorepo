@@ -3,12 +3,14 @@ import { google, googleModel } from "@/utils/google";
 import { storyGeneratorSchema } from "@/lib/zod";
 import { z } from "zod";
 
+/** Story generation input. */
 export interface GenerateStoryParams {
   cefrLevel: string;
   genre?: string;
   topic?: string;
 }
 
+/** Validated story generation output. */
 export type GenerateStoryResponse = z.infer<typeof storyGeneratorSchema>;
 
 const SYSTEM_PROMPT = `You are an expert creative writer and language educator specializing in creating engaging stories for English language learners. Your task is to generate a complete story with multiple chapters, characters, and educational exercises tailored to a specific CEFR level.
@@ -25,6 +27,11 @@ Guidelines:
 Output Format:
 Generate a JSON object matching the provided schema. Ensure all fields are populated and formatted correctly.`;
 
+/**
+ * Generates structured story content for a CEFR level.
+ * @param params The story topic and learner level.
+ * @returns The generated story content.
+ */
 export async function generateStoryContent(
   params: GenerateStoryParams,
 ): Promise<GenerateStoryResponse> {
@@ -47,7 +54,7 @@ export async function generateStoryContent(
       system: SYSTEM_PROMPT,
       prompt: userPrompt,
       temperature: 1,
-      maxTokens: 8192, // Increase max tokens for longer content
+      maxOutputTokens: 8192,
     });
 
     return story;

@@ -1,6 +1,6 @@
 import React from "react";
 import { MCQuestion, QuestionResponse } from "@/types";
-import { AnswerStatus, QuestionState } from "@/types/enum";
+import { ActivityType, AnswerStatus, QuestionState } from "@/types/enum";
 import {
   Card,
   CardContent,
@@ -11,7 +11,6 @@ import {
 import { QuizContextProvider } from "@/contexts/question-context";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getQuestionsByArticleId } from "@/server/models/articleModel";
-import { activityType as ActivityType } from "@reading-advantage/db";
 import MCQuestionContent from "./mc-question-content";
 import QuestionHeader from "./question-header";
 import { Button } from "@/components/ui/button";

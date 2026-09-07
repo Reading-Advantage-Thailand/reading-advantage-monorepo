@@ -29,8 +29,6 @@ import { format } from "date-fns";
 import { enUS, th, zhCN, zhTW, vi } from "date-fns/locale";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { useCurrentUser } from "@/hooks/use-current-user";
-import type { InferSelectModel } from "drizzle-orm";
-import { assignmentStudents } from "@reading-advantage/db";
 import { useTranslations } from "next-intl";
 
 /**
@@ -49,28 +47,29 @@ const AssignmentStatus = {
   COMPLETED: "COMPLETED",
 } as const satisfies Record<AssignmentStatusValue, AssignmentStatusValue>;
 
-type StudentAssignmentRow = InferSelectModel<typeof assignmentStudents>;
-
 interface Assignment {
   id: string;
   classroomId: string;
-  articleId: string;
-  name: string;
-  description: string;
-  dueDate: string;
+  articleId: string | null;
+  lessonId: string | null;
+  title: string;
+  type: string;
+  description: string | null;
+  dueDate: string | null;
   createdAt: string;
   teacherId: string;
-  teacherName: string;
+  teacherName: string | null;
 }
 
 interface AssignmentStudent {
   id: string;
   studentId: string;
-  status: AssignmentStatus;
-  startedAt: string;
+  status: AssignmentStatusValue | null;
+  score: number | null;
+  startedAt: string | null;
   assignmentId: string;
   createdAt: string;
-  completedAt: string;
+  completedAt: string | null;
   assignment: Assignment;
 }
 
@@ -197,7 +196,7 @@ export default function StudentAssignmentTable() {
 
   const columns: ColumnDef<AssignmentStudent>[] = [
     {
-      accessorKey: "assignment.name",
+      accessorKey: "assignment.title",
       header: ({ column }) => {
         return (
           <Button
@@ -210,7 +209,7 @@ export default function StudentAssignmentTable() {
         );
       },
       cell: ({ row }) => {
-        const name: string = row.original.assignment.name || "";
+        const name = row.original.assignment.title;
 
         return (
           <div className="ml-4">
@@ -285,7 +284,8 @@ export default function StudentAssignmentTable() {
         );
       },
       cell: ({ row }) => {
-        const dueDate: string = row.original.assignment.dueDate || "";
+        const dueDate = row.original.assignment.dueDate;
+        if (!dueDate) return <div className="text-center">No due date</div>;
         const dueDateStatus = getDueDateStatus(dueDate);
         return (
           <div className="flex flex-col items-center justify-center text-center">
@@ -309,9 +309,9 @@ export default function StudentAssignmentTable() {
         return <div className="text-center">{t("status")}</div>;
       },
       cell: ({ row }) => {
-        const status: AssignmentStatus = row.getValue("status");
+        const status = row.getValue("status") as AssignmentStatusValue | null;
 
-        const getStatusIcon = (status: AssignmentStatus) => {
+        const getStatusIcon = (status: AssignmentStatusValue | null) => {
           switch (status) {
             case AssignmentStatus.NOT_STARTED:
               return "⏳";
@@ -324,7 +324,7 @@ export default function StudentAssignmentTable() {
           }
         };
 
-        const getStatusText = (status: AssignmentStatus) => {
+        const getStatusText = (status: AssignmentStatusValue | null) => {
           switch (status) {
             case AssignmentStatus.NOT_STARTED:
               //   return `${t("notFinished")}`;
@@ -554,39 +554,8 @@ export default function StudentAssignmentTable() {
   const AssignmentDetailDialog = () => {
     if (!selectedAssignment) return null;
 
-    const dueDateStatus = getDueDateStatus(
-      selectedAssignment.assignment.dueDate,
-    );
-
-    const getStatusIcon = (status: number) => {
-      switch (status) {
-        case 0:
-          return "⏳";
-        case 1:
-          return "🔄";
-        case 2:
-          return "✅";
-        default:
-          return "⏳";
-      }
-    };
-
-    const getStatusText = (status: number) => {
-      switch (status) {
-        case 0:
-          //   return `${t("notFinished")}`;
-          return "Not Finished";
-        case 1:
-          //   return `${t("inProgress")}`;
-          return "In Progress";
-        case 2:
-          //   return `${t("done")}`;
-          return "Done";
-        default:
-          //   return `${t("notFinished")}`;
-          return "Not Finished";
-      }
-    };
+    const dueDate = selectedAssignment.assignment.dueDate;
+    const dueDateStatus = dueDate ? getDueDateStatus(dueDate) : null;
 
     return (
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -629,19 +598,16 @@ export default function StudentAssignmentTable() {
               </h4>
               <div className="flex items-center gap-2">
                 <p className="text-sm">
-                  {format(
-                    new Date(selectedAssignment.assignment.dueDate),
-                    "MMM dd, yyyy",
-                    {
-                      locale: enUS,
-                    },
-                  )}
+                  {dueDate
+                    ? format(new Date(dueDate), "MMM dd, yyyy", { locale: enUS })
+                    : "No due date"}
                 </p>
-                {selectedAssignment.status !== AssignmentStatus.COMPLETED && (
+                {dueDateStatus &&
+                  selectedAssignment.status !== AssignmentStatus.COMPLETED && (
                   <Badge variant={dueDateStatus.variant} className="text-xs">
                     {dueDateStatus.text}
                   </Badge>
-                )}
+                  )}
               </div>
             </div>
 

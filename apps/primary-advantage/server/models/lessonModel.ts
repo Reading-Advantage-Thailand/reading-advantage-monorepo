@@ -69,6 +69,14 @@ import {
 /**
  * Update user lesson progress for standalone lessons (without assignment).
  */
+/**
+ * Updates a student's standalone article progress.
+ * @param userId The student identifier.
+ * @param articleId The article identifier.
+ * @param progress The completion percentage.
+ * @param timeSpent The elapsed study time.
+ * @returns The updated progress result.
+ */
 export async function updateStandaloneLessonProgress(
   userId: string,
   articleId: string,
@@ -104,6 +112,8 @@ export async function updateStandaloneLessonProgress(
       await db.transaction(async (tx) => {
         await tx.insert(lessonProgress).values({
           userId,
+          // The standalone lesson route identifies its lesson by article ID.
+          lessonId: articleId,
           articleId,
           assignmentId: null,
           progress,

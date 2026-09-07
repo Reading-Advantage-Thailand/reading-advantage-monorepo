@@ -5,7 +5,7 @@ import path from "path";
 import { parse } from "csv/sync";
 import { z } from "zod";
 import { db, eq, and, inArray, or, ilike } from '@reading-advantage/db';
-import { users, classrooms, classroomStudents, classroomTeachers, userRoles, roles } from '@reading-advantage/db';
+import { users, schools, classrooms, classroomStudents, classroomTeachers, userRoles, roles } from '@reading-advantage/db';
 import { getCurrentUser } from "@/lib/session";
 import { generateRandomClassCode } from "@/lib/utils";
 
@@ -147,6 +147,11 @@ const createTimer = (label: string) => {
   };
 };
 
+/**
+ * Imports authorized classroom rows from a CSV upload.
+ * @param request The authenticated upload request.
+ * @returns The import result or a validation error.
+ */
 export async function POST(request: NextRequest) {
   const apiTimer = createTimer("UPLOAD_CLASSES_API");
   console.log("🚀 Starting upload classes API request");
@@ -169,44 +174,29 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    // Stitch school include via FK.
-    let userSchool: { id: string; name: string } | null = null;
-    if (currentUser.schoolId) {
-      const [s] = await db.select({ id: users.id, name: users.name })
-        .from(users)
-        .where(eq(users.id, currentUser.schoolId))
-        .limit(1);
-      userSchool = s;
-    }
-
-    // Stitch roles include via join.
-    const userRoleRows = await db.select({ roleName: roles.name })
-      .from(userRoles)
-      .innerJoin(roles, eq(roles.id, userRoles.roleId))
-      .where(eq(userRoles.userId, authUser.id));
-
-    // Check if user has permission to upload (Admin, System, or Teacher roles)
-    const currentUserRoles = userRoleRows.map((ur) => ur.roleName);
-    const allowedRoles = ["admin", "system", "teacher"];
-    const hasPermission = currentUserRoles.some((role) =>
-      allowedRoles.includes(role),
-    );
-
-    if (!hasPermission) {
+    const allowedRoles = ["ADMIN", "SYSTEM", "TEACHER"];
+    if (!allowedRoles.includes(authUser.role)) {
       return NextResponse.json(
         {
           error: "Insufficient permissions",
-          details: [
-            "Only Admin, System, or Teacher roles can upload classes CSV files",
-          ],
-          userRoles: currentUserRoles,
+          details: ["Only Admin, System, or Teacher roles can upload CSV files"],
+          userRoles: [authUser.role],
         },
         { status: 403 },
       );
     }
 
-    // For non-system users, require school association
-    if (!currentUserRoles.includes("system") && !currentUser.schoolId) {
+    // Stitch school include via FK.
+    let userSchool: { id: string; name: string } | null = null;
+    if (currentUser.schoolId) {
+      const [s] = await db.select({ id: schools.id, name: schools.name })
+        .from(schools)
+        .where(eq(schools.id, currentUser.schoolId))
+        .limit(1);
+      userSchool = s;
+    }
+
+    if (authUser.role !== "SYSTEM" && !currentUser.schoolId) {
       return NextResponse.json(
         {
           error: "School association required",
@@ -385,6 +375,10 @@ export async function POST(request: NextRequest) {
 
         try {
           const validatedRow = userCsvRowSchema.parse(row);
+          const expectedRole = filename === "students.csv" ? "student" : "teacher";
+          if (validatedRow.role !== expectedRole) {
+            throw new Error(`${filename} can only contain ${expectedRole} rows`);
+          }
           validatedRows.push({ row, rowNumber, validatedData: validatedRow });
         } catch (validationError) {
           if (validationError instanceof z.ZodError) {
@@ -400,7 +394,7 @@ export async function POST(request: NextRequest) {
             validatedRows.push({
               row,
               rowNumber,
-              error: `Row ${rowNumber}: Validation failed`,
+              error: `Row ${rowNumber}: ${validationError instanceof Error ? validationError.message : "Validation failed"}`,
             });
           }
           continue;
@@ -560,6 +554,7 @@ export async function POST(request: NextRequest) {
         const userData = {
           email: validatedRow.email.toLowerCase().trim(),
           name: validatedRow.name.trim(),
+          role: validatedRow.role,
           password: null,
           schoolId: currentUser.schoolId,
           classroomNames:
@@ -678,6 +673,8 @@ export async function POST(request: NextRequest) {
           name: validatedRow.classroom_name.trim(),
           classCode: generateRandomClassCode(),
           schoolId: currentUser.schoolId,
+          teacherId: currentUser.id,
+          createdBy: currentUser.id,
         };
 
         processedClasses.push(classroomData);
@@ -725,11 +722,13 @@ export async function POST(request: NextRequest) {
     if (filename === "students.csv" || filename === "teachers.csv") {
       console.log("👥 Starting user creation and assignment processes...");
       // Get all roles from database (replaces Prisma `role.findMany`).
-      const roles = await db.select().from(roles);
-      const roleMap = new Map(roles.map((role) => [role.name, role.id]));
+      const roleRows = await db.select().from(roles);
+      const roleMap = new Map(
+        roleRows.map((role) => [role.name.toLowerCase(), role.id]),
+      );
       dbTimer.log(
         "Roles fetched from database",
-        `Roles count: ${roles.length}`,
+        `Roles count: ${roleRows.length}`,
       );
 
       // Process users in batches
@@ -737,8 +736,12 @@ export async function POST(request: NextRequest) {
 
       for (const userData of processedUsers) {
         batch.push({
+          id: crypto.randomUUID(),
+          username: userData.email,
+          displayUsername: userData.email,
           email: userData.email,
           name: userData.name,
+          role: userData.role.toUpperCase(),
           password: userData.password,
           cefrLevel: "A0-", // Default CEFR level
           level: 1, // Default level

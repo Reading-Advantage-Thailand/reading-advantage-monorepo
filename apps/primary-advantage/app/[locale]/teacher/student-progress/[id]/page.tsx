@@ -29,23 +29,28 @@ export default async function StudentProgressPage({
   if (!data?.activity || !data?.xpLogs) {
     return <AuthErrorPage />;
   }
+  const activity = data.activity.map((row) => ({
+    ...row,
+    completed: row.completed ?? false,
+    details: row.details ?? {},
+  }));
 
   return (
     <>
-      <Header heading={`Progress for ${data.user.name}`} />
-      <UserRecentActivity data={data.activity || []} />
+      <Header heading={`Progress for ${data.user.name ?? data.user.username}`} />
+      <UserRecentActivity data={activity} />
       <div className="mt-4 mb-10 grid gap-4 md:grid-cols-3 lg:grid-cols-3">
         <div className="col-span-2 flex flex-col gap-4">
           <UserActivityChart
-            data={data.activity || []}
-            xpLogs={data.xpLogs || []}
+            data={activity}
+            xpLogs={data.xpLogs}
           />
-          <UserXpOverAllChart data={data.xpLogs || []} />
-          <ReadingStatsChart data={data.activity || []} />
+          <UserXpOverAllChart data={data.xpLogs} />
+          <ReadingStatsChart data={activity} />
         </div>
         <div className="flex flex-col gap-4">
-          <CEFRLevels currentLevel={user.cefrLevel || "A0"} />
-          <UserActivityHeatMap data={data.activity || []} />
+          <CEFRLevels currentLevel={data.user.cefrLevel || "A0"} />
+          <UserActivityHeatMap data={activity} />
         </div>
       </div>
     </>

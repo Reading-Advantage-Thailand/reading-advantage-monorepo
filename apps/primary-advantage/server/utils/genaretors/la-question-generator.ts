@@ -11,10 +11,16 @@ interface GenrateLAQuestionParams {
   imageDesc: string;
 }
 
-interface GenerateLAQuestionResponse {
+/** A generated long-answer question for an article. */
+export interface GenerateLAQuestionResponse {
   question: string;
 }
 
+/**
+ * Generates long-answer questions for an article.
+ * @param params The article and learner context.
+ * @returns The generated questions.
+ */
 export async function generateLAQuestion(
   params: GenrateLAQuestionParams
 ): Promise<GenerateLAQuestionResponse> {

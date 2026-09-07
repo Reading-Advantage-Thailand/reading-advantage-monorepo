@@ -7,7 +7,7 @@ import { useTranslations } from "next-intl";
 interface Article {
   id: string;
   title: string;
-  type: string;
+  type: string | null;
   genre: string | null;
   subGenre?: string | null;
 }

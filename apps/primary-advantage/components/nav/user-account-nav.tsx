@@ -12,7 +12,6 @@ import {
 import { UserAvatar } from "@/components/user-avatar";
 import { Loader2, LogOutIcon } from "lucide-react";
 import { Badge } from "../ui/badge";
-import { Role } from "@/types/enum";
 import { type AuthUser } from "@reading-advantage/auth-client";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { useTranslations } from "next-intl";
@@ -28,14 +27,16 @@ interface UserAccountNavProps {
   const tr = useTranslations("Overall.roles");
 
   const roles = {
-    system: { label: tr("system"), color: "bg-[#FFC107]" },
-    admin: { label: tr("admin"), color: "bg-[#DC3545]" },
-    teacher: { label: tr("teacher"), color: "bg-[#007BFF]" },
-    student: { label: tr("student"), color: "bg-[#28A745]" },
-    user: { label: tr("user"), color: "bg-[#6C757D]" },
+    SYSTEM: { label: tr("system"), color: "bg-[#FFC107]" },
+    ADMIN: { label: tr("admin"), color: "bg-[#DC3545]" },
+    TEACHER: { label: tr("teacher"), color: "bg-[#007BFF]" },
+    STUDENT: { label: tr("student"), color: "bg-[#28A745]" },
   };
 
-  const { label, color } = roles[(user?.role as keyof typeof roles) || "user"];
+  const { label, color } = roles[user.role as keyof typeof roles] ?? {
+    label: tr("user"),
+    color: "bg-[#6C757D]",
+  };
 
   return (
     <DropdownMenu>
@@ -103,23 +104,23 @@ interface UserAccountNavProps {
             </Link>
           </DropdownMenuItem>
         )} */}
-        {(user?.role === Role.teacher ||
-          user?.role === Role.admin ||
-          user?.role === Role.system) && (
+        {(user.role === "TEACHER" ||
+          user.role === "ADMIN" ||
+          user.role === "SYSTEM") && (
           <DropdownMenuItem asChild>
             <Link href="/teacher/my-classes" className="flex items-center">
               <span>{t("teacherDashboard")}</span>
             </Link>
           </DropdownMenuItem>
         )}
-        {(user?.role === Role.admin || user?.role === Role.system) && (
+        {(user.role === "ADMIN" || user.role === "SYSTEM") && (
           <DropdownMenuItem asChild>
             <Link href="/admin" className="flex items-center">
               <span>{t("adminDashboard")}</span>
             </Link>
           </DropdownMenuItem>
         )}
-        {user?.role === Role.system && (
+        {user.role === "SYSTEM" && (
           <>
             <DropdownMenuItem asChild>
               <Link href="/system/dashboard" className="flex items-center">
@@ -141,7 +142,7 @@ interface UserAccountNavProps {
             <span>{t("contactUs")}</span>
           </Link>
         </DropdownMenuItem>
-        {user?.role !== Role.student && (
+        {user.role !== "STUDENT" && (
           <DropdownMenuItem asChild>
             <Link href="/settings/user-profile" className="flex items-center">
               <span>{t("settings")}</span>

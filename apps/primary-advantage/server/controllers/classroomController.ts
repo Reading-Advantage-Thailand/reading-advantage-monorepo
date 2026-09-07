@@ -14,9 +14,21 @@ import {
   getAllStudentsByAdmin,
 } from "@/server/models/classroomModel";
 import { currentUser } from "@/lib/session";
-import { validateUser } from "../utils/auth";
 
-// GET /api/classroom - Get all classrooms for a teacher
+const ALLOWED_CLASSROOM_ROLES = ["TEACHER", "ADMIN", "SYSTEM"] as const;
+
+function canManageClassrooms(role: string): boolean {
+  return ALLOWED_CLASSROOM_ROLES.some((allowedRole) => allowedRole === role);
+}
+
+function isClassroomAccessError(error: unknown): boolean {
+  return error instanceof Error && error.message.includes("access denied");
+}
+
+/**
+ * Gets classrooms for the current authorized actor.
+ * @returns An HTTP response with accessible classrooms.
+ */
 export async function fetchClassrooms() {
   try {
     const user = await currentUser();
@@ -24,12 +36,14 @@ export async function fetchClassrooms() {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const userWithRoles = await validateUser(user.id);
-    if (!userWithRoles) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    if (!canManageClassrooms(user.role)) {
+      return NextResponse.json(
+        { error: "Access denied. Insufficient permissions." },
+        { status: 403 },
+      );
     }
 
-    const classrooms = await getAllClassrooms(userWithRoles);
+    const classrooms = await getAllClassrooms(user);
     return NextResponse.json({ classrooms }, { status: 200 });
   } catch (error) {
     console.error("Error fetching classrooms:", error);
@@ -40,7 +54,12 @@ export async function fetchClassrooms() {
   }
 }
 
-// GET /api/classroom/[id] - Get a specific classroom with students
+/**
+ * Gets one accessible classroom with its students.
+ * @param req The incoming request.
+ * @param context The route parameters.
+ * @returns An HTTP response with the classroom roster.
+ */
 export async function getClassroomController(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> },
@@ -51,23 +70,16 @@ export async function getClassroomController(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Only teachers and system can view classroom details
-    // if (user.role !== "teacher" && user.role !== "system") {
-    //   return NextResponse.json(
-    //     { error: "Access denied. Insufficient permissions." },
-    //     { status: 403 },
-    //   );
-    // }
+    if (!canManageClassrooms(user.role)) {
+      return NextResponse.json(
+        { error: "Access denied. Insufficient permissions." },
+        { status: 403 },
+      );
+    }
 
     const { id: classroomId } = await params;
 
-    // For teachers, verify they own the classroom
-    const teacherId = user.role === "teacher" ? user.id : undefined;
-
-    const classroomData = await getClassroomWithStudents(
-      classroomId,
-      teacherId,
-    );
+    const classroomData = await getClassroomWithStudents(classroomId, user);
 
     if (!classroomData) {
       return NextResponse.json(
@@ -86,21 +98,30 @@ export async function getClassroomController(
   }
 }
 
-// POST /api/classroom - Create a new classroom
+/**
+ * Creates a classroom for the current authorized actor.
+ * @param name The classroom name.
+ * @param _userId The legacy caller user identifier.
+ * @param grade The optional grade.
+ * @param classCode The optional class code.
+ * @param _role The legacy caller role.
+ * @returns The creation result.
+ */
 export async function createClassroomController(
   name: string,
-  userId?: string,
+  _userId?: string,
   grade?: string,
   classCode?: string,
-  role?: string,
+  _role?: string,
 ) {
   try {
+    const user = await currentUser();
+    if (!user || !canManageClassrooms(user.role)) throw new Error("FORBIDDEN");
     await createClassroom({
       name,
-      teacherId: userId,
       classCode,
       grade,
-      role,
+      actor: user,
     });
 
     return { success: true, message: "Classroom created successfully" };
@@ -109,7 +130,12 @@ export async function createClassroomController(
   }
 }
 
-// PATCH /api/classroom/[id] - Update a classroom
+/**
+ * Updates one accessible classroom.
+ * @param req The incoming request.
+ * @param context The route parameters.
+ * @returns An HTTP response with the updated classroom.
+ */
 export async function updateClassroomController(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> },
@@ -118,6 +144,12 @@ export async function updateClassroomController(
     const user = await currentUser();
     if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    if (!canManageClassrooms(user.role)) {
+      return NextResponse.json(
+        { error: "Access denied. Insufficient permissions." },
+        { status: 403 },
+      );
     }
 
     const { id } = await params;
@@ -135,7 +167,7 @@ export async function updateClassroomController(
       name: classroomName,
       grade,
       description,
-    });
+    }, user);
 
     if (!classroom) {
       return NextResponse.json(
@@ -154,14 +186,24 @@ export async function updateClassroomController(
   }
 }
 
-// DELETE /api/classroom/[id] - Delete a classroom
+/**
+ * Deletes one accessible classroom.
+ * @param classroomId The classroom identifier.
+ * @param _userId The legacy caller user identifier.
+ * @param _role The legacy caller role.
+ * @returns The deletion result.
+ */
 export async function deleteClassroomController(
   classroomId: string,
-  userId: string,
-  role?: string,
+  _userId: string,
+  _role?: string,
 ) {
   try {
-    const result = await deleteClassroom(classroomId, userId, role);
+    const user = await currentUser();
+    if (!user || !canManageClassrooms(user.role)) {
+      return { success: false, error: "Insufficient permissions to delete classroom" };
+    }
+    const result = await deleteClassroom(classroomId, user);
 
     if (result && typeof result === "object" && "success" in result) {
       return result;
@@ -174,7 +216,10 @@ export async function deleteClassroomController(
   }
 }
 
-// GET /api/classroom/students - Get students based on user role
+/**
+ * Gets students within the current actor's scope.
+ * @returns An HTTP response with accessible students.
+ */
 export async function fetchStudentsByRole() {
   try {
     const user = await currentUser();
@@ -184,20 +229,27 @@ export async function fetchStudentsByRole() {
 
     let students;
 
+    if (user.role !== "SYSTEM" && !user.schoolId) {
+      return NextResponse.json(
+        { error: "Access denied. School association required." },
+        { status: 403 },
+      );
+    }
+
     // Role-based access control
     switch (user.role) {
-      case "system":
+      case "SYSTEM":
         // system can see all students in the system
         students = await getAllStudentsInSystem();
         break;
 
-      case "admin":
-        students = await getAllStudentsByAdmin(user.id);
+      case "ADMIN":
+        students = await getAllStudentsByAdmin(user.id, user.schoolId!);
         break;
 
-      case "teacher":
+      case "TEACHER":
         // teacher can only see students in their own classes
-        students = await getAllStudentsByTeacher(user.id);
+        students = await getAllStudentsByTeacher(user.id, user.schoolId!);
         break;
 
       default:
@@ -217,7 +269,12 @@ export async function fetchStudentsByRole() {
   }
 }
 
-// POST /api/classroom/[id]/enroll - Enroll a student in a classroom
+/**
+ * Enrolls a student in an accessible classroom.
+ * @param req The incoming request.
+ * @param context The route parameters.
+ * @returns An HTTP response with the enrollment.
+ */
 export async function enrollStudentController(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> },
@@ -228,8 +285,7 @@ export async function enrollStudentController(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Only teachers and system can enroll students
-    if (user.role !== "TEACHER" && user.role !== "SYSTEM") {
+    if (!canManageClassrooms(user.role)) {
       return NextResponse.json(
         { error: "Access denied. Insufficient permissions." },
         { status: 403 },
@@ -246,10 +302,7 @@ export async function enrollStudentController(
       );
     }
 
-    // For teachers, verify they own the classroom
-    const teacherId = user.role === "teacher" ? user.id : undefined;
-
-    const enrollment = await enrollStudentInClassroom(studentId, classroomId);
+    const enrollment = await enrollStudentInClassroom(studentId, classroomId, user);
 
     return NextResponse.json(
       {
@@ -260,6 +313,12 @@ export async function enrollStudentController(
     );
   } catch (error: any) {
     console.error("Error enrolling student:", error);
+    if (isClassroomAccessError(error)) {
+      return NextResponse.json(
+        { error: "Classroom not found or access denied" },
+        { status: 404 },
+      );
+    }
     return NextResponse.json(
       { error: error.message || "Failed to enroll student" },
       { status: 500 },
@@ -267,7 +326,12 @@ export async function enrollStudentController(
   }
 }
 
-// DELETE /api/classroom/[id]/unenroll - Unenroll a student from a classroom
+/**
+ * Removes a student from an accessible classroom.
+ * @param req The incoming request.
+ * @param context The route parameters.
+ * @returns An HTTP response with the removed enrollment.
+ */
 export async function unenrollStudentController(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> },
@@ -278,8 +342,7 @@ export async function unenrollStudentController(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Only teachers and system can unenroll students
-    if (user.role !== "TEACHER" && user.role !== "SYSTEM") {
+    if (!canManageClassrooms(user.role)) {
       return NextResponse.json(
         { error: "Access denied. Insufficient permissions." },
         { status: 403 },
@@ -296,13 +359,10 @@ export async function unenrollStudentController(
       );
     }
 
-    // For teachers, verify they own the classroom
-    const teacherId = user.role === "teacher" ? user.id : undefined;
-
     const enrollment = await unenrollStudentFromClassroom(
       studentId,
       classroomId,
-      teacherId,
+      user,
     );
 
     return NextResponse.json(
@@ -314,6 +374,12 @@ export async function unenrollStudentController(
     );
   } catch (error: any) {
     console.error("Error unenrolling student:", error);
+    if (isClassroomAccessError(error)) {
+      return NextResponse.json(
+        { error: "Classroom not found or access denied" },
+        { status: 404 },
+      );
+    }
     return NextResponse.json(
       { error: error.message || "Failed to unenroll student" },
       { status: 500 },
@@ -321,7 +387,12 @@ export async function unenrollStudentController(
   }
 }
 
-// GET /api/classroom/[id]/available-students - Get available students for enrollment
+/**
+ * Gets students available to an accessible classroom.
+ * @param req The incoming request.
+ * @param context The route parameters.
+ * @returns An HTTP response with available students.
+ */
 export async function getAvailableStudentsController(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> },
@@ -332,8 +403,7 @@ export async function getAvailableStudentsController(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Only teachers and system can view available students
-    if (user.role !== "TEACHER" && user.role !== "SYSTEM") {
+    if (!canManageClassrooms(user.role)) {
       return NextResponse.json(
         { error: "Access denied. Insufficient permissions." },
         { status: 403 },
@@ -342,17 +412,20 @@ export async function getAvailableStudentsController(
 
     const { id: classroomId } = await params;
 
-    // For teachers, verify they own the classroom
-    const teacherId = user.role === "teacher" ? user.id : undefined;
-
     const availableStudents = await getAvailableStudentsForClassroom(
       classroomId,
-      teacherId,
+      user,
     );
 
     return NextResponse.json({ students: availableStudents }, { status: 200 });
   } catch (error: any) {
     console.error("Error fetching available students:", error);
+    if (isClassroomAccessError(error)) {
+      return NextResponse.json(
+        { error: "Classroom not found or access denied" },
+        { status: 404 },
+      );
+    }
     return NextResponse.json(
       { error: error.message || "Failed to fetch available students" },
       { status: 500 },
@@ -360,7 +433,12 @@ export async function getAvailableStudentsController(
   }
 }
 
-// POST /api/classroom/[id]/generate-code - Generate a new class code
+/**
+ * Generates a login code for an accessible classroom.
+ * @param req The incoming request.
+ * @param context The route parameters.
+ * @returns An HTTP response with the generated code.
+ */
 export async function generateClassCodeController(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> },
@@ -371,24 +449,16 @@ export async function generateClassCodeController(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Only teachers and system can generate class codes
-    // if (user.role !== "teacher" && user.role !== "system") {
-    //   return NextResponse.json(
-    //     { error: "Access denied. Insufficient permissions." },
-    //     { status: 403 },
-    //   );
-    // }
-
     const { id: classroomId } = await params;
 
-    if (user.role === "user" || user.role === "student") {
+    if (!canManageClassrooms(user.role)) {
       return NextResponse.json(
         { error: "Access denied. Insufficient permissions." },
         { status: 403 },
       );
     }
 
-    const classroom = await generateClassCode(classroomId);
+    const classroom = await generateClassCode(classroomId, user);
 
     if (!classroom) {
       return NextResponse.json(

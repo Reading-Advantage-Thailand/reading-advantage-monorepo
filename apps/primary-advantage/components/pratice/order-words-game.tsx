@@ -36,7 +36,7 @@ import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { useRouter } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
-import { useSession } from "@reading-advantage/auth-client";
+import { useAuth } from "@reading-advantage/auth-client";
 
 interface OrderWordData {
   id: string;
@@ -131,19 +131,7 @@ export function OrderWordGame({ deckId, sentences = [] }: OrderWordGameProps) {
 
   const [activeSentences, setActiveSentences] =
     useState<OrderWordData[]>(sentences);
-  // The auth-client `useSession()` hook only exposes { user, isAuthenticated,
-  // isLoading }; there is no `session` or `update` field on it. We still
-  // destructure `session` and `update` here so the completion callback below
-  // can reference `update(...)` and `session?.user` without throwing a
-  // ReferenceError when the student finishes the game. Both bindings are
-  // intentionally local-only refresh stubs that no-op when the auth-client
-  // contract does not provide them, preserving the original M1 fix shape
-  // (refresh session after XP/activity writes) without crashing.
-  const { user, session, update } = useSession() as unknown as {
-    user?: ReturnType<typeof useSession>["user"];
-    session?: { user?: ReturnType<typeof useSession>["user"] };
-    update?: (data: { user?: ReturnType<typeof useSession>["user"] }) => void;
-  };
+  const { user, refresh } = useAuth();
 
   useEffect(() => {
     if (deckId && sentences.length === 0) {
@@ -295,15 +283,7 @@ export function OrderWordGame({ deckId, sentences = [] }: OrderWordGameProps) {
         }),
       });
       setIsPlaying(false);
-      // `update` and `session` are the typed-local refresh stubs declared
-      // in the useSession() destructure above. The auth-client contract
-      // does not currently provide them, so we guard with `?.` to keep
-      // the M1 no-op behavior and avoid TS2722. We pass
-      // `session?.user ?? null` (instead of spreading, which would type
-      // as a partial AuthUser and fail TS2322).
-      update?.({
-        user: session?.user ?? null,
-      });
+      await refresh();
     }
   }, [currentIndex, activeSentences.length]);
 

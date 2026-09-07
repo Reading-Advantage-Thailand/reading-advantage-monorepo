@@ -38,7 +38,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
-import { useSession } from "@reading-advantage/auth-client";
+import { useAuth } from "@reading-advantage/auth-client";
 
 interface SAQFeedback {
   score: number;
@@ -59,7 +59,7 @@ export default function SAQuestionContent({
   const t = useTranslations("Question");
   const tc = useTranslations("Components");
   const router = useRouter();
-  const { user } = useSession();
+  const { user, refresh } = useAuth();
 
   const formSchema = z.object({
     answer: z
@@ -105,17 +105,13 @@ export default function SAQuestionContent({
     };
     startTransition(async () => {
       await finishQuiz(articleId, data, ActivityType.SA_QUESTION).then(
-        (res) => {
+        async (res) => {
           if (res.success) {
             toast.success(t("descriptionSuccess"), {
               richColors: true,
             });
             setIsOpenModal(false);
-            update({
-              user: {
-                ...session?.user,
-              },
-            });
+            await refresh();
             router.refresh();
           } else {
             toast.error(res.error, { richColors: true });

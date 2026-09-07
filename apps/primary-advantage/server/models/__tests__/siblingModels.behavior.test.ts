@@ -39,9 +39,15 @@ import { getStudentAssignments } from "../assignmentModel";
 
 const systemAdmin = {
   id: "admin1",
-  email: "admin@test.com",
+  username: "admin1",
+  name: "System Admin",
+  role: "SYSTEM",
   schoolId: "school1",
-  roles: [{ role: { id: "r1", name: "system" } }],
+  xp: 0,
+  level: 1,
+  cefrLevel: "A1-",
+  email: "admin@example.com",
+  roles: [{ role: { id: "system-role", name: "system" } }],
   SchoolAdmins: [],
 } as never;
 

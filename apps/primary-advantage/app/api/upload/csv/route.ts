@@ -4,7 +4,7 @@ import { existsSync, unlink } from "fs";
 import path from "path";
 import { parse } from "csv/sync";
 import { db, eq, and, inArray, or, ilike } from '@reading-advantage/db';
-import { users, roles, classrooms, classroomStudents, classroomTeachers, userRoles } from '@reading-advantage/db';
+import { users, schools, roles, classrooms, classroomStudents, classroomTeachers, userRoles } from '@reading-advantage/db';
 import { getCurrentUser } from "@/lib/session";
 /**
  * CSV Upload API Route
@@ -17,21 +17,21 @@ import { getCurrentUser } from "@/lib/session";
  * Expected CSV format with exactly 4 headers:
  * - name (required): User's full name
  * - email (required): User's email address
- * - role (required): User role (Student, Teacher, Admin, System)
- * - classroom_name (optional): Classroom name (ignored for Admin role)
+ * - role (required): User role (Student or Teacher)
+ * - classroom_name (required): Classroom name
  *
  * Example CSV:
  * name,email,role,classroom_name
  * John Doe,john@example.com,Student,Math Class A
  * Jane Smith,jane@example.com,Teacher,Math Class A
- * Admin User,admin@example.com,Admin,
  *
  * Classroom Logic:
  * - Students: Assigned to specified classroom (created if doesn't exist)
  * - Teachers: Assigned as classroom teacher (created if doesn't exist)
- * - Admin/System: classroom_name is ignored
  * - All classrooms are associated with the uploader's school
  * - Can create classrooms on-the-fly or use existing ones
+ * @param request The authenticated upload request.
+ * @returns The import result or a validation error.
  */
 export async function POST(request: NextRequest) {
   try {
@@ -49,44 +49,29 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    // Stitch school include via FK.
-    let userSchool: { id: string; name: string } | null = null;
-    if (currentUser.schoolId) {
-      const [s] = await db.select({ id: users.id, name: users.name })
-        .from(users)
-        .where(eq(users.id, currentUser.schoolId))
-        .limit(1);
-      userSchool = s;
-    }
-
-    // Stitch roles include via join.
-    const userRoleRows = await db.select({ roleName: roles.name })
-      .from(userRoles)
-      .innerJoin(roles, eq(roles.id, userRoles.roleId))
-      .where(eq(userRoles.userId, authUser.id));
-
-    // Check if user has permission to upload (admin, system, or teacher roles)
-    const currentUserRoles = userRoleRows.map((ur) => ur.roleName);
-    const allowedRoles = ["admin", "system", "teacher"];
-    const hasPermission = currentUserRoles.some((role) =>
-      allowedRoles.includes(role),
-    );
-
-    if (!hasPermission) {
+    const allowedRoles = ["ADMIN", "SYSTEM", "TEACHER"];
+    if (!allowedRoles.includes(authUser.role)) {
       return NextResponse.json(
         {
           error: "Insufficient permissions",
-          details: [
-            "Only Admin, System, or Teacher roles can upload CSV files",
-          ],
-          userRoles: currentUserRoles,
+          details: ["Only Admin, System, or Teacher roles can upload CSV files"],
+          userRoles: [authUser.role],
         },
         { status: 403 },
       );
     }
 
-    // For non-system users, require school association
-    if (!currentUserRoles.includes("system") && !currentUser.schoolId) {
+    // Stitch school include via FK.
+    let userSchool: { id: string; name: string } | null = null;
+    if (currentUser.schoolId) {
+      const [s] = await db.select({ id: schools.id, name: schools.name })
+        .from(schools)
+        .where(eq(schools.id, currentUser.schoolId))
+        .limit(1);
+      userSchool = s;
+    }
+
+    if (authUser.role !== "SYSTEM" && !currentUser.schoolId) {
       return NextResponse.json(
         {
           error: "School association required",
@@ -193,7 +178,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Validate and process CSV data
-    const validRoles = ["student", "teacher", "admin", "system"];
+    const validRoles = ["student", "teacher"];
     const processedUsers: any[] = [];
     const userRoleAssignments: { userId: string; roleName: string }[] = [];
     const classroomAssignments: {
@@ -206,7 +191,9 @@ export async function POST(request: NextRequest) {
 
     // Get all roles from database (replaces Prisma `role.findMany`).
     const allRoles = await db.select().from(roles);
-    const roleMap = new Map(allRoles.map((role) => [role.name, role.id]));
+    const roleMap = new Map(
+      allRoles.map((role) => [role.name.toLowerCase(), role.id]),
+    );
 
     // Validate and process each row
     for (let i = 0; i < csvData.length; i++) {
@@ -254,6 +241,11 @@ export async function POST(request: NextRequest) {
         );
         continue;
       }
+      const expectedRole = filename === "students.csv" ? "student" : "teacher";
+      if (role !== expectedRole) {
+        errors.push(`Row ${rowNumber}: ${filename} can only contain ${expectedRole} rows`);
+        continue;
+      }
 
       // Check if role exists in database
       if (!roleMap.has(role)) {
@@ -274,8 +266,12 @@ export async function POST(request: NextRequest) {
 
       // Prepare user data with default values and school assignment
       const userData = {
-        email: row.email.trim(),
+        id: crypto.randomUUID(),
+        username: row.email.trim().toLowerCase(),
+        displayUsername: row.email.trim().toLowerCase(),
+        email: row.email.trim().toLowerCase(),
         name: row.name.trim(),
+        role: role.toUpperCase(),
         password: null, // No password from CSV, will need to be set later
         cefrLevel: "A0-", // Default CEFR level
         level: 1, // Default level
@@ -419,11 +415,16 @@ export async function POST(request: NextRequest) {
         let classroom = existingClassroom;
 
         if (!classroom) {
+          const ownerId =
+            assignments.find((assignment) => assignment.role === "teacher")
+              ?.userId ?? currentUser.id;
           // Create new classroom (replaces Prisma `classroom.create`).
           const [created] = await db.insert(classrooms).values({
             name: classroomName,
             schoolId: currentUser.schoolId as string,
-          } as any).returning();
+            teacherId: ownerId,
+            createdBy: currentUser.id,
+          }).returning();
           classroom = created;
           classroomsCreated++;
         }

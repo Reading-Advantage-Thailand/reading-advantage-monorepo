@@ -11,7 +11,8 @@ interface GenrateMCQuestionParams {
   imageDesc: string;
 }
 
-interface GenerateMCQuestionResponse {
+/** Generated multiple-choice questions for an article. */
+export interface GenerateMCQuestionResponse {
   questions: {
     question_number: number;
     question: string;
@@ -21,6 +22,11 @@ interface GenerateMCQuestionResponse {
   }[];
 }
 
+/**
+ * Generates multiple-choice questions for an article.
+ * @param params The article and learner context.
+ * @returns The generated questions.
+ */
 export async function generateMCQuestion(
   params: GenrateMCQuestionParams
 ): Promise<GenerateMCQuestionResponse> {

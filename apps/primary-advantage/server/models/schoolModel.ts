@@ -20,7 +20,8 @@ import {
   schoolAdmins,
 } from '@reading-advantage/db';
 
-interface LeaderboardResult {
+/** A ranked student entry in a school leaderboard. */
+export interface LeaderboardResult {
   classroom: string;
   name: string;
   rank: number;
@@ -28,7 +29,8 @@ interface LeaderboardResult {
   userId: string;
 }
 
-interface SchoolLeaderboardData {
+/** The stored leaderboard details for one school. */
+export interface SchoolLeaderboardData {
   schoolName: string;
   results: LeaderboardResult[];
 }

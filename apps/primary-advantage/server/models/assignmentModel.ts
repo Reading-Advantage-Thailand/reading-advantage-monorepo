@@ -24,6 +24,11 @@ interface createAssignmentData {
   dueDate: Date;
 }
 
+/**
+ * Creates an article assignment for the authenticated teacher.
+ * @param data The assignment fields.
+ * @returns The created assignment result.
+ */
 export async function createAssignment(data: createAssignmentData) {
   try {
     const user = await currentUser();
@@ -76,6 +81,7 @@ export async function createAssignment(data: createAssignmentData) {
         const [assignment] = await tx.insert(assignments).values({
           classroomId,
           articleId,
+          type: "ARTICLE",
           title: name,
           teacherId: user.id,
           teacherName: user.name,
@@ -334,6 +340,15 @@ import {
   longAnswerQuestions as longAnswerQuestionsLocal,
 } from '@reading-advantage/db';
 
+/**
+ * Updates a student's progress for one assigned article.
+ * @param userId The student identifier.
+ * @param assignmentId The assignment identifier.
+ * @param articleId The assigned article identifier.
+ * @param progress The completion percentage.
+ * @param timeSpent The elapsed study time.
+ * @returns The updated progress result.
+ */
 export async function updateUserLessonProgress(
   userId: string,
   assignmentId: string,
@@ -362,17 +377,21 @@ export async function updateUserLessonProgress(
           })
           .where(eq(lessonProgress.id, existingUserLessonProgress.id));
       } else {
+        const completedAt = new Date();
         await db.transaction(async (tx) => {
           await tx.update(lessonProgress)
             .set({
               progress,
               timeSpent,
-              updatedAt: new Date(),
+              status: "completed",
+              isCompleted: true,
+              completedAt,
+              updatedAt: completedAt,
             })
             .where(eq(lessonProgress.id, existingUserLessonProgress.id));
 
           await tx.update(studentAssignments)
-            .set({ status: "COMPLETED" })
+            .set({ status: "COMPLETED", completed: true, completedAt })
             .where(
               and(
                 eq(studentAssignments.assignmentId, assignmentId),
@@ -382,17 +401,27 @@ export async function updateUserLessonProgress(
         });
       }
     } else {
+      const isCompleted = progress === 100;
+      const completedAt = isCompleted ? new Date() : null;
       await db.transaction(async (tx) => {
         await tx.insert(lessonProgress).values({
           userId,
+          lessonId: assignmentId,
           articleId,
           assignmentId,
+          status: isCompleted ? "completed" : "in_progress",
           progress,
           timeSpent,
+          isCompleted,
+          completedAt,
         });
 
         await tx.update(studentAssignments)
-          .set({ status: "IN_PROGRESS" })
+          .set({
+            status: isCompleted ? "COMPLETED" : "IN_PROGRESS",
+            completed: isCompleted,
+            completedAt,
+          })
           .where(
             and(
               eq(studentAssignments.assignmentId, assignmentId),

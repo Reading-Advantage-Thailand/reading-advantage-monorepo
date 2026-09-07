@@ -189,7 +189,7 @@ export default function MyStudents() {
       },
     },
     // Conditionally add classrooms column for system users
-    ...(userRole === "system"
+    ...(userRole === "SYSTEM"
       ? [
           {
             accessorKey: "classrooms",

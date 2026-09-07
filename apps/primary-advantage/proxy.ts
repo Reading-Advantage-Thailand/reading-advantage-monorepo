@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import createIntlMiddleware from "next-intl/middleware";
-import { getPathname } from "./i18n/navigation";
 import { routing } from "./i18n/routing";
 import { currentUser } from "./lib/session";
 
@@ -104,8 +103,6 @@ export default async function middleware(request: NextRequest) {
 
   return response;
 }
-
-export const runtime = "nodejs";
 
 export const config = {
   // Match all pathnames except for

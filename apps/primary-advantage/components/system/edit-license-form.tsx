@@ -109,11 +109,11 @@ export function EditLicenseForm({
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      name: license.name,
+      name: license.name ?? "",
       maxUsers: license.maxUsers,
-      startDate: new Date(license.startDate),
+      startDate: new Date(license.startDate ?? license.createdAt),
       expiryDays: getExpiryDays(
-        new Date(license.startDate),
+        new Date(license.startDate ?? license.createdAt),
         license.expiryDate ? new Date(license.expiryDate) : null,
       ),
       status: license.status as "active" | "inactive" | "expired",

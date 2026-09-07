@@ -18,6 +18,11 @@ import {
 import { ActivityType } from "@/types/enum";
 import bcrypt from "bcryptjs";
 
+/**
+ * Creates a user with the required identity fields.
+ * @param data The new user's account fields.
+ * @returns The created user result.
+ */
 export const createUser = async (data: {
   name: string;
   email: string;
@@ -48,9 +53,14 @@ export const createUser = async (data: {
 
     // Create user with transaction to ensure role assignment
     const newUser = await db.transaction(async (tx) => {
+      const username = data.email.trim().toLowerCase();
       const [user] = await tx.insert(users).values({
+        id: crypto.randomUUID(),
+        username,
+        displayUsername: data.email.trim(),
         name: data.name,
         email: data.email,
+        role: "STUDENT",
         password: hashedPassword,
       }).returning();
 

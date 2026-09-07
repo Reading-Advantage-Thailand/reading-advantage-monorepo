@@ -176,7 +176,7 @@ export const getTeachers = async (
         assignedClassrooms: ctList.map((c) => ({
           id: c.id,
           name: c.name,
-          grade: c.grade,
+          grade: c.grade?.toString() ?? null,
         })),
       };
     });
@@ -280,7 +280,7 @@ export const getTeacherById = async (
       assignedClassrooms: ctList.map((c) => ({
         id: c.id,
         name: c.name,
-        grade: c.grade,
+        grade: c.grade?.toString() ?? null,
       })),
     };
 
@@ -292,6 +292,11 @@ export const getTeacherById = async (
 };
 
 // Create new teacher
+/**
+ * Creates a teacher in the authorized school.
+ * @param params The teacher fields and authenticated actor.
+ * @returns The created teacher result.
+ */
 export const createTeacher = async (params: {
   name: string;
   email: string;
@@ -366,6 +371,9 @@ export const createTeacher = async (params: {
             userWithRoles,
           });
         } else {
+          if (!existingUser.School.name) {
+            return { success: false, error: "Teacher school name was not found" };
+          }
           return {
             success: false,
             requiresConfirmation: true,
@@ -426,9 +434,14 @@ export const createTeacher = async (params: {
 
     // Create the new teacher and assign classrooms in a transaction
     const completeTeacher = await db.transaction(async (tx) => {
+      const username = email.trim().toLowerCase();
       const [user] = await tx.insert(users).values({
+        id: crypto.randomUUID(),
+        username,
+        displayUsername: email.trim(),
         name,
         email,
+        role: "TEACHER",
         password: hashedPassword,
         schoolId,
       }).returning();
@@ -531,7 +544,7 @@ async function refetchTeacherWithInclude(userId: string, primaryRoleName: string
     assignedClassrooms: ctList.map((c) => ({
       id: c.id,
       name: c.name,
-      grade: c.grade,
+      grade: c.grade?.toString() ?? null,
     })),
   };
 

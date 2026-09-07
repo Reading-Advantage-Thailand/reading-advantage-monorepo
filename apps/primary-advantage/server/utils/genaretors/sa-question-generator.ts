@@ -12,7 +12,8 @@ interface GenrateSAQuestionParams {
   imageDesc: string;
 }
 
-interface GenerateSAQuestionResponse {
+/** Generated short-answer questions for an article. */
+export interface GenerateSAQuestionResponse {
   questions: {
     question_number: number;
     question: string;
@@ -20,6 +21,11 @@ interface GenerateSAQuestionResponse {
   }[];
 }
 
+/**
+ * Generates short-answer questions for an article.
+ * @param params The article and learner context.
+ * @returns The generated questions.
+ */
 export async function generateSAQuestion(
   params: GenrateSAQuestionParams
 ): Promise<GenerateSAQuestionResponse> {

@@ -71,6 +71,7 @@ export const getStudents = async (
       userWithRoles.SchoolAdmins.length > 0 &&
       !userWithRoles.roles.some((r: any) => r.role.name === "system")
     ) {
+      if (!userWithRoles.schoolId) throw new Error("School association required");
       whereConditions.push(eq(users.schoolId, userWithRoles.schoolId));
     }
 
@@ -196,6 +197,7 @@ export const getStudentById = async (
       userWithRoles.SchoolAdmins.length > 0 &&
       !userWithRoles.roles.some((r: any) => r.role.name === "system")
     ) {
+      if (!userWithRoles.schoolId) throw new Error("School association required");
       whereConditions.push(eq(users.schoolId, userWithRoles.schoolId));
     }
 
@@ -247,6 +249,11 @@ export const getStudentById = async (
 };
 
 // Create new student
+/**
+ * Creates a student in the authorized school.
+ * @param params The student fields and authenticated actor.
+ * @returns The created student result.
+ */
 export const createStudent = async (params: {
   name: string;
   email: string;
@@ -312,9 +319,14 @@ export const createStudent = async (params: {
 
     // Create the new student (and role + optional classroom link) in a tx.
     const newStudentId = await db.transaction(async (tx) => {
+      const username = email.trim().toLowerCase();
       const [created] = await tx.insert(users).values({
+        id: crypto.randomUUID(),
+        username,
+        displayUsername: email.trim(),
         name,
         email,
+        role: "STUDENT",
         password: hashedPassword,
         cefrLevel,
         schoolId,
@@ -398,6 +410,7 @@ export const updateStudent = async (
       userWithRoles.SchoolAdmins.length > 0 &&
       !userWithRoles.roles.some((r: any) => r.role.name === "system")
     ) {
+      if (!userWithRoles.schoolId) throw new Error("School association required");
       whereConditions.push(eq(users.schoolId, userWithRoles.schoolId));
     }
 
@@ -549,6 +562,7 @@ export const deleteStudent = async (
       userWithRoles.SchoolAdmins.length > 0 &&
       !userWithRoles.roles.some((r: any) => r.role.name === "system")
     ) {
+      if (!userWithRoles.schoolId) throw new Error("School association required");
       whereConditions.push(eq(users.schoolId, userWithRoles.schoolId));
     }
 
@@ -593,6 +607,7 @@ export const getStudentStatistics = async (userWithRoles: UserWithRoles) => {
       userWithRoles.SchoolAdmins.length > 0 &&
       !userWithRoles.roles.some((r: any) => r.role.name === "system")
     ) {
+      if (!userWithRoles.schoolId) throw new Error("School association required");
       whereConditions.push(eq(users.schoolId, userWithRoles.schoolId));
     }
 

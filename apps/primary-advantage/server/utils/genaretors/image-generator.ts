@@ -1,19 +1,10 @@
-import {
-  experimental_generateImage as generateImages,
-  generateObject,
-  NoImageGeneratedError,
-  APICallError,
-  generateText,
-} from "@reading-advantage/ai/internal-sdk";
-import { vertex } from "@reading-advantage/ai/internal-sdk";
+import { generateObject, generateText } from "@reading-advantage/ai/internal-sdk";
 import fs from "fs";
 import path from "path";
-import sharp from "sharp";
-import { openai, openaiImages } from "@/utils/openai";
+import { openai } from "@/utils/openai";
 import { google, googleImage, googleModelLite } from "@/utils/google";
 import { uploadToBucket } from "@/utils/storage";
 import { z } from "zod";
-import { Uploadable } from "openai/uploads";
 import { createLogFile } from "../logging";
 
 interface GenerateImageParams {
@@ -28,6 +19,12 @@ interface GeneratedImageResult {
   error?: string;
 }
 
+/**
+ * Generates and stores an article image.
+ * @param params The image prompt and article context.
+ * @param maxRetries The maximum generation attempts.
+ * @returns The generated image result.
+ */
 export async function generateImage(
   params: GenerateImageParams,
   maxRetries = 5,

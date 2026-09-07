@@ -15,6 +15,11 @@ import { generateObject } from "@reading-advantage/ai/internal-sdk";
 import fs from "fs";
 import path from "path";
 
+/**
+ * Generates feedback for a short-answer response.
+ * @param req The response and learner context.
+ * @returns The generated feedback.
+ */
 export async function getSaqFeedback(req: {
   data: {
     articleId: string;
@@ -40,6 +45,9 @@ export async function getSaqFeedback(req: {
 
     if (!article) {
       throw new Error("Article not found");
+    }
+    if (!article.cefrLevel || !article.passage) {
+      throw new Error("Article feedback fields are incomplete");
     }
 
     const rawPrompt = fs.readFileSync(
@@ -80,6 +88,11 @@ export async function getSaqFeedback(req: {
   }
 }
 
+/**
+ * Generates feedback for a long-answer response.
+ * @param req The response and learner context.
+ * @returns The generated feedback.
+ */
 export async function getLaqFeedback(req: {
   data: {
     articleId: string;
@@ -104,6 +117,9 @@ export async function getLaqFeedback(req: {
 
     if (!article) {
       throw new Error("Article not found");
+    }
+    if (!article.cefrLevel || !article.passage) {
+      throw new Error("Article feedback fields are incomplete");
     }
 
     const rawPrompt = fs.readFileSync(

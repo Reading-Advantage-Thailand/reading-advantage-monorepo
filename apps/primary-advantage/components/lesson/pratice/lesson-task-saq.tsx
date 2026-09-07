@@ -23,7 +23,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { useTranslations } from "next-intl";
-import { useSession } from "@reading-advantage/auth-client";
+import { useAuth } from "@reading-advantage/auth-client";
 
 interface SAQFeedback {
   score: number;
@@ -41,7 +41,7 @@ function LessonSAQContent({ article }: { article: Article }) {
   const [isPanding, startTransition] = useTransition();
   const [feedback, setFeedback] = useState<any>(null);
   const [questions, setQuestions] = useState<SAQuestion | null>(null);
-  const { user } = useSession();
+  const { user, refresh } = useAuth();
   useEffect(() => {
     if (article.shortAnswerQuestions) {
       const randomQuestions = article.shortAnswerQuestions
@@ -96,13 +96,9 @@ function LessonSAQContent({ article }: { article: Article }) {
 
           await finishQuiz(article.id, data, ActivityType.SA_QUESTION);
         })
-        .finally(() => {
+        .finally(async () => {
           setState(QuestionState.COMPLETED);
-          update({
-            user: {
-              ...session?.user,
-            },
-          });
+          await refresh();
         });
     });
   };

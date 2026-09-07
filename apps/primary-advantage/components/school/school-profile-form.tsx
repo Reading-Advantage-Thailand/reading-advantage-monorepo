@@ -25,7 +25,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useSession } from "@reading-advantage/auth-client";
+import { useAuth } from "@reading-advantage/auth-client";
 import { useRouter } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 
@@ -65,7 +65,7 @@ export function SchoolProfileForm({
   onCancel,
 }: SchoolProfileFormProps) {
   const [isLoading, setIsLoading] = useState(false);
-  const { user } = useSession();
+  const { user, refresh } = useAuth();
   const router = useRouter();
   const form = useForm<SchoolFormData>({
     resolver: zodResolver(schoolFormSchema),
@@ -104,10 +104,7 @@ export function SchoolProfileForm({
       const school = await response.json();
 
       if (school.roleUpgraded) {
-        await update({
-          ...session,
-          user: { ...session?.user, role: "admin" },
-        });
+        await refresh();
       }
 
       toast.success("School created successfully!", {

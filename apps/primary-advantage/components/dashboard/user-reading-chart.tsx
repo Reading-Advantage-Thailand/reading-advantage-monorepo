@@ -26,8 +26,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { UserActivityLog } from "@/types";
+import { ActivityType } from "@/types/enum";
 import { useTranslations } from "next-intl";
-import { activityType as ActivityType } from "@reading-advantage/db";
 
 const chartConfig = {
   inProgress: {

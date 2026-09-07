@@ -10,7 +10,6 @@ import { getCurrentUser } from "@/lib/session";
 import { redirect } from "@/i18n/navigation";
 import Leaderboard from "../leaderboard";
 import { getLocale } from "next-intl/server";
-import { Role } from "@/types/enum";
 import { getSchoolLeaderboardController } from "@/server/controllers/schoolController";
 
 interface AppLayoutProps {
@@ -44,7 +43,7 @@ export default async function AppLayout({
 
   let leaderboardData: any | null = null;
 
-  if (user.role === Role.student) {
+  if (user.role === "STUDENT" && user.schoolId) {
     const leaderboard = await getSchoolLeaderboardController(
       user.schoolId,
       user.id,
@@ -77,7 +76,7 @@ export default async function AppLayout({
         {!disableSidebar && (
           <aside className="lg:flex lg:w-[230px] lg:flex-col">
             <SidebarNav items={sidebarNavConfig || []} user={user} />
-            {!disableLeaderboard && user.role === Role.student ? (
+            {!disableLeaderboard && user.role === "STUDENT" && user.schoolId ? (
               <Leaderboard
                 data={leaderboardData?.results || []}
                 schoolName={leaderboardData?.schoolName || ""}

@@ -11,13 +11,21 @@ import { generateWordLists } from "@/server/utils/genaretors/audio-word-generato
 import { deleteFile, uploadToBucket } from "@/utils/storage";
 import { generateImage } from "@/server/utils/genaretors/image-generator";
 
+/**
+ * Generates passage and sentence audio for an article.
+ * @param articleId The source article identifier.
+ * @returns The generation result.
+ */
 export async function generateAudios(articleId: string) {
   try {
     const article = await getArticleById(articleId);
+    const passage = article.article.passage;
+    if (!passage) throw new Error("Article passage is required");
 
-    const audio = await generateAudio({
-      passage: article.article.passage,
-      articleId: articleId,
+    await generateAudio({
+      passage,
+      sentences: [],
+      articleId,
     });
 
     return { success: true };
@@ -103,6 +111,11 @@ export async function deleteAllArticles() {
   }
 }
 
+/**
+ * Generates and stores the image for an article.
+ * @param articleId The source article identifier.
+ * @returns The generation result.
+ */
 export async function generateImages(articleId: string) {
   try {
     const [article] = await db.select({
@@ -114,10 +127,13 @@ export async function generateImages(articleId: string) {
       .where(eq(articles.id, articleId))
       .limit(1);
 
+    if (!article?.imageDescription || !article.passage) {
+      throw new Error("Article image fields are required");
+    }
     const result = await generateImage({
-      imageDesc: article?.imageDescription as string[],
-      articleId: article?.id as string,
-      passage: article?.passage as string,
+      imageDesc: article.imageDescription,
+      articleId: article.id,
+      passage: article.passage,
     });
 
     if (result.success) {

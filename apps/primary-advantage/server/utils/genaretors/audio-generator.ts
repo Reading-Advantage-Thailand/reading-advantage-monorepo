@@ -416,12 +416,20 @@ function processWordTimestampsIntoSentences(
   return sentenceTimepoints;
 }
 
+/**
+ * Generates and stores passage and sentence audio.
+ * @param params The article text and storage identifiers.
+ * @returns Nothing after all audio is stored.
+ */
 export async function generateAudio({
   passage,
   sentences,
   articleId,
 }: GenerateAudioParams): Promise<void> {
   try {
+    const sourceSentences = sentences.length
+      ? sentences
+      : await splitIntoSentences(passage);
     const voice = VOICES_AI[Math.floor(Math.random() * VOICES_AI.length)];
 
     const response = await fetch("https://api.lemonfox.ai/v1/audio/speech", {
@@ -467,7 +475,7 @@ export async function generateAudio({
     // Process word timestamps into sentence timepoints
     const sentenceTimepoints = processWordTimestampsIntoSentences(
       json.word_timestamps,
-      sentences,
+      sourceSentences,
       articleId,
     );
 

@@ -93,6 +93,11 @@ Provide translations in the exact same order, maintaining sentence structure and
 /**
  * Main function to translate sentences and store in database
  */
+/**
+ * Translates and stores article sentences.
+ * @param params The article and target language settings.
+ * @returns Nothing after translations are stored.
+ */
 export async function translateAndStoreSentences({
   articleId,
   targetLanguages = ["th", "cn", "tw", "vi"],
@@ -119,6 +124,9 @@ export async function translateAndStoreSentences({
       throw new Error(
         `No sentences found for article ${articleId}. Generate audio first.`,
       );
+    }
+    if (!article.cefrLevel) {
+      throw new Error(`No CEFR level found for article ${articleId}`);
     }
 
     // Check if translations already exist and forceRetranslate is false

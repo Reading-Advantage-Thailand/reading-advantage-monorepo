@@ -25,7 +25,7 @@ import AudioButton from "../audio-button";
 import { Rating } from "ts-fsrs";
 import { cn } from "@/lib/utils";
 import { useTranslations } from "next-intl";
-import { useSession } from "@reading-advantage/auth-client";
+import { useAuth } from "@reading-advantage/auth-client";
 
 interface FlashcardGameInlineProps {
   deck: {
@@ -57,22 +57,7 @@ export function FlashcardGameInline({
     {},
   );
   const t = useTranslations("SentencesPage.sentencesCard");
-  // The auth-client `useSession()` hook only exposes { user, isAuthenticated,
-  // isLoading }; there is no `session` or `update` field on it. We still
-  // destructure `session` and `update` here so the completion callback below
-  // can reference `update(...)` and `session?.user` without throwing a
-  // ReferenceError when the student finishes the game. Both bindings are
-  // intentionally local-only refresh stubs that no-op when the auth-client
-  // contract does not provide them, preserving the original M1 fix shape
-  // (refresh session after XP/activity writes) without crashing.
-  // This is the same M1 fix pattern used in
-  // lesson-sentence-order-word.tsx / order-words-game.tsx; flashcard-game
-  // was a same-class site that 591b1cc1 left unfixed.
-  const { user, session, update } = useSession() as unknown as {
-    user?: ReturnType<typeof useSession>["user"];
-    session?: { user?: ReturnType<typeof useSession>["user"] };
-    update?: (data: { user?: ReturnType<typeof useSession>["user"] }) => void;
-  };
+  const { user, refresh } = useAuth();
 
   const currentCard = cards[currentIndex];
   const progress = cards.length > 0 ? (completedCards / cards.length) * 100 : 0;
@@ -118,12 +103,7 @@ export function FlashcardGameInline({
 
           if (allSuccess) {
             setSessionComplete(true);
-            // `update` and `session` are the typed-local refresh stubs
-            // (see M1 destructure above). Guard with `?.` because the
-            // auth-client contract does not currently provide them.
-            update?.({
-              user: session?.user ?? null,
-            });
+            await refresh();
           } else {
             toast.error("Failed to save ratings");
           }

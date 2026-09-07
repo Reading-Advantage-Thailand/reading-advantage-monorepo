@@ -97,6 +97,19 @@ interface GeneratedContent {
   };
 }
 
+/**
+ * Finds the stored option index for a generated answer.
+ * @param options The answer options in display order.
+ * @param answer The generated correct answer.
+ * @returns The zero-based index of the correct answer.
+ * @throws When the answer does not match an option.
+ */
+function getCorrectAnswer(options: string[], answer: string): number {
+  const correctAnswer = options.indexOf(answer);
+  if (correctAnswer < 0) throw new Error("The correct answer is not in the options");
+  return correctAnswer;
+}
+
 const MAX_ATTEMPTS = 3;
 const MIN_RATING = 2;
 
@@ -163,10 +176,19 @@ async function generateContent(
   };
 }
 
+/**
+ * Persists generated article content and questions.
+ * @param content The generated article content.
+ * @returns Nothing after all records are stored.
+ */
 export async function saveArticleContent(
   content: GeneratedContent,
 ): Promise<void> {
   const { article, mcq, saq, laq } = content;
+  const multipleChoiceRows = mcq.questions.map((question) => ({
+    ...question,
+    correctAnswer: getCorrectAnswer(question.options, question.answer),
+  }));
 
   // First create the article to get its ID
   // Exclude fields that need transformation or don't exist in Prisma schema
@@ -181,6 +203,7 @@ export async function saveArticleContent(
 
   const [createdArticle] = await db.insert(articles).values({
     title: articleData.title,
+    content: articleData.passage,
     passage: articleData.passage,
     summary: articleData.summary,
     translatedSummary: articleData.translatedSummary,
@@ -193,7 +216,7 @@ export async function saveArticleContent(
     isDraft: isDraft || false,
     isPublished: isPublished || false,
     isApproved: isApproved || false,
-    authorId: authorId || "",
+    authorId,
     topic: article.topic,
     rating: article.rating,
   }).returning();
@@ -224,11 +247,12 @@ export async function saveArticleContent(
     ),
 
     // Save multiple choice questions
-    ...mcq.questions.map((mcq) =>
+    ...multipleChoiceRows.map((mcq) =>
       db.insert(multipleChoiceQuestions).values({
         question: mcq.question,
         options: mcq.options,
         answer: mcq.answer,
+        correctAnswer: mcq.correctAnswer,
         articleId,
       }),
     ),
@@ -627,6 +651,14 @@ export const getArticleActivity = async (articleId: string) => {
   }
 };
 
+/**
+ * Stores generated article content as a draft.
+ * @param article The generated article fields.
+ * @param type The article type.
+ * @param genre The article genre.
+ * @param subgenre The article subgenre.
+ * @returns The stored draft result.
+ */
 export const saveArticleAsDraftModel = async (
   article: GeneratedContent["article"],
   type: ArticleType,
@@ -642,6 +674,7 @@ export const saveArticleAsDraftModel = async (
 
     await db.insert(articles).values({
       title: article.title,
+      content: article.passage,
       passage: article.passage,
       summary: article.summary,
       translatedSummary: article.translatedSummary,
@@ -727,6 +760,11 @@ export const createdArticleCustom = async (
   }
 };
 
+/**
+ * Approves a custom article and stores its generated content.
+ * @param articleId The custom article identifier.
+ * @returns The updated article result.
+ */
 export const updateAprovedCustomArticle = async (articleId: string) => {
   try {
     const [article] = await db.select().from(articles)
@@ -735,6 +773,15 @@ export const updateAprovedCustomArticle = async (articleId: string) => {
 
     if (!article) {
       throw new Error("Article not found");
+    }
+    if (
+      !article.type ||
+      !article.cefrLevel ||
+      !article.passage ||
+      !article.summary ||
+      !article.imageDescription
+    ) {
+      throw new Error("Article generation fields are incomplete");
     }
 
     const { mcq, saq, laq } = await generateQuestions(
@@ -745,6 +792,10 @@ export const updateAprovedCustomArticle = async (articleId: string) => {
       article.summary,
       article.imageDescription,
     );
+    const multipleChoiceRows = mcq.questions.map((question) => ({
+      ...question,
+      correctAnswer: getCorrectAnswer(question.options, question.answer),
+    }));
 
     await Promise.all([
       // Generate and save image
@@ -770,11 +821,12 @@ export const updateAprovedCustomArticle = async (articleId: string) => {
       ),
 
       // Save multiple choice questions
-      ...mcq.questions.map((mcq) =>
+      ...multipleChoiceRows.map((mcq) =>
         db.insert(multipleChoiceQuestions).values({
           question: mcq.question,
           options: mcq.options,
           answer: mcq.answer,
+          correctAnswer: mcq.correctAnswer,
           articleId,
         }),
       ),
