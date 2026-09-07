@@ -29,9 +29,8 @@
  *     finds 67 production hits. This pins the cross-tool gap.
  *
  * Snapshot policy (`test-strategy.md` §5):
- *   For sections 1, 4, and 9, the rg output is also written to
- *   `measure/tracks/agents_md_audit_science_advantage_20260603/fixtures/`
- *   so the audit is reproducible from the snapshot alone.
+ *   For sections 1, 4, and 9, the test writes rg output to an isolated
+ *   temporary directory. The archived audit keeps its review snapshots.
  *
  * Post-migration state (2026-06-04 onward):
  *   Four migration tracks landed between the audit (2026-06-03) and
@@ -64,22 +63,27 @@
  * See: measure/tracks/agents_md_audit_science_advantage_20260603/test-strategy.md
  */
 import fs from 'fs/promises';
+import { tmpdir } from 'os';
 import path from 'path';
 import { spawnSync } from 'child_process';
-import { describe, it, expect } from 'vitest';
+import { afterAll, beforeAll, describe, it, expect } from 'vitest';
 
 const MONOREPO_ROOT = spawnSync('git', ['rev-parse', '--show-toplevel'], {
   encoding: 'utf-8',
 }).stdout.trim();
 const GRAPH_DB = path.join(MONOREPO_ROOT, 'graph.db');
 const APP_DIR = path.join(MONOREPO_ROOT, 'apps/science-advantage');
-const TRACK_DIR = path.join(
-  MONOREPO_ROOT,
-  'measure/tracks/agents_md_audit_science_advantage_20260603',
-);
-const FIXTURES_DIR = path.join(TRACK_DIR, 'fixtures');
+let fixturesDir = '';
 const STATIC_AUDIT_REVISION = '1b7d49ed052351ac0b57bb974d44647c43aa57ca';
 const INVENTORY_REVISION = 'e5c77751fb9fffcc450b40949afc51bd172226a3';
+
+beforeAll(async () => {
+  fixturesDir = await fs.mkdtemp(path.join(tmpdir(), 'science-audit-phase2-'));
+});
+
+afterAll(async () => {
+  if (fixturesDir) await fs.rm(fixturesDir, { recursive: true, force: true });
+});
 
 /**
  * Run a shell command and return trimmed stdout. `rg` returns exit
@@ -130,17 +134,14 @@ function rgFiles(args: string[]): string[] {
 }
 
 /**
- * Run an `rg` query and write the file-list output (one file path per
- * line, sorted) to `measure/.../fixtures/<name>.txt`. The fixture is
- * the audit's "ground-truth snapshot" for the query — re-running the
- * test overwrites it idempotently. The test then asserts a count /
- * membership property on the live result, not on the fixture.
+ * Run an `rg` query and write sorted file paths to a temporary fixture.
+ * The test asserts a count or membership property on the live result.
  */
 async function snapshotRgFiles(name: string, args: string[]): Promise<{ count: number; files: string[] }> {
   const files = rgFiles(args);
-  await fs.mkdir(FIXTURES_DIR, { recursive: true });
+  await fs.mkdir(fixturesDir, { recursive: true });
   await fs.writeFile(
-    path.join(FIXTURES_DIR, `${name}.txt`),
+    path.join(fixturesDir, `${name}.txt`),
     files.join('\n') + '\n',
     'utf-8',
   );
@@ -221,7 +222,11 @@ describe('AGENTS.md Compliance Audit — science-advantage (Phase 2: Static Anal
     });
 
     // ---- Cross-validation: rg vs build-graph search ----
-    it('§1 cross-validation — the audit found provider SDKs while the graph was empty', () => {
+    it('§1 cross-validation — the audit found provider SDKs while the graph was empty', async () => {
+      await snapshotRgFiles('section-1-cross-provider', [
+        '@ai-sdk',
+        'apps/science-advantage/',
+      ]);
       const checklist = historicalText(
         INVENTORY_REVISION,
         'measure/audit-reports/science-advantage_20260603/checklist-partial-1.md',
@@ -832,9 +837,9 @@ describe('AGENTS.md Compliance Audit — science-advantage (Phase 2: Static Anal
       ]);
       const n = out === '' ? 0 : out.split('\n').filter((l) => l.length > 0).length;
       // Snapshot the count (not the full output, which is large).
-      await fs.mkdir(FIXTURES_DIR, { recursive: true });
+      await fs.mkdir(fixturesDir, { recursive: true });
       await fs.writeFile(
-        path.join(FIXTURES_DIR, 'section-9-console.txt'),
+        path.join(fixturesDir, 'section-9-console.txt'),
         `count=${n}\n`,
         'utf-8',
       );
@@ -1111,9 +1116,9 @@ describe('AGENTS.md Compliance Audit — science-advantage (Phase 2: Static Anal
   // ============================================================
   // Cross-section sanity — fixture inventory
   // ============================================================
-  describe('Phase 2 fixtures — snapshot directory is populated', () => {
-    it('fixtures/ directory exists and contains the §1/§4/§9 snapshot files', async () => {
-      const stat = await fs.stat(FIXTURES_DIR);
+  describe('Phase 2 fixtures — temporary snapshot directory is populated', () => {
+    it('contains the §1/§4/§9 snapshot files during the test run', async () => {
+      const stat = await fs.stat(fixturesDir);
       expect(stat.isDirectory()).toBe(true);
       const expected = [
         'section-1-ai-sdk.txt',
@@ -1123,7 +1128,7 @@ describe('AGENTS.md Compliance Audit — science-advantage (Phase 2: Static Anal
         'section-9-console.txt',
       ];
       for (const f of expected) {
-        const fileStat = await fs.stat(path.join(FIXTURES_DIR, f));
+        const fileStat = await fs.stat(path.join(fixturesDir, f));
         expect(fileStat.size, `${f} should be non-empty`).toBeGreaterThan(0);
       }
     });
