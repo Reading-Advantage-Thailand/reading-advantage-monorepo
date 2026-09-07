@@ -1,0 +1,12 @@
+Architectural priorities: auth. Preserve existing behavior and reduce coupling or duplicate parsing.
+
+Files:
+packages/auth/src/company-identity/cookies.ts
+packages/auth/src/company-identity/__tests__/cookies.test.ts
+packages/auth/src/company-identity/index.ts
+packages/auth/src/index.ts
+apps/codecamp-advantage/lib/company-oidc.ts
+apps/sales-advantage/lib/company-oidc.ts
+apps/marketing/app/lib/company-oidc.ts
+
+Validation: Astra low review passed. Relevant behavior tests passed. Affected lint and type tasks passed. Full application build checks remain in the track verification record.
