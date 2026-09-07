@@ -1,0 +1,1 @@
+ALTER TABLE "science_attempts" ADD COLUMN "selected_question_ids" jsonb DEFAULT '[]'::jsonb NOT NULL;

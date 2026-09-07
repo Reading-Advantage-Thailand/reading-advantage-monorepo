@@ -35,8 +35,6 @@ import { resolve } from "node:path";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const PACKAGE_ROOT = resolve(import.meta.dirname, "../..");
-const REPO_ROOT = resolve(PACKAGE_ROOT, "../..");
-const TSX_PATH = resolve(REPO_ROOT, "node_modules/tsx/dist/cli.mjs");
 const MIGRATE_SCRIPT_PATH = resolve(PACKAGE_ROOT, "scripts/migrate.ts");
 
 interface MigrationFixtureEntry {
@@ -439,7 +437,7 @@ describe("scripts/migrate.ts behavioral propagation of MIGRATION_CEILING_TAG", (
     // names the exact tag, and the DNS-failure signal is absent.
     const child = spawn(
       process.execPath,
-      [TSX_PATH, MIGRATE_SCRIPT_PATH],
+      ["--import", "tsx", MIGRATE_SCRIPT_PATH],
       {
         cwd: PACKAGE_ROOT,
         env: {

@@ -337,6 +337,12 @@ const EXPECTED_JOURNAL_TAGS = [
   "0049_codecamp_exercise_quiz_repair",
   "0050_finance_operations_records",
   "0051_marketing_phase7_audit_and_script",
+  "0052_durable_jobs",
+  "0053_sales_mastery_tenant_mapping",
+  "0054_chunky_dazzler",
+  "0055_eminent_nuke",
+  "0056_great_clint_barton",
+  "0057_complex_sleeper",
 ] as const;
 
 describe("drizzle045-phase3-integration-gates — Journal entries for full migration apply (Task 5)", () => {

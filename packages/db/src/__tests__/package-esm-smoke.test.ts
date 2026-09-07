@@ -39,7 +39,7 @@ function runNodeImport(): Promise<SpawnResult> {
   return new Promise((resolveP, rejectP) => {
     // Mark stdout so the test can assert the import actually executed.
     const code = `import("${DIST_ENTRY}").then(() => process.stdout.write("imported")).catch((e) => { process.stderr.write(String(e && e.message || e)); process.exit(1); })`;
-    const child = spawn("node", ["--input-type=module", "-e", code], {
+    const child = spawn(process.execPath, ["--input-type=module", "-e", code], {
       cwd: PACKAGE_ROOT,
       env: {
         ...process.env,
@@ -64,7 +64,7 @@ function runNodeImport(): Promise<SpawnResult> {
       clearTimeout(killTimer);
       rejectP(err);
     });
-    child.on("exit", (status, signal) => {
+    child.on("close", (status, signal) => {
       clearTimeout(killTimer);
       resolveP({ status, stdout, stderr, signal });
     });

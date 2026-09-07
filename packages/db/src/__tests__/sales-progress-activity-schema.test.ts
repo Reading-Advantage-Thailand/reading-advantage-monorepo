@@ -19,7 +19,7 @@ describe("Sales progress activity migration", () => {
     expect(sql).toMatch(
       /ALTER TABLE "sales_progress" ADD COLUMN "updated_at" timestamp DEFAULT now\(\) NOT NULL/,
     );
-    expect(journal.entries.at(-1)).toMatchObject({
+    expect(journal.entries.find((entry) => entry.tag === migrationTag)).toMatchObject({
       idx: 39,
       tag: migrationTag,
     });

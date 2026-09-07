@@ -11,6 +11,7 @@ export interface SentinelProbe {
   tag: string;
   kind:
     | "table"
+    | "table_absent"
     | "column"
     | "unique_constraint"
     | "function"
@@ -292,6 +293,11 @@ export const sentinelProbes: Record<string, SentinelProbe> = {
     table: "codecamp_lessons",
     columns: ["module_id", "order"],
   },
+  "0050_finance_operations_records": {
+    tag: "0050_finance_operations_records",
+    kind: "function",
+    target: "public.finance_records_validate_supersession()",
+  },
   "0051_marketing_phase7_audit_and_script": {
     tag: "0051_marketing_phase7_audit_and_script",
     kind: "all",
@@ -452,5 +458,42 @@ export const sentinelProbes: Record<string, SentinelProbe> = {
         target: "sales_mastery_projection_receipts",
       },
     ],
+  },
+  "0054_chunky_dazzler": {
+    tag: "0054_chunky_dazzler",
+    kind: "table",
+    target: "accounting_submissions",
+  },
+  "0055_eminent_nuke": {
+    tag: "0055_eminent_nuke",
+    kind: "table",
+    target: "accounting_submission_audit_events",
+  },
+  "0056_great_clint_barton": {
+    tag: "0056_great_clint_barton",
+    kind: "all",
+    target: "finance_operations_relocated",
+    allOf: [
+      {
+        tag: "0056_great_clint_barton",
+        kind: "table",
+        target: "accounting_submissions",
+      },
+      {
+        tag: "0056_great_clint_barton",
+        kind: "table_absent",
+        target: "finance_records",
+      },
+      {
+        tag: "0056_great_clint_barton",
+        kind: "table_absent",
+        target: "finance_record_success_audit_outbox",
+      },
+    ],
+  },
+  "0057_complex_sleeper": {
+    tag: "0057_complex_sleeper",
+    kind: "column",
+    target: "science_attempts.selected_question_ids",
   },
 };

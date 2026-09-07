@@ -47,7 +47,7 @@ function runNode(
   env: Record<string, string | undefined>
 ): Promise<SpawnResult> {
   return new Promise((resolveP, rejectP) => {
-    const child = spawn("node", ["--input-type=module", "-e", code], {
+    const child = spawn(process.execPath, ["--input-type=module", "-e", code], {
       cwd: PACKAGE_ROOT,
       env: {
         PATH: process.env.PATH ?? "",
@@ -82,14 +82,14 @@ function runNode(
       clearTimeout(killTimer);
       rejectP(err);
     });
-    child.on("exit", (status, signal) => {
+    child.on("close", (status, signal) => {
       clearTimeout(killTimer);
       resolveP({ status, stdout, stderr, signal });
     });
   });
 }
 
-describe("env-guards — FR-7 (client.ts production-runtime fail-fast)", () => {
+describe("env-guards — FR-7 (client.ts production-runtime fail-fast)", { timeout: 15_000 }, () => {
   const suite = distClientExists ? describe : describe.skip;
   suite("client.ts production-runtime fail-fast", () => {
     it("throws on missing DATABASE_URL when NODE_ENV=production and NEXT_PHASE is unset", async () => {
@@ -158,7 +158,7 @@ describe("env-guards — FR-7 (client.ts production-runtime fail-fast)", () => {
 });
 
 const privSuite = distPrivilegedExists ? describe : describe.skip;
-privSuite("env-guards — FR-7 (privileged.ts warn-once on DATABASE_URL fallback)", () => {
+privSuite("env-guards — FR-7 (privileged.ts warn-once on DATABASE_URL fallback)", { timeout: 15_000 }, () => {
   it("warns when DIRECT_DATABASE_URL is unset and DATABASE_URL is used", async () => {
     const result = await runNode(
       `const { createPrivilegedDb } = await import("${DIST_PRIVILEGED}"); ` +

@@ -88,10 +88,10 @@ async function seedRoleAssignmentGraph(sql: postgres.Sql): Promise<{
     values (${accountId}, 'Ada', 'ada', 'Ada Lovelace')
   `;
   await sql`
-    insert into company_organizations (id, stable_key, display_name)
+    insert into company_organizations (id, stable_key, display_name, status)
     values
-      (${organizationId}, 'internal-company', 'Internal Company'),
-      (${otherOrganizationId}, 'other-internal', 'Other Internal')
+      (${organizationId}, 'internal-company', 'Internal Company', 'ACTIVE'),
+      (${otherOrganizationId}, 'other-internal', 'Other Internal', 'SUSPENDED')
   `;
   await sql`
     insert into company_organization_memberships

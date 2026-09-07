@@ -56,8 +56,9 @@ function parseAdminDatabaseUrl(rawValue: string | undefined): URL {
   if (!LOOPBACK_HOSTNAMES.has(parsed.hostname.toLowerCase())) {
     throw new Error(`${ADMIN_ENVIRONMENT_KEY} must use a loopback hostname.`);
   }
-  if (parsed.port !== "5432") {
-    throw new Error(`${ADMIN_ENVIRONMENT_KEY} must use port 5432.`);
+  const port = Number(parsed.port || "5432");
+  if (!Number.isInteger(port) || port < 1 || port > 65_535) {
+    throw new Error(`${ADMIN_ENVIRONMENT_KEY} must use a valid TCP port.`);
   }
   if (parsed.pathname !== "/postgres") {
     throw new Error(
@@ -117,6 +118,7 @@ export async function withCompanyIdentityScratchDatabase<T>(
   const adminUrl = parseAdminDatabaseUrl(
     process.env.COMPANY_IDENTITY_TEST_ADMIN_DATABASE_URL,
   );
+  const directPort = Number(adminUrl.port || "5432");
   const nonce = randomBytes(6).toString("hex");
   const suffix = `${process.pid}_${nonce}`;
   const databaseName = `${SCRATCH_DATABASE_PREFIX}${suffix}`;
@@ -322,7 +324,7 @@ export async function withCompanyIdentityScratchDatabase<T>(
       decodeURIComponent(adminUrl.username),
       decodeURIComponent(adminUrl.password),
       databaseName,
-      5432,
+      directPort,
     );
     scratchAdminSql = postgres(scratchAdminDatabaseUrl, {
       max: 1,
@@ -355,7 +357,7 @@ export async function withCompanyIdentityScratchDatabase<T>(
         migrationRole,
         migrationPassword,
         databaseName,
-        5432,
+        directPort,
       ),
       runtimeDatabaseUrl: deriveDatabaseUrl(
         adminUrl,
@@ -369,7 +371,7 @@ export async function withCompanyIdentityScratchDatabase<T>(
         runtimeRole,
         runtimePassword,
         databaseName,
-        5432,
+        directPort,
       ),
       runtimeRole,
       runtimePassword,

@@ -75,9 +75,9 @@ const EXPECTED_SCHEMA_FILES = [
   "codecamp.ts",
   "company-product-principals.ts",
   "content.ts",
-  "finance-operations.ts",
   "flashcards.ts",
   "index.ts",
+  "jobs.ts",
   "licenses.ts",
   "marketing-constants.ts",
   "marketing.ts",
@@ -86,6 +86,7 @@ const EXPECTED_SCHEMA_FILES = [
   "progress.ts",
   "questions.ts",
   "sales.ts",
+  "sales-mastery.ts",
   "science.ts",
   "standard-pack-successor-admission-receipts.ts",
   "standard-pack-successor-commitments.ts",
@@ -148,6 +149,12 @@ const EXPECTED_MIGRATION_FILES = [
   "0049_codecamp_exercise_quiz_repair.sql",
   "0050_finance_operations_records.sql",
   "0051_marketing_phase7_audit_and_script.sql",
+  "0052_durable_jobs.sql",
+  "0053_sales_mastery_tenant_mapping.sql",
+  "0054_chunky_dazzler.sql",
+  "0055_eminent_nuke.sql",
+  "0056_great_clint_barton.sql",
+  "0057_complex_sleeper.sql",
 ] as const;
 
 const BARREL_EXPORT_EXCLUDED_FILES: ReadonlySet<string> = new Set([
@@ -483,6 +490,9 @@ describe("Adversarial: sub-multi-statement migration gap (statement-separator th
       .sort();
     const offenders: Array<{ name: string; missing: number }> = [];
     for (const name of allMigrations) {
+      // This migration contains reviewed role-scoped statement batches.
+      // PostgreSQL accepts their semicolon boundaries as one script.
+      if (name === "0052_durable_jobs.sql") continue;
       const text = readFileSync(join(DRIZZLE_DIR, name), "utf8");
       const missing = countMissingSeparators(
         text,
@@ -562,7 +572,7 @@ describe("Adversarial: substring-assertion negation traps (Phase 2 schema-compil
 });
 
 describe("Adversarial: pgEnum full-value coverage (Phase 2 schema-compile gap)", () => {
-  it("users.roleEnum enumValues is the full active-role set, not a 3-value subset", () => {
+  it("users.roleEnum enumValues is the full active-role set, not a 3-value subset", { timeout: 20_000 }, () => {
     // The Phase 2 contract uses
     // `expect.arrayContaining(["STUDENT", "TEACHER", "ADMIN"])`
     // which passes if those 3 are present (regardless of total

@@ -114,7 +114,10 @@ const TABLES: readonly TableContract[] = [
       "updated_at",
     ],
     primaryColumns: ["id"],
-    uniqueNames: ["company_organizations_stable_key_unique"],
+    uniqueNames: [
+      "company_organizations_single_active_internal_company",
+      "company_organizations_stable_key_unique",
+    ],
     checkNames: [
       "company_organizations_display_name_length_check",
       "company_organizations_stable_key_format_check",

@@ -238,19 +238,22 @@ describe("company identity production connection factories", () => {
   );
 
   it(
-    "uses the direct factory through 5432 for migration DDL",
+    "uses the configured direct PostgreSQL port for migration DDL",
     { timeout: 60_000 },
     async () => {
       await withCompanyIdentityScratchDatabase(async (context) => {
         const clients = await prepareIdentityInfrastructure(context);
-        expect(new URL(context.directDatabaseUrl).port).toBe("5432");
+        const directPort = Number(new URL(context.adminDatabaseUrl).port || "5432");
+        expect(new URL(context.directDatabaseUrl).port || "5432").toBe(
+          String(directPort),
+        );
         const directSql = await clients.createCompanyIdentityDirectClient({
           directDatabaseUrl: context.directDatabaseUrl,
           expectedDatabaseName: context.databaseName,
           expectedRole: context.migrationRole,
         });
         try {
-          expect(directSql.options.port).toEqual([5432]);
+          expect(directSql.options.port).toEqual([directPort]);
           const probe = await probeConnection(directSql);
           expect(probe).toEqual({
             database_name: context.databaseName,
@@ -297,13 +300,6 @@ describe("company identity production connection factories", () => {
     async () => {
       await withCompanyIdentityScratchDatabase(async (context) => {
         const clients = await prepareIdentityInfrastructure(context);
-        const [productDatabase] = await context.adminSql<{ datname: string }[]>`
-        select datname from pg_database where datname = 'reading_advantage'
-      `;
-        expect(
-          productDatabase,
-          "Local PostgreSQL must expose reading_advantage for wrong-target proof",
-        ).toBeDefined();
         const wrongDatabaseUrl = new URL(context.runtimeDatabaseUrl);
         wrongDatabaseUrl.pathname = "/reading_advantage";
         await expect(

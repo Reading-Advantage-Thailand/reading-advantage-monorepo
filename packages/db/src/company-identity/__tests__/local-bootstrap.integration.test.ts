@@ -34,6 +34,8 @@ interface ClientModule {
 
 interface FreshVolumeConnections {
   readonly adminDatabaseUrl: string;
+  readonly containerCli: "podman" | "docker";
+  readonly containerName: string;
   readonly directDatabaseUrl: string;
   readonly runtimeDatabaseUrl: string;
 }
@@ -117,11 +119,13 @@ function quoteIdentifier(identifier: string): string {
  * Fingerprints every user table and row count in a local test database.
  * @param sql PostgreSQL connection for catalog and row-count queries.
  * @param targetDatabaseUrl Credential-bearing URL passed only to pg_dump.
+ * @param container Disposable container that provides the matching pg_dump binary.
  * @returns Stable schema, data, and row-count evidence.
  */
 async function databaseFingerprint(
   sql: ReturnType<typeof postgres>,
   targetDatabaseUrl: string,
+  container: Pick<FreshVolumeConnections, "containerCli" | "containerName">,
 ): Promise<DatabaseFingerprint> {
   const tables = await sql<Array<{ table_name: string; table_schema: string }>>`
     select table_schema, table_name
@@ -147,23 +151,23 @@ async function databaseFingerprint(
   const dumpHash = async (section: "schema" | "data"): Promise<string> => {
     const parsed = new URL(targetDatabaseUrl);
     const { stdout } = await execFileAsync(
-      "pg_dump",
+      container.containerCli,
       [
+        "exec",
+        "-i",
+        "--env",
+        "PGOPTIONS=-c default_transaction_read_only=on",
+        container.containerName,
+        "pg_dump",
         section === "schema" ? "--schema-only" : "--data-only",
         "--no-owner",
         "--no-privileges",
+        "--username",
+        decodeURIComponent(parsed.username),
         "--dbname",
         decodeURIComponent(parsed.pathname.slice(1)),
       ],
       {
-        env: {
-          ...process.env,
-          PGHOST: parsed.hostname,
-          PGPORT: parsed.port || "5432",
-          PGUSER: decodeURIComponent(parsed.username),
-          PGPASSWORD: decodeURIComponent(parsed.password),
-          PGOPTIONS: "-c default_transaction_read_only=on",
-        },
         maxBuffer: 256 * 1024 * 1024,
       },
     );
@@ -288,6 +292,8 @@ async function withFreshPostgres16Volume<T>(
       runtimeUrl.pathname = "/company_identity";
       return await testBody({
         adminDatabaseUrl,
+        containerCli: cli,
+        containerName,
         directDatabaseUrl: directUrl.toString(),
         runtimeDatabaseUrl: runtimeUrl.toString(),
       });
@@ -369,6 +375,7 @@ describe("persistent local company identity database bootstrap", () => {
             fingerprint: await databaseFingerprint(
               product.sql,
               product.databaseUrl,
+              connections,
             ),
           })),
         );
@@ -399,6 +406,7 @@ describe("persistent local company identity database bootstrap", () => {
           const firstFingerprint = await databaseFingerprint(
             identitySql,
             connections.directDatabaseUrl,
+            connections,
           );
           await runtimeSql`select count(*) from company_accounts`;
           await expect(
@@ -410,6 +418,7 @@ describe("persistent local company identity database bootstrap", () => {
             await databaseFingerprint(
               identitySql,
               connections.directDatabaseUrl,
+              connections,
             ),
           ).toEqual(firstFingerprint);
 
@@ -493,6 +502,7 @@ describe("persistent local company identity database bootstrap", () => {
               fingerprint: await databaseFingerprint(
                 product.sql,
                 product.databaseUrl,
+                connections,
               ),
             })),
           ),

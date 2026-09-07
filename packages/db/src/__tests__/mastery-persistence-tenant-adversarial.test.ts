@@ -25,6 +25,13 @@ const STUDENT_A = "mastery-owner-a";
 const STUDENT_A2 = "mastery-owner-a2";
 const STUDENT_B = "mastery-owner-b";
 const NOW = new Date("2026-07-10T04:00:00.000Z");
+const RESET_TRIGGER_TABLES = [
+  "durable_job_audit_events",
+  "review_job_adoption_audit_events",
+  "sales_mastery_tenant_mappings",
+  "sales_mastery_projection_outbox",
+  "sales_mastery_projection_receipts",
+] as const;
 
 interface Journal {
   entries: Array<{ idx: number; tag: string }>;
@@ -68,15 +75,37 @@ async function resetDatabase(db: TestDatabase): Promise<void> {
   );
   const names = (result.rows as Array<{ tablename: string }>)
     .map(({ tablename }) => tablename)
-    .filter(Boolean);
-  if (names.length > 0) {
-    await db.execute(
-      sql.raw(`TRUNCATE TABLE ${names.join(", ")} RESTART IDENTITY CASCADE`),
+    .filter(
+      (name) =>
+        Boolean(name) &&
+        ![
+          "standard_pack_successor_commitments",
+          "standard_pack_successor_admission_receipts",
+        ].includes(name),
     );
+  if (names.length > 0) {
+    const immutableNames = names.filter((name) =>
+      (RESET_TRIGGER_TABLES as readonly string[]).includes(name),
+    );
+    try {
+      for (const name of immutableNames) {
+        await db.execute(sql.raw(`ALTER TABLE ${name} DISABLE TRIGGER USER`));
+      }
+      await db.execute(
+        sql.raw(`TRUNCATE TABLE ${names.join(", ")} RESTART IDENTITY CASCADE`),
+      );
+    } finally {
+      for (const name of immutableNames) {
+        await db.execute(sql.raw(`ALTER TABLE ${name} ENABLE TRIGGER USER`));
+      }
+    }
   }
 }
 
-async function seedOwners(db: TestDatabase): Promise<void> {
+async function seedOwners(
+  db: TestDatabase,
+  includeMasteryPrincipals = true,
+): Promise<void> {
   await db.insert(schema.schools).values([
     { id: SCHOOL_A, name: "Mastery School A" },
     { id: SCHOOL_B, name: "Mastery School B" },
@@ -101,6 +130,13 @@ async function seedOwners(db: TestDatabase): Promise<void> {
       schoolId: SCHOOL_B,
     },
   ]);
+  if (includeMasteryPrincipals) {
+    await db.insert(schema.masteryPrincipals).values([
+      { schoolId: SCHOOL_A, studentId: STUDENT_A, sourceTenantKey: "school-a" },
+      { schoolId: SCHOOL_A, studentId: STUDENT_A2, sourceTenantKey: "school-a" },
+      { schoolId: SCHOOL_B, studentId: STUDENT_B, sourceTenantKey: "school-b" },
+    ]);
+  }
 }
 
 async function expectPostgresCode(
@@ -404,7 +440,7 @@ describe("Phase S3 remediation: fail-closed 0028 preflight", () => {
       for (const migration of migrationScripts(27)) {
         await client.exec(migration);
       }
-      await seedOwners(db);
+      await seedOwners(db, false);
       await db.insert(schema.masteryCards).values(
         cardValues({ schoolId: SCHOOL_A, studentId: STUDENT_B }),
       );

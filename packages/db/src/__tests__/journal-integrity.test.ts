@@ -226,4 +226,24 @@ describe("journal-integrity — sentinel coverage for FR-3 doctor", () => {
       `Journal tags without a sentinel probe in scripts/sentinels.ts: ${missing.join(", ")}`,
     ).toEqual([]);
   });
+
+  it("tracks the finance relocation before and after migration 0056", async () => {
+    const { sentinelProbes } = await import("../sentinels.js");
+    expect(sentinelProbes["0050_finance_operations_records"]).toEqual({
+      tag: "0050_finance_operations_records",
+      kind: "function",
+      target: "public.finance_records_validate_supersession()",
+    });
+    expect(sentinelProbes["0056_great_clint_barton"]).toMatchObject({
+      kind: "all",
+      allOf: expect.arrayContaining([
+        expect.objectContaining({ kind: "table", target: "accounting_submissions" }),
+        expect.objectContaining({ kind: "table_absent", target: "finance_records" }),
+        expect.objectContaining({
+          kind: "table_absent",
+          target: "finance_record_success_audit_outbox",
+        }),
+      ]),
+    });
+  });
 });

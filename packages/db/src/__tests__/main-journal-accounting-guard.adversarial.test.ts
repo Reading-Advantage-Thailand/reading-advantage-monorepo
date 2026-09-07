@@ -1,11 +1,12 @@
 // @vitest-environment node
 import { spawnSync } from "node:child_process";
 import { cpSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
+import { join, resolve } from "node:path";
 
 import { describe, expect, it } from "vitest";
 
 const packageRoot = new URL("../../", import.meta.url).pathname;
+const vitestPath = resolve(packageRoot, "../../node_modules/vitest/vitest.mjs");
 const guardTest = new URL("./main-journal-accounting-guard.test.ts", import.meta.url)
   .pathname;
 
@@ -31,10 +32,9 @@ describe("Main-journal Accounting guard adversarial fixture", () => {
       );
 
       const result = spawnSync(
-        "pnpm",
+        process.execPath,
         [
-          "exec",
-          "vitest",
+          vitestPath,
           "run",
           join(fixtureTestDirectory, "main-journal-accounting-guard.test.ts"),
           "-t",

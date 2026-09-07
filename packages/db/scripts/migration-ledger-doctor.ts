@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 import { createHash } from "node:crypto";
 import postgres from "postgres";
 import { sentinelProbes, type SentinelProbe } from "../src/sentinels.js";
+import { checkTableSentinel } from "../src/sentinel-evaluation.js";
 import {
   buildPostgresOptions,
   normalizePostgresConnectionString,
@@ -39,13 +40,6 @@ function parseRequiredMigration(): string | null {
     if (value) return value;
   }
   return null;
-}
-
-if (!mode) {
-  console.error(
-    "Usage: tsx scripts/migration-ledger-doctor.ts [--check|--repair] [--required-migration <tag>]",
-  );
-  process.exit(2);
 }
 
 interface JournalEntry {
@@ -129,11 +123,10 @@ async function checkSentinel(
     return results.every((present) => present);
   }
   if (probe.kind === "table") {
-    const rows = await client.unsafe(
-      "SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = $1 LIMIT 1",
-      [probe.target],
-    );
-    return rows.length > 0;
+    return checkTableSentinel(client, "table", probe.target);
+  }
+  if (probe.kind === "table_absent") {
+    return checkTableSentinel(client, "table_absent", probe.target);
   }
   if (probe.kind === "column") {
     const [table, column] = probe.target.split(".");
@@ -236,6 +229,12 @@ async function checkSentinel(
 }
 
 async function main() {
+  if (!mode) {
+    console.error(
+      "Usage: tsx scripts/migration-ledger-doctor.ts [--check|--repair] [--required-migration <tag>]",
+    );
+    process.exit(2);
+  }
   // Prefer DIRECT_DATABASE_URL (session-mode direct connection); fall back
   // to DATABASE_URL with a warning, mirroring drizzle.config.ts and the
   // codecamp seed. Environments like the Cloud Build deploy gate reach the

@@ -53,6 +53,11 @@ function productTableNames(): string[] {
 }
 
 const PRODUCT_TABLES = productTableNames();
+const PRODUCT_MIGRATION_TABLES = [
+  ...PRODUCT_TABLES,
+  "accounting_submission_audit_events",
+  "accounting_submissions",
+].sort();
 
 /**
  * Removes parser directives that occur inside PostgreSQL dollar-quoted bodies.
@@ -163,13 +168,17 @@ describe("product and company identity migration isolation", () => {
           expect(identityTablesBeforeProduct).toEqual(
             [...IDENTITY_TABLES].sort(),
           );
-          for (const tableName of PRODUCT_TABLES) {
+          for (const tableName of PRODUCT_MIGRATION_TABLES) {
             expect(identityTablesBeforeProduct).not.toContain(tableName);
           }
 
           await withCompanyIdentityScratchDatabase(
-            async ({ directDatabaseUrl: productDatabaseUrl }) => {
-              const productSql = postgres(productDatabaseUrl, { max: 1 });
+            async ({ adminDatabaseUrl, databaseName }) => {
+              const productDatabaseUrl = new URL(adminDatabaseUrl);
+              productDatabaseUrl.pathname = `/${databaseName}`;
+              const productSql = postgres(productDatabaseUrl.toString(), {
+                max: 1,
+              });
               const stagedProductMigrations =
                 await stageProductMigrationsForIsolationProof();
               try {
@@ -182,7 +191,9 @@ describe("product and company identity migration isolation", () => {
                 const productLedgerAfterMigration =
                   await ledgerHashes(productSql);
                 expect(productLedgerAfterMigration.length).toBeGreaterThan(0);
-                expect(productTablesAfterMigration).toEqual(PRODUCT_TABLES);
+                expect(productTablesAfterMigration).toEqual(
+                  PRODUCT_MIGRATION_TABLES,
+                );
                 for (const tableName of IDENTITY_TABLES) {
                   expect(productTablesAfterMigration).not.toContain(tableName);
                 }

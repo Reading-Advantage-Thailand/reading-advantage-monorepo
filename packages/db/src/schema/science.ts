@@ -184,6 +184,7 @@ export const scienceAttempts = pgTable("science_attempts", {
     .references(() => schools.id, { onDelete: "cascade" }),
   score: real("score").default(0).notNull(),
   maxScore: real("max_score").notNull(),
+  selectedQuestionIds: jsonb("selected_question_ids").$type<string[]>().default([]).notNull(),
   attemptNumber: integer("attempt_number").notNull(),
   startedAt: timestamp("started_at").defaultNow().notNull(),
   completedAt: timestamp("completed_at"),

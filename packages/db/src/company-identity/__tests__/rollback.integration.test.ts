@@ -40,6 +40,7 @@ const REPOSITORY_ROOT = resolve(PACKAGE_ROOT, "../..");
 const COMPOSE_FILE = join(REPOSITORY_ROOT, "docker-compose.yml");
 const MIGRATIONS_FOLDER = join(PACKAGE_ROOT, "company-identity", "drizzle");
 const MIGRATION_MODULE = new URL("../migration.js", import.meta.url).href;
+const POSTGRES_CONTAINER_ENV = "COMPANY_IDENTITY_TEST_POSTGRES_CONTAINER";
 const ROLLBACK_SENTINEL_ID = "00000000-0000-4000-8000-000000000201";
 const ROLLBACK_ACCOUNT_SENTINEL_ID = "00000000-0000-4000-8000-000000000202";
 
@@ -254,15 +255,15 @@ async function readLedger(sql: ReturnType<typeof postgres>) {
 }
 
 function runPostgresTool(args: readonly string[], input?: Buffer): Buffer {
-  const result = spawnSync(
-    "docker",
-    ["compose", "-f", COMPOSE_FILE, "exec", "-T", "postgres", ...args],
-    {
-      cwd: REPOSITORY_ROOT,
-      input,
-      maxBuffer: 64 * 1024 * 1024,
-    },
-  );
+  const containerName = process.env[POSTGRES_CONTAINER_ENV]?.trim();
+  const dockerArgs = containerName
+    ? ["exec", "-i", containerName, ...args]
+    : ["compose", "-f", COMPOSE_FILE, "exec", "-T", "postgres", ...args];
+  const result = spawnSync("docker", dockerArgs, {
+    cwd: REPOSITORY_ROOT,
+    input,
+    maxBuffer: 64 * 1024 * 1024,
+  });
 
   if (result.error || result.status !== 0) {
     const stderr = result.stderr?.toString("utf8").trim();

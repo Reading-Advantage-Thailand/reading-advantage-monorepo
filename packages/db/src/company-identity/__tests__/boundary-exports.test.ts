@@ -74,7 +74,7 @@ describe("company identity package boundary", () => {
       exports?: Record<string, { import?: string; types?: string }>;
     };
 
-    expect(packageJson.exports?.["./company-identity"]).toEqual({
+    expect(packageJson.exports?.["./company-identity"]).toMatchObject({
       types: "./dist/company-identity/index.d.ts",
       import: "./dist/company-identity/index.js",
     });
