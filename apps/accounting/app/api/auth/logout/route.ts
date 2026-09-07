@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { logStructuredError } from "@reading-advantage/utils/structured-error";
 
 import {
   ACCOUNTING_SESSION_COOKIE,
@@ -47,13 +48,7 @@ export async function POST(request: Request): Promise<NextResponse> {
   try {
     if (token) await getAccountingOidcClient().logout(token);
   } catch (error) {
-    console.error(
-      JSON.stringify({
-        level: "error",
-        event: "accounting_logout_error",
-        errorName: error instanceof Error ? error.name : "UnknownError",
-      }),
-    );
+    logStructuredError({ event: "accounting_logout_error", error });
     const failure = NextResponse.json(
       { message: "Logout failed" },
       { status: 500 },

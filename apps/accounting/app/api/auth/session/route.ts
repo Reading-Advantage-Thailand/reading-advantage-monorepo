@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { logStructuredError } from "@reading-advantage/utils/structured-error";
 
 import {
   ACCOUNTING_SESSION_COOKIE,
@@ -23,13 +24,10 @@ export async function GET(request: Request): Promise<NextResponse> {
       },
     );
   } catch (error) {
-    console.error(
-      JSON.stringify({
-        level: "error",
-        event: "accounting_session_introspection_failed",
-        errorName: error instanceof Error ? error.name : "UnknownError",
-      }),
-    );
+    logStructuredError({
+      event: "accounting_session_introspection_failed",
+      error,
+    });
     return NextResponse.json(
       { session: null },
       {
