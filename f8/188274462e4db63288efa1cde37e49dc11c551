@@ -1,0 +1,33 @@
+Task: Phase 0 / Schema gap fix (Track 1 follow-up)
+
+Discovery:
+Pilot route (app/api/lessons/[lessonSlug]/route.ts) calls
+prisma.lesson.findUnique({ include: { standards, curriculumUnits: { include: { class: { include: { teacher, students } } } } } }).
+Track 1's audit classified Lesson/Standard/CurriculumUnit/Class as PORT-AS-IS but
+never modeled the four implicit Prisma join tables in Drizzle. Without them, every
+M:N relation in science-advantage (standards, students, units) is unrepresentable.
+
+Decision:
+Per user direction, fix inside Track 3 Phase 0 (not a Track 1 reopen). Faster and
+keeps junction definitions co-located with the controllers that use them.
+
+Tables added (all composite-PK, both FKs ON DELETE CASCADE to mirror Prisma):
+  - science_lesson_standards    (lesson_id, standard_id)
+  - science_unit_lessons        (unit_id, lesson_id)
+  - science_class_students      (class_id, student_id)   -- student_id is text (FK to users.id)
+  - science_question_standards  (question_id, standard_id)
+
+Verification:
+- pnpm --filter @reading-advantage/db build: pass
+- pnpm --filter @reading-advantage/domain build: pass
+- pnpm --filter @reading-advantage/db test: 223/223 pass (11 net-new tests)
+- Migration 0015 applied to local DB: 4 CREATE TABLEs OK, \dt science_* shows 15 tables
+- _journal.json idx=15 entry added (when=1779033600000)
+- drizzle-kit generate not used (requires TTY); hand-written per lessons-learned 2026-05-22
+
+Files:
+  + packages/db/drizzle/0015_science_junction_tables.sql
+  M packages/db/src/schema/science.ts (added primaryKey import + 4 tables)
+  M packages/db/drizzle/meta/_journal.json
+  M packages/db/src/__tests__/migration-sql.test.ts (+1 test)
+  M packages/db/src/__tests__/schema.test.ts (+5 tests)

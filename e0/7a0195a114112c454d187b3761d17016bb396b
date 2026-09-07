@@ -1,0 +1,20 @@
+Task: Verify lesson page renders contentJson correctly
+
+Summary: Replaced raw JSON dump in lesson page with a type-aware LessonContent component that properly renders theory sections (heading, body, code blocks), exercise instructions, and quiz instructions.
+
+Files created:
+- apps/codecamp-advantage/components/lesson-content.tsx
+- apps/codecamp-advantage/components/__tests__/lesson-content.test.tsx
+- apps/codecamp-advantage/vitest.config.ts
+- apps/codecamp-advantage/lib/__tests__/setup.ts
+- apps/codecamp-advantage/jest-dom.d.ts
+
+Files modified:
+- apps/codecamp-advantage/app/lesson/[id]/page.tsx
+- apps/codecamp-advantage/package.json
+- pnpm-lock.yaml
+
+Tests: 11/11 passing (theory, exercise, quiz, edge cases)
+Build: passes
+Lint: 0 errors
+Types: all pass

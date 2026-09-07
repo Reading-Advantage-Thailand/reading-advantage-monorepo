@@ -1,0 +1,15 @@
+Measure task: Phase S1 Task 1 — Define company identity ownership and tenancy contracts
+
+Summary:
+- established a separate company_identity PostgreSQL ownership boundary
+- defined active-membership-scoped company and application roles
+- separated company organization context from school tenancy
+- recorded exact DB/backend import ownership and future employee-app expansion
+- explicitly excluded schools, licensing, customer identities, and product data
+
+Review: independent contract review passed with 0 critical, high, medium, or low findings after four corrections.
+
+Files:
+- measure/tracks/company_identity_sso_20260715/identity-boundary.md
+
+Graph: documentation-only change; no exported TypeScript symbols changed, so graph update was not required.

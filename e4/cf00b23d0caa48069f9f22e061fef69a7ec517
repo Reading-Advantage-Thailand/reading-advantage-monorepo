@@ -1,0 +1,18 @@
+Phase 3 Red Gate — MID Eighth Re-Verification (2026-06-13, post-adab2b26)
+
+Task: Re-verify Phase 3 Red contract at HEAD adab2b26, after the previous supervisor attempt (mid-attempt-3) failed with status 70 (OpenCode server unavailable at startup).
+
+Files changed: measure/tracks/dependency_upgrade_hardening_20260607/plan.md (Phase 3 Red Gate MID Eighth Re-Verification section appended, +140 lines).
+
+Why: Supervisor retried after mid-attempt-3 exit 70. The Red contract suite committed in 438ba747 and the Phase 2 calendar/ffmpeg tests committed in 4ec52a0d were both permanently satisfied by the Green commit 70061422 (recorded at 61bd58a4) and remain satisfied at adab2b26.
+
+Re-run of all 3 bounded Red commands at HEAD adab2b26 (worktree restored clean before each):
+- phase3-contracts: 0 fail / 13 pass / 13 total in ~1.34s.
+- calendar Jest: 0 fail / 9 pass / 9 total in 18.402s.
+- ffmpeg-process vitest: 0 fail / 12 pass / 12 total in 2.21s.
+
+Red contract is now octuple-locked: tests in 4ec52a0d + 438ba747, re-verified at 438ba747/8f7870e1/a7de3fec/103200bc/140d4241/01ebc143, permanently satisfied by 70061422 (recorded at 61bd58a4 and adab2b26), re-re-verified at adab2b26 (recorded at e4cf00b2).
+
+Handoff: Red contract is closed. Next agent (Implementer/Green-completion or Phase 4 Generator) owns Batch A-G checkbox flip to [x], Batch H lockfile freeze, audio-generator refactors consuming ffmpeg-process utility, fluent-ffmpeg removal, Phase 4 aggregate turbo closeout, and Phase 3 User Manual Verification gate (still [ ] — user-owned).
+
+No source code modified. MID boundary preserved.

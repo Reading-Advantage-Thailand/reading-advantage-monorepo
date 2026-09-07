@@ -1,0 +1,5 @@
+Task: Verify quality gates for Phase S2 (track r3f_rendering_tier_20260708)
+
+Summary: tsc --noEmit clean; eslint 0 errors; CI=true pnpm test 189 suites / 1824 tests pass; pnpm build (static export) passes. Bundle isolation verified from the export: three.js lives in a single async chunk (2riyk_exiwy5r.js) whose only referrer chunk is loaded exclusively by the abyssal-well pages (en/zh/th); no 2D game page's scripts contain three code (checked abyssal-well, dungeon-liberator, wizard-vs-zombie, rune-match initial scripts).
+
+Files: none (verification-only; empty commit for audit trail)

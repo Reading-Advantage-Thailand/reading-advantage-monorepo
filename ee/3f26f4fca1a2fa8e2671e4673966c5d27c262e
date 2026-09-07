@@ -1,0 +1,9 @@
+Phase 2: Validation and Authorization Fixes
+
+- Fixed sessionUserSchema to accept empty/optional emails
+- Replaced unsafe 'as Role' cast with z.enum runtime validation in context.ts
+- Added assertCan to getUser domain function with new user:read permission
+- Added classroom ownership check to importRoster (teacherId === user.id or ADMIN/SYSTEM)
+- Added tests for role schema validation and cross-teacher roster import rejection
+
+Commit: ee3f26f4fca1a2fa8e2671e4673966c5d27c262e

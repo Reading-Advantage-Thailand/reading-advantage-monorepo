@@ -1,0 +1,5 @@
+Task: TypeScript 7 Phase 1 strategy-contract Red tests
+Track: typescript7_native_migration_20260710
+Summary: Added falsifiable resource-limit and Phase 2/Phase 3 execution-boundary contracts. Focused suite ran 27 tests with exactly 2 intended Red failures; malformed/missing limit counterexample passed.
+Files: measure/tests/test_typescript7_native_migration_phase1.py
+Why: Prevent nonexistent resource-budget references and unavailable real compiler claims from producing false-green Phase 1/2 strategy evidence.

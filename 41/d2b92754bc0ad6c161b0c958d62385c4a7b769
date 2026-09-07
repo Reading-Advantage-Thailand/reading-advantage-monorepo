@@ -1,0 +1,10 @@
+Track: prisma_drizzle_science_controllers_20260505
+Task: lib/utils/generateJoinCode + class-format → Drizzle
+Tests: 5/5 pass (lib/utils/generateJoinCode.integration.test.ts), lint clean for lib/utils/
+Notes:
+- generateJoinCode.ts: replaced `PrismaClient` import + `prisma.class.findUnique` with Drizzle `select({id}).from(scienceClasses).where(eq(scienceClasses.joinCode, code)).limit(1)`. MAX_RETRIES=5 + collision-retry semantics preserved byte-for-byte; signature now `generateUniqueJoinCode(db: JoinCodeDb)` where JoinCodeDb = Pick<typeof db, 'select'> so both root `db` and a tx handle satisfy it (parity with the old PrismaClassDelegate slice).
+- class-format.ts: swapped `import { StandardsAlignment } from '@prisma/client'` for `import type { StandardsAlignment } from '@/lib/enums'` (the local string-union type added in Phase 1's enum cleanup). Exported names unchanged: getStandardsAlignmentLabel, formatStudentCount, formatGradeLevel — all callers resolve unchanged.
+- No old mock-Prisma test for generateJoinCode existed (tests/api/classes.test.ts only mocks the function); nothing deleted.
+- class-format.test.ts (3 unit tests) still green — only passes string literals so the type swap is transparent.
+- Sole caller of generateUniqueJoinCode (app/api/classes/route.ts) is itself still on Prisma and is a separate Phase 4 task; no caller change in this commit per scope rules.
+Behavior-preserving; no logic change beyond ORM swap.

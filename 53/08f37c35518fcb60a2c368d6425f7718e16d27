@@ -1,0 +1,7 @@
+Task: Define rendering-tier contract in tech-stack.md (Phase S1, track r3f_rendering_tier_20260708)
+
+Summary: Added 'Rendering Tiers' section to measure/tech-stack.md establishing the two-tier rendering policy: Tier 1 React-Konva remains the 2D default; Tier 2 React Three Fiber (three + fiber + drei + postprocessing runtime, test-renderer/@types/three dev) is the sanctioned 3D/2.5D option. Codified pure-logic + thin-render-layer rule, next/dynamic bundle isolation, >80% coverage via @react-three/test-renderer, mobile perf budget (DPR cap 2, low-poly, instancing, portrait 390x844), rapier as approved-but-deferred physics, and an explicit ban on faking 3D in Konva (lesson from the original Abyssal Well).
+
+Files: measure/tech-stack.md
+
+Why: The workflow requires tech-stack changes to be documented before implementation; this is the contract every later task in the track builds against.

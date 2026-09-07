@@ -1,0 +1,6 @@
+Track: prisma_drizzle_science_controllers_20260505
+Task: tests/lib/test-utils.ts → deleted
+Decision: delete because file is entirely Prisma-based fixture helpers (prisma.user.create, prisma.class.create, etc.) and a repo-wide grep found zero importers (no `from.*test-utils` references). Track has migrated the underlying tests to either co-located integration suites or removed them; this helper module is dead.
+Coverage: N/A deleted (no consumers; co-located *.integration.test.ts files use the per-file truncate-and-reseed pattern directly against Drizzle, not via shared helpers)
+Notes: All other tests/lib/*.test.{ts,tsx} files are pure unit tests with no Prisma touches and no imports of this module, so deletion is safe.
+Behavior-preserving.

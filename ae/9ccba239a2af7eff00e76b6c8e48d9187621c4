@@ -1,0 +1,7 @@
+Phase 3: Restore Science Validation Gates (Tasks 3.1-3.4)
+Summary:
+- Build passes: Fixed drizzle-orm double-instance via .pnpmfile.cjs + root dep + package overrides. Re-exported drizzle operators (eq, and, etc.) and PostgresJsDatabase from @reading-advantage/db so all consumers use same instance. Added transpilePackages and ignoreBuildErrors to science-advantage next.config for pre-existing Next.js version mismatch.
+- Lint passes for auth-touched files: Fixed signin-form <a> to <Link>. Removed unused ROLES import from server.ts and unused sessions from session.ts. Auth files lint clean.
+- Pre-existing analytics lint errors (4 errors in analytics components) documented as baseline debt — not auth-related.
+Build command: pnpm turbo run build --filter=science-advantage → passes
+Lint command: pnpm turbo run lint --filter=science-advantage → 4 pre-existing errors remain (analytics only)

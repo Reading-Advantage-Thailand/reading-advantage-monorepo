@@ -1,0 +1,11 @@
+Task: Migrate from middleware.ts to Next.js 16 proxy.ts and compose with next-intl
+
+Summary: Replaced Edge middleware.ts with Next.js 16 proxy.ts that composes next-intl locale routing with admin route guard. The proxy handles locale prefix redirection via createMiddleware from next-intl/middleware, while maintaining defense-in-depth admin auth checks for /admin/* paths. API routes and static assets bypass both intl and auth processing.
+
+Files created:
+- apps/codecamp-advantage/proxy.ts (new) — intl + auth composition
+- apps/codecamp-advantage/lib/__tests__/proxy.test.ts (new) — 9 unit tests
+
+Files deleted:
+- apps/codecamp-advantage/middleware.ts (replaced by proxy.ts)
+- apps/codecamp-advantage/lib/__tests__/middleware.test.ts (replaced by proxy.test.ts)

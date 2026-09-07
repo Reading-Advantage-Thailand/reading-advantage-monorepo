@@ -1,0 +1,23 @@
+Task: Refactor Domain Functions
+
+Summary: Updated all domain functions to require TenantDB instead of raw DB.
+Extracted users domain functions from tRPC router.
+
+Files created:
+- packages/domain/src/users/index.ts
+- packages/domain/src/__tests__/users.test.ts
+
+Files modified:
+- packages/domain/src/db-contract.ts (improved proxy to preserve mock props)
+- packages/domain/src/index.ts (export users, createTenantDB)
+- packages/domain/src/__tests__/mock-db.ts (add update, offset)
+- packages/domain/src/__tests__/*.test.ts (wrap mocks with createTenantDB)
+- packages/domain/src/*/index.ts (change DB -> TenantDB)
+- packages/api/src/context.ts (add tenantDb)
+- packages/api/src/trpc.ts (add tenantDb to Context)
+- packages/api/src/routers/*.ts (use ctx.tenantDb)
+- packages/domain/package.json (add ./users export)
+- packages/domain/tsconfig.json (exclude __tests__ from build)
+- measure/tracks/strict_contracts_20260504/plan.md
+
+Core why: Enforces compile-time tenant scoping across all domain operations.

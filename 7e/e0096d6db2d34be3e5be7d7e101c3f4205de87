@@ -1,0 +1,12 @@
+Task: Add tRPC router procedures for exercise repos, PR reviews, module phase, admin
+
+Summary: Extended codecamp router with 9 new procedures wiring existing domain functions to the API layer. Added 13 comprehensive router tests covering exercise repo management, PR review lifecycle, module phase queries, and prerequisite checks.
+
+Files changed:
+- packages/api/src/routers/codecamp.ts (+154 lines, 9 new procedures)
+- packages/api/src/__tests__/codecamp-router.test.ts (+280 lines, 13 new tests)
+- packages/types/src/codecamp.ts (moduleSlug added to lessonResponseSchema)
+- packages/domain/src/codecamp/index.ts (listInterns query optimization)
+- apps/codecamp-advantage/app/lesson/[id]/page.tsx (back link fix)
+
+Test results: 78/78 API tests pass.

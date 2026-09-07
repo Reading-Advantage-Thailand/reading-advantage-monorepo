@@ -1,0 +1,20 @@
+Task: Connect chat tutor to tRPC
+
+Summary: Integrated chat tutor with tRPC persistence, conversation history loading, and module-aware system prompts.
+
+Changes:
+- Updated chatMessageInputSchema to include optional role field (user | assistant)
+- Updated saveChatMessage domain function to accept role parameter and save both user/assistant messages
+- Added domain tests for assistant message persistence and error cases
+- Updated useChatStream hook with onSend/onComplete callbacks and initialMessages support
+- Updated ChatTutor in lesson page to load conversation history via tRPC, save user messages before sending, and save assistant messages after streaming completes
+- Updated /api/chat route to build dynamic system prompt including current module/lesson context from DB
+- Rebuilt @reading-advantage/types and @reading-advantage/api packages
+
+Files modified:
+- packages/types/src/codecamp.ts
+- packages/domain/src/codecamp/index.ts
+- packages/domain/src/__tests__/codecamp.test.ts
+- apps/codecamp-advantage/lib/use-chat-stream.ts
+- apps/codecamp-advantage/app/lesson/[id]/page.tsx
+- apps/codecamp-advantage/app/api/chat/route.ts

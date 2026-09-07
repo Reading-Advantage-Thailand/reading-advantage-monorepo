@@ -1,0 +1,14 @@
+Track: prisma_drizzle_science_controllers_20260505
+Task: scripts/backfill-mastery → Drizzle (part of 5-script bundle)
+Tests: none for this script (calculateMasteryUpdates pure-fn has its own tests; mastery-worker covers similar logic)
+Notes:
+- Replaced prisma.attempt.findUnique(include questionResponses → question.standards) with explicit Drizzle joins (scienceQuestionResponses+scienceQuizQuestions for points, separate scienceQuestionStandards lookup).
+- Replaced prisma.standardMastery.upsert with onConflictDoUpdate on (studentId, standardId) — mirrors standard-mastery.ts pattern.
+- Replaced prisma.$transaction({ isolationLevel: Serializable }) with db.transaction(fn, { isolationLevel: 'serializable' }) (postgres-js driver supports lowercase string).
+- Replaced Prisma cursor pagination (cursor: { id }, skip:1) with explicit composite cursor on (completedAt, id) — preserves ordering integrity for ascending completedAt iteration where Prisma's id-cursor relied on internal mechanics.
+- Decimal masteryLevel: pass String(...) on write; read with Number(...).
+- Replaced @prisma/client MasteryRunStatus import with @/lib/enums.
+- Replaced Prisma.AttemptWhereInput with manual SQL[] conditions.
+- Dropped prisma.$disconnect() — postgres-js needs no teardown for CLI use here.
+- CLI args, --dry-run output, error codes preserved.
+Behavior-preserving except cursor semantics now use (completedAt,id) tuple instead of Prisma's opaque id cursor — strictly more correct for asc(completedAt) ordering.

@@ -1,0 +1,5 @@
+Track: apk_cross_game_asset_ontology_20260712 Phase 1 corpus reconciliation
+Summary: Reconciled 27 live catalog identities plus Abyssal Well and Babel Architect historical evidence; mapped one canonical scene per game; enumerated concrete Advantage Games and Reading copy paths; recorded four source conflicts; added deterministic generation and completeness tests.
+Files: audit-schema.ts; __tests__/game-corpus.test.ts; generate-corpus.mjs; game-corpus.json; game-corpus.md; plan.md
+Why: Blueprint, responsive, capability, and asset analysis must share one non-duplicated product boundary.
+Verification: 9/9 focused tests passed; 29 games; 29 scenes; 13 playable; 14 withdrawn; 2 stale; no unmapped evidence paths.

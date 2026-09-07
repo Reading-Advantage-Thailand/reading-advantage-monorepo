@@ -1,0 +1,7 @@
+Track: codecamp_progress_monotonicity_20260611
+
+Summary: Prevent CodeCamp lesson progress from regressing after completion by preserving completed status in the shared upsert conflict expression. Added a PgDialect-rendered regression test and refreshed graph.db.
+
+Production: Repaired Pkalakorn's Vitest exercise progress and deployed production-matched hotfix build 99666d94-a6ce-4a0e-9e55-134d6898e513 (revision codecamp-advantage-00017-9tv).
+
+Verification: domain tests 282 passed/5 skipped; domain typecheck passed; lint 0 errors; production invariants returned zero contradictory rows and zero approved PRs with incomplete exercises.

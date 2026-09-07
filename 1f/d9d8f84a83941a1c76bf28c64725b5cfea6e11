@@ -1,0 +1,6 @@
+Task: Add Thai-friendly font loading via next/font
+Summary: Created lib/i18n-font.ts with getBodyFontClass() that selects font based on locale. Updated app/layout.tsx to use the locale-aware font. th locale applies both Inter + Noto_Sans_Thai.
+Files:
+- apps/codecamp-advantage/lib/i18n-font.ts (created)
+- apps/codecamp-advantage/lib/__tests__/i18n-font.test.ts (created)
+- apps/codecamp-advantage/app/layout.tsx (modified)

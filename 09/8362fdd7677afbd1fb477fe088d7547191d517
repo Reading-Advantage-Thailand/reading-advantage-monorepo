@@ -1,0 +1,15 @@
+Track: prisma_drizzle_science_controllers_20260505
+Task: Fix leftover Prisma imports in auth tests
+Triage:
+- lib/prisma.test.ts: DELETED — tests the Prisma singleton itself; client being removed in Phase 7.
+- lib/auth/session.unit.test.ts: DELETED — asserts session.ts 'uses the shared prisma singleton'; that singleton is gone and session.ts uses Drizzle via @reading-advantage/auth.
+- lib/auth/session-id-separation.test.ts: REWRITTEN as pure unit test, mocks @reading-advantage/db; preserves the three invariants (id != token, id is a UUID string, token is 64-hex).
+- lib/auth/session.integration.test.ts: REWRITTEN on Drizzle (db + sessions/accounts/users from @reading-advantage/db/schema). Uses canonical truncate-and-reseed pattern from app/api/lessons/[lessonSlug]/route.integration.test.ts.
+- lib/auth/server.integration.test.ts: REWRITTEN on Drizzle. Fixed two latent bugs while at it: requireAuth redirects to /signin (not /login) per server.ts:12; cookies must carry session.token, not session.id (validateSession looks up by token).
+Tests: 21/21 session.integration + 20/20 server.integration + 3/3 session-id-separation = 44/44 pass.
+Notes:
+- Two unrelated unit-test files in lib/auth/ (password.test.ts, rate-limit.test.ts) remain broken due to deleted source modules — pre-existing, OUT OF SCOPE.
+- Pre-existing tsc errors in lib/auth/session.ts (role-widening to INTERN) and several other Prisma-related files are unchanged and OUT OF SCOPE.
+- lib/prisma.ts itself still exists; deletion is scheduled for Phase 7 (plan line 277).
+- INTERN role: users.role widens to 5-value enum but local UserRole is 4-value; added a narrow cast in toSessionUser helper since seeded users use only the 4 mapped roles.
+Auth logic (lib/auth/server.ts + lib/auth/session.ts) unchanged; only test infrastructure modernized.

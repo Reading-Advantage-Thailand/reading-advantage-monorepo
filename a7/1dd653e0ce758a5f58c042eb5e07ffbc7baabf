@@ -1,0 +1,5 @@
+Track: prisma_drizzle_science_controllers_20260505
+Task: app/api/classes/join route → Drizzle (part of 3-route bundle)
+Tests: 9/9 pass, lint clean
+Notes: Class+teacher lookup via a single LEFT JOIN (replaces Prisma include of {teacher, students}). Enrollment check + insert wrapped in db.transaction(tx => ...) for atomicity; concurrent-insert race translated from postgres-js SQLSTATE 23505 (unique violation on the science_class_students PK) into the original 409 'Already enrolled in this class' response. Uses a private AlreadyEnrolledError sentinel inside the txn so the precondition path returns the same 409 without retrying. Old mock-Prisma test tests/api/classes-join.test.ts removed; replaced with co-located real-DB integration test covering 401/403/400 (bad format + bad JSON)/404/409/200 success + uppercase normalization + null teacher name fallback path.
+Behavior-preserving; no logic change beyond ORM swap.

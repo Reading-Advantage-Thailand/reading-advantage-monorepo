@@ -1,0 +1,19 @@
+Track: prisma_drizzle_science_controllers_20260505
+Task: prisma/seed-functions/seed-activity-data → scripts/seed/seed-activity-data (final file of 7-file bundle)
+Decision: REWRITE.
+Tables seeded: users, accounts, science_classes, science_class_students, science_attempts, science_question_responses, science_lesson_completions
+Tests: tests/seed-activity.integration.test.ts UPDATED + still skipped (see 'Tests blocker' below)
+Importers updated:
+  - apps/science-advantage/scripts/seed-activity-data.ts: dropped 'new PrismaClient()' boot; imports the Drizzle port; explicitly unblocks the DEFERRED scripts/* item on plan.md line 271.
+  - apps/science-advantage/tests/seed-activity.integration.test.ts: full Drizzle-ported suite written but reverted to .skip stub (see below) — this is the same file that was deferred in [cb04ed5].
+Notes:
+- Drizzle insert + onConflictDoNothing for user/account/class-students roster upsert. onConflictDoUpdate on (studentId,lessonId) for lesson_completions roll-up.
+- Replaced prisma.$inner (include: { students }) + (include: { quizQuestions }) with explicit join on science_class_students and a separate batched questions-by-lessonId map.
+- Idempotency check on existing attempts preserved using inArray + count(*)::int.
+- Test re-enable WAS attempted (full Drizzle-ported suite written and ran end-to-end) but seedQuestions calls process.exit(1) due to pre-existing seed-data validator drift in g3-being-a-scientist-questions.json (VOCABULARY_MATCH options stored as object, validator expects array). This bug pre-dates the track and would also have triggered the original Prisma seedQuestions exit path. Per task brief: 'If tests don't pass, leave the skip in place and document.' Stub rewritten with refined header pointing at the validator drift (no longer blocks on 'Phase 6 in-progress').
+- Followups (not in this track):
+  * Reconcile lib/schemas/seed-validation.ts with VOCABULARY_MATCH object shape OR migrate the JSON.
+  * After reconciliation, revert the .skip stub to restore the 5-test Drizzle suite (preserved in this commit's git diff).
+- Unblocks plan.md line 271 (scripts/* DEFERRED row 'seed-activity-data DEFERRED'): wrapper now imports the Drizzle port; the DEFERRED rationale is resolved.
+- prisma/seed.ts still imports from prisma/seed-functions/* and will fully break with this commit (the seed-functions directory is now empty) — that's the next task on plan.md line 270.
+Behavior-preserving; no logic change beyond ORM swap and the test-skip-stays-but-justification-updates.

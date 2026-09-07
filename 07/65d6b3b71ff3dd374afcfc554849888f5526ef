@@ -1,0 +1,1 @@
+Retrospective discovery-auditor handoff. The receipt binds only the three frozen discovery-auditor outputs at f17fa78b, records supplied session ses_0a73854b3ffea1l0aDqq8uAa4o, and explicitly leaves unavailable context and event IDs null. Its status remains candidate-retrospective because it was created after the bound commit.

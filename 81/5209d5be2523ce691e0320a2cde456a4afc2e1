@@ -1,0 +1,9 @@
+Task 3 deterministic inventory evidence:
+- Red: missing inventory API; later Red regressions proved nested src/build was skipped and database migration doctor was misclassified.
+- Green: package suite 40/40; 97.24% lines, 86.71% branches, 95.55% functions.
+- Repository inventory after staging: 3,620 tracked sources, 20,056 facts, 0 parse/read errors.
+- Determinism: two raw JSON runs SHA-256 09a0408e4c81e9ae990cf8fdc0d97bcdfaf919ab5f24aee843b0e148a8469788.
+- Review manifest: 699 entries; SHA-256 352f1aee772e03680c773523bacec93a1e39ec160c07c1195d5d5a896d82f186.
+- Dispositions: 491 production baseline reviews; 208 exact test/fixture reviews.
+- Independent review: PASS after exact DB scripts ownership and exact generated-output exclusion fixes.
+- Static gates: Prettier, TypeScript check/build, ESLint, frozen offline lock validation pass.

@@ -1,0 +1,5 @@
+Track: measure_apk_evidence_integrity_gates_20260712
+Task: Remediate V4-ADV-001 and canonical prompt generation.
+Changes: Require complete retained/live reviewer history and stable identity equality; add byte-derived canonical review-prompt CLI; add adversarial truncation and prompt tests.
+Files: measure/evidence_integrity_gates/cli.py; measure/evidence_integrity_gates/supervisor_gate.py; measure/tests/evidence_integrity_gates/test_supervisor_integration.py.
+Why: Prevent truncated retained reviewer exports from passing against fuller trusted provider history and eliminate protocol prompt drift.

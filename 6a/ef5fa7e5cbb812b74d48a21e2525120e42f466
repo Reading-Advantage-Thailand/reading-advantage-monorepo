@@ -1,0 +1,4 @@
+Task: Write hook unit tests
+Summary: 9 tests for useAuth (5), useSession (2), useRequireAuth (2) with mocked fetch
+Files: packages/auth-client/src/__tests__/hooks.test.tsx, packages/auth-client/vitest.config.ts, packages/auth-client/package.json
+Why: Auth client hooks are consumed by all app frontends — must be tested before migration

@@ -1,0 +1,16 @@
+Task: Update getUserDashboard to return phase-grouped data + UI updates
+
+Summary: Extended dashboard domain function to group modules by phase (A/B/C/D)
+with metadata (title, description, portfolio project) and per-phase progress.
+Updated types schema, router tests, and dashboard UI with phase color coding.
+
+Files changed:
+- packages/domain/src/codecamp/index.ts (getUserDashboard phase grouping)
+- packages/types/src/codecamp.ts (phaseInfoSchema, dashboardResponseSchema)
+- packages/domain/src/__tests__/codecamp.test.ts (phase grouping tests)
+- packages/api/src/__tests__/codecamp-router.test.ts (router test updates)
+- apps/codecamp-advantage/app/page.tsx (phase-grouped UI)
+- measure/tracks/codecamp_curriculum_20260514/plan.md (task tracking)
+
+Why: Curriculum track requires phase-grouped module display for the 18-module
+bootcamp with 4 distinct phases and portfolio projects.

@@ -1,0 +1,7 @@
+Task: Phase 1 denominator completeness remediation
+
+Summary: Exhaustively enumerated the frozen 27-card catalog while preserving 17 current-page identities and 10 route-less catalog-withdrawn identities. Expanded mechanical state discovery to pure literal-union aliases, inline interface literal properties, typed useState declarations, and explicit source-backed runtime-store initializer, guarded, and conditional transitions. Added omission-failing Phase 1 contracts and regenerated deterministic artifacts/report.
+
+Files: measure/tracks/apk_source_denominator_inventory_20260712/generate_phase1_denominators.py; game-identity-ledger.json; scene-state-denominator.json; denominator-method.md; phase1-green-test-report.json; measure/tests/test_apk_source_denominator_inventory_phase1.py
+
+Why: Remediates Review A Critical and Medium denominator omissions without inventing current pages or editing Phase 2/3.

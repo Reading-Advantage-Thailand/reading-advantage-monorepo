@@ -1,0 +1,13 @@
+Task: Implement admin tRPC procedures
+
+Summary: Added three admin-protected tRPC procedures to codecamp router:
+- createIntern: creates intern account (ADMIN only)
+- listInterns: returns cohort overview with progress stats (ADMIN only)
+- getInternProgress: returns per-intern detailed breakdown (ADMIN only)
+
+Files modified:
+- packages/types/src/codecamp.ts: Added internAccountResponseSchema, internDetailSchema
+- packages/api/src/routers/codecamp.ts: Added 3 procedures + error mapping
+- packages/api/src/__tests__/codecamp-router.test.ts: Added 9 tests
+
+Acceptance: All 85 API tests pass.

@@ -1,0 +1,8 @@
+Track: prisma_drizzle_science_controllers_20260505
+Task: scripts/test-curriculum-endpoint → Drizzle (part of 5-script bundle)
+Tests: none for this script
+Notes:
+- Replaced nested Prisma includes (class→teacher, class→students, curriculumUnit→lessons) with explicit Drizzle joins/lookups via scienceClassStudents and scienceUnitLessons junctions.
+- Removed prisma.$disconnect() — postgres-js client doesn't need explicit teardown for CLI scripts here (matches codecamp-seed pattern).
+- Preserved console.log output, error handling, and overall script shape.
+Behavior-preserving; no logic change beyond ORM swap.

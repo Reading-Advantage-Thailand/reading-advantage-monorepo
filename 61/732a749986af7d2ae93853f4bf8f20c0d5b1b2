@@ -1,0 +1,14 @@
+Measure support artifact: Phase S1 verification oracle
+
+Summary:
+- defines fail-closed Red/Green commands for DB, backend, auth, architecture, coverage, generation, and doctors
+- requires local PostgreSQL 16 plus PgBouncer credential-path evidence
+- proves product/identity migrator isolation and hash-only secret persistence
+- requires backend capability/executor behavioral suites once dependency gates open
+- replaces the shared company_identity_test assumption with per-run scratch databases
+
+Review: independent auth/security review passed after resolving 7 High and 5 Medium findings.
+
+Files:
+- measure/tracks/company_identity_sso_20260715/test-strategy.md
+- measure/tracks/company_identity_sso_20260715/identity-boundary.md

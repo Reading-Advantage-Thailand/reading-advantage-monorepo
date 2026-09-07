@@ -1,0 +1,1 @@
+Track typescript7_native_migration_20260710: reconcile the first hosted semantic-parity observation by preventing runner-created bytecode provenance drift, annotating Reading Advantage tRPC portable type ownership, and ledgering only the 21 verified TS2769 span-only diagnostic pairs.

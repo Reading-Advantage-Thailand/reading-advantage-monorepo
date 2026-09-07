@@ -1,0 +1,4 @@
+Measure track: apk_catalog_cutover_w0_20260710
+Public IDs: dragon-flight, dungeon-liberator, magic-defense.
+Verification: cartridges 26/26 at 97.26% statement coverage; Reading 4/4; Primary 4/4; QC Jest 1/1; Chromium 3/3; Advantage Games type/build green; architecture guard green; legacy manifest 55 exact paths (22 retain, 3 deleted, 30 deferred).
+Stable vocabulary/sentence arrays and five-field GameResults ABI preserved.

@@ -1,0 +1,32 @@
+Task: Migrate app/api/lessons/[lessonSlug]/quiz/route.ts (Phase 1, was 2.5 after re-order)
+Track: prisma_drizzle_science_controllers_20260505
+
+Summary:
+GET:
+- 9 SELECTs + 1 INSERT + (0..1) UPDATE: lesson -> classes (3-table join)
+  -> enrollments (when not teacher) -> question bank -> attempt count
+  -> insert attempt -> lessonCompletion upsert.
+
+POST:
+- Attempt + question bank loaded.
+- Single db.transaction wraps: UPDATE attempt, INSERT
+  scienceQuestionResponses[], UPSERT scienceLessonCompletions.
+- INSERT scienceMasteryRuns + call to migrated processMasteryRun (default
+  client).
+- Find-or-create gamificationProfile + awardXp + updateStreakForProfile +
+  checkBadgeConditions (all already on Drizzle from prior commits).
+
+Files:
+- M apps/science-advantage/app/api/lessons/[lessonSlug]/quiz/route.ts
+- M apps/science-advantage/app/api/lessons/[lessonSlug]/quiz/route.integration.test.ts
+
+Verification:
+- route.integration.test.ts: 13/13 pass (10s wall)
+- eslint clean
+
+Behavior preserved including the existing 'param treated as lesson id'
+semantics (slug→id lookup, matching the pilot route's pattern).
+
+Outstanding: this route is now Prisma-free. The remaining 3 Phase 1
+routes (curriculum, analytics overview, lesson analytics) do not depend
+on gamification/mastery; they can be migrated in standard order next.

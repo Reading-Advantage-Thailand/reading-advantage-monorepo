@@ -1,0 +1,1 @@
+strict_contracts_20260504: Phase 3 - tRPC output contracts enforced on all 8 routers. All 23 API tests pass. Output schemas strip extraneous fields (verified in users.list test).

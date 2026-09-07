@@ -1,0 +1,6 @@
+Track: prisma_drizzle_science_controllers_20260505
+Task: prisma/seed.ts → scripts/seed.ts (file 1 of 4 in line-270 bundle)
+Decision: rewrite (canonical entrypoint, was broken after [09a22d3] moved seed-functions/ → scripts/seed/)
+package.json scripts updated: "seed": "tsx prisma/seed.ts" → "tsx scripts/seed.ts"
+prisma.config.ts: migrations.seed 'tsx prisma/seed.ts' → 'tsx scripts/seed.ts' (left in place for now; Phase 7 owns full Prisma config removal)
+Notes: drops PrismaClient instantiation and import. New seed-functions in scripts/seed/ no longer accept a prisma client arg; call signatures updated accordingly. Imports now resolve against scripts/seed/* from [09a22d3]. Behavior-preserving.

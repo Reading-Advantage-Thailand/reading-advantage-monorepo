@@ -1,0 +1,8 @@
+Track: typescript7_native_migration_20260710
+
+Reconciled rejected hosted parity run 29460487973. All 39 configs executed with stable provenance; the sole failure was two obsolete Primary Advantage GenerateAudio ledger entries that neither TypeScript 6 nor TypeScript 7 emitted. Removed only those stale exceptions, added a regression test, and recorded the rejected CI artifact transcript with its immutable artifact ID and SHA. No application source or TypeScript behavior changed.
+
+Verification:
+- PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v measure.tests.test_typescript7_native_migration_phase3 (86 passed)
+- JSON parse of diagnostic ledger and compacted CI record
+- git diff --check

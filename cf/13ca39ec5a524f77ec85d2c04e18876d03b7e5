@@ -1,0 +1,5 @@
+Track: apk_cross_game_asset_ontology_20260712 Phase 0
+Summary: Froze the repository/evidence boundary, added versioned Zod audit schemas and referential-integrity validation, published conflict rules, and recorded product-owner Phase 0 acceptance.
+Files: measure/tracks.md; measure/tracks/apk_cross_game_asset_ontology_20260712/{audit-schema.ts,__tests__/audit-validator.test.ts,audit-method.md,evidence-snapshot.md,plan.md,metadata.json}
+Why: Later corpus, responsive, capability, and asset deliverables require machine-checkable IDs and evidence before analysis begins.
+Graph baseline: 25,387 nodes; 49,462 edges; 3,019 files; graph.db fresh at Phase 0 start.

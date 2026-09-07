@@ -1,0 +1,34 @@
+Task: Migrate app/api/ai/update-mastery/route.ts (Phase 2; heaviest route)
+Track: prisma_drizzle_science_controllers_20260505
+
+Summary:
+The route was 528 lines and exercises the full mastery-update pipeline
+inside a serializable transaction with idempotency, status-machine
+guards (PENDING→PROCESSING→COMPLETED|FAILED), error-code branching,
+metrics, logging, and rate limiting.
+
+Key Drizzle translations:
+- prisma.attempt.findUnique({deep include}) → loadAttemptContext() with 4
+  scoped SELECTs (attempts, questionResponses, quizQuestions for points,
+  questionStandards) + 1 SELECT for the existing masteryRun.
+- prisma.$transaction({isolationLevel: Serializable}) → db.transaction(
+  fn, { isolationLevel: 'serializable' }).
+- standardMastery.upsert → insert().onConflictDoUpdate() on the unique
+  (studentId, standardId) constraint.
+- Prisma error codes: P2002 → pg 23505 (unique violation); P2034 → pg
+  40001 (serialization_failure). Both branches preserved with the exact
+  same response shapes/status codes/retry-after headers.
+- MasteryRunStatus enum: now from @/lib/enums (added in same commit).
+- masteryLevel passed to .values()/.set() as String(...) (decimal(3,2)).
+
+Files:
+- M apps/science-advantage/lib/enums.ts (added MasteryRunStatus)
+- M apps/science-advantage/app/api/ai/update-mastery/route.ts
+- A apps/science-advantage/app/api/ai/update-mastery/route.integration.test.ts
+- D apps/science-advantage/tests/api/ai-update-mastery.integration.test.ts (530-line mock-Prisma)
+
+Verification:
+- 10/10 integration tests pass (real DB)
+- eslint clean
+- 9 of 10 paths exercised on real DB; the 10th (PROCESSING branch) tests
+  the state-machine guard rather than concurrency itself

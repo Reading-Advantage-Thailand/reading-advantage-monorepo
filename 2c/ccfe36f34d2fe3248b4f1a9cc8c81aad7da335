@@ -1,0 +1,10 @@
+Track: prisma_drizzle_science_controllers_20260505
+Task: students/me/gamification route → Drizzle
+Tests: 5/5 pass (route.integration.test.ts), lint clean
+Notes:
+- count() imported from @reading-advantage/db (re-exported from drizzle-orm)
+- achievement count returns {value:number} → destructure [{value: totalAchievements}]
+- gamificationProfiles, achievements tables are global (not science_* prefixed)
+- xpProgress helper and LEVEL_THRESHOLDS unchanged
+- 401/403/404 paths preserved verbatim
+Behavior-preserving; no logic change beyond ORM swap.

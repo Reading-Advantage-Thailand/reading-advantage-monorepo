@@ -1,0 +1,5 @@
+Track: prisma_drizzle_science_controllers_20260505
+Task: prisma/seed-demo-users.ts → scripts/seed-demo-users.ts (file 2 of 4 in line-270 bundle)
+Decision: rewrite (preserved — narrower than scripts/seed/seed-demo-data.ts which also creates classes/curriculum/mastery; this one creates ONLY the 4 demo users + credential accounts, which is what package.json 'seed:demo-users' invokes for a fast dev refresh).
+package.json scripts updated: "seed:demo-users": "tsx prisma/seed-demo-users.ts" → "tsx scripts/seed-demo-users.ts"
+Notes: Drizzle insert with onConflictDoNothing keyed on username (preserves upsert idempotency of original prisma.user.upsert). Removed emailVerified field (not in Drizzle users schema; Better Auth no longer tracks it on the user row in this codebase). Behavior-preserving for the credential-creation path.

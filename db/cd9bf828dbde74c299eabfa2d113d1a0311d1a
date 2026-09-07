@@ -1,0 +1,9 @@
+Phase 1: Contract & Schema Extension
+
+- Added codecampReviewStatusEnum to schema
+- Added codecamp_exercise_repos table (moduleId FK, repoUrl, description, order)
+- Added codecamp_pr_reviews table (exerciseRepoId FK, userId FK, prUrl, reviewStatus, llmReviewSummary, reviewedAt)
+- Applied manual migration 0007_codecamp_repos_reviews.sql (drizzle-kit snapshots lack codecamp tables)
+- Defined Zod contracts: exerciseRepoSchema, prReviewSchema, githubWebhookPayloadSchema, moduleWithReposSchema, internAccountInputSchema, internProgressSchema
+- Updated packages/types/src/codecamp.ts with all new types
+- Existing domain/api wiring already supports codecamp barrel export and router

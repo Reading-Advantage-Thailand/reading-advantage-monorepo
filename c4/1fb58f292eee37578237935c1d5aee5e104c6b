@@ -1,0 +1,25 @@
+Track: review_remediation_20260502
+
+Summary: Implemented auth migration tests, cross-tenant authorization guards,
+config drift wiring, and database constraint migration.
+
+Changes:
+- packages/api/src/__tests__/auth.test.ts: Added MIGRATION_REQUIRED and migrate tests
+- packages/api/src/__tests__/users.test.ts: New tests for safe columns and cross-school scoping
+- packages/auth-client/src/__tests__/hooks.test.tsx: Added token propagation tests
+- packages/domain/src/__tests__/mock-db.ts: Fixed chain mock to support thenable patterns
+- packages/domain/src/__tests__/students.test.ts: Added cross-tenant classroom tests
+- packages/domain/src/__tests__/reports.test.ts: Added cross-tenant progress/analytics tests
+- packages/domain/src/students/index.ts: Added classroom ownership checks
+- packages/domain/src/reports/index.ts: Added school ownership checks
+- packages/domain/src/classes/index.ts: Scope teachers by schoolId
+- packages/db/src/schema/questions.ts: Documented polymorphic questionId reference
+- packages/db/drizzle/0002_quick_skreet.sql: Migration for unique constraints
+- package.json: Added config-drift script
+- .github/workflows/ci.yml: Added config-drift step
+- measure/tracks/review_remediation_20260502/plan.md: Updated task status
+- measure/tech-debt.md: Added studentAnswers and lessonProgress items
+- measure/lessons-learned.md: Added mocking and testing lessons
+
+All workspace packages build, lint, and test pass.
+Root validation baseline: primary-advantage lint fails with 49 pre-existing errors.

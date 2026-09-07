@@ -1,0 +1,3 @@
+Task: Finalize track
+Summary: Updated tracks registry [~]→[x], set metadata.json actual_tasks=23.
+Files: measure/tracks.md, measure/tracks/protocol_v1_1_graphdb_20260603/metadata.json

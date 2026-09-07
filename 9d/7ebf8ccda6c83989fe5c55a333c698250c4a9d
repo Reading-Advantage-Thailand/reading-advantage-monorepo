@@ -1,0 +1,24 @@
+Phase 3: Localize Admin Dashboard & Chat
+
+Summary: Replaced all hardcoded strings in admin pages, components, and module/chat pages with next-intl useTranslations() keys. Added 50+ new translation keys to both en.json and th.json. Updated chat API to accept locale parameter and branch system prompt accordingly.
+
+Files created:
+- lib/__tests__/chat-locale.test.ts (chat API locale awareness tests)
+
+Files modified:
+- messages/en.json, messages/th.json (new translation namespaces: fork, review, workflow, lesson, updated chat/module/admin)
+- app/[locale]/admin/page.tsx (useTranslations for all strings)
+- app/[locale]/admin/[userId]/page.tsx (useTranslations for all strings)
+- app/[locale]/admin/new-intern/page.tsx (useTranslations for all strings)
+- app/[locale]/chat/page.tsx (useTranslations + locale passthrough)
+- app/[locale]/module/[slug]/page.tsx (useTranslations for module strings)
+- app/api/chat/route.ts (locale-aware system prompt builder)
+- components/fork-instruction.tsx, review-history.tsx, workflow-tracker.tsx, lesson-content.tsx (useTranslations)
+- lib/use-chat-stream.ts (locale option added)
+- lib/__tests__/setup.ts (next-intl mock with hasLocale)
+- lib/__tests__/i18n-admin-keys.test.ts (comprehensive key tests)
+- All 4 component test files (updated assertions for mocked translations)
+
+All tests: 148 passing
+Lint: clean
+Type-check: clean

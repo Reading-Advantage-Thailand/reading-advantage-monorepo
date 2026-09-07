@@ -1,0 +1,1 @@
+Track: audit_log_retention_dsar_20260605 — COMPLETE. 7-year FERPA audit-event retention with advisory-locked periodic purge. DSAR bulk-export endpoint (ADMIN-only, tenant-scoped, zip/json). 8 phases, 276+ tests across auth/domain/science-advantage. Follow-up to audit_log_infrastructure_20260603.

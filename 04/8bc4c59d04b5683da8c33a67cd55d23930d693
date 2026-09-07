@@ -1,0 +1,15 @@
+Task: Write Phase B seed data (Modules 7-10, 23 lessons)
+
+Summary: Added complete Phase B curriculum data for the codecamp-advantage app.
+- Module 7: React (7 lessons) — components, JSX, useState, useEffect, useContext, lists/keys, forms/custom hooks
+- Module 8: API Fundamentals (5 lessons) — HTTP/REST, Fetch GET, POST/PUT/PATCH/DELETE, error handling
+- Module 9: Next.js 16 Basics (6 lessons) — App Router, Server/Client Components, data fetching, dynamic routes, layouts
+- Module 10: Next.js 16 Advanced (5 lessons) — Route Handlers, middleware, error boundaries, streaming, optimization
+- Added 12 comprehensive unit tests in codecamp-curriculum-data-phase-b.test.ts
+- Updated seed script to merge Phase A and Phase B data
+- All 33 db package tests pass
+
+Files changed:
+- packages/db/src/seed/codecamp-curriculum-data.ts (new getPhaseBCurriculumData function)
+- packages/db/src/seed/codecamp-seed.ts (merged Phase A + B)
+- packages/db/src/__tests__/codecamp-curriculum-data-phase-b.test.ts (new test suite)

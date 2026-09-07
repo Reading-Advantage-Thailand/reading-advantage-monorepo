@@ -1,0 +1,5 @@
+Track: measure_apk_evidence_integrity_gates_20260712
+Task: Publish v6 accepted gate
+Summary: Bound the completed canonical owner event and root owner designation to exact raw and deterministic-gzip exports, published one-time approval consumption and the v6 root accepted manifest, and recorded truthful verification.
+Verification: production live _validate_manifest pass; 23 focused tests pass; six guards pass; doctor pass; dry-run pass; aggregate 136/137 with documented immutable v6 portability-test blocker V6-ACCEPT-TEST-001.
+Why: Make the exact reviewed v6 gate consumable without altering candidate or review bytes.

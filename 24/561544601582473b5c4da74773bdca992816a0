@@ -1,0 +1,6 @@
+Track: prisma_drizzle_science_controllers_20260505
+Task: app/api/classes route (GET list + POST create) → Drizzle (part of 3-route bundle)
+Tests: 11/11 pass, lint clean
+Notes: POST wraps insert in db.transaction(tx => ...) and passes tx to generateUniqueJoinCode (already Drizzle). Curriculum-unit creation now uses an explicit junction insert into science_unit_lessons (Prisma's connect:[{id}] is implicit). Template-lesson lookup translates Prisma 'standards.some(framework = X)' to Drizzle EXISTS subquery joining science_lesson_standards + science_standards.
+GET list does paginated SELECT + COUNT in parallel, then a single grouped COUNT(*) GROUP BY classId for studentCount (Prisma's _count.students per-row include is replaced by one extra round-trip rather than N+1). Old mock-Prisma test tests/api/classes.test.ts removed; replaced with co-located real-DB integration test covering 401/403/400/201 (with and without template lessons), admin path, pagination, studentCount aggregation.
+Behavior-preserving; no logic change beyond ORM swap.

@@ -1,0 +1,10 @@
+Task: Create components/language-switcher.tsx
+Task: Update components/header.tsx to include language switcher
+
+Summary: Created a LanguageSwitcher component that toggles between 'EN' and 'ไทย' using next-intl's useLocale()/useRouter()/usePathname() from @/i18n/navigation. The component is keyboard accessible with aria-label and aria-current. Integrated it into the header bar with a Languages icon separator, placed before the auth controls section. Also replaced next/link imports in header.tsx with locale-aware Link from @/i18n/navigation so navigation links get proper locale prefixes.
+
+Files created:
+- apps/codecamp-advantage/components/language-switcher.tsx
+
+Files modified:
+- apps/codecamp-advantage/components/header.tsx

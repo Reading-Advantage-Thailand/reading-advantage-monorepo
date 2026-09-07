@@ -1,0 +1,7 @@
+Task: Verify quality gates for Phase S1 (track r3f_rendering_tier_20260708)
+
+Summary: Quality-gate pass surfaced two integration issues. (1) StartScreen typed difficulty icons as React.ElementType; JSX props for ElementType collapse to the intersection of ALL intrinsic elements' props, so registering three.js elements (no className) via @react-three/fiber's JSX augmentation made className resolve to never — narrowed to React.ComponentType<{className?: string}>. This would have broken on the first real fiber import regardless. (2) react/no-unknown-property fires on R3F intrinsic props (position/args); added a scoped eslint override for src/components/games/**/*Scene.tsx, establishing *Scene.tsx as the R3F scene-file convention. Added a type-only fiber import to SmokeScene for the JSX augmentation. Gates: tsc --noEmit clean, eslint 0 errors (109 pre-existing warnings unrelated), CI=true pnpm test: 187 suites / 1811 tests pass, pnpm build passes (verified in dep task).
+
+Files: src/components/games/game/StartScreen.tsx, src/components/games/r3f/SmokeScene.tsx, eslint.config.mjs
+
+Why: Keeps the repo green with the R3F tier installed; both fixes are preconditions for every future Tier 2 game.

@@ -1,0 +1,9 @@
+Track: prisma_drizzle_science_controllers_20260505
+Task: lib/services/classes/get-student-classes → Drizzle
+Tests: 6/6 pass (get-student-classes.integration.test.ts), lint clean
+Notes:
+- Tables/joins: science_class_students (junction) INNER JOIN science_classes LEFT JOIN users (teacher); ORDER BY science_classes.created_at DESC
+- Used db/eq/desc re-exports from @reading-advantage/db plus schema imports for scienceClasses, scienceClassStudents, users
+- Deleted old mock-Prisma unit test apps/science-advantage/tests/lib/get-student-classes.test.ts; replaced with co-located real-DB integration test (6 cases: empty, non-existent student, single class, null teacher name fallback, multi-class desc ordering, tenant/student scoping)
+- Sole caller app/api/student/classes/route.ts uses only the public StudentEnrolledClassSummary shape, which is byte-identical — no caller touched
+Behavior-preserving; no logic change beyond ORM swap.

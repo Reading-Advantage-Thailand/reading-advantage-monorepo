@@ -1,0 +1,15 @@
+Task: Create TenantDB Wrapper
+
+Summary: Implemented a Proxy-based TenantDB wrapper in packages/domain/src/db-contract.ts
+that automatically injects tenant scoping (eq(table.schoolId, tenant.schoolId)) into
+select, update, and delete operations for tables that expose a schoolId column.
+
+Files created:
+- packages/domain/src/db-contract.ts (TenantDB implementation)
+- packages/domain/src/__tests__/db-contract.test.ts (15 unit tests)
+
+Files modified:
+- measure/tracks/strict_contracts_20260504/plan.md (task status)
+
+Core why: Prevents accidental cross-tenant data leaks by making tenant scoping
+automatic and compile-time enforced, removing reliance on developer memory.

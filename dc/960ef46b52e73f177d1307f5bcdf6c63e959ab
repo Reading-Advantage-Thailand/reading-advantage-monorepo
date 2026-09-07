@@ -1,0 +1,8 @@
+Track: prisma_drizzle_science_controllers_20260505
+Task: intervention-alerts route + detect-alerts (types-only) → Drizzle
+Tests: 10/10 pass (route.integration.test.ts), detect-alerts.test.ts 4/4 still green, lint clean
+Notes:
+- Route: scienceClasses (lookup by id, teacherId for ACL), scienceClassStudents innerJoin users (id/name/gradeLevel), scienceStandardMastery innerJoin scienceStandards. Decimal comparison uses lt(masteryLevel, sql`${interventionConfig.masteryFilterLevel}`). Teacher/Admin role enforcement (getCurrentSession-based, NOT requireRole) and full response shape preserved exactly (classId, generatedAt, alerts, nextCursor, totalAlerts; same headers; same cache/severity/since/cursor pipeline).
+- detect-alerts.ts: swapped @prisma/client type imports (Class, StandardMastery, user) for typeof <table>.$inferSelect from @reading-advantage/db/schema. Preserved exported names: MasteryRecord, AlertPayload, detectAlerts. Widened MasteryRecord.masteryLevel to 'string | { toString(): string }' so scripts/dev-interventions.ts (still on Prisma — Phase 6) keeps type-checking; runtime stays Number(record.masteryLevel) as before.
+- Old mock-Prisma route.integration.test.ts replaced in-place with real-Drizzle suite (TEST_PREFIX cleanup, mockCookies pattern from teacher-dashboard).
+Behavior-preserving; no logic change beyond ORM swap.

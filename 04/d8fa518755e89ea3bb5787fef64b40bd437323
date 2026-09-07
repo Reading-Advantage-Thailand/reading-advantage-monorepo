@@ -1,0 +1,8 @@
+Track: prisma_drizzle_science_controllers_20260505
+Task: Fix badges client-bundle leak (subtask under line 288)
+Problem: badges.ts imported @reading-advantage/db which drags postgres (node-only) into client bundles via quiz-player.tsx + lesson page.
+Fix: split into badges.constants.ts (client-safe, BADGE_DEFINITIONS + BadgeDefinition + BadgeType + BadgeTriggerEvent) and badges.ts (server-only, DB query functions; now starts with import 'server-only'; re-exports constants for back-compat).
+Client importers repointed: components/features/student/quiz-player.tsx, components/features/gamification/badge-unlock-animation.tsx, components/features/student/mastery-profile/student-badges-section.tsx, components/features/gamification/__tests__/badge-unlock-animation.test.tsx (type-only).
+Server importers unchanged: app/api/lessons/[lessonSlug]/quiz/route.ts (uses checkBadgeConditions; resolved via server-only badges.ts).
+Behavior-preserving — no runtime logic changed, only export topology.
+Verification: tsc 360 errors (= 360 baseline, 0 NEW); lint 4 errors + 6 warnings (= baseline, 0 NEW); build STILL fails but badges.ts/badges.constants.ts no longer appear in any Module-not-found trace — leak via xp.ts → level-up-animation.tsx → quiz-player.tsx is a SEPARATE module-leak (logged as follow-up, out of scope for this task per user instructions).

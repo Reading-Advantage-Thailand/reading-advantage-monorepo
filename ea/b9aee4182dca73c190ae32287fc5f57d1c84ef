@@ -1,0 +1,12 @@
+Track: prisma_drizzle_science_controllers_20260505
+Task: Delete lib/generated/zod + remove prisma-zod-generator config
+Sanity check: 0 importers found pre-deletion (only 2 doc-comment string matches in lib/validations/{class,student-classes}.ts referencing the historical dependency)
+Removed:
+- apps/science-advantage/lib/generated/zod/ (1741 files)
+- generator zod { ... } block from prisma/schema.prisma
+- prisma-zod-generator from package.json devDependencies
+- No related scripts (zod generation was folded into 'prisma generate' build step, left intact for Phase 7 teardown)
+- No .gitignore entry to remove
+Tests: lib/validations/ 19/19 pass; tsc shows no new errors (pre-existing DOM matcher / password module / role enum errors unchanged)
+pnpm install: succeeded, lockfile updated and amended into the commit
+No callers modified.

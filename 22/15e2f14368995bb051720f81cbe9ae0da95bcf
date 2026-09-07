@@ -1,0 +1,6 @@
+Task: Add translation keys for admin dashboard
+Summary: Added 'admin' namespace with 12 keys to both en.json and th.json. Covers Intern Management UI: title, intern list, CRUD, overview, progress, PR reviews, etc.
+Files:
+- apps/codecamp-advantage/messages/en.json (modified)
+- apps/codecamp-advantage/messages/th.json (modified)
+- apps/codecamp-advantage/lib/__tests__/i18n-admin-keys.test.ts (created)

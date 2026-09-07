@@ -1,0 +1,21 @@
+Task: Migrate dashboard-summary-controller.ts (reopened) — fix legacy raw SQL
+
+Summary:
+Replaced legacy Prisma quoted PascalCase identifiers ("UserActivity",
+"XPLogs", "createdAt") and the singular legacy table 'article' with
+the unified Drizzle/Postgres snake_case names (user_activity, xp_logs,
+created_at, articles). Switched from the executeBatchRawQueries helper
+(which previously did unsafe $n string interpolation) to direct
+db.execute(sql`...`) calls so each period boundary is bound as a
+parameter by Drizzle/postgres-js.
+
+Files:
+- apps/reading-advantage/server/controllers/dashboard-summary-controller.ts
+- apps/reading-advantage/__test__/dashboard-summary-controller.test.ts (new)
+
+Why:
+The 2026-05-23 review found the dashboard summary endpoint would fail
+at runtime against the unified schema because it still referenced
+Prisma's pre-unification quoted PascalCase tables and columns. Direct
+parameterized sql template usage eliminates both the schema-name bug
+and the SQL injection surface in one change.

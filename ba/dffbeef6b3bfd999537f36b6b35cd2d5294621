@@ -1,0 +1,1 @@
+Phase 1 read-only audit evidence: classified all 64 API route files as 29 direct session guards, 1 direct read without decision, 14 controller-mediated guards, 1 mixed assignment route, 8 controller calls without local session, 1 inactive file, 6 auth adapters, and 4 no-evident-auth endpoints. Recorded layout/proxy coverage and role-representation drift.

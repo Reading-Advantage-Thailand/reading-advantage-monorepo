@@ -1,0 +1,12 @@
+Track: prisma_drizzle_science_controllers_20260505
+Task: lib/ai/types → Drizzle types
+Tests: no test changes (pure types module)
+Notes:
+- Swapped: LessonType (from @prisma/client) -> LessonType (from @/lib/enums string-union)
+- Swapped: StandardsAlignment (from @prisma/client) -> StandardsAlignment (from @/lib/enums string-union)
+- Enums imported from @/lib/enums: LessonType, StandardsAlignment
+- No Drizzle $inferSelect types needed — the file only consumed Prisma enums; all other exported types (MasterySnapshotEntry, CandidateLesson, AttemptPerformance, RecommendationContext, RecommendationRecord) are plain application-shape types built locally and were left unchanged.
+- No widening needed; @/lib/enums values are identical Postgres enum literals (Track 3 0.7).
+- No dedup with recommendation-context.ts (AttemptWithRelations lives there and is exported from there; lib/ai/types never defined it).
+- No callers modified (recommendation-context.ts, recommendation-service.ts, rules-engine.ts, prompts/recommendation.ts all type-check unchanged).
+Behavior-preserving; no runtime change.

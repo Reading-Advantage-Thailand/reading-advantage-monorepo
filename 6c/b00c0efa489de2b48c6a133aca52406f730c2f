@@ -1,0 +1,14 @@
+Task: Update dashboard for 18 modules
+
+Summary: Added prerequisite locking (modules lock until previous module is 100% complete) and PR review status summary badges to the dashboard.
+
+Changes:
+- Created lib/module-utils.ts with isModuleLocked() and getModulePrStatus() helpers
+- Added lib/__tests__/module-utils.test.ts with 10 unit tests
+- Updated app/page.tsx to show lock badges on locked modules, disable Start button, and display overall PR review counts (pending/needs_changes/approved) in the stats bar
+- Imported LockKeyhole and GitPullRequest icons from lucide-react
+
+Files modified:
+- apps/codecamp-advantage/app/page.tsx
+- apps/codecamp-advantage/lib/module-utils.ts (new)
+- apps/codecamp-advantage/lib/__tests__/module-utils.test.ts (new)

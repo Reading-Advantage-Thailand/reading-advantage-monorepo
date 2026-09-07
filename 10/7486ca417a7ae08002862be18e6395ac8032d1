@@ -1,0 +1,9 @@
+Phase 3: Test Coverage Backfill
+
+- Backfilled assignments domain tests (list, get, update, delete, submit)
+- Backfilled articles domain tests (get, create, update)
+- Added API router output-contract tests for articles, assignments, classes,
+  progress, reports, students, auth routers
+- Added delete method to mock-db helper
+
+Commit: 107486ca417a7ae08002862be18e6395ac8032d1

@@ -1,0 +1,8 @@
+Task: Add lesson-language badge
+
+- apps/codecamp-advantage/messages/en.json: Added dashboard.lessonsInEnglish and module.lessonsInEnglish
+- apps/codecamp-advantage/messages/th.json: Added dashboard.lessonsInEnglish and module.lessonsInEnglish (บทเรียนเป็นภาษาอังกฤษ)
+- apps/codecamp-advantage/app/[locale]/page.tsx: Added inline badge below subtitle
+- apps/codecamp-advantage/app/[locale]/module/[slug]/page.tsx: Added inline badge next to module title
+- apps/codecamp-advantage/app/api/chat/route.ts: Updated buildSystemPrompt to note lesson content is English
+- apps/codecamp-advantage/lib/__tests__/lesson-language-badge.test.ts: New test file

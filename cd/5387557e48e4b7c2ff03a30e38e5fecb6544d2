@@ -1,0 +1,11 @@
+Track: prisma_drizzle_science_controllers_20260505
+Task: prisma/seed-functions/validate-json → scripts/seed/validate-json (part of 7-file bundle)
+Decision: REWRITE (move). Pure validation helpers — only Prisma dep was the StandardsAlignment type. Swapped to local lib/enums.ts.
+Tables seeded: none (validation only)
+Tests: none (no test file existed for this helper)
+Importers updated: none (consumers still on Prisma in prisma/seed-functions/seed-{standards,lessons,curriculum-units}.ts — will be fixed in subsequent commits as those files are migrated)
+Notes:
+- No logic change; identical type guards and error messages.
+- Now imports StandardsAlignment from @/lib/enums (string union literal that matches Prisma enum at runtime).
+- Pre-existing tsc errors elsewhere out of scope per task brief.
+Behavior-preserving; no logic change beyond type-import swap.

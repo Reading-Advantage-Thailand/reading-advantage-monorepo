@@ -1,0 +1,11 @@
+Track: prisma_drizzle_science_controllers_20260505
+Task: students/[studentId]/achievements route → Drizzle
+Tests: 6/6 pass (route.integration.test.ts), lint clean
+Notes:
+- Tables used: global `achievements` (no schoolId — raw db, not TenantDB per plan §0.6)
+- Drizzle pattern: db.select({...}).from(achievements).where(eq).orderBy(desc)
+- Auth preserved exactly: getCurrentSession, isOwnProfile || (DEV_AUTH_ENABLED && TEACHER|ADMIN)
+- Response shape preserved: { achievements: [{ badgeType, unlockedAt }] }
+- No pre-existing test in tests/ to delete
+- New co-located test follows gamification-profile pattern (cce3000); covers 401, 403 cross-student, 403 teacher-no-dev, empty list, ordered desc + other-user isolation, dev impersonation via vi.doMock(@/lib/env)
+Behavior-preserving; no logic change beyond ORM swap.

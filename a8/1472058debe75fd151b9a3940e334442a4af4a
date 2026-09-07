@@ -1,0 +1,15 @@
+Task: Implement GitHub webhook Hono route with signature verification + LLM PR review pipeline
+
+Summary: Built the webhook handler infrastructure and LLM review domain function for Phase 3 GitHub Integration.
+
+Files changed:
+- packages/webhooks/src/github.ts — Hono route with signature verification, PR event parsing, review re-triggering
+- packages/webhooks/src/index.ts — mount /github sub-router
+- packages/webhooks/src/__tests__/github-webhook.test.ts — 8 tests for webhook handler
+- packages/domain/src/codecamp/review-exercise.ts — LLM review pipeline with dependency-injected generateReview
+- packages/domain/src/codecamp/index.ts — export reviewExercise
+- packages/types/src/codecamp.ts — loosen githubWebhookPayloadSchema action to z.string()
+- packages/webhooks/package.json — add vitest, @reading-advantage/types
+- packages/webhooks/vitest.config.ts — test configuration
+
+Test results: 8/8 webhook tests pass. 134/134 domain tests pass. 78/78 API tests pass.

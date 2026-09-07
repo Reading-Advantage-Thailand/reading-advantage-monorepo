@@ -1,0 +1,21 @@
+Task: Migrate app/api/classes/[classId]/curriculum/route.ts (Phase 1)
+Track: prisma_drizzle_science_controllers_20260505
+
+Summary:
+- prisma.class.findUnique({include:{teacher,students}}) → SELECT scienceClasses
+  + targeted SELECT scienceClassStudents only when caller is not the teacher.
+- prisma.curriculumUnit.findMany({include:{lessons}}) → SELECT
+  scienceCurriculumUnits + single INNER JOIN scienceUnitLessons/scienceLessons,
+  grouped by unitId and sorted by lesson.order in-memory.
+- prisma.lessonCompletion.findMany → SELECT scienceLessonCompletions with
+  studentId + inArray(lessonIds).
+- Response shape verbatim with previous Prisma version.
+
+Files:
+- M apps/science-advantage/app/api/classes/[classId]/curriculum/route.ts
+- M apps/science-advantage/app/api/classes/[classId]/curriculum/route.integration.test.ts
+
+Verification:
+- route.integration.test.ts: 6/6 pass (401, 404, 403 outsider, empty units,
+  unit+lesson ordering, COMPLETED+IN_PROGRESS reflection)
+- eslint clean

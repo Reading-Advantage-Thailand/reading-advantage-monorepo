@@ -1,0 +1,15 @@
+Task: Phase 1/Task 1 \u2014 integration setup + URL helper
+
+TDD loop:
+  Red:   vitest run on lib/test/resolve-test-database-url.test.ts \u2192 import failure (no file)
+  Green: implement lib/test/resolve-test-database-url.ts \u2192 7/7 pass
+  Refactor: doc comment only
+
+Files:
+  + lib/test/resolve-test-database-url.ts (32 LoC)
+  + lib/test/resolve-test-database-url.test.ts (52 LoC, 7 cases)
+  + vitest.integration.setup.ts (15 LoC)
+
+The setup file is intentionally DB-free \u2014 the migration runs in globalSetup
+(next task). This keeps per-test startup fast and makes the file safe to also
+be referenced by vitest.config.ts after vitest.setup.ts is retired in Phase 2.

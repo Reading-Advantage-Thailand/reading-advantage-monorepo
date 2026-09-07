@@ -1,0 +1,9 @@
+Track: prisma_drizzle_science_controllers_20260505
+Task: students/[studentId]/assignments route → Drizzle
+Tests: 9/9 pass, lint clean
+Notes:
+- Tables used: scienceAssignments, scienceClassStudents, scienceClasses, scienceLessons, users
+- Replaced Prisma nested filter (class.students.some) with explicit innerJoin on scienceClassStudents scoped by studentId; additional innerJoins on scienceClasses (className), scienceLessons (lesson fields), and users (teacher info)
+- Auth/authorization preserved: 401 unauth, 403 cross-student (TEACHER/ADMIN still permitted per existing route logic), ordering by assignedAt desc
+- No pre-existing tests in tests/api/ for this route (nothing to delete)
+Behavior-preserving; no logic change beyond ORM swap.

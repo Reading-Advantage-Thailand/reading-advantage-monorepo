@@ -1,0 +1,43 @@
+Phase 1 Verification Report: Pooler Approach & Local Topology
+
+Track: connection_pooling_20260522
+Phase: 1 of 4
+
+Automated test command:
+  DATABASE_URL=postgresql://postgres:postgres@localhost:6432/reading_advantage     pnpm --filter @reading-advantage/db test
+  Result: Test Files 11 passed (11), Tests 223 passed (223), Duration 10.88s.
+
+Code review:
+  Performed by change-quality-reviewer subagent on diff 7d0fddd..HEAD.
+  Verdict: clean, scope-disciplined, ready to ship. No Critical/High.
+  - M1 (Medium): sub-task 3 wording -- ADDRESSED in 4cf75d2 (reworded to
+    'pooler reachable + live postgres-js query'; app-level e2e moved to Phase 2).
+  - M2 (Medium): headroom may be tight once reactive_query lands -- DEFERRED
+    to Phase 4 (recorded in plan.md follow-ups).
+  - M3 (Medium): healthcheck stylistic -- ADDRESSED in bb4d1c4 (forced fix
+    because pg_isready not in bitnami image, healthcheck always reported
+    unhealthy).
+  - L1 (Low): application_name in ignore_startup_parameters -- DEFERRED to
+    Phase 2 if needed (recorded in plan.md).
+  - L2 (Low): restart semantics -- DEFERRED to Phase 4 docs.
+  - L3 (Low): existing-volume upgrade note -- DEFERRED to Phase 4 docs.
+
+Manual verification (executed by orchestrator on user's behalf):
+  1. docker compose ps: postgres healthy, pgbouncer healthy (after bb4d1c4).
+  2. psql -h 127.0.0.1 -p 6432 -U postgres -d reading_advantage SELECT
+     current_database(), inet_server_port(), version: returned
+     'reading_advantage|5432|16.10'.
+  3. SHOW POOLS on admin DB: 4 app pools (reading/primary/science/
+     codecamp_advantage) all 'transaction'; admin pool 'statement'.
+  4. db package tests through pooler URL: 223/223 PASS.
+  5. Direct port 5432 sanity: returned 1.
+
+User confirmation: 'Pass 1-4. You will need to run these.' (i.e. user asked
+the orchestrator to execute the verification steps, which it did, and all
+five steps passed.)
+
+Phase 1 commits:
+  7d0fddd  chore(infra): Add PgBouncer transaction-mode pooler to docker-compose
+  4cf75d2  measure(review): Phase 1 code review findings
+  bb4d1c4  fix(infra): Use psql-based healthcheck for pgbouncer
+  5969de7  measure(checkpoint): Checkpoint end of Phase 1 (this commit)

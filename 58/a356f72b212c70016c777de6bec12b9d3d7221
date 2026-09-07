@@ -1,0 +1,18 @@
+Task: Migrate services/metrics/assignment-prediction-service.ts (reopened)
+
+Summary:
+Fixed getAtRiskStudents() raw SQL — replaced three references to the
+legacy quoted Prisma column a."createdAt" with the unified Drizzle
+column a.created_at in the WHERE risk-condition clause and in the
+SELECT/days_since_assigned/risk_score expressions. Added jest coverage
+that renders the SQL with PgDialect.sqlToQuery and asserts column-name
+correctness plus safe parameter binding.
+
+Files:
+- apps/reading-advantage/server/services/metrics/assignment-prediction-service.ts
+- apps/reading-advantage/__test__/assignment-prediction-service.test.ts (new)
+
+Why:
+2026-05-23 review found the at-risk-students query would error at
+runtime ('column a.createdAt does not exist') because Drizzle's
+'assignments' table only has created_at.

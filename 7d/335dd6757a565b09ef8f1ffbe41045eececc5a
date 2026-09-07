@@ -1,0 +1,7 @@
+Task: Retype Abyssal Well logic contract to SentenceItem (Phase S2, track r3f_rendering_tier_20260708)
+
+Summary: abyssalWell.ts now exports its own SentenceItem type ({term, translation}, matching dungeonLiberator/spellweaversRun) and createAbyssalWellState takes sentences: SentenceItem[] instead of vocabulary: VocabularyItem[] (import from useGameStore removed). Empty-input error message updated to 'Sentences cannot be empty'. Red demonstrated via scoped tsconfig including the test file (TS2305 no exported member SentenceItem) since project tsconfig excludes tests; Green: all 49 abyssalWell logic/config tests pass and project tsc clean. Tech-debt registry annotated: Abyssal Well naming-consistency item resolved.
+
+Files: src/lib/games/abyssalWell.ts, src/lib/games/__tests__/abyssalWell.test.ts, measure/tech-debt.md
+
+Why: Sentence games should use the sentence contract; closes the Abyssal Well part of the open VocabularyItem/SentenceItem tech-debt item before the render rewrite builds on this module.

@@ -1,0 +1,20 @@
+Track: Science-Advantage Auth Migration (26/26 tasks)
+
+Summary: Completed all remaining verification and documentation tasks for science-advantage auth migration.
+
+Changes:
+- Marked Phase 1-5 tasks complete in plan.md
+- Verified shared auth route handlers (login, session, logout, impersonate) delegate correctly
+- Confirmed Google OAuth removal is complete (no active code remains)
+- Verified AuthProvider wraps root layout, signin form and user menu use useAuth()
+- Confirmed dev impersonation panel calls shared API route
+- Verified build passes (26 pages generated)
+- Verified no auth-related lint errors (4 pre-existing analytics errors remain)
+- Updated tech-debt.md: marked manual auth verification as Resolved
+- Updated tracks.md: marked track complete
+
+Files modified:
+- measure/tracks/science_auth_migration_20260503/plan.md
+- measure/tracks/science_auth_migration_20260503/metadata.json
+- measure/tracks.md
+- measure/tech-debt.md

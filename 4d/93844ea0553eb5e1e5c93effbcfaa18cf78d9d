@@ -1,0 +1,5 @@
+Task: Add localized formatting helpers in lib/i18n-format.ts
+Summary: Three formatting functions - formatRelativeTime (Intl.RelativeTimeFormat), formatNumber (Intl.NumberFormat), formatDate (Intl.DateTimeFormat). All locale-aware with proper Thai support.
+Files:
+- apps/codecamp-advantage/lib/i18n-format.ts (created)
+- apps/codecamp-advantage/lib/__tests__/i18n-format.test.ts (created)

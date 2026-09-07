@@ -1,0 +1,16 @@
+Task: Phase 3 (Contract-First Game Logic)
+
+Summary:
+- Wrote failing logic tests (Red) then implemented pure module (Green).
+- createBabelArchitectState builds serializable state from VocabularyItem[].
+- placeBabelArchitectBlock scores correct/incorrect placements, updates stability, errors, progress.
+- tickBabelArchitect advances time, applies stability decay, defeats on timeout.
+- completeBabelArchitectRun + estimateBabelArchitectXP produce server-authoritative completion payload.
+- easy/normal/hard difficulty presets tune timeLimit, dropSpeed, maxErrors, stability costs.
+- Logic is deterministic (injectable nowMs) and renderer-agnostic; no Phaser imports in logic.
+
+Files:
+- src/lib/games/babelArchitect.ts
+- src/lib/games/__tests__/babelArchitect.test.ts (6 tests, all passing)
+
+Why: Pure sentence-order rules must be testable without a canvas or GPU before the Phaser scene is built.

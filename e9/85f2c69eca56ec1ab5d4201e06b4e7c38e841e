@@ -1,0 +1,4 @@
+Task: Add CI status badge to root README
+Summary: Added GitHub Actions CI workflow badge to README.md
+Files: README.md
+Why: Provides at-a-glance CI status visibility from the repo homepage

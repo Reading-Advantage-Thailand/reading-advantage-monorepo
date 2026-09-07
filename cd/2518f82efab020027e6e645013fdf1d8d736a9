@@ -1,0 +1,5 @@
+Track: measure_apk_evidence_integrity_gates_20260712
+Task: Revoke v4 and publish non-consumable v5 candidate.
+Changes: Mark v4 revoked/prohibited; publish v5 bound to implementation commit and exact file hashes; record full source base and pending review/approval only.
+Files: phase4-v4-candidate-gate-manifest.json; phase4-v5-candidate-gate-manifest.json; plan.md.
+Why: Canonical v4 findings prohibit v4 approval or acceptance and require a fresh v5 review.

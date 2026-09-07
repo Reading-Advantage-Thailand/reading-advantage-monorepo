@@ -1,0 +1,13 @@
+Task: Update module detail page
+
+Summary: Added exercise repository links, PR review status badges, and quiz score display to the module detail page.
+
+Changes:
+- Fetch exerciseRepos via tRPC and display them with GitHub links and PR review status
+- Fetch prReviews and map them to repos for per-repo status display
+- Compute module quiz average from lesson scores and display as Trophy badge
+- Show individual lesson quiz scores in the lesson list
+- Added PrStatusBadge component for consistent review status rendering
+
+Files modified:
+- apps/codecamp-advantage/app/module/[slug]/page.tsx

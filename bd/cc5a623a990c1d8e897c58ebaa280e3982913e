@@ -1,0 +1,28 @@
+Task: Migrate app/api/classes/[classId]/lessons/[lessonId]/analytics/route.ts (Phase 1)
+Track: prisma_drizzle_science_controllers_20260505
+
+Summary:
+- 8 SELECTs total: class, students JOIN users, lesson + exists() guard,
+  lesson standards JOIN standards, questions, question standards JOIN
+  standards, lesson completions JOIN users, question responses JOIN
+  attempts JOIN users.
+- Aggregations identical: class avg score/completion rate, per-student
+  status + colors, per-question percent correct (sorted asc) with
+  incorrect-student names, per-standard mastery (>=80% per student) with
+  reteach flag (<70% class mastery).
+- exists() in the lesson lookup is the Drizzle equivalent of the Prisma
+  findFirst({where:{curriculumUnits:{some:{classId}}}}) — keeps the lesson-
+  belongs-to-class invariant a single query.
+
+Files:
+- M app/api/classes/[classId]/lessons/[lessonId]/analytics/route.ts
+- A app/api/classes/[classId]/lessons/[lessonId]/analytics/route.integration.test.ts
+- D tests/api/lesson-analytics.integration.test.ts
+
+Verification:
+- route.integration.test.ts: 5/5 pass
+- eslint clean
+
+This completes the 3 simpler Phase 1 routes (curriculum, analytics overview,
+lesson analytics). Phase 1 has only the test updates + manual verification
+gate remaining, plus the originally-deferred sub-tasks.

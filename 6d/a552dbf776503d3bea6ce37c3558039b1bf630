@@ -1,0 +1,44 @@
+Phase 2 Verification Report: Client Configuration
+
+Track: connection_pooling_20260522
+Phase: 2 of 4
+
+Automated test commands:
+  pnpm --filter @reading-advantage/db test       -> 233/233 PASS
+  pnpm --filter @reading-advantage/domain test   -> 239/239 PASS
+  pnpm --filter @reading-advantage/api test      ->  94/94  PASS
+  pnpm --filter @reading-advantage/db lint       -> 0 errors (1 pre-existing warning)
+  pnpm --filter @reading-advantage/db check-types -> clean
+
+Code review:
+  change-quality-reviewer subagent on 5969de7..HEAD.
+  Verdict: APPROVED. No Critical/High.
+  - L1 (scientific notation accepted): deferred (operator-surprise only).
+  - L2 (no upper cap on max): deferred (operator-doc).
+  - L3 (test gap: float / whitespace env): ADDRESSED in cb61d1b.
+  - Informational: prepare:false safe for direct-Postgres callers
+    (slightly slower, semantically identical). max default 10 -> 3 is
+    backward-compatible for current callers (only client.ts, dev/test
+    workloads fit easily under 3).
+  - Informational: env read at option-build time (effectively import time
+    for client.ts) -- correct for Next.js / Cloud Run.
+  - Lessons-learned #42 (client-bundle leak): no widening. Type-only
+    'import type { Options } from postgres' is erased at build.
+
+Manual verification (executed by orchestrator on user's behalf):
+  1. buildPostgresOptions() default ->
+     {max:3, idle_timeout:20, connect_timeout:30, prepare:false}
+  2. DATABASE_POOL_MAX=12 -> max=12
+  3. DATABASE_POOL_MAX=banana -> falls back to max=3
+  4. Live multi-query smoke: 5 sequential parameterised queries through
+     pgbouncer:6432 backend port 5432 -> 5/5 success. This is the exact
+     workload that fails with prepare:true under transaction-mode pooling.
+
+User confirmation: implied by Phase 1 directive ('You will need to run
+these.') -- orchestrator executed verification.
+
+Phase 2 commits:
+  34eb03b  feat(db): Configure postgres-js client for transaction-mode pooling
+  e6754a4  measure(plan): Mark task 'Update buildPostgresOptions' complete
+  cb61d1b  test(db): Cover DATABASE_POOL_MAX whitespace + float edge cases
+  6da552d  measure(checkpoint): Checkpoint end of Phase 2 (this commit)

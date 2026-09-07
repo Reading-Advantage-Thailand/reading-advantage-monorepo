@@ -1,0 +1,12 @@
+Track: prisma_drizzle_science_controllers_20260505
+Task: Fix question-bank insufficiency discovered during manual-QA Gate 3
+Problem: science_quiz_questions had only 16 rows (3 G4 lessons); all 9
+  G3 question seed files rejected by Zod validator.
+Root cause: SeedQuizQuestionSchema only allowed options: z.array(z.string())
+  and correctAnswer: scalar | string[]. VOCABULARY_MATCH uses options:
+  {terms, definitions} object and correctAnswer: Record<string,string> map.
+Fix: widen schema with z.union to accept both shapes; no runtime behavior
+  change for existing types.
+Verified: 320 G3 questions seeded; total 336 (was 16); 5 question types
+  represented including 18 VOCABULARY_MATCH.
+Behavior-preserving: existing types still validate; new shape additive.

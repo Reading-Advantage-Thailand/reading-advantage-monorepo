@@ -1,0 +1,10 @@
+Track: prisma_drizzle_science_controllers_20260505
+Task: app/(teacher)/teacher/classes/page.tsx RSC → Drizzle (part of 2-page bundle)
+Tests: no test (thin RSC; pre-existing pattern from app/api/classes/route.ts reused inline)
+Notes:
+- Replaced Prisma findMany + include {_count:{students:true}} with: (1) select * from scienceClasses where teacherId, orderBy createdAt desc; (2) grouped count() on scienceClassStudents by classId; (3) Map-based join in JS. Mirrors api/classes/route.ts GET pattern (a71dd65).
+- Preserved cls._count.students shape so the JSX uses identical access path (behavior-preserving for unchanged children).
+- standardsAlignment column is text in Drizzle (vs Prisma enum) — narrow cast to StandardsAlignment at the helper call site; helper has '?? alignment' fallback so unknown values still render safely.
+- Auth flow preserved (requireRole('TEACHER')).
+- No co-located helper extracted: the two-query pattern is short and identical to the matching API route, so duplication is acceptable.
+Behavior-preserving; no logic change beyond ORM swap.

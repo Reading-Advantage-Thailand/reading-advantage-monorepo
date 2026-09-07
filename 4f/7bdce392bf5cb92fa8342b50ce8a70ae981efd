@@ -1,0 +1,21 @@
+Task: Rewrite Phase A seed data (Modules 1-6, 29 lessons)
+
+Summary: Replaced the old 5-module placeholder seed with the full Phase A curriculum
+data covering Dev Environment, Git & GitHub, HTML & CSS, JavaScript, TypeScript,
+and Testing with Vitest. Total: 6 modules, 29 lessons, exercises, and quizzes.
+
+Files created:
+- packages/db/src/seed/codecamp-curriculum-data.ts (pure data module, testable)
+- packages/db/src/__tests__/codecamp-curriculum-data.test.ts (11 tests)
+
+Files modified:
+- packages/db/src/seed/codecamp-seed.ts (rewritten to use data module)
+
+Key design decisions:
+- Extracted curriculum data into a pure data module for testability
+- Each module ends with a quiz lesson
+- Combined exercise+quiz lessons use type 'quiz' with embedded exercises
+- Exercise repo placeholders generated per module
+- All content sourced from unit class period plans in apps/codecamp-advantage/measure/curriculum/
+
+Tests: 11 new tests, all passing. Build: clean.

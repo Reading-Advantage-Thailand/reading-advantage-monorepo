@@ -1,0 +1,8 @@
+Track: prisma_drizzle_science_controllers_20260505
+Task: app/(teacher)/teacher/page.tsx RSC → Drizzle (part of 2-page bundle)
+Tests: no test (thin RSC; e2e .spec.ts is Playwright and unaffected by ORM swap)
+Notes:
+- Inline Prisma findMany {id,name}, orderBy createdAt desc, take 10 → Drizzle select/from/where/orderBy/limit on scienceClasses.
+- Auth flow preserved (requireRole('TEACHER')).
+- No client-component types depend on Prisma here (InterventionAlertsWidget accepts {id,name} only).
+Behavior-preserving; no logic change beyond ORM swap.

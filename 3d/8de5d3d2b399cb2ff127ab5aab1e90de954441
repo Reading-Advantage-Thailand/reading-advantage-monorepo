@@ -1,0 +1,31 @@
+task: Phase 1 verification [~] (Mid agent, Red phase)
+track_id: video_pipeline_20260613
+phase: Phase 1 (Vinext Scaffold + Monorepo Integration), task 8 'Verify: app starts, auth works, DB connects'
+
+files created:
+  apps/marketing/vitest.config.ts (new)
+  apps/marketing/app/__tests__/phase-1-boot.test.ts (new)
+
+rationale: encodes the §6 P1 smoke contract (boot, /login renders, DB ping returns)
+as executable assertions per test-strategy.md §6. While the owning task is [~],
+the file is describe.skip() AND listed under test.exclude in vitest.config.ts
+(both gates required per §8, so aggregate 'turbo run test' does not pick up
+red marketing files).
+
+Red probe: bunx vitest run --config=/tmp/vitest-red.config.ts (env has no
+node/pnpm on PATH; PATH-adjusted pnpm only used for the commit-msg hook).
+Result: 16 tests, 2 failed, 14 passed.
+
+Failing assertions (expected missing behaviour for the [~] task):
+  - /login page renders (no apps/marketing/app/login/page.tsx)
+  - DB ping endpoint exists (no apps/marketing/app/api/health/db/route.ts)
+
+Passing assertions (Phase 1 tasks 1-7 already wired):
+  - scaffold invariants (package.json, vite.config.ts, tsconfig.json)
+  - monorepo wiring (deps @reading-advantage/{auth-client, db, storage, ai, api})
+  - lib re-exports (app/lib/{db,ai,storage}.ts)
+  - sidebar layout (layout.tsx wraps children in AuthProvider)
+  - auth API routes (login/logout/session)
+
+open-questions:
+  - Q-VP-01..03 (test-strategy.md §9) — still pending; not blocked by this Red

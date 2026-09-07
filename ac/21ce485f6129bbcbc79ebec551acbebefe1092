@@ -1,0 +1,4 @@
+Task: Write auth procedure integration tests
+Summary: 12 tests covering login (4), register (2), session (2), refresh (2), logout (2) with mocked DB
+Files: packages/api/src/__tests__/auth.test.ts
+Why: Auth procedures are core security surface — all paths must be tested before migration

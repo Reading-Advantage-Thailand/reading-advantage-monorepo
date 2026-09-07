@@ -1,0 +1,6 @@
+Track: apk_incomplete_sentence_action_20260710
+Task: Implement APK sentence-action W1
+Summary: Added Astral Mage target-action and Sorcerer's Ziggurat isometric-step Phaser 4 cartridges, reusable pure-state families, dual-edition slots, exact sentence/result contract adapters, QC deep links, host smoke registries, and desktop/mobile browser completion.
+Quality: 55 cartridge tests; 96.34% statement coverage; package lint/type/build and architecture guard passed; Advantage build passed; Chromium QC 6/6; mandatory reviewer found no remaining Critical or High issues.
+Why: Replace zero-implementation catalog placeholders with distinctive package-owned Phaser mechanics consumable by Advantage Games, Reading Advantage, and Primary Advantage without widening the authoritative completion boundary.
+Scope: 37 files in packages/game-cartridges plus bounded Advantage QC/catalog and Reading/Primary host smoke surfaces. Concurrent Abyssal, Babel, R3F, lockfile, and test-result work was excluded.

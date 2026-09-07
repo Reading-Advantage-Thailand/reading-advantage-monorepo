@@ -1,0 +1,26 @@
+Task: Migrate lib/gamification/badges.ts + replace test (Phase 3 helpers, pulled ahead)
+Track: prisma_drizzle_science_controllers_20260505
+
+Summary:
+- badges.ts: replaced default Prisma client with @reading-advantage/db drizzle.
+  All 10 checkers + checkBadgeConditions/evaluateAllBadges ported with no
+  behavioral changes.
+- Deleted lib/gamification/badges.test.ts (mock-Prisma, 471 lines) and
+  replaced with lib/gamification/badges.integration.test.ts (real-DB, 20 tests).
+
+Tables touched: scienceLessonCompletions, scienceAttempts,
+scienceCurriculumUnits, scienceUnitLessons (junction), scienceLessons,
+gamificationProfiles, achievements (global).
+
+Files:
+- M apps/science-advantage/lib/gamification/badges.ts
+- D apps/science-advantage/lib/gamification/badges.test.ts
+- A apps/science-advantage/lib/gamification/badges.integration.test.ts
+
+Verification:
+- badges.integration.test.ts: 20/20 pass
+- eslint: 2 pre-existing _underscore warnings, no errors
+
+Pre-existing warnings (intentional underscore params) left as-is:
+- _userId in checkBilingualScholar (deferred badge)
+- _triggerEvent in checkBadgeConditions (event-routing placeholder)

@@ -1,0 +1,6 @@
+Track: jsdoc_shared_packages_20260530
+Type: chore
+Scope: 154 exported functions across 8 shared packages (domain, api, auth, db, webhooks, ui, auth-client, utils)
+Method: build-graph query to identify undocumented functions, add JSDoc, verify with build-graph update
+Phases: 8 (one per package + final verification)
+Commit: 49ac716

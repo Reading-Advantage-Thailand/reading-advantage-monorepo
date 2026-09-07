@@ -1,0 +1,18 @@
+Track: prisma_drizzle_science_controllers_20260505
+Task: Infra fix discovered during manual-QA batch (pre-existing latent bugs, surfaced by attempting to run seed for the first time post-Prisma-removal)
+Problem 1: apps/science-advantage/package.json lacked 'type': 'module'; tsx tried CJS resolution against ESM-only @reading-advantage/db exports → ERR_PACKAGE_PATH_NOT_EXPORTED.
+Problem 2: After type:module, ESM doesn't define __dirname; 7 scripts using it for JSON path resolution failed.
+Fix: add 'type': 'module' + fileURLToPath/__dirname shim in each script.
+Affected files:
+  - apps/science-advantage/package.json
+  - apps/science-advantage/scripts/seed/seed-standards.ts
+  - apps/science-advantage/scripts/seed/seed-lessons.ts
+  - apps/science-advantage/scripts/seed/seed-questions.ts
+  - apps/science-advantage/scripts/seed/seed-curriculum-units.ts
+  - apps/science-advantage/scripts/migrate-seed-data.ts
+  - apps/science-advantage/scripts/convert-md-to-structured.ts
+  - apps/science-advantage/scripts/__tests__/migrate-lesson-content.test.ts
+Behavior-preserving for scripts; package-type change is purely a script-runtime concern (Next.js build verified post-change — still passes).
+Note: reading-advantage has the SAME pre-existing bug (also runs tsx scripts importing @reading-advantage/db without type:module). NOT fixed here; out of scope for this track.
+Note 2: end-to-end seed run blocked by separate pre-existing env issues — .env.local uses Prisma-format DATABASE_URL with ?schema=public (postgres-js rejects), and Drizzle migrations have not been applied to science_advantage DB (existing tables conflict with first migration). Both out of scope for this infra fix; ESM correctness verified by reaching DB-query phase before failure.
+Out-of-scope __dirname users left untouched (pre-existing, not blocking seed): apps/science-advantage/vitest.{config,scripts.config,integration.config,unit.config}.ts (loaded by vitest, not tsx); apps/science-advantage/lib/{platform/integration,security-headers,env}.test.ts (vitest handles); apps/science-advantage/prisma/seed-functions/update-seed-files.ts (legacy, not invoked).

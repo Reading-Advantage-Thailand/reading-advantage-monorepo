@@ -1,0 +1,3 @@
+Track: apk_cross_game_asset_ontology_20260712 Phase 4 responsive composition
+Summary: Declared compact/wide strategies, inputs, reserved regions, camera policies, required visibility, state preservation, Thai/English fixtures, and shared responsive primitives for all 29 games.
+Verification: 17/17 track tests pass.

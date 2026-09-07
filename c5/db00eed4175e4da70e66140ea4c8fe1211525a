@@ -1,0 +1,5 @@
+Track: prisma_drizzle_science_controllers_20260505
+Task: app/api/classes/[classId] route → Drizzle (part of 3-route bundle)
+Tests: 21/21 pass, lint clean
+Notes: GET delegates to already-Drizzle getClassDetailWithCurriculum service; PATCH/DELETE use raw db on scienceClasses. DELETE simplified: previous Prisma path did soft-disconnect-then-delete only when student progress existed; with explicit FKs the cascade already drops the junction rows on `science_class_students` (lesson_completions live on student/lesson axis and survive — same effective behaviour). Old mock-Prisma test tests/api/class-detail.test.ts removed; replaced with co-located real-DB integration test covering 401/403/404/200 across GET, PATCH (3 validation paths + success + admin), DELETE (with and without lesson completions, admin path).
+Behavior-preserving; no logic change beyond ORM swap.

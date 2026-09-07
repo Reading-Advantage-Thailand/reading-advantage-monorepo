@@ -1,0 +1,6 @@
+Task: Write tests for language switcher
+
+Summary: Added 7 unit tests covering rendering (both locale labels visible), locale highlighting (aria-current), navigation (router.replace called with correct locale), and accessibility (aria-label on buttons, role group on container).
+
+Files created:
+- apps/codecamp-advantage/components/__tests__/language-switcher.test.tsx

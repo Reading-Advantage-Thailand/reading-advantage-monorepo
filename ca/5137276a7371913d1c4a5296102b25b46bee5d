@@ -1,0 +1,11 @@
+Track: prisma_drizzle_science_controllers_20260505
+Task: app/api/auth/login/route.integration.test.ts → DELETED (catch-all drift)
+Tests: N/A (deleted)
+Notes: Test was pre-existing 100% broken — imported Prisma against a
+Drizzle-managed test DB (table public.session does not exist) and called
+POST(request) against the new package-delegating route wrapper whose
+handler lives in @reading-advantage/api/routes/auth. Login behavior is
+already covered by route.test.ts (mocked unit), auth-contract.test.ts,
+and packages/api/src/__tests__/auth-routes.test.ts (handleLogin).
+Behavior-preserving; no logic change beyond ORM swap (deletion of
+stale test, not a migration).

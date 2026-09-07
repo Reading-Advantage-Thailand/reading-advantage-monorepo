@@ -1,0 +1,9 @@
+Task: Implement R3F render layer — Green phase (Phase S2, track r3f_rendering_tier_20260708)
+
+Summary: The Abyssal Well now renders real 3D. New wellProjection.ts maps logic (lane, depth) onto a 3D tube (rim z=0, far end z=-24, 8 lanes on the wall). New AbyssalWellScene.tsx (pure R3F scene, no Canvas): wireframe cylinder with one radial segment per lane, icosahedron enemies (amber target / purple others) with drei Text word labels, sphere projectiles, cone player ship — all meshBasicMaterial per the mobile perf budget. AbyssalWellGame.tsx: Konva Stage replaced by <Canvas camera=[0,0,3.2] dpr=[1,2]> + scene + Bloom (postprocessing); HUD (lives, target word, translation) moved from canvas to DOM overlay for accessibility/text-scaling; Konva render code deleted; manual ResizeObserver/scale plumbing removed (Canvas is self-sizing); selects got label+htmlFor. Logic module, rAF loop, phases, fullscreen/accessibility hooks, start/end screens, input handling unchanged. Route already loads via next/dynamic ssr:false. Note: jest transformIgnorePatterns exception for ESM R3F packages turned out to be dead config under next/jest (its own /node_modules/ pattern wins) — reverted; project convention is mocking (drei/postprocessing mocked in tests). getLanePosition (old 2D projection) left in the logic module — still tested, now render-unused.
+
+Gates: tsc clean, eslint 0 errors, 189 suites / 1824 tests pass.
+
+Files: src/components/games/sentence/abyssal-well/{AbyssalWellGame.tsx, AbyssalWellScene.tsx, wellProjection.ts, AbyssalWellGame.test.tsx}
+
+Why: Proof-of-concept and exemplar for the Tier 2 rendering stack (spec S2).

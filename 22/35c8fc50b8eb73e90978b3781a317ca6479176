@@ -1,0 +1,16 @@
+Track: prisma_drizzle_science_controllers_20260505
+Task: prisma/seed-functions/seed-lessons → scripts/seed/seed-lessons (part of 7-file bundle)
+Decision: REWRITE.
+Tables seeded: science_lessons, science_lesson_standards (junction)
+Tests: none
+Importers updated: none yet — prisma/seed.ts still on old path (will break temporarily; next task line 270 fixes)
+Notes:
+- Drizzle insert + onConflictDoUpdate on unique slug replaces prisma.lesson.upsert (which keyed on id).
+- Schema reshape: Prisma had string id == seed JSON id; Drizzle uses UUID id + unique slug. JSON 'id' or 'slug' becomes the schema slug.
+- Standards link rewritten: implicit Prisma _LessonToStandard → explicit science_lesson_standards with delete-then-insert pattern inside a transaction.
+- Preserves grade-4 dual-source collection (prisma/seed-data/lessons + data/content/grade-4/lessons).
+- Preserves Zod validation (validateLessonsSeedFile + formatValidationErrors) — error path still process.exit(1).
+- structuredContent uses null instead of undefined (Drizzle treats undefined as 'no-op'; we want explicit null to overwrite stale jsonb).
+- lessonType default 'LESSON' (matches schema default).
+- CLI shape preserved.
+Behavior-preserving; no logic change beyond ORM swap + key-source change (id→slug for upsert key).

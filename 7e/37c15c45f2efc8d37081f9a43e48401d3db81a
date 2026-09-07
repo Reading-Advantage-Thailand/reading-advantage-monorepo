@@ -1,0 +1,1 @@
+Task: Document S1 activity runtime public boundaries and usage. File: packages/activity-runtime/README.md. Why: make trusted resource resolution, server correctness, evidence separation, migration, and package gates discoverable to future LMS consumers.

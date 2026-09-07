@@ -1,0 +1,13 @@
+Track: prisma_drizzle_science_controllers_20260505
+Task: students/[studentId]/mastery-profile route → Drizzle
+Tests: 14/14 pass (route.integration.test.ts), lint clean
+Notes:
+- innerJoin(scienceStandardMastery⋈scienceStandards) replaces include:{standard}
+- like(code, `${strand}%`) replaces startsWith; only fetched when strand filter set
+- gt(scienceStandardMastery.id, cursor) preserves cursor pagination semantics (asc(id) order)
+- decimal masteryLevel is string from postgres-js → Number() coerced for math
+- Old mock-Prisma 546-line integration test fully replaced (Drizzle fixtures use String() for decimals)
+- Math.round(0.785*100)/100 = 0.78 in JS (float repr), not 0.79 — test uses range assert
+- Response shape, status (READY/CALCULATING), retryAfterSeconds, mastery thresholds, strand titles, sort order, logger/metrics calls — preserved verbatim
+- session.token used (createSession returns object), matching pilot pattern in lessons/[lessonSlug] route test
+Behavior-preserving; no logic change beyond ORM swap.

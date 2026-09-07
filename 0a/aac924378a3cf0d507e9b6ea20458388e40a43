@@ -1,0 +1,3 @@
+Track: apk_cross_game_asset_ontology_20260712 Phase 6 semantic ontology
+Summary: Expanded to 493 scene usages, normalized them into 17 theme-independent semantic families, proved exact resolution and source consumers, defined substitutions/conflations, separated five Must roles, and ranked kit, asset, environment, action, audio/UI, and cartridge cohorts.
+Verification: 22/22 track tests pass; all usages resolve exactly once; all ontology entries have consumers.

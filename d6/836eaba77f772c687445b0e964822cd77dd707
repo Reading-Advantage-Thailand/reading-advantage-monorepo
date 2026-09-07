@@ -1,0 +1,53 @@
+Phase 4 Verification Report: Verification & Docs (TRACK CLOSE-OUT)
+
+Track: connection_pooling_20260522
+Phase: 4 of 4 (FINAL)
+
+Automated test commands (re-run during final verification):
+  pnpm --filter @reading-advantage/db test       -> 232/232 PASS
+  pnpm --filter @reading-advantage/domain test   -> 239/239 PASS
+  pnpm --filter @reading-advantage/api test      ->  94/94  PASS
+  pnpm --filter @reading-advantage/webhooks test ->  33/33  PASS  (run earlier in phase)
+  pnpm --filter @reading-advantage/auth test     ->  64/64  PASS  (run earlier in phase)
+
+Concurrency check (FR-5 / AC5):
+  12 simulated app instances x max:3 driving 50 concurrent pg_sleep(1)
+  queries through pgbouncer:6432.
+    Baseline backend connections (warmup):      4
+    Peak backend connections (mid-workload):    8
+    Post-workload (idle pool):                 20
+    pooler default_pool_size:                  20
+    estimated unpooled peak (12*3):            36
+    delta vs unpooled:                         28
+  PASS: backend connections bounded by pooler.
+
+Code review:
+  change-quality-reviewer subagent on 51bd274..HEAD.
+  Verdict: Cleared to close after M1 fix.
+  - M1 (tech-stack.md Workspace Structure tree truncated): ADDRESSED
+    in b8aa908.
+  - L2 (pre-existing eslint warning): unrelated to this track.
+  - L3 (unrelated commit 0c05b95 in window): acknowledged.
+  - L4 (auth test count assumption): re-verified 64/64.
+
+All 7 acceptance criteria met (see commit message).
+
+Manual verification (orchestrator-run):
+  1. tech-stack.md AC7 keywords present (DIRECT_DATABASE_URL x6,
+     LISTEN/NOTIFY x2, pgbouncer, transaction mode, prepare: false).
+  2. measure/lessons-learned.md 47/50, measure/tech-debt.md 44/50.
+  3. measure/tracks.md: '[x] **Track: Connection Pooling**' with full
+     completion status line.
+  4. Final regression sweep: 565+ tests across db/domain/api green.
+  5. Workspace Structure tree restored after M1 fix.
+
+Phase 4 commits:
+  1a0ab20  docs(measure): Document pool/direct split + bookkeeping
+  b8aa908  fix(measure): Restore Workspace Structure tree
+  d6836ea  measure(checkpoint): Checkpoint end of Phase 4 (this commit)
+
+Track-total commits (16):
+  Phase 1: 7d0fddd, 4cf75d2, bb4d1c4, 5969de7
+  Phase 2: 34eb03b, e6754a4, cb61d1b, 6da552d
+  Phase 3: 701e942, 2ebb95b, cfb2dd1, 51bd274
+  Phase 4: 1a0ab20, b8aa908, d6836ea, (plan-SHA commit to follow)

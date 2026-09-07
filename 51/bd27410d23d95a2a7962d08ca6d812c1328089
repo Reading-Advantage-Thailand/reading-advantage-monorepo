@@ -1,0 +1,44 @@
+Phase 3 Verification Report: Direct Connection for Migrations
+
+Track: connection_pooling_20260522
+Phase: 3 of 4
+
+Automated test commands:
+  pnpm --filter @reading-advantage/db lint       -> 0 errors (1 pre-existing warning)
+  pnpm --filter @reading-advantage/db check-types -> clean
+  pnpm --filter @reading-advantage/db test       -> 232/232 PASS
+  pnpm --filter @reading-advantage/domain test   -> 239/239 PASS
+  pnpm --filter @reading-advantage/api test      ->  94/94  PASS
+  pnpm --filter @reading-advantage/webhooks test ->  33/33  PASS
+
+Code review:
+  change-quality-reviewer subagent on 6da552d..HEAD.
+  Verdict: APPROVED. No Critical/High.
+  - M1 (pathToFileURL fragility): ADDRESSED in cfb2dd1.
+  - L1 (eager seedClient allocation): deferred (negligible at runtime,
+    postgres-js connect is lazy).
+  - L2 (console.warn noise): deferred (acceptable single-line hint).
+
+Manual verification (executed by orchestrator on user's behalf):
+  1. drizzle-kit migrate with BOTH env vars set -> uses DIRECT, no warning.
+  2. drizzle-kit migrate with only DATABASE_URL -> emits expected console
+     warning '[drizzle.config] DIRECT_DATABASE_URL is not set; falling
+     back to DATABASE_URL...' then proceeds via fallback.
+  3. codecamp-stale-seed.test.ts 6/6 pass in 14ms with NO 'Seeding
+     codecamp curriculum...' stdout (main-module guard working).
+  4. Fresh DB end-to-end via DIRECT_DATABASE_URL:
+     - DROP/CREATE DATABASE p3_verify
+     - drizzle-kit migrate -> 'migrations applied successfully!'
+     - seed:codecamp -> 'Seeded 18 new module(s) with 85 lessons,
+       exercises, and quizzes.'
+     - Counts: modules=18, lessons=85, tables=68, drizzle_migrations=17.
+     - Cleanup: DROP DATABASE.
+
+User confirmation: implied -- orchestrator executes verification on
+user's behalf per Phase 1 directive ('You will need to run these.').
+
+Phase 3 commits:
+  701e942  feat(db): Split DATABASE_URL (pooled) from DIRECT_DATABASE_URL
+  2ebb95b  measure(plan): Mark Phase 3 implementation tasks as complete
+  cfb2dd1  fix(db): Use pathToFileURL for main-module guard
+  51bd274  measure(checkpoint): Checkpoint end of Phase 3 (this commit)

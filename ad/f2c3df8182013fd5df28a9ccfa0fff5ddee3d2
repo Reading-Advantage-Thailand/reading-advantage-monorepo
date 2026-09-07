@@ -1,0 +1,23 @@
+Task: Migrate lib/gamification/xp.ts (Phase 3 helper, pulled ahead)
+Track: prisma_drizzle_science_controllers_20260505
+
+Summary:
+- Replaced default-export Prisma client with @reading-advantage/db (drizzle).
+- awardXp() now: SELECT from gamification_profiles → throw if missing → UPDATE
+  with returning(). Pure helpers (calculateLevel, getLevelName, calculateXpForQuiz)
+  unchanged.
+- Added lib/gamification/xp.integration.test.ts: 3 tests (level recompute on award,
+  levelUp=false on same-level award, throw on missing profile).
+
+Files:
+- M apps/science-advantage/lib/gamification/xp.ts
+- A apps/science-advantage/lib/gamification/xp.integration.test.ts
+
+Why:
+Quiz route migration (Phase 1) depends on awardXp(). Migrating xp.ts to Drizzle
+first removes the cross-DB chasm so the route can be verified in isolation.
+
+Verification:
+- pnpm --filter science-advantage exec vitest run --config vitest.integration.config.ts lib/gamification/xp.integration.test.ts → 3/3 pass
+- pnpm --filter science-advantage exec vitest run --config vitest.unit.config.ts lib/gamification/xp.test.ts → 22/22 pass
+- eslint clean

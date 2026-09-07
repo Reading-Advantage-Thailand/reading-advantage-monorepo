@@ -1,0 +1,5 @@
+Task: Update Science auth migration plan (Phase 1, Task 1.1-1.2)
+Summary: Removed Google OAuth rewrite tasks from science_auth_migration_20260503/plan.md. Replaced Phase 2 (Google OAuth Rewrite) with Phase 2 (Auth Strategy Alignment - Username/Password Only). Updated tech-debt.md line 40 to state Google OAuth was removed, not rewritten to Drizzle. Verified tech-stack.md line 30 already correctly documents username/password-only sessions.
+Files modified:
+- measure/tracks/science_auth_migration_20260503/plan.md
+- measure/tech-debt.md

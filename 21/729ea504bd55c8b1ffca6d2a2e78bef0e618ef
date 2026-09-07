@@ -1,0 +1,11 @@
+Task: Phase 4 validator trust remediation for apk_source_denominator_inventory_20260712
+
+Summary: Bound validation to committed Phase-0 authority and admitted phase-base ancestry; enforced exact frozen roles, ceilings, numeric stop-loss, live nested locators, and apk-role-receipt.v1 provider-event/output bindings; added paired coordinated counterexamples while preserving prior controls.
+
+Files:
+- measure/evidence_integrity_gates/apk_inventory_acceptance.py
+- measure/tests/test_apk_source_denominator_inventory_phase4.py
+
+Why: Remediates RB-SEC-006/007 and APK-DEN-C-101..105 without authoring Phase-4 review, candidate, owner, or accepted artifacts.
+
+Verification: syntax PASS; Phase4 Green-branch 31/31 PASS; Phase0-3 39/39 PASS; focused Phase4 31 counterexamples PASS plus 10 expected live failures solely for missing independent-review.json.

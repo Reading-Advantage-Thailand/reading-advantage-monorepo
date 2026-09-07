@@ -1,0 +1,27 @@
+Task: Migrate lib/services/mastery/mastery-worker.ts (Phase 2)
+Track: prisma_drizzle_science_controllers_20260505
+
+Summary:
+- Replaced PrismaClient subset (WorkerPrisma) with direct @reading-advantage/db
+  use; client param defaults to db so callers (e.g., quiz/route.ts) can drop
+  their explicit prisma arg.
+- Removed: AttemptWithRelations, ExistingMasteryRow, WorkerPrisma types
+  (no longer needed; data shape captured locally via per-table SELECTs).
+- 5 SELECTs now replace the single nested Prisma include: attempt metadata,
+  quiz questions for the lesson, question-standard junction rows,
+  responses by attemptId, existing mastery for touched standards.
+- Update path preserved: same per-question recency × difficulty × correctness
+  weighting; same masteryLevel = previous*0.35 + new*0.65 EMA-style blend.
+
+Behavior preserved (including the pre-existing 'evidenceDelta = previous +
+new' quirk that effectively double-counts evidence on second writes; not
+fixed here — out of scope of behavior-preserving migration).
+
+Replaces tests/lib/mastery-pipeline.test.ts (mocked, 371 lines) with
+mastery-worker.integration.test.ts (real-DB, 5 tests).
+
+Verification:
+- mastery-worker.integration.test.ts: 5/5 pass
+- standard-mastery.integration.test.ts: 9/9 pass (re-verified)
+- eslint clean
+- Resolves tsc error introduced by previous commit (3d1101b)

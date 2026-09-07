@@ -1,0 +1,12 @@
+Track: prisma_drizzle_science_controllers_20260505
+Task: 4 teacher components (class-card, class-detail-header, class-snapshot-panel, teacher-dashboard-classes) -> Drizzle types
+Tests: no test changes (presentational components; types-only swap)
+Notes:
+- Each component only imported the StandardsAlignment enum type from @prisma/client.
+- Swapped to 'import type { StandardsAlignment } from @/lib/enums' string-union shim (same compile-time shape as Prisma's enum literals THAI | NGSS).
+- No Drizzle table.$inferSelect needed: props are already narrow DTO shapes (id/name/gradeLevel/standardsAlignment/studentCount/createdAt) that callers construct from RSC/API data; only the enum field referenced an external type.
+- class-card.tsx and teacher-dashboard-classes.tsx had 'import { StandardsAlignment }' (value import) but used only as type; converted to 'import type' (verbatimModuleSyntax-safe).
+- class-detail-header.tsx and class-snapshot-panel.tsx already used 'import type'; only source path changed.
+- No nullability widening required (no nullable enum fields involved).
+- No callers modified; prop interfaces preserved.
+Behavior-preserving; no runtime change.

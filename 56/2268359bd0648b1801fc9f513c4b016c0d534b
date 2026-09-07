@@ -1,0 +1,13 @@
+Task: Phase 5 — Phaser Adapter + Scene
+
+Summary:
+- babelArchitectScene.ts: Phaser.Scene renders tower, active/placed blocks, stability bar, HUD text, and feedback from serializable state. Constrained low-color palette. Touch input on block sprites emits placement intents.
+- babelArchitectAdapter.ts: createBabelArchitectGame mounts Phaser.Game, starts scene with a typed bridge (getState + onPlaceBlock), returns handle for setState/destroy.
+- 5 lifecycle tests mock Phaser to verify mount, setState, intent forwarding, destroy.
+
+Files:
+- src/components/games/sentence/babel-architect/babelArchitectScene.ts
+- src/components/games/sentence/babel-architect/babelArchitectAdapter.ts
+- src/components/games/sentence/babel-architect/babelArchitectAdapter.test.ts
+
+Why: Phaser must be isolated behind a thin adapter so React owns all learning rules and the render layer is replaceable.

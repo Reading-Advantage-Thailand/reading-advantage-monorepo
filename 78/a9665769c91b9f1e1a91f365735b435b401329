@@ -1,0 +1,1 @@
+Inventory-driven Task 2 remediation: approved exact packages/db/company-identity/ migration root for Company Identity rules. Red test denied COMPANY_AUTH_DIRECT_DATABASE_URL from dedicated Drizzle config; Green ownership suite 7/7.

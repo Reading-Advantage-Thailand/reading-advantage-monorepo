@@ -1,0 +1,7 @@
+Task: Mobile performance verification (Phase S2, track r3f_rendering_tier_20260708)
+
+Summary: Static budget verified in code: Canvas dpr={[1,2]}, all materials meshBasicMaterial (no PBR lighting rig), low-poly geometry (icosahedron detail 0, 8x8 spheres, 4-seg cone, 8x12 open wireframe cylinder), bloom is the single post effect. Runtime smoke test against the production static export (python http.server on :8347, Chrome via automation): start screen renders, game enters playing phase, DOM HUD (lives/target/translation) correct, 3D wireframe tube + glowing floor + player ship render correctly at first frame. Live FPS measurement was blocked: the automation Chrome window was occluded (document.visibilityState='hidden'), and Chrome suspends requestAnimationFrame for hidden tabs — this also explains enemies not spawning during the automated session (game loop is rAF-driven by design, same as every other compliant game). Live FPS + gameplay check folded into the phase's user manual verification with the server left running.
+
+Files: none (verification-only task; empty commit for audit trail)
+
+Why: Spec S2 mobile-performance acceptance criterion.

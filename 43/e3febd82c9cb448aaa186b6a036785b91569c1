@@ -1,0 +1,12 @@
+Task: Phase 4 Task 1 — API Routes
+
+Summary:
+- sentences/route.ts uses createSentencesRoute(SAMPLE_SENTENCES) with force-static.
+- complete/route.ts uses createCompleteRoute() with force-static.
+- Follows the exact pattern of other sentence games (devourer-slime, etc.).
+
+Files:
+- src/app/api/v1/games/babel-architect/sentences/route.ts
+- src/app/api/v1/games/babel-architect/complete/route.ts
+
+Why: Server-authoritative sentence data and completion submission must use the shared route factories so the game integrates with the existing catalog and leaderboard contract.

@@ -1,0 +1,27 @@
+Phase 1 / Task 2: Add pooler to docker-compose
+
+Changes:
+- docker-compose.yml: new pgbouncer service (bitnami 1.23.1 from ECR mirror),
+  transaction mode, pool_mode=transaction, max_client_conn=200,
+  default_pool_size=20, auth_type=trust (local only),
+  ignore_startup_parameters=extra_float_digits,search_path,
+  bind 0.0.0.0:6432, healthcheck via pg_isready on 6432.
+- docker/init-db.sh: add codecamp_advantage + science_advantage_test so a
+  fresh volume covers all app DBs.
+- plan.md: mark Task 'Ratify pooler choice' [x], Task 'Add pooler' [~] with
+  all 3 sub-tasks [x].
+
+Why:
+- FR-1 requires a transaction-mode pooler in docker-compose so local dev
+  mirrors production. Sizing math written into the file so future readers
+  can re-derive default_pool_size without spelunking the spec.
+
+Verification:
+- 'docker compose up -d' brings both containers healthy.
+- 'psql -h 127.0.0.1 -p 6432 -d <each_db>' returns rows.
+- 'SHOW POOLS' on pgbouncer admin confirms transaction mode for all 4 app pools.
+- Live postgres-js client (prepare:false, max:3) returns pg_version 16.10
+  via the pooler.
+
+Files modified: docker-compose.yml, docker/init-db.sh,
+measure/tracks/connection_pooling_20260522/plan.md

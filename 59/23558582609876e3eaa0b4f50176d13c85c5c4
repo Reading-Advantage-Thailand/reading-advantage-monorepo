@@ -1,0 +1,17 @@
+Task: Write Phase C seed data (Modules 11-13)
+
+Summary:
+- Added getPhaseCCurriculumData() to codecamp-curriculum-data.ts
+- Module 11: Databases & ORMs (5 lessons) - PostgreSQL, Drizzle schema, queries, migrations, multi-tenancy
+- Module 12: tRPC & Server Actions (5 lessons) - thin router/thick domain, tRPC setup, frontend hooks, Server Actions
+- Module 13: Authentication (4 lessons) - sessions, logout/middleware, RBAC with assertCan
+- Each module ends with exercise + quiz (3-5 questions)
+- Updated codecamp-seed.ts to include Phase C modules and exercise repos
+- Added 12 comprehensive tests in codecamp-curriculum-data-phase-c.test.ts
+
+Files changed:
+- packages/db/src/seed/codecamp-curriculum-data.ts
+- packages/db/src/seed/codecamp-seed.ts
+- packages/db/src/__tests__/codecamp-curriculum-data-phase-c.test.ts
+
+All 45 db package tests pass.

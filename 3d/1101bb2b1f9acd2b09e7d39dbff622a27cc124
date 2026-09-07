@@ -1,0 +1,25 @@
+Task: Migrate lib/services/mastery/standard-mastery.ts (Phase 2)
+Track: prisma_drizzle_science_controllers_20260505
+
+Summary:
+- Removed @prisma/client + @prisma/client/runtime/library imports.
+- recordStandardMastery uses Drizzle insert().onConflictDoUpdate() for
+  atomic upsert against science_standard_mastery (avoids the
+  read-then-write race of the previous Prisma.$transaction(upsert) form
+  under concurrent writers).
+- clampMasteryLevel(): number → string (decimal(3,2) representation).
+- evidenceCount increment uses sql`${col} + ${delta}`.
+- StandardMasteryWriter type removed; client param is now typeof db.
+
+Replaces prisma/__tests__/standard-mastery.test.ts (Prisma) with
+lib/services/mastery/standard-mastery.integration.test.ts (Drizzle,
+9 tests: create, unique constraint via pg cause.code=23505, clamp+round,
+NaN, evidence accumulation, student cascade, standard cascade, ordering,
+concurrent writer serialization).
+
+Verification:
+- standard-mastery.integration.test.ts: 9/9 pass
+- eslint clean
+
+Known follow-up: mastery-worker.ts now has a TS2345 at line 239 because
+it passes WorkerPrisma where typeof db is expected. Fixed in next commit.

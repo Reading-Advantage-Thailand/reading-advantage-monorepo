@@ -1,0 +1,7 @@
+Track: prisma_drizzle_science_controllers_20260505
+Task: backfill-thai-titles → Drizzle
+Decision: migrate because schema fields (scienceLessons.titleThai, descriptionThai) already exist in Drizzle (packages/db/src/schema/science.ts:85,87) but git history shows the Prisma backfill script was only added in the placeholder commit (3b93a05) — no evidence it was ever executed in production. Per task guidance, migrated rather than retired to be safe; a future cleanup task can retire it once confirmed unneeded.
+- Schema state: titleThai/descriptionThai columns shipped in Drizzle (migration 0013/Phase 2 schema port abe60de); add-bilingual-fields migration.sql kept in prisma/migrations/ for now (will be removed wholesale in Phase 7 Prisma teardown)
+- Production evidence: only 1 commit touches this folder (3b93a05 — track creation); no migration deploy log in history; no other code imports the script
+- Affected files: apps/science-advantage/prisma/migrations/20260429000000_add_lesson_bilingual_fields/backfill-thai-titles.ts (deleted), apps/science-advantage/scripts/backfill-thai-titles.ts (added)
+Behavior-preserving: same CLI shape, same console output, same skip/update logic; Prisma findMany → db.select, prisma.lesson.update → db.update(scienceLessons), prisma.$disconnect() → process.exit (drizzle pool closes on exit). parseBilingualTitle untouched.

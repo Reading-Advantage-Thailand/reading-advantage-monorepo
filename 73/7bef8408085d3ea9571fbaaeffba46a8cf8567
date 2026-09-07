@@ -1,0 +1,27 @@
+Task: Implement GitHub Integration (Phase 3)
+
+Summary: Completed Phase 3 of the codecamp-advantage track — GitHub integration for fork-based exercises with LLM PR review.
+
+Changes:
+- Added githubUsername column to users table (schema + migration)
+- Created packages/webhooks/src/github-client.ts — GitHub App JWT auth, PR diff fetching, PR comment posting
+- Updated packages/webhooks/src/github.ts — webhook handler now creates PR reviews for new PRs, looks up users by GitHub username, triggers LLM review pipeline, posts review comments to GitHub, updates DB with review status
+- Added getUserByGithubUsername domain function in packages/domain/src/users/
+- Exported reviewResultSchema from domain codecamp index
+- Added reviewExercise tRPC procedure to codecamp router with generateObject LLM integration
+- Updated webhook tests with mocks for getExerciseRepos and getUserByGithubUsername
+- Added AI SDK dependencies to packages/webhooks and packages/api
+
+Files changed:
+- packages/db/src/schema/users.ts
+- packages/db/drizzle/0009_add_github_username.sql
+- packages/domain/src/codecamp/index.ts
+- packages/domain/src/users/index.ts
+- packages/webhooks/src/github-client.ts (new)
+- packages/webhooks/src/github.ts
+- packages/webhooks/src/__tests__/github-webhook.test.ts
+- packages/api/src/routers/codecamp.ts
+- packages/api/src/__tests__/codecamp-router.test.ts
+- packages/webhooks/package.json
+- packages/api/package.json
+- measure/tracks/codecamp_advantage_20260513/plan.md
