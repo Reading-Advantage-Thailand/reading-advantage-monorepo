@@ -91,3 +91,14 @@ version-to-`kst-srs.v3.2` mapping and supported graph major live in
 `packages/mastery-runtime-compat/runtime-manifest.json`. Add normative fixtures
 before behavior changes, use semver for public contracts, run the packed
 consumer gate before release, and never ship consumers with `*` or `latest`.
+
+## Contract checks
+
+The Mastery Advantage repository owns the current v3.2 specification.
+Local tests cover the imported v3.2 runtime behavior and current dependency boundaries.
+The ra-math repository owns the retained v2 specification, IM3 evidence, Measure documents, and repository scripts.
+Set `RA_MATH_V2_ROOT` to run those historical integration checks:
+
+```sh
+RA_MATH_V2_ROOT=/path/to/ra-math-advantage node ../../node_modules/vitest/vitest.mjs run src/__tests__/docs-reconciliation.test.ts src/__tests__/spec-markers.test.ts src/__tests__/phase4-spec-section-6-implementation.test.ts src/__tests__/phase5-spec-section-3-2-3-7-8-4-13-3-implementation.test.ts src/__tests__/phase4-doctor-generate-scripts.test.ts src/__tests__/phase4-final-verification.test.ts src/__tests__/phase-1-adversarial.test.ts src/__tests__/phase-5-adversarial.test.ts --maxWorkers=1 --no-file-parallelism
+```

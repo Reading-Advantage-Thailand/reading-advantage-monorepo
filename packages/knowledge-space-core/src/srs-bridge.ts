@@ -54,6 +54,8 @@ export interface SrsCardState {
   state?: 'new' | 'learning' | 'review' | 'relearning';
   /** Optional timestamp of the last review (epoch ms). Used for recency. */
   lastReviewedAt?: number;
+  /** Completed review count. A review timestamp implies history when omitted. */
+  reps?: number;
 }
 
 // ---------------------------------------------------------------------------
@@ -86,6 +88,7 @@ export interface LearnerStateOutput {
     mastery?: number;
     retention?: number;
     isProficient?: boolean;
+    hasReviewHistory?: boolean;
   }>;
   /** Optional reference timestamp emitted by the bridge. */
   generatedAt?: number;
@@ -185,8 +188,7 @@ export class DefaultSrsToKstBridge implements SrsToKstBridge {
  * results.
  *
  * For each unique objective ID found in cards or proficiencies:
- *   - Picks the most recent card (by lastReviewedAt; falls back to highest
- *     stability; positional last-wins as final tiebreaker).
+ *   - Computes minimum retention across variants with review history.
  *   - Picks the last proficiency result (positional last-wins).
  *   - Merges: stability/lastReviewedAt from card; isProficient from
  *     proficiency (if available) else from card state; retention from
@@ -200,27 +202,11 @@ function buildEvidence(
   proficiencies: readonly ObjectiveProficiencyResult[],
   now: number,
 ): KnowledgeStateEvidence[] {
-  // Group cards by objectiveId, keeping the best (most recent)
-  const bestCardByObjective = new Map<string, SrsCardState>();
+  const cardsByObjective = new Map<string, SrsCardState[]>();
   for (const card of cards) {
-    const existing = bestCardByObjective.get(card.objectiveId);
-    if (!existing) {
-      bestCardByObjective.set(card.objectiveId, card);
-      continue;
-    }
-    // Pick the most recent: compare lastReviewedAt, then stability, then positional
-    const existingLast = existing.lastReviewedAt ?? -Infinity;
-    const cardLast = card.lastReviewedAt ?? -Infinity;
-    if (cardLast > existingLast) {
-      bestCardByObjective.set(card.objectiveId, card);
-    } else if (cardLast === existingLast) {
-      const existingStab = existing.stability ?? 0;
-      const cardStab = card.stability ?? 0;
-      if (cardStab > existingStab) {
-        bestCardByObjective.set(card.objectiveId, card);
-      }
-      // else keep existing (positional first-wins when tie)
-    }
+    const objectiveCards = cardsByObjective.get(card.objectiveId) ?? [];
+    objectiveCards.push(card);
+    cardsByObjective.set(card.objectiveId, objectiveCards);
   }
 
   // Proficiency results: positional last-wins per objective
@@ -236,26 +222,45 @@ function buildEvidence(
 
   const evidence: KnowledgeStateEvidence[] = [];
   for (const objId of allObjectiveIds) {
-    const card = bestCardByObjective.get(objId);
+    const objectiveCards = cardsByObjective.get(objId) ?? [];
+    const reviewedCards = objectiveCards.filter((card) =>
+      card.reps === undefined
+        ? card.lastReviewedAt !== undefined
+        : card.reps >= 1,
+    );
+    const mostRecentReviewedCard = reviewedCards.reduce<SrsCardState | undefined>(
+      (mostRecent, card) =>
+        (card.lastReviewedAt ?? -Infinity) > (mostRecent?.lastReviewedAt ?? -Infinity)
+          ? card
+          : mostRecent,
+      undefined,
+    );
+    const card = mostRecentReviewedCard ?? objectiveCards[0];
     const prof = lastProficiencyByObjective.get(objId);
+
+    if (reviewedCards.length === 0 && !prof) continue;
 
     const entry: KnowledgeStateEvidence = {
       sourceId: objId,
+      hasReviewHistory: reviewedCards.length > 0,
     };
 
-    if (card) {
-      if (card.stability != null) entry.stability = card.stability;
-      if (card.lastReviewedAt != null) entry.lastReviewedAt = card.lastReviewedAt;
+    if (mostRecentReviewedCard) {
+      if (mostRecentReviewedCard.stability != null) entry.stability = mostRecentReviewedCard.stability;
+      if (mostRecentReviewedCard.lastReviewedAt != null) entry.lastReviewedAt = mostRecentReviewedCard.lastReviewedAt;
     }
 
     // Card stability takes priority for retention computation.
     // Pre-compute retention from card stability when available.
-    let cardRetention: number | undefined;
-    if (card?.stability != null && card?.lastReviewedAt != null) {
-      const deltaMs = now - card.lastReviewedAt;
+    const reviewedRetentions = reviewedCards.flatMap((reviewedCard) => {
+      if (reviewedCard.stability == null || reviewedCard.lastReviewedAt == null) return [];
+      const deltaMs = now - reviewedCard.lastReviewedAt;
       const deltaDays = Math.max(0, deltaMs / (1000 * 60 * 60 * 24));
-      cardRetention = stabilityToRetention(card.stability, deltaDays);
-    }
+      return [stabilityToRetention(reviewedCard.stability, deltaDays)];
+    });
+    const cardRetention = reviewedRetentions.length > 0
+      ? Math.min(...reviewedRetentions)
+      : undefined;
 
     if (cardRetention != null) {
       // Card-based retention is the primary signal

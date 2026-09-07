@@ -25,12 +25,13 @@
  * It does not create the scripts or modify generated documentation; it only
  * executes the existing entry points and verifies their exit codes.
  */
-import { describe, it, expect } from 'vitest';
+import { it, expect } from 'vitest';
 import { existsSync, statSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
+import { describeHistoricalV2, resolveHistoricalV2Path } from './upstream-contract.js';
 
-const MEASURE_SCRIPTS_DIR = resolve(__dirname, '../../../../measure/scripts');
+const MEASURE_SCRIPTS_DIR = () => resolveHistoricalV2Path('measure', 'scripts');
 
 const DOCTOR_CANDIDATES = [
   'doctor.sh',
@@ -51,7 +52,7 @@ const GENERATE_CANDIDATES = [
  */
 function findExisting(candidates: readonly string[]): string | null {
   for (const name of candidates) {
-    const full = resolve(MEASURE_SCRIPTS_DIR, name);
+    const full = resolve(MEASURE_SCRIPTS_DIR(), name);
     if (existsSync(full) && statSync(full).isFile()) {
       return full;
     }
@@ -59,7 +60,7 @@ function findExisting(candidates: readonly string[]): string | null {
   return null;
 }
 
-describe('Phase 4 — measure/scripts/doctor script exists and exits 0', () => {
+describeHistoricalV2('Historical Phase 4 — measure/scripts/doctor script exists and exits 0', () => {
   it('measure/scripts/ contains a doctor entry point (sh/mjs/js)', () => {
     const found = findExisting(DOCTOR_CANDIDATES);
     expect(found, `Expected one of ${DOCTOR_CANDIDATES.join(', ')} in measure/scripts/`).not.toBeNull();
@@ -83,7 +84,7 @@ describe('Phase 4 — measure/scripts/doctor script exists and exits 0', () => {
     const found = findExisting(DOCTOR_CANDIDATES);
     if (found === null) return;
     const result = spawnSync(found, [], {
-      cwd: resolve(MEASURE_SCRIPTS_DIR, '..', '..'),
+      cwd: resolve(MEASURE_SCRIPTS_DIR(), '..', '..'),
       encoding: 'utf-8',
       timeout: 30_000,
     });
@@ -91,7 +92,7 @@ describe('Phase 4 — measure/scripts/doctor script exists and exits 0', () => {
   });
 });
 
-describe('Phase 4 — measure/scripts/generate script exists and exits 0', () => {
+describeHistoricalV2('Historical Phase 4 — measure/scripts/generate script exists and exits 0', () => {
   it('measure/scripts/ contains a generate entry point (sh/mjs/js)', () => {
     const found = findExisting(GENERATE_CANDIDATES);
     expect(found, `Expected one of ${GENERATE_CANDIDATES.join(', ')} in measure/scripts/`).not.toBeNull();
@@ -112,7 +113,7 @@ describe('Phase 4 — measure/scripts/generate script exists and exits 0', () =>
     const found = findExisting(GENERATE_CANDIDATES);
     if (found === null) return;
     const result = spawnSync(found, [], {
-      cwd: resolve(MEASURE_SCRIPTS_DIR, '..', '..'),
+      cwd: resolve(MEASURE_SCRIPTS_DIR(), '..', '..'),
       encoding: 'utf-8',
       timeout: 60_000,
     });

@@ -16,17 +16,17 @@
  * The test invokes the linter as a subprocess and asserts exit code 0.
  * This is a passing regression guard for the Phase 4 Task 3 quality gate.
  */
-import { describe, it, expect } from 'vitest';
+import { it, expect } from 'vitest';
 import { spawnSync } from 'node:child_process';
-import { resolve } from 'node:path';
+import { describeHistoricalV2, resolveHistoricalV2Path } from './upstream-contract.js';
 
-const LINTER_PATH = resolve(__dirname, '../../../../scripts/check-monorepo-boundaries.mjs');
-const REPO_ROOT = resolve(__dirname, '../../../../');
+const LINTER_PATH = () => resolveHistoricalV2Path('scripts', 'check-monorepo-boundaries.mjs');
+const REPO_ROOT = () => resolveHistoricalV2Path();
 
-describe('Phase 4 — final verification: monorepo boundary linter is green', () => {
+describeHistoricalV2('Historical Phase 4 — final verification: monorepo boundary linter is green', () => {
   it('scripts/check-monorepo-boundaries.mjs exists and is runnable', () => {
-    const result = spawnSync('node', [LINTER_PATH], {
-      cwd: REPO_ROOT,
+    const result = spawnSync('node', [LINTER_PATH()], {
+      cwd: REPO_ROOT(),
       encoding: 'utf-8',
       timeout: 30_000,
     });
@@ -38,8 +38,8 @@ describe('Phase 4 — final verification: monorepo boundary linter is green', ()
   });
 
   it('the boundary linter exits with code 0 on a clean repository', () => {
-    const result = spawnSync('node', [LINTER_PATH], {
-      cwd: REPO_ROOT,
+    const result = spawnSync('node', [LINTER_PATH()], {
+      cwd: REPO_ROOT(),
       encoding: 'utf-8',
       timeout: 30_000,
     });

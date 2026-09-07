@@ -54,12 +54,12 @@ describe('transfer-credit boundary', () => {
 
   it('uses type-only imports from ./mastery-state', () => {
     const content = readFileSync(sourcePath, 'utf-8');
-    expect(content).toMatch(/import\s+type\s+\{[^}]*KnowledgeStateEntry[^}]*\}\s+from\s+['"]\.\/mastery-state['"]/);
+    expect(content).toMatch(/import\s+type\s+\{[^}]*KnowledgeStateEntry[^}]*\}\s+from\s+['"]\.\/mastery-state(?:\.js)?['"]/);
   });
 
   it('uses type-only imports from ./cross-course-equivalence', () => {
     const content = readFileSync(sourcePath, 'utf-8');
-    expect(content).toMatch(/import\s+type\s+\{[^}]*EquivalenceComponent[^}]*\}\s+from\s+['"]\.\/cross-course-equivalence['"]/);
+    expect(content).toMatch(/import\s+type\s+\{[^}]*EquivalenceComponent[^}]*\}\s+from\s+['"]\.\/cross-course-equivalence(?:\.js)?['"]/);
   });
 
   it('does not import from apps/, convex/_generated/, math-content, curriculum, or srs-engine', () => {

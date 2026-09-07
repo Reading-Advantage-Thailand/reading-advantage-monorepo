@@ -13,6 +13,7 @@ import { describe, it, expect } from 'vitest';
 import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { resolve, join } from 'node:path';
 import { execSync } from 'node:child_process';
+import { describeHistoricalV2, itHistoricalV2, resolveHistoricalV2Path } from './upstream-contract.js';
 
 // ---------------------------------------------------------------------------
 // Boundary-violation test (future-proofing)
@@ -77,22 +78,22 @@ describe('Phase 5 — adversarial: boundary future-proofing', () => {
     ).toHaveLength(0);
   });
 
-  it('boundary linter script exits 0 against current codebase', () => {
+  itHistoricalV2('historical boundary linter script exits 0 against its codebase', () => {
     // Run the monorepo boundary linter. Exit 0 means clean; any non-zero
     // status would indicate a boundary violation from a future edit.
-    const scriptPath = resolve(__dirname, '../../../../scripts/check-monorepo-boundaries.mjs');
+    const scriptPath = resolveHistoricalV2Path('scripts', 'check-monorepo-boundaries.mjs');
     const result = execSync(`node ${scriptPath}`, {
       encoding: 'utf-8',
-      cwd: resolve(__dirname, '../../..'),
+      cwd: resolveHistoricalV2Path(),
     });
     expect(result).toContain('[OK] No monorepo boundary violations found.');
   });
 
-  it('boundary linter excludes test files (__tests__) from its scan', () => {
+  itHistoricalV2('historical boundary linter excludes test files (__tests__) from its scan', () => {
     // verify the linter's exclusion is working — grep for test-dir patterns
     // that should NOT trigger the linter
     const scriptContent = readFileSync(
-      resolve(__dirname, '../../../../scripts/check-monorepo-boundaries.mjs'),
+      resolveHistoricalV2Path('scripts', 'check-monorepo-boundaries.mjs'),
       'utf-8',
     );
     expect(scriptContent).toContain('--exclude-dir');
@@ -105,7 +106,7 @@ describe('Phase 5 — adversarial: boundary future-proofing', () => {
 // ---------------------------------------------------------------------------
 
 describe('Phase 5 — adversarial: export-completeness', () => {
-  it('all value exports from knowledge-space-core index.ts resolve at runtime', async () => {
+  it('all value exports from knowledge-space-core index.ts resolve at runtime', { timeout: 20_000 }, async () => {
     // Import all value-level exports (functions, classes, objects, schemas).
     // If any export is missing from its source module, the import will fail
     // at resolve-time, causing this test to fail.
@@ -227,7 +228,8 @@ describe('Phase 5 — adversarial: export-completeness', () => {
 
     const missing: string[] = [];
     for (const modPath of modules) {
-      const absolute = resolve(__dirname, '..', modPath + '.ts');
+      const sourceSpecifier = modPath.replace(/\.js$/, '');
+      const absolute = resolve(__dirname, '..', sourceSpecifier + '.ts');
       try {
         statSync(absolute);
       } catch {
@@ -243,11 +245,11 @@ describe('Phase 5 — adversarial: export-completeness', () => {
 // Doc-correctness — projection-audit.md is no longer a placeholder
 // ---------------------------------------------------------------------------
 
-describe('Phase 5 — adversarial: doc-correctness', () => {
+describeHistoricalV2('Historical Phase 5 — adversarial: doc-correctness', () => {
   it('knowledge-space-practice-projection-audit.md does not contain "placeholder" language', () => {
     const auditPath = resolve(
       __dirname,
-      '../../../../measure/knowledge-space-practice-projection-audit.md',
+      resolveHistoricalV2Path('measure', 'knowledge-space-practice-projection-audit.md'),
     );
     const content = readFileSync(auditPath, 'utf-8');
 
@@ -258,7 +260,7 @@ describe('Phase 5 — adversarial: doc-correctness', () => {
   it('knowledge-space-practice-projection-audit.md does not contain "not wired" language', () => {
     const auditPath = resolve(
       __dirname,
-      '../../../../measure/knowledge-space-practice-projection-audit.md',
+      resolveHistoricalV2Path('measure', 'knowledge-space-practice-projection-audit.md'),
     );
     const content = readFileSync(auditPath, 'utf-8');
 
@@ -269,7 +271,7 @@ describe('Phase 5 — adversarial: doc-correctness', () => {
   it('knowledge-space-practice-projection-audit.md mentions Wired Math (IM3) status', () => {
     const auditPath = resolve(
       __dirname,
-      '../../../../measure/knowledge-space-practice-projection-audit.md',
+      resolveHistoricalV2Path('measure', 'knowledge-space-practice-projection-audit.md'),
     );
     const content = readFileSync(auditPath, 'utf-8');
 
@@ -280,7 +282,7 @@ describe('Phase 5 — adversarial: doc-correctness', () => {
   it('knowledge-space-practice-projection-audit.md references the production route', () => {
     const auditPath = resolve(
       __dirname,
-      '../../../../measure/knowledge-space-practice-projection-audit.md',
+      resolveHistoricalV2Path('measure', 'knowledge-space-practice-projection-audit.md'),
     );
     const content = readFileSync(auditPath, 'utf-8');
 
@@ -291,7 +293,7 @@ describe('Phase 5 — adversarial: doc-correctness', () => {
   it('knowledge-space-practice-projection-audit.md lists outstanding future-track items', () => {
     const auditPath = resolve(
       __dirname,
-      '../../../../measure/knowledge-space-practice-projection-audit.md',
+      resolveHistoricalV2Path('measure', 'knowledge-space-practice-projection-audit.md'),
     );
     const content = readFileSync(auditPath, 'utf-8');
 

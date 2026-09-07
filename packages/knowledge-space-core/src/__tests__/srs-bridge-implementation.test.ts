@@ -45,6 +45,7 @@ function makeCard(
     stability?: number;
     lastReviewedAt?: number;
     state?: SrsCardState['state'];
+    reps?: number;
   },
 ): SrsCardState {
   return {
@@ -53,6 +54,7 @@ function makeCard(
     stability: opts?.stability,
     lastReviewedAt: opts?.lastReviewedAt,
     state: opts?.state,
+    reps: opts?.reps,
   };
 }
 
@@ -129,7 +131,7 @@ describe('DefaultSrsToKstBridge.convert — state transitions', () => {
     expect(entry!.state).toBe('inProgress');
   });
 
-  it('inProgress: card exists but not proficient → inProgress', async () => {
+  it('untouched: unreviewed card without proficiency is not practice evidence', async () => {
     const { DefaultSrsToKstBridge } = await getBridgeModule();
     const bridge = new DefaultSrsToKstBridge();
     const graph = makeGraph(['skill.b']);
@@ -138,6 +140,7 @@ describe('DefaultSrsToKstBridge.convert — state transitions', () => {
         stability: 5,
         lastReviewedAt: NOW - 1 * DAY_MS,
         state: 'learning', // not review → not proficient
+        reps: 0,
       }),
     ];
     const proficiencies: ObjectiveProficiencyResult[] = [];
@@ -145,7 +148,7 @@ describe('DefaultSrsToKstBridge.convert — state transitions', () => {
     const state = bridge.convert({ cards, proficiencies, graph, now: NOW });
     const entry = state.get('skill.b');
     expect(entry).toBeDefined();
-    expect(entry!.state).toBe('inProgress');
+    expect(entry!.state).toBe('untouched');
     expect(entry!.isProficient).toBe(false);
   });
 
@@ -185,7 +188,7 @@ describe('DefaultSrsToKstBridge.convert — state transitions', () => {
     expect(state.get('skill.d')!.state).toBe('untouched');
   });
 
-  it('multiple cards per same node → most recent (by lastReviewedAt) wins', async () => {
+  it('uses minimum retention across reviewed variants', async () => {
     const { DefaultSrsToKstBridge } = await getBridgeModule();
     const bridge = new DefaultSrsToKstBridge();
     const graph = makeGraph(['skill.x']);
@@ -195,12 +198,14 @@ describe('DefaultSrsToKstBridge.convert — state transitions', () => {
         stability: 5,
         lastReviewedAt: NOW - 50 * DAY_MS, // 50 days ago → low retention
         state: 'review',
+        reps: 1,
       }),
       makeCard('skill.x', {
         cardId: 'recent-card',
         stability: 30,
         lastReviewedAt: NOW, // just reviewed → high retention
         state: 'review',
+        reps: 1,
       }),
     ];
     const proficiencies = [
@@ -210,12 +215,11 @@ describe('DefaultSrsToKstBridge.convert — state transitions', () => {
     const state = bridge.convert({ cards, proficiencies, graph, now: NOW });
     const entry = state.get('skill.x');
     expect(entry).toBeDefined();
-    // Recent card should win → high retention → mastered
-    expect(entry!.retention).toBeCloseTo(1.0, 1);
-    expect(entry!.state).toBe('mastered');
+    expect(entry!.retention).toBeLessThan(0.7);
+    expect(entry!.state).toBe('inProgress');
   });
 
-  it('multiple cards per same node → most recent (by stability when no lastReviewedAt)', async () => {
+  it('ignores unreviewed variants when reviewed variants exist', async () => {
     const { DefaultSrsToKstBridge } = await getBridgeModule();
     const bridge = new DefaultSrsToKstBridge();
     const graph = makeGraph(['skill.y']);
@@ -223,14 +227,16 @@ describe('DefaultSrsToKstBridge.convert — state transitions', () => {
       makeCard('skill.y', {
         cardId: 'low-stability',
         stability: 3,
-        // no lastReviewedAt
-        state: 'review',
+        lastReviewedAt: NOW - 100 * DAY_MS,
+        state: 'new',
+        reps: 0,
       }),
       makeCard('skill.y', {
         cardId: 'high-stability',
         stability: 30,
-        // no lastReviewedAt
+        lastReviewedAt: NOW,
         state: 'review',
+        reps: 2,
       }),
     ];
     const proficiencies = [
@@ -240,16 +246,46 @@ describe('DefaultSrsToKstBridge.convert — state transitions', () => {
     const state = bridge.convert({ cards, proficiencies, graph, now: NOW });
     const entry = state.get('skill.y');
     expect(entry).toBeDefined();
-    // Without lastReviewedAt, retention can't be computed from stability alone
-    // → engine defaults to retention=0 for no stability info, OR uses pre-computed
-    // Since no lastReviewedAt, getKnowledgeState can't compute retention from stability
-    // But stability IS provided, so the engine will still see stability and lastReviewedAt as undefined → retention=0
-    // Actually, if stability is provided but no lastReviewedAt, engine defaults retention=0
-    // The isProficient=true should still drive inProgress state
-    expect(entry!.state).toBe('inProgress');
+    expect(entry!.retention).toBeCloseTo(1, 8);
+    expect(entry!.state).toBe('mastered');
   });
 
-  it('proficiency result feeds state', async () => {
+  it('uses proficiency retention when no card has review history', async () => {
+    const { DefaultSrsToKstBridge } = await getBridgeModule();
+    const bridge = new DefaultSrsToKstBridge();
+    const graph = makeGraph(['skill.z']);
+    const cards = [
+      makeCard('skill.z', { stability: 3, state: 'new', reps: 0 }),
+      makeCard('skill.z', { stability: 30, state: 'learning' }),
+    ];
+    const proficiencies = [
+      makeProficiency('skill.z', { retentionStrength: 0.82, isProficient: true }),
+    ];
+
+    const state = bridge.convert({ cards, proficiencies, graph, now: NOW });
+    expect(state.get('skill.z')!.retention).toBe(0.82);
+    expect(state.get('skill.z')!.state).toBe('inProgress');
+  });
+
+  it('keeps an objective untouched when only an unreviewed card exists', async () => {
+    const { DefaultSrsToKstBridge } = await getBridgeModule();
+    const bridge = new DefaultSrsToKstBridge();
+    const graph = makeGraph(['skill.unreviewed']);
+    const cards = [makeCard('skill.unreviewed', {
+      stability: 100,
+      lastReviewedAt: NOW,
+      state: 'review',
+      reps: 0,
+    })];
+
+    const state = bridge.convert({ cards, proficiencies: [], graph, now: NOW });
+    expect(state.get('skill.unreviewed')).toMatchObject({
+      retention: 0,
+      state: 'untouched',
+    });
+  });
+
+  it('high proficiency without review history stays in progress', async () => {
     const { DefaultSrsToKstBridge } = await getBridgeModule();
     const bridge = new DefaultSrsToKstBridge();
     const graph = makeGraph(['skill.p']);
@@ -262,8 +298,7 @@ describe('DefaultSrsToKstBridge.convert — state transitions', () => {
     const entry = state.get('skill.p');
     expect(entry).toBeDefined();
     expect(entry!.isProficient).toBe(true);
-    // retention=0.95 ≥ 0.90 → mastered
-    expect(entry!.state).toBe('mastered');
+    expect(entry!.state).toBe('inProgress');
     expect(entry!.retention).toBe(0.95);
   });
 
@@ -276,11 +311,17 @@ describe('DefaultSrsToKstBridge.convert — state transitions', () => {
     const proficiencyResults = [
       makeProficiency('skill.q', { isProficient: true, retentionStrength: 0.92 }),
     ];
+    const cards = [makeCard('skill.q', {
+      stability: 10,
+      lastReviewedAt: NOW - DAY_MS,
+      state: 'review',
+      reps: 1,
+    })];
 
-    const state = bridge.convert({ cards: [], proficiencies: proficiencyResults, graph, now: NOW });
+    const state = bridge.convert({ cards, proficiencies: proficiencyResults, graph, now: NOW });
     const entry = state.get('skill.q');
     expect(entry).toBeDefined();
-    // retention=0.92 < custom masteryEnter=0.95 → not mastered
+    // Reviewed retention is below the custom 0.95 entry threshold.
     expect(entry!.state).toBe('inProgress');
   });
 

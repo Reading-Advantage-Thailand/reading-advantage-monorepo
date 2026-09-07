@@ -46,6 +46,8 @@ export type KnowledgeStateEvidence = {
   stability?: number;
   /** Optional timestamp of the last review (epoch ms). */
   lastReviewedAt?: number;
+  /** Whether objective retention has at least one completed card review. */
+  hasReviewHistory?: boolean;
 };
 
 // ---------------------------------------------------------------------------
@@ -218,7 +220,9 @@ export function getKnowledgeState(
     const proficiencyFactor = isProficient ? 1.0 : 0.6;
     const mastery = Math.max(0, Math.min(1, retention * proficiencyFactor));
 
-    const state = determineState(isProficient, retention, prev?.state, t);
+    const state = ev.hasReviewHistory === false
+      ? 'inProgress'
+      : determineState(isProficient, retention, prev?.state, t);
 
     result.set(node.id, {
       nodeId: node.id,

@@ -16,7 +16,6 @@
 
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
 import {
   MASTERY_THRESHOLDS_DEFAULT,
   masteryThresholdsSchema,
@@ -34,10 +33,10 @@ import type {
   ReadinessFn,
   ObjectiveProficiencyResult,
 } from '../index.js';
+import { describeHistoricalV2, resolveHistoricalV2Path } from './upstream-contract.js';
 
-const MEASURE_DIR = resolve(__dirname, '../../../../measure');
-const KNOWLEDGE_SPACE_MD = resolve(MEASURE_DIR, 'knowledge-space.md');
-const INDEX_MD = resolve(MEASURE_DIR, 'index.md');
+const KNOWLEDGE_SPACE_MD = () => resolveHistoricalV2Path('measure', 'knowledge-space.md');
+const INDEX_MD = () => resolveHistoricalV2Path('measure', 'index.md');
 
 // ---------------------------------------------------------------------------
 // Probe 1 — Threshold-order invariant regression
@@ -434,28 +433,28 @@ describe('probe 6: ObjectiveProficiencyResult local structural snapshot', () => 
 // Space Contract" row to `measure/index.md`. This probe catches a future
 // agent reversing those reconciliations.
 
-describe('probe 7: docs reconciliation reversal', () => {
+describeHistoricalV2('historical v2 probe 7: docs reconciliation reversal', () => {
   it('measure/knowledge-space.md does not claim to be the source of truth', () => {
-    const content = readFileSync(KNOWLEDGE_SPACE_MD, 'utf-8');
+    const content = readFileSync(KNOWLEDGE_SPACE_MD(), 'utf-8');
     // Case-insensitive — the original phrase appears as "source of truth" or
     // "Source Of Truth". Reject any capitalization.
     expect(content.toLowerCase()).not.toMatch(/source\s+of\s+truth/);
   });
 
   it('measure/knowledge-space.md points at the canonical SPECIFICATION.md', () => {
-    const content = readFileSync(KNOWLEDGE_SPACE_MD, 'utf-8');
+    const content = readFileSync(KNOWLEDGE_SPACE_MD(), 'utf-8');
     expect(content).toMatch(/kst-srs\.v2\/SPECIFICATION\.md/);
   });
 
   it('measure/index.md contains a Knowledge Space Contract row', () => {
-    const content = readFileSync(INDEX_MD, 'utf-8');
+    const content = readFileSync(INDEX_MD(), 'utf-8');
     // Look for the exact row name in a table-like context. A row is
     // "| **Knowledge Space Contract** | ..." somewhere in the file.
     expect(content).toMatch(/\|\s*\*\*Knowledge Space Contract\*\*\s*\|/);
   });
 
   it('measure/index.md Knowledge Space Contract row points at the spec path', () => {
-    const content = readFileSync(INDEX_MD, 'utf-8');
+    const content = readFileSync(INDEX_MD(), 'utf-8');
     // The row's path column should reference SPECIFICATION.md (either at
     // kst-srs.v2/... or packages/knowledge-space-core/...).
     const rowMatch = content.match(/\|\s*\*\*Knowledge Space Contract\*\*\s*\|\s*([^|]+)\|/);
@@ -468,7 +467,7 @@ describe('probe 7: docs reconciliation reversal', () => {
     // A reversal would put mastery-model theory back into knowledge-space.md.
     // The Phase 1 doc is an architecture summary; it must not redefine
     // hysteresis or readiness formulas inline.
-    const content = readFileSync(KNOWLEDGE_SPACE_MD, 'utf-8');
+    const content = readFileSync(KNOWLEDGE_SPACE_MD(), 'utf-8');
     // Look for the pointer language — the doc explicitly defers to the spec.
     expect(content.toLowerCase()).toMatch(/canonical|defers|pointer|specification/);
   });

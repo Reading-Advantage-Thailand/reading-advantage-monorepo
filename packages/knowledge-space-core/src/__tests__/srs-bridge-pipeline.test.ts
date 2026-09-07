@@ -16,6 +16,7 @@ import type {
 // ---------------------------------------------------------------------------
 
 const NOW = 1_700_000_000_000;
+const DAY_MS = 86_400_000;
 
 function makeSkillNode(id: string): KnowledgeSpace['nodes'][number] {
   return {
@@ -160,17 +161,20 @@ describe('buildKstState — full pipeline', () => {
   it('custom thresholds passed through to engine', async () => {
     const { buildKstState } = await getPipelineModule();
     const graph = makeDAG();
-    // Use proficiency-only (no card) so retention comes from retentionStrength.
+    // A reviewed card supplies the review history required for mastery.
+    const cards: SrsCardState[] = [
+      { cardId: 'card.a', objectiveId: 'A', stability: 10, lastReviewedAt: NOW - DAY_MS, state: 'review', reps: 1 },
+    ];
     const proficiencies: ObjectiveProficiencyResult[] = [
       { objectiveId: 'A', retentionStrength: 0.92, practiceCoverage: 0.9, isProficient: true },
     ];
 
-    // With default thresholds (masteryEnter=0.9), retention 0.92 ≥ 0.9 → mastered
-    const defaultResult = buildKstState([], proficiencies, graph, NOW);
+    // With default thresholds, reviewed retention is above 0.9.
+    const defaultResult = buildKstState(cards, proficiencies, graph, NOW);
     expect(defaultResult.state.get('A')!.state).toBe('mastered');
 
-    // With strict thresholds (masteryEnter=0.95), retention 0.92 < 0.95 → not mastered
-    const strictResult = buildKstState([], proficiencies, graph, NOW, { masteryEnter: 0.95 });
+    // With a 0.95 entry threshold, reviewed retention is insufficient.
+    const strictResult = buildKstState(cards, proficiencies, graph, NOW, { masteryEnter: 0.95 });
     expect(strictResult.state.get('A')!.state).toBe('inProgress');
   });
 });

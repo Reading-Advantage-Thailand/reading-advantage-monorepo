@@ -117,7 +117,7 @@ describe('adversarial — empty inputs', () => {
       { objectiveId: 'A', retentionStrength: 0.95, practiceCoverage: 0.8, isProficient: true },
     ];
     const result = buildKstState([], profs, graph, NOW);
-    expect(result.state.get('A')!.state).toBe('mastered');
+    expect(result.state.get('A')!.state).toBe('inProgress');
     expect(result.state.get('A')!.retention).toBe(0.95);
     expect(result.state.get('B')!.state).toBe('untouched');
   });
@@ -227,7 +227,7 @@ describe('adversarial — duplicate proficiency entries (last-wins)', () => {
     const entry = result.state.get('D')!;
     expect(entry.retention).toBe(0.95);
     expect(entry.isProficient).toBe(true);
-    expect(entry.state).toBe('mastered');
+    expect(entry.state).toBe('inProgress');
   });
 
   it('duplicate entries reversed → last wins again', () => {
@@ -269,33 +269,31 @@ describe('adversarial — no proficiencies', () => {
     expect(result.state.get('C2')!.state).toBe('inProgress');
   });
 
-  it('cards alone with new state → inProgress (has evidence, not proficient)', () => {
+  it('cards alone with new state and no reviews → untouched', () => {
     const cards: SrsCardState[] = [
       { cardId: 'c.c3', objectiveId: 'C3', stability: undefined, lastReviewedAt: undefined, state: 'new' },
     ];
     const result = buildKstState(cards, [], graph, NOW);
-    // Card exists → evidence exists → inProgress, not untouched
-    expect(result.state.get('C3')!.state).toBe('inProgress');
+    expect(result.state.get('C3')!.state).toBe('untouched');
     expect(result.state.get('C3')!.isProficient).toBe(false);
   });
 
-  it('cards alone with stability but no lastReviewedAt → retention=0, inProgress', () => {
+  it('cards alone with stability but no review history → untouched', () => {
     const cards: SrsCardState[] = [
       { cardId: 'c.c1b', objectiveId: 'C1', stability: 30, state: 'review' },
     ];
     const result = buildKstState(cards, [], graph, NOW);
-    // Without lastReviewedAt, retention defaults to 0 → inProgress despite isProficient
-    expect(result.state.get('C1')!.state).toBe('inProgress');
+    expect(result.state.get('C1')!.state).toBe('untouched');
   });
 
-  it('multiple cards for same node with no proficiencies → most recent wins', () => {
+  it('multiple reviewed cards use the minimum variant retention', () => {
     const cards: SrsCardState[] = [
       { cardId: 'old', objectiveId: 'C1', stability: 5, lastReviewedAt: NOW - 50 * DAY_MS, state: 'review' },
       { cardId: 'recent', objectiveId: 'C1', stability: 30, lastReviewedAt: NOW, state: 'review' },
     ];
     const result = buildKstState(cards, [], graph, NOW);
-    expect(result.state.get('C1')!.retention).toBeCloseTo(1.0);
-    expect(result.state.get('C1')!.state).toBe('mastered');
+    expect(result.state.get('C1')!.retention).toBeLessThan(0.7);
+    expect(result.state.get('C1')!.state).toBe('inProgress');
   });
 });
 

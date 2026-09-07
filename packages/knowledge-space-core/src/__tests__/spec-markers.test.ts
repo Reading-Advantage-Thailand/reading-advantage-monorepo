@@ -39,18 +39,18 @@
  * npx tsc --noEmit && CI=true npm run test` phase-closeout
  * command.
  */
-import { describe, it, expect } from 'vitest';
+import { it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { describeHistoricalV2, resolveHistoricalV2Path } from './upstream-contract.js';
 
-const SPEC_PATH = resolve(__dirname, '../../../../kst-srs.v2/SPECIFICATION.md');
+const SPEC_PATH = () => resolveHistoricalV2Path('kst-srs.v2', 'SPECIFICATION.md');
 
 /**
  * Read the full SPECIFICATION.md file contents.
  * @returns {string} - The spec file as a UTF-8 string
  */
 function readSpec(): string {
-  return readFileSync(SPEC_PATH, 'utf-8');
+  return readFileSync(SPEC_PATH(), 'utf-8');
 }
 
 /**
@@ -86,7 +86,7 @@ function extractSection(
   return stopAt === -1 ? rest : rest.slice(0, stopAt);
 }
 
-describe('Phase 4 — kst-srs.v2/SPECIFICATION.md cross-reference markers', () => {
+describeHistoricalV2('Historical Phase 4 — kst-srs.v2/SPECIFICATION.md cross-reference markers', () => {
   it('the spec file exists and is non-empty', () => {
     const spec = readSpec();
     expect(spec.length).toBeGreaterThan(0);
