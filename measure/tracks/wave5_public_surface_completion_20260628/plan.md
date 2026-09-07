@@ -8,12 +8,16 @@
 
 > **2026-07-22 decision:** Lead capture is the company-operations lead
 > capability. `www_crm_lead_intake_20260722` owns Contact Us and commercial CTA
-> implementation. Pricing/comparison and legal-copy decisions remain blocking
-> for their respective Wave 5 surfaces.
+> implementation.
+>
+> **2026-09-07 owner decision:** Replace unverified prices with “Contact us for
+> current pricing” in each locale. Remove unsupported competitor claims and
+> absolute guarantees. Use factual, neutral service copy. The active
+> `monorepo_package_review_20260907` track records this decision and its tests.
 
-- [~] Task: Record remaining PO answers: approved comparison/pricing figures and final legal copy. Lead-capture backend/adapter is resolved by the successor tracks. **Blocking gate:** do not implement T12 or T17 surfaces until this task is complete.
-- [~] Task: Reconcile T12 pricing/comparison against the Wave 3 claims matrix; note any conflicts.
-- [~] Task: If any PO answer is unavailable, mark the dependent implementation tasks blocked and split unblockable SEO/assets/i18n/a11y/test-hygiene work into a smaller executable subtrack.
+- [x] Task: Record remaining PO answers: approved comparison/pricing figures and final legal copy. Lead capture remains successor-owned.
+- [x] Task: Reconcile T12 pricing/comparison against the Wave 3 claims matrix. Unverified prices and competitor claims are removed.
+- [x] Task: Resolve the Phase 0 blockers through the 2026-09-07 owner decision.
 - [~] Task: Record baseline www/marketing/science pass/fail for the required verification commands.
 
 ## Phase 1: Conversion — Lead Capture and Dead Components
@@ -137,10 +141,10 @@
 
 ## Phase 5: Comparison/Pricing Data and Legal Copy
 
-- [~] Task: Write Red claim tests for stale comparison/pricing timestamps and "ZERO RISK" copy.
+- [x] Task: Write Red claim tests for copy review dates, unsupported pricing/comparison claims, and "ZERO RISK" copy.
   - Evidence refs: www T12 (LRF-017/018), T17 (LRF-019).
-- [~] Task: Update data to the approved figures (reconciled with Wave 3 matrix) and replace legal copy.
-- [~] Task: Run www targeted tests.
+- [x] Task: Replace unverified figures with localized contact copy and replace legal claims with factual copy.
+- [x] Task: Run www targeted tests. Phase 5 passes 13/13. Related Phase 4 and locale tests pass 21/21.
 
 ## Phase 6: www Test Hygiene
 

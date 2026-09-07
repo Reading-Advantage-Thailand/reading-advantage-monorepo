@@ -1,46 +1,59 @@
 # Monorepo review results
 
-Astra reviewed all 41 workspace units. Sol implemented 18 confirmed fixes under the Ponytail Rules.
-The review covered selected source and test paths in 11 apps, 29 packages, and one worker service.
-It does not certify every function.
+The review covers all 41 workspace units: 11 apps, 29 packages, and one worker service.
+Astra low agents evaluated the units. Sol medium agents implemented the confirmed repairs.
+All configured checks pass. The continued review and repairs are complete.
 
-## Fixes
+## Repairs
 
 | Area | Result |
 | --- | --- |
-| Account administration | Registration and password reset reject unrelated roles. Password reset also restricts target roles. |
-| Session behavior | Logout rejects stale session results. Session creation locks the user row before enforcing the session cap. |
-| GitHub | The token cache checks the installation identity. |
-| Article generation | The script loads with the installed client, validates results, and limits retries. |
-| Primary and Reading | Obsolete debug and anonymous signup paths no longer access data or create accounts. |
-| Codecamp | Tutor requests use the configured company or legacy authentication mode. |
-| Accounting and Sales | CSV text neutralizes formulas. Multipart requests validate files, strings, and complete integers. |
-| Learning | Timing ignores old events. Sparse recommendations respect a zero limit. Player cleanup preserves the supplied controller. |
-| Shared UI | Progress reports its value and maximum. Local storage handles consecutive updates and relevant removal events. |
+| Primary | Classroom operations enforce roles, school boundaries, and ownership. CSV imports use the correct tables. Completion views refresh authoritative sessions. |
+| Reading | Writers supply required fields. Assignment changes enforce membership and state transitions. Completion checks use the license contract. Calendar selection preserves focus. |
+| Science | Quiz attempts retain selected questions. Submission validates answers and uses a transaction for completion and rewards. Malformed mastery requests return a structured error. |
+| Accounts and shared authentication | Session handling rejects stale results. Refresh failures clear loading state. Accounts uses the compiled private identity adapter. |
+| Sales and Codecamp | Company authentication follows the configured mode. Sales Mastery rejects the public legacy trust bypass. |
+| Shared learning packages | SRS retention uses reviewed variants. Release tests preserve authentic evidence and declared upstream contracts. |
+| Games | Tutorial and audio handling preserve runtime behavior. Tests isolate random fixtures and use current component contracts. |
+| WWW | Pricing text follows the owner decision in English, Thai, and Chinese. Absolute guarantees are removed. Locale navigation uses the active locale. |
+| Shared adapters | Structured errors use the existing logger. CSV and multipart boundaries validate external input. |
+| Build and CI | App imports, Proxy configuration, and local fonts build successfully. CI supplies the required PostgreSQL and PgBouncer fixtures. |
+| Historical tests | Assertions use authentic recorded Git evidence. They preserve required checks without inventing missing artifacts or acceptance records. |
 
-## Validation
+The initial 18 fixes did not complete the assigned work.
+The continued review also resolved the recorded type errors, test failures, build failures, and fixture defects.
+The reports describe concrete coverage. They do not certify every function or external provider.
 
-All three independent Astra reviews accepted the fixes.
-All 153 focused tests passed. Relevant lint checks passed with recorded existing warnings.
-Type checks passed for eight affected packages and three affected apps. UI lint and build passed.
-Primary and Reading full type checks reported 131 and 82 errors outside the changed files.
-UI full type checking retains existing test matcher errors.
-The complete workspace test command still fails at the config baseline assertion.
-Additional broad tests found existing contract and fixture failures, missing PostgreSQL configuration, and two suite timeouts.
-Live PostgreSQL concurrency, browser behavior, and provider requests remain unverified.
+## Verification
+
+| Check | Current result |
+| --- | --- |
+| Configured builds | All 39 tasks have passing results across the complete run and repair runs. |
+| Configured lint | All 38 tasks pass. Existing warnings remain. |
+| Configured type checks | All 37 tasks pass. Science also passes after its final fixture edits. |
+| Database | 1,166 tests pass. |
+| Backend | 556 tests pass. |
+| Reading | 734 tests pass across 118 suites. |
+| Games | 1,761 tests pass across 189 suites. |
+| Science | 1,725 tests pass across 160 files. |
+| Complete workspace tests | All 65 tasks pass, including 40 test tasks and 25 dependency builds. |
+
+The database checks use isolated containers created for this task.
+The task preserves existing source changes and asset work.
+The task makes no production deployment or remote repository change.
 
 ## Evidence
 
-- [App evaluation](./review-apps.md)
-- [Backend evaluation](./review-backend.md)
-- [Shared-package evaluation](./review-learning.md)
-- [App implementation](./implementation-apps.md)
-- [Backend implementation](./implementation-backend.md)
-- [Shared-package implementation](./implementation-learning.md)
-- [Final app review](./final-review-apps.md)
-- [Final backend review](./final-review-backend.md)
-- [Final shared-package review](./final-review-learning.md)
-- [Verification details](./verification.md)
-
-The patch contains 36 source, test, and package files. None overlapped the initial dirty-file list.
-The task preserved existing work and changed no framework versions or lockfiles.
+- [Plan and unit coverage](./plan.md)
+- [Verification results and logs](./verification.md)
+- [Continued app evaluation](./resume-review-apps.md)
+- [Reading and Science evaluation](./resume-review-reading-science.md)
+- [Shared package evaluation](./resume-review-shared-deep.md)
+- [Database evaluation](./resume-review-data.md)
+- [Check evaluation](./resume-review-checks.md)
+- [Final app review](./resume-final-review-apps.md)
+- [Final Reading review](./resume-final-review-reading.md)
+- [Final shared review](./resume-final-review-shared.md)
+- [Science evidence review](./resume-final-review-science-audits.md)
+- [Build repair review](./resume-final-review-workspace-build.md)
+- [CI database review](./resume-final-review-ci-database.md)
