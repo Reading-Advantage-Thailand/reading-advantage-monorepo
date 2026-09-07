@@ -16,7 +16,11 @@
       "dependsOn": ["^lint"]
     },
     "test": {
-      "dependsOn": ["^build"]
+      "dependsOn": ["^build"],
+      "env": [
+        "COMPANY_IDENTITY_TEST_ADMIN_DATABASE_URL",
+        "COMPANY_IDENTITY_TEST_POSTGRES_CONTAINER"
+      ]
     },
     "dev": {
       "cache": false,

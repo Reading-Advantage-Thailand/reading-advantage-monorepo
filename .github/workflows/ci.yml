@@ -22,13 +22,60 @@ on:
       - 'turbo.json'
 
 jobs:
-  build:
+  packages:
     name: Build, Lint, and Test
     runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/science_advantage_test
+      COMPANY_IDENTITY_TEST_ADMIN_DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: science_advantage_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d science_advantage_test"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      pgbouncer:
+        image: docker.io/bitnamilegacy/pgbouncer:1.23.1
+        env:
+          POSTGRESQL_HOST: postgres
+          POSTGRESQL_PORT: "5432"
+          POSTGRESQL_USERNAME: postgres
+          POSTGRESQL_PASSWORD: postgres
+          PGBOUNCER_DATABASE: "*"
+          PGBOUNCER_PORT: "6432"
+          PGBOUNCER_POOL_MODE: transaction
+          PGBOUNCER_MAX_CLIENT_CONN: "200"
+          PGBOUNCER_DEFAULT_POOL_SIZE: "15"
+          PGBOUNCER_AUTH_TYPE: scram-sha-256
+          PGBOUNCER_AUTH_USER: postgres
+          PGBOUNCER_AUTH_QUERY: "SELECT usename, passwd FROM pg_catalog.pg_shadow WHERE usename = $1"
+          PGBOUNCER_IGNORE_STARTUP_PARAMETERS: "extra_float_digits,search_path"
+          PGBOUNCER_LISTEN_ADDRESS: "0.0.0.0"
+        ports:
+          - 6432:6432
+        options: >-
+          --health-cmd "PGPASSWORD=postgres psql -h 127.0.0.1 -p 6432 -U postgres -d pgbouncer -tAc 'SHOW VERSION;' >/dev/null"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Fetch published Git notes
+        run: git fetch --no-tags origin refs/notes/commits:refs/notes/commits
 
       - name: Check graph.db
         run: |
@@ -44,11 +91,13 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
+        with:
+          standalone: true
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: pnpm
 
       - name: Install dependencies
@@ -82,5 +131,15 @@ jobs:
       - name: Type check
         run: pnpm turbo run check-types
 
+      - name: Generator contract gate
+        env:
+          CI: true
+        run: pnpm --filter @reading-advantage/practice-core test:generators
+
+      - name: Codecamp cold-start tests
+        run: pnpm test:codecamp-cold-start
+
       - name: Test
+        env:
+          COMPANY_IDENTITY_TEST_POSTGRES_CONTAINER: ${{ job.services.postgres.id }}
         run: pnpm test
