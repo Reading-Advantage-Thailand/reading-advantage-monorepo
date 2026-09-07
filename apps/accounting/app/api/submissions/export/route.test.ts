@@ -180,6 +180,24 @@ describe("GET /api/submissions/export", () => {
     expect(body).toContain("34.70");
   });
 
+  it("neutralizes spreadsheet formulas in text cells", async () => {
+    mocks.listAccountingSubmissions.mockResolvedValue([
+      { ...approvedNonThbSubmission, payee: "=1+1", category: "+SUM(A1:A2)" },
+      { ...approvedNonThbSubmission, id: "formula-minus", payee: "-2+3", category: "@SUM(A1:A2)" },
+      { ...approvedNonThbSubmission, id: "formula-space", payee: "  =1+1", category: 'travel "quoted"' },
+      { ...approvedNonThbSubmission, id: "formula-newline", payee: "\r\n=1+1" },
+    ]);
+
+    const response = await GET(new Request(ROUTE_URL));
+    const body = await response.text();
+
+    expect(body).toContain("'=1+1,'+SUM(A1:A2)");
+    expect(body).toContain("'-2+3,'@SUM(A1:A2)");
+    expect(body).toContain("'  =1+1,\"travel \"\"quoted\"\"\"");
+    expect(body).toContain("\"'\r\n=1+1\"");
+    expect(body).toContain(",15000,520500,34.70,");
+  });
+
   it("leaves settled THB and derived rate empty for an approved THB row", async () => {
     mocks.listAccountingSubmissions.mockResolvedValue([approvedThbSubmission]);
     const response = await GET(new Request(ROUTE_URL));

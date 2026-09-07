@@ -95,6 +95,8 @@ export async function GET(request: Request): Promise<Response> {
   ];
   const escape = (cell: string): string =>
     /[",\r\n]/u.test(cell) ? `"${cell.replace(/"/gu, '""')}"` : cell;
+  const escapeText = (cell: string): string =>
+    escape(/^\s*[=+@-]/u.test(cell) ? `'${cell}` : cell);
   const lines: string[] = [];
   lines.push(HEADERS.join(","));
   for (const submission of filtered) {
@@ -105,16 +107,16 @@ export async function GET(request: Request): Promise<Response> {
     const submittedDate = submission.submittedAt.slice(0, 10);
     lines.push(
       [
-        escape(submission.id),
-        escape(submittedDate),
-        escape(submission.payee),
-        escape(submission.category),
-        escape(submission.money.currency),
+        escapeText(submission.id),
+        escapeText(submittedDate),
+        escapeText(submission.payee),
+        escapeText(submission.category),
+        escapeText(submission.money.currency),
         escape(submission.money.amountMinor),
         escape(submission.settledThbAmount ?? ""),
         escape(rate),
-        escape(submission.status),
-        escape(submission.evidenceReference),
+        escapeText(submission.status),
+        escapeText(submission.evidenceReference),
       ].join(","),
     );
   }

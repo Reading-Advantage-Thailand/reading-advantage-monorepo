@@ -287,4 +287,60 @@ describe("POST /api/roleplay-attempts audio upload boundary", () => {
       "getRoleplayEvaluationContext call count on rejected retention",
     ).toHaveBeenCalledTimes(0);
   });
+
+  it("rejects non-file audio before storage and provider calls", async () => {
+    const form = makeFormWithPrivacy(
+      new File(["audio"], "audio.webm", { type: "audio/webm" }),
+      "1000",
+      "true",
+      "30",
+    );
+    form.set("audio", "audio text");
+
+    const response = await POST(makeRequest(form));
+
+    expect(response.status).toBe(400);
+    expect((await response.json()).field).toBe("audio");
+    expect(mockGetStorageClient).not.toHaveBeenCalled();
+    expect(mockGetAIClient).not.toHaveBeenCalled();
+  });
+
+  it("rejects a file-valued scenario identifier before provider calls", async () => {
+    const form = makeFormWithPrivacy(
+      new File(["audio"], "audio.webm", { type: "audio/webm" }),
+      "1000",
+      "true",
+      "30",
+    );
+    form.set("scenarioId", new File(["scenario"], "scenario.txt"));
+
+    const response = await POST(makeRequest(form));
+
+    expect(response.status).toBe(400);
+    expect((await response.json()).field).toBe("scenarioId");
+    expect(mockGetRoleplayEvaluationContext).not.toHaveBeenCalled();
+    expect(mockGetAIClient).not.toHaveBeenCalled();
+  });
+
+  it("rejects fractional and suffixed integers before provider calls", async () => {
+    const audio = new File(["audio"], "audio.webm", { type: "audio/webm" });
+
+    for (const [field, durationMs, retentionDays] of [
+      ["durationMs", "1000.5", "30"],
+      ["durationMs", "30days", "30"],
+      ["retentionDays", "1000", "30.5"],
+      ["retentionDays", "1000", "30days"],
+    ] as const) {
+      const response = await POST(
+        makeRequest(makeFormWithPrivacy(audio, durationMs, "true", retentionDays)),
+      );
+
+      expect(response.status).toBe(400);
+      expect((await response.json()).field).toBe(field);
+    }
+
+    expect(mockGetStorageClient).not.toHaveBeenCalled();
+    expect(mockGetAIClient).not.toHaveBeenCalled();
+    expect(mockSubmitRoleplayAttempt).not.toHaveBeenCalled();
+  });
 });

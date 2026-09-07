@@ -1,3 +1,4 @@
+import { StrictMode } from "react";
 import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { activitySchema } from "@reading-advantage/activity-runtime/core";
@@ -180,7 +181,43 @@ describe("InteractiveActivityPlayer", () => {
     expect(controller.play).toHaveBeenCalled();
     expect(screen.getByRole("button", { name: "Retry media" })).toHaveAttribute("data-touch-target", "true");
     unmount();
-    expect(controller.destroy).toHaveBeenCalledOnce();
+    expect(controller.destroy).not.toHaveBeenCalled();
+  });
+
+  it("keeps an owner-supplied controller active across Strict Mode and activity changes", () => {
+    const controller = createFakeMediaController();
+    let destroyed = false;
+    const subscribe = controller.subscribe;
+    controller.subscribe = (listener) => destroyed ? () => undefined : subscribe(listener);
+    controller.destroy.mockImplementation(() => { destroyed = true; });
+    const onPositionChange = vi.fn();
+    const { rerender } = render(
+      <StrictMode>
+        <InteractiveActivityPlayer
+          activity={activity}
+          controller={controller}
+          locale="en"
+          onAssess={vi.fn()}
+          onPositionChange={onPositionChange}
+        />
+      </StrictMode>
+    );
+
+    rerender(
+      <StrictMode>
+        <InteractiveActivityPlayer
+          activity={{ ...activity }}
+          controller={controller}
+          locale="en"
+          onAssess={vi.fn()}
+          onPositionChange={onPositionChange}
+        />
+      </StrictMode>
+    );
+    act(() => controller.emit({ status: "playing", currentSeconds: 8, durationSeconds: 90, captionsEnabled: true }));
+
+    expect(controller.destroy).not.toHaveBeenCalled();
+    expect(onPositionChange).toHaveBeenLastCalledWith(8);
   });
 
   it("mounts host media and keeps engagement, multi-select, and remediation contracts distinct", async () => {

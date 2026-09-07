@@ -7,6 +7,10 @@ const aiMocks = vi.hoisted(() => ({
 const authMocks = vi.hoisted(() => ({
   requireAuth: vi.fn(),
   getAuthToken: vi.fn(),
+  legacyMode: vi.fn(),
+  introspect: vi.fn(),
+  readCookie: vi.fn(),
+  resolveUser: vi.fn(),
 }));
 const domainMocks = vi.hoisted(() => ({
   buildCodecampTutorContext: vi.fn(),
@@ -26,6 +30,15 @@ vi.mock("@reading-advantage/auth", async () => {
   const actual = await vi.importActual<typeof import("@reading-advantage/auth")>("@reading-advantage/auth");
   return { ...actual, requireAuth: authMocks.requireAuth };
 });
+vi.mock("@/lib/auth-mode", () => ({
+  isLegacyCodecampAuthEnabled: authMocks.legacyMode,
+}));
+vi.mock("@/lib/company-oidc", () => ({
+  CODECAMP_SESSION_COOKIE: "__Host-ra_codecamp_session",
+  getCodecampOidcClient: () => ({ introspect: authMocks.introspect }),
+  readCodecampCookie: authMocks.readCookie,
+  resolveCodecampSessionUser: authMocks.resolveUser,
+}));
 vi.mock("@reading-advantage/db", () => ({ db: {} }));
 vi.mock("@reading-advantage/domain", () => ({
   createTenantDB: domainMocks.createTenantDB,
@@ -105,6 +118,7 @@ describe("POST /api/tutor/intervention modes", () => {
     vi.clearAllMocks();
     activityMode = "guided";
     process.env.OPENROUTER_API_KEY = "test-key";
+    authMocks.legacyMode.mockReturnValue(true);
     authMocks.getAuthToken.mockResolvedValue("token");
     authMocks.requireAuth.mockResolvedValue({ user });
     domainMocks.createTenantDB.mockReturnValue({});
@@ -250,5 +264,87 @@ describe("POST /api/tutor/intervention modes", () => {
     expect(aiMocks.generateObjectWithProvenance).toHaveBeenCalledWith(expect.objectContaining({
       prompt: expect.stringContaining("Submission-ready answer forbidden: true"),
     }));
+  });
+});
+
+describe("POST /api/tutor/intervention authentication", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    delete process.env.OPENROUTER_API_KEY;
+    domainMocks.createTenantDB.mockReturnValue({});
+    domainMocks.persistTutorIntervention.mockResolvedValue({ id: "intervention-1" });
+    domainMocks.buildCodecampTutorContext.mockResolvedValue({ ...baseContext, mode: "remediate" });
+  });
+
+  afterEach(() => {
+    if (originalApiKey === undefined) delete process.env.OPENROUTER_API_KEY;
+    else process.env.OPENROUTER_API_KEY = originalApiKey;
+  });
+
+  it("authenticates a company session through its verified principal", async () => {
+    authMocks.legacyMode.mockReturnValue(false);
+    authMocks.readCookie.mockReturnValue("company-token");
+    authMocks.introspect.mockResolvedValue({ identity: { organizationId: "org-1" } });
+    authMocks.resolveUser.mockResolvedValue(user);
+
+    const response = await request({
+      action: "request",
+      requestId: "22222222-2222-4222-8222-222222222222",
+      activitySessionId: "33333333-3333-4333-8333-333333333333",
+      message: "I am stuck.",
+      locale: "en",
+    });
+
+    expect(response.status).toBe(200);
+    expect(authMocks.introspect).toHaveBeenCalledWith("company-token");
+    expect(domainMocks.createTenantDB).toHaveBeenCalledWith({}, { schoolId: "school-1" });
+    expect(authMocks.requireAuth).not.toHaveBeenCalled();
+  });
+
+  it("rejects revoked company sessions", async () => {
+    authMocks.legacyMode.mockReturnValue(false);
+    authMocks.readCookie.mockReturnValue("revoked-token");
+    authMocks.introspect.mockResolvedValue(null);
+
+    const response = await request({ action: "resource_use", interventionId: "22222222-2222-4222-8222-222222222222", resourceId: "resource-1", actionType: "open" });
+
+    expect(response.status).toBe(401);
+    expect(domainMocks.createTenantDB).not.toHaveBeenCalled();
+  });
+
+  it("sanitizes company introspection failures", async () => {
+    authMocks.legacyMode.mockReturnValue(false);
+    authMocks.readCookie.mockReturnValue("invalid-token");
+    authMocks.introspect.mockRejectedValue(new Error("private provider detail"));
+
+    const response = await request({ action: "resource_use", interventionId: "22222222-2222-4222-8222-222222222222", resourceId: "resource-1", actionType: "open" });
+
+    expect(response.status).toBe(401);
+    await expect(response.json()).resolves.toEqual({ error: "Authentication required" });
+    expect(domainMocks.createTenantDB).not.toHaveBeenCalled();
+  });
+
+  it("rejects legacy evidence in company mode", async () => {
+    authMocks.legacyMode.mockReturnValue(false);
+    authMocks.readCookie.mockReturnValue(undefined);
+    authMocks.getAuthToken.mockResolvedValue("legacy-token");
+
+    const response = await request({ action: "resource_use", interventionId: "22222222-2222-4222-8222-222222222222", resourceId: "resource-1", actionType: "open" });
+
+    expect(response.status).toBe(401);
+    expect(authMocks.getAuthToken).not.toHaveBeenCalled();
+    expect(authMocks.requireAuth).not.toHaveBeenCalled();
+  });
+
+  it("uses the legacy adapter only in explicit legacy mode", async () => {
+    authMocks.legacyMode.mockReturnValue(true);
+    authMocks.getAuthToken.mockResolvedValue("legacy-token");
+    authMocks.requireAuth.mockResolvedValue({ user });
+
+    const response = await request({ action: "resource_use", interventionId: "22222222-2222-4222-8222-222222222222", resourceId: "resource-1", actionType: "open" });
+
+    expect(response.status).toBe(200);
+    expect(authMocks.requireAuth).toHaveBeenCalledWith({}, "legacy-token");
+    expect(authMocks.introspect).not.toHaveBeenCalled();
   });
 });

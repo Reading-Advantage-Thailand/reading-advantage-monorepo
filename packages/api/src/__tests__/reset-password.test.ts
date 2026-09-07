@@ -116,7 +116,7 @@ function selectResult(rows: unknown[]) {
 
 function setActorSession(
   userId: string,
-  role: "STUDENT" | "TEACHER" | "ADMIN" | "SYSTEM",
+  role: "STUDENT" | "TEACHER" | "ADMIN" | "SALES_ADMIN" | "SYSTEM",
   schoolId: string | null
 ) {
   const session = {
@@ -143,6 +143,22 @@ beforeEach(() => {
 });
 
 describe("Phase 2 — Task 15: FR-7b reset-password authorization matrix", () => {
+  it("rejects a SALES_ADMIN actor before database access", async () => {
+    setActorSession("sales-1", "SALES_ADMIN", null);
+
+    const response = await handleResetPassword(
+      jsonRequest(
+        "/api/auth/reset-password",
+        { userId: "target-1", newPassword: "NewPassword123!" },
+        "sales-1-token"
+      )
+    );
+
+    expect(response.status).toBe(403);
+    expect(mockDb.select).not.toHaveBeenCalled();
+    expect(mockDb.update).not.toHaveBeenCalled();
+  });
+
   it("returns 401 when the request has no session_token cookie", async () => {
     vi.mocked(requireRole).mockRejectedValueOnce(
       new AuthError("Authentication required", "UNAUTHORIZED"),
@@ -326,6 +342,35 @@ describe("Phase 2 — Task 15: FR-7b reset-password authorization matrix", () =>
     );
     expect(response.status, "ADMIN + target ADMIN → 403").toBe(403);
   });
+
+  it.each(["SYSTEM", "SALES_ADMIN"] as const)(
+    "returns 403 when an ADMIN tries to reset a %s user",
+    async (targetRole) => {
+      setActorSession("admin-1", "ADMIN", null);
+      mockDb.select.mockReturnValueOnce(
+        selectResult([
+          {
+            id: "target-2",
+            username: "target-admin",
+            name: "Target Admin",
+            role: targetRole,
+            schoolId: null,
+          },
+        ])
+      );
+
+      const response = await handleResetPassword(
+        jsonRequest(
+          "/api/auth/reset-password",
+          { userId: "target-2", newPassword: "NewPassword123!" },
+          "admin-1-token"
+        )
+      );
+
+      expect(response.status).toBe(403);
+      expect(mockDb.update).not.toHaveBeenCalled();
+    }
+  );
 
   it("scopes the target-user query by schoolId when the actor is TEACHER", async () => {
     setActorSession("teacher-1", "TEACHER", "school-1");

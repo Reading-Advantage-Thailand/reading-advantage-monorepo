@@ -112,6 +112,38 @@ describe("auth route handlers", () => {
     expect(mockDb.insert).not.toHaveBeenCalled();
   });
 
+  it("rejects SALES_ADMIN registration before database access", async () => {
+    vi.mocked(requireRole).mockResolvedValueOnce({
+      id: "sess",
+      userId: "sales-1",
+      expiresAt: new Date(Date.now() + 86400000),
+      user: {
+        id: "sales-1",
+        username: "sales",
+        name: "Sales",
+        role: "SALES_ADMIN",
+        schoolId: null,
+        xp: 0,
+        level: 0,
+        cefrLevel: "",
+      },
+    });
+
+    const request = jsonRequest("/api/auth/register", {
+      username: "student1",
+      password: "Password123!",
+      name: "Student One",
+      schoolId: "550e8400-e29b-41d4-a716-446655440001",
+    });
+    request.cookies.set("session_token", "tok");
+
+    const response = await handleRegister(request);
+
+    expect(response.status).toBe(403);
+    expect(mockDb.select).not.toHaveBeenCalled();
+    expect(mockDb.insert).not.toHaveBeenCalled();
+  });
+
   it("rejects registration when TEACHER actor tries to register into a different school (tenant scope)", async () => {
     // FR-6: registration requires auth — mock teacher session for school "s1"
     vi.mocked(requireAuth).mockResolvedValueOnce({

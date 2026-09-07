@@ -44,6 +44,9 @@ export async function handleRegister(request: NextRequest) {
     }
     const session = await requireRole(db, cookie, "TEACHER");
     const actor = session.user;
+    if (actor.role !== "TEACHER" && actor.role !== "ADMIN") {
+      return NextResponse.json({ message: "Forbidden" }, { status: 403 });
+    }
 
     const { username, password, name, schoolId } = parsed.data;
     const lowerUsername = username.toLowerCase();

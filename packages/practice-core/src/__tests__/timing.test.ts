@@ -64,6 +64,16 @@ describe('TimingAccumulator (package)', () => {
       const snap = acc.getSnapshot();
       expect(snap.activeMs).toBe(2000);
     });
+
+    it('keeps the latest timestamp after an old event arrives', () => {
+      const acc = createTimingAccumulator();
+      acc.start(0);
+      acc.addEvent({ type: 'interaction', timestamp: 1000 });
+      acc.addEvent({ type: 'interaction', timestamp: 500 });
+      acc.addEvent({ type: 'interaction', timestamp: 1500 });
+
+      expect(acc.getSnapshot().wallClockMs).toBe(1500);
+    });
   });
 
   describe('finalize', () => {

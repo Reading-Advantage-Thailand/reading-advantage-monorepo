@@ -16,6 +16,13 @@ import {
 } from "@reading-advantage/domain/codecamp";
 import { z } from "zod";
 import { generateCodecampTutorIntervention } from "@/lib/tutor-intervention";
+import { isLegacyCodecampAuthEnabled } from "@/lib/auth-mode";
+import {
+  CODECAMP_SESSION_COOKIE,
+  getCodecampOidcClient,
+  readCodecampCookie,
+  resolveCodecampSessionUser,
+} from "@/lib/company-oidc";
 
 const tutorRequestSchema = z.discriminatedUnion("action", [
   z.object({
@@ -48,25 +55,40 @@ const tutorRequestSchema = z.discriminatedUnion("action", [
  */
 export async function POST(request: NextRequest): Promise<Response> {
   try {
-    const token = await getAuthToken();
-    const session = await requireAuth(db, token);
-    const tenant = { schoolId: session.user.schoolId };
+    const user = isLegacyCodecampAuthEnabled()
+      ? (await requireAuth(db, await getAuthToken())).user
+      : await (async () => {
+          const token = readCodecampCookie(request, CODECAMP_SESSION_COOKIE);
+          let session = null;
+          try {
+            session = token
+              ? await getCodecampOidcClient().introspect(token)
+              : null;
+          } catch {
+            return null;
+          }
+          return session
+            ? await resolveCodecampSessionUser(session.identity)
+            : null;
+        })();
+    if (!user) throw new Error("Authentication required");
+    const tenant = { schoolId: user.schoolId };
     const tenantDb = createTenantDB(db, tenant);
     const input = tutorRequestSchema.parse(await request.json());
 
     if (input.action === "resource_use") {
-      await recordTutorResourceUse({ db: tenantDb, user: session.user, tenant, input });
+      await recordTutorResourceUse({ db: tenantDb, user, tenant, input });
       return Response.json({ ok: true });
     }
 
     if (input.action === "join_verified_evidence") {
-      await joinTutorInterventionToVerifiedEvidence({ db: tenantDb, user: session.user, tenant, input });
+      await joinTutorInterventionToVerifiedEvidence({ db: tenantDb, user, tenant, input });
       return Response.json({ ok: true });
     }
 
     const context = await buildCodecampTutorContext({
       db: tenantDb,
-      user: session.user,
+      user,
       tenant,
       input: { activitySessionId: input.activitySessionId, locale: input.locale, stepId: input.stepId, mode: input.mode },
     });
@@ -101,7 +123,7 @@ export async function POST(request: NextRequest): Promise<Response> {
       };
     const persisted = await persistTutorIntervention({
       db: tenantDb,
-      user: session.user,
+      user,
       tenant,
       input: {
         requestId: input.requestId,

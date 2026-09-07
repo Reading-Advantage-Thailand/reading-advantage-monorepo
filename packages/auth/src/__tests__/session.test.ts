@@ -6,6 +6,7 @@ vi.mock("@reading-advantage/db", () => ({
   eq: vi.fn((col: unknown, val: unknown) => ({ col, val, type: "eq" })),
   and: vi.fn((...args: unknown[]) => ({ type: "and", args })),
   gt: vi.fn((col: unknown, val: unknown) => ({ col, val, type: "gt" })),
+  inArray: vi.fn((col: unknown, val: unknown) => ({ col, val, type: "inArray" })),
 }));
 
 vi.mock("@reading-advantage/db/schema", () => ({
@@ -36,6 +37,7 @@ vi.mock("drizzle-orm", () => ({
   eq: vi.fn((col: unknown, val: unknown) => ({ col, val, type: "eq" })),
   and: vi.fn((...args: unknown[]) => ({ type: "and", args })),
   gt: vi.fn((col: unknown, val: unknown) => ({ col, val, type: "gt" })),
+  inArray: vi.fn((col: unknown, val: unknown) => ({ col, val, type: "inArray" })),
 }));
 
 const mockSessionRow = {
@@ -68,6 +70,7 @@ function createMockDb(overrides: {
     select: vi.fn().mockReturnValue({
       from: vi.fn().mockReturnValue({
         where: vi.fn().mockReturnValue({
+          for: vi.fn().mockResolvedValue(resolvedSelect),
           limit: vi.fn().mockResolvedValue(resolvedSelect),
         }),
       }),
@@ -514,30 +517,42 @@ describe("Phase 2 — Task 10: FR-8 ipAddress/userAgent + FR-10 session cap", ()
     ).toBe("TestUA/1.0");
   });
 
-  it("createSession enforces a 10-session cap by deleting the oldest row when 10 already exist", async () => {
-    // Wire the select to return a count of 10 existing sessions (cap reached),
+  it("createSession restores the 10-session cap when 12 sessions already exist", async () => {
+    // Wire the select to return 12 existing sessions from an earlier race.
     // then return the user row on the next call so createSession completes.
     const db = createMockDb();
     let selectCall = 0;
+    const evictionLimit = vi.fn().mockResolvedValue([
+      { id: "oldest-session-id", createdAt: new Date(0) },
+      { id: "older-session-id", createdAt: new Date(1) },
+      { id: "old-session-id", createdAt: new Date(2) },
+    ]);
     db.select.mockImplementation(() => {
       selectCall++;
       if (selectCall === 1) {
-        // First select: the FR-10 aggregate count() — return 10 to trigger eviction.
         return {
           from: vi.fn().mockReturnValue({
-            where: vi.fn().mockResolvedValue([{ value: 10 }]),
+            where: vi.fn().mockReturnValue({
+              for: vi.fn().mockResolvedValue([{ id: "u1" }]),
+            }),
           }),
         };
       }
       if (selectCall === 2) {
+        // The count exceeds the cap and requires three evictions before insertion.
+        return {
+          from: vi.fn().mockReturnValue({
+            where: vi.fn().mockResolvedValue([{ value: 12 }]),
+          }),
+        };
+      }
+      if (selectCall === 3) {
         // Second select: FR-10 delete-the-oldest lookup — return one row.
         return {
           from: vi.fn().mockReturnValue({
             where: vi.fn().mockReturnValue({
               orderBy: vi.fn().mockReturnValue({
-                limit: vi.fn().mockResolvedValue([
-                  { id: "oldest-session-id", createdAt: new Date(0) },
-                ]),
+                limit: evictionLimit,
               }),
             }),
           }),
@@ -579,6 +594,7 @@ describe("Phase 2 — Task 10: FR-8 ipAddress/userAgent + FR-10 session cap", ()
         "count is at or above the 10-session cap. FR-10 enforces a rolling " +
         "window of <= 10 active sessions per user.",
     ).toHaveBeenCalled();
+    expect(evictionLimit).toHaveBeenCalledWith(3);
     // The eviction must target the oldest session by createdAt.
     expect(
       selectCall >= 2,
@@ -617,6 +633,7 @@ describe("Phase 2 — Task 10: FR-8 ipAddress/userAgent + FR-10 session cap", ()
       chain.where = vi.fn().mockImplementation(wrap(`${tag}.where`));
       chain.orderBy = vi.fn().mockImplementation(wrap(`${tag}.orderBy`));
       chain.limit = vi.fn().mockImplementation(wrap(`${tag}.limit`));
+      chain.for = vi.fn().mockImplementation(wrap(`${tag}.for`));
       chain.values = vi.fn().mockImplementation((...args: unknown[]) => {
         recorded.push({ op: `${tag}.values`, handle });
         return chain;
@@ -633,6 +650,8 @@ describe("Phase 2 — Task 10: FR-8 ipAddress/userAgent + FR-10 session cap", ()
     // insert; we record every chain call against the tx handle.
     const txHandle = newTxHandle();
     const txChain = makeChain(txHandle, "tx", txCalls);
+    let lockMode: unknown;
+    let lockWhere: unknown;
 
     // tx.select(...).from(...).where(...) returns a value, so build a more
     // explicit version. We drive the count to the cap (10) so the eviction
@@ -646,9 +665,19 @@ describe("Phase 2 — Task 10: FR-8 ipAddress/userAgent + FR-10 session cap", ()
       step.from = vi.fn().mockImplementation(() => {
         txCalls.push({ op: "tx.from", handle: txHandle });
         const step2: Record<string, unknown> = {};
-        step2.where = vi.fn().mockImplementation(() => {
+        step2.where = vi.fn().mockImplementation((condition: unknown) => {
           txCalls.push({ op: "tx.where", handle: txHandle });
           if (txSelectCallCount === 1) {
+            lockWhere = condition;
+            const lockStep: Record<string, unknown> = {};
+            lockStep.for = vi.fn().mockImplementation(async (mode: unknown) => {
+              lockMode = mode;
+              txCalls.push({ op: "tx.for", handle: txHandle });
+              return [{ id: "u1" }];
+            });
+            return lockStep;
+          }
+          if (txSelectCallCount === 2) {
             // First tx.select is the count -> at the cap, triggers eviction.
             return Promise.resolve([{ value: 10 }]);
           }
@@ -725,9 +754,13 @@ describe("Phase 2 — Task 10: FR-8 ipAddress/userAgent + FR-10 session cap", ()
 
     // 2) The count, eviction, and insert all ran on the SAME tx handle.
     const txSelects = txCalls.filter((c) => c.op === "tx.select");
+    const txLocks = txCalls.filter((c) => c.op === "tx.for");
     const txDeletes = txCalls.filter((c) => c.op === "tx.delete");
     const txInserts = txCalls.filter((c) => c.op === "tx.insert");
     expect(txSelects.length, "Expected at least one select inside the tx (the count).").toBeGreaterThanOrEqual(1);
+    expect(txLocks.length, "Expected a user-row lock before the session count.").toBe(1);
+    expect(lockMode).toBe("update");
+    expect(lockWhere).toEqual({ col: "id", val: "u1", type: "eq" });
     expect(txDeletes.length, "Expected one delete inside the tx (eviction at the cap).").toBe(1);
     expect(txInserts.length, "Expected at least one insert inside the tx.").toBe(1);
 
@@ -746,6 +779,7 @@ describe("Phase 2 — Task 10: FR-8 ipAddress/userAgent + FR-10 session cap", ()
       insertHandle,
       "FR-10: the insert must run on the same tx handle as the count.",
     ).toBe(countHandle);
+    expect(txCalls.indexOf(txLocks[0]!)).toBeLessThan(txCalls.indexOf(txSelects[1]!));
 
     // 3) The user lookup runs on the outer db (not inside the tx), as the
     // current implementation does.

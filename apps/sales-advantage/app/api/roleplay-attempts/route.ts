@@ -47,27 +47,38 @@ export async function POST(request: NextRequest) {
     }
 
     const formData = await request.formData();
-    const scenarioId = formData.get("scenarioId") as string;
-    const audioFile = formData.get("audio") as File;
-    const durationMs = parseInt(
-      (formData.get("durationMs") as string) ?? "0",
-      10,
-    );
+    const scenarioIdRaw = formData.get("scenarioId");
+    const audioFileRaw = formData.get("audio");
+    const durationMsRaw = formData.get("durationMs");
     const consentGivenRaw = formData.get("consentGiven");
     const retentionDaysRaw = formData.get("retentionDays");
 
-    if (!scenarioId || !audioFile) {
+    if (typeof scenarioIdRaw !== "string" || scenarioIdRaw.trim() === "") {
       return NextResponse.json(
         {
           error: "INVALID_AUDIO",
-          field: !scenarioId ? "scenarioId" : "audio",
-          message: !scenarioId
-            ? "scenarioId is required"
-            : "audio file is required",
+          field: "scenarioId",
+          message: "scenarioId is required",
         },
         { status: 400 },
       );
     }
+    if (!(audioFileRaw instanceof File)) {
+      return NextResponse.json(
+        {
+          error: "INVALID_AUDIO",
+          field: "audio",
+          message: "audio file is required",
+        },
+        { status: 400 },
+      );
+    }
+    const scenarioId = scenarioIdRaw;
+    const audioFile = audioFileRaw;
+    const durationMs =
+      typeof durationMsRaw === "string" && /^[1-9]\d*$/u.test(durationMsRaw)
+        ? Number(durationMsRaw)
+        : NaN;
 
     const mimeType = audioFile.type || "audio/webm";
 
@@ -105,6 +116,7 @@ export async function POST(request: NextRequest) {
     }
     if (
       !Number.isFinite(durationMs) ||
+      !Number.isInteger(durationMs) ||
       durationMs <= 0 ||
       durationMs > ROLEPLAY_MAX_AUDIO_DURATION_MS
     ) {
@@ -130,11 +142,12 @@ export async function POST(request: NextRequest) {
       );
     }
     const retentionDays =
-      typeof retentionDaysRaw === "string"
-        ? parseInt(retentionDaysRaw, 10)
+      typeof retentionDaysRaw === "string" && /^[1-9]\d*$/u.test(retentionDaysRaw)
+        ? Number(retentionDaysRaw)
         : NaN;
     if (
       !Number.isFinite(retentionDays) ||
+      !Number.isInteger(retentionDays) ||
       retentionDays < 1 ||
       retentionDays > 365
     ) {

@@ -349,6 +349,42 @@ describe("Phase 2 — Task 36: FR-13 mount-session-check race guard", () => {
 // ---------------------------------------------------------------------------
 
 describe("Phase 2 — Task 37: FR-14 & FR-15 logout failure + state derivation", () => {
+  it.each([true, false])(
+    "keeps the user cleared when a pending mount check resolves after logout success=%s",
+    async (logoutSucceeds) => {
+      let resolveSessionCheck!: (value: Response) => void;
+      const sessionCheckPromise = new Promise<Response>((resolve) => {
+        resolveSessionCheck = resolve;
+      });
+      vi.spyOn(globalThis, "fetch")
+        .mockReturnValueOnce(sessionCheckPromise)
+        .mockResolvedValueOnce({ ok: logoutSucceeds } as Response);
+
+      const { result } = renderHook(() => useAuth(), { wrapper });
+      await act(async () => {
+        await result.current.logout().catch(() => undefined);
+      });
+      await act(async () => {
+        resolveSessionCheck({
+          ok: true,
+          json: () => Promise.resolve({
+            session: {
+              user: {
+                id: "u1",
+                username: "student1",
+                role: "STUDENT",
+              },
+            },
+          }),
+        } as Response);
+        await Promise.resolve();
+      });
+
+      expect(result.current.user).toBeNull();
+      expect(result.current.isAuthenticated).toBe(false);
+    }
+  );
+
   it("FR-14: logout fetch returns ok:false → logout() rejects AND isAuthenticated is false", async () => {
     vi.spyOn(globalThis, "fetch")
       // Mount session check — no session

@@ -171,6 +171,21 @@ describe('kst-srs.v3.2 integrated recommendation policy', () => {
     );
   });
 
+  it('returns no recommendations when topN is zero in sparse and dense modes', () => {
+    const sparseInput = plannerInput({
+      nodes: [node('skill-a')],
+      readinessByNode: { 'skill-a': 1 },
+    });
+    const denseInput = plannerInput({
+      nodes: [node('skill-a'), node('skill-b')],
+      edges: [edge('a-before-b', 'prerequisite_for', 'skill-a', 'skill-b')],
+      readinessByNode: { 'skill-a': 1, 'skill-b': 1 },
+    });
+
+    expect(planRecommendedNext({ input: sparseInput, policy: { topN: 0 } }).recommendedNext).toEqual([]);
+    expect(planRecommendedNext({ input: denseInput, policy: { topN: 0 } }).recommendedNext).toEqual([]);
+  });
+
   it('suppresses new skills only above the exact 80 percent review-load boundary', () => {
     const input = plannerInput({
       nodes: [node('skill-a')],

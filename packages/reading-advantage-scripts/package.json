@@ -2,7 +2,9 @@
   "name": "@reading-advantage/scripts",
   "version": "0.1.0",
   "private": true,
-  "scripts": {},
+  "scripts": {
+    "test": "node --test generateArticle.test.js"
+  },
   "dependencies": {
     "@ai-sdk/google-vertex": "catalog:",
     "@ai-sdk/openai": "catalog:",

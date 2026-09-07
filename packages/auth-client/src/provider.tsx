@@ -100,6 +100,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
   // FR-16: register action removed — registration is now an admin operation
 
   const logout = useCallback(async () => {
+    // Discard the pending mount check as soon as logout starts.
+    authActionCompletedRef.current = true;
     // FR-14: clear local state regardless (defense in depth)
     setState({
       user: null,
@@ -117,9 +119,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
       // FR-14: throw so the UI can warn
       throw new Error("Logout may not have completed on the server");
     }
-
-    // FR-13: mark auth action completed
-    authActionCompletedRef.current = true;
   }, []);
 
   return (

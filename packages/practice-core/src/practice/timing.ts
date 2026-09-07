@@ -186,7 +186,6 @@ export class TimingAccumulator {
     const delta = event.timestamp - prevTime;
 
     if (delta < 0) {
-      this.state.lastEventTime = event.timestamp;
       return;
     }
 

@@ -49,6 +49,9 @@ export async function handleResetPassword(
     }
 
     const actor = session.user;
+    if (actor.role !== "TEACHER" && actor.role !== "ADMIN") {
+      return NextResponse.json({ message: "Forbidden" }, { status: 403 });
+    }
 
     // Load target user — scope by school for TEACHER actors.
     // ADMIN bypasses school scoping per the authorization matrix.
@@ -77,7 +80,7 @@ export async function handleResetPassword(
       }
     }
     if (actor.role === "ADMIN") {
-      if (target.role === "ADMIN") {
+      if (target.role !== "STUDENT" && target.role !== "TEACHER") {
         return NextResponse.json({ message: "Forbidden" }, { status: 403 });
       }
     }

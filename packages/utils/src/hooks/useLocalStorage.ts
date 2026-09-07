@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 
 /**
  * A React hook for managing localStorage with SSR support and cross-tab synchronization.
@@ -17,11 +17,14 @@ export function useLocalStorage<T>(key: string, initialValue: T) {
       return initialValue;
     }
   });
+  const storedValueRef = useRef(storedValue);
+  storedValueRef.current = storedValue;
 
   const setValue = useCallback(
     (value: T | ((val: T) => T)) => {
       try {
-        const valueToStore = value instanceof Function ? value(storedValue) : value;
+        const valueToStore = value instanceof Function ? value(storedValueRef.current) : value;
+        storedValueRef.current = valueToStore;
         setStoredValue(valueToStore);
         if (typeof window !== "undefined") {
           window.localStorage.setItem(key, JSON.stringify(valueToStore));
@@ -30,11 +33,12 @@ export function useLocalStorage<T>(key: string, initialValue: T) {
         console.warn(`Error setting localStorage key "${key}":`, error);
       }
     },
-    [key, storedValue]
+    [key]
   );
 
   const removeValue = useCallback(() => {
     try {
+      storedValueRef.current = initialValue;
       setStoredValue(initialValue);
       if (typeof window !== "undefined") {
         window.localStorage.removeItem(key);
@@ -46,17 +50,24 @@ export function useLocalStorage<T>(key: string, initialValue: T) {
 
   useEffect(() => {
     function handleStorageChange(e: StorageEvent) {
-      if (e.key === key && e.newValue !== null) {
-        try {
-          setStoredValue(JSON.parse(e.newValue) as T);
-        } catch {
-          // ignore parse errors from other tabs
-        }
+      if (e.storageArea !== null && e.storageArea !== window.localStorage) return;
+      if (e.key !== key && e.key !== null) return;
+      if (e.newValue === null) {
+        storedValueRef.current = initialValue;
+        setStoredValue(initialValue);
+        return;
+      }
+      try {
+        const nextValue = JSON.parse(e.newValue) as T;
+        storedValueRef.current = nextValue;
+        setStoredValue(nextValue);
+      } catch {
+        // ignore parse errors from other tabs
       }
     }
     window.addEventListener("storage", handleStorageChange);
     return () => window.removeEventListener("storage", handleStorageChange);
-  }, [key]);
+  }, [initialValue, key]);
 
   return [storedValue, setValue, removeValue] as const;
 }

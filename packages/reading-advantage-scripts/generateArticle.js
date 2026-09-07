@@ -1,4 +1,4 @@
-const { Configuration, OpenAIApi } = require('openai');
+const OpenAI = require('openai');
 const dotenv = require('dotenv');
 const fs = require('fs');
 const csvParser = require('csv-parser');
@@ -6,10 +6,8 @@ const readline = require('readline');
 const printFullWidthLine = require('./utils/printLine');
 
 dotenv.config({ path: './config.env' });
-const configuration = new Configuration({
-    apiKey: process.env.OPENAI_API_KEY,
-});
-const openai = new OpenAIApi(configuration);
+let openai;
+const MAX_GENERATION_ATTEMPTS = 3;
 let generatedCount = 0;
 let nullErrorCount = 0;
 let gradeCount = {
@@ -45,7 +43,24 @@ function removeNewlines(jsonObject) {
     }
 }
 
-async function generateArticle(type, genre, subGenre, topic, gradeLevel) {
+function getOpenAIClient() {
+    if (!openai) {
+        openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+    }
+    return openai;
+}
+
+/**
+ * Generates one article with the configured OpenAI client.
+ * @param {string} type The article type.
+ * @param {string} genre The article genre.
+ * @param {string} subGenre The article subgenre.
+ * @param {string} topic The article topic.
+ * @param {number|string} gradeLevel The target grade.
+ * @param {OpenAI} client The OpenAI client.
+ * @return {Promise<object>} The generated article.
+ */
+async function generateArticle(type, genre, subGenre, topic, gradeLevel, client = getOpenAIClient()) {
     const isLowLevel = gradeLevel <= 2;
     const isMidLevel = gradeLevel >= 3 && gradeLevel <= 5;
     const levelSentencePrompt = isLowLevel ? `Try to make the average sentence length ${3 + 2 * gradeLevel} words and try to make the text very predictable`
@@ -76,7 +91,7 @@ async function generateArticle(type, genre, subGenre, topic, gradeLevel) {
     console.log('prompt:', prompt);
     console.log('is fiction:', type === 'Fiction');
 
-    const reponse = await openai.createChatCompletion({
+    const response = await client.chat.completions.create({
         model: 'gpt-3.5-turbo',
         messages: [
             {
@@ -88,18 +103,24 @@ async function generateArticle(type, genre, subGenre, topic, gradeLevel) {
                 "content": prompt,
             }
         ],
-        functions: [
-            {
-                "name": 'get_article',
-                "parameters": schema,
-            }
-        ],
+        functions: [{
+            name: 'get_article',
+            parameters: schema,
+        }],
         function_call: {
             name: 'get_article',
         },
         temperature: temperature,
-    })
-    const result = JSON.parse(reponse.data.choices[0].message.function_call.arguments);
+    });
+    const content = response.choices[0]?.message?.function_call?.arguments;
+    if (!content) {
+        throw new Error('OpenAI returned no article content');
+    }
+    const result = JSON.parse(content);
+    if (!result || typeof result !== 'object' ||
+        typeof result.title !== 'string' || typeof result.content !== 'string') {
+        throw new Error('OpenAI returned an invalid article');
+    }
     const data = {
         title: result.title,
         content: result.content,
@@ -111,8 +132,21 @@ async function generateArticle(type, genre, subGenre, topic, gradeLevel) {
     return modifiedData;
 }
 
+/**
+ * Generates one article for each selected grade band.
+ * @param {string} type The article type.
+ * @param {string} genre The article genre.
+ * @param {string} subGenre The article subgenre.
+ * @param {string} topic The article topic.
+ * @param {number|string} lowLevel The low grade input.
+ * @param {number|string} midLevel The middle grade input.
+ * @param {number|string} highLevel The high grade input.
+ * @param {Function} generate The article generator.
+ * @return {Promise<object[]>} The generated articles.
+ */
 async function generateArticles(
-    type, genre, subGenre, topic, lowLevel, midLevel, highLevel
+    type, genre, subGenre, topic, lowLevel, midLevel, highLevel,
+    generate = generateArticle,
 ) {
 
     const levels = [
@@ -124,20 +158,22 @@ async function generateArticles(
     for (let i = 0; i < 3; i++) {
         const gradeLevel = levels[i];
         gradeCount[gradeLevel]++;
-        const result = await generateArticle(
-            type,
-            genre,
-            subGenre,
-            topic,
-            gradeLevel,
-        ).then((article) => {
-            generatedCount++;
-            return article;
-        }).catch((error) => {
-            nullErrorCount++;
-            console.error('Error generating article:', error.message);
-            i--;
-        });
+        let result;
+        let lastError;
+        for (let attempt = 0; attempt < MAX_GENERATION_ATTEMPTS; attempt++) {
+            try {
+                result = await generate(type, genre, subGenre, topic, gradeLevel);
+                generatedCount++;
+                break;
+            } catch (error) {
+                lastError = error;
+                nullErrorCount++;
+                console.error('Error generating article:', error.message);
+            }
+        }
+        if (!result) {
+            throw lastError;
+        }
         results.push(result);
         console.log('generated article for grade level', gradeLevel);
         printFullWidthLine();

@@ -225,6 +225,7 @@ function applyDiversityCap(
   input: PlannerInput,
   topN: number,
 ): string[] {
+  if (topN === 0) return [];
   const groupByNode = nearestContainsAncestorByNode(input);
   const countByGroup = new Map<string, number>();
   const selected: string[] = [];

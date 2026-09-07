@@ -58,7 +58,11 @@ export class GitHubRestDriver implements GitHubClient {
   private readonly appId: string;
   private readonly privateKey: string;
   private readonly defaultInstallationId?: string;
-  private cachedToken: { token: string; expiresAt: number } | null = null;
+  private cachedToken: {
+    installationId: string;
+    token: string;
+    expiresAt: number;
+  } | null = null;
 
   constructor(config: GitHubRestConfig) {
     this.appId = config.appId;
@@ -71,7 +75,10 @@ export class GitHubRestDriver implements GitHubClient {
    */
   private async getInstallationToken(installationId: string): Promise<string> {
     const now = Date.now();
-    if (this.cachedToken && this.cachedToken.expiresAt > now) {
+    if (
+      this.cachedToken?.installationId === installationId &&
+      this.cachedToken.expiresAt > now
+    ) {
       return this.cachedToken.token;
     }
 
@@ -97,6 +104,7 @@ export class GitHubRestDriver implements GitHubClient {
 
     const data = (await res.json()) as { token: string; expires_at: string };
     this.cachedToken = {
+      installationId,
       token: data.token,
       expiresAt: new Date(data.expires_at).getTime() - 60_000,
     };

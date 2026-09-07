@@ -168,7 +168,7 @@ export function InteractiveActivityPlayer({ activity, controller, locale, onAsse
     setSnapshot(next);
     });
     if (initialPosition.current > 0) controller.seek(initialPosition.current);
-    return () => { unsubscribe(); controller.destroy(); };
+    return unsubscribe;
   }, [activity, controller]);
 
   useEffect(() => {

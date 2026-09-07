@@ -1,6 +1,6 @@
 
 import { createHash } from "node:crypto";
-import { count, eq, and, gt, type PostgresJsDatabase } from "@reading-advantage/db";
+import { count, eq, and, gt, inArray, type PostgresJsDatabase } from "@reading-advantage/db";
 import { sessions, users } from "@reading-advantage/db/schema";
 import type * as schema from "@reading-advantage/db/schema";
 import type { UserContext } from "./tenant.js";
@@ -45,6 +45,11 @@ export async function createSession(
   // concurrent logins cannot race past the cap.
   const session = await db.transaction(async (tx) => {
     const now = new Date();
+    await tx
+      .select({ id: users.id })
+      .from(users)
+      .where(eq(users.id, userId))
+      .for("update");
     const countResult = await tx
       .select({ value: count() })
       .from(sessions)
@@ -56,9 +61,11 @@ export async function createSession(
         .from(sessions)
         .where(and(eq(sessions.userId, userId), gt(sessions.expiresAt, now)))
         .orderBy(sessions.createdAt)
-        .limit(1);
-      if (oldestRows[0]) {
-        await tx.delete(sessions).where(eq(sessions.id, oldestRows[0].id));
+        .limit(sessionCount - 9);
+      if (oldestRows.length > 0) {
+        await tx
+          .delete(sessions)
+          .where(inArray(sessions.id, oldestRows.map((row) => row.id)));
       }
     }
 
