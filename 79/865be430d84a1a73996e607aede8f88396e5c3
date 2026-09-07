@@ -1,0 +1,24 @@
+Architectural priorities: imports. Preserve existing behavior and reduce coupling or duplicate parsing.
+
+Files:
+apps/science-advantage/app/(teacher)/teacher/classes/[classId]/analytics/page.tsx
+apps/science-advantage/app/(teacher)/teacher/classes/[classId]/page.tsx
+apps/science-advantage/app/(teacher)/teacher/classes/[classId]/roster/page.tsx
+apps/science-advantage/app/(teacher)/teacher/classes/page.tsx
+apps/science-advantage/app/(teacher)/teacher/page.tsx
+apps/science-advantage/app/api/admin/dsar/export/route.ts
+apps/science-advantage/app/api/ai/recommendations/route.ts
+apps/science-advantage/app/api/student/classes/route.ts
+apps/science-advantage/lib/ai/recommendation-context.integration.test.ts
+apps/science-advantage/lib/gamification/badges.integration.test.ts
+apps/science-advantage/lib/gamification/gamification-tenant-isolation.test.ts
+apps/science-advantage/lib/gamification/streak.integration.test.ts
+apps/science-advantage/lib/gamification/xp.integration.test.ts
+apps/science-advantage/lib/services/classes/get-class-detail.integration.test.ts
+apps/science-advantage/lib/services/classes/get-student-classes.integration.test.ts
+apps/science-advantage/lib/services/mastery/mastery-worker.integration.test.ts
+apps/science-advantage/lib/services/services-tenant-isolation.test.ts
+apps/science-advantage/lib/test/domain-subpath-isolation.test.ts
+apps/science-advantage/lib/test/fixtures/domain-root-import-counterexample.txt
+
+Validation: Astra low review passed. Relevant behavior tests passed. Affected lint and type tasks passed. Full application build checks remain in the track verification record.
