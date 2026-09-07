@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { logStructuredError } from "@reading-advantage/utils/structured-error";
 
 import { isLegacyCodecampAuthEnabled } from "@/lib/auth-mode";
 import {
@@ -57,21 +58,13 @@ export async function GET(request: Request): Promise<NextResponse> {
       try {
         const revoked = await client.logout(session.accessToken);
         if (!revoked) {
-          console.error(
-            JSON.stringify({
-              level: "error",
-              event: "codecamp_callback_revocation_failed",
-            }),
-          );
+          logStructuredError({ event: "codecamp_callback_revocation_failed" });
         }
       } catch (error) {
-        console.error(
-          JSON.stringify({
-            level: "error",
-            event: "codecamp_callback_revocation_error",
-            errorName: error instanceof Error ? error.name : "UnknownError",
-          }),
-        );
+        logStructuredError({
+          event: "codecamp_callback_revocation_error",
+          error,
+        });
       }
       const response = NextResponse.redirect(
         new URL("/?error=forbidden", publicOrigin),

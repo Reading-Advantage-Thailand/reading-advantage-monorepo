@@ -92,7 +92,7 @@ export function TutorCoach({
     }
   };
 
-  const useResource = async () => {
+  const applyResource = async () => {
     if (!response?.resource || resourcePending) return;
     setResourcePending(true);
     setError(null);
@@ -147,7 +147,7 @@ export function TutorCoach({
         {response.intervention.diagnosticQuestion ? <p className="font-medium">{response.intervention.diagnosticQuestion}</p> : null}
         {response.resource ? <div className="space-y-2 rounded-md border border-blue-200 bg-white p-3">
           <p className="font-medium">{response.resource.title}</p>
-          <button type="button" className="min-h-11 rounded-md border px-4" disabled={resourcePending} onClick={() => void useResource()}>{resourcePending ? (thai ? "กำลังเปิด…" : "Opening…") : resourceActionLabel(response.resource, thai)}</button>
+          <button type="button" className="min-h-11 rounded-md border px-4" disabled={resourcePending} onClick={() => void applyResource()}>{resourcePending ? (thai ? "กำลังเปิด…" : "Opening…") : resourceActionLabel(response.resource, thai)}</button>
         </div> : null}
       </div> : null}
       {error ? <p role="alert" className="text-red-700">{error}</p> : null}

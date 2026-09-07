@@ -1,4 +1,5 @@
 import { handleLogout } from "@reading-advantage/api/routes/auth";
+import { logStructuredError } from "@reading-advantage/utils/structured-error";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
@@ -44,22 +45,14 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       const revoked = await getCodecampOidcClient().logout(token);
       if (!revoked) {
         revocationFailed = true;
-        console.error(
-          JSON.stringify({
-            level: "error",
-            event: "codecamp_logout_revocation_failed",
-          }),
-        );
+        logStructuredError({ event: "codecamp_logout_revocation_failed" });
       }
     } catch (error) {
       revocationFailed = true;
-      console.error(
-        JSON.stringify({
-          level: "error",
-          event: "codecamp_logout_revocation_error",
-          errorName: error instanceof Error ? error.name : "UnknownError",
-        }),
-      );
+      logStructuredError({
+        event: "codecamp_logout_revocation_error",
+        error,
+      });
     }
   }
   const response = NextResponse.json(

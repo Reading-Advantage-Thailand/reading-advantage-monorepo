@@ -6,6 +6,13 @@ import { getAuthToken } from "@reading-advantage/api/context";
 import { createTenantDB } from "@reading-advantage/domain";
 import { getChatContext } from "@reading-advantage/domain/codecamp";
 import { checkChatRateLimit } from "@/lib/rate-limit";
+import { isLegacyCodecampAuthEnabled } from "@/lib/auth-mode";
+import {
+  CODECAMP_SESSION_COOKIE,
+  getCodecampOidcClient,
+  readCodecampCookie,
+  resolveCodecampSessionUser,
+} from "@/lib/company-oidc";
 import { z } from "zod";
 
 const CODECAMP_TUTOR_MODEL = process.env.CODECAMP_TUTOR_MODEL ?? "xiaomi/mimo-v2.5";
@@ -86,17 +93,30 @@ function createChatStreamResponse(textStream: AsyncIterable<string>): Response {
  */
 export async function POST(req: NextRequest) {
   try {
-    // Authenticate using shared token helper
-    const token = await getAuthToken();
-    const session = await requireAuth(db, token);
+    const user = isLegacyCodecampAuthEnabled()
+      ? (await requireAuth(db, await getAuthToken())).user
+      : await (async () => {
+          const token = readCodecampCookie(req, CODECAMP_SESSION_COOKIE);
+          let session = null;
+          try {
+            session = token
+              ? await getCodecampOidcClient().introspect(token)
+              : null;
+          } catch {
+            return null;
+          }
+          return session
+            ? await resolveCodecampSessionUser(session.identity)
+            : null;
+        })();
+    if (!user) throw new Error("Authentication required");
 
     // Create tenant context for domain function
-    const tenantDb = createTenantDB(db, { schoolId: session.user.schoolId });
-    const user = session.user;
-    const tenant = { schoolId: session.user.schoolId };
+    const tenantDb = createTenantDB(db, { schoolId: user.schoolId });
+    const tenant = { schoolId: user.schoolId };
 
     // Rate limit check
-    const rateCheck = checkChatRateLimit(session.user.id);
+    const rateCheck = checkChatRateLimit(user.id);
     if (!rateCheck.allowed) {
       return Response.json(
         { error: "Rate limit exceeded", retryAfter: rateCheck.retryAfter },

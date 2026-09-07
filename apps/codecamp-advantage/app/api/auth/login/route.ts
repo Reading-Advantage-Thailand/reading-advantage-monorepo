@@ -1,4 +1,5 @@
 import { handleLogin } from "@reading-advantage/api/routes/auth";
+import { logStructuredError } from "@reading-advantage/utils/structured-error";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
@@ -23,14 +24,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     return await handleLogin(request);
   } catch (error) {
-    console.error(
-      JSON.stringify({
-        level: "error",
-        event: "codecamp_legacy_login_error",
-        requestId: request.headers.get("x-request-id") ?? null,
-        errorName: error instanceof Error ? error.name : "UnknownError",
-      }),
-    );
+    logStructuredError({
+      event: "codecamp_legacy_login_error",
+      requestId: request.headers.get("x-request-id") ?? null,
+      error,
+    });
     return NextResponse.json(
       { message: "Internal server error" },
       { status: 500 },
