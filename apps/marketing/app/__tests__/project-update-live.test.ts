@@ -35,6 +35,7 @@ vi.mock("next/server", () => ({
 import { GET, PATCH } from "@/api/video/projects/route";
 
 const campaignId = "11111111-1111-4111-8111-111111111111";
+const foreignCampaignId = "33333333-3333-4333-8333-333333333333";
 const projectId = "22222222-2222-4222-8222-222222222222";
 const originalScript = Array.from({ length: 5 }, (_, index) => ({
   narration: `ต้นฉบับ ${index + 1}`,
@@ -52,7 +53,9 @@ describe("Marketing project update PGlite round trip", () => {
     testDb = await createTestDb();
     await testDb.db.execute(sql`
       INSERT INTO campaigns (id, type, app, name, status)
-      VALUES (${campaignId}, 'video', 'reading-advantage', 'Reload Campaign', 'draft')
+      VALUES
+        (${campaignId}, 'video', 'reading-advantage', 'Reload Campaign', 'draft'),
+        (${foreignCampaignId}, 'video', 'primary-advantage', 'Foreign Campaign', 'draft')
     `);
     await testDb.db.execute(sql`
       INSERT INTO video_projects (id, campaign_id, topic, script)
@@ -115,6 +118,30 @@ describe("Marketing project update PGlite round trip", () => {
         topic: "หัวข้อที่แก้ไข",
         script: editedScript,
       }),
+    ]);
+  });
+
+  it("denies an update through a different campaign", async () => {
+    const response = await PATCH(
+      authedRequest("http://localhost/api/video/projects", {
+        method: "PATCH",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          id: projectId,
+          campaignId: foreignCampaignId,
+          topic: "Foreign edit",
+          script: editedScript,
+        }),
+      }),
+    );
+
+    expect(response.status).toBe(404);
+
+    const rows = await testDb.db.execute(
+      sql`SELECT campaign_id FROM video_projects WHERE id = ${projectId}`,
+    );
+    expect(rows.rows).toEqual([
+      expect.objectContaining({ campaign_id: campaignId }),
     ]);
   });
 });

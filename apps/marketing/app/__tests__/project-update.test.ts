@@ -4,7 +4,12 @@ const routeMocks = vi.hoisted(() => ({
   update: vi.fn(),
   requirePermission: vi.fn(async () => ({
     ok: true as const,
-    session: { user: { id: "admin", role: "ADMIN" as const } },
+    session: {
+      user: {
+        id: "33333333-3333-4333-8333-333333333333",
+        role: "ADMIN" as const,
+      },
+    },
   })),
 }));
 
@@ -85,6 +90,7 @@ describe("PATCH /api/video/projects", () => {
     expect(setMock).toHaveBeenCalledWith({
       topic: updatedProject.topic,
       script,
+      updatedBy: "33333333-3333-4333-8333-333333333333",
     });
     expect(whereMock).toHaveBeenCalled();
     expect(routeMocks.requirePermission).toHaveBeenCalledWith(

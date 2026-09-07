@@ -54,7 +54,12 @@ vi.mock("@/lib/ai-credentials", () => ({
 vi.mock("@/lib/auth", () => ({
   requireMarketingPermission: vi.fn(async () => ({
     ok: true,
-    session: { user: { id: "marketing-user", role: "ADMIN" } },
+    session: {
+      user: {
+        id: "44444444-4444-4444-8444-444444444444",
+        role: "ADMIN",
+      },
+    },
   })),
 }));
 
@@ -246,6 +251,7 @@ describe("Marketing approved-topic conflict-safe persistence", () => {
         app: "reading-advantage",
         topic: "Reading Advantage สำหรับเด็ก",
         normalizedKey: "reading advantageสำหรับเด็ก",
+        createdBy: "44444444-4444-4444-8444-444444444444",
       },
     ]);
     expect(mocks.onConflictDoNothing).toHaveBeenCalledWith({

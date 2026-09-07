@@ -34,7 +34,12 @@ vi.mock("next/server", () => ({
 vi.mock("@/lib/auth", () => ({
   requireMarketingPermission: vi.fn(async () => ({
     ok: true,
-    session: { user: { id: "marketing-admin", role: "ADMIN" } },
+    session: {
+      user: {
+        id: "55555555-5555-4555-8555-555555555555",
+        role: "ADMIN",
+      },
+    },
   })),
 }));
 

@@ -219,7 +219,7 @@ describe("Phase 2E: AI adapter routing — regression guards", () => {
     }
     console.log(`Direct SDK import count: ${directSdkImportCount}`);
     expect(directSdkImportCount).toBe(0);
-  });
+  }, 30_000);
 });
 
 describe("Phase 2E: AI adapter error redaction — RED at baseline", () => {

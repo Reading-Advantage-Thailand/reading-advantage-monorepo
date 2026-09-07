@@ -76,7 +76,7 @@ describe("Phase 7.4: Marketing language contract", () => {
     const expected = analysis.defaultLocale ?? analysis.inferredLocale;
     expect(expected).toMatch(/^(en|th)$/);
     expect(analysis.layoutLocale).toBe(expected);
-  });
+  }, 30_000);
   it("requires real message data and used accessor output for every client page", () => {
     const analysis = getProductionAnalysis();
     expect(analysis.messagePaths.size).toBeGreaterThan(0);

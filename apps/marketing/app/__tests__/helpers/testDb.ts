@@ -51,7 +51,9 @@ CREATE TABLE IF NOT EXISTS campaigns (
   name text NOT NULL,
   status campaign_status NOT NULL DEFAULT 'draft',
   created_at timestamp NOT NULL DEFAULT now(),
-  updated_at timestamp NOT NULL DEFAULT now()
+  updated_at timestamp NOT NULL DEFAULT now(),
+  created_by uuid,
+  updated_by uuid
 );
 
 CREATE TABLE IF NOT EXISTS video_projects (
@@ -60,7 +62,10 @@ CREATE TABLE IF NOT EXISTS video_projects (
   topic text NOT NULL,
   script jsonb,
   status video_project_status NOT NULL DEFAULT 'draft',
-  created_at timestamp NOT NULL DEFAULT now()
+  created_at timestamp NOT NULL DEFAULT now(),
+  updated_at timestamp NOT NULL DEFAULT now(),
+  created_by uuid,
+  updated_by uuid
 );
 
 CREATE TABLE IF NOT EXISTS past_topics (
@@ -68,7 +73,8 @@ CREATE TABLE IF NOT EXISTS past_topics (
   app app NOT NULL,
   topic text NOT NULL,
   normalized_key text NOT NULL,
-  created_at timestamp NOT NULL DEFAULT now()
+  created_at timestamp NOT NULL DEFAULT now(),
+  created_by uuid
 );
 
 CREATE UNIQUE INDEX IF NOT EXISTS past_topics_app_normalized_key_unique
