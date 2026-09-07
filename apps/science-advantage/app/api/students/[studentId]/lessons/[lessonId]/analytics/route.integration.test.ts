@@ -13,12 +13,21 @@ import {
   scienceStandards,
   scienceUnitLessons,
   sessions,
+  schools,
   users,
 } from '@reading-advantage/db/schema';
 import { GET } from './route';
 import { createSession } from '@/lib/auth/session';
 
 const TEST_PREFIX = 'student-lesson-analytics-itest';
+const TEST_SCHOOL_ID = '00000000-0000-0000-0000-000000000099';
+const TEST_USER_IDS = {
+  teacher: '00000000-0000-0000-0000-000000000201',
+  otherTeacher: '00000000-0000-0000-0000-000000000202',
+  admin: '00000000-0000-0000-0000-000000000203',
+  student: '00000000-0000-0000-0000-000000000204',
+  missingStudent: '00000000-0000-0000-0000-000000000299',
+} as const;
 
 const mockCookies = {
   get: vi.fn(),
@@ -32,42 +41,50 @@ vi.mock('next/headers', () => ({
 
 async function cleanup(): Promise<void> {
   await db.delete(scienceQuestionResponses);
-  await db.delete(scienceAttempts);
   await db.delete(scienceQuestionStandards);
-  await db.delete(scienceQuizQuestions);
   await db.delete(scienceUnitLessons);
   await db.delete(scienceClassStudents);
-  await db.delete(scienceLessons);
+  await db.delete(scienceAttempts);
+  await db.delete(scienceQuizQuestions);
   await db.delete(scienceCurriculumUnits);
+  await db.delete(scienceLessons);
   await db.delete(scienceClasses);
   await db.execute(
     sql`DELETE FROM science_standards WHERE description = 'SL analytics standard'`
   );
   await db.delete(sessions);
   await db.delete(accounts);
-  await db.execute(sql`DELETE FROM users WHERE id LIKE ${`${TEST_PREFIX}-%`}`);
+  await db.execute(
+    sql`DELETE FROM users WHERE username LIKE ${`${TEST_PREFIX}-%`}`
+  );
 }
 
-async function seedUser(id: string, role: 'TEACHER' | 'STUDENT' | 'ADMIN', name?: string) {
+async function seedUser(
+  id: string,
+  role: 'TEACHER' | 'STUDENT' | 'ADMIN',
+  name?: string
+) {
+  const username = `${TEST_PREFIX}-${id.slice(-3)}`;
   const [u] = await db
     .insert(users)
     .values({
       id,
       name: name ?? id,
-      username: id,
-      displayUsername: id,
-      email: `${id}@example.com`,
+      username,
+      displayUsername: username,
+      email: `${username}@example.com`,
       role,
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
   return u;
 }
 
 async function seedScenario() {
-  const teacher = await seedUser(`${TEST_PREFIX}-teacher`, 'TEACHER', 'Teach');
-  const otherTeacher = await seedUser(`${TEST_PREFIX}-other`, 'TEACHER');
-  const admin = await seedUser(`${TEST_PREFIX}-admin`, 'ADMIN');
-  const student = await seedUser(`${TEST_PREFIX}-student`, 'STUDENT', 'Alice');
+  const teacher = await seedUser(TEST_USER_IDS.teacher, 'TEACHER', 'Teach');
+  const otherTeacher = await seedUser(TEST_USER_IDS.otherTeacher, 'TEACHER');
+  const admin = await seedUser(TEST_USER_IDS.admin, 'ADMIN');
+  const student = await seedUser(TEST_USER_IDS.student, 'STUDENT', 'Alice');
 
   const [cls] = await db
     .insert(scienceClasses)
@@ -77,11 +94,14 @@ async function seedScenario() {
       standardsAlignment: 'THAI',
       joinCode: `SLA-${Date.now()}`,
       teacherId: teacher.id,
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
-  await db
-    .insert(scienceClassStudents)
-    .values({ classId: cls.id, studentId: student.id });
+  await db.insert(scienceClassStudents).values({
+    classId: cls.id,
+    studentId: student.id,
+    schoolId: TEST_SCHOOL_ID,
+  });
 
   const [unit] = await db
     .insert(scienceCurriculumUnits)
@@ -92,6 +112,7 @@ async function seedScenario() {
       gradeLevel: 3,
       order: 1,
       classId: cls.id,
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
   const [lesson] = await db
@@ -101,11 +122,14 @@ async function seedScenario() {
       title: 'SL Lesson',
       gradeLevel: 3,
       order: 1,
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
-  await db
-    .insert(scienceUnitLessons)
-    .values({ unitId: unit.id, lessonId: lesson.id });
+  await db.insert(scienceUnitLessons).values({
+    unitId: unit.id,
+    lessonId: lesson.id,
+    schoolId: TEST_SCHOOL_ID,
+  });
 
   const [std1] = await db
     .insert(scienceStandards)
@@ -114,6 +138,7 @@ async function seedScenario() {
       code: `SL-${TEST_PREFIX}-S1-${Date.now()}`,
       description: 'SL analytics standard',
       gradeLevel: 3,
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
 
@@ -128,6 +153,7 @@ async function seedScenario() {
       correctAnswer: 'A',
       points: 1,
       order: 1,
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
   const [q2] = await db
@@ -141,11 +167,20 @@ async function seedScenario() {
       correctAnswer: 'A',
       points: 1,
       order: 2,
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
   await db.insert(scienceQuestionStandards).values([
-    { questionId: q1.id, standardId: std1.id },
-    { questionId: q2.id, standardId: std1.id },
+    {
+      questionId: q1.id,
+      standardId: std1.id,
+      schoolId: TEST_SCHOOL_ID,
+    },
+    {
+      questionId: q2.id,
+      standardId: std1.id,
+      schoolId: TEST_SCHOOL_ID,
+    },
   ]);
 
   // Attempt 1: 1/2 correct (q1 correct, q2 wrong).
@@ -154,6 +189,7 @@ async function seedScenario() {
     .values({
       studentId: student.id,
       lessonId: lesson.id,
+      schoolId: TEST_SCHOOL_ID,
       score: 1,
       maxScore: 2,
       attemptNumber: 1,
@@ -165,6 +201,7 @@ async function seedScenario() {
     {
       attemptId: attempt1.id,
       questionId: q1.id,
+      schoolId: TEST_SCHOOL_ID,
       studentAnswer: 'A',
       isCorrect: true,
       timeSpentSeconds: 30,
@@ -174,6 +211,7 @@ async function seedScenario() {
     {
       attemptId: attempt1.id,
       questionId: q2.id,
+      schoolId: TEST_SCHOOL_ID,
       studentAnswer: 'B',
       isCorrect: false,
       timeSpentSeconds: 45,
@@ -188,6 +226,7 @@ async function seedScenario() {
     .values({
       studentId: student.id,
       lessonId: lesson.id,
+      schoolId: TEST_SCHOOL_ID,
       score: 2,
       maxScore: 2,
       attemptNumber: 2,
@@ -199,6 +238,7 @@ async function seedScenario() {
     {
       attemptId: attempt2.id,
       questionId: q1.id,
+      schoolId: TEST_SCHOOL_ID,
       studentAnswer: 'A',
       isCorrect: true,
       timeSpentSeconds: 20,
@@ -208,6 +248,7 @@ async function seedScenario() {
     {
       attemptId: attempt2.id,
       questionId: q2.id,
+      schoolId: TEST_SCHOOL_ID,
       studentAnswer: 'A',
       isCorrect: true,
       timeSpentSeconds: 25,
@@ -224,6 +265,10 @@ describe('GET /api/students/[studentId]/lessons/[lessonId]/analytics (integratio
     mockCookies.get.mockReset();
     mockCookies.get.mockReturnValue(undefined);
     await cleanup();
+    await db
+      .insert(schools)
+      .values({ id: TEST_SCHOOL_ID, name: 'Test School' })
+      .onConflictDoNothing();
   });
 
   it('returns a non-2xx error when not authenticated', async () => {
@@ -234,7 +279,7 @@ describe('GET /api/students/[studentId]/lessons/[lessonId]/analytics (integratio
     try {
       res = await GET(new Request('http://localhost'), {
         params: Promise.resolve({
-          studentId: `${TEST_PREFIX}-x`,
+          studentId: TEST_USER_IDS.missingStudent,
           lessonId: '00000000-0000-0000-0000-000000000000',
         }),
       });
@@ -253,7 +298,7 @@ describe('GET /api/students/[studentId]/lessons/[lessonId]/analytics (integratio
 
     const res = await GET(new Request('http://localhost'), {
       params: Promise.resolve({
-        studentId: `${TEST_PREFIX}-nope`,
+        studentId: TEST_USER_IDS.missingStudent,
         lessonId: '00000000-0000-0000-0000-000000000000',
       }),
     });

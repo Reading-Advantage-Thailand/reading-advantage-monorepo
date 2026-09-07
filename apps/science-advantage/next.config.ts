@@ -44,13 +44,13 @@ const nextConfig: NextConfig = {
 
 // Wrap the Next.js config with Sentry so the framework auto-loads
 // `sentry.client.config.ts` and `sentry.server.config.ts` on the
-// live runtime path. Source-map upload is disabled (`disable: true`)
+// live runtime path. Source-map upload is disabled
 // because we do not maintain release health in CI; the runtime SDK
 // initialization (captureException in route handlers) is the live
 // behavior gated by Phase 9's live-initialization acceptance test.
 export default withSentryConfig(nextConfig, {
   org: process.env.SENTRY_ORG,
   project: process.env.SENTRY_PROJECT,
-  disable: !process.env.SENTRY_AUTH_TOKEN,
+  sourcemaps: { disable: !process.env.SENTRY_AUTH_TOKEN },
   silent: !process.env.SENTRY_AUTH_TOKEN,
 });

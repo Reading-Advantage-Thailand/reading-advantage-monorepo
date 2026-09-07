@@ -13,7 +13,7 @@ import {
   scienceLessons,
   sessions,
   users,
-  schools
+  schools,
 } from '@reading-advantage/db/schema';
 import { createSession } from '@/lib/auth/session';
 
@@ -67,6 +67,7 @@ async function seedScenario(args: { withStandards: boolean }) {
     displayUsername: studentId,
     email: `${studentId}@example.com`,
     role: 'STUDENT',
+    schoolId: TEST_SCHOOL_ID,
   });
 
   const [lesson] = await db
@@ -112,11 +113,11 @@ async function seedScenario(args: { withStandards: boolean }) {
       })
       .returning();
     standardId = std.id;
-    await db
-      .insert(scienceQuestionStandards)
-      .values({ questionId: q1.id, standardId: std.id ,
-          schoolId: TEST_SCHOOL_ID,
-      });
+    await db.insert(scienceQuestionStandards).values({
+      questionId: q1.id,
+      standardId: std.id,
+      schoolId: TEST_SCHOOL_ID,
+    });
   }
 
   const [attempt] = await db
@@ -151,7 +152,10 @@ describe('POST /api/ai/update-mastery (integration)', () => {
     mockCookies.get.mockReset();
     mockCookies.get.mockReturnValue(undefined);
     await cleanup();
-    await db.insert(schools).values({ id: TEST_SCHOOL_ID, name: 'Test School' }).onConflictDoNothing();
+    await db
+      .insert(schools)
+      .values({ id: TEST_SCHOOL_ID, name: 'Test School' })
+      .onConflictDoNothing();
   });
 
   it('returns 401 when not authenticated', async () => {
@@ -175,7 +179,12 @@ describe('POST /api/ai/update-mastery (integration)', () => {
       body: 'not json',
     });
     const res = await POST(req);
-    expect(res.status).toBe(202);
+    expect(res.status).toBe(400);
+    await expect(res.json()).resolves.toEqual({
+      success: false,
+      error: 'invalid_input',
+      details: [{ path: '', message: 'Invalid JSON body' }],
+    });
   });
 
   it('returns 400 for missing attemptId', async () => {
@@ -219,6 +228,7 @@ describe('POST /api/ai/update-mastery (integration)', () => {
       displayUsername: otherId,
       email: `${otherId}@example.com`,
       role: 'STUDENT',
+      schoolId: TEST_SCHOOL_ID,
     });
     const session = await createSession(otherId);
     mockCookies.get.mockReturnValue({ value: session.token });
@@ -233,7 +243,9 @@ describe('POST /api/ai/update-mastery (integration)', () => {
   });
 
   it('returns 409 when attempt has no completedAt', async () => {
-    const { studentId, attemptId } = await seedScenario({ withStandards: true });
+    const { studentId, attemptId } = await seedScenario({
+      withStandards: true,
+    });
     // Mark this attempt as not completed.
     await db
       .update(scienceAttempts)
@@ -253,7 +265,9 @@ describe('POST /api/ai/update-mastery (integration)', () => {
   });
 
   it('short-circuits with 200/updated=0 when no standards are linked', async () => {
-    const { studentId, attemptId } = await seedScenario({ withStandards: false });
+    const { studentId, attemptId } = await seedScenario({
+      withStandards: false,
+    });
     const session = await createSession(studentId);
     mockCookies.get.mockReturnValue({ value: session.token });
 
@@ -342,7 +356,9 @@ describe('POST /api/ai/update-mastery (integration)', () => {
   });
 
   it('returns 202/QUEUED when an existing run is already PROCESSING', async () => {
-    const { studentId, attemptId } = await seedScenario({ withStandards: true });
+    const { studentId, attemptId } = await seedScenario({
+      withStandards: true,
+    });
     // Pre-insert a PROCESSING run for this attempt.
     await db.insert(scienceMasteryRuns).values({
       attemptId,

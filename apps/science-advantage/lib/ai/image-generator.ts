@@ -145,7 +145,6 @@ export async function generateLessonDiagram(
   // been migrated to the AIClient adapter (which returns Buffer from
   // `generateImage` and wraps the base64 conversion). Follow-up row in
   // measure/tracks/wave2_confidence_restoration_20260628/plan.md Phase 2.
-  // @ts-expect-error -- ai is a transitive dep available at runtime via @reading-advantage/ai/internal-sdk
   const { experimental_generateImage } = await import('@reading-advantage/ai/internal-sdk');
 
   const client: AIClient = {

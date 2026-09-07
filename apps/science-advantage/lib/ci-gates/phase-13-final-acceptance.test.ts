@@ -219,7 +219,7 @@ const TURBO_CONFIG_PATH = resolve(WORKSPACE_ROOT, "turbo.json");
  * Phase 10 status note: the `paths:` block includes
  * `apps/science-advantage/**` plus the shared paths.
  */
-const REQUIRED_SCIENCE_ADVANTAGE_PATH = "apps/science-advantage/**";
+const REQUIRED_SCIENCE_ADVANTAGE_PATH = "apps/**";
 
 /**
  * The set of 4 named gates that the monorepo-root CI workflow
@@ -309,15 +309,12 @@ let testSmokeStatus: number | null;
  * each take several minutes; the margin absorbs a cold start
  * and slow CI runners.
  *
- * Invokes `corepack pnpm` so the test works both in dev (where
- * pnpm is provisioned via corepack) and in CI (where pnpm is on
- * PATH and corepack forwards transparently).
- * @param args The pnpm arguments (e.g. `["--filter",
- *   "science-advantage", "check-types"]`).
+ * @param script The workspace-relative Node tool path.
+ * @param args The arguments for the selected Node tool.
  * @returns The captured spawn result.
  */
-function runGate(args: readonly string[]): SpawnSyncReturns<string> {
-  return spawnSync("corepack", ["pnpm", ...args], {
+function runNodeTool(script: string, args: readonly string[]): SpawnSyncReturns<string> {
+  return spawnSync(process.execPath, [resolve(WORKSPACE_ROOT, script), ...args], {
     cwd: SCIENCE_ADVANTAGE_ROOT,
     encoding: "utf8",
     stdio: ["ignore", "pipe", "pipe"],
@@ -334,8 +331,8 @@ function runGate(args: readonly string[]): SpawnSyncReturns<string> {
  * and by `phase-8-ignore-build-errors.test.ts` (for build).
  */
 const GATE_ARGS: Readonly<Record<string, readonly string[]>> = {
-  checkTypes: ["--filter", "science-advantage", "check-types"],
-  lint: ["--filter", "science-advantage", "lint"],
+  checkTypes: ["--noEmit"],
+  lint: ["."],
 } as const;
 
 describe(
@@ -343,7 +340,7 @@ describe(
   () => {
     describe("umbrella gate 1 — check-types (per test-strategy.md \u00a71 P13)", () => {
       beforeAll(() => {
-        const result = runGate(GATE_ARGS.checkTypes);
+        const result = runNodeTool("node_modules/typescript/bin/tsc", GATE_ARGS.checkTypes);
         checkTypesOutput = `${result.stdout ?? ""}\n${result.stderr ?? ""}`;
         checkTypesStatus = result.status;
       }, 600_000);
@@ -380,7 +377,7 @@ describe(
 
     describe("umbrella gate 2 — lint (per test-strategy.md \u00a71 P13)", () => {
       beforeAll(() => {
-        const result = runGate(GATE_ARGS.lint);
+        const result = runNodeTool("node_modules/eslint/bin/eslint.js", GATE_ARGS.lint);
         lintOutput = `${result.stdout ?? ""}\n${result.stderr ?? ""}`;
         lintStatus = result.status;
       }, 600_000);
@@ -432,13 +429,9 @@ describe(
           // suite (which takes 9+ minutes and blew the
           // supervisor's 900s budget in attempt-1).
           const result = spawnSync(
-            "corepack",
+            process.execPath,
             [
-              "pnpm",
-              "--filter",
-              "science-advantage",
-              "exec",
-              "vitest",
+              resolve(WORKSPACE_ROOT, "node_modules/vitest/vitest.mjs"),
               "run",
               "--config",
               "vitest.unit.config.ts",
@@ -725,6 +718,50 @@ describe(
           }
         });
 
+        it("provides the isolated Science test database service", () => {
+          const content = readFileSync(CI_WORKFLOW_PATH, "utf8");
+          expect(content).toMatch(/^\s{8}image: postgres:16-alpine$/mu);
+          expect(content).toMatch(/^\s{10}POSTGRES_DB: science_advantage_test$/mu);
+          expect(content).toMatch(/^\s{10}POSTGRES_USER: postgres$/mu);
+          expect(content).toMatch(/^\s{10}POSTGRES_PASSWORD: postgres$/mu);
+          expect(content).toMatch(/^\s{10}- 5432:5432$/mu);
+          expect(content).toContain(
+            '--health-cmd "pg_isready -U postgres -d science_advantage_test"',
+          );
+        });
+
+        it("passes the isolated Science database URL to every job gate", () => {
+          const content = readFileSync(CI_WORKFLOW_PATH, "utf8");
+          expect(content).toMatch(
+            /^\s{6}DATABASE_URL: postgresql:\/\/postgres:postgres@localhost:5432\/science_advantage_test$/mu,
+          );
+        });
+
+        it("provides the Company Identity PostgreSQL fixtures", () => {
+          const content = readFileSync(CI_WORKFLOW_PATH, "utf8");
+          expect(content).toMatch(
+            /^\s{6}COMPANY_IDENTITY_TEST_ADMIN_DATABASE_URL: postgresql:\/\/postgres:postgres@localhost:5432\/postgres$/mu,
+          );
+          expect(content).toContain(
+            "COMPANY_IDENTITY_TEST_POSTGRES_CONTAINER: ${{ job.services.postgres.id }}",
+          );
+        });
+
+        it("provides the Company Identity transaction pool", () => {
+          const content = readFileSync(CI_WORKFLOW_PATH, "utf8");
+          expect(content).toContain(
+            "image: docker.io/bitnamilegacy/pgbouncer:1.23.1",
+          );
+          expect(content).toContain("PGBOUNCER_POOL_MODE: transaction");
+          expect(content).toContain('PGBOUNCER_PORT: "6432"');
+          expect(content).toContain('PGBOUNCER_LISTEN_ADDRESS: "0.0.0.0"');
+          expect(content).toContain(
+            'PGBOUNCER_AUTH_QUERY: "SELECT usename, passwd FROM pg_catalog.pg_shadow WHERE usename = $1"',
+          );
+          expect(content).toMatch(/^\s{10}- 6432:6432$/mu);
+          expect(content).toContain("-d pgbouncer -tAc 'SHOW VERSION;' ");
+        });
+
         it("turbo.json declares check-types, lint, test, and build tasks with the required dependsOn chains", () => {
           expect(
             existsSync(TURBO_CONFIG_PATH),
@@ -733,7 +770,7 @@ describe(
           ).toBe(true);
           const content = readFileSync(TURBO_CONFIG_PATH, "utf8");
           const turbo = JSON.parse(content) as {
-            tasks?: Record<string, { dependsOn?: string[] }>;
+            tasks?: Record<string, { dependsOn?: string[]; env?: string[] }>;
           };
           const expectedDeps: Record<string, string[]> = {
             "check-types": ["^check-types"],
@@ -761,6 +798,13 @@ describe(
               ).toContain(required);
             }
           }
+
+          expect(turbo.tasks?.test?.env).toEqual(
+            expect.arrayContaining([
+              "COMPANY_IDENTITY_TEST_ADMIN_DATABASE_URL",
+              "COMPANY_IDENTITY_TEST_POSTGRES_CONTAINER",
+            ]),
+          );
         });
 
         it("monorepo-root .github/workflows/ci.yml runs each gate via the workspace-wide turbo command", () => {

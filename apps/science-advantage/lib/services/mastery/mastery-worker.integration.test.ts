@@ -53,6 +53,7 @@ async function seedUsers(): Promise<void> {
       displayUsername: 'MWTeacher',
       email: `${TEACHER_ID}@example.com`,
       role: 'TEACHER',
+      schoolId: TEST_SCHOOL_ID,
     },
     {
       id: STUDENT_ID,
@@ -61,6 +62,7 @@ async function seedUsers(): Promise<void> {
       displayUsername: 'MWStudent',
       email: `${STUDENT_ID}@example.com`,
       role: 'STUDENT',
+      schoolId: TEST_SCHOOL_ID,
     },
   ]);
 }

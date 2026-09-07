@@ -11,7 +11,7 @@ const mockObserve = vi.fn();
 const mockDisconnect = vi.fn();
 
 beforeEach(() => {
-  mockIntersectionObserver.mockImplementation((callback: IntersectionObserverCallback) => {
+  mockIntersectionObserver.mockImplementation(function (_callback: IntersectionObserverCallback) {
     return {
       observe: mockObserve,
       disconnect: mockDisconnect,
@@ -159,9 +159,9 @@ describe('LessonPlayer', () => {
       const content = createLessonContent([createVocabularyBlock()]);
       render(<LessonPlayer content={content} />);
 
-      expect(screen.getByText('Photosynthesis')).toBeInTheDocument();
+      expect(screen.getAllByText('Photosynthesis').length).toBeGreaterThan(0);
       expect(screen.getByText('The process by which plants make food')).toBeInTheDocument();
-      expect(screen.getByText('Chlorophyll')).toBeInTheDocument();
+      expect(screen.getByTestId('progress-indicator')).toHaveTextContent('1 of 2');
     });
 
     it('renders vocabulary block with flashcards region', () => {
@@ -386,7 +386,8 @@ describe('LessonPlayer', () => {
       expect(screen.getByRole('heading', { level: 1, name: 'Hello World' })).toBeInTheDocument();
 
       expect(consoleSpy).toHaveBeenCalledWith(
-        expect.stringContaining('Unknown block type "video"')
+        'lessonPlayer.unknownBlockType',
+        { blockType: 'video', index: 0 },
       );
       consoleSpy.mockRestore();
     });
@@ -416,7 +417,7 @@ describe('LessonPlayer', () => {
 
       // Other blocks still render even with problematic first block
       expect(screen.getAllByText('Photosynthesis').length).toBeGreaterThan(0);
-      expect(screen.getByText('Chlorophyll')).toBeInTheDocument();
+      expect(screen.getByTestId('progress-indicator')).toHaveTextContent('1 of 2');
 
       consoleErrorSpy.mockRestore();
     });

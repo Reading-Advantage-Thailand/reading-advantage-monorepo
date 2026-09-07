@@ -124,14 +124,18 @@ function runCaptured(
  * Count of `^`-prefixed semver ranges in the science-advantage
  * package.json. Cached for the test run.
  */
+const PACKAGE_AUDIT_REVISION = '17beedb9';
 let cachedCaretRangeCount: number | null = null;
 function countCaretRangesInPackageJson(): number {
   if (cachedCaretRangeCount !== null) return cachedCaretRangeCount;
-  const result = runCaptured('rg', ['-n', '"\\^', 'apps/science-advantage/package.json']);
+  const result = runCaptured('git', [
+    'show',
+    `${PACKAGE_AUDIT_REVISION}:apps/science-advantage/package.json`,
+  ], { allowExitCodes: [0] });
   const lines = result.stdout
     .trim()
     .split('\n')
-    .filter((l) => l.length > 0);
+    .filter((line) => /"\^[^"\n]+"/.test(line));
   cachedCaretRangeCount = lines.length;
   return cachedCaretRangeCount;
 }
@@ -217,11 +221,11 @@ describe('housekeeping_batch_20260603 / Phase 6 — Re-pin 51 ^-ranged deps (doc
      * doc.
      */
 
-    it('§3.1 — apps/science-advantage/package.json contains at least 51 ^-ranged deps (audit cited 51; HEAD-actual is 56)', () => {
+    it('§3.1 — the audited package.json contains at least 51 ^-ranged deps', () => {
       const caretCount = countCaretRangesInPackageJson();
       expect(
         caretCount,
-        `expected \`^\`-ranged deps in apps/science-advantage/package.json to be \u2265 51 (audit F-1201 cited 51; HEAD-actual is 56); found ${caretCountForMsg(caretCount)}.`
+        `expected \`^\`-ranged deps at ${PACKAGE_AUDIT_REVISION} to be at least 51; found ${caretCountForMsg(caretCount)}.`
       ).toBeGreaterThanOrEqual(51);
     });
 

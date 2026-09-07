@@ -21,8 +21,10 @@ describe('runDrizzleMigrate', () => {
     });
     expect(spawn).toHaveBeenCalledTimes(1);
     const [cmd, args, opts] = spawn.mock.calls[0];
-    expect(cmd).toBe('pnpm');
-    expect(args).toEqual(['--filter', '@reading-advantage/db', 'migrate']);
+    expect(cmd).toBe(process.execPath);
+    expect(args[0]).toBe('--import');
+    expect(args[1]).toContain('/tsx/');
+    expect(args[2]).toContain('/packages/db/scripts/migrate.ts');
     expect(opts.env.DATABASE_URL).toBe('postgresql://example/test_db');
     expect(opts.stdio).toBe('inherit');
   });

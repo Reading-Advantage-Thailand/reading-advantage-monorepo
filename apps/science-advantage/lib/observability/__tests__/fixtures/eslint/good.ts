@@ -23,4 +23,6 @@
 // reference (no `no-undef` rule is active under the Next.js
 // `nextTypescript` config; the per-test-file rule block also
 // disables `no-unused-vars` / `no-explicit-any`).
+declare const logger: { info(message: string): void };
+
 logger.info("phase7-good-fixture-logger-info");

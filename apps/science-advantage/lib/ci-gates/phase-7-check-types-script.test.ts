@@ -111,20 +111,13 @@ let checkTypesOutput: string;
 let checkTypesStatus: number | null;
 
 /**
- * Runs `pnpm --filter science-advantage check-types` and returns the
- * captured result. We pin a 9-minute timeout because `tsc --noEmit` on
- * the science-advantage codebase takes several minutes; the margin
- * absorbs a cold start.
- *
- * Invokes `corepack pnpm` so the test works both in dev (where pnpm is
- * provisioned via corepack) and in CI (where pnpm is on PATH and
- * corepack forwards transparently).
+ * Runs the installed TypeScript compiler for the Science app.
  * @returns The captured spawn result.
  */
 function runCheckTypesGate(): SpawnSyncReturns<string> {
   return spawnSync(
-    "corepack",
-    ["pnpm", "--filter", "science-advantage", "check-types"],
+    process.execPath,
+    [resolve(SCIENCE_ADVANTAGE_ROOT, "../..", "node_modules/typescript/bin/tsc"), "--noEmit"],
     {
       cwd: SCIENCE_ADVANTAGE_ROOT,
       encoding: "utf8",

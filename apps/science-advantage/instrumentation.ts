@@ -1,49 +1,28 @@
+/** Shared OpenTelemetry registration for the Node.js runtime. */
+let registration: Promise<void> | undefined;
+
 /**
- * Next.js instrumentation entry point for OpenTelemetry.
- *
- * Next.js only loads `instrumentation.ts` from the app root (or `src/`).
- * This root file is the live runtime entry point. It deliberately uses
- * `serviceName` + `spanProcessors` (not the modern `resource:` config)
- * because the installed `@opentelemetry/sdk-node@0.57.2` resolves
- * `@opentelemetry/resources` to its bundled `1.30.1`, which expects
- * the legacy `Resource` class shape; passing a 2.x `resourceFromAttributes`
- * result causes a cross-version `getRawAttributes` mismatch inside
- * `ResourceImpl.merge`. The `serviceName` path is constructed by the
- * SDK itself against its own bundled resources version, so it is
- * version-safe.
- *
- * The earlier `lib/instrumentation.ts` + `lib/instrumentation.node.ts`
- * pair remains as the Phase 2 contract-test target — it preserves the
- * `Resource` class-constructor shape that the Phase 2 contract test
- * mocks exercise, and is not loaded by Next.js on the live path.
+ * Starts the installed Node SDK with its compatible exporter implementations.
+ * @returns A promise that resolves after startup.
  */
-import { NodeSDK } from '@opentelemetry/sdk-node';
-import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-http';
-import {
-  ConsoleSpanExporter,
-  BatchSpanProcessor,
-} from '@opentelemetry/sdk-trace-base';
-
-let sdk: NodeSDK | undefined;
-
-export async function register() {
-  if (process.env.NEXT_RUNTIME !== 'nodejs') {
-    return;
-  }
-  if (sdk) {
-    return;
+async function startNodeSdk(): Promise<void> {
+  if (!process.env.OTEL_EXPORTER_OTLP_ENDPOINT && !process.env.OTEL_TRACES_EXPORTER) {
+    process.env.OTEL_TRACES_EXPORTER = 'console';
   }
 
-  const serviceName =
-    process.env.OTEL_SERVICE_NAME || 'science-advantage';
-  const otlpEndpoint = process.env.OTEL_EXPORTER_OTLP_ENDPOINT;
-  const spanExporter = otlpEndpoint
-    ? new OTLPTraceExporter({ url: otlpEndpoint })
-    : new ConsoleSpanExporter();
-
-  sdk = new NodeSDK({
-    serviceName,
-    spanProcessors: [new BatchSpanProcessor(spanExporter)],
+  const { NodeSDK } = await import('@opentelemetry/sdk-node');
+  const sdk = new NodeSDK({
+    serviceName: process.env.OTEL_SERVICE_NAME || 'science-advantage',
   });
   sdk.start();
+}
+
+/**
+ * Registers OpenTelemetry once for the Next.js Node.js runtime.
+ * @returns A promise that resolves after registration.
+ */
+export async function register(): Promise<void> {
+  if (process.env.NEXT_RUNTIME !== 'nodejs') return;
+  registration ??= startNodeSdk();
+  await registration;
 }

@@ -92,7 +92,7 @@ describe('Session Management', () => {
       const [dbSession] = await db
         .select()
         .from(sessions)
-        .where(eq(sessions.token, session.token!))
+        .where(eq(sessions.id, session.id))
         .limit(1);
 
       expect(dbSession).toBeDefined();
@@ -219,7 +219,7 @@ describe('Session Management', () => {
       const [dbSession] = await db
         .select()
         .from(sessions)
-        .where(eq(sessions.token, session.token!))
+        .where(eq(sessions.id, session.id))
         .limit(1);
 
       expect(dbSession).toBeUndefined();
@@ -249,12 +249,12 @@ describe('Session Management', () => {
       const [dbSession1] = await db
         .select()
         .from(sessions)
-        .where(eq(sessions.token, session1.token!))
+        .where(eq(sessions.id, session1.id))
         .limit(1);
       const [dbSession2] = await db
         .select()
         .from(sessions)
-        .where(eq(sessions.token, session2.token!))
+        .where(eq(sessions.id, session2.id))
         .limit(1);
 
       expect(dbSession1).toBeUndefined();

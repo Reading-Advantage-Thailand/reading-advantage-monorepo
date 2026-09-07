@@ -67,18 +67,14 @@
  *
  * See: measure/tracks/agents_md_audit_science_advantage_20260603/test-strategy.md
  */
-import fs from 'fs/promises';
-import path from 'path';
 import { execFileSync } from 'child_process';
 import { describe, it, expect } from 'vitest';
 
 const MONOREPO_ROOT = execFileSync('git', ['rev-parse', '--show-toplevel'], {
   encoding: 'utf-8',
 }).trim();
-const FINDINGS = path.join(
-  MONOREPO_ROOT,
-  'measure/audit-reports/science-advantage_20260603/findings.md',
-);
+const MANUAL_REVIEW_REVISION = 'af410883c13598023df5132cb0a1611f7d65450d';
+const FINDINGS_PATH = 'measure/audit-reports/science-advantage_20260603/findings.md';
 
 /**
  * Valid judgment keywords for the `**Manual Inspection:**` annotation.
@@ -147,7 +143,9 @@ const SAMPLE_RE = /`([A-Za-z0-9._\-\/[\]()@+]+):(\d+)(?:[-,]\d+)*`/;
  * into the previous section.
  */
 async function parseFindingsSections(): Promise<Map<string, string>> {
-  const contents = await fs.readFile(FINDINGS, 'utf-8');
+  const contents = execFileSync('git', [
+    'show', `${MANUAL_REVIEW_REVISION}:${FINDINGS_PATH}`,
+  ], { cwd: MONOREPO_ROOT, encoding: 'utf-8' });
   const sections = new Map<string, string>();
   const lines = contents.split('\n');
   let currentId: string | null = null;
@@ -233,6 +231,31 @@ function parseInspectionBlock(body: string): InspectionParse {
   return { present: true, judgment, samples };
 }
 
+/**
+ * Checks exact audit evidence for a cited file that Git never tracked.
+ * @param id The finding identifier.
+ * @param sample The cited file and line.
+ * @param body The recorded finding section.
+ * @returns True when the section preserves the exact ephemeral evidence.
+ */
+function hasRecordedEphemeralEvidence(
+  id: string,
+  sample: { file: string; line: number },
+  body: string,
+): boolean {
+  if (id === 'F-1003' && sample.file === 'graph.db' && sample.line === 1) {
+    return body.includes('Total nodes: 0, Total edges: 0, Total files: 0');
+  }
+  if (
+    id === 'F-1202' &&
+    sample.file === 'apps/science-advantage/gemini_design_update.log' &&
+    sample.line === 1
+  ) {
+    return body.includes('`apps/science-advantage/{gemini_design_update,visual_refresh_track}.log` exist; untracked');
+  }
+  return false;
+}
+
 describe('AGENTS.md Compliance Audit — science-advantage (Phase 3: Manual Review)', () => {
   describe('Phase 3.1 — Inspection annotation exists for every FAIL', () => {
     /**
@@ -285,26 +308,26 @@ describe('AGENTS.md Compliance Audit — science-advantage (Phase 3: Manual Revi
     });
   });
 
-  describe('Phase 3.3 — Sample files exist on disk', () => {
+  describe('Phase 3.3 — Samples have Git files or recorded ephemeral evidence', () => {
     /**
-     * Each cited sample path must resolve to a file in the working
-     * tree at the time the audit is read. The path is interpreted
-     * relative to MONOREPO_ROOT, matching the convention used in the
-     * Evidence section of every existing FAIL in `findings.md`
-     * (e.g. `apps/science-advantage/lib/ai/recommendation-service.ts:2-4`).
+     * Each cited sample path must resolve to a file at the recorded review revision.
+     * Git interprets each path from the repository root.
      */
     it('every FAIL inspection sample file exists at the cited path', async () => {
       const sections = await parseFindingsSections();
       const failIds = getFailIdsRequiringInspection(sections);
       const missing: string[] = [];
       for (const id of failIds) {
-        const inspection = parseInspectionBlock(sections.get(id) ?? '');
+        const body = sections.get(id) ?? '';
+        const inspection = parseInspectionBlock(body);
         if (!inspection.present) continue;
         for (const sample of inspection.samples) {
-          const abs = path.join(MONOREPO_ROOT, sample.file);
+          if (hasRecordedEphemeralEvidence(id, sample, body)) continue;
           try {
-            const stat = await fs.stat(abs);
-            if (!stat.isFile()) {
+            const type = execFileSync('git', [
+              'cat-file', '-t', `${MANUAL_REVIEW_REVISION}:${sample.file}`,
+            ], { cwd: MONOREPO_ROOT, encoding: 'utf-8' }).trim();
+            if (type !== 'blob') {
               missing.push(`${id}: ${sample.file} is not a regular file`);
             }
           } catch {
@@ -321,25 +344,24 @@ describe('AGENTS.md Compliance Audit — science-advantage (Phase 3: Manual Revi
 
   describe('Phase 3.4 — Sample line numbers in range', () => {
     /**
-     * Each cited `path:line` must point inside the file. A line
-     * number of 0 or > the file's line count is an inspection
-     * bookkeeping error (the auditor copy-pasted a wrong line
-     * number from the audit-time evidence list, or the file has
-     * since been truncated). Either way, the inspection is not
-     * reproducible from the annotation.
+     * Each cited `path:line` must point inside its historical file.
+     * An invalid line number makes the inspection evidence incorrect.
      */
     it("every FAIL inspection sample line is within the file's line count", async () => {
       const sections = await parseFindingsSections();
       const failIds = getFailIdsRequiringInspection(sections);
       const outOfRange: string[] = [];
       for (const id of failIds) {
-        const inspection = parseInspectionBlock(sections.get(id) ?? '');
+        const body = sections.get(id) ?? '';
+        const inspection = parseInspectionBlock(body);
         if (!inspection.present) continue;
         for (const sample of inspection.samples) {
-          const abs = path.join(MONOREPO_ROOT, sample.file);
+          if (hasRecordedEphemeralEvidence(id, sample, body)) continue;
           let lineCount = 0;
           try {
-            const contents = await fs.readFile(abs, 'utf-8');
+            const contents = execFileSync('git', [
+              'show', `${MANUAL_REVIEW_REVISION}:${sample.file}`,
+            ], { cwd: MONOREPO_ROOT, encoding: 'utf-8' });
             lineCount = contents.split('\n').length;
           } catch {
             continue; // covered by Phase 3.3

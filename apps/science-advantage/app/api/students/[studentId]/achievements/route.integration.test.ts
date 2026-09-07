@@ -7,13 +7,24 @@ import {
   gamificationProfiles,
   sessions,
   users,
-  schools
+  schools,
 } from '@reading-advantage/db/schema';
 import { GET } from './route';
 import { createSession } from '@/lib/auth/session';
 
 const TEST_PREFIX = 'achievements-itest';
 const TEST_SCHOOL_ID = '00000000-0000-0000-0000-000000000099';
+const TEST_USER_IDS = {
+  studentA: '20000000-0000-4000-8000-000000000201',
+  studentB: '20000000-0000-4000-8000-000000000202',
+  teacher: '20000000-0000-4000-8000-000000000203',
+  student: '20000000-0000-4000-8000-000000000204',
+  emptyStudent: '20000000-0000-4000-8000-000000000205',
+  loadedStudent: '20000000-0000-4000-8000-000000000206',
+  otherStudent: '20000000-0000-4000-8000-000000000207',
+  devTeacher: '20000000-0000-4000-8000-000000000208',
+  devStudent: '20000000-0000-4000-8000-000000000209',
+} as const;
 
 const mockCookies = {
   get: vi.fn(),
@@ -39,22 +50,26 @@ async function cleanup(): Promise<void> {
   await db.delete(gamificationProfiles);
   await db.delete(sessions);
   await db.delete(accounts);
-  await db.execute(sql`DELETE FROM users WHERE id LIKE ${`${TEST_PREFIX}-%`}`);
+  await db.execute(
+    sql`DELETE FROM users WHERE username LIKE ${`${TEST_PREFIX}-%`}`
+  );
 }
 
 async function seedUser(
   id: string,
+  username: string,
   role: 'STUDENT' | 'TEACHER' | 'ADMIN'
 ) {
   const [u] = await db
     .insert(users)
     .values({
       id,
-      name: id,
-      username: id,
-      displayUsername: id,
-      email: `${id}@example.com`,
+      name: username,
+      username,
+      displayUsername: username,
+      email: `${username}@example.com`,
       role,
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
   return u;
@@ -73,7 +88,10 @@ describe('GET /api/students/[studentId]/achievements (integration)', () => {
     mockCookies.delete.mockReset();
     mockCookies.get.mockReturnValue(undefined);
     await cleanup();
-    await db.insert(schools).values({ id: TEST_SCHOOL_ID, name: 'Test School' }).onConflictDoNothing();
+    await db
+      .insert(schools)
+      .values({ id: TEST_SCHOOL_ID, name: 'Test School' })
+      .onConflictDoNothing();
   });
 
   it('returns 401 when unauthenticated', async () => {
@@ -87,8 +105,16 @@ describe('GET /api/students/[studentId]/achievements (integration)', () => {
   });
 
   it('returns 403 when a student requests another student achievements', async () => {
-    const studentA = await seedUser(`${TEST_PREFIX}-a`, 'STUDENT');
-    const studentB = await seedUser(`${TEST_PREFIX}-b`, 'STUDENT');
+    const studentA = await seedUser(
+      TEST_USER_IDS.studentA,
+      `${TEST_PREFIX}-a`,
+      'STUDENT'
+    );
+    const studentB = await seedUser(
+      TEST_USER_IDS.studentB,
+      `${TEST_PREFIX}-b`,
+      'STUDENT'
+    );
     const session = await createSession(studentA.id);
     mockCookies.get.mockReturnValue({ value: session.token });
 
@@ -102,8 +128,16 @@ describe('GET /api/students/[studentId]/achievements (integration)', () => {
   });
 
   it('returns 200 when a teacher requests a student achievements', async () => {
-    const teacher = await seedUser(`${TEST_PREFIX}-teacher`, 'TEACHER');
-    const student = await seedUser(`${TEST_PREFIX}-student`, 'STUDENT');
+    const teacher = await seedUser(
+      TEST_USER_IDS.teacher,
+      `${TEST_PREFIX}-teacher`,
+      'TEACHER'
+    );
+    const student = await seedUser(
+      TEST_USER_IDS.student,
+      `${TEST_PREFIX}-student`,
+      'STUDENT'
+    );
     const session = await createSession(teacher.id);
     mockCookies.get.mockReturnValue({ value: session.token });
 
@@ -115,7 +149,11 @@ describe('GET /api/students/[studentId]/achievements (integration)', () => {
   });
 
   it('returns an empty achievements array for a student with no badges', async () => {
-    const student = await seedUser(`${TEST_PREFIX}-empty`, 'STUDENT');
+    const student = await seedUser(
+      TEST_USER_IDS.emptyStudent,
+      `${TEST_PREFIX}-empty`,
+      'STUDENT'
+    );
     const session = await createSession(student.id);
     mockCookies.get.mockReturnValue({ value: session.token });
 
@@ -129,8 +167,16 @@ describe('GET /api/students/[studentId]/achievements (integration)', () => {
   });
 
   it('returns all achievements for the student, ordered by unlockedAt desc', async () => {
-    const student = await seedUser(`${TEST_PREFIX}-loaded`, 'STUDENT');
-    const other = await seedUser(`${TEST_PREFIX}-other`, 'STUDENT');
+    const student = await seedUser(
+      TEST_USER_IDS.loadedStudent,
+      `${TEST_PREFIX}-loaded`,
+      'STUDENT'
+    );
+    const other = await seedUser(
+      TEST_USER_IDS.otherStudent,
+      `${TEST_PREFIX}-other`,
+      'STUDENT'
+    );
     const baseTime = Date.now();
     for (let i = 0; i < 4; i++) {
       await db.insert(achievements).values({
@@ -158,12 +204,9 @@ describe('GET /api/students/[studentId]/achievements (integration)', () => {
     expect(res.status).toBe(200);
     const body = await res.json();
     expect(body.achievements).toHaveLength(4);
-    expect(body.achievements.map((a: { badgeType: string }) => a.badgeType)).toEqual([
-      'ACH_BADGE_3',
-      'ACH_BADGE_2',
-      'ACH_BADGE_1',
-      'ACH_BADGE_0',
-    ]);
+    expect(
+      body.achievements.map((a: { badgeType: string }) => a.badgeType)
+    ).toEqual(['ACH_BADGE_3', 'ACH_BADGE_2', 'ACH_BADGE_1', 'ACH_BADGE_0']);
     // Each entry should expose exactly badgeType + unlockedAt.
     for (const a of body.achievements) {
       expect(Object.keys(a).sort()).toEqual(['badgeType', 'unlockedAt']);
@@ -183,8 +226,16 @@ describe('GET /api/students/[studentId]/achievements (integration)', () => {
     }));
     const { GET: GETDev } = await import('./route');
 
-    const teacher = await seedUser(`${TEST_PREFIX}-dev-teacher`, 'TEACHER');
-    const student = await seedUser(`${TEST_PREFIX}-dev-student`, 'STUDENT');
+    const teacher = await seedUser(
+      TEST_USER_IDS.devTeacher,
+      `${TEST_PREFIX}-dev-teacher`,
+      'TEACHER'
+    );
+    const student = await seedUser(
+      TEST_USER_IDS.devStudent,
+      `${TEST_PREFIX}-dev-student`,
+      'STUDENT'
+    );
     await db.insert(achievements).values({
       userId: student.id,
       badgeType: 'DEV_BADGE',

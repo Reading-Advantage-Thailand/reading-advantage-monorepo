@@ -1,11 +1,13 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { GET } from '@/app/api/student/classes/route';
 
-const { getCurrentSessionMock, getStudentEnrolledClassesMock } = vi.hoisted(() => ({
-  getCurrentSessionMock: vi.fn(),
-  getStudentEnrolledClassesMock: vi.fn(),
-}));
+const { getCurrentSessionMock, getStudentEnrolledClassesMock } = vi.hoisted(
+  () => ({
+    getCurrentSessionMock: vi.fn(),
+    getStudentEnrolledClassesMock: vi.fn(),
+  })
+);
 
 vi.mock('@/lib/auth/session', () => ({
   getCurrentSession: getCurrentSessionMock,
@@ -37,22 +39,24 @@ describe('/api/student/classes route', () => {
     expect(getStudentEnrolledClassesMock).not.toHaveBeenCalled();
   });
 
-  it('returns 403 when user is not a student', async () => {
+  it('allows a teacher to request student classes', async () => {
     getCurrentSessionMock.mockResolvedValue({
       user: {
         id: 'user-1',
         role: 'TEACHER',
+        schoolId: 'school-1',
       },
     });
 
     const response = await GET();
     const payload = await response.json();
 
-    expect(response.status).toBe(403);
-    expect(payload).toEqual({
-      error: 'Not authorized',
-    });
-    expect(getStudentEnrolledClassesMock).not.toHaveBeenCalled();
+    expect(response.status).toBe(200);
+    expect(payload).toEqual({});
+    const input = getStudentEnrolledClassesMock.mock.calls[0][0];
+    expect(input.user.id).toBe('user-1');
+    expect(input.tenant).toEqual({ schoolId: 'school-1' });
+    expect(input.input).toEqual({ studentId: 'user-1' });
   });
 
   it('returns enrolled classes for the student', async () => {
@@ -60,6 +64,7 @@ describe('/api/student/classes route', () => {
       user: {
         id: 'student-1',
         role: 'STUDENT',
+        schoolId: 'school-1',
       },
     });
 
@@ -77,7 +82,10 @@ describe('/api/student/classes route', () => {
     const response = await GET();
     const payload = await response.json();
 
-    expect(getStudentEnrolledClassesMock).toHaveBeenCalledWith('student-1');
+    const input = getStudentEnrolledClassesMock.mock.calls[0][0];
+    expect(input.user.id).toBe('student-1');
+    expect(input.tenant).toEqual({ schoolId: 'school-1' });
+    expect(input.input).toEqual({ studentId: 'student-1' });
     expect(response.status).toBe(200);
     expect(payload).toEqual({
       classes: [

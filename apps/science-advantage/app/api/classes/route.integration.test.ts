@@ -12,7 +12,7 @@ import {
   scienceUnitLessons,
   sessions,
   users,
-  schools
+  schools,
 } from '@reading-advantage/db/schema';
 import { GET, POST } from './route';
 import { createSession } from '@/lib/auth/session';
@@ -58,6 +58,7 @@ async function seedUser(
       displayUsername: id,
       email: `${id}@example.com`,
       role,
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
   return u;
@@ -73,7 +74,10 @@ describe('POST /api/classes (integration)', () => {
     mockCookies.delete.mockReset();
     mockCookies.get.mockReturnValue(undefined);
     await cleanup();
-    await db.insert(schools).values({ id: TEST_SCHOOL_ID, name: 'Test School' }).onConflictDoNothing();
+    await db
+      .insert(schools)
+      .values({ id: TEST_SCHOOL_ID, name: 'Test School' })
+      .onConflictDoNothing();
     teacher = await seedUser(`${TEST_PREFIX}-teacher`, 'TEACHER');
     student = await seedUser(`${TEST_PREFIX}-student`, 'STUDENT');
   });
@@ -99,7 +103,11 @@ describe('POST /api/classes (integration)', () => {
     const session = await createSession(student.id);
     mockCookies.get.mockReturnValue({ value: session.token });
     const res = await POST(
-      postReq({ name: 'Science Class', gradeLevel: 4, standardsAlignment: 'NGSS' })
+      postReq({
+        name: 'Science Class',
+        gradeLevel: 4,
+        standardsAlignment: 'NGSS',
+      })
     );
     expect(res.status).toBe(403);
     const body = await res.json();
@@ -115,15 +123,25 @@ describe('POST /api/classes (integration)', () => {
     expect(res.status).toBe(400);
     const body = await res.json();
     expect(body.success).toBe(false);
-    expect(body.error).toBe('Validation failed');
-    expect(Array.isArray(body.details)).toBe(true);
+    expect(body.error).toBe('invalid_input');
+    expect(body.details).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ path: 'name' }),
+        expect.objectContaining({ path: 'gradeLevel' }),
+        expect.objectContaining({ path: 'standardsAlignment' }),
+      ])
+    );
   });
 
   it('creates a class with no template lessons and returns 201', async () => {
     const session = await createSession(teacher.id);
     mockCookies.get.mockReturnValue({ value: session.token });
     const res = await POST(
-      postReq({ name: 'Science Explorers', gradeLevel: 5, standardsAlignment: 'NGSS' })
+      postReq({
+        name: 'Science Explorers',
+        gradeLevel: 5,
+        standardsAlignment: 'NGSS',
+      })
     );
     expect(res.status).toBe(201);
     const body = await res.json();
@@ -186,18 +204,18 @@ describe('POST /api/classes (integration)', () => {
       })
       .returning();
     await db.insert(scienceLessonStandards).values([
-      { lessonId: l1.id, standardId: standard.id ,
-        schoolId: TEST_SCHOOL_ID,
-      },
-      { lessonId: l2.id, standardId: standard.id ,
-        schoolId: TEST_SCHOOL_ID,
-      },
+      { lessonId: l1.id, standardId: standard.id, schoolId: TEST_SCHOOL_ID },
+      { lessonId: l2.id, standardId: standard.id, schoolId: TEST_SCHOOL_ID },
     ]);
 
     const session = await createSession(teacher.id);
     mockCookies.get.mockReturnValue({ value: session.token });
     const res = await POST(
-      postReq({ name: 'With Template', gradeLevel: 5, standardsAlignment: 'NGSS' })
+      postReq({
+        name: 'With Template',
+        gradeLevel: 5,
+        standardsAlignment: 'NGSS',
+      })
     );
     expect(res.status).toBe(201);
     const body = await res.json();
@@ -216,7 +234,9 @@ describe('POST /api/classes (integration)', () => {
       .select()
       .from(scienceUnitLessons)
       .where(eq(scienceUnitLessons.unitId, units[0].id));
-    expect(junction.map(j => j.lessonId).sort()).toEqual([l1.id, l2.id].sort());
+    expect(junction.map((j) => j.lessonId).sort()).toEqual(
+      [l1.id, l2.id].sort()
+    );
   });
 
   it('allows admin to create a class', async () => {
@@ -224,7 +244,11 @@ describe('POST /api/classes (integration)', () => {
     const session = await createSession(admin.id);
     mockCookies.get.mockReturnValue({ value: session.token });
     const res = await POST(
-      postReq({ name: 'Admin Class', gradeLevel: 4, standardsAlignment: 'NGSS' })
+      postReq({
+        name: 'Admin Class',
+        gradeLevel: 4,
+        standardsAlignment: 'NGSS',
+      })
     );
     expect(res.status).toBe(201);
   });
@@ -344,12 +368,8 @@ describe('GET /api/classes (integration)', () => {
     const s1 = await seedUser(`${TEST_PREFIX}-s1`, 'STUDENT');
     const s2 = await seedUser(`${TEST_PREFIX}-s2`, 'STUDENT');
     await db.insert(scienceClassStudents).values([
-      { classId: cls.id, studentId: s1.id ,
-        schoolId: TEST_SCHOOL_ID,
-      },
-      { classId: cls.id, studentId: s2.id ,
-        schoolId: TEST_SCHOOL_ID,
-      },
+      { classId: cls.id, studentId: s1.id, schoolId: TEST_SCHOOL_ID },
+      { classId: cls.id, studentId: s2.id, schoolId: TEST_SCHOOL_ID },
     ]);
 
     const session = await createSession(teacher.id);

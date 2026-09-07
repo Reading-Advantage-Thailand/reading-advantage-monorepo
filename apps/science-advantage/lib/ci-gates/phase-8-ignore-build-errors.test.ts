@@ -130,22 +130,26 @@ let buildOutput: string;
 let buildStatus: number | null;
 
 /**
- * Runs `pnpm turbo run build --filter=science-advantage` and returns
- * the captured result. We pin a 9-minute timeout because `next build`
- * on the science-advantage codebase takes 2-4 minutes; the margin
- * absorbs a cold start and slow CI runners.
- *
- * Invokes `corepack pnpm` so the test works both in dev (where pnpm
- * is provisioned via corepack) and in CI (where pnpm is on PATH and
- * corepack forwards transparently).
+ * Runs the installed Turbo build for the Science app and its dependencies.
  * @returns The captured spawn result.
  */
 function runBuildGate(): SpawnSyncReturns<string> {
   return spawnSync(
-    "corepack",
-    ["pnpm", "turbo", "run", "build", "--filter=science-advantage"],
+    process.execPath,
+    [
+      resolve(SCIENCE_ADVANTAGE_ROOT, "../..", "node_modules/turbo/bin/turbo"),
+      "run",
+      "build",
+      "--filter=science-advantage",
+      "--env-mode=loose",
+    ],
     {
       cwd: SCIENCE_ADVANTAGE_ROOT,
+      env: {
+        ...process.env,
+        CI: "true",
+        pnpm_config_verify_deps_before_run: "warn",
+      },
       encoding: "utf8",
       stdio: ["ignore", "pipe", "pipe"],
       timeout: 540_000,
@@ -260,7 +264,7 @@ describe(
     );
 
     describe(
-      "end-to-end build gate (green-phase: passes today because `ignoreBuildErrors: true` masks tsc errors; locks the build state)",
+      "end-to-end Turbo build gate",
       () => {
         beforeAll(() => {
           const result = runBuildGate();
@@ -275,7 +279,7 @@ describe(
           // that failure mode loud.
           expect(
             buildStatus,
-            `Expected pnpm turbo run build --filter=science-advantage to ` +
+            `Expected the installed Turbo build to ` +
               `exit; got status ${String(buildStatus)}. First 1 KB of ` +
               `output:\n${buildOutput.slice(0, 1024)}`,
           ).not.toBeNull();
@@ -292,9 +296,8 @@ describe(
           // 0–7 left tsc clean, which is their contract).
           expect(
             buildStatus,
-            `Expected pnpm turbo run build --filter=science-advantage to ` +
-              `exit 0 (the Phase 8 end-state gate from test-strategy.md ` +
-              `\u00a71 P8). Currently exits with code ${String(buildStatus)}. ` +
+            `Expected the installed Turbo build to exit 0. ` +
+              `It exited with code ${String(buildStatus)}. ` +
               `First 4 KB of output:\n${buildOutput.slice(0, 4096)}`,
           ).toBe(0);
         });

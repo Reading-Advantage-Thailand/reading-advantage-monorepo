@@ -152,8 +152,8 @@ function readAuthPackageJson(): Record<string, unknown> {
 }
 
 /**
- * Module-scoped cache for the `pnpm --filter science-advantage
- * build` spawn result. Populated once by the second describe
+ * Module-scoped cache for the installed Next.js build result.
+ * The second describe block populates the cache once.
  * block's `beforeAll`; read by tests 4–6. Sharing the expensive
  * build invocation across tests is the difference between a
  * ~3-min test run and a ~15-min test run. Scoping the beforeAll
@@ -165,26 +165,16 @@ let buildOutput: string;
 let buildStatus: number | null;
 
 /**
- * Runs `pnpm --filter science-advantage build` and returns the
- * captured spawn result. We pin a 9-minute timeout because
- * `next build` on the science-advantage codebase takes 2-3
- * minutes; the margin absorbs a cold start and slow CI runners.
+ * Runs the installed Next.js build for the Science app.
  *
- * Invokes `corepack pnpm` so the test works both in dev (where
- * pnpm is provisioned via corepack) and in CI (where pnpm is on
- * PATH and corepack forwards transparently).
- *
- * Per the Phase 12C plan task: the assertion is on
- * `pnpm --filter science-advantage build` (per-app build, not
- * turbo). Workspace deps are already compiled into
- * `packages/<name>/dist` (verified 2026-06-07) so the per-app
- * build has the artifacts it needs.
+ * The direct Next.js command provides the app build required by Phase 12C.
+ * Workspace dependencies already exist in `packages/<name>/dist`.
  * @returns The captured spawn result.
  */
 function runBuildGate(): SpawnSyncReturns<string> {
   return spawnSync(
-    "corepack",
-    ["pnpm", "--filter", "science-advantage", "build"],
+    process.execPath,
+    [resolve(MONOREPO_ROOT, "node_modules/next/dist/bin/next"), "build"],
     {
       cwd: SCIENCE_ADVANTAGE_ROOT,
       encoding: "utf8",

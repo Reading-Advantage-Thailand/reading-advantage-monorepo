@@ -57,13 +57,11 @@ const JEST_DOM_MATCHERS = [
 ] as const;
 
 /**
- * Runs `tsc --noEmit` inside the science-advantage package and returns the
- * captured result. We pin a 9-minute timeout because `tsc --noEmit` on the
- * science-advantage codebase takes several minutes.
+ * Runs the installed TypeScript compiler inside the Science app.
  * @returns The captured spawn result.
  */
 function runTscNoEmit(): SpawnSyncReturns<string> {
-  return spawnSync("npx", ["tsc", "--noEmit"], {
+  return spawnSync(process.execPath, [resolve(SCIENCE_ADVANTAGE_ROOT, "../../node_modules/typescript/bin/tsc"), "--noEmit"], {
     cwd: SCIENCE_ADVANTAGE_ROOT,
     encoding: "utf8",
     stdio: ["ignore", "pipe", "pipe"],
@@ -107,11 +105,15 @@ describe(
           declared,
           `Expected ${pkgPath} devDependencies['@testing-library/jest-dom'] to be declared so the type augmentation ships with the package. Found: ${JSON.stringify(declared)}`,
         ).toBeTruthy();
-        // Spec says "Pin to a version compatible with @testing-library/react@^16.3.0"
-        // — the installed version must satisfy the major-version range.
+        const workspacePath = resolve(SCIENCE_ADVANTAGE_ROOT, "../..", "pnpm-workspace.yaml");
+        const catalogVersion = readFileSync(workspacePath, "utf8").match(
+          /^\s+"@testing-library\/jest-dom":\s*(\S+)$/mu,
+        )?.[1];
+        const declaredVersion = declared === "catalog:" ? catalogVersion : declared;
+        // The resolved catalog or direct declaration must satisfy the compatible range.
         expect(
-          declared,
-          `Expected @testing-library/jest-dom major to be ≥6 (compatible with @testing-library/react@^16.3.0). Found: ${declared}`,
+          declaredVersion,
+          `Expected @testing-library/jest-dom major to be ≥6 (compatible with @testing-library/react@^16.3.0). Found: ${declaredVersion}`,
         ).toMatch(/^\^?[6-9]\./);
       });
     });

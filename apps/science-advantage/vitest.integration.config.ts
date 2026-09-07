@@ -12,6 +12,11 @@ export default defineConfig({
     // truncate/insert races between files.
     pool: 'forks',
     fileParallelism: false,
+    server: {
+      deps: {
+        external: [/\/packages\/sales-knowledge\/dist\//],
+      },
+    },
   },
   resolve: {
     alias: {

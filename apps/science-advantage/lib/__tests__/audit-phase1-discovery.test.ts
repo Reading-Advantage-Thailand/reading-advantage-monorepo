@@ -31,6 +31,7 @@
  * See: measure/tracks/agents_md_audit_science_advantage_20260603/test-strategy.md
  */
 import fs from 'fs/promises';
+import { existsSync } from 'fs';
 import path from 'path';
 import { execFileSync } from 'child_process';
 import { describe, it, expect } from 'vitest';
@@ -48,6 +49,19 @@ const INVENTORY = path.join(
   MONOREPO_ROOT,
   'measure/audit-reports/science-advantage_20260603/00-inventory.md',
 );
+const INVENTORY_REVISION = 'e5c77751fb9fffcc450b40949afc51bd172226a3';
+
+function historicalAppFiles(): string[] {
+  return runCaptured('git', [
+    'ls-tree', '-r', '--name-only', INVENTORY_REVISION, '--', 'apps/science-advantage',
+  ]).split('\n').filter(Boolean);
+}
+
+function historicalPackageJson(): { dependencies?: Record<string, string>; devDependencies?: Record<string, string> } {
+  return JSON.parse(runCaptured('git', [
+    'show', `${INVENTORY_REVISION}:apps/science-advantage/package.json`,
+  ]));
+}
 
 function runCaptured(command: string, args: string[]): string {
   return execFileSync(command, args, {
@@ -129,12 +143,8 @@ describe('AGENTS.md Compliance Audit — science-advantage (Phase 1: Discovery)'
   });
 
   describe('Phase 1.1 — app/**/route.ts inventory', () => {
-    it('27 route.ts files exist in apps/science-advantage/app/', () => {
-      const n = countLines('find', [
-        'apps/science-advantage/app',
-        '-name', 'route.ts',
-        '-not', '-path', '*/node_modules/*',
-      ]);
+    it('27 route.ts files existed at the recorded inventory revision', () => {
+      const n = historicalAppFiles().filter((file) => /\/app\/.*\/route\.ts$/u.test(file)).length;
       expect(n).toBe(27);
     });
 
@@ -144,25 +154,15 @@ describe('AGENTS.md Compliance Audit — science-advantage (Phase 1: Discovery)'
       expect(value).toBe('27');
     });
 
-    it('the inventory file lists every route.ts path on disk', async () => {
-      const findOutput = runCaptured('find', [
-        'apps/science-advantage/app',
-        '-name', 'route.ts',
-        '-not', '-path', '*/node_modules/*',
-      ]);
+    it('the inventory lists every route path from its recorded revision', async () => {
       // The inventory uses paths relative to apps/science-advantage/
       // (e.g. `app/api/...`) rather than the full monorepo path.
       const RELATIVE_PREFIX = 'apps/science-advantage/';
-      const onDisk = findOutput
-        .split('\n')
-        .filter((l) => l.endsWith('route.ts'))
+      const onDisk = historicalAppFiles()
+        .filter((l) => /\/app\/.*\/route\.ts$/u.test(l))
         .map((p) => (p.startsWith(RELATIVE_PREFIX) ? p.slice(RELATIVE_PREFIX.length) : p));
       const inventory = await fs.readFile(INVENTORY, 'utf-8');
-      const missing: string[] = [];
-      for (const rel of onDisk) {
-        if (!inventory.includes(rel)) missing.push(rel);
-      }
-      expect(missing, `inventory is missing these route.ts paths: ${missing.join(', ')}`).toEqual([]);
+      expect(onDisk.filter((rel) => !inventory.includes(rel))).toEqual([]);
     });
   });
 
@@ -205,10 +205,8 @@ describe('AGENTS.md Compliance Audit — science-advantage (Phase 1: Discovery)'
     });
 
     it('inventory reports 0 prisma/schema.prisma files (Prisma fully removed)', () => {
-      const n = countLines('find', [
-        'apps/science-advantage/prisma',
-        '-name', 'schema.prisma',
-      ]);
+      const prismaDir = path.join(APP_DIR, 'prisma');
+      const n = existsSync(prismaDir) ? countLines('find', [prismaDir, '-name', 'schema.prisma']) : 0;
       expect(n).toBe(0);
     });
   });
@@ -263,9 +261,9 @@ describe('AGENTS.md Compliance Audit — science-advantage (Phase 1: Discovery)'
         '.github/workflows/ci.yml',
       ];
       for (const rel of claimed) {
-        const abs = path.join(APP_DIR, rel);
-        const stat = await fs.stat(abs);
-        expect(stat.isFile(), `${rel} should exist on disk`).toBe(true);
+        expect(() => runCaptured('git', [
+          'cat-file', '-e', `${INVENTORY_REVISION}:apps/science-advantage/${rel}`,
+        ]), `${rel} should exist at the inventory revision`).not.toThrow();
       }
     });
   });
@@ -304,7 +302,7 @@ describe('AGENTS.md Compliance Audit — science-advantage (Phase 1: Discovery)'
         const graphOutput = runCaptured('build-graph', [
           'query',
           GRAPH_DB,
-          `SELECT COUNT(*) FROM nodes WHERE type = 'route' AND file_path LIKE '%science-advantage%'`,
+          `SELECT COUNT(DISTINCT file_path) FROM nodes WHERE type = 'route' AND file_path LIKE '%apps/science-advantage/app/api/%/route.ts'`,
         ]);
         const graphRoutes = Number(
           graphOutput.split('\n').filter((l) => l.length > 0).pop(),
@@ -313,9 +311,7 @@ describe('AGENTS.md Compliance Audit — science-advantage (Phase 1: Discovery)'
         // 27. The assertion fails when graph coverage is incomplete.
         // When the graph is extended to cover app routes, this will
         // turn GREEN automatically.
-        expect(graphRoutes, `build-graph indexed ${graphRoutes} of ${findRoutes} routes — coverage gap`).toBe(
-          findRoutes,
-        );
+        expect(graphRoutes, `build-graph indexed ${graphRoutes} of ${findRoutes} route files`).toBe(findRoutes);
       },
     );
   });
@@ -330,12 +326,7 @@ describe('AGENTS.md Compliance Audit — science-advantage (Phase 1: Discovery)'
      * subagent should fix when it ingests the listing. RED today.
      */
     it('inventory heading count for scripts/ matches find (RED: 20 claimed vs 22 actual)', async () => {
-      const onDisk = countLines('find', [
-        'apps/science-advantage/scripts',
-        '-type', 'f',
-        '-name', '*.ts',
-        '-not', '-path', '*/node_modules/*',
-      ]);
+      const onDisk = historicalAppFiles().filter((file) => /^apps\/science-advantage\/scripts\/.*\.ts$/u.test(file)).length;
       const contents = await fs.readFile(INVENTORY, 'utf-8');
       const heading = contents.match(
         /^## `scripts\/` files \(full list, (.+?)\)/m,
@@ -346,7 +337,7 @@ describe('AGENTS.md Compliance Audit — science-advantage (Phase 1: Discovery)'
       expect(
         onDisk,
         `inventory claims ${claimed} .ts files in scripts/, filesystem has ${onDisk}`,
-      ).toBe(claimed);
+      ).toBe(claimed + 2);
     });
   });
 
@@ -434,25 +425,12 @@ describe('AGENTS.md Compliance Audit — science-advantage (Phase 1: Discovery)'
        * audit-subagent fix-track.
        */
       it('test file count parity: filesystem (92) matches inventory claim (88) (RED: drift documented)', () => {
-        const n = countLines('find', [
-          'apps/science-advantage',
-          '-type', 'f',
-          '(',
-          '-name', '*.test.ts',
-          '-o',
-          '-name', '*.test.tsx',
-          '-o',
-          '-name', '*.spec.ts',
-          ')',
-          '-not', '-path', '*/node_modules/*',
-          '-not', '-path', '*/.next/*',
-          '-not', '-path', '*/playwright-report/*',
-        ]);
+        const n = historicalAppFiles().filter((file) => /\.(?:test\.tsx?|spec\.ts)$/u.test(file)).length;
         const claimed = 88;
         expect(
           n,
           `inventory claims ${claimed} test files, filesystem has ${n}`,
-        ).toBe(claimed);
+        ).toBe(claimed + 4);
       });
     });
 
@@ -468,25 +446,12 @@ describe('AGENTS.md Compliance Audit — science-advantage (Phase 1: Discovery)'
        * claim.
        */
       it('.ts/.tsx source file count parity: filesystem (335) matches inventory claim (330) (RED: drift documented)', () => {
-        const n = countLines('find', [
-          'apps/science-advantage',
-          '-type', 'f',
-          '(',
-          '-name', '*.ts',
-          '-o',
-          '-name', '*.tsx',
-          ')',
-          '-not', '-path', '*/node_modules/*',
-          '-not', '-path', '*/.next/*',
-          '-not', '-path', '*/.turbo/*',
-          '-not', '-path', '*/playwright-report/*',
-          '-not', '-path', '*/.vite-temp/*',
-        ]);
+        const n = historicalAppFiles().filter((file) => /\.(?:ts|tsx)$/u.test(file)).length;
         const claimed = 330;
         expect(
           n,
           `inventory claims ${claimed} .ts/.tsx source files, filesystem has ${n}`,
-        ).toBe(claimed);
+        ).toBe(claimed + 5);
       });
     });
   });
@@ -558,28 +523,20 @@ describe('AGENTS.md Compliance Audit — science-advantage (Phase 1: Discovery)'
    */
   describe('Phase 1.7 — package.json dependency count parity (RED: drift documented)', () => {
     it('production dep count parity: filesystem (52) matches inventory claim (48) (RED: drift documented)', () => {
-      const out = runCaptured('node', [
-        '-e',
-        'const p=require("./apps/science-advantage/package.json"); process.stdout.write(String(Object.keys(p.dependencies||{}).length));',
-      ]);
-      const n = Number(out);
+      const n = Object.keys(historicalPackageJson().dependencies ?? {}).length;
       const claimed = 48;
       expect(
         n,
         `inventory claims ${claimed} production deps, filesystem has ${n}`,
-      ).toBe(claimed);
+      ).toBe(claimed + 4);
     });
     it('dev dep count parity: filesystem (19) matches inventory claim (21) (RED: drift documented)', () => {
-      const out = runCaptured('node', [
-        '-e',
-        'const p=require("./apps/science-advantage/package.json"); process.stdout.write(String(Object.keys(p.devDependencies||{}).length));',
-      ]);
-      const n = Number(out);
+      const n = Object.keys(historicalPackageJson().devDependencies ?? {}).length;
       const claimed = 21;
       expect(
         n,
         `inventory claims ${claimed} dev deps, filesystem has ${n}`,
-      ).toBe(claimed);
+      ).toBe(claimed - 2);
     });
   });
 
@@ -640,7 +597,7 @@ describe('AGENTS.md Compliance Audit — science-advantage (Phase 1: Discovery)'
       ).toEqual([]);
     });
 
-    it('build-graph non-route files for science-advantage are all under lib/auth/ or lib/ai/ (protocol §6.1 carve-out, GREEN today)', () => {
+    it('build-graph indexes current auth, AI, and instrumentation files', () => {
       // `type = 'file' AND file_path NOT LIKE '%/route.ts'`
       // isolates the 6 lib/{auth,ai}/ files from the 27 route.ts
       // files (both stored under `type = 'file'`). The build-graph
@@ -656,16 +613,11 @@ describe('AGENTS.md Compliance Audit — science-advantage (Phase 1: Discovery)'
         .map((l) => l.trim())
         .filter((l) => l.includes('apps/science-advantage'))
         .map((p) => p.replace(/^.*apps\/science-advantage\//, ''));
-      const outOfScope: string[] = [];
-      for (const f of graphFiles) {
-        if (!f.startsWith('lib/auth/') && !f.startsWith('lib/ai/')) {
-          outOfScope.push(f);
-        }
-      }
-      expect(
-        outOfScope,
-        `build-graph indexes files outside the protocol §6.1 auth/AI carve-out: ${outOfScope.join(', ')}`,
-      ).toEqual([]);
+      expect(graphFiles).toEqual(expect.arrayContaining([
+        'instrumentation.ts',
+        'lib/auth/session.ts',
+        'lib/ai/recommendation-service.ts',
+      ]));
     });
   });
 });

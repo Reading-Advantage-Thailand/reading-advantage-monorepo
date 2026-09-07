@@ -7,13 +7,22 @@ import {
   gamificationProfiles,
   sessions,
   users,
-  schools
+  schools,
 } from '@reading-advantage/db/schema';
 import { GET } from './route';
 import { createSession } from '@/lib/auth/session';
 
 const TEST_PREFIX = 'gamification-profile-itest';
 const TEST_SCHOOL_ID = '00000000-0000-0000-0000-000000000099';
+const TEST_USER_IDS = {
+  studentA: '30000000-0000-4000-8000-000000000301',
+  studentB: '30000000-0000-4000-8000-000000000302',
+  teacher: '30000000-0000-4000-8000-000000000303',
+  student: '30000000-0000-4000-8000-000000000304',
+  freshStudent: '30000000-0000-4000-8000-000000000305',
+  existingStudent: '30000000-0000-4000-8000-000000000306',
+  topStudent: '30000000-0000-4000-8000-000000000307',
+} as const;
 
 const mockCookies = {
   get: vi.fn(),
@@ -39,22 +48,26 @@ async function cleanup(): Promise<void> {
   await db.delete(gamificationProfiles);
   await db.delete(sessions);
   await db.delete(accounts);
-  await db.execute(sql`DELETE FROM users WHERE id LIKE ${`${TEST_PREFIX}-%`}`);
+  await db.execute(
+    sql`DELETE FROM users WHERE username LIKE ${`${TEST_PREFIX}-%`}`
+  );
 }
 
 async function seedUser(
   id: string,
+  username: string,
   role: 'STUDENT' | 'TEACHER' | 'ADMIN'
 ) {
   const [u] = await db
     .insert(users)
     .values({
       id,
-      name: id,
-      username: id,
-      displayUsername: id,
-      email: `${id}@example.com`,
+      name: username,
+      username,
+      displayUsername: username,
+      email: `${username}@example.com`,
       role,
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
   return u;
@@ -73,7 +86,10 @@ describe('GET /api/students/[studentId]/gamification-profile (integration)', () 
     mockCookies.delete.mockReset();
     mockCookies.get.mockReturnValue(undefined);
     await cleanup();
-    await db.insert(schools).values({ id: TEST_SCHOOL_ID, name: 'Test School' }).onConflictDoNothing();
+    await db
+      .insert(schools)
+      .values({ id: TEST_SCHOOL_ID, name: 'Test School' })
+      .onConflictDoNothing();
   });
 
   it('returns 401 when unauthenticated', async () => {
@@ -87,8 +103,16 @@ describe('GET /api/students/[studentId]/gamification-profile (integration)', () 
   });
 
   it('returns 403 when a student requests another student profile', async () => {
-    const studentA = await seedUser(`${TEST_PREFIX}-a`, 'STUDENT');
-    const studentB = await seedUser(`${TEST_PREFIX}-b`, 'STUDENT');
+    const studentA = await seedUser(
+      TEST_USER_IDS.studentA,
+      `${TEST_PREFIX}-a`,
+      'STUDENT'
+    );
+    const studentB = await seedUser(
+      TEST_USER_IDS.studentB,
+      `${TEST_PREFIX}-b`,
+      'STUDENT'
+    );
     const session = await createSession(studentA.id);
     mockCookies.get.mockReturnValue({ value: session.token });
 
@@ -102,8 +126,16 @@ describe('GET /api/students/[studentId]/gamification-profile (integration)', () 
   });
 
   it('returns 200 when a teacher requests a student profile', async () => {
-    const teacher = await seedUser(`${TEST_PREFIX}-teacher`, 'TEACHER');
-    const student = await seedUser(`${TEST_PREFIX}-student`, 'STUDENT');
+    const teacher = await seedUser(
+      TEST_USER_IDS.teacher,
+      `${TEST_PREFIX}-teacher`,
+      'TEACHER'
+    );
+    const student = await seedUser(
+      TEST_USER_IDS.student,
+      `${TEST_PREFIX}-student`,
+      'STUDENT'
+    );
     const session = await createSession(teacher.id);
     mockCookies.get.mockReturnValue({ value: session.token });
 
@@ -115,7 +147,11 @@ describe('GET /api/students/[studentId]/gamification-profile (integration)', () 
   });
 
   it('auto-creates a gamification profile on first access for own profile', async () => {
-    const student = await seedUser(`${TEST_PREFIX}-fresh`, 'STUDENT');
+    const student = await seedUser(
+      TEST_USER_IDS.freshStudent,
+      `${TEST_PREFIX}-fresh`,
+      'STUDENT'
+    );
     const session = await createSession(student.id);
     mockCookies.get.mockReturnValue({ value: session.token });
 
@@ -149,7 +185,11 @@ describe('GET /api/students/[studentId]/gamification-profile (integration)', () 
   });
 
   it('returns the existing profile, recent badges (limit 3 desc), and xpProgress', async () => {
-    const student = await seedUser(`${TEST_PREFIX}-existing`, 'STUDENT');
+    const student = await seedUser(
+      TEST_USER_IDS.existingStudent,
+      `${TEST_PREFIX}-existing`,
+      'STUDENT'
+    );
     await db.insert(gamificationProfiles).values({
       userId: student.id,
       xp: 450,
@@ -193,7 +233,11 @@ describe('GET /api/students/[studentId]/gamification-profile (integration)', () 
   });
 
   it('returns 100% progress and zero range for the top level threshold', async () => {
-    const student = await seedUser(`${TEST_PREFIX}-top`, 'STUDENT');
+    const student = await seedUser(
+      TEST_USER_IDS.topStudent,
+      `${TEST_PREFIX}-top`,
+      'STUDENT'
+    );
     await db.insert(gamificationProfiles).values({
       userId: student.id,
       xp: 2000,

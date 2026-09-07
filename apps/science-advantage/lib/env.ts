@@ -41,6 +41,12 @@ const envSchema = z
     AI_IMAGE_MAX_WIDTH: z.coerce.number().int().positive().optional(),
     AI_IMAGE_MAX_BYTES: z.coerce.number().int().positive().optional(),
 
+    // ── Observability ─────────────────────────────────────────
+    OTEL_EXPORTER_OTLP_ENDPOINT: z.string().url().optional(),
+    OTEL_SERVICE_NAME: z.string().min(1).optional().default('science-advantage'),
+    SENTRY_DSN: z.string().url().optional().or(z.literal('')),
+    NEXT_PUBLIC_SENTRY_DSN: z.string().url().optional().or(z.literal('')),
+
     // ── Runtime flags ─────────────────────────────────────────
     NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
     DEV_AUTH_ENABLED: z.string().optional(),
@@ -131,6 +137,12 @@ export const env = {
   // ── AI config objects ─────────────────────────────────────
   aiRecommender,
   aiImage,
+
+  // ── Observability ─────────────────────────────────────────
+  OTEL_EXPORTER_OTLP_ENDPOINT: rawEnv.OTEL_EXPORTER_OTLP_ENDPOINT,
+  OTEL_SERVICE_NAME: rawEnv.OTEL_SERVICE_NAME,
+  SENTRY_DSN: rawEnv.SENTRY_DSN || undefined,
+  NEXT_PUBLIC_SENTRY_DSN: rawEnv.NEXT_PUBLIC_SENTRY_DSN || undefined,
 
   // ── Runtime flags ─────────────────────────────────────────
   NODE_ENV: rawEnv.NODE_ENV,

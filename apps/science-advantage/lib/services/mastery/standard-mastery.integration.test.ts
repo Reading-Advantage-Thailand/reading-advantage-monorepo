@@ -35,6 +35,7 @@ async function createStudent() {
       displayUsername: `Student${id.slice(-6)}`,
       email: `${id}@example.com`,
       role: 'STUDENT',
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
   return user;

@@ -46,7 +46,7 @@ describe('Phase 9 — FR-1 live-path Sentry initialization', () => {
 
   beforeEach(() => {
     initMock.mockReset();
-    process.env.NODE_ENV = 'test';
+    process.env = { ...process.env, NODE_ENV: 'test' };
     process.env.NEXT_PUBLIC_SENTRY_DSN =
       'https://public@example.ingest.sentry.io/1';
     process.env.SENTRY_DSN = 'https://private@example.ingest.sentry.io/2';

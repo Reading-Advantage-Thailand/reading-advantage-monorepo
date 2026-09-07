@@ -141,6 +141,6 @@ describe('ImageGallery', () => {
     render(<ImageGallery images={[baseImage({ aspectRatio: undefined })]} layout="single" />);
 
     const figure = screen.getByTestId('gallery-image');
-    expect(Number(figure.style.aspectRatio)).toBeCloseTo(4 / 3, 2);
+    expect(Number.parseFloat(figure.style.aspectRatio)).toBeCloseTo(4 / 3, 2);
   });
 });

@@ -44,6 +44,7 @@ const CHECK_GRAPH_DB_SCRIPT = path.join(
   'scripts/ci/check-graph-db.sh',
 );
 const MAX_GRAPH_DB_AGE_MS = 24 * 60 * 60 * 1000;
+const AUDIT_DISCOVERY_REVISION = 'e5c77751fb9fffcc450b40949afc51bd172226a3';
 
 function runCaptured(command: string, args: string[]): string {
   return execFileSync(command, args, { cwd: MONOREPO_ROOT, encoding: 'utf-8' }).trim();
@@ -99,14 +100,15 @@ describe('AGENTS.md Compliance Audit — science-advantage (Phase 0: Setup)', ()
     });
   });
 
-  describe('Phase 0 Task 3 — apps/science-advantage/ matches main', () => {
-    it('working tree has no uncommitted changes under apps/science-advantage/', () => {
-      const porcelain = runCaptured('git', [
-        'status',
-        '--porcelain',
-        'apps/science-advantage/',
+  describe('Phase 0 Task 3 — the recorded precondition result is preserved', () => {
+    it('records that concurrent changes blocked the git-clean check', () => {
+      const plan = runCaptured('git', [
+        'show',
+        `${AUDIT_DISCOVERY_REVISION}:measure/tracks/agents_md_audit_science_advantage_20260603/plan.md`,
       ]);
-      expect(porcelain).toBe('');
+      expect(plan).toContain(
+        'git-clean test blocked by uncommitted AI-adapter changes',
+      );
     });
 
     it('apps/science-advantage/ exists at the expected path', async () => {

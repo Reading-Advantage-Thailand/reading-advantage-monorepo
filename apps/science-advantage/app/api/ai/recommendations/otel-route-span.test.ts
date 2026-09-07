@@ -117,7 +117,7 @@ vi.mock('@reading-advantage/ai', () => ({
 // and a `z` namespace export so the `import { z } from 'zod'` inside
 // `recommendation-service.ts` resolves cleanly under the bun +
 // vitest transform pipeline.
-vi.mock(import('zod'), async (importOriginal) => {
+vi.mock('zod', async (importOriginal) => {
   const actual = await importOriginal<typeof import('zod')>();
   return {
     ...actual,

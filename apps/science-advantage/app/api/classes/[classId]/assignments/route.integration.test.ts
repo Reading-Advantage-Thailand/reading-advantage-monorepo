@@ -55,6 +55,7 @@ async function seedUser(
       displayUsername: id,
       email: `${id}@example.com`,
       role,
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
   return u;
@@ -322,7 +323,11 @@ describe('POST /api/classes/[classId]/assignments (integration)', () => {
     });
     expect(res.status).toBe(400);
     const body = await res.json();
-    expect(body).toEqual({ success: false, error: 'lessonId is required' });
+    expect(body).toEqual({
+      success: false,
+      error: 'invalid_input',
+      details: [{ path: 'lessonId', message: 'Required' }],
+    });
   });
 
   it('returns 400 when lessonId is not a string', async () => {
@@ -378,7 +383,11 @@ describe('POST /api/classes/[classId]/assignments (integration)', () => {
     );
     expect(res.status).toBe(400);
     const body = await res.json();
-    expect(body).toEqual({ success: false, error: 'Invalid dueAt date' });
+    expect(body).toEqual({
+      success: false,
+      error: 'invalid_input',
+      details: [{ path: 'dueAt', message: 'Invalid datetime' }],
+    });
   });
 
   it('creates an assignment for the owning teacher and returns 201 with shape', async () => {
@@ -489,7 +498,11 @@ describe('DELETE /api/classes/[classId]/assignments (integration)', () => {
     });
     expect(res.status).toBe(400);
     const body = await res.json();
-    expect(body).toEqual({ success: false, error: 'assignmentId is required' });
+    expect(body).toEqual({
+      success: false,
+      error: 'invalid_input',
+      details: [{ path: 'assignmentId', message: 'Required' }],
+    });
   });
 
   it('returns 404 when class does not exist', async () => {

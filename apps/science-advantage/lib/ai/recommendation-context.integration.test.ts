@@ -70,6 +70,7 @@ describe('buildRecommendationContext - Integration', () => {
         displayUsername: 'RecS',
         email: 'rec-student@example.com',
         role: 'STUDENT',
+        schoolId: TEST_SCHOOL_ID,
       })
       .returning({ id: users.id });
 
@@ -82,6 +83,7 @@ describe('buildRecommendationContext - Integration', () => {
         displayUsername: 'RecT',
         email: 'rec-teacher@example.com',
         role: 'TEACHER',
+        schoolId: TEST_SCHOOL_ID,
       })
       .returning({ id: users.id });
 

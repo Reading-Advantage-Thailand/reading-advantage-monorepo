@@ -11,7 +11,7 @@ import {
   scienceUnitLessons,
   sessions,
   users,
-  schools
+  schools,
 } from '@reading-advantage/db/schema';
 import { GET, PATCH, DELETE } from './route';
 import { createSession } from '@/lib/auth/session';
@@ -57,6 +57,7 @@ async function seedUser(
       displayUsername: id,
       email: `${id}@example.com`,
       role,
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
   return u;
@@ -78,7 +79,10 @@ async function seedClass(teacherId: string): Promise<ClassRow> {
 }
 
 function buildReq(classId: string, init?: RequestInit) {
-  return new NextRequest(`http://localhost/api/classes/${classId}`, init as ConstructorParameters<typeof NextRequest>[1]);
+  return new NextRequest(
+    `http://localhost/api/classes/${classId}`,
+    init as ConstructorParameters<typeof NextRequest>[1]
+  );
 }
 
 describe('GET /api/classes/[classId] (integration)', () => {
@@ -95,23 +99,28 @@ describe('GET /api/classes/[classId] (integration)', () => {
     mockCookies.delete.mockReset();
     mockCookies.get.mockReturnValue(undefined);
     await cleanup();
-    await db.insert(schools).values({ id: TEST_SCHOOL_ID, name: 'Test School' }).onConflictDoNothing();
+    await db
+      .insert(schools)
+      .values({ id: TEST_SCHOOL_ID, name: 'Test School' })
+      .onConflictDoNothing();
     teacher = await seedUser(`${TEST_PREFIX}-teacher`, 'TEACHER');
     otherTeacher = await seedUser(`${TEST_PREFIX}-other-teacher`, 'TEACHER');
     student = await seedUser(`${TEST_PREFIX}-student`, 'STUDENT');
     outsider = await seedUser(`${TEST_PREFIX}-outsider`, 'STUDENT');
     admin = await seedUser(`${TEST_PREFIX}-admin`, 'ADMIN');
     cls = await seedClass(teacher.id);
-    await db
-      .insert(scienceClassStudents)
-      .values({ classId: cls.id, studentId: student.id ,
-          schoolId: TEST_SCHOOL_ID,
-      });
+    await db.insert(scienceClassStudents).values({
+      classId: cls.id,
+      studentId: student.id,
+      schoolId: TEST_SCHOOL_ID,
+    });
   });
 
   it('returns 401 when unauthenticated', async () => {
     const req = buildReq(cls.id);
-    const res = await GET(req, { params: Promise.resolve({ classId: cls.id }) });
+    const res = await GET(req, {
+      params: Promise.resolve({ classId: cls.id }),
+    });
     expect(res.status).toBe(401);
     const body = await res.json();
     expect(body).toEqual({ success: false, error: 'Unauthorized' });
@@ -248,7 +257,11 @@ describe('PATCH /api/classes/[classId] (integration)', () => {
     });
     expect(res.status).toBe(400);
     const body = await res.json();
-    expect(body.error).toMatch(/3 and 100/);
+    expect(body).toEqual({
+      success: false,
+      error: 'invalid_input',
+      details: [expect.objectContaining({ path: 'name' })],
+    });
   });
 
   it('returns 400 when name is too long', async () => {
@@ -351,11 +364,11 @@ describe('DELETE /api/classes/[classId] (integration)', () => {
     const session = await createSession(teacher.id);
     mockCookies.get.mockReturnValue({ value: session.token });
 
-    await db
-      .insert(scienceClassStudents)
-      .values({ classId: cls.id, studentId: student.id ,
-          schoolId: TEST_SCHOOL_ID,
-      });
+    await db.insert(scienceClassStudents).values({
+      classId: cls.id,
+      studentId: student.id,
+      schoolId: TEST_SCHOOL_ID,
+    });
 
     const res = await DELETE(buildReq(cls.id, { method: 'DELETE' }), {
       params: Promise.resolve({ classId: cls.id }),
@@ -376,11 +389,11 @@ describe('DELETE /api/classes/[classId] (integration)', () => {
     mockCookies.get.mockReturnValue({ value: session.token });
 
     // Seed lesson + completion for an enrolled student
-    await db
-      .insert(scienceClassStudents)
-      .values({ classId: cls.id, studentId: student.id ,
-          schoolId: TEST_SCHOOL_ID,
-      });
+    await db.insert(scienceClassStudents).values({
+      classId: cls.id,
+      studentId: student.id,
+      schoolId: TEST_SCHOOL_ID,
+    });
     const [lesson] = await db
       .insert(scienceLessons)
       .values({

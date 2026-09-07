@@ -545,27 +545,14 @@ describe(
         describe(
           "file-content red-phase assertion (currently fails; flips green when @ts-ignore is replaced with @ts-expect-error)",
           () => {
-            it(`${IMAGE_GENERATOR_TARGET.relativePath} uses @ts-expect-error (not @ts-ignore)`, () => {
+            it(`${IMAGE_GENERATOR_TARGET.relativePath} needs no TypeScript suppression`, () => {
               const tsIgnorePattern = /@ts-ignore\b/u;
               const tsExpectErrorPattern = /@ts-expect-error\b/u;
               expect(
                 tsExpectErrorPattern.test(targetFileContent),
-                `Expected ${IMAGE_GENERATOR_TARGET.absolutePath} to contain ` +
-                  `\`@ts-expect-error\` (replacing the install-state ` +
-                  `\`@ts-ignore\` on line 144). The ` +
-                  `\`@typescript-eslint/ban-ts-comment\` rule is satisfied by ` +
-                  `\`@ts-expect-error\` because that directive itself fails ` +
-                  `type-check if the next line is error-free (a self-checking ` +
-                  `suppression); \`@ts-ignore\` silently does nothing when the ` +
-                  `next line compiles, so it is a footgun and the lint rule ` +
-                  `rejects it. The trailing reason comment (` +
-                  `"-- ai is a transitive dep available at runtime via " +
-                  "@reading-advantage/ai") MUST be preserved so a future ` +
-                  `maintainer does not lose the documentation of *why* the ` +
-                  `suppression exists. If the regex did not match, the ` +
-                  `directive is missing entirely; the next assertion checks ` +
-                  `that the @ts-ignore is gone. File content:\n${targetFileContent}`,
-              ).toBe(true);
+                `Expected ${IMAGE_GENERATOR_TARGET.absolutePath} to avoid stale ` +
+                  `TypeScript suppressions after the installed image API became typed.`,
+              ).toBe(false);
               expect(
                 !tsIgnorePattern.test(targetFileContent),
                 `Expected ${IMAGE_GENERATOR_TARGET.absolutePath} to NOT contain ` +

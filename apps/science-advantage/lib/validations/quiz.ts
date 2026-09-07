@@ -16,7 +16,19 @@ export const submitQuizAttemptSchema = z.object({
         order: z.number().int().positive().optional(),
       })
     )
-    .min(1, 'At least one response is required'),
+    .min(1, 'At least one response is required')
+    .superRefine((responses, context) => {
+      const questionIds = new Set<string>();
+      for (const response of responses) {
+        if (questionIds.has(response.questionId)) {
+          context.addIssue({
+            code: 'custom',
+            message: `Duplicate response for question ${response.questionId}`,
+          });
+        }
+        questionIds.add(response.questionId);
+      }
+    }),
 });
 
 export type SubmitQuizAttemptInput = z.infer<typeof submitQuizAttemptSchema>;

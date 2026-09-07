@@ -54,6 +54,7 @@ async function seedUser(id: string, role: 'TEACHER' | 'STUDENT' | 'ADMIN'): Prom
       displayUsername: id,
       email: `${id}@example.com`,
       role,
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
   return user;

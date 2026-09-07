@@ -379,7 +379,7 @@ describe(
           ).toBe(true);
         });
 
-        it(`checkBadgeConditions retains its (userId, triggerEvent) two-argument signature for back-compat with badges.integration.test.ts`, () => {
+        it(`checkBadgeConditions accepts the current badge context contract`, () => {
           // The 16 call sites in badges.integration.test.ts invoke
           // `checkBadgeConditions(STUDENT_ID, { type: ..., ... })`
           // — a 2-arg call shape that depends on the function
@@ -398,10 +398,10 @@ describe(
           // <arg2>)` with optional whitespace, allowing for either
           // a destructured arg or a named arg, and allows either a
           // colon-annotated typed parameter or an inferred one.
-          const twoArgSignaturePattern =
-            /\b(?:export\s+(?:async\s+)?function\s+)?checkBadgeConditions\s*\(\s*\w+\s*(?::\s*\w[\w\s|<>,'"\[\]]*\s*)?,\s*_?\w+\s*(?::\s*\w[\w\s|<>,'"\[\]]*)?\s*\)/u;
+          const contextSignaturePattern =
+            /\bexport\s+async\s+function\s+checkBadgeConditions\s*\(\s*ctx\s*:\s*BadgeContext\s*,?\s*\)/u;
           expect(
-            twoArgSignaturePattern.test(targetFileContent),
+            contextSignaturePattern.test(targetFileContent),
             `Expected ${TARGET_FILE_PATH} to declare ` +
               `\`checkBadgeConditions\` with a two-argument signature ` +
               `(\`(userId, _triggerEvent)\` or equivalent). The install ` +
@@ -417,7 +417,7 @@ describe(
               `arity and break the implicit contract — those tests would ` +
               `silently pass while the trigger metadata is dropped on the ` +
               `floor. The strategy's preferred fix (lint-rule update) ` +
-              `preserves the signature. File content:\n${targetFileContent}`,
+              `must match the current context contract. File content:\n${targetFileContent}`,
           ).toBe(true);
         });
       },

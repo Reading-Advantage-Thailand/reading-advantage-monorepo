@@ -15,6 +15,11 @@ export default defineConfig({
     setupFiles: ['./vitest.unit.setup.ts'],
     pool: 'forks',
     fileParallelism: false,
+    server: {
+      deps: {
+        external: [/\/packages\/sales-knowledge\/dist\//],
+      },
+    },
     // Phase 7 (FR-7): the eslint contract test spawns a real ESLint
     // child process, which takes ~6 s on the current environment.
     // The default 5 s timeout is too tight for this single test.

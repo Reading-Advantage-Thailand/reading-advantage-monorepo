@@ -619,6 +619,14 @@ describe("GET /api/admin/dsar/export — audit row + 413 (Phase 5 task #2)", () 
     // before (matches test-strategy.md §4: "assertCan is required
     // before any subject lookup — never after").
     // ---------------------------------------------------------------
+    const beforeRows = (await db.execute(sql`
+      SELECT COUNT(*)::int AS n FROM audit_events
+      WHERE action = 'dsar:export'
+        AND actor_user_id IN (${ADMIN_A_ID}, ${TEACHER_ID})
+        AND target_id = ${SUBJECT_A_ID}
+    `)) as unknown as Array<{ n: number }>;
+    const before = Number(beforeRows[0]?.n ?? 0);
+
     // Unauthenticated.
     const noAuthRes = await GET(buildRequest(`?userId=${SUBJECT_A_ID}`));
     expect([401, 403]).toContain(noAuthRes.status);
@@ -641,12 +649,14 @@ describe("GET /api/admin/dsar/export — audit row + 413 (Phase 5 task #2)", () 
     const badReqRes = await GET(buildRequest(""));
     expect(badReqRes.status).toBe(400);
 
-    // No dsar:export row was written at any point.
+    // The denied requests did not add a matching export row.
     const rows = (await db.execute(sql`
       SELECT COUNT(*)::int AS n FROM audit_events
       WHERE action = 'dsar:export'
+        AND actor_user_id IN (${ADMIN_A_ID}, ${TEACHER_ID})
+        AND target_id = ${SUBJECT_A_ID}
     `)) as unknown as Array<{ n: number }>;
-    expect(Number(rows[0]?.n ?? 0)).toBe(0);
+    expect(Number(rows[0]?.n ?? 0)).toBe(before);
   });
 
   it(

@@ -21,6 +21,7 @@ import {
 } from '@reading-advantage/db/schema';
 import { GET, POST } from './route';
 import { createSession } from '@/lib/auth/session';
+import { submitAttempt } from '@reading-advantage/domain/quiz';
 
 const TEST_PREFIX = 'quiz-itest';
 const TEST_SCHOOL_ID = '00000000-0000-0000-0000-000000000099';
@@ -64,7 +65,8 @@ async function cleanupFixtures(): Promise<void> {
 
 async function seedUser(
   id: string,
-  role: 'TEACHER' | 'STUDENT'
+  role: 'TEACHER' | 'STUDENT',
+  schoolId = TEST_SCHOOL_ID
 ): Promise<UserRow> {
   const [user] = await db
     .insert(users)
@@ -75,6 +77,7 @@ async function seedUser(
       displayUsername: id,
       email: `${id}@example.com`,
       role,
+      schoolId,
     })
     .returning();
   return user;
@@ -258,6 +261,9 @@ describe('GET /api/lessons/[lessonSlug]/quiz (integration)', () => {
     expect(attempt).toBeDefined();
     expect(attempt.studentId).toBe(student.id);
     expect(attempt.lessonId).toBe(lesson.id);
+    expect(attempt.selectedQuestionIds).toEqual(
+      data.questions.map((question: { id: string }) => question.id)
+    );
     expect(attempt.completedAt).toBeNull();
   });
 
@@ -293,12 +299,24 @@ describe('POST /api/lessons/[lessonSlug]/quiz/submit (integration)', () => {
         studentId: student.id,
         lessonId: lesson.id,
         maxScore: questions.length,
+        selectedQuestionIds: questions.map((question) => question.id),
         attemptNumber: 1,
         startedAt: new Date(),
         schoolId: TEST_SCHOOL_ID,
       })
       .returning();
     return attempt.id;
+  }
+
+  async function expectNoSubmissionWrites(attemptId: string): Promise<void> {
+    expect(await db.select().from(scienceQuestionResponses)
+      .where(eq(scienceQuestionResponses.attemptId, attemptId))).toHaveLength(0);
+    expect(await db.select().from(scienceMasteryRuns)
+      .where(eq(scienceMasteryRuns.attemptId, attemptId))).toHaveLength(0);
+    expect(await db.select().from(gamificationProfiles)
+      .where(eq(gamificationProfiles.userId, student.id))).toHaveLength(0);
+    expect(await db.select().from(achievements)
+      .where(eq(achievements.userId, student.id))).toHaveLength(0);
   }
 
   beforeEach(async () => {
@@ -308,6 +326,7 @@ describe('POST /api/lessons/[lessonSlug]/quiz/submit (integration)', () => {
     mockCookies.get.mockReturnValue(undefined);
 
     await cleanupFixtures();
+    await db.insert(schools).values({ id: TEST_SCHOOL_ID, name: 'Test School' }).onConflictDoNothing();
     teacher = await seedUser(`${TEST_PREFIX}-teacher`, 'TEACHER');
     student = await seedUser(`${TEST_PREFIX}-student`, 'STUDENT');
     const seeded = await seedLessonWithQuestions({
@@ -458,6 +477,7 @@ describe('POST /api/lessons/[lessonSlug]/quiz/submit (integration)', () => {
         studentId: student.id,
         lessonId: lesson.id,
         maxScore: questions.length,
+        selectedQuestionIds: questions.map((question) => question.id),
         attemptNumber: 2,
         startedAt: new Date(),
         schoolId: TEST_SCHOOL_ID,
@@ -521,6 +541,183 @@ describe('POST /api/lessons/[lessonSlug]/quiz/submit (integration)', () => {
       params: Promise.resolve({ lessonSlug: lesson.id }),
     });
     expect(res.status).toBe(403);
+  });
+
+  it('does not expose an attempt from another school', async () => {
+    const otherSchoolId = '00000000-0000-0000-0000-000000000098';
+    await db.insert(schools).values({ id: otherSchoolId, name: 'Other School' }).onConflictDoNothing();
+    const otherStudent = await seedUser(`${TEST_PREFIX}-other-school`, 'STUDENT', otherSchoolId);
+    const [attempt] = await db.insert(scienceAttempts).values({
+      studentId: otherStudent.id,
+      lessonId: lesson.id,
+      schoolId: otherSchoolId,
+      maxScore: questions.length,
+      selectedQuestionIds: questions.map((question) => question.id),
+      attemptNumber: 1,
+    }).returning();
+    const session = await createSession(student.id);
+    mockCookies.get.mockReturnValue({ value: session.token });
+
+    const res = await POST(new NextRequest(
+      `http://localhost/api/lessons/${lesson.id}/quiz/submit`,
+      { method: 'POST', body: JSON.stringify({
+        attemptId: attempt.id,
+        responses: questions.map((question) => ({
+          questionId: question.id,
+          studentAnswer: 'Observe',
+        })),
+      }) }
+    ), { params: Promise.resolve({ lessonSlug: lesson.id }) });
+
+    expect(res.status).toBe(404);
+  });
+
+  it('rejects duplicate question responses before any attempt writes', async () => {
+    const attemptId = await startAttempt();
+    const session = await createSession(student.id);
+    mockCookies.get.mockReturnValue({ value: session.token });
+    const duplicate = { questionId: questions[0].id, studentAnswer: 'Observe' };
+
+    const res = await POST(new NextRequest(
+      `http://localhost/api/lessons/${lesson.id}/quiz/submit`,
+      { method: 'POST', body: JSON.stringify({ attemptId, responses: [duplicate, duplicate] }) }
+    ), { params: Promise.resolve({ lessonSlug: lesson.id }) });
+
+    expect(res.status).toBe(400);
+    await expectNoSubmissionWrites(attemptId);
+  });
+
+  it('rejects a lesson question that was not selected for the attempt', async () => {
+    const attemptId = await startAttempt();
+    await db.update(scienceAttempts)
+      .set({ selectedQuestionIds: [questions[0].id], maxScore: 1 })
+      .where(eq(scienceAttempts.id, attemptId));
+    const session = await createSession(student.id);
+    mockCookies.get.mockReturnValue({ value: session.token });
+
+    const res = await POST(new NextRequest(
+      `http://localhost/api/lessons/${lesson.id}/quiz/submit`,
+      { method: 'POST', body: JSON.stringify({ attemptId, responses: [
+        { questionId: questions[0].id, studentAnswer: 'Observe' },
+        { questionId: questions[1].id, studentAnswer: 'Observe' },
+      ] }) }
+    ), { params: Promise.resolve({ lessonSlug: lesson.id }) });
+
+    expect(res.status).toBe(400);
+    await expectNoSubmissionWrites(attemptId);
+  });
+
+  it('requires a new quiz for a migrated unfinished attempt without a question selection', async () => {
+    const attemptId = await startAttempt();
+    await db.update(scienceAttempts)
+      .set({ selectedQuestionIds: [] })
+      .where(eq(scienceAttempts.id, attemptId));
+    const session = await createSession(student.id);
+    mockCookies.get.mockReturnValue({ value: session.token });
+
+    const res = await POST(new NextRequest(
+      `http://localhost/api/lessons/${lesson.id}/quiz/submit`,
+      { method: 'POST', body: JSON.stringify({ attemptId, responses: [
+        { questionId: questions[0].id, studentAnswer: 'Observe' },
+      ] }) }
+    ), { params: Promise.resolve({ lessonSlug: lesson.id }) });
+
+    expect(res.status).toBe(409);
+    await expectNoSubmissionWrites(attemptId);
+  });
+
+  it('allows only one concurrent completion to create responses and rewards', async () => {
+    const attemptId = await startAttempt();
+    const session = await createSession(student.id);
+    mockCookies.get.mockReturnValue({ value: session.token });
+    const body = JSON.stringify({
+      attemptId,
+      responses: questions.map((question) => ({
+        questionId: question.id,
+        studentAnswer: 'Observe',
+      })),
+    });
+
+    const results = await Promise.all([1, 2].map(() => POST(new NextRequest(
+      `http://localhost/api/lessons/${lesson.id}/quiz/submit`,
+      { method: 'POST', body }
+    ), { params: Promise.resolve({ lessonSlug: lesson.id }) })));
+
+    expect(results.map((response) => response.status).sort()).toEqual([200, 409]);
+    expect(await db.select().from(scienceQuestionResponses)
+      .where(eq(scienceQuestionResponses.attemptId, attemptId))).toHaveLength(questions.length);
+    expect(await db.select().from(scienceMasteryRuns)
+      .where(eq(scienceMasteryRuns.attemptId, attemptId))).toHaveLength(1);
+    const successBody = await results.find((response) => response.status === 200)!.json();
+    const profiles = await db.select().from(gamificationProfiles)
+      .where(eq(gamificationProfiles.userId, student.id));
+    expect(profiles).toHaveLength(1);
+    expect(profiles[0].xp).toBe(successBody.gamification.totalXp);
+    const [completion] = await db.select().from(scienceLessonCompletions)
+      .where(and(
+        eq(scienceLessonCompletions.studentId, student.id),
+        eq(scienceLessonCompletions.lessonId, lesson.id),
+      ));
+    expect(completion.attemptsCount).toBe(1);
+  });
+
+  it('rolls back a claimed completion when reward processing fails and permits retry', async () => {
+    const attemptId = await startAttempt();
+    const input = {
+      attemptId,
+      responses: questions.map((question) => ({
+        questionId: question.id,
+        studentAnswer: 'Observe',
+      })),
+    };
+    const baseDeps: Parameters<typeof submitAttempt>[0]['deps'] = {
+      gradeAnswer: () => true,
+      calculateXpForQuiz: () => ({ baseXp: 10, firstAttemptBonus: 5, totalXp: 15 }),
+      processMasteryRun: async () => ({ status: 'COMPLETED', updatedCount: questions.length }),
+      awardXp: async () => ({ xp: 15, level: 1, levelName: 'Explorer', levelUp: false }),
+      updateStreakForProfile: async () => ({ streak: 1, milestoneBonus: 0 }),
+      checkBadgeConditions: async () => ({ newlyUnlocked: [], achievements: [] }),
+    };
+
+    await expect(submitAttempt({
+      user: student as Parameters<typeof submitAttempt>[0]['user'],
+      tenant: { schoolId: TEST_SCHOOL_ID },
+      input,
+      deps: { ...baseDeps, awardXp: async () => { throw new Error('forced reward failure'); } },
+    })).rejects.toThrow('forced reward failure');
+
+    const [rolledBackAttempt] = await db.select().from(scienceAttempts)
+      .where(eq(scienceAttempts.id, attemptId));
+    expect(rolledBackAttempt.completedAt).toBeNull();
+    expect(rolledBackAttempt.score).toBe(0);
+    expect(await db.select().from(scienceQuestionResponses)
+      .where(eq(scienceQuestionResponses.attemptId, attemptId))).toHaveLength(0);
+    expect(await db.select().from(scienceLessonCompletions)
+      .where(and(
+        eq(scienceLessonCompletions.studentId, student.id),
+        eq(scienceLessonCompletions.lessonId, lesson.id),
+      ))).toHaveLength(0);
+    expect(await db.select().from(scienceMasteryRuns)
+      .where(eq(scienceMasteryRuns.attemptId, attemptId))).toHaveLength(0);
+    expect(await db.select().from(gamificationProfiles)
+      .where(eq(gamificationProfiles.userId, student.id))).toHaveLength(0);
+    expect(await db.select().from(achievements)
+      .where(eq(achievements.userId, student.id))).toHaveLength(0);
+
+    const retry = await submitAttempt({
+      user: student as Parameters<typeof submitAttempt>[0]['user'],
+      tenant: { schoolId: TEST_SCHOOL_ID },
+      input,
+      deps: baseDeps,
+    });
+    expect(retry.status).toBe(200);
+    const [completedAttempt] = await db.select().from(scienceAttempts)
+      .where(eq(scienceAttempts.id, attemptId));
+    expect(completedAttempt.completedAt).not.toBeNull();
+    expect(await db.select().from(scienceQuestionResponses)
+      .where(eq(scienceQuestionResponses.attemptId, attemptId))).toHaveLength(questions.length);
+    expect(await db.select().from(scienceMasteryRuns)
+      .where(eq(scienceMasteryRuns.attemptId, attemptId))).toHaveLength(1);
   });
 
   it('returns 409 if attempt was already submitted', async () => {

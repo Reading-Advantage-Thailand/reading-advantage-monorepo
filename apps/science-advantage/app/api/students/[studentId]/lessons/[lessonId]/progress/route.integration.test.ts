@@ -11,13 +11,20 @@ import {
   scienceUnitLessons,
   sessions,
   users,
-  schools
+  schools,
 } from '@reading-advantage/db/schema';
 import { GET } from './route';
 import { createSession } from '@/lib/auth/session';
 
 const TEST_PREFIX = 'progress-itest';
 const TEST_SCHOOL_ID = '00000000-0000-0000-0000-000000000099';
+const TEST_USER_IDS = {
+  teacher: '00000000-0000-0000-0000-000000000301',
+  otherTeacher: '00000000-0000-0000-0000-000000000302',
+  student: '00000000-0000-0000-0000-000000000303',
+  outsider: '00000000-0000-0000-0000-000000000304',
+  missingStudent: '00000000-0000-0000-0000-000000000399',
+} as const;
 
 const mockCookies = {
   get: vi.fn(),
@@ -37,24 +44,31 @@ async function cleanup(): Promise<void> {
   await db.delete(scienceLessonCompletions);
   await db.delete(scienceUnitLessons);
   await db.delete(scienceClassStudents);
-  await db.delete(scienceLessons);
   await db.delete(scienceCurriculumUnits);
+  await db.delete(scienceLessons);
   await db.delete(scienceClasses);
   await db.delete(sessions);
   await db.delete(accounts);
-  await db.execute(sql`DELETE FROM users WHERE id LIKE ${`${TEST_PREFIX}-%`}`);
+  await db.execute(
+    sql`DELETE FROM users WHERE username LIKE ${`${TEST_PREFIX}-%`}`
+  );
 }
 
-async function seedUser(id: string, role: 'TEACHER' | 'STUDENT'): Promise<UserRow> {
+async function seedUser(
+  id: string,
+  role: 'TEACHER' | 'STUDENT'
+): Promise<UserRow> {
+  const username = `${TEST_PREFIX}-${id.slice(-3)}`;
   const [user] = await db
     .insert(users)
     .values({
       id,
       name: id,
-      username: id,
-      displayUsername: id,
-      email: `${id}@example.com`,
+      username,
+      displayUsername: username,
+      email: `${username}@example.com`,
       role,
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
   return user;
@@ -77,9 +91,9 @@ async function seedClassWithLesson(args: {
     .returning();
 
   for (const sid of args.studentIds) {
-    await db.insert(scienceClassStudents).values({ classId: cls.id, studentId: sid ,
-        schoolId: TEST_SCHOOL_ID,
-    });
+    await db
+      .insert(scienceClassStudents)
+      .values({ classId: cls.id, studentId: sid, schoolId: TEST_SCHOOL_ID });
   }
 
   const [unit] = await db
@@ -106,9 +120,9 @@ async function seedClassWithLesson(args: {
     })
     .returning();
 
-  await db.insert(scienceUnitLessons).values({ unitId: unit.id, lessonId: lesson.id ,
-      schoolId: TEST_SCHOOL_ID,
-  });
+  await db
+    .insert(scienceUnitLessons)
+    .values({ unitId: unit.id, lessonId: lesson.id, schoolId: TEST_SCHOOL_ID });
 
   return { cls, lesson };
 }
@@ -125,11 +139,14 @@ describe('GET /api/students/[studentId]/lessons/[lessonId]/progress (integration
     mockCookies.get.mockReset();
     mockCookies.get.mockReturnValue(undefined);
     await cleanup();
-    await db.insert(schools).values({ id: TEST_SCHOOL_ID, name: 'Test School' }).onConflictDoNothing();
-    teacher = await seedUser(`${TEST_PREFIX}-teacher`, 'TEACHER');
-    otherTeacher = await seedUser(`${TEST_PREFIX}-other-teacher`, 'TEACHER');
-    student = await seedUser(`${TEST_PREFIX}-student`, 'STUDENT');
-    outsider = await seedUser(`${TEST_PREFIX}-outsider`, 'STUDENT');
+    await db
+      .insert(schools)
+      .values({ id: TEST_SCHOOL_ID, name: 'Test School' })
+      .onConflictDoNothing();
+    teacher = await seedUser(TEST_USER_IDS.teacher, 'TEACHER');
+    otherTeacher = await seedUser(TEST_USER_IDS.otherTeacher, 'TEACHER');
+    student = await seedUser(TEST_USER_IDS.student, 'STUDENT');
+    outsider = await seedUser(TEST_USER_IDS.outsider, 'STUDENT');
     const seeded = await seedClassWithLesson({
       teacherId: teacher.id,
       studentIds: [student.id],
@@ -152,7 +169,7 @@ describe('GET /api/students/[studentId]/lessons/[lessonId]/progress (integration
     const req = new NextRequest(`http://localhost/x`);
     const res = await GET(req, {
       params: Promise.resolve({
-        studentId: `${TEST_PREFIX}-nope`,
+        studentId: TEST_USER_IDS.missingStudent,
         lessonId: lesson.id,
       }),
     });

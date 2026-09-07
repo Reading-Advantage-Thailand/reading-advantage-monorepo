@@ -1,6 +1,6 @@
 import { randomUUID } from 'crypto';
 import { NextRequest, NextResponse } from 'next/server';
-import { z, ZodError } from 'zod';
+import { ZodError } from 'zod';
 import { AuthError } from '@reading-advantage/auth';
 import { getCurrentSession } from '@/lib/auth/session';
 import { calculateMasteryUpdates, buildResponseInput } from '@/lib/ai/mastery-calculator';
@@ -31,6 +31,12 @@ export async function POST(request: NextRequest) {
     const session = await getCurrentSession();
     if (!session) return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
     setRequestContextUserId(session.user.id);
+
+    try {
+      await requestClone.clone().json();
+    } catch {
+      return NextResponse.json({ success: false, error: 'invalid_input', details: [{ path: '', message: 'Invalid JSON body' }] }, { status: 400 });
+    }
 
     const result = await recordRun({
       user: session.user,

@@ -78,6 +78,7 @@ describe('GET /api/lessons/[lessonSlug] - Integration Tests', () => {
         displayUsername: 'TeacherLesson',
         email: 'pilot-lesson-route-teacher@example.com',
         role: 'TEACHER',
+        schoolId: TEST_SCHOOL_ID,
       })
       .returning();
 
@@ -90,6 +91,7 @@ describe('GET /api/lessons/[lessonSlug] - Integration Tests', () => {
         displayUsername: 'StudentLesson',
         email: 'pilot-lesson-route-student@example.com',
         role: 'STUDENT',
+        schoolId: TEST_SCHOOL_ID,
       })
       .returning();
 
@@ -102,6 +104,7 @@ describe('GET /api/lessons/[lessonSlug] - Integration Tests', () => {
         displayUsername: 'OtherLesson',
         email: 'pilot-lesson-route-other@example.com',
         role: 'STUDENT',
+        schoolId: TEST_SCHOOL_ID,
       })
       .returning();
 

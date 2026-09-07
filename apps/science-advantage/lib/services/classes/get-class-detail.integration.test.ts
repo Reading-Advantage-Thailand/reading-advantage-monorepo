@@ -14,6 +14,7 @@ import {
 import { getClassDetailWithCurriculum } from './get-class-detail';
 
 const TEST_SCHOOL_ID = '00000000-0000-0000-0000-000000000099';
+const TEST_TEACHER_ID = 'get-class-detail-test-teacher';
 
 async function cleanupFixtures(): Promise<void> {
   await db.delete(scienceClassStudents);
@@ -44,12 +45,13 @@ describe('getClassDetailWithCurriculum - Integration', () => {
     [{ id: teacherId }] = await db
       .insert(users)
       .values({
-        id: 'get-class-detail-test-teacher',
+        id: TEST_TEACHER_ID,
         name: 'Detail Teacher',
         username: 'get-class-detail-test-teacher',
         displayUsername: 'GCDTeacher',
         email: 'gcd-teacher@example.com',
         role: 'TEACHER',
+        schoolId: TEST_SCHOOL_ID,
       })
       .returning({ id: users.id });
 
@@ -62,6 +64,7 @@ describe('getClassDetailWithCurriculum - Integration', () => {
         displayUsername: 'GCDStudentA',
         email: 'gcd-student-a@example.com',
         role: 'STUDENT',
+        schoolId: TEST_SCHOOL_ID,
       })
       .returning({ id: users.id });
 
@@ -74,6 +77,7 @@ describe('getClassDetailWithCurriculum - Integration', () => {
         displayUsername: 'GCDStudentB',
         email: 'gcd-student-b@example.com',
         role: 'STUDENT',
+        schoolId: TEST_SCHOOL_ID,
       })
       .returning({ id: users.id });
 
@@ -242,6 +246,7 @@ describe('getClassDetailWithCurriculum - Integration', () => {
       id: lessonOneId,
       slug: 'gcd-lesson-one',
       title: 'Lesson One',
+      titleThai: null,
       description: 'First',
       order: 1,
       gradeLevel: 4,
@@ -307,7 +312,7 @@ function makeUser(id: string, role: 'STUDENT' | 'TEACHER' | 'ADMIN' | 'SYSTEM', 
 
 async function callGetClassDetail(classId: string) {
   const tenantDb = createTenantDB(db, { schoolId: TEST_SCHOOL_ID });
-  const teacherUser = makeUser(teacherId, 'TEACHER', TEST_SCHOOL_ID);
+  const teacherUser = makeUser(TEST_TEACHER_ID, 'TEACHER', TEST_SCHOOL_ID);
   return getClassDetailWithCurriculum({
     db: tenantDb,
     user: teacherUser,

@@ -162,7 +162,7 @@ const TURBO_CONFIG_PATH = resolve(WORKSPACE_ROOT, "turbo.json");
  * ci.yml` (monorepo root) has `paths: apps/science-advantage/**`
  * filter."
  */
-const REQUIRED_SCIENCE_ADVANTAGE_PATH = "apps/science-advantage/**";
+const REQUIRED_APPS_PATH = "apps/**";
 
 /**
  * The set of shared paths that the `paths:` filter MUST include
@@ -251,12 +251,12 @@ describe(
           ).toBe(true);
         });
 
-        it(`paths filter includes '${REQUIRED_SCIENCE_ADVANTAGE_PATH}'`, () => {
+        it(`paths filter includes '${REQUIRED_APPS_PATH}'`, () => {
           const content = readFileSync(CI_WORKFLOW_PATH, "utf8");
           expect(
-            content.includes(REQUIRED_SCIENCE_ADVANTAGE_PATH),
+            content.includes(REQUIRED_APPS_PATH),
             `Expected ${CI_WORKFLOW_PATH} to contain the path filter ` +
-              `\`${REQUIRED_SCIENCE_ADVANTAGE_PATH}\`. Per spec.md FR-10 ` +
+              `\`${REQUIRED_APPS_PATH}\`. The broad app filter ` +
               `Acceptance Criteria #10, the monorepo-root CI must have ` +
               `\`paths: apps/science-advantage/**\` filter so that PRs ` +
               `touching only the science-advantage app trigger the ` +

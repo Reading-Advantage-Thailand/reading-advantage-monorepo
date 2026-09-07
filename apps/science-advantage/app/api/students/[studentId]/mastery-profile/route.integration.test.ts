@@ -18,6 +18,10 @@ import { createSession } from '@/lib/auth/session';
 const TEST_PREFIX = 'mastery-profile-itest';
 const STANDARDS_DESC = 'mastery-profile-itest standard';
 const TEST_SCHOOL_ID = '00000000-0000-0000-0000-000000000099';
+const TEST_USER_IDS = {
+  student: '40000000-0000-4000-8000-000000000401',
+  otherStudent: '40000000-0000-4000-8000-000000000402',
+} as const;
 
 const mockCookies = {
   get: vi.fn(),
@@ -39,8 +43,9 @@ async function cleanup(): Promise<void> {
   );
   await db.delete(sessions);
   await db.delete(accounts);
-  await db.execute(sql`DELETE FROM users WHERE id LIKE ${`${TEST_PREFIX}-%`}`);
-  await db.execute(sql`DELETE FROM schools WHERE id = ${TEST_SCHOOL_ID}`);
+  await db.execute(
+    sql`DELETE FROM users WHERE username LIKE ${`${TEST_PREFIX}-%`}`
+  );
   await db
     .insert(schools)
     .values({ id: TEST_SCHOOL_ID, name: 'Mastery Profile Test School' })
@@ -49,6 +54,7 @@ async function cleanup(): Promise<void> {
 
 async function seedUser(
   id: string,
+  username: string,
   role: 'STUDENT' | 'TEACHER' | 'ADMIN',
   opts: { gradeLevel?: number; name?: string } = {}
 ) {
@@ -57,9 +63,9 @@ async function seedUser(
     .values({
       id,
       name: opts.name ?? id,
-      username: id,
-      displayUsername: id,
-      email: `${id}@example.com`,
+      username,
+      displayUsername: username,
+      email: `${username}@example.com`,
       role,
       gradeLevel: opts.gradeLevel ?? null,
       schoolId: TEST_SCHOOL_ID,
@@ -113,14 +119,24 @@ describe('GET /api/students/[studentId]/mastery-profile (integration)', () => {
   });
 
   async function seedScenario() {
-    const testStudent = await seedUser(`${TEST_PREFIX}-student`, 'STUDENT', {
-      gradeLevel: 3,
-      name: 'Test Student',
-    });
-    const otherStudent = await seedUser(`${TEST_PREFIX}-other`, 'STUDENT', {
-      gradeLevel: 3,
-      name: 'Other Student',
-    });
+    const testStudent = await seedUser(
+      TEST_USER_IDS.student,
+      `${TEST_PREFIX}-student`,
+      'STUDENT',
+      {
+        gradeLevel: 3,
+        name: 'Test Student',
+      }
+    );
+    const otherStudent = await seedUser(
+      TEST_USER_IDS.otherStudent,
+      `${TEST_PREFIX}-other`,
+      'STUDENT',
+      {
+        gradeLevel: 3,
+        name: 'Other Student',
+      }
+    );
 
     const sc11 = await seedStandard('Sc1.1-G3');
     const sc12 = await seedStandard('Sc1.2-G3');

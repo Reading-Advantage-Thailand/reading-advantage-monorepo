@@ -63,7 +63,7 @@ describe('ST-2 services auth and tenant scoping', () => {
 
   describe('getClassDetailWithCurriculum', () => {
     it('throws when called without a user context (fails before assertCan)', async () => {
-      const tenantDb = createTenantDB(mutableMockDb, schoolA);
+      const tenantDb = createTenantDB(mutableMockDb as never, schoolA);
 
       await expect(
         (getClassDetailWithCurriculum as any)({
@@ -90,7 +90,7 @@ describe('ST-2 services auth and tenant scoping', () => {
           },
         ],
       });
-      const tenantDb = createTenantDB(mutableMockDb, schoolA);
+      const tenantDb = createTenantDB(mutableMockDb as never, schoolA);
       const attacker = makeUser('student-b', schoolB.schoolId);
 
       await expect(
@@ -106,7 +106,7 @@ describe('ST-2 services auth and tenant scoping', () => {
 
   describe('getStudentEnrolledClasses', () => {
     it('throws when called without a user context (fails before assertCan)', async () => {
-      const tenantDb = createTenantDB(mutableMockDb, schoolA);
+      const tenantDb = createTenantDB(mutableMockDb as never, schoolA);
 
       await expect(
         (getStudentEnrolledClasses as any)({
@@ -130,7 +130,7 @@ describe('ST-2 services auth and tenant scoping', () => {
           },
         ],
       });
-      const tenantDb = createTenantDB(mutableMockDb, schoolA);
+      const tenantDb = createTenantDB(mutableMockDb as never, schoolA);
       const attacker = makeUser('student-b', schoolB.schoolId);
 
       await expect(
@@ -146,7 +146,7 @@ describe('ST-2 services auth and tenant scoping', () => {
 
   describe('processMasteryRun', () => {
     it('throws when called without a user context (fails before assertCan)', async () => {
-      const tenantDb = createTenantDB(mutableMockDb, schoolA);
+      const tenantDb = createTenantDB(mutableMockDb as never, schoolA);
 
       await expect(
         (processMasteryRun as any)({
@@ -167,7 +167,7 @@ describe('ST-2 services auth and tenant scoping', () => {
           },
         ],
       });
-      const tenantDb = createTenantDB(mutableMockDb, schoolA);
+      const tenantDb = createTenantDB(mutableMockDb as never, schoolA);
       const attacker = makeUser('student-b', schoolB.schoolId);
 
       await expect(

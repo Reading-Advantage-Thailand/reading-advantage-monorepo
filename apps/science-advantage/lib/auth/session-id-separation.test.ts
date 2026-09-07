@@ -5,6 +5,7 @@ const insertCapture: InsertCapture = {};
 
 vi.mock('@reading-advantage/db', async () => {
   const mockDb = {
+    transaction: vi.fn(async (callback: (tx: unknown) => Promise<unknown>) => callback(mockDb)),
     insert: vi.fn().mockImplementation(() => ({
       values: vi.fn().mockImplementation((vals: Record<string, unknown>) => {
         insertCapture.values = vals;
@@ -23,6 +24,7 @@ vi.mock('@reading-advantage/db', async () => {
     select: vi.fn().mockImplementation(() => ({
       from: vi.fn().mockImplementation(() => ({
         where: vi.fn().mockImplementation(() => ({
+          for: vi.fn().mockResolvedValue([]),
           limit: vi.fn().mockResolvedValue([
             {
               id: 'user-1',
@@ -43,11 +45,21 @@ vi.mock('@reading-advantage/db', async () => {
   return {
     db: mockDb,
     eq: vi.fn(() => 'eq-clause'),
+    and: vi.fn(() => 'and-clause'),
+    gt: vi.fn(() => 'gt-clause'),
+    inArray: vi.fn(() => 'in-array-clause'),
+    count: vi.fn(() => 'count-expression'),
   };
 });
 
 vi.mock('@reading-advantage/db/schema', () => ({
-  sessions: { id: 'sessions.id', token: 'sessions.token' },
+  sessions: {
+    id: 'sessions.id',
+    tokenHash: 'sessions.tokenHash',
+    userId: 'sessions.userId',
+    expiresAt: 'sessions.expiresAt',
+    createdAt: 'sessions.createdAt',
+  },
   users: {
     id: 'users.id',
     username: 'users.username',
@@ -80,10 +92,10 @@ describe('Session ID separation from token (Drizzle insert payload)', () => {
     await createSession('user-1');
 
     expect(insertCapture.values).toBeDefined();
-    const { id, token } = insertCapture.values!;
+    const { id, tokenHash } = insertCapture.values!;
     expect(id).toBeDefined();
     expect(typeof id).toBe('string');
-    expect(id).not.toBe(token);
+    expect(id).not.toBe(tokenHash);
   });
 
   it('inserts a session with an explicit UUID id (not undefined)', async () => {
@@ -96,12 +108,12 @@ describe('Session ID separation from token (Drizzle insert payload)', () => {
     expect((insertCapture.values!.id as string).length).toBe(36);
   });
 
-  it('inserts a 64-char hex token separate from id', async () => {
+  it('inserts a 64-char token hash separate from id', async () => {
     await createSession('user-1');
 
-    expect(insertCapture.values!.token).toBeDefined();
-    expect(typeof insertCapture.values!.token).toBe('string');
-    expect((insertCapture.values!.token as string).length).toBe(64);
-    expect(insertCapture.values!.token).toMatch(/^[0-9a-f]+$/);
+    expect(insertCapture.values!.tokenHash).toBeDefined();
+    expect(typeof insertCapture.values!.tokenHash).toBe('string');
+    expect((insertCapture.values!.tokenHash as string).length).toBe(64);
+    expect(insertCapture.values!.tokenHash).toMatch(/^[0-9a-f]+$/);
   });
 });

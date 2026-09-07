@@ -122,7 +122,7 @@ describe('ST-1 gamification tenant isolation', () => {
           }),
         ],
       });
-      const tenantDb = createTenantDB(mutableMockDb, schoolA);
+      const tenantDb = createTenantDB(mutableMockDb as never, schoolA);
       const user = makeUser('student-a', schoolA.schoolId);
 
       const result = await (awardXp as any)({
@@ -155,7 +155,7 @@ describe('ST-1 gamification tenant isolation', () => {
           }),
         ],
       });
-      const tenantDb = createTenantDB(mutableMockDb, schoolA);
+      const tenantDb = createTenantDB(mutableMockDb as never, schoolA);
       const attacker = makeUser('student-b', schoolB.schoolId);
 
       await expect(
@@ -188,7 +188,7 @@ describe('ST-1 gamification tenant isolation', () => {
           }),
         ],
       });
-      const tenantDb = createTenantDB(mutableMockDb, schoolA);
+      const tenantDb = createTenantDB(mutableMockDb as never, schoolA);
       const user = makeUser('student-a', schoolA.schoolId);
 
       const result = await (awardXp as any)({
@@ -225,7 +225,7 @@ describe('ST-1 gamification tenant isolation', () => {
           }),
         ],
       });
-      const tenantDb = createTenantDB(mutableMockDb, schoolA);
+      const tenantDb = createTenantDB(mutableMockDb as never, schoolA);
       const user = makeUser('student-a', schoolA.schoolId);
 
       const result = await (updateStreakForProfile as any)({
@@ -251,7 +251,7 @@ describe('ST-1 gamification tenant isolation', () => {
           }),
         ],
       });
-      const tenantDb = createTenantDB(mutableMockDb, schoolA);
+      const tenantDb = createTenantDB(mutableMockDb as never, schoolA);
       const attacker = makeUser('student-b', schoolB.schoolId);
 
       await expect(
@@ -279,7 +279,7 @@ describe('ST-1 gamification tenant isolation', () => {
           },
         ],
       });
-      const tenantDb = createTenantDB(mutableMockDb, schoolA);
+      const tenantDb = createTenantDB(mutableMockDb as never, schoolA);
       const user = makeUser('student-a', schoolA.schoolId);
 
       const result = await (checkBadgeConditions as any)({
@@ -297,7 +297,7 @@ describe('ST-1 gamification tenant isolation', () => {
       mutableMockDb = createMockDb({
         selectResults: [[], [], []],
       });
-      const tenantDb = createTenantDB(mutableMockDb, schoolA);
+      const tenantDb = createTenantDB(mutableMockDb as never, schoolA);
       const attacker = makeUser('student-b', schoolB.schoolId);
 
       await expect(

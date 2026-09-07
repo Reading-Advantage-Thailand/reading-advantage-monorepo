@@ -112,7 +112,7 @@ vi.mock('@reading-advantage/ai', () => ({
 // `z` re-export from `zod/v3/external.js` correctly without an explicit
 // `vi.mock` indirection; this pattern forces vitest to load zod
 // through its own resolver.
-vi.mock(import('zod'), async (importOriginal) => {
+vi.mock('zod', async (importOriginal) => {
   const actual = await importOriginal<typeof import('zod')>();
   return {
     ...actual,
@@ -615,8 +615,9 @@ describe('Phase 6 — FR-5 OTel span wrapping around generateObject', () => {
     }));
     // Re-import the service with the mocked config. `vi.doMock` is
     // NOT hoisted (unlike `vi.mock`), so the re-import sees the mock.
+    vi.resetModules();
     const { RecommendationService: ServiceWithFallback } = await import(
-      '../recommendation-service?fallback-test'
+      '../recommendation-service'
     );
 
     const stub = new StubAIClient();

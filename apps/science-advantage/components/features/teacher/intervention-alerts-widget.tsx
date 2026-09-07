@@ -376,7 +376,7 @@ export function InterventionAlertsWidget({
       <CardHeader>
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1">
-            <CardTitle className="text-xl font-semibold">
+            <CardTitle role="heading" aria-level={2} className="text-xl font-semibold">
               <DualText
                 text={TEXT.heading.title}
                 secondaryClassName="text-sm font-medium text-muted-foreground"
@@ -448,6 +448,7 @@ export function InterventionAlertsWidget({
             <p className="text-xs text-red-600">{TEXT.error.title.th}</p>
             <p className="mt-2 text-gray-700">{TEXT.error.description.en}</p>
             <p className="text-xs text-gray-500">{TEXT.error.description.th}</p>
+            <p className="mt-2 text-gray-700">{error}</p>
             <Button
               type="button"
               variant="outline"

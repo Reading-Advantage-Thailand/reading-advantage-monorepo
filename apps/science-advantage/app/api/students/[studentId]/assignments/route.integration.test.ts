@@ -9,13 +9,23 @@ import {
   scienceLessons,
   sessions,
   users,
-  schools
+  schools,
 } from '@reading-advantage/db/schema';
 import { GET } from './route';
 import { createSession } from '@/lib/auth/session';
 
 const TEST_PREFIX = 'student-assignments-itest';
 const TEST_SCHOOL_ID = '00000000-0000-0000-0000-000000000099';
+const TEST_USER_IDS = {
+  studentA: '10000000-0000-4000-8000-000000000101',
+  studentB: '10000000-0000-4000-8000-000000000102',
+  emptyStudent: '10000000-0000-4000-8000-000000000103',
+  teacher: '10000000-0000-4000-8000-000000000104',
+  student: '10000000-0000-4000-8000-000000000105',
+  otherStudent: '10000000-0000-4000-8000-000000000106',
+  otherTeacher: '10000000-0000-4000-8000-000000000107',
+  admin: '10000000-0000-4000-8000-000000000108',
+} as const;
 
 const mockCookies = {
   get: vi.fn(),
@@ -39,28 +49,35 @@ async function cleanup(): Promise<void> {
   await db.delete(scienceClasses);
   await db.delete(sessions);
   await db.delete(accounts);
-  await db.execute(sql`DELETE FROM users WHERE id LIKE ${`${TEST_PREFIX}-%`}`);
+  await db.execute(
+    sql`DELETE FROM users WHERE username LIKE ${`${TEST_PREFIX}-%`}`
+  );
 }
 
 async function seedUser(
   id: string,
+  username: string,
   role: 'TEACHER' | 'STUDENT' | 'ADMIN'
 ): Promise<UserRow> {
   const [u] = await db
     .insert(users)
     .values({
       id,
-      name: id,
-      username: id,
-      displayUsername: id,
-      email: `${id}@example.com`,
+      name: username,
+      username,
+      displayUsername: username,
+      email: `${username}@example.com`,
       role,
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
   return u;
 }
 
-async function seedClass(teacherId: string, name = 'Student Assignments Class'): Promise<ClassRow> {
+async function seedClass(
+  teacherId: string,
+  name = 'Student Assignments Class'
+): Promise<ClassRow> {
   const [cls] = await db
     .insert(scienceClasses)
     .values({
@@ -123,7 +140,10 @@ describe('GET /api/students/[studentId]/assignments (integration)', () => {
     mockCookies.delete.mockReset();
     mockCookies.get.mockReturnValue(undefined);
     await cleanup();
-    await db.insert(schools).values({ id: TEST_SCHOOL_ID, name: 'Test School' }).onConflictDoNothing();
+    await db
+      .insert(schools)
+      .values({ id: TEST_SCHOOL_ID, name: 'Test School' })
+      .onConflictDoNothing();
   });
 
   it('returns 401 when unauthenticated', async () => {
@@ -136,8 +156,16 @@ describe('GET /api/students/[studentId]/assignments (integration)', () => {
   });
 
   it('returns 403 when a student requests another student assignments', async () => {
-    const studentA = await seedUser(`${TEST_PREFIX}-a`, 'STUDENT');
-    const studentB = await seedUser(`${TEST_PREFIX}-b`, 'STUDENT');
+    const studentA = await seedUser(
+      TEST_USER_IDS.studentA,
+      `${TEST_PREFIX}-a`,
+      'STUDENT'
+    );
+    const studentB = await seedUser(
+      TEST_USER_IDS.studentB,
+      `${TEST_PREFIX}-b`,
+      'STUDENT'
+    );
     const session = await createSession(studentA.id);
     mockCookies.get.mockReturnValue({ value: session.token });
 
@@ -150,7 +178,11 @@ describe('GET /api/students/[studentId]/assignments (integration)', () => {
   });
 
   it('returns 200 with an empty array for a student with no enrollments', async () => {
-    const student = await seedUser(`${TEST_PREFIX}-empty`, 'STUDENT');
+    const student = await seedUser(
+      TEST_USER_IDS.emptyStudent,
+      `${TEST_PREFIX}-empty`,
+      'STUDENT'
+    );
     const session = await createSession(student.id);
     mockCookies.get.mockReturnValue({ value: session.token });
 
@@ -163,13 +195,23 @@ describe('GET /api/students/[studentId]/assignments (integration)', () => {
   });
 
   it('returns 200 with an empty array when student is enrolled but class has no assignments', async () => {
-    const teacher = await seedUser(`${TEST_PREFIX}-teacher`, 'TEACHER');
-    const student = await seedUser(`${TEST_PREFIX}-student`, 'STUDENT');
+    const teacher = await seedUser(
+      TEST_USER_IDS.teacher,
+      `${TEST_PREFIX}-teacher`,
+      'TEACHER'
+    );
+    const student = await seedUser(
+      TEST_USER_IDS.student,
+      `${TEST_PREFIX}-student`,
+      'STUDENT'
+    );
     const cls = await seedClass(teacher.id);
     await db
       .insert(scienceClassStudents)
-      .values({ classId: cls.id, studentId: student.id ,
-          schoolId: TEST_SCHOOL_ID,
+      .values({
+        classId: cls.id,
+        studentId: student.id,
+        schoolId: TEST_SCHOOL_ID,
       });
 
     const session = await createSession(student.id);
@@ -184,13 +226,23 @@ describe('GET /api/students/[studentId]/assignments (integration)', () => {
   });
 
   it('returns assignments for the student own classes with expected shape', async () => {
-    const teacher = await seedUser(`${TEST_PREFIX}-teacher`, 'TEACHER');
-    const student = await seedUser(`${TEST_PREFIX}-student`, 'STUDENT');
+    const teacher = await seedUser(
+      TEST_USER_IDS.teacher,
+      `${TEST_PREFIX}-teacher`,
+      'TEACHER'
+    );
+    const student = await seedUser(
+      TEST_USER_IDS.student,
+      `${TEST_PREFIX}-student`,
+      'STUDENT'
+    );
     const cls = await seedClass(teacher.id, 'Physics 101');
     await db
       .insert(scienceClassStudents)
-      .values({ classId: cls.id, studentId: student.id ,
-          schoolId: TEST_SCHOOL_ID,
+      .values({
+        classId: cls.id,
+        studentId: student.id,
+        schoolId: TEST_SCHOOL_ID,
       });
     const lesson = await seedLesson('only', 1);
     const due = new Date('2026-12-01T10:00:00.000Z');
@@ -226,31 +278,55 @@ describe('GET /api/students/[studentId]/assignments (integration)', () => {
   });
 
   it('returns assignments only from classes the student is enrolled in, ordered by assignedAt desc', async () => {
-    const teacher = await seedUser(`${TEST_PREFIX}-teacher`, 'TEACHER');
-    const student = await seedUser(`${TEST_PREFIX}-student`, 'STUDENT');
-    const otherStudent = await seedUser(`${TEST_PREFIX}-other`, 'STUDENT');
+    const teacher = await seedUser(
+      TEST_USER_IDS.teacher,
+      `${TEST_PREFIX}-teacher`,
+      'TEACHER'
+    );
+    const student = await seedUser(
+      TEST_USER_IDS.student,
+      `${TEST_PREFIX}-student`,
+      'STUDENT'
+    );
+    const otherStudent = await seedUser(
+      TEST_USER_IDS.otherStudent,
+      `${TEST_PREFIX}-other`,
+      'STUDENT'
+    );
 
     const enrolledClass = await seedClass(teacher.id, 'Enrolled');
     const otherClass = await seedClass(teacher.id, 'Other');
 
     await db
       .insert(scienceClassStudents)
-      .values({ classId: enrolledClass.id, studentId: student.id ,
-          schoolId: TEST_SCHOOL_ID,
+      .values({
+        classId: enrolledClass.id,
+        studentId: student.id,
+        schoolId: TEST_SCHOOL_ID,
       });
     await db
       .insert(scienceClassStudents)
-      .values({ classId: otherClass.id, studentId: otherStudent.id ,
-          schoolId: TEST_SCHOOL_ID,
+      .values({
+        classId: otherClass.id,
+        studentId: otherStudent.id,
+        schoolId: TEST_SCHOOL_ID,
       });
 
     const lessonA = await seedLesson('A', 1);
     const lessonB = await seedLesson('B', 2);
     const lessonOther = await seedLesson('other', 99);
 
-    const first = await seedAssignment(enrolledClass.id, lessonA.id, teacher.id);
+    const first = await seedAssignment(
+      enrolledClass.id,
+      lessonA.id,
+      teacher.id
+    );
     await new Promise((r) => setTimeout(r, 5));
-    const second = await seedAssignment(enrolledClass.id, lessonB.id, teacher.id);
+    const second = await seedAssignment(
+      enrolledClass.id,
+      lessonB.id,
+      teacher.id
+    );
     // Assignment in a class the student is NOT enrolled in — must not appear.
     await seedAssignment(otherClass.id, lessonOther.id, teacher.id);
 
@@ -271,13 +347,23 @@ describe('GET /api/students/[studentId]/assignments (integration)', () => {
   });
 
   it('returns null dueAt when assignment has no due date', async () => {
-    const teacher = await seedUser(`${TEST_PREFIX}-teacher`, 'TEACHER');
-    const student = await seedUser(`${TEST_PREFIX}-student`, 'STUDENT');
+    const teacher = await seedUser(
+      TEST_USER_IDS.teacher,
+      `${TEST_PREFIX}-teacher`,
+      'TEACHER'
+    );
+    const student = await seedUser(
+      TEST_USER_IDS.student,
+      `${TEST_PREFIX}-student`,
+      'STUDENT'
+    );
     const cls = await seedClass(teacher.id);
     await db
       .insert(scienceClassStudents)
-      .values({ classId: cls.id, studentId: student.id ,
-          schoolId: TEST_SCHOOL_ID,
+      .values({
+        classId: cls.id,
+        studentId: student.id,
+        schoolId: TEST_SCHOOL_ID,
       });
     const lesson = await seedLesson('nd', 1);
     await seedAssignment(cls.id, lesson.id, teacher.id);
@@ -294,14 +380,28 @@ describe('GET /api/students/[studentId]/assignments (integration)', () => {
   });
 
   it('allows a teacher to view any student assignments', async () => {
-    const teacher = await seedUser(`${TEST_PREFIX}-teacher`, 'TEACHER');
-    const otherTeacher = await seedUser(`${TEST_PREFIX}-other-teacher`, 'TEACHER');
-    const student = await seedUser(`${TEST_PREFIX}-student`, 'STUDENT');
+    const teacher = await seedUser(
+      TEST_USER_IDS.teacher,
+      `${TEST_PREFIX}-teacher`,
+      'TEACHER'
+    );
+    const otherTeacher = await seedUser(
+      TEST_USER_IDS.otherTeacher,
+      `${TEST_PREFIX}-other-teacher`,
+      'TEACHER'
+    );
+    const student = await seedUser(
+      TEST_USER_IDS.student,
+      `${TEST_PREFIX}-student`,
+      'STUDENT'
+    );
     const cls = await seedClass(teacher.id);
     await db
       .insert(scienceClassStudents)
-      .values({ classId: cls.id, studentId: student.id ,
-          schoolId: TEST_SCHOOL_ID,
+      .values({
+        classId: cls.id,
+        studentId: student.id,
+        schoolId: TEST_SCHOOL_ID,
       });
     const lesson = await seedLesson('t', 1);
     await seedAssignment(cls.id, lesson.id, teacher.id);
@@ -318,14 +418,28 @@ describe('GET /api/students/[studentId]/assignments (integration)', () => {
   });
 
   it('allows an admin to view any student assignments', async () => {
-    const teacher = await seedUser(`${TEST_PREFIX}-teacher`, 'TEACHER');
-    const admin = await seedUser(`${TEST_PREFIX}-admin`, 'ADMIN');
-    const student = await seedUser(`${TEST_PREFIX}-student`, 'STUDENT');
+    const teacher = await seedUser(
+      TEST_USER_IDS.teacher,
+      `${TEST_PREFIX}-teacher`,
+      'TEACHER'
+    );
+    const admin = await seedUser(
+      TEST_USER_IDS.admin,
+      `${TEST_PREFIX}-admin`,
+      'ADMIN'
+    );
+    const student = await seedUser(
+      TEST_USER_IDS.student,
+      `${TEST_PREFIX}-student`,
+      'STUDENT'
+    );
     const cls = await seedClass(teacher.id);
     await db
       .insert(scienceClassStudents)
-      .values({ classId: cls.id, studentId: student.id ,
-          schoolId: TEST_SCHOOL_ID,
+      .values({
+        classId: cls.id,
+        studentId: student.id,
+        schoolId: TEST_SCHOOL_ID,
       });
     const lesson = await seedLesson('a', 1);
     await seedAssignment(cls.id, lesson.id, teacher.id);

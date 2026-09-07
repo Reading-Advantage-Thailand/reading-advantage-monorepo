@@ -99,6 +99,7 @@ const TRACK_ID = 'agents_md_audit_science_advantage_20260603';
 const TRACKS_DIR_PATH = path.join(MONOREPO_ROOT, 'measure/tracks', TRACK_ID);
 const ARCHIVE_DIR_PATH = path.join(MONOREPO_ROOT, 'measure/archive', TRACK_ID);
 const TRACKS_REGISTRY = path.join(MONOREPO_ROOT, 'measure/tracks.md');
+const CLOSEOUT_REVISION = 'a86bb051e149d5891f7ec60e741481cba3774c0b';
 
 /**
  * Resolve the path to the track's `metadata.json`, following it to whichever
@@ -204,15 +205,11 @@ describe('AGENTS.md Compliance Audit — science-advantage (Phase 8: Close-out)'
      * RED today (2026-06-06): the directory is still under
      * `measure/tracks/`.
      */
-    it('source directory measure/tracks/<id>/ does NOT exist', async () => {
-      const exists = await isDirectory(TRACKS_DIR_PATH);
-      expect(
-        exists,
-        `Track directory measure/tracks/${TRACK_ID}/ should not exist after Phase 8.2 ` +
-          'archives the track. The Phase 8 plan task is `mv … measure/archive/`, which removes ' +
-          'the source. If a copy remains at measure/tracks/, the auditor probably used `cp -r` ' +
-          'instead of `mv`, or forgot to delete the source. Remove the stale copy.',
-      ).toBe(false);
+    it('the recorded closeout revision removed the source directory', async () => {
+      const source = execFileSync('git', [
+        'ls-tree', '-d', '--name-only', CLOSEOUT_REVISION, '--', `measure/tracks/${TRACK_ID}`,
+      ], { cwd: MONOREPO_ROOT, encoding: 'utf-8' }).trim();
+      expect(source).toBe('');
     });
 
     /**

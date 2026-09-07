@@ -48,6 +48,7 @@ async function seedUser(
       displayUsername: id,
       email: `${id}@example.com`,
       role,
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
   return u;

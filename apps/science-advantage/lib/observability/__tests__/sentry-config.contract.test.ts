@@ -50,7 +50,7 @@ describe('FR-1 sentry.client.config.ts contract', () => {
     captureExceptionMock.mockReset();
     captureMessageMock.mockReset();
     process.env.NEXT_PUBLIC_SENTRY_DSN = 'https://public@example.ingest.sentry.io/1';
-    process.env.NODE_ENV = 'test';
+    process.env = { ...process.env, NODE_ENV: 'test' };
   });
 
   afterEach(() => {
@@ -83,7 +83,7 @@ describe('FR-1 sentry.server.config.ts contract', () => {
     captureExceptionMock.mockReset();
     captureMessageMock.mockReset();
     process.env.SENTRY_DSN = 'https://public@example.ingest.sentry.io/2';
-    process.env.NODE_ENV = 'test';
+    process.env = { ...process.env, NODE_ENV: 'test' };
   });
 
   afterEach(() => {

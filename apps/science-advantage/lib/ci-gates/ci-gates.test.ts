@@ -26,22 +26,20 @@
  */
 
 import { spawnSync, type SpawnSyncReturns } from "node:child_process";
+import { resolve } from "node:path";
 import { describe, it, expect } from "vitest";
 import { ROLES, type Role } from "@reading-advantage/auth";
 
 /**
- * Runs a pnpm command in the science-advantage package and returns the
- * captured result. We pin a 9-minute per-gate timeout because `tsc --noEmit`
- * on a 4k-line project takes several minutes; lint is usually <30s.
- *
- * Invokes `corepack pnpm` so the test works both in dev (where pnpm is
- * provisioned via corepack) and in CI (where pnpm is on PATH and corepack
- * forwards transparently).
- * @param args Arguments passed to `pnpm`.
+ * Runs the installed tool for a Science gate.
+ * @param args Gate arguments whose last item selects lint or type checking.
  * @returns The captured spawn result.
  */
 function runGate(args: readonly string[]): SpawnSyncReturns<string> {
-  return spawnSync("corepack", ["pnpm", ...args], {
+  const task = args.at(-1);
+  const script = task === "lint" ? "node_modules/eslint/bin/eslint.js" : "node_modules/typescript/bin/tsc";
+  const toolArgs = task === "lint" ? ["."] : ["--noEmit"];
+  return spawnSync(process.execPath, [resolve(process.cwd(), "../..", script), ...toolArgs], {
     cwd: process.cwd(),
     encoding: "utf8",
     stdio: ["ignore", "pipe", "pipe"],

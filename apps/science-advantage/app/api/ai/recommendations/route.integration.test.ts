@@ -97,6 +97,7 @@ async function seedScenario() {
       displayUsername: teacherId,
       email: `${teacherId}@example.com`,
       role: 'TEACHER',
+      schoolId: TEST_SCHOOL_ID,
     },
     {
       id: studentId,
@@ -106,6 +107,7 @@ async function seedScenario() {
       email: `${studentId}@example.com`,
       role: 'STUDENT',
       gradeLevel: 3,
+      schoolId: TEST_SCHOOL_ID,
     },
   ]);
 
@@ -315,6 +317,7 @@ describe('POST /api/ai/recommendations (integration)', () => {
       displayUsername: outsiderId,
       email: `${outsiderId}@example.com`,
       role: 'STUDENT',
+      schoolId: TEST_SCHOOL_ID,
     });
 
     const session = await createSession(outsiderId);

@@ -30,23 +30,18 @@ describe('Phase 10: Closeout artifacts', () => {
     );
   });
 
-  it('archives the track directory and removes it from active tracks.md', () => {
-    const tracksPath = path.join(repoRoot, 'measure/tracks.md');
-    const tracks = fs.readFileSync(tracksPath, 'utf8');
-    const archivePath = path.join(
+  it('records the rejected closeout as a reopened track', () => {
+    const metadataPath = path.join(
       repoRoot,
-      'measure/archive/observability_stack_20260603/plan.md',
+      'measure/tracks/observability_stack_20260603/metadata.json',
     );
+    const metadata = JSON.parse(fs.readFileSync(metadataPath, 'utf8')) as {
+      status: string;
+      deviation_notes: string;
+    };
 
-    expect(
-      fs.existsSync(archivePath),
-      `expected archived plan to exist at ${archivePath}`,
-    ).toBe(true);
-
-    const activeSection = tracks.split('## Archived Tracks')[0] ?? tracks;
-    expect(
-      activeSection,
-      'expected observability_stack_20260603 to no longer appear in the active section of tracks.md',
-    ).not.toContain('observability_stack_20260603');
+    expect(fs.existsSync(metadataPath)).toBe(true);
+    expect(metadata.status).toBe('reopened');
+    expect(metadata.deviation_notes).toContain('Final-acceptance 2026-06-23: FAIL');
   });
 });

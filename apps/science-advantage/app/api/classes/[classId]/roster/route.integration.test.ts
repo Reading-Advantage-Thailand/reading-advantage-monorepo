@@ -15,6 +15,15 @@ import { createSession } from '@/lib/auth/session';
 
 const TEST_PREFIX = 'roster-itest';
 const TEST_SCHOOL_ID = '00000000-0000-0000-0000-000000000099';
+const USER_IDS = {
+  teacher: '10000000-0000-4000-8000-000000000001',
+  otherTeacher: '10000000-0000-4000-8000-000000000002',
+  admin: '10000000-0000-4000-8000-000000000003',
+  alice: '10000000-0000-4000-8000-000000000004',
+  bob: '10000000-0000-4000-8000-000000000005',
+  outsider: '10000000-0000-4000-8000-000000000006',
+  stranger: '10000000-0000-4000-8000-000000000007',
+} as const;
 
 const mockCookies = {
   get: vi.fn(),
@@ -35,9 +44,11 @@ async function cleanup(): Promise<void> {
   await db.delete(sessions);
   await db.delete(accounts);
   await db.execute(
-    sql`DELETE FROM gamification_profiles WHERE user_id LIKE ${`${TEST_PREFIX}-%`}`
+    sql`DELETE FROM gamification_profiles WHERE user_id IN (
+      SELECT id FROM users WHERE username LIKE ${`${TEST_PREFIX}-%`}
+    )`
   );
-  await db.execute(sql`DELETE FROM users WHERE id LIKE ${`${TEST_PREFIX}-%`}`);
+  await db.execute(sql`DELETE FROM users WHERE username LIKE ${`${TEST_PREFIX}-%`}`);
 }
 
 async function seedUser(
@@ -49,10 +60,11 @@ async function seedUser(
     .values({
       id,
       name: id,
-      username: id,
-      displayUsername: id,
-      email: `${id}@example.com`,
+      username: `${TEST_PREFIX}-${id}`,
+      displayUsername: `${TEST_PREFIX}-${id}`,
+      email: `${TEST_PREFIX}-${id}@example.com`,
       role,
+      schoolId: TEST_SCHOOL_ID,
     })
     .returning();
   return u;
@@ -93,12 +105,12 @@ describe('GET /api/classes/[classId]/roster (integration)', () => {
     mockCookies.get.mockReturnValue(undefined);
     await cleanup();
     await db.insert(schools).values({ id: TEST_SCHOOL_ID, name: 'Test School' }).onConflictDoNothing();
-    teacher = await seedUser(`${TEST_PREFIX}-teacher`, 'TEACHER');
-    otherTeacher = await seedUser(`${TEST_PREFIX}-other-teacher`, 'TEACHER');
-    admin = await seedUser(`${TEST_PREFIX}-admin`, 'ADMIN');
-    studentA = await seedUser(`${TEST_PREFIX}-alice`, 'STUDENT');
-    studentB = await seedUser(`${TEST_PREFIX}-bob`, 'STUDENT');
-    outsider = await seedUser(`${TEST_PREFIX}-outsider`, 'STUDENT');
+    teacher = await seedUser(USER_IDS.teacher, 'TEACHER');
+    otherTeacher = await seedUser(USER_IDS.otherTeacher, 'TEACHER');
+    admin = await seedUser(USER_IDS.admin, 'ADMIN');
+    studentA = await seedUser(USER_IDS.alice, 'STUDENT');
+    studentB = await seedUser(USER_IDS.bob, 'STUDENT');
+    outsider = await seedUser(USER_IDS.outsider, 'STUDENT');
     cls = await seedClass(teacher.id);
     await db
       .insert(scienceClassStudents)
@@ -236,11 +248,12 @@ describe('DELETE /api/classes/[classId]/roster (integration)', () => {
     mockCookies.delete.mockReset();
     mockCookies.get.mockReturnValue(undefined);
     await cleanup();
-    teacher = await seedUser(`${TEST_PREFIX}-teacher`, 'TEACHER');
-    otherTeacher = await seedUser(`${TEST_PREFIX}-other-teacher`, 'TEACHER');
-    admin = await seedUser(`${TEST_PREFIX}-admin`, 'ADMIN');
-    studentA = await seedUser(`${TEST_PREFIX}-alice`, 'STUDENT');
-    studentB = await seedUser(`${TEST_PREFIX}-bob`, 'STUDENT');
+    await db.insert(schools).values({ id: TEST_SCHOOL_ID, name: 'Test School' }).onConflictDoNothing();
+    teacher = await seedUser(USER_IDS.teacher, 'TEACHER');
+    otherTeacher = await seedUser(USER_IDS.otherTeacher, 'TEACHER');
+    admin = await seedUser(USER_IDS.admin, 'ADMIN');
+    studentA = await seedUser(USER_IDS.alice, 'STUDENT');
+    studentB = await seedUser(USER_IDS.bob, 'STUDENT');
     cls = await seedClass(teacher.id);
     await db
       .insert(scienceClassStudents)
@@ -277,7 +290,11 @@ describe('DELETE /api/classes/[classId]/roster (integration)', () => {
     });
     expect(res.status).toBe(400);
     const body = await res.json();
-    expect(body).toEqual({ success: false, error: 'studentId is required' });
+    expect(body).toEqual({
+      success: false,
+      error: 'invalid_input',
+      details: [{ path: 'studentId', message: 'Required' }],
+    });
   });
 
   it('returns 400 when studentId is not a string', async () => {
@@ -338,7 +355,7 @@ describe('DELETE /api/classes/[classId]/roster (integration)', () => {
   it('is a no-op (still 200) when the student is not enrolled', async () => {
     const session = await createSession(teacher.id);
     mockCookies.get.mockReturnValue({ value: session.token });
-    const stranger = await seedUser(`${TEST_PREFIX}-stranger`, 'STUDENT');
+    const stranger = await seedUser(USER_IDS.stranger, 'STUDENT');
     const res = await DELETE(delReq(cls.id, { studentId: stranger.id }), {
       params: Promise.resolve({ classId: cls.id }),
     });

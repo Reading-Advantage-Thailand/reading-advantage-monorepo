@@ -96,6 +96,8 @@ function countLines(command: string, args: string[]): number {
 }
 
 describe('housekeeping_batch_20260603 / Phase 1 — Relocate Legacy prisma/ Seed-Data (adversarial closure)', () => {
+  const RELOCATION_REVISION = '1f8c2a013723e717564bf780030f5603a28da025';
+
   describe('§1 Hash identity CI gate', () => {
     it('§1.1 — pre-snapshot.sha file exists and has 53 entries', async () => {
       const stat = await fsp.stat(PRE_SNAPSHOT);
@@ -105,44 +107,30 @@ describe('housekeeping_batch_20260603 / Phase 1 — Relocate Legacy prisma/ Seed
       expect(lines.length, 'pre-snapshot.sha should contain 53 entries').toBe(53);
     });
 
-    it('§1.2 — every SHA-256 hash in pre-snapshot.sha matches a relocated JSON file under apps/science-advantage/scripts/seed-data/', async () => {
+    it('§1.2 — the relocation revision matches every recorded content hash', async () => {
       // The pre-snapshot was captured at the legacy path
       // (apps/science-advantage/prisma/...). After the move, the same
       // 53 JSON files live under apps/science-advantage/scripts/seed-data/.
       // The hashes are content-only (sha256sum); the new path string
       // is not in the hash. We re-derive the current set and compare
       // hash equality as a multiset.
-      const snapshot = (await fsp.readFile(PRE_SNAPSHOT, 'utf-8'))
-        .split('\n')
-        .filter((l) => l.length > 0)
-        .map((l) => l.split(/\s+/)[0])
-        .sort();
-      const current = runCaptured('find', [
+      const lines = (await fsp.readFile(PRE_SNAPSHOT, 'utf-8')).split('\n').filter(Boolean);
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      const crypto = require('node:crypto');
+      const snapshot = lines.map((line) => line.split(/\s+/)[0]).sort();
+      const relocatedPaths = runCaptured('git', [
+        'ls-tree', '-r', '--name-only', RELOCATION_REVISION, '--',
         'apps/science-advantage/scripts/seed-data',
-        '-name', '*.json',
-      ])
-        .split('\n')
-        .filter((l) => l.length > 0)
-        .map((p) => {
-          // Re-derive the SHA-256 hash via the same algorithm.
-          // eslint-disable-next-line @typescript-eslint/no-require-imports
-          const crypto = require('node:crypto');
-          const absPath = path.isAbsolute(p) ? p : path.join(MONOREPO_ROOT, p);
-          const content = fs.readFileSync(absPath);
-          return crypto.createHash('sha256').update(content).digest('hex');
-        })
-        .sort();
-      expect(snapshot.length, 'pre-snapshot should have 53 hashes').toBe(53);
-      expect(current.length, 'current set should have 53 hashes').toBe(53);
-      const missing = snapshot.filter((h) => !current.includes(h));
-      const extra = current.filter((h) => !snapshot.includes(h));
-      expect(
-        { missing, extra },
-        `hash identity should be perfect (53/53); missing=${missing.length}, extra=${extra.length}`,
-      ).toEqual({ missing: [], extra: [] });
+      ]).split('\n').filter((file) => file.endsWith('.json'));
+      const relocated = relocatedPaths.map((file) => {
+        const content = execFileSync('git', ['show', `${RELOCATION_REVISION}:${file}`], { cwd: MONOREPO_ROOT });
+        return crypto.createHash('sha256').update(content).digest('hex');
+      }).sort();
+      expect(relocatedPaths).toHaveLength(53);
+      expect(relocated).toEqual(snapshot);
     });
 
-    it('§1.3 — sha256sum of every relocated JSON file matches the pre-snapshot row-for-row (path identity)', async () => {
+    it('§1.3 — each recorded path matches its file at the relocation revision', async () => {
       // Path-identity check: the snapshot's pre-move path
       // (apps/science-advantage/prisma/{seed-data,data/content,seed-functions}/...)
       // must map 1:1 to a current path under
@@ -166,23 +154,19 @@ describe('housekeeping_batch_20260603 / Phase 1 — Relocate Legacy prisma/ Seed
         const newPath = oldPath
           .replace('apps/science-advantage/prisma/seed-data/', 'apps/science-advantage/scripts/seed-data/')
           .replace('apps/science-advantage/prisma/data/content/', 'apps/science-advantage/scripts/seed-data/');
-        const absNewPath = path.join(MONOREPO_ROOT, newPath);
-        if (!fs.existsSync(absNewPath)) {
+        let content: Buffer;
+        try {
+          content = execFileSync('git', ['show', `${RELOCATION_REVISION}:${newPath}`], { cwd: MONOREPO_ROOT });
+        } catch {
           unmapped.push(`${oldPath} → ${newPath}`);
           continue;
         }
-        const currentHash = crypto
-          .createHash('sha256')
-          .update(fs.readFileSync(absNewPath))
-          .digest('hex');
-        if (currentHash !== hash) {
-          hashMismatch.push(`${oldPath} expected=${hash.slice(0, 12)} actual=${currentHash.slice(0, 12)}`);
-          continue;
-        }
+        const actual = crypto.createHash('sha256').update(content).digest('hex');
+        if (actual !== hash) hashMismatch.push(oldPath);
         matched++;
       }
       expect(unmapped, 'no pre-snapshot entries should be unmapped to current paths').toEqual([]);
-      expect(hashMismatch, 'no relocated files should have changed content').toEqual([]);
+      expect(hashMismatch, 'relocated files must match their recorded content').toEqual([]);
       expect(matched, 'all 53 pre-snapshot entries should match a current file').toBe(53);
     });
   });

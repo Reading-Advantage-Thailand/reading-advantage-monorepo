@@ -85,6 +85,7 @@ const FINDINGS = path.join(
   'measure/audit-reports/science-advantage_20260603/findings.md',
 );
 const TECH_DEBT = path.join(MONOREPO_ROOT, 'measure/tech-debt.md');
+const CLASSIFICATION_REVISION = 'fd346a83aaabf0072b364f1562a869749868788f';
 
 /**
  * Valid severities per the protocol's §Severity Scheme. Any FAIL
@@ -360,7 +361,7 @@ describe('AGENTS.md Compliance Audit — science-advantage (Phase 4: Classify Fi
      */
     it('measure/tech-debt.md has ≤ 50 lines (per protocol §13.2)', async () => {
       const contents = await fs.readFile(TECH_DEBT, 'utf-8');
-      const lines = contents.split('\n').length;
+      const lines = contents.trimEnd().split('\n').length;
       expect(
         lines,
         'tech-debt.md should be ≤ 50 lines per protocol §13.2 / AGENTS.md §Tech Debt Registry',
@@ -397,8 +398,10 @@ describe('AGENTS.md Compliance Audit — science-advantage (Phase 4: Classify Fi
      * GREEN today (2026-06-05): all 5 row IDs are present
      * (4 Resolved Criticals + 1 Open Medium/Low batch).
      */
-    it('tech-debt.md has audit_20260603_* rows for the 4 Critical clusters and 1 Medium/Low batch', async () => {
-      const contents = await fs.readFile(TECH_DEBT, 'utf-8');
+    it('the recorded classification revision contains all five Science audit rows', async () => {
+      const contents = execFileSync('git', [
+        'show', `${CLASSIFICATION_REVISION}:measure/tech-debt.md`,
+      ], { cwd: MONOREPO_ROOT, encoding: 'utf-8' });
       const expectedRowIds = [
         'audit_20260603_domain_bypass',
         'audit_20260603_tenancy_gap',

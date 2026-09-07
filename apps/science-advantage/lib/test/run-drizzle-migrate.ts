@@ -1,4 +1,6 @@
 import type { SpawnSyncOptions, SpawnSyncReturns } from 'node:child_process';
+import { createRequire } from 'node:module';
+import path from 'node:path';
 
 type SpawnLike = (
   command: string,
@@ -7,9 +9,7 @@ type SpawnLike = (
 ) => Pick<SpawnSyncReturns<Buffer>, 'status' | 'signal'>;
 
 /**
- * Runs `pnpm --filter @reading-advantage/db migrate` against a specific
- * database URL, inheriting stdio so migration output shows up in the
- * vitest console.
+ * Runs the database migration script with the installed Node and tsx runtime.
  *
  * Throws if the migration process exits non-zero or is killed by a signal.
  *
@@ -21,10 +21,13 @@ export function runDrizzleMigrate(params: {
   databaseUrl: string;
 }): void {
   const { spawn, databaseUrl } = params;
+  const require = createRequire(import.meta.url);
+  const tsxLoaderPath = require.resolve('tsx/esm');
+  const migrationScriptPath = path.resolve(process.cwd(), '../../packages/db/scripts/migrate.ts');
 
   const result = spawn(
-    'pnpm',
-    ['--filter', '@reading-advantage/db', 'migrate'],
+    process.execPath,
+    ['--import', tsxLoaderPath, migrationScriptPath],
     {
       stdio: 'inherit',
       env: {

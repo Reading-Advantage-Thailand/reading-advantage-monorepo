@@ -491,7 +491,7 @@ describe(
           .split('\n')
           .filter((l) => /^[0-9a-f]{40} refactor\(science\):/.test(l))
           .map((l) => l.split(' ')[0]);
-        const negativeControl = new Set(NON_TRACK_SHAS);
+        const negativeControl = new Set<string>(NON_TRACK_SHAS);
         const violations: string[] = [];
         for (const sha of refactorShas) {
           if (negativeControl.has(sha)) continue;

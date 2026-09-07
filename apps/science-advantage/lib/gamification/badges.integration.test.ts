@@ -201,6 +201,13 @@ describe('badges (integration)', () => {
     await cleanupFixtures();
     await db.insert(schools).values({ id: TEST_SCHOOL_ID, name: 'Test School' }).onConflictDoNothing();
     await seedUsers();
+    await db.insert(gamificationProfiles).values({
+      userId: STUDENT_ID,
+      xp: 0,
+      level: 1,
+      streak: 0,
+      schoolId: TEST_SCHOOL_ID,
+    });
   });
 
   describe('BADGE_DEFINITIONS', () => {
