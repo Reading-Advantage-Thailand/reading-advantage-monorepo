@@ -38,4 +38,20 @@ describe("architecture enforcement integration wiring", () => {
     expect(ci).not.toContain("architecture:baseline:update");
     expect(doctor).not.toContain("architecture:baseline:update");
   });
+
+  it("loads historical Git evidence with a Node runtime supported by pnpm", async () => {
+    const [ci, packageJsonSource] = await Promise.all([
+      readRepositoryFile(".github/workflows/ci.yml"),
+      readRepositoryFile("package.json"),
+    ]);
+    const packageJson = JSON.parse(packageJsonSource) as { packageManager?: string };
+
+    expect(packageJson.packageManager).toBe("pnpm@11.8.0");
+    expect(ci).toMatch(/uses:\s*actions\/checkout@v4[\s\S]*?fetch-depth:\s*0/u);
+    expect(ci).toContain(
+      "git fetch --no-tags origin refs/notes/commits:refs/notes/commits",
+    );
+    expect(ci).toMatch(/uses:\s*pnpm\/action-setup@v4[\s\S]*?standalone:\s*true/u);
+    expect(ci).toMatch(/uses:\s*actions\/setup-node@v4[\s\S]*?node-version:\s*22/u);
+  });
 });
