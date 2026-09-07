@@ -455,3 +455,11 @@ This section supersedes the earlier pending and failing results.
 
 Final test log: `/tmp/resume-workspace-test-complete.log`.
 Final Science static log: `/tmp/resume-science-static-complete.log`.
+
+## Local commits and cleanup
+
+- The repair work has 28 scoped local commits. Each commit has a Measure note.
+- Five repaired test files also contained existing fixture changes. The commits preserve that setup alongside the reviewed repairs.
+- Existing asset work, other unrelated changes, and the mixed graph remain outside these commits.
+- The task removed its PostgreSQL and PgBouncer containers and its unused network after verification.
+- The Git index is empty after the repair commits. The whitespace check passes.
