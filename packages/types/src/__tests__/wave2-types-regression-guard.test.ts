@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import { readFileSync, readdirSync } from "node:fs";
 import { resolve } from "node:path";
 import { spawnSync } from "node:child_process";
+import { createRequire } from "node:module";
 
 /**
  * Wave 2 Phase 3 — @reading-advantage/types regression guard.
@@ -21,6 +22,12 @@ import { spawnSync } from "node:child_process";
 const TESTS_DIR = __dirname;
 const PACKAGE_ROOT = resolve(TESTS_DIR, "../..");
 const SELF_FILE = "wave2-types-regression-guard.test.ts";
+const packageRequire = createRequire(resolve(PACKAGE_ROOT, "package.json"));
+const VITEST_ENTRY = resolve(
+  packageRequire.resolve("vitest/package.json"),
+  "..",
+  "vitest.mjs",
+);
 
 function listPeerTestFiles(): string[] {
   return readdirSync(TESTS_DIR, { withFileTypes: true })
@@ -39,14 +46,21 @@ interface VitestJsonSummary {
 
 function runPeerSuite(files: string[]): VitestJsonSummary {
   const result = spawnSync(
-    "pnpm",
-    ["exec", "vitest", "run", "--reporter=json", ...files],
+    process.execPath,
+    [VITEST_ENTRY, "run", "--reporter=json", ...files],
     {
       cwd: PACKAGE_ROOT,
       encoding: "utf8",
       env: { ...process.env, CI: "true" },
     },
   );
+  if (result.error || result.signal || result.status !== 0) {
+    throw new Error(
+      `Vitest failed with status ${result.status} and signal ${result.signal}. ` +
+        `error: ${result.error?.message ?? "none"}\n` +
+        `stdout:\n${result.stdout ?? ""}\nstderr:\n${result.stderr ?? ""}`,
+    );
+  }
   const output = result.stdout ?? "";
   const jsonStart = output.indexOf("{");
   if (jsonStart === -1) {
