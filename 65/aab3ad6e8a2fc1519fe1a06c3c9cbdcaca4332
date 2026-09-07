@@ -1,0 +1,11 @@
+Monorepo package review: package-utils
+
+Astra low agents reviewed the findings. Sol medium agents implemented the repairs under the Ponytail Rules.
+The complete workspace test command passed all 65 tasks. The verification record contains check results and limitations.
+
+Files:
+packages/utils/package.json
+packages/utils/src/index.ts
+packages/utils/README.md
+packages/utils/src/__tests__/structured-error.test.ts
+packages/utils/src/structured-error.ts
