@@ -1,0 +1,8 @@
+{
+  "track_id": "architecture_priorities_20260908",
+  "type": "chore",
+  "status": "in_progress",
+  "created_at": "2026-09-08",
+  "description": "Reduce repeated verification, narrow imports, and consolidate shared authentication behavior.",
+  "estimated_tasks": 6
+}
