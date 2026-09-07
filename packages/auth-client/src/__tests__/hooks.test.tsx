@@ -41,6 +41,7 @@ describe("useAuth", () => {
     expect(result.current).toBeDefined();
     expect(result.current.login).toBeTypeOf("function");
     expect(result.current.logout).toBeTypeOf("function");
+    expect(result.current.refresh).toBeTypeOf("function");
   });
 
   it("throws when used outside AuthProvider", () => {
@@ -141,6 +142,185 @@ describe("useAuth", () => {
     expect(result.current.isAuthenticated).toBe(true);
     expect(result.current.user?.role).toBe("TEACHER");
     expect(result.current.isForbidden).toBe(false);
+  });
+});
+
+describe("refresh", () => {
+  it("replaces the client user with the authoritative session user", async () => {
+    vi.spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce({ ok: true, json: () => Promise.resolve({ session: null }) } as Response)
+      .mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve({
+          session: { user: { id: "u1", username: "student", name: "Student", role: "STUDENT", schoolId: "s1", xp: 25, level: 2, cefrLevel: "A1" } },
+        }),
+      } as Response);
+
+    const { result } = renderHook(() => useAuth(), { wrapper });
+    await waitFor(() => expect(result.current.isLoading).toBe(false));
+
+    await act(async () => result.current.refresh());
+
+    expect(result.current.user?.xp).toBe(25);
+    expect(result.current.user?.role).toBe("STUDENT");
+  });
+
+  it("discards a refresh response that arrives after logout", async () => {
+    let resolveRefresh!: (value: Response) => void;
+    const refreshResponse = new Promise<Response>((resolve) => { resolveRefresh = resolve; });
+    vi.spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve({ session: { user: { id: "u1", username: "student", role: "STUDENT" } } }),
+      } as Response)
+      .mockReturnValueOnce(refreshResponse)
+      .mockResolvedValueOnce({ ok: true } as Response);
+
+    const { result } = renderHook(() => useAuth(), { wrapper });
+    await waitFor(() => expect(result.current.user?.id).toBe("u1"));
+
+    let pendingRefresh!: Promise<void>;
+    act(() => { pendingRefresh = result.current.refresh(); });
+    await act(async () => result.current.logout());
+    await act(async () => {
+      resolveRefresh({
+        ok: true,
+        json: () => Promise.resolve({ session: { user: { id: "u1", username: "student", role: "STUDENT" } } }),
+      } as Response);
+      await pendingRefresh;
+    });
+
+    expect(result.current.user).toBeNull();
+    expect(result.current.isAuthenticated).toBe(false);
+  });
+
+  it("ignores a completion refresh that starts while logout is pending", async () => {
+    let resolveLogout!: (value: Response) => void;
+    const logoutResponse = new Promise<Response>((resolve) => { resolveLogout = resolve; });
+    const fetchSpy = vi.spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve({ session: { user: { id: "u1", username: "student", role: "STUDENT" } } }),
+      } as Response)
+      .mockReturnValueOnce(logoutResponse);
+
+    const { result } = renderHook(() => useAuth(), { wrapper });
+    await waitFor(() => expect(result.current.user?.id).toBe("u1"));
+
+    let pendingLogout!: Promise<void>;
+    act(() => { pendingLogout = result.current.logout(); });
+    await act(async () => result.current.refresh());
+
+    expect(result.current.user).toBeNull();
+    expect(fetchSpy).toHaveBeenCalledTimes(2);
+
+    await act(async () => {
+      resolveLogout({ ok: true } as Response);
+      await pendingLogout;
+    });
+  });
+
+  it("discards an older refresh response after a newer refresh", async () => {
+    let resolveOlder!: (value: Response) => void;
+    const olderResponse = new Promise<Response>((resolve) => { resolveOlder = resolve; });
+    vi.spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce({ ok: true, json: () => Promise.resolve({ session: null }) } as Response)
+      .mockReturnValueOnce(olderResponse)
+      .mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve({ session: { user: { id: "u1", username: "student", role: "STUDENT", xp: 50 } } }),
+      } as Response);
+
+    const { result } = renderHook(() => useAuth(), { wrapper });
+    await waitFor(() => expect(result.current.isLoading).toBe(false));
+
+    let olderRefresh!: Promise<void>;
+    act(() => { olderRefresh = result.current.refresh(); });
+    await act(async () => result.current.refresh());
+    await act(async () => {
+      resolveOlder({
+        ok: true,
+        json: () => Promise.resolve({ session: { user: { id: "u1", username: "student", role: "STUDENT", xp: 10 } } }),
+      } as Response);
+      await olderRefresh;
+    });
+
+    expect(result.current.user?.xp).toBe(50);
+  });
+
+  it("clears initial loading when refresh fails before the mount check resolves", async () => {
+    let resolveMount!: (value: Response) => void;
+    const mountResponse = new Promise<Response>((resolve) => { resolveMount = resolve; });
+    vi.spyOn(globalThis, "fetch")
+      .mockReturnValueOnce(mountResponse)
+      .mockRejectedValueOnce(new Error("Network error"));
+
+    const { result } = renderHook(() => useAuth(), { wrapper });
+    await act(async () => {
+      await expect(result.current.refresh()).rejects.toThrow("Network error");
+    });
+
+    expect(result.current.isLoading).toBe(false);
+    expect(result.current.user).toBeNull();
+    expect(result.current.isAuthenticated).toBe(false);
+
+    await act(async () => {
+      resolveMount({
+        ok: true,
+        json: () => Promise.resolve({ session: null }),
+      } as Response);
+      await Promise.resolve();
+    });
+
+    expect(result.current.isLoading).toBe(false);
+  });
+
+  it("keeps a later logout state when an older refresh fails", async () => {
+    let rejectRefresh!: (reason: Error) => void;
+    const refreshResponse = new Promise<Response>((_resolve, reject) => { rejectRefresh = reject; });
+    vi.spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve({ session: { user: { id: "u1", username: "student", role: "STUDENT" } } }),
+      } as Response)
+      .mockReturnValueOnce(refreshResponse)
+      .mockResolvedValueOnce({ ok: true } as Response);
+
+    const { result } = renderHook(() => useAuth(), { wrapper });
+    await waitFor(() => expect(result.current.user?.id).toBe("u1"));
+
+    let pendingRefresh!: Promise<void>;
+    act(() => { pendingRefresh = result.current.refresh(); });
+    await act(async () => result.current.logout());
+    await act(async () => {
+      rejectRefresh(new Error("Network error"));
+      await expect(pendingRefresh).rejects.toThrow("Network error");
+    });
+
+    expect(result.current.user).toBeNull();
+    expect(result.current.isAuthenticated).toBe(false);
+    expect(result.current.isForbidden).toBe(false);
+    expect(result.current.isLoading).toBe(false);
+  });
+});
+
+describe("login generation", () => {
+  it("clears loading when login fails before the mount check resolves", async () => {
+    const pendingSession = new Promise<Response>(() => undefined);
+    vi.spyOn(globalThis, "fetch")
+      .mockReturnValueOnce(pendingSession)
+      .mockResolvedValueOnce({
+        ok: false,
+        json: () => Promise.resolve({ message: "Invalid credentials" }),
+      } as Response);
+
+    const { result } = renderHook(() => useAuth(), { wrapper });
+    await act(async () => {
+      await expect(result.current.login("student", "wrong")).rejects.toThrow("Invalid credentials");
+    });
+
+    expect(result.current.isLoading).toBe(false);
+    expect(result.current.isAuthenticated).toBe(false);
   });
 });
 

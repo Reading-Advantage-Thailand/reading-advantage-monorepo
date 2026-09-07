@@ -35,6 +35,8 @@ export interface AuthState {
 export interface AuthActions {
   login: (username: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
+  /** Reloads the authoritative session from the server. */
+  refresh: () => Promise<void>;
 }
 
 /** Complete shared authentication context value. */
