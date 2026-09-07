@@ -7,13 +7,15 @@
 
 ## Phase 2: Tests and implementation
 
-- [~] Use Sol medium agents to improve verification tasks and prove retained coverage.
-- [~] Use Sol medium agents to narrow Domain imports and verify isolation.
-- [ ] Use Sol medium agents to consolidate shared authentication and justified domain behavior.
+- [x] Use Sol medium agents to improve verification tasks and prove retained coverage. Commit: 3a573ec2f.
+- [x] Narrow Domain imports and verify isolation. Commit: 79865be43.
+- [x] Consolidate shared authentication behavior. Commit: f59c60b9a.
+
+- [x] Isolate generated audit fixtures so tests preserve the active track registry. Commit: 26b16fb59.
 
 ## Phase 3: Verification and records
 
-- [ ] Review changes, run affected checks, update the graph, and commit scoped changes.
+- [x] Review changes, run affected checks, update the graph, and commit scoped changes.
 
 ## Execution constraints
 

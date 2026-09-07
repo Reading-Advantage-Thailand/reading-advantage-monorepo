@@ -4,7 +4,7 @@ This file tracks all major tracks for the project.
 
 ---
 
-- [~] **Track: Architectural Priorities** *Link: [./tracks/architecture_priorities_20260908/](./tracks/architecture_priorities_20260908/)*
+- [x] **Track: Architectural Priorities** *Link: [./tracks/architecture_priorities_20260908/](./tracks/architecture_priorities_20260908/)*
   Reduce repeated verification, narrow Domain imports, and consolidate shared authentication behavior.
 
 ## Current Focus (owner-confirmed 2026-08-10)

@@ -9,6 +9,11 @@ The owner authorized these priorities after the monorepo repair review.
 
 - Separate expensive verification from routine tests where the current suite repeats builds.
 - Keep every existing verification gate reachable and required in CI.
+- Run one shared TypeScript check before the CI gate tests and preserve every diagnostic assertion.
+- Preserve the existing standalone typecheck behavior.
+- Refresh only existing candidate reconciliation fields required by the documented V2 contract.
+- Preserve approved baselines, reviewer records, and the default architecture policy.
+- Keep generated test fixtures outside the active Measure tracks and remove them after each run.
 - Replace broad Domain imports with existing capability exports where practical.
 - Consolidate repeated authentication decisions in existing owning modules.
 - Consolidate a shared domain operation only when the review proves useful duplication.
