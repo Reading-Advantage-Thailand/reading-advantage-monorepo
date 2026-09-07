@@ -1,0 +1,8 @@
+Monorepo package review: package-backend
+
+Astra low agents reviewed the findings. Sol medium agents implemented the repairs under the Ponytail Rules.
+The complete workspace test command passed all 65 tasks. The verification record contains check results and limitations.
+
+Files:
+packages/backend/src/__tests__/package-scaffold.test.ts
+packages/backend/src/jobs/__tests__/durable-job-architecture.red.test.ts
