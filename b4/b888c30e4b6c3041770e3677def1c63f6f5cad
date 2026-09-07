@@ -1,0 +1,13 @@
+Monorepo package review: marketing
+
+Astra low agents reviewed the findings. Sol medium agents implemented the repairs under the Ponytail Rules.
+The complete workspace test command passed all 65 tasks. The verification record contains check results and limitations.
+
+Files:
+apps/marketing/app/__tests__/helpers/testDb.ts
+apps/marketing/app/__tests__/phase-7-i18n-lang.red.test.tsx
+apps/marketing/app/__tests__/phase-w3-ai-adapter.test.ts
+apps/marketing/app/__tests__/project-update-live.test.ts
+apps/marketing/app/__tests__/project-update.test.ts
+apps/marketing/app/__tests__/topic-save-concurrency-live.test.ts
+apps/marketing/app/__tests__/workflow-correctness.test.ts
