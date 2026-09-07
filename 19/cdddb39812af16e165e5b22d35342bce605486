@@ -1,0 +1,14 @@
+Monorepo package review: package-domain
+
+Astra low agents reviewed the findings. Sol medium agents implemented the repairs under the Ponytail Rules.
+The complete workspace test command passed all 65 tasks. The verification record contains check results and limitations.
+
+Files:
+packages/domain/src/__tests__/codecamp-curriculum-assignments.test.ts
+packages/domain/src/__tests__/helpers/testDb.ts
+packages/domain/src/__tests__/mastery-persistence-public-api.test.ts
+packages/domain/src/__tests__/quiz.test.ts
+packages/domain/src/activity/__tests__/activity-drizzle-integration.test.ts
+packages/domain/src/quiz/submit-attempt.ts
+packages/domain/src/sales-mastery.ts
+packages/domain/vitest.config.ts
