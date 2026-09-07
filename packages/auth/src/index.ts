@@ -86,6 +86,7 @@ export { createPostgresRateLimitStore } from "./rate-limit-store.js";
 // Company employee identity configuration (provider-neutral auth boundary)
 export * from "./company-identity/environment.js";
 export * from "./company-identity/client.js";
+export * from "./company-identity/cookies.js";
 
 // Rate Limit Cleanup
 export {

@@ -1,6 +1,7 @@
 import {
   createCompanyIdentityServiceAuthConfig,
   createCompanyOidcClient,
+  readRequestCookie,
   type CompanyOidcIdentity,
 } from "@reading-advantage/auth";
 
@@ -55,16 +56,7 @@ export function getMarketingOidcClient(): ReturnType<typeof createCompanyOidcCli
  * @returns Cookie value or undefined.
  */
 export function readMarketingCookie(request: Request, name: string): string | undefined {
-  const nextCookies = (request as Request & {
-    cookies?: { get: (cookieName: string) => { value: string } | undefined };
-  }).cookies;
-  const nextValue = nextCookies?.get(name)?.value;
-  if (nextValue) return nextValue;
-  for (const part of (request.headers.get("cookie") ?? "").split(";")) {
-    const [cookieName, ...value] = part.trim().split("=");
-    if (cookieName === name) return value.join("=");
-  }
-  return undefined;
+  return readRequestCookie(request, name);
 }
 
 /**

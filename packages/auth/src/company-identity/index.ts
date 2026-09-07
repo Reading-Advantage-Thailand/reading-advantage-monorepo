@@ -10,4 +10,5 @@ export {
   verifyPassword,
 } from "../password.js";
 export * from "./client.js";
+export * from "./cookies.js";
 export * from "./environment.js";
