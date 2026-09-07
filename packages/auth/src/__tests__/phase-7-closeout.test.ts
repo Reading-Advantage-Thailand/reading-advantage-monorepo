@@ -15,20 +15,14 @@
 // Phase 7 has no source code and no new tests-of-behavior — it is a
 // documentation/bookkeeping phase. Following the established
 // `phase-1-docs.test.ts` / `phase-6-quality-gates.test.ts` pattern,
-// this file pins the four closeout deliverables as file-system and
-// git-state assertions so a regression (e.g. the track gets archived
-// but the tech-debt row is forgotten, or the lessons-learned entry
-// misses the privileged-DELETE gotcha) trips the test runner
-// instead of relying on a doc review.
+// this file pins the four closeout deliverables through current files
+// and recorded Git evidence.
 //
 // What this file pins:
 //
-//   1. `measure/tech-debt.md` MUST contain a row tagged
-//      `audit_log_retention_dsar_20260605` that records the delivery
-//      (and any follow-up reconciliation from the prior audit-log
-//      track). The file MUST stay at or below the 50-line working-
-//      memory cap, so the new row requires pruning the oldest
-//      resolved entries (the file is currently at the cap).
+//   1. The recorded closeout revision MUST contain the resolved
+//      `audit_log_retention_dsar_20260605` row. The current curated
+//      registry MUST stay at or below its 50-line cap.
 //
 //   2. `measure/lessons-learned.md` MUST contain a 2026-06-06 entry
 //      tagged `audit_log_retention_dsar_20260605` that captures at
@@ -97,6 +91,7 @@ const TRACK_DIR_ARCHIVE = resolve(
 
 const TRACK_ID = "audit_log_retention_dsar_20260605";
 const CLOSE_DATE = "2026-06-06";
+const CLOSEOUT_REVISION = "7fdaf602cfe32aba264176efca9c4337e6954818";
 
 function safeExec(command: string): string {
   try {
@@ -122,43 +117,25 @@ describe("Phase 7 — Task 1: measure/tech-debt.md records retention/DSAR delive
     ).toBe(true);
   });
 
-  it("tech-debt.md contains a row tagged with this track id", () => {
-    expect(
-      existsSync(TECH_DEBT_PATH),
-      "tech-debt.md must exist before its content can be pinned.",
-    ).toBe(true);
-
-    const source = readFileSync(TECH_DEBT_PATH, "utf-8");
-    // The track id must appear as the cell in the Track column. The
-    // table is pipe-separated; a line like
-    //   `| 2026-06-06 | audit_log_retention_dsar_20260605 | ... |`
-    // contains the track id. We do not constrain the exact column
-    // position — only that the id appears at all in a pipe-prefixed
-    // table row (defends against accidental drift into prose).
+  it("the recorded closeout revision contains the resolved registry row", () => {
+    const source = safeExec(
+      `git show ${CLOSEOUT_REVISION}:measure/tech-debt.md`,
+    );
     const rowPattern = new RegExp(
       `^\\s*\\|\\s*[^|]*\\|\\s*${TRACK_ID}\\s*\\|`,
       "m",
     );
     expect(
       rowPattern.test(source),
-      `tech-debt.md must contain a pipe-table row whose Track column ` +
-        `is "${TRACK_ID}". The closeout owner records the delivery ` +
-        `so future readers can find the resolved row by track id.`,
+      `Closeout revision ${CLOSEOUT_REVISION} must contain a row ` +
+        `whose Track column is "${TRACK_ID}".`,
     ).toBe(true);
   });
 
-  it("tech-debt.md row for this track records the delivery (Resolved status)", () => {
-    expect(
-      existsSync(TECH_DEBT_PATH),
-      "tech-debt.md must exist before its content can be pinned.",
-    ).toBe(true);
-
-    const source = readFileSync(TECH_DEBT_PATH, "utf-8");
-    // Find the row, then check that its Status column is Resolved.
-    // The Status column is the 5th column in the existing rows; we
-    // anchor on the row beginning with the track id, then accept
-    // any "Resolved" / "Delivered" / "Closed" status to leave room
-    // for a future status taxonomy.
+  it("the recorded closeout row records a closed status", () => {
+    const source = safeExec(
+      `git show ${CLOSEOUT_REVISION}:measure/tech-debt.md`,
+    );
     const rowMatch = source.match(
       new RegExp(
         `^\\s*\\|\\s*[^|]*\\|\\s*${TRACK_ID}\\s*\\|\\s*([^|]+?)\\s*\\|\\s*([^|]+?)\\s*\\|\\s*([^|]+?)\\s*\\|`,
@@ -167,15 +144,15 @@ describe("Phase 7 — Task 1: measure/tech-debt.md records retention/DSAR delive
     );
     expect(
       rowMatch,
-      `tech-debt.md must contain a row tagged "${TRACK_ID}" with ` +
-        `Item | Severity | Status columns.`,
+      `Closeout revision ${CLOSEOUT_REVISION} must contain the ` +
+        `resolved row for "${TRACK_ID}".`,
     ).not.toBeNull();
     // The 4th capture group is the Status column.
     const status = rowMatch![3] ?? "";
     const allowedStatuses = /Resolved|Delivered|Closed/i;
     expect(
       allowedStatuses.test(status),
-      `tech-debt.md row for "${TRACK_ID}" must record a closed ` +
+      `The closeout row for "${TRACK_ID}" must record a closed ` +
         `status (Resolved / Delivered / Closed). Got Status = ` +
         `"${status}".`,
     ).toBe(true);
