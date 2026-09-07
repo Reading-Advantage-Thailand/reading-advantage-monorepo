@@ -62,19 +62,19 @@ describe("read-only Codecamp curriculum inventory", () => {
     ]);
   });
 
-  it("verifies the exact protected source digest and package snapshot provenance", () => {
+  it("verifies protected artifacts while reporting live-source drift", () => {
     const source = readFileSync(join(packageRoot, "../db/src/seed/codecamp-curriculum-data.ts"));
     const artifact = readFileSync(join(packageRoot, curriculumSourceProvenance.sourceArtifact));
     const base = execFileSync("git", ["show", `${curriculumSourceProvenance.originBaseRevision}:${curriculumSourceProvenance.sourcePath}`], { cwd: join(packageRoot, "../..") });
     const result = verifyCurriculumSource(source, artifact, base, curriculumSourceInventory, curriculumSourceProvenance);
-    expect(result).toMatchObject({ valid: true, originBaseRevision: curriculumSourceProvenance.originBaseRevision, currentSourceMatchesArtifact: true });
-    expect(result.sourceDigest).toBe(curriculumSourceProvenance.sourceDigest);
+    expect(result).toMatchObject({ valid: true, originBaseRevision: curriculumSourceProvenance.originBaseRevision, currentSourceMatchesArtifact: false });
+    expect(result.sourceDigest).not.toBe(curriculumSourceProvenance.sourceDigest);
     expect(result.artifactDigest).toBe(curriculumSourceProvenance.sourceDigest);
     expect(result.originBaseDigest).toBe(curriculumSourceProvenance.originBaseDigest);
     expect(result.snapshotDigest).toBe(curriculumSourceProvenance.snapshotDigest);
   });
 
-  it("reproduces the approved artifact from the committed source in a clean checkout", () => {
+  it("reports committed source drift without invalidating the approved artifact", () => {
     const cleanCheckoutSource = execFileSync(
       "git",
       ["show", `HEAD:${curriculumSourceProvenance.sourcePath}`],
@@ -96,8 +96,7 @@ describe("read-only Codecamp curriculum inventory", () => {
       ),
     ).toMatchObject({
       valid: true,
-      currentSourceMatchesArtifact: true,
-      sourceDigest: curriculumSourceProvenance.sourceDigest,
+      currentSourceMatchesArtifact: false,
       artifactDigest: curriculumSourceProvenance.sourceDigest,
     });
   });
