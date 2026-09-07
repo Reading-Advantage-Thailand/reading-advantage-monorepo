@@ -1,0 +1,32 @@
+Monorepo package review: package-db
+
+Astra low agents reviewed the findings. Sol medium agents implemented the repairs under the Ponytail Rules.
+The complete workspace test command passed all 65 tasks. The verification record contains check results and limitations.
+
+Files:
+packages/db/drizzle/meta/_journal.json
+packages/db/scripts/migration-ledger-doctor.ts
+packages/db/src/__tests__/drizzle045-phase1-contracts-adversarial.test.ts
+packages/db/src/__tests__/drizzle045-phase2-contracts-adversarial.test.ts
+packages/db/src/__tests__/drizzle045-phase3-integration-gates.test.ts
+packages/db/src/__tests__/env-guards.test.ts
+packages/db/src/__tests__/journal-integrity.test.ts
+packages/db/src/__tests__/main-journal-accounting-guard.adversarial.test.ts
+packages/db/src/__tests__/mastery-persistence-tenant-adversarial.test.ts
+packages/db/src/__tests__/migration-ceiling-adversarial.test.ts
+packages/db/src/__tests__/package-esm-smoke.test.ts
+packages/db/src/__tests__/sales-progress-activity-schema.test.ts
+packages/db/src/company-identity/__tests__/boundary-exports.test.ts
+packages/db/src/company-identity/__tests__/connection-topology.integration.test.ts
+packages/db/src/company-identity/__tests__/constraints.integration.test.ts
+packages/db/src/company-identity/__tests__/local-bootstrap.integration.test.ts
+packages/db/src/company-identity/__tests__/product-isolation.integration.test.ts
+packages/db/src/company-identity/__tests__/rollback.integration.test.ts
+packages/db/src/company-identity/__tests__/schema-metadata.test.ts
+packages/db/src/company-identity/__tests__/test-postgres.ts
+packages/db/src/schema/science.ts
+packages/db/src/sentinels.ts
+packages/db/drizzle/0057_complex_sleeper.sql
+packages/db/drizzle/meta/0057_snapshot.json
+packages/db/src/company-identity/__tests__/sentinel-table-absence.integration.test.ts
+packages/db/src/sentinel-evaluation.ts
