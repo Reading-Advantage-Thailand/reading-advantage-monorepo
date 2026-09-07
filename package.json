@@ -15,6 +15,7 @@
     "lint": "turbo run lint",
     "test": "turbo run test",
     "test:codecamp-cold-start": "node node_modules/vitest/vitest.mjs run apps/codecamp-advantage/lib/__tests__/cold-start-optimization.test.ts apps/codecamp-advantage/lib/__tests__/_helpers/cloudbuild-parser.test.ts apps/codecamp-advantage/lib/__tests__/_helpers/cold-start-sampler.test.ts apps/codecamp-advantage/lib/__tests__/smoke-local-image-script.test.ts",
+    "verify:science": "turbo run verify --filter=science-advantage",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types",
     "db:start": "docker compose up -d",
@@ -22,7 +23,7 @@
     "db:reset": "docker compose down -v && docker compose up -d",
     "config-drift": "pnpm --filter @reading-advantage/config test",
     "prepare": "husky",
-    "validate": "pnpm config-drift && turbo run lint test build"
+    "validate": "pnpm config-drift && turbo run lint test build && pnpm verify:science"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.8.1",

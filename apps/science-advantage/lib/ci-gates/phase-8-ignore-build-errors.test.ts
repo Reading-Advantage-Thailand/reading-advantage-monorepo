@@ -2,9 +2,7 @@
  * Red-phase gate tests for track `ci_typecheck_alignment_20260603` / Phase 8
  * ("Remove `ignoreBuildErrors: true`").
  *
- * Mirrors the Phase 0 / Phase 1 / Phase 3 / Phase 4 / Phase 6 / Phase 7
- * files in style: file-content regression guards plus a verification
- * gate that invokes the same build command CI runs.
+ * The file contains content guards and assertions for the Turbo build log.
  *
  * Background (per `measure/tracks/ci_typecheck_alignment_20260603/spec.md`
  * FR-8 and `test-strategy.md` §1 row P8 / §4 architecture guardrails):
@@ -35,12 +33,9 @@
  *       (or removed). A regression that re-introduces
  *       `ignoreBuildErrors: true` must surface immediately per the §4
  *       guardrail above.
- *   (b) **End-to-end build gate** — `pnpm turbo run build
- *       --filter=science-advantage` exits 0 with the new tsc-clean
- *       code, per `test-strategy.md` §1 P8. With `ignoreBuildErrors:
- *       true` masking the residual tsc errors, the build currently
- *       exits 0; this is a forward-looking smoke test that locks the
- *       build state so the post-flip state does not regress.
+ *   (b) **End-to-end build gate** — the root `pnpm verify:science`
+ *       command requires a successful Science build through Turbo.
+ *       These tests inspect the build log that Turbo creates or restores.
  *
  * Tests in this file:
  *
@@ -58,34 +53,19 @@
  *      removal' annotation` — **red-phase assertion** (fails today;
  *      line 15 still references the prisma_drizzle_science_controllers
  *      track as the rationale for the masking).
- *   5. `pnpm turbo run build --filter=science-advantage completed
- *      (sanity check on shared setup)` — **green-phase guard** (passes
- *      today; the build exits 0 because `ignoreBuildErrors: true`
- *      masks tsc errors. Locks the build state so a future flip of
- *      `ignoreBuildErrors: true → false` cannot silently regress the
- *      build).
- *   6. `pnpm turbo run build --filter=science-advantage exits 0 (end-
- *      to-end gate)` — **green-phase guard** (passes today per §1 P8
- *      build-gate contract; locks the build state).
+ *   5. The required Turbo build produced its task log.
+ *   6. The task log records a real successful Next.js build.
  *
- * Performance note: `pnpm turbo run build --filter=science-advantage`
- * can take several minutes (Next.js production build). To keep the
- * test file under the supervisor role-timeout budget, we run the build
- * once via `beforeAll` and cache the output, then run all assertions
- * against the cached strings. This is the same pattern used in
- * `phase-7-check-types-script.test.ts` (which runs `tsc --noEmit` via
- * `beforeAll`).
+ * Direct Vitest runs inspect existing evidence only.
+ * Use the root `pnpm verify:science` command to enforce the build dependency.
  */
 
 import { readFileSync, existsSync } from "node:fs";
 import { resolve } from "node:path";
-import {
-  spawnSync,
-  type SpawnSyncReturns,
-} from "node:child_process";
 import { beforeAll, describe, it, expect } from "vitest";
 
 const SCIENCE_ADVANTAGE_ROOT = process.cwd();
+const TURBO_BUILD_LOG = resolve(SCIENCE_ADVANTAGE_ROOT, ".turbo", "turbo-build.log");
 
 /**
  * Unique phrases that identify the resolved-error enumeration comment
@@ -114,48 +94,9 @@ const RESOLVED_COHORT_BULLETS = [
 ] as const;
 
 /**
- * Module-scoped cache for the `pnpm turbo run build
- * --filter=science-advantage` spawn result. Populated once by the
- * second describe block's `beforeAll`; read by tests 5 and 6. Sharing
- * the expensive build invocation across tests is the difference
- * between a ~3-min test run and a ~15-min test run. Scoping the
- * beforeAll inside the second describe (rather than at the file
- * level) means `vitest run -t "file-content"` skips the build
- * entirely, so the targeted Red-phase command in `package.json`
- * scripts (`pnpm --filter science-advantage exec vitest run --config
- * vitest.unit.config.ts lib/ci-gates/phase-8-ignore-build-errors.test.ts`)
- * runs in <1s when filtered to the file content tests.
+ * Cached Turbo build output for the assertions below.
  */
-let buildOutput: string;
-let buildStatus: number | null;
-
-/**
- * Runs the installed Turbo build for the Science app and its dependencies.
- * @returns The captured spawn result.
- */
-function runBuildGate(): SpawnSyncReturns<string> {
-  return spawnSync(
-    process.execPath,
-    [
-      resolve(SCIENCE_ADVANTAGE_ROOT, "../..", "node_modules/turbo/bin/turbo"),
-      "run",
-      "build",
-      "--filter=science-advantage",
-      "--env-mode=loose",
-    ],
-    {
-      cwd: SCIENCE_ADVANTAGE_ROOT,
-      env: {
-        ...process.env,
-        CI: "true",
-        pnpm_config_verify_deps_before_run: "warn",
-      },
-      encoding: "utf8",
-      stdio: ["ignore", "pipe", "pipe"],
-      timeout: 540_000,
-    },
-  );
-}
+let buildOutput = "";
 
 describe(
   "Phase 8 remove ignoreBuildErrors (ci_typecheck_alignment_20260603)",
@@ -264,42 +205,25 @@ describe(
     );
 
     describe(
-      "end-to-end Turbo build gate",
+      "Turbo build dependency evidence",
       () => {
         beforeAll(() => {
-          const result = runBuildGate();
-          buildOutput = `${result.stdout ?? ""}\n${result.stderr ?? ""}`;
-          buildStatus = result.status;
-        }, 600_000);
-
-        it("pnpm turbo run build --filter=science-advantage completed (sanity check on shared setup)", () => {
-          // If the build was killed by the spawn timeout (status null)
-          // or threw an unexpected exit code, the assertion below would
-          // silently pass on an empty buildOutput. This guard makes
-          // that failure mode loud.
-          expect(
-            buildStatus,
-            `Expected the installed Turbo build to ` +
-              `exit; got status ${String(buildStatus)}. First 1 KB of ` +
-              `output:\n${buildOutput.slice(0, 1024)}`,
-          ).not.toBeNull();
+          if (existsSync(TURBO_BUILD_LOG)) buildOutput = readFileSync(TURBO_BUILD_LOG, "utf8");
         });
 
-        it("pnpm turbo run build --filter=science-advantage exits 0 (end-to-end gate)", () => {
-          // Per test-strategy.md §1 P8: "Build must pass *before* the
-          // flip is committed (sequence the commits: typecheck-clean
-          // first, then flip, then build)." Currently passes because
-          // `ignoreBuildErrors: true` masks tsc errors during the
-          // build. Locks the build state so a future flip of
-          // `ignoreBuildErrors: true → false` does not regress the
-          // build (the post-flip state will only stay green if Phases
-          // 0–7 left tsc clean, which is their contract).
+        it("finds the Turbo build log produced by the required build task", () => {
           expect(
-            buildStatus,
-            `Expected the installed Turbo build to exit 0. ` +
-              `It exited with code ${String(buildStatus)}. ` +
-              `First 4 KB of output:\n${buildOutput.slice(0, 4096)}`,
-          ).toBe(0);
+            existsSync(TURBO_BUILD_LOG),
+            `Expected ${TURBO_BUILD_LOG}. Turbo must restore this output on a cache hit.`,
+          ).toBe(true);
+        });
+
+        it("records a real successful Next.js production build", () => {
+          expect(
+            buildOutput,
+            `Expected ${TURBO_BUILD_LOG} to contain the real Next.js build command.`,
+          ).toContain("$ next build");
+          expect(buildOutput).toContain("Compiled successfully");
         });
       },
     );

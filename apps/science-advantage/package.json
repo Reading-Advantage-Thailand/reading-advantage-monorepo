@@ -11,6 +11,7 @@
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,md}\"",
     "test": "vitest run",
     "test:watch": "vitest",
+    "verify": "mkdir -p .turbo && pnpm run check-types > .turbo/verify-check-types.log 2>&1 || { cat .turbo/verify-check-types.log; exit 1; }; vitest run --config vitest.verification.config.ts",
     "check-types": "tsc --noEmit",
     "test:integration": "vitest run --config vitest.integration.config.ts",
     "test:e2e": "playwright test",

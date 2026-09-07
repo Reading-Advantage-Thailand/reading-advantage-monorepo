@@ -2,9 +2,9 @@ import { configDefaults, defineConfig } from 'vitest/config';
 import { resolve } from 'path';
 
 /**
- * Default vitest config used by `pnpm test`. Runs ALL tests in the app
- * (unit + integration), so it must be DB-capable. It also loads the unit
- * browser setup for component tests.
+ * Default Vitest config used by `pnpm test`.
+ * It runs application tests and excludes CI verification gates.
+ * Use the root `pnpm verify:science` command for Science CI verification gates.
  *
  * Prefer the more specific configs when you know what scope you want:
  *   - `pnpm test:integration` \u2192 vitest.integration.config.ts (integration only)
@@ -16,7 +16,12 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: ['./vitest.integration.setup.ts', './vitest.unit.setup.ts'],
     globalSetup: ['./vitest.integration.global-setup.ts'],
-    exclude: [...configDefaults.exclude, 'e2e/**', '**/*.e2e.spec.{ts,tsx}'],
+    exclude: [
+      ...configDefaults.exclude,
+      'e2e/**',
+      '**/*.e2e.spec.{ts,tsx}',
+      'lib/ci-gates/**',
+    ],
     // Tests share a single test DB; run sequentially to avoid races.
     pool: 'forks',
     fileParallelism: false,

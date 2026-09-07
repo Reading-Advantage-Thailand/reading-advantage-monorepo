@@ -22,6 +22,10 @@
         "COMPANY_IDENTITY_TEST_POSTGRES_CONTAINER"
       ]
     },
+    "science-advantage#verify": {
+      "dependsOn": ["build"],
+      "cache": false
+    },
     "dev": {
       "cache": false,
       "persistent": true

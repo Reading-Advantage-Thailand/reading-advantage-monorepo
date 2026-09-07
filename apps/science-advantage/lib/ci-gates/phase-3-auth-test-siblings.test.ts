@@ -41,25 +41,12 @@
  *      unchanged but other module errors shift.
  */
 
-import { spawnSync, type SpawnSyncReturns } from "node:child_process";
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { describe, it, expect } from "vitest";
 
 const SCIENCE_ADVANTAGE_ROOT = process.cwd();
-
-/**
- * Runs `tsc --noEmit` inside the science-advantage package and returns the
- * captured result. We pin a 9-minute timeout because `tsc --noEmit` on the
- * science-advantage codebase takes several minutes.
- * @returns The captured spawn result.
- */
-function runTscNoEmit(): SpawnSyncReturns<string> {
-  return spawnSync("npx", ["tsc", "--noEmit"], {
-    cwd: SCIENCE_ADVANTAGE_ROOT,
-    encoding: "utf8",
-    stdio: ["ignore", "pipe", "pipe"],
-    timeout: 540_000,
-  });
-}
+const VERIFY_CHECK_TYPES_LOG = resolve(SCIENCE_ADVANTAGE_ROOT, ".turbo", "verify-check-types.log");
 
 const TSC_TIMEOUT_MS = 600_000;
 
@@ -70,8 +57,7 @@ describe(
       "tsc --noEmit reports 0 TS2307 errors for './rate-limit' (lib/auth/rate-limit.test.ts must resolve)",
       { timeout: TSC_TIMEOUT_MS },
       () => {
-        const result = runTscNoEmit();
-        const output = `${result.stdout ?? ""}\n${result.stderr ?? ""}`;
+        const output = readFileSync(VERIFY_CHECK_TYPES_LOG, "utf8");
         // Match TS2307 "Cannot find module './rate-limit'" lines only.
         // The match is path-anchored on the module specifier so we don't
         // accidentally swallow `lib/auth/rate-limit.test.ts` (the importer)
@@ -104,8 +90,7 @@ describe(
       "tsc --noEmit reports 0 TS2307 errors for './password' (lib/auth/password.test.ts must resolve)",
       { timeout: TSC_TIMEOUT_MS },
       () => {
-        const result = runTscNoEmit();
-        const output = `${result.stdout ?? ""}\n${result.stderr ?? ""}`;
+        const output = readFileSync(VERIFY_CHECK_TYPES_LOG, "utf8");
         // The './password' module is owned by Track 3 (Argon2id). Today
         // `lib/auth/password.test.ts` does not exist, so the import does
         // not even reach tsc — this test passes today and acts as a
@@ -136,8 +121,7 @@ describe(
       "tsc --noEmit reports 0 TS2307 errors for the lib/auth/* missing-module cohort",
       { timeout: TSC_TIMEOUT_MS },
       () => {
-        const result = runTscNoEmit();
-        const output = `${result.stdout ?? ""}\n${result.stderr ?? ""}`;
+        const output = readFileSync(VERIFY_CHECK_TYPES_LOG, "utf8");
         // Cohort gate: any TS2307 inside the lib/auth/* import graph.
         // This is the loose companion to tests 1 + 2 — catches the case
         // where the cohort is unchanged but the specific module names

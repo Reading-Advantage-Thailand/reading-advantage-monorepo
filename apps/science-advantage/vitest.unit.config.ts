@@ -1,4 +1,4 @@
-import { defineConfig } from 'vitest/config';
+import { configDefaults, defineConfig } from 'vitest/config';
 import { resolve } from 'path';
 
 /**
@@ -37,6 +37,7 @@ export default defineConfig({
       'tests/**/*.test.{ts,tsx}',
       '!**/*.integration.test.{ts,tsx}',
     ],
+    exclude: [...configDefaults.exclude, 'lib/ci-gates/**'],
   },
   resolve: {
     alias: {

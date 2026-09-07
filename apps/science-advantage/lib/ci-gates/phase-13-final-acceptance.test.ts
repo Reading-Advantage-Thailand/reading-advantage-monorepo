@@ -188,6 +188,7 @@ import { beforeAll, describe, it, expect } from "vitest";
 
 const SCIENCE_ADVANTAGE_ROOT = process.cwd();
 const WORKSPACE_ROOT = resolve(SCIENCE_ADVANTAGE_ROOT, "..", "..");
+const VERIFY_CHECK_TYPES_LOG = resolve(SCIENCE_ADVANTAGE_ROOT, ".turbo", "verify-check-types.log");
 
 /**
  * Absolute path to the monorepo-root GitHub Actions workflow. The
@@ -252,11 +253,8 @@ const REQUIRED_GATE_COMMANDS = {
 } as const;
 
 /**
- * Module-scoped caches for the 2 fast umbrella gates (tests 1–2).
- * Populated once by each `describe` block's `beforeAll`;
- * read by the assertion inside that describe. Sharing the
- * expensive gate invocations across tests is the difference
- * between a ~60s test run and a ~120s test run.
+ * The check-types gate reads the captured compiler log.
+ * The lint gate keeps its existing subprocess.
  *
  * The `test` and `build` umbrella gates (tests 3–4) are
  * implemented as **smoke tests** rather than full gate
@@ -282,7 +280,6 @@ const REQUIRED_GATE_COMMANDS = {
  * still running).
  */
 let checkTypesOutput: string;
-let checkTypesStatus: number | null;
 let lintOutput: string;
 let lintStatus: number | null;
 let testSmokeOutput: string;
@@ -304,10 +301,7 @@ let testSmokeStatus: number | null;
  * resolution (workspace deps with `transitive: true` are still
  * built before the filtered package's task runs).
  *
- * We pin a 9-minute per-gate timeout because the `next build` /
- * `tsc --noEmit` / `eslint .` / `vitest run` invocations can
- * each take several minutes; the margin absorbs a cold start
- * and slow CI runners.
+ * The lint and nested Vitest subprocesses keep their existing timeouts.
  *
  * @param script The workspace-relative Node tool path.
  * @param args The arguments for the selected Node tool.
@@ -323,7 +317,7 @@ function runNodeTool(script: string, args: readonly string[]): SpawnSyncReturns<
 }
 
 /**
- * Argument lists for the 2 fast umbrella gates. The `test` and
+ * Argument lists for the remaining subprocess gate. The `test` and
  * `build` gates are smoke-tested (file-content + a single fast
  * test-file invocation for test) so the entire test file runs in
  * <60s; the end-to-end versions of those gates are exercised by
@@ -331,7 +325,6 @@ function runNodeTool(script: string, args: readonly string[]): SpawnSyncReturns<
  * and by `phase-8-ignore-build-errors.test.ts` (for build).
  */
 const GATE_ARGS: Readonly<Record<string, readonly string[]>> = {
-  checkTypes: ["--noEmit"],
   lint: ["."],
 } as const;
 
@@ -340,38 +333,26 @@ describe(
   () => {
     describe("umbrella gate 1 — check-types (per test-strategy.md \u00a71 P13)", () => {
       beforeAll(() => {
-        const result = runNodeTool("node_modules/typescript/bin/tsc", GATE_ARGS.checkTypes);
-        checkTypesOutput = `${result.stdout ?? ""}\n${result.stderr ?? ""}`;
-        checkTypesStatus = result.status;
-      }, 600_000);
-
-      it("pnpm --filter science-advantage check-types completed", () => {
-        // If the gate was killed by the spawn timeout (status null)
-        // or threw an unexpected exit code, the assertion below would
-        // silently pass on an empty checkTypesOutput. This guard makes
-        // that failure mode loud.
-        expect(
-          checkTypesStatus,
-          `Expected pnpm --filter science-advantage check-types ` +
-            `to exit; got status ${String(checkTypesStatus)}. First 1 KB of ` +
-            `output:\n${checkTypesOutput.slice(0, 1024)}`,
-        ).not.toBeNull();
+        checkTypesOutput = existsSync(VERIFY_CHECK_TYPES_LOG)
+          ? readFileSync(VERIFY_CHECK_TYPES_LOG, "utf8")
+          : "";
       });
 
-      it("pnpm --filter science-advantage check-types exits 0", () => {
-        // The Phase 13 umbrella gate for `check-types`. Currently
-        // passes (Phase 7 GREEN, commit `7e19895`); this assertion
-        // is the cumulative acceptance contract that Phases 0–7 +
-        // Phase 8 must have left the codebase type-clean. A
-        // regression in any of those phases surfaces here.
+      it("finds the captured tsc --noEmit log", () => {
         expect(
-          checkTypesStatus,
-          `Expected pnpm --filter science-advantage check-types to ` +
-            `exit 0 (the Phase 13 umbrella gate for check-types per ` +
-            `test-strategy.md \u00a71 P13). Currently exits with code ` +
-            `${String(checkTypesStatus)}. First 4 KB of output:\n` +
-            `${checkTypesOutput.slice(0, 4096)}`,
-        ).toBe(0);
+          existsSync(VERIFY_CHECK_TYPES_LOG),
+          `Expected ${VERIFY_CHECK_TYPES_LOG}. Run the root pnpm verify:science command.`,
+        ).toBe(true);
+      });
+
+      it("captured tsc --noEmit output contains no TypeScript errors", () => {
+        const errorLines = checkTypesOutput
+          .split("\n")
+          .filter((line) => /\berror TS\d+:/u.test(line));
+        expect(
+          errorLines,
+          `Expected no TypeScript errors. First 4 KB:\n${checkTypesOutput.slice(0, 4096)}`,
+        ).toHaveLength(0);
       });
     });
 
@@ -434,7 +415,7 @@ describe(
               resolve(WORKSPACE_ROOT, "node_modules/vitest/vitest.mjs"),
               "run",
               "--config",
-              "vitest.unit.config.ts",
+              "vitest.verification.config.ts",
               "lib/ci-gates/phase-12-unused-vars-warnings.test.ts",
             ],
             {

@@ -62,24 +62,17 @@
  *   5. `turbo.json declares a check-types task with dependsOn ["^check-types"]`
  *      — **regression guard** (passes today; locks turbo's task declaration
  *      so a future rename / dependency-drop surfaces immediately).
- *   6. `pnpm --filter science-advantage check-types output contains tsc invocation evidence (not a no-op)`
- *      — **verification gate** (passes today; the script invokes `tsc
- *      --noEmit` which produces `error TS\d+:` lines. The companion to
- *      test 7: even when the gate exits non-zero, the output must look
- *      like a tsc run, not a no-op's empty echo).
- *   7. `pnpm --filter science-advantage check-types exits 0 (end-to-end gate)`
- *      — **red-phase assertion** (fails today; tsc reports 265 errors so
- *      exit code is 2. This is the precise Phase 7 gate — it will flip to
- *      green once Phases 0–6 are all resolved and tsc reports 0 errors).
+ *   6. The captured compiler output contains no TypeScript errors.
+ *   7. The captured compiler output remains type-clean.
  */
 
 import { readFileSync, existsSync } from "node:fs";
 import { resolve } from "node:path";
-import { spawnSync, type SpawnSyncReturns } from "node:child_process";
 import { beforeAll, describe, it, expect } from "vitest";
 
 const SCIENCE_ADVANTAGE_ROOT = process.cwd();
 const WORKSPACE_ROOT = resolve(SCIENCE_ADVANTAGE_ROOT, "..", "..");
+const VERIFY_CHECK_TYPES_LOG = resolve(SCIENCE_ADVANTAGE_ROOT, ".turbo", "verify-check-types.log");
 
 /**
  * The set of well-known no-op shell invocations a contributor might
@@ -102,30 +95,9 @@ const NO_OP_SCRIPT_VALUES = [
 ] as const;
 
 /**
- * Module-scoped cache for the `pnpm --filter science-advantage
- * check-types` spawn result. Populated once by `beforeAll`; read by
- * tests 6 and 7. Sharing the expensive tsc invocation across tests is
- * the difference between a ~30s test run and a ~120s test run.
+ * Compiler output captured before Vitest starts.
  */
 let checkTypesOutput: string;
-let checkTypesStatus: number | null;
-
-/**
- * Runs the installed TypeScript compiler for the Science app.
- * @returns The captured spawn result.
- */
-function runCheckTypesGate(): SpawnSyncReturns<string> {
-  return spawnSync(
-    process.execPath,
-    [resolve(SCIENCE_ADVANTAGE_ROOT, "../..", "node_modules/typescript/bin/tsc"), "--noEmit"],
-    {
-      cwd: SCIENCE_ADVANTAGE_ROOT,
-      encoding: "utf8",
-      stdio: ["ignore", "pipe", "pipe"],
-      timeout: 540_000,
-    },
-  );
-}
 
 /**
  * Filters raw `tsc --noEmit` output to lines that report any
@@ -134,7 +106,7 @@ function runCheckTypesGate(): SpawnSyncReturns<string> {
  * would produce empty output or a single `done` line, neither of
  * which matches this regex. The companion to the file-content guards
  * (tests 1–5) — together they form the Phase 7 "not a no-op" gate.
- * @param output The combined stdout/stderr from the spawned pnpm gate.
+ * @param output The captured compiler output.
  * @returns The matching error lines, in the order tsc reported them.
  */
 function tscErrorLines(output: string): string[] {
@@ -144,10 +116,10 @@ function tscErrorLines(output: string): string[] {
 }
 
 beforeAll(() => {
-  const result = runCheckTypesGate();
-  checkTypesOutput = `${result.stdout ?? ""}\n${result.stderr ?? ""}`;
-  checkTypesStatus = result.status;
-}, 600_000);
+  checkTypesOutput = existsSync(VERIFY_CHECK_TYPES_LOG)
+    ? readFileSync(VERIFY_CHECK_TYPES_LOG, "utf8")
+    : "";
+});
 
 describe(
   "Phase 7 add check-types script (ci_typecheck_alignment_20260603)",
@@ -276,71 +248,24 @@ describe(
       });
     });
 
-    describe("verification gate (run the actual command)", () => {
-      it("pnpm --filter science-advantage check-types completed (sanity check on shared setup)", () => {
-        // If the gate was killed by the spawn timeout (status null) or
-        // threw an unexpected exit code, the assertions below would
-        // silently pass on an empty checkTypesOutput (the regex would
-        // match nothing and the tsc evidence line count would be 0).
-        // This guard makes that failure mode loud.
+    describe("verification gate (read the captured compiler log)", () => {
+      it("finds the captured tsc --noEmit log", () => {
         expect(
-          checkTypesStatus,
-          `Expected pnpm --filter science-advantage check-types to exit; ` +
-            `got status ${String(checkTypesStatus)}. First 1 KB of ` +
-            `output:\n${checkTypesOutput.slice(0, 1024)}`,
-        ).not.toBeNull();
+          existsSync(VERIFY_CHECK_TYPES_LOG),
+          `Expected ${VERIFY_CHECK_TYPES_LOG}. Run the root pnpm verify:science command.`,
+        ).toBe(true);
       });
 
-      it("pnpm --filter science-advantage check-types output contains tsc invocation evidence (not a no-op)", () => {
-        // The "not a no-op" verification: a tsc invocation produces
-        // `error TS\d+:` lines when errors exist, OR exits 0 with no
-        // error output when the codebase is clean. A no-op (`echo done`,
-        // `:`, `true`, `pnpm echo`) would produce empty output or a
-        // single non-tsc line. When tsc exits 0 (clean), the lack of
-        // error lines is expected — the exit-0 gate (test 7) covers
-        // that case. When tsc exits non-zero, we require error lines
-        // to prove tsc actually ran.
+      it("captured tsc --noEmit output contains no TypeScript errors", () => {
         const tscLines = tscErrorLines(checkTypesOutput);
-        if (checkTypesStatus === 0) {
-          // tsc passed cleanly — no error lines expected.
-          // The file-content guards (tests 1–5) verify the script
-          // contains `tsc` and `--noEmit`, so this is not a no-op.
-          expect(checkTypesStatus).toBe(0);
-        } else {
-          expect(
-            tscLines.length,
-            `Expected the 'check-types' gate output to contain tsc ` +
-              `invocation evidence (i.e. 'error TS<num>:' lines), not a ` +
-              `no-op's empty echo. Found ${String(tscLines.length)} tsc ` +
-              `error lines. This is the Phase 7 'not a no-op' assertion ` +
-              `from test-strategy.md §1 P7. First 1 KB of gate output:\n` +
-              `${checkTypesOutput.slice(0, 1024)}`,
-          ).toBeGreaterThan(0);
-        }
+        expect(tscLines, `Unexpected compiler errors:\n${checkTypesOutput}`).toHaveLength(0);
       });
 
-      it("pnpm --filter science-advantage check-types exits 0 (end-to-end gate)", () => {
-        // The precise Phase 7 end-state gate. Currently fails (red
-        // phase) because tsc reports 265 errors post-Phase-6. Will
-        // flip to green once Phases 0–6 are all resolved and tsc
-        // reports 0 errors. Mirrors the existing `check-types exits 0`
-        // assertion in `ci-gates.test.ts` but is colocated with the
-        // Phase 7 file so the per-phase test file is self-contained.
+      it("captured tsc --noEmit output contains no TypeScript errors", () => {
         const tscLines = tscErrorLines(checkTypesOutput);
         expect(
-          checkTypesStatus,
-          `Expected pnpm --filter science-advantage check-types to exit 0 ` +
-            `(the Phase 7 end-state gate from test-strategy.md §1 P7). ` +
-            `Currently exits with code ${String(checkTypesStatus)}; ` +
-            `${String(tscLines.length)} tsc errors reported. First 3 ` +
-            `error lines:\n` +
-            tscLines
-              .slice(0, 3)
-              .map((l) => `  - ${l}`)
-              .join("\n") +
-            `\nThis gate flips to green once Phases 0–6 are all ` +
-            `resolved and tsc reports 0 errors. ` +
-            `Full gate output (truncated to 4 KB):\n${checkTypesOutput.slice(0, 4096)}`,
+          tscLines.length,
+          `Expected no TypeScript errors. First 4 KB:\n${checkTypesOutput.slice(0, 4096)}`,
         ).toBe(0);
       });
     });

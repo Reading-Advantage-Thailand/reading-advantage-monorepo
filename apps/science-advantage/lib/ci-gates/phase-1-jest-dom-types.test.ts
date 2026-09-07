@@ -2,9 +2,7 @@
  * Red-phase gate tests for track `ci_typecheck_alignment_20260603` / Phase 1
  * ("Add `@testing-library/jest-dom/vitest` Types").
  *
- * Mirrors the Phase 0 file `lib/ci-gates/ci-gates.test.ts` in style: spawns the
- * same `tsc --noEmit` / file-read commands the implementer would run by hand
- * and asserts the post-Phase-1 end state.
+ * The tests read the compiler log captured by the root `pnpm verify:science` command.
  *
  * Per `measure/tracks/ci_typecheck_alignment_20260603/test-strategy.md` §0 and
  * §3, the **real** root cause of the matcher errors is the multi-version
@@ -31,10 +29,10 @@
 
 import { readFileSync, existsSync } from "node:fs";
 import { resolve } from "node:path";
-import { spawnSync, type SpawnSyncReturns } from "node:child_process";
 import { describe, it, expect } from "vitest";
 
 const SCIENCE_ADVANTAGE_ROOT = process.cwd();
+const VERIFY_CHECK_TYPES_LOG = resolve(SCIENCE_ADVANTAGE_ROOT, ".turbo", "verify-check-types.log");
 
 /**
  * The set of jest-dom matcher names whose TS errors are the
@@ -55,19 +53,6 @@ const JEST_DOM_MATCHERS = [
   "toHaveFocus",
   "toBeChecked",
 ] as const;
-
-/**
- * Runs the installed TypeScript compiler inside the Science app.
- * @returns The captured spawn result.
- */
-function runTscNoEmit(): SpawnSyncReturns<string> {
-  return spawnSync(process.execPath, [resolve(SCIENCE_ADVANTAGE_ROOT, "../../node_modules/typescript/bin/tsc"), "--noEmit"], {
-    cwd: SCIENCE_ADVANTAGE_ROOT,
-    encoding: "utf8",
-    stdio: ["ignore", "pipe", "pipe"],
-    timeout: 540_000,
-  });
-}
 
 const TSC_TIMEOUT_MS = 600_000;
 
@@ -123,8 +108,7 @@ describe(
         "tsc --noEmit reports 0 TS errors for the jest-dom matcher cohort",
         { timeout: TSC_TIMEOUT_MS },
         () => {
-          const result = runTscNoEmit();
-          const output = `${result.stdout ?? ""}\n${result.stderr ?? ""}`;
+          const output = readFileSync(VERIFY_CHECK_TYPES_LOG, "utf8");
           const matcherPattern = new RegExp(
             `error TS\\d+: .*\\b(${JEST_DOM_MATCHERS.join("|")})\\b`,
             "g",
@@ -150,8 +134,7 @@ describe(
         "tsc --noEmit total error count drops below the Phase 0 baseline (617)",
         { timeout: TSC_TIMEOUT_MS },
         () => {
-          const result = runTscNoEmit();
-          const output = `${result.stdout ?? ""}\n${result.stderr ?? ""}`;
+          const output = readFileSync(VERIFY_CHECK_TYPES_LOG, "utf8");
           const errorLines = output
             .split("\n")
             .filter((line) => /\berror TS\d+:/u.test(line));

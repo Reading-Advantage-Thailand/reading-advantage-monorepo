@@ -2,9 +2,7 @@
  * Red-phase gate tests for track `ci_typecheck_alignment_20260603` / Phase 6
  * ("Misc Cleanup").
  *
- * Mirrors the Phase 1 / Phase 3 / Phase 4 files in style: spawns the same
- * `tsc --noEmit` that CI runs, caches the output once via `beforeAll`, and
- * asserts the post-Phase-6 end state across all 4 files in the cohort.
+ * The tests read the compiler log captured by the root `pnpm verify:science` command.
  *
  * Background (per `measure/tracks/ci_typecheck_alignment_20260603/spec.md`
  * FR-6 and `test-strategy.md` §1 row P6 / §5 P6 notes):
@@ -55,18 +53,11 @@
  * baseline gate (test 7) catch the case where one of the 4 files
  * regresses with a new error of a different type.
  *
- * Performance note: `tsc --noEmit` on the science-advantage codebase
- * takes ~30s. To keep the test file under the supervisor role-timeout
- * budget, we run tsc once via `beforeAll` and cache the output, then
- * run all 7 assertions against the cached string. This is the same
- * pattern used in `phase-4-process-env-cast.test.ts`.
+ * The verify script runs the compiler once before Vitest starts.
  *
  * Tests in this file:
  *
- *   1. `tsc --noEmit completed (sanity check on shared setup)`
- *      — passes as long as tsc exits; guards against silent
- *      "everything looks clean" failures when tsc was killed by a
- *      timeout.
+ *   1. The captured compiler log exists.
  *   2. `tsc --noEmit reports 0 errors in components/features/auth/user-menu.tsx`
  *      — **red-phase assertion** (fails today, 1 TS2322 error at line 89).
  *   3. `tsc --noEmit reports 0 errors in components/features/lesson/__tests__/review-block.test.tsx`
@@ -87,10 +78,12 @@
  *      phases may shift the count before this one runs).
  */
 
-import { spawnSync, type SpawnSyncReturns } from "node:child_process";
+import { existsSync, readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { beforeAll, describe, it, expect } from "vitest";
 
 const SCIENCE_ADVANTAGE_ROOT = process.cwd();
+const VERIFY_CHECK_TYPES_LOG = resolve(SCIENCE_ADVANTAGE_ROOT, ".turbo", "verify-check-types.log");
 
 /**
  * The set of files owned by Phase 6. Each gets a per-file zero-error
@@ -112,27 +105,9 @@ const PHASE_6_FILES = [
 const POST_PHASE_5_BASELINE = 273;
 
 /**
- * Module-scoped cache for the tsc --noEmit output. Populated once by
- * `beforeAll`; read by all 7 tests. Sharing the tsc invocation across
- * tests is the difference between a ~30s test run and a ~210s test run.
+ * Compiler output captured before Vitest starts.
  */
 let tscOutput: string;
-let tscStatus: number | null;
-
-/**
- * Runs `tsc --noEmit` inside the science-advantage package and returns the
- * captured result. We pin a 4-minute timeout because `tsc --noEmit` on the
- * science-advantage codebase takes ~30s; the margin absorbs a cold start.
- * @returns The captured spawn result.
- */
-function runTscNoEmit(): SpawnSyncReturns<string> {
-  return spawnSync("npx", ["tsc", "--noEmit"], {
-    cwd: SCIENCE_ADVANTAGE_ROOT,
-    encoding: "utf8",
-    stdio: ["ignore", "pipe", "pipe"],
-    timeout: 240_000,
-  });
-}
 
 /**
  * Filters raw tsc output to lines that report any `error TS<num>` against
@@ -156,24 +131,19 @@ function tscErrorsInFile(output: string, relativeFile: string): string[] {
 }
 
 beforeAll(() => {
-  const result = runTscNoEmit();
-  tscOutput = `${result.stdout ?? ""}\n${result.stderr ?? ""}`;
-  tscStatus = result.status;
-}, 300_000);
+  tscOutput = existsSync(VERIFY_CHECK_TYPES_LOG)
+    ? readFileSync(VERIFY_CHECK_TYPES_LOG, "utf8")
+    : "";
+});
 
 describe(
   "Phase 6 misc cleanup (ci_typecheck_alignment_20260603)",
   () => {
-    it("tsc --noEmit completed (sanity check on shared setup)", () => {
-      // If tsc was killed by the spawn timeout (status null) or threw an
-      // unexpected exit code, the cohort assertions below would silently
-      // pass on an empty tscOutput (the regex would match nothing and the
-      // cohort length would be 0). This guard makes that failure mode loud.
+    it("finds the captured tsc --noEmit log", () => {
       expect(
-        tscStatus,
-        `Expected tsc --noEmit to exit; got status ${String(tscStatus)}. ` +
-          `First 1 KB of output:\n${tscOutput.slice(0, 1024)}`,
-      ).not.toBeNull();
+        existsSync(VERIFY_CHECK_TYPES_LOG),
+        `Expected ${VERIFY_CHECK_TYPES_LOG}. Run the root pnpm verify:science command.`,
+      ).toBe(true);
     });
 
     it("tsc --noEmit reports 0 errors in components/features/auth/user-menu.tsx", () => {

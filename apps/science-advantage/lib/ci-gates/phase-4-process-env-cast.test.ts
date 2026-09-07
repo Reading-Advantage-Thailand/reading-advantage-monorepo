@@ -30,11 +30,8 @@
  * The end-state gate (per `test-strategy.md` §1 P4): `tsc` reports 0
  * TS2559 errors in those 3 files.
  *
- * Performance note: `tsc --noEmit` on the science-advantage codebase takes
- * ~30s. To keep the test file under the supervisor role-timeout budget,
- * we run tsc once via `beforeAll` and cache the output, then run all 5
- * assertions against the cached string. This is the standard vitest
- * pattern for an expensive setup shared across many tests.
+ * The root `pnpm verify:science` command captures one compiler run.
+ * These tests read that log without starting another compiler.
  *
  * Tests in this file:
  *
@@ -56,10 +53,12 @@
  *      may shift the count before this one runs).
  */
 
-import { spawnSync, type SpawnSyncReturns } from "node:child_process";
+import { existsSync, readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { beforeAll, describe, it, expect } from "vitest";
 
 const SCIENCE_ADVANTAGE_ROOT = process.cwd();
+const VERIFY_CHECK_TYPES_LOG = resolve(SCIENCE_ADVANTAGE_ROOT, ".turbo", "verify-check-types.log");
 
 /**
  * The set of files owned by Phase 4. Each gets a per-file TS2559 assertion
@@ -80,27 +79,9 @@ const PHASE_4_FILES = [
 const POST_PHASE_3_BASELINE = 276;
 
 /**
- * Module-scoped cache for the tsc --noEmit output. Populated once by
- * `beforeAll`; read by all 5 tests. Sharing the tsc invocation across
- * tests is the difference between a 30s test run and a 150s test run.
+ * Compiler output captured before Vitest starts.
  */
 let tscOutput: string;
-let tscStatus: number | null;
-
-/**
- * Runs `tsc --noEmit` inside the science-advantage package and returns the
- * captured result. We pin a 4-minute timeout because `tsc --noEmit` on the
- * science-advantage codebase takes ~30s; the margin absorbs a cold start.
- * @returns The captured spawn result.
- */
-function runTscNoEmit(): SpawnSyncReturns<string> {
-  return spawnSync("npx", ["tsc", "--noEmit"], {
-    cwd: SCIENCE_ADVANTAGE_ROOT,
-    encoding: "utf8",
-    stdio: ["ignore", "pipe", "pipe"],
-    timeout: 240_000,
-  });
-}
 
 /**
  * Filters raw tsc output to lines that match a TS2559 "Type 'X' has no
@@ -124,24 +105,19 @@ function ts2559ErrorsInFile(output: string, relativeFile: string): string[] {
 }
 
 beforeAll(() => {
-  const result = runTscNoEmit();
-  tscOutput = `${result.stdout ?? ""}\n${result.stderr ?? ""}`;
-  tscStatus = result.status;
-}, 300_000);
+  tscOutput = existsSync(VERIFY_CHECK_TYPES_LOG)
+    ? readFileSync(VERIFY_CHECK_TYPES_LOG, "utf8")
+    : "";
+});
 
 describe(
   "Phase 4 process.env cast (ci_typecheck_alignment_20260603)",
   () => {
-    it("tsc --noEmit completed (sanity check on shared setup)", () => {
-      // If tsc was killed by the spawn timeout (status null) or threw an
-      // unexpected exit code, the cohort assertions below would silently
-      // pass on an empty tscOutput (the regex would match nothing and the
-      // cohort length would be 0). This guard makes that failure mode loud.
+    it("finds the captured tsc --noEmit log", () => {
       expect(
-        tscStatus,
-        `Expected tsc --noEmit to exit; got status ${String(tscStatus)}. ` +
-          `First 1 KB of output:\n${tscOutput.slice(0, 1024)}`,
-      ).not.toBeNull();
+        existsSync(VERIFY_CHECK_TYPES_LOG),
+        `Expected ${VERIFY_CHECK_TYPES_LOG}. Run the root pnpm verify:science command.`,
+      ).toBe(true);
     });
 
     it("tsc --noEmit reports 0 TS2559 errors in lib/test/resolve-test-database-url.ts", () => {

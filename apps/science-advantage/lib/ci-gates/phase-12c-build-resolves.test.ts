@@ -66,38 +66,16 @@
  *   3. `apps/science-advantage/package.json scripts.build is wired
  *      to next build` — **regression guard** (passes today; locks
  *      the install state).
- *   4. `pnpm --filter science-advantage build completed` —
- *      **sanity check** (passes once the build actually exits; fails
- *      if the spawn timed out with status null).
- *   5. `pnpm --filter science-advantage build exits 0 (end-to-end
- *      build gate)` — **red-phase assertion** (fails today; the
- *      @node-rs/argon2 Turbopack issue causes exit 1).
- *   6. `pnpm --filter science-advantage build output does not
- *      mention @node-rs/argon2 resolution errors` — **red-phase
- *      assertion** (fails today; the Turbopack error message
- *      names `@node-rs/argon2`).
+ *   4. The required Turbo build produced its task log.
+ *   5. The task log records a real successful Next.js build.
+ *   6. The task log contains no known Argon2 resolution error.
  *
- * Performance note: `pnpm --filter science-advantage build`
- * invokes `next build` directly (not via turbo) per the Phase 12C
- * plan task. Workspace deps (`packages/auth` et al.) are already
- * compiled into `dist/` (verified 2026-06-07). Build wall-clock
- * is ~2-3 minutes on a warm `.next/` cache; we pin a 9-minute
- * (`540_000 ms`) `spawnSync` timeout to absorb cold-cache and slow
- * CI runners. The build is invoked once via the second describe
- * block's `beforeAll` and the result is cached in module-scoped
- * state so all assertions in the same describe share the output.
- * Scoping the `beforeAll` inside the second describe means
- * `vitest run -t "file-content"` skips the build entirely and
- * the targeted Red-phase command in `package.json` runs the
- * file-content tests in <1s.
+ * Direct Vitest runs inspect existing evidence only.
+ * Use the root `pnpm verify:science` command to enforce the build dependency.
  */
 
 import { readFileSync, existsSync } from "node:fs";
 import { resolve } from "node:path";
-import {
-  spawnSync,
-  type SpawnSyncReturns,
-} from "node:child_process";
 import { beforeAll, describe, it, expect } from "vitest";
 
 const SCIENCE_ADVANTAGE_ROOT = process.cwd();
@@ -106,6 +84,7 @@ const MONOREPO_ROOT = resolve(SCIENCE_ADVANTAGE_ROOT, "..", "..");
 const PACKAGES_DIR = resolve(MONOREPO_ROOT, "packages");
 const APP_PACKAGE_JSON = resolve(APPS_DIR, "package.json");
 const AUTH_PACKAGE_JSON = resolve(PACKAGES_DIR, "auth", "package.json");
+const TURBO_BUILD_LOG = resolve(SCIENCE_ADVANTAGE_ROOT, ".turbo", "turbo-build.log");
 
 /**
  * Substrings that identify the @node-rs/argon2 Turbopack / module-
@@ -152,37 +131,9 @@ function readAuthPackageJson(): Record<string, unknown> {
 }
 
 /**
- * Module-scoped cache for the installed Next.js build result.
- * The second describe block populates the cache once.
- * block's `beforeAll`; read by tests 4–6. Sharing the expensive
- * build invocation across tests is the difference between a
- * ~3-min test run and a ~15-min test run. Scoping the beforeAll
- * inside the second describe (rather than at the file level)
- * means `vitest run -t "file-content"` skips the build entirely
- * and the file-content-targeted command runs in <1s.
+ * Cached Turbo build output for the assertions below.
  */
-let buildOutput: string;
-let buildStatus: number | null;
-
-/**
- * Runs the installed Next.js build for the Science app.
- *
- * The direct Next.js command provides the app build required by Phase 12C.
- * Workspace dependencies already exist in `packages/<name>/dist`.
- * @returns The captured spawn result.
- */
-function runBuildGate(): SpawnSyncReturns<string> {
-  return spawnSync(
-    process.execPath,
-    [resolve(MONOREPO_ROOT, "node_modules/next/dist/bin/next"), "build"],
-    {
-      cwd: SCIENCE_ADVANTAGE_ROOT,
-      encoding: "utf8",
-      stdio: ["ignore", "pipe", "pipe"],
-      timeout: 540_000,
-    },
-  );
-}
+let buildOutput = "";
 
 describe(
   "Phase 12C resolve science-advantage production build (ci_typecheck_alignment_20260603)",
@@ -286,56 +237,30 @@ describe(
     );
 
     describe(
-      "end-to-end build gate (red-phase: pnpm --filter science-advantage build exits non-zero today because of @node-rs/argon2 Turbopack issue; flips green once @node-rs/argon2 is added to app dependencies and pnpm install re-runs)",
+      "Turbo build dependency evidence",
       () => {
         beforeAll(() => {
-          const result = runBuildGate();
-          buildOutput = `${result.stdout ?? ""}\n${result.stderr ?? ""}`;
-          buildStatus = result.status;
-        }, 600_000);
-
-        it("pnpm --filter science-advantage build completed (sanity check on shared setup)", () => {
-          // If the build was killed by the spawn timeout (status null)
-          // or threw an unexpected exit code, the assertion below would
-          // silently pass on an empty buildOutput. This guard makes
-          // that failure mode loud.
-          expect(
-            buildStatus,
-            `Expected pnpm --filter science-advantage build to exit; ` +
-              `got status ${String(buildStatus)}. First 1 KB of output:\n` +
-              `${buildOutput.slice(0, 1024)}`,
-          ).not.toBeNull();
+          if (existsSync(TURBO_BUILD_LOG)) buildOutput = readFileSync(TURBO_BUILD_LOG, "utf8");
         });
 
-        it("pnpm --filter science-advantage build exits 0 (end-to-end build gate)", () => {
-          // Per the Phase 12C plan task: the end-state contract is
-          // `pnpm --filter science-advantage build` exits 0. Currently
-          // exits non-zero because @node-rs/argon2 cannot be resolved
-          // by Turbopack from the app's bundling graph. The fix (add
-          // @node-rs/argon2 to app dependencies at the same semver
-          // as @reading-advantage/auth) makes the build resolve
-          // cleanly. Locks the build state so a future contributor
-          // who re-introduces a Turbopack resolution failure
-          // surfaces here.
+        it("finds the Turbo build log produced by the required build task", () => {
           expect(
-            buildStatus,
-            `Expected pnpm --filter science-advantage build to exit 0 (the Phase 12C end-state ` +
-              `contract from plan.md:608-639 and spec AC-16). Currently exits with code ` +
-              `${String(buildStatus)}. First 4 KB of output:\n${buildOutput.slice(0, 4096)}`,
-          ).toBe(0);
+            existsSync(TURBO_BUILD_LOG),
+            `Expected ${TURBO_BUILD_LOG}. Turbo must restore this output on a cache hit.`,
+          ).toBe(true);
+        });
+
+        it("records a real successful Next.js production build", () => {
+          expect(
+            buildOutput,
+            `Expected ${TURBO_BUILD_LOG} to contain the real Next.js build command.`,
+          ).toContain("$ next build");
+          expect(buildOutput).toContain("Compiled successfully");
         });
 
         it("pnpm --filter science-advantage build output does not mention @node-rs/argon2 resolution errors (pins Red-phase failure to the @node-rs/argon2 root cause)", () => {
-          // The Red-phase failure surfaces a Turbopack error that
-          // names @node-rs/argon2. Once the fix lands (app declares
-          // the dep), the error disappears. This assertion locks the
-          // end-state contract: a future build that fails for ANY
-          // other reason (e.g. a regression in the auth package, a
-          // schema change) is still caught by test 5 (exits 0) but
-          // this test specifically pins the @node-rs/argon2
-          // resolution error as the Red-phase failure mode so a
-          // future contributor can confirm they fixed the right
-          // thing.
+          // The Turbo dependency blocks verification after any build failure.
+          // This assertion also guards the known Argon2 failure signature.
           const offendingFragments = ARGON2_BUILD_ERROR_FRAGMENTS.filter(
             (fragment) => buildOutput.includes(fragment),
           );
