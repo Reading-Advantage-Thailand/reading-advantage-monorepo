@@ -100,6 +100,7 @@ const TRACK_DIR_ARCHIVE = join(
 
 const TRACK_ID = "codecamp_review_ai_consolidation_20260605";
 const CLOSE_DATE = "2026-06-12";
+const CLOSEOUT_COMMIT = "7c9bef80c513a1a80b12e020b963f592045c8884";
 const RESOLVING_COMMIT = "3dc3167a";
 
 function safeExec(command: string): string {
@@ -446,69 +447,44 @@ describe("Phase 7 — Task 3: tracks.md updated + track dir moved to measure/arc
 // ---------------------------------------------------------------------------
 
 describe("Phase 7 — Task 4: git notes attached to the closeout (dir-move) commit", () => {
-  it("the latest commit touching the track dir has a git notes note", () => {
-    // The dir-move commit (`git mv measure/tracks/<id>/* measure/archive/<id>/*`
-    // or equivalent) is the latest commit touching either path. The
-    // closeout task attaches a `git notes add` note to that commit
-    // summarizing the track. The note is what `git log --notes` and
-    // `git notes show <sha>` will print for a future reader.
-    //
-    // Note: `-n 1` must come BEFORE `--`; after `--` git interprets
-    // it as part of the pathspec list and returns every matching
-    // commit instead of the latest one.
-    const latestTouching = safeExec(
-      `git log -n 1 --format=%H -- ${shellQuote(`measure/tracks/${TRACK_ID}/`)} ${shellQuote(`measure/archive/${TRACK_ID}/`)}`,
-    );
+  it("the archive move commit has a git notes note", () => {
+    const closeoutCommit = safeExec(`git rev-parse ${CLOSEOUT_COMMIT}`);
     expect(
-      latestTouching.length > 0,
-      `Expected at least one commit to have touched the track dir. ` +
-        "This should be the closeout (dir-move) commit.",
-    ).toBe(true);
+      closeoutCommit,
+      "The recorded closeout commit must resolve from local Git history.",
+    ).toBe(CLOSEOUT_COMMIT);
+    expect(
+      safeExec(
+        `git diff-tree --no-commit-id --name-status -r ${closeoutCommit}`,
+      ),
+      "The recorded closeout commit must add the archived track path.",
+    ).toContain(`A\tmeasure/archive/${TRACK_ID}/`);
 
-    // `git notes show <sha>` exits non-zero with no output when no
-    // note is attached; safeExec swallows that into "".
-    const note = safeExec(`git notes show ${latestTouching}`);
+    const note = safeExec(`git notes show ${closeoutCommit}`);
     expect(
       note.length > 0,
-      `The latest commit touching the track dir (${latestTouching}) ` +
-        "has no `git notes` note attached. The Phase 7 task #4 " +
-        "requires `git notes add -m \"...\" <sha>` summarizing the " +
-        "track — a future reader reviewing the closeout will see no " +
-        "summary without it.",
+      `The archive move commit (${closeoutCommit}) has no local git note.`,
     ).toBe(true);
   });
 
   it("the git notes note mentions this track id by name", () => {
-    const latestTouching = safeExec(
-      `git log -n 1 --format=%H -- ${shellQuote(`measure/tracks/${TRACK_ID}/`)} ${shellQuote(`measure/archive/${TRACK_ID}/`)}`,
-    );
-    expect(latestTouching.length > 0).toBe(true);
-
-    const note = safeExec(`git notes show ${latestTouching}`);
+    const note = safeExec(`git notes show ${CLOSEOUT_COMMIT}`);
     expect(note.length > 0).toBe(true);
 
     expect(
       note.includes(TRACK_ID),
-      `The git notes note on ${latestTouching} must mention the ` +
+      `The git notes note on ${CLOSEOUT_COMMIT} must mention the ` +
         `track id "${TRACK_ID}" so it is searchable by name. ` +
         `Got note: ${JSON.stringify(note.slice(0, 200))}`,
     ).toBe(true);
   });
 
   it("the git notes note references the resolving commit (3dc3167a)", () => {
-    // The dir-move commit is bookkeeping, not the resolving commit.
-    // The git notes summary is the right place to cite the
-    // resolving commits so a future reviewer sees the closure
-    // evidence at a glance.
-    const latestTouching = safeExec(
-      `git log -n 1 --format=%H -- ${shellQuote(`measure/tracks/${TRACK_ID}/`)} ${shellQuote(`measure/archive/${TRACK_ID}/`)}`,
-    );
-    expect(latestTouching.length > 0).toBe(true);
-    const note = safeExec(`git notes show ${latestTouching}`);
+    const note = safeExec(`git notes show ${CLOSEOUT_COMMIT}`);
     expect(note.length > 0).toBe(true);
     expect(
       note.includes(RESOLVING_COMMIT),
-      `The git notes note on the closeout commit (${latestTouching}) ` +
+      `The git notes note on the closeout commit (${CLOSEOUT_COMMIT}) ` +
         `must reference the Phase 5 Green resolving commit ` +
         `'${RESOLVING_COMMIT}' (the actual deletion of the duplicate ` +
         "call sites — the closure of the tech-debt row). Got note: " +

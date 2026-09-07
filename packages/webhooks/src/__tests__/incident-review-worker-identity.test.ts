@@ -61,6 +61,8 @@ describe("incident repair — worker review identity", () => {
       repoName: "reading-advantage",
       pullNumber: 2,
       status: "claimed",
+      claimedBy: "worker-identity",
+      deliveryId: "delivery-identity",
       attempts: 0,
       maxAttempts: 5,
       payloadJson: {},
@@ -76,6 +78,7 @@ describe("incident repair — worker review identity", () => {
       }),
       postComment: vi.fn().mockResolvedValue(undefined),
       resolveRollout: activeRollout,
+      isCurrentClaim: vi.fn().mockResolvedValue(true),
     });
 
     const reviewInput = mocks.reviewExercise.mock.calls[0]?.[0] as Record<string, unknown>;

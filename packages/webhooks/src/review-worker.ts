@@ -34,6 +34,7 @@ import { eq, and, isNull } from "drizzle-orm";
 import { reviewJobs } from "@reading-advantage/db";
 import type { DB } from "@reading-advantage/db";
 import { createTenantDB } from "@reading-advantage/domain";
+import * as codecampDomain from "@reading-advantage/domain/codecamp";
 import { getAIClient } from "@reading-advantage/ai";
 
 /**
@@ -704,10 +705,7 @@ export async function processJob(
   }
 
   const prInfo = { owner: job.repoOwner, repo: job.repoName, pullNumber: job.pullNumber };
-  // Lazy-load the domain primitives so test files that mock
-  // `@reading-advantage/domain/codecamp` resolve cleanly at the call
-  // site rather than at module-load time.
-  const domain = await import("@reading-advantage/domain/codecamp");
+  const domain = codecampDomain;
   const rollout = (deps.resolveRollout ?? domain.resolvePrEvaluationRuntimeRollout)();
   if (!rollout.runModel) return true;
   const shouldPublishFeedback = rollout.mayPublishFeedback && (
