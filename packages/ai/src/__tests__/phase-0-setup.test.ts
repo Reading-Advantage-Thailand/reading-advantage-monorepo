@@ -1,16 +1,19 @@
 import { describe, expect, it } from "vitest";
-import { exec as execCb } from "node:child_process";
+import { execFile as execFileCb } from "node:child_process";
 import { promisify } from "node:util";
 import { readFileSync, existsSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { createRequire } from "node:module";
+import { parse } from "yaml";
 
-const exec = promisify(execCb);
+const execFile = promisify(execFileCb);
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const PKG_ROOT = resolve(__dirname, "..", "..");
 const REPO_ROOT = resolve(PKG_ROOT, "..", "..");
+const packageRequire = createRequire(resolve(PKG_ROOT, "package.json"));
 
 function readJson(path: string): Record<string, unknown> {
   return JSON.parse(readFileSync(path, "utf8")) as Record<string, unknown>;
@@ -61,7 +64,11 @@ describe("Phase 0: Setup invariants for @reading-advantage/ai", () => {
     it("packages/ai/package.json pins zod to the monorepo-wide version", () => {
       const pkg = readJson(resolve(PKG_ROOT, "package.json"));
       const deps = (pkg.dependencies ?? {}) as Record<string, string>;
-      expect(deps.zod).toMatch(/^\^?3\./);
+      const workspace = parse(readText(resolve(REPO_ROOT, "pnpm-workspace.yaml"))) as {
+        catalog?: Record<string, string>;
+      };
+      expect(workspace.catalog?.zod).toMatch(/^\^?3\./);
+      expect(deps.zod).toBe("catalog:");
     });
   });
 
@@ -71,14 +78,10 @@ describe("Phase 0: Setup invariants for @reading-advantage/ai", () => {
       expect(yaml).toMatch(/packages\/\*/);
     });
 
-    it("packages/ai/node_modules is populated (pnpm install ran for this package)", () => {
-      // Phase 0 task 3 requires the workspace to be installed end-to-end.
-      // A populated local node_modules is the simplest cross-platform proof
-      // pnpm has linked the package into the workspace.
-      const localNm = resolve(PKG_ROOT, "node_modules");
-      expect(existsSync(localNm)).toBe(true);
-      expect(existsSync(resolve(localNm, "vitest"))).toBe(true);
-      expect(existsSync(resolve(localNm, "zod"))).toBe(true);
+    it("resolves package dependencies from the package context", () => {
+      expect(existsSync(packageRequire.resolve("vitest/package.json"))).toBe(true);
+      expect(existsSync(packageRequire.resolve("yaml"))).toBe(true);
+      expect(existsSync(packageRequire.resolve("zod"))).toBe(true);
     });
   });
 
@@ -96,7 +99,8 @@ describe("Phase 0: Setup invariants for @reading-advantage/ai", () => {
       let exitCode = 0;
       let stderr = "";
       try {
-        const result = await exec("./node_modules/.bin/tsc --noEmit", {
+        const compiler = packageRequire.resolve("typescript/bin/tsc");
+        const result = await execFile(process.execPath, [compiler, "--noEmit"], {
           cwd: PKG_ROOT,
           encoding: "utf8",
         });

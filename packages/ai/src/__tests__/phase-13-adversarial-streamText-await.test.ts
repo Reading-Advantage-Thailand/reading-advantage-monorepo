@@ -74,6 +74,20 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const REPO_ROOT = join(__dirname, "../../../..");
 
+function findUnawaitedStreamTextCalls(source: string): string[] {
+  const violations: string[] = [];
+  for (const [index, line] of source.split("\n").entries()) {
+    if (/^\s*(\/\/|\*|\/\*)/.test(line)) continue;
+    if (
+      /\bstreamText\s*\(/.test(line) &&
+      !/\bawait\s+(?:[\w$]+\s*\.\s*)*streamText\s*\(/.test(line)
+    ) {
+      violations.push(`  L${index + 1}: ${line.trim()}`);
+    }
+  }
+  return violations;
+}
+
 beforeEach(() => {
   // no-op; the contract tests in `phase-stream-text-contract.test.ts`
   // clear their own mocks.
@@ -128,6 +142,16 @@ describe("Adversarial — streamText return-type contract (regression net)", () 
 });
 
 describe("Adversarial — production route handlers await streamText (apps/**)", () => {
+  it("accepts awaited direct and member streamText calls", () => {
+    expect(findUnawaitedStreamTextCalls("await streamText({});")).toEqual([]);
+    expect(findUnawaitedStreamTextCalls("await tutorClient.streamText({});")).toEqual([]);
+  });
+
+  it("rejects unawaited direct and member streamText calls", () => {
+    expect(findUnawaitedStreamTextCalls("streamText({});")).toHaveLength(1);
+    expect(findUnawaitedStreamTextCalls("tutorClient.streamText({});")).toHaveLength(1);
+  });
+
   // The Phase 3 contract harness uses `await provider.streamText(...)`
   // in every assertion. It cannot catch a regression where the
   // consumer route handler forgets to await. The two production
@@ -165,23 +189,13 @@ describe("Adversarial — production route handlers await streamText (apps/**)",
     it(`${label} awaits streamText(...) before consuming the result (per AC #6)`, () => {
       const abs = join(REPO_ROOT, file);
       const source = readFileSync(abs, "utf8");
-      // The check: any `streamText(` call site must be immediately
-      // preceded by `await ` (with optional leading whitespace) on
+      // The check requires `await` before direct or member calls on
       // the same line. A `const result = streamText(` or
       // `const { textStream } = streamText(` without `await` trips
       // the bug captured in this file's docstring.
       // Allow `const result = await streamText(`, `const { textStream } = await streamText(`,
       // `return await streamText(`, etc.
-      const lines = source.split("\n");
-      const violations: string[] = [];
-      for (let i = 0; i < lines.length; i++) {
-        const line = lines[i];
-        // Skip comment lines.
-        if (/^\s*(\/\/|\*|\/\*)/.test(line)) continue;
-        if (/\bstreamText\s*\(/.test(line) && !/\bawait\s+streamText\s*\(/.test(line)) {
-          violations.push(`  L${i + 1}: ${line.trim()}`);
-        }
-      }
+      const violations = findUnawaitedStreamTextCalls(source);
       expect(
         violations,
         `${file} contains unawaited streamText(...) call sites. ` +

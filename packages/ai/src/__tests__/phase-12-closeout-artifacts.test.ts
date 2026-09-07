@@ -86,7 +86,7 @@ const __dirname = dirname(__filename);
 // up 3 → repo root.
 const REPO_ROOT = join(__dirname, "../../../..");
 
-const TRACK_DIR = join(REPO_ROOT, "measure/tracks/ai_sdk_major_migration");
+const TRACK_DIR = join(REPO_ROOT, "measure/archive/ai_sdk_major_migration");
 const ARTIFACTS_DIR = join(TRACK_DIR, "artifacts");
 const GATE_RESULT_PATH = join(ARTIFACTS_DIR, "gate-result.json");
 const OUTDATED_PATH = join(ARTIFACTS_DIR, "outdated.json");

@@ -36,6 +36,7 @@ import { describe, expect, it } from "vitest";
 import { readFileSync, existsSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { parse } from "yaml";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -76,6 +77,20 @@ const AFFECTED_MANIFESTS: ReadonlyArray<{ label: string; path: string }> = [
 
 type DepsBlock = { dependencies?: Record<string, string>; devDependencies?: Record<string, string> };
 
+type WorkspaceConfig = {
+  catalog?: Record<string, string>;
+  catalogs?: Record<string, Record<string, string>>;
+};
+
+type Lockfile = {
+  packages?: Record<string, { peerDependencies?: Record<string, string> }>;
+  importers?: Record<string, { dependencies?: Record<string, { version?: string }> }>;
+};
+
+const WORKSPACE_CONFIG = parse(
+  readFileSync(join(REPO_ROOT, "pnpm-workspace.yaml"), "utf8"),
+) as WorkspaceConfig;
+
 function readManifest(relPath: string): DepsBlock {
   const abs = join(REPO_ROOT, relPath);
   if (!existsSync(abs)) {
@@ -90,6 +105,17 @@ function readManifest(relPath: string): DepsBlock {
 
 function mergedDeps(manifest: DepsBlock): Record<string, string> {
   return { ...(manifest.dependencies ?? {}), ...(manifest.devDependencies ?? {}) };
+}
+
+function resolveCatalogRange(packageName: string, range: string): string {
+  if (!range.startsWith("catalog:")) return range;
+  const catalogName = range.slice("catalog:".length);
+  const catalog = catalogName
+    ? WORKSPACE_CONFIG.catalogs?.[catalogName]
+    : WORKSPACE_CONFIG.catalog;
+  const resolved = catalog?.[packageName];
+  if (!resolved) throw new Error(`No catalog entry resolves ${packageName} from ${range}.`);
+  return resolved;
 }
 
 /** True if the range is satisfied by an installed version of `major.X`. */
@@ -128,7 +154,7 @@ describe("Phase 11 — Task 1: every affected manifest declares the target @ai-s
       if (label !== "root" && existsSync(join(REPO_ROOT, relPath))) {
         if ("ai" in deps) {
           expect(
-            rangeTargetsMajor(deps.ai, TARGET_AI_MAJOR),
+            rangeTargetsMajor(resolveCatalogRange("ai", deps.ai), TARGET_AI_MAJOR),
             `${relPath}: \`ai\` must declare ^${TARGET_AI_MAJOR}.x ` +
               `to align with the new major. Today it is \`${deps.ai}\`.`,
           ).toBe(true);
@@ -138,7 +164,7 @@ describe("Phase 11 — Task 1: every affected manifest declares the target @ai-s
       for (const [pkg, targetMajor] of Object.entries(TARGET_AI_SDK_PACKAGE_MAJORS)) {
         if (pkg in deps) {
           expect(
-            rangeTargetsMajor(deps[pkg], targetMajor),
+            rangeTargetsMajor(resolveCatalogRange(pkg, deps[pkg]), targetMajor),
             `${relPath}: \`${pkg}\` must declare ^${targetMajor}.x ` +
               `to align with the new major. Today it is \`${deps[pkg]}\`.`,
           ).toBe(true);
@@ -245,28 +271,21 @@ describe("Phase 11 — Task 2: domain/ai consumer is decoupled from @ai-sdk/*", 
 describe("Phase 11 — Task 3: pnpm-lock.yaml resolves exactly one @ai-sdk major", () => {
   const LOCKFILE = join(REPO_ROOT, "pnpm-lock.yaml");
 
-  function readLockfile(): string {
+  function readLockfile(): Lockfile {
     if (!existsSync(LOCKFILE)) {
       throw new Error(
         `${LOCKFILE} is missing; Phase 1 cannot run without a ` +
           "lockfile. Run `pnpm install` and re-run the test.",
       );
     }
-    return readFileSync(LOCKFILE, "utf8");
+    return parse(readFileSync(LOCKFILE, "utf8")) as Lockfile;
   }
 
-  function resolvedMajorsFor(prefix: string): number[] {
-    // pnpm-lock top-level entries are `  /<name>@<version>(...):`
-    // We scan for the key prefix; `majorOfResolvedVersion` pulls the
-    // major out of the version segment.
-    const re = new RegExp(`^  \\/${prefix}@([\\d.]+)\\(`, "gm");
-    const majors: number[] = [];
-    let match: RegExpExecArray | null;
-    while ((match = re.exec(readLockfile())) !== null) {
-      const major = majorOfResolvedVersion(`${prefix}@${match[1]}`);
-      if (major !== null) majors.push(major);
-    }
-    return majors;
+  function resolvedMajorsFor(packageName: string): number[] {
+    return Object.keys(readLockfile().packages ?? {})
+      .filter((key) => key.startsWith(`${packageName}@`))
+      .map(majorOfResolvedVersion)
+      .filter((major): major is number => major !== null);
   }
 
   for (const [pkg, targetMajor] of [
@@ -305,7 +324,6 @@ describe("Phase 11 — Task 3: pnpm-lock.yaml resolves exactly one @ai-sdk major
       // output: today the lockfile has BOTH v1 and v2 for
       // `@ai-sdk/openai` and `@ai-sdk/google` and `ai`.
       const majors = resolvedMajorsFor(pkg);
-      const hasV1Holdout = majors.includes(1) || majors.includes(4);
       // For `ai`, the legacy major is 4; for `@ai-sdk/*`, the legacy
       // major is 1. The assertion is phrased as "no major below
       // target" for forward compatibility.
@@ -320,25 +338,24 @@ describe("Phase 11 — Task 3: pnpm-lock.yaml resolves exactly one @ai-sdk major
     });
   }
 
-  it("zod resolves on a single major compatible with the @ai-sdk/* target peer range", () => {
-    // Per test-strategy §3 "Cross-phase edge cases" item 1: `ai@5`
-    // and `@ai-sdk/*@2` pin zod ranges, and the lockfile must end
-    // with one zod major. The current single-resolved zod is 3.25.76
-    // (see `pnpm-lock.yaml` 10481 / 10501), which is in both
-    // `^3.25.x` and `^4.x.y` peer ranges; we pin the resolved major
-    // is a single value to catch a future split.
-    const source = readFileSync(LOCKFILE, "utf8");
-    const re = /^ {2}\/zod@(\d+)\.\d+\.\d+/gm;
-    const majors = new Set<number>();
-    let match: RegExpExecArray | null;
-    while ((match = re.exec(source)) !== null) {
-      majors.add(Number(match[1]));
+  it("packages/ai resolves zod on a major accepted by its SDK peers", () => {
+    // Other workspace packages can use another Zod major. This contract
+    // checks the AI package resolution and each relevant SDK peer range.
+    const lockfile = readLockfile();
+    const zodVersion = lockfile.importers?.["packages/ai"]?.dependencies?.zod?.version;
+    const major = zodVersion ? majorOfResolvedVersion(`zod@${zodVersion}`) : null;
+    expect(major, "packages/ai must resolve zod on major 3.").toBe(3);
+    expect(zodVersion).toMatch(/^3\.(?:2[5-9]|[3-9]\d|\d{3,})\./);
+
+    for (const packageName of ["ai", "@ai-sdk/provider-utils"]) {
+      const key = Object.keys(lockfile.packages ?? {}).find((candidate) =>
+        candidate.startsWith(`${packageName}@`),
+      );
+      const zodPeer = key ? lockfile.packages?.[key]?.peerDependencies?.zod : undefined;
+      expect(
+        zodPeer?.split("||").some((range) => rangeTargetsMajor(range.trim(), 3)),
+        `${packageName} must accept the resolved Zod 3 line.`,
+      ).toBe(true);
     }
-    expect(
-      majors.size,
-      `lockfile resolves \`zod\` on ${majors.size} distinct majors ` +
-        `(${Array.from(majors).join(", ")}); a single major is ` +
-        "required so the AI SDK peer ranges are satisfiable.",
-    ).toBe(1);
   });
 });
