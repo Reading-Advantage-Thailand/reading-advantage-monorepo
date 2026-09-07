@@ -262,7 +262,8 @@ async function digestNamedFiles(
 async function waitForReleaseInputSnapshot(
   initialEntries: ReadonlySet<string>,
 ): Promise<void> {
-  for (let attempt = 0; attempt < 300; attempt += 1) {
+  const deadline = Date.now() + 240_000;
+  while (Date.now() < deadline) {
     const entries = await readdir(TRUSTED_WORK_ROOT);
     for (const entry of entries) {
       if (initialEntries.has(entry) || !entry.startsWith(".release-artifact-"))

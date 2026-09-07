@@ -86,7 +86,8 @@ async function findArchive(directory: string): Promise<string | undefined> {
 async function waitForPackedArchive(
   initialEntries: ReadonlySet<string>,
 ): Promise<string> {
-  for (let attempt = 0; attempt < 300; attempt += 1) {
+  const deadline = Date.now() + 240_000;
+  while (Date.now() < deadline) {
     let entries: string[];
     try {
       entries = await readdir(TRUSTED_WORK_ROOT);

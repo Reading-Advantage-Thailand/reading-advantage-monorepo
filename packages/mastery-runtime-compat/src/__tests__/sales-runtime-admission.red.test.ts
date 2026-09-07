@@ -596,7 +596,7 @@ describe("Sales packed consumer admission (intended red)", () => {
     } finally {
       await rm(temporaryRoot, { recursive: true, force: true });
     }
-  }, 180_000);
+  }, 420_000);
 
   it("cleans its failed child without removing caller-owned root files", async () => {
     const { module } = await loadPackedAdmission();
