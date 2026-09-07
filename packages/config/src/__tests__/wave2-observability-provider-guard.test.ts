@@ -40,6 +40,7 @@ import { describe, expect, it } from "vitest";
 import { readdirSync, readFileSync } from "node:fs";
 import { dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
+import ts from "typescript";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -77,8 +78,7 @@ const IGNORED_DIRS = new Set([
 const TEST_FILE_RE = /\.(test|integration\.test|spec)\.(tsx?|jsx?|mjs|cjs)$/;
 const SOURCE_FILE_RE = /\.(tsx?|jsx?|mjs|cjs)$/;
 
-const CONSOLE_CALL_RE = /\bconsole\.error\s*\(/;
-const SENTRY_CAPTURE_RE = /\bSentry\.(captureException|captureMessage)\s*\(/;
+type CallTarget = "console" | "sentry";
 
 interface AllowlistEntry {
   readonly pattern: RegExp;
@@ -200,17 +200,41 @@ interface Hit {
   readonly kind: "console" | "sentry";
 }
 
-function findHits(source: string, regex: RegExp): Array<{ line: number; text: string }> {
+function getCallTarget(node: ts.CallExpression): CallTarget | undefined {
+  if (!ts.isPropertyAccessExpression(node.expression)) return undefined;
+  const owner = node.expression.expression;
+  const method = node.expression.name.text;
+  if (ts.isIdentifier(owner) && owner.text === "console" && method === "error") {
+    return "console";
+  }
+  if (
+    ts.isIdentifier(owner) &&
+    owner.text === "Sentry" &&
+    (method === "captureException" || method === "captureMessage")
+  ) {
+    return "sentry";
+  }
+  return undefined;
+}
+
+function findHits(source: string, fileName: string, target: CallTarget): Array<{ line: number; text: string }> {
   const hits: Array<{ line: number; text: string }> = [];
   const lines = source.split("\n");
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i];
-    // Strip trailing single-line comment so commented-out calls are ignored.
-    const codeOnly = line.replace(/\/\/.*$/g, "");
-    if (regex.test(codeOnly)) {
-      hits.push({ line: i + 1, text: line.trim() });
+  const sourceFile = ts.createSourceFile(
+    fileName,
+    source,
+    ts.ScriptTarget.Latest,
+    true,
+    fileName.endsWith("x") ? ts.ScriptKind.TSX : ts.ScriptKind.TS,
+  );
+  const visit = (node: ts.Node): void => {
+    if (ts.isCallExpression(node) && getCallTarget(node) === target) {
+      const line = sourceFile.getLineAndCharacterOfPosition(node.getStart(sourceFile)).line + 1;
+      hits.push({ line, text: lines[line - 1]?.trim() ?? "" });
     }
-  }
+    ts.forEachChild(node, visit);
+  };
+  visit(sourceFile);
   return hits;
 }
 
@@ -232,7 +256,23 @@ function findHits(source: string, regex: RegExp): Array<{ line: number; text: st
 const CONSOLE_ERROR_BASELINE = 621;
 
 describe("Wave 2 Phase 2 — observability provider guard", () => {
-  it("regression-protects against new console.error in production paths and forbids direct Sentry capture outside the observability adapter", () => {
+  it("counts real calls and ignores matching text in comments and strings", () => {
+    const source = [
+      "/* console.error('comment') */",
+      "const text = `Sentry.captureException(error)`;",
+      "console.error('real');",
+      "Sentry.captureMessage('real');",
+    ].join("\n");
+
+    expect(findHits(source, "fixture.ts", "console")).toEqual([
+      { line: 3, text: "console.error('real');" },
+    ]);
+    expect(findHits(source, "fixture.ts", "sentry")).toEqual([
+      { line: 4, text: "Sentry.captureMessage('real');" },
+    ]);
+  });
+
+  it("regression-protects against new console.error in production paths and forbids direct Sentry capture outside the observability adapter", { timeout: 30_000 }, () => {
     const scanDirs = expandScanPaths();
     const files = scanDirs.flatMap((dir) => walk(dir));
     const scannedFileCount = files.length;
@@ -243,10 +283,10 @@ describe("Wave 2 Phase 2 — observability provider guard", () => {
       if (isAllowlisted(rel)) continue;
 
       const source = readFileSync(file, "utf8");
-      for (const h of findHits(source, CONSOLE_CALL_RE)) {
+      for (const h of findHits(source, file, "console")) {
         hits.push({ file: rel, line: h.line, text: h.text, kind: "console" });
       }
-      for (const h of findHits(source, SENTRY_CAPTURE_RE)) {
+      for (const h of findHits(source, file, "sentry")) {
         hits.push({ file: rel, line: h.line, text: h.text, kind: "sentry" });
       }
     }
