@@ -1,0 +1,7 @@
+Monorepo package review: accounts
+
+Astra low agents reviewed the findings. Sol medium agents implemented the repairs under the Ponytail Rules.
+The complete workspace test command passed all 65 tasks. The verification record contains check results and limitations.
+
+Files:
+apps/accounts/lib/server/company-identity-route-bindings.ts
