@@ -1,0 +1,11 @@
+Monorepo package review: sales-advantage
+
+Astra low agents reviewed the findings. Sol medium agents implemented the repairs under the Ponytail Rules.
+The complete workspace test command passed all 65 tasks. The verification record contains check results and limitations.
+
+Files:
+apps/sales-advantage/app/[locale]/admin/admin-localization.test.tsx
+apps/sales-advantage/app/api/auth/callback/route.ts
+apps/sales-advantage/app/api/auth/login/route.ts
+apps/sales-advantage/app/api/auth/logout/route.ts
+apps/sales-advantage/scripts/sales-admin-ui.test.ts
