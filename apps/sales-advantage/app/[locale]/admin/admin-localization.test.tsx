@@ -115,7 +115,32 @@ describe.each(localeCases)(
               avgQuizScore: 80,
             },
           ],
-          scenarios: [],
+          scenarios: [
+            {
+              scenarioId: "scenario-1",
+              lessonTitle: "Discovery",
+              personaName: "Coach Mali",
+              attemptCount: 2,
+              retryCount: 1,
+              bestAttempt: { id: "attempt-2" },
+              attempts: [
+                {
+                  id: "attempt-1",
+                  attemptNumber: 1,
+                  overallScore: 60,
+                  passed: false,
+                  createdAt: activityAt,
+                },
+                {
+                  id: "attempt-2",
+                  attemptNumber: 2,
+                  overallScore: 90,
+                  passed: true,
+                  createdAt: activityAt,
+                },
+              ],
+            },
+          ],
         },
         isLoading: false,
         error: null,
@@ -129,9 +154,18 @@ describe.each(localeCases)(
         }),
       ).toBeTruthy();
       expect(screen.getByText(messages.admin.moduleProgress)).toBeTruthy();
-      expect(screen.getByText(messages.admin.noRoleplayScenarios)).toBeTruthy();
       expect(
-        screen.getByText(new Intl.DateTimeFormat(locale).format(activityAt)),
+        screen.getByRole("heading", { name: "Discovery: Coach Mali" }),
+      ).toBeTruthy();
+      expect(
+        screen.getByRole("table", {
+          name: messages.admin.attemptCaption.replace("{name}", "Coach Mali"),
+        }),
+      ).toBeTruthy();
+      expect(screen.getByText(messages.admin.best)).toBeTruthy();
+      expect(screen.getByText(messages.admin.retry)).toBeTruthy();
+      expect(
+        screen.getAllByText(new Intl.DateTimeFormat(locale).format(activityAt)),
       ).toBeTruthy();
     });
 

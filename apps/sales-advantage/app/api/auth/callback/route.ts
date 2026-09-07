@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { logStructuredError } from "@reading-advantage/utils/structured-error";
 
 import {
   SALES_SESSION_COOKIE,
@@ -56,21 +57,13 @@ export async function GET(request: Request): Promise<NextResponse> {
       try {
         const revoked = await getSalesOidcClient().logout(session.accessToken);
         if (!revoked) {
-          console.error(
-            JSON.stringify({
-              level: "error",
-              event: "sales_callback_revocation_failed",
-            }),
-          );
+          logStructuredError({ event: "sales_callback_revocation_failed" });
         }
       } catch (error) {
-        console.error(
-          JSON.stringify({
-            level: "error",
-            event: "sales_callback_revocation_error",
-            errorName: error instanceof Error ? error.name : "UnknownError",
-          }),
-        );
+        logStructuredError({
+          event: "sales_callback_revocation_error",
+          error,
+        });
       }
       const response = NextResponse.redirect(
         new URL("/?error=forbidden", publicOrigin),
@@ -92,16 +85,12 @@ export async function GET(request: Request): Promise<NextResponse> {
     expireHostCookie(response, SALES_TRANSACTION_COOKIE, secure);
     return response;
   } catch (error) {
-    console.error(
-      JSON.stringify({
-        level: "error",
-        event: "sales_oidc_callback_failed",
-        requestId: request.headers.get("x-request-id") ?? null,
-        method: request.method,
-        route: url.pathname,
-        errorName: error instanceof Error ? error.name : "UnknownError",
-      }),
-    );
+    logStructuredError({
+      event: "sales_oidc_callback_failed",
+      requestId: request.headers.get("x-request-id") ?? null,
+      error,
+      fields: { method: request.method, route: url.pathname },
+    });
     const response = NextResponse.redirect(new URL("/?error=sso", publicOrigin));
     expireHostCookie(response, SALES_TRANSACTION_COOKIE, secure);
     return response;

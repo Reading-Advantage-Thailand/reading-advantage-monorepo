@@ -1,4 +1,5 @@
 import { handleLogout } from "@reading-advantage/api/routes/auth";
+import { logStructuredError } from "@reading-advantage/utils/structured-error";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
@@ -54,13 +55,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     expireSalesSessionCookie(response, publicOrigin.protocol === "https:");
     return response;
   } catch (error) {
-    console.error(
-      JSON.stringify({
-        level: "error",
-        event: "sales_logout_error",
-        detail: error instanceof Error ? error.message : String(error),
-      }),
-    );
+    logStructuredError({ event: "sales_logout_error", error });
     return NextResponse.json({ message: "Logout failed" }, { status: 500 });
   }
 }

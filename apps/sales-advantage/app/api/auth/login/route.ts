@@ -5,6 +5,7 @@ import {
 } from "@reading-advantage/auth";
 import { db } from "@reading-advantage/db";
 import { resolveLegacySalesCompanyPrincipal } from "@reading-advantage/domain";
+import { logStructuredError } from "@reading-advantage/utils/structured-error";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { z } from "zod";
@@ -89,14 +90,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (issuedToken) {
       await deleteSession(db, issuedToken).catch(() => undefined);
     }
-    console.error(
-      JSON.stringify({
-        level: "error",
-        event: "sales_legacy_login_error",
-        requestId: request.headers.get("x-request-id") ?? null,
-        errorName: error instanceof Error ? error.name : "UnknownError",
-      }),
-    );
+    logStructuredError({
+      event: "sales_legacy_login_error",
+      requestId: request.headers.get("x-request-id") ?? null,
+      error,
+    });
     return NextResponse.json(
       { message: "Internal server error" },
       { status: 500 },
