@@ -1,5 +1,5 @@
-import { and, eq, count, inArray, or, type SQL } from "drizzle-orm";
-import { db } from "@reading-advantage/db";
+import { and, eq, count, inArray, isNull, or, type SQL } from "drizzle-orm";
+import { db, type DB } from "@reading-advantage/db";
 import { createTenantDB } from "../db-contract.js";
 import {
   gamificationProfiles,
@@ -77,9 +77,18 @@ export async function startQuiz({
     .where(and(eq(scienceAttempts.studentId, user.id), eq(scienceAttempts.lessonId, lesson.id)));
   const attemptNumber = previousAttempts + 1;
   const totalPoints = selectedQuestions.reduce((sum, q) => sum + q.points, 0);
+  if (totalPoints <= 0) return { status: 500, body: { error: "Quiz questions must have positive points" } };
 
   const [attempt] = await tenantDb.insert(scienceAttempts)
-    .values({ studentId: user.id, lessonId: lesson.id, schoolId: tenant.schoolId!, maxScore: totalPoints, attemptNumber, startedAt: new Date() })
+    .values({
+      studentId: user.id,
+      lessonId: lesson.id,
+      schoolId: tenant.schoolId!,
+      maxScore: totalPoints,
+      selectedQuestionIds: selectedQuestions.map((question) => question.id),
+      attemptNumber,
+      startedAt: new Date(),
+    })
     .returning();
 
   const [existingCompletion] = await tenantDb.select().from(scienceLessonCompletions)
@@ -159,8 +168,25 @@ deps: {
   if (!attempt) return { status: 404, body: { error: "Attempt not found" } };
   if (attempt.studentId !== user.id) return { status: 403, body: { error: "Not authorized to submit this attempt" } };
   if (attempt.completedAt) return { status: 409, body: { error: "Attempt already submitted" } };
+  if (attempt.selectedQuestionIds.length === 0 || attempt.maxScore <= 0) {
+    return { status: 409, body: { error: "Attempt question selection is unavailable; start a new quiz" } };
+  }
+  const responseQuestionIds = responses.map((response) => response.questionId);
+  if (new Set(responseQuestionIds).size !== responseQuestionIds.length) {
+    return { status: 400, body: { error: "Duplicate question responses are not allowed" } };
+  }
+  const selectedQuestionIds = new Set(attempt.selectedQuestionIds);
+  if (
+    responseQuestionIds.length !== selectedQuestionIds.size ||
+    responseQuestionIds.some((questionId) => !selectedQuestionIds.has(questionId))
+  ) {
+    return { status: 400, body: { error: "Responses must match the questions selected for this attempt" } };
+  }
 
-  const lessonQuestions = await tenantDb.select().from(scienceQuizQuestions).where(eq(scienceQuizQuestions.lessonId, attempt.lessonId));
+  const lessonQuestions = await tenantDb.select().from(scienceQuizQuestions).where(and(
+    eq(scienceQuizQuestions.lessonId, attempt.lessonId),
+    inArray(scienceQuizQuestions.id, attempt.selectedQuestionIds),
+  ));
   const questionMap = new Map(lessonQuestions.map((q) => [q.id, q]));
   if (responses.length === 0) return { status: 400, body: { error: "All questions must be answered" } };
 
@@ -181,8 +207,14 @@ deps: {
   const percentage = (totalScore / attempt.maxScore) * 100;
   const attemptTimeSpent = questionResponsesToCreate.reduce((sum, qr) => sum + (typeof qr.timeSpentSeconds === "number" ? qr.timeSpentSeconds : 0), 0);
 
-  await tenantDb.transaction(async (tx) => {
-    await tx.update(scienceAttempts).set({ score: totalScore, completedAt: new Date(), updatedAt: new Date() }).where(eq(scienceAttempts.id, attemptId));
+  const completionResult = await tenantDb.transaction(async (tx) => {
+    const claimedAttempts = await tx.update(scienceAttempts)
+      .set({ score: totalScore, completedAt: new Date(), updatedAt: new Date() })
+      .where(and(eq(scienceAttempts.id, attemptId), isNull(scienceAttempts.completedAt)))
+      .returning({ id: scienceAttempts.id });
+    if (claimedAttempts.length === 0) return null;
+    const transactionDb = tx as unknown as DB;
+
     await tx.insert(scienceQuestionResponses).values(questionResponsesToCreate);
 
     const [existingCompletion] = await tx.select().from(scienceLessonCompletions)
@@ -204,20 +236,30 @@ deps: {
         lastAttemptAt: now, completedAt: now, totalTimeSpentSeconds: attemptTimeSpent,
       });
     }
+    await tx.insert(scienceMasteryRuns).values({ attemptId, studentId: user.id, schoolId: tenant.schoolId!, status: "PENDING", updatedCount: 0 });
+    const masteryResult = await deps.processMasteryRun({ db: transactionDb, user, tenant, input: { attemptId, studentId: user.id } });
+
+    const { baseXp, firstAttemptBonus, totalXp } = deps.calculateXpForQuiz(percentage, attempt.attemptNumber);
+    let [profile] = await tx.select().from(gamificationProfiles).where(eq(gamificationProfiles.userId, user.id)).limit(1);
+    if (!profile) {
+      [profile] = await tx.insert(gamificationProfiles).values({ userId: user.id, schoolId: tenant.schoolId!, xp: 0, level: 1, streak: 0 }).returning();
+    }
+    const xpResult = await deps.awardXp({ db: transactionDb, user, tenant, input: { profileId: profile.id, amount: totalXp } });
+    const streakResult = await deps.updateStreakForProfile({ db: transactionDb, user, tenant, input: { profileId: profile.id, currentTime: new Date() } });
+    const badgeResult = await deps.checkBadgeConditions({ db: transactionDb, user, tenant, input: { userId: user.id, triggerEvent: "quiz_completed" } });
+
+    return {
+      masteryResult,
+      baseXp,
+      firstAttemptBonus,
+      totalXpAwarded: totalXp + streakResult.milestoneBonus,
+      xpResult,
+      streakResult,
+      badgeResult,
+    };
   });
-
-  await tenantDb.insert(scienceMasteryRuns).values({ attemptId, studentId: user.id, schoolId: tenant.schoolId!, status: "PENDING", updatedCount: 0 });
-  const masteryResult = await deps.processMasteryRun({ db: tenantDb, user, tenant, input: { attemptId, studentId: user.id } });
-
-  const { baseXp, firstAttemptBonus, totalXp } = deps.calculateXpForQuiz(percentage, attempt.attemptNumber);
-  let [profile] = await tenantDb.select().from(gamificationProfiles).where(eq(gamificationProfiles.userId, user.id)).limit(1);
-  if (!profile) {
-    [profile] = await tenantDb.insert(gamificationProfiles).values({ userId: user.id, schoolId: tenant.schoolId!, xp: 0, level: 1, streak: 0 }).returning();
-  }
-  const xpResult = await deps.awardXp({ db: tenantDb, user, tenant, input: { profileId: profile.id, amount: totalXp } });
-  const streakResult = await deps.updateStreakForProfile({ db: tenantDb, user, tenant, input: { profileId: profile.id, currentTime: new Date() } });
-  const totalXpAwarded = totalXp + streakResult.milestoneBonus;
-  const badgeResult = await deps.checkBadgeConditions({ db: tenantDb, user, tenant, input: { userId: user.id, triggerEvent: "quiz_completed" } });
+  if (!completionResult) return { status: 409, body: { error: "Attempt already submitted" } };
+  const { masteryResult, baseXp, firstAttemptBonus, totalXpAwarded, xpResult, streakResult, badgeResult } = completionResult;
 
   return {
     status: 200,

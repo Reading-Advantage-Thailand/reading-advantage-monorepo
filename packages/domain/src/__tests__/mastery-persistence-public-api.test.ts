@@ -7,6 +7,7 @@ import { beforeAll, describe, expect, it } from "vitest";
 const DOMAIN_ROOT = resolve(import.meta.dirname, "../..");
 const REPO_ROOT = resolve(DOMAIN_ROOT, "../..");
 const DIST_MASTERY_INDEX = join(DOMAIN_ROOT, "dist/mastery/index.js");
+const TYPESCRIPT_CLI = join(REPO_ROOT, "node_modules/typescript/bin/tsc");
 const DB_WARNING = /DATABASE_URL|database operations will fail|database unavailable/i;
 
 type CommandResult = ReturnType<typeof spawnSync> & {
@@ -37,10 +38,9 @@ function compileProbe(source: string): CommandResult {
   writeFileSync(probePath, source);
   try {
     return spawnSync(
-      "pnpm",
+      process.execPath,
       [
-        "exec",
-        "tsc",
+        TYPESCRIPT_CLI,
         "--noEmit",
         "--strict",
         "--skipLibCheck",
@@ -70,12 +70,16 @@ function diagnostics(result: CommandResult): string {
 
 describe("mastery persistence public API", () => {
   beforeAll(() => {
-    execFileSync("pnpm", ["--dir", DOMAIN_ROOT, "build"], {
-      cwd: REPO_ROOT,
-      encoding: "utf8",
-      env: dbFreeEnvironment(),
-      timeout: 120_000,
-    });
+    execFileSync(
+      process.execPath,
+      [TYPESCRIPT_CLI, "--project", join(DOMAIN_ROOT, "tsconfig.json")],
+      {
+        cwd: REPO_ROOT,
+        encoding: "utf8",
+        env: dbFreeEnvironment(),
+        timeout: 120_000,
+      },
+    );
   }, 125_000);
 
   it("keeps the underlying contracts module cold-importable as a passing control", () => {

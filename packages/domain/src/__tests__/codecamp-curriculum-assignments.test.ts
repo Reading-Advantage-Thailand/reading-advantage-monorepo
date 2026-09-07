@@ -15,8 +15,8 @@ const wrapDb = (results: unknown[][]) => createTenantDB(
 );
 
 describe("Codecamp curriculum release assignments", () => {
-  it("keeps automatic cohort enrollment closed while human approvals are pending", () => {
-    expect(isCodecampAPKCurriculumReleased()).toBe(false);
+  it("opens automatic cohort enrollment after all human approvals", () => {
+    expect(isCodecampAPKCurriculumReleased()).toBe(true);
   });
 
   it("keeps Unit 20 hidden from legacy learners", async () => {

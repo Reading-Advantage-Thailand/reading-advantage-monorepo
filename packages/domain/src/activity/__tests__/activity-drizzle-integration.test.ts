@@ -8,7 +8,7 @@ import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { createTestDb, type TestDb } from "../../__tests__/helpers/testDb.js";
 import { CODECAMP_MASTERY_SCHOOL_ID, DrizzleActivityPersistence } from "../drizzle-activity-persistence.js";
 import { DrizzleTutorialReportStore, prepareCodecampTutorialReport, processCodecampTutorialReport, reissueCodecampTutorialReportCredential } from "../tutorial-reporting.js";
-import { updatePrReview } from "../../codecamp/pr-reviews.js";
+import { approveAPKPrReview, updatePrReview } from "../../codecamp/pr-reviews.js";
 
 const passingAPKEvaluation = {
   rubricId: "apk.rubric.independent-cartridge" as const,
@@ -20,6 +20,21 @@ const passingAPKEvaluation = {
   ],
   requiredChecks: codecampAPKUnit.youdo.requiredChecks.map((check) => ({ check, passed: true, evidence: `${check} passed in CI.` })),
   totalScore: 1,
+};
+
+const trustedAPKEvidence = {
+  schemaVersion: "apk.trusted-pr-evidence.v1" as const,
+  commitSha: "a".repeat(40),
+  evaluation: passingAPKEvaluation,
+  checks: codecampAPKUnit.youdo.requiredChecks.map((check) => ({
+    check,
+    passed: true as const,
+    source: check === "browser smoke test" ? "manual_browser" as const : "github_check_run" as const,
+    evidenceUrl: check === "browser smoke test"
+      ? "https://evidence.example.test/runs/1"
+      : "https://github.com/example/apk/actions/runs/1",
+    observedAt: "2026-07-12T00:00:00.000Z",
+  })),
 };
 
 const activity = activitySchema.parse({
@@ -57,17 +72,18 @@ describe("activity Drizzle outbox and Codecamp mastery", () => {
     const actor = { learnerId: "codecamp-learner", schoolId: null, tenantKey: "codecamp" } as const;
     const tutorialActivity = createCodecampAPKTutorialActivity("en");
     const sessionId = "00000000-0000-4000-8000-000000000902";
-    const validManifest = "export const cartridgeManifest = { id: 'game', title: 'Game', description: 'Guided game', version: '1.0.0', runtimeApiVersion: '1.0.0', inputMode: 'vocabulary', requiredAssetSlots: ['background'], capabilities: ['keyboard'] } as const;";
+    const validManifest = "export const cartridgeManifest = { id: 'game', title: 'Game', description: 'Guided game', version: '1.0.0', runtimeApiVersion: '1.0.0', inputMode: 'vocabulary', requiredAssetBindings: ['background'], capabilities: ['keyboard'] } as const;";
+    const validGameState = "export function evaluateAttempt(objectiveId: string, selectedAnswerId: string, correctAnswerId: string, attempts: number) { return { objectiveId, correct: selectedAnswerId === correctAnswerId, attempts }; }";
     const repositoryCapturedAt = new Date(Date.now() - 90_000).toISOString();
     await persistence.createSession(createActivitySessionRecord({ sessionId, actor, activityId: tutorialActivity.activityId, activityVersion: tutorialActivity.activityVersion, startedAt: "2026-07-10T00:00:00Z" }));
     const prepared = await prepareCodecampTutorialReport(tenantDb, actor, { sessionId, submissionId: "submission-apk-1", repositoryId: codecampAPKUnit.wedo.manifest.repositoryId, stepId: "wedo.apk.manifest" }, "integration-tutorial-secret-at-least-32-bytes", {
-      capture: async () => ({ files: { "src/cartridge.ts": validManifest, "src/game-state.ts": "export const educationalResult = { objectiveId: 'codecamp.game-development.skill.apk-contract', correct: true, attempts: 1 } as const;", ".env": "must-not-persist" }, gitStatus: "", capturedAt: repositoryCapturedAt.replace("Z", "+00:00") }),
+      capture: async () => ({ files: { "src/cartridge.ts": validManifest, "src/game-state.ts": validGameState, ".env": "must-not-persist" }, gitStatus: "", capturedAt: repositoryCapturedAt.replace("Z", "+00:00") }),
     });
     const reissued = await reissueCodecampTutorialReportCredential(tenantDb, actor, { sessionId, submissionId: "submission-apk-1", repositoryStateId: prepared.repositoryStateId, stepId: "wedo.apk.manifest" }, "integration-tutorial-secret-at-least-32-bytes");
     await expect(reissueCodecampTutorialReportCredential(tenantDb, actor, { sessionId, submissionId: "submission-apk-2", repositoryStateId: prepared.repositoryStateId, stepId: "wedo.apk.manifest" }, "integration-tutorial-secret-at-least-32-bytes")).rejects.toThrow("state not found");
     await expect(reissueCodecampTutorialReportCredential(tenantDb, actor, { sessionId, submissionId: "submission-apk-1", repositoryStateId: prepared.repositoryStateId, stepId: "wedo.apk.other" }, "integration-tutorial-secret-at-least-32-bytes")).rejects.toThrow("session not found");
     const localResult = await runTutorialStep(codecampAPKUnit.wedo.manifest, "wedo.apk.manifest", {
-      readAllowedFile: async () => validManifest, runAllowedCommand: async () => "", now: () => "2026-07-10T00:01:00Z",
+      readAllowedFile: async (path) => path.endsWith("game-state.ts") ? validGameState : validManifest, runAllowedCommand: async () => "", now: () => "2026-07-10T00:01:00Z",
     });
     const request = { submissionId: "submission-apk-1", credential: reissued.credential, repositoryStateId: prepared.repositoryStateId, localResult };
     const evidenceBefore = await harness.db.select().from(masteryEvidence);
@@ -113,7 +129,7 @@ describe("activity Drizzle outbox and Codecamp mastery", () => {
     const [review] = await harness.db.insert(codecampPrReviews).values({ exerciseRepoId: repository!.id, userId: "codecamp-learner", prUrl: "https://github.com/example/apk/pull/1", reviewStatus: "pending" }).returning();
 
     await expect(updatePrReview({ db: tenantDb, user: { id: "admin", username: "admin", name: "Admin", role: "ADMIN", schoolId: null, xp: 0, level: 1, cefrLevel: "A1" }, tenant: { schoolId: null }, input: { reviewId: review!.id, reviewStatus: "approved" } })).rejects.toThrow();
-    await updatePrReview({ db: tenantDb, user: { id: "admin", username: "admin", name: "Admin", role: "ADMIN", schoolId: null, xp: 0, level: 1, cefrLevel: "A1" }, tenant: { schoolId: null }, input: { reviewId: review!.id, reviewStatus: "approved", rubricEvaluation: passingAPKEvaluation } });
+    await approveAPKPrReview({ db: tenantDb, user: { id: "admin", username: "admin", name: "Admin", role: "ADMIN", schoolId: null, xp: 0, level: 1, cefrLevel: "A1" }, tenant: { schoolId: null }, input: { reviewId: review!.id, evidence: trustedAPKEvidence } });
 
     const persistence = new DrizzleActivityPersistence(tenantDb);
     await expect(persistence.getPlatformTeacherSummary("codecamp-learner", review!.id)).resolves.toMatchObject({ assessedCheckpointResults: { "checkpoint.apk.pr-approved": { isCorrect: true } } });

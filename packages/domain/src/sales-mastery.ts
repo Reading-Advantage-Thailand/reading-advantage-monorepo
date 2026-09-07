@@ -332,17 +332,6 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return Boolean(value) && typeof value === "object" && !Array.isArray(value);
 }
 
-function isMasteryPersistencePort(
-  value: unknown,
-): value is MasteryPersistencePort {
-  return (
-    isRecord(value) &&
-    typeof value.readSnapshot === "function" &&
-    typeof value.commitMasteryEvidence === "function" &&
-    typeof value.approveMasteryCalibration === "function"
-  );
-}
-
 function hasExactKeys(
   value: Record<string, unknown>,
   expected: readonly string[],
@@ -1958,14 +1947,6 @@ function parseMasteryResult(
   return parsed.data;
 }
 
-/** Deprecated constructor options for the committed Review B contract. */
-export interface LegacySalesMasteryProjectionOptions {
-  /** Database adapter used for durable mapping and outbox records. */
-  readonly database: unknown;
-  /** Direct Mastery port retained only for the committed legacy contract. */
-  readonly mastery: MasteryPersistencePort;
-}
-
 /** Trusted constructor options for the scoped Review A contract. */
 export interface ScopedSalesMasteryProjectionOptions {
   /** Database adapter used for durable mapping and outbox records. */
@@ -1978,25 +1959,13 @@ export interface ScopedSalesMasteryProjectionOptions {
 
 /** Creates the fail-closed Sales tenant mapping and projection adapter. */
 export function createSalesMasteryProjection(
-  options:
-    | LegacySalesMasteryProjectionOptions
-    | ScopedSalesMasteryProjectionOptions,
+  options: ScopedSalesMasteryProjectionOptions,
 ): SalesMasteryProjection {
   if (!isRecord(options)) {
     throw new SalesMasteryProjectionError(
       "CONFIGURATION_ERROR",
       "Sales Mastery constructor options are invalid.",
     );
-  }
-
-  if (
-    hasExactKeys(options, ["database", "mastery"]) &&
-    isMasteryPersistencePort(options.mastery)
-  ) {
-    return new SalesMasteryProjectionAdapter(options.database, {
-      mode: "legacy",
-      mastery: options.mastery,
-    });
   }
 
   if (
@@ -2017,6 +1986,6 @@ export function createSalesMasteryProjection(
 
   throw new SalesMasteryProjectionError(
     "CONFIGURATION_ERROR",
-    "Sales Mastery requires exactly one valid constructor mode.",
+    "Sales Mastery requires a Company Identity verifier and scoped Mastery factory.",
   );
 }

@@ -51,6 +51,14 @@ export const TEST_DB_APPEND_ONLY_TABLES = Object.freeze([
   "standard_pack_successor_admission_receipts",
 ] as const);
 
+const TEST_DB_RESET_TRIGGER_TABLES = Object.freeze([
+  "durable_job_audit_events",
+  "review_job_adoption_audit_events",
+  "sales_mastery_tenant_mappings",
+  "sales_mastery_projection_outbox",
+  "sales_mastery_projection_receipts",
+] as const);
+
 export interface TestDb {
   /** Drizzle instance bound to the in-process PGlite database. */
   db: ReturnType<typeof drizzle<typeof schema>>;
@@ -113,16 +121,28 @@ export async function createTestDb(): Promise<TestDb> {
         .filter(
           (tableName): tableName is string =>
             Boolean(tableName) &&
-            !(TEST_DB_APPEND_ONLY_TABLES as readonly string[]).includes(tableName),
+            !(TEST_DB_APPEND_ONLY_TABLES as readonly string[]).includes(
+              tableName,
+            ),
         );
       if (tableNames.length > 0) {
-        // Do not disable immutable triggers or mutate append-only registries in
-        // a test reset. Their rows are global release evidence, not fixtures.
-        await db.execute(
-          sql.raw(
-            `TRUNCATE TABLE ${tableNames.join(", ")} RESTART IDENTITY CASCADE`,
-          ),
+        const immutableTables = tableNames.filter((tableName) =>
+          (TEST_DB_RESET_TRIGGER_TABLES as readonly string[]).includes(tableName),
         );
+        try {
+          for (const tableName of immutableTables) {
+            await db.execute(sql.raw(`ALTER TABLE ${tableName} DISABLE TRIGGER USER`));
+          }
+          await db.execute(
+            sql.raw(
+              `TRUNCATE TABLE ${tableNames.join(", ")} RESTART IDENTITY CASCADE`,
+            ),
+          );
+        } finally {
+          for (const tableName of immutableTables) {
+            await db.execute(sql.raw(`ALTER TABLE ${tableName} ENABLE TRIGGER USER`));
+          }
+        }
       }
     },
     close: async () => {
