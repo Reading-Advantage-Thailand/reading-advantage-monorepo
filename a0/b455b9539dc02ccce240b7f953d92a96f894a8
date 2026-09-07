@@ -1,0 +1,42 @@
+Monorepo package review: review-records
+
+Astra low agents reviewed the findings. Sol medium agents implemented the repairs under the Ponytail Rules.
+The complete workspace test command passed all 65 tasks. The verification record contains check results and limitations.
+
+Files:
+measure/tracks/monorepo_package_review_20260907/index.md
+measure/tracks/monorepo_package_review_20260907/metadata.json
+measure/tracks/monorepo_package_review_20260907/plan.md
+measure/tracks/monorepo_package_review_20260907/report.md
+measure/tracks/monorepo_package_review_20260907/verification.md
+measure/tracks/wave5_public_surface_completion_20260628/plan.md
+measure/tracks/monorepo_package_review_20260907/resume-final-review-apps.md
+measure/tracks/monorepo_package_review_20260907/resume-final-review-ci-database.md
+measure/tracks/monorepo_package_review_20260907/resume-final-review-reading.md
+measure/tracks/monorepo_package_review_20260907/resume-final-review-science-audits.md
+measure/tracks/monorepo_package_review_20260907/resume-final-review-shared.md
+measure/tracks/monorepo_package_review_20260907/resume-final-review-workspace-build.md
+measure/tracks/monorepo_package_review_20260907/resume-implementation-app-cleanup.md
+measure/tracks/monorepo_package_review_20260907/resume-implementation-app-fixtures.md
+measure/tracks/monorepo_package_review_20260907/resume-implementation-checks.md
+measure/tracks/monorepo_package_review_20260907/resume-implementation-ci-database.md
+measure/tracks/monorepo_package_review_20260907/resume-implementation-ci-followup.md
+measure/tracks/monorepo_package_review_20260907/resume-implementation-codecamp-chat.md
+measure/tracks/monorepo_package_review_20260907/resume-implementation-data.md
+measure/tracks/monorepo_package_review_20260907/resume-implementation-graph-update.md
+measure/tracks/monorepo_package_review_20260907/resume-implementation-mastery-harness.md
+measure/tracks/monorepo_package_review_20260907/resume-implementation-primary-security.md
+measure/tracks/monorepo_package_review_20260907/resume-implementation-primary-ui.md
+measure/tracks/monorepo_package_review_20260907/resume-implementation-primary-writers.md
+measure/tracks/monorepo_package_review_20260907/resume-implementation-reading-controllers.md
+measure/tracks/monorepo_package_review_20260907/resume-implementation-reading-games.md
+measure/tracks/monorepo_package_review_20260907/resume-implementation-science.md
+measure/tracks/monorepo_package_review_20260907/resume-implementation-shared-deep.md
+measure/tracks/monorepo_package_review_20260907/resume-implementation-trust-closeout.md
+measure/tracks/monorepo_package_review_20260907/resume-implementation-workspace-build-fixes.md
+measure/tracks/monorepo_package_review_20260907/resume-review-apps.md
+measure/tracks/monorepo_package_review_20260907/resume-review-checks.md
+measure/tracks/monorepo_package_review_20260907/resume-review-data.md
+measure/tracks/monorepo_package_review_20260907/resume-review-reading-science.md
+measure/tracks/monorepo_package_review_20260907/resume-review-shared-deep.md
+measure/tracks/monorepo_package_review_20260907/resume-shared-investigation-notes.md
