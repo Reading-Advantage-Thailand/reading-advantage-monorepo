@@ -52,7 +52,7 @@ interface OwnershipException {
 }
 
 interface OwnershipMapModule {
-  readonly loadOwnershipMap: () => {
+  readonly loadOwnershipMap: (policyVersion?: "v1" | "v2") => {
     readonly rules: readonly DurableJobOwnershipRule[];
     readonly exactExceptions: readonly OwnershipException[];
   };
@@ -156,7 +156,7 @@ describe("durable-job architecture Red contract", () => {
     const workspaceResolution = (await import(
       pathToFileURL(WORKSPACE_RESOLUTION_MODULE_PATH).href
     )) as WorkspaceResolutionModule;
-    const config = ownershipMap.loadOwnershipMap();
+    const config = ownershipMap.loadOwnershipMap("v2");
     const tenantRegistrySource = readFileSync(TENANT_REGISTRY_PATH, "utf8");
     const durableJobRule = config.rules.find(
       (rule) => rule.id === "DURABLE_JOB_DATABASE_BOUNDARY",
