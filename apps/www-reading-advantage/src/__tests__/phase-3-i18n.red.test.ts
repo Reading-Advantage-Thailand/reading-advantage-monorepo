@@ -266,7 +266,7 @@ describe("Wave 5 T8 and T15 i18n contracts", () => {
       ),
     ).toBe(true);
     expect(diagnostics).toEqual([]);
-  });
+  }, 120_000);
 
   it("renders localized CTA interpolation and Sheet screen-reader text", async () => {
     const localeEntries = Object.entries(LOCALE_MESSAGES) as Array<

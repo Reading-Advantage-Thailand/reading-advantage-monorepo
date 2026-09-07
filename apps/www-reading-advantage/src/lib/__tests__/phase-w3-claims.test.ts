@@ -466,7 +466,7 @@ describe("1I — Stale timestamps", () => {
       const text = await readSrcFile(relPath);
       const lines = text.split("\n");
       lines.forEach((line, idx) => {
-        if (!/last\s+updated|lastupdated|อัปเดตล่าสุด|最后更新/gi.test(line)) return;
+        if (!/last\s+updated|lastupdated|copy\s+reviewed|อัปเดตล่าสุด|ทบทวนข้อความเมื่อ|最后更新|文案审核日期/gi.test(line)) return;
         const kinds = helper.classify({ text: line, page: relPath });
         if (kinds.includes("stale-launch-date")) {
           staleCount++;
@@ -480,12 +480,14 @@ describe("1I — Stale timestamps", () => {
     ).toBe(0);
   });
 
-  it("positive control: comparison/pricing tables still carry a last-updated line", async () => {
+  it("positive control: comparison/pricing tables carry the approved copy-review date", async () => {
     const pricing = await readSrcFile("locales/components/pricing-table.ts");
     const comparison = await readSrcFile("locales/components/comparison-table.ts");
-    expect(
-      /last\s+updated/gi.test(pricing + comparison),
-      "Expected pricing/comparison tables to keep a 'Last updated' line.",
-    ).toBe(true);
+    for (const source of [pricing, comparison]) {
+      expect(
+        /copy\s+reviewed\s*:[^"\n]*\b2026\b/i.test(source),
+        "Expected each table to include the approved 2026 copy review date.",
+      ).toBe(true);
+    }
   });
 });

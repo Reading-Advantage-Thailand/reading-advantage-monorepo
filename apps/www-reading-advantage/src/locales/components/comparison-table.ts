@@ -1,6 +1,7 @@
 export const en = {
   title: "Reading Program Comparison",
-  lastUpdated: "Last updated: July 2026",
+  lastUpdated: "Copy reviewed: September 2026",
+  currentPricing: "Contact us for current pricing",
   tableHeaders: {
     feature: "Feature",
     readingAdvantage: "Reading Advantage",
@@ -24,6 +25,7 @@ export const en = {
     included: "Included",
     unavailable: "Not available",
     partial: "Partially available",
+    notVerified: "Not verified",
   },
   descriptions: {
     fiction: {
@@ -76,7 +78,8 @@ export const en = {
 
 export const th = {
   title: "การเปรียบเทียบโปรแกรมการอ่าน",
-  lastUpdated: "อัปเดตล่าสุด: กรกฎาคม 2026",
+  lastUpdated: "ทบทวนข้อความเมื่อ: กันยายน 2026",
+  currentPricing: "ติดต่อเราเพื่อสอบถามราคาปัจจุบัน",
   tableHeaders: {
     feature: "คุณสมบัติ",
     readingAdvantage: "Reading Advantage",
@@ -100,6 +103,7 @@ export const th = {
     included: "มีให้",
     unavailable: "ไม่มีให้",
     partial: "มีให้บางส่วน",
+    notVerified: "ยังไม่ได้ตรวจสอบ",
   },
   descriptions: {
     fiction: {
@@ -152,7 +156,8 @@ export const th = {
 
 export const zh = {
   title: "阅读程序比较",
-  lastUpdated: "最后更新：2026年7月",
+  lastUpdated: "文案审核日期：2026年9月",
+  currentPricing: "联系我们获取当前价格",
   tableHeaders: {
     feature: "功能",
     readingAdvantage: "Reading Advantage",
@@ -176,6 +181,7 @@ export const zh = {
     included: "包含",
     unavailable: "不可用",
     partial: "部分提供",
+    notVerified: "尚未验证",
   },
   descriptions: {
     fiction: {

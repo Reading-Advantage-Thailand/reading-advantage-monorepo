@@ -34,7 +34,7 @@ export const en = {
         "The white-glove solution: We provide the technology AND the teacher for complete English department outsourcing.",
       features: [
         "Fully outsourced English department",
-        "Zero implementation risk",
+        "Structured onboarding and implementation review",
         "Certified Reading Advantage teachers",
         "Complete curriculum and materials",
         "Progress tracking and reporting",
@@ -49,7 +49,7 @@ export const en = {
       status: "Available Now",
       statusBadge: "ACTIVE",
       description:
-        "Comprehensive implementation support to ensure your school gets the most from Reading Advantage.",
+        "Comprehensive implementation support with defined setup and review steps.",
       features: [
         "Account setup and configuration",
         "Student and teacher enrollment",
@@ -123,7 +123,7 @@ export const th = {
         "โซลูชันแบบไขมือขาว: เรามอบทั้งเทคโนโลยีและครูสำหรับการจัดการแผนกวิชาภาษาอังกฤษแบบครบวงจรภายนอก",
       features: [
         "แผนกวิชาภาษาอังกฤษแบบจัดการภายนอกทั้งหมด",
-        "ความเสี่ยงต่อการนำไปใช้งานเป็นศูนย์",
+        "การเริ่มต้นใช้งานอย่างเป็นขั้นตอน",
         "ครู Reading Advantage ที่ได้รับการรับรอง",
         "หลักสูตรและวัสดุครบถ้วน",
         "การติดตามความก้าวหน้าและรายงาน",
@@ -138,7 +138,7 @@ export const th = {
       status: "พร้อมใช้งานแล้ว",
       statusBadge: "ใช้งาน",
       description:
-        "การสนับสนุนการนำไปใช้งานแบบครบถ้วนเพื่อให้มั่นใจว่าโรงเรียนของคุณได้ประโยชนจาก Reading Advantage มากที่สุด",
+        "การสนับสนุนการนำไปใช้งานแบบครบถ้วนพร้อมขั้นตอนการตั้งค่าและทบทวนที่ชัดเจน",
       features: [
         "การตั้งค่าและการกำหนดบัญชี",
         "การลงทะเบียนนักเรียนและครู",
@@ -212,7 +212,7 @@ export const zh = {
         "白手套解决方案：我们同时提供技术和教师，实现完整的英语部门外包。",
       features: [
         "完全外包英语部门",
-        "零实施风险",
+        "结构化的入门和实施审查",
         "经过认证的阅读优势教师",
         "完整的课程和材料",
         "进度跟踪和报告",
@@ -226,7 +226,7 @@ export const zh = {
       name: "入职和设置",
       status: "现在可用",
       statusBadge: "活跃",
-      description: "全面的实施支持，确保您的学校从阅读优势中获得最大价值。",
+      description: "全面的实施支持，包括明确的设置和审查步骤。",
       features: [
         "账户设置和配置",
         "学生和教师注册",

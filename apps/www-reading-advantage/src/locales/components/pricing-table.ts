@@ -4,7 +4,7 @@ export const en = {
         description: "Compare Reading Advantage with other leading reading programs",
     },
     table: {
-        lastUpdated: "Last updated: July 2026",
+        lastUpdated: "Copy reviewed: September 2026",
         title: "Feature",
         basicTier: "Basic Tier",
         aiEnhancedTier: "AI Enhanced Tier",
@@ -13,9 +13,9 @@ export const en = {
     pricingFeatures: {
         0: {
             name: "Price (per student, 12 month license)",
-            basic: "US$36",
-            aiEnhanced: "US$60",
-            aiTutor: "US$120",
+            basic: "Contact us for current pricing",
+            aiEnhanced: "Contact us for current pricing",
+            aiTutor: "Contact us for current pricing",
         },
         1: {
             name: "Access to leveled reading materials (fiction and non-fiction)",
@@ -176,7 +176,7 @@ export const th = {
         description: "เปรียบเทียบ Reading Advantage กับโปรแกรมการอ่านชั้นนำอื่น ๆ",
     },
     table: {
-        lastUpdated: "อัปเดตล่าสุด: กรกฎาคม 2026",
+        lastUpdated: "ทบทวนข้อความเมื่อ: กันยายน 2026",
         title: "ฟีเจอร์",
         basicTier: "ระดับพื้นฐาน",
         aiEnhancedTier: "ระดับ AI พิเศษ",
@@ -185,9 +185,9 @@ export const th = {
     pricingFeatures: {
         0: {
             name: "ราคา (ต่อผู้เรียน ใบอนุญาต 12 เดือน)",
-            basic: "US$36",
-            aiEnhanced: "US$60",
-            aiTutor: "US$120",
+            basic: "ติดต่อเราเพื่อสอบถามราคาปัจจุบัน",
+            aiEnhanced: "ติดต่อเราเพื่อสอบถามราคาปัจจุบัน",
+            aiTutor: "ติดต่อเราเพื่อสอบถามราคาปัจจุบัน",
         },
         1: {
             name: "การเข้าถึงสื่อการอ่านระดับต่างๆ (เรื่องแต่งและเรื่องไม่แต่ง)",
@@ -348,7 +348,7 @@ export const zh = {
         description: "比较 Reading Advantage 与其他领先的阅读项目",
     },
     table: {
-        lastUpdated: "最后更新时间：2026年7月",
+        lastUpdated: "文案审核日期：2026年9月",
         title: "功能",
         basicTier: "基础版",
         aiEnhancedTier: "AI 增强版",
@@ -357,9 +357,9 @@ export const zh = {
     pricingFeatures: {
         0: {
             name: "价格（每位学生，12个月许可）",
-            basic: "US$36",
-            aiEnhanced: "US$60",
-            aiTutor: "US$120",
+            basic: "联系我们获取当前价格",
+            aiEnhanced: "联系我们获取当前价格",
+            aiTutor: "联系我们获取当前价格",
         },
         1: {
             name: "访问分级阅读材料（小说和非小说）",
@@ -513,4 +513,3 @@ export const zh = {
     },
     comingSoon: "即将推出",
 };
-

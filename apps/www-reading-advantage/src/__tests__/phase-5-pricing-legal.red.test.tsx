@@ -24,10 +24,7 @@ vi.mock("@/locales/client", () => ({
 }));
 
 const EN_CURRENT_PRICING = "Contact us for current pricing";
-const CURRENT_PUBLIC_MONTH = (() => {
-  const now = new Date();
-  return { year: now.getUTCFullYear(), month: now.getUTCMonth() + 1 };
-})();
+const COPY_REVIEW_FLOOR = { year: 2026, month: 9 } as const;
 const CURRENCY_NUMBER_RE =
   /(?:(?:THB|USD|EUR|GBP|CNY)\s?[\d,.]+|[\d,.]+\s?(?:THB|USD|EUR|GBP|CNY)|(?:US\$|[$€£¥฿])\s?[\d,.]+)/i;
 
@@ -55,6 +52,7 @@ const guaranteePatterns = [
 type LocaleSurface = {
   locale: "en" | "th" | "zh";
   expectedPricing: string;
+  copyReviewLabel: RegExp;
   evaluationPattern: RegExp;
   pricing: unknown;
   comparison: unknown;
@@ -66,6 +64,7 @@ const publicLocales: LocaleSurface[] = [
   {
     locale: "en",
     expectedPricing: EN_CURRENT_PRICING,
+    copyReviewLabel: /^Copy reviewed:/,
     evaluationPattern:
       /low-risk|structured onboarding|currently in development|accepting inquiries|progress tracking|quality assurance/i,
     pricing: enPricing,
@@ -76,6 +75,7 @@ const publicLocales: LocaleSurface[] = [
   {
     locale: "th",
     expectedPricing: "ติดต่อเราเพื่อสอบถามราคาปัจจุบัน",
+    copyReviewLabel: /^ทบทวนข้อความเมื่อ:/,
     evaluationPattern:
       /ความเสี่ยงต่ำ|การเริ่มต้นที่มีโครงสร้าง|อยู่ในระหว่างพัฒนา|รับคำขอ|ติดตามความก้าวหน้า|รับรองคุณภาพ/i,
     pricing: thPricing,
@@ -86,6 +86,7 @@ const publicLocales: LocaleSurface[] = [
   {
     locale: "zh",
     expectedPricing: "联系我们获取当前价格",
+    copyReviewLabel: /^文案审核日期：/,
     evaluationPattern: /低风险|结构化|开发阶段|接受.*询问|进度跟踪|质量保证/i,
     pricing: zhPricing,
     comparison: zhComparison,
@@ -186,14 +187,14 @@ function parsePublicMonth(
   return match ? { year, month: match[1] } : null;
 }
 
-/** Returns whether a public timestamp predates the current review month. */
-function isStaleTimestamp(text: string): boolean {
+/** Returns whether a public copy review date predates the approved decision. */
+function isBeforeCopyReviewFloor(text: string): boolean {
   const parsed = parsePublicMonth(text);
   if (!parsed) return true;
   return (
-    parsed.year < CURRENT_PUBLIC_MONTH.year ||
-    (parsed.year === CURRENT_PUBLIC_MONTH.year &&
-      parsed.month < CURRENT_PUBLIC_MONTH.month)
+    parsed.year < COPY_REVIEW_FLOOR.year ||
+    (parsed.year === COPY_REVIEW_FLOOR.year &&
+      parsed.month < COPY_REVIEW_FLOOR.month)
   );
 }
 
@@ -246,23 +247,34 @@ describe("Wave 5 Phase 5 pricing and legal claims", () => {
       expect(priceRow).toBeDefined();
       if (!priceRow) return;
       const cells = [...priceRow.querySelectorAll("td")];
+      const competitorCells = [
+        ...rendered.container.querySelectorAll("tbody tr"),
+      ].flatMap((row) => [...row.querySelectorAll("td")].slice(2));
 
       expect(cells[1]).toHaveTextContent(expectedPricing);
       expect(findUnsupportedCompetitorCells(rendered.container)).toEqual([]);
+      expect(
+        competitorCells.every(
+          (cell) =>
+            cell.getAttribute("aria-label") ===
+            readPath(comparison, "semanticLabels.notVerified"),
+        ),
+      ).toBe(true);
       expect(rendered.container.textContent ?? "").not.toMatch(
         CURRENCY_NUMBER_RE,
       );
     },
   );
 
-  it("rejects stale or missing timestamps on pricing and comparison tables", () => {
+  it("requires pricing and comparison copy review dates from the approved decision", () => {
     const violations = publicLocales.flatMap(
-      ({ locale, pricing, comparison }) =>
+      ({ locale, pricing, comparison, copyReviewLabel }) =>
         [
           ["pricing", String(readPath(pricing, "table.lastUpdated"))],
           ["comparison", String(readPath(comparison, "lastUpdated"))],
         ].flatMap(([surface, timestamp]) =>
-          isStaleTimestamp(timestamp)
+          !copyReviewLabel.test(timestamp) ||
+          isBeforeCopyReviewFloor(timestamp)
             ? [`${locale}:${surface}:${timestamp}`]
             : [],
         ),
@@ -272,18 +284,18 @@ describe("Wave 5 Phase 5 pricing and legal claims", () => {
   });
 
   it("detects an October 2024 timestamp as a stale counterexample", () => {
-    expect(isStaleTimestamp("Last updated: October 2024")).toBe(true);
-    const currentMonthName = new Intl.DateTimeFormat("en-US", {
+    expect(isBeforeCopyReviewFloor("Copy reviewed: October 2024")).toBe(true);
+    const reviewMonthName = new Intl.DateTimeFormat("en-US", {
       month: "long",
       timeZone: "UTC",
     }).format(
       new Date(
-        Date.UTC(CURRENT_PUBLIC_MONTH.year, CURRENT_PUBLIC_MONTH.month - 1, 1),
+        Date.UTC(COPY_REVIEW_FLOOR.year, COPY_REVIEW_FLOOR.month - 1, 1),
       ),
     );
     expect(
-      isStaleTimestamp(
-        `Last updated: ${currentMonthName} ${CURRENT_PUBLIC_MONTH.year}`,
+      isBeforeCopyReviewFloor(
+        `Copy reviewed: ${reviewMonthName} ${COPY_REVIEW_FLOOR.year}`,
       ),
     ).toBe(false);
   });
