@@ -218,19 +218,19 @@ export function AdvantageGamesAuthoringQc({ preview }: AdvantageGamesAuthoringQc
     setTutorialStatus(status);
   };
 
-  const startTutorial = () => {
-    void tutorialQc.controller.start();
-    void tutorialQc.clock.runAll();
+  const startTutorial = async () => {
+    await tutorialQc.controller.start();
+    await tutorialQc.clock.runAll();
     refreshTutorial("Tutorial running");
   };
 
-  const replayTutorial = () => {
-    void tutorialQc.controller.replay();
+  const replayTutorial = async () => {
+    await tutorialQc.controller.replay();
     refreshTutorial("Tutorial clean after replay");
   };
 
-  const interruptTutorial = () => {
-    void tutorialQc.controller.interrupt();
+  const interruptTutorial = async () => {
+    await tutorialQc.controller.interrupt();
     refreshTutorial("Tutorial interrupted and clean");
   };
 

@@ -75,6 +75,7 @@ describe('Haunted Library Logic', () => {
     state.ghosts = [] // Clear ghosts for testing
     const targetDoor = state.doors.find(d => d.wordIndex === 0)
     if (!targetDoor) throw new Error('Target door not found')
+    state.doors = [targetDoor]
     
     // Teleport player to door
     state.player.x = targetDoor.x
@@ -93,6 +94,7 @@ describe('Haunted Library Logic', () => {
     state.ghosts = [] // Clear ghosts for testing
     const wrongDoor = state.doors.find(d => d.wordIndex === 1)
     if (!wrongDoor) throw new Error('Wrong door not found')
+    state.doors = [wrongDoor]
     
     state.player.x = wrongDoor.x
     state.player.y = wrongDoor.y + 10
@@ -147,6 +149,7 @@ describe('Haunted Library Logic', () => {
     let state = createLibraryState(mockSentences)
     const door = state.doors[0]
     const ghost = state.ghosts[0]
+    state.ghosts = [ghost]
     // Teleport ghost to door
     ghost.x = door.x
     ghost.y = door.y
@@ -277,8 +280,6 @@ describe('Haunted Library Logic', () => {
     })
   })
 })
-
-
 
 
 

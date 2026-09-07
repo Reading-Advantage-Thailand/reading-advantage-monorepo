@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, within } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 
 import preview from "@/lib/apk/standard-pack-qc-preview.json";
 import { AdvantageGamesAuthoringQc } from "./AdvantageGamesAuthoringQc";
@@ -51,18 +51,22 @@ describe("AdvantageGamesAuthoringQc guided tutorial preview", () => {
     expect(within(qc).getAllByRole("img", { name: /guided tutorial phaser canvas/i })).toHaveLength(1);
   });
 
-  it("keeps preview actions in tutorial mode and reports replay/interruption cleanup without a result", () => {
+  it("keeps preview actions in tutorial mode and reports replay/interruption cleanup without a result", async () => {
     render(<AdvantageGamesAuthoringQc preview={preview as StandardPackQcPreview} />);
 
     const qc = screen.getByRole("region", { name: "Guided tutorial QC preview" });
     fireEvent.click(within(qc).getByRole("button", { name: /start tutorial/i }));
+    await waitFor(() => expect(within(qc).getByRole("status")).toHaveTextContent(/tutorial running/i));
     fireEvent.click(within(qc).getByRole("button", { name: /replay tutorial/i }));
+    await waitFor(() => expect(within(qc).getByRole("status")).toHaveTextContent(/clean after replay/i));
     fireEvent.click(within(qc).getByRole("button", { name: /interrupt tutorial/i }));
 
-    expect(within(qc).getByRole("status")).toHaveTextContent(/interrupted|clean/i);
-    expect(within(qc).getByText(/timers: 0/i)).toBeInTheDocument();
-    expect(within(qc).getByText(/listeners: 0/i)).toBeInTheDocument();
-    expect(within(qc).getByText(/phaser objects: 0/i)).toBeInTheDocument();
+    await waitFor(() => {
+      expect(within(qc).getByRole("status")).toHaveTextContent(/interrupted|clean/i);
+      expect(within(qc).getByText(/timers: 0/i)).toBeInTheDocument();
+      expect(within(qc).getByText(/listeners: 0/i)).toBeInTheDocument();
+      expect(within(qc).getByText(/phaser objects: 0/i)).toBeInTheDocument();
+    });
     expect(within(qc).queryByRole("region", { name: "Game result" })).not.toBeInTheDocument();
     expect(within(qc).getAllByRole("img", { name: /guided tutorial phaser canvas/i })).toHaveLength(1);
   });

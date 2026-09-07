@@ -1,9 +1,11 @@
 import { isValidElement } from 'react';
 import RootLayout, { metadata } from './layout';
 
-jest.mock('next/font/google', () => ({
-  Geist: () => ({ variable: 'font-sans' }),
-  Geist_Mono: () => ({ variable: 'font-mono' }),
+jest.mock('next/font/local', () => ({
+  __esModule: true,
+  default: jest.fn(({ src }: { src: string }) => ({
+    variable: src.includes('Mono') ? 'font-mono' : 'font-sans',
+  })),
 }));
 
 describe('RootLayout', () => {
@@ -26,5 +28,20 @@ describe('RootLayout', () => {
     expect(body.props.className).toEqual(expect.stringContaining('font-sans'));
     expect(body.props.className).toEqual(expect.stringContaining('font-mono'));
     expect(body.props.className).toEqual(expect.stringContaining('antialiased'));
+  });
+
+  it('loads both Geist fonts from Advantage Games inputs', () => {
+    const localFont = jest.requireMock('next/font/local').default as jest.Mock;
+
+    expect(localFont).toHaveBeenNthCalledWith(1, expect.objectContaining({
+      src: '../fonts/GeistVF.woff',
+      variable: '--font-geist-sans',
+      weight: '100 900',
+    }));
+    expect(localFont).toHaveBeenNthCalledWith(2, expect.objectContaining({
+      src: '../fonts/GeistMonoVF.woff',
+      variable: '--font-geist-mono',
+      weight: '100 900',
+    }));
   });
 });
