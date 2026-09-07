@@ -1,0 +1,22 @@
+Monorepo package review: package-knowledge-space-core
+
+Astra low agents reviewed the findings. Sol medium agents implemented the repairs under the Ponytail Rules.
+The complete workspace test command passed all 65 tasks. The verification record contains check results and limitations.
+
+Files:
+packages/knowledge-space-core/README.md
+packages/knowledge-space-core/src/__tests__/docs-reconciliation.test.ts
+packages/knowledge-space-core/src/__tests__/phase-1-adversarial.test.ts
+packages/knowledge-space-core/src/__tests__/phase-3-adversarial.test.ts
+packages/knowledge-space-core/src/__tests__/phase-5-adversarial.test.ts
+packages/knowledge-space-core/src/__tests__/phase4-doctor-generate-scripts.test.ts
+packages/knowledge-space-core/src/__tests__/phase4-final-verification.test.ts
+packages/knowledge-space-core/src/__tests__/phase4-spec-section-6-implementation.test.ts
+packages/knowledge-space-core/src/__tests__/phase5-spec-section-3-2-3-7-8-4-13-3-implementation.test.ts
+packages/knowledge-space-core/src/__tests__/spec-markers.test.ts
+packages/knowledge-space-core/src/__tests__/srs-bridge-implementation.test.ts
+packages/knowledge-space-core/src/__tests__/srs-bridge-pipeline.test.ts
+packages/knowledge-space-core/src/__tests__/transfer-credit-signature.test.ts
+packages/knowledge-space-core/src/knowledge-state-engine.ts
+packages/knowledge-space-core/src/srs-bridge.ts
+packages/knowledge-space-core/src/__tests__/upstream-contract.ts
