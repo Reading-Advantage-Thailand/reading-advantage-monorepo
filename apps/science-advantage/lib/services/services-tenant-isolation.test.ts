@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import type { Tenant, UserContext } from '@reading-advantage/auth';
 import { AuthError } from '@reading-advantage/auth';
-import { createTenantDB } from '@reading-advantage/domain';
+import { createTenantDB } from '@reading-advantage/domain/db-contract';
 import { createMockDb } from '../../../../packages/domain/src/__tests__/mock-db.js';
 import { buildTenantIsolationHarness } from '../../../../packages/domain/src/testing/tenant-isolation-harness.js';
 

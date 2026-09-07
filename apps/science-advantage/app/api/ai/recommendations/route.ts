@@ -1,6 +1,6 @@
 import { randomUUID } from 'crypto';
 import { NextRequest, NextResponse } from 'next/server';
-import { createTenantDB } from '@reading-advantage/domain';
+import { createTenantDB } from '@reading-advantage/domain/db-contract';
 import { db as defaultDb } from '@reading-advantage/db';
 import { AuthError } from '@reading-advantage/auth';
 import { getCurrentSession } from '@/lib/auth/session';

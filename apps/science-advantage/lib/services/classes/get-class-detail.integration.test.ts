@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { createTenantDB } from '@reading-advantage/domain';
+import { createTenantDB } from '@reading-advantage/domain/db-contract';
 import { db, sql } from '@reading-advantage/db';
 import {
   scienceClasses,

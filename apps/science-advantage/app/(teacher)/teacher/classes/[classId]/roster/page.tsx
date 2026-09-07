@@ -1,6 +1,6 @@
 import { cache } from 'react';
 import { notFound, redirect } from 'next/navigation';
-import { createTenantDB } from '@reading-advantage/domain';
+import { createTenantDB } from '@reading-advantage/domain/db-contract';
 import { db } from '@reading-advantage/db';
 
 import { hasRole, requireAuth } from '@/lib/auth/server';

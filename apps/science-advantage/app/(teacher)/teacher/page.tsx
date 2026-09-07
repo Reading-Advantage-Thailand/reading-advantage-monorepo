@@ -1,4 +1,5 @@
-import { teachers, createTenantDB } from '@reading-advantage/domain';
+import { createTenantDB } from '@reading-advantage/domain/db-contract';
+import * as teachers from '@reading-advantage/domain/teachers';
 import type { UserContext } from '@reading-advantage/auth';
 import { db } from '@reading-advantage/db';
 

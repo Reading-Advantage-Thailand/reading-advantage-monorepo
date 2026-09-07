@@ -4,7 +4,7 @@ import { randomUUID } from 'crypto';
 
 import { assertCan, AuthError } from '@reading-advantage/auth';
 import type { UserContext } from '@reading-advantage/auth';
-import { createTenantDB } from '@reading-advantage/domain';
+import { createTenantDB } from '@reading-advantage/domain/db-contract';
 import { db } from '@reading-advantage/db';
 import { getCurrentSession } from '@/lib/auth/session';
 import { getStudentEnrolledClasses } from '@/lib/services/classes/get-student-classes';

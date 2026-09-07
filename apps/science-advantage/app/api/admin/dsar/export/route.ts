@@ -2,7 +2,7 @@ import { z } from "zod";
 import { runWithRequestContext } from '@/lib/observability/context';
 import { randomUUID } from 'crypto';
 import { NextRequest } from "next/server";
-import { createTenantDB } from "@reading-advantage/domain";
+import { createTenantDB } from "@reading-advantage/domain/db-contract";
 import { getCurrentSession } from "@/lib/auth/session";
 import {
   exportSubjectData,
