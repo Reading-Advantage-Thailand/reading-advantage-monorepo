@@ -1,0 +1,13 @@
+Monorepo package review: advantage-games
+
+Astra low agents reviewed the findings. Sol medium agents implemented the repairs under the Ponytail Rules.
+The complete workspace test command passed all 65 tasks. The verification record contains check results and limitations.
+
+Files:
+apps/advantage-games/src/app/layout.test.tsx
+apps/advantage-games/src/app/layout.tsx
+apps/advantage-games/src/components/apk/AdvantageGamesAuthoringQc.tsx
+apps/advantage-games/src/components/apk/AdvantageGamesAuthoringQc.tutorial.test.tsx
+apps/advantage-games/src/lib/games/hauntedLibrary.test.ts
+apps/advantage-games/src/fonts/GeistMonoVF.woff
+apps/advantage-games/src/fonts/GeistVF.woff
