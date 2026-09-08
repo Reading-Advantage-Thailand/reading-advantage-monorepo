@@ -1,0 +1,33 @@
+The rating domain owns atomic rating and reward writes.
+The action returns committed results even when cache revalidation fails.
+The dialog waits for the action and supports retry without duplicate submissions.
+
+Verification: 22 domain tests, 16 permission tests, 10 targeted application tests, and one PostgreSQL scenario passed.
+Focused lint and source typechecks passed.
+The PostgreSQL test used two connections and a disposable schema copy.
+Fixture cleanup and database removal were verified.
+Browser verification remains pending in the reading journey.
+
+Changed files:
+apps/reading-advantage/__tests__/actions/rating.test.ts
+apps/reading-advantage/__tests__/actions/sensitive-auth-boundaries.test.ts
+apps/reading-advantage/__tests__/components/rating-popup.test.tsx
+apps/reading-advantage/actions/rating.ts
+apps/reading-advantage/components/article-card.tsx
+apps/reading-advantage/components/rating-popup.tsx
+apps/reading-advantage/jest.config.ts
+apps/reading-advantage/locales/cn.ts
+apps/reading-advantage/locales/en.ts
+apps/reading-advantage/locales/th.ts
+apps/reading-advantage/locales/tw.ts
+apps/reading-advantage/locales/vi.ts
+measure/tracks/reading_advantage_refactor_20260909/plan.md
+measure/tracks/reading_advantage_refactor_20260909/rating-design.md
+packages/auth/src/__tests__/permissions.test.ts
+packages/auth/src/permissions.ts
+packages/domain/src/__tests__/article-rating.integration.test.ts
+packages/domain/src/__tests__/article-rating.test.ts
+packages/domain/src/articles/actions.ts
+packages/domain/src/articles/contracts.ts
+packages/domain/src/articles/index.ts
+packages/domain/src/articles/permissions.ts
