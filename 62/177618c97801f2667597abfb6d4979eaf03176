@@ -1,0 +1,17 @@
+Reading Advantage article discovery and access now use the existing domain module.
+The migration preserves the HTTP envelopes and authenticated activity ownership.
+Verification: 21 domain tests, 7 controller tests, focused module types, and focused lint.
+Database conflict integration and browser verification remain pending.
+Graph consumers were inspected and changed source files were updated incrementally.
+The graph database is excluded from the commit.
+apps/reading-advantage/__tests__/controllers/article-boundary.test.ts
+apps/reading-advantage/jest.config.ts
+apps/reading-advantage/server/controllers/article-controller.ts
+packages/domain/package.json
+packages/domain/src/__tests__/article-discovery-access.test.ts
+packages/domain/src/articles/actions.ts
+packages/domain/src/articles/contracts.ts
+packages/domain/src/articles/errors.ts
+packages/domain/src/articles/index.ts
+packages/domain/src/articles/permissions.ts
+packages/domain/src/articles/queries.ts
