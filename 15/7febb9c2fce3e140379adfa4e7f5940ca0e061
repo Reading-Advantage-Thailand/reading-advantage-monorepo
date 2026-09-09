@@ -1,0 +1,38 @@
+Measure reading_advantage_refactor_20260909: Chapter MCQ sessions.
+
+Shared commands now own grading, rewards, reset, and chapter completion.
+The component uses actor-scoped server state and shared UI components.
+Stored question IDs prevent positional grading errors.
+Retake preserves earned XP and completed reading progress.
+
+Verification: 72 focused cases passed. Source type checks and focused lint passed.
+Application lint retains 21 existing legacy warnings.
+Both disposable databases and their runners were removed.
+The external graph includes all 23 changed TypeScript files.
+
+Changed files:
+apps/reading-advantage/__tests__/components/story-mcq-session.test.tsx
+apps/reading-advantage/__tests__/controllers/story-chapter-mutations-controller.test.ts
+apps/reading-advantage/__tests__/controllers/story-mcq-controller.test.ts
+apps/reading-advantage/app/api/v1/stories/[storyId]/[chapterNumber]/question/mcq/[questionNumber]/route.ts
+apps/reading-advantage/app/api/v1/stories/[storyId]/[chapterNumber]/question/mcq/route.ts
+apps/reading-advantage/components/stories-chapter-question/mc-question-card.tsx
+apps/reading-advantage/locales/cn.ts
+apps/reading-advantage/locales/en.ts
+apps/reading-advantage/locales/th.ts
+apps/reading-advantage/locales/tw.ts
+apps/reading-advantage/locales/vi.ts
+apps/reading-advantage/server/controllers/stories-controller.ts
+apps/reading-advantage/server/controllers/stories-question-controller.ts
+apps/reading-advantage/server/controllers/story-mcq-controller.ts
+measure/tracks/reading_advantage_refactor_20260909/plan.md
+measure/tracks/reading_advantage_refactor_20260909/story-mcq-review.md
+packages/domain/src/__tests__/story-chapter-mcq.test.ts
+packages/domain/src/__tests__/story-mcq-answer.integration.test.ts
+packages/domain/src/__tests__/story-read-model.integration.test.ts
+packages/domain/src/stories/completion.ts
+packages/domain/src/stories/contracts.ts
+packages/domain/src/stories/errors.ts
+packages/domain/src/stories/index.ts
+packages/domain/src/stories/mcq.ts
+packages/domain/src/stories/reading.ts
