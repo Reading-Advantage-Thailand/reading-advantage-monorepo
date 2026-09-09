@@ -1,0 +1,35 @@
+Task: Chapter short-answer self-assessment.
+Track: reading_advantage_refactor_20260909.
+
+The story module now owns authorized question reads, read-only previews, and atomic five-XP finalization.
+The card uses actor-scoped queries and preserves answers across retries.
+Shared completion resolves legacy written-answer question identities by chapter and activity type.
+
+Verification: 96 focused cases passed sequentially with one worker and a 1536 MB Node heap.
+The source type check passed. Domain lint passed. App lint had zero errors and 16 existing warnings.
+Both disposable PostgreSQL databases and their runners were removed after empty fixture checks.
+The original checkout remained untouched. The full refactor remains active.
+
+Files:
+- apps/reading-advantage/__tests__/components/story-short-answer-session.test.tsx
+- apps/reading-advantage/__tests__/controllers/story-short-answer-controller.test.ts
+- apps/reading-advantage/app/api/v1/stories/[storyId]/[chapterNumber]/question/sa/[questionNumber]/route.ts
+- apps/reading-advantage/app/api/v1/stories/[storyId]/[chapterNumber]/question/sa/route.ts
+- apps/reading-advantage/components/stories-chapter-question/sa-question-card.tsx
+- apps/reading-advantage/locales/cn.ts
+- apps/reading-advantage/locales/en.ts
+- apps/reading-advantage/locales/th.ts
+- apps/reading-advantage/locales/tw.ts
+- apps/reading-advantage/locales/vi.ts
+- apps/reading-advantage/server/controllers/stories-question-controller.ts
+- apps/reading-advantage/server/controllers/story-short-answer-controller.ts
+- measure/tracks/reading_advantage_refactor_20260909/plan.md
+- measure/tracks/reading_advantage_refactor_20260909/story-short-answer-review.md
+- packages/domain/src/__tests__/story-mcq-answer.integration.test.ts
+- packages/domain/src/__tests__/story-short-answer.integration.test.ts
+- packages/domain/src/__tests__/story-short-answer.test.ts
+- packages/domain/src/stories/completion.ts
+- packages/domain/src/stories/contracts.ts
+- packages/domain/src/stories/index.ts
+- packages/domain/src/stories/mcq.ts
+- packages/domain/src/stories/written-answers.ts
