@@ -1,0 +1,16 @@
+Index runnable scope discovery
+
+The selective synthetic fixture showed two table scans across 20,000 jobs.
+Two measured partial indexes reduced shared buffer accesses from 1456 to 122.
+The generated migration applied successfully in the disposable database.
+The actual indexed query completed in 0.475 milliseconds and returned the same row and scope counts.
+
+Files:
+packages/db/src/schema/jobs.ts
+packages/db/drizzle/0058_durable_job_scope_discovery.sql
+packages/db/drizzle/meta/0058_snapshot.json
+packages/db/drizzle/meta/_journal.json
+
+The focused type and lint checks passed.
+The disposable database and scripts were removed.
+Integration must reconcile the original checkout's separate 0058 migration.
