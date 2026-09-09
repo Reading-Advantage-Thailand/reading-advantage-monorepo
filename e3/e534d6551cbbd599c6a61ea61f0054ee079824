@@ -1,0 +1,16 @@
+Centralize story writing feedback
+
+The existing story module owns the rubric, contracts, and grader.
+It reuses the existing AIClient interface without another dependency.
+The grader preserves category-specific CEFR descriptors and normalizes missing optional feedback lists.
+
+Files:
+packages/domain/src/stories/writing-feedback.ts
+packages/domain/src/stories/writing-feedback-prompt.ts
+packages/domain/src/__tests__/story-writing-feedback.test.ts
+
+Six expected failures confirmed the stub before implementation.
+All 11 focused cases passed after implementation and review.
+Source and test types and lint passed.
+The code graph includes the new modules.
+The worker workflow and application integration remain pending.
