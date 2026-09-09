@@ -1,0 +1,26 @@
+Initial discovery migration
+
+The server and API reuse one domain composition. The existing query provider receives request-local hydration. Actor-scoped invalidation refreshes progress after article access.
+
+Verification: 44 focused tests passed. Domain and application source typechecks passed. Lint passed with seven legacy controller warnings. Browser history verification remains pending. Tests ran sequentially with a 1536 MB Node heap limit.
+
+Changed files:
+apps/reading-advantage/__tests__/components/article-discovery-invalidator.test.tsx
+apps/reading-advantage/__tests__/components/article-discovery.test.tsx
+apps/reading-advantage/__tests__/controllers/article-boundary.test.ts
+apps/reading-advantage/app/[locale]/(student)/student/read/[articleId]/page.test.tsx
+apps/reading-advantage/app/[locale]/(student)/student/read/[articleId]/page.tsx
+apps/reading-advantage/app/[locale]/(student)/student/read/page.test.tsx
+apps/reading-advantage/app/[locale]/(student)/student/read/page.tsx
+apps/reading-advantage/components/article-discovery-invalidator.tsx
+apps/reading-advantage/components/select.tsx
+apps/reading-advantage/lib/article-discovery-query.ts
+apps/reading-advantage/server/controllers/article-controller.ts
+measure/tracks/reading_advantage_refactor_20260909/initial-discovery-review.md
+measure/tracks/reading_advantage_refactor_20260909/plan.md
+measure/tracks/reading_advantage_refactor_20260909/translation-audit.md
+measure/tracks/reading_advantage_refactor_20260909/translation-design.md
+packages/domain/src/__tests__/article-discovery-page.test.ts
+packages/domain/src/articles/contracts.ts
+packages/domain/src/articles/index.ts
+packages/domain/src/articles/queries.ts
