@@ -1,0 +1,42 @@
+Article translation migration
+
+Article translations use domain contracts, an injected AI interface, authenticated HTTP adapters, and atomic locale updates. Client requests validate responses and cancel stale work. The migration preserves four-locale saved sentence cards and summary endpoint behavior.
+
+Verification: 95 focused tests passed, including PostgreSQL concurrency. Source typechecks passed. Focused lint passed with 25 legacy application warnings. Tests ran sequentially with a 1536 MB Node heap limit. The disposable database was removed.
+
+Limits: Chapter cache writes still need migration. Final content access policy, browser behavior, and live provider quality remain pending. Chapter helper regression tests followed extraction without a confirmed RED run.
+
+Changed files:
+apps/reading-advantage/__tests__/api/article-translation-routes.test.ts
+apps/reading-advantage/__tests__/components/article-content-translation.test.tsx
+apps/reading-advantage/__tests__/components/article-translation-summary.test.tsx
+apps/reading-advantage/__tests__/controllers/article-translation-controller.test.ts
+apps/reading-advantage/__tests__/controllers/chapter-translation-fallback.test.ts
+apps/reading-advantage/__tests__/lib/article-translation.test.ts
+apps/reading-advantage/app/api/v1/articles/[article_id]/translate/route.ts
+apps/reading-advantage/app/api/v1/assistant/translate/[article_id]/route.ts
+apps/reading-advantage/components/article-content.tsx
+apps/reading-advantage/components/article-showcase-card.tsx
+apps/reading-advantage/components/article-summary.tsx
+apps/reading-advantage/jest.config.ts
+apps/reading-advantage/lib/article-translation.ts
+apps/reading-advantage/lib/env.ts
+apps/reading-advantage/server/controllers/article-controller.ts
+apps/reading-advantage/server/controllers/article-translation-controller.ts
+apps/reading-advantage/server/controllers/translation-controller.ts
+measure/tracks/reading_advantage_refactor_20260909/plan.md
+measure/tracks/reading_advantage_refactor_20260909/translation-design.md
+measure/tracks/reading_advantage_refactor_20260909/translation-review.md
+packages/ai/package.json
+packages/ai/src/index.ts
+packages/ai/src/translation.test.ts
+packages/ai/src/translation.ts
+packages/ai/src/vertex-translation.test.ts
+packages/domain/package.json
+packages/domain/src/__tests__/article-translation.integration.test.ts
+packages/domain/src/__tests__/article-translation.test.ts
+packages/domain/src/articles/contracts.ts
+packages/domain/src/articles/errors.ts
+packages/domain/src/articles/index.ts
+packages/domain/src/articles/translation.ts
+pnpm-lock.yaml
