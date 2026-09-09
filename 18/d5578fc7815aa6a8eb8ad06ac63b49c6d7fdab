@@ -1,0 +1,22 @@
+Worker scope discovery
+
+The separate port returns bounded runnable scopes without job data.
+The worker starts validated claims immediately and drains started work during later failures.
+Each lifecycle request uses a fresh trusted timestamp.
+Existing fixed-scope behavior remains compatible.
+
+Changed files:
+packages/backend/src/jobs/contracts.ts
+packages/backend/src/jobs/ports.ts
+packages/backend/src/jobs/adapters/postgres/index.ts
+packages/backend/src/jobs/__tests__/scope-discovery.integration.test.ts
+services/worker/src/worker-composition.ts
+services/worker/src/__tests__/worker-scope-discovery.test.ts
+measure/tracks/reading_advantage_refactor_20260909/plan.md
+measure/tracks/reading_advantage_refactor_20260909/long-answer-review.md
+
+Validation: 24 focused cases, types, and lint passed.
+Checks ran sequentially with one worker and a 1536 MB heap limit.
+The graph includes six changed TypeScript files.
+The disposable database and runner were removed.
+The complete refactor remains active.
