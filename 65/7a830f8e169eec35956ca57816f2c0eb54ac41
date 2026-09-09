@@ -1,0 +1,1 @@
+Measure track: reading_advantage_refactor_20260909. Story translation reuses the shared domain core and AI adapter. All 100 focused cases passed. Both source type checks passed. The review records RED deviations and pending resource access rules. The disposable database and runner were removed.
