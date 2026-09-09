@@ -1,0 +1,21 @@
+Task: Immutable evaluation jobs and identity-bound status.
+Track: reading_advantage_refactor_20260909.
+
+The additive enqueueOnce port preserves existing attempts and results across retries.
+Status queries require job, handler, tenant, and actor-derived idempotency identity.
+The implementation shares the existing enqueue transaction and preserves its refresh behavior.
+It adds no database columns or hashing behavior.
+
+Verification: 19 focused checks passed sequentially with one worker and a 1536 MB Node heap.
+Source and test types passed. Focused lint passed without warnings.
+The disposable jobs database contained zero rows before removal. Its runner was removed.
+The full long-answer journey and application refactor remain active.
+
+Files:
+- measure/tracks/reading_advantage_refactor_20260909/long-answer-review.md
+- measure/tracks/reading_advantage_refactor_20260909/plan.md
+- packages/backend/src/jobs/__tests__/enqueue-once-status.integration.test.ts
+- packages/backend/src/jobs/__tests__/enqueue-once-status.test.ts
+- packages/backend/src/jobs/adapters/postgres/index.ts
+- packages/backend/src/jobs/contracts.ts
+- packages/backend/src/jobs/ports.ts
