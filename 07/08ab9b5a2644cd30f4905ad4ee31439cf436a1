@@ -1,0 +1,36 @@
+The reading page authenticates before loading through the article domain.
+The loader returns typed article data, the actor rating, and tool permissions.
+Shared article types replace duplicate app shapes.
+The recovery components use localized messages and preserve retry behavior.
+
+Verification: 26 domain tests and seven page/error tests passed.
+The focused typecheck passed for 42 affected source entries and their imports.
+Focused lint passed with legacy warnings and no errors.
+The code graph was updated outside the worktree.
+Browser verification remains pending within the complete reading journey.
+The review records the recovery-test sequencing deviation.
+
+Changed files:
+apps/reading-advantage/app/[locale]/(student)/student/read/[articleId]/custom-error.tsx
+apps/reading-advantage/app/[locale]/(student)/student/read/[articleId]/error.test.tsx
+apps/reading-advantage/app/[locale]/(student)/student/read/[articleId]/error.tsx
+apps/reading-advantage/app/[locale]/(student)/student/read/[articleId]/page.test.tsx
+apps/reading-advantage/app/[locale]/(student)/student/read/[articleId]/page.tsx
+apps/reading-advantage/app/[locale]/(student)/student/stories/[storyId]/page.tsx
+apps/reading-advantage/components/article-summary.tsx
+apps/reading-advantage/components/lesson/lesson-sentence-preview.tsx
+apps/reading-advantage/components/models/article-model.ts
+apps/reading-advantage/components/models/story-bible-model.ts
+apps/reading-advantage/components/stories-chapter-content.tsx
+apps/reading-advantage/components/teacher/assignment-dashboard.tsx
+apps/reading-advantage/locales/cn.ts
+apps/reading-advantage/locales/en.ts
+apps/reading-advantage/locales/th.ts
+apps/reading-advantage/locales/tw.ts
+apps/reading-advantage/locales/vi.ts
+measure/tracks/reading_advantage_refactor_20260909/plan.md
+measure/tracks/reading_advantage_refactor_20260909/reading-screen-review.md
+packages/domain/src/__tests__/article-reading-screen.test.ts
+packages/domain/src/articles/contracts.ts
+packages/domain/src/articles/index.ts
+packages/domain/src/articles/reading-screen.ts
