@@ -7,6 +7,10 @@ import {
 
 import { listCartridgeCatalog } from "./catalog.js";
 import { CATALOG_WORLD_ART_FILES } from "./catalog-standard-art-files.js";
+import { WIZARD_STANDARD_ART_FILES } from "./wizard-standard-art.js";
+import { LABYRINTH_STANDARD_ART_FILES } from "./labyrinth-standard-art.js";
+import { STORM_STANDARD_ART_FILES } from "./storm-standard-art.js";
+import { ABYSSAL_STANDARD_ART_FILES } from "./abyssal-standard-art.js";
 
 /** Closed live-catalog art decision for one role. */
 export type CatalogArtDecision = "reuse-canonical" | "block";
@@ -86,10 +90,29 @@ const ENEMY_FILE: PhysicalAssetFile = Object.freeze({
   provenance: ELVGAMES_PROVENANCE,
 });
 
+const ENCHANTED_LIBRARY_BOOKSHELF_FILE: PhysicalAssetFile = Object.freeze({
+  id: "enchanted-library-bookshelf",
+  path: "enchanted-library-bookshelf.png",
+  kind: "image",
+  view: "top-down",
+  width: 16,
+  height: 32,
+  format: "png",
+  alpha: true,
+  byteSize: 395,
+  sha256: "10c44a679253ed3d2f580f06cceae0a865d08364826e74faa155c3e91e8b82e0",
+  provenance: ELVGAMES_PROVENANCE,
+});
+
 const ALL_ART_FILES: Readonly<Record<string, PhysicalAssetFile>> = Object.freeze({
   [PLAYER_FILE.id]: PLAYER_FILE,
   [ENEMY_FILE.id]: ENEMY_FILE,
+  [ENCHANTED_LIBRARY_BOOKSHELF_FILE.id]: ENCHANTED_LIBRARY_BOOKSHELF_FILE,
   ...CATALOG_WORLD_ART_FILES,
+  ...WIZARD_STANDARD_ART_FILES,
+  ...LABYRINTH_STANDARD_ART_FILES,
+  ...STORM_STANDARD_ART_FILES,
+  ...ABYSSAL_STANDARD_ART_FILES,
 });
 
 const TITLE_KITS: Readonly<Record<string, TitleArtKit>> = Object.freeze({
@@ -107,7 +130,13 @@ const TITLE_KITS: Readonly<Record<string, TitleArtKit>> = Object.freeze({
       "prop:prisoner": "player-mage",
     },
   },
-  "storm-castle-tower": { ground: "tile-brick", props: ["prop-tower", "prop-tower"], player: "player-knight", enemy: "enemy-beast" },
+  "storm-castle-tower": {
+    ground: "tile-brick",
+    props: ["prop-tower", "prop-tower"],
+    player: "player-knight",
+    enemy: "enemy-beast",
+    extras: { "world:tower-wall": "storm-castle-blue-wall" },
+  },
   "magic-defense": {
     ground: "tile-grass",
     props: ["prop-side-tower", "prop-tree"],
@@ -144,25 +173,70 @@ const TITLE_KITS: Readonly<Record<string, TitleArtKit>> = Object.freeze({
       "world:parallax-near": "parallax-near",
     },
   },
-  "griffin-sky-joust": { ground: "tile-grass", props: ["prop-tree"], player: "player-paladin", enemy: "enemy-bat" },
-  "griffin-riders-escape": { ground: "tile-grass", props: ["prop-tree"], player: "player-paladin", enemy: "enemy-bat" },
-  "gryphon-patrol": { ground: "tile-grass", props: ["prop-tree"], player: "player-archer", enemy: "enemy-bat" },
-  "dungeon-liberator": { ground: "tile-stone", props: ["prop-tower"], player: "player-knight", enemy: "enemy-beast" },
-  "shadow-gate-dungeon": { ground: "tile-stone", props: ["prop-tower"], player: "player-knight", enemy: "enemy-spirit" },
-  "labyrinth-goblin-king": { ground: "tile-stone", props: ["prop-tree"], player: "player-paladin", enemy: "enemy-beast" },
-  "sorcerer-ziggurat": { ground: "tile-stone", props: ["prop-tower"], player: "player-wizard", enemy: "enemy-spirit" },
-  "abyssal-well": { ground: "tile-stone", props: ["prop-tower"], player: "player-mage", enemy: "enemy-spirit" },
-  "haunted-library": { ground: "tile-stone", props: ["prop-grave", "prop-grave"], player: "player-mage", enemy: "enemy-spirit" },
-  "enchanted-library": { ground: "tile-stone", props: ["prop-tree", "prop-grave"], player: "player-wizard", enemy: "enemy-spirit" },
-  "wizard-vs-zombie": {
-    ground: "tile-grave-dirt",
-    props: ["prop-grave", "prop-tower"],
-    player: "player-mage",
-    enemy: "enemy-skeleton",
+  "griffin-sky-joust": {
+    ground: "tile-grass",
+    props: ["prop-tree"],
+    player: "dragon-rider-idle",
+    enemy: "enemy-bat",
     extras: {
-      "prop:grave": "prop-grave",
-      "prop:crypt": "prop-tower",
+      "world:parallax-far": "parallax-far",
+      "world:parallax-mid": "parallax-mid",
+      "world:parallax-near": "parallax-near",
+      "prop:gate": "prop-sky-gate",
+    },
+  },
+  "griffin-riders-escape": { ground: "tile-grass", props: ["prop-tree"], player: "player-paladin", enemy: "enemy-bat" },
+  "gryphon-patrol": {
+    ground: "tile-grass",
+    props: ["prop-tree"],
+    player: "dragon-rider-idle",
+    enemy: "enemy-bat",
+    extras: {
+      "world:parallax-far": "parallax-far",
+      "world:parallax-mid": "parallax-mid",
+      "world:parallax-near": "parallax-near",
+      "prop:gate": "prop-sky-gate",
+    },
+  },
+  "dungeon-liberator": { ground: "wizard-floor", props: ["prop-tower"], player: "labyrinth-player-idle", enemy: "labyrinth-goblin-static" },
+  "shadow-gate-dungeon": { ground: "tile-stone", props: ["prop-tower"], player: "player-knight", enemy: "enemy-spirit" },
+  "labyrinth-goblin-king": { ground: "wizard-floor", props: ["prop-tree"], player: "labyrinth-player-idle", enemy: "labyrinth-goblin-static" },
+  "sorcerer-ziggurat": { ground: "tile-stone", props: ["prop-tower"], player: "player-wizard", enemy: "enemy-spirit" },
+  "abyssal-well": {
+    ground: "wizard-floor",
+    props: [],
+    player: "wizard-player",
+    enemy: "wizard-undead",
+    extras: { "world:well-mouth": "abyssal-well-mouth" },
+  },
+  "haunted-library": { ground: "tile-stone", props: ["prop-grave", "prop-grave"], player: "player-mage", enemy: "enemy-spirit" },
+  "enchanted-library": {
+    ground: "tile-stone",
+    props: ["enchanted-library-bookshelf", "enchanted-library-bookshelf"],
+    player: "player-wizard",
+    enemy: "enemy-spirit",
+  },
+  "wizard-vs-zombie": {
+    ground: "tile-grass",
+    props: ["wizard-grave", "wizard-grave-b", "wizard-grave-c", "wizard-mausoleum", "wizard-dead-tree-large"],
+    player: "wizard-player",
+    enemy: "wizard-undead",
+    extras: {
+      "prop:grave": "wizard-grave",
+      "prop:grave-a": "wizard-grave",
+      "prop:grave-b": "wizard-grave-b",
+      "prop:grave-c": "wizard-grave-c",
+      "prop:memorial": "wizard-memorial",
+      "prop:crypt": "wizard-crypt",
+      "prop:mausoleum": "wizard-mausoleum",
+      "prop:dead-tree-large": "wizard-dead-tree-large",
+      "prop:dead-tree-small": "wizard-dead-tree-small",
+      "prop:fence": "wizard-fence",
+      "prop:lantern": "wizard-lantern",
+      "prop:gate": "wizard-gate",
       "prop:orb": "prop-crystal-blue",
+      "world:path": "tile-dirt",
+      "wizard-floor": "wizard-floor",
     },
   },
   "rpg-battle": {
@@ -180,9 +254,9 @@ const TITLE_KITS: Readonly<Record<string, TitleArtKit>> = Object.freeze({
   "potion-rush": { ground: "tile-grass", props: ["prop-tree"], player: "player-mage", enemy: "enemy-spirit" },
   "alchemists-synthesis": { ground: "tile-stone", props: ["prop-tower"], player: "player-wizard", enemy: "enemy-spirit" },
   "rune-match": { ground: "tile-stone", props: ["prop-tower"], player: "player-wizard", enemy: "enemy-beast" },
-  "rune-forge-chamber": { ground: "tile-stone", props: ["prop-tower"], player: "player-mage", enemy: "enemy-spirit" },
+  "rune-forge-chamber": { ground: "wizard-floor", props: ["prop-tower"], player: "player-mage", enemy: "enemy-spirit" },
   "astral-mage": { ground: "tile-stone", props: ["prop-tower"], player: "player-wizard", enemy: "enemy-spirit" },
-  "realm-carver": { ground: "tile-grass", props: ["prop-tree"], player: "player-mage", enemy: "enemy-spirit" },
+  "realm-carver": { ground: "wizard-floor", props: ["prop-tree"], player: "labyrinth-player-idle", enemy: "labyrinth-goblin-static" },
   "devourer-slime": { ground: "tile-grass", props: ["prop-tree"], player: "enemy-idle", enemy: "player-knight" },
   "spellweavers-run": { ground: "tile-grass", props: ["prop-tree"], player: "player-wizard", enemy: "enemy-spirit" },
 });

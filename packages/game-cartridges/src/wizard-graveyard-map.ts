@@ -116,11 +116,15 @@ export const WIZARD_GRAVEYARD_MAP: WizardGraveyardMap = Object.freeze({
   ]),
   terrain: Object.freeze([
     Object.freeze({ id: "grave-soil", assetKey: "world:ground", depth: -40 }),
+    Object.freeze({ id: "crypt-floor", assetKey: "wizard-floor", depth: -24 }),
     Object.freeze({ id: "broken-stone-paths", assetKey: "world:path", depth: -30 }),
   ]),
   decor: Object.freeze([
     feature("south-entrance", "entrance", "prop:gate", 480, 514, 72, 44, 11),
+    feature("crypt-floor-interior", "crypt-floor", "wizard-floor", 480, 188, 140, 150, -22, undefined, undefined, "xy"),
     feature("north-mausoleum", "mausoleum", "prop:mausoleum", 480, 188, 96, 128, 10, FEATURE_SOLIDS[0]),
+    feature("crypt-gate", "gate", "prop:gate", 480, 264, 48, 40, 9),
+    feature("crypt-coffin", "enemy-spawn", "prop:grave-c", 510, 232, 30, 54, 12),
     ...GRAVE_CLUSTERS,
     feature("west-tree", "dead-tree", "prop:dead-tree-large", 365, 276, 72, 96, 14, FEATURE_SOLIDS[13]),
     feature("east-tree", "dead-tree", "prop:dead-tree-small", 596, 274, 68, 76, 14, FEATURE_SOLIDS[14]),

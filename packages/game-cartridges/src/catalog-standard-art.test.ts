@@ -82,6 +82,22 @@ describe("catalog standard art", () => {
     expect(edition.bindings["world:ground"]?.file).toBe("tile-grass");
   });
 
+  it("binds the reviewed Enchanted Library bookshelf crop to both prop roles", () => {
+    const edition = createCatalogStandardEdition(
+      ["enchanted-library/arcane-shelves"],
+      "/assets/apk/standard-pack-qc/",
+      "enchanted-library",
+    );
+    expect(edition.bindings["prop:0"]?.file).toBe("enchanted-library-bookshelf");
+    expect(edition.bindings["prop:1"]?.file).toBe("enchanted-library-bookshelf");
+    expect(edition.pack.files["enchanted-library-bookshelf"]).toMatchObject({
+      path: "enchanted-library-bookshelf.png",
+      width: 16,
+      height: 32,
+      view: "top-down",
+    });
+  });
+
   it("loads aerial titles with grass, trees, and a flying enemy instead of a blank overlay", () => {
     const edition = createCatalogStandardEdition(
       ["dragon-rider/player-flight"],
@@ -94,18 +110,30 @@ describe("catalog standard art", () => {
     expect(edition.bindings["enemy:idle"]?.file).toBe("enemy-bat");
   });
 
-  it("assigns stone, gravestones, a grey mage, a skeleton, and a blue crystal to Wizard vs Zombie", () => {
+  it("assigns the reviewed crypt kit and correctly framed actors to Wizard vs Zombie", () => {
     const edition = createCatalogStandardEdition(
       ["legacy-catalog/wizard-vs-zombie/zombie-orbs"],
       "/assets/apk/standard-pack-qc/",
       "wizard-vs-zombie",
     );
-    expect(edition.bindings["world:ground"]?.file).toBe("tile-grave-dirt");
-    expect(edition.bindings["prop:grave"]?.file).toBe("prop-grave");
-    expect(edition.bindings["prop:crypt"]?.file).toBe("prop-tower");
+    expect(edition.bindings["world:ground"]?.file).toBe("tile-grass");
+    expect(edition.bindings["prop:grave"]?.file).toBe("wizard-grave");
+    expect(edition.bindings["prop:grave-b"]?.file).toBe("wizard-grave-b");
+    expect(edition.bindings["prop:grave-c"]?.file).toBe("wizard-grave-c");
+    expect(edition.bindings["prop:mausoleum"]?.file).toBe("wizard-mausoleum");
+    expect(edition.bindings["prop:dead-tree-large"]?.file).toBe("wizard-dead-tree-large");
+    expect(edition.bindings["prop:fence"]?.file).toBe("wizard-fence");
+    expect(edition.bindings["prop:lantern"]?.file).toBe("wizard-lantern");
+    expect(edition.bindings["world:path"]?.file).toBe("tile-dirt");
+    expect(edition.bindings["wizard-floor"]?.file).toBe("wizard-floor");
+    expect(edition.bindings["prop:crypt"]?.file).toBe("wizard-crypt");
     expect(edition.bindings["prop:orb"]?.file).toBe("prop-crystal-blue");
-    expect(edition.bindings["player:idle"]?.file).toBe("player-mage");
-    expect(edition.bindings["enemy:idle"]?.file).toBe("enemy-skeleton");
-    expect(edition.bindings["legacy-catalog/wizard-vs-zombie/zombie-orbs"]?.file).toBe("enemy-skeleton");
+    expect(edition.bindings["player:idle"]?.file).toBe("wizard-player");
+    expect(edition.bindings["enemy:idle"]?.file).toBe("wizard-undead");
+    expect(edition.bindings["legacy-catalog/wizard-vs-zombie/zombie-orbs"]?.file).toBe("wizard-undead");
+    expect(edition.pack.files["wizard-player"]?.grid).toMatchObject({ frameWidth: 24, frameHeight: 24, columns: 4, rows: 4 });
+    expect(edition.pack.files["wizard-undead"]?.grid).toMatchObject({ frameWidth: 48, frameHeight: 48, columns: 6, rows: 6 });
+    expect(edition.pack.files["wizard-crypt"]?.grid).toMatchObject({ frameWidth: 16, frameHeight: 32, columns: 4 });
+    expect(() => validateEdition(edition, [], APK_RUNTIME_API_VERSION)).not.toThrow();
   });
 });

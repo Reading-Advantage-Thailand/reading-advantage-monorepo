@@ -64,4 +64,22 @@ describe("Wizard graveyard map", () => {
     expect(fences).toHaveLength(5);
     expect(fences.every((item) => item.repeat === "x" && item.displayHeight === 32)).toBe(true);
   });
+
+  it("keeps the crypt floor, gate, and coffin inside the crypt footprint", () => {
+    const mausoleum = WIZARD_GRAVEYARD_MAP.decor.find((item) => item.kind === "mausoleum")!;
+    const crypt = {
+      left: mausoleum.position.x - mausoleum.displayWidth / 2,
+      right: mausoleum.position.x + mausoleum.displayWidth / 2,
+      top: mausoleum.position.y - mausoleum.displayHeight / 2,
+      bottom: mausoleum.position.y + mausoleum.displayHeight / 2,
+    };
+    const insideCrypt = (x: number, y: number): boolean =>
+      x >= crypt.left && x <= crypt.right && y >= crypt.top && y <= crypt.bottom;
+    const kinds = WIZARD_GRAVEYARD_MAP.decor.map((item) => item.kind);
+    expect(kinds).toContain("crypt-floor");
+    expect(WIZARD_GRAVEYARD_MAP.terrain.some((layer) => layer.assetKey === "wizard-floor")).toBe(true);
+    expect(insideCrypt(480, 188)).toBe(true);
+    const coffin = WIZARD_GRAVEYARD_MAP.decor.find((item) => item.kind === "enemy-spawn")!;
+    expect(insideCrypt(coffin.position.x, coffin.position.y)).toBe(true);
+  });
 });
