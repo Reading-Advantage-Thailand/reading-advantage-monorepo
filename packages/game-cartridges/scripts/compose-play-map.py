@@ -39,6 +39,12 @@ KEYS: dict[str, tuple[str, int, int, int]] = {
     "prop:fence": (p(HALLOWEEN, "remastered-halloween-gray-burning-fence.png"), 16, 32, 0),
     "prop:lantern": (p(NATIVE, "fantasy-dreamland-world", "processed", "halloween-objects", "halloween-objects-candle-sequence-272.png"), 16, 16, 0),
     "prop:gate": (p(RA, "ra-crypt-review-parts", "ra-crypt-review-parts-gate-3-1.png"), 16, 16, 0),
+    "world:stone-floor": (p(QC, "asset-ab8ed48e49d778a5.png"), 32, 32, 0),
+    "prop:bookshelf": (p(QC, "enchanted-library-bookshelf.png"), 16, 32, 0),
+    "prop:crystal": (p(QC, "asset-1a2d909a506fd6c9.png"), 16, 16, 0),
+    "prop:tower": (p(QC, "asset-84663e69de1c831d.png"), 32, 80, 0),
+    "prop:ruins": (p(QC, "asset-aac6ef52552b8d68.png"), 64, 64, 0),
+    "prop:dirt-patch": (p(QC, "asset-2bd2454d7f15581b.png"), 192, 192, 0),
 }
 
 _cache: dict[str, Image.Image] = {}

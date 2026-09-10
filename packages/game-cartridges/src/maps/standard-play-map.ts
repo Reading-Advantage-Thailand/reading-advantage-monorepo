@@ -67,8 +67,8 @@ export interface StandardPlayMapFeature {
   readonly displayHeight: number;
   /** Render depth; lower values draw first. */
   readonly depth: number;
-  /** Repeat axis for tiled features such as fences. */
-  readonly repeat?: "x" | "y";
+  /** Repeat axis for tiled features such as fences or floor fills. */
+  readonly repeat?: "x" | "y" | "xy";
   /** Rotation in degrees. */
   readonly rotation?: number;
   /** Optional solid footprint owned by this feature. */
