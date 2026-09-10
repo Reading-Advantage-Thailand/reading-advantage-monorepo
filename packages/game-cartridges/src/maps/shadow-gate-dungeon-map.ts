@@ -119,11 +119,10 @@ export const SHADOW_GATE_DUNGEON_MAP: ShadowGateDungeonMap = Object.freeze({
     Object.freeze({ id: "southeast-spur", width: 32, points: Object.freeze([point(480, 390), point(650, 390), point(740, 390)]) }),
   ]),
   terrain: Object.freeze([
-    Object.freeze({ id: "dungeon-floor", assetKey: "world:stone-floor", depth: -40 }),
+    Object.freeze({ id: "dungeon-floor", assetKey: "dungeon:stone", depth: -40 }),
     Object.freeze({ id: "stone-corridors", assetKey: "world:path", depth: -30 }),
   ]),
   decor: Object.freeze([
-    feature("stone-floor-fill", "floor", "world:stone-floor", 480, 270, 960, 540, -22, undefined, undefined, "xy"),
     feature("south-entrance", "entrance", "prop:gate", 480, 520, 72, 44, 11),
     feature("north-exit", "gate", "prop:gate", 480, 36, 72, 44, 11),
     ...wallFeatures,

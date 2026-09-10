@@ -59,6 +59,17 @@ Catalog tiles and props (materialized standard pack):
 - `asset-aac6ef52552b8d68.png` — 64×64 ruins.
 - `asset-2bd2454d7f15581b.png` — 192×192 grave dirt.
 
+Dungeon floors (rogue-adventure-world and sewers-tileset):
+- `ra-crypt-review-parts/ra-crypt-review-parts-floor-1-1.png` — 16×16 sandstone floor.
+- `sewers-tileset/processed/sewers-tileset/sewers-tiles-floor-tile-0.png` — 16×16 dark stone.
+- `sewers-tileset/processed/sewers-tileset/sewers-tiles-floor-tile-5.png` — 16×16 dark stone variant.
+
+The three dungeon maps use distinct seamless floors: `dungeon:stone` (dark
+sewers stone), `dungeon:stone-alt` (dark sewers stone variant), and
+`dungeon:sandstone` (tan crypt stone). The open-field maps use three distinct
+grounds: grass for Village Guardian, mud for Devourer Slime, and sandstone for
+Realm Carver.
+
 ## Regenerating a PNG
 
 From `packages/game-cartridges`:

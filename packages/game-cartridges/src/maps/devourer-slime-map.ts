@@ -11,13 +11,13 @@ import {
   type StandardPlayMapTerrainLayer,
 } from "./standard-play-map.js";
 
-/** A point in the fixed Devourer Slime feeding field. */
+/** A point in the fixed Devourer Slime feeding bog. */
 export type DevourerSlimePoint = StandardPlayMapPoint;
 
-/** An axis-aligned solid footprint in the Devourer Slime field. */
+/** An axis-aligned solid footprint in the Devourer Slime bog. */
 export type DevourerSlimeRect = StandardPlayMapRect;
 
-/** One dirt corridor through the feeding field. */
+/** One dirt corridor through the feeding bog. */
 export type DevourerSlimePath = StandardPlayMapPath;
 
 /** One stable word-orb clearing. */
@@ -26,7 +26,7 @@ export type DevourerSlimeClearing = StandardPlayMapClearing;
 /** One terrain layer rendered below actors. */
 export type DevourerSlimeTerrainLayer = StandardPlayMapTerrainLayer;
 
-/** One field prop with a reviewed semantic asset. */
+/** One bog prop with a reviewed semantic asset. */
 export type DevourerSlimeFeature = StandardPlayMapFeature;
 
 /** The complete authored layout consumed by Devourer Slime rules and rendering. */
@@ -45,17 +45,47 @@ const BORDER_SOLIDS = Object.freeze([
   rect(564, 516, 396, 24),
 ]);
 
-const FEATURE_SOLIDS = Object.freeze([
-  rect(68, 224, 44, 52),
-  rect(848, 224, 44, 52),
-  rect(68, 444, 44, 52),
-  rect(848, 444, 44, 52),
-  rect(378, 274, 44, 52),
-  rect(538, 274, 44, 52),
-  rect(144, 240, 32, 72),
-  rect(144, 360, 32, 60),
-  rect(784, 240, 32, 72),
-  rect(784, 360, 32, 60),
+const TREE_SOLIDS = Object.freeze([
+  rect(82, 466, 36, 28),
+  rect(842, 466, 36, 28),
+  rect(602, 66, 36, 28),
+  rect(322, 66, 36, 28),
+  rect(102, 186, 36, 28),
+  rect(822, 186, 36, 28),
+  rect(82, 326, 36, 28),
+  rect(842, 326, 36, 28),
+]);
+
+const SPIRAL_POINTS = Object.freeze([
+  point(480, 500),
+  point(480, 440),
+  point(760, 440),
+  point(760, 140),
+  point(200, 140),
+  point(200, 380),
+  point(640, 380),
+  point(640, 220),
+  point(320, 220),
+  point(320, 320),
+  point(520, 320),
+  point(520, 280),
+]);
+
+const DIRT_PATCH_CENTERS = Object.freeze([
+  point(120, 144),
+  point(312, 144),
+  point(504, 144),
+  point(696, 144),
+  point(888, 144),
+  point(216, 312),
+  point(408, 312),
+  point(600, 312),
+  point(792, 312),
+  point(168, 456),
+  point(360, 456),
+  point(552, 456),
+  point(744, 456),
+  point(912, 456),
 ]);
 
 const feature = (
@@ -83,57 +113,82 @@ const feature = (
   ...(repeat === undefined ? {} : { repeat }),
 });
 
-/** The authored 960 by 540 open feeding field layout for Devourer Slime. */
+const dirtPatch = (index: number, x: number, y: number): DevourerSlimeFeature =>
+  feature(`mud-${index}`, "dirt-patch", "prop:dirt-patch", x, y, 192, 192, -10);
+
+const coilStamp = (
+  id: string,
+  start: DevourerSlimePoint,
+  end: DevourerSlimePoint,
+): DevourerSlimeFeature => {
+  const horizontal = start.y === end.y;
+  const length = Math.abs(horizontal ? end.x - start.x : end.y - start.y);
+  return feature(
+    id,
+    "path",
+    "world:path",
+    (start.x + end.x) / 2,
+    (start.y + end.y) / 2,
+    horizontal ? length + 44 : 44,
+    horizontal ? 44 : length + 44,
+    -5,
+    undefined,
+    undefined,
+    horizontal ? "x" : "y",
+  );
+};
+
+const COIL_STAMPS = Object.freeze(
+  SPIRAL_POINTS.slice(1).map((end, index) =>
+    coilStamp(`coil-${index}`, SPIRAL_POINTS[index]!, end),
+  ),
+);
+
+/** The authored 960 by 540 murky spiral feeding bog layout for Devourer Slime. */
 export const DEVOURER_SLIME_MAP: DevourerSlimeMap = Object.freeze({
   id: "devourer-slime",
   world: Object.freeze({ width: 960, height: 540 }),
   playerSpawn: point(480, 474),
   enemySpawns: Object.freeze([point(120, 84), point(840, 84)]),
   clearings: Object.freeze([
-    Object.freeze({ id: "orb-north", center: point(480, 130), radius: 52 }),
-    Object.freeze({ id: "orb-northwest", center: point(210, 150), radius: 52 }),
-    Object.freeze({ id: "orb-northeast", center: point(750, 150), radius: 52 }),
-    Object.freeze({ id: "orb-southwest", center: point(250, 400), radius: 52 }),
-    Object.freeze({ id: "orb-southeast", center: point(710, 400), radius: 52 }),
+    Object.freeze({ id: "orb-north", center: point(480, 80), radius: 52 }),
+    Object.freeze({ id: "orb-west", center: point(120, 260), radius: 52 }),
+    Object.freeze({ id: "orb-east", center: point(860, 260), radius: 52 }),
+    Object.freeze({ id: "orb-core", center: point(480, 280), radius: 52 }),
+    Object.freeze({ id: "orb-inner-south", center: point(480, 410), radius: 52 }),
   ]),
   paths: Object.freeze([
-    Object.freeze({ id: "spine", width: 38, points: Object.freeze([point(480, 500), point(480, 260), point(480, 130)]) }),
-    Object.freeze({ id: "northwest-fork", width: 32, points: Object.freeze([point(480, 200), point(340, 180), point(210, 150)]) }),
-    Object.freeze({ id: "northeast-fork", width: 32, points: Object.freeze([point(480, 200), point(620, 180), point(750, 150)]) }),
-    Object.freeze({ id: "southwest-fork", width: 32, points: Object.freeze([point(480, 440), point(360, 430), point(250, 400)]) }),
-    Object.freeze({ id: "southeast-fork", width: 32, points: Object.freeze([point(480, 440), point(600, 430), point(710, 400)]) }),
-    Object.freeze({ id: "west-enemy", width: 26, points: Object.freeze([point(340, 180), point(220, 120), point(120, 84)]) }),
-    Object.freeze({ id: "east-enemy", width: 26, points: Object.freeze([point(620, 180), point(740, 120), point(840, 84)]) }),
+    Object.freeze({ id: "spiral-coil", width: 44, points: SPIRAL_POINTS }),
   ]),
   terrain: Object.freeze([
-    Object.freeze({ id: "feeding-grass", assetKey: "world:ground", depth: -40 }),
-    Object.freeze({ id: "dirt-corridors", assetKey: "world:path", depth: -30 }),
+    Object.freeze({ id: "bog-grass", assetKey: "world:ground", depth: -40 }),
+    Object.freeze({ id: "bog-dirt", assetKey: "world:path", depth: -30 }),
   ]),
   decor: Object.freeze([
-    feature("south-entrance", "entrance", "prop:gate", 480, 514, 72, 44, 11),
-    feature("tree-nw", "dead-tree", "prop:dead-tree-large", 90, 250, 72, 96, 14, FEATURE_SOLIDS[0]),
-    feature("tree-ne", "dead-tree", "prop:dead-tree-large", 870, 250, 72, 96, 14, FEATURE_SOLIDS[1]),
-    feature("tree-sw", "dead-tree", "prop:dead-tree-large", 90, 470, 72, 96, 14, FEATURE_SOLIDS[2]),
-    feature("tree-se", "dead-tree", "prop:dead-tree-large", 870, 470, 72, 96, 14, FEATURE_SOLIDS[3]),
-    feature("tree-center-west", "dead-tree", "prop:dead-tree-large", 400, 300, 72, 96, 14, FEATURE_SOLIDS[4]),
-    feature("tree-center-east", "dead-tree", "prop:dead-tree-large", 560, 300, 72, 96, 14, FEATURE_SOLIDS[5]),
-    feature("size-gate-west-north", "gate", "prop:fence", 160, 276, 72, 32, 8, FEATURE_SOLIDS[6], 90, "x"),
-    feature("size-gate-west-south", "gate", "prop:fence", 160, 390, 60, 32, 8, FEATURE_SOLIDS[7], 90, "x"),
-    feature("size-gate-east-north", "gate", "prop:fence", 800, 276, 72, 32, 8, FEATURE_SOLIDS[8], 90, "x"),
-    feature("size-gate-east-south", "gate", "prop:fence", 800, 390, 60, 32, 8, FEATURE_SOLIDS[9], 90, "x"),
+    ...DIRT_PATCH_CENTERS.map((center, index) => dirtPatch(index, center.x, center.y)),
+    ...COIL_STAMPS,
+    feature("south-entrance", "gate", "prop:gate", 480, 514, 72, 44, 11),
+    feature("tree-southwest", "dead-tree", "prop:dead-tree-large", 100, 480, 72, 96, 14, TREE_SOLIDS[0]),
+    feature("tree-southeast", "dead-tree", "prop:dead-tree-large", 860, 480, 72, 96, 14, TREE_SOLIDS[1]),
+    feature("tree-northeast", "dead-tree", "prop:dead-tree-large", 620, 80, 72, 96, 14, TREE_SOLIDS[2]),
+    feature("tree-northwest", "dead-tree", "prop:dead-tree-large", 340, 80, 72, 96, 14, TREE_SOLIDS[3]),
+    feature("tree-west-north", "dead-tree", "prop:dead-tree-large", 120, 200, 72, 96, 14, TREE_SOLIDS[4]),
+    feature("tree-east-north", "dead-tree", "prop:dead-tree-large", 840, 200, 72, 96, 14, TREE_SOLIDS[5]),
+    feature("tree-west-south", "dead-tree", "prop:dead-tree-large", 100, 340, 72, 96, 14, TREE_SOLIDS[6]),
+    feature("tree-east-south", "dead-tree", "prop:dead-tree-large", 860, 340, 72, 96, 14, TREE_SOLIDS[7]),
     feature("fence-north", "fence", "prop:fence", 480, 12, 912, 32, 8, undefined, undefined, "x"),
     feature("fence-west", "fence", "prop:fence", 12, 270, 492, 32, 8, undefined, 90, "x"),
     feature("fence-east", "fence", "prop:fence", 948, 270, 492, 32, 8, undefined, 90, "x"),
     feature("fence-southwest", "fence", "prop:fence", 198, 522, 396, 32, 8, undefined, undefined, "x"),
     feature("fence-southeast", "fence", "prop:fence", 762, 522, 396, 32, 8, undefined, undefined, "x"),
   ]),
-  solids: Object.freeze([...BORDER_SOLIDS, ...FEATURE_SOLIDS]),
+  solids: Object.freeze([...BORDER_SOLIDS, ...TREE_SOLIDS]),
 });
 
 validateStandardPlayMap(DEVOURER_SLIME_MAP);
 
 /**
- * Checks whether a circular actor overlaps any Devourer Slime field solid.
+ * Checks whether a circular actor overlaps any Devourer Slime bog solid.
  * @param pointValue The actor center.
  * @param radius The actor collision radius.
  * @param solids The solid footprints to check.
@@ -148,10 +203,10 @@ export function isPointInsideDevourerSlimeSolid(
 }
 
 /**
- * Checks grid reachability between two Devourer Slime field points.
+ * Checks grid reachability between two Devourer Slime bog points.
  * @param start The starting point.
  * @param end The destination point.
- * @param map The field layout to traverse.
+ * @param map The bog layout to traverse.
  * @returns Whether a collision-free route exists.
  */
 export function devourerSlimeReachable(

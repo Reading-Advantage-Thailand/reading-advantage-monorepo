@@ -16,6 +16,7 @@ NATIVE = os.path.join(REPO, "packages", "advantage-play-kit", "assets", "standar
 QC = os.path.join(REPO, "apps", "advantage-games", "public", "assets", "apk", "standard-pack-qc")
 RA = os.path.join(NATIVE, "rogue-adventure-world", "processed")
 HALLOWEEN = os.path.join(NATIVE, "fantasy-dreamland-world", "processed", "remastered-halloween")
+SEWERS = os.path.join(NATIVE, "sewers-tileset", "processed", "sewers-tileset")
 
 
 def p(*parts: str) -> str:
@@ -40,6 +41,9 @@ KEYS: dict[str, tuple[str, int, int, int]] = {
     "prop:lantern": (p(NATIVE, "fantasy-dreamland-world", "processed", "halloween-objects", "halloween-objects-candle-sequence-272.png"), 16, 16, 0),
     "prop:gate": (p(RA, "ra-crypt-review-parts", "ra-crypt-review-parts-gate-3-1.png"), 16, 16, 0),
     "world:stone-floor": (p(QC, "asset-ab8ed48e49d778a5.png"), 32, 32, 0),
+    "dungeon:stone": (p(SEWERS, "sewers-tiles-floor-tile-0.png"), 16, 16, 0),
+    "dungeon:stone-alt": (p(SEWERS, "sewers-tiles-floor-tile-5.png"), 16, 16, 0),
+    "dungeon:sandstone": (p(RA, "ra-crypt-review-parts", "ra-crypt-review-parts-floor-1-1.png"), 16, 16, 0),
     "prop:bookshelf": (p(QC, "enchanted-library-bookshelf.png"), 16, 32, 0),
     "prop:crystal": (p(QC, "asset-1a2d909a506fd6c9.png"), 16, 16, 0),
     "prop:tower": (p(QC, "asset-84663e69de1c831d.png"), 32, 80, 0),
@@ -99,10 +103,10 @@ def compose(layout: dict) -> Image.Image:
     height = int(layout["world"]["height"])
     canvas = Image.new("RGBA", (width, height), (0, 0, 0, 0))
 
-    # Ground layer: fill the whole world.
-    ground_key = next((layer["assetKey"] for layer in layout["terrain"] if layer["assetKey"] == "world:ground"), None)
-    if ground_key:
-        tile = load_cell(ground_key)
+    # Ground layer: fill the whole world from the lowest-depth terrain layer.
+    if layout["terrain"]:
+        ground_layer = min(layout["terrain"], key=lambda layer: layer["depth"])
+        tile = load_cell(ground_layer["assetKey"])
         if tile:
             tile_fill(canvas, tile, (0, 0, width, height), tile.width)
 
