@@ -59,6 +59,9 @@ describe("Realm Carver map", () => {
   it("provides at least two distinct landmark kinds", () => {
     const kinds = [...new Set(REALM_CARVER_MAP.decor.map((item) => item.kind))];
     expect(kinds.length).toBeGreaterThanOrEqual(2);
-    expect(kinds).toEqual(expect.arrayContaining(["dead-tree", "fence", "dirt-patch"]));
+    expect(kinds).toEqual(expect.arrayContaining(["dead-tree", "ruins", "crystal"]));
+    expect(REALM_CARVER_MAP.decor.some((item) => item.assetKey === "prop:dirt-patch")).toBe(false);
+    expect(REALM_CARVER_MAP.decor.some((item) => item.assetKey === "prop:fence")).toBe(false);
+    expect(REALM_CARVER_MAP.terrain[1]?.assetKey).toBe("path:sand");
   });
 });

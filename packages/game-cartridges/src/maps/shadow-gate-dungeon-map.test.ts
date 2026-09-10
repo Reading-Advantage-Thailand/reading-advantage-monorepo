@@ -59,6 +59,8 @@ describe("Shadow Gate dungeon map", () => {
   it("provides at least two distinct landmark kinds", () => {
     const kinds = [...new Set(SHADOW_GATE_DUNGEON_MAP.decor.map((item) => item.kind))];
     expect(kinds.length).toBeGreaterThanOrEqual(2);
-    expect(kinds).toEqual(expect.arrayContaining(["wall", "grave", "ruins"]));
+    expect(kinds).toEqual(expect.arrayContaining(["wall", "grave", "lantern"]));
+    expect(SHADOW_GATE_DUNGEON_MAP.decor.some((item) => item.kind === "ruins")).toBe(false);
+    expect(SHADOW_GATE_DUNGEON_MAP.terrain[1]?.assetKey).toBe("path:crypt");
   });
 });

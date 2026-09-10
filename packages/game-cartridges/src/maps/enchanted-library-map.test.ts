@@ -49,7 +49,9 @@ describe("Enchanted Library map", () => {
   it("provides library landmarks and stable shelf rows", () => {
     const kinds = ENCHANTED_LIBRARY_MAP.decor.map((item) => item.kind);
     expect(new Set(kinds).size).toBeGreaterThanOrEqual(2);
-    expect(kinds).toEqual(expect.arrayContaining(["shelf", "lantern", "entrance"]));
+    expect(kinds).toEqual(expect.arrayContaining(["shelf", "lantern", "entrance", "wall"]));
     expect(ENCHANTED_LIBRARY_MAP.decor.filter((item) => item.kind === "shelf").length).toBeGreaterThanOrEqual(12);
+    expect(ENCHANTED_LIBRARY_MAP.decor.some((item) => item.id === "reading-west")).toBe(false);
+    expect(ENCHANTED_LIBRARY_MAP.decor.filter((item) => item.kind === "wall")).toHaveLength(5);
   });
 });

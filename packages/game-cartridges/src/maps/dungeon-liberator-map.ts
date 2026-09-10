@@ -61,30 +61,42 @@ const feature = (
   ...(repeat === undefined ? {} : { repeat }),
 });
 
-/** Outer and divider wall footprints. Top and bottom center gaps are the gate openings. */
+/** Outer wall footprints with offset entrance and exit openings. */
 const BORDER_SEGMENTS = Object.freeze([
-  rect(0, 0, 420, 24),
-  rect(540, 0, 420, 24),
+  rect(0, 0, 760, 24),
+  rect(856, 0, 104, 24),
   rect(0, 0, 24, 540),
   rect(936, 0, 24, 540),
-  rect(0, 516, 420, 24),
-  rect(540, 516, 420, 24),
+  rect(0, 516, 64, 24),
+  rect(184, 516, 776, 24),
 ]);
 
-/** Horizontal walls dividing each cell block into two stacked cells. */
-const DIVIDER_SEGMENTS = Object.freeze([
-  rect(24, 246, 336, 24),
-  rect(600, 246, 336, 24),
+/** Wall segments enclosing the four offset cell blocks. */
+const CELL_WALL_SEGMENTS = Object.freeze([
+  rect(48, 72, 208, 24),
+  rect(48, 192, 208, 24),
+  rect(48, 72, 24, 144),
+  rect(48, 320, 208, 24),
+  rect(48, 440, 208, 24),
+  rect(48, 320, 24, 144),
+  rect(560, 56, 176, 24),
+  rect(560, 152, 176, 24),
+  rect(736, 56, 24, 120),
+  rect(520, 320, 216, 24),
+  rect(520, 440, 216, 24),
+  rect(736, 320, 24, 144),
 ]);
 
-/** Cell fronts facing the escort corridor. Door gaps let escorts enter each cell. */
-const CELL_FRONT_SEGMENTS = Object.freeze([
-  rect(360, 24, 24, 86),
-  rect(360, 190, 24, 160),
-  rect(360, 430, 24, 86),
-  rect(576, 24, 24, 86),
-  rect(576, 190, 24, 160),
-  rect(576, 430, 24, 86),
+/** Barred cell fronts with door gaps at their centers. */
+const CELL_BAR_SEGMENTS = Object.freeze([
+  rect(256, 72, 24, 48),
+  rect(256, 168, 24, 48),
+  rect(256, 320, 24, 48),
+  rect(256, 416, 24, 48),
+  rect(560, 56, 24, 48),
+  rect(560, 136, 24, 40),
+  rect(520, 320, 24, 48),
+  rect(520, 416, 24, 48),
 ]);
 
 /** Builds one tiled wall feature from an axis-aligned segment. */
@@ -112,53 +124,54 @@ const wallFeature = (
 
 const solids: DungeonLiberatorRect[] = [];
 const wallDecor: DungeonLiberatorFeature[] = [];
-[...BORDER_SEGMENTS, ...DIVIDER_SEGMENTS].forEach((segment, index) => {
+[...BORDER_SEGMENTS, ...CELL_WALL_SEGMENTS].forEach((segment, index) => {
   solids.push(segment);
   wallDecor.push(wallFeature(`wall-${index}`, "wall", "prop:mausoleum", segment));
 });
-CELL_FRONT_SEGMENTS.forEach((segment, index) => {
+CELL_BAR_SEGMENTS.forEach((segment, index) => {
   solids.push(segment);
-  wallDecor.push(wallFeature(`cell-bars-${index}`, "cell-bars", "prop:fence", segment));
+  wallDecor.push(wallFeature(`cell-bars-${index}`, "cell-bars", "prop:cell-bars", segment));
 });
 
 /** The authored 960 by 540 cell block and escort route layout for Dungeon Liberator. */
 export const DUNGEON_LIBERATOR_MAP: DungeonLiberatorMap = Object.freeze({
   id: "dungeon-liberator",
   world: Object.freeze({ width: 960, height: 540 }),
-  playerSpawn: point(480, 480),
-  enemySpawns: Object.freeze([point(480, 300), point(768, 200)]),
+  playerSpawn: point(120, 480),
+  enemySpawns: Object.freeze([point(420, 240), point(680, 392)]),
   clearings: Object.freeze([
-    Object.freeze({ id: "cell-northwest", center: point(192, 130), radius: 46 }),
-    Object.freeze({ id: "cell-northeast", center: point(768, 130), radius: 46 }),
-    Object.freeze({ id: "cell-southwest", center: point(192, 400), radius: 46 }),
-    Object.freeze({ id: "cell-southeast", center: point(768, 400), radius: 46 }),
-    Object.freeze({ id: "escort-exit", center: point(480, 70), radius: 40 }),
+    Object.freeze({ id: "cell-west-north", center: point(160, 144), radius: 40 }),
+    Object.freeze({ id: "cell-west-south", center: point(160, 392), radius: 40 }),
+    Object.freeze({ id: "cell-east-north", center: point(660, 116), radius: 40 }),
+    Object.freeze({ id: "cell-east-south", center: point(640, 392), radius: 40 }),
+    Object.freeze({ id: "escort-exit", center: point(808, 64), radius: 36 }),
   ]),
   paths: Object.freeze([
-    Object.freeze({ id: "escort-route", width: 40, points: Object.freeze([point(480, 500), point(480, 150), point(480, 70)]) }),
-    Object.freeze({ id: "cell-spur-nw", width: 32, points: Object.freeze([point(480, 150), point(192, 150)]) }),
-    Object.freeze({ id: "cell-spur-ne", width: 32, points: Object.freeze([point(480, 150), point(768, 150)]) }),
-    Object.freeze({ id: "cell-spur-sw", width: 32, points: Object.freeze([point(480, 390), point(192, 390)]) }),
-    Object.freeze({ id: "cell-spur-se", width: 32, points: Object.freeze([point(480, 390), point(768, 390)]) }),
+    Object.freeze({ id: "escort-route", width: 40, points: Object.freeze([point(120, 500), point(300, 500), point(300, 280), point(400, 300), point(400, 116)]) }),
+    Object.freeze({ id: "cell-west-north", width: 32, points: Object.freeze([point(400, 116), point(268, 144), point(160, 144)]) }),
+    Object.freeze({ id: "cell-west-south", width: 32, points: Object.freeze([point(300, 280), point(300, 392), point(268, 392), point(160, 392)]) }),
+    Object.freeze({ id: "cell-east-north", width: 32, points: Object.freeze([point(400, 116), point(548, 116), point(660, 116)]) }),
+    Object.freeze({ id: "cell-east-south", width: 32, points: Object.freeze([point(400, 300), point(508, 392), point(640, 392)]) }),
+    Object.freeze({ id: "exit-route", width: 30, points: Object.freeze([point(400, 116), point(480, 40), point(808, 40), point(808, 64)]) }),
   ]),
   terrain: Object.freeze([
     Object.freeze({ id: "dungeon-floor", assetKey: "dungeon:stone-alt", depth: -40 }),
-    Object.freeze({ id: "stone-corridors", assetKey: "world:path", depth: -30 }),
+    Object.freeze({ id: "stone-corridors", assetKey: "path:stone", depth: -30 }),
   ]),
   decor: Object.freeze([
-    feature("south-entrance", "entrance", "prop:gate", 480, 520, 72, 44, 11),
-    feature("north-exit", "exit", "prop:gate", 480, 36, 72, 44, 11),
+    feature("south-entrance", "entrance", "prop:gate", 120, 520, 72, 44, 11),
+    feature("north-exit", "exit", "prop:gate", 808, 36, 72, 44, 11),
     ...wallDecor,
-    feature("cell-door-nw", "cell-door", "prop:gate", 372, 150, 28, 28, 9),
-    feature("cell-door-sw", "cell-door", "prop:gate", 372, 390, 28, 28, 9),
-    feature("cell-door-ne", "cell-door", "prop:gate", 588, 150, 28, 28, 9),
-    feature("cell-door-se", "cell-door", "prop:gate", 588, 390, 28, 28, 9),
-    feature("crystal-nw", "crystal", "prop:crystal", 192, 130, 20, 20, 13),
-    feature("crystal-ne", "crystal", "prop:crystal", 768, 130, 20, 20, 13),
-    feature("crystal-sw", "crystal", "prop:crystal", 192, 400, 20, 20, 13),
-    feature("crystal-se", "crystal", "prop:crystal", 768, 400, 20, 20, 13),
-    feature("lantern-north", "lantern", "prop:lantern", 480, 320, 28, 28, 16),
-    feature("lantern-south", "lantern", "prop:lantern", 480, 180, 28, 28, 16),
+    feature("cell-door-west-north", "cell-door", "prop:gate", 268, 144, 28, 28, 9),
+    feature("cell-door-west-south", "cell-door", "prop:gate", 268, 392, 28, 28, 9),
+    feature("cell-door-east-north", "cell-door", "prop:gate", 548, 116, 28, 28, 9),
+    feature("cell-door-east-south", "cell-door", "prop:gate", 508, 392, 28, 28, 9),
+    feature("crystal-west-north", "crystal", "prop:crystal", 160, 144, 20, 20, 13),
+    feature("crystal-west-south", "crystal", "prop:crystal", 160, 392, 20, 20, 13),
+    feature("crystal-east-north", "crystal", "prop:crystal", 660, 116, 20, 20, 13),
+    feature("crystal-east-south", "crystal", "prop:crystal", 640, 392, 20, 20, 13),
+    feature("lantern-corridor", "lantern", "prop:lantern", 400, 240, 28, 28, 16),
+    feature("lantern-entry", "lantern", "prop:lantern", 240, 280, 28, 28, 16),
   ]),
   solids: Object.freeze([...solids]),
 });

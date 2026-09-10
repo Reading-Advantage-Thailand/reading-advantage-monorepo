@@ -59,6 +59,10 @@ describe("Devourer Slime map", () => {
   it("provides at least two distinct landmark kinds", () => {
     const kinds = [...new Set(DEVOURER_SLIME_MAP.decor.map((item) => item.kind))];
     expect(kinds.length).toBeGreaterThanOrEqual(2);
-    expect(kinds).toEqual(expect.arrayContaining(["dead-tree", "fence", "gate"]));
+    expect(kinds).toEqual(expect.arrayContaining(["dead-tree", "dirt-patch", "gate", "path"]));
+    expect(DEVOURER_SLIME_MAP.decor.filter((item) => item.kind === "dirt-patch")).toHaveLength(15);
+    expect(DEVOURER_SLIME_MAP.decor.some((item) => item.assetKey === "prop:fence")).toBe(false);
+    expect(DEVOURER_SLIME_MAP.terrain[1]?.assetKey).toBe("path:mud");
+    expect(DEVOURER_SLIME_MAP.decor.filter((item) => item.kind === "path").every((item) => item.assetKey === "path:mud")).toBe(true);
   });
 });

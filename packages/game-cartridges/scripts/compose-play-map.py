@@ -44,6 +44,11 @@ KEYS: dict[str, tuple[str, int, int, int]] = {
     "dungeon:stone": (p(SEWERS, "sewers-tiles-floor-tile-0.png"), 16, 16, 0),
     "dungeon:stone-alt": (p(SEWERS, "sewers-tiles-floor-tile-5.png"), 16, 16, 0),
     "dungeon:sandstone": (p(RA, "ra-crypt-review-parts", "ra-crypt-review-parts-floor-1-1.png"), 16, 16, 0),
+    "path:stone": (p(RA, "ra-crypt-review-parts", "ra-crypt-review-parts-floor-4-1.png"), 16, 16, 0),
+    "path:crypt": (p(RA, "ra-crypt-review-parts", "ra-crypt-review-parts-floor-2-1.png"), 16, 16, 0),
+    "path:mud": (p(RA, "ra-crypt-review-parts", "ra-crypt-review-parts-floor-5-2.png"), 16, 16, 0),
+    "path:sand": (p(RA, "ra-crypt-review-parts", "ra-crypt-review-parts-floor-5-1.png"), 16, 16, 0),
+    "prop:cell-bars": (p(RA, "ra-crypt-review-parts", "ra-crypt-review-parts-bars-upper-1-1.png"), 16, 16, 0),
     "prop:bookshelf": (p(QC, "enchanted-library-bookshelf.png"), 16, 32, 0),
     "prop:crystal": (p(QC, "asset-1a2d909a506fd6c9.png"), 16, 16, 0),
     "prop:tower": (p(QC, "asset-84663e69de1c831d.png"), 32, 80, 0),
@@ -126,7 +131,8 @@ def compose(layout: dict) -> Image.Image:
             )
 
     # Paths: stamp the dirt tile along every centerline segment.
-    path_key = next((layer["assetKey"] for layer in layout["terrain"] if layer["assetKey"] == "world:path"), None)
+    path_key = next((layer["assetKey"] for layer in layout["terrain"]
+                     if layer["assetKey"] == "world:path" or layer["assetKey"].startswith("path:")), None)
     path_tile = load_cell(path_key) if path_key else None
     if path_tile:
         for path in layout["paths"]:

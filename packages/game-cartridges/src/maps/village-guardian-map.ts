@@ -69,22 +69,13 @@ const BORDER_SOLIDS = Object.freeze([
   rect(0, 520, 960, 20),
 ]);
 
-const BUILDING_SOLIDS = Object.freeze([
-  rect(136, 88, 30, 58),
-  rect(582, 92, 50, 40),
-  rect(840, 232, 46, 38),
-  rect(796, 434, 30, 62),
-  rect(122, 444, 50, 40),
-  rect(546, 196, 28, 58),
-  rect(304, 302, 48, 40),
-  rect(596, 352, 46, 38),
-  rect(408, 248, 24, 24),
+const TOWER_SOLIDS = Object.freeze([
+  rect(125, 75, 30, 58),
+  rect(846, 75, 30, 58),
 ]);
 
 const TREE_SOLIDS = Object.freeze([
-  rect(86, 226, 36, 44),
-  rect(848, 108, 30, 28),
-  rect(866, 446, 28, 32),
+  rect(64, 286, 30, 28),
 ]);
 
 /** The authored 960 by 540 walled village with a ring road around a central green. */
@@ -121,7 +112,6 @@ export const VILLAGE_GUARDIAN_MAP: VillageGuardianMap = Object.freeze({
     Object.freeze({ id: "village-roads", assetKey: "world:path", depth: -30 }),
   ]),
   decor: Object.freeze([
-    feature("green-heart", "plaza", "prop:dirt-patch", 480, 300, 128, 128, 5),
     feature("fence-north-left", "fence", "prop:fence", 239, 16, 438, 32, 8, undefined, undefined, "x"),
     feature("fence-north-right", "fence", "prop:fence", 721, 16, 438, 32, 8, undefined, undefined, "x"),
     feature("fence-west", "fence", "prop:fence", 16, 270, 500, 32, 8, undefined, 90, "x"),
@@ -131,19 +121,10 @@ export const VILLAGE_GUARDIAN_MAP: VillageGuardianMap = Object.freeze({
     feature("fence-south-right", "fence", "prop:fence", 840, 524, 200, 32, 8, undefined, undefined, "x"),
     feature("gate-north", "gate", "prop:gate", 480, 26, 36, 36, 9),
     feature("gate-south", "gate", "prop:gate", 480, 514, 36, 36, 9),
-    feature("gate-southeast", "gate", "prop:gate", 720, 514, 36, 36, 9),
-    feature("house-north", "house", "prop:memorial", 607, 120, 64, 56, 14, BUILDING_SOLIDS[1]),
-    feature("house-east", "house", "prop:memorial", 863, 251, 60, 54, 14, BUILDING_SOLIDS[2]),
-    feature("house-southwest", "house", "prop:memorial", 147, 464, 64, 56, 14, BUILDING_SOLIDS[4]),
-    feature("house-west-inner", "house", "prop:memorial", 328, 322, 60, 52, 14, BUILDING_SOLIDS[7]),
-    feature("house-south-inner", "house", "prop:memorial", 619, 371, 56, 50, 14, BUILDING_SOLIDS[8]),
-    feature("tower-northwest", "tower", "prop:tower", 151, 133, 48, 90, 15, BUILDING_SOLIDS[0]),
-    feature("tower-southeast", "tower", "prop:tower", 811, 479, 48, 90, 15, BUILDING_SOLIDS[3]),
-    feature("tower-north-inner", "tower", "prop:tower", 560, 237, 44, 84, 15, BUILDING_SOLIDS[5]),
-    feature("village-well", "well", "prop:memorial", 420, 260, 44, 44, 15, BUILDING_SOLIDS[9]),
-    feature("tree-west", "dead-tree", "prop:dead-tree-large", 104, 250, 72, 96, 14, TREE_SOLIDS[0]),
-    feature("tree-northeast", "dead-tree", "prop:dead-tree-small", 863, 122, 68, 76, 14, TREE_SOLIDS[1]),
-    feature("tree-southeast", "dead-tree", "prop:dead-tree-small", 880, 462, 68, 76, 14, TREE_SOLIDS[2]),
+    feature("gate-east", "gate", "prop:gate", 900, 300, 36, 36, 9),
+    feature("tower-northwest", "tower", "prop:tower", 140, 120, 48, 90, 15, TOWER_SOLIDS[0]),
+    feature("tower-southeast", "tower", "prop:tower", 860, 120, 48, 90, 15, TOWER_SOLIDS[1]),
+    feature("tree-west", "dead-tree", "prop:dead-tree-small", 100, 300, 68, 76, 14, TREE_SOLIDS[0]),
     feature("lantern-ring-nw", "lantern", "prop:lantern", 216, 146, 28, 28, 16),
     feature("lantern-ring-ne", "lantern", "prop:lantern", 744, 146, 28, 28, 16),
     feature("lantern-ring-se", "lantern", "prop:lantern", 744, 434, 28, 28, 16),
@@ -153,7 +134,7 @@ export const VILLAGE_GUARDIAN_MAP: VillageGuardianMap = Object.freeze({
     feature("lantern-plaza-west", "lantern", "prop:lantern", 400, 300, 28, 28, 16),
     feature("lantern-plaza-east", "lantern", "prop:lantern", 560, 300, 28, 28, 16),
   ]),
-  solids: Object.freeze([...BORDER_SOLIDS, ...BUILDING_SOLIDS, ...TREE_SOLIDS]),
+  solids: Object.freeze([...BORDER_SOLIDS, ...TOWER_SOLIDS, ...TREE_SOLIDS]),
 });
 
 validateStandardPlayMap(VILLAGE_GUARDIAN_MAP);

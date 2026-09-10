@@ -60,5 +60,8 @@ describe("Dungeon Liberator map", () => {
     const kinds = [...new Set(DUNGEON_LIBERATOR_MAP.decor.map((item) => item.kind))];
     expect(kinds.length).toBeGreaterThanOrEqual(2);
     expect(kinds).toEqual(expect.arrayContaining(["wall", "cell-bars", "cell-door"]));
+    expect(DUNGEON_LIBERATOR_MAP.decor.filter((item) => item.kind === "cell-bars")).toHaveLength(8);
+    expect(DUNGEON_LIBERATOR_MAP.decor.filter((item) => item.kind === "cell-bars").every((item) => item.assetKey === "prop:cell-bars")).toBe(true);
+    expect(DUNGEON_LIBERATOR_MAP.terrain[1]?.assetKey).toBe("path:stone");
   });
 });

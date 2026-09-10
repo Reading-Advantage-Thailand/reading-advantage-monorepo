@@ -112,6 +112,25 @@ SHELF_SOLIDS.forEach((shelf, index) => {
   ));
 });
 
+/** Boundary wall features that anchor the library interior and entrance. */
+const borderFeatures: EnchantedLibraryFeature[] = [];
+BORDER_SOLIDS.forEach((segment, index) => {
+  const horizontal = segment.width >= segment.height;
+  borderFeatures.push(feature(
+    `wall-${index}`,
+    "wall",
+    "prop:mausoleum",
+    segment.x + segment.width / 2,
+    segment.y + segment.height / 2,
+    horizontal ? segment.width : segment.height,
+    horizontal ? segment.height : segment.width,
+    10,
+    segment,
+    horizontal ? undefined : 90,
+    "x",
+  ));
+});
+
 /** The authored 960 by 540 library interior for Enchanted Library. */
 export const ENCHANTED_LIBRARY_MAP: EnchantedLibraryMap = Object.freeze({
   id: "enchanted-library",
@@ -138,12 +157,12 @@ export const ENCHANTED_LIBRARY_MAP: EnchantedLibraryMap = Object.freeze({
     Object.freeze({ id: "library-floor", assetKey: "wizard-floor", depth: -40 }),
   ]),
   decor: Object.freeze([
+    ...borderFeatures,
     feature("south-entrance", "entrance", "prop:gate", 480, 522, 72, 44, 11),
     ...shelfFeatures,
     feature("lantern-rotunda", "lantern", "prop:lantern", 480, 210, 28, 28, 16),
     feature("lantern-west", "lantern", "prop:lantern", 240, 200, 28, 28, 16),
     feature("lantern-east", "lantern", "prop:lantern", 740, 200, 28, 28, 16),
-    feature("reading-west", "reading-desk", "prop:memorial", 200, 330, 40, 40, 13),
     feature("reading-east", "reading-desk", "prop:memorial", 810, 140, 40, 40, 13),
     feature("reading-north", "reading-desk", "prop:memorial", 300, 150, 40, 40, 13),
   ]),

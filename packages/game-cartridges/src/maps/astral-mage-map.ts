@@ -115,8 +115,8 @@ export const ASTRAL_MAGE_MAP: AstralMageMap = Object.freeze({
     Object.freeze({ id: "spawn-northeast", width: 26, points: Object.freeze([point(480, 240), point(600, 160), point(600, 90)]) }),
   ]),
   terrain: Object.freeze([
-    Object.freeze({ id: "arena-stone", assetKey: "dungeon:sandstone", depth: -40 }),
-    Object.freeze({ id: "stone-corridors", assetKey: "world:path", depth: -30 }),
+    Object.freeze({ id: "arena-stone", assetKey: "dungeon:stone-alt", depth: -40 }),
+    Object.freeze({ id: "stone-corridors", assetKey: "path:sand", depth: -30 }),
   ]),
   decor: Object.freeze([
     feature("mausoleum-west", "mausoleum", "prop:mausoleum", 350, 270, 96, 128, 10, FEATURE_SOLIDS[0]),

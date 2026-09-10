@@ -71,22 +71,9 @@ const SPIRAL_POINTS = Object.freeze([
   point(520, 280),
 ]);
 
-const DIRT_PATCH_CENTERS = Object.freeze([
-  point(120, 144),
-  point(312, 144),
-  point(504, 144),
-  point(696, 144),
-  point(888, 144),
-  point(216, 312),
-  point(408, 312),
-  point(600, 312),
-  point(792, 312),
-  point(168, 456),
-  point(360, 456),
-  point(552, 456),
-  point(744, 456),
-  point(912, 456),
-]);
+const DIRT_PATCH_CENTERS = Object.freeze(
+  [96, 288, 480, 672, 864].flatMap((x) => [96, 288, 480].map((y) => point(x, y))),
+);
 
 const feature = (
   id: string,
@@ -126,7 +113,7 @@ const coilStamp = (
   return feature(
     id,
     "path",
-    "world:path",
+    "path:mud",
     (start.x + end.x) / 2,
     (start.y + end.y) / 2,
     horizontal ? length + 44 : 44,
@@ -162,7 +149,7 @@ export const DEVOURER_SLIME_MAP: DevourerSlimeMap = Object.freeze({
   ]),
   terrain: Object.freeze([
     Object.freeze({ id: "bog-grass", assetKey: "world:ground", depth: -40 }),
-    Object.freeze({ id: "bog-dirt", assetKey: "world:path", depth: -30 }),
+    Object.freeze({ id: "bog-mud", assetKey: "path:mud", depth: -30 }),
   ]),
   decor: Object.freeze([
     ...DIRT_PATCH_CENTERS.map((center, index) => dirtPatch(index, center.x, center.y)),
@@ -176,11 +163,6 @@ export const DEVOURER_SLIME_MAP: DevourerSlimeMap = Object.freeze({
     feature("tree-east-north", "dead-tree", "prop:dead-tree-large", 840, 200, 72, 96, 14, TREE_SOLIDS[5]),
     feature("tree-west-south", "dead-tree", "prop:dead-tree-large", 100, 340, 72, 96, 14, TREE_SOLIDS[6]),
     feature("tree-east-south", "dead-tree", "prop:dead-tree-large", 860, 340, 72, 96, 14, TREE_SOLIDS[7]),
-    feature("fence-north", "fence", "prop:fence", 480, 12, 912, 32, 8, undefined, undefined, "x"),
-    feature("fence-west", "fence", "prop:fence", 12, 270, 492, 32, 8, undefined, 90, "x"),
-    feature("fence-east", "fence", "prop:fence", 948, 270, 492, 32, 8, undefined, 90, "x"),
-    feature("fence-southwest", "fence", "prop:fence", 198, 522, 396, 32, 8, undefined, undefined, "x"),
-    feature("fence-southeast", "fence", "prop:fence", 762, 522, 396, 32, 8, undefined, undefined, "x"),
   ]),
   solids: Object.freeze([...BORDER_SOLIDS, ...TREE_SOLIDS]),
 });

@@ -52,5 +52,9 @@ describe("Village Guardian map", () => {
     expect(kinds).toEqual(expect.arrayContaining(["fence", "dead-tree", "tower", "lantern"]));
     expect(VILLAGE_GUARDIAN_MAP.terrain[0]?.assetKey).toBe("world:ground");
     expect(VILLAGE_GUARDIAN_MAP.terrain.some((layer) => layer.assetKey === "world:path")).toBe(true);
+    expect(VILLAGE_GUARDIAN_MAP.decor.filter((item) => item.kind === "dead-tree")).toHaveLength(1);
+    expect(VILLAGE_GUARDIAN_MAP.decor.some((item) => item.assetKey === "prop:memorial")).toBe(false);
+    expect(VILLAGE_GUARDIAN_MAP.decor.some((item) => item.assetKey === "prop:dirt-patch")).toBe(false);
+    expect(VILLAGE_GUARDIAN_MAP.decor.find((item) => item.id === "gate-east")?.position).toEqual({ x: 900, y: 300 });
   });
 });

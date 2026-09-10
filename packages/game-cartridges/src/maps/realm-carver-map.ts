@@ -53,14 +53,14 @@ const RUIN_SOLIDS = Object.freeze([
 ]);
 
 const TREE_SOLIDS = Object.freeze([
-  rect(100, 48, 40, 44),
-  rect(820, 48, 40, 44),
+  rect(60, 58, 40, 44),
+  rect(860, 58, 40, 44),
   rect(80, 158, 40, 44),
   rect(840, 158, 40, 44),
   rect(80, 338, 40, 44),
   rect(840, 338, 40, 44),
-  rect(100, 448, 40, 44),
-  rect(820, 448, 40, 44),
+  rect(60, 438, 40, 44),
+  rect(860, 438, 40, 44),
 ]);
 
 const feature = (
@@ -111,29 +111,22 @@ export const REALM_CARVER_MAP: RealmCarverMap = Object.freeze({
   ]),
   terrain: Object.freeze([
     Object.freeze({ id: "sandstone-floor", assetKey: "dungeon:sandstone", depth: -40 }),
-    Object.freeze({ id: "carve-lanes", assetKey: "world:path", depth: -30 }),
+    Object.freeze({ id: "carve-lanes", assetKey: "path:sand", depth: -30 }),
   ]),
   decor: Object.freeze([
-    feature("dirt-patch-southwest", "dirt-patch", "prop:dirt-patch", 250, 430, 96, 96, 6),
-    feature("dirt-patch-southeast", "dirt-patch", "prop:dirt-patch", 710, 430, 96, 96, 6),
-    feature("fence-north", "fence", "prop:fence", 480, 12, 912, 32, 8, undefined, undefined, "x"),
-    feature("fence-west", "fence", "prop:fence", 12, 270, 492, 32, 8, undefined, 90, "x"),
-    feature("fence-east", "fence", "prop:fence", 948, 270, 492, 32, 8, undefined, 90, "x"),
-    feature("fence-southwest", "fence", "prop:fence", 198, 522, 396, 32, 8, undefined, undefined, "x"),
-    feature("fence-southeast", "fence", "prop:fence", 762, 522, 396, 32, 8, undefined, undefined, "x"),
     feature("south-gate", "entrance", "prop:gate", 480, 514, 72, 44, 11),
     feature("ruin-northwest", "ruins", "prop:ruins", 200, 170, 64, 64, 12, RUIN_SOLIDS[0]),
     feature("ruin-northeast", "ruins", "prop:ruins", 760, 170, 64, 64, 12, RUIN_SOLIDS[1]),
     feature("ruin-southwest", "ruins", "prop:ruins", 200, 370, 64, 64, 12, RUIN_SOLIDS[2]),
     feature("ruin-southeast", "ruins", "prop:ruins", 760, 370, 64, 64, 12, RUIN_SOLIDS[3]),
-    feature("tree-northwest", "dead-tree", "prop:dead-tree-large", 120, 70, 72, 96, 14, TREE_SOLIDS[0]),
-    feature("tree-northeast", "dead-tree", "prop:dead-tree-large", 840, 70, 72, 96, 14, TREE_SOLIDS[1]),
+    feature("tree-northwest", "dead-tree", "prop:dead-tree-large", 80, 80, 72, 96, 14, TREE_SOLIDS[0]),
+    feature("tree-northeast", "dead-tree", "prop:dead-tree-large", 880, 80, 72, 96, 14, TREE_SOLIDS[1]),
     feature("tree-west-upper", "dead-tree", "prop:dead-tree-large", 100, 180, 72, 96, 14, TREE_SOLIDS[2]),
     feature("tree-east-upper", "dead-tree", "prop:dead-tree-large", 860, 180, 72, 96, 14, TREE_SOLIDS[3]),
     feature("tree-west-lower", "dead-tree", "prop:dead-tree-large", 100, 360, 72, 96, 14, TREE_SOLIDS[4]),
     feature("tree-east-lower", "dead-tree", "prop:dead-tree-large", 860, 360, 72, 96, 14, TREE_SOLIDS[5]),
-    feature("tree-southwest", "dead-tree", "prop:dead-tree-large", 120, 470, 72, 96, 14, TREE_SOLIDS[6]),
-    feature("tree-southeast", "dead-tree", "prop:dead-tree-large", 840, 470, 72, 96, 14, TREE_SOLIDS[7]),
+    feature("tree-southwest", "dead-tree", "prop:dead-tree-large", 80, 460, 72, 96, 14, TREE_SOLIDS[6]),
+    feature("tree-southeast", "dead-tree", "prop:dead-tree-large", 880, 460, 72, 96, 14, TREE_SOLIDS[7]),
     feature("monument-crystal", "crystal", "prop:crystal", 480, 270, 44, 44, 15),
     feature("ring-crystal-north", "crystal", "prop:crystal", 480, 150, 18, 18, 15),
     feature("ring-crystal-south", "crystal", "prop:crystal", 480, 390, 18, 18, 15),
