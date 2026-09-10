@@ -4,6 +4,9 @@ This file tracks all major tracks for the project.
 
 ---
 
+- [~] **Track: APK Arcade Portfolio Refactor** *Link: [./tracks/apk_arcade_portfolio_refactor_20260908/](./tracks/apk_arcade_portfolio_refactor_20260908/)*
+  Plan the complete game rebuild, shared arcade experience, listening, progression, and social play. Sol medium handoff is complete; implementation remains planned.
+
 - [x] **Track: Architectural Priorities** *Link: [./tracks/architecture_priorities_20260908/](./tracks/architecture_priorities_20260908/)*
   Reduce repeated verification, narrow Domain imports, and consolidate shared authentication behavior.
 
@@ -412,7 +415,7 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
   Repair the company SSO redirect chain: carry the destination through sign-in, stop overwriting the learner's language cookie, honor the Cloud Run forwarding hop in every auth route, and surface sign-in errors.
 
 - [ ] **Track: Sales and Marketing SSO Parity and Demo Accounts** *Link: [./tracks/sales_marketing_sso_parity_20260829/](./tracks/sales_marketing_sso_parity_20260829/)*
-  Port the Codecamp SSO redirect repair to Sales and Marketing: carry the destination through sign-in, stop overwriting the language cookie, port the forwarding-origin approval with the Codecamp callback-origin handoff, fail cleanly on unsafe return paths, surface sign-in errors, deny no-role sessions, and provision demo-only acceptance accounts with generated credentials. Part of the five-app launch program; this is the SSO hard gate. Plan reviewed and approved 2026-08-29 (reviews/plan-review-a-2026-08-29-r5.json: pass).
+  Port the Codecamp SSO redirect repair to Sales and Marketing: carry the destination through sign-in, stop overwriting the language cookie, port the forwarding-origin approval with the Codecamp callback-origin handoff, fail cleanly on unsafe return paths, surface sign-in errors, deny   no-role sessions, and provision demo-only acceptance accounts with generated credentials. Part of the five-app launch program; this is the SSO hard gate. Plan reviewed and approved 2026-08-29 (reviews/plan-review-a-2026-08-29-r5.json: pass).
 
 - [ ] **Track: Accounting Dedicated Database Launch** *Link: [./tracks/accounting_dedicated_db_launch_20260830/](./tracks/accounting_dedicated_db_launch_20260830/)*
   Take `apps/accounting`, the only one of the five company apps with no Cloud Run deployment, to production on its own dedicated database: a separate `accounting` database on the shared Cloud SQL instance following the company-identity layout (own drizzle journal, runtime client, migration/runtime roles, secrets), SSO origin-approval and redirect parity with the Sales repair, a candidate no-traffic Cloud Build pipeline with a manual acceptance-gated promotion script, and DNS for accounting.reading-advantage.com. Status: Draft 2026-08-30.
@@ -422,6 +425,11 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 
 - [ ] **Track: Codecamp Mastery Evidence Projection** *Link: [./tracks/codecamp_mastery_evidence_projection_20260820/](./tracks/codecamp_mastery_evidence_projection_20260820/)*
   Make Codecamp learner evidence trustworthy (stored exercise submissions, recorded quiz attempts, earned theory completion), then open the knowledge-space projection for every module instead of only Unit 20.
+
+---
+
+- [ ] **Track: Standard Play Maps** *Link: [./tracks/apk_standard_play_maps_20260910/](./tracks/apk_standard_play_maps_20260910/)*
+  Generalize the existing Wizard graveyard map into one shared typed layout contract, then author nine top-down play maps (PNG plus typed layout) for the Advantage games. Rebuild Wizard vs. Zombie from scratch as the reference map. Keep collision rules stable and leave composed art outside the pinned standard pack.
 
 ---
 
@@ -869,3 +877,6 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 - [x] **Track: Monorepo Package Review**
   *Link: [./tracks/monorepo_package_review_20260907/](./tracks/monorepo_package_review_20260907/)*
   Evaluate all workspace units and repair confirmed defects under the Ponytail Rules.
+
+- [x] **Track: APK Named Asset Cuts** *Link: [./tracks/apk_named_asset_cuts_20260907/](./tracks/apk_named_asset_cuts_20260907/)*
+  Prepare several sheets per review batch and process approved cuts.

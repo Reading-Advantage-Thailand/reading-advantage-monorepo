@@ -1,0 +1,25 @@
+{
+  "track_id": "apk_standard_play_maps_20260910",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-09-10T09:13:29Z",
+  "updated_at": "2026-09-10T09:13:29Z",
+  "description": "Author reusable standard play maps for the top-down Advantage games and rebuild the Wizard vs. Zombie graveyard as the reference map.",
+  "estimated_tasks": 35,
+  "actual_tasks": null,
+  "deviation_notes": "",
+  "sprint": {
+    "goal": "Give every top-down Advantage game a reusable authored play map, and rebuild the Wizard vs. Zombie graveyard as the reference map.",
+    "stories": [
+      { "id": "S1", "title": "Shared play-map contract", "size": "M", "priority": "Must", "status": "pending" },
+      { "id": "S2", "title": "Wizard graveyard rework", "size": "L", "priority": "Must", "status": "pending" },
+      { "id": "S3", "title": "Dungeon maps", "size": "L", "priority": "Must", "status": "pending" },
+      { "id": "S4", "title": "Library and village maps", "size": "M", "priority": "Must", "status": "pending" },
+      { "id": "S5", "title": "Open-field maps", "size": "M", "priority": "Should", "status": "pending" },
+      { "id": "S6", "title": "Maze map art", "size": "M", "priority": "Should", "status": "pending" },
+      { "id": "S7", "title": "Verification and provenance", "size": "M", "priority": "Must", "status": "pending" }
+    ],
+    "demo_notes": null,
+    "retro_ref": null
+  }
+}
