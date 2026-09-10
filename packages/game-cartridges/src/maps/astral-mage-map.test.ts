@@ -59,8 +59,10 @@ describe("Astral Mage map", () => {
   it("provides at least two distinct landmark kinds", () => {
     const kinds = [...new Set(ASTRAL_MAGE_MAP.decor.map((item) => item.kind))];
     expect(kinds.length).toBeGreaterThanOrEqual(2);
-    expect(kinds).toEqual(expect.arrayContaining(["mausoleum", "ruins", "crystal"]));
+    expect(kinds).toEqual(expect.arrayContaining(["mausoleum", "ruins", "crystal", "wall", "gate"]));
     expect(ASTRAL_MAGE_MAP.terrain[0]?.assetKey).toBe("dungeon:stone-alt");
     expect(ASTRAL_MAGE_MAP.terrain[1]?.assetKey).toBe("path:sand");
+    expect(ASTRAL_MAGE_MAP.decor.filter((item) => item.kind === "wall")).toHaveLength(4);
+    expect(ASTRAL_MAGE_MAP.decor.filter((item) => item.kind === "gate")).toHaveLength(2);
   });
 });

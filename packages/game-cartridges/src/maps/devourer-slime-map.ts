@@ -113,7 +113,7 @@ const coilStamp = (
   return feature(
     id,
     "path",
-    "path:mud",
+    "path:crypt",
     (start.x + end.x) / 2,
     (start.y + end.y) / 2,
     horizontal ? length + 44 : 44,
@@ -149,7 +149,7 @@ export const DEVOURER_SLIME_MAP: DevourerSlimeMap = Object.freeze({
   ]),
   terrain: Object.freeze([
     Object.freeze({ id: "bog-grass", assetKey: "world:ground", depth: -40 }),
-    Object.freeze({ id: "bog-mud", assetKey: "path:mud", depth: -30 }),
+    Object.freeze({ id: "bog-trail", assetKey: "path:crypt", depth: -30 }),
   ]),
   decor: Object.freeze([
     ...DIRT_PATCH_CENTERS.map((center, index) => dirtPatch(index, center.x, center.y)),
