@@ -9,6 +9,7 @@ import {
   createBoundedFrameScheduler,
   createCompletionLatch,
   createDeterministicSpawner,
+  createGridNavigator,
   createInputActionNormalizer,
   createResultAccountant,
   finalizeResult,
@@ -17,16 +18,27 @@ import {
   resolveAssetBinding,
   validateNonEmptyContent,
   type APKInputController,
+  type AnswerChoiceAudioController,
   type CartridgeGameConfigContext,
   type GameTerminalOutcome,
   type GameplayBounds,
   type GameplayVector,
   type InputActionId,
+  type ListeningAudioController,
   type RuntimeEdition,
 } from "@reading-advantage/advantage-play-kit";
-import type { StandardExperienceCartridge } from "@reading-advantage/advantage-play-kit/presentation";
+import type {
+  CreateTutorialActionDriverContext,
+  GameTutorialActionDriverContext,
+  StandardExperienceCartridge,
+} from "@reading-advantage/advantage-play-kit/presentation";
 
 import { createCartridgeStandardExperience } from "./standard-experience.js";
+import {
+  WIZARD_GRAVEYARD_MAP,
+  type WizardGraveyardFeature,
+} from "./wizard-graveyard-map.js";
+import { getWizardZombieIntent } from "./wizard-zombie-behavior.js";
 
 /** Stable public identifier for the Wizard vs Zombie cartridge. */
 export const WIZARD_VS_ZOMBIE_ID = "wizard-vs-zombie" as const;
@@ -48,6 +60,9 @@ export const MAX_SHOCKWAVE_CHARGES = 3;
 
 /** Bounded damage-immunity duration after one zombie collision. */
 export const INVULNERABILITY_DURATION = 500;
+
+/** One bounded damage protection window for the first answer audition. */
+export const ANSWER_AUDIO_PROTECTION_DURATION = 8_000;
 
 /** Wizard collision radius in base arena pixels. */
 export const WIZARD_RADIUS = 20;
@@ -101,7 +116,7 @@ export interface WizardVsZombieOrb extends WizardVsZombiePoint {
   readonly term: string;
   /** Compatibility alias for renderers that call the term a word. */
   readonly word: string;
-  /** Translation displayed below the crystal. */
+  /** Target-language translation associated with the crystal. */
   readonly translation: string;
   /** Whether this crystal matches the active target term. */
   readonly isCorrect: boolean;
@@ -141,6 +156,8 @@ export interface WizardVsZombieControllerOptions {
   readonly rng?: () => number;
   /** Zombies present before the first simulation step. */
   readonly initialZombies?: readonly WizardVsZombieZombieSeed[];
+  /** Whether crystal contact waits for an external audio confirmation. */
+  readonly deferOrbCollection?: boolean;
 }
 
 /** Immutable graveyard and learning state exposed by the controller. */
@@ -205,6 +222,10 @@ export interface WizardVsZombieSnapshot {
   readonly gameTime: number;
   /** Current deterministic crystal relocation revision. */
   readonly layoutRevision: number;
+  /** Whether crystal contact must wait for the wizard to leave the contact zone. */
+  readonly orbContactLatched: boolean;
+  /** Physical crystal zone that must be left before another contact can register. */
+  readonly orbContactZone: Readonly<WizardVsZombiePoint & { readonly radius: number }> | undefined;
   /** Milliseconds accumulated toward the next zombie spawn. */
   readonly spawnTimerMs: number;
   /** Number of deterministic zombie gates already consumed. */
@@ -263,6 +284,8 @@ export interface WizardVsZombieController {
   castShockwave(): WizardVsZombieActionResult;
   /** Applies one direct ten-point hazard for deterministic terminal testing. */
   applyHazard(): WizardVsZombieActionResult;
+  /** Grants a bounded damage protection window without pausing simulation. */
+  grantProtection(durationMs: number): void;
   /** Adds one deterministic zombie to the active graveyard. */
   addZombie(zombie: WizardVsZombieZombieSeed): void;
   /** Captures all gameplay state for a responsive transition. */
@@ -281,22 +304,31 @@ interface PhaserGraphicsLike {
   fillRoundedRect(x: number, y: number, width: number, height: number, radius?: number): this;
   lineStyle(lineWidth: number, color: number, alpha?: number): this;
   strokeRoundedRect(x: number, y: number, width: number, height: number, radius?: number): this;
+  strokeCircle(x: number, y: number, radius: number): this;
   setDepth?(depth: number): this;
   destroy(): void;
 }
 
 interface PhaserTextLike {
+  readonly height?: number;
+  readonly width?: number;
   setPosition(x: number, y: number): this;
   setText(value: string): this;
+  setAlign?(alignment: "left" | "center" | "right" | "justify"): this;
   setDepth?(depth: number): this;
+  setFontSize?(size: number | string): this;
+  setVisible?(visible: boolean): this;
+  setWordWrapWidth?(width: number, useAdvancedWrap?: boolean): this;
   destroy(): void;
 }
 
 interface PhaserImageLike {
   setOrigin?(x: number, y: number): this;
   setDisplaySize?(width: number, height: number): this;
+  setFrame?(frame: number): this;
   setDepth?(depth: number): this;
   setPosition?(x: number, y: number): this;
+  setRotation?(radians: number): this;
   setVisible?(visible: boolean): this;
   destroy(): void;
 }
@@ -330,10 +362,16 @@ interface PhaserSceneLike {
 interface SceneResources {
   readonly night: PhaserGraphicsLike;
   readonly graphics: PhaserGraphicsLike;
+  readonly hud: PhaserGraphicsLike;
   readonly title: PhaserTextLike;
   readonly prompt: PhaserTextLike;
   readonly progress: PhaserTextLike;
   readonly health: PhaserTextLike;
+  readonly ability: PhaserTextLike;
+  readonly audioControl: PhaserTextLike;
+  readonly transcriptControl: PhaserTextLike;
+  readonly fallbackControl: PhaserTextLike;
+  readonly answerAudioControls: readonly PhaserTextLike[];
   readonly feedback: PhaserTextLike;
   readonly instructions: PhaserTextLike;
   readonly orbLabels: readonly PhaserTextLike[];
@@ -342,17 +380,23 @@ interface SceneResources {
   playerSprite?: PhaserImageLike;
   readonly orbSprites: Map<string, PhaserImageLike>;
   readonly zombieSprites: Map<string, PhaserImageLike>;
+  worldX: number;
+  worldY: number;
   worldWidth: number;
   worldHeight: number;
 }
 
 interface WizardVsZombieSceneContext {
   readonly controller: WizardVsZombieController;
+  readonly items: readonly VocabularyItem[];
   readonly inputController: APKInputController;
   readonly composition: CartridgeGameConfigContext["composition"];
   readonly diagnostic: CartridgeGameConfigContext["diagnostic"];
   readonly sessionMode: NonNullable<CartridgeGameConfigContext["sessionMode"]>;
   readonly edition: RuntimeEdition;
+  readonly listening?: ListeningAudioController;
+  readonly answerAudio?: AnswerChoiceAudioController;
+  readonly seed: number;
 }
 
 interface ResolvedArenaTexture {
@@ -360,138 +404,32 @@ interface ResolvedArenaTexture {
   readonly frame?: number;
 }
 
-const SOUL_POSITIONS: readonly WizardVsZombiePoint[] = Object.freeze([
-  Object.freeze({ x: 180, y: 180 }),
-  Object.freeze({ x: 780, y: 180 }),
-  Object.freeze({ x: 180, y: 420 }),
-  Object.freeze({ x: 780, y: 420 }),
-]);
+/** Display-space mapping for the fixed Wizard arena. */
+export interface WizardArenaProjection extends GameplayBounds {
+  /** Horizontal display pixels per arena pixel. */
+  readonly scaleX: number;
+  /** Vertical display pixels per arena pixel. */
+  readonly scaleY: number;
+}
 
-const ARENA_ART_KEYS = Object.freeze([
-  "world:ground",
-  "prop:grave",
-  "prop:crypt",
+const SOUL_POSITIONS: readonly WizardVsZombiePoint[] = Object.freeze(
+  WIZARD_GRAVEYARD_MAP.clearings.map((clearing) => clearing.center),
+);
+
+const ARENA_ART_KEYS = Object.freeze([...new Set([
+  ...WIZARD_GRAVEYARD_MAP.terrain.map((layer) => layer.assetKey),
+  ...WIZARD_GRAVEYARD_MAP.decor.map((feature) => feature.assetKey),
+  "prop:gate",
   "prop:orb",
   "player:idle",
   "enemy:idle",
-]);
+])]);
 
-/** One drawn graveyard feature with a solid footprint. */
-export interface GraveyardFeature {
-  /** Stable feature identity. */
-  readonly id: string;
-  /** Catalog prop binding used to draw this feature. */
-  readonly prop: "crypt" | "grave";
-  /** Foot position x. */
-  readonly x: number;
-  /** Foot position y. */
-  readonly y: number;
-  /** Drawn width. */
-  readonly width: number;
-  /** Drawn height. */
-  readonly height: number;
-  /** Solid collision box in arena space. */
-  readonly solid: GameplayBounds;
-}
-
-/** Complete sprites only: crypt towers and gravestones. No atlas crops. No fences. */
-export const GRAVEYARD_FEATURES: readonly GraveyardFeature[] = Object.freeze([
-  Object.freeze({
-    id: "crypt-north",
-    prop: "crypt",
-    x: 480,
-    y: 148,
-    width: 150,
-    height: 196,
-    solid: Object.freeze({ x: 420, y: 62, width: 120, height: 74 }),
-  }),
-  Object.freeze({
-    id: "crypt-west",
-    prop: "crypt",
-    x: 78,
-    y: 348,
-    width: 124,
-    height: 168,
-    solid: Object.freeze({ x: 28, y: 248, width: 96, height: 88 }),
-  }),
-  Object.freeze({
-    id: "crypt-east",
-    prop: "crypt",
-    x: 882,
-    y: 348,
-    width: 124,
-    height: 168,
-    solid: Object.freeze({ x: 836, y: 248, width: 96, height: 88 }),
-  }),
-  Object.freeze({
-    id: "grave-nw",
-    prop: "grave",
-    x: 90,
-    y: 72,
-    width: 96,
-    height: 124,
-    solid: Object.freeze({ x: 54, y: 46, width: 72, height: 28 }),
-  }),
-  Object.freeze({
-    id: "grave-ne",
-    prop: "grave",
-    x: 832,
-    y: 116,
-    width: 96,
-    height: 124,
-    solid: Object.freeze({ x: 796, y: 90, width: 72, height: 28 }),
-  }),
-  Object.freeze({
-    id: "grave-mid-west",
-    prop: "grave",
-    x: 268,
-    y: 338,
-    width: 90,
-    height: 116,
-    solid: Object.freeze({ x: 232, y: 312, width: 72, height: 28 }),
-  }),
-  Object.freeze({
-    id: "grave-mid-east",
-    prop: "grave",
-    x: 692,
-    y: 338,
-    width: 90,
-    height: 116,
-    solid: Object.freeze({ x: 656, y: 312, width: 72, height: 28 }),
-  }),
-  Object.freeze({
-    id: "grave-sw",
-    prop: "grave",
-    x: 132,
-    y: 508,
-    width: 96,
-    height: 124,
-    solid: Object.freeze({ x: 96, y: 482, width: 72, height: 28 }),
-  }),
-  Object.freeze({
-    id: "grave-south",
-    prop: "grave",
-    x: 480,
-    y: 516,
-    width: 96,
-    height: 124,
-    solid: Object.freeze({ x: 444, y: 490, width: 72, height: 28 }),
-  }),
-  Object.freeze({
-    id: "grave-se",
-    prop: "grave",
-    x: 828,
-    y: 508,
-    width: 96,
-    height: 124,
-    solid: Object.freeze({ x: 792, y: 482, width: 72, height: 28 }),
-  }),
-]);
+/** Authored graveyard decor used by rendering and tests. */
+export const GRAVEYARD_FEATURES: readonly WizardGraveyardFeature[] = WIZARD_GRAVEYARD_MAP.decor;
 
 /** Solid footprints used by APK rectangle collision. */
-export const GRAVEYARD_SOLIDS: readonly GameplayBounds[] = Object.freeze(
-  GRAVEYARD_FEATURES.map((feature) => feature.solid),
-);
+export const GRAVEYARD_SOLIDS: readonly GameplayBounds[] = WIZARD_GRAVEYARD_MAP.solids;
 
 const WIZARD_BOUNDS = Object.freeze({
   x: WIZARD_RADIUS,
@@ -500,12 +438,12 @@ const WIZARD_BOUNDS = Object.freeze({
   height: GAME_HEIGHT - WIZARD_RADIUS * 2,
 });
 
-const HORDE_BOUNDS = Object.freeze({
-  x: -80,
-  y: -80,
-  width: GAME_WIDTH + 160,
-  height: GAME_HEIGHT + 160,
-});
+const VISIBLE_ARENA_BOUNDS = Object.freeze({ x: 0, y: 0, width: GAME_WIDTH, height: GAME_HEIGHT });
+
+const HORDE_BOUNDS = Object.freeze({ x: 0, y: 0, width: GAME_WIDTH, height: GAME_HEIGHT });
+
+/** Cardinal zombie gates outside the visible arena. */
+export const WIZARD_ZOMBIE_SPAWN_GATES: readonly WizardVsZombiePoint[] = WIZARD_GRAVEYARD_MAP.enemySpawns;
 
 const WIZARD_MOVE_STEP = 48;
 const ZOMBIE_SPAWN_INTERVAL = 1_000;
@@ -514,6 +452,8 @@ const DEFAULT_ZOMBIE_SPEED = 96;
 const SHOCKWAVE_RADIUS = 250;
 const SHOCKWAVE_PUSH_DISTANCE = 300;
 const MAX_ZOMBIES = 50;
+const GRAVEYARD_NAV_CELL_SIZE = 32;
+const SHOCKWAVE_EFFECT_DURATION = 280;
 const WIZARD_VS_ZOMBIE_MECHANIC = "Collect the true soul and survive the horde.";
 const WIZARD_VS_ZOMBIE_AVAILABLE_ACTIONS: readonly InputActionId[] = Object.freeze([
   "move-left",
@@ -530,6 +470,10 @@ function finiteDelta(deltaMs: number): number {
 
 function distanceBetween(first: WizardVsZombiePoint, second: WizardVsZombiePoint): number {
   return Math.hypot(first.x - second.x, first.y - second.y);
+}
+
+function normalizedOrbLabel(value: string): string {
+  return value.trim().toLowerCase();
 }
 
 function actionTowardPoint(
@@ -596,6 +540,13 @@ function bodyRect(point: WizardVsZombiePoint, radius: number): GameplayBounds {
   };
 }
 
+function containsRect(bounds: GameplayBounds, rect: GameplayBounds): boolean {
+  return rect.x >= bounds.x
+    && rect.y >= bounds.y
+    && rect.x + rect.width <= bounds.x + bounds.width
+    && rect.y + rect.height <= bounds.y + bounds.height;
+}
+
 /**
  * Returns whether a body rectangle hits a graveyard solid.
  * @param rect Candidate collision rectangle.
@@ -603,6 +554,128 @@ function bodyRect(point: WizardVsZombiePoint, radius: number): GameplayBounds {
  */
 export function hitsGraveyardSolid(rect: GameplayBounds): boolean {
   return GRAVEYARD_SOLIDS.some((solid) => intersects(rect, solid));
+}
+
+function createGraveyardNavigator(clearance: number) {
+  return createGridNavigator({
+    bounds: HORDE_BOUNDS,
+    cellSize: GRAVEYARD_NAV_CELL_SIZE,
+    clearance,
+    obstacles: GRAVEYARD_SOLIDS,
+  });
+}
+
+/**
+ * Finds a deterministic safe route through the graveyard.
+ * @param start Route origin in arena coordinates.
+ * @param target Route destination in arena coordinates.
+ * @param clearance Required body clearance from solids.
+ * @returns Cardinal grid waypoints, or an empty route when blocked.
+ */
+export function findGraveyardRoute(
+  start: WizardVsZombiePoint,
+  target: WizardVsZombiePoint,
+  clearance = ZOMBIE_RADIUS,
+): readonly WizardVsZombiePoint[] {
+  return createGraveyardNavigator(clearance).findPath(start, target);
+}
+
+/**
+ * Returns the visible shockwave button rectangle for one scene size.
+ * @param width Scene width in display pixels.
+ * @param height Scene height in display pixels.
+ * @returns A touch-safe button rectangle inside the scene.
+ */
+export function getWizardShockwaveButtonBounds(width: number, height: number): GameplayBounds {
+  const safeWidth = Number.isFinite(width) && width > 0 ? width : GAME_WIDTH;
+  const safeHeight = Number.isFinite(height) && height > 0 ? height : GAME_HEIGHT;
+  const buttonSize = Math.min(54, Math.max(48, safeHeight - 16));
+  return Object.freeze({
+    x: Math.max(8, safeWidth - buttonSize - 16),
+    y: 18,
+    width: buttonSize,
+    height: buttonSize,
+  });
+}
+
+/** Display rectangles for the three Wizard listening controls. */
+export interface WizardListeningControlBounds {
+  /** Play, replay, or retry button rectangle. */
+  readonly audio: GameplayBounds;
+  /** Transcript assistance button rectangle. */
+  readonly transcript: GameplayBounds;
+  /** Explicit reading fallback button rectangle. */
+  readonly fallback: GameplayBounds;
+}
+
+/**
+ * Returns visible listening control rectangles for one scene size.
+ * @param width Scene width in display pixels.
+ * @param height Scene height in display pixels.
+ * @returns Touch-safe audio, transcript, and fallback rectangles.
+ */
+export function getWizardListeningControlBounds(width: number, height: number): WizardListeningControlBounds {
+  const shockwave = getWizardShockwaveButtonBounds(width, height);
+  const gap = 8;
+  const controlHeight = shockwave.height;
+  const leftColumnX = Math.max(8, shockwave.x - shockwave.width - gap);
+  const secondRowY = shockwave.y + shockwave.height + gap;
+  return Object.freeze({
+    audio: Object.freeze({ x: leftColumnX, y: shockwave.y, width: shockwave.width, height: controlHeight }),
+    transcript: Object.freeze({ x: leftColumnX, y: secondRowY, width: shockwave.width, height: controlHeight }),
+    fallback: Object.freeze({ x: shockwave.x, y: secondRowY, width: shockwave.width, height: controlHeight }),
+  });
+}
+
+/**
+ * Returns four numbered answer-audio button rectangles.
+ * @param width Scene width in display pixels.
+ * @param height Scene height in display pixels.
+ * @returns Four compact rectangles in the second HUD row.
+ */
+export function getWizardAnswerAudioControlBounds(width: number, height: number): readonly GameplayBounds[] {
+  const safeWidth = Number.isFinite(width) && width > 0 ? width : GAME_WIDTH;
+  const safeHeight = Number.isFinite(height) && height > 0 ? height : GAME_HEIGHT;
+  const gap = 8;
+  const size = Math.min(48, Math.max(36, (safeWidth - gap * 5) / 4));
+  const totalWidth = size * 4 + gap * 3;
+  const startX = Math.max(8, (safeWidth - totalWidth) / 2);
+  const y = Math.min(88, Math.max(0, safeHeight - size));
+  return Object.freeze(Array.from({ length: 4 }, (_unused, index) => Object.freeze({
+    x: startX + index * (size + gap),
+    y,
+    width: size,
+    height: size,
+  })));
+}
+
+/**
+ * Returns the unobstructed display rectangle for the fixed Wizard arena.
+ * @param width Scene width in display pixels.
+ * @param height Scene height in display pixels.
+ * @param compact Whether the scene uses the compact HUD.
+ * @param listening Whether listening controls need the second compact row.
+ * @returns The arena mapping between the top HUD and footer.
+ */
+export function getWizardArenaProjection(
+  width: number,
+  height: number,
+  compact: boolean,
+  listening: boolean,
+): WizardArenaProjection {
+  const safeWidth = Number.isFinite(width) && width > 0 ? width : GAME_WIDTH;
+  const safeHeight = Number.isFinite(height) && height > 0 ? height : GAME_HEIGHT;
+  const desiredTop = listening ? 144 : 88;
+  const y = Math.min(desiredTop, Math.max(0, safeHeight - 1));
+  const arenaHeight = Math.max(1, safeHeight - y);
+  return Object.freeze({
+    x: 0,
+    y,
+    width: safeWidth,
+    height: arenaHeight,
+    scaleX: safeWidth / GAME_WIDTH,
+    scaleY: arenaHeight / GAME_HEIGHT,
+  });
 }
 
 function slidePosition(
@@ -642,12 +715,14 @@ export function createWizardVsZombieController(
   let terminalOutcome: GameTerminalOutcome = "complete";
   const completion = createCompletionLatch<GameResults>((result) => deliver(result, terminalOutcome));
   const spawner = createDeterministicSpawner({ intervalMs: ZOMBIE_SPAWN_INTERVAL, maxPerTick: 2 });
+  const zombieNavigator = createGraveyardNavigator(ZOMBIE_RADIUS + 2);
   let phase: WizardVsZombiePhase = "playing";
   let targetIndex = 0;
   let layoutRevision = 0;
-  let wizard = { x: GAME_WIDTH / 2, y: GAME_HEIGHT / 2 };
+  let wizard = { ...WIZARD_GRAVEYARD_MAP.playerSpawn };
   let orbs: readonly WizardVsZombieOrb[] = [];
   const setup = typeof options === "number" ? {} : options;
+  const deferOrbCollection = setup.deferOrbCollection === true;
   let zombies: readonly WizardVsZombieZombie[] = (setup.initialZombies ?? []).map(buildZombie);
   let health = INITIAL_HP;
   let shockwaveCharges = 0;
@@ -656,18 +731,31 @@ export function createWizardVsZombieController(
   let spawnTimerMs = 0;
   let spawnCount = zombies.length;
   let lastOutcome: "correct" | "incorrect" | undefined;
+  let orbContactLatched = false;
+  let orbContactZone: Readonly<WizardVsZombiePoint & { readonly radius: number }> | undefined;
   let result: GameResults | undefined;
   let destroyed = false;
 
   const currentItem = (): VocabularyItem => items[Math.min(targetIndex, items.length - 1)]!;
 
   const buildOrbs = (): readonly WizardVsZombieOrb[] => {
-    const correctSlot = (seed + targetIndex) % SOUL_POSITIONS.length;
-    return Object.freeze(SOUL_POSITIONS.map((_unused, slot) => {
+    const current = currentItem();
+    const targetLabel = normalizedOrbLabel(current.term);
+    const seenLabels = new Set<string>();
+    const distractors = items.filter((item) => {
+      const label = normalizedOrbLabel(item.term);
+      if (label === targetLabel || seenLabels.has(label)) return false;
+      seenLabels.add(label);
+      return true;
+    });
+    const orbCount = Math.min(SOUL_POSITIONS.length, distractors.length + 1);
+    const correctSlot = (seed + targetIndex) % orbCount;
+    let distractorCursor = targetIndex % Math.max(1, distractors.length);
+    return Object.freeze(SOUL_POSITIONS.slice(0, orbCount).map((_unused, slot) => {
       const position = SOUL_POSITIONS[(slot + layoutRevision) % SOUL_POSITIONS.length]!;
       const item = slot === correctSlot
-        ? currentItem()
-        : items[(targetIndex + slot + 1) % items.length]!;
+        ? current
+        : distractors[distractorCursor++ % distractors.length]!;
       return Object.freeze({
         id: `orb:${targetIndex}:${layoutRevision}:${slot}`,
         x: position.x,
@@ -718,6 +806,8 @@ export function createWizardVsZombieController(
     gameTimeMs,
     gameTime: gameTimeMs,
     layoutRevision,
+    orbContactLatched,
+    orbContactZone,
     spawnTimerMs,
     spawnCount,
     destroyed,
@@ -832,8 +922,18 @@ export function createWizardVsZombieController(
   };
 
   const resolveOrbCollision = (): WizardVsZombieActionResult | undefined => {
+    if (orbContactZone
+      && distanceBetween(wizard, orbContactZone) > WIZARD_RADIUS + orbContactZone.radius) {
+      orbContactLatched = false;
+      orbContactZone = undefined;
+    }
+    if (orbContactLatched) return undefined;
     const orb = orbs.find((candidate) => distanceBetween(wizard, candidate) <= WIZARD_RADIUS + candidate.radius);
-    return orb ? collectOrb(orb.id) : undefined;
+    if (!orb) return undefined;
+    orbContactLatched = true;
+    orbContactZone = Object.freeze({ x: orb.x, y: orb.y, radius: orb.radius });
+    if (deferOrbCollection) return undefined;
+    return collectOrb(orb.id);
   };
 
   const resolveZombieCollision = (): WizardVsZombieActionResult | undefined => {
@@ -923,13 +1023,7 @@ export function createWizardVsZombieController(
   const spawnZombie = (): void => {
     if (zombies.length >= MAX_ZOMBIES) return;
     const gate = spawnCount % 4;
-    const gates: readonly WizardVsZombiePoint[] = [
-      { x: GAME_WIDTH / 2, y: -40 },
-      { x: GAME_WIDTH + 40, y: GAME_HEIGHT / 2 },
-      { x: GAME_WIDTH / 2, y: GAME_HEIGHT + 40 },
-      { x: -40, y: GAME_HEIGHT / 2 },
-    ];
-    const point = gates[(gate + seed) % gates.length]!;
+    const point = WIZARD_ZOMBIE_SPAWN_GATES[(gate + seed) % WIZARD_ZOMBIE_SPAWN_GATES.length]!;
     const zombie = buildZombie({
       id: `zombie-${spawnCount}`,
       x: point.x,
@@ -951,9 +1045,20 @@ export function createWizardVsZombieController(
     spawnTimerMs = spawner.elapsedMs;
     for (let index = 0; index < due; index += 1) spawnZombie();
     zombies = Object.freeze(zombies.map((zombie) => {
+      const intent = getWizardZombieIntent({
+        id: zombie.id,
+        seed,
+        timeMs: gameTimeMs,
+        position: zombie,
+        target: wizard,
+        baseSpeed: zombie.speed,
+      });
+      const waypoint = zombieNavigator.nextWaypoint(zombie, intent.target)
+        ?? zombieNavigator.nextWaypoint(zombie, wizard)
+        ?? zombie;
       const next = slidePosition(
         zombie,
-        velocityToward(zombie, wizard, zombie.speed),
+        velocityToward(zombie, waypoint, intent.speed),
         elapsed,
         HORDE_BOUNDS,
         zombie.radius,
@@ -984,16 +1089,32 @@ export function createWizardVsZombieController(
     if (destroyed || phase !== "playing" || shockwaveCharges === 0) return inactive();
     shockwaveCharges -= 1;
     const survivors: WizardVsZombieZombie[] = [];
-    for (const zombie of zombies) {
+    for (const [index, zombie] of zombies.entries()) {
       const dx = zombie.x - wizard.x;
       const dy = zombie.y - wizard.y;
       const distance = Math.hypot(dx, dy);
       if (distance < SHOCKWAVE_RADIUS) {
-        const angle = distance === 0 ? 0 : Math.atan2(dy, dx);
+        const angle = distance === 0 ? index * Math.PI * 0.5 : Math.atan2(dy, dx);
+        const direction = { x: Math.cos(angle), y: Math.sin(angle) };
+        const steps = Math.ceil(SHOCKWAVE_PUSH_DISTANCE / 6);
+        let pushed: WizardVsZombiePoint = zombie;
+        let foundSafe = !hitsGraveyardSolid(bodyRect(zombie, zombie.radius));
+        for (let step = 1; step <= steps; step += 1) {
+          const travel = Math.min(SHOCKWAVE_PUSH_DISTANCE, step * 6);
+          const candidate = {
+            x: Math.min(HORDE_BOUNDS.x + HORDE_BOUNDS.width - zombie.radius, Math.max(HORDE_BOUNDS.x + zombie.radius, zombie.x + direction.x * travel)),
+            y: Math.min(HORDE_BOUNDS.y + HORDE_BOUNDS.height - zombie.radius, Math.max(HORDE_BOUNDS.y + zombie.radius, zombie.y + direction.y * travel)),
+          };
+          const safe = !hitsGraveyardSolid(bodyRect(candidate, zombie.radius));
+          if (!safe && foundSafe) break;
+          if (!safe) continue;
+          foundSafe = true;
+          pushed = candidate;
+        }
         survivors.push(buildZombie({
           ...zombie,
-          x: zombie.x + Math.cos(angle) * SHOCKWAVE_PUSH_DISTANCE,
-          y: zombie.y + Math.sin(angle) * SHOCKWAVE_PUSH_DISTANCE,
+          x: pushed.x,
+          y: pushed.y,
         }, 0));
       } else {
         survivors.push(zombie);
@@ -1011,6 +1132,14 @@ export function createWizardVsZombieController(
   };
 
   const applyHazard = (): WizardVsZombieActionResult => damageWizard(ZOMBIE_DAMAGE, false);
+
+  const grantProtection = (durationMs: number): void => {
+    if (destroyed || phase !== "playing" || !Number.isFinite(durationMs) || durationMs <= 0) return;
+    invulnerabilityMs = Math.max(
+      invulnerabilityMs,
+      Math.min(ANSWER_AUDIO_PROTECTION_DURATION, durationMs),
+    );
+  };
 
   const addZombie = (zombie: WizardVsZombieZombieSeed): void => {
     if (destroyed || phase !== "playing" || zombies.length >= MAX_ZOMBIES) return;
@@ -1078,6 +1207,9 @@ export function createWizardVsZombieController(
     if (state.wizard.x < WIZARD_RADIUS || state.wizard.x > GAME_WIDTH - WIZARD_RADIUS || state.wizard.y < WIZARD_RADIUS || state.wizard.y > GAME_HEIGHT - WIZARD_RADIUS) {
       throw new Error("Wizard vs Zombie wizard bounds are invalid");
     }
+    if (hitsGraveyardSolid(bodyRect(state.wizard, state.wizard.radius))) {
+      throw new Error("Wizard vs Zombie wizard overlaps a solid");
+    }
     if (!isPoint(state.player) || state.player.radius !== WIZARD_RADIUS || state.player.x !== state.wizard.x || state.player.y !== state.wizard.y) {
       throw new Error("Wizard vs Zombie player position is invalid");
     }
@@ -1100,10 +1232,25 @@ export function createWizardVsZombieController(
     if (!Number.isInteger(state.layoutRevision) || state.layoutRevision < 0) {
       throw new Error("Wizard vs Zombie orb layout is invalid");
     }
-    if (!Number.isFinite(state.spawnTimerMs) || state.spawnTimerMs < 0 || !Number.isInteger(state.spawnCount) || state.spawnCount < 0) {
+    if (typeof state.orbContactLatched !== "boolean") {
+      throw new Error("Wizard vs Zombie orb contact state is invalid");
+    }
+    const hasValidContactZone = state.orbContactZone === undefined
+      || (isPoint(state.orbContactZone) && state.orbContactZone.radius === ORB_RADIUS);
+    if (!hasValidContactZone
+      || state.orbContactLatched !== (state.orbContactZone !== undefined)
+      || (state.orbContactZone !== undefined
+        && distanceBetween(state.wizard, state.orbContactZone) > WIZARD_RADIUS + state.orbContactZone.radius)) {
+      throw new Error("Wizard vs Zombie orb contact zone is invalid");
+    }
+    if (!Number.isFinite(state.spawnTimerMs)
+      || state.spawnTimerMs < 0
+      || state.spawnTimerMs >= ZOMBIE_SPAWN_INTERVAL
+      || !Number.isInteger(state.spawnCount)
+      || state.spawnCount < 0) {
       throw new Error("Wizard vs Zombie spawn state is invalid");
     }
-    if (!Number.isFinite(state.invulnerabilityMs) || state.invulnerabilityMs < 0 || state.invulnerabilityMs > INVULNERABILITY_DURATION) {
+    if (!Number.isFinite(state.invulnerabilityMs) || state.invulnerabilityMs < 0 || state.invulnerabilityMs > ANSWER_AUDIO_PROTECTION_DURATION) {
       throw new Error("Wizard vs Zombie immunity state is invalid");
     }
     if (!Number.isFinite(state.gameTimeMs) || state.gameTimeMs < 0) {
@@ -1113,6 +1260,19 @@ export function createWizardVsZombieController(
       throw new Error("Wizard vs Zombie clock aliases are invalid");
     }
     const target = items[Math.min(state.targetIndex, items.length - 1)]!;
+    for (const orb of state.orbs) {
+      const rect = bodyRect(orb, orb.radius);
+      if (!containsRect(VISIBLE_ARENA_BOUNDS, rect)) throw new Error("Wizard vs Zombie orb bounds are invalid");
+      if (hitsGraveyardSolid(rect)) throw new Error("Wizard vs Zombie orb overlaps a solid");
+      if (findGraveyardRoute(state.wizard, orb, WIZARD_RADIUS).length === 0) {
+        throw new Error("Wizard vs Zombie orb route is invalid");
+      }
+    }
+    for (const zombie of state.zombies) {
+      const rect = bodyRect(zombie, zombie.radius);
+      if (!containsRect(HORDE_BOUNDS, rect)) throw new Error("Wizard vs Zombie zombie bounds are invalid");
+      if (hitsGraveyardSolid(rect)) throw new Error("Wizard vs Zombie zombie overlaps a solid");
+    }
     if (state.prompt !== target.term || state.answer !== target.translation || state.targetWord !== target.term) {
       throw new Error("Wizard vs Zombie target content is invalid");
     }
@@ -1122,10 +1282,17 @@ export function createWizardVsZombieController(
       throw new Error("Wizard vs Zombie available actions are invalid");
     }
     const correctOrb = state.orbs.find((orb) => orb.isCorrect);
+    const targetLabel = normalizedOrbLabel(target.term);
+    const fairOrbs = state.orbs.every((orb) => orb.isCorrect
+      ? normalizedOrbLabel(orb.term) === targetLabel
+      : normalizedOrbLabel(orb.term) !== targetLabel);
     if (state.correctAction !== actionTowardPoint(state.wizard, correctOrb)) {
       throw new Error("Wizard vs Zombie correct action is invalid");
     }
-    if (state.phase === "playing" && (state.targetIndex === items.length || state.health === 0 || state.result !== undefined || state.orbs.length !== 4 || state.orbs.filter((orb) => orb.isCorrect).length !== 1)) {
+    if (state.phase === "playing" && !fairOrbs) {
+      throw new Error("Wizard vs Zombie orb fairness is invalid");
+    }
+    if (state.phase === "playing" && (state.targetIndex === items.length || state.health === 0 || state.result !== undefined || state.orbs.length < 1 || state.orbs.length > 4 || state.orbs.filter((orb) => orb.isCorrect).length !== 1)) {
       throw new Error("Wizard vs Zombie playing state is terminal");
     }
     if (state.phase === "victory" && (state.targetIndex !== items.length || state.orbs.length !== 0)) {
@@ -1167,6 +1334,8 @@ export function createWizardVsZombieController(
     invulnerabilityMs = state.invulnerabilityMs;
     gameTimeMs = state.gameTimeMs;
     layoutRevision = state.layoutRevision;
+    orbContactLatched = state.orbContactLatched;
+    orbContactZone = state.orbContactZone === undefined ? undefined : Object.freeze({ ...state.orbContactZone });
     spawnTimerMs = state.spawnTimerMs;
     zombies = Object.freeze(state.zombies.map((zombie) => buildZombie(zombie, 0)));
     spawnCount = state.spawnCount;
@@ -1177,7 +1346,7 @@ export function createWizardVsZombieController(
     result = state.result;
     accountant = restoredAccountant;
     destroyed = state.destroyed;
-    spawner.reset();
+    spawner.setElapsed(state.spawnTimerMs);
     if (phase !== "playing" || destroyed) completion.sealWithoutDelivery();
   };
 
@@ -1195,6 +1364,7 @@ export function createWizardVsZombieController(
     tick: advance,
     castShockwave,
     applyHazard,
+    grantProtection,
     addZombie,
     capture: snapshot,
     restore,
@@ -1269,6 +1439,8 @@ function destroyWorldLayer(resources: SceneResources): void {
   resources.ground = undefined;
   for (const sprite of resources.worldSprites) sprite.destroy();
   resources.worldSprites.length = 0;
+  resources.worldX = 0;
+  resources.worldY = 0;
   resources.worldWidth = 0;
   resources.worldHeight = 0;
 }
@@ -1278,45 +1450,114 @@ function destroyWorldLayer(resources: SceneResources): void {
  * @param scene Active Phaser scene.
  * @param resources Live scene resource bag.
  * @param edition Audience edition supplied by the host.
- * @param width Current scene width.
- * @param height Current scene height.
+ * @param projection Current arena display mapping.
  * @returns Nothing. Creates world sprites when missing.
  */
 function ensureWorldLayer(
   scene: PhaserSceneLike,
   resources: SceneResources,
   edition: RuntimeEdition,
-  width: number,
-  height: number,
+  projection: WizardArenaProjection,
 ): void {
-  if (resources.worldWidth === width && resources.worldHeight === height && resources.ground) return;
+  if (resources.worldX === projection.x
+    && resources.worldY === projection.y
+    && resources.worldWidth === projection.width
+    && resources.worldHeight === projection.height
+    && resources.ground) return;
   destroyWorldLayer(resources);
-  resources.worldWidth = width;
-  resources.worldHeight = height;
+  resources.worldX = projection.x;
+  resources.worldY = projection.y;
+  resources.worldWidth = projection.width;
+  resources.worldHeight = projection.height;
+  const artScale = Math.sqrt(projection.scaleX * projection.scaleY);
   const ground = arenaTexture(edition, "world:ground");
   if (ground) {
     if (scene.add?.tileSprite) {
-      const tiled = scene.add.tileSprite(0, 0, width, height, ground.textureKey);
+      const tiled = scene.add.tileSprite(
+        projection.x,
+        projection.y,
+        projection.width,
+        projection.height,
+        ground.textureKey,
+      );
       tiled.setOrigin?.(0, 0);
       tiled.setDepth?.(-25);
       resources.ground = tiled;
     } else {
-      const image = placeImage(scene, width / 2, height / 2, ground, width, height, -25, 0.5, 0.5);
+      const image = placeImage(
+        scene,
+        projection.x + projection.width / 2,
+        projection.y + projection.height / 2,
+        ground,
+        projection.width,
+        projection.height,
+        -25,
+        0.5,
+        0.5,
+      );
       if (image) resources.ground = image;
     }
   }
+  const pathTexture = arenaTexture(edition, "world:path");
+  if (pathTexture) {
+    for (const path of WIZARD_GRAVEYARD_MAP.paths) {
+      for (let index = 1; index < path.points.length; index += 1) {
+        const start = path.points[index - 1]!;
+        const end = path.points[index]!;
+        const dx = (end.x - start.x) * projection.scaleX;
+        const dy = (end.y - start.y) * projection.scaleY;
+        const x = projection.x + (start.x + end.x) / 2 * projection.scaleX;
+        const y = projection.y + (start.y + end.y) / 2 * projection.scaleY;
+        const displayWidth = Math.hypot(dx, dy) + path.width * artScale * 0.35;
+        const displayHeight = path.width * artScale;
+        const image = scene.add?.tileSprite
+          ? scene.add.tileSprite(x, y, displayWidth, displayHeight, pathTexture.textureKey)
+          : placeImage(scene, x, y, pathTexture, displayWidth, displayHeight, -18, 0.5, 0.5);
+        image?.setOrigin?.(0.5, 0.5);
+        image?.setRotation?.(Math.atan2(dy, dx));
+        image?.setDepth?.(-18);
+        if (image) resources.worldSprites.push(image);
+      }
+    }
+  }
   for (const feature of GRAVEYARD_FEATURES) {
-    const texture = arenaTexture(edition, `prop:${feature.prop}`);
+    const texture = arenaTexture(edition, feature.assetKey);
     if (!texture) continue;
+    if (feature.repeat) {
+      const segmentWidth = feature.displayHeight / 2;
+      const segmentCount = Math.max(1, Math.ceil(feature.displayWidth / segmentWidth));
+      const renderedWidth = feature.displayWidth / segmentCount;
+      for (let index = 0; index < segmentCount; index += 1) {
+        const localX = -feature.displayWidth / 2 + renderedWidth * (index + 0.5);
+        const angle = (feature.rotation ?? 0) * Math.PI / 180;
+        const x = feature.position.x + Math.cos(angle) * localX;
+        const y = feature.position.y + Math.sin(angle) * localX;
+        const image = placeImage(
+          scene,
+          projection.x + x * projection.scaleX,
+          projection.y + y * projection.scaleY,
+          { ...texture, frame: index % 8 },
+          renderedWidth * artScale,
+          feature.displayHeight * artScale,
+          feature.depth - 20,
+          0.5,
+          0.5,
+        );
+        image?.setRotation?.(angle);
+        if (image) resources.worldSprites.push(image);
+      }
+      continue;
+    }
     const image = placeImage(
       scene,
-      feature.x * width / GAME_WIDTH,
-      feature.y * height / GAME_HEIGHT,
+      projection.x + feature.position.x * projection.scaleX,
+      projection.y + feature.position.y * projection.scaleY,
       texture,
-      feature.width * width / GAME_WIDTH,
-      feature.height * height / GAME_HEIGHT,
-      -6,
+      feature.displayWidth * artScale,
+      feature.displayHeight * artScale,
+      feature.depth - 20,
     );
+    image?.setRotation?.((feature.rotation ?? 0) * Math.PI / 180);
     if (image) resources.worldSprites.push(image);
   }
 }
@@ -1329,24 +1570,27 @@ function ensureWorldLayer(
  * @param texture Pack texture for the role.
  * @param size Drawn size.
  * @param depth Draw order.
+ * @param originY Vertical origin for the sprite collision anchor.
  * @returns Nothing. Mutates the sprite map.
  */
 function syncKeyedSprites(
   scene: PhaserSceneLike,
   sprites: Map<string, PhaserImageLike>,
-  items: readonly { readonly id: string; readonly x: number; readonly y: number }[],
+  items: readonly { readonly id: string; readonly x: number; readonly y: number; readonly frame?: number }[],
   texture: ResolvedArenaTexture | undefined,
   size: number,
   depth: number,
+  originY = 0.5,
 ): void {
   if (!texture) return;
   const seen = new Set<string>();
   for (const item of items) {
     seen.add(item.id);
     const current = sprites.get(item.id);
-    const sprite = current ?? placeImage(scene, item.x, item.y, texture, size, size, depth);
+    const sprite = current ?? placeImage(scene, item.x, item.y, texture, size, size, depth, 0.5, originY);
     sprite?.setPosition?.(item.x, item.y);
     sprite?.setDisplaySize?.(size, size);
+    if (item.frame !== undefined) sprite?.setFrame?.(item.frame);
     sprite?.setVisible?.(true);
     if (sprite) sprites.set(item.id, sprite);
   }
@@ -1383,8 +1627,22 @@ function heldVelocity(held: ReadonlySet<string>, normalize: (descriptor: {
 
 function createScene(context: WizardVsZombieSceneContext): Readonly<Record<string, unknown>> {
   let resources: SceneResources | undefined;
+  let activeScene: PhaserSceneLike | undefined;
   let composition = context.composition;
   let cleaned = false;
+  let shockwaveEffectMs = 0;
+  let shockwaveEffectOrigin: WizardVsZombiePoint | undefined;
+  let playerFacingRow = 0;
+  let playerMoving = false;
+  let heardItemPosition: number | undefined;
+  let assistedItemPosition: number | undefined;
+  let fallbackItemPosition: number | undefined;
+  let listeningPending = false;
+  let listeningFailure: string | undefined;
+  let listeningGeneration = 0;
+  let pointerGestureTracked = false;
+  let pointerSteeringGesture = false;
+  const protectedAnswerQuestions = new Set<number>();
   const arenaArt = usesArenaArt(context.edition);
   const normalize = createInputActionNormalizer({
     keyboard: WIZARD_VS_ZOMBIE_KEYBOARD_BINDINGS,
@@ -1404,9 +1662,14 @@ function createScene(context: WizardVsZombieSceneContext): Readonly<Record<strin
     height: scene.scale?.height ?? GAME_HEIGHT,
   });
 
-  const scaledPoint = (point: WizardVsZombiePoint, width: number, height: number): WizardVsZombiePoint => ({
-    x: point.x * width / GAME_WIDTH,
-    y: point.y * height / GAME_HEIGHT,
+  const projectedPoint = (point: WizardVsZombiePoint, projection: WizardArenaProjection): WizardVsZombiePoint => ({
+    x: projection.x + point.x * projection.scaleX,
+    y: projection.y + point.y * projection.scaleY,
+  });
+
+  const arenaPoint = (point: WizardVsZombiePoint, projection: WizardArenaProjection): WizardVsZombiePoint => ({
+    x: (point.x - projection.x) / projection.scaleX,
+    y: (point.y - projection.y) / projection.scaleY,
   });
 
   const directionToPoint = (
@@ -1435,91 +1698,290 @@ function createScene(context: WizardVsZombieSceneContext): Readonly<Record<strin
     };
   };
 
+  const castWithFeedback = (): WizardVsZombieActionResult => {
+    const result = context.controller.castShockwave();
+    if (result.accepted) {
+      shockwaveEffectMs = SHOCKWAVE_EFFECT_DURATION;
+      shockwaveEffectOrigin = result.snapshot.wizard;
+    }
+    return result;
+  };
+
+  const beginListening = (itemPosition: number, replay: boolean): void => {
+    const listening = context.listening;
+    if (!listening) return;
+    const generation = ++listeningGeneration;
+    listeningPending = true;
+    let operation: ReturnType<ListeningAudioController["play"]>;
+    try {
+      operation = replay ? listening.replay(itemPosition) : listening.play(itemPosition);
+    } catch (error: unknown) {
+      listeningPending = false;
+      listeningFailure = error instanceof Error ? error.message : "Audio is unavailable. Retry audio or use Reading mode.";
+      return;
+    }
+    void operation.then((next) => {
+      if (cleaned || generation !== listeningGeneration || context.controller.snapshot().targetIndex !== itemPosition) return;
+      listeningPending = false;
+      if (next.status === "completed" && next.activeItemPosition === itemPosition) {
+        listeningFailure = undefined;
+        heardItemPosition = itemPosition;
+        return;
+      }
+      listeningFailure = next.failure?.message ?? "Audio did not complete. Retry audio or use Reading mode.";
+    }).catch((error: unknown) => {
+      if (cleaned || generation !== listeningGeneration || context.controller.snapshot().targetIndex !== itemPosition) return;
+      listeningPending = false;
+      listeningFailure = error instanceof Error ? error.message : "Audio is unavailable. Retry audio or use Reading mode.";
+    });
+  };
+
+  const listeningBlocked = (): boolean => {
+    if (!context.listening) return false;
+    const position = context.controller.snapshot().targetIndex;
+    return heardItemPosition !== position && fallbackItemPosition !== position;
+  };
+
+  const containsPoint = (bounds: GameplayBounds, point: WizardVsZombiePoint): boolean => point.x >= bounds.x
+    && point.x <= bounds.x + bounds.width
+    && point.y >= bounds.y
+    && point.y <= bounds.y + bounds.height;
+
+  const displayScale = (scene: PhaserSceneLike, width: number, height: number): number => {
+    const rect = scene.game?.canvas?.getBoundingClientRect?.();
+    if (!rect || rect.width <= 0 || rect.height <= 0) return 1;
+    return Math.max(0.01, Math.min(rect.width / width, rect.height / height));
+  };
+
   const updateView = (scene: PhaserSceneLike): void => {
     if (!resources) return;
     const { width, height } = dimensions(scene);
     const state = context.controller.snapshot();
-    const scale = Math.min(width / GAME_WIDTH, height / GAME_HEIGHT);
-    const wizard = scaledPoint(state.wizard, width, height);
+    const compact = composition?.profile === "compact" || width <= 520;
+    const canvasDisplayScale = displayScale(scene, width, height);
+    const targetFontSize = Math.max(compact ? 34 : 44, Math.ceil(18 / canvasDisplayScale));
+    const answerFontSize = Math.max(compact ? 16 : 18, Math.ceil(16 / canvasDisplayScale));
+    const projection = getWizardArenaProjection(width, height, compact, Boolean(context.listening || context.answerAudio));
+    const scale = Math.min(projection.scaleX, projection.scaleY);
+    const wizard = projectedPoint(state.wizard, projection);
     resources.night.clear();
     resources.graphics.clear();
+    resources.hud.clear();
     if (arenaArt) {
-      ensureWorldLayer(scene, resources, context.edition, width, height);
-      resources.night.fillStyle(0x070204, 0.58).fillRect(0, 0, width, height);
-      resources.night.fillStyle(0x000000, 0.28).fillRect(0, 0, width, height * 0.22);
-      resources.night.fillStyle(0x000000, 0.34).fillRect(0, height * 0.82, width, height * 0.18);
+      ensureWorldLayer(scene, resources, context.edition, projection);
+      resources.night.fillStyle(0x1a0f14, 0.18).fillRect(projection.x, projection.y, projection.width, projection.height);
+      resources.night.fillStyle(0x000000, 0.14).fillRect(projection.x, projection.y, projection.width, projection.height * 0.18);
+      resources.night.fillStyle(0x000000, 0.16).fillRect(projection.x, projection.y + projection.height * 0.84, projection.width, projection.height * 0.16);
       const orbTexture = arenaTexture(context.edition, "prop:orb");
       const enemyTexture = arenaTexture(context.edition, "enemy:idle");
       const playerTexture = arenaTexture(context.edition, "player:idle");
       syncKeyedSprites(
         scene,
         resources.orbSprites,
-        state.orbs.map((orb) => {
-          const point = scaledPoint(orb, width, height);
-          return { id: orb.id, x: point.x, y: point.y };
+        state.orbs.map((orb, index) => {
+          const point = projectedPoint(orb, projection);
+          return { id: orb.id, x: point.x, y: point.y, frame: Math.floor(state.gameTimeMs / 120 + index) % 8 };
         }),
         orbTexture,
-        Math.max(52, ORB_RADIUS * 2.2 * scale),
+        Math.max(54, ORB_RADIUS * 2.8 * scale),
         5,
+        0.5,
       );
       syncKeyedSprites(
         scene,
         resources.zombieSprites,
         state.zombies.map((zombie) => {
-          const point = scaledPoint(zombie, width, height);
-          return { id: zombie.id, x: point.x, y: point.y };
+          const point = projectedPoint(zombie, projection);
+          const dx = state.wizard.x - zombie.x;
+          const dy = state.wizard.y - zombie.y;
+          const row = Math.abs(dx) >= Math.abs(dy) ? (dx < 0 ? 0 : 1) : 3;
+          const intent = getWizardZombieIntent({
+            id: zombie.id,
+            seed: context.seed,
+            timeMs: state.gameTimeMs,
+            position: zombie,
+            target: state.wizard,
+            baseSpeed: zombie.speed,
+          });
+          const motionFrame = intent.speed === 0 ? 1 : Math.floor((state.gameTimeMs + intent.animationOffsetMs) / 140) % 6;
+          return { id: zombie.id, x: point.x, y: point.y, frame: row * 6 + motionFrame };
         }),
         enemyTexture,
-        Math.max(84, ZOMBIE_RADIUS * 5.4 * scale),
+        Math.max(64, 96 * scale),
         6,
+        0.78,
       );
       if (playerTexture) {
-        const size = Math.max(88, WIZARD_RADIUS * 4.4 * scale);
+        const size = Math.max(48, 48 * scale);
         const sprite = resources.playerSprite
-          ?? placeImage(scene, wizard.x, wizard.y, playerTexture, size, size, 7);
+          ?? placeImage(scene, wizard.x, wizard.y, playerTexture, size, size, 7, 0.5, 0.78);
         sprite?.setPosition?.(wizard.x, wizard.y);
         sprite?.setDisplaySize?.(size, size);
+        sprite?.setFrame?.(playerFacingRow * 4 + (playerMoving ? Math.floor(state.gameTimeMs / 140) % 4 : 1));
         sprite?.setVisible?.(true);
         resources.playerSprite = sprite;
       }
     } else {
-      resources.graphics.fillStyle(0x070204, 1).fillRect(0, 0, width, height);
-      resources.graphics.fillStyle(0x1a0b0d, 0.96).fillRect(width * 0.04, height * 0.18, width * 0.92, height * 0.72);
+      resources.graphics.fillStyle(0x070204, 1).fillRect(projection.x, projection.y, projection.width, projection.height);
+      resources.graphics.fillStyle(0x1a0b0d, 0.96).fillRect(
+        projection.x + projection.width * 0.04,
+        projection.y + projection.height * 0.04,
+        projection.width * 0.92,
+        projection.height * 0.92,
+      );
       for (const zombie of state.zombies) {
-        const point = scaledPoint(zombie, width, height);
+        const point = projectedPoint(zombie, projection);
         resources.graphics.fillStyle(0x7f1d1d, 0.95).fillCircle(point.x, point.y, zombie.radius * scale);
       }
       resources.graphics.fillStyle(0xd6d3d1, 1).fillCircle(wizard.x, wizard.y, WIZARD_RADIUS * scale);
       for (const [index, orb] of state.orbs.entries()) {
-        const point = scaledPoint(orb, width, height);
+        const point = projectedPoint(orb, projection);
         const pulse = Math.sin(state.gameTimeMs / 260 + index) * 3;
         resources.graphics.fillStyle(0x67e8f9, 0.9).fillCircle(point.x, point.y + pulse, ORB_RADIUS * scale);
       }
     }
-    for (const [index, orb] of state.orbs.entries()) {
-      const point = scaledPoint(orb, width, height);
-      resources.orbLabels[index]?.setText(orb.translation).setPosition(point.x - 50 * scale, point.y + (ORB_RADIUS + 10) * scale);
+    if (shockwaveEffectMs > 0 && shockwaveEffectOrigin) {
+      const origin = projectedPoint(shockwaveEffectOrigin, projection);
+      const progress = 1 - shockwaveEffectMs / SHOCKWAVE_EFFECT_DURATION;
+      const radius = (36 + progress * (SHOCKWAVE_RADIUS - 36)) * scale;
+      resources.graphics.lineStyle(5, 0x67e8f9, Math.max(0.2, 1 - progress)).strokeCircle(origin.x, origin.y, radius);
     }
-    resources.title.setText("WIZARD VS ZOMBIE").setPosition(28, 18);
-    resources.prompt.setText(`The living word: ${state.prompt}`).setPosition(28, 58);
-    resources.progress.setText(
-      `${composition?.profile === "compact" ? "Compact arena" : "Night arena"}  •  Horde ${state.zombies.length}  •  Souls ${Math.min(state.targetIndex + 1, state.targetCount)}/${state.targetCount}  •  Score ${state.score}`,
-    ).setPosition(28, 98);
-    resources.health.setText(
-      `Health ${state.health}/${state.maxHealth}  •  Shockwave ${state.shockwaveCharges}/${state.maxShockwaveCharges}`,
-    ).setPosition(28, 128);
-    resources.feedback.setText(
-      state.phase === "victory"
-        ? "The last soul is yours. Dawn breaks."
-        : state.phase === "defeat"
-          ? "The horde takes the graveyard."
-          : state.lastOutcome === "incorrect"
-            ? "That soul was false. The dead close in."
-            : "Take the true soul. Hold the line. Cast when they reach you.",
-    ).setPosition(28, height - 66);
-    resources.instructions.setText(
-      "Hold WASD or arrows to move  •  Space casts a shockwave  •  Swipe or tap to step",
-    ).setPosition(28, height - 34);
+    const listeningBounds = getWizardListeningControlBounds(width, height);
+    const answerAudioBounds = getWizardAnswerAudioControlBounds(width, height);
+    resources.hud.fillStyle(0x090407, 1).fillRect(0, 0, width, projection.y);
+    const abilityBounds = getWizardShockwaveButtonBounds(width, height);
+    const headerOriginX = compact ? 16 : 28;
+    const controlsLeft = context.listening
+      ? Math.min(abilityBounds.x, listeningBounds.audio.x, listeningBounds.transcript.x)
+      : abilityBounds.x;
+    const headerTextWidth = compact
+      ? Math.max(120, width - headerOriginX - 16)
+      : Math.max(120, controlsLeft - headerOriginX - 12);
+    resources.prompt.setWordWrapWidth?.(headerTextWidth, true);
+    resources.prompt.setFontSize?.(targetFontSize);
+    resources.prompt.setAlign?.("left");
+    const healthX = headerOriginX + 26;
+    const healthY = 66;
+    const healthWidth = Math.min(124, Math.max(72, controlsLeft - healthX - 12));
+    const healthRatio = Math.max(0, Math.min(1, state.health / state.maxHealth));
+    resources.hud.fillStyle(0x3f1d24, 1).fillRoundedRect(healthX, healthY, healthWidth, 12, 6);
+    resources.hud.fillStyle(0x4ade80, 1).fillRoundedRect(healthX, healthY, healthWidth * healthRatio, 12, 6);
+    resources.hud.lineStyle(2, 0xfecaca, 0.8).strokeRoundedRect(healthX, healthY, healthWidth, 12, 6);
+    resources.health.setText(context.answerAudio && state.invulnerabilityMs > 0 ? "♥ 🛡" : "♥")
+      .setPosition(headerOriginX, 55)
+      .setVisible?.(true);
+    resources.health.setFontSize?.(20);
+    resources.hud.fillStyle(state.shockwaveCharges > 0 ? 0x164e63 : 0x292524, 0.94)
+      .fillRoundedRect(abilityBounds.x, abilityBounds.y, abilityBounds.width, abilityBounds.height, 10);
+    resources.hud.lineStyle(3, state.shockwaveCharges > 0 ? 0x67e8f9 : 0x78716c, 1)
+      .strokeRoundedRect(abilityBounds.x, abilityBounds.y, abilityBounds.width, abilityBounds.height, 10);
+    resources.ability.setText(`✦ ${state.shockwaveCharges}`).setPosition(abilityBounds.x + 9, abilityBounds.y + 14);
+    resources.ability.setFontSize?.(20);
+    if (context.listening) {
+      const position = state.targetIndex;
+      const audioLabel = listeningPending
+        ? "…"
+        : listeningFailure
+          ? "↻"
+          : heardItemPosition === position
+            ? "↻"
+            : "🔊";
+      resources.hud.fillStyle(0x312e81, 0.96)
+        .fillRoundedRect(listeningBounds.audio.x, listeningBounds.audio.y, listeningBounds.audio.width, listeningBounds.audio.height, 10);
+      resources.hud.lineStyle(3, 0xa5b4fc, 1)
+        .strokeRoundedRect(listeningBounds.audio.x, listeningBounds.audio.y, listeningBounds.audio.width, listeningBounds.audio.height, 10);
+      resources.audioControl.setText(audioLabel).setPosition(listeningBounds.audio.x + 13, listeningBounds.audio.y + 12).setVisible?.(true);
+      resources.audioControl.setFontSize?.(22);
+      resources.hud.fillStyle(0x334155, 0.96)
+        .fillRoundedRect(listeningBounds.transcript.x, listeningBounds.transcript.y, listeningBounds.transcript.width, listeningBounds.transcript.height, 10);
+      resources.hud.lineStyle(3, 0xcbd5e1, 1)
+        .strokeRoundedRect(listeningBounds.transcript.x, listeningBounds.transcript.y, listeningBounds.transcript.width, listeningBounds.transcript.height, 10);
+      resources.transcriptControl.setText("Aa").setPosition(listeningBounds.transcript.x + 13, listeningBounds.transcript.y + 14).setVisible?.(true);
+      resources.transcriptControl.setFontSize?.(18);
+      if (listeningFailure) {
+        resources.hud.fillStyle(0x7c2d12, 0.96)
+          .fillRoundedRect(listeningBounds.fallback.x, listeningBounds.fallback.y, listeningBounds.fallback.width, listeningBounds.fallback.height, 10);
+        resources.hud.lineStyle(3, 0xfdba74, 1)
+          .strokeRoundedRect(listeningBounds.fallback.x, listeningBounds.fallback.y, listeningBounds.fallback.width, listeningBounds.fallback.height, 10);
+        resources.fallbackControl.setText("A").setPosition(listeningBounds.fallback.x + 18, listeningBounds.fallback.y + 14).setVisible?.(true);
+        resources.fallbackControl.setFontSize?.(18);
+      } else {
+        resources.fallbackControl.setText("").setVisible?.(false);
+      }
+    } else {
+      resources.audioControl.setText("").setVisible?.(false);
+      resources.transcriptControl.setText("").setVisible?.(false);
+      resources.fallbackControl.setText("").setVisible?.(false);
+    }
+    for (const [index, control] of resources.answerAudioControls.entries()) {
+      const bounds = answerAudioBounds[index];
+      const orb = state.orbs[index];
+      if (!context.answerAudio || !bounds || !orb) {
+        control.setText("").setVisible?.(false);
+        continue;
+      }
+      const choice = context.answerAudio.getChoiceSnapshot(state.targetIndex, itemPositionForOrb(orb));
+      const active = choice.status === "loading" || choice.status === "ready" || choice.status === "playing";
+      const failed = choice.status === "failed";
+      const border = failed ? 0xfca5a5 : active ? 0xfde68a : choice.canConfirm ? 0x86efac : 0xa5b4fc;
+      resources.hud.fillStyle(0x312e81, 0.96)
+        .fillRoundedRect(bounds.x, bounds.y, bounds.width, bounds.height, 10);
+      resources.hud.lineStyle(3, border, 1)
+        .strokeRoundedRect(bounds.x, bounds.y, bounds.width, bounds.height, 10);
+      control
+        .setText(active ? `${index + 1} …` : failed ? `${index + 1} ↻` : `${index + 1} 🔊`)
+        .setPosition(bounds.x + 7, bounds.y + 12)
+        .setFontSize?.(16)
+        .setVisible?.(true);
+    }
+    for (const [index, orb] of state.orbs.entries()) {
+      const point = projectedPoint(orb, projection);
+      const maxLabelWidth = Math.min(
+        projection.width / 2 - 24,
+        Math.max(100 * scale, compact ? 96 : 0, 96 / canvasDisplayScale),
+      );
+      const label = resources.orbLabels[index];
+      const labelText = context.answerAudio ? String(index + 1) : orb.term;
+      label
+        ?.setText(labelText)
+        .setFontSize?.(answerFontSize)
+        .setWordWrapWidth?.(maxLabelWidth, true)
+        .setAlign?.("center");
+      const estimatedLineWidth = Math.max(answerFontSize, labelText.length * answerFontSize * 0.62);
+      const measuredWidth = Math.min(maxLabelWidth, label?.width ?? estimatedLineWidth);
+      const measuredLines = Math.max(1, Math.ceil(estimatedLineWidth / maxLabelWidth));
+      const measuredHeight = label?.height ?? answerFontSize * 1.2 * measuredLines;
+      const labelX = Math.min(
+        projection.x + projection.width - measuredWidth - 4,
+        Math.max(projection.x + 4, point.x - measuredWidth / 2),
+      );
+      const labelPadding = Math.max(4, 3 / canvasDisplayScale);
+      const belowOrbY = point.y + (ORB_RADIUS + 8) * scale;
+      const labelY = belowOrbY + measuredHeight + labelPadding <= projection.y + projection.height - 4
+        ? belowOrbY
+        : Math.max(projection.y + 4, point.y - (ORB_RADIUS + 8) * scale - measuredHeight);
+      resources.hud.fillStyle(0x090407, 0.92)
+        .fillRoundedRect(
+          labelX - labelPadding,
+          labelY - labelPadding,
+          measuredWidth + labelPadding * 2,
+          measuredHeight + labelPadding * 2,
+          6,
+        );
+      label?.setPosition(labelX, labelY);
+    }
+    resources.title.setText("").setVisible?.(false);
+    const promptText = context.answerAudio || !context.listening
+      ? state.answer
+      : fallbackItemPosition === state.targetIndex
+        ? state.answer
+        : assistedItemPosition === state.targetIndex
+          ? state.answer
+          : "";
+    resources.prompt.setText(promptText).setPosition(headerOriginX, 12).setVisible?.(promptText.length > 0);
+    resources.progress.setText("").setVisible?.(false);
+    resources.feedback.setText("").setVisible?.(false);
+    resources.instructions.setText("").setVisible?.(false);
   };
 
   const report = (result: WizardVsZombieActionResult): void => {
@@ -1536,14 +1998,78 @@ function createScene(context: WizardVsZombieSceneContext): Readonly<Record<strin
     });
   };
 
+  const itemPositionForOrb = (orb: WizardVsZombieOrb): number => {
+    const state = context.controller.snapshot();
+    if (orb.isCorrect) return state.targetIndex;
+    const position = context.items.findIndex((item) => item.term === orb.term && item.translation === orb.translation);
+    if (position < 0) throw new Error("Wizard answer audio choice does not match session content");
+    return position;
+  };
+
+  const answerChoicePositions = (state: WizardVsZombieSnapshot): readonly number[] => state.orbs.map(itemPositionForOrb);
+
+  const beginAnswerChoice = (questionPosition: number, clipItemPosition: number): void => {
+    const answerAudio = context.answerAudio;
+    if (!answerAudio) return;
+    const choice = answerAudio.getChoiceSnapshot(questionPosition, clipItemPosition);
+    if (choice.status === "loading" || choice.status === "ready" || choice.status === "playing") return;
+    if (!protectedAnswerQuestions.has(questionPosition)) {
+      protectedAnswerQuestions.add(questionPosition);
+      context.controller.grantProtection(ANSWER_AUDIO_PROTECTION_DURATION);
+    }
+    void answerAudio.playChoice(questionPosition, clipItemPosition).catch((error: unknown) => {
+      if (cleaned || context.controller.snapshot().targetIndex !== questionPosition) return;
+      context.diagnostic({
+        level: "warning",
+        code: "WIZARD_ANSWER_AUDIO_FAILED",
+        message: "Wizard answer audio could not play.",
+        details: { questionPosition, clipItemPosition, error: error instanceof Error ? error.message : String(error) },
+      });
+    });
+  };
+
+  const handleAnswerOrbContact = (orb: WizardVsZombieOrb): void => {
+    const answerAudio = context.answerAudio;
+    if (!answerAudio) return;
+    const questionPosition = context.controller.snapshot().targetIndex;
+    const clipItemPosition = itemPositionForOrb(orb);
+    if (!answerAudio.canConfirmChoice(questionPosition, clipItemPosition)) {
+      beginAnswerChoice(questionPosition, clipItemPosition);
+      return;
+    }
+    const confirmation = answerAudio.confirmChoice(questionPosition, clipItemPosition);
+    if (confirmation.completedQuestion !== orb.isCorrect) {
+      throw new Error("Wizard answer audio confirmation does not match the crystal");
+    }
+    const result = context.controller.collectOrb(orb.id);
+    report(result);
+    if (result.progressed && result.snapshot.phase === "playing") {
+      answerAudio.setQuestion(result.snapshot.targetIndex, answerChoicePositions(result.snapshot));
+    }
+  };
+
+  const reportAction = (action: () => WizardVsZombieActionResult): WizardVsZombieActionResult => {
+    const wasLatched = context.controller.snapshot().orbContactLatched;
+    const result = action();
+    report(result);
+    if (context.answerAudio && !wasLatched && result.snapshot.orbContactLatched && result.snapshot.orbContactZone) {
+      const zone = result.snapshot.orbContactZone;
+      const orb = result.snapshot.orbs.find((candidate) => candidate.x === zone.x && candidate.y === zone.y);
+      if (orb) handleAnswerOrbContact(orb);
+    }
+    return result;
+  };
+
   const cleanup = (): void => {
     if (cleaned) return;
     cleaned = true;
+    listeningGeneration += 1;
     frameScheduler.cancel();
     context.inputController.cancelActiveGesture();
     context.controller.destroy();
     const active = resources;
     resources = undefined;
+    activeScene = undefined;
     if (!active) return;
     destroyWorldLayer(active);
     active.playerSprite?.destroy();
@@ -1553,10 +2079,16 @@ function createScene(context: WizardVsZombieSceneContext): Readonly<Record<strin
     active.zombieSprites.clear();
     active.night.destroy();
     active.graphics.destroy();
+    active.hud.destroy();
     active.title.destroy();
     active.prompt.destroy();
     active.progress.destroy();
     active.health.destroy();
+    active.ability.destroy();
+    active.audioControl.destroy();
+    active.transcriptControl.destroy();
+    active.fallbackControl.destroy();
+    for (const control of active.answerAudioControls) control.destroy();
     active.feedback.destroy();
     active.instructions.destroy();
     for (const label of active.orbLabels) label.destroy();
@@ -1569,8 +2101,13 @@ function createScene(context: WizardVsZombieSceneContext): Readonly<Record<strin
     preloadAssetBindings(this.load, context.edition, keys);
   };
 
+  const rememberActiveScene = (scene: PhaserSceneLike): void => {
+    activeScene = scene;
+  };
+
   const create = function (this: PhaserSceneLike): void {
     if (!this.add) throw new Error("Wizard vs Zombie requires Phaser display services");
+    rememberActiveScene(this);
     const textWidth = Math.max(220, (context.composition?.safeRect?.width ?? GAME_WIDTH) - 56);
     const style = {
       fontFamily: "Arial",
@@ -1584,34 +2121,54 @@ function createScene(context: WizardVsZombieSceneContext): Readonly<Record<strin
     night.setDepth?.(1);
     const graphics = this.add.graphics();
     graphics.setDepth?.(2);
-    const title = this.add.text(28, 18, "WIZARD VS ZOMBIE", { ...style, fontSize: "30px", fontStyle: "bold", color: "#fee2e2" });
-    const prompt = this.add.text(28, 58, "", { ...style, fontSize: "22px" });
+    const hud = this.add.graphics();
+    hud.setDepth?.(10);
+    const title = this.add.text(28, 18, "", { ...style, fontSize: "30px", fontStyle: "bold", color: "#fee2e2" });
+    const prompt = this.add.text(28, 12, "", { ...style, fontSize: "44px", fontStyle: "bold" });
     const progress = this.add.text(28, 98, "", { ...style, fontSize: "16px", color: "#fca5a5" });
     const health = this.add.text(28, 128, "", { ...style, fontSize: "16px", color: "#86efac" });
+    const ability = this.add.text(0, 0, "✦ 0", { ...style, fontSize: "20px", color: "#cffafe" });
+    const audioControl = this.add.text(0, 0, "🔊", { ...style, fontSize: "22px", color: "#e0e7ff" });
+    const transcriptControl = this.add.text(0, 0, "Aa", { ...style, fontSize: "18px", color: "#f1f5f9" });
+    const fallbackControl = this.add.text(0, 0, "A", { ...style, fontSize: "18px", color: "#ffedd5" });
     const feedback = this.add.text(28, 0, "", { ...style, fontSize: "17px", color: "#fde68a" });
     const instructions = this.add.text(28, 0, "", { ...style, fontSize: "15px", color: "#d6d3d1" });
     const orbLabels = SOUL_POSITIONS.map(() => this.add!.text(0, 0, "", { ...style, fontSize: "16px", color: "#e2e8f0" }));
-    for (const text of [title, prompt, progress, health, feedback, instructions, ...orbLabels]) {
+    const answerAudioControls = SOUL_POSITIONS.map(() => this.add!.text(0, 0, "", { ...style, fontSize: "16px", color: "#e0e7ff" }));
+    for (const text of [title, prompt, progress, health, ability, audioControl, transcriptControl, fallbackControl, feedback, instructions, ...orbLabels, ...answerAudioControls]) {
       text.setDepth?.(20);
     }
     resources = {
       night,
       graphics,
+      hud,
       title,
       prompt,
       progress,
       health,
+      ability,
+      audioControl,
+      transcriptControl,
+      fallbackControl,
+      answerAudioControls,
       feedback,
       instructions,
       orbLabels,
       worldSprites: [],
       orbSprites: new Map(),
       zombieSprites: new Map(),
+      worldX: 0,
+      worldY: 0,
       worldWidth: 0,
       worldHeight: 0,
     };
     this.events?.once("shutdown", cleanup);
     this.events?.once("destroy", cleanup);
+    if (context.listening && context.sessionMode === "playing") beginListening(context.controller.snapshot().targetIndex, false);
+    if (context.answerAudio && context.sessionMode === "playing") {
+      const state = context.controller.snapshot();
+      context.answerAudio.setQuestion(state.targetIndex, answerChoicePositions(state));
+    }
     updateView(this);
   };
 
@@ -1619,19 +2176,109 @@ function createScene(context: WizardVsZombieSceneContext): Readonly<Record<strin
     if (!resources || cleaned) return;
     frameScheduler.tick(delta);
     const deltaMs = frameScheduler.lastDeltaMs;
+    shockwaveEffectMs = Math.max(0, shockwaveEffectMs - deltaMs);
     if (context.sessionMode === "playing") {
       const input = context.inputController.snapshot();
+      const startingTargetPosition = context.controller.snapshot().targetIndex;
       const attemptsBeforeInput = context.controller.snapshot().totalAttempts;
+      let pointerConsumed = false;
+      let pointerWasSteering = pointerSteeringGesture;
+      if (input.pointer.cancelled) {
+        pointerGestureTracked = false;
+        pointerSteeringGesture = false;
+      } else if (input.pointer.down && !pointerGestureTracked) {
+        const { width, height } = dimensions(this);
+        const point = pointerInScene(this, input.pointer.startX, input.pointer.startY, width, height);
+        const compact = composition?.profile === "compact" || width <= 520;
+        const projection = getWizardArenaProjection(width, height, compact, Boolean(context.listening || context.answerAudio));
+        const abilityBounds = getWizardShockwaveButtonBounds(width, height);
+        const listeningControls = getWizardListeningControlBounds(width, height);
+        const answerControls = getWizardAnswerAudioControlBounds(width, height);
+        const startsOnControl = containsPoint(abilityBounds, point)
+          || (Boolean(context.listening) && [listeningControls.audio, listeningControls.transcript, listeningControls.fallback]
+            .some((bounds) => containsPoint(bounds, point)))
+          || (Boolean(context.answerAudio) && answerControls.some((bounds) => containsPoint(bounds, point)));
+        pointerGestureTracked = true;
+        pointerSteeringGesture = !startsOnControl && containsPoint(projection, point);
+        pointerWasSteering = pointerSteeringGesture;
+      } else if (!input.pointer.down && !input.pointer.released) {
+        pointerGestureTracked = false;
+        pointerSteeringGesture = false;
+        pointerWasSteering = false;
+      }
+      if (context.listening && input.pointer.released && !input.pointer.cancelled && !pointerWasSteering) {
+        const { width, height } = dimensions(this);
+        const point = pointerInScene(this, input.pointer.x, input.pointer.y, width, height);
+        const controls = getWizardListeningControlBounds(width, height);
+        if (containsPoint(controls.audio, point)) {
+          pointerConsumed = true;
+          if (!listeningPending) beginListening(startingTargetPosition, heardItemPosition === startingTargetPosition);
+        } else if (containsPoint(controls.transcript, point)) {
+          pointerConsumed = true;
+          context.listening.recordTranscriptAssistance(startingTargetPosition);
+          assistedItemPosition = startingTargetPosition;
+        } else if (listeningFailure && containsPoint(controls.fallback, point)) {
+          pointerConsumed = true;
+          listeningGeneration += 1;
+          listeningPending = false;
+          context.listening.pause();
+          context.listening.recordReadingFallback(startingTargetPosition);
+          fallbackItemPosition = startingTargetPosition;
+          listeningFailure = undefined;
+        }
+      }
+      if (listeningBlocked()) {
+        playerMoving = false;
+        updateView(this);
+        return;
+      }
       const held = new Set([...(input.pressed ?? []), ...input.keys]);
       const velocity = heldVelocity(held, normalize);
-      if (velocity.x !== 0 || velocity.y !== 0) {
-        report(context.controller.steer(velocity, deltaMs));
+      let activeVelocity = velocity;
+      if (activeVelocity.x === 0 && activeVelocity.y === 0 && pointerSteeringGesture && input.pointer.down) {
+        const { width, height } = dimensions(this);
+        const compact = composition?.profile === "compact" || width <= 520;
+        const projection = getWizardArenaProjection(width, height, compact, Boolean(context.listening || context.answerAudio));
+        const pointer = pointerInScene(this, input.pointer.x, input.pointer.y, width, height);
+        if (containsPoint(projection, pointer)) {
+          const target = arenaPoint(pointer, projection);
+          const wizard = context.controller.snapshot().wizard;
+          const dx = target.x - wizard.x;
+          const dy = target.y - wizard.y;
+          const distance = Math.hypot(dx, dy);
+          const speed = distance > 0 && deltaMs > 0
+            ? Math.min(WIZARD_MOVE_SPEED, distance * 1_000 / deltaMs)
+            : 0;
+          activeVelocity = distance > 0
+            ? { x: dx / distance * speed, y: dy / distance * speed }
+            : { x: 0, y: 0 };
+        }
+      }
+      playerMoving = activeVelocity.x !== 0 || activeVelocity.y !== 0;
+      if (playerMoving) {
+        playerFacingRow = Math.abs(activeVelocity.x) >= Math.abs(activeVelocity.y)
+          ? (activeVelocity.x < 0 ? 1 : 2)
+          : (activeVelocity.y < 0 ? 3 : 0);
+      }
+      if (activeVelocity.x !== 0 || activeVelocity.y !== 0) {
+        reportAction(() => context.controller.steer(activeVelocity, deltaMs));
       }
       for (const code of input.pressed ?? []) {
         const action = normalize({ modality: "keyboard", code })[0]?.action;
-        if (action === "confirm") report(context.controller.castShockwave());
+        if (action === "confirm") reportAction(castWithFeedback);
       }
-      if (input.pointer.released && !input.pointer.cancelled) {
+      if (context.answerAudio && input.pointer.released && !input.pointer.cancelled && !pointerWasSteering) {
+        const { width, height } = dimensions(this);
+        const point = pointerInScene(this, input.pointer.x, input.pointer.y, width, height);
+        const controls = getWizardAnswerAudioControlBounds(width, height);
+        const choiceIndex = controls.findIndex((bounds) => containsPoint(bounds, point));
+        const orb = context.controller.snapshot().orbs[choiceIndex];
+        if (orb) {
+          pointerConsumed = true;
+          beginAnswerChoice(startingTargetPosition, itemPositionForOrb(orb));
+        }
+      }
+      if (!pointerConsumed && input.pointer.released && !input.pointer.cancelled && !pointerWasSteering) {
         const drag = normalize({
           modality: "pointer",
           phase: "drag",
@@ -1641,27 +2288,48 @@ function createScene(context: WizardVsZombieSceneContext): Readonly<Record<strin
           deltaY: input.pointer.y - input.pointer.startY,
         })[0]?.action;
         if (drag && drag !== "confirm") {
-          report(context.controller.move(drag as WizardVsZombieDirection));
+          playerFacingRow = drag === "move-left" ? 1 : drag === "move-right" ? 2 : drag === "move-up" ? 3 : 0;
+          playerMoving = true;
+          reportAction(() => context.controller.move(drag as WizardVsZombieDirection));
         } else {
           const tap = normalize({ modality: "pointer", phase: "up", x: input.pointer.x, y: input.pointer.y })[0]?.action;
           if (tap === "confirm") {
             const { width, height } = dimensions(this);
             const point = pointerInScene(this, input.pointer.x, input.pointer.y, width, height);
-            if (point.x >= width * 0.86 && point.y <= height * 0.16) {
-              report(context.controller.castShockwave());
+            const abilityBounds = getWizardShockwaveButtonBounds(width, height);
+            if (point.x >= abilityBounds.x
+              && point.x <= abilityBounds.x + abilityBounds.width
+              && point.y >= abilityBounds.y
+              && point.y <= abilityBounds.y + abilityBounds.height) {
+              reportAction(castWithFeedback);
             } else {
               const state = context.controller.snapshot();
-              const direction = directionToPoint(state.wizard, {
-                x: point.x * GAME_WIDTH / width,
-                y: point.y * GAME_HEIGHT / height,
-              });
-              if (direction) report(context.controller.move(direction));
+              const compact = composition?.profile === "compact" || width <= 520;
+              const projection = getWizardArenaProjection(width, height, compact, Boolean(context.listening || context.answerAudio));
+              const direction = containsPoint(projection, point)
+                ? directionToPoint(state.wizard, arenaPoint(point, projection))
+                : undefined;
+              if (direction) {
+                playerFacingRow = direction === "move-left" ? 1 : direction === "move-right" ? 2 : direction === "move-up" ? 3 : 0;
+                playerMoving = true;
+                reportAction(() => context.controller.move(direction));
+              }
             }
           }
         }
       }
+      if (!input.pointer.down) {
+        pointerGestureTracked = false;
+        pointerSteeringGesture = false;
+      }
       if (context.controller.snapshot().totalAttempts === attemptsBeforeInput) {
-        report(context.controller.advance(deltaMs));
+        reportAction(() => context.controller.advance(deltaMs));
+      }
+      const nextState = context.controller.snapshot();
+      if (context.listening && nextState.phase === "playing" && nextState.targetIndex !== startingTargetPosition) {
+        listeningPending = false;
+        listeningFailure = undefined;
+        beginListening(nextState.targetIndex, false);
       }
     }
     updateView(this);
@@ -1680,6 +2348,7 @@ function createScene(context: WizardVsZombieSceneContext): Readonly<Record<strin
       },
       apkRecompose: (nextComposition: WizardVsZombieSceneContext["composition"]) => {
         composition = nextComposition;
+        if (activeScene && resources && !cleaned) updateView(activeScene);
       },
     },
   };
@@ -1688,29 +2357,61 @@ function createScene(context: WizardVsZombieSceneContext): Readonly<Record<strin
 /** Creates the Wizard vs Zombie standard APK cartridge. */
 export function createWizardVsZombieCartridge(): StandardExperienceCartridge {
   let activeController: WizardVsZombieController | undefined;
+  let activeItems: readonly VocabularyItem[] = [];
+  const itemPositionForTutorialOrb = (
+    orb: WizardVsZombieOrb,
+    snapshot: WizardVsZombieSnapshot,
+  ): number => {
+    if (orb.isCorrect) return snapshot.targetIndex;
+    const itemPosition = activeItems.findIndex((item) =>
+      item.term === orb.term && item.translation === orb.translation);
+    if (itemPosition < 0) throw new Error("Wizard Practice choice does not match tutorial content");
+    return itemPosition;
+  };
+  const demonstrateTutorialAction = async (
+    actionId: string,
+    driverContext: CreateTutorialActionDriverContext,
+    execution: GameTutorialActionDriverContext,
+  ): Promise<void> => {
+    if (execution.signal?.aborted) return;
+    const controller = activeController;
+    if (!controller) return;
+    const snapshot = controller.snapshot();
+    const orb = actionId === "action:select-correct"
+      ? snapshot.orbs.find((candidate) => candidate.isCorrect)
+      : snapshot.orbs.find((candidate) => !candidate.isCorrect);
+    if (!orb) return;
+    const answerAudio = driverContext.answerAudio;
+    if (answerAudio) {
+      const clipItemPosition = itemPositionForTutorialOrb(orb, snapshot);
+      answerAudio.setQuestion(
+        snapshot.targetIndex,
+        snapshot.orbs.map((candidate) => itemPositionForTutorialOrb(candidate, snapshot)),
+      );
+      await answerAudio.playChoice(snapshot.targetIndex, clipItemPosition);
+      if (execution.signal?.aborted || activeController !== controller || controller.snapshot().destroyed) return;
+      if (answerAudio.getChoiceSnapshot(snapshot.targetIndex, clipItemPosition).status !== "completed") {
+        throw new Error("Wizard Practice answer audio did not complete");
+      }
+    }
+    controller.collectOrb(orb.id);
+  };
   const standardExperience = createCartridgeStandardExperience({
     id: WIZARD_VS_ZOMBIE_ID,
     title: "Wizard vs Zombie",
-    description: "Survive the graveyard. Collect the true soul. Hold the horde back.",
+    description: "Match Thai words to their English meanings while you avoid zombies.",
     inputMode: "vocabulary",
-    objective: "Collect every true soul before the horde reaches you.",
-    mechanicInstruction: "Hold the arrows to move. Touch the matching soul. Cast a shockwave when the dead close in.",
+    objective: "Match every Thai word to its English meaning.",
+    mechanicInstruction: "Read the Thai word. Read the English choices, or use the speakers in audio mode. Hold the graveyard and drag to steer toward a crystal. Use a shockwave to escape zombies.",
     keyboardKeys: ["W", "A", "S", "D", "Arrow keys", "Space"],
-    executeTutorialAction: (actionId) => {
-      const controller = activeController;
-      if (!controller) return;
-      const orb = actionId === "action:select-correct"
-        ? controller.snapshot().orbs.find((candidate) => candidate.isCorrect)
-        : controller.snapshot().orbs.find((candidate) => !candidate.isCorrect);
-      if (orb) controller.collectOrb(orb.id);
-    },
+    executeTutorialAction: demonstrateTutorialAction,
   });
 
   return {
     manifest: {
       id: WIZARD_VS_ZOMBIE_ID,
       title: "Wizard vs Zombie",
-      description: "Survive the graveyard. Collect the true soul. Hold the horde back.",
+      description: "Match Thai words to their English meanings while you avoid zombies.",
       runtimeApiVersion: "1.0.0",
       inputMode: "vocabulary",
       requiredAssetBindings: ["legacy-catalog/wizard-vs-zombie/zombie-orbs"],
@@ -1728,11 +2429,17 @@ export function createWizardVsZombieCartridge(): StandardExperienceCartridge {
     standardExperience,
     createGameConfig(context: CartridgeGameConfigContext): Readonly<Record<string, unknown>> {
       const input = vocabularyInputSchema.parse(context.input);
+      activeItems = input;
       const sessionMode = context.sessionMode ?? "playing";
       const controller = createWizardVsZombieController(
         input,
-        sessionMode === "playing" ? (result, outcome) => context.complete(result, outcome) : () => undefined,
-        { seed: context.seed },
+        sessionMode === "playing" ? (result, outcome) => {
+          const delivered = context.listening?.getEvidence().effectiveModality === "reading-fallback"
+            ? gameResultsSchema.parse({ ...result, xp: 0, score: 0 })
+            : result;
+          context.complete(delivered, outcome);
+        } : () => undefined,
+        { seed: context.seed, deferOrbCollection: Boolean(context.answerAudio) },
       );
       activeController = controller;
       context.diagnostic({
@@ -1747,11 +2454,15 @@ export function createWizardVsZombieCartridge(): StandardExperienceCartridge {
         render: { antialias: false, pixelArt: true },
         scene: createScene({
           controller,
+          items: input,
           inputController: context.inputController,
           composition: context.composition,
           diagnostic: context.diagnostic,
           sessionMode,
           edition: context.edition,
+          listening: context.listening,
+          answerAudio: context.answerAudio,
+          seed: normalizedSeed({ seed: context.seed }),
         }),
       };
     },
