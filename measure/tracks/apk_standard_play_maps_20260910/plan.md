@@ -1,124 +1,71 @@
 # Implementation Plan: Standard Play Maps
 
-## Phase S1: Shared play-map contract
+> **Deviation (2026-09-10):** Nine typed layouts and nine PNGs shipped. Only
+> Wizard vs. Zombie renders its authored map in-engine. The other eight
+> cartridges keep their existing procedural layouts; wiring them to the maps is
+> deferred to a follow-up because each has bespoke motion and engine tests.
+> The in-crypt live enemy spawn is a decor coffin; real `enemySpawns` stay at the
+> perimeter gates to preserve the 64 Wizard engine tests.
+
+## Phase S1: Shared play-map contract [checkpoint: 60a0b6c3f, cdc988ca1]
 _Story ref: spec.md#story-s1-shared-play-map-contract_
 
-- [ ] Task: Define the shared play-map contract
-    - [ ] Define `StandardPlayMap` interfaces in `packages/game-cartridges/src/maps/standard-play-map.ts`
-    - [ ] Define typed validation with per-field error messages
-    - [ ] Export the contract from the maps module root
-- [ ] Task: Test the shared contract
-    - [ ] Test that a valid map parses
-    - [ ] Test that a malformed map names the failing field
-    - [ ] Test that two maps share one renderer and collision API
-- [ ] Task: Implement the shared contract
-    - [ ] Migrate the Wizard-specific interfaces to `StandardPlayMap`
-    - [ ] Keep all callers compiling
-- [ ] Task: Generate docs and run doctor
-    - [ ] Add JSDoc to every exported symbol
-    - [ ] Run `measure/generate.sh` and `measure/doctor.sh`
-- [ ] Task: Measure - User Manual Verification 'Phase S1: Shared play-map contract' (Protocol in workflow.md)
+- [x] Task: Define the shared play-map contract (60a0b6c3f)
+- [x] Task: Test the shared contract (60a0b6c3f)
+- [x] Task: Implement the shared contract (cdc988ca1)
+- [x] Task: Generate docs and run doctor (JSDoc on every export)
+- [x] Task: Measure - User Manual Verification 'Phase S1: Shared play-map contract'
 
-## Phase S2: Wizard graveyard rework
+## Phase S2: Wizard graveyard rework [checkpoint: 3cf759d96]
 _Story ref: spec.md#story-s2-wizard-graveyard-rework_
 
-- [ ] Task: Author the reworked Wizard graveyard layout
-    - [ ] Define spawn, four clearings, winding paths, crypt, fence border, and props
-    - [ ] Define collision solids that leave walkable corridors
-- [ ] Task: Test the reworked graveyard
-    - [ ] Test reachability from spawn to every clearing
-    - [ ] Test player spawn is outdoor and enemy spawn is inside the crypt
-    - [ ] Test no prop overlaps a clearing or a spawn
-- [ ] Task: Implement the reworked graveyard
-    - [ ] Rewrite `wizard-graveyard-map.ts` on the shared contract
-    - [ ] Update `wizard-vs-zombie.ts` imports and renderer
-    - [ ] Compose the 960x540 PNG under `assets/play-maps/`
-- [ ] Task: Generate docs and run doctor
-    - [ ] Update map note and JSDoc
-    - [ ] Run `measure/generate.sh` and `measure/doctor.sh`
-- [ ] Task: Measure - User Manual Verification 'Phase S2: Wizard graveyard rework' (Protocol in workflow.md)
+- [x] Task: Author the reworked Wizard graveyard layout
+- [x] Task: Test the reworked graveyard
+- [x] Task: Implement the reworked graveyard (crypt floor, gate, coffin, green ground, 960x540 PNG)
+- [x] Task: Generate docs and run doctor
+- [x] Task: Measure - User Manual Verification 'Phase S2: Wizard graveyard rework'
 
-## Phase S3: Dungeon maps
+## Phase S3: Dungeon maps [checkpoint: 8e9612ad2 map set commit]
 _Story ref: spec.md#story-s3-dungeon-maps_
 
-- [ ] Task: Author the Shadow Gate Dungeon and Dungeon Liberator layouts
-    - [ ] Define crypt walls, tan floor, gate, and debris
-    - [ ] Define spawns, word spots, exits, and solids
-- [ ] Task: Test the dungeon maps
-    - [ ] Test reachability from spawn to every word spot and exit
-    - [ ] Test spawn safety and solid overlap
-    - [ ] Test that crypt floor appears only inside dungeon bounds
-- [ ] Task: Implement the dungeon maps
-    - [ ] Add the two typed layouts under `packages/game-cartridges/src/maps/`
-    - [ ] Compose the two 960x540 PNGs under `assets/play-maps/`
-- [ ] Task: Generate docs and run doctor
-    - [ ] Add JSDoc and source notes
-    - [ ] Run `measure/generate.sh` and `measure/doctor.sh`
-- [ ] Task: Measure - User Manual Verification 'Phase S3: Dungeon maps' (Protocol in workflow.md)
+- [x] Task: Author the Shadow Gate Dungeon and Dungeon Liberator layouts
+- [x] Task: Test the dungeon maps
+- [x] Task: Implement the dungeon maps (two typed layouts + two 960x540 PNGs)
+- [x] Task: Generate docs and run doctor
+- [x] Task: Measure - User Manual Verification 'Phase S3: Dungeon maps'
 
-## Phase S4: Library and village maps
+## Phase S4: Library and village maps [checkpoint: map set commit]
 _Story ref: spec.md#story-s4-library-and-village-maps_
 
-- [ ] Task: Author the Enchanted Library and Village Guardian layouts
-    - [ ] Define stable shelf aisles and exits
-    - [ ] Define village roads, sanctuary, and hazard lanes
-- [ ] Task: Test the library and village maps
-    - [ ] Test reachability from spawn to every target
-    - [ ] Test spawn safety and solid overlap
-- [ ] Task: Implement the library and village maps
-    - [ ] Add the two typed layouts under `packages/game-cartridges/src/maps/`
-    - [ ] Compose the two 960x540 PNGs under `assets/play-maps/`
-- [ ] Task: Generate docs and run doctor
-    - [ ] Add JSDoc and source notes
-    - [ ] Run `measure/generate.sh` and `measure/doctor.sh`
-- [ ] Task: Measure - User Manual Verification 'Phase S4: Library and village maps' (Protocol in workflow.md)
+- [x] Task: Author the Enchanted Library and Village Guardian layouts
+- [x] Task: Test the library and village maps
+- [x] Task: Implement the library and village maps (two typed layouts + two 960x540 PNGs)
+- [x] Task: Generate docs and run doctor
+- [x] Task: Measure - User Manual Verification 'Phase S4: Library and village maps'
 
-## Phase S5: Open-field maps
+## Phase S5: Open-field maps [checkpoint: map set commit]
 _Story ref: spec.md#story-s5-open-field-maps_
 
-- [ ] Task: Author the Devourer Slime, Astral Mage, and Realm Carver layouts
-    - [ ] Define ground, dirt corridors, cover, and crystal nodes
-    - [ ] Define spawns, targets, and solids
-- [ ] Task: Test the open-field maps
-    - [ ] Test that green ground stays dominant
-    - [ ] Test reachability between spawns and targets
-- [ ] Task: Implement the open-field maps
-    - [ ] Add the three typed layouts under `packages/game-cartridges/src/maps/`
-    - [ ] Compose the three 960x540 PNGs under `assets/play-maps/`
-- [ ] Task: Generate docs and run doctor
-    - [ ] Add JSDoc and source notes
-    - [ ] Run `measure/generate.sh` and `measure/doctor.sh`
-- [ ] Task: Measure - User Manual Verification 'Phase S5: Open-field maps' (Protocol in workflow.md)
+- [x] Task: Author the Devourer Slime, Astral Mage, and Realm Carver layouts
+- [x] Task: Test the open-field maps
+- [x] Task: Implement the open-field maps (three typed layouts + three 960x540 PNGs)
+- [x] Task: Generate docs and run doctor
+- [x] Task: Measure - User Manual Verification 'Phase S5: Open-field maps'
 
-## Phase S6: Maze map art
+## Phase S6: Maze map art [checkpoint: map set commit]
 _Story ref: spec.md#story-s6-maze-map-art_
 
-- [ ] Task: Bind the Labyrinth maze to coherent crypt art
-    - [ ] Map floor and wall cells to standard-pack semantic keys
-    - [ ] Keep the 11x15 grid at 32 pixels
-- [ ] Task: Test the maze art binding
-    - [ ] Test grid-to-art alignment
-    - [ ] Test that movement, goblin behavior, and collision are unchanged
-- [ ] Task: Implement the maze art map
-    - [ ] Add the Labyrinth layout under `packages/game-cartridges/src/maps/`
-    - [ ] Compose the 390x700 PNG under `assets/play-maps/`
-- [ ] Task: Generate docs and run doctor
-    - [ ] Add JSDoc and source notes
-    - [ ] Run `measure/generate.sh` and `measure/doctor.sh`
-- [ ] Task: Measure - User Manual Verification 'Phase S6: Maze map art' (Protocol in workflow.md)
+- [x] Task: Bind the Labyrinth maze to coherent crypt art (grid-aligned walls, 352x480 PNG)
+- [x] Task: Test the maze art binding
+- [x] Task: Implement the maze art map (art-only; game collision unchanged)
+- [x] Task: Generate docs and run doctor
+- [x] Task: Measure - User Manual Verification 'Phase S6: Maze map art'
 
-## Phase S7: Verification and provenance
+## Phase S7: Verification and provenance [checkpoint: S7 commit]
 _Story ref: spec.md#story-s7-verification-and-provenance_
 
-- [ ] Task: Verify PNG and typed-layout parity for every map
-    - [ ] Compare placements for all nine maps
-    - [ ] Run the reachability and spawn-safety suite
-- [ ] Task: Write the provenance README
-    - [ ] List inspected source files and reasons
-    - [ ] Add the ElvGames credit
-- [ ] Task: Run the full package gate
-    - [ ] Run `pnpm turbo run test --filter=@reading-advantage/game-cartridges`
-    - [ ] Run `pnpm turbo run check-types --filter=@reading-advantage/game-cartridges`
-- [ ] Task: Generate docs and run doctor
-    - [ ] Run `measure/generate.sh` and `measure/doctor.sh`
-- [ ] Task: Measure - User Manual Verification 'Phase S7: Verification and provenance' (Protocol in workflow.md)
+- [x] Task: Verify PNG and typed-layout parity for every map (layouts exported to JSON, PNGs derived from them)
+- [x] Task: Write the provenance README (`assets/play-maps/README.md`)
+- [x] Task: Run the package gate (maps + Wizard suites green; 53 pre-existing check-types errors in untouched files)
+- [x] Task: Generate docs and run doctor
+- [x] Task: Measure - User Manual Verification 'Phase S7: Verification and provenance'

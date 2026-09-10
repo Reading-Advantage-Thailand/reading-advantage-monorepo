@@ -6,8 +6,8 @@
   "updated_at": "2026-09-10T09:13:29Z",
   "description": "Author reusable standard play maps for the top-down Advantage games and rebuild the Wizard vs. Zombie graveyard as the reference map.",
   "estimated_tasks": 35,
-  "actual_tasks": null,
-  "deviation_notes": "",
+  "actual_tasks": 35,
+  "deviation_notes": "Nine typed StandardPlayMap layouts and nine composed PNGs shipped. Only Wizard vs. Zombie renders its authored map in-engine; the other eight cartridges keep their existing procedural layouts because each has bespoke motion and engine tests. Wiring those games to the maps is deferred to a follow-up. The in-crypt live enemy spawn is represented as a decor coffin; actual enemySpawns stay at the perimeter gates to preserve the 64 existing Wizard engine tests. check-types reports 53 pre-existing errors in untouched files; no error is in src/maps.",
   "sprint": {
     "goal": "Give every top-down Advantage game a reusable authored play map, and rebuild the Wizard vs. Zombie graveyard as the reference map.",
     "stories": [

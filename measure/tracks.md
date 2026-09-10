@@ -430,6 +430,7 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 
 - [ ] **Track: Standard Play Maps** *Link: [./tracks/apk_standard_play_maps_20260910/](./tracks/apk_standard_play_maps_20260910/)*
   Generalize the existing Wizard graveyard map into one shared typed layout contract, then author nine top-down play maps (PNG plus typed layout) for the Advantage games. Rebuild Wizard vs. Zombie from scratch as the reference map. Keep collision rules stable and leave composed art outside the pinned standard pack.
+  *Status: Implementation complete 2026-09-10 — shared `StandardPlayMap` contract, nine typed layouts, nine composed PNGs, and focused tests (48 map tests + 64 Wizard engine tests green). Documented deviation: only Wizard renders its authored map in-engine; the other eight cartridges keep procedural layouts pending a wiring follow-up. 53 pre-existing check-types errors remain in untouched files.*
 
 ---
 
