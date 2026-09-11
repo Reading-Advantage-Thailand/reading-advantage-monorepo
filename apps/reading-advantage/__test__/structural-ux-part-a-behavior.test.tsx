@@ -21,6 +21,9 @@ jest.mock("@/locales/client", () => ({
 
 jest.mock("next/navigation", () => ({
   useRouter: () => ({ push: jest.fn(), refresh: jest.fn() }),
+  redirect: (url: string) => {
+    throw new Error(`NEXT_REDIRECT: ${url}`);
+  },
 }));
 
 jest.mock("@/lib/telemetry/dashboard-telemetry", () => ({

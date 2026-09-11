@@ -9,6 +9,9 @@ import UserActivityHeatMap from "@/components/dashboard/user-activity-heatmap";
 import ReadingStatsChart from "@/components/dashboard/user-reading-chart";
 import CEFRLevels from "@/components/dashboard/user-level-indicator";
 import { fetchData } from "@/utils/fetch-data";
+import { db, and, eq } from "@reading-advantage/db";
+import { classroomStudents, classroomTeachers } from "@reading-advantage/db/schema";
+import { Role } from "@/lib/enums";
 
 async function getUserActivityData(userId: string) {
   return fetchData(`/api/v1/users/${userId}/activitylog`);
@@ -26,6 +29,31 @@ export default async function ProgressPage({
   const { studentId } = await params;
   const user = await getCurrentUser();
   if (!user) return redirect("/auth/signin");
+
+  // Verify access: staff roles proceed; everyone else must teach a classroom
+  // that contains this student. Mirrors the check in
+  // teacher/reports/[classroomId]/page.tsx.
+  if (user.role !== Role.SYSTEM && user.role !== Role.ADMIN) {
+    const [classroomLink] = await db
+      .select({ id: classroomStudents.id })
+      .from(classroomStudents)
+      .innerJoin(
+        classroomTeachers,
+        eq(classroomTeachers.classroomId, classroomStudents.classroomId),
+      )
+      .where(
+        and(
+          eq(classroomStudents.studentId, studentId),
+          eq(classroomTeachers.teacherId, user.id),
+        ),
+      )
+      .limit(1);
+
+    if (!classroomLink) {
+      return redirect("/teacher/dashboard");
+    }
+  }
+
   const t = await getScopedI18n("pages.teacher.studentProgressPage");
 
   try {
