@@ -47,6 +47,7 @@ export type TeacherDataTableProps<TData> = {
   paginationClassName?: string;
   paginationButtonClassName?: string;
   paginationLeft?: React.ReactNode;
+  renderPagination?: (table: ReturnType<typeof useReactTable<TData>>) => React.ReactNode;
   columnVisibility?: VisibilityState;
   onColumnVisibilityChange?: OnChangeFn<VisibilityState>;
 };
@@ -78,6 +79,7 @@ export default function TeacherDataTable<TData>({
   paginationClassName = "flex items-center justify-end space-x-2",
   paginationButtonClassName,
   paginationLeft,
+  renderPagination,
   columnVisibility: controlledColumnVisibility,
   onColumnVisibilityChange: controlledOnColumnVisibilityChange,
 }: TeacherDataTableProps<TData>) {
@@ -203,31 +205,34 @@ export default function TeacherDataTable<TData>({
       ) : (
         wrappedTable
       )}
-      {showPagination && (
-        <div className={paginationClassName}>
-          {paginationLeft}
-          <div className="space-x-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage()}
-              className={paginationButtonClassName}
-            >
-              {t("previous")}
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage()}
-              className={paginationButtonClassName}
-            >
-              {t("next")}
-            </Button>
+      {showPagination &&
+        (renderPagination ? (
+          renderPagination(table)
+        ) : (
+          <div className={paginationClassName}>
+            {paginationLeft}
+            <div className="space-x-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => table.previousPage()}
+                disabled={!table.getCanPreviousPage()}
+                className={paginationButtonClassName}
+              >
+                {t("previous")}
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => table.nextPage()}
+                disabled={!table.getCanNextPage()}
+                className={paginationButtonClassName}
+              >
+                {t("next")}
+              </Button>
+            </div>
           </div>
-        </div>
-      )}
+        ))}
     </>
   );
 }

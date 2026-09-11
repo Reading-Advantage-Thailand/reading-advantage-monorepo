@@ -1,34 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHeader,
-  TableRow,
-  TableHead,
-} from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuItem,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { CaretSortIcon, ChevronDownIcon } from "@radix-ui/react-icons";
-import {
-  ColumnDef,
-  ColumnFiltersState,
-  SortingState,
-  VisibilityState,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
-import { Input } from "@/components/ui/input";
 import { useScopedI18n } from "@/locales/client";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import {
@@ -42,7 +14,6 @@ import {
 import { Icons } from "@/components/icons";
 import { Header } from "@/components/header";
 import { toast } from "../ui/use-toast";
-import { ScrollArea } from "../ui/scroll-area";
 import { useClassroomState, useClassroomStore } from "@/store/classroom-store";
 import Image from "next/image";
 import {
@@ -55,6 +26,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useClassroomActions } from "@/hooks/teacher/useClassroomActions";
+import ClassroomStudentTable from "../classroom-student-table";
 
 type StudentData = {
   id: string;
@@ -87,13 +59,6 @@ interface Classes {
 }
 
 export default function ClassRoster() {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  );
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
-  const [rowSelection, setRowSelection] = React.useState({});
   const t = useScopedI18n("components.articleRecordsTable");
   const tr = useScopedI18n("components.classRoster");
   const ts = useScopedI18n("components.myStudent");
@@ -121,122 +86,7 @@ export default function ClassRoster() {
     isResetModalOpen,
   } = useClassroomActions();
 
-  const columns: ColumnDef<StudentData>[] = React.useMemo(
-    () => [
-      {
-        accessorKey: "display_name",
-        header: ({ column }) => {
-          return (
-            <Button
-              variant="ghost"
-              onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            >
-              {tr("name")}
-              <CaretSortIcon className="ml-2 h-4 w-4" />
-            </Button>
-          );
-        },
-        cell: ({ row }) => (
-          <div className="ml-4">{row.getValue("display_name")}</div>
-        ),
-      },
-      {
-        accessorKey: "last_activity",
-        header: () => {
-          return <div className="text-center">{tr("lastActivity")}</div>;
-        },
-        cell: ({ row }) => {
-          return (
-            <div className="text-center">
-              {row.getValue("last_activity")
-                ? new Date(row.getValue("last_activity")).toLocaleString()
-                : "No Activity"}
-            </div>
-          );
-        },
-      },
-      {
-        accessorKey: "action",
-        header: () => {
-          return <div className="text-center">{tr("actions")}</div>;
-        },
-        cell: ({ row }) => {
-          const payment = row.original;
-          return (
-            <div className="text-center">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="default" className="ml-auto">
-                    {tr("actions")} <ChevronDownIcon className="ml-2 h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="start">
-                  <DropdownMenuItem
-                    onClick={() =>
-                      router.push(
-                        `/teacher/student-progress/${payment.id}`
-                      )
-                    }
-                  >
-                    {ts("progress")}
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() =>
-                      router.push(
-                        `/teacher/enroll-classes/${payment.id}`
-                      )
-                    }
-                  >
-                    {ts("enroll")}
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() => {
-                      setIsResetModalOpen(true);
-                      setSelectedStudentId(payment.id);
-                    }}
-                  >
-                    {ts("resetProgress")}
-                  </DropdownMenuItem>
-                  {classrooms && (
-                    <DropdownMenuItem
-                      onClick={() =>
-                        router.push(
-                          `/teacher/class-roster/${classrooms[0]?.id}/history/${payment.id}`
-                        )
-                      }
-                    >
-                      {tr("history")}
-                    </DropdownMenuItem>
-                  )}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-          );
-        },
-      },
-    ],
-    [tr, ts]
-  );
   const data = React.useMemo(() => studentInClass || [], [studentInClass]);
-
-  const table = useReactTable({
-    data,
-    columns,
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    onColumnVisibilityChange: setColumnVisibility,
-    onRowSelectionChange: setRowSelection,
-    state: {
-      sorting,
-      columnFilters,
-      columnVisibility,
-      rowSelection,
-    },
-  });
 
   useEffect(() => {
     if (classrooms.length) {
@@ -264,6 +114,63 @@ export default function ClassRoster() {
     }
   }, []);
 
+  const addStudentButton = (
+    <Button
+      variant="outline"
+      onClick={() => {
+        if (classroomId) {
+          router.push(`/teacher/class-roster/${classroomId}/create-new-student`);
+        } else {
+          toast({
+            title: "Error",
+            description: "Classroom ID is not available.",
+          });
+        }
+      }}
+    >
+      <Icons.add />
+      {tr("addStudentButton")}
+    </Button>
+  );
+
+  const syncStudentsButton = (
+    <Button
+      onClick={() =>
+        classes.googleClassroomId && syncStudents(classes.googleClassroomId)
+      }
+      disabled={loading || !classes.googleClassroomId}
+    >
+      {loading ? (
+        <>
+          <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+          Sync students
+        </>
+      ) : (
+        <>
+          <Image
+            className="mr-2"
+            src={"/96x96_yellow_stroke_icon@1x.png"}
+            alt="google-classroom"
+            width={20}
+            height={20}
+          />
+          Sync students
+        </>
+      )}
+    </Button>
+  );
+
+  const rosterToolbar =
+    selectedClassroom &&
+    classroomId &&
+    classes &&
+    Object.keys(classes).length > 0 &&
+    !classes.importedFromGoogle
+      ? addStudentButton
+      : classes && Object.keys(classes).length > 0 && classes.importedFromGoogle
+        ? syncStudentsButton
+      : addStudentButton;
+
   return (
     <div className="flex flex-col gap-4">
       <div>
@@ -288,159 +195,16 @@ export default function ClassRoster() {
         ) : (
           <Header heading={tr("noStudent")} />
         ))}
-      <div className="flex justify-between items-center">
-        <Input
-          placeholder={tr("search")}
-          value={
-            (table.getColumn("display_name")?.getFilterValue() as string) ?? ""
-          }
-          onChange={(event) =>
-            table.getColumn("display_name")?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
-        />
-        {selectedClassroom &&
-          classroomId &&
-          (classes &&
-            Object.keys(classes).length > 0 &&
-            !classes.importedFromGoogle ? (
-            <Button
-              variant="outline"
-              onClick={() => {
-                if (classroomId) {
-                  router.push(
-                    `/teacher/class-roster/${classroomId}/create-new-student`
-                  );
-                } else {
-                  toast({
-                    title: "Error",
-                    description: "Classroom ID is not available.",
-                  });
-                }
-              }}
-            >
-              <Icons.add />
-              {tr("addStudentButton")}
-            </Button>
-          ) : classes &&
-            Object.keys(classes).length > 0 &&
-            classes.importedFromGoogle ? (
-            <Button
-              onClick={() =>
-                classes.googleClassroomId &&
-                syncStudents(classes.googleClassroomId)
-              }
-              disabled={loading || !classes.googleClassroomId}
-            >
-              {loading ? (
-                <>
-                  <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-                  Sync students
-                </>
-              ) : (
-                <>
-                  <Image
-                    className="mr-2"
-                    src={"/96x96_yellow_stroke_icon@1x.png"}
-                    alt="google-classroom"
-                    width={20}
-                    height={20}
-                  />
-                  Sync students
-                </>
-              )}
-            </Button>
-          ) : (
-            <Button
-              variant="outline"
-              onClick={() => {
-                if (classroomId) {
-                  router.push(
-                    `/teacher/class-roster/${classroomId}/create-new-student`
-                  );
-                } else {
-                  toast({
-                    title: "Error",
-                    description: "Classroom ID is not available.",
-                  });
-                }
-              }}
-            >
-              <Icons.add />
-              {tr("addStudentButton")}
-            </Button>
-          ))}
-      </div>
-      <div className="rounded-md border">
-        <Table style={{ tableLayout: "fixed", width: "100%" }}>
-          <TableHeader className="font-bold">
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                    </TableHead>
-                  );
-                })}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  Empty
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
-      <div className="flex items-center justify-end space-x-2">
-        <div className="space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            {t("previous")}
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            {t("next")}
-          </Button>
-        </div>
-      </div>
+      <ClassroomStudentTable
+        students={data}
+        variant="roster"
+        classrooms={classrooms}
+        toolbar={rosterToolbar}
+        onResetProgress={(studentId) => {
+          setIsResetModalOpen(true);
+          setSelectedStudentId(studentId);
+        }}
+      />
       <Dialog
         open={isResetModalOpen}
         onOpenChange={(open) => !isResetting && setIsResetModalOpen(open)}

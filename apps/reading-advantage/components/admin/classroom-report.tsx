@@ -1,39 +1,10 @@
 "use client";
 import React, { useEffect, useState, useCallback } from "react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHeader,
-  TableRow,
-  TableHead,
-} from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuItem,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { CaretSortIcon, ChevronDownIcon } from "@radix-ui/react-icons";
-import {
-  ColumnDef,
-  ColumnFiltersState,
-  SortingState,
-  VisibilityState,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
-import { Input } from "@/components/ui/input";
 import { useScopedI18n } from "@/locales/client";
 import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Header } from "@/components/header";
-import { ScrollArea } from "../ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import {
   ArrowLeft,
@@ -44,6 +15,7 @@ import {
   User,
 } from "lucide-react";
 import ClassroomXPBarChartPerStudents from "../classroom-xp-chart-per-students";
+import ClassroomStudentTable from "../classroom-student-table";
 import { format } from "date-fns";
 
 type StudentData = {
@@ -83,19 +55,11 @@ export default function AdminClassroomReport({
   students,
   classroomId,
 }: AdminClassroomReportProps) {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  );
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
-  const [rowSelection, setRowSelection] = React.useState({});
   const [xpData, setXpData] = React.useState<any>({});
   const [isClient, setIsClient] = React.useState(false);
   const [activeStudents, setActiveStudents] = React.useState(0);
   const [isMobile, setIsMobile] = React.useState(false);
 
-  const t = useScopedI18n("components.articleRecordsTable");
   const trp = useScopedI18n("components.reports");
   const router = useRouter();
 
@@ -149,29 +113,6 @@ export default function AdminClassroomReport({
     return () => window.removeEventListener("resize", checkMobile);
   }, [students, classroomId, fetchXpPerStudents]);
 
-  // Set column visibility based on screen size
-  React.useEffect(() => {
-    if (!isClient) return;
-
-    if (isMobile) {
-      // On mobile, only show display_name and level
-      setColumnVisibility({
-        email: false,
-        xp: false,
-        last_activity: false,
-        actions: false, // Hide actions since they're in level column
-      });
-    } else {
-      // On desktop, show all columns
-      setColumnVisibility({
-        email: true,
-        xp: true,
-        last_activity: true,
-        actions: true,
-      });
-    }
-  }, [isMobile, isClient]);
-
   const totalStudents = students.length;
   const averageLevel =
     students.length > 0
@@ -179,211 +120,6 @@ export default function AdminClassroomReport({
         students.length
       : 0;
   const totalXP = students.reduce((sum, student) => sum + (student.xp || 0), 0);
-
-  const columns: ColumnDef<StudentData>[] = [
-    {
-      accessorKey: "display_name",
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            {trp("name")}
-            <CaretSortIcon className="ml-2 h-4 w-4" />
-          </Button>
-        );
-      },
-      cell: ({ row }) => (
-        <div className="font-medium ml-2">
-          <div>{row.getValue("display_name")}</div>
-          {/* Show additional info on mobile */}
-          {isMobile && (
-            <div className="text-xs text-muted-foreground mt-1 space-y-1">
-              <div>{row.getValue("email")}</div>
-              <div>
-                XP: {(row.getValue("xp") as number)?.toLocaleString() || "0"}
-              </div>
-              <div>
-                Last Activity:{" "}
-                {row.getValue("last_activity")
-                  ? format(
-                      new Date(row.getValue("last_activity") as string),
-                      "MMM dd, yyyy"
-                    )
-                  : "No Activity"}
-              </div>
-            </div>
-          )}
-        </div>
-      ),
-    },
-    {
-      accessorKey: "email",
-      header: "Email",
-      cell: ({ row }) => (
-        <div className="lowercase">{row.getValue("email")}</div>
-      ),
-    },
-    {
-      accessorKey: "level",
-      header: ({ column }) => {
-        return (
-          <div className="text-center">
-            <Button
-              variant="ghost"
-              onClick={() =>
-                column.toggleSorting(column.getIsSorted() === "asc")
-              }
-              className="w-full justify-center"
-            >
-              {trp("level")}
-              <CaretSortIcon className="ml-2 h-4 w-4" />
-            </Button>
-          </div>
-        );
-      },
-      cell: ({ row }) => (
-        <div className="text-center">
-          <Badge variant="secondary">{row.getValue("level") || 0}</Badge>
-          {/* Show mobile actions below level on mobile */}
-          {isMobile && (
-            <div className="mt-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() =>
-                  router.push(`/teacher/student-progress/${row.original.id}`)
-                }
-                className="w-full text-xs"
-              >
-                {trp("viewDetails")}
-              </Button>
-            </div>
-          )}
-        </div>
-      ),
-    },
-    {
-      accessorKey: "xp",
-      header: ({ column }) => {
-        return (
-          <div className="text-center">
-            <Button
-              variant="ghost"
-              onClick={() =>
-                column.toggleSorting(column.getIsSorted() === "asc")
-              }
-              className="w-full justify-center"
-            >
-              {trp("xp")}
-              <CaretSortIcon className="ml-2 h-4 w-4" />
-            </Button>
-          </div>
-        );
-      },
-      cell: ({ row }) => {
-        const xp = row.getValue("xp") as number;
-        return (
-          <div className="text-center font-mono">
-            {isClient ? xp?.toLocaleString() || "0" : xp || "0"}
-          </div>
-        );
-      },
-    },
-    {
-      accessorKey: "last_activity",
-      header: ({ column }) => {
-        return (
-          <div className="text-center">
-            <Button
-              variant="ghost"
-              onClick={() =>
-                column.toggleSorting(column.getIsSorted() === "asc")
-              }
-              className="w-full justify-center"
-            >
-              {trp("lastActivity")}
-              <CaretSortIcon className="ml-2 h-4 w-4" />
-            </Button>
-          </div>
-        );
-      },
-      cell: ({ row }) => {
-        const lastActivity = row.getValue("last_activity") as string;
-        if (!isClient) {
-          return <div className="text-center">Loading...</div>;
-        }
-        return (
-          <div className="text-center">
-            {lastActivity
-              ? format(new Date(lastActivity), "MMM dd, yyyy")
-              : "No Activity"}
-          </div>
-        );
-      },
-    },
-    {
-      id: "actions",
-      header: () => <div className="text-center">{trp("actions")}</div>,
-      cell: ({ row }) => {
-        const student = row.original;
-        return (
-          <div className="text-center">
-            {isMobile ? (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() =>
-                  router.push(`/teacher/student-progress/${student.id}`)
-                }
-                className="w-full"
-              >
-                {trp("viewDetails")}
-              </Button>
-            ) : (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" size="sm">
-                    {trp("actions")}{" "}
-                    <ChevronDownIcon className="ml-2 h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="start">
-                  <DropdownMenuItem
-                    onClick={() =>
-                      router.push(`/teacher/student-progress/${student.id}`)
-                    }
-                  >
-                    {trp("viewDetails")}
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            )}
-          </div>
-        );
-      },
-    },
-  ];
-
-  const table = useReactTable({
-    data: students,
-    columns,
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    onColumnVisibilityChange: setColumnVisibility,
-    onRowSelectionChange: setRowSelection,
-    state: {
-      sorting,
-      columnFilters,
-      columnVisibility,
-      rowSelection,
-    },
-  });
 
   return (
     <div className="space-y-6">
@@ -513,95 +249,9 @@ export default function AdminClassroomReport({
               <CardTitle>Students</CardTitle>
             </CardHeader>
             <CardContent className="p-0">
-              <div className="p-4">
-                <Input
-                  placeholder={trp("search")}
-                  value={
-                    (table
-                      .getColumn("display_name")
-                      ?.getFilterValue() as string) ?? ""
-                  }
-                  onChange={(event) =>
-                    table
-                      .getColumn("display_name")
-                      ?.setFilterValue(event.target.value)
-                  }
-                  className="w-full md:max-w-sm"
-                />
-              </div>
-
-              <ScrollArea className="h-[400px]">
-                <Table>
-                  <TableHeader>
-                    {table.getHeaderGroups().map((headerGroup) => (
-                      <TableRow key={headerGroup.id}>
-                        {headerGroup.headers.map((header) => (
-                          <TableHead key={header.id}>
-                            {header.isPlaceholder
-                              ? null
-                              : flexRender(
-                                  header.column.columnDef.header,
-                                  header.getContext()
-                                )}
-                          </TableHead>
-                        ))}
-                      </TableRow>
-                    ))}
-                  </TableHeader>
-                  <TableBody>
-                    {table.getRowModel().rows?.length ? (
-                      table.getRowModel().rows.map((row) => (
-                        <TableRow
-                          key={row.id}
-                          data-state={row.getIsSelected() && "selected"}
-                        >
-                          {row.getVisibleCells().map((cell) => (
-                            <TableCell key={cell.id}>
-                              {flexRender(
-                                cell.column.columnDef.cell,
-                                cell.getContext()
-                              )}
-                            </TableCell>
-                          ))}
-                        </TableRow>
-                      ))
-                    ) : (
-                      <TableRow>
-                        <TableCell
-                          colSpan={columns.length}
-                          className="h-24 text-center"
-                        >
-                          No students found.
-                        </TableCell>
-                      </TableRow>
-                    )}
-                  </TableBody>
-                </Table>
-              </ScrollArea>
+              <ClassroomStudentTable students={students} variant="admin" />
             </CardContent>
           </Card>
-
-          {/* Pagination */}
-          <div className="flex flex-col space-y-2 md:flex-row md:items-center md:justify-end md:space-y-0 md:space-x-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage()}
-              className="w-full md:w-auto"
-            >
-              {t("previous")}
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage()}
-              className="w-full md:w-auto"
-            >
-              {t("next")}
-            </Button>
-          </div>
 
           {/* XP Chart */}
           <Card>
