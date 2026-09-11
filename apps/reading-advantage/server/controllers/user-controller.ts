@@ -16,6 +16,7 @@ import {
   licenseOnUsers,
 } from "@reading-advantage/db/schema";
 import { ActivityType, LicenseType } from "@/lib/enums";
+import { ActivityType as ModelActivityType } from "@/components/models/user-activity-log-model";
 import { getCurrentUser } from "@/lib/session";
 import { recordAuditEventSafe } from "@/server/utils/audit-recorder";
 
@@ -118,13 +119,21 @@ interface RequestContext {
 
 /**
  * Normalizes an external activity type after validating its input shape.
+ * Accepts the lowercase snake_case strings clients send and legacy uppercase
+ * enum values, and returns the canonical uppercase enum casing stored in the
+ * database.
  * @param value The submitted activity type.
  * @returns The recognized activity type, or null for invalid input.
  */
-function parseActivityType(value: unknown): ActivityType | null {
+export function parseActivityType(value: unknown): ActivityType | null {
   if (typeof value !== "string" || value.trim() === "") return null;
-  const activityType = value.toUpperCase() as ActivityType;
-  return Object.values(ActivityType).includes(activityType) ? activityType : null;
+  const normalized = value.trim().toUpperCase();
+  const isKnown =
+    Object.values(ActivityType).includes(normalized as ActivityType) ||
+    Object.values(ModelActivityType).some(
+      (modelValue) => modelValue.toUpperCase() === normalized,
+    );
+  return isKnown ? (normalized as ActivityType) : null;
 }
 
 /**
