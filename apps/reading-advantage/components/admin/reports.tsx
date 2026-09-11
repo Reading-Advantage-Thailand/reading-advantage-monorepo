@@ -366,8 +366,6 @@ function AdminReports({ classes }: AdminReportsProps) {
       columnVisibility,
       rowSelection,
     },
-    // Add performance debugging
-    debugAll: process.env.NODE_ENV === 'development',
   });
 
   // Calculate summary statistics - memoized to prevent recalculation on every render

@@ -5,14 +5,7 @@ import { redirect } from "next/navigation";
 import React from "react";
 import SelectStory from "@/components/stories-select";
 
-type Props = {
-  params: Promise<{ storyId: string }>;
-  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
-};
-
-export default async function ReadPage({ params, searchParams }: Props) {
-  const { storyId } = await params;
-  const resolvedSearchParams = searchParams ? await searchParams : undefined;
+export default async function StoriesPage() {
   const user = await getCurrentUser();
   if (!user) return redirect("/auth/signin");
 
