@@ -11,7 +11,6 @@ import {
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
-  getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
@@ -89,6 +88,17 @@ interface TeacherAssignmentsTableProps {
   initialData?: TeacherAssignmentData[];
 }
 
+type TeacherAssignmentsPagination = {
+  currentPage: number;
+  totalPages: number;
+  totalCount: number;
+  limit: number;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+};
+
+const TEACHER_ASSIGNMENTS_PAGE_SIZE = 20;
+
 function TeacherAssignmentsTable({
   initialData = [],
 }: TeacherAssignmentsTableProps) {
@@ -108,6 +118,15 @@ function TeacherAssignmentsTable({
   const [isMobile, setIsMobile] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(true);
   const [currentPage, setCurrentPage] = React.useState(1);
+  const [pagination, setPagination] =
+    React.useState<TeacherAssignmentsPagination>({
+      currentPage: 1,
+      totalPages: 1,
+      totalCount: 0,
+      limit: TEACHER_ASSIGNMENTS_PAGE_SIZE,
+      hasNextPage: false,
+      hasPreviousPage: false,
+    });
   const [selectedAssignment, setSelectedAssignment] =
     React.useState<TeacherAssignmentData | null>(null);
   const [isDialogOpen, setIsDialogOpen] = React.useState(false);
@@ -125,7 +144,7 @@ function TeacherAssignmentsTable({
         params.append("classroomId", selectedClassroom);
       }
       params.append("page", currentPage.toString());
-      params.append("limit", "20");
+      params.append("limit", TEACHER_ASSIGNMENTS_PAGE_SIZE.toString());
 
       const response = await fetch(
         `/api/v1/admin/teacher-assignments?${params.toString()}`
@@ -137,6 +156,16 @@ function TeacherAssignmentsTable({
 
       const result = await response.json();
       setData(result.data || []);
+      setPagination(
+        result.pagination || {
+          currentPage,
+          totalPages: 1,
+          totalCount: 0,
+          limit: TEACHER_ASSIGNMENTS_PAGE_SIZE,
+          hasNextPage: false,
+          hasPreviousPage: false,
+        }
+      );
     } catch (error) {
       console.error("Error fetching teacher assignments:", error);
       setData([]);
@@ -434,7 +463,6 @@ function TeacherAssignmentsTable({
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
@@ -781,34 +809,33 @@ function TeacherAssignmentsTable({
         </CardContent>
       </Card>
 
-      {/* Pagination */}
+      {/* Pagination — driven by the server page */}
       <div className="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0 py-4">
         <div className="flex-1 text-sm text-muted-foreground text-center md:text-left">
           <span className="hidden md:inline">
             {t("assignmentsSelected", {
               selectedCount: table.getRowModel().rows.length,
-              totalCount: table.getFilteredRowModel().rows.length,
+              totalCount: pagination.totalCount,
             })}
           </span>
           <span className="md:hidden">
-            {table.getRowModel().rows.length} /{" "}
-            {table.getFilteredRowModel().rows.length}
+            {pagination.currentPage} / {pagination.totalPages}
           </span>
         </div>
         <div className="flex space-x-2 justify-center md:justify-end">
           <Button
             variant="outline"
             size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
+            onClick={() => setCurrentPage((page) => page - 1)}
+            disabled={!pagination.hasPreviousPage || isLoading}
           >
             {t("previous")}
           </Button>
           <Button
             variant="outline"
             size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
+            onClick={() => setCurrentPage((page) => page + 1)}
+            disabled={!pagination.hasNextPage || isLoading}
           >
             {t("next")}
           </Button>
