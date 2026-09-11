@@ -13,6 +13,7 @@ import { Header } from "./header";
 import { toast } from "./ui/use-toast";
 import { Skeleton } from "./ui/skeleton";
 import { Sentence } from "./practic/types";
+import { Word } from "./vocabulary/types";
 import AudioButton from "./audio-button";
 import {
   UserXpEarned,
@@ -24,38 +25,115 @@ dayjs.extend(utc);
 dayjs.extend(dayjs_plugin_isSameOrBefore);
 dayjs.extend(dayjs_plugin_isSameOrAfter);
 
-type Props = {
-  userId: string;
-};
-
-type Word = {
+export type MatchingWord = {
   text: string;
   match: string;
-  timepoint: number;
-  endTimepoint: number;
-  articleId: string;
-  audioUrl: string;
+  timepoint?: number;
+  endTimepoint?: number;
+  articleId?: string;
+  audioUrl?: string;
 };
 
-export default function Matching({ userId }: Props) {
+type MatchingProps = {
+  userId: string;
+  fetchWords?: (
+    userId: string,
+    currentLocale: string
+  ) => Promise<MatchingWord[]>;
+  description?: string;
+  headerClassName?: string;
+  activityType?: ActivityType;
+  xpEarned?: UserXpEarned;
+  showAudio?: boolean;
+};
+
+/**
+ * Fetches saved sentences and maps them to matching cards.
+ * @param userId The student user id.
+ * @param currentLocale The locale used to pick the sentence translation.
+ * @returns The sentence matching cards sorted by due date.
+ */
+export async function fetchSentenceMatchingWords(
+  userId: string,
+  currentLocale: string
+): Promise<MatchingWord[]> {
+  const res = await fetch(`/api/v1/users/sentences/${userId}`);
+  const data = await res.json();
+
+  const matching = data.sentences.sort((a: Sentence, b: Sentence) => {
+    return dayjs(a.due).isAfter(dayjs(b.due)) ? 1 : -1;
+  });
+
+  const words: MatchingWord[] = [];
+  for (const article of matching) {
+    words.push({
+      text: article?.sentence,
+      match:
+        article?.translation?.[currentLocale] ??
+        article?.translation?.["th"],
+      timepoint: article?.timepoint,
+      endTimepoint: article?.endTimepoint,
+      articleId: article?.articleId,
+      audioUrl: article?.audioUrl,
+    });
+  }
+  return words;
+}
+
+/**
+ * Fetches saved vocabulary words and maps them to matching cards.
+ * @param userId The student user id.
+ * @param currentLocale The locale used to pick the word definition.
+ * @returns The vocabulary matching cards sorted by due date.
+ */
+export async function fetchVocabularyMatchingWords(
+  userId: string,
+  currentLocale: string
+): Promise<MatchingWord[]> {
+  const res = await fetch(`/api/v1/users/wordlist/${userId}`);
+  const data = await res.json();
+
+  const matching = data.word.sort((a: Word, b: Word) => {
+    return dayjs(a.due).isAfter(dayjs(b.due)) ? 1 : -1;
+  });
+
+  const words: MatchingWord[] = [];
+  for (const item of matching) {
+    words.push({
+      text: item?.word?.vocabulary,
+      match: item?.word?.definition?.[currentLocale],
+    });
+  }
+  return words;
+}
+
+export default function Matching({
+  userId,
+  fetchWords = fetchSentenceMatchingWords,
+  description,
+  headerClassName,
+  activityType = ActivityType.SentenceMatching,
+  xpEarned = UserXpEarned.Sentence_Matching,
+  showAudio = true,
+}: MatchingProps) {
   const t = useScopedI18n("pages.student.practicePage");
   const tUpdateScore = useScopedI18n(
     "pages.student.practicePage.flashcardPractice"
   );
   const currentLocale = useCurrentLocale();
   const router = useRouter();
-  const [articleMatching, setArticleMatching] = useState<Word[]>([]);
-  const [selectedCard, setSelectedCard] = useState<Word | null>(null);
+  const [articleMatching, setArticleMatching] = useState<MatchingWord[]>([]);
+  const [selectedCard, setSelectedCard] = useState<MatchingWord | null>(null);
   const [loadState, setLoadState] = useState<"loading" | "error" | "done">(
     "loading"
   );
 
   const [correctMatches, setCorrectMatches] = useState<string[]>([]);
-  const [words, setWords] = useState<Word[]>([]);
+  const [words, setWords] = useState<MatchingWord[]>([]);
   const [animateShake, setAnimateShake] = useState<string>("");
 
   useEffect(() => {
-    getUserSentenceSaved();
+    getUserWordsSaved();
   }, []);
 
   useEffect(() => {
@@ -84,12 +162,11 @@ export default function Matching({ userId }: Props) {
             {
               method: "POST",
               body: JSON.stringify({
-                activityType: ActivityType.SentenceMatching,
+                activityType,
                 activityStatus: ActivityStatus.Completed,
-                xpEarned: UserXpEarned.Sentence_Matching,
+                xpEarned,
                 details: {
-                  cefr_level: levelCalculation(UserXpEarned.Sentence_Matching)
-                    .cefrLevel,
+                  cefr_level: levelCalculation(xpEarned).cefrLevel,
                 },
               }),
             }
@@ -100,7 +177,7 @@ export default function Matching({ userId }: Props) {
               title: t("toast.success"),
               imgSrc: true,
               description: tUpdateScore("yourXp", {
-                xp: UserXpEarned.Sentence_Matching,
+                xp: xpEarned,
               }),
             });
           }
@@ -116,31 +193,10 @@ export default function Matching({ userId }: Props) {
     updateScoreCorrectMatches();
   }, [correctMatches]);
 
-  const getUserSentenceSaved = async () => {
+  const getUserWordsSaved = async () => {
     try {
       setLoadState("loading");
-      const res = await fetch(`/api/v1/users/sentences/${userId}`);
-      const data = await res.json();
-
-      // step 1 : sort Article sentence: ID and SN due date expired
-      const matching = data.sentences.sort((a: Sentence, b: Sentence) => {
-        return dayjs(a.due).isAfter(dayjs(b.due)) ? 1 : -1;
-      });
-
-      const initialWords: Word[] = [];
-
-      for (const article of matching) {
-        initialWords.push({
-          text: article?.sentence,
-          match:
-            article?.translation?.[currentLocale] ??
-            article?.translation?.["th"],
-          timepoint: article?.timepoint,
-          endTimepoint: article?.endTimepoint,
-          articleId: article?.articleId,
-          audioUrl: article?.audioUrl,
-        });
-      }
+      const initialWords = await fetchWords(userId, currentLocale);
       setArticleMatching(
         initialWords.length > 5 ? initialWords.slice(0, 5) : initialWords
       );
@@ -151,8 +207,8 @@ export default function Matching({ userId }: Props) {
     }
   };
 
-  const shuffleWords = (words: Word[]): Word[] => {
-    const rawData: Word[] = JSON.parse(JSON.stringify(words));
+  const shuffleWords = (words: MatchingWord[]): MatchingWord[] => {
+    const rawData: MatchingWord[] = JSON.parse(JSON.stringify(words));
     return rawData
       .map((word) => ({ ...word, sort: Math.random() }))
       .sort((a, b) => a.sort - b.sort)
@@ -166,7 +222,7 @@ export default function Matching({ userId }: Props) {
       }));
   };
 
-  const handleCardClick = async (word: Word) => {
+  const handleCardClick = async (word: MatchingWord) => {
     if (selectedCard === null) {
       setSelectedCard(word);
     } else if (selectedCard.text === word.match) {
@@ -180,7 +236,7 @@ export default function Matching({ userId }: Props) {
     }
   };
 
-  const getCardStyle = (word: Word) => {
+  const getCardStyle = (word: MatchingWord) => {
     const styles = {
       backgroundColor: selectedCard?.text === word.text ? "#edefff" : "", // Change to a light yellow on wrong select
       border:
@@ -194,10 +250,12 @@ export default function Matching({ userId }: Props) {
 
   return (
     <>
-      <Header
-        heading={t("matchingPractice.matching")}
-        text={t("matchingPractice.matchingDescription")}
-      />
+      <div className={headerClassName}>
+        <Header
+          heading={t("matchingPractice.matching")}
+          text={description ?? t("matchingPractice.matchingDescription")}
+        />
+      </div>
       {correctMatches.length !== 10 && (
         <div className="flex">
           <div className="w-1/2">
@@ -257,14 +315,16 @@ export default function Matching({ userId }: Props) {
                       style={getCardStyle(word)}
                     >
                       <div className="mb-5">
-                        {new RegExp(/^[a-zA-Z\s,.']+$/).test(word.text) && (
-                          <AudioButton
-                            key={word?.text}
-                            audioUrl={word?.audioUrl}
-                            startTimestamp={word?.timepoint}
-                            endTimestamp={word?.endTimepoint}
-                          />
-                        )}
+                        {showAudio &&
+                          word.audioUrl &&
+                          new RegExp(/^[a-zA-Z\s,.']+$/).test(word.text) && (
+                            <AudioButton
+                              key={word?.text}
+                              audioUrl={word?.audioUrl}
+                              startTimestamp={word?.timepoint}
+                              endTimestamp={word?.endTimepoint}
+                            />
+                          )}
                       </div>
                       <div onClick={() => handleCardClick(word)}>
                         {word.text}
