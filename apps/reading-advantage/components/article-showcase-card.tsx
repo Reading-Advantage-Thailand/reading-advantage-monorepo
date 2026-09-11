@@ -54,7 +54,22 @@ const ArticleShowcaseCard = React.forwardRef<HTMLDivElement, Props>(
       if (!locale || locale === "en") {
         return;
       }
-      const data = await getTranslateSentence(articleId, locale);
+
+      // Normalize the locale key to match the keys stored in the database.
+      const localeTarget =
+        locale === "cn" ? "zh-CN" : locale === "tw" ? "zh-TW" : locale;
+
+      // Use the cached translation from the article payload when present.
+      const cachedSummary = (
+        article.translatedSummary as Record<string, string[]> | null
+      )?.[localeTarget];
+
+      if (cachedSummary && cachedSummary.length > 0) {
+        setSummarySentence(cachedSummary);
+        return;
+      }
+
+      const data = await getTranslateSentence(articleId, localeTarget);
 
       setSummarySentence(data.translated_sentences);
     }

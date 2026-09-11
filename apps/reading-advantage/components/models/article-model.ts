@@ -19,6 +19,7 @@ export interface ArticleShowcase {
   author?: { authorId: string | null; name: string | null };
   averageRating?: number;
   rating?: number;
+  translatedSummary?: Record<string, string[]> | null;
 }
 
 export interface StoryChapter {
