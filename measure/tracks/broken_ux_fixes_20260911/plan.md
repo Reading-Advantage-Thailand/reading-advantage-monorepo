@@ -8,10 +8,10 @@ All file paths are relative to `apps/reading-advantage/`.
 
 These fixes change no data contracts. This phase pins the invariants as greppable checks.
 
-- [ ] Task: Define fix invariants as automated checks
-  - [ ] Write `__test__/broken-ux-fixes.test.ts` with static source assertions: no `captoliza` in `components/`, no `/teacher/class-detail/` in source, no hardcoded `/th/teacher` redirects, no `import { log } from "console"`, no `act` import in `student-assignment-dashboard.tsx`, `"use client"` present in `matching.tsx` and `tab-matching-words.tsx`.
-  - [ ] Confirm the new test file fails (Red) against the current source.
-  - [ ] Owner decision record for FR-10 games auth policy: note the chosen policy in this plan before implementation.
+- [x] Task: Define fix invariants as automated checks `8174d49`
+  - [x] Write `__test__/broken-ux-fixes.test.ts` with static source assertions: no `captoliza` in `components/`, no `/teacher/class-detail/` in source, no hardcoded `/th/teacher` redirects, no `import { log } from "console"`, no `act` import in `student-assignment-dashboard.tsx`, `"use client"` present in `matching.tsx` and `tab-matching-words.tsx`.
+  - [x] Confirm the new test file fails (Red) against the current source. (Red: 12 failed, 1 passed; Green: 13/13)
+  - [ ] Owner decision record for FR-10 games auth policy: note the chosen policy in this plan before implementation. **PENDING owner decision**
 
 ## Phase 2: Test
 
@@ -23,17 +23,17 @@ These fixes change no data contracts. This phase pins the invariants as greppabl
 
 ## Phase 3: Implement
 
-- [ ] Task: FR-1 genre link fix in `student-dashboard-content.tsx`
-- [ ] Task: FR-2 remove `captoliza` from both history tables
-- [ ] Task: FR-3 teacher 404 links in `class-summary-table.tsx` and `class-detail-dashboard.tsx`
-- [ ] Task: FR-4 locale-relative redirects and relative `router.push` in teacher pages
-- [ ] Task: FR-5 restore `"use client"` in `matching.tsx` and `tab-matching-words.tsx`
-- [ ] Task: FR-6 remove `act` import in `student-assignment-dashboard.tsx`
-- [ ] Task: FR-7 `speechSynthesis.cancel()` in `flashcard-game.tsx`
-- [ ] Task: FR-8 fix `max-w-[400px]]` and delete `console` imports
-- [ ] Task: FR-9 chatbot history preservation and `" : "` prefix removal
-- [ ] Task: FR-10 enforce the owner-approved games auth policy
-- [ ] Task: Run new tests until green; run `pnpm turbo run test --filter=reading-advantage` and `check-types`
+- [x] Task: FR-1 genre link fix in `student-dashboard-content.tsx` `61ce729`
+- [x] Task: FR-2 remove `captoliza` from both history tables `eb57371` (deviation: 10 components had 20 occurrences; all removed per AC-2)
+- [x] Task: FR-3 teacher 404 links in `class-summary-table.tsx` and `class-detail-dashboard.tsx` `0b4945d` (deviation: real path is `components/dashboard/class-summary-table.tsx`)
+- [x] Task: FR-4 locale-relative redirects and relative `router.push` in teacher pages `5ef0aff` (deviation: 11 `NEXT_PUBLIC_BASE_URL` prefixes removed across `components/teacher/`)
+- [x] Task: FR-5 restore `"use client"` in `matching.tsx` and `tab-matching-words.tsx` `b171457`
+- [x] Task: FR-6 remove `act` import in `student-assignment-dashboard.tsx` `101a0be`
+- [x] Task: FR-7 `speechSynthesis.cancel()` in `flashcard-game.tsx` `b65503f`
+- [x] Task: FR-8 fix `max-w-[400px]]` and delete `console` imports `7708d3c`
+- [x] Task: FR-9 chatbot history preservation and `" : "` prefix removal `2a6c13e`
+- [ ] Task: FR-10 enforce the owner-approved games auth policy **BLOCKED on owner decision**
+- [x] Task: Run new tests until green; run test suite and `check-types` (13/13 new tests; 122/124 suites pass, 2 pre-existing APK failures; 17 pre-existing tsc errors in unrelated files)
 - [ ] Task: Measure - User Manual Verification 'Phase 3: Implement' (Protocol in workflow.md)
 
 ## Phase 4: Generate Docs & Doctor
