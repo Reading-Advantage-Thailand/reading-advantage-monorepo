@@ -14,6 +14,7 @@ export default function useAudio(sentenceList: Sentence[]) {
     const [isPlaying, setIsPlaying] = useState(false);
     const [currentAudioIndex, setCurrentAudioIndex] = useState(0);
     const [speed, setSpeed] = useState<string>("1");
+    const speedRef = useRef("1");
     const [selectedIndex, setSelectedIndex] = useState(-1);
     const currentTimeRef = useRef(0);
     const [selectedSentence, setSelectedSentence] = useState<number>(-1);
@@ -97,6 +98,10 @@ export default function useAudio(sentenceList: Sentence[]) {
 
     const handleSpeedTime = (value: string) => {
         setSpeed(value);
+        speedRef.current = value;
+        if (audioRef.current) {
+            audioRef.current.playbackRate = Number(value);
+        }
     };
 
     const handleSentenceClick = (startTime: number, audioIndex: number) => {
@@ -180,7 +185,7 @@ export default function useAudio(sentenceList: Sentence[]) {
             const handleLoadedMetadata = () => {
                 audio.currentTime = sentenceList[currentAudioIndex].startTime;
 
-                audio.playbackRate = Number(speed);
+                audio.playbackRate = Number(speedRef.current);
 
                 if (isPlaying) {
                     audio.play().catch((error) => {
@@ -197,7 +202,7 @@ export default function useAudio(sentenceList: Sentence[]) {
                 audio.pause();
             };
         }
-    }, [currentAudioIndex, speed]);
+    }, [currentAudioIndex]);
 
     return {
         handlePlayPause,
