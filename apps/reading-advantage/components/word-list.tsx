@@ -293,7 +293,7 @@ export default function WordList({
           });
         }
       }
-    } catch (error: any) {
+    } catch {
       toast({
         title: "Something went wrong.",
         description: "Your word was not saved. Please try again.",

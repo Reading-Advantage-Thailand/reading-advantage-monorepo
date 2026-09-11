@@ -28,13 +28,6 @@ import {
 import { useClassroomActions } from "@/hooks/teacher/useClassroomActions";
 import ClassroomStudentTable from "../classroom-student-table";
 
-type StudentData = {
-  id: string;
-  display_name: string;
-  email: string;
-  last_activity: string;
-};
-
 interface Classes {
   classroomName: string;
   classCode: string;
@@ -59,7 +52,6 @@ interface Classes {
 }
 
 export default function ClassRoster() {
-  const t = useScopedI18n("components.articleRecordsTable");
   const tr = useScopedI18n("components.classRoster");
   const ts = useScopedI18n("components.myStudent");
   const router = useRouter();
