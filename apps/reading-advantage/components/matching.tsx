@@ -46,6 +46,9 @@ export default function Matching({ userId }: Props) {
   const router = useRouter();
   const [articleMatching, setArticleMatching] = useState<Word[]>([]);
   const [selectedCard, setSelectedCard] = useState<Word | null>(null);
+  const [loadState, setLoadState] = useState<"loading" | "error" | "done">(
+    "loading"
+  );
 
   const [correctMatches, setCorrectMatches] = useState<string[]>([]);
   const [words, setWords] = useState<Word[]>([]);
@@ -115,6 +118,7 @@ export default function Matching({ userId }: Props) {
 
   const getUserSentenceSaved = async () => {
     try {
+      setLoadState("loading");
       const res = await fetch(`/api/v1/users/sentences/${userId}`);
       const data = await res.json();
 
@@ -140,8 +144,10 @@ export default function Matching({ userId }: Props) {
       setArticleMatching(
         initialWords.length > 5 ? initialWords.slice(0, 5) : initialWords
       );
+      setLoadState("done");
     } catch (error) {
       console.error(error);
+      setLoadState("error");
     }
   };
 
@@ -216,7 +222,7 @@ export default function Matching({ userId }: Props) {
       )}
 
       <div className="mt-10">
-        {articleMatching.length === 0 ? (
+        {loadState === "loading" ? (
           <>
             <div className="grid w-full gap-10">
               <div className="mx-auto w-[800px] space-y-6">
@@ -227,6 +233,12 @@ export default function Matching({ userId }: Props) {
               </div>
             </div>
           </>
+        ) : loadState === "error" ? (
+          <div className="flex flex-wrap justify-center rounded-2xl border-2 border-gray-200 p-4 mt-20">
+            <div className="text-rose-600 dark:text-rose-300 font-bold">
+              {t("toast.error")}
+            </div>
+          </div>
         ) : (
           <>
             {articleMatching.length == 5 ? (
