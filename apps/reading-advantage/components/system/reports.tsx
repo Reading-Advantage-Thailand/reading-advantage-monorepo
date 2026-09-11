@@ -121,7 +121,8 @@ function SystemReports({}: SystemReportsProps) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [isClient, setIsClient] = React.useState(false);
   const [isMobile, setIsMobile] = React.useState(false);
-  const [isLoading, setIsLoading] = React.useState(true);
+  const [schoolXpLoaded, setSchoolXpLoaded] = React.useState(false);
+  const [licensesLoaded, setLicensesLoaded] = React.useState(false);
   const [schoolXpData, setSchoolXpData] = React.useState<SchoolXpData[]>([]);
   const [licensesData, setLicensesData] = React.useState<LicenseData[]>([]);
   const [selectedPeriod, setSelectedPeriod] = React.useState<string>("all");
@@ -229,6 +230,7 @@ function SystemReports({}: SystemReportsProps) {
         setSchoolXpData([]);
       } finally {
         setIsChartLoading(false);
+        setSchoolXpLoaded(true);
       }
     },
     []
@@ -252,6 +254,8 @@ function SystemReports({}: SystemReportsProps) {
     } catch (error) {
       console.error("Error fetching licenses data:", error);
       setLicensesData([]);
+    } finally {
+      setLicensesLoaded(true);
     }
   }, []);
 
@@ -287,11 +291,7 @@ function SystemReports({}: SystemReportsProps) {
     fetchLicensesData();
   }, [fetchLicensesData]);
 
-  React.useEffect(() => {
-    if (schoolXpData.length >= 0 && licensesData.length >= 0) {
-      setIsLoading(false);
-    }
-  }, [schoolXpData, licensesData]);
+  const isLoading = !schoolXpLoaded || !licensesLoaded;
 
   const formatXP = (xp: number) => {
     if (xp >= 1000000) {
