@@ -128,12 +128,7 @@ export default function useAudio(
         }
     };
 
-    const handleAudioEnded = () => {
-        if (!hasTimepoints) {
-            // Fallback timing mode: sentences advance via the timeupdate check.
-            setIsPlaying(false);
-            return;
-        }
+    const advanceToNext = () => {
         if (currentAudioIndex < sentenceList.length - 1) {
             const nextAudioIndex = currentAudioIndex + 1;
             setCurrentAudioIndex(nextAudioIndex);
@@ -142,6 +137,15 @@ export default function useAudio(
             setIsPlaying(false);
             setCurrentAudioIndex(0);
         }
+    };
+
+    const handleAudioEnded = () => {
+        if (!hasTimepoints) {
+            // Fallback timing mode: sentences advance via the timeupdate check.
+            setIsPlaying(false);
+            return;
+        }
+        advanceToNext();
     };
 
     const handleTimeUpdate = () => {
@@ -155,7 +159,7 @@ export default function useAudio(
                     currentSentence &&
                     audioRef.current.currentTime >= currentSentence.endTime
                 ) {
-                    handleAudioEnded();
+                    advanceToNext();
                 }
             }
         }

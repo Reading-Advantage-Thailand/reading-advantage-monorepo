@@ -215,27 +215,30 @@ describe("useAudio playFromIndex", () => {
 });
 
 describe("useAudioSegment", () => {
-  function renderSegment(url: string) {
-    const rendered = renderHook(() => useAudioSegment(url, 1, 3));
+  function renderSegment() {
+    const rendered = renderHook(
+      ({ url }: { url: string }) => useAudioSegment(url, 1, 3),
+      { initialProps: { url: "a.mp3" } }
+    );
     const fake = createFakeAudio();
     act(() => {
       (rendered.result.current.audioRef as React.MutableRefObject<HTMLAudioElement | null>).current =
         fake as unknown as HTMLAudioElement;
     });
-    // Re-run the effect with the audio element attached.
-    rendered.rerender();
+    // Change the URL so the effect re-runs with the audio element attached.
+    rendered.rerender({ url: "b.mp3" });
     return { ...rendered, fake };
   }
 
   it("uses timeupdate, not setInterval", () => {
     const setIntervalSpy = jest.spyOn(global, "setInterval");
-    renderSegment("https://x/clip.mp3");
+    renderSegment();
     expect(setIntervalSpy).not.toHaveBeenCalled();
     setIntervalSpy.mockRestore();
   });
 
   it("stops at the segment end on timeupdate", () => {
-    const { result, fake } = renderSegment("https://x/clip.mp3");
+    const { result, fake } = renderSegment();
 
     act(() => {
       result.current.toggle();
@@ -250,7 +253,7 @@ describe("useAudioSegment", () => {
   });
 
   it("pause stops the clip instead of restarting it", () => {
-    const { result, fake } = renderSegment("https://x/clip.mp3");
+    const { result, fake } = renderSegment();
 
     act(() => {
       result.current.toggle();
@@ -267,7 +270,7 @@ describe("useAudioSegment", () => {
   });
 
   it("removes listeners and pauses audio on unmount", () => {
-    const { unmount, fake } = renderSegment("https://x/clip.mp3");
+    const { unmount, fake } = renderSegment();
 
     unmount();
 
