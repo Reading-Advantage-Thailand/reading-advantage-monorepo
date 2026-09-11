@@ -6,6 +6,7 @@ import { recordAuditEventSafe } from "@/server/utils/audit-recorder";
 import dayjs from "dayjs";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import isoWeek from "dayjs/plugin/isoWeek";
+import { getStudentClassroomId } from "@/server/services/classroom-service";
 import {
   db,
   eq,
@@ -525,13 +526,7 @@ export async function getStudentClassroom(req: ExtendedNextRequest) {
     const user = await getCurrentUser();
     if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-    const rows = await db
-      .select({ classroomId: classroomStudents.classroomId })
-      .from(classroomStudents)
-      .where(eq(classroomStudents.studentId, user.id))
-      .limit(1);
-
-    const classroomId = rows.length > 0 ? rows[0].classroomId : null;
+    const classroomId = await getStudentClassroomId(user.id);
     return NextResponse.json({ message: "success", data: classroomId }, { status: 200 });
   } catch (error) {
     console.error(error);

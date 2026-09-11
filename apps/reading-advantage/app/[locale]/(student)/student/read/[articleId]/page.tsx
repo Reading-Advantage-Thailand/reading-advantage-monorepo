@@ -4,9 +4,9 @@ import { isAtLeastTeacher } from "@/lib/roles";
 import { redirect } from "next/navigation";
 import React from "react";
 import { getScopedI18n } from "@/locales/server";
-import { fetchData } from "@/utils/fetch-data";
 import CustomError from "./custom-error";
 import { Article } from "@/components/models/article-model";
+import { getArticleForReader } from "@/server/services/article-service";
 import { db, and, eq } from "@reading-advantage/db";
 import { userActivity } from "@reading-advantage/db/schema";
 import WordList from "@/components/word-list";
@@ -27,8 +27,8 @@ export const metadata = {
   description: "Article",
 };
 
-async function getArticle(articleId: string) {
-  return fetchData(`/api/v1/articles/${articleId}`);
+async function getArticle(articleId: string, userId: string, userLevel?: number | null) {
+  return getArticleForReader(articleId, userId, userLevel);
 }
 
 /** ดึง rating เก่าของ user สำหรับบทความนี้โดยตรงจาก DB (server-side) */
@@ -62,33 +62,37 @@ export default async function ArticleQuizPage({
   const { articleId } = await params;
 
   // Parallelize unavoidable server fetches
-  // user ถูก resolve ก่อนเพื่อใช้ userId ใน getArticleRating
-  const [t, user, articleResponse] = await Promise.all([
+  // user ถูก resolve ก่อนเพื่อใช้ userId ใน getArticleRating และ getArticle
+  const [t, user] = await Promise.all([
     getScopedI18n("pages.student.readPage.article"),
     getCurrentUser(),
-    getArticle(articleId),
   ]);
 
   if (!user) return redirect("/auth/signin");
 
-  // Resolve rating เก่าที่ server แทนที่จะให้ client fetch activitylog ทั้งก้อน
-  const initialRating = await getArticleRating(articleId, user.id);
+  const [articleResponse, initialRating] = await Promise.all([
+    getArticle(articleId, user.id, user.level),
+    // Resolve rating เก่าที่ server แทนที่จะให้ client fetch activitylog ทั้งก้อน
+    getArticleRating(articleId, user.id),
+  ]);
 
   // guard ถูกย้ายขึ้นไปอยู่หลัง Promise.all แล้ว
 
   const isAboveTeacher = (role: string) =>
     role.includes("ADMIN") || role.includes("SYSTEM");
 
-  if (articleResponse.message)
+  if (!articleResponse.ok)
     return (
       <CustomError message={articleResponse.message} resp={articleResponse} />
     );
+
+  const article = articleResponse.article as unknown as Article;
 
   return (
     <>
       <div className="md:flex md:flex-row md:gap-3 md:mb-5">
         <ArticleCard
-          article={articleResponse.article}
+          article={article}
           articleId={articleId}
           userId={user.id}
           initialRating={initialRating}
@@ -99,22 +103,22 @@ export default async function ArticleQuizPage({
             <div className="flex gap-2 justify-center items-center flex-wrap bg-white/5 p-3 rounded-lg border border-white/10">
               <PrintArticle
                 articleId={articleId}
-                article={articleResponse.article}
+                article={article}
               />
               {isAboveTeacher(user.role) && (
                 <ExportWorkbookButton
                   articleId={articleId}
-                  article={articleResponse.article}
+                  article={article}
                 />
               )}
               {isAboveTeacher(user.role) && (
                 <ArticleActions
-                  article={articleResponse.article}
+                  article={article}
                   articleId={articleId}
                 />
               )}
               <AssignDialog
-                article={articleResponse.article}
+                article={article}
                 articleId={articleId}
                 userId={user.id}
               />
@@ -126,13 +130,13 @@ export default async function ArticleQuizPage({
             <WordList
               dataSource={{
                 type: "article",
-                article: articleResponse.article,
+                article: article,
                 articleId,
               }}
               userId={user.id}
             />
             <ArticleLesson
-              article={articleResponse.article}
+              article={article}
               articleId={articleId}
               userId={user.id}
             />
@@ -142,8 +146,8 @@ export default async function ArticleQuizPage({
             <MCQuestionCard
               userId={user.id}
               articleId={articleId}
-              articleTitle={articleResponse.article.title}
-              articleLevel={articleResponse.article.ra_level}
+              articleTitle={article.title}
+              articleLevel={article.ra_level}
               page="article"
             />
           </div>
@@ -151,8 +155,8 @@ export default async function ArticleQuizPage({
             <SAQuestionCard
               userId={user.id}
               articleId={articleId}
-              articleTitle={articleResponse.article.title}
-              articleLevel={articleResponse.article.ra_level}
+              articleTitle={article.title}
+              articleLevel={article.ra_level}
               page="article"
             />
           </div>
@@ -161,8 +165,8 @@ export default async function ArticleQuizPage({
               userId={user.id}
               articleId={articleId}
               userLevel={user.level ?? 0}
-              articleTitle={articleResponse.article.title}
-              articleLevel={articleResponse.article.ra_level}
+              articleTitle={article.title}
+              articleLevel={article.ra_level}
               userLicenseLevel={
                 user.license_level === "EXPIRED"
                   ? undefined
@@ -173,7 +177,7 @@ export default async function ArticleQuizPage({
         </div>
       </div>
       <ChatBotFloatingChatButton
-        article={articleResponse?.article as Article}
+        article={article as Article}
       />
     </>
   );

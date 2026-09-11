@@ -21,6 +21,7 @@ import {
   sql,
 } from "@reading-advantage/db";
 import { articles, users, userActivity } from "@reading-advantage/db/schema";
+import { getArticleForReader } from "@/server/services/article-service";
 
 // Import genre data
 import genreData from "@/data/type-genre.json";
@@ -303,108 +304,18 @@ export async function getArticleById(
 ) {
   try {
     const { article_id } = await ctx.params;
-    const userId = req.session?.user.id as string;
-
-    const [article] = await db
-      .select()
-      .from(articles)
-      .where(eq(articles.id, article_id))
-      .limit(1);
-
-    if (!article) {
-      return NextResponse.json(
-        { message: "Article not found" },
-        { status: 404 },
-      );
-    }
-
-    // Check if user has read the article and create activity record atomically
-    // Wrap in try-catch to handle race conditions when multiple requests arrive simultaneously
-    try {
-      await db
-        .insert(userActivity)
-        .values({
-          userId,
-          activityType: "ARTICLE_READ",
-          targetId: article_id,
-          completed: false,
-          details: {
-            articleTitle: article.title,
-            level: req.session?.user.level,
-          },
-        })
-        .onConflictDoNothing();
-    } catch (error: any) {
-      console.error("Error creating user activity:", error);
-      // Don't fail the request, just log the error
-    }
-
-    // Validate article data
-    if (
-      !article ||
-      !article.summary ||
-      !article.imageDescription ||
-      !article.passage ||
-      !article.createdAt ||
-      (article.rating !== 0 && !article.rating) ||
-      !article.type ||
-      !article.title ||
-      !article.cefrLevel ||
-      !article.raLevel ||
-      !article.subGenre ||
-      !article.genre ||
-      !article.id
-    ) {
-      return NextResponse.json(
-        {
-          message: "Article fields are not correct",
-          invalids: {
-            summary: !article.summary,
-            image_description: !article.imageDescription,
-            passage: !article.passage,
-            created_at: !article.createdAt,
-            average_rating: !article.rating && article.rating !== 0,
-            type: !article.type,
-            title: !article.title,
-            cefr_level: !article.cefrLevel,
-            ra_level: !article.raLevel,
-            subgenre: !article.subGenre,
-            genre: !article.genre,
-            id: !article.id,
-          },
-        },
-        { status: 400 },
-      );
-    }
-
-    const articleSentences = article.sentences;
-
-    const formattedArticle = {
-      id: article.id,
-      type: article.type,
-      genre: article.genre,
-      subgenre: article.subGenre,
-      title: article.title,
-      summary: article.summary,
-      passage: article.passage,
-      image_description: article.imageDescription,
-      cefr_level: article.cefrLevel,
-      ra_level: article.raLevel,
-      average_rating: article.rating || 0,
-      audio_url: article.audioUrl,
-      created_at: article.createdAt,
-      timepoints: articleSentences || {},
-      translatedPassage: article.translatedPassage,
-      translatedSummary: article.translatedSummary,
-      read_count: 0,
-    };
-
-    return NextResponse.json(
-      {
-        article: formattedArticle,
-      },
-      { status: 200 },
+    const result = await getArticleForReader(
+      article_id,
+      req.session?.user.id as string,
+      req.session?.user.level,
     );
+
+    if (!result.ok) {
+      const { invalids, ...rest } = result;
+      return NextResponse.json(rest, { status: result.status });
+    }
+
+    return NextResponse.json({ article: result.article }, { status: 200 });
   } catch (err) {
     console.error("Error getting documents", err);
     return NextResponse.json(

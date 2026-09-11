@@ -3,21 +3,16 @@ import { getCurrentUser } from "@/lib/session";
 import { redirect } from "next/navigation";
 import React from "react";
 import { getScopedI18n } from "@/locales/server";
-import { fetchData } from "@/utils/fetch-data";
 import CustomError from "./custom-error";
 import ChatBotFloatingChatButton from "@/components/chatbot-floating-button";
 import { Article } from "@/components/models/article-model";
-import { headers } from "next/headers";
-import { env } from "@/lib/env";
+import { getArticleForReader } from "@/server/services/article-service";
+import { getStudentClassroomId } from "@/server/services/classroom-service";
 
 export const metadata = {
   title: "Lesson",
   description: "Interactive Reading Lesson",
 };
-
-async function getArticle(articleId: string) {
-  return fetchData(`/api/v1/articles/${articleId}`);
-}
 
 export default async function LessonPage({
   params,
@@ -30,37 +25,27 @@ export default async function LessonPage({
   const user = await getCurrentUser();
   if (!user) return redirect("/auth/signin");
 
-  const articleResponse = await getArticle(articleId);
+  const articleResponse = await getArticleForReader(articleId, user.id, user.level);
 
-  if (articleResponse.message)
+  if (!articleResponse.ok)
     return (
       <CustomError message={articleResponse.message} resp={articleResponse} />
     );
 
-  const requestHeaders = await headers();
-  const response = await fetch(
-    `${env.NEXT_PUBLIC_BASE_URL}/api/v1/classroom/students/${user.id}`,
-    {
-      method: "GET",
-      headers: requestHeaders,
-    }
-  );
-  const data = await response.json();
-  const classroomId = data.data;
+  const classroomId = await getStudentClassroomId(user.id);
+  const article = articleResponse.article as unknown as Article;
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-slate-900 dark:to-[hsl(222.2_90%_4.9%)] to-20% rounded-xl">
       <div className="container mx-auto px-4 py-6 max-w-7xl">
         <div className="relative">
           <LessonCard
-            article={articleResponse.article}
+            article={article}
             articleId={articleId}
             userId={user.id}
-            classroomId={classroomId}
+            classroomId={classroomId ?? undefined}
           />
-          <ChatBotFloatingChatButton
-            article={articleResponse?.article as Article}
-          />
+          <ChatBotFloatingChatButton article={article} />
         </div>
       </div>
     </div>
