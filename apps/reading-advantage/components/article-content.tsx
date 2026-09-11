@@ -1,4 +1,8 @@
 "use client";
+import {
+  getGcsTtsAudioUrl,
+  getGcsWordAudioUrl,
+} from "@/lib/gcs-url";
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import { Article } from "./models/article-model";
 import { cn, splitTextIntoSentences } from "@/lib/utils";
@@ -31,6 +35,10 @@ import {
 } from "./ui/select";
 import useAudio from "@/hooks/use-audio";
 import {
+  getTranslateSentence,
+  normalizeTranslateLocale,
+} from "@/lib/translate-sentence";
+import {
   SENTENCE_BASE_CLASS,
   SENTENCE_HOVER_CLASS,
   SENTENCE_PLAYING_CLASS,
@@ -51,31 +59,6 @@ type Sentence = {
   endTime: number;
   audioUrl: string;
 };
-
-async function getTranslateSentence(
-  articleId: string,
-  targetLanguage: string,
-): Promise<{ message: string; translated_sentences: string[] }> {
-  try {
-    const res = await fetch(`/api/v1/assistant/translate/${articleId}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ type: "passage", targetLanguage }),
-    });
-
-    if (!res.ok) {
-      throw new Error(`HTTP error! status: ${res.status}`);
-    }
-
-    const data = await res.json();
-    return data;
-  } catch (error) {
-    console.error("Error translating sentences:", error);
-    return { message: "error", translated_sentences: [] };
-  }
-}
 
 export default function ArticleContent({
   article,
@@ -106,8 +89,8 @@ export default function ArticleContent({
 
             // Generate the correct audio URL with cache busting
             const audioUrl = timepoint.file
-              ? `https://storage.googleapis.com/artifacts.reading-advantage.appspot.com/tts/${timepoint.file}?v=${cacheKey}`
-              : `https://storage.googleapis.com/artifacts.reading-advantage.appspot.com/tts/${article.id}.mp3?v=${cacheKey}`;
+              ? getGcsTtsAudioUrl(timepoint.file, cacheKey)
+              : getGcsTtsAudioUrl(`${article.id}.mp3`, cacheKey);
 
             // Use timepoint.sentences if available (new format), otherwise use split sentences (old format)
             const sentenceText = timepoint.sentences || sentences[index] || "";
@@ -125,7 +108,7 @@ export default function ArticleContent({
             index,
             startTime: index * 2,
             endTime: (index + 1) * 2,
-            audioUrl: `https://storage.googleapis.com/artifacts.reading-advantage.appspot.com/tts/${article.id}.mp3?v=${cacheKey}`,
+            audioUrl: getGcsTtsAudioUrl(`${article.id}.mp3`, cacheKey),
           })),
     [article.timepoints, article.id, sentences, cacheKey],
   );
@@ -227,7 +210,11 @@ export default function ArticleContent({
 
         // Fetch translation if not cached
         try {
-          const response = await getTranslateSentence(article.id, lang);
+          const response = await getTranslateSentence(
+            `/api/v1/assistant/translate/${article.id}`,
+            lang,
+            { body: { type: "passage" } },
+          );
           if (response.message !== "error" && response.translated_sentences) {
             translationObj[lang] =
               response.translated_sentences[targetIndex];
@@ -299,16 +286,7 @@ export default function ArticleContent({
 
   async function handleTranslateSentence() {
     setLoading(true);
-    type ExtendedLocale = "th" | "cn" | "tw" | "vi" | "zh-CN" | "zh-TW";
-    let targetLanguage: ExtendedLocale = locale as ExtendedLocale;
-    switch (locale) {
-      case "cn":
-        targetLanguage = "zh-CN";
-        break;
-      case "tw":
-        targetLanguage = "zh-TW";
-        break;
-    }
+    const targetLanguage = normalizeTranslateLocale(locale);
 
     const translatedPassage = article.translatedPassage as Record<
       string,
@@ -322,7 +300,11 @@ export default function ArticleContent({
       setLoading(false);
       return;
     }
-    const response = await getTranslateSentence(article.id, targetLanguage);
+    const response = await getTranslateSentence(
+      `/api/v1/assistant/translate/${article.id}`,
+      targetLanguage,
+      { body: { type: "passage" } },
+    );
     if (response.message === "error") {
       setIsTranslate(false);
       setIsTranslateOpen(false);

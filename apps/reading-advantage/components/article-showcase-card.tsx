@@ -5,36 +5,15 @@ import { Rating } from "@mui/material";
 import { ArticleShowcase } from "./models/article-model";
 import { useCurrentLocale, useScopedI18n } from "@/locales/client";
 import { usePathname } from "next/navigation";
+import {
+  getTranslateSentence,
+  normalizeTranslateLocale,
+} from "@/lib/translate-sentence";
 
 type Props = {
   article: ArticleShowcase;
   userId?: string;
 };
-
-async function getTranslateSentence(
-  articleId: string,
-  targetLanguage: string
-): Promise<{ message: string; translated_sentences: string[] }> {
-  try {
-    const res = await fetch(`/api/v1/articles/${articleId}/translate`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ targetLanguage }),
-    });
-
-    if (!res.ok) {
-      throw new Error(`HTTP error! status: ${res.status}`);
-    }
-
-    const data = await res.json();
-    return data;
-  } catch (error) {
-    console.error("Translation error:", error);
-    return { message: "error", translated_sentences: [] };
-  }
-}
 
 const ArticleShowcaseCard = React.forwardRef<HTMLDivElement, Props>(
   ({ article, userId }, ref) => {
@@ -56,8 +35,7 @@ const ArticleShowcaseCard = React.forwardRef<HTMLDivElement, Props>(
       }
 
       // Normalize the locale key to match the keys stored in the database.
-      const localeTarget =
-        locale === "cn" ? "zh-CN" : locale === "tw" ? "zh-TW" : locale;
+      const localeTarget = normalizeTranslateLocale(locale);
 
       // Use the cached translation from the article payload when present.
       const cachedSummary = (
@@ -69,7 +47,10 @@ const ArticleShowcaseCard = React.forwardRef<HTMLDivElement, Props>(
         return;
       }
 
-      const data = await getTranslateSentence(articleId, localeTarget);
+      const data = await getTranslateSentence(
+        `/api/v1/articles/${articleId}/translate`,
+        localeTarget,
+      );
 
       setSummarySentence(data.translated_sentences);
     }

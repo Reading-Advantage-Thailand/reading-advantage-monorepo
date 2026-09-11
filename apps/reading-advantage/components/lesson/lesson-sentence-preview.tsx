@@ -1,5 +1,13 @@
 "use client";
+import {
+  getGcsTtsAudioUrl,
+  getGcsWordAudioUrl,
+} from "@/lib/gcs-url";
 import React, { useState, useEffect, useRef } from "react";
+import {
+  getTranslateSentence,
+  normalizeTranslateLocale,
+} from "@/lib/translate-sentence";
 import { Article } from "../models/article-model";
 import { cn, splitTextIntoSentences } from "@/lib/utils";
 import { useCurrentLocale, useScopedI18n } from "@/locales/client";
@@ -47,17 +55,6 @@ type Props = {
   onCompleteChange: (complete: boolean) => void;
 };
 
-/**
- * Normalizes locale codes for the translation API.
- * Cache/storage uses raw locale keys ("cn", "tw") matching the Article model,
- * while the API expects IETF tags ("zh-CN", "zh-TW").
- */
-function normalizeLocaleForAPI(locale: string): string {
-  if (locale === "cn") return "zh-CN";
-  if (locale === "tw") return "zh-TW";
-  return locale;
-}
-
 type Sentence = {
   sentence: string;
   index: number;
@@ -65,22 +62,6 @@ type Sentence = {
   endTime: number;
   audioUrl: string;
 };
-
-async function getTranslateSentence(
-  articleId: string,
-  targetLanguage: string
-): Promise<{ message: string; translated_sentences: string[] }> {
-  try {
-    const res = await fetch(`/api/v1/assistant/translate/${articleId}`, {
-      method: "POST",
-      body: JSON.stringify({ type: "passage", targetLanguage }),
-    });
-    const data = await res.json();
-    return data;
-  } catch (error) {
-    return { message: "error", translated_sentences: [] };
-  }
-}
 
 export default function LessonSentensePreview({
   article,
@@ -139,8 +120,8 @@ export default function LessonSentensePreview({
         startTime,
         endTime,
         audioUrl: timepoint.file
-          ? `https://storage.googleapis.com/artifacts.reading-advantage.appspot.com/tts/${timepoint.file}`
-          : `https://storage.googleapis.com/artifacts.reading-advantage.appspot.com/tts/${article.id}.mp3`,
+          ? getGcsTtsAudioUrl(timepoint.file)
+          : getGcsTtsAudioUrl(`${article.id}.mp3`),
       };
     }
   );
@@ -329,8 +310,12 @@ export default function LessonSentensePreview({
     }
 
     // 2. No cache — normalize locale for the API ("cn" → "zh-CN", "tw" → "zh-TW") then fetch
-    const apiLocale = normalizeLocaleForAPI(locale);
-    const response = await getTranslateSentence(article.id, apiLocale);
+    const apiLocale = normalizeTranslateLocale(locale);
+    const response = await getTranslateSentence(
+      `/api/v1/assistant/translate/${article.id}`,
+      apiLocale,
+      { body: { type: "passage" } },
+    );
     if (response.message === "error") {
       setIsTranslate(false);
       setIsTranslateOpen(false);

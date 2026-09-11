@@ -6,27 +6,15 @@ import { ArticleShowcase } from "./models/article-model";
 import { useCurrentLocale, useScopedI18n } from "@/locales/client";
 import { usePathname } from "next/navigation";
 import { ActivityType, ActivityStatus } from "./models/user-activity-log-model";
+import {
+  getTranslateSentence,
+  normalizeTranslateLocale,
+} from "@/lib/translate-sentence";
 
 type Props = {
   story: ArticleShowcase;
   userId?: string;
 };
-
-async function getTranslateSentence(
-  storyId: string,
-  targetLanguage: string
-): Promise<{ message: string; translated_sentences: string[] }> {
-  try {
-    const res = await fetch(`/api/v1/assistant/stories-translate/${storyId}`, {
-      method: "POST",
-      body: JSON.stringify({ type: "summary", targetLanguage }),
-    });
-    const data = await res.json();
-    return data;
-  } catch (error) {
-    return { message: "error", translated_sentences: [] };
-  }
-}
 
 const StoryShowcaseCard = React.forwardRef<HTMLDivElement, Props>(
   ({ story, userId }, ref) => {
@@ -45,19 +33,13 @@ const StoryShowcaseCard = React.forwardRef<HTMLDivElement, Props>(
       if (!locale || locale === "en") {
         return;
       }
-      type ExtendedLocale = "th" | "cn" | "tw" | "vi" | "zh-CN" | "zh-TW";
-      let localeTarget: ExtendedLocale = locale as ExtendedLocale;
+      const localeTarget = normalizeTranslateLocale(locale);
 
-      switch (locale) {
-        case "cn":
-          localeTarget = "zh-CN";
-          break;
-        case "tw":
-          localeTarget = "zh-TW";
-          break;
-      }
-
-      const data = await getTranslateSentence(storyId, localeTarget);
+      const data = await getTranslateSentence(
+        `/api/v1/assistant/stories-translate/${storyId}`,
+        localeTarget,
+        { body: { type: "summary" } },
+      );
 
       setSummarySentence(data.translated_sentences);
     }

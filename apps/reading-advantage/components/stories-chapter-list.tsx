@@ -1,5 +1,9 @@
 "use client";
 
+import {
+  getTranslateSentence,
+  normalizeTranslateLocale,
+} from "@/lib/translate-sentence";
 import { useRouter } from "next/navigation";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
@@ -53,25 +57,6 @@ export default function ChapterList({
     router.push(`/${locale}/student/stories/${storyId}/${chapterNumber}`);
   };
 
-  async function getTranslate(
-    storyId: string,
-    targetLanguage: string
-  ): Promise<{ message: string; translated_sentences: string[] }> {
-    try {
-      const res = await fetch(
-        `/api/v1/assistant/stories-translate/${storyId}`,
-        {
-          method: "POST",
-          body: JSON.stringify({ type: "chapter", targetLanguage }),
-        }
-      );
-      const data = await res.json();
-      return data;
-    } catch (error) {
-      return { message: "error", translated_sentences: [] };
-    }
-  }
-
   React.useEffect(() => {
     const fetchTranslations = async () => {
       if (!locale || locale === "en" || isLoading || hasTranslated) {
@@ -80,20 +65,15 @@ export default function ChapterList({
 
       setIsLoading(true);
       try {
-        type ExtendedLocale = "th" | "cn" | "tw" | "vi" | "zh-CN" | "zh-TW";
-        let localeTarget: ExtendedLocale = locale as ExtendedLocale;
-        switch (locale) {
-          case "cn":
-            localeTarget = "zh-CN";
-            break;
-          case "tw":
-            localeTarget = "zh-TW";
-            break;
-        }
+        const localeTarget = normalizeTranslateLocale(locale);
 
         const translatedChapters = await Promise.all(
           chapters.map(async (chapter, index) => {
-            const res = await getTranslate(storyId, localeTarget);
+            const res = await getTranslateSentence(
+              `/api/v1/assistant/stories-translate/${storyId}`,
+              localeTarget,
+              { body: { type: "chapter" } },
+            );
             return res.translated_sentences[index];
           })
         );

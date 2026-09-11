@@ -1,5 +1,9 @@
 "use client";
 import React, { useRef, useState, useEffect } from "react";
+import {
+  getTranslateSentence,
+  normalizeTranslateLocale,
+} from "@/lib/translate-sentence";
 import { Button } from "../ui/button";
 import { useReactToPrint } from "react-to-print";
 import { Article } from "@/components/models/article-model";
@@ -83,22 +87,11 @@ export default function PrintArticle({
       }
     };
     const fetchTranslate = async () => {
-      type ExtendedLocale = "th" | "cn" | "tw" | "vi" | "zh-CN" | "zh-TW";
-      let targetLanguage: ExtendedLocale = locale as ExtendedLocale;
-      switch (locale) {
-        case "cn":
-          targetLanguage = "zh-CN";
-          break;
-        case "tw":
-          targetLanguage = "zh-TW";
-          break;
-      }
+      const targetLanguage = normalizeTranslateLocale(locale);
       if (locale !== "en") {
-        const response = await fetch(`/api/v1/assistant/translate`, {
-          method: "POST",
-          body: JSON.stringify({ passage: article.passage, targetLanguage }),
+        const data = await getTranslateSentence(`/api/v1/assistant/translate`, targetLanguage, {
+          body: { passage: article.passage },
         });
-        const data = await response.json();
 
         setTranslated(data.translated_sentences);
       }

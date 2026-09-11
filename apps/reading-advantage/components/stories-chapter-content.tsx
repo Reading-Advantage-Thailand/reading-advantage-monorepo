@@ -1,4 +1,5 @@
 "use client";
+import { getGcsTtsAudioUrl } from "@/lib/gcs-url";
 import React, { useState, useRef, useEffect, useMemo } from "react";
 import { StoryChapter } from "./models/article-model";
 import { cn, splitTextIntoSentences } from "@/lib/utils";
@@ -44,6 +45,10 @@ import {
   SENTENCE_PLAYING_CLASS,
   SENTENCE_SELECTED_CLASS,
 } from "@/lib/sentence-highlight";
+import {
+  getTranslateSentence,
+  normalizeTranslateLocale,
+} from "@/lib/translate-sentence";
 
 type Sentence = {
   sentence: string;
@@ -52,29 +57,6 @@ type Sentence = {
   endTime: number;
   audioUrl: string;
 };
-
-async function getTranslateSentence(
-  storyId: string,
-  targetLanguage: string,
-  chapterNumber: string
-): Promise<{
-  message: string;
-  translated_sentences: string[];
-}> {
-  try {
-    const res = await fetch(
-      `/api/v1/assistant/stories-translate/${storyId}/${chapterNumber}`,
-      {
-        method: "POST",
-        body: JSON.stringify({ type: "content", targetLanguage }),
-      }
-    );
-    const data = await res.json();
-    return data;
-  } catch (error) {
-    return { message: "error", translated_sentences: [] };
-  }
-}
 
 export default function ChapterContent({
   story,
@@ -114,8 +96,8 @@ export default function ChapterContent({
         startTime,
         endTime,
         audioUrl: timepoint.file
-          ? `https://storage.googleapis.com/artifacts.reading-advantage.appspot.com/tts/${timepoint.file}`
-          : `https://storage.googleapis.com/artifacts.reading-advantage.appspot.com/tts/${story.storyId}-${chapterNumber}.mp3`,
+          ? getGcsTtsAudioUrl(`${timepoint.file}`)
+          : getGcsTtsAudioUrl(`${story.storyId}-${chapterNumber}.mp3`),
       };
     });
   }, [story.timepoints, story.storyId, chapterNumber, sentences]);
@@ -215,9 +197,9 @@ export default function ChapterContent({
       const translationPromises = supportedLanguages.map(async (lang) => {
         try {
           const response = await getTranslateSentence(
-            story.storyId,
+            `/api/v1/assistant/stories-translate/${story.storyId}/${chapterNumber}`,
             lang,
-            chapterNumber
+            { body: { type: "content" } },
           );
           if (response.message !== "error" && response.translated_sentences) {
             translationObj[lang] = response.translated_sentences[targetIndex];
@@ -293,20 +275,11 @@ export default function ChapterContent({
 
   async function handleTranslateSentence() {
     setLoading(true);
-    type ExtendedLocale = "th" | "cn" | "tw" | "vi" | "zh-CN" | "zh-TW";
-    let targetLanguage: ExtendedLocale = locale as ExtendedLocale;
-    switch (locale) {
-      case "cn":
-        targetLanguage = "zh-CN";
-        break;
-      case "tw":
-        targetLanguage = "zh-TW";
-        break;
-    }
+    const targetLanguage = normalizeTranslateLocale(locale);
     const response = await getTranslateSentence(
-      story.storyId,
+      `/api/v1/assistant/stories-translate/${story.storyId}/${chapterNumber}`,
       targetLanguage,
-      chapterNumber
+      { body: { type: "content" } },
     );
     if (response.message === "error") {
       setIsTranslate(false);

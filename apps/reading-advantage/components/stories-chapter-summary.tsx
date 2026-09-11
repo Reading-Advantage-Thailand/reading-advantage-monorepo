@@ -2,29 +2,16 @@
 import React from "react";
 import { useCurrentLocale } from "@/locales/client";
 import { StoryChapter } from "./models/article-model";
+import {
+  getTranslateSentence,
+  normalizeTranslateLocale,
+} from "@/lib/translate-sentence";
 
 type Props = {
   story: StoryChapter;
   storyId: string;
   chapterNumber: string;
 };
-
-async function getTranslate(
-  storyId: string,
-  chapterNumber: string,
-  targetLanguage: string
-): Promise<{ message: string; translated_sentences: string[] }> {
-  try {
-    const res = await fetch(`/api/v1/assistant/stories-translate/${storyId}/${chapterNumber}`, {
-      method: "POST",
-      body: JSON.stringify({ type: "summary", targetLanguage }),
-    });
-    const data = await res.json();
-    return data;
-  } catch (error) {
-    return { message: "error", translated_sentences: [] };
-  }
-}
 
 export function ChapterSummary({ story, storyId, chapterNumber }: Props) {
   const [summarySentence, setSummarySentence] = React.useState<string[]>([]);
@@ -38,16 +25,7 @@ export function ChapterSummary({ story, storyId, chapterNumber }: Props) {
     if (!locale || locale === "en") {
       return;
     }
-    type ExtendedLocale = "th" | "cn" | "tw" | "vi" | "zh-CN" | "zh-TW";
-    let localeTarget: ExtendedLocale = locale as ExtendedLocale;
-    switch (locale) {
-      case "cn":
-        localeTarget = "zh-CN";
-        break;
-      case "tw":
-        localeTarget = "zh-TW";
-        break;
-    }
+    const localeTarget = normalizeTranslateLocale(locale);
 
     const existingTranslationData = (story.chapter as any).translatedSummary;
     if (existingTranslationData && existingTranslationData[localeTarget] && existingTranslationData[localeTarget].length > 0) {
@@ -55,7 +33,11 @@ export function ChapterSummary({ story, storyId, chapterNumber }: Props) {
       return;
     }
 
-    const res = await getTranslate(storyId, chapterNumber, localeTarget);
+    const res = await getTranslateSentence(
+      `/api/v1/assistant/stories-translate/${storyId}/${chapterNumber}`,
+      localeTarget,
+      { body: { type: "summary" } },
+    );
 
     setSummarySentence(res.translated_sentences);
   }
