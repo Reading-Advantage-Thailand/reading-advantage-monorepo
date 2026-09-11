@@ -1,5 +1,6 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
+import { redirect } from "next/navigation";
 import {
   Table,
   TableBody,
@@ -29,8 +30,7 @@ import { Header } from "./header";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
 import { enUS, th, zhCN, zhTW, vi } from "date-fns/locale";
-import { useCurrentLocale } from "@/locales/client";
-import { useScopedI18n } from "@/locales/client";
+import { useCurrentLocale, useScopedI18n, useRouter } from "@/locales/client";
 import {
   Dialog,
   DialogContent,
@@ -70,7 +70,194 @@ type PaginationInfo = {
   limit: number;
 };
 
+type AssignmentT = ReturnType<typeof useScopedI18n>;
+
+function getDateLocale(locale: string) {
+  switch (locale) {
+    case "th":
+      return th;
+    case "cn":
+      return zhCN;
+    case "tw":
+      return zhTW;
+    case "vi":
+      return vi;
+    default:
+      return enUS;
+  }
+}
+
+function getDueDateStatus(dueDate: string, t: AssignmentT) {
+  const now = new Date();
+  const due = new Date(dueDate);
+  const timeDiff = due.getTime() - now.getTime();
+  const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+
+  if (daysDiff < 0) {
+    return {
+      status: "overdue",
+      variant: "destructive" as const,
+      text: `${t("overdue")}`,
+    };
+  } else if (daysDiff === 0) {
+    return {
+      status: "today",
+      variant: "secondary" as const,
+      text: `${t("dueToday")}`,
+    };
+  } else if (daysDiff <= 3) {
+    return {
+      status: "soon",
+      variant: "outline" as const,
+      text: `${t("daysLeft", { daysDiff: daysDiff })}`,
+    };
+  } else {
+    return {
+      status: "upcoming",
+      variant: "default" as const,
+      text: `${t("daysLeft", { daysDiff: daysDiff })}`,
+    };
+  }
+}
+
+function AssignmentDetailDialog({
+  assignment,
+  open,
+  onOpenChange,
+  t,
+  locale,
+}: {
+  assignment: Assignment | null;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  t: AssignmentT;
+  locale: string;
+}) {
+  const router = useRouter();
+
+  if (!assignment) return null;
+
+  const dueDateStatus = getDueDateStatus(assignment.dueDate, t);
+
+  const getStatusIcon = (status: number) => {
+    switch (status) {
+      case 0:
+        return "⏳";
+      case 1:
+        return "🔄";
+      case 2:
+        return "✅";
+      default:
+        return "⏳";
+    }
+  };
+
+  const getStatusText = (status: number) => {
+    switch (status) {
+      case 0:
+        return `${t("notFinished")}`;
+      case 1:
+        return `${t("inProgress")}`;
+      case 2:
+        return `${t("done")}`;
+      default:
+        return `${t("notFinished")}`;
+    }
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent
+        className="sm:max-w-[425px] max-w-[90vw] max-h-[90vh] overflow-y-auto"
+        onPointerDownOutside={(e) => e.preventDefault()}
+      >
+        <div className="space-y-4">
+          {/* Description */}
+          <div>
+            <h4 className="font-medium text-sm text-muted-foreground mb-2">
+              {t("assignmentDescription")}
+            </h4>
+            <p className="text-sm">
+              {assignment.description || "No description provided"}
+            </p>
+          </div>
+
+          {/* Created Date */}
+          <div>
+            <h4 className="font-medium text-sm text-muted-foreground mb-2">
+              {t("createAt")}
+            </h4>
+            <p className="text-sm">
+              {format(new Date(assignment.createdAt), "MMM dd, yyyy", {
+                locale: getDateLocale(locale),
+              })}
+            </p>
+          </div>
+
+          {/* Due Date */}
+          <div>
+            <h4 className="font-medium text-sm text-muted-foreground mb-2">
+              {t("dueDate")}
+            </h4>
+            <div className="flex items-center gap-2">
+              <p className="text-sm">
+                {format(new Date(assignment.dueDate), "MMM dd, yyyy", {
+                  locale: getDateLocale(locale),
+                })}
+              </p>
+              {assignment.status !== 2 && (
+                <Badge variant={dueDateStatus.variant} className="text-xs">
+                  {dueDateStatus.text}
+                </Badge>
+              )}
+            </div>
+          </div>
+
+          {/* Status */}
+          <div>
+            <h4 className="font-medium text-sm text-muted-foreground mb-2">
+              {t("status")}
+            </h4>
+            <div className="flex items-center gap-2">
+              <span className="text-lg">{getStatusIcon(assignment.status)}</span>
+              <span className="text-sm">{getStatusText(assignment.status)}</span>
+            </div>
+          </div>
+
+          {/* Assigned By */}
+          <div>
+            <h4 className="font-medium text-sm text-muted-foreground mb-2">
+              {t("assignedBy")}
+            </h4>
+            <p className="text-sm">
+              {assignment.teacherDisplayName ||
+                assignment.displayName ||
+                "Unknown Teacher"}
+            </p>
+          </div>
+
+          {/* Action Button */}
+          <div className="pt-4">
+            <Button
+              onClick={() => {
+                router.push(`/student/lesson/${assignment.articleId}`);
+              }}
+              className="w-full"
+            >
+              {t("goToLesson")}
+            </Button>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 export default function StudentAssignmentTable({ userId }: AssignmentProps) {
+  if (!userId) {
+    redirect("/auth/signin");
+  }
+
   const [sorting, setSorting] = React.useState<SortingState>([
     {
       id: "createdAt",
@@ -81,8 +268,7 @@ export default function StudentAssignmentTable({ userId }: AssignmentProps) {
     []
   );
   const locale = useCurrentLocale() as "en" | "th" | "cn" | "tw" | "vi";
-  const t = useScopedI18n("pages.student.assignmentPage");
-  const [columnVisibility, setColumnVisibility] =
+  const t = useScopedI18n("pages.student.assignmentPage");  const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({
       description: false,
       createdAt: false,
@@ -111,6 +297,7 @@ export default function StudentAssignmentTable({ userId }: AssignmentProps) {
     useState<Assignment | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -127,21 +314,6 @@ export default function StudentAssignmentTable({ userId }: AssignmentProps) {
     window.addEventListener("resize", checkScreenSize);
     return () => window.removeEventListener("resize", checkScreenSize);
   }, []);
-
-  const getDateLocale = () => {
-    switch (locale) {
-      case "th":
-        return th;
-      case "cn":
-        return zhCN;
-      case "tw":
-        return zhTW;
-      case "vi":
-        return vi;
-      default:
-        return enUS;
-    }
-  };
 
   const useDebounce = (value: string, delay: number) => {
     const [debouncedValue, setDebouncedValue] = useState(value);
@@ -160,39 +332,6 @@ export default function StudentAssignmentTable({ userId }: AssignmentProps) {
   };
 
   const debouncedSearchQuery = useDebounce(searchQuery, 1000);
-
-  const getDueDateStatus = (dueDate: string) => {
-    const now = new Date();
-    const due = new Date(dueDate);
-    const timeDiff = due.getTime() - now.getTime();
-    const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
-
-    if (daysDiff < 0) {
-      return {
-        status: "overdue",
-        variant: "destructive" as const,
-        text: `${t("overdue")}`,
-      };
-    } else if (daysDiff === 0) {
-      return {
-        status: "today",
-        variant: "secondary" as const,
-        text: `${t("dueToday")}`,
-      };
-    } else if (daysDiff <= 3) {
-      return {
-        status: "soon",
-        variant: "outline" as const,
-        text: `${t("daysLeft", { daysDiff: daysDiff })}`,
-      };
-    } else {
-      return {
-        status: "upcoming",
-        variant: "default" as const,
-        text: `${t("daysLeft", { daysDiff: daysDiff })}`,
-      };
-    }
-  };
 
   const columns: ColumnDef<Assignment>[] = [
     {
@@ -265,7 +404,7 @@ export default function StudentAssignmentTable({ userId }: AssignmentProps) {
           <div className="flex justify-center">
             <div className="text-sm">
               {format(new Date(createdAt), "MMM dd, yyyy", {
-                locale: getDateLocale(),
+                locale: getDateLocale(locale),
               })}
             </div>
           </div>
@@ -291,12 +430,12 @@ export default function StudentAssignmentTable({ userId }: AssignmentProps) {
       },
       cell: ({ row }) => {
         const dueDate: string = row.getValue("dueDate");
-        const dueDateStatus = getDueDateStatus(dueDate);
+        const dueDateStatus = getDueDateStatus(dueDate, t);
         return (
           <div className="flex flex-col items-center justify-center text-center">
             <div className="font-medium">
               {format(new Date(dueDate), "MMM dd, yyyy", {
-                locale: getDateLocale(),
+                locale: getDateLocale(locale),
               })}
             </div>
             {row.original.status !== 2 && (
@@ -383,7 +522,7 @@ export default function StudentAssignmentTable({ userId }: AssignmentProps) {
               variant="outline"
               size="sm"
               onClick={() =>
-                (window.location.href = `/student/lesson/${assignment.articleId}`)
+                router.push(`/student/lesson/${assignment.articleId}`)
               }
             >
               {t("goToLesson")}
@@ -482,24 +621,7 @@ export default function StudentAssignmentTable({ userId }: AssignmentProps) {
     }
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      await fetchAssignment(
-        currentPage,
-        statusFilter,
-        dueDateFilter,
-        debouncedSearchQuery
-      );
-      // Fetch notifications once
-      await fetchNotifications();
-      setLoading(false);
-    };
-
-    fetchData();
-  }, [userId, currentPage, statusFilter, dueDateFilter, debouncedSearchQuery]);
-
-  const fetchNotifications = async () => {
+  const fetchNotifications = useCallback(async () => {
     try {
       const response = await fetch(
         `/api/v1/assignment-notifications?studentId=${userId}`
@@ -516,7 +638,26 @@ export default function StudentAssignmentTable({ userId }: AssignmentProps) {
     } catch (error) {
       console.error("Error fetching notifications:", error);
     }
-  };
+  }, [userId]);
+
+  useEffect(() => {
+    fetchNotifications();
+  }, [fetchNotifications]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      await fetchAssignment(
+        currentPage,
+        statusFilter,
+        dueDateFilter,
+        debouncedSearchQuery
+      );
+      setLoading(false);
+    };
+
+    fetchData();
+  }, [userId, currentPage, statusFilter, dueDateFilter, debouncedSearchQuery]);
 
   const handleStatusFilterChange = (value: string) => {
     setStatusFilter(value);
@@ -572,136 +713,6 @@ export default function StudentAssignmentTable({ userId }: AssignmentProps) {
     }
   };
 
-  const AssignmentDetailDialog = () => {
-    if (!selectedAssignment) return null;
-
-    const dueDateStatus = getDueDateStatus(selectedAssignment.dueDate);
-
-    const getStatusIcon = (status: number) => {
-      switch (status) {
-        case 0:
-          return "⏳";
-        case 1:
-          return "🔄";
-        case 2:
-          return "✅";
-        default:
-          return "⏳";
-      }
-    };
-
-    const getStatusText = (status: number) => {
-      switch (status) {
-        case 0:
-          return `${t("notFinished")}`;
-        case 1:
-          return `${t("inProgress")}`;
-        case 2:
-          return `${t("done")}`;
-        default:
-          return `${t("notFinished")}`;
-      }
-    };
-
-    return (
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent
-          className="sm:max-w-[425px] max-w-[90vw] max-h-[90vh] overflow-y-auto"
-          onPointerDownOutside={(e) => e.preventDefault()}
-        >
-          <div className="space-y-4">
-            {/* Description */}
-            <div>
-              <h4 className="font-medium text-sm text-muted-foreground mb-2">
-                {t("assignmentDescription")}
-              </h4>
-              <p className="text-sm">
-                {selectedAssignment.description || "No description provided"}
-              </p>
-            </div>
-
-            {/* Created Date */}
-            <div>
-              <h4 className="font-medium text-sm text-muted-foreground mb-2">
-                {t("createAt")}
-              </h4>
-              <p className="text-sm">
-                {format(
-                  new Date(selectedAssignment.createdAt),
-                  "MMM dd, yyyy",
-                  {
-                    locale: getDateLocale(),
-                  }
-                )}
-              </p>
-            </div>
-
-            {/* Due Date */}
-            <div>
-              <h4 className="font-medium text-sm text-muted-foreground mb-2">
-                {t("dueDate")}
-              </h4>
-              <div className="flex items-center gap-2">
-                <p className="text-sm">
-                  {format(
-                    new Date(selectedAssignment.dueDate),
-                    "MMM dd, yyyy",
-                    {
-                      locale: getDateLocale(),
-                    }
-                  )}
-                </p>
-                {selectedAssignment.status !== 2 && (
-                  <Badge variant={dueDateStatus.variant} className="text-xs">
-                    {dueDateStatus.text}
-                  </Badge>
-                )}
-              </div>
-            </div>
-
-            {/* Status */}
-            <div>
-              <h4 className="font-medium text-sm text-muted-foreground mb-2">
-                {t("status")}
-              </h4>
-              <div className="flex items-center gap-2">
-                <span className="text-lg">
-                  {getStatusIcon(selectedAssignment.status)}
-                </span>
-                <span className="text-sm">
-                  {getStatusText(selectedAssignment.status)}
-                </span>
-              </div>
-            </div>
-
-            {/* Assigned By */}
-            <div>
-              <h4 className="font-medium text-sm text-muted-foreground mb-2">
-                {t("assignedBy")}
-              </h4>
-              <p className="text-sm">
-                {selectedAssignment.teacherDisplayName ||
-                  selectedAssignment.displayName ||
-                  "Unknown Teacher"}
-              </p>
-            </div>
-
-            {/* Action Button */}
-            <div className="pt-4">
-              <Button
-                onClick={() => {
-                  window.location.href = `/student/lesson/${selectedAssignment.articleId}`;
-                }}
-                className="w-full"
-              >
-                {t("goToLesson")}
-              </Button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
-    );
-  };
 
   return (
     <div className="flex flex-col gap-4 py-4">
@@ -731,7 +742,13 @@ export default function StudentAssignmentTable({ userId }: AssignmentProps) {
         t={t}
       />
 
-      <AssignmentDetailDialog />
+      <AssignmentDetailDialog
+        assignment={selectedAssignment}
+        open={isDialogOpen}
+        onOpenChange={setIsDialogOpen}
+        t={t}
+        locale={locale}
+      />
     </div>
   );
 }
