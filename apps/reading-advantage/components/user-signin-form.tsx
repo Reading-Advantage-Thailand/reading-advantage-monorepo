@@ -73,7 +73,9 @@ export function UserSignInForm({ className, ...props }: UserAuthFormProps) {
             />
           </div>
           {error && (
-            <div className="text-red-500 text-sm">{error}</div>
+            <div className="text-red-500 text-sm" role="alert">
+              {error}
+            </div>
           )}
           <Button
             name="signin-button"

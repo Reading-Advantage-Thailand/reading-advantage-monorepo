@@ -1,5 +1,5 @@
 "use client";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Icons } from "@/components/icons";
@@ -21,13 +21,13 @@ export function SidebarTeacherNav({ items }: SidebarTeacherNavProps) {
   return (
     <>
       {pathWithoutLocale.startsWith("/settings") && (
-        <button
+        <Link
+          href="/teacher/my-classes"
           className="flex items-center space-x-2 text-sm text-gray-500 py-2 px-4"
-          onClick={() => window.history.back()}
         >
           <Icons.back className="h-4 w-4" />
           Back
-        </button>
+        </Link>
       )}
       <nav className="flex flex-wrap lg:grid items-start gap-2 mb-4 lg:mb-0">
         {items.map((item, index) => {

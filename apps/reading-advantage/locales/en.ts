@@ -3176,6 +3176,7 @@ export default {
         open: "Translate",
         close: "Close translate panel",
       },
+      saveToFlashcard: "Save to flashcard",
     },
     storyChapterContent: {
       voiceAssistant: "Voice Assistant",
@@ -3191,6 +3192,7 @@ export default {
         open: "Translate",
         close: "Close translate panel",
       },
+      saveToFlashcard: "Save to flashcard",
     },
     mcq: {
       title: "Multiple Choice Questions",

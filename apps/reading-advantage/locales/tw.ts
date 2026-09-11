@@ -3007,6 +3007,7 @@ export default {
         open: "翻譯",
         close: "關閉翻譯視窗",
       },
+      saveToFlashcard: "儲存到字卡",
     },
     storyChapterContent: {
       voiceAssistant: "語音助理",
@@ -3021,6 +3022,7 @@ export default {
         open: "翻譯",
         close: "關閉翻譯面板",
       },
+      saveToFlashcard: "儲存到字卡",
     },
     mcq: {
       title: "多項選擇題",

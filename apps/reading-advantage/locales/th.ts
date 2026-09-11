@@ -3126,6 +3126,7 @@ export default {
         open: "แปล",
         close: "ปิดหน้าต่างการแปล",
       },
+      saveToFlashcard: "บันทึกไปยังแฟลชการ์ด",
     },
     storyChapterContent: {
       voiceAssistant: "ผู้ช่วยเสียง",
@@ -3140,6 +3141,7 @@ export default {
         open: "แปลภาษา",
         close: "ปิดแผงแปลภาษา",
       },
+      saveToFlashcard: "บันทึกไปยังแฟลชการ์ด",
     },
     mcq: {
       title: "คำถามแบบหลายตัวเลือก",

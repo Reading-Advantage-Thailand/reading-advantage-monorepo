@@ -333,6 +333,15 @@ export default function ChapterContent({
                 : t("translateButton.open")}
           </Button>
         </div>
+        <div id="onborda-saveflashcard">
+          <Button
+            variant="default"
+            onClick={saveToFlashcard}
+            disabled={loading}
+          >
+            {loading ? "Loading" : t("saveToFlashcard")}
+          </Button>
+        </div>
       </div>
 
       {togglePlayer && (

@@ -155,6 +155,18 @@ export default function TeacherDataTable<TData>({
               key={row.id}
               className={rowClassName}
               onClick={onRowClick ? () => onRowClick(row) : undefined}
+              {...(onRowClick
+                ? {
+                    tabIndex: 0,
+                    role: "link",
+                    onKeyDown: (e: React.KeyboardEvent<HTMLTableRowElement>) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        onRowClick(row);
+                      }
+                    },
+                  }
+                : {})}
               data-state={row.getIsSelected() && "selected"}
             >
               {row.getVisibleCells().map((cell) => (

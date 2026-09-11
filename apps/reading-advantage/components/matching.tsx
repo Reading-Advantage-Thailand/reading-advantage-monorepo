@@ -326,9 +326,13 @@ export default function Matching({
                             />
                           )}
                       </div>
-                      <div onClick={() => handleCardClick(word)}>
+                      <button
+                        type="button"
+                        className="w-full"
+                        onClick={() => handleCardClick(word)}
+                      >
                         {word.text}
-                      </div>
+                      </button>
                     </div>
                   ))}
                 </div>

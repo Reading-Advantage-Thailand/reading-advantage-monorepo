@@ -3203,6 +3203,7 @@ export default {
         open: "Dịch",
         close: "Đóng cửa sổ dịch",
       },
+      saveToFlashcard: "Lưu vào thẻ ghi nhớ",
     },
     storyChapterContent: {
       voiceAssistant: "Trợ lý giọng nói",
@@ -3217,6 +3218,7 @@ export default {
         open: "Dịch",
         close: "Đóng bảng dịch",
       },
+      saveToFlashcard: "Lưu vào thẻ ghi nhớ",
     },
     mcq: {
       title: "Câu hỏi trắc nghiệm",

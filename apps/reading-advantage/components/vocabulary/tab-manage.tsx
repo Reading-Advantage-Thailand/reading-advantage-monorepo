@@ -197,12 +197,13 @@ export default function VocabularyManageTab({ userId }: Props) {
       accessorKey: "word",
       header: "Vocabulary",
       cell: ({ row }) => (
-        <div
-          className="capitalize cursor-pointer"
+        <button
+          type="button"
+          className="capitalize text-left hover:underline"
           onClick={() => handleNavigateToArticle(row.original.articleId)}
         >
           {row.getValue("word")}
-        </div>
+        </button>
       ),
     },
     {

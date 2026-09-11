@@ -515,7 +515,7 @@ export default function LevelTestChat() {
       <CardContent className="space-y-4">
         {/* Chat Messages */}
         <ScrollArea className="h-[400px] pr-4">
-          <div className="space-y-4">
+          <div className="space-y-4" aria-live="polite">
             {messages.map((message, index) => (
               <div
                 key={index}

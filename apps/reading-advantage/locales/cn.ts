@@ -2997,6 +2997,7 @@ export default {
           open: "翻译",
           close: "关闭翻译窗口",
         },
+        saveToFlashcard: "保存到闪卡",
       },
       storyChapterContent: {
         voiceAssistant: "语音助手",
@@ -3011,6 +3012,7 @@ export default {
           open: "翻译",
           close: "关闭翻译面板",
         },
+        saveToFlashcard: "保存到闪卡",
       },
       mcq: {
         title: "多项选择题",

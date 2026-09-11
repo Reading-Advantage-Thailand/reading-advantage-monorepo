@@ -178,12 +178,13 @@ export default function ManageTab({ userId }: Props) {
       accessorKey: "sentence",
       header: "Sentence",
       cell: ({ row }) => (
-        <div
-          className="capitalize cursor-pointer"
+        <button
+          type="button"
+          className="capitalize text-left hover:underline"
           onClick={() => handleNavigateToArticle(row.original.articleId)}
         >
           {row.getValue("sentence")}
-        </div>
+        </button>
       ),
     },
     {
