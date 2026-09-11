@@ -339,34 +339,6 @@ export default function ArticleContent({
     }
   };
 
-  useEffect(() => {
-    const audio = audioRef.current;
-    setSelectedIndex(-1);
-    if (audio && sentenceList[currentAudioIndex]) {
-      // Use the URL from sentenceList (already has cache busting)
-      audio.src = sentenceList[currentAudioIndex].audioUrl;
-      audio.load();
-
-      const handleLoadedMetadata = () => {
-        audio.currentTime = sentenceList[currentAudioIndex].startTime;
-        audio.playbackRate = Number(speed);
-
-        if (isPlaying) {
-          audio.play().catch((error) => {
-            console.error("Playback error:", error);
-          });
-        }
-      };
-
-      audio.addEventListener("loadedmetadata", handleLoadedMetadata);
-
-      return () => {
-        audio.removeEventListener("loadedmetadata", handleLoadedMetadata);
-        audio.pause();
-      };
-    }
-  }, [currentAudioIndex, speed]);
-
   // Reset audio player when article changes
   useEffect(() => {
     setIsPlaying(false);
