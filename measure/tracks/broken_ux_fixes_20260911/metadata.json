@@ -1,0 +1,11 @@
+{
+  "track_id": "broken_ux_fixes_20260911",
+  "type": "bug",
+  "status": "new",
+  "created_at": "2026-09-11T00:00:00Z",
+  "updated_at": "2026-09-11T00:00:00Z",
+  "description": "Fix broken user-facing behavior in reading-advantage from the 2026-09-11 UX audit: 404 links, broken client directives, crash-risk imports, audio leaks, and visual typos.",
+  "estimated_tasks": 19,
+  "actual_tasks": null,
+  "deviation_notes": ""
+}
