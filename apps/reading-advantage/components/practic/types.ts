@@ -11,7 +11,7 @@ export type Sentence = {
   sentence: string;
   sn: number;
   timepoint: number;
-  translation: { th: string };
+  translation: Record<string, string> & { th: string };
   userId: string;
   id: string;
   due: string;

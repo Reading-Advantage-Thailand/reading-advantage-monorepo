@@ -6,7 +6,7 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import dayjs_plugin_isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import dayjs_plugin_isSameOrAfter from "dayjs/plugin/isSameOrAfter";
-import { useScopedI18n } from "@/locales/client";
+import { useScopedI18n, useCurrentLocale } from "@/locales/client";
 import "animate.css";
 import Image from "next/image";
 import { Header } from "./header";
@@ -42,6 +42,7 @@ export default function Matching({ userId }: Props) {
   const tUpdateScore = useScopedI18n(
     "pages.student.practicePage.flashcardPractice"
   );
+  const currentLocale = useCurrentLocale();
   const router = useRouter();
   const [articleMatching, setArticleMatching] = useState<Word[]>([]);
   const [selectedCard, setSelectedCard] = useState<Word | null>(null);
@@ -127,7 +128,9 @@ export default function Matching({ userId }: Props) {
       for (const article of matching) {
         initialWords.push({
           text: article?.sentence,
-          match: article?.translation?.th,
+          match:
+            article?.translation?.[currentLocale] ??
+            article?.translation?.["th"],
           timepoint: article?.timepoint,
           endTimepoint: article?.endTimepoint,
           articleId: article?.articleId,
