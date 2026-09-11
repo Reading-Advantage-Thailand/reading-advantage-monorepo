@@ -192,7 +192,7 @@ export default function MyStudents() {
                 <DropdownMenuItem
                   onClick={() =>
                     router.push(
-                      `${process.env.NEXT_PUBLIC_BASE_URL}/teacher/student-progress/${payment.id}`
+                      `/teacher/student-progress/${payment.id}`
                     )
                   }
                 >
@@ -201,7 +201,7 @@ export default function MyStudents() {
                 <DropdownMenuItem
                   onClick={() =>
                     router.push(
-                      `${process.env.NEXT_PUBLIC_BASE_URL}/teacher/enroll-classes/${payment.id}`
+                      `/teacher/enroll-classes/${payment.id}`
                     )
                   }
                 >
@@ -210,7 +210,7 @@ export default function MyStudents() {
                 <DropdownMenuItem
                   onClick={() =>
                     router.push(
-                      `${process.env.NEXT_PUBLIC_BASE_URL}/teacher/unenroll-classes/${payment.id}`
+                      `/teacher/unenroll-classes/${payment.id}`
                     )
                   }
                 >

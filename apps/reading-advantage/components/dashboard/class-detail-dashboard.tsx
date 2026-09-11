@@ -53,7 +53,7 @@ export function ClassDetailDashboard({
   const [activeTab, setActiveTab] = useState("overview");
 
   const handleBack = () => {
-    router.push("/th/teacher/dashboard");
+    router.push("/teacher/dashboard");
   };
 
   const handleRefresh = async () => {

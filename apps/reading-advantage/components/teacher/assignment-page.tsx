@@ -168,7 +168,7 @@ export default function Assignments() {
               <DropdownMenuItem
                 onClick={() => {
                   router.push(
-                    `${process.env.NEXT_PUBLIC_BASE_URL}/teacher/assignments/${row.original.meta.classroomId}/${row.original.meta.articleId}`
+                    `/teacher/assignments/${row.original.meta.classroomId}/${row.original.meta.articleId}`
                   );
                 }}
               >
@@ -424,7 +424,7 @@ export default function Assignments() {
                             <DropdownMenuItem
                               onClick={() => {
                                 router.push(
-                                  `${process.env.NEXT_PUBLIC_BASE_URL}/teacher/assignments/${row.meta.classroomId}/${row.meta.articleId}`
+                                  `/teacher/assignments/${row.meta.classroomId}/${row.meta.articleId}`
                                 );
                               }}
                             >

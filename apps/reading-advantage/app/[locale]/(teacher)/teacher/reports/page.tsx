@@ -8,5 +8,5 @@ export default async function ReportsPage() {
   }
 
   // Redirect to teacher dashboard which shows classes
-  return redirect("/th/teacher/dashboard");
+  return redirect("/teacher/dashboard");
 }

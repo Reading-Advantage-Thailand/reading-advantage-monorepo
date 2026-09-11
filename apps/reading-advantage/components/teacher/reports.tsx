@@ -175,7 +175,7 @@ export default function Reports() {
                 <DropdownMenuItem
                   onClick={() =>
                     router.push(
-                      `${process.env.NEXT_PUBLIC_BASE_URL}/teacher/student-progress/${payment.id}`
+                      `/teacher/student-progress/${payment.id}`
                     )
                   }
                 >

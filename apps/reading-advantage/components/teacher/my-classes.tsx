@@ -178,7 +178,7 @@ export default function MyClasses() {
                 <DropdownMenuItem
                   onClick={() =>
                     router.push(
-                      `${process.env.NEXT_PUBLIC_BASE_URL}/teacher/class-roster/${payment.id}`
+                      `/teacher/class-roster/${payment.id}`
                     )
                   }
                 >
@@ -187,7 +187,7 @@ export default function MyClasses() {
                 <DropdownMenuItem
                   onClick={() =>
                     router.push(
-                      `${process.env.NEXT_PUBLIC_BASE_URL}/teacher/reports/${payment.id}`
+                      `/teacher/reports/${payment.id}`
                     )
                   }
                 >

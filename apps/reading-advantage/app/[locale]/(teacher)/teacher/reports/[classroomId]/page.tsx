@@ -25,7 +25,7 @@ export default async function ClassDetailReportsPage({
     .limit(1);
 
   if (!classroom) {
-    return redirect("/th/teacher/dashboard");
+    return redirect("/teacher/dashboard");
   }
 
   // Verify access
@@ -42,7 +42,7 @@ export default async function ClassDetailReportsPage({
       .limit(1);
 
     if (!classroomTeacher) {
-      return redirect("/th/teacher/dashboard");
+      return redirect("/teacher/dashboard");
     }
   }
   const t = await getScopedI18n("pages.teacher.classdetail");
