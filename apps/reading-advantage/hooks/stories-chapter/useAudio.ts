@@ -9,7 +9,11 @@ export type Sentence = {
     audioUrl: string;
 };
 
-export default function useAudio(sentenceList: Sentence[]) {
+export default function useAudio(
+    sentenceList: Sentence[],
+    options?: { hasTimepoints?: boolean }
+) {
+    const { hasTimepoints = true } = options ?? {};
     const audioRef = useRef<HTMLAudioElement | null>(null);
     const [isPlaying, setIsPlaying] = useState(false);
     const [currentAudioIndex, setCurrentAudioIndex] = useState(0);
@@ -127,6 +131,11 @@ export default function useAudio(sentenceList: Sentence[]) {
     };
 
     const handleAudioEnded = () => {
+        if (!hasTimepoints) {
+            // Fallback timing mode: sentences advance via the timeupdate check.
+            setIsPlaying(false);
+            return;
+        }
         if (currentAudioIndex < sentenceList.length - 1) {
             const nextAudioIndex = currentAudioIndex + 1;
             setCurrentAudioIndex(nextAudioIndex);
@@ -152,9 +161,16 @@ export default function useAudio(sentenceList: Sentence[]) {
     const handleTimeUpdate = () => {
         if (audioRef.current) {
             currentTimeRef.current = audioRef.current.currentTime;
-            const currentSentence = sentenceList[currentAudioIndex];
-            if (audioRef.current.currentTime >= currentSentence.endTime) {
-                handleAudioEnded();
+            // Single advance path: onEnded advances when timepoints exist.
+            // The timeupdate check runs only in fallback timing mode.
+            if (!hasTimepoints) {
+                const currentSentence = sentenceList[currentAudioIndex];
+                if (
+                    currentSentence &&
+                    audioRef.current.currentTime >= currentSentence.endTime
+                ) {
+                    handleAudioEnded();
+                }
             }
         }
     };

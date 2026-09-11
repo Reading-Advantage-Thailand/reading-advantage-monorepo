@@ -141,7 +141,10 @@ export default function ArticleContent({
     setCurrentAudioIndex,
     setIsPlaying,
     setSelectedIndex,
-  } = useAudio(sentenceList);
+  } = useAudio(sentenceList, {
+    hasTimepoints:
+      Array.isArray(article.timepoints) && article.timepoints.length > 0,
+  });
 
   const getHighlightedClass = (index: number) =>
     cn(
