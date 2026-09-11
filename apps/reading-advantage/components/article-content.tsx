@@ -30,6 +30,12 @@ import {
   SelectValue,
 } from "./ui/select";
 import useAudio from "@/hooks/use-audio";
+import {
+  SENTENCE_BASE_CLASS,
+  SENTENCE_HOVER_CLASS,
+  SENTENCE_PLAYING_CLASS,
+  SENTENCE_SELECTED_CLASS,
+} from "@/lib/sentence-highlight";
 
 type Props = {
   article: Article;
@@ -148,10 +154,11 @@ export default function ArticleContent({
 
   const getHighlightedClass = (index: number) =>
     cn(
-      "cursor-pointer text-muted-foreground hover:bg-blue-200 hover:dark:bg-blue-900 hover:text-primary rounded-md",
+      SENTENCE_BASE_CLASS,
+      SENTENCE_HOVER_CLASS,
       currentAudioIndex === index &&
         isPlaying &&
-        "bg-red-200 dark:bg-red-900 text-primary",
+        SENTENCE_PLAYING_CLASS
     );
 
   const renderSentence = (sentence: string, i: number) => {
@@ -448,7 +455,7 @@ export default function ArticleContent({
               id="onborda-savesentences"
               key={`sentence-${index}`}
               className={cn(
-                selectedIndex === index && "bg-blue-200 dark:bg-blue-900",
+                selectedIndex === index && SENTENCE_SELECTED_CLASS,
                 `${getHighlightedClass(index)}`,
               )}
               onClick={() => {
