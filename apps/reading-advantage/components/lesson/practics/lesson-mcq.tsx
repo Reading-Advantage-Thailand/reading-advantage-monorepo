@@ -22,19 +22,11 @@ import { Icons } from "@/components/icons";
 import { useRouter } from "next/navigation";
 import { toast } from "@/components/ui/use-toast";
 import { useQuestionStore } from "@/store/question-store";
-
-// Import necessary types and enums
-enum AnswerStatus {
-  CORRECT = 0,
-  INCORRECT = 1,
-  UNANSWERED = 2,
-}
-
-enum QuestionState {
-  LOADING = 0,
-  INCOMPLETE = 1,
-  COMPLETED = 2,
-}
+import {
+  AnswerStatus,
+  QuestionState,
+} from "@/components/models/questions-model";
+import { useQuizProgress } from "@/lib/use-quiz-progress";
 
 interface MultipleChoiceQuestion {
   id: string;
@@ -73,6 +65,7 @@ function LessonMCQContent({
   articleLevel,
   onCompleteChange,
 }: LessonMCQProps) {
+  const { saveProgress, clear } = useQuizProgress(articleId);
   const [state, setState] = useState(QuestionState.LOADING);
   const [data, setData] = useState<QuestionResponse>({
     results: [],
@@ -167,14 +160,7 @@ function LessonMCQContent({
         setProgress(newProgress);
 
         // Save to session storage
-        try {
-          sessionStorage.setItem(
-            `quiz_progress_${articleId}`,
-            JSON.stringify(newProgress)
-          );
-        } catch (e) {
-          console.error("Failed to save progress:", e);
-        }
+        saveProgress(newProgress);
       }
     } catch (error) {
       console.error("Error submitting answer:", error);
@@ -209,12 +195,7 @@ function LessonMCQContent({
       });
 
       // Clear session storage
-      try {
-        sessionStorage.removeItem(`quiz_progress_${articleId}`);
-        sessionStorage.removeItem(`quiz_started_${articleId}`);
-      } catch (e) {
-        console.error("Error clearing session storage:", e);
-      }
+      clear();
 
       return;
     }
@@ -243,8 +224,7 @@ function LessonMCQContent({
 
     try {
       // Clear session storage
-      sessionStorage.removeItem(`quiz_progress_${articleId}`);
-      sessionStorage.removeItem(`quiz_started_${articleId}`);
+      clear();
 
       // Delete existing progress
       await fetch(`/api/v1/articles/${articleId}/questions/mcq`, {
