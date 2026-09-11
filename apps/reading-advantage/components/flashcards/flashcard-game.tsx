@@ -142,6 +142,15 @@ export function FlashcardGameInline({
     return () => clearInterval(timer);
   }, [isPlaying, studyComplete]);
 
+  // Cancel any in-flight speech when the game unmounts
+  useEffect(() => {
+    return () => {
+      if ("speechSynthesis" in window) {
+        speechSynthesis.cancel();
+      }
+    };
+  }, []);
+
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
@@ -327,6 +336,7 @@ export function FlashcardGameInline({
 
   const speakText = (text: string) => {
     if ("speechSynthesis" in window) {
+      speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.lang = "en-US";
       speechSynthesis.speak(utterance);
