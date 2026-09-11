@@ -1,5 +1,9 @@
 "use client";
 
+import {
+  getGcsTtsAudioUrl,
+  getGcsWordAudioUrl,
+} from "@/lib/gcs-url";
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import { Article } from "../../models/article-model";
 import {
@@ -19,7 +23,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { AUDIO_URL } from "@/server/constants";
 
 interface Phase3FirstReadingProps {
   article: Article;
@@ -159,7 +162,7 @@ const Phase3FirstReading: React.FC<Phase3FirstReadingProps> = ({
 
       // เพิ่มการตรวจสอบ URL format
       if (!fullAudioUrl.startsWith("http")) {
-        fullAudioUrl = `https://storage.googleapis.com/artifacts.reading-advantage.appspot.com/${AUDIO_URL}/${effectiveAudioUrl}`;
+        fullAudioUrl = getGcsTtsAudioUrl(effectiveAudioUrl);
       }
 
       // Add cache buster

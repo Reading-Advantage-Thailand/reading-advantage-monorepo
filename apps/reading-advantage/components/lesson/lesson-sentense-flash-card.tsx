@@ -1,4 +1,8 @@
 "use client";
+import {
+  getGcsTtsAudioUrl,
+  getGcsWordAudioUrl,
+} from "@/lib/gcs-url";
 import React, { useEffect, useState, useRef } from "react";
 import { FlashcardArray } from "react-quizlet-flashcard";
 import dayjs from "dayjs";
@@ -281,7 +285,7 @@ export default function LessonSentenseFlashCard({
                       <AudioButton
                         audioUrl={
                           sentences[currentCardIndex].audioUrl ||
-                          `https://storage.googleapis.com/artifacts.reading-advantage.appspot.com/tts/${sentences[currentCardIndex].articleId}.mp3`
+                          getGcsTtsAudioUrl(`${sentences[currentCardIndex].articleId}.mp3`)
                         }
                         startTimestamp={sentences[currentCardIndex]?.timepoint}
                         endTimestamp={sentences[currentCardIndex]?.endTimepoint}

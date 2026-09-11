@@ -1,12 +1,15 @@
 "use client";
 
+import {
+  getGcsTtsAudioUrl,
+  getGcsWordAudioUrl,
+} from "@/lib/gcs-url";
 import { useState, useEffect } from "react";
 import { useScopedI18n } from "@/locales/client";
 import { Book } from "lucide-react";
 import { useCurrentLocale } from "@/locales/client";
 import { Article } from "@/components/models/article-model";
 import { Skeleton } from "@/components/ui/skeleton";
-import { AUDIO_WORDS_URL } from "@/server/constants";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { toast } from "@/components/ui/use-toast";
 import AudioImg from "../audio-img";
@@ -168,7 +171,7 @@ export default function LessonWordCollection({
               index,
               startTime,
               endTime,
-              audioUrl: word.audioUrl || `https://storage.googleapis.com/artifacts.reading-advantage.appspot.com/${AUDIO_WORDS_URL}/${articleId}.mp3`,
+              audioUrl: word.audioUrl || getGcsWordAudioUrl(articleId),
             };
           });
           console.log("Direct array - processed with endTime logic:", processedWordList); // Debug log
@@ -186,7 +189,7 @@ export default function LessonWordCollection({
                 index,
                 startTime,
                 endTime,
-                audioUrl: `https://storage.googleapis.com/artifacts.reading-advantage.appspot.com/${AUDIO_WORDS_URL}/${articleId}.mp3`,
+                audioUrl: getGcsWordAudioUrl(articleId),
               };
             }
           );
@@ -202,7 +205,7 @@ export default function LessonWordCollection({
               index,
               startTime,
               endTime,
-              audioUrl: word.audioUrl || `https://storage.googleapis.com/artifacts.reading-advantage.appspot.com/${AUDIO_WORDS_URL}/${articleId}.mp3`,
+              audioUrl: word.audioUrl || getGcsWordAudioUrl(articleId),
             };
           });
         } else if (data?.wordlist && Array.isArray(data.wordlist)) {
@@ -217,7 +220,7 @@ export default function LessonWordCollection({
               index,
               startTime,
               endTime,
-              audioUrl: word.audioUrl || `https://storage.googleapis.com/artifacts.reading-advantage.appspot.com/${AUDIO_WORDS_URL}/${articleId}.mp3`,
+              audioUrl: word.audioUrl || getGcsWordAudioUrl(articleId),
             };
           });
         } else {
@@ -376,7 +379,7 @@ export default function LessonWordCollection({
                                                 audioUrl={
                                                   word.audioUrl
                                                     ? word.audioUrl
-                                                    : `https://storage.googleapis.com/artifacts.reading-advantage.appspot.com/${AUDIO_WORDS_URL}/${articleId}.mp3`
+                                                    : getGcsWordAudioUrl(articleId)
                                                 }
                                                 startTimestamp={word?.startTime}
                                                 endTimestamp={word?.endTime}

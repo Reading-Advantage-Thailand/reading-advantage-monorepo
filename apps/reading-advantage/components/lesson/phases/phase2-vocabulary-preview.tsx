@@ -1,12 +1,15 @@
 "use client";
 
+import {
+  getGcsTtsAudioUrl,
+  getGcsWordAudioUrl,
+} from "@/lib/gcs-url";
 import React, { useState, useEffect, useRef } from "react";
 import { Article } from "../../models/article-model";
 import { useScopedI18n, useCurrentLocale } from "@/locales/client";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "@/components/ui/use-toast";
 import { BookmarkIcon, VolumeXIcon, PlayIcon, Volume2Icon } from "lucide-react";
-import { AUDIO_WORDS_URL } from "@/server/constants";
 
 interface Phase2VocabularyPreviewProps {
   article: Article;
@@ -297,11 +300,11 @@ const Phase2VocabularyPreview: React.FC<Phase2VocabularyPreviewProps> = ({
             // ปรับปรุง audioUrl ให้มีการ fallback ที่ดีขึ้นและ validate URL
             let audioUrl =
               word.audioUrl ||
-              `https://storage.googleapis.com/artifacts.reading-advantage.appspot.com/${AUDIO_WORDS_URL}/${articleId}.mp3`;
+              getGcsWordAudioUrl(articleId);
 
             // เพิ่มการตรวจสอบ URL format
             if (!audioUrl.startsWith("http")) {
-              audioUrl = `https://storage.googleapis.com/artifacts.reading-advantage.appspot.com/${AUDIO_WORDS_URL}/${articleId}.mp3`;
+              audioUrl = getGcsWordAudioUrl(articleId);
             }
 
             return {
@@ -324,7 +327,7 @@ const Phase2VocabularyPreview: React.FC<Phase2VocabularyPreviewProps> = ({
                 : undefined; // คำสุดท้ายไม่มี endTime -> เล่นจนจบไฟล์
 
               // ปรับปรุง audioUrl ให้มีการ fallback ที่ดีขึ้น
-              const audioUrl = `https://storage.googleapis.com/artifacts.reading-advantage.appspot.com/${AUDIO_WORDS_URL}/${articleId}.mp3`;
+              const audioUrl = getGcsWordAudioUrl(articleId);
 
               const vocabulary = data?.word_list[index]?.vocabulary;
 

@@ -1,5 +1,6 @@
 "use client";
 SelectStory;
+import { isAtLeastTeacher } from "@/lib/roles";
 import React from "react";
 import {
   Card,
@@ -85,8 +86,7 @@ export default function SelectStory({ user }: Props) {
   );
   const [selectedLevels, setSelectedLevels] = React.useState<string[]>([]);
 
-  const isTeacherOrAbove =
-    user.role === "TEACHER" || user.role === "ADMIN" || user.role === "SYSTEM";
+  const isTeacherOrAbove = isAtLeastTeacher(user.role);
 
   const selectedGenre = searchParams.get("genre");
   const selectedSubgenre = searchParams.get("subgenre");

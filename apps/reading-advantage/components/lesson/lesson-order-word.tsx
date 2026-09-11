@@ -1,4 +1,8 @@
 "use client";
+import {
+  getGcsTtsAudioUrl,
+  getGcsWordAudioUrl,
+} from "@/lib/gcs-url";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useScopedI18n } from "@/locales/client";
@@ -33,7 +37,6 @@ import {
 import { cn } from "@/lib/utils";
 import { Progress } from "../ui/progress";
 import { Separator } from "../ui/separator";
-import { AUDIO_URL } from "@/server/constants";
 
 interface OrderWordData {
   id: string;
@@ -738,7 +741,7 @@ export default function LessonOrderWords({
               <div className="pt-3">
                 <AudioButton
                   key={currentIndex}
-                  audioUrl={`https://storage.googleapis.com/artifacts.reading-advantage.appspot.com/${AUDIO_URL}/${currentSentence.audioUrl}`}
+                  audioUrl={getGcsTtsAudioUrl(currentSentence.audioUrl ?? "")}
                   startTimestamp={currentSentence.timepoint || 0}
                   endTimestamp={currentSentence.endTimepoint || 0}
                 />

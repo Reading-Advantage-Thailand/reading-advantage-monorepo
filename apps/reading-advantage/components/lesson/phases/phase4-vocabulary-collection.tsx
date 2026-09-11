@@ -1,5 +1,9 @@
 "use client";
 
+import {
+  getGcsTtsAudioUrl,
+  getGcsWordAudioUrl,
+} from "@/lib/gcs-url";
 import React, { useState, useEffect } from "react";
 import { Article } from "../../models/article-model";
 import { useScopedI18n, useCurrentLocale } from "@/locales/client";
@@ -14,7 +18,6 @@ import {
   StarIcon,
 } from "lucide-react";
 import AudioImg from "../../audio-img";
-import { AUDIO_WORDS_URL } from "@/server/constants";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -142,7 +145,7 @@ const Phase4VocabularyCollection: React.FC<Phase4VocabularyCollectionProps> = ({
               endTime,
               audioUrl:
                 word.audioUrl ||
-                `https://storage.googleapis.com/artifacts.reading-advantage.appspot.com/${AUDIO_WORDS_URL}/${articleId}.mp3`,
+                getGcsWordAudioUrl(articleId),
             };
           });
         }
@@ -393,7 +396,7 @@ const Phase4VocabularyCollection: React.FC<Phase4VocabularyCollectionProps> = ({
                                             key={word.vocabulary}
                                             audioUrl={
                                               word.audioUrl ||
-                                              `https://storage.googleapis.com/artifacts.reading-advantage.appspot.com/${AUDIO_WORDS_URL}/${articleId}.mp3`
+                                              getGcsWordAudioUrl(articleId)
                                             }
                                             startTimestamp={word?.startTime}
                                             endTimestamp={word?.endTime}

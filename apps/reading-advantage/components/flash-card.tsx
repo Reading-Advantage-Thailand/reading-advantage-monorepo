@@ -1,5 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
+import {
+  getGcsTtsAudioUrl,
+  getGcsWordAudioUrl,
+} from "@/lib/gcs-url";
 import React, { useEffect, useState, useRef } from "react";
 import { FlashcardArray } from "react-quizlet-flashcard";
 import dayjs from "dayjs";
@@ -250,7 +254,7 @@ export default function FlashCard({
                           audioUrl={
                             sentence.audioUrl
                               ? sentence.audioUrl
-                              : `https://storage.googleapis.com/artifacts.reading-advantage.appspot.com/tts/${sentence.articleId}.mp3`
+                              : getGcsTtsAudioUrl(`${sentence.articleId}.mp3`)
                           }
                           startTimestamp={sentence.timepoint}
                           endTimestamp={sentence.endTimepoint}

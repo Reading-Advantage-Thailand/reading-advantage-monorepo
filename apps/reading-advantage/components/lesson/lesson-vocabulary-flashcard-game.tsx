@@ -1,5 +1,9 @@
 "use client";
 
+import {
+  getGcsTtsAudioUrl,
+  getGcsWordAudioUrl,
+} from "@/lib/gcs-url";
 import React, { useState, useEffect, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -40,7 +44,6 @@ import {
 } from "ts-fsrs";
 import { toast } from "sonner";
 import AudioButton from "@/components/audio-button";
-import { AUDIO_WORDS_URL } from "@/server/constants";
 
 // FSRS Configuration
 const f = fsrs(generatorParameters({ enable_fuzz: true }));
@@ -792,7 +795,7 @@ export default function LessonVocabularyFlashcardGame({
                     <AudioButton
                       audioUrl={
                         currentCard.word.audioUrl ||
-                        `https://storage.googleapis.com/artifacts.reading-advantage.appspot.com/${AUDIO_WORDS_URL}/${currentCard.articleId}.mp3`
+                        getGcsWordAudioUrl(currentCard.articleId)
                       }
                       startTimestamp={currentCard?.word?.startTime || 0}
                       endTimestamp={currentCard?.word?.endTime || 0}

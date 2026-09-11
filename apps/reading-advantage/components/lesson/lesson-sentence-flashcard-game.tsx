@@ -1,8 +1,11 @@
 "use client";
 
+import {
+  getGcsTtsAudioUrl,
+  getGcsWordAudioUrl,
+} from "@/lib/gcs-url";
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { AUDIO_URL } from "@/server/constants";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -209,7 +212,7 @@ export default function LessonSentenceFlashcardGame({
               timepoint: item.timepoint,
               endTimepoint: item.endTimepoint,
               audioUrl: item.audioUrl
-                ? `https://storage.googleapis.com/artifacts.reading-advantage.appspot.com/${AUDIO_URL}/${item.audioUrl}`
+                ? getGcsTtsAudioUrl(item.audioUrl)
                 : undefined,
             },
             articleId: item.articleId,

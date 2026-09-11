@@ -1,5 +1,9 @@
 "use client";
 
+import {
+  getGcsTtsAudioUrl,
+  getGcsWordAudioUrl,
+} from "@/lib/gcs-url";
 import React, {
   useCallback,
   useEffect,
@@ -40,7 +44,6 @@ import {
   ActivityType,
 } from "../models/user-activity-log-model";
 import "animate.css";
-import { AUDIO_URL } from "@/server/constants";
 
 interface OrderSentenceData {
   id: string;
@@ -203,7 +206,7 @@ export default React.memo(function LessonOrderSentences({
               id: `sentence-${tp.index}-${Date.now()}-${index}`,
               text: tp.sentences,
               originalIndex: tp.index,
-              audioUrl: `https://storage.googleapis.com/artifacts.reading-advantage.appspot.com/${AUDIO_URL}/${tp.file}`,
+              audioUrl: getGcsTtsAudioUrl(tp.file),
               startTime: tp.timeSeconds,
               endTime:
                 index < 4

@@ -1,5 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
+import {
+  getGcsTtsAudioUrl,
+  getGcsWordAudioUrl,
+} from "@/lib/gcs-url";
 import React, { useEffect, useState, useRef } from "react";
 import { FlashcardArray } from "react-quizlet-flashcard";
 import dayjs from "dayjs";
@@ -14,7 +18,6 @@ import { Button } from "../ui/button";
 import { Header } from "../header";
 import { toast } from "../ui/use-toast";
 import { useCurrentLocale, useScopedI18n } from "@/locales/client";
-import { AUDIO_WORDS_URL } from "@/server/constants";
 import LessonFlashCardVocabularyPracticeButton from "./lesson-vocabulary-flash-card-button";
 import FlipCardPracticeButton from "../flip-card-button";
 import {
@@ -321,7 +324,7 @@ export default function LessonVocabularyFlashCard({
                       <AudioButton
                         audioUrl={
                           words[currentCardIndex].word.audioUrl ||
-                          `https://storage.googleapis.com/artifacts.reading-advantage.appspot.com/${AUDIO_WORDS_URL}/${words[currentCardIndex].articleId}.mp3`
+                          getGcsWordAudioUrl(words[currentCardIndex].articleId)
                         }
                         startTimestamp={
                           words[currentCardIndex]?.word?.startTime

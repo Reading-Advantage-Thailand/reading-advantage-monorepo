@@ -1,3 +1,4 @@
+import { isAtLeastTeacher } from "@/lib/roles";
 import { getCurrentUser } from "@/lib/session";
 import { redirect } from "next/navigation";
 import React from "react";
@@ -93,11 +94,6 @@ export default async function StoryChapterSelectionPage({
     continueRead: t("continueRead"),
     readChapter: t("readChapter"),
   };
-
-  const isAtLeastTeacher = (role: string) =>
-    role.includes("TEACHER") ||
-    role.includes("ADMIN") ||
-    role.includes("SYSTEM");
 
   const isAboveTeacher = (role: string) =>
     role.includes("ADMIN") || role.includes("SYSTEM");
