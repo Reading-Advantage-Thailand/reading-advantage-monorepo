@@ -100,6 +100,8 @@ export async function submitRating(userId: string, articleId: string, rating: nu
         )
       );
 
+    const averageRating = await computeAverageRating(articleId);
+
     return { success: true, xpEarned: 0, averageRating };
   }
 }

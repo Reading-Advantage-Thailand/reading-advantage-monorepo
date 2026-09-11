@@ -321,7 +321,7 @@ export default function Matching({
                             <AudioButton
                               key={word?.text}
                               audioUrl={word?.audioUrl}
-                              startTimestamp={word?.timepoint}
+                              startTimestamp={word?.timepoint ?? 0}
                               endTimestamp={word?.endTimepoint}
                             />
                           )}

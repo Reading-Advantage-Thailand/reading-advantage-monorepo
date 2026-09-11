@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef, Table } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -33,9 +33,7 @@ type ClassroomStudentTableProps = {
   toolbar?: React.ReactNode;
   onResetProgress?: (studentId: string) => void;
   showPagination?: boolean;
-  renderPagination?: (
-    table: ReturnType<typeof useReactTable<ClassroomStudent>>
-  ) => React.ReactNode;
+  renderPagination?: (table: Table<ClassroomStudent>) => React.ReactNode;
 };
 
 /**

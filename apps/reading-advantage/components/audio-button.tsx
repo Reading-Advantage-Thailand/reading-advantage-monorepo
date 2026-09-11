@@ -8,7 +8,7 @@ import useAudioSegment from "@/hooks/use-audio-segment";
 type Props = {
   audioUrl: string;
   startTimestamp: number;
-  endTimestamp: number;
+  endTimestamp?: number;
 };
 
 /**
