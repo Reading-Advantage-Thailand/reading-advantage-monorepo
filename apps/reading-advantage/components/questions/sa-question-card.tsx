@@ -1,5 +1,5 @@
 "use client";
-import React, { use, useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -14,7 +14,10 @@ import { Skeleton } from "../ui/skeleton";
 import { Badge } from "../ui/badge";
 import { useScopedI18n } from "@/locales/client";
 import { Button } from "../ui/button";
-import { ShortAnswerQuestion } from "../models/questions-model";
+import {
+  QuestionState,
+  ShortAnswerQuestion,
+} from "../models/questions-model";
 import { Icons } from "../icons";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -47,6 +50,8 @@ type Props = {
   articleLevel: number;
   page: "article" | "lesson";
   onCompleteChange?: (complete: boolean) => void;
+  variant?: "article" | "story";
+  chapterNumber?: string;
 };
 
 export type QuestionResponse = {
@@ -62,13 +67,6 @@ type AnswerResponse = {
   suggested_answer: string;
 };
 
-enum QuestionState {
-  LOADING = 0,
-  INCOMPLETE = 1,
-  COMPLETED = 2,
-  ERROR = 3,
-}
-
 export default function SAQuestionCard({
   userId,
   articleId,
@@ -76,7 +74,13 @@ export default function SAQuestionCard({
   articleLevel,
   page,
   onCompleteChange,
+  variant = "article",
+  chapterNumber,
 }: Props) {
+  const isStory = variant === "story";
+  const endpointBase = isStory
+    ? `/api/v1/stories/${articleId}/${chapterNumber}/question`
+    : `/api/v1/articles/${articleId}/questions`;
   const [state, setState] = useState(QuestionState.LOADING);
   const [data, setData] = useState<QuestionResponse>({
     result: {
@@ -91,7 +95,7 @@ export default function SAQuestionCard({
   const { checkAndNotifyCompletion } = useArticleCompletion();
 
   useEffect(() => {
-    fetch(`/api/v1/articles/${articleId}/questions/sa`)
+    fetch(`${endpointBase}/sa`)
       .then((res) => res.json())
       .then((data) => {
         setData(data);
@@ -102,10 +106,19 @@ export default function SAQuestionCard({
         console.error("error: ", error);
         setState(QuestionState.ERROR);
       });
-  }, [articleId]);
+    // Story cards refetch after completion to load the saved answer; article
+    // cards resolve completion locally and must not fetch in a loop.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, isStory ? [state, endpointBase] : [endpointBase]);
 
   const handleCompleted = (answerData?: Partial<QuestionResponse>) => {
-    // Merge ผลลัพธ์ที่ได้จาก submit โดยตรง ไม่ต้อง re-fetch จาก server
+    if (isStory) {
+      // Refetch from the server so the completed card shows the saved answer.
+      setState(QuestionState.LOADING);
+      return;
+    }
+
+    // Merge the submitted result directly instead of re-fetching.
     const updatedData = { ...data, ...answerData, state: QuestionState.COMPLETED };
     setData(updatedData);
     setState(QuestionState.COMPLETED);
@@ -132,23 +145,28 @@ export default function SAQuestionCard({
     }
   }, [state, userId, articleId, page, checkAndNotifyCompletion]);
 
+  const layoutPage = isStory ? ("article" as const) : page;
+
   switch (state) {
     case QuestionState.LOADING:
-      return <QuestionCardLoading page={page} />;
+      return <QuestionCardLoading page={layoutPage} />;
     case QuestionState.INCOMPLETE:
       return (
         <QuestionCardIncomplete
           userId={userId}
           resp={data}
           articleId={articleId}
+          chapterNumber={chapterNumber}
           handleCompleted={handleCompleted}
           articleTitle={articleTitle}
           articleLevel={articleLevel}
-          page={page}
+          page={layoutPage}
+          isStory={isStory}
+          endpointBase={endpointBase}
         />
       );
     case QuestionState.COMPLETED:
-      return <QuestionCardComplete resp={data} page={page} />;
+      return <QuestionCardComplete resp={data} page={layoutPage} />;
     default:
       return <QuestionCardError error="Failed to load question. Please refresh the page." />;
   }
@@ -295,18 +313,24 @@ function QuestionCardIncomplete({
   userId,
   resp,
   articleId,
+  chapterNumber,
   handleCompleted,
   articleTitle,
   articleLevel,
   page,
+  isStory,
+  endpointBase,
 }: {
   userId: string;
   resp: QuestionResponse;
   articleId: string;
+  chapterNumber?: string;
   handleCompleted: (answerData?: Partial<QuestionResponse>) => void;
   articleTitle: string;
   articleLevel: number;
   page: "article" | "lesson";
+  isStory: boolean;
+  endpointBase: string;
 }) {
   const t = useScopedI18n("components.saq");
   return (
@@ -326,11 +350,14 @@ function QuestionCardIncomplete({
               <SAQuestion
                 resp={resp}
                 articleId={articleId}
+                chapterNumber={chapterNumber}
                 handleCompleted={handleCompleted}
                 userId={userId}
                 articleTitle={articleTitle}
                 articleLevel={articleLevel}
                 page={page}
+                isStory={isStory}
+                endpointBase={endpointBase}
               />
             </QuizContextProvider>
           </QuestionHeader>
@@ -340,12 +367,15 @@ function QuestionCardIncomplete({
         <QuizContextProvider>
           <SAQuestion
             articleId={articleId}
+            chapterNumber={chapterNumber}
             resp={resp}
             handleCompleted={handleCompleted}
             userId={userId}
             articleTitle={articleTitle}
             articleLevel={articleLevel}
             page="lesson"
+            isStory={isStory}
+            endpointBase={endpointBase}
           />
         </QuizContextProvider>
       )}
@@ -363,19 +393,25 @@ function countWords(text: string): number {
 function SAQuestion({
   resp,
   articleId,
+  chapterNumber,
   userId,
   handleCompleted,
   articleTitle,
   articleLevel,
   page,
+  isStory,
+  endpointBase,
 }: {
   resp: QuestionResponse;
   articleId: string;
+  chapterNumber?: string;
   userId: string;
   handleCompleted: (answerData?: Partial<QuestionResponse>) => void;
   articleTitle: string;
   articleLevel: number;
   page: "article" | "lesson";
+  isStory: boolean;
+  endpointBase: string;
 }) {
   const shortAnswerSchema = z.object({
     answer: z
@@ -408,22 +444,63 @@ function SAQuestion({
   const router = useRouter();
   const currentLocale = useCurrentLocale();
 
+  const questionId = isStory
+    ? (resp.result as { questionId?: string }).questionId || resp.result.id
+    : resp.result.id;
+
   const handleTextChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const text = event.target.value;
     setWordCount(countWords(text));
   };
 
-  async function onSubmitted(data: FormData) {
+  async function onSubmitted(formData: FormData) {
     setIsLoading(true);
     setPaused(true);
 
+    if (isStory) {
+      try {
+        const res = await fetch(`${endpointBase}/sa/${questionId}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            answer: formData.answer,
+            timeRecorded: timer,
+            createActivity: false,
+          }),
+        });
+
+        if (!res.ok) {
+          const text = await res.text();
+          console.error("SA submit failed", { status: res.status, text });
+          toast({
+            title: "An error occurred.",
+            description: "Unable to submit answer.",
+          });
+          return;
+        }
+
+        const responseData = await res.json();
+        setData(responseData);
+      } catch (err) {
+        console.error("Error submitting SA answer:", err);
+        toast({
+          title: "An error occurred.",
+          description: "Unable to submit answer.",
+        });
+      } finally {
+        setIsLoading(false);
+        setPaused(false);
+      }
+      return;
+    }
+
     try {
       const submitResponse = await fetch(
-        `/api/v1/articles/${articleId}/questions/sa/${resp.result.id}`,
+        `${endpointBase}/sa/${questionId}`,
         {
           method: "POST",
           body: JSON.stringify({
-            answer: data.answer,
+            answer: formData.answer,
             timeRecorded: timer,
           }),
         }
@@ -434,11 +511,11 @@ function SAQuestion({
     } catch (error) {
       console.error("Error getting feedback:", error);
       const submitResponse = await fetch(
-        `/api/v1/articles/${articleId}/questions/sa/${resp.result.id}`,
+        `${endpointBase}/sa/${questionId}`,
         {
           method: "POST",
           body: JSON.stringify({
-            answer: data.answer,
+            answer: formData.answer,
             timeRecorded: timer,
           }),
         }
@@ -454,16 +531,62 @@ function SAQuestion({
   async function onRating() {
     setIsLoading(true);
 
-    try {
-      await fetch(
-        `/api/v1/articles/${articleId}/questions/sa/${resp.result.id}/rate`,
-        {
+    if (isStory) {
+      const xpToAward = 5;
+      try {
+        const res = await fetch(`/api/v1/users/${userId}/activitylog`, {
           method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            rating,
+            articleId,
+            activityType: ActivityType.SA_Question,
+            activityStatus: ActivityStatus.Completed,
+            timeTaken: timer,
+            xpEarned: xpToAward,
+            details: {
+              answer: data?.answer ?? "",
+              suggested_answer: data?.suggested_answer ?? "",
+              questionId,
+              chapter_number: chapterNumber,
+              rate: rating,
+              level: articleLevel,
+              title: articleTitle,
+              cefr_level: levelCalculation(rating).cefrLevel,
+            },
           }),
+        });
+
+        if (!res.ok) {
+          const text = await res.text();
+          console.error("Activity log failed", { status: res.status, text });
+          toast({ title: "Error", description: "Unable to save activity." });
+          return;
         }
-      );
+
+        toast({
+          title: tf("toast.success"),
+          imgSrc: true,
+          description: `Congratulations!, You received ${xpToAward} XP for completing this activity.`,
+        });
+
+        handleCompleted();
+        router.refresh();
+      } catch (err) {
+        console.error("Error creating activity log:", err);
+        toast({ title: "Error", description: "Unable to save activity." });
+      } finally {
+        setIsLoading(false);
+      }
+      return;
+    }
+
+    try {
+      await fetch(`${endpointBase}/sa/${questionId}/rate`, {
+        method: "POST",
+        body: JSON.stringify({
+          rating,
+        }),
+      });
 
       toast({
         title: tf("toast.success"),
@@ -471,7 +594,7 @@ function SAQuestion({
         description: `Congratulations!, You received ${rating} XP for completing this activity.`,
       });
 
-      // ส่ง submitData ที่มีอยู่แล้วเข้า handleCompleted แทนการ re-fetch
+      // Send the submitted result into handleCompleted instead of re-fetching.
       handleCompleted({
         state: QuestionState.COMPLETED,
         suggested_answer: data.suggested_answer,
@@ -615,9 +738,7 @@ function SAQuestion({
                         {t("suggestedAnswer")}
                       </p>
                       <p>{data.suggested_answer}</p>
-                      <p className="font-bold text-lg mt-4">
-                        {t("yourAnswer")}
-                      </p>
+                      <p className="font-bold text-lg mt-4">{t("yourAnswer")}</p>
                       <p className="text-green-500 dark:text-green-400 inline font-bold mt-2">
                         {data.answer}
                       </p>

@@ -13,7 +13,7 @@ import { Skeleton } from "../ui/skeleton";
 import { Badge } from "../ui/badge";
 import { useScopedI18n } from "@/locales/client";
 import { Button } from "../ui/button";
-import { cn, levelCalculation } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import {
   AnswerStatus,
   MultipleChoiceQuestion,
@@ -22,8 +22,9 @@ import {
 import { Icons } from "../icons";
 import { useQuestionStore } from "@/store/question-store";
 import { toast } from "../ui/use-toast";
-import { useRouter } from "next/navigation";
 import { useArticleCompletion } from "@/lib/use-article-completion";
+import { useStoryCompletion } from "@/lib/use-story-completion";
+import { useQuizProgress } from "@/lib/use-quiz-progress";
 
 type Props = {
   userId: string;
@@ -32,6 +33,8 @@ type Props = {
   articleLevel: number;
   page?: "lesson" | "article";
   onCompleteChange?: (complete: boolean) => void;
+  variant?: "article" | "story";
+  chapterNumber?: string;
 };
 
 export type QuestionResponse = {
@@ -41,6 +44,23 @@ export type QuestionResponse = {
   state: QuestionState;
 };
 
+type StoryQuestionResult = MultipleChoiceQuestion & {
+  question_number: number;
+  chapter_number: string;
+};
+
+type StoryQuestionResponse = Omit<QuestionResponse, "results"> & {
+  results: StoryQuestionResult[];
+};
+
+const UNANSWERED_PROGRESS: AnswerStatus[] = [
+  AnswerStatus.UNANSWERED,
+  AnswerStatus.UNANSWERED,
+  AnswerStatus.UNANSWERED,
+  AnswerStatus.UNANSWERED,
+  AnswerStatus.UNANSWERED,
+];
+
 export default function MCQuestionCard({
   userId,
   articleId,
@@ -48,7 +68,14 @@ export default function MCQuestionCard({
   articleLevel,
   page,
   onCompleteChange,
+  variant = "article",
+  chapterNumber,
 }: Props) {
+  const isStory = variant === "story";
+  const storageKey = isStory ? `${articleId}_${chapterNumber}` : articleId;
+  const endpointBase = isStory
+    ? `/api/v1/stories/${articleId}/${chapterNumber}/question`
+    : `/api/v1/articles/${articleId}/questions`;
   const [state, setState] = useState(QuestionState.LOADING);
   const [data, setData] = useState<QuestionResponse>({
     results: [],
@@ -57,8 +84,12 @@ export default function MCQuestionCard({
     state: QuestionState.LOADING,
   });
 
-  const [hasStarted, setHasStarted] = useState(false);
-  const { checkAndNotifyCompletion } = useArticleCompletion();
+  const { hasStarted, markStarted, clear, saveProgress, loadProgress } =
+    useQuizProgress(storageKey);
+  const { checkAndNotifyCompletion: checkArticleCompletion } =
+    useArticleCompletion();
+  const { checkAndNotifyCompletion: checkStoryCompletion } =
+    useStoryCompletion();
 
   // Listen to global store changes to sync between lesson and article
   useEffect(() => {
@@ -74,97 +105,12 @@ export default function MCQuestionCard({
   }, []);
 
   useEffect(() => {
-    const checkAndClearCorruptedData = async () => {
-      try {
-        const savedProgress = sessionStorage.getItem(
-          `quiz_progress_${articleId}`
-        );
-        const savedStarted = sessionStorage.getItem(
-          `quiz_started_${articleId}`
-        );
-
-        if (savedProgress) {
-          const parsedProgress = JSON.parse(savedProgress);
-          if (
-            Array.isArray(parsedProgress) &&
-            parsedProgress.length === 5 &&
-            parsedProgress.every(
-              (status: number) => status === AnswerStatus.CORRECT
-            )
-          ) {
-            sessionStorage.removeItem(`quiz_progress_${articleId}`);
-            sessionStorage.removeItem(`quiz_started_${articleId}`);
-            setHasStarted(false);
-          }
-        }
-
-        if (savedStarted === "true" && !savedProgress) {
-          sessionStorage.removeItem(`quiz_started_${articleId}`);
-          setHasStarted(false);
-        }
-      } catch (e) {
-        console.error("Error checking cached data:", e);
-        try {
-          sessionStorage.removeItem(`quiz_progress_${articleId}`);
-          sessionStorage.removeItem(`quiz_started_${articleId}`);
-          setHasStarted(false);
-        } catch (clearError) {
-          console.error("Error clearing corrupted data:", clearError);
-        }
-      }
-    };
-
-    checkAndClearCorruptedData();
-  }, [articleId]);
-
-  useEffect(() => {
-    try {
-      const quizStarted = sessionStorage.getItem(`quiz_started_${articleId}`);
-      if (quizStarted === "true") {
-        setHasStarted(true);
-      } else {
-        setHasStarted(false);
-      }
-    } catch (e) {
-      console.error("Failed to read from sessionStorage:", e);
-      setHasStarted(false);
-    }
-  }, [articleId]);
-
-  useEffect(() => {
     const timestamp = new Date().getTime();
-    fetch(`/api/v1/articles/${articleId}/questions/mcq?_t=${timestamp}`)
+    fetch(`${endpointBase}/mcq?_t=${timestamp}`)
       .then((res) => res.json())
       .then((data) => {
-        try {
-          sessionStorage.removeItem(`quiz_progress_${articleId}`);
-          sessionStorage.removeItem(`quiz_started_${articleId}`);
-        } catch (e) {
-          console.error("Error clearing sessionStorage:", e);
-        }
-
-        if (
-          data.progress &&
-          Array.isArray(data.progress) &&
-          data.progress.length === 5 &&
-          data.progress.every(
-            (status: number) => status === AnswerStatus.CORRECT
-          ) &&
-          data.state === QuestionState.INCOMPLETE
-        ) {
-          data.progress = [
-            AnswerStatus.UNANSWERED,
-            AnswerStatus.UNANSWERED,
-            AnswerStatus.UNANSWERED,
-            AnswerStatus.UNANSWERED,
-            AnswerStatus.UNANSWERED,
-          ];
-          setHasStarted(false);
-          try {
-            sessionStorage.removeItem(`quiz_progress_${articleId}`);
-            sessionStorage.removeItem(`quiz_started_${articleId}`);
-          } catch (clearError) {}
-        }
+        // Server state is the source of truth; drop any cached progress.
+        clear();
 
         setData(data);
         setState(data.state);
@@ -172,15 +118,14 @@ export default function MCQuestionCard({
 
         // If the quiz is completed server-side, make sure to update local state
         if (data.state === QuestionState.COMPLETED) {
-          setHasStarted(true);
+          markStarted();
         }
       })
       .catch((error) => {
-        // à¹ƒà¸Šà¹‰ ERROR à¹à¸—à¸™ LOADING à¹€à¸žà¸·à¹ˆà¸­à¸›à¹‰à¸­à¸‡à¸à¸±à¸™ fetch loop
         console.error("Error fetching MCQ:", error);
-        setState(QuestionState.ERROR);
+        setState(isStory ? QuestionState.LOADING : QuestionState.ERROR);
       });
-  }, [articleId]);
+  }, [endpointBase]);
 
   const handleCompleted = (
     currentProgress?: AnswerStatus[],
@@ -196,63 +141,51 @@ export default function MCQuestionCard({
       if (newResp) {
         updatedData.results = newResp.results;
         updatedData.total = newResp.total;
-        updatedData.state = newResp.state || (completedAnswers >= 5 ? QuestionState.COMPLETED : QuestionState.INCOMPLETE);
+        updatedData.state =
+          newResp.state ||
+          (completedAnswers >= 5
+            ? QuestionState.COMPLETED
+            : QuestionState.INCOMPLETE);
       }
       setData(updatedData);
-      
+
       // Update global store with the updated data
       useQuestionStore.setState({ mcQuestion: updatedData });
-    }
 
-    if (completedAnswers >= 5) {
-      setState(QuestionState.COMPLETED);
-      // Clear session storage when completed
-      try {
-        sessionStorage.removeItem(`quiz_progress_${articleId}`);
-        sessionStorage.removeItem(`quiz_started_${articleId}`);
-      } catch (e) {
-        console.error("Error clearing session storage:", e);
+      if (completedAnswers >= 5) {
+        setState(QuestionState.COMPLETED);
+        clear();
+      } else {
+        setState(QuestionState.INCOMPLETE);
       }
+    } else if (completedAnswers >= 5) {
+      setState(QuestionState.COMPLETED);
+      clear();
     } else {
-      // à¹ƒà¸Šà¹‰ INCOMPLETE à¹à¸—à¸™ LOADING à¹€à¸žà¸·à¹ˆà¸­à¹„à¸¡à¹ˆà¹ƒà¸«à¹‰ trigger fetch loop
-      setState(QuestionState.INCOMPLETE);
+      setState(isStory ? QuestionState.LOADING : QuestionState.INCOMPLETE);
     }
 
-    setHasStarted(true);
-    try {
-      sessionStorage.setItem(`quiz_started_${articleId}`, "true");
-    } catch (e) {}
+    markStarted();
   };
 
   const onRetake = () => {
     setState(QuestionState.LOADING);
 
-    try {
-      sessionStorage.removeItem(`quiz_progress_${articleId}`);
-      sessionStorage.removeItem(`quiz_started_${articleId}`);
-    } catch (e) {}
+    clear();
 
-    setHasStarted(false);
-
-    fetch(`/api/v1/articles/${articleId}/questions/mcq`, {
+    fetch(`${endpointBase}/mcq`, {
       method: "DELETE",
     })
       .then((res) => res.json())
-      .then((deleteResponse) => {
+      .then(() => {
         const timestamp = new Date().getTime();
-        return fetch(
-          `/api/v1/articles/${articleId}/questions/mcq?_t=${timestamp}`
-        ).then((res) => res.json());
+        return fetch(`${endpointBase}/mcq?_t=${timestamp}`).then((res) =>
+          res.json()
+        );
       })
       .then((data) => {
         const newData = {
-          progress: [
-            AnswerStatus.UNANSWERED,
-            AnswerStatus.UNANSWERED,
-            AnswerStatus.UNANSWERED,
-            AnswerStatus.UNANSWERED,
-            AnswerStatus.UNANSWERED,
-          ],
+          progress: [...UNANSWERED_PROGRESS],
           results: data.results || [],
           total: data.total || 5,
           state: QuestionState.INCOMPLETE,
@@ -263,12 +196,10 @@ export default function MCQuestionCard({
           mcQuestion: { ...data, state: QuestionState.INCOMPLETE },
         });
 
-        setTimeout(() => {
-          setState(QuestionState.INCOMPLETE);
-        }, 10);
+        setState(QuestionState.INCOMPLETE);
       })
       .catch((error) => {
-        console.error("âŒ Error during retake:", error);
+        console.error("Error during retake:", error);
         setState(QuestionState.INCOMPLETE);
       });
   };
@@ -283,7 +214,7 @@ export default function MCQuestionCard({
     if (state === QuestionState.COMPLETED && page === "article") {
       const checkCompletion = async () => {
         try {
-          await checkAndNotifyCompletion(userId, articleId);
+          await checkArticleCompletion(userId, articleId);
         } catch (error) {
           console.error("Error checking article completion:", error);
         }
@@ -291,32 +222,56 @@ export default function MCQuestionCard({
 
       checkCompletion();
     }
-  }, [state, userId, articleId, page, checkAndNotifyCompletion]);
+  }, [state, userId, articleId, page, checkArticleCompletion]);
+
+  useEffect(() => {
+    if (state === QuestionState.COMPLETED && isStory) {
+      const checkCompletion = async () => {
+        try {
+          await checkStoryCompletion(userId, articleId, chapterNumber ?? "");
+        } catch (error) {
+          console.error("Error checking story completion:", error);
+        }
+      };
+
+      checkCompletion();
+    }
+  }, [state, isStory, userId, articleId, chapterNumber, checkStoryCompletion]);
+
+  const layoutPage = isStory ? ("article" as const) : page;
 
   switch (state) {
     case QuestionState.LOADING:
-      return <QuestionCardLoading page={page} />;
+      return <QuestionCardLoading page={layoutPage} />;
     case QuestionState.INCOMPLETE:
       return (
         <QuestionCardIncomplete
           userId={userId}
           resp={data}
           articleId={articleId}
+          chapterNumber={chapterNumber}
           handleCompleted={handleCompleted}
           articleTitle={articleTitle}
           articleLevel={articleLevel}
           page={page}
+          layoutPage={layoutPage}
+          isStory={isStory}
           hasStarted={hasStarted}
+          endpointBase={endpointBase}
+          saveProgress={saveProgress}
+          loadProgress={loadProgress}
+          markStarted={markStarted}
+          clear={clear}
         />
       );
     case QuestionState.COMPLETED:
       return (
-        <QuestionCardComplete resp={data} onRetake={onRetake} page={page} />
+        <QuestionCardComplete resp={data} onRetake={onRetake} page={layoutPage} />
       );
     case QuestionState.ERROR:
-      return <QuestionCardError page={page} />;
+      return <QuestionCardError page={layoutPage} />;
     default:
-      return <QuestionCardLoading page={page} />;
+      return <QuestionCardLoading page={layoutPage} />;
   }
 }
 
@@ -450,15 +405,24 @@ function QuestionCardIncomplete({
   userId,
   resp,
   articleId,
+  chapterNumber,
   handleCompleted,
   articleTitle,
   articleLevel,
   page,
-  hasStarted = false,
+  layoutPage,
+  isStory,
+  hasStarted,
+  endpointBase,
+  saveProgress,
+  loadProgress,
+  markStarted,
+  clear,
 }: {
   userId: string;
   resp: QuestionResponse;
   articleId: string;
+  chapterNumber?: string;
   handleCompleted: (
     currentProgress?: AnswerStatus[],
     newResp?: QuestionResponse
@@ -466,50 +430,46 @@ function QuestionCardIncomplete({
   articleTitle: string;
   articleLevel: number;
   page?: "lesson" | "article";
-  hasStarted?: boolean;
+  layoutPage?: "lesson" | "article";
+  isStory: boolean;
+  hasStarted: boolean;
+  endpointBase: string;
+  saveProgress: (progress: unknown) => void;
+  loadProgress: () => unknown | null;
+  markStarted: () => void;
+  clear: () => void;
 }) {
   const t = useScopedI18n("components.mcq");
 
-  const getCurrentQuizStartedStatus = () => {
-    try {
-      const sessionStarted = sessionStorage.getItem(
-        `quiz_started_${articleId}`
-      );
-      return sessionStarted === "true";
-    } catch (e) {
-      console.error("Error reading quiz_started from sessionStorage:", e);
-      return false;
-    }
-  };
+  const hasAnswered =
+    resp.progress &&
+    resp.progress.length === 5 &&
+    resp.progress.some(
+      (status) =>
+        status === AnswerStatus.CORRECT || status === AnswerStatus.INCORRECT
+    );
+  const hasStartedQuiz = Boolean(hasAnswered || hasStarted);
 
-  const hasStartedQuiz = (() => {
-    const sessionStarted = getCurrentQuizStartedStatus();
-
-    if (resp.progress && resp.progress.length === 5) {
-      if (
-        resp.state === QuestionState.INCOMPLETE &&
-        resp.progress.every((status) => status === AnswerStatus.CORRECT)
-      ) {
-        try {
-          sessionStorage.removeItem(`quiz_started_${articleId}`);
-          sessionStorage.removeItem(`quiz_progress_${articleId}`);
-        } catch (e) {
-          console.error("Error clearing suspicious data:", e);
-        }
-        return false;
-      }
-      const hasAnswered = resp.progress.some(
-        (status) =>
-          status === AnswerStatus.CORRECT || status === AnswerStatus.INCORRECT
-      );
-      return hasAnswered;
-    }
-    return false;
-  })();
+  const storyQuestion = (
+    <QuizContextProvider>
+      <StoryMCQeustion
+        articleId={articleId}
+        chapterNumber={chapterNumber ?? ""}
+        resp={resp as StoryQuestionResponse}
+        handleCompleted={handleCompleted}
+        userId={userId}
+        articleTitle={articleTitle}
+        articleLevel={articleLevel}
+        endpointBase={endpointBase}
+        saveProgress={saveProgress}
+        markStarted={markStarted}
+      />
+    </QuizContextProvider>
+  );
 
   return (
     <>
-      {page === "article" && !hasStartedQuiz && (
+      {layoutPage === "article" && !hasStartedQuiz && (
         <Card id="onborda-mcq">
           <QuestionHeader
             heading={t("title")}
@@ -520,22 +480,30 @@ function QuestionCardIncomplete({
             disabled={false}
             activityType="mc_question"
           >
-            <QuizContextProvider>
-              <MCQeustion
-                articleId={articleId}
-                resp={resp}
-                handleCompleted={handleCompleted}
-                userId={userId}
-                articleTitle={articleTitle}
-                articleLevel={articleLevel}
-                page={page}
-              />
-            </QuizContextProvider>
+            {isStory ? (
+              storyQuestion
+            ) : (
+              <QuizContextProvider>
+                <MCQeustion
+                  articleId={articleId}
+                  resp={resp}
+                  handleCompleted={handleCompleted}
+                  userId={userId}
+                  articleTitle={articleTitle}
+                  articleLevel={articleLevel}
+                  page={page}
+                  saveProgress={saveProgress}
+                  loadProgress={loadProgress}
+                  markStarted={markStarted}
+                  clear={clear}
+                />
+              </QuizContextProvider>
+            )}
           </QuestionHeader>
         </Card>
       )}
 
-      {page === "article" && hasStartedQuiz && (
+      {layoutPage === "article" && hasStartedQuiz && !isStory && (
         <Card id="onborda-mcq">
           <CardHeader>
             <CardTitle className="font-bold text-3xl md:text-3xl text-muted-foreground">
@@ -550,11 +518,27 @@ function QuestionCardIncomplete({
               userId={userId}
               articleTitle={articleTitle}
               articleLevel={articleLevel}
+              saveProgress={saveProgress}
+              loadProgress={loadProgress}
+              markStarted={markStarted}
+              clear={clear}
             />
           </QuizContextProvider>
         </Card>
       )}
-      {page === "lesson" && (
+
+      {isStory && hasStartedQuiz && (
+        <Card id="onborda-mcq">
+          <CardHeader>
+            <CardTitle className="font-bold text-3xl md:text-3xl text-muted-foreground">
+              {t("title")}
+            </CardTitle>
+          </CardHeader>
+          {storyQuestion}
+        </Card>
+      )}
+
+      {layoutPage === "lesson" && (
         <QuizContextProvider>
           <MCQeustion
             articleId={articleId}
@@ -564,6 +548,10 @@ function QuestionCardIncomplete({
             articleTitle={articleTitle}
             articleLevel={articleLevel}
             page="lesson"
+            saveProgress={saveProgress}
+            loadProgress={loadProgress}
+            markStarted={markStarted}
+            clear={clear}
           />
         </QuizContextProvider>
       )}
@@ -579,6 +567,10 @@ function MCQeustion({
   articleTitle,
   articleLevel,
   page,
+  saveProgress,
+  loadProgress,
+  markStarted,
+  clear,
 }: {
   articleId: string;
   resp: QuestionResponse;
@@ -590,6 +582,10 @@ function MCQeustion({
   articleTitle: string;
   articleLevel: number;
   page?: "lesson" | "article";
+  saveProgress: (progress: unknown) => void;
+  loadProgress: () => unknown | null;
+  markStarted: () => void;
+  clear: () => void;
 }) {
   const [progress, setProgress] = useState(resp.progress || []);
   const [isLoadingAnswer, setLoadingAnswer] = useState(false);
@@ -597,7 +593,6 @@ function MCQeustion({
   const [correctAnswer, setCorrectAnswer] = useState("");
   const { timer, setPaused } = useContext(QuizContext);
   const t = useScopedI18n("components.mcq");
-  const router = useRouter();
   const [fullResults, setFullResults] = useState(resp.results || []);
   const [currentResp, setCurrentResp] = useState(resp);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -610,7 +605,7 @@ function MCQeustion({
         setCurrentIndex(firstUnanswered);
       }
     }
-  }, [fullResults, progress]); 
+  }, [fullResults, progress]);
 
   React.useEffect(() => {
     setFullResults(resp.results || []);
@@ -627,71 +622,39 @@ function MCQeustion({
       }
     }
 
-    let initialProgress = resp.progress || [];
-    if (
-      resp.state === QuestionState.INCOMPLETE &&
-      initialProgress.length === 5 &&
-      initialProgress.every((status) => status === AnswerStatus.CORRECT)
-    ) {
-      console.warn(
-        "ðŸš¨ MCQeustion: Detected suspicious server progress, resetting to unanswered"
-      );
-      initialProgress = [
-        AnswerStatus.UNANSWERED,
-        AnswerStatus.UNANSWERED,
-        AnswerStatus.UNANSWERED,
-        AnswerStatus.UNANSWERED,
-        AnswerStatus.UNANSWERED,
-      ];
-    }
-
+    // Server state is the source of truth; cached progress only fills in
+    // answers given since the last server response.
+    const initialProgress = resp.progress || [];
     try {
-      const savedProgress = sessionStorage.getItem(
-        `quiz_progress_${articleId}`
-      );
-      if (savedProgress) {
-        const parsedProgress = JSON.parse(savedProgress);
-        if (
-          Array.isArray(parsedProgress) &&
-          parsedProgress.length === 5 &&
-          parsedProgress.every(
-            (status) =>
-              status === AnswerStatus.CORRECT ||
-              status === AnswerStatus.INCORRECT ||
-              status === AnswerStatus.UNANSWERED
-          )
-        ) {
-          setProgress(parsedProgress);
-        } else {
-          console.warn("Invalid saved progress data, using server data");
-          setProgress(initialProgress);
-          sessionStorage.removeItem(`quiz_progress_${articleId}`);
-        }
+      const savedProgress = loadProgress();
+      if (
+        Array.isArray(savedProgress) &&
+        savedProgress.length === 5 &&
+        savedProgress.every(
+          (status) =>
+            status === AnswerStatus.CORRECT ||
+            status === AnswerStatus.INCORRECT ||
+            status === AnswerStatus.UNANSWERED
+        )
+      ) {
+        setProgress(savedProgress);
       } else {
         setProgress(initialProgress);
       }
     } catch (e) {
       console.error("Failed to load progress from sessionStorage:", e);
       setProgress(initialProgress);
-      try {
-        sessionStorage.removeItem(`quiz_progress_${articleId}`);
-      } catch (clearError) {
-        console.error("Error clearing corrupted progress:", clearError);
-      }
     }
 
     setSelectedOption(-1);
     setCorrectAnswer("");
 
     if (resp.results && resp.results[0]) {
-      try {
-        if (resp.results[0].question) {
-          sessionStorage.setItem(`quiz_started_${articleId}`, "true");
-        }
-      } catch (e) {
-        console.error("Failed to save to sessionStorage:", e);
+      if (resp.results[0].question) {
+        markStarted();
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [resp, articleId]);
 
   const activeQuestion = fullResults[currentIndex];
@@ -738,14 +701,7 @@ function MCQeustion({
               : AnswerStatus.INCORRECT;
             setProgress(newProgress);
 
-            try {
-              sessionStorage.setItem(
-                `quiz_progress_${articleId}`,
-                JSON.stringify(newProgress)
-              );
-            } catch (e) {
-              console.error("Failed to save progress to sessionStorage:", e);
-            }
+            saveProgress(newProgress);
           }
         }
       })
@@ -784,17 +740,12 @@ function MCQeustion({
       handleCompleted(progress, updatedResp);
 
       // Update global state to mark MCQ as completed
-      useQuestionStore.setState({ 
-        mcQuestion: { ...updatedResp, state: QuestionState.COMPLETED } 
+      useQuestionStore.setState({
+        mcQuestion: { ...updatedResp, state: QuestionState.COMPLETED }
       });
 
-      // Clear session storage since quiz is completed
-      try {
-        sessionStorage.removeItem(`quiz_started_${articleId}`);
-        sessionStorage.removeItem(`quiz_progress_${articleId}`);
-      } catch (e) {
-        console.error("Error clearing session storage:", e);
-      }
+      // The quiz is completed; server state wins over cached progress.
+      clear();
 
       const totalXpEarned = correctCount * 2;
       toast({
@@ -802,19 +753,16 @@ function MCQeustion({
         imgSrc: true,
         description: `Congratulations! You got ${correctCount} out of 5 questions correct and earned ${totalXpEarned} XP.`,
       });
-      setTimeout(() => {
-        router.refresh();
-      }, 100);
     }
-  }, [progress, router, page, setPaused, handleCompleted, currentResp, articleId]);
+  }, [progress, page, setPaused, handleCompleted, currentResp, clear]);
 
   const handleNext = () => {
     setSelectedOption(-1);
     setCorrectAnswer("");
     setPaused(false);
-    
+
     // Find the next unanswered question to advance the index
-    const nextUnanswered = progress.findIndex((p, idx) => p === AnswerStatus.UNANSWERED);
+    const nextUnanswered = progress.findIndex((p) => p === AnswerStatus.UNANSWERED);
     if (nextUnanswered !== -1) {
       setCurrentIndex(nextUnanswered);
     }
@@ -976,6 +924,368 @@ function MCQeustion({
           )}
         </Button>
       )}
+    </CardContent>
+  );
+}
+
+function StoryMCQeustion({
+  articleId,
+  chapterNumber,
+  resp,
+  handleCompleted,
+  userId,
+  articleTitle,
+  articleLevel,
+  endpointBase,
+  saveProgress,
+  markStarted,
+}: {
+  articleId: string;
+  chapterNumber: string;
+  resp: StoryQuestionResponse;
+  handleCompleted: (
+    currentProgress?: AnswerStatus[],
+    newResp?: QuestionResponse
+  ) => void;
+  userId: string;
+  articleTitle: string;
+  articleLevel: number;
+  endpointBase: string;
+  saveProgress: (progress: unknown) => void;
+  markStarted: () => void;
+}) {
+  const [progress, setProgress] = useState(resp.progress);
+  const [isLoadingAnswer, setLoadingAnswer] = useState(false);
+  const [index, setIndex] = useState(0);
+  const [correctAnswer, setCorrectAnswer] = useState("");
+  const [selectedOption, setSelectedOption] = useState(-1);
+  const { timer, setPaused } = useContext(QuizContext);
+  const [textualEvidence, setTextualEvidence] = useState("");
+
+  useEffect(() => {
+    setProgress(resp.progress);
+  }, [resp.progress]);
+
+  useEffect(() => {
+    if (resp.results && resp.results[0] && resp.results[0].question) {
+      markStarted();
+    }
+  }, [resp.results, markStarted]);
+
+  // Whenever the visible question index changes, hide any textual feedback
+  // and reset selection so feedback only appears after a new submission.
+  useEffect(() => {
+    // Clear feedback and selection when user moves to another question
+    setTextualEvidence("");
+    setSelectedOption(-1);
+    setCorrectAnswer("");
+  }, [index]);
+
+  // If parent/server updates the resp.results (for example server returns
+  // a single-item results array), ensure our index is valid and clear
+  // feedback so we don't show previous question's feedback for the new data.
+  useEffect(() => {
+    try {
+      const resultsLen = resp?.results?.length || 0;
+      if (resultsLen === 0) return;
+      if (index >= resultsLen) {
+        setIndex(0);
+        setSelectedOption(-1);
+        setCorrectAnswer("");
+        setTextualEvidence("");
+        setPaused(false);
+      }
+    } catch (e) {
+      // ignore
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [resp.results]);
+
+  const onSubmitted = async (
+    storyId: string,
+    questionNumber: number,
+    chapterNumber: string,
+    option: string,
+    i: number
+  ) => {
+    setPaused(true);
+    setLoadingAnswer(true);
+
+    if (!option) {
+      console.error("Attempted to submit an empty option");
+      option = `Option ${i + 1}`;
+    }
+
+    const cleanOption = option.replace(/^\d+\.\s*/, "");
+
+    setSelectedOption(i);
+
+    try {
+      const response = await fetch(
+        `${endpointBase}/mcq/${questionNumber}`,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            selectedAnswer: cleanOption,
+            timeRecorded: timer,
+          }),
+        }
+      );
+
+      const data = await response.json();
+      if (data) {
+        const isCorrect = cleanOption === data.correctAnswer;
+
+        setCorrectAnswer(data.correctAnswer || "");
+        setSelectedOption(i);
+        // Show textual feedback returned by the server (support camelCase and snake_case)
+        try {
+          setTextualEvidence(
+            data.textualEvidence || data.textual_evidence || ""
+          );
+        } catch (e) {
+          // ignore
+        }
+        const newProgress = [...(progress || [])];
+
+        const currentQuestionIndex = newProgress.findIndex(
+          (p) => p === AnswerStatus.UNANSWERED
+        );
+
+        if (currentQuestionIndex !== -1) {
+          const actuallyCorrect = isCorrect;
+          newProgress[currentQuestionIndex] = actuallyCorrect
+            ? AnswerStatus.CORRECT
+            : AnswerStatus.INCORRECT;
+          setProgress(newProgress);
+
+          saveProgress(newProgress);
+        }
+      }
+    } catch (error) {
+      console.error("Error submitting answer:", error);
+      setSelectedOption(i);
+    } finally {
+      setLoadingAnswer(false);
+    }
+  };
+
+  return (
+    <CardContent>
+      <div className="flex gap-2 items-end mt-6">
+        <Badge className="flex-1" variant="destructive">
+          Time Elapsed: {timer} seconds
+        </Badge>
+        {progress.map((status, idx) =>
+          status === AnswerStatus.CORRECT ? (
+            <Icons.correctChecked
+              key={idx}
+              className="text-green-500"
+              size={22}
+            />
+          ) : status === AnswerStatus.INCORRECT ? (
+            <Icons.incorrectChecked
+              key={idx}
+              className="text-red-500"
+              size={22}
+            />
+          ) : (
+            <Icons.unChecked key={idx} className="text-gray-500" size={22} />
+          )
+        )}
+      </div>
+
+      <CardTitle className="font-bold text-3xl md:text-3xl mt-3">
+        Question {resp.results[0]?.question_number || 1} of {resp.total}
+      </CardTitle>
+      <CardDescription className="text-2xl md:text-2xl mt-3">
+        {resp.results[index]?.question}
+      </CardDescription>
+
+      {textualEvidence && (
+        <div className="mt-4 p-4 font-semibold bg-gray-100 text-gray-700 rounded">
+          <p>
+            <span className="font-bold text-lg text-gray-800">Feedback: </span>
+            {`"${textualEvidence}"`}
+          </p>
+        </div>
+      )}
+
+      {resp.results[index]?.options.map((option, i) => (
+        <Button
+          key={i}
+          className={`mt-2 h-auto w-full ${
+            selectedOption === i ? "bg-red-500 hover:bg-red-600" : ""
+          } ${
+            correctAnswer === option ? "bg-green-500 hover:bg-green-600" : ""
+          }`}
+          disabled={isLoadingAnswer}
+          onClick={() => {
+            // Clear any visible feedback immediately when user clicks Continue
+            // so previous question's textual evidence doesn't persist.
+            try {
+              setTextualEvidence("");
+            } catch (e) {
+              // ignore
+            }
+            if (selectedOption === -1) {
+              onSubmitted(
+                articleId,
+                resp.results[index].question_number,
+                chapterNumber,
+                option,
+                i
+              );
+            }
+          }}
+        >
+          <p className="w-full text-left">
+            {i + 1}. {option}
+          </p>
+        </Button>
+      ))}
+
+      <Button
+        variant="outline"
+        size="sm"
+        className="mt-2"
+        disabled={isLoadingAnswer || selectedOption === -1}
+        onClick={() => {
+          // Build a local updatedProgress that includes the most-recent answer
+          const updated = Array.isArray(progress) ? [...progress] : [];
+          while (updated.length < (resp.total || 5))
+            updated.push(AnswerStatus.UNANSWERED);
+
+          // If a selection was made, mark this question's progress locally
+          if (selectedOption !== -1) {
+            const selectedOptionText =
+              resp.results[index]?.options?.[selectedOption] || "";
+            // Only update if this slot wasn't already answered
+            if (updated[index] === AnswerStatus.UNANSWERED) {
+              updated[index] =
+                correctAnswer === selectedOptionText
+                  ? AnswerStatus.CORRECT
+                  : AnswerStatus.INCORRECT;
+            }
+          }
+
+          // Persist and set local progress immediately so UI reflects the answer
+          saveProgress(updated);
+          markStarted();
+
+          setProgress(updated);
+
+          const nowAnsweredCount = updated.filter(
+            (p) => p === AnswerStatus.CORRECT || p === AnswerStatus.INCORRECT
+          ).length;
+
+          if (nowAnsweredCount >= (resp.total || 5)) {
+            // All answered — notify parent to finalize (don't force a reload)
+            handleCompleted(updated, {
+              ...resp,
+              progress: updated,
+              state: QuestionState.COMPLETED,
+            });
+            return;
+          }
+
+          // Advance to next unanswered question (if any)
+          let nextUnanswered = updated.findIndex(
+            (p) => p === AnswerStatus.UNANSWERED
+          );
+          if (nextUnanswered === -1) {
+            // fallback: move to next index
+            nextUnanswered = Math.min(index + 1, (resp.total || 5) - 1);
+          }
+
+          // If we don't have the next question in resp.results, fetch updated questions from server
+          if (!resp.results || !resp.results[nextUnanswered]) {
+            const ts = new Date().getTime();
+            fetch(`${endpointBase}/mcq?_t=${ts}`)
+              .then((res) => res.json())
+              .then((newData) => {
+                const merged = {
+                  ...newData,
+                  progress: updated,
+                  state: QuestionState.INCOMPLETE,
+                } as QuestionResponse;
+                // Ask parent to update its data/store
+                try {
+                  handleCompleted(updated, merged);
+                } catch (e) {
+                  console.error("[StoryMCQ] handleCompleted failed", e);
+                  // fallback to using global store directly
+                  useQuestionStore.setState({ mcQuestion: merged });
+                }
+
+                // Determine a safe index into the merged results.
+                // Prefer server-provided summary.currentQuestion if present, else prefer nextUnanswered, else clamp to 0.
+                let resolvedIndex = 0;
+                try {
+                  const serverIndex = (newData as any)?.summary
+                    ?.currentQuestion;
+                  if (typeof serverIndex === "number") {
+                    // serverIndex is 1-based
+                    resolvedIndex = Math.max(
+                      0,
+                      Math.min(
+                        (merged.results?.length || 1) - 1,
+                        serverIndex - 1
+                      )
+                    );
+                  } else if (merged.results && merged.results[nextUnanswered]) {
+                    resolvedIndex = nextUnanswered;
+                  } else if (merged.results && merged.results.length > 0) {
+                    // show first available result
+                    resolvedIndex = 0;
+                  } else {
+                    // nothing available, keep previous index
+                    resolvedIndex = Math.min(
+                      nextUnanswered,
+                      (resp.total || 5) - 1
+                    );
+                  }
+                } catch (e) {
+                  resolvedIndex = Math.min(
+                    nextUnanswered,
+                    (resp.total || 5) - 1
+                  );
+                }
+                // Always clear textualEvidence when advancing questions (or replacing results)
+                setIndex(resolvedIndex);
+                setSelectedOption(-1);
+                setCorrectAnswer("");
+                setTextualEvidence("");
+                setPaused(false);
+              })
+              .catch((err) => {
+                console.error(
+                  "[StoryMCQ] failed to fetch updated questions",
+                  err
+                );
+                // fallback to local index advance
+                setIndex(nextUnanswered);
+                setSelectedOption(-1);
+                setCorrectAnswer("");
+                setTextualEvidence("");
+                setPaused(false);
+              });
+          } else {
+            setIndex(nextUnanswered);
+            setSelectedOption(-1);
+            setCorrectAnswer("");
+            setTextualEvidence("");
+            setPaused(false);
+          }
+        }}
+      >
+        {isLoadingAnswer ? (
+          <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+        ) : (
+          ""
+        )}
+        Continue
+      </Button>
     </CardContent>
   );
 }

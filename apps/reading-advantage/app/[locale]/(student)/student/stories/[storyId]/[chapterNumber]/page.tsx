@@ -6,9 +6,9 @@ import { getScopedI18n } from "@/locales/server";
 import { fetchData } from "@/utils/fetch-data";
 import CustomError from "./custom-error";
 import StoriesWordList from "@/components/stories-word-list";
-import StoryMCQuestionCard from "@/components/stories-chapter-question/mc-question-card";
-import StorySAQuestionCard from "@/components/stories-chapter-question/sa-question-card";
-import StoryLAQuestionCard from "@/components/stories-chapter-question/laq-question-card";
+import MCQuestionCard from "@/components/questions/mc-question-card";
+import SAQuestionCard from "@/components/questions/sa-question-card";
+import LAQuestionCard from "@/components/questions/laq-question-card";
 
 export const metadata = {
   title: "Story",
@@ -59,28 +59,33 @@ export default async function ArticleQuizPage({
             userId={user.id}
           />
 
-          <StoryMCQuestionCard
+          <MCQuestionCard
             userId={user.id}
-            storyId={chapterResponse.storyId}
+            articleId={chapterResponse.storyId}
             articleTitle={chapterResponse.chapter.title}
             articleLevel={chapterResponse.ra_Level}
+            page="article"
+            variant="story"
             chapterNumber={chapterResponse.chapterNumber}
           />
 
-          <StorySAQuestionCard
+          <SAQuestionCard
             userId={user.id}
-            storyId={storyId}
+            articleId={storyId}
             articleTitle={chapterResponse.chapter.title}
             articleLevel={chapterResponse.ra_Level}
+            page="article"
+            variant="story"
             chapterNumber={chapterResponse.chapterNumber}
           />
 
-          <StoryLAQuestionCard
+          <LAQuestionCard
             userId={user.id}
-            storyId={storyId}
+            articleId={storyId}
             userLevel={user.level ?? 0}
             articleTitle={chapterResponse.chapter.title}
             articleLevel={chapterResponse.ra_Level}
+            variant="story"
             chapterNumber={chapterResponse.chapterNumber}
           />
         </div>

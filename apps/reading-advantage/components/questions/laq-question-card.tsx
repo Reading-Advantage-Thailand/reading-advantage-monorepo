@@ -21,7 +21,10 @@ import { Badge } from "../ui/badge";
 import { useForm } from "react-hook-form";
 import { QuizContext, QuizContextProvider } from "@/contexts/quiz-context";
 import { useScopedI18n } from "@/locales/client";
-import { LongAnswerQuestion } from "../models/questions-model";
+import {
+  LongAnswerQuestion,
+  QuestionState,
+} from "../models/questions-model";
 import QuestionHeader from "./question-header";
 import { Skeleton } from "../ui/skeleton";
 import * as z from "zod";
@@ -44,6 +47,8 @@ interface Props {
   articleTitle: string;
   articleLevel: number;
   userLicenseLevel?: LicenseType;
+  variant?: "article" | "story";
+  chapterNumber?: string;
 }
 
 interface FeedbackDetails {
@@ -78,13 +83,6 @@ type AnswerResponse = {
   };
 };
 
-enum QuestionState {
-  LOADING = 0,
-  INCOMPLETE = 1,
-  COMPLETED = 2,
-  ERROR = 3,
-}
-
 export default function LAQuestionCard({
   userId,
   userLevel,
@@ -92,7 +90,13 @@ export default function LAQuestionCard({
   articleTitle,
   articleLevel,
   userLicenseLevel,
+  variant = "article",
+  chapterNumber,
 }: Props) {
+  const isStory = variant === "story";
+  const endpointBase = isStory
+    ? `/api/v1/stories/${articleId}/${chapterNumber}/question`
+    : `/api/v1/articles/${articleId}/questions`;
   const [state, setState] = useState(QuestionState.LOADING);
   const [data, setData] = useState<QuestionResponse>({
     result: {
@@ -106,7 +110,7 @@ export default function LAQuestionCard({
   const { checkAndNotifyCompletion } = useArticleCompletion();
 
   useEffect(() => {
-    fetch(`/api/v1/articles/${articleId}/questions/laq`)
+    fetch(`${endpointBase}/laq`)
       .then((res) => res.json())
       .then((data) => {
         setData(data);
@@ -119,17 +123,21 @@ export default function LAQuestionCard({
         setFetchError(error?.message ?? "Failed to load question.");
         setState(QuestionState.ERROR);
       });
-  // ลบ `state` ออกจาก dependency เพื่อป้องกัน fetch loop
-  }, [articleId]);
+  // Article cards removed `state` from the dependencies to prevent a fetch
+  // loop; story cards refetch through LOADING after completion.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, isStory ? [state, endpointBase] : [endpointBase]);
 
   const handleCompleted = () => {
-    // เปลี่ยนเป็น COMPLETED โดยตรง ไม่ใช้ LOADING ซึ่งจะ trigger fetch loop
-    setState(QuestionState.COMPLETED);
+    // Story cards reload the saved answer through LOADING; article cards
+    // switch to COMPLETED directly so they never enter a fetch loop.
+    setState(isStory ? QuestionState.LOADING : QuestionState.COMPLETED);
   };
 
   const handleCancel = () => {
-    // กลับไปสถานะ INCOMPLETE (แสดงฟอร์มอีกครั้ง) ไม่ใช้ LOADING
-    setState(QuestionState.INCOMPLETE);
+    // Story cards reload the question through LOADING; article cards return
+    // to INCOMPLETE to show the form again without a fetch loop.
+    setState(isStory ? QuestionState.LOADING : QuestionState.INCOMPLETE);
   };
 
   useEffect(() => {
@@ -156,11 +164,14 @@ export default function LAQuestionCard({
           resp={data}
           userLevel={userLevel}
           articleId={articleId}
+          chapterNumber={chapterNumber}
           handleCompleted={handleCompleted}
           handleCancel={handleCancel}
           articleTitle={articleTitle}
           articleLevel={articleLevel}
           userLicenseLevel={userLicenseLevel}
+          isStory={isStory}
+          endpointBase={endpointBase}
         />
       );
     case QuestionState.COMPLETED:
@@ -231,24 +242,30 @@ function QuestionCardIncomplete({
   resp,
   userLevel,
   articleId,
+  chapterNumber,
   handleCompleted,
   handleCancel,
   articleTitle,
   articleLevel,
   userLicenseLevel,
+  isStory,
+  endpointBase,
 }: {
   userId: string;
   resp: QuestionResponse;
   userLevel: number;
   articleId: string;
+  chapterNumber?: string;
   handleCompleted: () => void;
   handleCancel: () => void;
   articleTitle: string;
   articleLevel: number;
   userLicenseLevel?: LicenseType;
+  isStory: boolean;
+  endpointBase: string;
 }) {
   const t = useScopedI18n("components.laq");
-  const isLocked = userLicenseLevel !== LicenseType.ENTERPRISE;
+  const isLocked = !isStory && userLicenseLevel !== LicenseType.ENTERPRISE;
   
   return (
     <Card id="onborda-laq" className="mt-3">
@@ -268,10 +285,13 @@ function QuestionCardIncomplete({
             resp={resp}
             userLevel={userLevel}
             articleId={articleId}
+            chapterNumber={chapterNumber}
             handleCompleted={handleCompleted}
             handleCancel={handleCancel}
             articleTitle={articleTitle}
             articleLevel={articleLevel}
+            isStory={isStory}
+            endpointBase={endpointBase}
           />
         </QuizContextProvider>
       </QuestionHeader>
@@ -284,19 +304,25 @@ function LAQuestion({
   resp,
   userLevel,
   articleId,
+  chapterNumber,
   handleCompleted,
   handleCancel,
   articleTitle,
   articleLevel,
+  isStory,
+  endpointBase,
 }: {
   userId: string;
   resp: QuestionResponse;
   userLevel: number;
   articleId: string;
+  chapterNumber?: string;
   handleCompleted: () => void;
   handleCancel: () => void;
   articleTitle: string;
   articleLevel: number;
+  isStory: boolean;
+  endpointBase: string;
 }) {
   const t = useScopedI18n("components.laq");
   const tf = useScopedI18n("components.rate");
@@ -355,7 +381,7 @@ function LAQuestion({
 
     try {
       const feedbackResponse = await fetch(
-        `/api/v1/articles/${articleId}/questions/laq/${resp.result.id}/feedback`,
+        `${endpointBase}/laq/${resp.result.id}/feedback`,
         {
           method: "POST",
           body: JSON.stringify({
@@ -372,13 +398,14 @@ function LAQuestion({
       if (dataForm.method === "submit" && feedback) {
         setPaused(true);
         const submitAnswer = await fetch(
-          `/api/v1/articles/${articleId}/questions/laq/${resp.result.id}`,
+          `${endpointBase}/laq/${resp.result.id}`,
           {
             method: "POST",
             body: JSON.stringify({
               answer: dataForm.answer,
               feedback: feedback.result,
               timeRecorded: timer,
+              ...(isStory ? { createActivity: false } : {}),
             }),
           }
         );
@@ -407,7 +434,7 @@ function LAQuestion({
     setIsLoading(true);
     try {
       const response = await fetch(
-        `/api/v1/articles/${articleId}/questions/laq/${resp.result.id}/getxp`,
+        `${endpointBase}/laq/${resp.result.id}/getxp`,
         {
           method: "POST",
           body: JSON.stringify({
