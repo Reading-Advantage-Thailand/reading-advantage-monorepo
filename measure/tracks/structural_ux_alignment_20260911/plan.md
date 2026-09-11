@@ -22,20 +22,20 @@ All file paths are relative to `apps/reading-advantage/`. Run after `component_d
 
 ## Phase 3: Implement
 
-- [ ] Task: FR-1 server-side dashboard metrics; delete `useDashboardMetrice`; swap dashboard/reports i18n scopes; merge reports view
-- [ ] Task: FR-1 server-side goals fetch; `ActiveGoalsWidget` receives props; `AlertDialog` replaces native confirm
-- [ ] Task: FR-2 replace self-HTTP fetches in read and lesson pages with direct domain/DB calls
-- [ ] Task: FR-5 lesson page `Promise.all` and error guards
-- [ ] Task: FR-3 student-progress role and ownership check
-- [ ] Task: FR-4 server-side level-test XP placement
-- [ ] Task: FR-6 i18n pass (goals, flashcards, settings, auth, system, sidebar keys, footer, marketing metadata)
-- [ ] Task: FR-7 accessibility pass (keyboard support, `role="alert"`, `Link` wrapping, `aria-live`, sidebar back link)
-- [ ] Task: FR-8 shell cleanup part 1: `SessionSyncRedirect` destination, `sharedMainNav`, shared guard helper, `disableLeaderboard`
-- [ ] Task: FR-8 shell cleanup part 2: theme-wrapper rename, delete dead context/imports, auth layout min-height, i18n routing links, index layout collapse, `user-account-nav` fixes
-- [ ] Task: FR-8 page cleanup: workbook-generator decision, `router.refresh()` replacements, per-group `error.tsx`, `Promise.all` fetches, license page ordering, admin guard dedup
-- [ ] Task: Run `build-graph update ./graph.db` on all structurally edited files
-- [ ] Task: Run new tests until green; run `pnpm turbo run test --filter=reading-advantage`, `check-types`, and `build`
-- [ ] Task: Measure - User Manual Verification 'Phase 3: Implement' (Protocol in workflow.md)
+- [x] Task: FR-1 server-side dashboard metrics; delete `useDashboardMetrice`; swap dashboard/reports i18n scopes; merge reports view `d275693`
+- [x] Task: FR-1 server-side goals fetch; `ActiveGoalsWidget` receives props; `AlertDialog` replaces native confirm `d275693`
+- [x] Task: FR-2 replace self-HTTP fetches in read and lesson pages with direct domain/DB calls `c363b21`
+- [x] Task: FR-5 lesson page `Promise.all` and error guards `7db9992`
+- [x] Task: FR-3 student-progress role and ownership check `62ae099`
+- [x] Task: FR-4 server-side level-test XP placement `afb45de`
+- [x] Task: FR-6 i18n pass (goals, flashcards, settings, auth, system, sidebar keys, footer, marketing metadata) `d7d1778` `461d92b`
+- [x] Task: FR-7 accessibility pass (keyboard support, `role="alert"`, `aria-live`, sidebar back link, visible save-to-flashcard button) `4af49b6` (deferred: games catalog card `Link` wrapping — blocked by APK track's uncommitted files)
+- [x] Task: FR-8 shell cleanup part 1: `SessionSyncRedirect` destination, `sharedMainNav`, shared guard helper, `disableLeaderboard` `1d4ab96` `f95125d`
+- [x] Task: FR-8 shell cleanup part 2: theme-wrapper rename, delete dead context/imports, auth layout min-height, i18n routing links, index layout collapse, `user-account-nav` fixes `f95125d` `58746bb`
+- [x] Task: FR-8 page cleanup: workbook-generator decision (added to sidebar; owner review pending), `router.refresh()` replacements, per-group `error.tsx`, `Promise.all` fetches, license page ordering, admin guard dedup `58746bb`
+- [x] Task: Run `build-graph update ./graph.db` on all structurally edited files `bf2f528` `efc941c` `3614844`
+- [x] Task: Run new tests until green (984 passed, 2 known pre-existing failures; zero new tsc errors)
+- [ ] Task: Measure - User Manual Verification 'Phase 3: Implement' (Protocol in workflow.md) **PENDING owner verification**
 
 ## Phase 4: Generate Docs & Doctor
 

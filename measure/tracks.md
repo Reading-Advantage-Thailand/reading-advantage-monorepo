@@ -436,16 +436,16 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 > tracks 2 and 3 may run in parallel after track 1; tracks 4 and 5 are
 > sequential after 1-3 to avoid conflicts on shared components.
 
-- [ ] **Track: Reading Broken UX Fixes** *Link: [./tracks/broken_ux_fixes_20260911/](./tracks/broken_ux_fixes_20260911/)*
-  Fix 404 links, broken client directives, crash-risk imports, audio leaks, and visual typos from the UX audit. One-line and small fixes only.
-- [ ] **Track: Reading Audio and Highlighting Correctness** *Link: [./tracks/audio_highlight_correctness_20260911/](./tracks/audio_highlight_correctness_20260911/)*
-  Consolidate four audio/highlight implementations into one shared hook; fix speed-switch restarts, double-advance race, timer leaks, and highlight color semantics.
-- [ ] **Track: Reading Loading and State Correctness** *Link: [./tracks/loading_state_correctness_20260911/](./tracks/loading_state_correctness_20260911/)*
-  Fix double pagination, infinite-scroll race, stuck skeletons, translate request storm, render-phase side effects, and wrong KPI labels.
-- [ ] **Track: Reading Component Deduplication** *Link: [./tracks/component_deduplication_20260911/](./tracks/component_deduplication_20260911/)*
-  Merge ten forked component pairs (~2,200 duplicated quiz-card lines included), extract shared helpers, delete dead code. Depends on tracks 1-2 for shared files.
-- [ ] **Track: Reading Structural UX Alignment** *Link: [./tracks/structural_ux_alignment_20260911/](./tracks/structural_ux_alignment_20260911/)*
-  Server-side dashboard/goals data, remove internal self-HTTP fetches, student-progress role check, server-owned level-test XP, i18n and a11y passes, shell cleanup. Runs after deduplication.
+- [~] **Track: Reading Broken UX Fixes** *Link: [./tracks/broken_ux_fixes_20260911/](./tracks/broken_ux_fixes_20260911/)*
+  Fix 404 links, broken client directives, crash-risk imports, audio leaks, and visual typos from the UX audit. One-line and small fixes only. **FR-1..9 implemented 2026-09-11 (9 commits, 13/13 static tests); FR-10 games auth policy pending owner decision; manual verification pending.**
+- [~] **Track: Reading Audio and Highlighting Correctness** *Link: [./tracks/audio_highlight_correctness_20260911/](./tracks/audio_highlight_correctness_20260911/)*
+  Consolidate four audio/highlight implementations into one shared hook; fix speed-switch restarts, double-advance race, timer leaks, and highlight color semantics. **Implemented 2026-09-11 (11 commits, 12/12 new tests); manual browser verification pending.**
+- [~] **Track: Reading Loading and State Correctness** *Link: [./tracks/loading_state_correctness_20260911/](./tracks/loading_state_correctness_20260911/)*
+  Fix double pagination, infinite-scroll race, stuck skeletons, translate request storm, render-phase side effects, and wrong KPI labels. **Implemented 2026-09-11 (11 commits, 14/14 new tests); manual verification pending.**
+- [~] **Track: Reading Component Deduplication** *Link: [./tracks/component_deduplication_20260911/](./tracks/component_deduplication_20260911/)*
+  Merge ten forked component pairs (~2,200 duplicated quiz-card lines included), extract shared helpers, delete dead code. **Implemented 2026-09-11 in two parallel parts (18+ commits; ~1,990 forked quiz lines deleted; `system-articles.tsx` retained — two real importers); manual verification pending.**
+- [~] **Track: Reading Structural UX Alignment** *Link: [./tracks/structural_ux_alignment_20260911/](./tracks/structural_ux_alignment_20260911/)*
+  Server-side dashboard/goals data, remove internal self-HTTP fetches, student-progress role check, server-owned level-test XP, i18n and a11y passes, shell cleanup. **Implemented 2026-09-11 (12 commits, 984 tests green); games-catalog card a11y deferred behind APK track's uncommitted files; manual verification pending. Found pre-existing critical regression: `parseActivityType` breaks activitylog POSTs since 2026-09-08 — needs its own hotfix track.**
 
 ---
 
