@@ -64,7 +64,7 @@ export default function ChatBotFloatingChatButton({ article }: Props) {
         const data = await resOpenAi.json();
 
         const response: Message = {
-          text: ` : ${data?.text}`,
+          text: data?.text ?? "",
           sender: "bot",
         };
         setMessages((messages) => [...messages, response]);
@@ -103,7 +103,6 @@ export default function ChatBotFloatingChatButton({ article }: Props) {
             onClick={() => {
               setIsOpen(!isOpen);
               setUserInput("");
-              setMessages([]);
             }}
           >
             <MessageSquare />
