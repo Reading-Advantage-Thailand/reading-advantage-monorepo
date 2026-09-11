@@ -19,20 +19,25 @@ export default async function LessonPage({
 }: {
   params: Promise<{ articleId: string }>;
 }) {
-  const { articleId } = await params;
-  const t = await getScopedI18n("pages.student.readPage.article");
-
-  const user = await getCurrentUser();
+  const [{ articleId }, t, user] = await Promise.all([
+    params,
+    getScopedI18n("pages.student.readPage.article"),
+    getCurrentUser(),
+  ]);
   if (!user) return redirect("/auth/signin");
 
-  const articleResponse = await getArticleForReader(articleId, user.id, user.level);
+  // Run the article and classroom lookups in parallel. Failures resolve to a
+  // real error state instead of an unhandled page crash.
+  const [articleResponse, classroomId] = await Promise.all([
+    getArticleForReader(articleId, user.id, user.level),
+    getStudentClassroomId(user.id),
+  ]);
 
   if (!articleResponse.ok)
     return (
       <CustomError message={articleResponse.message} resp={articleResponse} />
     );
 
-  const classroomId = await getStudentClassroomId(user.id);
   const article = articleResponse.article as unknown as Article;
 
   return (
