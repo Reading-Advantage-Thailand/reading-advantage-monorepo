@@ -1,0 +1,11 @@
+{
+  "track_id": "component_deduplication_20260911",
+  "type": "chore",
+  "status": "new",
+  "created_at": "2026-09-11T00:00:00Z",
+  "updated_at": "2026-09-11T00:00:00Z",
+  "description": "Merge the ten forked component pairs in reading-advantage (quiz cards, matching, enroll, history, roster, word list, rating popups), extract shared helpers, and delete dead code.",
+  "estimated_tasks": 20,
+  "actual_tasks": null,
+  "deviation_notes": ""
+}
