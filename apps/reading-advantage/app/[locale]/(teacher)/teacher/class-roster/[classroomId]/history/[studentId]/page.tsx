@@ -1,7 +1,6 @@
 import React from "react";
 import { ArticleRecordsTable } from "@/components/article-records-table";
 import { Header } from "@/components/header";
-import { ReminderRereadTable } from "@/components/reminder-reread-table";
 import { getCurrentUser } from "@/lib/session";
 import { redirect } from "next/navigation";
 import { getScopedI18n } from "@/locales/server";
@@ -143,7 +142,10 @@ export default async function StudentHistoryForTeacher({
           variant="warning"
         />
         {reminderArticles.length !== 0 && (
-          <ReminderRereadTable articles={reminderArticles as ArticleRecord[]} />
+          <ArticleRecordsTable
+            articles={reminderArticles as ArticleRecord[]}
+            variant="reminder"
+          />
         )}
         <Header
           heading={t("articleRecords")}

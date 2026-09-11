@@ -1,6 +1,5 @@
 import { ArticleRecordsTable } from "@/components/article-records-table";
 import { Header } from "@/components/header";
-import { ReminderRereadTable } from "@/components/reminder-reread-table";
 import { getCurrentUser } from "@/lib/session";
 import { redirect } from "next/navigation";
 import React from "react";
@@ -57,7 +56,7 @@ export default async function HistoryPage({}: Props) {
         variant="warning"
       />
       {incompleteArticles.length !== 0 && (
-        <ReminderRereadTable articles={incompleteArticles} />
+        <ArticleRecordsTable articles={incompleteArticles} variant="reminder" />
       )}
       <Header
         heading={t("articleRecords")}

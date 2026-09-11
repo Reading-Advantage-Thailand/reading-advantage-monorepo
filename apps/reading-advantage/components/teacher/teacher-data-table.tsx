@@ -33,7 +33,7 @@ export type TeacherDataTableProps<TData> = {
   searchPlaceholder?: string;
   searchClassName?: string;
   toolbarClassName?: string;
-  toolbar?: React.ReactNode;
+  toolbar?: React.ReactNode | ((table: ReturnType<typeof useReactTable<TData>>) => React.ReactNode);
   loading?: boolean;
   loadingMessage?: React.ReactNode;
   emptyMessage?: React.ReactNode;
@@ -46,7 +46,7 @@ export type TeacherDataTableProps<TData> = {
   showPagination?: boolean;
   paginationClassName?: string;
   paginationButtonClassName?: string;
-  paginationLeft?: React.ReactNode;
+  paginationLeft?: React.ReactNode | ((table: ReturnType<typeof useReactTable<TData>>) => React.ReactNode);
   renderPagination?: (table: ReturnType<typeof useReactTable<TData>>) => React.ReactNode;
   columnVisibility?: VisibilityState;
   onColumnVisibilityChange?: OnChangeFn<VisibilityState>;
@@ -95,6 +95,8 @@ export default function TeacherDataTable<TData>({
     controlledColumnVisibility ?? internalColumnVisibility;
   const onColumnVisibilityChange =
     controlledOnColumnVisibilityChange ?? setInternalColumnVisibility;
+  const toolbarNode =
+    typeof toolbar === "function" ? toolbar : toolbar ? () => toolbar : undefined;
 
   const table = useReactTable({
     data,
@@ -180,7 +182,7 @@ export default function TeacherDataTable<TData>({
 
   return (
     <>
-      {(searchColumn || toolbar) && (
+      {(searchColumn || toolbarNode) && (
         <div className={toolbarClassName}>
           {searchColumn && (
             <Input
@@ -197,7 +199,7 @@ export default function TeacherDataTable<TData>({
               className={searchClassName}
             />
           )}
-          {toolbar}
+          {toolbarNode?.(table)}
         </div>
       )}
       {borderClassName ? (
@@ -210,7 +212,9 @@ export default function TeacherDataTable<TData>({
           renderPagination(table)
         ) : (
           <div className={paginationClassName}>
-            {paginationLeft}
+            {typeof paginationLeft === "function"
+              ? paginationLeft(table)
+              : paginationLeft}
             <div className="space-x-2">
               <Button
                 variant="outline"
