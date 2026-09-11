@@ -5,7 +5,7 @@ import React from "react";
 import { getScopedI18n } from "@/locales/server";
 import { fetchData } from "@/utils/fetch-data";
 import CustomError from "./custom-error";
-import StoriesWordList from "@/components/stories-word-list";
+import WordList from "@/components/word-list";
 import MCQuestionCard from "@/components/questions/mc-question-card";
 import SAQuestionCard from "@/components/questions/sa-question-card";
 import LAQuestionCard from "@/components/questions/laq-question-card";
@@ -52,11 +52,16 @@ export default async function ArticleQuizPage({
 
         {/* Sidebar - Word List and Questions */}
         <div className="lg:col-span-1 space-y-6">
-          <StoriesWordList
-            chapter={chapterResponse}
-            storyId={storyId}
-            chapterNumber={chapterNumber}
+          <WordList
+            dataSource={{
+              type: "stories",
+              chapter: chapterResponse,
+              storyId,
+              chapterNumber,
+            }}
             userId={user.id}
+            wrapperClassName=""
+            triggerClassName="mb-4 ml-3"
           />
 
           <MCQuestionCard

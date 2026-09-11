@@ -124,8 +124,11 @@ export default async function ArticleQuizPage({
           {/* Student Actions Section */}
           <div className="flex gap-2 justify-center items-center flex-wrap">
             <WordList
-              article={articleResponse.article}
-              articleId={articleId}
+              dataSource={{
+                type: "article",
+                article: articleResponse.article,
+                articleId,
+              }}
               userId={user.id}
             />
             <ArticleLesson

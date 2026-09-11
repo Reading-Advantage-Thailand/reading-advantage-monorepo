@@ -1,19 +1,18 @@
 "use client";
 import { useCallback, useState, useRef, useEffect } from "react";
-import { useScopedI18n } from "@/locales/client";
+import Image from "next/image";
+import { useTheme } from "next-themes";
+import { useScopedI18n, useCurrentLocale } from "@/locales/client";
 import { Book } from "lucide-react";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { createEmptyCard, Card } from "ts-fsrs";
-import { filter, includes } from "lodash";
-import { useCurrentLocale } from "@/locales/client";
-import { Article } from "@/components/models/article-model";
+import { Article, Chapter } from "@/components/models/article-model";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
-import { AUDIO_WORDS_URL } from "@/server/constants";
 import { Button } from "./ui/button";
 import {
   Dialog,
@@ -23,15 +22,18 @@ import {
   DialogTrigger,
 } from "./ui/dialog";
 import { toast } from "./ui/use-toast";
-import AudioImg from "./audio-img";
+import { getGcsWordAudioUrl } from "@/lib/gcs-url";
 
-interface Props {
-  article: Article;
-  articleId: string;
-  userId: string;
-}
+export type WordListDataSource =
+  | { type: "article"; article: Article; articleId: string }
+  | {
+      type: "stories";
+      chapter: Chapter;
+      storyId: string;
+      chapterNumber: string;
+    };
 
-interface WordList {
+interface WordListItem {
   markName?: string;
   vocabulary: string;
   definition: {
@@ -41,19 +43,149 @@ interface WordList {
     tw: string;
     vi: string;
   };
-  timeSeconds: number;
   index: number;
   startTime: number;
   endTime: number;
   audioUrl: string;
 }
 
-export default function WordList({ article, articleId, userId }: Props) {
+type Props = {
+  dataSource: WordListDataSource;
+  userId: string;
+  wrapperClassName?: string;
+  triggerClassName?: string;
+};
+
+type RawWord = {
+  markName?: string;
+  vocabulary?: string;
+  definition?: WordListItem["definition"];
+  timeSeconds?: number;
+};
+
+/**
+ * Maps one array of words with per-word time offsets to dialog items.
+ * @param words Raw word array from the article or chapter payload.
+ * @param audioUrl The shared audio URL for every item.
+ * @returns The normalized word list items.
+ */
+function normalizeWordList(
+  words: RawWord[] | undefined,
+  audioUrl: string
+): WordListItem[] {
+  if (!Array.isArray(words)) return [];
+  return words
+    .filter((word) => word?.vocabulary && word?.definition)
+    .map((word, index) => {
+      const nextWord = words[index + 1];
+      return {
+        vocabulary: word.vocabulary as string,
+        definition: word.definition as WordListItem["definition"],
+        markName: word.markName,
+        index,
+        startTime: word.timeSeconds || 0,
+        endTime: nextWord
+          ? nextWord.timeSeconds || 0
+          : (word.timeSeconds || 0) + 10,
+        audioUrl,
+      };
+    });
+}
+
+/**
+ * Normalizes the three assistant wordlist response shapes: a bare word
+ * array, a `{ word_list }` object, and `{ word_list, timepoints }` pairs.
+ * @param data The parsed assistant wordlist response.
+ * @param audioUrl The shared audio URL for every item.
+ * @returns The normalized word list items.
+ */
+function extractWordList(data: any, audioUrl: string): WordListItem[] {
+  if (!data) return [];
+  if (Array.isArray(data)) {
+    return normalizeWordList(data, audioUrl);
+  }
+  if (Array.isArray(data.timepoints) && data.timepoints.length > 0) {
+    return data.timepoints.map(
+      (timepoint: { timeSeconds: number }, index: number) => {
+        const word = data.word_list?.[index] as RawWord | undefined;
+        return {
+          vocabulary: word?.vocabulary as string,
+          definition: word?.definition as WordListItem["definition"],
+          markName: word?.markName,
+          index,
+          startTime: timepoint.timeSeconds,
+          endTime:
+            index === data.timepoints.length - 1
+              ? timepoint.timeSeconds + 10
+              : data.timepoints[index + 1].timeSeconds,
+          audioUrl,
+        };
+      }
+    );
+  }
+  if (Array.isArray(data.word_list)) {
+    return normalizeWordList(data.word_list, audioUrl);
+  }
+  return [];
+}
+
+/**
+ * Renders the vocabulary word-list dialog for articles and story chapters.
+ * One shared audio element plays every word segment in the dialog.
+ * @param props The data source plus the user and trigger styling.
+ * @returns The trigger button and the word-list dialog.
+ */
+export default function WordList({
+  dataSource,
+  userId,
+  wrapperClassName = "flex items-center",
+  triggerClassName = "",
+}: Props) {
   const t = useScopedI18n("components.wordList");
   const [loading, setLoading] = useState<boolean>(false);
-  const [wordList, setWordList] = useState<WordList[]>([]);
+  const [wordList, setWordList] = useState<WordListItem[]>([]);
 
   const currentLocale = useCurrentLocale() as "en" | "th" | "cn" | "tw" | "vi";
+  const { resolvedTheme } = useTheme();
+
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const segmentEndRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    const handleTimeUpdate = () => {
+      if (
+        segmentEndRef.current !== null &&
+        audio.currentTime >= segmentEndRef.current
+      ) {
+        audio.pause();
+        segmentEndRef.current = null;
+      }
+    };
+
+    audio.addEventListener("timeupdate", handleTimeUpdate);
+    return () => {
+      audio.removeEventListener("timeupdate", handleTimeUpdate);
+      audio.pause();
+    };
+  }, []);
+
+  const sharedAudioUrl =
+    dataSource.type === "article"
+      ? getGcsWordAudioUrl(dataSource.articleId)
+      : getGcsWordAudioUrl(`${dataSource.storyId}-${dataSource.chapterNumber}`);
+
+  const playSegment = (start: number, end?: number) => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    audio.currentTime = start;
+    segmentEndRef.current = end ?? null;
+    audio.play()?.catch?.((error: unknown) => {
+      console.error("Audio playback failed:", error);
+    });
+  };
 
   const FormSchema = z.object({
     items: z.array(z.string()).refine((value) => value.some((item) => item), {
@@ -68,81 +200,38 @@ export default function WordList({ article, articleId, userId }: Props) {
   const handleWordList = useCallback(async () => {
     try {
       setLoading(true);
-      const resWordlist = await fetch(`/api/v1/assistant/wordlist`, {
-        method: "POST",
-        body: JSON.stringify({ article, articleId }),
-      });
 
-      if (!resWordlist.ok) {
-        throw new Error(
-          `API request failed with status: ${resWordlist.status}`
-        );
+      let list: WordListItem[] = [];
+      if (dataSource.type === "article") {
+        const resWordlist = await fetch(`/api/v1/assistant/wordlist`, {
+          method: "POST",
+          body: JSON.stringify({
+            article: dataSource.article,
+            articleId: dataSource.articleId,
+          }),
+        });
+
+        if (!resWordlist.ok) {
+          throw new Error(
+            `API request failed with status: ${resWordlist.status}`
+          );
+        }
+
+        const data = await resWordlist.json();
+        if (!data) {
+          throw new Error("No data received from server");
+        }
+        list = extractWordList(data, sharedAudioUrl);
+      } else {
+        const words = (dataSource.chapter as { chapter?: { words?: RawWord[] } })
+          ?.chapter?.words;
+        if (!Array.isArray(words)) {
+          console.error("Invalid words format", words);
+        }
+        list = normalizeWordList(words, sharedAudioUrl);
       }
 
-      const data = await resWordlist.json();
-
-      let wordList = [];
-
-      if (!data) {
-        throw new Error("No data received from server");
-      }
-
-      if (Array.isArray(data)) {
-        wordList = data
-          .filter((word) => word.vocabulary && word.definition)
-          .map((word: any, index: number) => {
-            const nextWord = data[index + 1];
-            return {
-              vocabulary: word.vocabulary,
-              definition: word.definition,
-              markName: word.markName,
-              index,
-              startTime: word.timeSeconds || 0,
-              endTime: nextWord
-                ? nextWord.timeSeconds
-                : (word.timeSeconds || 0) + 10,
-              audioUrl: `https://storage.googleapis.com/artifacts.reading-advantage.appspot.com/${AUDIO_WORDS_URL}/${articleId}.mp3`,
-            };
-          });
-      } else if (data?.word_list && Array.isArray(data.word_list)) {
-        wordList = data.word_list
-          .filter((word: any) => word.vocabulary && word.definition)
-          .map((word: any, index: number) => {
-            const nextWord = data.word_list[index + 1];
-            return {
-              vocabulary: word.vocabulary,
-              definition: word.definition,
-              markName: word.markName,
-              index,
-              startTime: word.timeSeconds || 0,
-              endTime: nextWord
-                ? nextWord.timeSeconds
-                : (word.timeSeconds || 0) + 10,
-              audioUrl: `https://storage.googleapis.com/artifacts.reading-advantage.appspot.com/${AUDIO_WORDS_URL}/${articleId}.mp3`,
-            };
-          });
-      } else if (data?.timepoints) {
-        wordList = data.timepoints.map(
-          (timepoint: { timeSeconds: number }, index: number) => {
-            const startTime = timepoint.timeSeconds;
-            const endTime =
-              index === data.timepoints.length - 1
-                ? timepoint.timeSeconds + 10
-                : data.timepoints[index + 1].timeSeconds;
-            return {
-              vocabulary: data?.word_list[index]?.vocabulary,
-              definition: data?.word_list[index]?.definition,
-              markName: data?.word_list[index]?.markName,
-              index,
-              startTime,
-              endTime,
-              audioUrl: `https://storage.googleapis.com/artifacts.reading-advantage.appspot.com/${AUDIO_WORDS_URL}/${articleId}.mp3`,
-            };
-          }
-        );
-      }
-
-      if (wordList.length === 0) {
+      if (list.length === 0) {
         console.warn("No valid word list data found");
         toast({
           title: "No words found",
@@ -151,7 +240,7 @@ export default function WordList({ article, articleId, userId }: Props) {
         });
       }
 
-      setWordList(wordList);
+      setWordList(list);
       form.reset();
     } catch (error: any) {
       console.error("error: ", error);
@@ -163,18 +252,23 @@ export default function WordList({ article, articleId, userId }: Props) {
     } finally {
       setLoading(false);
     }
-  }, [article, articleId, form]);
+  }, [dataSource, form, sharedAudioUrl]);
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
     try {
       const card: Card = createEmptyCard();
-      const foundWordsList = filter(wordList, (vocab) =>
-        includes(data?.items, vocab?.vocabulary)
+      const foundWordsList = wordList.filter((vocab) =>
+        data?.items.includes(vocab?.vocabulary)
       );
       if (foundWordsList.length > 0) {
         const param = {
           ...card,
-          articleId: articleId,
+          ...(dataSource.type === "article"
+            ? { articleId: dataSource.articleId }
+            : {
+                storyId: dataSource.storyId,
+                chapterNumber: Number(dataSource.chapterNumber),
+              }),
           saveToFlashcard: true,
           foundWordsList: foundWordsList,
         };
@@ -217,10 +311,10 @@ export default function WordList({ article, articleId, userId }: Props) {
   };
 
   return (
-    <div id="onborda-wordbutton" className="flex items-center">
+    <div id="onborda-wordbutton" className={wrapperClassName}>
       <Dialog>
         <DialogTrigger asChild>
-          <Button onClick={handleWordList} className="">
+          <Button onClick={handleWordList} className={triggerClassName}>
             {t("title")}
           </Button>
         </DialogTrigger>
@@ -308,24 +402,31 @@ export default function WordList({ article, articleId, userId }: Props) {
                                             </div>
 
                                             <span className="font-bold text-cyan-500 ml-2">
-                                              {word.vocabulary}                                           
+                                              {word.vocabulary}
                                             </span>
 
                                             <div className="mr-1">
-                                              {word?.startTime && (
-                                                <AudioImg
-                                                  key={word.vocabulary}
-                                                  audioUrl={
-                                                    word.audioUrl
-                                                      ? word.audioUrl
-                                                      : `https://storage.googleapis.com/artifacts.reading-advantage.appspot.com/${AUDIO_WORDS_URL}/${articleId}.mp3`
+                                              {word?.startTime ? (
+                                                <Image
+                                                  src={
+                                                    resolvedTheme === "dark"
+                                                      ? "/sound-play-sound-white.png"
+                                                      : "/sound-play-sound-black.png"
                                                   }
-                                                  startTimestamp={
-                                                    word?.startTime
+                                                  alt="play sound"
+                                                  width={20}
+                                                  height={20}
+                                                  className={
+                                                    "mx-3 mt-1 cursor-pointer"
                                                   }
-                                                  endTimestamp={word?.endTime}
+                                                  onClick={() =>
+                                                    playSegment(
+                                                      word.startTime,
+                                                      word.endTime
+                                                    )
+                                                  }
                                                 />
-                                              )}
+                                              ) : null}
                                             </div>
 
                                             <span>
@@ -350,6 +451,7 @@ export default function WordList({ article, articleId, userId }: Props) {
                   />
                 </>
               )}
+              <audio ref={audioRef} src={sharedAudioUrl} />
               <div className="fixed bottom-0 left-0 w-full bg-white dark:bg-[#020817] p-5">
                 <div className="flex justify-end">
                   <DialogClose asChild>
