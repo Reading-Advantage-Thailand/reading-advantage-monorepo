@@ -18,20 +18,23 @@ export default async function AddNewStudent({
 
   const ClassesData = async () => {
     const requestHeaders = await headers();
-    const resClass = await fetch(
-      `${env.NEXT_PUBLIC_BASE_URL}/api/v1/classroom`,
-      { method: "GET", headers: requestHeaders }
-    );
+    const [resClass, resStudent] = await Promise.all([
+      fetch(`${env.NEXT_PUBLIC_BASE_URL}/api/v1/classroom`, {
+        method: "GET",
+        headers: requestHeaders,
+      }),
+      fetch(`${env.NEXT_PUBLIC_BASE_URL}/api/v1/classroom/students`, {
+        method: "GET",
+        headers: requestHeaders,
+      }),
+    ]);
     if (!resClass.ok) throw new Error("Failed to fetch ClassesData list");
-    const ClassroomData = await resClass.json();
-
-    const resStudent = await fetch(
-      `${env.NEXT_PUBLIC_BASE_URL}/api/v1/classroom/students`,
-      { method: "GET", headers: requestHeaders }
-    );
     if (!resStudent.ok) throw new Error("Failed to fetch StudentData list");
 
-    const studentsData = await resStudent.json();
+    const [ClassroomData, studentsData] = await Promise.all([
+      resClass.json(),
+      resStudent.json(),
+    ]);
 
     const classData = ClassroomData.data.find(
       (classroom: { id: string }) => classroom.id === classroomId
@@ -66,8 +69,10 @@ export default async function AddNewStudent({
     return allStudentEmail;
   };
 
-  const allStudentEmail = await allStudentEmailData();
-  const classData = await ClassesData();
+  const [allStudentEmail, classData] = await Promise.all([
+    allStudentEmailData(),
+    ClassesData(),
+  ]);
   
   return (
     <>

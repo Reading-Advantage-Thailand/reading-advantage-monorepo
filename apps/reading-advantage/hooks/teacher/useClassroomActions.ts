@@ -115,7 +115,7 @@ export const useClassroomActions = () => {
                 await fetchStudentInClass(selectedClassroom);
             }
 
-            window.location.reload();
+            router.refresh();
         } catch (error) {
             console.error("Error resetting progress:", error);
             toast({
@@ -126,7 +126,7 @@ export const useClassroomActions = () => {
             setIsResetting(false);
             setIsResetModalOpen(false);
         }
-    }, [fetchStudentInClass, selectedClassroom]);
+    }, [fetchStudentInClass, selectedClassroom, router]);
 
     const clearCache = useCallback((studentId: string) => {
         const keysToRemove = [];

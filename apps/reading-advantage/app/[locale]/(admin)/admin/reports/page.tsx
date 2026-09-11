@@ -1,21 +1,13 @@
 import React from "react";
-import { getCurrentUser } from "@/lib/session";
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 import { Role } from "@/lib/enums";
 import ReportsContent from "@/components/admin/reports-content";
 import { env } from "@/lib/env";
+import { requireUser } from "@/lib/auth-guard";
 
 export default async function AdminReportsPage() {
-  const user = await getCurrentUser();
-  
-  if (!user) {
-    return redirect("/auth/signin");
-  }
-
-  if (user?.role !== Role.SYSTEM && user?.role !== Role.ADMIN) {
-    return redirect("/");
-  }
+  const user = await requireUser();
 
   if (!user.license_id) {
     return redirect("/");
@@ -63,8 +55,10 @@ export default async function AdminReportsPage() {
     }
   };
 
-  const classData = await ClassesData();
-  const allLicenses = await getAllLicensesData();
+  const [classData, allLicenses] = await Promise.all([
+    ClassesData(),
+    getAllLicensesData(),
+  ]);
 
   return (
     <div>

@@ -11,20 +11,15 @@ import {
 import UserRoleManagement from "@/components/user-role-management";
 import PieChartCustom from "@/components/pie-chart";
 import { headers } from "next/headers";
-import { getCurrentUser } from "@/lib/session";
 import { redirect } from "next/navigation";
-import UnauthorizedPage from "@/components/shared/unauthorized-page";
+import { requireUser } from "@/lib/auth-guard";
 import { env } from "@/lib/env";
 
 export default async function AdminManagementPage() {
-  const user = await getCurrentUser();
-
-  if (!user) {
-    return redirect("/auth/signin");
-  }
+  const user = await requireUser();
 
   if (!user.license_id) {
-    return <UnauthorizedPage />;
+    return redirect("/");
   }
 
   const getManegementData = async () => {

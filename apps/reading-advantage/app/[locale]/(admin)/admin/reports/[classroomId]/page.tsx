@@ -1,7 +1,5 @@
 import AdminClassroomReport from "@/components/admin/classroom-report";
-import { getCurrentUser } from "@/lib/session";
-import { redirect } from "next/navigation";
-import { Role } from "@/lib/enums";
+import { requireUser } from "@/lib/auth-guard";
 import { headers } from "next/headers";
 import { env } from "@/lib/env";
 
@@ -11,15 +9,7 @@ export default async function AdminClassroomReportPage({
   params: Promise<{ classroomId: string }>;
 }) {
   const { classroomId } = await params;
-  const user = await getCurrentUser();
-
-  if (!user) {
-    return redirect("/auth/signin");
-  }
-
-  if (user?.role !== Role.SYSTEM && user?.role !== Role.ADMIN) {
-    return redirect("/");
-  }
+  await requireUser();
 
   const getClassroomData = async () => {
     try {

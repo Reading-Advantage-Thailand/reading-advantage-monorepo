@@ -65,9 +65,11 @@ export default async function SchoolsDashboardPage() {
     }
   };
 
-  const schoolList = await schoolListfetch();
-  const userRoleList = await userRoleListfetch();
-  const averageCefrLevelData = await averageCefrLevelDatafetch();
+  const [schoolList, userRoleList, averageCefrLevelData] = await Promise.all([
+    schoolListfetch(),
+    userRoleListfetch(),
+    averageCefrLevelDatafetch(),
+  ]);
 
   // Map the data to the expected structure for the component
   const mappedSchoolList = {

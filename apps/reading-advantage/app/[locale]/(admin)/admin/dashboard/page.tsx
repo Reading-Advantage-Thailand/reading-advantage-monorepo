@@ -1,11 +1,10 @@
 import React, { Suspense } from "react";
 import { Header } from "@/components/header";
 import { headers } from "next/headers";
-import { getCurrentUser } from "@/lib/session";
 import { redirect } from "next/navigation";
-import UnauthorizedPage from "@/components/shared/unauthorized-page";
-import { SchoolDashboardContent } from "@/components/dashboard/school-dashboard-content";
+import { requireUser } from "@/lib/auth-guard";
 import { Role } from "@/lib/enums";
+import { SchoolDashboardContent } from "@/components/dashboard/school-dashboard-content";
 import { AdminOverviewResponse } from "@/types/dashboard";
 import { KPICardSkeleton } from "@/components/dashboard/kpi-card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -35,19 +34,10 @@ function DashboardSkeleton() {
 }
 
 export default async function AdminDashboardPage() {
-  const user = await getCurrentUser();
-
-  // RBAC Guard - Admins only
-  if (!user) {
-    return redirect("/auth/signin");
-  }
-
-  if (user.role !== Role.ADMIN && user.role !== Role.SYSTEM) {
-    return <UnauthorizedPage />;
-  }
+  const user = await requireUser();
 
   if (!user.license_id) {
-    return <UnauthorizedPage />;
+    return redirect("/");
   }
 
   // Parallel data fetching for optimal performance

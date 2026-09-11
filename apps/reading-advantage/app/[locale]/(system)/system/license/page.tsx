@@ -41,7 +41,6 @@ async function getAllLicenses() {
 
 export default async function LicensePage() {
   const user = await getCurrentUser();
-  const licenses = await getAllLicenses();
 
   if (!user) {
     return redirect("/auth/signin");
@@ -50,6 +49,8 @@ export default async function LicensePage() {
   if (user.role !== Role.SYSTEM) {
     return <UnauthorizedPage />;
   }
+
+  const licenses = await getAllLicenses();
 
   return (
     <div>

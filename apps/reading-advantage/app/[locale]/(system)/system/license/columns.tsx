@@ -12,17 +12,21 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { License } from "@/server/models/license";
 import { ColumnDef, Row } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 const apiDeleteLicense = async (id: string) => {
   await licenseService.licenses.deleteDoc(id);
 };
 
-const convertToReadableDate = (isoDateString: string): string => {
+const convertToReadableDate = (isoDateString: unknown): string => {
+  if (typeof isoDateString !== "string" || !isoDateString) return "—";
   const date = new Date(isoDateString);
+  if (Number.isNaN(date.getTime())) return "—";
   const options: Intl.DateTimeFormatOptions = {
     year: "numeric",
     month: "long",
@@ -30,6 +34,63 @@ const convertToReadableDate = (isoDateString: string): string => {
   };
   return date.toLocaleDateString("en-US", options);
 };
+
+function ActionsCell({ license }: { license: License }) {
+  const router = useRouter();
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleDelete = async () => {
+    setIsDeleting(true);
+    try {
+      await apiDeleteLicense(license.id);
+      setConfirmOpen(false);
+      router.refresh();
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  return (
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" className="h-8 w-8 p-0">
+            <span className="sr-only">Open menu</span>
+            <MoreHorizontal className="h-4 w-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+          <DropdownMenuItem
+            onSelect={(event) => {
+              event.preventDefault();
+              setConfirmOpen(true);
+            }}
+          >
+            Delete
+          </DropdownMenuItem>
+          <CopyKeyButton
+            asDropdownItem
+            copyText={license.key}
+            dropdownLabel="Copy License Key"
+          />
+          <DropdownMenuSeparator />
+          <DropdownMenuItem>View license details</DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <ConfirmDialog
+        open={confirmOpen}
+        onOpenChange={setConfirmOpen}
+        onConfirm={handleDelete}
+        title="Delete license?"
+        description={`This permanently deletes the license for ${license.schoolName}. This action cannot be undone.`}
+        confirmText={isDeleting ? "Deleting..." : "Delete"}
+        variant="destructive"
+      />
+    </>
+  );
+}
 
 export const columns: ColumnDef<License>[] = [
   {
@@ -106,38 +167,6 @@ export const columns: ColumnDef<License>[] = [
   {
     id: "actions",
     enableHiding: false,
-    cell: ({ row }) => {
-      const license = row.original;
-      //   const router = useRouter();
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => {
-                apiDeleteLicense(license.id);
-                // router.refresh();
-              }}
-            >
-              Delete
-            </DropdownMenuItem>
-            <CopyKeyButton
-              asDropdownItem
-              copyText={license.key}
-              dropdownLabel="Copy License Key"
-            />
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View license details</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    },
+    cell: ({ row }) => <ActionsCell license={row.original} />,
   },
 ];

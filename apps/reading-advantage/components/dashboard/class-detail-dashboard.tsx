@@ -59,7 +59,8 @@ export function ClassDetailDashboard({
   const handleRefresh = async () => {
     setRefreshing(true);
     // Trigger a refresh of all data
-    window.location.reload();
+    router.refresh();
+    setRefreshing(false);
   };
 
   const handleExportCSV = async () => {

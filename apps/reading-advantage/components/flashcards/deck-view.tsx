@@ -209,8 +209,8 @@ export function SingleDeckViewInline({
       if (onDeckUpdate) {
         onDeckUpdate();
       } else {
-        // Fallback to page reload if callback not provided
-        window.location.reload();
+        // Fallback to router refresh if callback not provided
+        router.refresh();
       }
     }, 1000); // Reduced to 1 second since toast now shows properly with better timing
   };
@@ -515,7 +515,7 @@ export function SingleDeckViewInline({
                       description: "Data refreshed!",
                     });
                   } else {
-                    window.location.reload();
+                    router.refresh();
                   }
                 }}
                 className="h-12"
