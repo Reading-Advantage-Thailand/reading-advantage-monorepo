@@ -1,4 +1,5 @@
 // components/flashcards/empty-dashboard.tsx
+"use client";
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -18,122 +19,78 @@ import {
   Sparkles,
 } from "lucide-react";
 import Link from "next/link";
+import { useScopedI18n } from "@/locales/client";
 
 interface EmptyDashboardProps {
   deckType?: "VOCABULARY" | "SENTENCE";
 }
 
 export function EmptyDashboard({ deckType }: EmptyDashboardProps) {
+  const t = useScopedI18n("components.flashcards.emptyDeck");
+  const scope = deckType === "VOCABULARY" || deckType === "SENTENCE" ? deckType.toLowerCase() as "vocabulary" | "sentence" : "all";
+
   const getContent = () => {
-    if (deckType === "VOCABULARY") {
-      return {
-        icon: <GraduationCap className="h-16 w-16" />,
-        title: "Start Your Vocabulary Journey",
-        description:
-          "Create personalized flashcard decks by reading articles and saving vocabulary words. Master new words with scientifically-proven spaced repetition.",
-        actionText: "Start Reading for Vocabulary",
-        gradient:
-          "from-blue-50 to-indigo-100 dark:from-blue-950/20 dark:to-indigo-950/20",
-        iconColor: "text-blue-500",
-        badgeColor:
-          "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200",
-        steps: [
-          {
-            icon: BookOpen,
-            text: "Read Articles",
-            desc: "Browse content at your reading level",
-            color: "text-blue-500",
-            bgColor: "bg-blue-50 dark:bg-blue-950/20",
-          },
-          {
-            icon: Target,
-            text: "Save Words",
-            desc: "Click words to add to your deck",
-            color: "text-green-500",
-            bgColor: "bg-green-50 dark:bg-green-950/20",
-          },
-          {
-            icon: CheckCircle,
-            text: "Study & Master",
-            desc: "Learn with spaced repetition",
-            color: "text-purple-500",
-            bgColor: "bg-purple-50 dark:bg-purple-950/20",
-          },
-        ],
-      };
-    } else if (deckType === "SENTENCE") {
-      return {
-        icon: <FileText className="h-16 w-16" />,
-        title: "Start Your Sentence Mastery",
-        description:
-          "Build sentence comprehension by reading articles and saving meaningful sentences. Practice understanding and translation skills through interactive flashcards.",
-        actionText: "Start Reading for Sentences",
-        gradient:
-          "from-green-50 to-emerald-100 dark:from-green-950/20 dark:to-emerald-950/20",
-        iconColor: "text-green-500",
-        badgeColor:
-          "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
-        steps: [
-          {
-            icon: FileText,
-            text: "Read Articles",
-            desc: "Discover engaging content to learn from",
-            color: "text-green-500",
-            bgColor: "bg-green-50 dark:bg-green-950/20",
-          },
-          {
-            icon: Target,
-            text: "Save Sentences",
-            desc: "Select meaningful sentences for practice",
-            color: "text-blue-500",
-            bgColor: "bg-blue-50 dark:bg-blue-950/20",
-          },
-          {
-            icon: CheckCircle,
-            text: "Practice Translation",
-            desc: "Master sentence understanding",
-            color: "text-purple-500",
-            bgColor: "bg-purple-50 dark:bg-purple-950/20",
-          },
-        ],
-      };
-    } else {
-      return {
-        icon: <Brain className="h-16 w-16" />,
-        title: "Start Your Learning Adventure",
-        description:
-          "Build personalized flashcard decks by reading articles and saving vocabulary words or sentences. Use scientifically-proven spaced repetition to learn efficiently and retain more.",
-        actionText: "Start Reading Articles",
-        gradient:
-          "from-purple-50 to-pink-100 dark:from-purple-950/20 dark:to-pink-950/20",
-        iconColor: "text-purple-500",
-        badgeColor:
-          "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200",
-        steps: [
-          {
-            icon: BookOpen,
-            text: "Read Content",
-            desc: "Choose from curated articles at your level",
-            color: "text-blue-500",
-            bgColor: "bg-blue-50 dark:bg-blue-950/20",
-          },
-          {
-            icon: Target,
-            text: "Build Your Deck",
-            desc: "Save words and sentences that matter",
-            color: "text-green-500",
-            bgColor: "bg-green-50 dark:bg-green-950/20",
-          },
-          {
-            icon: CheckCircle,
-            text: "Study & Progress",
-            desc: "Master with spaced repetition",
-            color: "text-purple-500",
-            bgColor: "bg-purple-50 dark:bg-purple-950/20",
-          },
-        ],
-      };
-    }
+    const variant = {
+      icon:
+        deckType === "VOCABULARY" ? (
+          <GraduationCap className="h-16 w-16" />
+        ) : deckType === "SENTENCE" ? (
+          <FileText className="h-16 w-16" />
+        ) : (
+          <Brain className="h-16 w-16" />
+        ),
+      title: t(`${scope}.title`),
+      description: t(`${scope}.description`),
+      actionText: t(`${scope}.actionText`),
+      gradient:
+        deckType === "VOCABULARY"
+          ? "from-blue-50 to-indigo-100 dark:from-blue-950/20 dark:to-indigo-950/20"
+          : deckType === "SENTENCE"
+            ? "from-green-50 to-emerald-100 dark:from-green-950/20 dark:to-emerald-950/20"
+            : "from-purple-50 to-pink-100 dark:from-purple-950/20 dark:to-pink-950/20",
+      iconColor:
+        deckType === "VOCABULARY"
+          ? "text-blue-500"
+          : deckType === "SENTENCE"
+            ? "text-green-500"
+            : "text-purple-500",
+      badgeColor:
+        deckType === "VOCABULARY"
+          ? "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
+          : deckType === "SENTENCE"
+            ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
+            : "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200",
+      steps: [
+        {
+          icon: deckType === "SENTENCE" ? FileText : BookOpen,
+          text: t(`${scope}.step1Text`),
+          desc: t(`${scope}.step1Desc`),
+          color: deckType === "SENTENCE" ? "text-green-500" : "text-blue-500",
+          bgColor:
+            deckType === "SENTENCE"
+              ? "bg-green-50 dark:bg-green-950/20"
+              : "bg-blue-50 dark:bg-blue-950/20",
+        },
+        {
+          icon: Target,
+          text: t(`${scope}.step2Text`),
+          desc: t(`${scope}.step2Desc`),
+          color: deckType === "VOCABULARY" ? "text-green-500" : "text-blue-500",
+          bgColor:
+            deckType === "VOCABULARY"
+              ? "bg-green-50 dark:bg-green-950/20"
+              : "bg-blue-50 dark:bg-blue-950/20",
+        },
+        {
+          icon: CheckCircle,
+          text: t(`${scope}.step3Text`),
+          desc: t(`${scope}.step3Desc`),
+          color: "text-purple-500",
+          bgColor: "bg-purple-50 dark:bg-purple-950/20",
+        },
+      ],
+    };
+    return variant;
   };
 
   const content = getContent();
@@ -163,11 +120,11 @@ export function EmptyDashboard({ deckType }: EmptyDashboardProps) {
                   className={`${content.badgeColor} px-4 py-2 text-sm font-semibold`}
                 >
                   <Sparkles className="mr-2 h-4 w-4" />
-                  {deckType ? `${deckType} DECK` : "FLASHCARD SYSTEM"}
+                  {deckType ? `${deckType} DECK` : t("badgeDefault")}
                 </Badge>
 
                 <p className="text-muted-foreground text-lg">
-                  Ready to start your learning journey?
+                  {t("readyPrompt")}
                 </p>
               </div>
 
@@ -190,9 +147,9 @@ export function EmptyDashboard({ deckType }: EmptyDashboardProps) {
       {/* How It Works */}
       <div className="space-y-8">
         <div className="space-y-3 text-center">
-          <h2 className="text-2xl font-bold">How It Works</h2>
+          <h2 className="text-2xl font-bold">{t("howItWorksTitle")}</h2>
           <p className="text-muted-foreground text-lg">
-            Get started in three simple steps and begin your learning journey
+            {t("howItWorksDescription")}
           </p>
         </div>
 
@@ -210,7 +167,7 @@ export function EmptyDashboard({ deckType }: EmptyDashboardProps) {
                   <step.icon className="h-8 w-8" />
                 </div>
                 <Badge variant="outline" className="mx-auto mb-3 border-2">
-                  Step {index + 1}
+                  {t("stepLabel", { step: index + 1 })}
                 </Badge>
                 <CardTitle className="text-xl font-semibold">
                   {step.text}
@@ -229,38 +186,16 @@ export function EmptyDashboard({ deckType }: EmptyDashboardProps) {
         <CardContent className="p-10">
           <div className="space-y-8 text-center">
             <div className="space-y-3">
-              <h3 className="text-2xl font-bold">Why This Approach Works</h3>
-              <p className="text-muted-foreground">
-                Built on scientific learning principles for maximum retention
-              </p>
+              <h3 className="text-2xl font-bold">{t("whyTitle")}</h3>
+              <p className="text-muted-foreground">{t("whyDescription")}</p>
             </div>
 
             <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
               {[
-                {
-                  icon: Brain,
-                  title: "Spaced Repetition",
-                  desc: "Scientifically proven method",
-                  color: "text-purple-500",
-                },
-                {
-                  icon: Target,
-                  title: "Personalized",
-                  desc: "Content tailored to you",
-                  color: "text-blue-500",
-                },
-                {
-                  icon: Zap,
-                  title: "Track Progress",
-                  desc: "Monitor improvement",
-                  color: "text-green-500",
-                },
-                {
-                  icon: Globe,
-                  title: "Multi-Language",
-                  desc: "Learn any language",
-                  color: "text-orange-500",
-                },
+                { icon: Brain, color: "text-purple-500", title: t("feature1Title"), desc: t("feature1Desc") },
+                { icon: Target, color: "text-blue-500", title: t("feature2Title"), desc: t("feature2Desc") },
+                { icon: Zap, color: "text-green-500", title: t("feature3Title"), desc: t("feature3Desc") },
+                { icon: Globe, color: "text-orange-500", title: t("feature4Title"), desc: t("feature4Desc") },
               ].map((feature, index) => (
                 <div key={index} className="group space-y-4 text-center">
                   <div
@@ -284,9 +219,9 @@ export function EmptyDashboard({ deckType }: EmptyDashboardProps) {
       {/* Final CTA */}
       <div className="space-y-6 text-center">
         <div className="space-y-3">
-          <h3 className="text-2xl font-bold">Ready to Start Learning?</h3>
+          <h3 className="text-2xl font-bold">{t("finalTitle")}</h3>
           <p className="text-muted-foreground text-lg">
-            Join thousands of learners improving their language skills every day
+            {t("finalDescription")}
           </p>
         </div>
 
@@ -294,13 +229,13 @@ export function EmptyDashboard({ deckType }: EmptyDashboardProps) {
           <Button asChild size="lg" className="h-12 px-8">
             <Link href="/student/read">
               <BookOpen className="mr-2 h-4 w-4" />
-              Start Reading Now
+              {t("startReadingNow")}
             </Link>
           </Button>
           <Button asChild variant="outline" size="lg" className="h-12 px-8">
             <Link href="/student/read">
               <Clock className="mr-2 h-4 w-4" />
-              Browse Articles
+              {t("browseArticles")}
             </Link>
           </Button>
         </div>

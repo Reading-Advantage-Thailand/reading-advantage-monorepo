@@ -29,31 +29,32 @@ import {
   LicenseSubScriptionLevel,
   LicenseExpirationDate,
 } from "@/server/models/enum";
-
-const FormSchema = z.object({
-  school_name: z
-    .string()
-    .min(5, {
-      message: "School name must be at least 5 characters.",
-    })
-    .max(60, {
-      message: "School name must be at most 60 characters.",
-    }),
-  total: z.number().int().min(1),
-  subscription_level: z.enum([
-    LicenseSubScriptionLevel.BASIC,
-    LicenseSubScriptionLevel.PREMIUM,
-    LicenseSubScriptionLevel.ENTERPRISE,
-  ]),
-  admin_id: z.string(),
-  expiration_date: z.enum([
-    LicenseExpirationDate.HALFYEARS,
-    LicenseExpirationDate.FULLYEARS,
-  ]),
-});
+import { useScopedI18n } from "@/locales/client";
 
 export function CreateLicenseForm() {
   const [isLoading, setIsLoading] = useState(false);
+  const t = useScopedI18n("pages.systemLicense.form");
+  const FormSchema = z.object({
+    school_name: z
+      .string()
+      .min(5, {
+        message: t("schoolNameMin"),
+      })
+      .max(60, {
+        message: t("schoolNameMax"),
+      }),
+    total: z.number().int().min(1),
+    subscription_level: z.enum([
+      LicenseSubScriptionLevel.BASIC,
+      LicenseSubScriptionLevel.PREMIUM,
+      LicenseSubScriptionLevel.ENTERPRISE,
+    ]),
+    admin_id: z.string(),
+    expiration_date: z.enum([
+      LicenseExpirationDate.HALFYEARS,
+      LicenseExpirationDate.FULLYEARS,
+    ]),
+  });
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -89,13 +90,17 @@ export function CreateLicenseForm() {
 
       router.refresh();
       toast({
-        title: "Created licenses.",
-        description: `Created ${data.total} ${data.subscription_level} licenses for ${data.school_name}.`,
+        title: t("createdTitle"),
+        description: t("createdDescription", {
+          total: data.total,
+          level: data.subscription_level,
+          school: data.school_name,
+        }),
       });
     } catch (error) {
       toast({
-        title: "An error occurred.",
-        description: `Failed to create licenses`,
+        title: t("errorTitle"),
+        description: t("errorDescription"),
         variant: "destructive",
       });
     } finally {
@@ -111,12 +116,12 @@ export function CreateLicenseForm() {
           name="school_name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>School name</FormLabel>
+              <FormLabel>{t("schoolName")}</FormLabel>
               <FormControl>
-                <Input type="text" placeholder="name" {...field} />
+                <Input type="text" placeholder={t("schoolNamePlaceholder")} {...field} />
               </FormControl>
               <FormMessage />
-              <FormDescription>The name of the school</FormDescription>
+              <FormDescription>{t("schoolNameDescription")}</FormDescription>
             </FormItem>
           )}
         />
@@ -125,15 +130,12 @@ export function CreateLicenseForm() {
           name="admin_id"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Admin ID</FormLabel>
+              <FormLabel>{t("adminId")}</FormLabel>
               <FormControl>
-                <Input type="text" placeholder="ID" {...field} />
+                <Input type="text" placeholder={t("adminIdPlaceholder")} {...field} />
               </FormControl>
               <FormMessage />
-              <FormDescription>
-                The id of the admin that will be assigned to manage the school.
-                Responsible for admin roles.
-              </FormDescription>
+              <FormDescription>{t("adminIdDescription")}</FormDescription>
             </FormItem>
           )}
         />
@@ -142,19 +144,17 @@ export function CreateLicenseForm() {
           name="total"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Total</FormLabel>
+              <FormLabel>{t("total")}</FormLabel>
               <FormControl>
                 <Input
                   type="number"
-                  placeholder="total licenses"
+                  placeholder={t("totalPlaceholder")}
                   {...field}
                   onChange={(e) => field.onChange(Number(e.target.value))}
                 />
               </FormControl>
               <FormMessage />
-              <FormDescription>
-                The total number of licenses to create.
-              </FormDescription>
+              <FormDescription>{t("totalDescription")}</FormDescription>
             </FormItem>
           )}
         />
@@ -163,29 +163,27 @@ export function CreateLicenseForm() {
           name="subscription_level"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Subscription Level</FormLabel>
+              <FormLabel>{t("subscriptionLevel")}</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select a subscription level" />
+                    <SelectValue placeholder={t("subscriptionPlaceholder")} />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
                   <SelectItem value={LicenseSubScriptionLevel.BASIC}>
-                    Basic
+                    {t("basic")}
                   </SelectItem>
                   <SelectItem value={LicenseSubScriptionLevel.PREMIUM}>
-                    Premium
+                    {t("premium")}
                   </SelectItem>
                   <SelectItem value={LicenseSubScriptionLevel.ENTERPRISE}>
-                    Enterprise
+                    {t("enterprise")}
                   </SelectItem>
                 </SelectContent>
               </Select>
               <FormMessage />
-              <FormDescription>
-                The subscription level for the licenses.
-              </FormDescription>
+              <FormDescription>{t("subscriptionDescription")}</FormDescription>
             </FormItem>
           )}
         />
@@ -194,22 +192,20 @@ export function CreateLicenseForm() {
           name="expiration_date"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Expiration Date</FormLabel>
+              <FormLabel>{t("expirationDate")}</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select a Expiration Date" />
+                    <SelectValue placeholder={t("expirationPlaceholder")} />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value={"180"}>180 day</SelectItem>
-                  <SelectItem value={"360"}>360 day</SelectItem>
+                  <SelectItem value={"180"}>{t("days180")}</SelectItem>
+                  <SelectItem value={"360"}>{t("days360")}</SelectItem>
                 </SelectContent>
               </Select>
               <FormMessage />
-              <FormDescription>
-                The Expiration Date for the licenses.
-              </FormDescription>
+              <FormDescription>{t("expirationDescription")}</FormDescription>
             </FormItem>
           )}
         />
@@ -220,7 +216,7 @@ export function CreateLicenseForm() {
           disabled={isLoading || !form.formState.isValid}
         >
           {isLoading && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}
-          Create Licenses
+          {t("createLicenses")}
         </Button>
       </form>
     </Form>

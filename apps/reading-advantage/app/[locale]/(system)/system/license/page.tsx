@@ -14,11 +14,12 @@ import {
 } from "@/components/ui/card";
 import { CreateLicenseForm } from "./create-license-form";
 import { licenseService } from "@/client/services/firestore-client-services";
-import { columns } from "./columns";
+import { LicenseDataTableWithColumns } from "./columns";
 import { Header } from "@/components/header";
 import { getCurrentUser } from "@/lib/session";
 import { redirect } from "next/navigation";
 import UnauthorizedPage from "@/components/shared/unauthorized-page";
+import { getScopedI18n } from "@/locales/server";
 
 async function getAllLicenses() {
   const requestHeaders = await headers();
@@ -51,25 +52,23 @@ export default async function LicensePage() {
   }
 
   const licenses = await getAllLicenses();
+  const t = await getScopedI18n("pages.systemLicense");
 
   return (
     <div>
-      <Header heading="System" text="Create a new license for school" />
+      <Header heading={t("heading")} text={t("headerText")} />
       <Separator className="my-4" />
       <div className="mx-2 flex gap-4 flex-col md:flex-row">
         <div className="w-full">
-          <LicenseDataTable data={licenses} columns={columns} />
+          <LicenseDataTableWithColumns data={licenses} />
         </div>
         <Card className="md:w-[40rem] md:max-w-sm">
           <CardHeader>
             <CardTitle className="text-primary">
-              Create a new license for your school
+              {t("cardTitle")}
             </CardTitle>
             <CardDescription>
-              License is a key to access the platform. You can create a new
-              license for the school. Currently you have a total of{" "}
-              <strong className="dark:text-blue-500">{licenses.length}</strong>{" "}
-              license(s).
+              {t("cardDescription", { count: licenses.length })}
             </CardDescription>
           </CardHeader>
           <CardContent>

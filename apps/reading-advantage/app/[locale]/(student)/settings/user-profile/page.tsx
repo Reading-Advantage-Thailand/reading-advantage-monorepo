@@ -13,10 +13,13 @@ import ResetDialog from "@/components/reset-xp-dialog";
 import { cookies } from "next/headers";
 import { env } from "@/lib/env";
 import GoogleClassroomButtonLink from "@/components/googleClassroomButtonLink";
+import { getScopedI18n } from "@/locales/server";
+
 export default async function UserProfileSettingsPage() {
   const user = await getCurrentUser();
   const cookieStore = await cookies();
   const googleActive = cookieStore.get("google_refresh_token")?.value;
+  const t = await getScopedI18n("pages.settingsUserProfile");
 
   // check if user is not logged in and redirect to signin page
   if (!user) {
@@ -26,35 +29,35 @@ export default async function UserProfileSettingsPage() {
   return (
     <div>
       <Header
-        heading="Personal information"
-        text="Information about your personal profile"
+        heading={t("heading")}
+        text={t("description")}
       />
       <Link
         href="/student/read"
         className="inline-block mb-4 text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-200"
       >
-        &larr; Back to Reading Page
+        {t("backLink")}
       </Link>
       <Separator className="my-4" />
       <div className="mx-2 flex gap-4 flex-col md:flex-row">
         <div className="w-full">
           <ChangeUsernameForm username={user.display_name} userId={user.id} />
           <DisplaySettingInfo
-            title="Email"
+            title={t("email")}
             data={user.email}
             verified={user.email_verified}
             resetPassword
             showVerified
           />
-          <DisplaySettingInfo title="Google Classroom Link" />
+          <DisplaySettingInfo title={t("googleClassroom")} />
           <GoogleClassroomButtonLink status={Boolean(googleActive)} />
           <DisplaySettingInfo
-            title="Reading advantage level"
-            data={user.cefr_level || "unknown"}
+            title={t("level")}
+            data={user.cefr_level || t("unknown")}
           />
           <DisplaySettingInfo
-            title="Reading advantage XP"
-            desc="The XP is used to level up."
+            title={t("xp")}
+            desc={t("xpDesc")}
             data={user.xp?.toString() || "0"}
           />
           <ResetDialog users={user.id} />
@@ -86,7 +89,7 @@ interface DisplaySettingInfoProps {
   resetPassword?: boolean;
 }
 
-const DisplaySettingInfo: React.FC<DisplaySettingInfoProps> = ({
+async function DisplaySettingInfo({
   title,
   desc,
   data,
@@ -94,36 +97,39 @@ const DisplaySettingInfo: React.FC<DisplaySettingInfoProps> = ({
   verified,
   resetPassword,
   showVerified = false,
-}) => (
-  <>
-    <div className="text-sm font-medium mt-3">
-      {title}
-      {badge && (
-        <Badge className="ml-2" variant="secondary">
-          {badge}
-        </Badge>
-      )}
-    </div>
-    {desc && <p className="text-[0.8rem] text-muted-foreground mt-2">{desc}</p>}
-    {data && (
-      <div className="flex justify-between items-center text-[0.8rem] text-muted-foreground rounded-lg border bg-card shadow px-3 py-2 my-2">
-        <p>{data}</p>
-        {showVerified && (
-          <div className="flex items-center gap-1">
-            {verified ? (
-              <span className="text-green-800 dark:text-green-300 flex items-center gap-1">
-                <BadgeCheck size={16} />
-                Verified
-              </span>
-            ) : (
-              <span className="text-red-800 dark:text-red-300 flex items-center gap-1">
-                <Icons.unVerified size={16} />
-                Not verified
-              </span>
-            )}
-          </div>
+}: DisplaySettingInfoProps) {
+  const t = await getScopedI18n("pages.settingsUserProfile");
+  return (
+    <>
+      <div className="text-sm font-medium mt-3">
+        {title}
+        {badge && (
+          <Badge className="ml-2" variant="secondary">
+            {badge}
+          </Badge>
         )}
       </div>
-    )}
-  </>
-);
+      {desc && <p className="text-[0.8rem] text-muted-foreground mt-2">{desc}</p>}
+      {data && (
+        <div className="flex justify-between items-center text-[0.8rem] text-muted-foreground rounded-lg border bg-card shadow px-3 py-2 my-2">
+          <p>{data}</p>
+          {showVerified && (
+            <div className="flex items-center gap-1">
+              {verified ? (
+                <span className="text-green-800 dark:text-green-300 flex items-center gap-1">
+                  <BadgeCheck size={16} />
+                  {t("verified")}
+                </span>
+              ) : (
+                <span className="text-red-800 dark:text-red-300 flex items-center gap-1">
+                  <Icons.unVerified size={16} />
+                  {t("notVerified")}
+                </span>
+              )}
+            </div>
+          )}
+        </div>
+      )}
+    </>
+  );
+}

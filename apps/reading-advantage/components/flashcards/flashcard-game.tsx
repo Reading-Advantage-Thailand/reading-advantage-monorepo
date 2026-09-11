@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useToast } from "@/components/ui/use-toast";
-import { useCurrentLocale } from "@/locales/client";
+import { useCurrentLocale, useScopedI18n } from "@/locales/client";
 import {
   ChevronLeft,
   Volume2,
@@ -114,12 +114,13 @@ export function FlashcardGameInline({
   const router = useRouter();
   const locale = useCurrentLocale();
   const { toast } = useToast();
+  const t = useScopedI18n("components.flashcards.game");
 
   const currentCard = cards[currentCardIndex];
 
   // Get appropriate translation based on selected language
   const getTranslation = (translation: any) => {
-    if (!translation) return "No translation";
+    if (!translation) return t("noTranslation");
 
     // Use selectedLanguage or fallback to available translations
     return (
@@ -127,7 +128,7 @@ export function FlashcardGameInline({
       translation["en"] ||
       translation["th"] ||
       Object.values(translation)[0] ||
-      "No translation"
+      t("noTranslation")
     );
   };
 
@@ -228,8 +229,8 @@ export function FlashcardGameInline({
       } else {
         console.error("Failed to award XP:", responseData);
         toast({
-          title: "Error",
-          description: "Failed to save your progress. Please try again.",
+          title: t("errorTitle"),
+          description: t("saveProgressError"),
           variant: "destructive",
         });
         return null;
@@ -237,8 +238,8 @@ export function FlashcardGameInline({
     } catch (error) {
       console.error("Error awarding XP:", error);
       toast({
-        title: "Error",
-        description: "Failed to save your progress. Please try again.",
+        title: t("errorTitle"),
+        description: t("saveProgressError"),
         variant: "destructive",
       });
       return null;
@@ -269,7 +270,7 @@ export function FlashcardGameInline({
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to submit rating");
+        throw new Error(errorData.message || t("submitRatingError"));
       }
 
       // Update session stats
@@ -297,24 +298,24 @@ export function FlashcardGameInline({
         if (awardedXp) {
           setTimeout(() => {
             toast({
-              title: "🎉 Congratulations!",
-              description: `You earned ${awardedXp} XP!`,
+              title: t("congratulationsTitle"),
+              description: t("xpEarnedToast", { xp: awardedXp }),
               variant: "default",
             });
           }, 1000);
         }
 
         toast({
-          title: "Success",
-          description: "Study session completed!",
+          title: t("successTitle"),
+          description: t("sessionCompletedDesc"),
           variant: "default",
         });
       }
     } catch (error) {
       console.error("Error submitting rating:", error);
       toast({
-        title: "Error",
-        description: "Failed to save progress. Please try again.",
+        title: t("errorTitle"),
+        description: t("submitRatingError"),
         variant: "destructive",
       });
     } finally {
@@ -350,8 +351,8 @@ export function FlashcardGameInline({
     // Optional: Show a final toast
     if (xpAwarded) {
       toast({
-        title: "Session Completed!",
-        description: `Total XP earned: ${xpAwarded}`,
+        title: t("sessionCompletedTitle"),
+        description: t("totalXpDesc", { xp: xpAwarded }),
         variant: "default",
       });
     }
@@ -363,19 +364,19 @@ export function FlashcardGameInline({
         <CardContent className="space-y-6 p-8 text-center">
           <div className="space-y-4">
             <Trophy className="mx-auto h-16 w-16 text-yellow-500" />
-            <h2 className="text-2xl font-bold">Study Session Complete!</h2>
+            <h2 className="text-2xl font-bold">{t("sessionCompleteTitle")}</h2>
             {xpAwarded && (
               <div className="bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-950/20 dark:to-blue-950/20 p-4 rounded-lg border border-green-200 dark:border-green-800">
                 <div className="flex items-center justify-center gap-2">
                   <Zap className="h-5 w-5 text-yellow-500" />
                   <span className="text-lg font-semibold text-green-700 dark:text-green-300">
-                    +{xpAwarded} XP Earned!
+                    {t("xpEarned", { xp: xpAwarded })}
                   </span>
                 </div>
               </div>
             )}
             <p className="text-muted-foreground">
-              Great job! You&apos;ve completed your flashcard session.
+              {t("greatJob")}
             </p>
           </div>
 
@@ -385,21 +386,21 @@ export function FlashcardGameInline({
               <div className="text-2xl font-bold text-green-600">
                 {sessionStats.correct}
               </div>
-              <div className="text-sm text-muted-foreground">Correct</div>
+              <div className="text-sm text-muted-foreground">{t("correctLabel")}</div>
             </div>
             <div className="space-y-2">
               <XCircle className="mx-auto h-8 w-8 text-red-500" />
               <div className="text-2xl font-bold text-red-600">
                 {sessionStats.incorrect}
               </div>
-              <div className="text-sm text-muted-foreground">Incorrect</div>
+              <div className="text-sm text-muted-foreground">{t("incorrectLabel")}</div>
             </div>
             <div className="space-y-2">
               <Clock className="mx-auto h-8 w-8 text-blue-500" />
               <div className="text-2xl font-bold text-blue-600">
                 {formatTime(elapsedTime)}
               </div>
-              <div className="text-sm text-muted-foreground">Time</div>
+              <div className="text-sm text-muted-foreground">{t("timeLabel")}</div>
             </div>
           </div>
 
@@ -408,11 +409,11 @@ export function FlashcardGameInline({
           <div className="flex justify-center gap-3">
             <Button onClick={handleCompleteSession} size="lg">
               <CheckCircle className="mr-2 h-4 w-4" />
-              Complete Session
+              {t("completeSession")}
             </Button>
             <Button onClick={onExit} variant="outline" size="lg">
               <ChevronLeft className="mr-2 h-4 w-4" />
-              Back to Dashboard
+              {t("backToDashboard")}
             </Button>
           </div>
         </CardContent>
@@ -425,13 +426,13 @@ export function FlashcardGameInline({
       <Card className="mx-auto max-w-2xl">
         <CardContent className="space-y-4 p-8 text-center">
           <AlertTriangle className="mx-auto h-12 w-12 text-orange-500" />
-          <h3 className="text-lg font-semibold">No Cards Available</h3>
+          <h3 className="text-lg font-semibold">{t("noCardsTitle")}</h3>
           <p className="text-muted-foreground">
-            There are no cards to study at this time.
+            {t("noCardsDesc")}
           </p>
           <Button onClick={onExit} variant="outline">
             <ChevronLeft className="mr-2 h-4 w-4" />
-            Back to Dashboard
+            {t("backToDashboard")}
           </Button>
         </CardContent>
       </Card>
@@ -453,7 +454,7 @@ export function FlashcardGameInline({
               <div>
                 <CardTitle className="text-lg">{deckName}</CardTitle>
                 <p className="text-sm text-muted-foreground">
-                  Card {currentCardIndex + 1} of {cards.length}
+                  {t("cardProgress", { current: currentCardIndex + 1, total: cards.length })}
                 </p>
               </div>
             </div>
@@ -489,7 +490,7 @@ export function FlashcardGameInline({
           <div className="space-y-2">
             <Progress value={progress} className="h-2" />
             <div className="flex justify-between text-sm text-muted-foreground">
-              <span>Progress</span>
+              <span>{t("progressLabel")}</span>
               <span>{Math.round(progress)}%</span>
             </div>
           </div>
@@ -522,10 +523,10 @@ export function FlashcardGameInline({
                   <Target className="mr-1 h-3 w-3" />
                 )}
                 {currentCard.state === 0
-                  ? "NEW"
+                  ? t("stateNew")
                   : currentCard.state === 1 || currentCard.state === 3
-                    ? "LEARNING"
-                    : "REVIEW"}
+                    ? t("stateLearning")
+                    : t("stateReview")}
               </Badge>
             </div>
 
@@ -535,7 +536,7 @@ export function FlashcardGameInline({
                 <div className="space-y-4">
                   <div className="space-y-2">
                     <h2 className="text-4xl font-bold text-primary">
-                      {currentCard.word?.vocabulary || "No word"}
+                      {currentCard.word?.vocabulary || t("noWord")}
                     </h2>
                     {currentCard.word?.pos && (
                       <Badge variant="outline" className="text-xs">
@@ -557,7 +558,7 @@ export function FlashcardGameInline({
               ) : (
                 <div className="space-y-4">
                   <h2 className="text-2xl font-medium leading-relaxed">
-                    {currentCard.sentence || "No sentence"}
+                    {currentCard.sentence || t("noSentence")}
                   </h2>
                   <Button
                     onClick={() => speakText(currentCard.sentence || "")}
@@ -580,15 +581,15 @@ export function FlashcardGameInline({
                   {deckType === "VOCABULARY" ? (
                     <div className="space-y-3">
                       <div className="space-y-2">
-                        <h3 className="text-xl font-semibold">Definition</h3>
+                        <h3 className="text-xl font-semibold">{t("definitionLabel")}</h3>
                         <p className="text-lg text-muted-foreground">
                           {getTranslation(currentCard.word?.definition) ||
-                            "No definition"}
+                            t("noDefinition")}
                         </p>
                       </div>
                       {currentCard.word?.example && (
                         <div className="space-y-2">
-                          <h3 className="text-xl font-semibold">Example</h3>
+                          <h3 className="text-xl font-semibold">{t("exampleLabel")}</h3>
                           <p className="text-lg italic text-muted-foreground">
                             &quot;{currentCard.word.example}&quot;
                           </p>
@@ -597,7 +598,7 @@ export function FlashcardGameInline({
                     </div>
                   ) : (
                     <div className="space-y-3">
-                      <h3 className="text-xl font-semibold">Translation</h3>
+                      <h3 className="text-xl font-semibold">{t("translationLabel")}</h3>
                       <p className="text-lg text-muted-foreground">
                         {getTranslation(currentCard.translation)}
                       </p>
@@ -609,7 +610,7 @@ export function FlashcardGameInline({
                 <div className="space-y-4">
                   <div className="text-center">
                     <p className="text-sm text-muted-foreground">
-                      How well did you know this?
+                      {t("howWell")}
                     </p>
                   </div>
                   <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
@@ -620,7 +621,7 @@ export function FlashcardGameInline({
                       className="h-16 flex-col gap-1"
                     >
                       <XCircle className="h-5 w-5" />
-                      <span className="text-xs">Again</span>
+                      <span className="text-xs">{t("againLabel")}</span>
                       <span className="text-xs opacity-75">&lt;1m</span>
                     </Button>
                     <Button
@@ -630,7 +631,7 @@ export function FlashcardGameInline({
                       className="h-16 flex-col gap-1"
                     >
                       <ThumbsDown className="h-5 w-5" />
-                      <span className="text-xs">Hard</span>
+                      <span className="text-xs">{t("hardLabel")}</span>
                       <span className="text-xs opacity-75">&lt;6m</span>
                     </Button>
                     <Button
@@ -640,7 +641,7 @@ export function FlashcardGameInline({
                       className="h-16 flex-col gap-1"
                     >
                       <ThumbsUp className="h-5 w-5" />
-                      <span className="text-xs">Good</span>
+                      <span className="text-xs">{t("goodLabel")}</span>
                       <span className="text-xs opacity-75">&lt;10m</span>
                     </Button>
                     <Button
@@ -650,7 +651,7 @@ export function FlashcardGameInline({
                       className="h-16 flex-col gap-1 bg-green-600 hover:bg-green-700"
                     >
                       <CheckCircle className="h-5 w-5" />
-                      <span className="text-xs">Easy</span>
+                      <span className="text-xs">{t("easyLabel")}</span>
                       <span className="text-xs opacity-75">4d</span>
                     </Button>
                   </div>
@@ -661,8 +662,8 @@ export function FlashcardGameInline({
                 <div className="space-y-4">
                   <p className="text-muted-foreground">
                     {deckType === "VOCABULARY"
-                      ? "What does this word mean?"
-                      : "What does this sentence mean?"}
+                      ? t("wordQuestion")
+                      : t("sentenceQuestion")}
                   </p>
                   <Button
                     onClick={handleShowAnswer}
@@ -670,7 +671,7 @@ export function FlashcardGameInline({
                     className="h-14 px-8"
                   >
                     <Eye className="mr-2 h-5 w-5" />
-                    Show Answer
+                    {t("showAnswer")}
                   </Button>
                 </div>
                 <div className="flex justify-center gap-2">
@@ -681,7 +682,7 @@ export function FlashcardGameInline({
                     className="text-muted-foreground"
                   >
                     <SkipForward className="mr-1 h-4 w-4" />
-                    Skip
+                    {t("skipLabel")}
                   </Button>
                 </div>
               </div>
@@ -715,15 +716,16 @@ export function FlashcardGameInline({
               </div>
             </div>
             <div className="text-sm text-muted-foreground">
-              Accuracy:{" "}
-              {sessionStats.correct + sessionStats.incorrect > 0
-                ? Math.round(
-                    (sessionStats.correct /
-                      (sessionStats.correct + sessionStats.incorrect)) *
-                      100
-                  )
-                : 0}
-              %
+              {t("accuracyLabel", {
+                percent:
+                  sessionStats.correct + sessionStats.incorrect > 0
+                    ? Math.round(
+                        (sessionStats.correct /
+                          (sessionStats.correct + sessionStats.incorrect)) *
+                          100
+                      )
+                    : 0,
+              })}
             </div>
           </div>
         </CardContent>

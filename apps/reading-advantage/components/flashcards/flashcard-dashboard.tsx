@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { EmptyDashboard } from "./empty-deck";
 import { DeckView } from "./deck-view";
 import { getUserFlashcardDecks } from "@/actions/flashcard";
+import { useScopedI18n } from "@/locales/client";
 
 export interface Deck {
   id: string;
@@ -31,6 +32,7 @@ export function FlashcardDashboard({
   userId,
   deckType = "ALL",
 }: FlashcardDashboardProps) {
+  const t = useScopedI18n("components.flashcards.dashboard");
   const [decks, setDecks] = useState<Deck[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("vocabulary");
@@ -101,13 +103,13 @@ export function FlashcardDashboard({
         <div className="pb-4 p-6">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-2xl font-bold">Flashcard Dashboard</h2>
+              <h2 className="text-2xl font-bold">{t("title")}</h2>
               <p className="text-muted-foreground">
                 {deckType === "VOCABULARY"
-                  ? "Manage your vocabulary learning decks"
+                  ? t("descriptionVocabulary")
                   : deckType === "SENTENCE"
-                    ? "Manage your sentence learning decks"
-                    : "Manage your vocabulary and sentence learning decks"}
+                    ? t("descriptionSentence")
+                    : t("descriptionAll")}
               </p>
             </div>
           </div>
@@ -125,7 +127,7 @@ export function FlashcardDashboard({
                   value="vocabulary"
                   className="flex items-center gap-2"
                 >
-                  <span>Vocabulary</span>
+                  <span>{t("vocabularyTab")}</span>
                   {vocabularyDecks.length > 0 && (
                     <Badge variant="secondary" className="ml-1">
                       {vocabularyDecks.length}
@@ -136,7 +138,7 @@ export function FlashcardDashboard({
                   value="sentence"
                   className="flex items-center gap-2"
                 >
-                  <span>Sentences</span>
+                  <span>{t("sentencesTab")}</span>
                   {sentenceDecks.length > 0 && (
                     <Badge variant="secondary" className="ml-1">
                       {sentenceDecks.length}
