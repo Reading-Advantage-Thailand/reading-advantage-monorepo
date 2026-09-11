@@ -55,6 +55,7 @@ function HandleArticle() {
   const [articles, setArticles] = React.useState<Passage[]>([]);
   const scrollRef = React.useRef<HTMLDivElement>(null);
   const [loading, setLoading] = React.useState(false);
+  const loadingRef = React.useRef(false);
   const [page, setPage] = React.useState(1);
   const observer = React.useRef<IntersectionObserver | null>(null);
 
@@ -115,6 +116,8 @@ function HandleArticle() {
   }, [page]);
 
   const fecthData = async () => {
+    loadingRef.current = true;
+    setLoading(true);
     try {
       const res = await fetch(
         `${
@@ -129,6 +132,9 @@ function HandleArticle() {
       setArticles((prev) => [...prev, ...data]);
     } catch (error) {
       console.error(error);
+    } finally {
+      loadingRef.current = false;
+      setLoading(false);
     }
   };
 
@@ -145,7 +151,7 @@ function HandleArticle() {
       if (observer.current) observer.current.disconnect();
 
       observer.current = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting) {
+        if (entries[0].isIntersecting && !loadingRef.current) {
           setPage((prevPage) => prevPage + 1);
         }
       });
@@ -398,7 +404,9 @@ function HandleArticle() {
               })}
             </div>
           </div>
-          <div ref={scrollRef}>{loading ?? "Loading more articles..."}</div>
+          <div ref={scrollRef}>
+            {loading ? "Loading more articles..." : null}
+          </div>
         </ScrollArea>
       </div>
     </div>
