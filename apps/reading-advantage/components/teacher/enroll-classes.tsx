@@ -1,41 +1,25 @@
 "use client";
-import React, { useCallback, useEffect, useState } from "react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHeader,
-  TableRow,
-  TableHead,
-} from "@/components/ui/table";
+import React, { useEffect, useState } from "react";
+import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import { CaretSortIcon } from "@radix-ui/react-icons";
-import {
-  ColumnDef,
-  ColumnFiltersState,
-  SortingState,
-  VisibilityState,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
-import { Checkbox } from "../ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
 import { useScopedI18n } from "@/locales/client";
 import { useParams, useRouter } from "next/navigation";
 import { toast } from "../ui/use-toast";
 import { Header } from "../header";
+import TeacherDataTable from "./teacher-data-table";
 
 type Student = {
   id: string;
   email: string;
   display_name: string;
-  last_activity: string;
+  last_activity?: string;
+};
+
+type StudentInClass = {
+  studentId: string;
+  lastActivity: string;
 };
 
 type Classroom = {
@@ -47,6 +31,7 @@ type Classroom = {
     coTeacherId: string;
     name: string;
   };
+  student?: StudentInClass[];
   archived: boolean;
   teacherId: string;
 };
@@ -56,20 +41,24 @@ type MyEnrollProps = {
   student: Student;
 };
 
-export default function MyEnrollClasses() {
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-  const [rowSelection, setRowSelection] = useState({});
+type MyEnrollClassesProps = {
+  mode: "enroll" | "unenroll";
+};
+
+export default function MyEnrollClasses({ mode }: MyEnrollClassesProps) {
   const [selectedClassroomId, setSelectedClassroomId] = useState<string>("");
-  const [isEnrolling, setIsEnrolling] = useState<boolean>(false);
-  const t = useScopedI18n("components.articleRecordsTable");
-  const te = useScopedI18n("components.myStudent.enrollPage");
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const te = useScopedI18n(
+    mode === "enroll"
+      ? "components.myStudent.enrollPage"
+      : "components.myStudent.unEnrollPage"
+  );
   const router = useRouter();
   const params = useParams();
   const [data, setData] = useState<MyEnrollProps>();
+  const patchPath = mode === "enroll" ? `/enroll` : `/unenroll`;
 
-  const handleStudentEnrollment = async () => {
+  const handleSubmit = async () => {
     if (!selectedClassroomId) {
       toast({
         title: te("toast.errorEnrollment"),
@@ -79,48 +68,53 @@ export default function MyEnrollClasses() {
       return;
     }
 
-    setIsEnrolling(true);
-
-    const studentdata = [
-      {
-        studentId: params.studentId,
-        lastActivity: data?.student.last_activity
-          ? data.student.last_activity
-          : "No Activity",
-      },
-    ];
+    setIsSubmitting(true);
 
     try {
       const response = await fetch(
-        `/api/v1/classroom/${selectedClassroomId}/enroll`,
+        `/api/v1/classroom/${selectedClassroomId}${patchPath}`,
         {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({
-            student: studentdata,
-          }),
+          body:
+            mode === "enroll"
+              ? JSON.stringify({
+                  student: [
+                    {
+                      studentId: params.studentId,
+                      lastActivity: data?.student.last_activity
+                        ? data.student.last_activity
+                        : "No Activity",
+                    },
+                  ],
+                })
+              : JSON.stringify({
+                  studentId: params.studentId,
+                }),
         }
       );
 
-      const result = await response.json();
-
       if (!response.ok) {
-        if (result.error === "ALREADY_ENROLLED") {
-          toast({
-            title: "ไม่สามารถเพิ่มนักเรียนได้",
-            description: result.message,
-            variant: "destructive",
-          });
-        } else {
-          toast({
-            title: te("toast.errorEnrollment"),
-            description: te("toast.errorEnrollDescription"),
-            variant: "destructive",
-          });
+        if (mode === "enroll") {
+          const result = await response.json();
+          if (result.error === "ALREADY_ENROLLED") {
+            toast({
+              title: "ไม่สามารถเพิ่มนักเรียนได้",
+              description: result.message,
+              variant: "destructive",
+            });
+            setIsSubmitting(false);
+            return;
+          }
         }
-        setIsEnrolling(false);
+        toast({
+          title: te("toast.errorEnrollment"),
+          description: te("toast.errorEnrollDescription"),
+          variant: "destructive",
+        });
+        setIsSubmitting(false);
       } else {
         setData((prevData) => {
           const safePrevData = prevData ?? {
@@ -146,13 +140,16 @@ export default function MyEnrollClasses() {
         }, 1000);
       }
     } catch (error) {
-      console.error("Error during enrollment:", error);
+      console.error(
+        `Error during ${mode === "enroll" ? "enrollment" : "unenrollment"}:`,
+        error
+      );
       toast({
         title: te("toast.errorEnrollment"),
         description: te("toast.errorEnrollDescription"),
         variant: "destructive",
       });
-      setIsEnrolling(false);
+      setIsSubmitting(false);
     }
   };
 
@@ -173,8 +170,12 @@ export default function MyEnrollClasses() {
       cell: ({ row }) => {
         const classroomName: string = row.getValue("classroomName");
         return (
-          <div className="ml-4" onClick={() => row.toggleSelected}>
-            {classroomName ? classroomName : "Anonymous"}
+          <div className="ml-4" onClick={() => row.toggleSelected()}>
+            {mode === "enroll"
+              ? classroomName
+                ? classroomName
+                : "Anonymous"
+              : classroomName || "Unknown"}
           </div>
         );
       },
@@ -182,39 +183,24 @@ export default function MyEnrollClasses() {
     {
       accessorKey: "id",
       header: () => {
-        return <div>{te("enroll")}</div>;
+        return (
+          <div className={mode === "unenroll" ? "text-center" : undefined}>
+            {te(mode === "enroll" ? "enroll" : "unEnroll")}
+          </div>
+        );
       },
       cell: ({ row }) => (
-        <div className="ml-2">
+        <div className={mode === "enroll" ? "ml-2" : "text-center"}>
           <RadioGroupItem value={row.original.id} />
         </div>
       ),
     },
   ];
 
-  const table = useReactTable({
-    data: data?.classroom || [],
-    columns,
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    onColumnVisibilityChange: setColumnVisibility,
-    onRowSelectionChange: setRowSelection,
-    state: {
-      sorting,
-      columnFilters,
-      columnVisibility,
-      rowSelection,
-    },
-  });
-
   useEffect(() => {
     const fetchData = async () => {
       await fetch(
-        `/api/v1/classroom/students/enroll?studentId=${params.studentId}`,
+        `/api/v1/classroom/students/${mode}?studentId=${params.studentId}`,
         {
           method: "GET",
         }
@@ -237,101 +223,36 @@ export default function MyEnrollClasses() {
           studentName: data ? data.student?.display_name : "Unknown",
         })}
       />
-      <div className="flex items-center justify-between">
-        <Input
-          placeholder={te("search")}
-          value={
-            (table.getColumn("classroomName")?.getFilterValue() as string) ?? ""
-          }
-          onChange={(event) =>
-            table.getColumn("classroomName")?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
-        />
-        <Button
-          variant="default"
-          className="max-w-sm"
-          onClick={handleStudentEnrollment}
-          disabled={isEnrolling || !selectedClassroomId}
-        >
-          {isEnrolling ? "Adding..." : te("add")}
-        </Button>
-      </div>
-      <div className="rounded-md border">
-        <RadioGroup
-          value={selectedClassroomId}
-          onValueChange={setSelectedClassroomId}
-        >
-          <Table style={{ tableLayout: "fixed", width: "100%" }}>
-            <TableHeader className="font-bold">
-              {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => {
-                    return (
-                      <TableHead key={header.id}>
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
-                      </TableHead>
-                    );
-                  })}
-                </TableRow>
-              ))}
-            </TableHeader>
-            <TableBody>
-              {table.getRowModel().rows?.length ? (
-                table.getRowModel().rows.map((row) => (
-                  <TableRow
-                    key={row.id}
-                    data-state={row.getIsSelected() && "selected"}
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell
-                    colSpan={columns.length}
-                    className="h-24 text-center"
-                  >
-                    Empty
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </RadioGroup>
-      </div>
-      <div className="flex items-center justify-end space-x-2">
-        <div className="space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
+      <TeacherDataTable
+        data={data?.classroom || []}
+        columns={columns}
+        searchColumn="classroomName"
+        searchPlaceholder={te("search")}
+        tableFixed
+        headerClassName="font-bold"
+        tableWrapper={(table) => (
+          <RadioGroup
+            value={selectedClassroomId}
+            onValueChange={setSelectedClassroomId}
           >
-            {t("previous")}
-          </Button>
+            {table}
+          </RadioGroup>
+        )}
+        toolbar={
           <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
+            variant="default"
+            className="max-w-sm"
+            onClick={handleSubmit}
+            disabled={isSubmitting || !selectedClassroomId}
           >
-            {t("next")}
+            {isSubmitting
+              ? mode === "enroll"
+                ? "Adding..."
+                : "Removing..."
+              : te(mode === "enroll" ? "add" : "remove")}
           </Button>
-        </div>
-      </div>
+        }
+      />
     </div>
   );
 }

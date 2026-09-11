@@ -1,10 +1,10 @@
 import React from "react";
-import MyUnEnrollClasses from "@/components/teacher/unenroll-classes";
+import MyEnrollClasses from "@/components/teacher/enroll-classes";
 
 export default async function UnEnrollPage() {
   return (
     <div>
-      <MyUnEnrollClasses />
+      <MyEnrollClasses mode="unenroll" />
     </div>
   );
 }
