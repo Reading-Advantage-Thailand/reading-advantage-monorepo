@@ -63,7 +63,7 @@ export default function StudentDashboardContent({
   };
 
   const handleGenreClick = (genre: string) => {
-    router.push(`/student/articles?genre=${encodeURIComponent(genre)}`);
+    router.push(`/student/read?genre=${encodeURIComponent(genre)}`);
   };
 
   return (
