@@ -69,8 +69,7 @@ export default async function ArticleCard({
       <RatingPopup
         userId={userId}
         averageRating={article.average_rating}
-        articleId={articleId}
-        article={article}
+        target={{ articleId, article }}
         initialRating={initialRating}
       />
     </div>

@@ -4,7 +4,7 @@ import React from "react";
 import { Rating, Stack } from "@mui/material";
 import { useScopedI18n } from "@/locales/client";
 import { toast } from "./ui/use-toast";
-import { Article } from "./models/article-model";
+import { Article, StoryChapter } from "./models/article-model";
 import {
   UserXpEarned,
   ActivityStatus,
@@ -12,13 +12,24 @@ import {
 } from "./models/user-activity-log-model";
 import { useRouter } from "next/navigation";
 import { submitRating } from "@/actions/rating";
+import { Button } from "./ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "./ui/dialog";
+
+export type RatingTarget =
+  | { articleId: string; article: Article }
+  | { storyId: string; chapterId: string; story: StoryChapter };
 
 interface RateDialogProps {
   disabled?: boolean;
   averageRating: number;
   userId: string;
-  articleId: string;
-  article: Article;
+  target: RatingTarget;
   /** rating เก่าของ user สำหรับบทความนี้ (resolve มาจาก server แล้ว) */
   initialRating?: number;
 }
@@ -27,18 +38,24 @@ export default function RatingPopup({
   disabled = false,
   averageRating,
   userId,
-  articleId,
-  article,
+  target,
   initialRating = 0,
 }: RateDialogProps) {
-  const t = useScopedI18n("components.rate");
+  const isChapter = "storyId" in target;
+  const t = useScopedI18n(
+    isChapter ? "components.rateChapter" : "components.rate"
+  );
   const [value, setValue] = React.useState<number | null>(-1);
   const [modalIsOpen, setModalIsOpen] = React.useState<boolean>(false);
   const [loading, setLoading] = React.useState<boolean>(false);
   // initialRating มาจาก server — ไม่ต้อง fetch client-side อีกต่อไป
-  const [oldRating, setOldRating] = React.useState(initialRating);
-  const [localAverageRating, setLocalAverageRating] = React.useState(averageRating);
-  const [localInitialRating, setLocalInitialRating] = React.useState(initialRating);
+  const [oldRating, setOldRating] = React.useState(
+    isChapter ? 0 : initialRating
+  );
+  const [localAverageRating, setLocalAverageRating] =
+    React.useState(averageRating);
+  const [localInitialRating, setLocalInitialRating] =
+    React.useState(initialRating);
   const [isMounted, setIsMounted] = React.useState(false);
   const router = useRouter();
 
@@ -46,36 +63,189 @@ export default function RatingPopup({
     setIsMounted(true);
   }, []);
 
+  React.useEffect(() => {
+    if (isChapter) {
+      ratedFetch();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId, isChapter]);
+
+  const ratedFetch = async () => {
+    if (!isChapter) return;
+    try {
+      const ratingData = await fetch(
+        `/api/v1/users/${userId}/activitylog`
+      ).then((data) => data.json());
+
+      const logs = ratingData.activityLogs || [];
+      const filterRating = logs.filter(
+        (data: any) =>
+          (data.storyId === target.storyId ||
+            data.targetId === target.storyId ||
+            data.details?.storyId === target.storyId) &&
+          (String(data.chapterNumber) === String(target.chapterId) ||
+            String(data.details?.chapter_number) === String(target.chapterId) ||
+            String(data.details?.chapterNumber) === String(target.chapterId)) &&
+          data.activityType === ActivityType.ChapterRating
+      );
+
+      if (filterRating.length > 0 && filterRating[0].details?.rating) {
+        setOldRating(filterRating[0].details.rating);
+      } else {
+        setOldRating(0);
+      }
+    } catch (error) {
+      console.log("Error fetching rating: ", error);
+      setOldRating(0);
+    }
+  };
+
   const onUpdateUser = async () => {
     if (value === -1 || value === null) return;
     setLoading(true);
 
-    // Optimistic update
-    setLocalInitialRating(value);
-    setModalIsOpen(false);
+    if (!isChapter) {
+      const previousInitialRating = localInitialRating;
+      setLocalInitialRating(value);
+      setModalIsOpen(false);
 
-    const xpEarned = value !== 0 && localInitialRating === 0 ? 10 : 0;
-    toast({
-      title: t("toast.success"),
-      imgSrc: true,
-      description: xpEarned > 0 ? `Congratulations!, You received ${xpEarned} XP for completing this activity.` : "Rating updated.",
-    });
+      const xpEarned = value !== 0 && previousInitialRating === 0 ? 10 : 0;
 
-    try {
-      await submitRating(userId, articleId, value, article);
-      // Fetch new average rating
-      const res = await fetch(`/api/v1/articles/${articleId}`);
-      const data = await res.json();
-      setLocalAverageRating(data.article.average_rating);
-    } catch (error) {
-      // Rollback
-      setLocalInitialRating(localInitialRating);
-      toast({
-        title: "Error",
-        description: "Failed to submit rating.",
-      });
+      try {
+        const result = await submitRating(
+          userId,
+          target.articleId,
+          value,
+          target.article
+        );
+        if (result.success) {
+          if (typeof result.averageRating === "number") {
+            setLocalAverageRating(result.averageRating);
+          }
+          toast({
+            title: t("toast.success"),
+            imgSrc: true,
+            description:
+              xpEarned > 0
+                ? `Congratulations!, You received ${xpEarned} XP for completing this activity.`
+                : "Rating updated.",
+          });
+        } else {
+          setLocalInitialRating(previousInitialRating);
+          toast({
+            title: "Error",
+            description: result.error ?? "Failed to submit rating.",
+          });
+        }
+      } catch (error) {
+        setLocalInitialRating(previousInitialRating);
+        toast({
+          title: "Error",
+          description: "Failed to submit rating.",
+        });
+      }
+      setLoading(false);
+      return;
     }
-    setLoading(false);
+
+    const story = target.story;
+    if (value !== 0 && oldRating === 0) {
+      const ratingActivity = await fetch(
+        `/api/v1/users/${userId}/activitylog`,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            storyId: target.storyId,
+            chapterNumber: target.chapterId,
+            activityType: ActivityType.ChapterRating,
+            activityStatus: ActivityStatus.Completed,
+            xpEarned: UserXpEarned.Chapter_Rating,
+            details: {
+              title: story.chapter.title,
+              raLevel: story.ra_Level,
+              cefr_level: story.cefr_level,
+              rating: value,
+            },
+          }),
+        }
+      );
+
+      const updateAverageRating = await fetch(
+        `/api/v1/stories/${target.storyId}/${target.chapterId}`,
+        {
+          method: "PUT",
+          body: JSON.stringify({
+            rating: value,
+            chapterNumber: target.chapterId,
+          }),
+        }
+      );
+
+      const readActivity = await fetch(`/api/v1/users/${userId}/activitylog`, {
+        method: "POST",
+        body: JSON.stringify({
+          storyId: target.storyId,
+          chapterNumber: target.chapterId,
+          activityType: ActivityType.ChapterRead,
+          activityStatus: ActivityStatus.Completed,
+          details: {
+            title: story.chapter.title,
+            raLevel: story.ra_Level,
+            cefr_level: story.cefr_level,
+            type: story.type,
+            genre: story.genre,
+            subgenre: story.subgenre,
+          },
+        }),
+      });
+
+      const resRatingActivity = await ratingActivity.json();
+      const resReadActivity = await readActivity.json();
+      if (resRatingActivity.status === 200 && resReadActivity.status === 200) {
+        const count = story.chapter.user_rating_count || 0;
+        setLocalAverageRating(
+          (localAverageRating * count + value) / (count + 1)
+        );
+        toast({
+          title: t("toast.success"),
+          imgSrc: true,
+          description: `Congratulations!, You received ${UserXpEarned.Chapter_Rating} XP for completing this activity.`,
+        });
+        router.refresh();
+        setModalIsOpen(false);
+      }
+      setLoading(false);
+    } else if (value !== 0 && oldRating !== 0) {
+      await fetch(`/api/v1/users/${userId}/activitylog`, {
+        method: "POST",
+        body: JSON.stringify({
+          storyId: target.storyId,
+          chapterNumber: target.chapterId,
+          activityType: ActivityType.ChapterRating,
+          activityStatus: ActivityStatus.Completed,
+          details: {
+            title: story.chapter.title,
+            raLevel: story.ra_Level,
+            cefr_level: story.cefr_level,
+            rating: value,
+          },
+        }),
+      });
+      const count = story.chapter.user_rating_count || 0;
+      if (count > 0) {
+        setLocalAverageRating(
+          (localAverageRating * count + value - oldRating) / count
+        );
+      }
+      toast({
+        title: t("toast.success"),
+        imgSrc: true,
+        description: "you not earned XP.",
+      });
+      setModalIsOpen(false);
+
+      setLoading(false);
+    }
   };
 
   const handleChange = (
@@ -90,14 +260,20 @@ export default function RatingPopup({
     await fetch(`/api/v1/users/${userId}/activitylog`, {
       method: "POST",
       body: JSON.stringify({
-        articleId: articleId,
-        activityType: "article_rating",
+        articleId: isChapter ? target.storyId : target.articleId,
+        activityType: isChapter ? "chapter_rating" : "article_rating",
         activityStatus: "in_progress",
-        details: {
-          title: article.title,
-          raLevel: article.ra_level,
-          cefr_level: article.cefr_level,
-        },
+        details: isChapter
+          ? {
+              title: target.story.chapter.title,
+              raLevel: target.story.ra_Level,
+              cefr_level: target.story.cefr_level,
+            }
+          : {
+              title: target.article.title,
+              raLevel: target.article.ra_level,
+              cefr_level: target.article.cefr_level,
+            },
       }),
     });
   };
@@ -111,78 +287,68 @@ export default function RatingPopup({
   "
       >
         <h1 onClick={toggleModal} className="cursor-pointer">
-          Rate this article
+          {isChapter ? "Rate this chapter" : "Rate this article"}
         </h1>
-        <div onClick={toggleModal} className="cursor-pointer">
-          {isMounted ? (
+        {isChapter ? (
+          <Stack onClick={toggleModal} className="cursor-pointer">
             <Rating
-              value={localAverageRating}
+              value={localAverageRating || 0}
               onChange={handleChange}
               precision={0.5}
               size="large"
               className="dark:bg-white py-1 px-4 rounded-xl"
               readOnly
             />
-          ) : (
-            <div className="h-10 w-40 bg-gray-200 dark:bg-gray-700 rounded-xl" />
-          )}
-        </div>
+          </Stack>
+        ) : (
+          <div onClick={toggleModal} className="cursor-pointer">
+            {isMounted ? (
+              <Rating
+                value={localAverageRating}
+                onChange={handleChange}
+                precision={0.5}
+                size="large"
+                className="dark:bg-white py-1 px-4 rounded-xl"
+                readOnly
+              />
+            ) : (
+              <div className="h-10 w-40 bg-gray-200 dark:bg-gray-700 rounded-xl" />
+            )}
+          </div>
+        )}
       </div>
 
-      {/* modal */}
-      {modalIsOpen ? (
-        <div
-          className="w-full h-screen top-0 right-0 fixed 
-        z-40 bg-white bg-opacity-80 dark:bg-black dark:bg-opacity-80"
-        >
-          <div className="flex h-screen justify-center items-center">
-            <div
-              className=" bg-white px-4 w-[450px]
-             rounded-2xl py-6 shadow-2xl dark:bg-[#1e293b]"
-            >
-              <div
-                className="flex justify-between mb-2 mx-4 
-            "
-              >
-                <h1 className="font-bold text-xl">{t("title")}</h1>
-                <button
-                  onClick={() => setModalIsOpen(false)}
-                  className="text-xl font-semibold -mt-4 p-1"
-                >
-                  x
-                </button>
-              </div>
-              <p className="mx-4">{t("content")}</p>
-              <div className="flex justify-center mt-6">
-                <Rating
-                  // sx={{
-                  //   // change unselected color
-                  //   "& .MuiRating-iconEmpty": {
-                  //     color: "#f6a904",
-                  //   },
-                  // }}
-                  value={value}
-                  onChange={handleChange}
-                  precision={0.5}
-                  size="large"
-                  className="dark:bg-white py-2 px-4 rounded-xl"
-                />
-              </div>
-              <div className="mt-6 mx-4 flex justify-end items-end">
-                <button
-                  onClick={onUpdateUser}
-                  className="bg-black text-white px-4 py-2 rounded-md 
-              shadow-sm dark:bg-white dark:text-[#1e293b]"
-                >
-                  {t("submitButton")}
-                </button>
-              </div>
-            </div>
+      <Dialog open={modalIsOpen} onOpenChange={setModalIsOpen}>
+        <DialogContent className="bg-white px-4 sm:w-[450px] rounded-2xl py-6 shadow-2xl dark:bg-[#1e293b]">
+          <DialogHeader>
+            <DialogTitle className="font-bold text-xl text-left">
+              {t("title")}
+            </DialogTitle>
+          </DialogHeader>
+          <DialogDescription className="text-left">
+            {t("content")}
+          </DialogDescription>
+          <div className="flex justify-center mt-6">
+            <Rating
+              value={value}
+              onChange={handleChange}
+              precision={0.5}
+              size="large"
+              className="dark:bg-white py-2 px-4 rounded-xl"
+            />
           </div>
-        </div>
-      ) : (
-        ""
-      )}
+          <div className="mt-6 flex justify-end items-end">
+            <Button
+              onClick={onUpdateUser}
+              disabled={loading}
+              className="bg-black text-white px-4 py-2 rounded-md 
+              shadow-sm dark:bg-white dark:text-[#1e293b]"
+            >
+              {t("submitButton")}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

@@ -13,7 +13,6 @@ import { ArticleFooter } from "./article-footer";
 import RatingPopup from "./rating-popup";
 import { StoryChapter } from "./models/article-model";
 import { ChapterSummary } from "./stories-chapter-summary";
-import ChapterRatingPopup from "./chapter-rating-popup";
 import { BookMarked, Award } from "lucide-react";
 
 type Props = {
@@ -91,12 +90,10 @@ export default async function StoryChapterCard({
         <ArticleFooter />
       </Card>
 
-      <ChapterRatingPopup
+      <RatingPopup
         userId={userId}
         averageRating={story.chapter.rating || 0}
-        storyId={story.storyId}
-        story={story}
-        chapterNumber={chapterNumber}
+        target={{ storyId: story.storyId, chapterId: chapterNumber, story }}
       />
     </div>
   );

@@ -76,7 +76,9 @@ export async function submitRating(userId: string, articleId: string, rating: nu
     // Revalidate the path to update average rating
     revalidatePath(`/[locale]/student/read/${articleId}`);
 
-    return { success: true, xpEarned: 10 };
+    const averageRating = await computeAverageRating(articleId);
+
+    return { success: true, xpEarned: 10, averageRating };
   } else {
     // Update existing rating
     if (!oldRatingActivity) {
@@ -98,6 +100,33 @@ export async function submitRating(userId: string, articleId: string, rating: nu
         )
       );
 
-    return { success: true, xpEarned: 0 };
+    return { success: true, xpEarned: 0, averageRating };
   }
+}
+
+/**
+ * Recomputes the article average from every stored article rating.
+ * @param articleId The rated article id.
+ * @returns The mean of all positive ratings, or 0 when none exist.
+ */
+async function computeAverageRating(articleId: string): Promise<number> {
+  const rows = await db
+    .select({ details: userActivity.details })
+    .from(userActivity)
+    .where(
+      and(
+        eq(userActivity.targetId, articleId),
+        eq(userActivity.activityType, ActivityType.ARTICLE_RATING)
+      )
+    );
+
+  const ratings = rows
+    .map((row) => (row.details as { rating?: unknown } | null)?.rating)
+    .filter(
+      (rating): rating is number =>
+        typeof rating === "number" && rating > 0
+    );
+
+  if (ratings.length === 0) return 0;
+  return ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length;
 }
