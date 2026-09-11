@@ -1,0 +1,7480 @@
+[
+  {
+    "id": "D",
+    "title": "Dream terrain animations",
+    "slug": "dream-terrain-animations",
+    "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-animated-dream-source-036c865d5e8c.png",
+    "entries": [
+      {
+        "name": "palette-1-edge-0-0",
+        "box": [
+          16,
+          16,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-1-edge-0-0",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            16,
+            16,
+            16,
+            16
+          ],
+          [
+            80,
+            16,
+            16,
+            16
+          ],
+          [
+            144,
+            16,
+            16,
+            16
+          ],
+          [
+            208,
+            16,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-1-edge-16-0",
+        "box": [
+          32,
+          16,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-1-edge-16-0",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            32,
+            16,
+            16,
+            16
+          ],
+          [
+            96,
+            16,
+            16,
+            16
+          ],
+          [
+            160,
+            16,
+            16,
+            16
+          ],
+          [
+            224,
+            16,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-1-edge-32-0",
+        "box": [
+          48,
+          16,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-1-edge-32-0",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            48,
+            16,
+            16,
+            16
+          ],
+          [
+            112,
+            16,
+            16,
+            16
+          ],
+          [
+            176,
+            16,
+            16,
+            16
+          ],
+          [
+            240,
+            16,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-1-edge-0-16",
+        "box": [
+          16,
+          32,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-1-edge-0-16",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            16,
+            32,
+            16,
+            16
+          ],
+          [
+            80,
+            32,
+            16,
+            16
+          ],
+          [
+            144,
+            32,
+            16,
+            16
+          ],
+          [
+            208,
+            32,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-1-edge-16-16",
+        "box": [
+          32,
+          32,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-1-edge-16-16",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            32,
+            32,
+            16,
+            16
+          ],
+          [
+            96,
+            32,
+            16,
+            16
+          ],
+          [
+            160,
+            32,
+            16,
+            16
+          ],
+          [
+            224,
+            32,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-1-edge-32-16",
+        "box": [
+          48,
+          32,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-1-edge-32-16",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            48,
+            32,
+            16,
+            16
+          ],
+          [
+            112,
+            32,
+            16,
+            16
+          ],
+          [
+            176,
+            32,
+            16,
+            16
+          ],
+          [
+            240,
+            32,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-1-patch",
+        "box": [
+          16,
+          48,
+          240,
+          48
+        ],
+        "kind": "part",
+        "group": "palette-1-patch",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            16,
+            48,
+            48,
+            48
+          ],
+          [
+            80,
+            48,
+            48,
+            48
+          ],
+          [
+            144,
+            48,
+            48,
+            48
+          ],
+          [
+            208,
+            48,
+            48,
+            48
+          ]
+        ]
+      },
+      {
+        "name": "palette-2-edge-0-0",
+        "box": [
+          16,
+          112,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-2-edge-0-0",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            16,
+            112,
+            16,
+            16
+          ],
+          [
+            80,
+            112,
+            16,
+            16
+          ],
+          [
+            144,
+            112,
+            16,
+            16
+          ],
+          [
+            208,
+            112,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-2-edge-16-0",
+        "box": [
+          32,
+          112,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-2-edge-16-0",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            32,
+            112,
+            16,
+            16
+          ],
+          [
+            96,
+            112,
+            16,
+            16
+          ],
+          [
+            160,
+            112,
+            16,
+            16
+          ],
+          [
+            224,
+            112,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-2-edge-32-0",
+        "box": [
+          48,
+          112,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-2-edge-32-0",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            48,
+            112,
+            16,
+            16
+          ],
+          [
+            112,
+            112,
+            16,
+            16
+          ],
+          [
+            176,
+            112,
+            16,
+            16
+          ],
+          [
+            240,
+            112,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-2-edge-0-16",
+        "box": [
+          16,
+          128,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-2-edge-0-16",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            16,
+            128,
+            16,
+            16
+          ],
+          [
+            80,
+            128,
+            16,
+            16
+          ],
+          [
+            144,
+            128,
+            16,
+            16
+          ],
+          [
+            208,
+            128,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-2-edge-16-16",
+        "box": [
+          32,
+          128,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-2-edge-16-16",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            32,
+            128,
+            16,
+            16
+          ],
+          [
+            96,
+            128,
+            16,
+            16
+          ],
+          [
+            160,
+            128,
+            16,
+            16
+          ],
+          [
+            224,
+            128,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-2-edge-32-16",
+        "box": [
+          48,
+          128,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-2-edge-32-16",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            48,
+            128,
+            16,
+            16
+          ],
+          [
+            112,
+            128,
+            16,
+            16
+          ],
+          [
+            176,
+            128,
+            16,
+            16
+          ],
+          [
+            240,
+            128,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-2-patch",
+        "box": [
+          16,
+          144,
+          240,
+          48
+        ],
+        "kind": "part",
+        "group": "palette-2-patch",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            16,
+            144,
+            48,
+            48
+          ],
+          [
+            80,
+            144,
+            48,
+            48
+          ],
+          [
+            144,
+            144,
+            48,
+            48
+          ],
+          [
+            208,
+            144,
+            48,
+            48
+          ]
+        ]
+      },
+      {
+        "name": "palette-3-edge-0-0",
+        "box": [
+          16,
+          208,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-3-edge-0-0",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            16,
+            208,
+            16,
+            16
+          ],
+          [
+            80,
+            208,
+            16,
+            16
+          ],
+          [
+            144,
+            208,
+            16,
+            16
+          ],
+          [
+            208,
+            208,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-3-edge-16-0",
+        "box": [
+          32,
+          208,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-3-edge-16-0",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            32,
+            208,
+            16,
+            16
+          ],
+          [
+            96,
+            208,
+            16,
+            16
+          ],
+          [
+            160,
+            208,
+            16,
+            16
+          ],
+          [
+            224,
+            208,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-3-edge-32-0",
+        "box": [
+          48,
+          208,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-3-edge-32-0",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            48,
+            208,
+            16,
+            16
+          ],
+          [
+            112,
+            208,
+            16,
+            16
+          ],
+          [
+            176,
+            208,
+            16,
+            16
+          ],
+          [
+            240,
+            208,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-3-edge-0-16",
+        "box": [
+          16,
+          224,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-3-edge-0-16",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            16,
+            224,
+            16,
+            16
+          ],
+          [
+            80,
+            224,
+            16,
+            16
+          ],
+          [
+            144,
+            224,
+            16,
+            16
+          ],
+          [
+            208,
+            224,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-3-edge-16-16",
+        "box": [
+          32,
+          224,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-3-edge-16-16",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            32,
+            224,
+            16,
+            16
+          ],
+          [
+            96,
+            224,
+            16,
+            16
+          ],
+          [
+            160,
+            224,
+            16,
+            16
+          ],
+          [
+            224,
+            224,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-3-edge-32-16",
+        "box": [
+          48,
+          224,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-3-edge-32-16",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            48,
+            224,
+            16,
+            16
+          ],
+          [
+            112,
+            224,
+            16,
+            16
+          ],
+          [
+            176,
+            224,
+            16,
+            16
+          ],
+          [
+            240,
+            224,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-3-patch",
+        "box": [
+          16,
+          240,
+          240,
+          48
+        ],
+        "kind": "part",
+        "group": "palette-3-patch",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            16,
+            240,
+            48,
+            48
+          ],
+          [
+            80,
+            240,
+            48,
+            48
+          ],
+          [
+            144,
+            240,
+            48,
+            48
+          ],
+          [
+            208,
+            240,
+            48,
+            48
+          ]
+        ]
+      }
+    ],
+    "animated": false,
+    "animationWidths": {
+      "0": 16,
+      "1": 16,
+      "2": 16,
+      "3": 16,
+      "4": 16,
+      "5": 16,
+      "6": 48,
+      "7": 16,
+      "8": 16,
+      "9": 16,
+      "10": 16,
+      "11": 16,
+      "12": 16,
+      "13": 48,
+      "14": 16,
+      "15": 16,
+      "16": 16,
+      "17": 16,
+      "18": 16,
+      "19": 16,
+      "20": 48
+    },
+    "animationHeights": {},
+    "duplicates": [],
+    "size": [
+      272,
+      304
+    ],
+    "status": "approved-and-processed"
+  },
+  {
+    "id": "L",
+    "title": "Lava terrain animations",
+    "slug": "lava-terrain-animations",
+    "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-animated-lava-source-1030588b0440.png",
+    "entries": [
+      {
+        "name": "palette-1-edge-0-0",
+        "box": [
+          0,
+          0,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-1-edge-0-0",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            0,
+            0,
+            16,
+            16
+          ],
+          [
+            64,
+            0,
+            16,
+            16
+          ],
+          [
+            128,
+            0,
+            16,
+            16
+          ],
+          [
+            192,
+            0,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-1-edge-16-0",
+        "box": [
+          16,
+          0,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-1-edge-16-0",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            16,
+            0,
+            16,
+            16
+          ],
+          [
+            80,
+            0,
+            16,
+            16
+          ],
+          [
+            144,
+            0,
+            16,
+            16
+          ],
+          [
+            208,
+            0,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-1-edge-32-0",
+        "box": [
+          32,
+          0,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-1-edge-32-0",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            32,
+            0,
+            16,
+            16
+          ],
+          [
+            96,
+            0,
+            16,
+            16
+          ],
+          [
+            160,
+            0,
+            16,
+            16
+          ],
+          [
+            224,
+            0,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-1-edge-0-16",
+        "box": [
+          0,
+          16,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-1-edge-0-16",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            0,
+            16,
+            16,
+            16
+          ],
+          [
+            64,
+            16,
+            16,
+            16
+          ],
+          [
+            128,
+            16,
+            16,
+            16
+          ],
+          [
+            192,
+            16,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-1-edge-32-16",
+        "box": [
+          32,
+          16,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-1-edge-32-16",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            32,
+            16,
+            16,
+            16
+          ],
+          [
+            96,
+            16,
+            16,
+            16
+          ],
+          [
+            160,
+            16,
+            16,
+            16
+          ],
+          [
+            224,
+            16,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-1-edge-0-32",
+        "box": [
+          0,
+          32,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-1-edge-0-32",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            0,
+            32,
+            16,
+            16
+          ],
+          [
+            64,
+            32,
+            16,
+            16
+          ],
+          [
+            128,
+            32,
+            16,
+            16
+          ],
+          [
+            192,
+            32,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-1-edge-16-32",
+        "box": [
+          16,
+          32,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-1-edge-16-32",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            16,
+            32,
+            16,
+            16
+          ],
+          [
+            80,
+            32,
+            16,
+            16
+          ],
+          [
+            144,
+            32,
+            16,
+            16
+          ],
+          [
+            208,
+            32,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-1-edge-32-32",
+        "box": [
+          32,
+          32,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-1-edge-32-32",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            32,
+            32,
+            16,
+            16
+          ],
+          [
+            96,
+            32,
+            16,
+            16
+          ],
+          [
+            160,
+            32,
+            16,
+            16
+          ],
+          [
+            224,
+            32,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-1-patch",
+        "box": [
+          0,
+          48,
+          240,
+          48
+        ],
+        "kind": "part",
+        "group": "palette-1-patch",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            0,
+            48,
+            48,
+            48
+          ],
+          [
+            64,
+            48,
+            48,
+            48
+          ],
+          [
+            128,
+            48,
+            48,
+            48
+          ],
+          [
+            192,
+            48,
+            48,
+            48
+          ]
+        ]
+      },
+      {
+        "name": "palette-1-lower-corner-0",
+        "box": [
+          0,
+          96,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-1-lower-corner-0",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            0,
+            96,
+            16,
+            16
+          ],
+          [
+            64,
+            96,
+            16,
+            16
+          ],
+          [
+            128,
+            96,
+            16,
+            16
+          ],
+          [
+            192,
+            96,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-1-lower-corner-32",
+        "box": [
+          32,
+          96,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-1-lower-corner-32",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            32,
+            96,
+            16,
+            16
+          ],
+          [
+            96,
+            96,
+            16,
+            16
+          ],
+          [
+            160,
+            96,
+            16,
+            16
+          ],
+          [
+            224,
+            96,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-2-edge-0-0",
+        "box": [
+          0,
+          128,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-2-edge-0-0",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            0,
+            128,
+            16,
+            16
+          ],
+          [
+            64,
+            128,
+            16,
+            16
+          ],
+          [
+            128,
+            128,
+            16,
+            16
+          ],
+          [
+            192,
+            128,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-2-edge-16-0",
+        "box": [
+          16,
+          128,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-2-edge-16-0",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            16,
+            128,
+            16,
+            16
+          ],
+          [
+            80,
+            128,
+            16,
+            16
+          ],
+          [
+            144,
+            128,
+            16,
+            16
+          ],
+          [
+            208,
+            128,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-2-edge-32-0",
+        "box": [
+          32,
+          128,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-2-edge-32-0",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            32,
+            128,
+            16,
+            16
+          ],
+          [
+            96,
+            128,
+            16,
+            16
+          ],
+          [
+            160,
+            128,
+            16,
+            16
+          ],
+          [
+            224,
+            128,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-2-edge-0-16",
+        "box": [
+          0,
+          144,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-2-edge-0-16",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            0,
+            144,
+            16,
+            16
+          ],
+          [
+            64,
+            144,
+            16,
+            16
+          ],
+          [
+            128,
+            144,
+            16,
+            16
+          ],
+          [
+            192,
+            144,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-2-edge-32-16",
+        "box": [
+          32,
+          144,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-2-edge-32-16",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            32,
+            144,
+            16,
+            16
+          ],
+          [
+            96,
+            144,
+            16,
+            16
+          ],
+          [
+            160,
+            144,
+            16,
+            16
+          ],
+          [
+            224,
+            144,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-2-edge-0-32",
+        "box": [
+          0,
+          160,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-2-edge-0-32",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            0,
+            160,
+            16,
+            16
+          ],
+          [
+            64,
+            160,
+            16,
+            16
+          ],
+          [
+            128,
+            160,
+            16,
+            16
+          ],
+          [
+            192,
+            160,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-2-edge-16-32",
+        "box": [
+          16,
+          160,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-2-edge-16-32",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            16,
+            160,
+            16,
+            16
+          ],
+          [
+            80,
+            160,
+            16,
+            16
+          ],
+          [
+            144,
+            160,
+            16,
+            16
+          ],
+          [
+            208,
+            160,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-2-edge-32-32",
+        "box": [
+          32,
+          160,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-2-edge-32-32",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            32,
+            160,
+            16,
+            16
+          ],
+          [
+            96,
+            160,
+            16,
+            16
+          ],
+          [
+            160,
+            160,
+            16,
+            16
+          ],
+          [
+            224,
+            160,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-2-patch",
+        "box": [
+          0,
+          176,
+          240,
+          48
+        ],
+        "kind": "part",
+        "group": "palette-2-patch",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            0,
+            176,
+            48,
+            48
+          ],
+          [
+            64,
+            176,
+            48,
+            48
+          ],
+          [
+            128,
+            176,
+            48,
+            48
+          ],
+          [
+            192,
+            176,
+            48,
+            48
+          ]
+        ]
+      },
+      {
+        "name": "palette-2-lower-corner-0",
+        "box": [
+          0,
+          224,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-2-lower-corner-0",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            0,
+            224,
+            16,
+            16
+          ],
+          [
+            64,
+            224,
+            16,
+            16
+          ],
+          [
+            128,
+            224,
+            16,
+            16
+          ],
+          [
+            192,
+            224,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-2-lower-corner-32",
+        "box": [
+          32,
+          224,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-2-lower-corner-32",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            32,
+            224,
+            16,
+            16
+          ],
+          [
+            96,
+            224,
+            16,
+            16
+          ],
+          [
+            160,
+            224,
+            16,
+            16
+          ],
+          [
+            224,
+            224,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-3-edge-0-0",
+        "box": [
+          0,
+          256,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-3-edge-0-0",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            0,
+            256,
+            16,
+            16
+          ],
+          [
+            64,
+            256,
+            16,
+            16
+          ],
+          [
+            128,
+            256,
+            16,
+            16
+          ],
+          [
+            192,
+            256,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-3-edge-16-0",
+        "box": [
+          16,
+          256,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-3-edge-16-0",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            16,
+            256,
+            16,
+            16
+          ],
+          [
+            80,
+            256,
+            16,
+            16
+          ],
+          [
+            144,
+            256,
+            16,
+            16
+          ],
+          [
+            208,
+            256,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-3-edge-32-0",
+        "box": [
+          32,
+          256,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-3-edge-32-0",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            32,
+            256,
+            16,
+            16
+          ],
+          [
+            96,
+            256,
+            16,
+            16
+          ],
+          [
+            160,
+            256,
+            16,
+            16
+          ],
+          [
+            224,
+            256,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-3-edge-0-16",
+        "box": [
+          0,
+          272,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-3-edge-0-16",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            0,
+            272,
+            16,
+            16
+          ],
+          [
+            64,
+            272,
+            16,
+            16
+          ],
+          [
+            128,
+            272,
+            16,
+            16
+          ],
+          [
+            192,
+            272,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-3-edge-32-16",
+        "box": [
+          32,
+          272,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-3-edge-32-16",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            32,
+            272,
+            16,
+            16
+          ],
+          [
+            96,
+            272,
+            16,
+            16
+          ],
+          [
+            160,
+            272,
+            16,
+            16
+          ],
+          [
+            224,
+            272,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-3-edge-0-32",
+        "box": [
+          0,
+          288,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-3-edge-0-32",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            0,
+            288,
+            16,
+            16
+          ],
+          [
+            64,
+            288,
+            16,
+            16
+          ],
+          [
+            128,
+            288,
+            16,
+            16
+          ],
+          [
+            192,
+            288,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-3-edge-16-32",
+        "box": [
+          16,
+          288,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-3-edge-16-32",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            16,
+            288,
+            16,
+            16
+          ],
+          [
+            80,
+            288,
+            16,
+            16
+          ],
+          [
+            144,
+            288,
+            16,
+            16
+          ],
+          [
+            208,
+            288,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-3-edge-32-32",
+        "box": [
+          32,
+          288,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-3-edge-32-32",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            32,
+            288,
+            16,
+            16
+          ],
+          [
+            96,
+            288,
+            16,
+            16
+          ],
+          [
+            160,
+            288,
+            16,
+            16
+          ],
+          [
+            224,
+            288,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-3-patch",
+        "box": [
+          0,
+          304,
+          240,
+          48
+        ],
+        "kind": "part",
+        "group": "palette-3-patch",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            0,
+            304,
+            48,
+            48
+          ],
+          [
+            64,
+            304,
+            48,
+            48
+          ],
+          [
+            128,
+            304,
+            48,
+            48
+          ],
+          [
+            192,
+            304,
+            48,
+            48
+          ]
+        ]
+      },
+      {
+        "name": "palette-3-lower-corner-0",
+        "box": [
+          0,
+          352,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-3-lower-corner-0",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            0,
+            352,
+            16,
+            16
+          ],
+          [
+            64,
+            352,
+            16,
+            16
+          ],
+          [
+            128,
+            352,
+            16,
+            16
+          ],
+          [
+            192,
+            352,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-3-lower-corner-32",
+        "box": [
+          32,
+          352,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-3-lower-corner-32",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            32,
+            352,
+            16,
+            16
+          ],
+          [
+            96,
+            352,
+            16,
+            16
+          ],
+          [
+            160,
+            352,
+            16,
+            16
+          ],
+          [
+            224,
+            352,
+            16,
+            16
+          ]
+        ]
+      }
+    ],
+    "animated": false,
+    "animationWidths": {
+      "0": 16,
+      "1": 16,
+      "2": 16,
+      "3": 16,
+      "4": 16,
+      "5": 16,
+      "6": 16,
+      "7": 16,
+      "8": 48,
+      "9": 16,
+      "10": 16,
+      "11": 16,
+      "12": 16,
+      "13": 16,
+      "14": 16,
+      "15": 16,
+      "16": 16,
+      "17": 16,
+      "18": 16,
+      "19": 48,
+      "20": 16,
+      "21": 16,
+      "22": 16,
+      "23": 16,
+      "24": 16,
+      "25": 16,
+      "26": 16,
+      "27": 16,
+      "28": 16,
+      "29": 16,
+      "30": 48,
+      "31": 16,
+      "32": 16
+    },
+    "animationHeights": {},
+    "duplicates": [],
+    "size": [
+      240,
+      368
+    ],
+    "status": "approved-and-processed"
+  },
+  {
+    "id": "W",
+    "title": "Water terrain animations",
+    "slug": "water-terrain-animations",
+    "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-animated-water-source-a8fd7b2ecf02.png",
+    "entries": [
+      {
+        "name": "palette-1-edge-0-0",
+        "box": [
+          0,
+          0,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-1-edge-0-0",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            0,
+            0,
+            16,
+            16
+          ],
+          [
+            64,
+            0,
+            16,
+            16
+          ],
+          [
+            128,
+            0,
+            16,
+            16
+          ],
+          [
+            192,
+            0,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-1-edge-16-0",
+        "box": [
+          16,
+          0,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-1-edge-16-0",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            16,
+            0,
+            16,
+            16
+          ],
+          [
+            80,
+            0,
+            16,
+            16
+          ],
+          [
+            144,
+            0,
+            16,
+            16
+          ],
+          [
+            208,
+            0,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-1-edge-32-0",
+        "box": [
+          32,
+          0,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-1-edge-32-0",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            32,
+            0,
+            16,
+            16
+          ],
+          [
+            96,
+            0,
+            16,
+            16
+          ],
+          [
+            160,
+            0,
+            16,
+            16
+          ],
+          [
+            224,
+            0,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-1-edge-0-16",
+        "box": [
+          0,
+          16,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-1-edge-0-16",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            0,
+            16,
+            16,
+            16
+          ],
+          [
+            64,
+            16,
+            16,
+            16
+          ],
+          [
+            128,
+            16,
+            16,
+            16
+          ],
+          [
+            192,
+            16,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-1-edge-32-16",
+        "box": [
+          32,
+          16,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-1-edge-32-16",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            32,
+            16,
+            16,
+            16
+          ],
+          [
+            96,
+            16,
+            16,
+            16
+          ],
+          [
+            160,
+            16,
+            16,
+            16
+          ],
+          [
+            224,
+            16,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-1-edge-0-32",
+        "box": [
+          0,
+          32,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-1-edge-0-32",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            0,
+            32,
+            16,
+            16
+          ],
+          [
+            64,
+            32,
+            16,
+            16
+          ],
+          [
+            128,
+            32,
+            16,
+            16
+          ],
+          [
+            192,
+            32,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-1-edge-16-32",
+        "box": [
+          16,
+          32,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-1-edge-16-32",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            16,
+            32,
+            16,
+            16
+          ],
+          [
+            80,
+            32,
+            16,
+            16
+          ],
+          [
+            144,
+            32,
+            16,
+            16
+          ],
+          [
+            208,
+            32,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-1-edge-32-32",
+        "box": [
+          32,
+          32,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-1-edge-32-32",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            32,
+            32,
+            16,
+            16
+          ],
+          [
+            96,
+            32,
+            16,
+            16
+          ],
+          [
+            160,
+            32,
+            16,
+            16
+          ],
+          [
+            224,
+            32,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-1-patch",
+        "box": [
+          0,
+          48,
+          240,
+          48
+        ],
+        "kind": "part",
+        "group": "palette-1-patch",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            0,
+            48,
+            48,
+            48
+          ],
+          [
+            64,
+            48,
+            48,
+            48
+          ],
+          [
+            128,
+            48,
+            48,
+            48
+          ],
+          [
+            192,
+            48,
+            48,
+            48
+          ]
+        ]
+      },
+      {
+        "name": "palette-1-lower-corner-0",
+        "box": [
+          0,
+          96,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-1-lower-corner-0",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            0,
+            96,
+            16,
+            16
+          ],
+          [
+            64,
+            96,
+            16,
+            16
+          ],
+          [
+            128,
+            96,
+            16,
+            16
+          ],
+          [
+            192,
+            96,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-1-lower-corner-32",
+        "box": [
+          32,
+          96,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-1-lower-corner-32",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            32,
+            96,
+            16,
+            16
+          ],
+          [
+            96,
+            96,
+            16,
+            16
+          ],
+          [
+            160,
+            96,
+            16,
+            16
+          ],
+          [
+            224,
+            96,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-2-edge-0-0",
+        "box": [
+          0,
+          128,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-2-edge-0-0",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            0,
+            128,
+            16,
+            16
+          ],
+          [
+            64,
+            128,
+            16,
+            16
+          ],
+          [
+            128,
+            128,
+            16,
+            16
+          ],
+          [
+            192,
+            128,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-2-edge-16-0",
+        "box": [
+          16,
+          128,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-2-edge-16-0",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            16,
+            128,
+            16,
+            16
+          ],
+          [
+            80,
+            128,
+            16,
+            16
+          ],
+          [
+            144,
+            128,
+            16,
+            16
+          ],
+          [
+            208,
+            128,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-2-edge-32-0",
+        "box": [
+          32,
+          128,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-2-edge-32-0",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            32,
+            128,
+            16,
+            16
+          ],
+          [
+            96,
+            128,
+            16,
+            16
+          ],
+          [
+            160,
+            128,
+            16,
+            16
+          ],
+          [
+            224,
+            128,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-2-edge-0-16",
+        "box": [
+          0,
+          144,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-2-edge-0-16",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            0,
+            144,
+            16,
+            16
+          ],
+          [
+            64,
+            144,
+            16,
+            16
+          ],
+          [
+            128,
+            144,
+            16,
+            16
+          ],
+          [
+            192,
+            144,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-2-edge-32-16",
+        "box": [
+          32,
+          144,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-2-edge-32-16",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            32,
+            144,
+            16,
+            16
+          ],
+          [
+            96,
+            144,
+            16,
+            16
+          ],
+          [
+            160,
+            144,
+            16,
+            16
+          ],
+          [
+            224,
+            144,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-2-edge-0-32",
+        "box": [
+          0,
+          160,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-2-edge-0-32",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            0,
+            160,
+            16,
+            16
+          ],
+          [
+            64,
+            160,
+            16,
+            16
+          ],
+          [
+            128,
+            160,
+            16,
+            16
+          ],
+          [
+            192,
+            160,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-2-edge-16-32",
+        "box": [
+          16,
+          160,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-2-edge-16-32",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            16,
+            160,
+            16,
+            16
+          ],
+          [
+            80,
+            160,
+            16,
+            16
+          ],
+          [
+            144,
+            160,
+            16,
+            16
+          ],
+          [
+            208,
+            160,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-2-edge-32-32",
+        "box": [
+          32,
+          160,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-2-edge-32-32",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            32,
+            160,
+            16,
+            16
+          ],
+          [
+            96,
+            160,
+            16,
+            16
+          ],
+          [
+            160,
+            160,
+            16,
+            16
+          ],
+          [
+            224,
+            160,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-2-patch",
+        "box": [
+          0,
+          176,
+          240,
+          48
+        ],
+        "kind": "part",
+        "group": "palette-2-patch",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            0,
+            176,
+            48,
+            48
+          ],
+          [
+            64,
+            176,
+            48,
+            48
+          ],
+          [
+            128,
+            176,
+            48,
+            48
+          ],
+          [
+            192,
+            176,
+            48,
+            48
+          ]
+        ]
+      },
+      {
+        "name": "palette-2-lower-corner-0",
+        "box": [
+          0,
+          224,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-2-lower-corner-0",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            0,
+            224,
+            16,
+            16
+          ],
+          [
+            64,
+            224,
+            16,
+            16
+          ],
+          [
+            128,
+            224,
+            16,
+            16
+          ],
+          [
+            192,
+            224,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-2-lower-corner-32",
+        "box": [
+          32,
+          224,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-2-lower-corner-32",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            32,
+            224,
+            16,
+            16
+          ],
+          [
+            96,
+            224,
+            16,
+            16
+          ],
+          [
+            160,
+            224,
+            16,
+            16
+          ],
+          [
+            224,
+            224,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-3-edge-0-0",
+        "box": [
+          0,
+          256,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-3-edge-0-0",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            0,
+            256,
+            16,
+            16
+          ],
+          [
+            64,
+            256,
+            16,
+            16
+          ],
+          [
+            128,
+            256,
+            16,
+            16
+          ],
+          [
+            192,
+            256,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-3-edge-16-0",
+        "box": [
+          16,
+          256,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-3-edge-16-0",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            16,
+            256,
+            16,
+            16
+          ],
+          [
+            80,
+            256,
+            16,
+            16
+          ],
+          [
+            144,
+            256,
+            16,
+            16
+          ],
+          [
+            208,
+            256,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-3-edge-32-0",
+        "box": [
+          32,
+          256,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-3-edge-32-0",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            32,
+            256,
+            16,
+            16
+          ],
+          [
+            96,
+            256,
+            16,
+            16
+          ],
+          [
+            160,
+            256,
+            16,
+            16
+          ],
+          [
+            224,
+            256,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-3-edge-0-16",
+        "box": [
+          0,
+          272,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-3-edge-0-16",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            0,
+            272,
+            16,
+            16
+          ],
+          [
+            64,
+            272,
+            16,
+            16
+          ],
+          [
+            128,
+            272,
+            16,
+            16
+          ],
+          [
+            192,
+            272,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-3-edge-32-16",
+        "box": [
+          32,
+          272,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-3-edge-32-16",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            32,
+            272,
+            16,
+            16
+          ],
+          [
+            96,
+            272,
+            16,
+            16
+          ],
+          [
+            160,
+            272,
+            16,
+            16
+          ],
+          [
+            224,
+            272,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-3-edge-0-32",
+        "box": [
+          0,
+          288,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-3-edge-0-32",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            0,
+            288,
+            16,
+            16
+          ],
+          [
+            64,
+            288,
+            16,
+            16
+          ],
+          [
+            128,
+            288,
+            16,
+            16
+          ],
+          [
+            192,
+            288,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-3-edge-16-32",
+        "box": [
+          16,
+          288,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-3-edge-16-32",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            16,
+            288,
+            16,
+            16
+          ],
+          [
+            80,
+            288,
+            16,
+            16
+          ],
+          [
+            144,
+            288,
+            16,
+            16
+          ],
+          [
+            208,
+            288,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-3-edge-32-32",
+        "box": [
+          32,
+          288,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-3-edge-32-32",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            32,
+            288,
+            16,
+            16
+          ],
+          [
+            96,
+            288,
+            16,
+            16
+          ],
+          [
+            160,
+            288,
+            16,
+            16
+          ],
+          [
+            224,
+            288,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-3-patch",
+        "box": [
+          0,
+          304,
+          240,
+          48
+        ],
+        "kind": "part",
+        "group": "palette-3-patch",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            0,
+            304,
+            48,
+            48
+          ],
+          [
+            64,
+            304,
+            48,
+            48
+          ],
+          [
+            128,
+            304,
+            48,
+            48
+          ],
+          [
+            192,
+            304,
+            48,
+            48
+          ]
+        ]
+      },
+      {
+        "name": "palette-3-lower-corner-0",
+        "box": [
+          0,
+          352,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-3-lower-corner-0",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            0,
+            352,
+            16,
+            16
+          ],
+          [
+            64,
+            352,
+            16,
+            16
+          ],
+          [
+            128,
+            352,
+            16,
+            16
+          ],
+          [
+            192,
+            352,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-3-lower-corner-32",
+        "box": [
+          32,
+          352,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-3-lower-corner-32",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            32,
+            352,
+            16,
+            16
+          ],
+          [
+            96,
+            352,
+            16,
+            16
+          ],
+          [
+            160,
+            352,
+            16,
+            16
+          ],
+          [
+            224,
+            352,
+            16,
+            16
+          ]
+        ]
+      }
+    ],
+    "animated": false,
+    "animationWidths": {
+      "0": 16,
+      "1": 16,
+      "2": 16,
+      "3": 16,
+      "4": 16,
+      "5": 16,
+      "6": 16,
+      "7": 16,
+      "8": 48,
+      "9": 16,
+      "10": 16,
+      "11": 16,
+      "12": 16,
+      "13": 16,
+      "14": 16,
+      "15": 16,
+      "16": 16,
+      "17": 16,
+      "18": 16,
+      "19": 48,
+      "20": 16,
+      "21": 16,
+      "22": 16,
+      "23": 16,
+      "24": 16,
+      "25": 16,
+      "26": 16,
+      "27": 16,
+      "28": 16,
+      "29": 16,
+      "30": 48,
+      "31": 16,
+      "32": 16
+    },
+    "animationHeights": {},
+    "duplicates": [],
+    "size": [
+      240,
+      368
+    ],
+    "status": "approved-and-processed"
+  },
+  {
+    "id": "S",
+    "title": "Desert water animations",
+    "slug": "desert-water-animations",
+    "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-desert-water-source-c1adf4c8c758.png",
+    "entries": [
+      {
+        "name": "palette-1-edge-0-0",
+        "box": [
+          0,
+          0,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-1-edge-0-0",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            0,
+            0,
+            16,
+            16
+          ],
+          [
+            64,
+            0,
+            16,
+            16
+          ],
+          [
+            128,
+            0,
+            16,
+            16
+          ],
+          [
+            192,
+            0,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-1-edge-16-0",
+        "box": [
+          16,
+          0,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-1-edge-16-0",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            16,
+            0,
+            16,
+            16
+          ],
+          [
+            80,
+            0,
+            16,
+            16
+          ],
+          [
+            144,
+            0,
+            16,
+            16
+          ],
+          [
+            208,
+            0,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-1-edge-32-0",
+        "box": [
+          32,
+          0,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-1-edge-32-0",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            32,
+            0,
+            16,
+            16
+          ],
+          [
+            96,
+            0,
+            16,
+            16
+          ],
+          [
+            160,
+            0,
+            16,
+            16
+          ],
+          [
+            224,
+            0,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-1-edge-0-16",
+        "box": [
+          0,
+          16,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-1-edge-0-16",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            0,
+            16,
+            16,
+            16
+          ],
+          [
+            64,
+            16,
+            16,
+            16
+          ],
+          [
+            128,
+            16,
+            16,
+            16
+          ],
+          [
+            192,
+            16,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-1-edge-32-16",
+        "box": [
+          32,
+          16,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-1-edge-32-16",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            32,
+            16,
+            16,
+            16
+          ],
+          [
+            96,
+            16,
+            16,
+            16
+          ],
+          [
+            160,
+            16,
+            16,
+            16
+          ],
+          [
+            224,
+            16,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-1-edge-0-32",
+        "box": [
+          0,
+          32,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-1-edge-0-32",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            0,
+            32,
+            16,
+            16
+          ],
+          [
+            64,
+            32,
+            16,
+            16
+          ],
+          [
+            128,
+            32,
+            16,
+            16
+          ],
+          [
+            192,
+            32,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-1-edge-16-32",
+        "box": [
+          16,
+          32,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-1-edge-16-32",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            16,
+            32,
+            16,
+            16
+          ],
+          [
+            80,
+            32,
+            16,
+            16
+          ],
+          [
+            144,
+            32,
+            16,
+            16
+          ],
+          [
+            208,
+            32,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-1-edge-32-32",
+        "box": [
+          32,
+          32,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-1-edge-32-32",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            32,
+            32,
+            16,
+            16
+          ],
+          [
+            96,
+            32,
+            16,
+            16
+          ],
+          [
+            160,
+            32,
+            16,
+            16
+          ],
+          [
+            224,
+            32,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-1-patch",
+        "box": [
+          0,
+          48,
+          240,
+          48
+        ],
+        "kind": "part",
+        "group": "palette-1-patch",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            0,
+            48,
+            48,
+            48
+          ],
+          [
+            64,
+            48,
+            48,
+            48
+          ],
+          [
+            128,
+            48,
+            48,
+            48
+          ],
+          [
+            192,
+            48,
+            48,
+            48
+          ]
+        ]
+      },
+      {
+        "name": "palette-2-edge-0-0",
+        "box": [
+          0,
+          96,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-2-edge-0-0",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            0,
+            96,
+            16,
+            16
+          ],
+          [
+            64,
+            96,
+            16,
+            16
+          ],
+          [
+            128,
+            96,
+            16,
+            16
+          ],
+          [
+            192,
+            96,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-2-edge-16-0",
+        "box": [
+          16,
+          96,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-2-edge-16-0",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            16,
+            96,
+            16,
+            16
+          ],
+          [
+            80,
+            96,
+            16,
+            16
+          ],
+          [
+            144,
+            96,
+            16,
+            16
+          ],
+          [
+            208,
+            96,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-2-edge-32-0",
+        "box": [
+          32,
+          96,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-2-edge-32-0",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            32,
+            96,
+            16,
+            16
+          ],
+          [
+            96,
+            96,
+            16,
+            16
+          ],
+          [
+            160,
+            96,
+            16,
+            16
+          ],
+          [
+            224,
+            96,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-2-edge-0-16",
+        "box": [
+          0,
+          112,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-2-edge-0-16",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            0,
+            112,
+            16,
+            16
+          ],
+          [
+            64,
+            112,
+            16,
+            16
+          ],
+          [
+            128,
+            112,
+            16,
+            16
+          ],
+          [
+            192,
+            112,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-2-edge-32-16",
+        "box": [
+          32,
+          112,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-2-edge-32-16",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            32,
+            112,
+            16,
+            16
+          ],
+          [
+            96,
+            112,
+            16,
+            16
+          ],
+          [
+            160,
+            112,
+            16,
+            16
+          ],
+          [
+            224,
+            112,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-2-edge-0-32",
+        "box": [
+          0,
+          128,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-2-edge-0-32",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            0,
+            128,
+            16,
+            16
+          ],
+          [
+            64,
+            128,
+            16,
+            16
+          ],
+          [
+            128,
+            128,
+            16,
+            16
+          ],
+          [
+            192,
+            128,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-2-edge-16-32",
+        "box": [
+          16,
+          128,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-2-edge-16-32",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            16,
+            128,
+            16,
+            16
+          ],
+          [
+            80,
+            128,
+            16,
+            16
+          ],
+          [
+            144,
+            128,
+            16,
+            16
+          ],
+          [
+            208,
+            128,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-2-edge-32-32",
+        "box": [
+          32,
+          128,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-2-edge-32-32",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            32,
+            128,
+            16,
+            16
+          ],
+          [
+            96,
+            128,
+            16,
+            16
+          ],
+          [
+            160,
+            128,
+            16,
+            16
+          ],
+          [
+            224,
+            128,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-2-patch",
+        "box": [
+          0,
+          144,
+          240,
+          48
+        ],
+        "kind": "part",
+        "group": "palette-2-patch",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            0,
+            144,
+            48,
+            48
+          ],
+          [
+            64,
+            144,
+            48,
+            48
+          ],
+          [
+            128,
+            144,
+            48,
+            48
+          ],
+          [
+            192,
+            144,
+            48,
+            48
+          ]
+        ]
+      },
+      {
+        "name": "palette-3-edge-0-0",
+        "box": [
+          0,
+          192,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-3-edge-0-0",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            0,
+            192,
+            16,
+            16
+          ],
+          [
+            64,
+            192,
+            16,
+            16
+          ],
+          [
+            128,
+            192,
+            16,
+            16
+          ],
+          [
+            192,
+            192,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-3-edge-16-0",
+        "box": [
+          16,
+          192,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-3-edge-16-0",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            16,
+            192,
+            16,
+            16
+          ],
+          [
+            80,
+            192,
+            16,
+            16
+          ],
+          [
+            144,
+            192,
+            16,
+            16
+          ],
+          [
+            208,
+            192,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-3-edge-32-0",
+        "box": [
+          32,
+          192,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-3-edge-32-0",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            32,
+            192,
+            16,
+            16
+          ],
+          [
+            96,
+            192,
+            16,
+            16
+          ],
+          [
+            160,
+            192,
+            16,
+            16
+          ],
+          [
+            224,
+            192,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-3-edge-0-16",
+        "box": [
+          0,
+          208,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-3-edge-0-16",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            0,
+            208,
+            16,
+            16
+          ],
+          [
+            64,
+            208,
+            16,
+            16
+          ],
+          [
+            128,
+            208,
+            16,
+            16
+          ],
+          [
+            192,
+            208,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-3-edge-32-16",
+        "box": [
+          32,
+          208,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-3-edge-32-16",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            32,
+            208,
+            16,
+            16
+          ],
+          [
+            96,
+            208,
+            16,
+            16
+          ],
+          [
+            160,
+            208,
+            16,
+            16
+          ],
+          [
+            224,
+            208,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-3-edge-0-32",
+        "box": [
+          0,
+          224,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-3-edge-0-32",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            0,
+            224,
+            16,
+            16
+          ],
+          [
+            64,
+            224,
+            16,
+            16
+          ],
+          [
+            128,
+            224,
+            16,
+            16
+          ],
+          [
+            192,
+            224,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-3-edge-16-32",
+        "box": [
+          16,
+          224,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-3-edge-16-32",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            16,
+            224,
+            16,
+            16
+          ],
+          [
+            80,
+            224,
+            16,
+            16
+          ],
+          [
+            144,
+            224,
+            16,
+            16
+          ],
+          [
+            208,
+            224,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-3-edge-32-32",
+        "box": [
+          32,
+          224,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-3-edge-32-32",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            32,
+            224,
+            16,
+            16
+          ],
+          [
+            96,
+            224,
+            16,
+            16
+          ],
+          [
+            160,
+            224,
+            16,
+            16
+          ],
+          [
+            224,
+            224,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-3-patch",
+        "box": [
+          0,
+          240,
+          240,
+          48
+        ],
+        "kind": "part",
+        "group": "palette-3-patch",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            0,
+            240,
+            48,
+            48
+          ],
+          [
+            64,
+            240,
+            48,
+            48
+          ],
+          [
+            128,
+            240,
+            48,
+            48
+          ],
+          [
+            192,
+            240,
+            48,
+            48
+          ]
+        ]
+      }
+    ],
+    "animated": false,
+    "animationWidths": {
+      "0": 16,
+      "1": 16,
+      "2": 16,
+      "3": 16,
+      "4": 16,
+      "5": 16,
+      "6": 16,
+      "7": 16,
+      "8": 48,
+      "9": 16,
+      "10": 16,
+      "11": 16,
+      "12": 16,
+      "13": 16,
+      "14": 16,
+      "15": 16,
+      "16": 16,
+      "17": 48,
+      "18": 16,
+      "19": 16,
+      "20": 16,
+      "21": 16,
+      "22": 16,
+      "23": 16,
+      "24": 16,
+      "25": 16,
+      "26": 48
+    },
+    "animationHeights": {},
+    "duplicates": [],
+    "size": [
+      256,
+      288
+    ],
+    "status": "approved-and-processed"
+  },
+  {
+    "id": "M",
+    "title": "Marsh water animations",
+    "slug": "marsh-water-animations",
+    "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-marshlands-waters-source-351b5a45ad69.png",
+    "entries": [
+      {
+        "name": "palette-1-edge-0-0",
+        "box": [
+          0,
+          0,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-1-edge-0-0",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            0,
+            0,
+            16,
+            16
+          ],
+          [
+            64,
+            0,
+            16,
+            16
+          ],
+          [
+            128,
+            0,
+            16,
+            16
+          ],
+          [
+            192,
+            0,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-1-edge-16-0",
+        "box": [
+          16,
+          0,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-1-edge-16-0",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            16,
+            0,
+            16,
+            16
+          ],
+          [
+            80,
+            0,
+            16,
+            16
+          ],
+          [
+            144,
+            0,
+            16,
+            16
+          ],
+          [
+            208,
+            0,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-1-edge-32-0",
+        "box": [
+          32,
+          0,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "unused",
+        "frame": null,
+        "notes": "Do not use. Reuse M01. The complete crop is identical.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            32,
+            0,
+            16,
+            16
+          ],
+          [
+            96,
+            0,
+            16,
+            16
+          ],
+          [
+            160,
+            0,
+            16,
+            16
+          ],
+          [
+            224,
+            0,
+            16,
+            16
+          ]
+        ],
+        "reuseProposal": {
+          "sheetId": "M",
+          "reviewId": "M01",
+          "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-marshlands-waters-source-351b5a45ad69.png",
+          "box": [
+            0,
+            0,
+            208,
+            16
+          ]
+        }
+      },
+      {
+        "name": "palette-1-edge-0-16",
+        "box": [
+          0,
+          16,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-1-edge-0-16",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            0,
+            16,
+            16,
+            16
+          ],
+          [
+            64,
+            16,
+            16,
+            16
+          ],
+          [
+            128,
+            16,
+            16,
+            16
+          ],
+          [
+            192,
+            16,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-1-edge-32-16",
+        "box": [
+          32,
+          16,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-1-edge-32-16",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            32,
+            16,
+            16,
+            16
+          ],
+          [
+            96,
+            16,
+            16,
+            16
+          ],
+          [
+            160,
+            16,
+            16,
+            16
+          ],
+          [
+            224,
+            16,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-1-edge-0-32",
+        "box": [
+          0,
+          32,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-1-edge-0-32",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            0,
+            32,
+            16,
+            16
+          ],
+          [
+            64,
+            32,
+            16,
+            16
+          ],
+          [
+            128,
+            32,
+            16,
+            16
+          ],
+          [
+            192,
+            32,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-1-edge-16-32",
+        "box": [
+          16,
+          32,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-1-edge-16-32",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            16,
+            32,
+            16,
+            16
+          ],
+          [
+            80,
+            32,
+            16,
+            16
+          ],
+          [
+            144,
+            32,
+            16,
+            16
+          ],
+          [
+            208,
+            32,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-1-edge-32-32",
+        "box": [
+          32,
+          32,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-1-edge-32-32",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            32,
+            32,
+            16,
+            16
+          ],
+          [
+            96,
+            32,
+            16,
+            16
+          ],
+          [
+            160,
+            32,
+            16,
+            16
+          ],
+          [
+            224,
+            32,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-1-patch",
+        "box": [
+          0,
+          48,
+          240,
+          48
+        ],
+        "kind": "part",
+        "group": "palette-1-patch",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            0,
+            48,
+            48,
+            48
+          ],
+          [
+            64,
+            48,
+            48,
+            48
+          ],
+          [
+            128,
+            48,
+            48,
+            48
+          ],
+          [
+            192,
+            48,
+            48,
+            48
+          ]
+        ]
+      },
+      {
+        "name": "palette-2-edge-0-0",
+        "box": [
+          0,
+          96,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-2-edge-0-0",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            0,
+            96,
+            16,
+            16
+          ],
+          [
+            64,
+            96,
+            16,
+            16
+          ],
+          [
+            128,
+            96,
+            16,
+            16
+          ],
+          [
+            192,
+            96,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-2-edge-16-0",
+        "box": [
+          16,
+          96,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-2-edge-16-0",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            16,
+            96,
+            16,
+            16
+          ],
+          [
+            80,
+            96,
+            16,
+            16
+          ],
+          [
+            144,
+            96,
+            16,
+            16
+          ],
+          [
+            208,
+            96,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-2-edge-32-0",
+        "box": [
+          32,
+          96,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-2-edge-32-0",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            32,
+            96,
+            16,
+            16
+          ],
+          [
+            96,
+            96,
+            16,
+            16
+          ],
+          [
+            160,
+            96,
+            16,
+            16
+          ],
+          [
+            224,
+            96,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-2-edge-0-16",
+        "box": [
+          0,
+          112,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-2-edge-0-16",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            0,
+            112,
+            16,
+            16
+          ],
+          [
+            64,
+            112,
+            16,
+            16
+          ],
+          [
+            128,
+            112,
+            16,
+            16
+          ],
+          [
+            192,
+            112,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-2-edge-32-16",
+        "box": [
+          32,
+          112,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-2-edge-32-16",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            32,
+            112,
+            16,
+            16
+          ],
+          [
+            96,
+            112,
+            16,
+            16
+          ],
+          [
+            160,
+            112,
+            16,
+            16
+          ],
+          [
+            224,
+            112,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-2-edge-0-32",
+        "box": [
+          0,
+          128,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-2-edge-0-32",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            0,
+            128,
+            16,
+            16
+          ],
+          [
+            64,
+            128,
+            16,
+            16
+          ],
+          [
+            128,
+            128,
+            16,
+            16
+          ],
+          [
+            192,
+            128,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-2-edge-16-32",
+        "box": [
+          16,
+          128,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-2-edge-16-32",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            16,
+            128,
+            16,
+            16
+          ],
+          [
+            80,
+            128,
+            16,
+            16
+          ],
+          [
+            144,
+            128,
+            16,
+            16
+          ],
+          [
+            208,
+            128,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-2-edge-32-32",
+        "box": [
+          32,
+          128,
+          208,
+          16
+        ],
+        "kind": "part",
+        "group": "palette-2-edge-32-32",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            32,
+            128,
+            16,
+            16
+          ],
+          [
+            96,
+            128,
+            16,
+            16
+          ],
+          [
+            160,
+            128,
+            16,
+            16
+          ],
+          [
+            224,
+            128,
+            16,
+            16
+          ]
+        ]
+      },
+      {
+        "name": "palette-2-patch",
+        "box": [
+          0,
+          144,
+          240,
+          48
+        ],
+        "kind": "part",
+        "group": "palette-2-patch",
+        "frame": null,
+        "notes": "Four animation frames. Join these source regions into one horizontal strip.",
+        "placement": null,
+        "frameBoxes": [
+          [
+            0,
+            144,
+            48,
+            48
+          ],
+          [
+            64,
+            144,
+            48,
+            48
+          ],
+          [
+            128,
+            144,
+            48,
+            48
+          ],
+          [
+            192,
+            144,
+            48,
+            48
+          ]
+        ]
+      }
+    ],
+    "animated": false,
+    "animationWidths": {
+      "0": 16,
+      "1": 16,
+      "2": 16,
+      "3": 16,
+      "4": 16,
+      "5": 16,
+      "6": 16,
+      "7": 16,
+      "8": 48,
+      "9": 16,
+      "10": 16,
+      "11": 16,
+      "12": 16,
+      "13": 16,
+      "14": 16,
+      "15": 16,
+      "16": 16,
+      "17": 48
+    },
+    "animationHeights": {},
+    "duplicates": [
+      {
+        "number": 3,
+        "reuse": 1
+      }
+    ],
+    "size": [
+      256,
+      192
+    ],
+    "status": "approved-and-processed"
+  },
+  {
+    "id": "C",
+    "title": "Remastered castle",
+    "slug": "remastered-castle",
+    "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-castle-source-1afbf628d1b1.png",
+    "entries": [
+      {
+        "name": "tan-floor-16",
+        "box": [
+          16,
+          0,
+          16,
+          16
+        ],
+        "kind": "part",
+        "group": "tan-floor-16",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "tan-floor-32",
+        "box": [
+          32,
+          0,
+          16,
+          16
+        ],
+        "kind": "part",
+        "group": "tan-floor-32",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "tan-floor-48",
+        "box": [
+          48,
+          0,
+          16,
+          16
+        ],
+        "kind": "part",
+        "group": "tan-floor-48",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "tan-floor-64",
+        "box": [
+          64,
+          0,
+          16,
+          16
+        ],
+        "kind": "part",
+        "group": "tan-floor-64",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "tan-floor-80",
+        "box": [
+          80,
+          0,
+          16,
+          16
+        ],
+        "kind": "part",
+        "group": "tan-floor-80",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "tan-floor-112",
+        "box": [
+          112,
+          0,
+          16,
+          16
+        ],
+        "kind": "part",
+        "group": "tan-floor-112",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "tan-floor-128",
+        "box": [
+          128,
+          0,
+          16,
+          16
+        ],
+        "kind": "part",
+        "group": "tan-floor-128",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "tan-floor-144",
+        "box": [
+          144,
+          0,
+          16,
+          16
+        ],
+        "kind": "part",
+        "group": "tan-floor-144",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "tan-floor-160",
+        "box": [
+          160,
+          0,
+          16,
+          16
+        ],
+        "kind": "part",
+        "group": "tan-floor-160",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "tan-floor-176",
+        "box": [
+          176,
+          0,
+          16,
+          16
+        ],
+        "kind": "part",
+        "group": "tan-floor-176",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "tan-hollow-tower",
+        "box": [
+          0,
+          16,
+          48,
+          80
+        ],
+        "kind": "structure",
+        "group": "tan-hollow-tower",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "tan-narrow-wall",
+        "box": [
+          56,
+          24,
+          32,
+          64
+        ],
+        "kind": "structure",
+        "group": "tan-narrow-wall",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "tan-pillar-left",
+        "box": [
+          96,
+          40,
+          16,
+          40
+        ],
+        "kind": "structure",
+        "group": "tan-pillar-left",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "tan-pillar-right",
+        "box": [
+          112,
+          40,
+          16,
+          40
+        ],
+        "kind": "structure",
+        "group": "tan-pillar-right",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "tan-battlement-tower",
+        "box": [
+          128,
+          24,
+          48,
+          88
+        ],
+        "kind": "structure",
+        "group": "tan-battlement-tower",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "tan-battlement-wall",
+        "box": [
+          184,
+          32,
+          32,
+          72
+        ],
+        "kind": "structure",
+        "group": "tan-battlement-wall",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "tan-battlement-pillar-left",
+        "box": [
+          224,
+          32,
+          16,
+          48
+        ],
+        "kind": "structure",
+        "group": "tan-battlement-pillar-left",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "tan-battlement-pillar-right",
+        "box": [
+          240,
+          32,
+          16,
+          48
+        ],
+        "kind": "structure",
+        "group": "tan-battlement-pillar-right",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "tan-tower-floor",
+        "box": [
+          0,
+          112,
+          48,
+          48
+        ],
+        "kind": "structure",
+        "group": "tan-tower-floor",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "tan-open-tower-floor",
+        "box": [
+          48,
+          112,
+          48,
+          48
+        ],
+        "kind": "structure",
+        "group": "tan-open-tower-floor",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "tan-pillar-floor-left",
+        "box": [
+          96,
+          128,
+          16,
+          48
+        ],
+        "kind": "structure",
+        "group": "tan-pillar-floor-left",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "tan-pillar-floor-right",
+        "box": [
+          112,
+          128,
+          16,
+          48
+        ],
+        "kind": "structure",
+        "group": "tan-pillar-floor-right",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "tan-battlement-floor",
+        "box": [
+          128,
+          112,
+          48,
+          64
+        ],
+        "kind": "structure",
+        "group": "tan-battlement-floor",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "tan-battlement-wall-floor",
+        "box": [
+          176,
+          128,
+          48,
+          48
+        ],
+        "kind": "structure",
+        "group": "tan-battlement-wall-floor",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "tan-battlement-pillar-floor-left",
+        "box": [
+          224,
+          128,
+          16,
+          48
+        ],
+        "kind": "structure",
+        "group": "tan-battlement-pillar-floor-left",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "tan-battlement-pillar-floor-right",
+        "box": [
+          240,
+          128,
+          16,
+          48
+        ],
+        "kind": "structure",
+        "group": "tan-battlement-pillar-floor-right",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "tan-grate-0-168",
+        "box": [
+          0,
+          168,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "tan-grate-0-168",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "tan-grate-16-168",
+        "box": [
+          16,
+          168,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "tan-grate-16-168",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "tan-grate-32-168",
+        "box": [
+          32,
+          168,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "tan-grate-32-168",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "tan-grate-48-168",
+        "box": [
+          48,
+          168,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "tan-grate-48-168",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "tan-grate-0-200",
+        "box": [
+          0,
+          200,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "tan-grate-0-200",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "tan-grate-16-200",
+        "box": [
+          16,
+          200,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "tan-grate-16-200",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "tan-grate-32-200",
+        "box": [
+          32,
+          200,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "tan-grate-32-200",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "tan-grate-48-200",
+        "box": [
+          48,
+          200,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "tan-grate-48-200",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "tan-grate-0-232",
+        "box": [
+          0,
+          232,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "tan-grate-0-232",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "tan-grate-16-232",
+        "box": [
+          16,
+          232,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "tan-grate-16-232",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "tan-grate-32-232",
+        "box": [
+          32,
+          232,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "tan-grate-32-232",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "tan-grate-48-232",
+        "box": [
+          48,
+          232,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "tan-grate-48-232",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "tan-banner-64-192",
+        "box": [
+          64,
+          192,
+          16,
+          24
+        ],
+        "kind": "prop",
+        "group": "tan-banner-64-192",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "tan-banner-80-192",
+        "box": [
+          80,
+          192,
+          16,
+          24
+        ],
+        "kind": "prop",
+        "group": "tan-banner-80-192",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "tan-banner-96-192",
+        "box": [
+          96,
+          192,
+          16,
+          24
+        ],
+        "kind": "prop",
+        "group": "tan-banner-96-192",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "tan-banner-112-192",
+        "box": [
+          112,
+          192,
+          16,
+          24
+        ],
+        "kind": "prop",
+        "group": "tan-banner-112-192",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "tan-banner-128-192",
+        "box": [
+          128,
+          192,
+          16,
+          24
+        ],
+        "kind": "prop",
+        "group": "tan-banner-128-192",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "tan-banner-64-224",
+        "box": [
+          64,
+          224,
+          16,
+          24
+        ],
+        "kind": "prop",
+        "group": "tan-banner-64-224",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "tan-banner-80-224",
+        "box": [
+          80,
+          224,
+          16,
+          24
+        ],
+        "kind": "prop",
+        "group": "tan-banner-80-224",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "tan-banner-96-224",
+        "box": [
+          96,
+          224,
+          16,
+          24
+        ],
+        "kind": "prop",
+        "group": "tan-banner-96-224",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "tan-banner-112-224",
+        "box": [
+          112,
+          224,
+          16,
+          24
+        ],
+        "kind": "prop",
+        "group": "tan-banner-112-224",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "tan-banner-128-224",
+        "box": [
+          128,
+          224,
+          16,
+          24
+        ],
+        "kind": "prop",
+        "group": "tan-banner-128-224",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "tan-emblem-160-176",
+        "box": [
+          160,
+          176,
+          16,
+          16
+        ],
+        "kind": "part",
+        "group": "tan-emblem-160-176",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "tan-emblem-176-176",
+        "box": [
+          176,
+          176,
+          16,
+          16
+        ],
+        "kind": "part",
+        "group": "tan-emblem-176-176",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "tan-emblem-192-176",
+        "box": [
+          192,
+          176,
+          16,
+          16
+        ],
+        "kind": "part",
+        "group": "tan-emblem-192-176",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "tan-emblem-208-176",
+        "box": [
+          208,
+          176,
+          16,
+          16
+        ],
+        "kind": "part",
+        "group": "tan-emblem-208-176",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "tan-emblem-224-176",
+        "box": [
+          224,
+          176,
+          16,
+          16
+        ],
+        "kind": "part",
+        "group": "tan-emblem-224-176",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "tan-emblem-160-192",
+        "box": [
+          160,
+          192,
+          16,
+          16
+        ],
+        "kind": "part",
+        "group": "tan-emblem-160-192",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "tan-emblem-176-192",
+        "box": [
+          176,
+          192,
+          16,
+          16
+        ],
+        "kind": "part",
+        "group": "tan-emblem-176-192",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "tan-emblem-192-192",
+        "box": [
+          192,
+          192,
+          16,
+          16
+        ],
+        "kind": "part",
+        "group": "tan-emblem-192-192",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "tan-emblem-208-192",
+        "box": [
+          208,
+          192,
+          16,
+          16
+        ],
+        "kind": "part",
+        "group": "tan-emblem-208-192",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "tan-emblem-224-192",
+        "box": [
+          224,
+          192,
+          16,
+          16
+        ],
+        "kind": "part",
+        "group": "tan-emblem-224-192",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "tan-small-base",
+        "box": [
+          144,
+          184,
+          16,
+          16
+        ],
+        "kind": "part",
+        "group": "tan-small-base",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "tan-stair-wall-left",
+        "box": [
+          144,
+          208,
+          16,
+          48
+        ],
+        "kind": "structure",
+        "group": "tan-stair-wall-left",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "tan-stairs",
+        "box": [
+          160,
+          208,
+          32,
+          48
+        ],
+        "kind": "structure",
+        "group": "tan-stairs",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "tan-stair-wall-right",
+        "box": [
+          192,
+          208,
+          16,
+          48
+        ],
+        "kind": "structure",
+        "group": "tan-stair-wall-right",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "tan-ladder",
+        "box": [
+          224,
+          208,
+          16,
+          48
+        ],
+        "kind": "structure",
+        "group": "tan-ladder",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "blue-floor-16",
+        "box": [
+          272,
+          0,
+          16,
+          16
+        ],
+        "kind": "part",
+        "group": "blue-floor-16",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "blue-floor-32",
+        "box": [
+          288,
+          0,
+          16,
+          16
+        ],
+        "kind": "part",
+        "group": "blue-floor-32",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "blue-floor-48",
+        "box": [
+          304,
+          0,
+          16,
+          16
+        ],
+        "kind": "part",
+        "group": "blue-floor-48",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "blue-floor-64",
+        "box": [
+          320,
+          0,
+          16,
+          16
+        ],
+        "kind": "part",
+        "group": "blue-floor-64",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "blue-floor-80",
+        "box": [
+          336,
+          0,
+          16,
+          16
+        ],
+        "kind": "part",
+        "group": "blue-floor-80",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "blue-floor-112",
+        "box": [
+          368,
+          0,
+          16,
+          16
+        ],
+        "kind": "part",
+        "group": "blue-floor-112",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "blue-floor-128",
+        "box": [
+          384,
+          0,
+          16,
+          16
+        ],
+        "kind": "part",
+        "group": "blue-floor-128",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "blue-floor-144",
+        "box": [
+          400,
+          0,
+          16,
+          16
+        ],
+        "kind": "part",
+        "group": "blue-floor-144",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "blue-floor-160",
+        "box": [
+          416,
+          0,
+          16,
+          16
+        ],
+        "kind": "part",
+        "group": "blue-floor-160",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "blue-floor-176",
+        "box": [
+          432,
+          0,
+          16,
+          16
+        ],
+        "kind": "part",
+        "group": "blue-floor-176",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "blue-hollow-tower",
+        "box": [
+          256,
+          16,
+          48,
+          80
+        ],
+        "kind": "structure",
+        "group": "blue-hollow-tower",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "blue-narrow-wall",
+        "box": [
+          312,
+          24,
+          32,
+          64
+        ],
+        "kind": "structure",
+        "group": "blue-narrow-wall",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "blue-pillar-left",
+        "box": [
+          352,
+          40,
+          16,
+          40
+        ],
+        "kind": "structure",
+        "group": "blue-pillar-left",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "blue-pillar-right",
+        "box": [
+          368,
+          40,
+          16,
+          40
+        ],
+        "kind": "structure",
+        "group": "blue-pillar-right",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "blue-battlement-tower",
+        "box": [
+          384,
+          24,
+          48,
+          88
+        ],
+        "kind": "structure",
+        "group": "blue-battlement-tower",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "blue-battlement-wall",
+        "box": [
+          440,
+          32,
+          32,
+          72
+        ],
+        "kind": "structure",
+        "group": "blue-battlement-wall",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "blue-battlement-pillar-left",
+        "box": [
+          480,
+          32,
+          16,
+          48
+        ],
+        "kind": "structure",
+        "group": "blue-battlement-pillar-left",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "blue-battlement-pillar-right",
+        "box": [
+          496,
+          32,
+          16,
+          48
+        ],
+        "kind": "structure",
+        "group": "blue-battlement-pillar-right",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "blue-tower-floor",
+        "box": [
+          256,
+          112,
+          48,
+          48
+        ],
+        "kind": "structure",
+        "group": "blue-tower-floor",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "blue-open-tower-floor",
+        "box": [
+          304,
+          112,
+          48,
+          48
+        ],
+        "kind": "structure",
+        "group": "blue-open-tower-floor",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "blue-pillar-floor-left",
+        "box": [
+          352,
+          128,
+          16,
+          48
+        ],
+        "kind": "structure",
+        "group": "blue-pillar-floor-left",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "blue-pillar-floor-right",
+        "box": [
+          368,
+          128,
+          16,
+          48
+        ],
+        "kind": "structure",
+        "group": "blue-pillar-floor-right",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "blue-battlement-floor",
+        "box": [
+          384,
+          112,
+          48,
+          64
+        ],
+        "kind": "structure",
+        "group": "blue-battlement-floor",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "blue-battlement-wall-floor",
+        "box": [
+          432,
+          128,
+          48,
+          48
+        ],
+        "kind": "structure",
+        "group": "blue-battlement-wall-floor",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "blue-battlement-pillar-floor-left",
+        "box": [
+          480,
+          128,
+          16,
+          48
+        ],
+        "kind": "structure",
+        "group": "blue-battlement-pillar-floor-left",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "blue-battlement-pillar-floor-right",
+        "box": [
+          496,
+          128,
+          16,
+          48
+        ],
+        "kind": "structure",
+        "group": "blue-battlement-pillar-floor-right",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "blue-grate-0-168",
+        "box": [
+          256,
+          168,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "blue-grate-0-168",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "blue-grate-16-168",
+        "box": [
+          272,
+          168,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "blue-grate-16-168",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "blue-grate-32-168",
+        "box": [
+          288,
+          168,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "blue-grate-32-168",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "blue-grate-48-168",
+        "box": [
+          304,
+          168,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "blue-grate-48-168",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "blue-grate-0-200",
+        "box": [
+          256,
+          200,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "blue-grate-0-200",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "blue-grate-16-200",
+        "box": [
+          272,
+          200,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "blue-grate-16-200",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "blue-grate-32-200",
+        "box": [
+          288,
+          200,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "blue-grate-32-200",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "blue-grate-48-200",
+        "box": [
+          304,
+          200,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "blue-grate-48-200",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "blue-grate-0-232",
+        "box": [
+          256,
+          232,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "blue-grate-0-232",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "blue-grate-16-232",
+        "box": [
+          272,
+          232,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "blue-grate-16-232",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "blue-grate-32-232",
+        "box": [
+          288,
+          232,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "blue-grate-32-232",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "blue-grate-48-232",
+        "box": [
+          304,
+          232,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "blue-grate-48-232",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "blue-banner-64-192",
+        "box": [
+          320,
+          192,
+          16,
+          24
+        ],
+        "kind": "prop",
+        "group": "blue-banner-64-192",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "blue-banner-80-192",
+        "box": [
+          336,
+          192,
+          16,
+          24
+        ],
+        "kind": "prop",
+        "group": "blue-banner-80-192",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "blue-banner-96-192",
+        "box": [
+          352,
+          192,
+          16,
+          24
+        ],
+        "kind": "prop",
+        "group": "blue-banner-96-192",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "blue-banner-112-192",
+        "box": [
+          368,
+          192,
+          16,
+          24
+        ],
+        "kind": "prop",
+        "group": "blue-banner-112-192",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "blue-banner-128-192",
+        "box": [
+          384,
+          192,
+          16,
+          24
+        ],
+        "kind": "prop",
+        "group": "blue-banner-128-192",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "blue-banner-64-224",
+        "box": [
+          320,
+          224,
+          16,
+          24
+        ],
+        "kind": "prop",
+        "group": "blue-banner-64-224",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "blue-banner-80-224",
+        "box": [
+          336,
+          224,
+          16,
+          24
+        ],
+        "kind": "prop",
+        "group": "blue-banner-80-224",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "blue-banner-96-224",
+        "box": [
+          352,
+          224,
+          16,
+          24
+        ],
+        "kind": "prop",
+        "group": "blue-banner-96-224",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "blue-banner-112-224",
+        "box": [
+          368,
+          224,
+          16,
+          24
+        ],
+        "kind": "prop",
+        "group": "blue-banner-112-224",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "blue-banner-128-224",
+        "box": [
+          384,
+          224,
+          16,
+          24
+        ],
+        "kind": "prop",
+        "group": "blue-banner-128-224",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "blue-emblem-160-176",
+        "box": [
+          416,
+          176,
+          16,
+          16
+        ],
+        "kind": "part",
+        "group": "blue-emblem-160-176",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "blue-emblem-176-176",
+        "box": [
+          432,
+          176,
+          16,
+          16
+        ],
+        "kind": "part",
+        "group": "blue-emblem-176-176",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "blue-emblem-192-176",
+        "box": [
+          448,
+          176,
+          16,
+          16
+        ],
+        "kind": "part",
+        "group": "blue-emblem-192-176",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "blue-emblem-208-176",
+        "box": [
+          464,
+          176,
+          16,
+          16
+        ],
+        "kind": "part",
+        "group": "blue-emblem-208-176",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "blue-emblem-224-176",
+        "box": [
+          480,
+          176,
+          16,
+          16
+        ],
+        "kind": "part",
+        "group": "blue-emblem-224-176",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "blue-emblem-160-192",
+        "box": [
+          416,
+          192,
+          16,
+          16
+        ],
+        "kind": "part",
+        "group": "blue-emblem-160-192",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "blue-emblem-176-192",
+        "box": [
+          432,
+          192,
+          16,
+          16
+        ],
+        "kind": "part",
+        "group": "blue-emblem-176-192",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "blue-emblem-192-192",
+        "box": [
+          448,
+          192,
+          16,
+          16
+        ],
+        "kind": "part",
+        "group": "blue-emblem-192-192",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "blue-emblem-208-192",
+        "box": [
+          464,
+          192,
+          16,
+          16
+        ],
+        "kind": "part",
+        "group": "blue-emblem-208-192",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "blue-emblem-224-192",
+        "box": [
+          480,
+          192,
+          16,
+          16
+        ],
+        "kind": "part",
+        "group": "blue-emblem-224-192",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "blue-small-base",
+        "box": [
+          400,
+          184,
+          16,
+          16
+        ],
+        "kind": "part",
+        "group": "blue-small-base",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "blue-stair-wall-left",
+        "box": [
+          400,
+          208,
+          16,
+          48
+        ],
+        "kind": "structure",
+        "group": "blue-stair-wall-left",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "blue-stairs",
+        "box": [
+          416,
+          208,
+          32,
+          48
+        ],
+        "kind": "structure",
+        "group": "blue-stairs",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "blue-stair-wall-right",
+        "box": [
+          448,
+          208,
+          16,
+          48
+        ],
+        "kind": "structure",
+        "group": "blue-stair-wall-right",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "blue-ladder",
+        "box": [
+          480,
+          208,
+          16,
+          48
+        ],
+        "kind": "structure",
+        "group": "unused",
+        "frame": null,
+        "notes": "Do not use. Reuse C63. The complete crop is identical.",
+        "placement": null,
+        "reuseProposal": {
+          "sheetId": "C",
+          "reviewId": "C63",
+          "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-castle-source-1afbf628d1b1.png",
+          "box": [
+            224,
+            208,
+            16,
+            48
+          ]
+        }
+      },
+      {
+        "name": "blue-wall-tile",
+        "box": [
+          464,
+          16,
+          16,
+          16
+        ],
+        "kind": "part",
+        "group": "blue-wall-tile",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "tan-unlit-candle",
+        "box": [
+          32,
+          256,
+          16,
+          32
+        ],
+        "kind": "prop",
+        "group": "tan-unlit-candle",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "tan-candle-animation",
+        "box": [
+          48,
+          256,
+          128,
+          32
+        ],
+        "kind": "prop",
+        "group": "tan-candle-animation",
+        "frame": null,
+        "notes": "Preserve the complete animation strip.",
+        "placement": null
+      },
+      {
+        "name": "tan-large-door-animation",
+        "box": [
+          192,
+          256,
+          192,
+          32
+        ],
+        "kind": "structure",
+        "group": "tan-large-door-animation",
+        "frame": null,
+        "notes": "Preserve the complete animation strip.",
+        "placement": null
+      },
+      {
+        "name": "tan-small-door-animation",
+        "box": [
+          416,
+          256,
+          64,
+          32
+        ],
+        "kind": "structure",
+        "group": "tan-small-door-animation",
+        "frame": null,
+        "notes": "Preserve the complete animation strip.",
+        "placement": null
+      },
+      {
+        "name": "blue-unlit-candle",
+        "box": [
+          32,
+          288,
+          16,
+          32
+        ],
+        "kind": "prop",
+        "group": "blue-unlit-candle",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null
+      },
+      {
+        "name": "blue-candle-animation",
+        "box": [
+          48,
+          288,
+          128,
+          32
+        ],
+        "kind": "prop",
+        "group": "blue-candle-animation",
+        "frame": null,
+        "notes": "Preserve the complete animation strip.",
+        "placement": null
+      },
+      {
+        "name": "blue-large-door-animation",
+        "box": [
+          192,
+          288,
+          192,
+          32
+        ],
+        "kind": "structure",
+        "group": "blue-large-door-animation",
+        "frame": null,
+        "notes": "Preserve the complete animation strip.",
+        "placement": null
+      },
+      {
+        "name": "blue-small-door-animation",
+        "box": [
+          416,
+          288,
+          64,
+          32
+        ],
+        "kind": "structure",
+        "group": "blue-small-door-animation",
+        "frame": null,
+        "notes": "Preserve the complete animation strip.",
+        "placement": null
+      },
+      {
+        "name": "tan-portcullis-animation",
+        "box": [
+          112,
+          320,
+          288,
+          32
+        ],
+        "kind": "structure",
+        "group": "tan-portcullis-animation",
+        "frame": null,
+        "notes": "Preserve the complete animation strip.",
+        "placement": null
+      },
+      {
+        "name": "blue-portcullis-animation",
+        "box": [
+          112,
+          352,
+          288,
+          32
+        ],
+        "kind": "structure",
+        "group": "blue-portcullis-animation",
+        "frame": null,
+        "notes": "Preserve the complete animation strip.",
+        "placement": null
+      }
+    ],
+    "animated": false,
+    "animationWidths": {
+      "128": 16,
+      "129": 48,
+      "130": 16,
+      "132": 16,
+      "133": 48,
+      "134": 16,
+      "135": 48,
+      "136": 48
+    },
+    "animationHeights": {},
+    "duplicates": [
+      {
+        "number": 126,
+        "reuse": 63
+      }
+    ],
+    "size": [
+      512,
+      384
+    ],
+    "status": "approved-and-processed"
+  }
+]

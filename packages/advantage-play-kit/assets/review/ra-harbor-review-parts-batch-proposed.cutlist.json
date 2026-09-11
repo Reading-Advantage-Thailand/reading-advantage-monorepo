@@ -1,0 +1,3305 @@
+[
+  {
+    "name": "ship-hull",
+    "box": [
+      0,
+      144,
+      304,
+      176
+    ],
+    "kind": "part",
+    "group": "ship-hull",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "H01"
+  },
+  {
+    "name": "sailing-ship",
+    "box": [
+      0,
+      320,
+      304,
+      256
+    ],
+    "kind": "part",
+    "group": "sailing-ship",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "H02"
+  },
+  {
+    "name": "sail",
+    "box": [
+      176,
+      0,
+      128,
+      144
+    ],
+    "kind": "part",
+    "group": "sail",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "H03"
+  },
+  {
+    "name": "mast",
+    "box": [
+      32,
+      0,
+      32,
+      144
+    ],
+    "kind": "part",
+    "group": "mast",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "H04"
+  },
+  {
+    "name": "rowboat-left",
+    "box": [
+      304,
+      256,
+      64,
+      48
+    ],
+    "kind": "part",
+    "group": "rowboat-left",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "H05"
+  },
+  {
+    "name": "rowboat-right",
+    "box": [
+      368,
+      256,
+      64,
+      48
+    ],
+    "kind": "part",
+    "group": "rowboat-right",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "H06"
+  },
+  {
+    "name": "rowboat-small-left",
+    "box": [
+      320,
+      304,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "rowboat-small-left",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "H07"
+  },
+  {
+    "name": "rowboat-small-right",
+    "box": [
+      368,
+      304,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "rowboat-small-right",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "H08"
+  },
+  {
+    "name": "rowboat-crates-top",
+    "box": [
+      432,
+      272,
+      80,
+      48
+    ],
+    "kind": "part",
+    "group": "rowboat-crates-top",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "H09"
+  },
+  {
+    "name": "rowboat-crates-bottom",
+    "box": [
+      432,
+      320,
+      80,
+      64
+    ],
+    "kind": "part",
+    "group": "rowboat-crates-bottom",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "H10"
+  },
+  {
+    "name": "cabin-boat-left",
+    "box": [
+      320,
+      384,
+      96,
+      80
+    ],
+    "kind": "part",
+    "group": "cabin-boat-left",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "H11"
+  },
+  {
+    "name": "cabin-boat-right",
+    "box": [
+      416,
+      384,
+      96,
+      80
+    ],
+    "kind": "part",
+    "group": "cabin-boat-right",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "H12"
+  },
+  {
+    "name": "bridge-dock",
+    "box": [
+      336,
+      464,
+      144,
+      112
+    ],
+    "kind": "part",
+    "group": "bridge-dock",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "H13"
+  },
+  {
+    "name": "ladder-dock",
+    "box": [
+      320,
+      496,
+      16,
+      80
+    ],
+    "kind": "part",
+    "group": "ladder-dock",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "H14"
+  },
+  {
+    "name": "table-top",
+    "box": [
+      352,
+      144,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "table-top",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "H15"
+  },
+  {
+    "name": "table-right",
+    "box": [
+      400,
+      144,
+      16,
+      48
+    ],
+    "kind": "part",
+    "group": "table-right",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "H16"
+  },
+  {
+    "name": "chair-top",
+    "box": [
+      384,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "chair-top",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "H17"
+  },
+  {
+    "name": "chair-bottom",
+    "box": [
+      384,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "chair-bottom",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "H18"
+  },
+  {
+    "name": "treasure-left",
+    "box": [
+      448,
+      144,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "treasure-left",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "H19"
+  },
+  {
+    "name": "treasure-right",
+    "box": [
+      480,
+      144,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "treasure-right",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "H20"
+  },
+  {
+    "name": "hatch-grate",
+    "box": [
+      464,
+      208,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "hatch-grate",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "H21"
+  },
+  {
+    "name": "hatch-80",
+    "box": [
+      80,
+      80,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "hatch-80",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "H22"
+  },
+  {
+    "name": "hatch-112",
+    "box": [
+      112,
+      80,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "hatch-112",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "H23"
+  },
+  {
+    "name": "table-cards-top-448",
+    "box": [
+      448,
+      176,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "table-cards-top-448",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "H24"
+  },
+  {
+    "name": "table-cards-top-480",
+    "box": [
+      480,
+      176,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "table-cards-top-480",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "H25"
+  },
+  {
+    "name": "table-cards-bottom-384",
+    "box": [
+      384,
+      224,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "table-cards-bottom-384",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "H26"
+  },
+  {
+    "name": "table-cards-bottom-416",
+    "box": [
+      416,
+      224,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "table-cards-bottom-416",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "H27"
+  },
+  {
+    "name": "cabinet-304",
+    "box": [
+      304,
+      192,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "cabinet-304",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "H28"
+  },
+  {
+    "name": "cabinet-320",
+    "box": [
+      320,
+      192,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "cabinet-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "H29"
+  },
+  {
+    "name": "cabinet-336",
+    "box": [
+      336,
+      192,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "cabinet-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "H30"
+  },
+  {
+    "name": "cabinet-368",
+    "box": [
+      368,
+      192,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "cabinet-368",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "H31"
+  },
+  {
+    "name": "cabinet-384",
+    "box": [
+      384,
+      192,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "cabinet-384",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "H32"
+  },
+  {
+    "name": "cabinet-400",
+    "box": [
+      400,
+      192,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "cabinet-400",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "H33"
+  },
+  {
+    "name": "cabinet-short-352-192",
+    "box": [
+      352,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "cabinet-short-352-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "H34"
+  },
+  {
+    "name": "cabinet-short-352-208",
+    "box": [
+      352,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "cabinet-short-352-208",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "H35"
+  },
+  {
+    "name": "cabinet-short-416-192",
+    "box": [
+      416,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "cabinet-short-416-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "H36"
+  },
+  {
+    "name": "cabinet-short-416-208",
+    "box": [
+      416,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "cabinet-short-416-208",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "H37"
+  },
+  {
+    "name": "barrel-shelf-304",
+    "box": [
+      304,
+      224,
+      48,
+      32
+    ],
+    "kind": "part",
+    "group": "barrel-shelf-304",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "H38"
+  },
+  {
+    "name": "barrel-shelf-352",
+    "box": [
+      352,
+      224,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "barrel-shelf-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "H39"
+  },
+  {
+    "name": "tile-2-1",
+    "box": [
+      16,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-2-1",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H40"
+  },
+  {
+    "name": "tile-6-1",
+    "box": [
+      80,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-6-1",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H41"
+  },
+  {
+    "name": "tile-7-1",
+    "box": [
+      96,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-7-1",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H42"
+  },
+  {
+    "name": "tile-8-1",
+    "box": [
+      112,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-8-1",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H43"
+  },
+  {
+    "name": "tile-9-1",
+    "box": [
+      128,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-9-1",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H44"
+  },
+  {
+    "name": "tile-10-1",
+    "box": [
+      144,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-1",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H45"
+  },
+  {
+    "name": "tile-20-1",
+    "box": [
+      304,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-20-1",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H46"
+  },
+  {
+    "name": "tile-21-1",
+    "box": [
+      320,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-21-1",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H47"
+  },
+  {
+    "name": "tile-22-1",
+    "box": [
+      336,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-22-1",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H48"
+  },
+  {
+    "name": "tile-23-1",
+    "box": [
+      352,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-23-1",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H49"
+  },
+  {
+    "name": "tile-24-1",
+    "box": [
+      368,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-24-1",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H50"
+  },
+  {
+    "name": "tile-25-1",
+    "box": [
+      384,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H40. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "H51",
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H40",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-harbor-source-c0ab42220b13.png",
+      "box": [
+        16,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-26-1",
+    "box": [
+      400,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-26-1",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H52"
+  },
+  {
+    "name": "tile-27-1",
+    "box": [
+      416,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-27-1",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H53"
+  },
+  {
+    "name": "tile-28-1",
+    "box": [
+      432,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-28-1",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H54"
+  },
+  {
+    "name": "tile-29-1",
+    "box": [
+      448,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-29-1",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H55"
+  },
+  {
+    "name": "tile-30-1",
+    "box": [
+      464,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-30-1",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H56"
+  },
+  {
+    "name": "tile-31-1",
+    "box": [
+      480,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-31-1",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H57"
+  },
+  {
+    "name": "tile-32-1",
+    "box": [
+      496,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-32-1",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H58"
+  },
+  {
+    "name": "tile-6-2",
+    "box": [
+      80,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-6-2",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H59"
+  },
+  {
+    "name": "tile-7-2",
+    "box": [
+      96,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-7-2",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H60"
+  },
+  {
+    "name": "tile-8-2",
+    "box": [
+      112,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-8-2",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H61"
+  },
+  {
+    "name": "tile-9-2",
+    "box": [
+      128,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-9-2",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H62"
+  },
+  {
+    "name": "tile-10-2",
+    "box": [
+      144,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-2",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H63"
+  },
+  {
+    "name": "tile-20-2",
+    "box": [
+      304,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-20-2",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H64"
+  },
+  {
+    "name": "tile-21-2",
+    "box": [
+      320,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-21-2",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H65"
+  },
+  {
+    "name": "tile-22-2",
+    "box": [
+      336,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-22-2",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H66"
+  },
+  {
+    "name": "tile-23-2",
+    "box": [
+      352,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-23-2",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H67"
+  },
+  {
+    "name": "tile-24-2",
+    "box": [
+      368,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-24-2",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H68"
+  },
+  {
+    "name": "tile-25-2",
+    "box": [
+      384,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H40. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "H69",
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H40",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-harbor-source-c0ab42220b13.png",
+      "box": [
+        16,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-26-2",
+    "box": [
+      400,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-26-2",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H70"
+  },
+  {
+    "name": "tile-27-2",
+    "box": [
+      416,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-27-2",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H71"
+  },
+  {
+    "name": "tile-29-2",
+    "box": [
+      448,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-29-2",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H72"
+  },
+  {
+    "name": "tile-30-2",
+    "box": [
+      464,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-30-2",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H73"
+  },
+  {
+    "name": "tile-31-2",
+    "box": [
+      480,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-31-2",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H74"
+  },
+  {
+    "name": "tile-32-2",
+    "box": [
+      496,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-32-2",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H75"
+  },
+  {
+    "name": "tile-6-3",
+    "box": [
+      80,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-6-3",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H76"
+  },
+  {
+    "name": "tile-7-3",
+    "box": [
+      96,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H52. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "H77",
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H52",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-harbor-source-c0ab42220b13.png",
+      "box": [
+        400,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-8-3",
+    "box": [
+      112,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H53. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "H78",
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H53",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-harbor-source-c0ab42220b13.png",
+      "box": [
+        416,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-9-3",
+    "box": [
+      128,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-9-3",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H79"
+  },
+  {
+    "name": "tile-10-3",
+    "box": [
+      144,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-3",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H80"
+  },
+  {
+    "name": "tile-20-3",
+    "box": [
+      304,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H64. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "H81",
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H64",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-harbor-source-c0ab42220b13.png",
+      "box": [
+        304,
+        16,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-22-3",
+    "box": [
+      336,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H66. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "H82",
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H66",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-harbor-source-c0ab42220b13.png",
+      "box": [
+        336,
+        16,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-23-3",
+    "box": [
+      352,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H65. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "H83",
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H65",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-harbor-source-c0ab42220b13.png",
+      "box": [
+        320,
+        16,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-24-3",
+    "box": [
+      368,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H65. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "H84",
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H65",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-harbor-source-c0ab42220b13.png",
+      "box": [
+        320,
+        16,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-27-3",
+    "box": [
+      416,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-27-3",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H85"
+  },
+  {
+    "name": "tile-29-3",
+    "box": [
+      448,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-29-3",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H86"
+  },
+  {
+    "name": "tile-30-3",
+    "box": [
+      464,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-30-3",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H87"
+  },
+  {
+    "name": "tile-31-3",
+    "box": [
+      480,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-31-3",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H88"
+  },
+  {
+    "name": "tile-32-3",
+    "box": [
+      496,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-32-3",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H89"
+  },
+  {
+    "name": "tile-6-4",
+    "box": [
+      80,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-6-4",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H90"
+  },
+  {
+    "name": "tile-7-4",
+    "box": [
+      96,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-7-4",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H91"
+  },
+  {
+    "name": "tile-8-4",
+    "box": [
+      112,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-8-4",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H92"
+  },
+  {
+    "name": "tile-10-4",
+    "box": [
+      144,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-4",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H93"
+  },
+  {
+    "name": "tile-20-4",
+    "box": [
+      304,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-20-4",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H94"
+  },
+  {
+    "name": "tile-21-4",
+    "box": [
+      320,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-21-4",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H95"
+  },
+  {
+    "name": "tile-22-4",
+    "box": [
+      336,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-22-4",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H96"
+  },
+  {
+    "name": "tile-26-4",
+    "box": [
+      400,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-26-4",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H97"
+  },
+  {
+    "name": "tile-27-4",
+    "box": [
+      416,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-27-4",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H98"
+  },
+  {
+    "name": "tile-28-4",
+    "box": [
+      432,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-28-4",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H99"
+  },
+  {
+    "name": "tile-29-4",
+    "box": [
+      448,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-29-4",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H100"
+  },
+  {
+    "name": "tile-30-4",
+    "box": [
+      464,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-30-4",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H101"
+  },
+  {
+    "name": "tile-31-4",
+    "box": [
+      480,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-31-4",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H102"
+  },
+  {
+    "name": "tile-32-4",
+    "box": [
+      496,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-32-4",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H103"
+  },
+  {
+    "name": "tile-6-5",
+    "box": [
+      80,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-6-5",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H104"
+  },
+  {
+    "name": "tile-8-5",
+    "box": [
+      112,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-8-5",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H105"
+  },
+  {
+    "name": "tile-9-5",
+    "box": [
+      128,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-9-5",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H106"
+  },
+  {
+    "name": "tile-10-5",
+    "box": [
+      144,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-5",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H107"
+  },
+  {
+    "name": "tile-20-5",
+    "box": [
+      304,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-20-5",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H108"
+  },
+  {
+    "name": "tile-21-5",
+    "box": [
+      320,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-21-5",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H109"
+  },
+  {
+    "name": "tile-22-5",
+    "box": [
+      336,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-22-5",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H110"
+  },
+  {
+    "name": "tile-23-5",
+    "box": [
+      352,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-23-5",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H111"
+  },
+  {
+    "name": "tile-24-5",
+    "box": [
+      368,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-24-5",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H112"
+  },
+  {
+    "name": "tile-10-6",
+    "box": [
+      144,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-6",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H113"
+  },
+  {
+    "name": "tile-20-6",
+    "box": [
+      304,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-20-6",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H114"
+  },
+  {
+    "name": "tile-21-6",
+    "box": [
+      320,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H65. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "H115",
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H65",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-harbor-source-c0ab42220b13.png",
+      "box": [
+        320,
+        16,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-22-6",
+    "box": [
+      336,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-22-6",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H116"
+  },
+  {
+    "name": "tile-23-6",
+    "box": [
+      352,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H116. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "H117",
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H116",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-harbor-source-c0ab42220b13.png",
+      "box": [
+        336,
+        80,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-24-6",
+    "box": [
+      368,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H114. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "H118",
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H114",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-harbor-source-c0ab42220b13.png",
+      "box": [
+        304,
+        80,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-25-6",
+    "box": [
+      384,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H109. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "H119",
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H109",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-harbor-source-c0ab42220b13.png",
+      "box": [
+        320,
+        64,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-26-6",
+    "box": [
+      400,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H47. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "H120",
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H47",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-harbor-source-c0ab42220b13.png",
+      "box": [
+        320,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-27-6",
+    "box": [
+      416,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-27-6",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H121"
+  },
+  {
+    "name": "tile-28-6",
+    "box": [
+      432,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H67. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "H122",
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H67",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-harbor-source-c0ab42220b13.png",
+      "box": [
+        352,
+        16,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-29-6",
+    "box": [
+      448,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H68. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "H123",
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H68",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-harbor-source-c0ab42220b13.png",
+      "box": [
+        368,
+        16,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-30-6",
+    "box": [
+      464,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-30-6",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H124"
+  },
+  {
+    "name": "tile-31-6",
+    "box": [
+      480,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H47. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "H125",
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H47",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-harbor-source-c0ab42220b13.png",
+      "box": [
+        320,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-32-6",
+    "box": [
+      496,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H109. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "H126",
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H109",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-harbor-source-c0ab42220b13.png",
+      "box": [
+        320,
+        64,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-10-7",
+    "box": [
+      144,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-7",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H127"
+  },
+  {
+    "name": "tile-20-7",
+    "box": [
+      304,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H114. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "H128",
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H114",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-harbor-source-c0ab42220b13.png",
+      "box": [
+        304,
+        80,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-22-7",
+    "box": [
+      336,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H116. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "H129",
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H116",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-harbor-source-c0ab42220b13.png",
+      "box": [
+        336,
+        80,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-23-7",
+    "box": [
+      352,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-23-7",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H130"
+  },
+  {
+    "name": "tile-24-7",
+    "box": [
+      368,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-24-7",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H131"
+  },
+  {
+    "name": "tile-25-7",
+    "box": [
+      384,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-25-7",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H132"
+  },
+  {
+    "name": "tile-26-7",
+    "box": [
+      400,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H132. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "H133",
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H132",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-harbor-source-c0ab42220b13.png",
+      "box": [
+        384,
+        96,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-27-7",
+    "box": [
+      416,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H132. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "H134",
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H132",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-harbor-source-c0ab42220b13.png",
+      "box": [
+        384,
+        96,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-28-7",
+    "box": [
+      432,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H132. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "H135",
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H132",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-harbor-source-c0ab42220b13.png",
+      "box": [
+        384,
+        96,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-29-7",
+    "box": [
+      448,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-29-7",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H136"
+  },
+  {
+    "name": "tile-30-7",
+    "box": [
+      464,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H136. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "H137",
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H136",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-harbor-source-c0ab42220b13.png",
+      "box": [
+        448,
+        96,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-31-7",
+    "box": [
+      480,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H136. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "H138",
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H136",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-harbor-source-c0ab42220b13.png",
+      "box": [
+        448,
+        96,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-32-7",
+    "box": [
+      496,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H136. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "H139",
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H136",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-harbor-source-c0ab42220b13.png",
+      "box": [
+        448,
+        96,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-20-8",
+    "box": [
+      304,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-20-8",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H140"
+  },
+  {
+    "name": "tile-21-8",
+    "box": [
+      320,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-21-8",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H141"
+  },
+  {
+    "name": "tile-22-8",
+    "box": [
+      336,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-22-8",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H142"
+  },
+  {
+    "name": "tile-23-8",
+    "box": [
+      352,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-23-8",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H143"
+  },
+  {
+    "name": "tile-24-8",
+    "box": [
+      368,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H143. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "H144",
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H143",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-harbor-source-c0ab42220b13.png",
+      "box": [
+        352,
+        112,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-25-8",
+    "box": [
+      384,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-25-8",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H145"
+  },
+  {
+    "name": "tile-26-8",
+    "box": [
+      400,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H145. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "H146",
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H145",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-harbor-source-c0ab42220b13.png",
+      "box": [
+        384,
+        112,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-27-8",
+    "box": [
+      416,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H145. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "H147",
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H145",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-harbor-source-c0ab42220b13.png",
+      "box": [
+        384,
+        112,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-28-8",
+    "box": [
+      432,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H145. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "H148",
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H145",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-harbor-source-c0ab42220b13.png",
+      "box": [
+        384,
+        112,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-29-8",
+    "box": [
+      448,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-29-8",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H149"
+  },
+  {
+    "name": "tile-30-8",
+    "box": [
+      464,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H149. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "H150",
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H149",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-harbor-source-c0ab42220b13.png",
+      "box": [
+        448,
+        112,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-31-8",
+    "box": [
+      480,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H149. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "H151",
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H149",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-harbor-source-c0ab42220b13.png",
+      "box": [
+        448,
+        112,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-32-8",
+    "box": [
+      496,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H149. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "H152",
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H149",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-harbor-source-c0ab42220b13.png",
+      "box": [
+        448,
+        112,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-25-9",
+    "box": [
+      384,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H141. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "H153",
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H141",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-harbor-source-c0ab42220b13.png",
+      "box": [
+        320,
+        112,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-26-9",
+    "box": [
+      400,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H95. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "H154",
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H95",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-harbor-source-c0ab42220b13.png",
+      "box": [
+        320,
+        48,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-27-9",
+    "box": [
+      416,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-27-9",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H155"
+  },
+  {
+    "name": "tile-28-9",
+    "box": [
+      432,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H49. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "H156",
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H49",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-harbor-source-c0ab42220b13.png",
+      "box": [
+        352,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-29-9",
+    "box": [
+      448,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H50. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "H157",
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H50",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-harbor-source-c0ab42220b13.png",
+      "box": [
+        368,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-30-9",
+    "box": [
+      464,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-30-9",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H158"
+  },
+  {
+    "name": "tile-31-9",
+    "box": [
+      480,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H95. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "H159",
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H95",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-harbor-source-c0ab42220b13.png",
+      "box": [
+        320,
+        48,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-32-9",
+    "box": [
+      496,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H141. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "H160",
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H141",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-harbor-source-c0ab42220b13.png",
+      "box": [
+        320,
+        112,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-20-10",
+    "box": [
+      304,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H90. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "H161",
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H90",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-harbor-source-c0ab42220b13.png",
+      "box": [
+        80,
+        48,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-21-10",
+    "box": [
+      320,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H91. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "H162",
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H91",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-harbor-source-c0ab42220b13.png",
+      "box": [
+        96,
+        48,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-22-10",
+    "box": [
+      336,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H92. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "H163",
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H92",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-harbor-source-c0ab42220b13.png",
+      "box": [
+        112,
+        48,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-25-10",
+    "box": [
+      384,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-25-10",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H164"
+  },
+  {
+    "name": "tile-27-10",
+    "box": [
+      416,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-27-10",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H165"
+  },
+  {
+    "name": "tile-28-10",
+    "box": [
+      432,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-28-10",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H166"
+  },
+  {
+    "name": "tile-20-11",
+    "box": [
+      304,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H105. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "H167",
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H105",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-harbor-source-c0ab42220b13.png",
+      "box": [
+        112,
+        64,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-21-11",
+    "box": [
+      320,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H106. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "H168",
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H106",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-harbor-source-c0ab42220b13.png",
+      "box": [
+        128,
+        64,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-22-11",
+    "box": [
+      336,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H104. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "H169",
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H104",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-harbor-source-c0ab42220b13.png",
+      "box": [
+        80,
+        64,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-27-11",
+    "box": [
+      416,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-27-11",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H170"
+  },
+  {
+    "name": "tile-28-11",
+    "box": [
+      432,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-28-11",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H171"
+  },
+  {
+    "name": "tile-23-12",
+    "box": [
+      352,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-23-12",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H172"
+  },
+  {
+    "name": "tile-24-12",
+    "box": [
+      368,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-24-12",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H173"
+  },
+  {
+    "name": "tile-29-15",
+    "box": [
+      448,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-29-15",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H174"
+  },
+  {
+    "name": "tile-29-16",
+    "box": [
+      448,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-29-16",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H175"
+  },
+  {
+    "name": "tile-28-17",
+    "box": [
+      432,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-28-17",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H176"
+  },
+  {
+    "name": "tile-29-17",
+    "box": [
+      448,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-29-17",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H177"
+  },
+  {
+    "name": "tile-30-17",
+    "box": [
+      464,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H177. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "H178",
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H177",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-harbor-source-c0ab42220b13.png",
+      "box": [
+        448,
+        256,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-31-17",
+    "box": [
+      480,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H177. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "H179",
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H177",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-harbor-source-c0ab42220b13.png",
+      "box": [
+        448,
+        256,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-32-17",
+    "box": [
+      496,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-32-17",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H180"
+  },
+  {
+    "name": "tile-31-30",
+    "box": [
+      480,
+      464,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-31-30",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H181"
+  },
+  {
+    "name": "tile-32-30",
+    "box": [
+      496,
+      464,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H181. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "H182",
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H181",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-harbor-source-c0ab42220b13.png",
+      "box": [
+        480,
+        464,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-31-31",
+    "box": [
+      480,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-31-31",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H183"
+  },
+  {
+    "name": "tile-32-31",
+    "box": [
+      496,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-32-31",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "H184"
+  },
+  {
+    "name": "tile-32-32",
+    "box": [
+      496,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H183. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "H185",
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H183",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-harbor-source-c0ab42220b13.png",
+      "box": [
+        480,
+        480,
+        16,
+        16
+      ]
+    }
+  }
+]

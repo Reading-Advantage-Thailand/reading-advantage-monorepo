@@ -1,0 +1,4541 @@
+[
+  {
+    "name": "door-animation-1",
+    "box": [
+      48,
+      304,
+      384,
+      32
+    ],
+    "kind": "part",
+    "group": "door-animation-1",
+    "frame": null,
+    "notes": "8 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        48,
+        304,
+        48,
+        32
+      ],
+      [
+        96,
+        304,
+        48,
+        32
+      ],
+      [
+        144,
+        304,
+        48,
+        32
+      ],
+      [
+        192,
+        304,
+        48,
+        32
+      ],
+      [
+        240,
+        304,
+        48,
+        32
+      ],
+      [
+        288,
+        304,
+        48,
+        32
+      ],
+      [
+        336,
+        304,
+        48,
+        32
+      ],
+      [
+        384,
+        304,
+        48,
+        32
+      ]
+    ],
+    "reviewId": "S01"
+  },
+  {
+    "name": "door-animation-2",
+    "box": [
+      48,
+      336,
+      384,
+      32
+    ],
+    "kind": "part",
+    "group": "door-animation-2",
+    "frame": null,
+    "notes": "8 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        48,
+        336,
+        48,
+        32
+      ],
+      [
+        96,
+        336,
+        48,
+        32
+      ],
+      [
+        144,
+        336,
+        48,
+        32
+      ],
+      [
+        192,
+        336,
+        48,
+        32
+      ],
+      [
+        240,
+        336,
+        48,
+        32
+      ],
+      [
+        288,
+        336,
+        48,
+        32
+      ],
+      [
+        336,
+        336,
+        48,
+        32
+      ],
+      [
+        384,
+        336,
+        48,
+        32
+      ]
+    ],
+    "reviewId": "S02"
+  },
+  {
+    "name": "door-animation-3",
+    "box": [
+      48,
+      368,
+      384,
+      32
+    ],
+    "kind": "part",
+    "group": "door-animation-3",
+    "frame": null,
+    "notes": "8 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        48,
+        368,
+        48,
+        32
+      ],
+      [
+        96,
+        368,
+        48,
+        32
+      ],
+      [
+        144,
+        368,
+        48,
+        32
+      ],
+      [
+        192,
+        368,
+        48,
+        32
+      ],
+      [
+        240,
+        368,
+        48,
+        32
+      ],
+      [
+        288,
+        368,
+        48,
+        32
+      ],
+      [
+        336,
+        368,
+        48,
+        32
+      ],
+      [
+        384,
+        368,
+        48,
+        32
+      ]
+    ],
+    "reviewId": "S03"
+  },
+  {
+    "name": "door-animation-4",
+    "box": [
+      48,
+      400,
+      384,
+      32
+    ],
+    "kind": "part",
+    "group": "door-animation-4",
+    "frame": null,
+    "notes": "8 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        48,
+        400,
+        48,
+        32
+      ],
+      [
+        96,
+        400,
+        48,
+        32
+      ],
+      [
+        144,
+        400,
+        48,
+        32
+      ],
+      [
+        192,
+        400,
+        48,
+        32
+      ],
+      [
+        240,
+        400,
+        48,
+        32
+      ],
+      [
+        288,
+        400,
+        48,
+        32
+      ],
+      [
+        336,
+        400,
+        48,
+        32
+      ],
+      [
+        384,
+        400,
+        48,
+        32
+      ]
+    ],
+    "reviewId": "S04"
+  },
+  {
+    "name": "door-animation-5",
+    "box": [
+      48,
+      432,
+      384,
+      32
+    ],
+    "kind": "part",
+    "group": "door-animation-5",
+    "frame": null,
+    "notes": "8 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        48,
+        432,
+        48,
+        32
+      ],
+      [
+        96,
+        432,
+        48,
+        32
+      ],
+      [
+        144,
+        432,
+        48,
+        32
+      ],
+      [
+        192,
+        432,
+        48,
+        32
+      ],
+      [
+        240,
+        432,
+        48,
+        32
+      ],
+      [
+        288,
+        432,
+        48,
+        32
+      ],
+      [
+        336,
+        432,
+        48,
+        32
+      ],
+      [
+        384,
+        432,
+        48,
+        32
+      ]
+    ],
+    "reviewId": "S05"
+  },
+  {
+    "name": "flame-animation-left",
+    "box": [
+      96,
+      272,
+      128,
+      32
+    ],
+    "kind": "part",
+    "group": "flame-animation-left",
+    "frame": null,
+    "notes": "8 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        96,
+        272,
+        16,
+        32
+      ],
+      [
+        112,
+        272,
+        16,
+        32
+      ],
+      [
+        128,
+        272,
+        16,
+        32
+      ],
+      [
+        144,
+        272,
+        16,
+        32
+      ],
+      [
+        160,
+        272,
+        16,
+        32
+      ],
+      [
+        176,
+        272,
+        16,
+        32
+      ],
+      [
+        192,
+        272,
+        16,
+        32
+      ],
+      [
+        208,
+        272,
+        16,
+        32
+      ]
+    ],
+    "reviewId": "S06"
+  },
+  {
+    "name": "flame-animation-right",
+    "box": [
+      256,
+      272,
+      128,
+      32
+    ],
+    "kind": "part",
+    "group": "flame-animation-right",
+    "frame": null,
+    "notes": "8 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        256,
+        272,
+        16,
+        32
+      ],
+      [
+        272,
+        272,
+        16,
+        32
+      ],
+      [
+        288,
+        272,
+        16,
+        32
+      ],
+      [
+        304,
+        272,
+        16,
+        32
+      ],
+      [
+        320,
+        272,
+        16,
+        32
+      ],
+      [
+        336,
+        272,
+        16,
+        32
+      ],
+      [
+        352,
+        272,
+        16,
+        32
+      ],
+      [
+        368,
+        272,
+        16,
+        32
+      ]
+    ],
+    "reviewId": "S07"
+  },
+  {
+    "name": "door-264-0",
+    "box": [
+      256,
+      0,
+      48,
+      32
+    ],
+    "kind": "part",
+    "group": "door-264-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S08"
+  },
+  {
+    "name": "door-264-32",
+    "box": [
+      256,
+      32,
+      48,
+      32
+    ],
+    "kind": "part",
+    "group": "door-264-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S09"
+  },
+  {
+    "name": "door-312-0",
+    "box": [
+      304,
+      0,
+      48,
+      32
+    ],
+    "kind": "part",
+    "group": "door-312-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S10"
+  },
+  {
+    "name": "door-312-32",
+    "box": [
+      304,
+      32,
+      48,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S09. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "S11",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S09",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-fortress-winter-source-957aa1ff2c72.png",
+      "box": [
+        256,
+        32,
+        48,
+        32
+      ]
+    }
+  },
+  {
+    "name": "door-360-0",
+    "box": [
+      352,
+      0,
+      48,
+      32
+    ],
+    "kind": "part",
+    "group": "door-360-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S12"
+  },
+  {
+    "name": "door-360-32",
+    "box": [
+      352,
+      32,
+      48,
+      32
+    ],
+    "kind": "part",
+    "group": "door-360-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S13"
+  },
+  {
+    "name": "door-408-0",
+    "box": [
+      400,
+      0,
+      48,
+      32
+    ],
+    "kind": "part",
+    "group": "door-408-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S14"
+  },
+  {
+    "name": "door-408-32",
+    "box": [
+      400,
+      32,
+      48,
+      32
+    ],
+    "kind": "part",
+    "group": "door-408-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S15"
+  },
+  {
+    "name": "door-456-0",
+    "box": [
+      448,
+      0,
+      48,
+      32
+    ],
+    "kind": "part",
+    "group": "door-456-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S16"
+  },
+  {
+    "name": "door-456-32",
+    "box": [
+      448,
+      32,
+      48,
+      32
+    ],
+    "kind": "part",
+    "group": "door-456-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S17"
+  },
+  {
+    "name": "arch-256-64",
+    "box": [
+      256,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "arch-256-64",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S18"
+  },
+  {
+    "name": "arch-256-80",
+    "box": [
+      256,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "arch-256-80",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S19"
+  },
+  {
+    "name": "arch-256-96",
+    "box": [
+      256,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "arch-256-96",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S20"
+  },
+  {
+    "name": "arch-256-112",
+    "box": [
+      256,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "arch-256-112",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S21"
+  },
+  {
+    "name": "arch-272-64",
+    "box": [
+      272,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "arch-272-64",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S22"
+  },
+  {
+    "name": "arch-272-80",
+    "box": [
+      272,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "arch-272-80",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S23"
+  },
+  {
+    "name": "arch-272-96",
+    "box": [
+      272,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "arch-272-96",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S24"
+  },
+  {
+    "name": "arch-272-112",
+    "box": [
+      272,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "arch-272-112",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S25"
+  },
+  {
+    "name": "arch-360-64",
+    "box": [
+      360,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "arch-360-64",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S26"
+  },
+  {
+    "name": "arch-360-80",
+    "box": [
+      360,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S19. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "S27",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S19",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-fortress-winter-source-957aa1ff2c72.png",
+      "box": [
+        256,
+        80,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "arch-360-96",
+    "box": [
+      360,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "arch-360-96",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S28"
+  },
+  {
+    "name": "arch-360-112",
+    "box": [
+      360,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S21. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "S29",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S21",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-fortress-winter-source-957aa1ff2c72.png",
+      "box": [
+        256,
+        112,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "arch-288-72",
+    "box": [
+      288,
+      72,
+      16,
+      24
+    ],
+    "kind": "part",
+    "group": "arch-288-72",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S30"
+  },
+  {
+    "name": "arch-288-104",
+    "box": [
+      288,
+      104,
+      16,
+      24
+    ],
+    "kind": "part",
+    "group": "arch-288-104",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S31"
+  },
+  {
+    "name": "arch-304-72",
+    "box": [
+      304,
+      72,
+      16,
+      24
+    ],
+    "kind": "part",
+    "group": "arch-304-72",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S32"
+  },
+  {
+    "name": "arch-304-104",
+    "box": [
+      304,
+      104,
+      16,
+      24
+    ],
+    "kind": "part",
+    "group": "arch-304-104",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S33"
+  },
+  {
+    "name": "arch-320-72",
+    "box": [
+      320,
+      72,
+      16,
+      24
+    ],
+    "kind": "part",
+    "group": "arch-320-72",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S34"
+  },
+  {
+    "name": "arch-320-104",
+    "box": [
+      320,
+      104,
+      16,
+      24
+    ],
+    "kind": "part",
+    "group": "arch-320-104",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S35"
+  },
+  {
+    "name": "arch-336-72",
+    "box": [
+      336,
+      72,
+      16,
+      24
+    ],
+    "kind": "part",
+    "group": "arch-336-72",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S36"
+  },
+  {
+    "name": "arch-336-104",
+    "box": [
+      336,
+      104,
+      16,
+      24
+    ],
+    "kind": "part",
+    "group": "arch-336-104",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S37"
+  },
+  {
+    "name": "dark-opening-384-64",
+    "box": [
+      384,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "dark-opening-384-64",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S38"
+  },
+  {
+    "name": "dark-opening-384-80",
+    "box": [
+      384,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "dark-opening-384-80",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S39"
+  },
+  {
+    "name": "dark-opening-384-96",
+    "box": [
+      384,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "dark-opening-384-96",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S40"
+  },
+  {
+    "name": "dark-opening-384-112",
+    "box": [
+      384,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "dark-opening-384-112",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S41"
+  },
+  {
+    "name": "dark-opening-440-64",
+    "box": [
+      440,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S38. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "S42",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S38",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-fortress-winter-source-957aa1ff2c72.png",
+      "box": [
+        384,
+        64,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "dark-opening-440-80",
+    "box": [
+      440,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S39. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "S43",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S39",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-fortress-winter-source-957aa1ff2c72.png",
+      "box": [
+        384,
+        80,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "dark-opening-440-96",
+    "box": [
+      440,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S40. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "S44",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S40",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-fortress-winter-source-957aa1ff2c72.png",
+      "box": [
+        384,
+        96,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "dark-opening-440-112",
+    "box": [
+      440,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S41. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "S45",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S41",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-fortress-winter-source-957aa1ff2c72.png",
+      "box": [
+        384,
+        112,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "dark-opening-400-72",
+    "box": [
+      400,
+      72,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S38. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "S46",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S38",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-fortress-winter-source-957aa1ff2c72.png",
+      "box": [
+        384,
+        64,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "dark-opening-400-100",
+    "box": [
+      400,
+      100,
+      16,
+      24
+    ],
+    "kind": "part",
+    "group": "dark-opening-400-100",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S47"
+  },
+  {
+    "name": "dark-opening-416-72",
+    "box": [
+      416,
+      72,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S39. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "S48",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S39",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-fortress-winter-source-957aa1ff2c72.png",
+      "box": [
+        384,
+        80,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "dark-opening-416-100",
+    "box": [
+      416,
+      100,
+      16,
+      24
+    ],
+    "kind": "part",
+    "group": "dark-opening-416-100",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S49"
+  },
+  {
+    "name": "banner-0",
+    "box": [
+      240,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "banner-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S50"
+  },
+  {
+    "name": "banner-16",
+    "box": [
+      240,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "banner-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S51"
+  },
+  {
+    "name": "banner-32",
+    "box": [
+      240,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "banner-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S52"
+  },
+  {
+    "name": "banner-48",
+    "box": [
+      240,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "banner-48",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S53"
+  },
+  {
+    "name": "banner-64",
+    "box": [
+      240,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "banner-64",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S54"
+  },
+  {
+    "name": "banner-80",
+    "box": [
+      240,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "banner-80",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S55"
+  },
+  {
+    "name": "banner-96",
+    "box": [
+      240,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "banner-96",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S56"
+  },
+  {
+    "name": "banner-112",
+    "box": [
+      240,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "banner-112",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S57"
+  },
+  {
+    "name": "banner-tall-128",
+    "box": [
+      240,
+      128,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "banner-tall-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S58"
+  },
+  {
+    "name": "banner-tall-160",
+    "box": [
+      240,
+      160,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "banner-tall-160",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S59"
+  },
+  {
+    "name": "banner-tall-192",
+    "box": [
+      240,
+      192,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "banner-tall-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S60"
+  },
+  {
+    "name": "banner-tall-224",
+    "box": [
+      240,
+      224,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "banner-tall-224",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S61"
+  },
+  {
+    "name": "cross-small",
+    "box": [
+      256,
+      128,
+      32,
+      48
+    ],
+    "kind": "part",
+    "group": "cross-small",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S62"
+  },
+  {
+    "name": "cross-large",
+    "box": [
+      288,
+      128,
+      32,
+      48
+    ],
+    "kind": "part",
+    "group": "cross-large",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S63"
+  },
+  {
+    "name": "pedestal-short",
+    "box": [
+      320,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "pedestal-short",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S64"
+  },
+  {
+    "name": "pedestal-tall",
+    "box": [
+      320,
+      144,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "pedestal-tall",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S65"
+  },
+  {
+    "name": "wall-narrow",
+    "box": [
+      56,
+      48,
+      32,
+      80
+    ],
+    "kind": "part",
+    "group": "wall-narrow",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S66"
+  },
+  {
+    "name": "wall-ring",
+    "box": [
+      0,
+      40,
+      48,
+      88
+    ],
+    "kind": "part",
+    "group": "wall-ring",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S67"
+  },
+  {
+    "name": "wall-angle-cap",
+    "box": [
+      0,
+      144,
+      64,
+      40
+    ],
+    "kind": "part",
+    "group": "wall-angle-cap",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S68"
+  },
+  {
+    "name": "wall-angle-left",
+    "box": [
+      0,
+      192,
+      64,
+      64
+    ],
+    "kind": "part",
+    "group": "wall-angle-left",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S69"
+  },
+  {
+    "name": "wall-angle-middle-a",
+    "box": [
+      64,
+      184,
+      32,
+      72
+    ],
+    "kind": "part",
+    "group": "wall-angle-middle-a",
+    "frame": null,
+    "notes": "Preserve the complete left wall piece.",
+    "placement": null,
+    "reviewId": "S70a",
+    "reviewChanged": true
+  },
+  {
+    "name": "wall-angle-middle-b",
+    "box": [
+      96,
+      184,
+      32,
+      72
+    ],
+    "kind": "part",
+    "group": "wall-angle-middle-b",
+    "frame": null,
+    "notes": "Preserve the complete right wall piece.",
+    "placement": null,
+    "reviewId": "S70b",
+    "reviewChanged": true
+  },
+  {
+    "name": "wall-angle-right-a",
+    "box": [
+      128,
+      184,
+      32,
+      72
+    ],
+    "kind": "part",
+    "group": "wall-angle-right-a",
+    "frame": null,
+    "notes": "Preserve the complete left wall piece.",
+    "placement": null,
+    "reviewId": "S71a",
+    "reviewChanged": true
+  },
+  {
+    "name": "wall-angle-right-b",
+    "box": [
+      160,
+      184,
+      32,
+      72
+    ],
+    "kind": "part",
+    "group": "wall-angle-right-b",
+    "frame": null,
+    "notes": "Preserve the complete right wall piece.",
+    "placement": null,
+    "reviewId": "S71b",
+    "reviewChanged": true
+  },
+  {
+    "name": "wall-pillar",
+    "box": [
+      192,
+      160,
+      48,
+      80
+    ],
+    "kind": "part",
+    "group": "wall-pillar",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S72"
+  },
+  {
+    "name": "stairs-front",
+    "box": [
+      304,
+      176,
+      64,
+      56
+    ],
+    "kind": "part",
+    "group": "stairs-front",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S73"
+  },
+  {
+    "name": "wall-slope-left",
+    "box": [
+      368,
+      176,
+      48,
+      80
+    ],
+    "kind": "part",
+    "group": "wall-slope-left",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S74"
+  },
+  {
+    "name": "wall-slope-right",
+    "box": [
+      416,
+      176,
+      48,
+      80
+    ],
+    "kind": "part",
+    "group": "wall-slope-right",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S75"
+  },
+  {
+    "name": "cart-64",
+    "box": [
+      64,
+      144,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "cart-64",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S76"
+  },
+  {
+    "name": "cart-96",
+    "box": [
+      96,
+      144,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "cart-96",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S77"
+  },
+  {
+    "name": "cart-128",
+    "box": [
+      128,
+      144,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "cart-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S78"
+  },
+  {
+    "name": "cart-160",
+    "box": [
+      160,
+      144,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "cart-160",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S79"
+  },
+  {
+    "name": "crate-1-1",
+    "box": [
+      336,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "crate-1-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S80"
+  },
+  {
+    "name": "crate-2-1",
+    "box": [
+      352,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "crate-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S81"
+  },
+  {
+    "name": "crate-1-2",
+    "box": [
+      336,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "crate-1-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S82"
+  },
+  {
+    "name": "crate-2-2",
+    "box": [
+      352,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "crate-2-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S83"
+  },
+  {
+    "name": "crate-1-3",
+    "box": [
+      336,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "crate-1-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S84"
+  },
+  {
+    "name": "crate-2-3",
+    "box": [
+      352,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "crate-2-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S85"
+  },
+  {
+    "name": "pot-cluster-1-1",
+    "box": [
+      368,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "pot-cluster-1-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S86"
+  },
+  {
+    "name": "pot-cluster-2-1",
+    "box": [
+      384,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "pot-cluster-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S87"
+  },
+  {
+    "name": "pot-cluster-3-1",
+    "box": [
+      400,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "pot-cluster-3-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S88"
+  },
+  {
+    "name": "pot-cluster-4-1",
+    "box": [
+      416,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "pot-cluster-4-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S89"
+  },
+  {
+    "name": "pot-cluster-1-2",
+    "box": [
+      368,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "pot-cluster-1-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S90"
+  },
+  {
+    "name": "pot-cluster-2-2",
+    "box": [
+      384,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "pot-cluster-2-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S91"
+  },
+  {
+    "name": "pot-cluster-3-2",
+    "box": [
+      400,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "pot-cluster-3-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S92"
+  },
+  {
+    "name": "pot-cluster-1-3",
+    "box": [
+      368,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "pot-cluster-1-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S93"
+  },
+  {
+    "name": "pot-cluster-2-3",
+    "box": [
+      384,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "pot-cluster-2-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S94"
+  },
+  {
+    "name": "pot-cluster-3-3",
+    "box": [
+      400,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "pot-cluster-3-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S95"
+  },
+  {
+    "name": "pot-cluster-4-3",
+    "box": [
+      416,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "pot-cluster-4-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S96"
+  },
+  {
+    "name": "pot-cluster-right-1-1",
+    "box": [
+      432,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "pot-cluster-right-1-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S97"
+  },
+  {
+    "name": "pot-cluster-right-2-1",
+    "box": [
+      448,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "pot-cluster-right-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S98"
+  },
+  {
+    "name": "pot-cluster-right-1-2",
+    "box": [
+      432,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "pot-cluster-right-1-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S99"
+  },
+  {
+    "name": "pot-cluster-right-2-2",
+    "box": [
+      448,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "pot-cluster-right-2-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S100"
+  },
+  {
+    "name": "pillar-1-1",
+    "box": [
+      256,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "pillar-1-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S101"
+  },
+  {
+    "name": "pillar-2-1",
+    "box": [
+      272,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "pillar-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S102"
+  },
+  {
+    "name": "pillar-3-1",
+    "box": [
+      288,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "pillar-3-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S103"
+  },
+  {
+    "name": "pillar-1-2",
+    "box": [
+      256,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "pillar-1-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S104"
+  },
+  {
+    "name": "pillar-2-2",
+    "box": [
+      272,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "pillar-2-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S105"
+  },
+  {
+    "name": "pillar-3-2",
+    "box": [
+      288,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "pillar-3-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S106"
+  },
+  {
+    "name": "pillar-1-3",
+    "box": [
+      256,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "pillar-1-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S107"
+  },
+  {
+    "name": "pillar-3-3",
+    "box": [
+      288,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S107. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "S108",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S107",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-fortress-winter-source-957aa1ff2c72.png",
+      "box": [
+        256,
+        208,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "pillar-1-4",
+    "box": [
+      256,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "pillar-1-4",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S109"
+  },
+  {
+    "name": "pillar-2-4",
+    "box": [
+      272,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "pillar-2-4",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S110"
+  },
+  {
+    "name": "pillar-3-4",
+    "box": [
+      288,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "pillar-3-4",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S111"
+  },
+  {
+    "name": "pillar-1-5",
+    "box": [
+      256,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "pillar-1-5",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S112"
+  },
+  {
+    "name": "pillar-2-5",
+    "box": [
+      272,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "pillar-2-5",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S113"
+  },
+  {
+    "name": "pillar-3-5",
+    "box": [
+      288,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "pillar-3-5",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S114"
+  },
+  {
+    "name": "treasure-1-1",
+    "box": [
+      304,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "treasure-1-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S115"
+  },
+  {
+    "name": "treasure-2-1",
+    "box": [
+      320,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "treasure-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S116"
+  },
+  {
+    "name": "treasure-3-1",
+    "box": [
+      336,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "treasure-3-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S117"
+  },
+  {
+    "name": "treasure-4-1",
+    "box": [
+      352,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "treasure-4-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S118"
+  },
+  {
+    "name": "wall-upper-left-2-1",
+    "box": [
+      16,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-upper-left-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S119"
+  },
+  {
+    "name": "wall-upper-left-3-1",
+    "box": [
+      32,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-upper-left-3-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S120"
+  },
+  {
+    "name": "wall-upper-left-4-1",
+    "box": [
+      48,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-upper-left-4-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S121"
+  },
+  {
+    "name": "wall-upper-left-5-1",
+    "box": [
+      64,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-upper-left-5-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S122"
+  },
+  {
+    "name": "wall-upper-left-6-1",
+    "box": [
+      80,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-upper-left-6-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S123"
+  },
+  {
+    "name": "wall-upper-left-1-2",
+    "box": [
+      0,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-upper-left-1-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S124"
+  },
+  {
+    "name": "wall-upper-left-2-2",
+    "box": [
+      16,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-upper-left-2-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S125"
+  },
+  {
+    "name": "wall-upper-left-3-2",
+    "box": [
+      32,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-upper-left-3-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S126"
+  },
+  {
+    "name": "wall-upper-left-4-2",
+    "box": [
+      48,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-upper-left-4-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S127"
+  },
+  {
+    "name": "wall-upper-left-5-2",
+    "box": [
+      64,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-upper-left-5-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S128"
+  },
+  {
+    "name": "wall-upper-left-6-2",
+    "box": [
+      80,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-upper-left-6-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S129"
+  },
+  {
+    "name": "wall-upper-1-1",
+    "box": [
+      96,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-upper-1-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S130"
+  },
+  {
+    "name": "wall-upper-2-1",
+    "box": [
+      112,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-upper-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S131"
+  },
+  {
+    "name": "wall-upper-3-1",
+    "box": [
+      128,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-upper-3-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S132"
+  },
+  {
+    "name": "wall-upper-4-1",
+    "box": [
+      144,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S130. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "S133",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S130",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-fortress-winter-source-957aa1ff2c72.png",
+      "box": [
+        96,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "wall-upper-5-1",
+    "box": [
+      160,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S131. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "S134",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S131",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-fortress-winter-source-957aa1ff2c72.png",
+      "box": [
+        112,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "wall-upper-6-1",
+    "box": [
+      176,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S132. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "S135",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S132",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-fortress-winter-source-957aa1ff2c72.png",
+      "box": [
+        128,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "wall-upper-7-1",
+    "box": [
+      192,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-upper-7-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S136"
+  },
+  {
+    "name": "wall-upper-8-1",
+    "box": [
+      208,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-upper-8-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S137"
+  },
+  {
+    "name": "wall-upper-9-1",
+    "box": [
+      224,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-upper-9-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S138"
+  },
+  {
+    "name": "wall-upper-1-2",
+    "box": [
+      96,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-upper-1-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S139"
+  },
+  {
+    "name": "wall-upper-2-2",
+    "box": [
+      112,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-upper-2-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S140"
+  },
+  {
+    "name": "wall-upper-3-2",
+    "box": [
+      128,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-upper-3-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S141"
+  },
+  {
+    "name": "wall-upper-4-2",
+    "box": [
+      144,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-upper-4-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S142"
+  },
+  {
+    "name": "wall-upper-5-2",
+    "box": [
+      160,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-upper-5-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S143"
+  },
+  {
+    "name": "wall-upper-6-2",
+    "box": [
+      176,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-upper-6-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S144"
+  },
+  {
+    "name": "wall-upper-7-2",
+    "box": [
+      192,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-upper-7-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S145"
+  },
+  {
+    "name": "wall-upper-8-2",
+    "box": [
+      208,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-upper-8-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S146"
+  },
+  {
+    "name": "wall-upper-9-2",
+    "box": [
+      224,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-upper-9-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S147"
+  },
+  {
+    "name": "wall-upper-1-3",
+    "box": [
+      96,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-upper-1-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S148"
+  },
+  {
+    "name": "wall-upper-2-3",
+    "box": [
+      112,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S124. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "S149",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S124",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-fortress-winter-source-957aa1ff2c72.png",
+      "box": [
+        0,
+        16,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "wall-upper-3-3",
+    "box": [
+      128,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-upper-3-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S150"
+  },
+  {
+    "name": "wall-upper-4-3",
+    "box": [
+      144,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-upper-4-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S151"
+  },
+  {
+    "name": "wall-upper-5-3",
+    "box": [
+      160,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S119. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "S152",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S119",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-fortress-winter-source-957aa1ff2c72.png",
+      "box": [
+        16,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "wall-upper-6-3",
+    "box": [
+      176,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-upper-6-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S153"
+  },
+  {
+    "name": "wall-upper-7-3",
+    "box": [
+      192,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-upper-7-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S154"
+  },
+  {
+    "name": "wall-upper-9-3",
+    "box": [
+      224,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-upper-9-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S155"
+  },
+  {
+    "name": "wall-upper-1-4",
+    "box": [
+      96,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-upper-1-4",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S156"
+  },
+  {
+    "name": "wall-upper-2-4",
+    "box": [
+      112,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-upper-2-4",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S157"
+  },
+  {
+    "name": "wall-upper-3-4",
+    "box": [
+      128,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-upper-3-4",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S158"
+  },
+  {
+    "name": "wall-upper-4-4",
+    "box": [
+      144,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-upper-4-4",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S159"
+  },
+  {
+    "name": "wall-upper-5-4",
+    "box": [
+      160,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-upper-5-4",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S160"
+  },
+  {
+    "name": "wall-upper-6-4",
+    "box": [
+      176,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-upper-6-4",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S161"
+  },
+  {
+    "name": "wall-upper-7-4",
+    "box": [
+      192,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-upper-7-4",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S162"
+  },
+  {
+    "name": "wall-upper-8-4",
+    "box": [
+      208,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-upper-8-4",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S163"
+  },
+  {
+    "name": "wall-upper-9-4",
+    "box": [
+      224,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-upper-9-4",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S164"
+  },
+  {
+    "name": "wall-upper-1-5",
+    "box": [
+      96,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-upper-1-5",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S165"
+  },
+  {
+    "name": "wall-upper-2-5",
+    "box": [
+      112,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S157. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "S166",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S157",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-fortress-winter-source-957aa1ff2c72.png",
+      "box": [
+        112,
+        48,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "wall-upper-3-5",
+    "box": [
+      128,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-upper-3-5",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S167"
+  },
+  {
+    "name": "wall-upper-4-5",
+    "box": [
+      144,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-upper-4-5",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S168"
+  },
+  {
+    "name": "wall-upper-5-5",
+    "box": [
+      160,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S160. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "S169",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S160",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-fortress-winter-source-957aa1ff2c72.png",
+      "box": [
+        160,
+        48,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "wall-upper-6-5",
+    "box": [
+      176,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-upper-6-5",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S170"
+  },
+  {
+    "name": "wall-upper-7-5",
+    "box": [
+      192,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-upper-7-5",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S171"
+  },
+  {
+    "name": "wall-upper-8-5",
+    "box": [
+      208,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-upper-8-5",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S172"
+  },
+  {
+    "name": "wall-upper-9-5",
+    "box": [
+      224,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-upper-9-5",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S173"
+  },
+  {
+    "name": "wall-upper-1-6",
+    "box": [
+      96,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S150. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "S174",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S150",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-fortress-winter-source-957aa1ff2c72.png",
+      "box": [
+        128,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "wall-upper-2-6",
+    "box": [
+      112,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-upper-2-6",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S175"
+  },
+  {
+    "name": "wall-upper-3-6",
+    "box": [
+      128,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-upper-3-6",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S176"
+  },
+  {
+    "name": "wall-upper-4-6",
+    "box": [
+      144,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S153. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "S177",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S153",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-fortress-winter-source-957aa1ff2c72.png",
+      "box": [
+        176,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "wall-upper-5-6",
+    "box": [
+      160,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S175. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "S178",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S175",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-fortress-winter-source-957aa1ff2c72.png",
+      "box": [
+        112,
+        80,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "wall-upper-6-6",
+    "box": [
+      176,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-upper-6-6",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S179"
+  },
+  {
+    "name": "wall-upper-7-6",
+    "box": [
+      192,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-upper-7-6",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S180"
+  },
+  {
+    "name": "wall-upper-8-6",
+    "box": [
+      208,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S175. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "S181",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S175",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-fortress-winter-source-957aa1ff2c72.png",
+      "box": [
+        112,
+        80,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "wall-upper-9-6",
+    "box": [
+      224,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-upper-9-6",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S182"
+  },
+  {
+    "name": "wall-upper-1-7",
+    "box": [
+      96,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S150. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "S183",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S150",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-fortress-winter-source-957aa1ff2c72.png",
+      "box": [
+        128,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "wall-upper-2-7",
+    "box": [
+      112,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-upper-2-7",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S184"
+  },
+  {
+    "name": "wall-upper-3-7",
+    "box": [
+      128,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S176. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "S185",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S176",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-fortress-winter-source-957aa1ff2c72.png",
+      "box": [
+        128,
+        80,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "wall-upper-4-7",
+    "box": [
+      144,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S153. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "S186",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S153",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-fortress-winter-source-957aa1ff2c72.png",
+      "box": [
+        176,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "wall-upper-5-7",
+    "box": [
+      160,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S184. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "S187",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S184",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-fortress-winter-source-957aa1ff2c72.png",
+      "box": [
+        112,
+        96,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "wall-upper-6-7",
+    "box": [
+      176,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S179. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "S188",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S179",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-fortress-winter-source-957aa1ff2c72.png",
+      "box": [
+        176,
+        80,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "wall-upper-7-7",
+    "box": [
+      192,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-upper-7-7",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S189"
+  },
+  {
+    "name": "wall-upper-8-7",
+    "box": [
+      208,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S175. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "S190",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S175",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-fortress-winter-source-957aa1ff2c72.png",
+      "box": [
+        112,
+        80,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "wall-upper-9-7",
+    "box": [
+      224,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-upper-9-7",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S191"
+  },
+  {
+    "name": "wall-upper-1-8",
+    "box": [
+      96,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S150. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "S192",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S150",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-fortress-winter-source-957aa1ff2c72.png",
+      "box": [
+        128,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "wall-upper-2-8",
+    "box": [
+      112,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S131. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "S193",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S131",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-fortress-winter-source-957aa1ff2c72.png",
+      "box": [
+        112,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "wall-upper-3-8",
+    "box": [
+      128,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S176. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "S194",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S176",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-fortress-winter-source-957aa1ff2c72.png",
+      "box": [
+        128,
+        80,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "wall-upper-4-8",
+    "box": [
+      144,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S153. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "S195",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S153",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-fortress-winter-source-957aa1ff2c72.png",
+      "box": [
+        176,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "wall-upper-5-8",
+    "box": [
+      160,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S131. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "S196",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S131",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-fortress-winter-source-957aa1ff2c72.png",
+      "box": [
+        112,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "wall-upper-6-8",
+    "box": [
+      176,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S179. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "S197",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S179",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-fortress-winter-source-957aa1ff2c72.png",
+      "box": [
+        176,
+        80,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "wall-upper-7-8",
+    "box": [
+      192,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-upper-7-8",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S198"
+  },
+  {
+    "name": "wall-upper-8-8",
+    "box": [
+      208,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S175. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "S199",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S175",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-fortress-winter-source-957aa1ff2c72.png",
+      "box": [
+        112,
+        80,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "wall-upper-9-8",
+    "box": [
+      224,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-upper-9-8",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S200"
+  },
+  {
+    "name": "wall-upper-1-9",
+    "box": [
+      96,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-upper-1-9",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S201"
+  },
+  {
+    "name": "wall-upper-2-9",
+    "box": [
+      112,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S140. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "S202",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S140",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-fortress-winter-source-957aa1ff2c72.png",
+      "box": [
+        112,
+        16,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "wall-upper-3-9",
+    "box": [
+      128,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-upper-3-9",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S203"
+  },
+  {
+    "name": "wall-upper-4-9",
+    "box": [
+      144,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-upper-4-9",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S204"
+  },
+  {
+    "name": "wall-upper-5-9",
+    "box": [
+      160,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S143. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "S205",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S143",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-fortress-winter-source-957aa1ff2c72.png",
+      "box": [
+        160,
+        16,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "wall-upper-6-9",
+    "box": [
+      176,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-upper-6-9",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S206"
+  },
+  {
+    "name": "wall-upper-7-9",
+    "box": [
+      192,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-upper-7-9",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S207"
+  },
+  {
+    "name": "wall-upper-8-9",
+    "box": [
+      208,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S184. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "S208",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S184",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-fortress-winter-source-957aa1ff2c72.png",
+      "box": [
+        112,
+        96,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "wall-upper-9-9",
+    "box": [
+      224,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-upper-9-9",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S209"
+  },
+  {
+    "name": "wall-right-1-1",
+    "box": [
+      464,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-right-1-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S210"
+  },
+  {
+    "name": "wall-right-2-1",
+    "box": [
+      480,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-right-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S211"
+  },
+  {
+    "name": "wall-right-3-1",
+    "box": [
+      496,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-right-3-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S212"
+  },
+  {
+    "name": "wall-right-1-2",
+    "box": [
+      464,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-right-1-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S213"
+  },
+  {
+    "name": "wall-right-3-2",
+    "box": [
+      496,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-right-3-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S214"
+  },
+  {
+    "name": "wall-right-1-3",
+    "box": [
+      464,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-right-1-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S215"
+  },
+  {
+    "name": "wall-right-2-3",
+    "box": [
+      480,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-right-2-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S216"
+  },
+  {
+    "name": "wall-right-3-3",
+    "box": [
+      496,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-right-3-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S217"
+  },
+  {
+    "name": "wall-right-1-4",
+    "box": [
+      464,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-right-1-4",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S218"
+  },
+  {
+    "name": "wall-right-2-4",
+    "box": [
+      480,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-right-2-4",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S219"
+  },
+  {
+    "name": "wall-right-3-4",
+    "box": [
+      496,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-right-3-4",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S220"
+  },
+  {
+    "name": "wall-right-1-5",
+    "box": [
+      464,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S210. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "S221",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S210",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-fortress-winter-source-957aa1ff2c72.png",
+      "box": [
+        464,
+        64,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "wall-right-2-5",
+    "box": [
+      480,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S211. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "S222",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S211",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-fortress-winter-source-957aa1ff2c72.png",
+      "box": [
+        480,
+        64,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "wall-right-3-5",
+    "box": [
+      496,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S212. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "S223",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S212",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-fortress-winter-source-957aa1ff2c72.png",
+      "box": [
+        496,
+        64,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "wall-right-1-6",
+    "box": [
+      464,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-right-1-6",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S224"
+  },
+  {
+    "name": "wall-right-2-6",
+    "box": [
+      480,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S119. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "S225",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S119",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-fortress-winter-source-957aa1ff2c72.png",
+      "box": [
+        16,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "wall-right-3-6",
+    "box": [
+      496,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-right-3-6",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S226"
+  },
+  {
+    "name": "wall-right-1-7",
+    "box": [
+      464,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-right-1-7",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S227"
+  },
+  {
+    "name": "wall-right-2-7",
+    "box": [
+      480,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-right-2-7",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S228"
+  },
+  {
+    "name": "wall-right-3-7",
+    "box": [
+      496,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-right-3-7",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S229"
+  },
+  {
+    "name": "wall-right-1-8",
+    "box": [
+      464,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-right-1-8",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S230"
+  },
+  {
+    "name": "wall-right-2-8",
+    "box": [
+      480,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-right-2-8",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S231"
+  },
+  {
+    "name": "wall-right-3-8",
+    "box": [
+      496,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-right-3-8",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S232"
+  },
+  {
+    "name": "wall-right-1-9",
+    "box": [
+      464,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S210. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "S233",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S210",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-fortress-winter-source-957aa1ff2c72.png",
+      "box": [
+        464,
+        64,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "wall-right-2-9",
+    "box": [
+      480,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S211. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "S234",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S211",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-fortress-winter-source-957aa1ff2c72.png",
+      "box": [
+        480,
+        64,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "wall-right-3-9",
+    "box": [
+      496,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S212. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "S235",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S212",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-fortress-winter-source-957aa1ff2c72.png",
+      "box": [
+        496,
+        64,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "wall-right-1-10",
+    "box": [
+      464,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-right-1-10",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S236"
+  },
+  {
+    "name": "wall-right-2-10",
+    "box": [
+      480,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S124. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "S237",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S124",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-fortress-winter-source-957aa1ff2c72.png",
+      "box": [
+        0,
+        16,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "wall-right-3-10",
+    "box": [
+      496,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-right-3-10",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S238"
+  },
+  {
+    "name": "wall-right-1-11",
+    "box": [
+      464,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-right-1-11",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S239"
+  },
+  {
+    "name": "wall-right-2-11",
+    "box": [
+      480,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-right-2-11",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S240"
+  },
+  {
+    "name": "wall-right-3-11",
+    "box": [
+      496,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-right-3-11",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S241"
+  },
+  {
+    "name": "wall-right-1-12",
+    "box": [
+      464,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-right-1-12",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S242"
+  },
+  {
+    "name": "wall-right-2-12",
+    "box": [
+      480,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-right-2-12",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S243"
+  },
+  {
+    "name": "wall-right-3-12",
+    "box": [
+      496,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-right-3-12",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S244"
+  }
+]

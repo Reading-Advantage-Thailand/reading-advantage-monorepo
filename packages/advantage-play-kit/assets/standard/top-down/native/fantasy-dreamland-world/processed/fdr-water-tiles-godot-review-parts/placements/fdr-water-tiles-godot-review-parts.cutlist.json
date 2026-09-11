@@ -1,0 +1,3676 @@
+[
+  {
+    "name": "water-tile-1-1",
+    "box": [
+      0,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "water-tile-1-1",
+    "frame": null,
+    "notes": "Eight water frames. Preserve the same tile position.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        0,
+        16,
+        16,
+        16
+      ],
+      [
+        208,
+        16,
+        16,
+        16
+      ],
+      [
+        0,
+        96,
+        16,
+        16
+      ],
+      [
+        208,
+        96,
+        16,
+        16
+      ],
+      [
+        0,
+        176,
+        16,
+        16
+      ],
+      [
+        208,
+        176,
+        16,
+        16
+      ],
+      [
+        0,
+        256,
+        16,
+        16
+      ],
+      [
+        208,
+        256,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "W01"
+  },
+  {
+    "name": "water-tile-2-1",
+    "box": [
+      16,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "water-tile-2-1",
+    "frame": null,
+    "notes": "Eight water frames. Preserve the same tile position.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        16,
+        16,
+        16,
+        16
+      ],
+      [
+        224,
+        16,
+        16,
+        16
+      ],
+      [
+        16,
+        96,
+        16,
+        16
+      ],
+      [
+        224,
+        96,
+        16,
+        16
+      ],
+      [
+        16,
+        176,
+        16,
+        16
+      ],
+      [
+        224,
+        176,
+        16,
+        16
+      ],
+      [
+        16,
+        256,
+        16,
+        16
+      ],
+      [
+        224,
+        256,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "W02"
+  },
+  {
+    "name": "water-tile-3-1",
+    "box": [
+      32,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "water-tile-3-1",
+    "frame": null,
+    "notes": "Eight water frames. Preserve the same tile position.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        32,
+        16,
+        16,
+        16
+      ],
+      [
+        240,
+        16,
+        16,
+        16
+      ],
+      [
+        32,
+        96,
+        16,
+        16
+      ],
+      [
+        240,
+        96,
+        16,
+        16
+      ],
+      [
+        32,
+        176,
+        16,
+        16
+      ],
+      [
+        240,
+        176,
+        16,
+        16
+      ],
+      [
+        32,
+        256,
+        16,
+        16
+      ],
+      [
+        240,
+        256,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "W03"
+  },
+  {
+    "name": "water-tile-4-1",
+    "box": [
+      48,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "water-tile-4-1",
+    "frame": null,
+    "notes": "Eight water frames. Preserve the same tile position.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        48,
+        16,
+        16,
+        16
+      ],
+      [
+        256,
+        16,
+        16,
+        16
+      ],
+      [
+        48,
+        96,
+        16,
+        16
+      ],
+      [
+        256,
+        96,
+        16,
+        16
+      ],
+      [
+        48,
+        176,
+        16,
+        16
+      ],
+      [
+        256,
+        176,
+        16,
+        16
+      ],
+      [
+        48,
+        256,
+        16,
+        16
+      ],
+      [
+        256,
+        256,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "W04"
+  },
+  {
+    "name": "water-tile-5-1",
+    "box": [
+      64,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "water-tile-5-1",
+    "frame": null,
+    "notes": "Eight water frames. Preserve the same tile position.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        64,
+        16,
+        16,
+        16
+      ],
+      [
+        272,
+        16,
+        16,
+        16
+      ],
+      [
+        64,
+        96,
+        16,
+        16
+      ],
+      [
+        272,
+        96,
+        16,
+        16
+      ],
+      [
+        64,
+        176,
+        16,
+        16
+      ],
+      [
+        272,
+        176,
+        16,
+        16
+      ],
+      [
+        64,
+        256,
+        16,
+        16
+      ],
+      [
+        272,
+        256,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "W05"
+  },
+  {
+    "name": "water-tile-6-1",
+    "box": [
+      80,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "water-tile-6-1",
+    "frame": null,
+    "notes": "Eight water frames. Preserve the same tile position.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        80,
+        16,
+        16,
+        16
+      ],
+      [
+        288,
+        16,
+        16,
+        16
+      ],
+      [
+        80,
+        96,
+        16,
+        16
+      ],
+      [
+        288,
+        96,
+        16,
+        16
+      ],
+      [
+        80,
+        176,
+        16,
+        16
+      ],
+      [
+        288,
+        176,
+        16,
+        16
+      ],
+      [
+        80,
+        256,
+        16,
+        16
+      ],
+      [
+        288,
+        256,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "W06"
+  },
+  {
+    "name": "water-tile-7-1",
+    "box": [
+      96,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "water-tile-7-1",
+    "frame": null,
+    "notes": "Eight water frames. Preserve the same tile position.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        96,
+        16,
+        16,
+        16
+      ],
+      [
+        304,
+        16,
+        16,
+        16
+      ],
+      [
+        96,
+        96,
+        16,
+        16
+      ],
+      [
+        304,
+        96,
+        16,
+        16
+      ],
+      [
+        96,
+        176,
+        16,
+        16
+      ],
+      [
+        304,
+        176,
+        16,
+        16
+      ],
+      [
+        96,
+        256,
+        16,
+        16
+      ],
+      [
+        304,
+        256,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "W07"
+  },
+  {
+    "name": "water-tile-8-1",
+    "box": [
+      112,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "water-tile-8-1",
+    "frame": null,
+    "notes": "Eight water frames. Preserve the same tile position.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        112,
+        16,
+        16,
+        16
+      ],
+      [
+        320,
+        16,
+        16,
+        16
+      ],
+      [
+        112,
+        96,
+        16,
+        16
+      ],
+      [
+        320,
+        96,
+        16,
+        16
+      ],
+      [
+        112,
+        176,
+        16,
+        16
+      ],
+      [
+        320,
+        176,
+        16,
+        16
+      ],
+      [
+        112,
+        256,
+        16,
+        16
+      ],
+      [
+        320,
+        256,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "W08"
+  },
+  {
+    "name": "water-tile-9-1",
+    "box": [
+      128,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse W02. The complete crop is identical.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        128,
+        16,
+        16,
+        16
+      ],
+      [
+        336,
+        16,
+        16,
+        16
+      ],
+      [
+        128,
+        96,
+        16,
+        16
+      ],
+      [
+        336,
+        96,
+        16,
+        16
+      ],
+      [
+        128,
+        176,
+        16,
+        16
+      ],
+      [
+        336,
+        176,
+        16,
+        16
+      ],
+      [
+        128,
+        256,
+        16,
+        16
+      ],
+      [
+        336,
+        256,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "W09",
+    "reuseProposal": {
+      "sheetId": "W",
+      "reviewId": "W02",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-water-tiles-godot-source-c9113417e413.png",
+      "box": [
+        16,
+        16,
+        16,
+        16
+      ],
+      "frameBoxes": [
+        [
+          16,
+          16,
+          16,
+          16
+        ],
+        [
+          224,
+          16,
+          16,
+          16
+        ],
+        [
+          16,
+          96,
+          16,
+          16
+        ],
+        [
+          224,
+          96,
+          16,
+          16
+        ],
+        [
+          16,
+          176,
+          16,
+          16
+        ],
+        [
+          224,
+          176,
+          16,
+          16
+        ],
+        [
+          16,
+          256,
+          16,
+          16
+        ],
+        [
+          224,
+          256,
+          16,
+          16
+        ]
+      ]
+    }
+  },
+  {
+    "name": "water-tile-10-1",
+    "box": [
+      144,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "water-tile-10-1",
+    "frame": null,
+    "notes": "Eight water frames. Preserve the same tile position.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        144,
+        16,
+        16,
+        16
+      ],
+      [
+        352,
+        16,
+        16,
+        16
+      ],
+      [
+        144,
+        96,
+        16,
+        16
+      ],
+      [
+        352,
+        96,
+        16,
+        16
+      ],
+      [
+        144,
+        176,
+        16,
+        16
+      ],
+      [
+        352,
+        176,
+        16,
+        16
+      ],
+      [
+        144,
+        256,
+        16,
+        16
+      ],
+      [
+        352,
+        256,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "W10"
+  },
+  {
+    "name": "water-tile-11-1",
+    "box": [
+      160,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse W03. The complete crop is identical.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        160,
+        16,
+        16,
+        16
+      ],
+      [
+        368,
+        16,
+        16,
+        16
+      ],
+      [
+        160,
+        96,
+        16,
+        16
+      ],
+      [
+        368,
+        96,
+        16,
+        16
+      ],
+      [
+        160,
+        176,
+        16,
+        16
+      ],
+      [
+        368,
+        176,
+        16,
+        16
+      ],
+      [
+        160,
+        256,
+        16,
+        16
+      ],
+      [
+        368,
+        256,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "W11",
+    "reuseProposal": {
+      "sheetId": "W",
+      "reviewId": "W03",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-water-tiles-godot-source-c9113417e413.png",
+      "box": [
+        32,
+        16,
+        16,
+        16
+      ],
+      "frameBoxes": [
+        [
+          32,
+          16,
+          16,
+          16
+        ],
+        [
+          240,
+          16,
+          16,
+          16
+        ],
+        [
+          32,
+          96,
+          16,
+          16
+        ],
+        [
+          240,
+          96,
+          16,
+          16
+        ],
+        [
+          32,
+          176,
+          16,
+          16
+        ],
+        [
+          240,
+          176,
+          16,
+          16
+        ],
+        [
+          32,
+          256,
+          16,
+          16
+        ],
+        [
+          240,
+          256,
+          16,
+          16
+        ]
+      ]
+    }
+  },
+  {
+    "name": "water-tile-12-1",
+    "box": [
+      176,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse W04. The complete crop is identical.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        176,
+        16,
+        16,
+        16
+      ],
+      [
+        384,
+        16,
+        16,
+        16
+      ],
+      [
+        176,
+        96,
+        16,
+        16
+      ],
+      [
+        384,
+        96,
+        16,
+        16
+      ],
+      [
+        176,
+        176,
+        16,
+        16
+      ],
+      [
+        384,
+        176,
+        16,
+        16
+      ],
+      [
+        176,
+        256,
+        16,
+        16
+      ],
+      [
+        384,
+        256,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "W12",
+    "reuseProposal": {
+      "sheetId": "W",
+      "reviewId": "W04",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-water-tiles-godot-source-c9113417e413.png",
+      "box": [
+        48,
+        16,
+        16,
+        16
+      ],
+      "frameBoxes": [
+        [
+          48,
+          16,
+          16,
+          16
+        ],
+        [
+          256,
+          16,
+          16,
+          16
+        ],
+        [
+          48,
+          96,
+          16,
+          16
+        ],
+        [
+          256,
+          96,
+          16,
+          16
+        ],
+        [
+          48,
+          176,
+          16,
+          16
+        ],
+        [
+          256,
+          176,
+          16,
+          16
+        ],
+        [
+          48,
+          256,
+          16,
+          16
+        ],
+        [
+          256,
+          256,
+          16,
+          16
+        ]
+      ]
+    }
+  },
+  {
+    "name": "water-tile-1-2",
+    "box": [
+      0,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "water-tile-1-2",
+    "frame": null,
+    "notes": "Eight water frames. Preserve the same tile position.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        0,
+        32,
+        16,
+        16
+      ],
+      [
+        208,
+        32,
+        16,
+        16
+      ],
+      [
+        0,
+        112,
+        16,
+        16
+      ],
+      [
+        208,
+        112,
+        16,
+        16
+      ],
+      [
+        0,
+        192,
+        16,
+        16
+      ],
+      [
+        208,
+        192,
+        16,
+        16
+      ],
+      [
+        0,
+        272,
+        16,
+        16
+      ],
+      [
+        208,
+        272,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "W13"
+  },
+  {
+    "name": "water-tile-2-2",
+    "box": [
+      16,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "water-tile-2-2",
+    "frame": null,
+    "notes": "Eight water frames. Preserve the same tile position.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        16,
+        32,
+        16,
+        16
+      ],
+      [
+        224,
+        32,
+        16,
+        16
+      ],
+      [
+        16,
+        112,
+        16,
+        16
+      ],
+      [
+        224,
+        112,
+        16,
+        16
+      ],
+      [
+        16,
+        192,
+        16,
+        16
+      ],
+      [
+        224,
+        192,
+        16,
+        16
+      ],
+      [
+        16,
+        272,
+        16,
+        16
+      ],
+      [
+        224,
+        272,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "W14"
+  },
+  {
+    "name": "water-tile-3-2",
+    "box": [
+      32,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-water-tiles-review-parts-palette-1-band-2-tile-2.png",
+    "placement": null,
+    "frameBoxes": [
+      [
+        32,
+        32,
+        16,
+        16
+      ],
+      [
+        240,
+        32,
+        16,
+        16
+      ],
+      [
+        32,
+        112,
+        16,
+        16
+      ],
+      [
+        240,
+        112,
+        16,
+        16
+      ],
+      [
+        32,
+        192,
+        16,
+        16
+      ],
+      [
+        240,
+        192,
+        16,
+        16
+      ],
+      [
+        32,
+        272,
+        16,
+        16
+      ],
+      [
+        240,
+        272,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "W15",
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-water-tiles-review-parts/fdr-water-tiles-review-parts-palette-1-band-2-tile-2.png"
+  },
+  {
+    "name": "water-tile-4-2",
+    "box": [
+      48,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "water-tile-4-2",
+    "frame": null,
+    "notes": "Eight water frames. Preserve the same tile position.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        48,
+        32,
+        16,
+        16
+      ],
+      [
+        256,
+        32,
+        16,
+        16
+      ],
+      [
+        48,
+        112,
+        16,
+        16
+      ],
+      [
+        256,
+        112,
+        16,
+        16
+      ],
+      [
+        48,
+        192,
+        16,
+        16
+      ],
+      [
+        256,
+        192,
+        16,
+        16
+      ],
+      [
+        48,
+        272,
+        16,
+        16
+      ],
+      [
+        256,
+        272,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "W16"
+  },
+  {
+    "name": "water-tile-5-2",
+    "box": [
+      64,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "water-tile-5-2",
+    "frame": null,
+    "notes": "Eight water frames. Preserve the same tile position.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        64,
+        32,
+        16,
+        16
+      ],
+      [
+        272,
+        32,
+        16,
+        16
+      ],
+      [
+        64,
+        112,
+        16,
+        16
+      ],
+      [
+        272,
+        112,
+        16,
+        16
+      ],
+      [
+        64,
+        192,
+        16,
+        16
+      ],
+      [
+        272,
+        192,
+        16,
+        16
+      ],
+      [
+        64,
+        272,
+        16,
+        16
+      ],
+      [
+        272,
+        272,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "W17"
+  },
+  {
+    "name": "water-tile-6-2",
+    "box": [
+      80,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "water-tile-6-2",
+    "frame": null,
+    "notes": "Eight water frames. Preserve the same tile position.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        80,
+        32,
+        16,
+        16
+      ],
+      [
+        288,
+        32,
+        16,
+        16
+      ],
+      [
+        80,
+        112,
+        16,
+        16
+      ],
+      [
+        288,
+        112,
+        16,
+        16
+      ],
+      [
+        80,
+        192,
+        16,
+        16
+      ],
+      [
+        288,
+        192,
+        16,
+        16
+      ],
+      [
+        80,
+        272,
+        16,
+        16
+      ],
+      [
+        288,
+        272,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "W18"
+  },
+  {
+    "name": "water-tile-7-2",
+    "box": [
+      96,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "water-tile-7-2",
+    "frame": null,
+    "notes": "Eight water frames. Preserve the same tile position.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        96,
+        32,
+        16,
+        16
+      ],
+      [
+        304,
+        32,
+        16,
+        16
+      ],
+      [
+        96,
+        112,
+        16,
+        16
+      ],
+      [
+        304,
+        112,
+        16,
+        16
+      ],
+      [
+        96,
+        192,
+        16,
+        16
+      ],
+      [
+        304,
+        192,
+        16,
+        16
+      ],
+      [
+        96,
+        272,
+        16,
+        16
+      ],
+      [
+        304,
+        272,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "W19"
+  },
+  {
+    "name": "water-tile-8-2",
+    "box": [
+      112,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "water-tile-8-2",
+    "frame": null,
+    "notes": "Eight water frames. Preserve the same tile position.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        112,
+        32,
+        16,
+        16
+      ],
+      [
+        320,
+        32,
+        16,
+        16
+      ],
+      [
+        112,
+        112,
+        16,
+        16
+      ],
+      [
+        320,
+        112,
+        16,
+        16
+      ],
+      [
+        112,
+        192,
+        16,
+        16
+      ],
+      [
+        320,
+        192,
+        16,
+        16
+      ],
+      [
+        112,
+        272,
+        16,
+        16
+      ],
+      [
+        320,
+        272,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "W20"
+  },
+  {
+    "name": "water-tile-9-2",
+    "box": [
+      128,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse W14. The complete crop is identical.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        128,
+        32,
+        16,
+        16
+      ],
+      [
+        336,
+        32,
+        16,
+        16
+      ],
+      [
+        128,
+        112,
+        16,
+        16
+      ],
+      [
+        336,
+        112,
+        16,
+        16
+      ],
+      [
+        128,
+        192,
+        16,
+        16
+      ],
+      [
+        336,
+        192,
+        16,
+        16
+      ],
+      [
+        128,
+        272,
+        16,
+        16
+      ],
+      [
+        336,
+        272,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "W21",
+    "reuseProposal": {
+      "sheetId": "W",
+      "reviewId": "W14",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-water-tiles-godot-source-c9113417e413.png",
+      "box": [
+        16,
+        32,
+        16,
+        16
+      ],
+      "frameBoxes": [
+        [
+          16,
+          32,
+          16,
+          16
+        ],
+        [
+          224,
+          32,
+          16,
+          16
+        ],
+        [
+          16,
+          112,
+          16,
+          16
+        ],
+        [
+          224,
+          112,
+          16,
+          16
+        ],
+        [
+          16,
+          192,
+          16,
+          16
+        ],
+        [
+          224,
+          192,
+          16,
+          16
+        ],
+        [
+          16,
+          272,
+          16,
+          16
+        ],
+        [
+          224,
+          272,
+          16,
+          16
+        ]
+      ]
+    }
+  },
+  {
+    "name": "water-tile-10-2",
+    "box": [
+      144,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "water-tile-10-2",
+    "frame": null,
+    "notes": "Eight water frames. Preserve the same tile position.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        144,
+        32,
+        16,
+        16
+      ],
+      [
+        352,
+        32,
+        16,
+        16
+      ],
+      [
+        144,
+        112,
+        16,
+        16
+      ],
+      [
+        352,
+        112,
+        16,
+        16
+      ],
+      [
+        144,
+        192,
+        16,
+        16
+      ],
+      [
+        352,
+        192,
+        16,
+        16
+      ],
+      [
+        144,
+        272,
+        16,
+        16
+      ],
+      [
+        352,
+        272,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "W22"
+  },
+  {
+    "name": "water-tile-11-2",
+    "box": [
+      160,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "water-tile-11-2",
+    "frame": null,
+    "notes": "Eight water frames. Preserve the same tile position.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        160,
+        32,
+        16,
+        16
+      ],
+      [
+        368,
+        32,
+        16,
+        16
+      ],
+      [
+        160,
+        112,
+        16,
+        16
+      ],
+      [
+        368,
+        112,
+        16,
+        16
+      ],
+      [
+        160,
+        192,
+        16,
+        16
+      ],
+      [
+        368,
+        192,
+        16,
+        16
+      ],
+      [
+        160,
+        272,
+        16,
+        16
+      ],
+      [
+        368,
+        272,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "W23"
+  },
+  {
+    "name": "water-tile-12-2",
+    "box": [
+      176,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "water-tile-12-2",
+    "frame": null,
+    "notes": "Eight water frames. Preserve the same tile position.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        176,
+        32,
+        16,
+        16
+      ],
+      [
+        384,
+        32,
+        16,
+        16
+      ],
+      [
+        176,
+        112,
+        16,
+        16
+      ],
+      [
+        384,
+        112,
+        16,
+        16
+      ],
+      [
+        176,
+        192,
+        16,
+        16
+      ],
+      [
+        384,
+        192,
+        16,
+        16
+      ],
+      [
+        176,
+        272,
+        16,
+        16
+      ],
+      [
+        384,
+        272,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "W24"
+  },
+  {
+    "name": "water-tile-1-3",
+    "box": [
+      0,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "water-tile-1-3",
+    "frame": null,
+    "notes": "Eight water frames. Preserve the same tile position.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        0,
+        48,
+        16,
+        16
+      ],
+      [
+        208,
+        48,
+        16,
+        16
+      ],
+      [
+        0,
+        128,
+        16,
+        16
+      ],
+      [
+        208,
+        128,
+        16,
+        16
+      ],
+      [
+        0,
+        208,
+        16,
+        16
+      ],
+      [
+        208,
+        208,
+        16,
+        16
+      ],
+      [
+        0,
+        288,
+        16,
+        16
+      ],
+      [
+        208,
+        288,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "W25"
+  },
+  {
+    "name": "water-tile-2-3",
+    "box": [
+      16,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "water-tile-2-3",
+    "frame": null,
+    "notes": "Eight water frames. Preserve the same tile position.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        16,
+        48,
+        16,
+        16
+      ],
+      [
+        224,
+        48,
+        16,
+        16
+      ],
+      [
+        16,
+        128,
+        16,
+        16
+      ],
+      [
+        224,
+        128,
+        16,
+        16
+      ],
+      [
+        16,
+        208,
+        16,
+        16
+      ],
+      [
+        224,
+        208,
+        16,
+        16
+      ],
+      [
+        16,
+        288,
+        16,
+        16
+      ],
+      [
+        224,
+        288,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "W26"
+  },
+  {
+    "name": "water-tile-3-3",
+    "box": [
+      32,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "water-tile-3-3",
+    "frame": null,
+    "notes": "Eight water frames. Preserve the same tile position.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        32,
+        48,
+        16,
+        16
+      ],
+      [
+        240,
+        48,
+        16,
+        16
+      ],
+      [
+        32,
+        128,
+        16,
+        16
+      ],
+      [
+        240,
+        128,
+        16,
+        16
+      ],
+      [
+        32,
+        208,
+        16,
+        16
+      ],
+      [
+        240,
+        208,
+        16,
+        16
+      ],
+      [
+        32,
+        288,
+        16,
+        16
+      ],
+      [
+        240,
+        288,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "W27"
+  },
+  {
+    "name": "water-tile-4-3",
+    "box": [
+      48,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "water-tile-4-3",
+    "frame": null,
+    "notes": "Eight water frames. Preserve the same tile position.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        48,
+        48,
+        16,
+        16
+      ],
+      [
+        256,
+        48,
+        16,
+        16
+      ],
+      [
+        48,
+        128,
+        16,
+        16
+      ],
+      [
+        256,
+        128,
+        16,
+        16
+      ],
+      [
+        48,
+        208,
+        16,
+        16
+      ],
+      [
+        256,
+        208,
+        16,
+        16
+      ],
+      [
+        48,
+        288,
+        16,
+        16
+      ],
+      [
+        256,
+        288,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "W28"
+  },
+  {
+    "name": "water-tile-5-3",
+    "box": [
+      64,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "water-tile-5-3",
+    "frame": null,
+    "notes": "Eight water frames. Preserve the same tile position.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        64,
+        48,
+        16,
+        16
+      ],
+      [
+        272,
+        48,
+        16,
+        16
+      ],
+      [
+        64,
+        128,
+        16,
+        16
+      ],
+      [
+        272,
+        128,
+        16,
+        16
+      ],
+      [
+        64,
+        208,
+        16,
+        16
+      ],
+      [
+        272,
+        208,
+        16,
+        16
+      ],
+      [
+        64,
+        288,
+        16,
+        16
+      ],
+      [
+        272,
+        288,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "W29"
+  },
+  {
+    "name": "water-tile-6-3",
+    "box": [
+      80,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "water-tile-6-3",
+    "frame": null,
+    "notes": "Eight water frames. Preserve the same tile position.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        80,
+        48,
+        16,
+        16
+      ],
+      [
+        288,
+        48,
+        16,
+        16
+      ],
+      [
+        80,
+        128,
+        16,
+        16
+      ],
+      [
+        288,
+        128,
+        16,
+        16
+      ],
+      [
+        80,
+        208,
+        16,
+        16
+      ],
+      [
+        288,
+        208,
+        16,
+        16
+      ],
+      [
+        80,
+        288,
+        16,
+        16
+      ],
+      [
+        288,
+        288,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "W30"
+  },
+  {
+    "name": "water-tile-7-3",
+    "box": [
+      96,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "water-tile-7-3",
+    "frame": null,
+    "notes": "Eight water frames. Preserve the same tile position.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        96,
+        48,
+        16,
+        16
+      ],
+      [
+        304,
+        48,
+        16,
+        16
+      ],
+      [
+        96,
+        128,
+        16,
+        16
+      ],
+      [
+        304,
+        128,
+        16,
+        16
+      ],
+      [
+        96,
+        208,
+        16,
+        16
+      ],
+      [
+        304,
+        208,
+        16,
+        16
+      ],
+      [
+        96,
+        288,
+        16,
+        16
+      ],
+      [
+        304,
+        288,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "W31"
+  },
+  {
+    "name": "water-tile-8-3",
+    "box": [
+      112,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "water-tile-8-3",
+    "frame": null,
+    "notes": "Eight water frames. Preserve the same tile position.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        112,
+        48,
+        16,
+        16
+      ],
+      [
+        320,
+        48,
+        16,
+        16
+      ],
+      [
+        112,
+        128,
+        16,
+        16
+      ],
+      [
+        320,
+        128,
+        16,
+        16
+      ],
+      [
+        112,
+        208,
+        16,
+        16
+      ],
+      [
+        320,
+        208,
+        16,
+        16
+      ],
+      [
+        112,
+        288,
+        16,
+        16
+      ],
+      [
+        320,
+        288,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "W32"
+  },
+  {
+    "name": "water-tile-9-3",
+    "box": [
+      128,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "water-tile-9-3",
+    "frame": null,
+    "notes": "Eight water frames. Preserve the same tile position.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        128,
+        48,
+        16,
+        16
+      ],
+      [
+        336,
+        48,
+        16,
+        16
+      ],
+      [
+        128,
+        128,
+        16,
+        16
+      ],
+      [
+        336,
+        128,
+        16,
+        16
+      ],
+      [
+        128,
+        208,
+        16,
+        16
+      ],
+      [
+        336,
+        208,
+        16,
+        16
+      ],
+      [
+        128,
+        288,
+        16,
+        16
+      ],
+      [
+        336,
+        288,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "W33"
+  },
+  {
+    "name": "water-tile-10-3",
+    "box": [
+      144,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-water-tiles-review-parts-palette-1-band-2-tile-2.png",
+    "placement": null,
+    "frameBoxes": [
+      [
+        144,
+        48,
+        16,
+        16
+      ],
+      [
+        352,
+        48,
+        16,
+        16
+      ],
+      [
+        144,
+        128,
+        16,
+        16
+      ],
+      [
+        352,
+        128,
+        16,
+        16
+      ],
+      [
+        144,
+        208,
+        16,
+        16
+      ],
+      [
+        352,
+        208,
+        16,
+        16
+      ],
+      [
+        144,
+        288,
+        16,
+        16
+      ],
+      [
+        352,
+        288,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "W34",
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-water-tiles-review-parts/fdr-water-tiles-review-parts-palette-1-band-2-tile-2.png"
+  },
+  {
+    "name": "water-tile-11-3",
+    "box": [
+      160,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "water-tile-11-3",
+    "frame": null,
+    "notes": "Eight water frames. Preserve the same tile position.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        160,
+        48,
+        16,
+        16
+      ],
+      [
+        368,
+        48,
+        16,
+        16
+      ],
+      [
+        160,
+        128,
+        16,
+        16
+      ],
+      [
+        368,
+        128,
+        16,
+        16
+      ],
+      [
+        160,
+        208,
+        16,
+        16
+      ],
+      [
+        368,
+        208,
+        16,
+        16
+      ],
+      [
+        160,
+        288,
+        16,
+        16
+      ],
+      [
+        368,
+        288,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "W35"
+  },
+  {
+    "name": "water-tile-12-3",
+    "box": [
+      176,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse W16. The complete crop is identical.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        176,
+        48,
+        16,
+        16
+      ],
+      [
+        384,
+        48,
+        16,
+        16
+      ],
+      [
+        176,
+        128,
+        16,
+        16
+      ],
+      [
+        384,
+        128,
+        16,
+        16
+      ],
+      [
+        176,
+        208,
+        16,
+        16
+      ],
+      [
+        384,
+        208,
+        16,
+        16
+      ],
+      [
+        176,
+        288,
+        16,
+        16
+      ],
+      [
+        384,
+        288,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "W36",
+    "reuseProposal": {
+      "sheetId": "W",
+      "reviewId": "W16",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-water-tiles-godot-source-c9113417e413.png",
+      "box": [
+        48,
+        32,
+        16,
+        16
+      ],
+      "frameBoxes": [
+        [
+          48,
+          32,
+          16,
+          16
+        ],
+        [
+          256,
+          32,
+          16,
+          16
+        ],
+        [
+          48,
+          112,
+          16,
+          16
+        ],
+        [
+          256,
+          112,
+          16,
+          16
+        ],
+        [
+          48,
+          192,
+          16,
+          16
+        ],
+        [
+          256,
+          192,
+          16,
+          16
+        ],
+        [
+          48,
+          272,
+          16,
+          16
+        ],
+        [
+          256,
+          272,
+          16,
+          16
+        ]
+      ]
+    }
+  },
+  {
+    "name": "water-tile-1-4",
+    "box": [
+      0,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "water-tile-1-4",
+    "frame": null,
+    "notes": "Eight water frames. Preserve the same tile position.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        0,
+        64,
+        16,
+        16
+      ],
+      [
+        208,
+        64,
+        16,
+        16
+      ],
+      [
+        0,
+        144,
+        16,
+        16
+      ],
+      [
+        208,
+        144,
+        16,
+        16
+      ],
+      [
+        0,
+        224,
+        16,
+        16
+      ],
+      [
+        208,
+        224,
+        16,
+        16
+      ],
+      [
+        0,
+        304,
+        16,
+        16
+      ],
+      [
+        208,
+        304,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "W37"
+  },
+  {
+    "name": "water-tile-2-4",
+    "box": [
+      16,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "water-tile-2-4",
+    "frame": null,
+    "notes": "Eight water frames. Preserve the same tile position.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        16,
+        64,
+        16,
+        16
+      ],
+      [
+        224,
+        64,
+        16,
+        16
+      ],
+      [
+        16,
+        144,
+        16,
+        16
+      ],
+      [
+        224,
+        144,
+        16,
+        16
+      ],
+      [
+        16,
+        224,
+        16,
+        16
+      ],
+      [
+        224,
+        224,
+        16,
+        16
+      ],
+      [
+        16,
+        304,
+        16,
+        16
+      ],
+      [
+        224,
+        304,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "W38"
+  },
+  {
+    "name": "water-tile-3-4",
+    "box": [
+      32,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "water-tile-3-4",
+    "frame": null,
+    "notes": "Eight water frames. Preserve the same tile position.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        32,
+        64,
+        16,
+        16
+      ],
+      [
+        240,
+        64,
+        16,
+        16
+      ],
+      [
+        32,
+        144,
+        16,
+        16
+      ],
+      [
+        240,
+        144,
+        16,
+        16
+      ],
+      [
+        32,
+        224,
+        16,
+        16
+      ],
+      [
+        240,
+        224,
+        16,
+        16
+      ],
+      [
+        32,
+        304,
+        16,
+        16
+      ],
+      [
+        240,
+        304,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "W39"
+  },
+  {
+    "name": "water-tile-4-4",
+    "box": [
+      48,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "water-tile-4-4",
+    "frame": null,
+    "notes": "Eight water frames. Preserve the same tile position.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        48,
+        64,
+        16,
+        16
+      ],
+      [
+        256,
+        64,
+        16,
+        16
+      ],
+      [
+        48,
+        144,
+        16,
+        16
+      ],
+      [
+        256,
+        144,
+        16,
+        16
+      ],
+      [
+        48,
+        224,
+        16,
+        16
+      ],
+      [
+        256,
+        224,
+        16,
+        16
+      ],
+      [
+        48,
+        304,
+        16,
+        16
+      ],
+      [
+        256,
+        304,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "W40"
+  },
+  {
+    "name": "water-tile-5-4",
+    "box": [
+      64,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "water-tile-5-4",
+    "frame": null,
+    "notes": "Eight water frames. Preserve the same tile position.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        64,
+        64,
+        16,
+        16
+      ],
+      [
+        272,
+        64,
+        16,
+        16
+      ],
+      [
+        64,
+        144,
+        16,
+        16
+      ],
+      [
+        272,
+        144,
+        16,
+        16
+      ],
+      [
+        64,
+        224,
+        16,
+        16
+      ],
+      [
+        272,
+        224,
+        16,
+        16
+      ],
+      [
+        64,
+        304,
+        16,
+        16
+      ],
+      [
+        272,
+        304,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "W41"
+  },
+  {
+    "name": "water-tile-6-4",
+    "box": [
+      80,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "water-tile-6-4",
+    "frame": null,
+    "notes": "Eight water frames. Preserve the same tile position.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        80,
+        64,
+        16,
+        16
+      ],
+      [
+        288,
+        64,
+        16,
+        16
+      ],
+      [
+        80,
+        144,
+        16,
+        16
+      ],
+      [
+        288,
+        144,
+        16,
+        16
+      ],
+      [
+        80,
+        224,
+        16,
+        16
+      ],
+      [
+        288,
+        224,
+        16,
+        16
+      ],
+      [
+        80,
+        304,
+        16,
+        16
+      ],
+      [
+        288,
+        304,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "W42"
+  },
+  {
+    "name": "water-tile-7-4",
+    "box": [
+      96,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "water-tile-7-4",
+    "frame": null,
+    "notes": "Eight water frames. Preserve the same tile position.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        96,
+        64,
+        16,
+        16
+      ],
+      [
+        304,
+        64,
+        16,
+        16
+      ],
+      [
+        96,
+        144,
+        16,
+        16
+      ],
+      [
+        304,
+        144,
+        16,
+        16
+      ],
+      [
+        96,
+        224,
+        16,
+        16
+      ],
+      [
+        304,
+        224,
+        16,
+        16
+      ],
+      [
+        96,
+        304,
+        16,
+        16
+      ],
+      [
+        304,
+        304,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "W43"
+  },
+  {
+    "name": "water-tile-8-4",
+    "box": [
+      112,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "water-tile-8-4",
+    "frame": null,
+    "notes": "Eight water frames. Preserve the same tile position.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        112,
+        64,
+        16,
+        16
+      ],
+      [
+        320,
+        64,
+        16,
+        16
+      ],
+      [
+        112,
+        144,
+        16,
+        16
+      ],
+      [
+        320,
+        144,
+        16,
+        16
+      ],
+      [
+        112,
+        224,
+        16,
+        16
+      ],
+      [
+        320,
+        224,
+        16,
+        16
+      ],
+      [
+        112,
+        304,
+        16,
+        16
+      ],
+      [
+        320,
+        304,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "W44"
+  },
+  {
+    "name": "water-tile-9-4",
+    "box": [
+      128,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse W26. The complete crop is identical.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        128,
+        64,
+        16,
+        16
+      ],
+      [
+        336,
+        64,
+        16,
+        16
+      ],
+      [
+        128,
+        144,
+        16,
+        16
+      ],
+      [
+        336,
+        144,
+        16,
+        16
+      ],
+      [
+        128,
+        224,
+        16,
+        16
+      ],
+      [
+        336,
+        224,
+        16,
+        16
+      ],
+      [
+        128,
+        304,
+        16,
+        16
+      ],
+      [
+        336,
+        304,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "W45",
+    "reuseProposal": {
+      "sheetId": "W",
+      "reviewId": "W26",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-water-tiles-godot-source-c9113417e413.png",
+      "box": [
+        16,
+        48,
+        16,
+        16
+      ],
+      "frameBoxes": [
+        [
+          16,
+          48,
+          16,
+          16
+        ],
+        [
+          224,
+          48,
+          16,
+          16
+        ],
+        [
+          16,
+          128,
+          16,
+          16
+        ],
+        [
+          224,
+          128,
+          16,
+          16
+        ],
+        [
+          16,
+          208,
+          16,
+          16
+        ],
+        [
+          224,
+          208,
+          16,
+          16
+        ],
+        [
+          16,
+          288,
+          16,
+          16
+        ],
+        [
+          224,
+          288,
+          16,
+          16
+        ]
+      ]
+    }
+  },
+  {
+    "name": "water-tile-10-4",
+    "box": [
+      144,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse W27. The complete crop is identical.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        144,
+        64,
+        16,
+        16
+      ],
+      [
+        352,
+        64,
+        16,
+        16
+      ],
+      [
+        144,
+        144,
+        16,
+        16
+      ],
+      [
+        352,
+        144,
+        16,
+        16
+      ],
+      [
+        144,
+        224,
+        16,
+        16
+      ],
+      [
+        352,
+        224,
+        16,
+        16
+      ],
+      [
+        144,
+        304,
+        16,
+        16
+      ],
+      [
+        352,
+        304,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "W46",
+    "reuseProposal": {
+      "sheetId": "W",
+      "reviewId": "W27",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-water-tiles-godot-source-c9113417e413.png",
+      "box": [
+        32,
+        48,
+        16,
+        16
+      ],
+      "frameBoxes": [
+        [
+          32,
+          48,
+          16,
+          16
+        ],
+        [
+          240,
+          48,
+          16,
+          16
+        ],
+        [
+          32,
+          128,
+          16,
+          16
+        ],
+        [
+          240,
+          128,
+          16,
+          16
+        ],
+        [
+          32,
+          208,
+          16,
+          16
+        ],
+        [
+          240,
+          208,
+          16,
+          16
+        ],
+        [
+          32,
+          288,
+          16,
+          16
+        ],
+        [
+          240,
+          288,
+          16,
+          16
+        ]
+      ]
+    }
+  },
+  {
+    "name": "water-tile-11-4",
+    "box": [
+      160,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "water-tile-11-4",
+    "frame": null,
+    "notes": "Eight water frames. Preserve the same tile position.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        160,
+        64,
+        16,
+        16
+      ],
+      [
+        368,
+        64,
+        16,
+        16
+      ],
+      [
+        160,
+        144,
+        16,
+        16
+      ],
+      [
+        368,
+        144,
+        16,
+        16
+      ],
+      [
+        160,
+        224,
+        16,
+        16
+      ],
+      [
+        368,
+        224,
+        16,
+        16
+      ],
+      [
+        160,
+        304,
+        16,
+        16
+      ],
+      [
+        368,
+        304,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "W47"
+  },
+  {
+    "name": "water-tile-12-4",
+    "box": [
+      176,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse W28. The complete crop is identical.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        176,
+        64,
+        16,
+        16
+      ],
+      [
+        384,
+        64,
+        16,
+        16
+      ],
+      [
+        176,
+        144,
+        16,
+        16
+      ],
+      [
+        384,
+        144,
+        16,
+        16
+      ],
+      [
+        176,
+        224,
+        16,
+        16
+      ],
+      [
+        384,
+        224,
+        16,
+        16
+      ],
+      [
+        176,
+        304,
+        16,
+        16
+      ],
+      [
+        384,
+        304,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "W48",
+    "reuseProposal": {
+      "sheetId": "W",
+      "reviewId": "W28",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-water-tiles-godot-source-c9113417e413.png",
+      "box": [
+        48,
+        48,
+        16,
+        16
+      ],
+      "frameBoxes": [
+        [
+          48,
+          48,
+          16,
+          16
+        ],
+        [
+          256,
+          48,
+          16,
+          16
+        ],
+        [
+          48,
+          128,
+          16,
+          16
+        ],
+        [
+          256,
+          128,
+          16,
+          16
+        ],
+        [
+          48,
+          208,
+          16,
+          16
+        ],
+        [
+          256,
+          208,
+          16,
+          16
+        ],
+        [
+          48,
+          288,
+          16,
+          16
+        ],
+        [
+          256,
+          288,
+          16,
+          16
+        ]
+      ]
+    }
+  },
+  {
+    "name": "unused-frame-label-0",
+    "box": [
+      0,
+      0,
+      400,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. These source rows contain frame labels.",
+    "placement": null,
+    "excludedSource": true,
+    "reviewId": "W49"
+  },
+  {
+    "name": "unused-frame-label-80",
+    "box": [
+      0,
+      80,
+      400,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. These source rows contain frame labels.",
+    "placement": null,
+    "excludedSource": true,
+    "reviewId": "W50"
+  },
+  {
+    "name": "unused-frame-label-160",
+    "box": [
+      0,
+      160,
+      400,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. These source rows contain frame labels.",
+    "placement": null,
+    "excludedSource": true,
+    "reviewId": "W51"
+  },
+  {
+    "name": "unused-frame-label-240",
+    "box": [
+      0,
+      240,
+      400,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. These source rows contain frame labels.",
+    "placement": null,
+    "excludedSource": true,
+    "reviewId": "W52"
+  }
+]

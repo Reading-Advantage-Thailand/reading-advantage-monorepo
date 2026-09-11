@@ -1,0 +1,6245 @@
+[
+  {
+    "name": "floor-1-1",
+    "box": [
+      96,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "floor-1-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "floor-2-1",
+    "box": [
+      112,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "floor-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "floor-3-1",
+    "box": [
+      128,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "floor-3-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "floor-4-1",
+    "box": [
+      144,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "floor-4-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "floor-5-1",
+    "box": [
+      160,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "floor-5-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "floor-6-1",
+    "box": [
+      176,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "floor-6-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "floor-7-1",
+    "box": [
+      192,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "floor-7-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "floor-8-1",
+    "box": [
+      208,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "floor-8-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "floor-9-1",
+    "box": [
+      224,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "floor-9-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "floor-10-1",
+    "box": [
+      240,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "floor-10-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "floor-1-2",
+    "box": [
+      96,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "floor-1-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "floor-2-2",
+    "box": [
+      112,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "floor-2-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "floor-3-2",
+    "box": [
+      128,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "floor-3-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "floor-4-2",
+    "box": [
+      144,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "floor-4-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "floor-5-2",
+    "box": [
+      160,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "floor-5-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "floor-6-2",
+    "box": [
+      176,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "floor-6-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "floor-7-2",
+    "box": [
+      192,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "floor-7-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "floor-8-2",
+    "box": [
+      208,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "floor-8-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "floor-9-2",
+    "box": [
+      224,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "floor-9-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "floor-10-2",
+    "box": [
+      240,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "floor-10-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "blood-and-bars-1-1",
+    "box": [
+      96,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "blood-and-bars-1-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "blood-and-bars-2-1",
+    "box": [
+      112,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "blood-and-bars-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "blood-and-bars-3-1",
+    "box": [
+      128,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "blood-and-bars-3-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "blood-and-bars-4-1",
+    "box": [
+      144,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "blood-and-bars-4-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "blood-and-bars-5-1",
+    "box": [
+      160,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "blood-and-bars-5-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "blood-and-bars-6-1",
+    "box": [
+      176,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "blood-and-bars-6-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "blood-and-bars-7-1",
+    "box": [
+      192,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "blood-and-bars-7-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "blood-and-bars-8-1",
+    "box": [
+      208,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "blood-and-bars-8-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "blood-and-bars-9-1",
+    "box": [
+      224,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "blood-and-bars-9-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "blood-and-bars-1-2",
+    "box": [
+      96,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "blood-and-bars-1-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "blood-and-bars-2-2",
+    "box": [
+      112,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "blood-and-bars-2-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "blood-and-bars-3-2",
+    "box": [
+      128,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "blood-and-bars-3-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "blood-and-bars-4-2",
+    "box": [
+      144,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "blood-and-bars-4-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "blood-and-bars-5-2",
+    "box": [
+      160,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "blood-and-bars-5-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "blood-and-bars-6-2",
+    "box": [
+      176,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "blood-and-bars-6-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "blood-and-bars-7-2",
+    "box": [
+      192,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "blood-and-bars-7-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "blood-and-bars-8-2",
+    "box": [
+      208,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "blood-and-bars-8-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "blood-and-bars-9-2",
+    "box": [
+      224,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "blood-and-bars-9-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "bars-upper-1-1",
+    "box": [
+      96,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "bars-upper-1-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "bars-upper-2-1",
+    "box": [
+      112,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "bars-upper-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "bars-upper-3-1",
+    "box": [
+      128,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "bars-upper-3-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "bars-upper-4-1",
+    "box": [
+      144,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "bars-upper-4-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "bars-upper-5-1",
+    "box": [
+      160,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "bars-upper-5-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "bars-upper-6-1",
+    "box": [
+      176,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "bars-upper-6-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "bars-lower-1-1",
+    "box": [
+      96,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "bars-lower-1-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "bars-lower-2-1",
+    "box": [
+      112,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "bars-lower-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "bars-lower-3-1",
+    "box": [
+      128,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "bars-lower-3-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "bars-lower-4-1",
+    "box": [
+      144,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "bars-lower-4-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "bars-lower-5-1",
+    "box": [
+      160,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "bars-lower-5-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "bars-lower-6-1",
+    "box": [
+      176,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "bars-lower-6-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-niche-96-1-1",
+    "box": [
+      96,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "stone-niche-96-1-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-niche-96-2-1",
+    "box": [
+      112,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "stone-niche-96-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-niche-96-3-1",
+    "box": [
+      128,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "stone-niche-96-3-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-niche-96-4-1",
+    "box": [
+      144,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "stone-niche-96-4-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-niche-96-5-1",
+    "box": [
+      160,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "stone-niche-96-5-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-niche-96-6-1",
+    "box": [
+      176,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "stone-niche-96-6-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-niche-96-7-1",
+    "box": [
+      192,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse K55. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "K",
+      "reviewId": "K55",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-crypt-source-2fef6d9983a7.png",
+      "box": [
+        160,
+        96,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "stone-niche-112-1-1",
+    "box": [
+      96,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "stone-niche-112-1-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-niche-112-2-1",
+    "box": [
+      112,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "stone-niche-112-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-niche-112-3-1",
+    "box": [
+      128,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "stone-niche-112-3-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-niche-112-4-1",
+    "box": [
+      144,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "stone-niche-112-4-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-niche-112-5-1",
+    "box": [
+      160,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse K61. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "K",
+      "reviewId": "K61",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-crypt-source-2fef6d9983a7.png",
+      "box": [
+        144,
+        112,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "stone-niche-112-6-1",
+    "box": [
+      176,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "stone-niche-112-6-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-coffin-128-1-1",
+    "box": [
+      96,
+      128,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "stone-coffin-128-1-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-coffin-128-2-1",
+    "box": [
+      128,
+      128,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "stone-coffin-128-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-coffin-128-3-1",
+    "box": [
+      160,
+      128,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "stone-coffin-128-3-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-coffin-128-4-1",
+    "box": [
+      192,
+      128,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "stone-coffin-128-4-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-coffin-144-1-1",
+    "box": [
+      96,
+      144,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "stone-coffin-144-1-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-coffin-144-2-1",
+    "box": [
+      128,
+      144,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "stone-coffin-144-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-coffin-144-3-1",
+    "box": [
+      160,
+      144,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "stone-coffin-144-3-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-coffin-144-4-1",
+    "box": [
+      192,
+      144,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "stone-coffin-144-4-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-tombstone-1-1",
+    "box": [
+      256,
+      0,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "stone-tombstone-1-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-tombstone-2-1",
+    "box": [
+      272,
+      0,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "stone-tombstone-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-tombstone-3-1",
+    "box": [
+      288,
+      0,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "stone-tombstone-3-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-tombstone-4-1",
+    "box": [
+      304,
+      0,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "stone-tombstone-4-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-tombstone-5-1",
+    "box": [
+      320,
+      0,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "stone-tombstone-5-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-tombstone-6-1",
+    "box": [
+      336,
+      0,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "stone-tombstone-6-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-tombstone-1-2",
+    "box": [
+      256,
+      32,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "stone-tombstone-1-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-tombstone-2-2",
+    "box": [
+      272,
+      32,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "stone-tombstone-2-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-tombstone-3-2",
+    "box": [
+      288,
+      32,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "stone-tombstone-3-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-tombstone-4-2",
+    "box": [
+      304,
+      32,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "stone-tombstone-4-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-tombstone-5-2",
+    "box": [
+      320,
+      32,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "stone-tombstone-5-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-tombstone-6-2",
+    "box": [
+      336,
+      32,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "stone-tombstone-6-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-tombstone-1-3",
+    "box": [
+      256,
+      64,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "stone-tombstone-1-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-tombstone-2-3",
+    "box": [
+      272,
+      64,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "stone-tombstone-2-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-tombstone-3-3",
+    "box": [
+      288,
+      64,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "stone-tombstone-3-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-tombstone-4-3",
+    "box": [
+      304,
+      64,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "stone-tombstone-4-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-tombstone-5-3",
+    "box": [
+      320,
+      64,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "stone-tombstone-5-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-tombstone-6-3",
+    "box": [
+      336,
+      64,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "stone-tombstone-6-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-altar-1-1",
+    "box": [
+      352,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "stone-altar-1-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-altar-2-1",
+    "box": [
+      368,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "stone-altar-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-altar-3-1",
+    "box": [
+      384,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "stone-altar-3-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-altar-4-1",
+    "box": [
+      400,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "stone-altar-4-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-altar-5-1",
+    "box": [
+      416,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "stone-altar-5-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-altar-6-1",
+    "box": [
+      432,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "stone-altar-6-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-altar-1-2",
+    "box": [
+      352,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "stone-altar-1-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-altar-2-2",
+    "box": [
+      368,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse K96. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "K",
+      "reviewId": "K96",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-crypt-source-2fef6d9983a7.png",
+      "box": [
+        352,
+        16,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "stone-altar-3-2",
+    "box": [
+      384,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse K96. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "K",
+      "reviewId": "K96",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-crypt-source-2fef6d9983a7.png",
+      "box": [
+        352,
+        16,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "stone-altar-4-2",
+    "box": [
+      400,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "stone-altar-4-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-altar-5-2",
+    "box": [
+      416,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "stone-altar-5-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-altar-6-2",
+    "box": [
+      432,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "stone-altar-6-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-altar-1-3",
+    "box": [
+      352,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse K90. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "K",
+      "reviewId": "K90",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-crypt-source-2fef6d9983a7.png",
+      "box": [
+        352,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "stone-altar-2-3",
+    "box": [
+      368,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse K91. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "K",
+      "reviewId": "K91",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-crypt-source-2fef6d9983a7.png",
+      "box": [
+        368,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "stone-altar-3-3",
+    "box": [
+      384,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse K92. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "K",
+      "reviewId": "K92",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-crypt-source-2fef6d9983a7.png",
+      "box": [
+        384,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "stone-altar-4-3",
+    "box": [
+      400,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "stone-altar-4-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-altar-5-3",
+    "box": [
+      416,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "stone-altar-5-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-altar-6-3",
+    "box": [
+      432,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "stone-altar-6-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-altar-1-4",
+    "box": [
+      352,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "stone-altar-1-4",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-altar-2-4",
+    "box": [
+      368,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "stone-altar-2-4",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-altar-3-4",
+    "box": [
+      384,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "stone-altar-3-4",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-altar-4-4",
+    "box": [
+      400,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "stone-altar-4-4",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-altar-5-4",
+    "box": [
+      416,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "stone-altar-5-4",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-altar-6-4",
+    "box": [
+      432,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "stone-altar-6-4",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-altar-1-5",
+    "box": [
+      352,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "stone-altar-1-5",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-altar-2-5",
+    "box": [
+      368,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "stone-altar-2-5",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-altar-3-5",
+    "box": [
+      384,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "stone-altar-3-5",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-altar-4-5",
+    "box": [
+      400,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "stone-altar-4-5",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-altar-5-5",
+    "box": [
+      416,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "stone-altar-5-5",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-altar-6-5",
+    "box": [
+      432,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "stone-altar-6-5",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-altar-1-6",
+    "box": [
+      352,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "stone-altar-1-6",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-altar-2-6",
+    "box": [
+      368,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "stone-altar-2-6",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-altar-3-6",
+    "box": [
+      384,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "stone-altar-3-6",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-altar-4-6",
+    "box": [
+      400,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "stone-altar-4-6",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-altar-5-6",
+    "box": [
+      416,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse K106. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "K",
+      "reviewId": "K106",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-crypt-source-2fef6d9983a7.png",
+      "box": [
+        416,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "stone-altar-6-6",
+    "box": [
+      432,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse K107. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "K",
+      "reviewId": "K107",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-crypt-source-2fef6d9983a7.png",
+      "box": [
+        432,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "stone-sarcophagus-256",
+    "box": [
+      256,
+      104,
+      32,
+      24
+    ],
+    "kind": "part",
+    "group": "stone-sarcophagus-256",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-sarcophagus-288",
+    "box": [
+      288,
+      104,
+      32,
+      24
+    ],
+    "kind": "part",
+    "group": "stone-sarcophagus-288",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-sarcophagus-320",
+    "box": [
+      320,
+      104,
+      32,
+      24
+    ],
+    "kind": "part",
+    "group": "stone-sarcophagus-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-sarcophagus-352",
+    "box": [
+      352,
+      104,
+      32,
+      24
+    ],
+    "kind": "part",
+    "group": "stone-sarcophagus-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-grave-marker-384",
+    "box": [
+      384,
+      104,
+      16,
+      24
+    ],
+    "kind": "part",
+    "group": "stone-grave-marker-384",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-grave-marker-400",
+    "box": [
+      400,
+      104,
+      16,
+      24
+    ],
+    "kind": "part",
+    "group": "stone-grave-marker-400",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-grave-marker-416",
+    "box": [
+      416,
+      104,
+      16,
+      24
+    ],
+    "kind": "part",
+    "group": "stone-grave-marker-416",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-stairs-left",
+    "box": [
+      448,
+      0,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "stone-stairs-left",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-stairs-right",
+    "box": [
+      480,
+      8,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "stone-stairs-right",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-stairs-left-lower",
+    "box": [
+      448,
+      48,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "stone-stairs-left-lower",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-stairs-right-lower",
+    "box": [
+      480,
+      56,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "stone-stairs-right-lower",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-stairs-front",
+    "box": [
+      480,
+      96,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "stone-stairs-front",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-tomb-animation-512",
+    "box": [
+      512,
+      0,
+      16,
+      128
+    ],
+    "kind": "part",
+    "group": "stone-tomb-animation-512",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        512,
+        0,
+        16,
+        32
+      ],
+      [
+        512,
+        32,
+        16,
+        32
+      ],
+      [
+        512,
+        64,
+        16,
+        32
+      ],
+      [
+        512,
+        96,
+        16,
+        32
+      ]
+    ]
+  },
+  {
+    "name": "stone-tomb-animation-528",
+    "box": [
+      528,
+      0,
+      16,
+      128
+    ],
+    "kind": "part",
+    "group": "stone-tomb-animation-528",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        528,
+        0,
+        16,
+        32
+      ],
+      [
+        528,
+        32,
+        16,
+        32
+      ],
+      [
+        528,
+        64,
+        16,
+        32
+      ],
+      [
+        528,
+        96,
+        16,
+        32
+      ]
+    ]
+  },
+  {
+    "name": "stone-tomb-animation-544",
+    "box": [
+      544,
+      0,
+      16,
+      128
+    ],
+    "kind": "part",
+    "group": "stone-tomb-animation-544",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        544,
+        0,
+        16,
+        32
+      ],
+      [
+        544,
+        32,
+        16,
+        32
+      ],
+      [
+        544,
+        64,
+        16,
+        32
+      ],
+      [
+        544,
+        96,
+        16,
+        32
+      ]
+    ]
+  },
+  {
+    "name": "stone-tomb-animation-560",
+    "box": [
+      560,
+      0,
+      16,
+      128
+    ],
+    "kind": "part",
+    "group": "stone-tomb-animation-560",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        560,
+        0,
+        16,
+        32
+      ],
+      [
+        560,
+        32,
+        16,
+        32
+      ],
+      [
+        560,
+        64,
+        16,
+        32
+      ],
+      [
+        560,
+        96,
+        16,
+        32
+      ]
+    ]
+  },
+  {
+    "name": "stone-tomb-animation-576",
+    "box": [
+      576,
+      0,
+      16,
+      128
+    ],
+    "kind": "part",
+    "group": "stone-tomb-animation-576",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        576,
+        0,
+        16,
+        32
+      ],
+      [
+        576,
+        32,
+        16,
+        32
+      ],
+      [
+        576,
+        64,
+        16,
+        32
+      ],
+      [
+        576,
+        96,
+        16,
+        32
+      ]
+    ]
+  },
+  {
+    "name": "stone-tomb-animation-592",
+    "box": [
+      592,
+      0,
+      16,
+      128
+    ],
+    "kind": "part",
+    "group": "stone-tomb-animation-592",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        592,
+        0,
+        16,
+        32
+      ],
+      [
+        592,
+        32,
+        16,
+        32
+      ],
+      [
+        592,
+        64,
+        16,
+        32
+      ],
+      [
+        592,
+        96,
+        16,
+        32
+      ]
+    ]
+  },
+  {
+    "name": "stone-tomb-animation-608",
+    "box": [
+      608,
+      0,
+      16,
+      128
+    ],
+    "kind": "part",
+    "group": "stone-tomb-animation-608",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        608,
+        0,
+        16,
+        32
+      ],
+      [
+        608,
+        32,
+        16,
+        32
+      ],
+      [
+        608,
+        64,
+        16,
+        32
+      ],
+      [
+        608,
+        96,
+        16,
+        32
+      ]
+    ]
+  },
+  {
+    "name": "stone-tomb-animation-624",
+    "box": [
+      624,
+      0,
+      16,
+      128
+    ],
+    "kind": "part",
+    "group": "stone-tomb-animation-624",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        624,
+        0,
+        16,
+        32
+      ],
+      [
+        624,
+        32,
+        16,
+        32
+      ],
+      [
+        624,
+        64,
+        16,
+        32
+      ],
+      [
+        624,
+        96,
+        16,
+        32
+      ]
+    ]
+  },
+  {
+    "name": "stone-tomb-animation-640",
+    "box": [
+      640,
+      0,
+      16,
+      128
+    ],
+    "kind": "part",
+    "group": "stone-tomb-animation-640",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        640,
+        0,
+        16,
+        32
+      ],
+      [
+        640,
+        32,
+        16,
+        32
+      ],
+      [
+        640,
+        64,
+        16,
+        32
+      ],
+      [
+        640,
+        96,
+        16,
+        32
+      ]
+    ]
+  },
+  {
+    "name": "stone-tomb-animation-656",
+    "box": [
+      656,
+      0,
+      16,
+      128
+    ],
+    "kind": "part",
+    "group": "stone-tomb-animation-656",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        656,
+        0,
+        16,
+        32
+      ],
+      [
+        656,
+        32,
+        16,
+        32
+      ],
+      [
+        656,
+        64,
+        16,
+        32
+      ],
+      [
+        656,
+        96,
+        16,
+        32
+      ]
+    ]
+  },
+  {
+    "name": "stone-tomb-animation-672",
+    "box": [
+      672,
+      0,
+      16,
+      128
+    ],
+    "kind": "part",
+    "group": "stone-tomb-animation-672",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        672,
+        0,
+        16,
+        32
+      ],
+      [
+        672,
+        32,
+        16,
+        32
+      ],
+      [
+        672,
+        64,
+        16,
+        32
+      ],
+      [
+        672,
+        96,
+        16,
+        32
+      ]
+    ]
+  },
+  {
+    "name": "stone-tomb-animation-688",
+    "box": [
+      688,
+      0,
+      16,
+      128
+    ],
+    "kind": "part",
+    "group": "stone-tomb-animation-688",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        688,
+        0,
+        16,
+        32
+      ],
+      [
+        688,
+        32,
+        16,
+        32
+      ],
+      [
+        688,
+        64,
+        16,
+        32
+      ],
+      [
+        688,
+        96,
+        16,
+        32
+      ]
+    ]
+  },
+  {
+    "name": "stone-niche-animation-704",
+    "box": [
+      704,
+      0,
+      16,
+      64
+    ],
+    "kind": "part",
+    "group": "stone-niche-animation-704",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        704,
+        0,
+        16,
+        16
+      ],
+      [
+        704,
+        16,
+        16,
+        16
+      ],
+      [
+        704,
+        32,
+        16,
+        16
+      ],
+      [
+        704,
+        48,
+        16,
+        16
+      ]
+    ]
+  },
+  {
+    "name": "stone-niche-animation-720",
+    "box": [
+      720,
+      0,
+      16,
+      64
+    ],
+    "kind": "part",
+    "group": "stone-niche-animation-720",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        720,
+        0,
+        16,
+        16
+      ],
+      [
+        720,
+        16,
+        16,
+        16
+      ],
+      [
+        720,
+        32,
+        16,
+        16
+      ],
+      [
+        720,
+        48,
+        16,
+        16
+      ]
+    ]
+  },
+  {
+    "name": "stone-niche-animation-736",
+    "box": [
+      736,
+      0,
+      16,
+      64
+    ],
+    "kind": "part",
+    "group": "stone-niche-animation-736",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        736,
+        0,
+        16,
+        16
+      ],
+      [
+        736,
+        16,
+        16,
+        16
+      ],
+      [
+        736,
+        32,
+        16,
+        16
+      ],
+      [
+        736,
+        48,
+        16,
+        16
+      ]
+    ]
+  },
+  {
+    "name": "stone-niche-animation-752",
+    "box": [
+      752,
+      0,
+      16,
+      64
+    ],
+    "kind": "part",
+    "group": "stone-niche-animation-752",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        752,
+        0,
+        16,
+        16
+      ],
+      [
+        752,
+        16,
+        16,
+        16
+      ],
+      [
+        752,
+        32,
+        16,
+        16
+      ],
+      [
+        752,
+        48,
+        16,
+        16
+      ]
+    ]
+  },
+  {
+    "name": "stone-coffin-animation-704",
+    "box": [
+      704,
+      64,
+      32,
+      64
+    ],
+    "kind": "part",
+    "group": "stone-coffin-animation-704",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        704,
+        64,
+        32,
+        16
+      ],
+      [
+        704,
+        80,
+        32,
+        16
+      ],
+      [
+        704,
+        96,
+        32,
+        16
+      ],
+      [
+        704,
+        112,
+        32,
+        16
+      ]
+    ]
+  },
+  {
+    "name": "stone-coffin-animation-736",
+    "box": [
+      736,
+      64,
+      32,
+      64
+    ],
+    "kind": "part",
+    "group": "stone-coffin-animation-736",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        736,
+        64,
+        32,
+        16
+      ],
+      [
+        736,
+        80,
+        32,
+        16
+      ],
+      [
+        736,
+        96,
+        32,
+        16
+      ],
+      [
+        736,
+        112,
+        32,
+        16
+      ]
+    ]
+  },
+  {
+    "name": "moss-niche-96-1-1",
+    "box": [
+      96,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse K51. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "K",
+      "reviewId": "K51",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-crypt-source-2fef6d9983a7.png",
+      "box": [
+        96,
+        96,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "moss-niche-96-2-1",
+    "box": [
+      112,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse K52. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "K",
+      "reviewId": "K52",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-crypt-source-2fef6d9983a7.png",
+      "box": [
+        112,
+        96,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "moss-niche-96-3-1",
+    "box": [
+      128,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse K53. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "K",
+      "reviewId": "K53",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-crypt-source-2fef6d9983a7.png",
+      "box": [
+        128,
+        96,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "moss-niche-96-4-1",
+    "box": [
+      144,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse K54. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "K",
+      "reviewId": "K54",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-crypt-source-2fef6d9983a7.png",
+      "box": [
+        144,
+        96,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "moss-niche-96-5-1",
+    "box": [
+      160,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "moss-niche-96-5-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-niche-96-6-1",
+    "box": [
+      176,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "moss-niche-96-6-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-niche-96-7-1",
+    "box": [
+      192,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse K160. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "K",
+      "reviewId": "K160",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-crypt-source-2fef6d9983a7.png",
+      "box": [
+        160,
+        160,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "moss-niche-112-1-1",
+    "box": [
+      96,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse K58. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "K",
+      "reviewId": "K58",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-crypt-source-2fef6d9983a7.png",
+      "box": [
+        96,
+        112,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "moss-niche-112-2-1",
+    "box": [
+      112,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse K59. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "K",
+      "reviewId": "K59",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-crypt-source-2fef6d9983a7.png",
+      "box": [
+        112,
+        112,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "moss-niche-112-3-1",
+    "box": [
+      128,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse K60. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "K",
+      "reviewId": "K60",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-crypt-source-2fef6d9983a7.png",
+      "box": [
+        128,
+        112,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "moss-niche-112-4-1",
+    "box": [
+      144,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "moss-niche-112-4-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-niche-112-5-1",
+    "box": [
+      160,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse K166. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "K",
+      "reviewId": "K166",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-crypt-source-2fef6d9983a7.png",
+      "box": [
+        144,
+        176,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "moss-niche-112-6-1",
+    "box": [
+      176,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "moss-niche-112-6-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-coffin-128-1-1",
+    "box": [
+      96,
+      192,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "moss-coffin-128-1-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-coffin-128-2-1",
+    "box": [
+      128,
+      192,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "moss-coffin-128-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-coffin-128-3-1",
+    "box": [
+      160,
+      192,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "moss-coffin-128-3-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-coffin-128-4-1",
+    "box": [
+      192,
+      192,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "moss-coffin-128-4-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-coffin-144-1-1",
+    "box": [
+      96,
+      208,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "moss-coffin-144-1-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-coffin-144-2-1",
+    "box": [
+      128,
+      208,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "moss-coffin-144-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-coffin-144-3-1",
+    "box": [
+      160,
+      208,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "moss-coffin-144-3-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-coffin-144-4-1",
+    "box": [
+      192,
+      208,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "moss-coffin-144-4-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-tombstone-1-1",
+    "box": [
+      256,
+      128,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "moss-tombstone-1-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-tombstone-2-1",
+    "box": [
+      272,
+      128,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "moss-tombstone-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-tombstone-3-1",
+    "box": [
+      288,
+      128,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "moss-tombstone-3-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-tombstone-4-1",
+    "box": [
+      304,
+      128,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "moss-tombstone-4-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-tombstone-5-1",
+    "box": [
+      320,
+      128,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "moss-tombstone-5-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-tombstone-6-1",
+    "box": [
+      336,
+      128,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "moss-tombstone-6-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-tombstone-1-2",
+    "box": [
+      256,
+      160,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "moss-tombstone-1-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-tombstone-2-2",
+    "box": [
+      272,
+      160,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "moss-tombstone-2-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-tombstone-3-2",
+    "box": [
+      288,
+      160,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "moss-tombstone-3-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-tombstone-4-2",
+    "box": [
+      304,
+      160,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "moss-tombstone-4-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-tombstone-5-2",
+    "box": [
+      320,
+      160,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "moss-tombstone-5-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-tombstone-6-2",
+    "box": [
+      336,
+      160,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "moss-tombstone-6-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-tombstone-1-3",
+    "box": [
+      256,
+      192,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "moss-tombstone-1-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-tombstone-2-3",
+    "box": [
+      272,
+      192,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "moss-tombstone-2-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-tombstone-3-3",
+    "box": [
+      288,
+      192,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "moss-tombstone-3-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-tombstone-4-3",
+    "box": [
+      304,
+      192,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "moss-tombstone-4-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-tombstone-5-3",
+    "box": [
+      320,
+      192,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "moss-tombstone-5-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-tombstone-6-3",
+    "box": [
+      336,
+      192,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "moss-tombstone-6-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-altar-1-1",
+    "box": [
+      352,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "moss-altar-1-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-altar-2-1",
+    "box": [
+      368,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "moss-altar-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-altar-3-1",
+    "box": [
+      384,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "moss-altar-3-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-altar-4-1",
+    "box": [
+      400,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "moss-altar-4-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-altar-5-1",
+    "box": [
+      416,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "moss-altar-5-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-altar-6-1",
+    "box": [
+      432,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "moss-altar-6-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-altar-1-2",
+    "box": [
+      352,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "moss-altar-1-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-altar-2-2",
+    "box": [
+      368,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse K201. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "K",
+      "reviewId": "K201",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-crypt-source-2fef6d9983a7.png",
+      "box": [
+        352,
+        144,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "moss-altar-3-2",
+    "box": [
+      384,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse K201. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "K",
+      "reviewId": "K201",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-crypt-source-2fef6d9983a7.png",
+      "box": [
+        352,
+        144,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "moss-altar-4-2",
+    "box": [
+      400,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "moss-altar-4-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-altar-5-2",
+    "box": [
+      416,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "moss-altar-5-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-altar-6-2",
+    "box": [
+      432,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "moss-altar-6-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-altar-1-3",
+    "box": [
+      352,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse K195. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "K",
+      "reviewId": "K195",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-crypt-source-2fef6d9983a7.png",
+      "box": [
+        352,
+        128,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "moss-altar-2-3",
+    "box": [
+      368,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse K196. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "K",
+      "reviewId": "K196",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-crypt-source-2fef6d9983a7.png",
+      "box": [
+        368,
+        128,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "moss-altar-3-3",
+    "box": [
+      384,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse K197. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "K",
+      "reviewId": "K197",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-crypt-source-2fef6d9983a7.png",
+      "box": [
+        384,
+        128,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "moss-altar-4-3",
+    "box": [
+      400,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "moss-altar-4-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-altar-5-3",
+    "box": [
+      416,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "moss-altar-5-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-altar-6-3",
+    "box": [
+      432,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "moss-altar-6-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-altar-1-4",
+    "box": [
+      352,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "moss-altar-1-4",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-altar-2-4",
+    "box": [
+      368,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "moss-altar-2-4",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-altar-3-4",
+    "box": [
+      384,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "moss-altar-3-4",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-altar-4-4",
+    "box": [
+      400,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "moss-altar-4-4",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-altar-5-4",
+    "box": [
+      416,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "moss-altar-5-4",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-altar-6-4",
+    "box": [
+      432,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "moss-altar-6-4",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-altar-1-5",
+    "box": [
+      352,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "moss-altar-1-5",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-altar-2-5",
+    "box": [
+      368,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "moss-altar-2-5",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-altar-3-5",
+    "box": [
+      384,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "moss-altar-3-5",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-altar-4-5",
+    "box": [
+      400,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "moss-altar-4-5",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-altar-5-5",
+    "box": [
+      416,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "moss-altar-5-5",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-altar-6-5",
+    "box": [
+      432,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "moss-altar-6-5",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-altar-1-6",
+    "box": [
+      352,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "moss-altar-1-6",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-altar-2-6",
+    "box": [
+      368,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "moss-altar-2-6",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-altar-3-6",
+    "box": [
+      384,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "moss-altar-3-6",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-altar-4-6",
+    "box": [
+      400,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "moss-altar-4-6",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-altar-5-6",
+    "box": [
+      416,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse K211. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "K",
+      "reviewId": "K211",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-crypt-source-2fef6d9983a7.png",
+      "box": [
+        416,
+        160,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "moss-altar-6-6",
+    "box": [
+      432,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse K212. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "K",
+      "reviewId": "K212",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-crypt-source-2fef6d9983a7.png",
+      "box": [
+        432,
+        160,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "moss-sarcophagus-256",
+    "box": [
+      256,
+      232,
+      32,
+      24
+    ],
+    "kind": "part",
+    "group": "moss-sarcophagus-256",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-sarcophagus-288",
+    "box": [
+      288,
+      232,
+      32,
+      24
+    ],
+    "kind": "part",
+    "group": "moss-sarcophagus-288",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-sarcophagus-320",
+    "box": [
+      320,
+      232,
+      32,
+      24
+    ],
+    "kind": "part",
+    "group": "moss-sarcophagus-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-sarcophagus-352",
+    "box": [
+      352,
+      232,
+      32,
+      24
+    ],
+    "kind": "part",
+    "group": "moss-sarcophagus-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-grave-marker-384",
+    "box": [
+      384,
+      232,
+      16,
+      24
+    ],
+    "kind": "part",
+    "group": "moss-grave-marker-384",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-grave-marker-400",
+    "box": [
+      400,
+      232,
+      16,
+      24
+    ],
+    "kind": "part",
+    "group": "moss-grave-marker-400",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-grave-marker-416",
+    "box": [
+      416,
+      232,
+      16,
+      24
+    ],
+    "kind": "part",
+    "group": "moss-grave-marker-416",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-stairs-left",
+    "box": [
+      448,
+      128,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "moss-stairs-left",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-stairs-right",
+    "box": [
+      480,
+      136,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "moss-stairs-right",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-stairs-left-lower",
+    "box": [
+      448,
+      176,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "moss-stairs-left-lower",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-stairs-right-lower",
+    "box": [
+      480,
+      184,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "moss-stairs-right-lower",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-stairs-front",
+    "box": [
+      480,
+      224,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "moss-stairs-front",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "moss-tomb-animation-512",
+    "box": [
+      512,
+      128,
+      16,
+      128
+    ],
+    "kind": "part",
+    "group": "moss-tomb-animation-512",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        512,
+        128,
+        16,
+        32
+      ],
+      [
+        512,
+        160,
+        16,
+        32
+      ],
+      [
+        512,
+        192,
+        16,
+        32
+      ],
+      [
+        512,
+        224,
+        16,
+        32
+      ]
+    ]
+  },
+  {
+    "name": "moss-tomb-animation-528",
+    "box": [
+      528,
+      128,
+      16,
+      128
+    ],
+    "kind": "part",
+    "group": "moss-tomb-animation-528",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        528,
+        128,
+        16,
+        32
+      ],
+      [
+        528,
+        160,
+        16,
+        32
+      ],
+      [
+        528,
+        192,
+        16,
+        32
+      ],
+      [
+        528,
+        224,
+        16,
+        32
+      ]
+    ]
+  },
+  {
+    "name": "moss-tomb-animation-544",
+    "box": [
+      544,
+      128,
+      16,
+      128
+    ],
+    "kind": "part",
+    "group": "moss-tomb-animation-544",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        544,
+        128,
+        16,
+        32
+      ],
+      [
+        544,
+        160,
+        16,
+        32
+      ],
+      [
+        544,
+        192,
+        16,
+        32
+      ],
+      [
+        544,
+        224,
+        16,
+        32
+      ]
+    ]
+  },
+  {
+    "name": "moss-tomb-animation-560",
+    "box": [
+      560,
+      128,
+      16,
+      128
+    ],
+    "kind": "part",
+    "group": "moss-tomb-animation-560",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        560,
+        128,
+        16,
+        32
+      ],
+      [
+        560,
+        160,
+        16,
+        32
+      ],
+      [
+        560,
+        192,
+        16,
+        32
+      ],
+      [
+        560,
+        224,
+        16,
+        32
+      ]
+    ]
+  },
+  {
+    "name": "moss-tomb-animation-576",
+    "box": [
+      576,
+      128,
+      16,
+      128
+    ],
+    "kind": "part",
+    "group": "moss-tomb-animation-576",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        576,
+        128,
+        16,
+        32
+      ],
+      [
+        576,
+        160,
+        16,
+        32
+      ],
+      [
+        576,
+        192,
+        16,
+        32
+      ],
+      [
+        576,
+        224,
+        16,
+        32
+      ]
+    ]
+  },
+  {
+    "name": "moss-tomb-animation-592",
+    "box": [
+      592,
+      128,
+      16,
+      128
+    ],
+    "kind": "part",
+    "group": "moss-tomb-animation-592",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        592,
+        128,
+        16,
+        32
+      ],
+      [
+        592,
+        160,
+        16,
+        32
+      ],
+      [
+        592,
+        192,
+        16,
+        32
+      ],
+      [
+        592,
+        224,
+        16,
+        32
+      ]
+    ]
+  },
+  {
+    "name": "moss-tomb-animation-608",
+    "box": [
+      608,
+      128,
+      16,
+      128
+    ],
+    "kind": "part",
+    "group": "moss-tomb-animation-608",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        608,
+        128,
+        16,
+        32
+      ],
+      [
+        608,
+        160,
+        16,
+        32
+      ],
+      [
+        608,
+        192,
+        16,
+        32
+      ],
+      [
+        608,
+        224,
+        16,
+        32
+      ]
+    ]
+  },
+  {
+    "name": "moss-tomb-animation-624",
+    "box": [
+      624,
+      128,
+      16,
+      128
+    ],
+    "kind": "part",
+    "group": "moss-tomb-animation-624",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        624,
+        128,
+        16,
+        32
+      ],
+      [
+        624,
+        160,
+        16,
+        32
+      ],
+      [
+        624,
+        192,
+        16,
+        32
+      ],
+      [
+        624,
+        224,
+        16,
+        32
+      ]
+    ]
+  },
+  {
+    "name": "moss-tomb-animation-640",
+    "box": [
+      640,
+      128,
+      16,
+      128
+    ],
+    "kind": "part",
+    "group": "moss-tomb-animation-640",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        640,
+        128,
+        16,
+        32
+      ],
+      [
+        640,
+        160,
+        16,
+        32
+      ],
+      [
+        640,
+        192,
+        16,
+        32
+      ],
+      [
+        640,
+        224,
+        16,
+        32
+      ]
+    ]
+  },
+  {
+    "name": "moss-tomb-animation-656",
+    "box": [
+      656,
+      128,
+      16,
+      128
+    ],
+    "kind": "part",
+    "group": "moss-tomb-animation-656",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        656,
+        128,
+        16,
+        32
+      ],
+      [
+        656,
+        160,
+        16,
+        32
+      ],
+      [
+        656,
+        192,
+        16,
+        32
+      ],
+      [
+        656,
+        224,
+        16,
+        32
+      ]
+    ]
+  },
+  {
+    "name": "moss-tomb-animation-672",
+    "box": [
+      672,
+      128,
+      16,
+      128
+    ],
+    "kind": "part",
+    "group": "moss-tomb-animation-672",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        672,
+        128,
+        16,
+        32
+      ],
+      [
+        672,
+        160,
+        16,
+        32
+      ],
+      [
+        672,
+        192,
+        16,
+        32
+      ],
+      [
+        672,
+        224,
+        16,
+        32
+      ]
+    ]
+  },
+  {
+    "name": "moss-tomb-animation-688",
+    "box": [
+      688,
+      128,
+      16,
+      128
+    ],
+    "kind": "part",
+    "group": "moss-tomb-animation-688",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        688,
+        128,
+        16,
+        32
+      ],
+      [
+        688,
+        160,
+        16,
+        32
+      ],
+      [
+        688,
+        192,
+        16,
+        32
+      ],
+      [
+        688,
+        224,
+        16,
+        32
+      ]
+    ]
+  },
+  {
+    "name": "moss-niche-animation-704",
+    "box": [
+      704,
+      128,
+      16,
+      64
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse K150. The complete crop is identical.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        704,
+        128,
+        16,
+        16
+      ],
+      [
+        704,
+        144,
+        16,
+        16
+      ],
+      [
+        704,
+        160,
+        16,
+        16
+      ],
+      [
+        704,
+        176,
+        16,
+        16
+      ]
+    ],
+    "reuseProposal": {
+      "sheetId": "K",
+      "reviewId": "K150",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-crypt-source-2fef6d9983a7.png",
+      "box": [
+        704,
+        0,
+        16,
+        64
+      ]
+    }
+  },
+  {
+    "name": "moss-niche-animation-720",
+    "box": [
+      720,
+      128,
+      16,
+      64
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse K151. The complete crop is identical.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        720,
+        128,
+        16,
+        16
+      ],
+      [
+        720,
+        144,
+        16,
+        16
+      ],
+      [
+        720,
+        160,
+        16,
+        16
+      ],
+      [
+        720,
+        176,
+        16,
+        16
+      ]
+    ],
+    "reuseProposal": {
+      "sheetId": "K",
+      "reviewId": "K151",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-crypt-source-2fef6d9983a7.png",
+      "box": [
+        720,
+        0,
+        16,
+        64
+      ]
+    }
+  },
+  {
+    "name": "moss-niche-animation-736",
+    "box": [
+      736,
+      128,
+      16,
+      64
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse K152. The complete crop is identical.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        736,
+        128,
+        16,
+        16
+      ],
+      [
+        736,
+        144,
+        16,
+        16
+      ],
+      [
+        736,
+        160,
+        16,
+        16
+      ],
+      [
+        736,
+        176,
+        16,
+        16
+      ]
+    ],
+    "reuseProposal": {
+      "sheetId": "K",
+      "reviewId": "K152",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-crypt-source-2fef6d9983a7.png",
+      "box": [
+        736,
+        0,
+        16,
+        64
+      ]
+    }
+  },
+  {
+    "name": "moss-niche-animation-752",
+    "box": [
+      752,
+      128,
+      16,
+      64
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse K153. The complete crop is identical.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        752,
+        128,
+        16,
+        16
+      ],
+      [
+        752,
+        144,
+        16,
+        16
+      ],
+      [
+        752,
+        160,
+        16,
+        16
+      ],
+      [
+        752,
+        176,
+        16,
+        16
+      ]
+    ],
+    "reuseProposal": {
+      "sheetId": "K",
+      "reviewId": "K153",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-crypt-source-2fef6d9983a7.png",
+      "box": [
+        752,
+        0,
+        16,
+        64
+      ]
+    }
+  },
+  {
+    "name": "moss-coffin-animation-704",
+    "box": [
+      704,
+      192,
+      32,
+      64
+    ],
+    "kind": "part",
+    "group": "moss-coffin-animation-704",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        704,
+        192,
+        32,
+        16
+      ],
+      [
+        704,
+        208,
+        32,
+        16
+      ],
+      [
+        704,
+        224,
+        32,
+        16
+      ],
+      [
+        704,
+        240,
+        32,
+        16
+      ]
+    ]
+  },
+  {
+    "name": "moss-coffin-animation-736",
+    "box": [
+      736,
+      192,
+      32,
+      64
+    ],
+    "kind": "part",
+    "group": "moss-coffin-animation-736",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        736,
+        192,
+        32,
+        16
+      ],
+      [
+        736,
+        208,
+        32,
+        16
+      ],
+      [
+        736,
+        224,
+        32,
+        16
+      ],
+      [
+        736,
+        240,
+        32,
+        16
+      ]
+    ]
+  },
+  {
+    "name": "wall-top-0-2-1",
+    "box": [
+      16,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-top-0-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wall-top-0-3-1",
+    "box": [
+      32,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-top-0-3-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wall-top-0-4-1",
+    "box": [
+      48,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse K262. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "K",
+      "reviewId": "K262",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-crypt-source-2fef6d9983a7.png",
+      "box": [
+        32,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "wall-top-0-5-1",
+    "box": [
+      64,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse K262. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "K",
+      "reviewId": "K262",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-crypt-source-2fef6d9983a7.png",
+      "box": [
+        32,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "wall-top-0-6-1",
+    "box": [
+      80,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-top-0-6-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wall-top-0-2-2",
+    "box": [
+      16,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-top-0-2-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wall-top-0-3-2",
+    "box": [
+      32,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-top-0-3-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wall-top-0-4-2",
+    "box": [
+      48,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-top-0-4-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wall-top-0-5-2",
+    "box": [
+      64,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-top-0-5-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wall-top-0-6-2",
+    "box": [
+      80,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-top-0-6-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wall-ring-0-1-1",
+    "box": [
+      0,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-ring-0-1-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wall-ring-0-2-1",
+    "box": [
+      16,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-ring-0-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wall-ring-0-3-1",
+    "box": [
+      32,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-ring-0-3-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wall-ring-0-1-2",
+    "box": [
+      0,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-ring-0-1-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wall-ring-0-2-2",
+    "box": [
+      16,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-ring-0-2-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wall-ring-0-3-2",
+    "box": [
+      32,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-ring-0-3-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wall-ring-0-1-3",
+    "box": [
+      0,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse K261. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "K",
+      "reviewId": "K261",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-crypt-source-2fef6d9983a7.png",
+      "box": [
+        16,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "wall-ring-0-2-3",
+    "box": [
+      16,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse K262. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "K",
+      "reviewId": "K262",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-crypt-source-2fef6d9983a7.png",
+      "box": [
+        32,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "wall-ring-0-3-3",
+    "box": [
+      32,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse K265. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "K",
+      "reviewId": "K265",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-crypt-source-2fef6d9983a7.png",
+      "box": [
+        80,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "wall-ring-0-1-4",
+    "box": [
+      0,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-ring-0-1-4",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wall-ring-0-2-4",
+    "box": [
+      16,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-ring-0-2-4",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wall-ring-0-3-4",
+    "box": [
+      32,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-ring-0-3-4",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wall-inner-0",
+    "box": [
+      48,
+      32,
+      48,
+      64
+    ],
+    "kind": "part",
+    "group": "wall-inner-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wall-top-96-2-1",
+    "box": [
+      16,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse K261. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "K",
+      "reviewId": "K261",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-crypt-source-2fef6d9983a7.png",
+      "box": [
+        16,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "wall-top-96-3-1",
+    "box": [
+      32,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse K262. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "K",
+      "reviewId": "K262",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-crypt-source-2fef6d9983a7.png",
+      "box": [
+        32,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "wall-top-96-4-1",
+    "box": [
+      48,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse K262. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "K",
+      "reviewId": "K262",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-crypt-source-2fef6d9983a7.png",
+      "box": [
+        32,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "wall-top-96-5-1",
+    "box": [
+      64,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse K262. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "K",
+      "reviewId": "K262",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-crypt-source-2fef6d9983a7.png",
+      "box": [
+        32,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "wall-top-96-6-1",
+    "box": [
+      80,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse K265. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "K",
+      "reviewId": "K265",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-crypt-source-2fef6d9983a7.png",
+      "box": [
+        80,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "wall-top-96-2-2",
+    "box": [
+      16,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-top-96-2-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wall-top-96-3-2",
+    "box": [
+      32,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-top-96-3-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wall-top-96-4-2",
+    "box": [
+      48,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-top-96-4-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wall-top-96-5-2",
+    "box": [
+      64,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-top-96-5-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wall-top-96-6-2",
+    "box": [
+      80,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-top-96-6-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wall-ring-96-1-1",
+    "box": [
+      0,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse K271. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "K",
+      "reviewId": "K271",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-crypt-source-2fef6d9983a7.png",
+      "box": [
+        0,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "wall-ring-96-2-1",
+    "box": [
+      16,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse K272. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "K",
+      "reviewId": "K272",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-crypt-source-2fef6d9983a7.png",
+      "box": [
+        16,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "wall-ring-96-3-1",
+    "box": [
+      32,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse K273. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "K",
+      "reviewId": "K273",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-crypt-source-2fef6d9983a7.png",
+      "box": [
+        32,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "wall-ring-96-1-2",
+    "box": [
+      0,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse K274. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "K",
+      "reviewId": "K274",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-crypt-source-2fef6d9983a7.png",
+      "box": [
+        0,
+        48,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "wall-ring-96-2-2",
+    "box": [
+      16,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse K275. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "K",
+      "reviewId": "K275",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-crypt-source-2fef6d9983a7.png",
+      "box": [
+        16,
+        48,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "wall-ring-96-3-2",
+    "box": [
+      32,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse K276. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "K",
+      "reviewId": "K276",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-crypt-source-2fef6d9983a7.png",
+      "box": [
+        32,
+        48,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "wall-ring-96-1-3",
+    "box": [
+      0,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse K261. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "K",
+      "reviewId": "K261",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-crypt-source-2fef6d9983a7.png",
+      "box": [
+        16,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "wall-ring-96-2-3",
+    "box": [
+      16,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse K262. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "K",
+      "reviewId": "K262",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-crypt-source-2fef6d9983a7.png",
+      "box": [
+        32,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "wall-ring-96-3-3",
+    "box": [
+      32,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse K265. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "K",
+      "reviewId": "K265",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-crypt-source-2fef6d9983a7.png",
+      "box": [
+        80,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "wall-ring-96-1-4",
+    "box": [
+      0,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-ring-96-1-4",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wall-ring-96-2-4",
+    "box": [
+      16,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-ring-96-2-4",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wall-ring-96-3-4",
+    "box": [
+      32,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-ring-96-3-4",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wall-inner-96",
+    "box": [
+      48,
+      128,
+      48,
+      64
+    ],
+    "kind": "part",
+    "group": "wall-inner-96",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "gate-1-1",
+    "box": [
+      0,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "gate-1-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "gate-2-1",
+    "box": [
+      16,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "gate-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "gate-3-1",
+    "box": [
+      32,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "gate-3-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "gate-1-2",
+    "box": [
+      0,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "gate-1-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "gate-2-2",
+    "box": [
+      16,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "gate-2-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "gate-3-2",
+    "box": [
+      32,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "gate-3-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "gate-1-3",
+    "box": [
+      0,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "gate-1-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "gate-2-3",
+    "box": [
+      16,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse K313. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "K",
+      "reviewId": "K313",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-crypt-source-2fef6d9983a7.png",
+      "box": [
+        0,
+        224,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "gate-3-3",
+    "box": [
+      32,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse K313. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "K",
+      "reviewId": "K313",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-crypt-source-2fef6d9983a7.png",
+      "box": [
+        0,
+        224,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "earth-edge-1-1",
+    "box": [
+      48,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "earth-edge-1-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "earth-edge-2-1",
+    "box": [
+      64,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "earth-edge-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "earth-edge-3-1",
+    "box": [
+      80,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "earth-edge-3-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "earth-edge-1-2",
+    "box": [
+      48,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "earth-edge-1-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "earth-edge-2-2",
+    "box": [
+      64,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse K275. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "K",
+      "reviewId": "K275",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-crypt-source-2fef6d9983a7.png",
+      "box": [
+        16,
+        48,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "earth-edge-3-2",
+    "box": [
+      80,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "earth-edge-3-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "earth-edge-1-3",
+    "box": [
+      48,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "earth-edge-1-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "earth-edge-2-3",
+    "box": [
+      64,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "earth-edge-2-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "earth-edge-3-3",
+    "box": [
+      80,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "earth-edge-3-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "earth-piece-1-1",
+    "box": [
+      96,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "earth-piece-1-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "earth-piece-2-1",
+    "box": [
+      112,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "earth-piece-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "earth-piece-1-2",
+    "box": [
+      96,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "earth-piece-1-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "earth-piece-2-2",
+    "box": [
+      112,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "earth-piece-2-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "earth-piece-3-2",
+    "box": [
+      128,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "earth-piece-3-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "debris-1-1",
+    "box": [
+      144,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "debris-1-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "debris-2-1",
+    "box": [
+      160,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "debris-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "debris-3-1",
+    "box": [
+      176,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "debris-3-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "debris-4-1",
+    "box": [
+      192,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "debris-4-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "debris-5-1",
+    "box": [
+      208,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "debris-5-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "debris-1-2",
+    "box": [
+      144,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "debris-1-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "debris-2-2",
+    "box": [
+      160,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "debris-2-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "debris-3-2",
+    "box": [
+      176,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "debris-3-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "debris-4-2",
+    "box": [
+      192,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "debris-4-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "debris-5-2",
+    "box": [
+      208,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "debris-5-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  }
+]

@@ -1,0 +1,722 @@
+[
+  {
+    "id": "N",
+    "title": "Medium cave minerals",
+    "slug": "medium-cave-minerals",
+    "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-caves-minerals-medium-source-d7d2dc2533f6.png",
+    "entries": [
+      {
+        "name": "brown-medium-mineral-01-01",
+        "box": [
+          0,
+          0,
+          64,
+          32
+        ],
+        "kind": "structure",
+        "group": "brown-medium-mineral-01-01",
+        "frame": null,
+        "notes": "4 animation frames. Preserve the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "brown-medium-mineral-01-02",
+        "box": [
+          0,
+          32,
+          64,
+          32
+        ],
+        "kind": "structure",
+        "group": "brown-medium-mineral-01-02",
+        "frame": null,
+        "notes": "4 animation frames. Preserve the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "brown-medium-mineral-01-03",
+        "box": [
+          0,
+          64,
+          64,
+          32
+        ],
+        "kind": "structure",
+        "group": "brown-medium-mineral-01-03",
+        "frame": null,
+        "notes": "4 animation frames. Preserve the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "brown-medium-mineral-02-01",
+        "box": [
+          80,
+          0,
+          64,
+          32
+        ],
+        "kind": "structure",
+        "group": "brown-medium-mineral-02-01",
+        "frame": null,
+        "notes": "4 animation frames. Preserve the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "brown-medium-mineral-02-02",
+        "box": [
+          80,
+          32,
+          64,
+          32
+        ],
+        "kind": "structure",
+        "group": "brown-medium-mineral-02-02",
+        "frame": null,
+        "notes": "4 animation frames. Preserve the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "brown-medium-mineral-02-03",
+        "box": [
+          80,
+          64,
+          64,
+          32
+        ],
+        "kind": "structure",
+        "group": "brown-medium-mineral-02-03",
+        "frame": null,
+        "notes": "4 animation frames. Preserve the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "brown-medium-mineral-03-01",
+        "box": [
+          160,
+          0,
+          64,
+          32
+        ],
+        "kind": "structure",
+        "group": "brown-medium-mineral-03-01",
+        "frame": null,
+        "notes": "4 animation frames. Preserve the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "brown-medium-mineral-03-02",
+        "box": [
+          160,
+          32,
+          64,
+          32
+        ],
+        "kind": "structure",
+        "group": "brown-medium-mineral-03-02",
+        "frame": null,
+        "notes": "4 animation frames. Preserve the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "brown-medium-mineral-03-03",
+        "box": [
+          160,
+          64,
+          64,
+          32
+        ],
+        "kind": "structure",
+        "group": "brown-medium-mineral-03-03",
+        "frame": null,
+        "notes": "4 animation frames. Preserve the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "brown-medium-mineral-04-01",
+        "box": [
+          240,
+          0,
+          64,
+          32
+        ],
+        "kind": "structure",
+        "group": "brown-medium-mineral-04-01",
+        "frame": null,
+        "notes": "4 animation frames. Preserve the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "brown-medium-mineral-04-02",
+        "box": [
+          240,
+          32,
+          64,
+          32
+        ],
+        "kind": "structure",
+        "group": "brown-medium-mineral-04-02",
+        "frame": null,
+        "notes": "4 animation frames. Preserve the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "brown-medium-mineral-04-03",
+        "box": [
+          240,
+          64,
+          64,
+          32
+        ],
+        "kind": "structure",
+        "group": "brown-medium-mineral-04-03",
+        "frame": null,
+        "notes": "4 animation frames. Preserve the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "pink-medium-mineral-01-01",
+        "box": [
+          0,
+          96,
+          64,
+          32
+        ],
+        "kind": "structure",
+        "group": "pink-medium-mineral-01-01",
+        "frame": null,
+        "notes": "4 animation frames. Preserve the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "pink-medium-mineral-01-02",
+        "box": [
+          0,
+          128,
+          64,
+          32
+        ],
+        "kind": "structure",
+        "group": "pink-medium-mineral-01-02",
+        "frame": null,
+        "notes": "4 animation frames. Preserve the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "pink-medium-mineral-01-03",
+        "box": [
+          0,
+          160,
+          64,
+          32
+        ],
+        "kind": "structure",
+        "group": "pink-medium-mineral-01-03",
+        "frame": null,
+        "notes": "4 animation frames. Preserve the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "pink-medium-mineral-02-01",
+        "box": [
+          80,
+          96,
+          64,
+          32
+        ],
+        "kind": "structure",
+        "group": "pink-medium-mineral-02-01",
+        "frame": null,
+        "notes": "4 animation frames. Preserve the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "pink-medium-mineral-02-02",
+        "box": [
+          80,
+          128,
+          64,
+          32
+        ],
+        "kind": "structure",
+        "group": "pink-medium-mineral-02-02",
+        "frame": null,
+        "notes": "4 animation frames. Preserve the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "pink-medium-mineral-02-03",
+        "box": [
+          80,
+          160,
+          64,
+          32
+        ],
+        "kind": "structure",
+        "group": "pink-medium-mineral-02-03",
+        "frame": null,
+        "notes": "4 animation frames. Preserve the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "pink-medium-mineral-03-01",
+        "box": [
+          160,
+          96,
+          64,
+          32
+        ],
+        "kind": "structure",
+        "group": "pink-medium-mineral-03-01",
+        "frame": null,
+        "notes": "4 animation frames. Preserve the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "pink-medium-mineral-03-02",
+        "box": [
+          160,
+          128,
+          64,
+          32
+        ],
+        "kind": "structure",
+        "group": "pink-medium-mineral-03-02",
+        "frame": null,
+        "notes": "4 animation frames. Preserve the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "pink-medium-mineral-03-03",
+        "box": [
+          160,
+          160,
+          64,
+          32
+        ],
+        "kind": "structure",
+        "group": "pink-medium-mineral-03-03",
+        "frame": null,
+        "notes": "4 animation frames. Preserve the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "pink-medium-mineral-04-01",
+        "box": [
+          240,
+          96,
+          64,
+          32
+        ],
+        "kind": "structure",
+        "group": "pink-medium-mineral-04-01",
+        "frame": null,
+        "notes": "4 animation frames. Preserve the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "pink-medium-mineral-04-02",
+        "box": [
+          240,
+          128,
+          64,
+          32
+        ],
+        "kind": "structure",
+        "group": "pink-medium-mineral-04-02",
+        "frame": null,
+        "notes": "4 animation frames. Preserve the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "pink-medium-mineral-04-03",
+        "box": [
+          240,
+          160,
+          64,
+          32
+        ],
+        "kind": "structure",
+        "group": "pink-medium-mineral-04-03",
+        "frame": null,
+        "notes": "4 animation frames. Preserve the complete strip.",
+        "placement": null
+      }
+    ],
+    "animated": true,
+    "frameWidth": 16,
+    "size": [
+      320,
+      192
+    ],
+    "duplicates": [],
+    "status": "approved-and-processed"
+  },
+  {
+    "id": "C",
+    "title": "City doors",
+    "slug": "city-doors",
+    "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-city-doors-source-9e4a3e59dc6a.png",
+    "entries": [
+      {
+        "name": "city-door-style-01-01",
+        "box": [
+          0,
+          0,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "city-door-style-01-01",
+        "frame": null,
+        "notes": "4 animation frames. Preserve the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "city-door-style-01-02",
+        "box": [
+          80,
+          0,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "city-door-style-01-02",
+        "frame": null,
+        "notes": "4 animation frames. Preserve the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "city-door-style-01-03",
+        "box": [
+          160,
+          0,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "city-door-style-01-03",
+        "frame": null,
+        "notes": "4 animation frames. Preserve the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "city-door-style-02-01",
+        "box": [
+          0,
+          16,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "city-door-style-02-01",
+        "frame": null,
+        "notes": "4 animation frames. Preserve the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "city-door-style-02-02",
+        "box": [
+          80,
+          16,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "city-door-style-02-02",
+        "frame": null,
+        "notes": "4 animation frames. Preserve the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "city-door-style-02-03",
+        "box": [
+          160,
+          16,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "city-door-style-02-03",
+        "frame": null,
+        "notes": "4 animation frames. Preserve the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "city-door-style-03-01",
+        "box": [
+          0,
+          32,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "city-door-style-03-01",
+        "frame": null,
+        "notes": "4 animation frames. Preserve the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "city-door-style-03-02",
+        "box": [
+          80,
+          32,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "city-door-style-03-02",
+        "frame": null,
+        "notes": "4 animation frames. Preserve the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "city-door-style-03-03",
+        "box": [
+          160,
+          32,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "city-door-style-03-03",
+        "frame": null,
+        "notes": "4 animation frames. Preserve the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "city-door-style-04-01",
+        "box": [
+          0,
+          48,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "city-door-style-04-01",
+        "frame": null,
+        "notes": "4 animation frames. Preserve the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "city-door-style-04-02",
+        "box": [
+          80,
+          48,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "city-door-style-04-02",
+        "frame": null,
+        "notes": "4 animation frames. Preserve the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "city-door-style-04-03",
+        "box": [
+          160,
+          48,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "city-door-style-04-03",
+        "frame": null,
+        "notes": "4 animation frames. Preserve the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "city-door-style-05-01",
+        "box": [
+          0,
+          64,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "city-door-style-05-01",
+        "frame": null,
+        "notes": "4 animation frames. Preserve the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "city-door-style-05-02",
+        "box": [
+          80,
+          64,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "city-door-style-05-02",
+        "frame": null,
+        "notes": "4 animation frames. Preserve the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "city-door-style-05-03",
+        "box": [
+          160,
+          64,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "city-door-style-05-03",
+        "frame": null,
+        "notes": "4 animation frames. Preserve the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "city-door-style-06-01",
+        "box": [
+          0,
+          80,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "city-door-style-06-01",
+        "frame": null,
+        "notes": "4 animation frames. Preserve the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "city-door-style-06-02",
+        "box": [
+          80,
+          80,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "city-door-style-06-02",
+        "frame": null,
+        "notes": "4 animation frames. Preserve the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "city-door-style-06-03",
+        "box": [
+          160,
+          80,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "city-door-style-06-03",
+        "frame": null,
+        "notes": "4 animation frames. Preserve the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "city-door-ornate-01",
+        "box": [
+          240,
+          0,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "city-door-ornate-01",
+        "frame": null,
+        "notes": "4 animation frames. Preserve the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "city-door-ornate-02",
+        "box": [
+          240,
+          48,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "city-door-ornate-02",
+        "frame": null,
+        "notes": "4 animation frames. Preserve the complete strip.",
+        "placement": null
+      }
+    ],
+    "animated": true,
+    "frameWidth": 16,
+    "size": [
+      320,
+      96
+    ],
+    "duplicates": [],
+    "status": "approved-and-processed"
+  },
+  {
+    "id": "K",
+    "title": "Castle doors",
+    "slug": "castle-doors",
+    "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-castle-doors-source-7b70f2bba0fa.png",
+    "entries": [
+      {
+        "name": "castle-door-style-01-01",
+        "box": [
+          0,
+          0,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "castle-door-style-01-01",
+        "frame": null,
+        "notes": "4 animation frames. Preserve the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "castle-door-style-01-02",
+        "box": [
+          80,
+          0,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "castle-door-style-01-02",
+        "frame": null,
+        "notes": "4 animation frames. Preserve the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "castle-door-style-02-01",
+        "box": [
+          0,
+          16,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "castle-door-style-02-01",
+        "frame": null,
+        "notes": "4 animation frames. Preserve the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "castle-door-style-02-02",
+        "box": [
+          80,
+          16,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "castle-door-style-02-02",
+        "frame": null,
+        "notes": "4 animation frames. Preserve the complete strip.",
+        "placement": null
+      }
+    ],
+    "animated": true,
+    "frameWidth": 16,
+    "size": [
+      160,
+      32
+    ],
+    "duplicates": [],
+    "status": "approved-and-processed"
+  }
+]

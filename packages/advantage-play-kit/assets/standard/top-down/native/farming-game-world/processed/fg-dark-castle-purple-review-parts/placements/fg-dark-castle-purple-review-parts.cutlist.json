@@ -1,0 +1,9046 @@
+[
+  {
+    "name": "lava-frame-animation-1",
+    "box": [
+      64,
+      528,
+      384,
+      48
+    ],
+    "kind": "part",
+    "group": "lava-frame-animation-1",
+    "frame": null,
+    "notes": "8 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        64,
+        528,
+        48,
+        48
+      ],
+      [
+        112,
+        528,
+        48,
+        48
+      ],
+      [
+        160,
+        528,
+        48,
+        48
+      ],
+      [
+        208,
+        528,
+        48,
+        48
+      ],
+      [
+        256,
+        528,
+        48,
+        48
+      ],
+      [
+        304,
+        528,
+        48,
+        48
+      ],
+      [
+        352,
+        528,
+        48,
+        48
+      ],
+      [
+        400,
+        528,
+        48,
+        48
+      ]
+    ],
+    "reviewId": "P01"
+  },
+  {
+    "name": "lava-frame-animation-2",
+    "box": [
+      64,
+      576,
+      384,
+      48
+    ],
+    "kind": "part",
+    "group": "lava-frame-animation-2",
+    "frame": null,
+    "notes": "8 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        64,
+        576,
+        48,
+        48
+      ],
+      [
+        112,
+        576,
+        48,
+        48
+      ],
+      [
+        160,
+        576,
+        48,
+        48
+      ],
+      [
+        208,
+        576,
+        48,
+        48
+      ],
+      [
+        256,
+        576,
+        48,
+        48
+      ],
+      [
+        304,
+        576,
+        48,
+        48
+      ],
+      [
+        352,
+        576,
+        48,
+        48
+      ],
+      [
+        400,
+        576,
+        48,
+        48
+      ]
+    ],
+    "reviewId": "P02"
+  },
+  {
+    "name": "door-animation-1",
+    "box": [
+      64,
+      624,
+      384,
+      32
+    ],
+    "kind": "part",
+    "group": "door-animation-1",
+    "frame": null,
+    "notes": "8 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        64,
+        624,
+        48,
+        32
+      ],
+      [
+        112,
+        624,
+        48,
+        32
+      ],
+      [
+        160,
+        624,
+        48,
+        32
+      ],
+      [
+        208,
+        624,
+        48,
+        32
+      ],
+      [
+        256,
+        624,
+        48,
+        32
+      ],
+      [
+        304,
+        624,
+        48,
+        32
+      ],
+      [
+        352,
+        624,
+        48,
+        32
+      ],
+      [
+        400,
+        624,
+        48,
+        32
+      ]
+    ],
+    "reviewId": "P03"
+  },
+  {
+    "name": "door-animation-2",
+    "box": [
+      64,
+      656,
+      384,
+      32
+    ],
+    "kind": "part",
+    "group": "door-animation-2",
+    "frame": null,
+    "notes": "8 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        64,
+        656,
+        48,
+        32
+      ],
+      [
+        112,
+        656,
+        48,
+        32
+      ],
+      [
+        160,
+        656,
+        48,
+        32
+      ],
+      [
+        208,
+        656,
+        48,
+        32
+      ],
+      [
+        256,
+        656,
+        48,
+        32
+      ],
+      [
+        304,
+        656,
+        48,
+        32
+      ],
+      [
+        352,
+        656,
+        48,
+        32
+      ],
+      [
+        400,
+        656,
+        48,
+        32
+      ]
+    ],
+    "reviewId": "P04"
+  },
+  {
+    "name": "door-animation-3",
+    "box": [
+      64,
+      688,
+      384,
+      32
+    ],
+    "kind": "part",
+    "group": "door-animation-3",
+    "frame": null,
+    "notes": "8 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        64,
+        688,
+        48,
+        32
+      ],
+      [
+        112,
+        688,
+        48,
+        32
+      ],
+      [
+        160,
+        688,
+        48,
+        32
+      ],
+      [
+        208,
+        688,
+        48,
+        32
+      ],
+      [
+        256,
+        688,
+        48,
+        32
+      ],
+      [
+        304,
+        688,
+        48,
+        32
+      ],
+      [
+        352,
+        688,
+        48,
+        32
+      ],
+      [
+        400,
+        688,
+        48,
+        32
+      ]
+    ],
+    "reviewId": "P05"
+  },
+  {
+    "name": "door-animation-4",
+    "box": [
+      64,
+      720,
+      384,
+      32
+    ],
+    "kind": "part",
+    "group": "door-animation-4",
+    "frame": null,
+    "notes": "8 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        64,
+        720,
+        48,
+        32
+      ],
+      [
+        112,
+        720,
+        48,
+        32
+      ],
+      [
+        160,
+        720,
+        48,
+        32
+      ],
+      [
+        208,
+        720,
+        48,
+        32
+      ],
+      [
+        256,
+        720,
+        48,
+        32
+      ],
+      [
+        304,
+        720,
+        48,
+        32
+      ],
+      [
+        352,
+        720,
+        48,
+        32
+      ],
+      [
+        400,
+        720,
+        48,
+        32
+      ]
+    ],
+    "reviewId": "P06"
+  },
+  {
+    "name": "flame-pedestal-animation-400",
+    "box": [
+      240,
+      400,
+      128,
+      32
+    ],
+    "kind": "part",
+    "group": "flame-pedestal-animation-400",
+    "frame": null,
+    "notes": "8 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        240,
+        400,
+        16,
+        32
+      ],
+      [
+        256,
+        400,
+        16,
+        32
+      ],
+      [
+        272,
+        400,
+        16,
+        32
+      ],
+      [
+        288,
+        400,
+        16,
+        32
+      ],
+      [
+        304,
+        400,
+        16,
+        32
+      ],
+      [
+        320,
+        400,
+        16,
+        32
+      ],
+      [
+        336,
+        400,
+        16,
+        32
+      ],
+      [
+        352,
+        400,
+        16,
+        32
+      ]
+    ],
+    "reviewId": "P07"
+  },
+  {
+    "name": "flame-pedestal-animation-432",
+    "box": [
+      240,
+      432,
+      128,
+      32
+    ],
+    "kind": "part",
+    "group": "flame-pedestal-animation-432",
+    "frame": null,
+    "notes": "8 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        240,
+        432,
+        16,
+        32
+      ],
+      [
+        256,
+        432,
+        16,
+        32
+      ],
+      [
+        272,
+        432,
+        16,
+        32
+      ],
+      [
+        288,
+        432,
+        16,
+        32
+      ],
+      [
+        304,
+        432,
+        16,
+        32
+      ],
+      [
+        320,
+        432,
+        16,
+        32
+      ],
+      [
+        336,
+        432,
+        16,
+        32
+      ],
+      [
+        352,
+        432,
+        16,
+        32
+      ]
+    ],
+    "reviewId": "P08"
+  },
+  {
+    "name": "wall-diagonal-top-left",
+    "box": [
+      208,
+      0,
+      48,
+      64
+    ],
+    "kind": "part",
+    "group": "wall-diagonal-top-left",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P09"
+  },
+  {
+    "name": "wall-diagonal-bottom-left",
+    "box": [
+      208,
+      64,
+      48,
+      64
+    ],
+    "kind": "part",
+    "group": "wall-diagonal-bottom-left",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P10"
+  },
+  {
+    "name": "wall-diagonal-top-right",
+    "box": [
+      464,
+      0,
+      48,
+      64
+    ],
+    "kind": "part",
+    "group": "wall-diagonal-top-right",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P11"
+  },
+  {
+    "name": "wall-diagonal-bottom-right",
+    "box": [
+      496,
+      48,
+      16,
+      80
+    ],
+    "kind": "part",
+    "group": "wall-diagonal-bottom-right",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P12"
+  },
+  {
+    "name": "pit-small-left",
+    "box": [
+      64,
+      112,
+      64,
+      96
+    ],
+    "kind": "part",
+    "group": "pit-small-left",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P13"
+  },
+  {
+    "name": "pit-large-left",
+    "box": [
+      128,
+      112,
+      80,
+      96
+    ],
+    "kind": "part",
+    "group": "pit-large-left",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P14"
+  },
+  {
+    "name": "pit-small-right",
+    "box": [
+      320,
+      80,
+      64,
+      80
+    ],
+    "kind": "part",
+    "group": "pit-small-right",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P15"
+  },
+  {
+    "name": "pit-large-right",
+    "box": [
+      384,
+      80,
+      80,
+      96
+    ],
+    "kind": "part",
+    "group": "pit-large-right",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P16"
+  },
+  {
+    "name": "stairs-left",
+    "box": [
+      208,
+      128,
+      48,
+      80
+    ],
+    "kind": "part",
+    "group": "stairs-left",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P17"
+  },
+  {
+    "name": "stairs-right",
+    "box": [
+      464,
+      96,
+      48,
+      64
+    ],
+    "kind": "part",
+    "group": "stairs-right",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P18"
+  },
+  {
+    "name": "wall-rounded-tall",
+    "box": [
+      256,
+      192,
+      48,
+      64
+    ],
+    "kind": "part",
+    "group": "wall-rounded-tall",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P19"
+  },
+  {
+    "name": "wall-rounded-short",
+    "box": [
+      304,
+      208,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "wall-rounded-short",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P20"
+  },
+  {
+    "name": "frame-large",
+    "box": [
+      96,
+      304,
+      80,
+      96
+    ],
+    "kind": "part",
+    "group": "frame-large",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P21"
+  },
+  {
+    "name": "pillar-large-top",
+    "box": [
+      176,
+      304,
+      16,
+      48
+    ],
+    "kind": "part",
+    "group": "pillar-large-top",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P22"
+  },
+  {
+    "name": "pillar-large-bottom",
+    "box": [
+      176,
+      352,
+      16,
+      48
+    ],
+    "kind": "part",
+    "group": "pillar-large-bottom",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P23"
+  },
+  {
+    "name": "door-static-352-192",
+    "box": [
+      352,
+      192,
+      48,
+      32
+    ],
+    "kind": "part",
+    "group": "door-static-352-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P24"
+  },
+  {
+    "name": "door-static-352-224",
+    "box": [
+      352,
+      224,
+      48,
+      32
+    ],
+    "kind": "part",
+    "group": "door-static-352-224",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P25"
+  },
+  {
+    "name": "door-static-400-192",
+    "box": [
+      400,
+      192,
+      48,
+      32
+    ],
+    "kind": "part",
+    "group": "door-static-400-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P26"
+  },
+  {
+    "name": "door-static-400-224",
+    "box": [
+      400,
+      224,
+      48,
+      32
+    ],
+    "kind": "part",
+    "group": "door-static-400-224",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P27"
+  },
+  {
+    "name": "cross-base-0-304",
+    "box": [
+      0,
+      304,
+      48,
+      32
+    ],
+    "kind": "part",
+    "group": "cross-base-0-304",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P28"
+  },
+  {
+    "name": "cross-base-0-336",
+    "box": [
+      0,
+      336,
+      48,
+      32
+    ],
+    "kind": "part",
+    "group": "cross-base-0-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P29"
+  },
+  {
+    "name": "cross-base-0-368",
+    "box": [
+      0,
+      368,
+      48,
+      32
+    ],
+    "kind": "part",
+    "group": "cross-base-0-368",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P30"
+  },
+  {
+    "name": "cross-base-48-304",
+    "box": [
+      48,
+      304,
+      48,
+      32
+    ],
+    "kind": "part",
+    "group": "cross-base-48-304",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P31"
+  },
+  {
+    "name": "cross-base-48-336",
+    "box": [
+      48,
+      336,
+      48,
+      32
+    ],
+    "kind": "part",
+    "group": "cross-base-48-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P32"
+  },
+  {
+    "name": "cross-base-48-368",
+    "box": [
+      48,
+      368,
+      48,
+      32
+    ],
+    "kind": "part",
+    "group": "cross-base-48-368",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P33"
+  },
+  {
+    "name": "cross-240-256",
+    "box": [
+      240,
+      256,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "cross-240-256",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P34"
+  },
+  {
+    "name": "cross-240-288",
+    "box": [
+      240,
+      288,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "cross-240-288",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P35"
+  },
+  {
+    "name": "cross-240-320",
+    "box": [
+      240,
+      320,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "cross-240-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P36"
+  },
+  {
+    "name": "cross-272-256",
+    "box": [
+      280,
+      256,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Center the complete cross in this shifted box. Do not use. Reuse P34. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P37",
+    "reviewChanged": true,
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P34",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        240,
+        256,
+        32,
+        32
+      ]
+    }
+  },
+  {
+    "name": "cross-272-288",
+    "box": [
+      280,
+      288,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Center the complete cross in this shifted box. Do not use. Reuse P35. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P38",
+    "reviewChanged": true,
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P35",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        240,
+        288,
+        32,
+        32
+      ]
+    }
+  },
+  {
+    "name": "cross-272-320",
+    "box": [
+      280,
+      320,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Center the complete cross in this shifted box. Do not use. Reuse P36. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P39",
+    "reviewChanged": true,
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P36",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        240,
+        320,
+        32,
+        32
+      ]
+    }
+  },
+  {
+    "name": "urn-384-256",
+    "box": [
+      384,
+      256,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "urn-384-256",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P40"
+  },
+  {
+    "name": "urn-384-288",
+    "box": [
+      384,
+      288,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "urn-384-288",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P41"
+  },
+  {
+    "name": "urn-384-320",
+    "box": [
+      384,
+      320,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "urn-384-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P42"
+  },
+  {
+    "name": "urn-384-352",
+    "box": [
+      384,
+      352,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "urn-384-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P43"
+  },
+  {
+    "name": "urn-384-384",
+    "box": [
+      384,
+      384,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "urn-384-384",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P44"
+  },
+  {
+    "name": "urn-384-416",
+    "box": [
+      384,
+      416,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "urn-384-416",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P45"
+  },
+  {
+    "name": "urn-416-256",
+    "box": [
+      416,
+      256,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "urn-416-256",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P46"
+  },
+  {
+    "name": "urn-416-288",
+    "box": [
+      416,
+      288,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "urn-416-288",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P47"
+  },
+  {
+    "name": "urn-416-320",
+    "box": [
+      416,
+      320,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "urn-416-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P48"
+  },
+  {
+    "name": "urn-416-352",
+    "box": [
+      416,
+      352,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "urn-416-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P49"
+  },
+  {
+    "name": "urn-416-384",
+    "box": [
+      416,
+      384,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "urn-416-384",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P50"
+  },
+  {
+    "name": "urn-416-416",
+    "box": [
+      416,
+      416,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "urn-416-416",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P51"
+  },
+  {
+    "name": "figure-448-256",
+    "box": [
+      448,
+      256,
+      32,
+      48
+    ],
+    "kind": "part",
+    "group": "figure-448-256",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P52"
+  },
+  {
+    "name": "figure-448-304",
+    "box": [
+      448,
+      304,
+      32,
+      48
+    ],
+    "kind": "part",
+    "group": "figure-448-304",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P53"
+  },
+  {
+    "name": "figure-448-352",
+    "box": [
+      448,
+      352,
+      32,
+      48
+    ],
+    "kind": "part",
+    "group": "figure-448-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P54"
+  },
+  {
+    "name": "figure-448-400",
+    "box": [
+      448,
+      400,
+      32,
+      48
+    ],
+    "kind": "part",
+    "group": "figure-448-400",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P55"
+  },
+  {
+    "name": "figure-480-256",
+    "box": [
+      480,
+      256,
+      32,
+      48
+    ],
+    "kind": "part",
+    "group": "figure-480-256",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P56"
+  },
+  {
+    "name": "figure-480-304",
+    "box": [
+      480,
+      304,
+      32,
+      48
+    ],
+    "kind": "part",
+    "group": "figure-480-304",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P57"
+  },
+  {
+    "name": "figure-480-352",
+    "box": [
+      480,
+      352,
+      32,
+      48
+    ],
+    "kind": "part",
+    "group": "figure-480-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P58"
+  },
+  {
+    "name": "figure-480-400",
+    "box": [
+      480,
+      400,
+      32,
+      48
+    ],
+    "kind": "part",
+    "group": "figure-480-400",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P59"
+  },
+  {
+    "name": "stone-frame-272",
+    "box": [
+      192,
+      272,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "stone-frame-272",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P60"
+  },
+  {
+    "name": "stone-frame-416",
+    "box": [
+      192,
+      416,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "stone-frame-416",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P61"
+  },
+  {
+    "name": "stone-frame-464",
+    "box": [
+      192,
+      464,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "stone-frame-464",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P62"
+  },
+  {
+    "name": "panel-96-448",
+    "box": [
+      96,
+      448,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "panel-96-448",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P63"
+  },
+  {
+    "name": "panel-96-480",
+    "box": [
+      96,
+      480,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "panel-96-480",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P64"
+  },
+  {
+    "name": "panel-128-448",
+    "box": [
+      128,
+      448,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "panel-128-448",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P65"
+  },
+  {
+    "name": "panel-128-480",
+    "box": [
+      128,
+      480,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "panel-128-480",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P66"
+  },
+  {
+    "name": "panel-160-448",
+    "box": [
+      160,
+      448,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "panel-160-448",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P67"
+  },
+  {
+    "name": "panel-160-480",
+    "box": [
+      160,
+      480,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "panel-160-480",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P68"
+  },
+  {
+    "name": "tile-8-1",
+    "box": [
+      112,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-8-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P69"
+  },
+  {
+    "name": "tile-9-1",
+    "box": [
+      128,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-9-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P70"
+  },
+  {
+    "name": "tile-10-1",
+    "box": [
+      144,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P71"
+  },
+  {
+    "name": "tile-11-1",
+    "box": [
+      160,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P72"
+  },
+  {
+    "name": "tile-12-1",
+    "box": [
+      176,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P73"
+  },
+  {
+    "name": "tile-13-1",
+    "box": [
+      192,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P71. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P74",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P71",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        144,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-17-1",
+    "box": [
+      256,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-17-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P75"
+  },
+  {
+    "name": "tile-18-1",
+    "box": [
+      272,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-18-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P76"
+  },
+  {
+    "name": "tile-19-1",
+    "box": [
+      288,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-19-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P77"
+  },
+  {
+    "name": "tile-20-1",
+    "box": [
+      304,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-20-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P78"
+  },
+  {
+    "name": "tile-21-1",
+    "box": [
+      320,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-21-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P79"
+  },
+  {
+    "name": "tile-22-1",
+    "box": [
+      336,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-22-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P80"
+  },
+  {
+    "name": "tile-23-1",
+    "box": [
+      352,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-23-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P81"
+  },
+  {
+    "name": "tile-24-1",
+    "box": [
+      368,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P75. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P82",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P75",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        256,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-25-1",
+    "box": [
+      384,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P76. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P83",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P76",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        272,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-26-1",
+    "box": [
+      400,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P77. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P84",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P77",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        288,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-27-1",
+    "box": [
+      416,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P75. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P85",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P75",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        256,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-28-1",
+    "box": [
+      432,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P76. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P86",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P76",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        272,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-29-1",
+    "box": [
+      448,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P77. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P87",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P77",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        288,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-1-2",
+    "box": [
+      0,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P75. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P88",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P75",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        256,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-2-2",
+    "box": [
+      16,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P76. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P89",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P76",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        272,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-3-2",
+    "box": [
+      32,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P77. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P90",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P77",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        288,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-4-2",
+    "box": [
+      48,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P78. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P91",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P78",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        304,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-5-2",
+    "box": [
+      64,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P79. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P92",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P79",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        320,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-6-2",
+    "box": [
+      80,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P80. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P93",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P80",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        336,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-7-2",
+    "box": [
+      96,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P81. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P94",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P81",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        352,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-8-2",
+    "box": [
+      112,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-8-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P95"
+  },
+  {
+    "name": "tile-9-2",
+    "box": [
+      128,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-9-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P96"
+  },
+  {
+    "name": "tile-10-2",
+    "box": [
+      144,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P97"
+  },
+  {
+    "name": "tile-11-2",
+    "box": [
+      160,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P98"
+  },
+  {
+    "name": "tile-12-2",
+    "box": [
+      176,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P99"
+  },
+  {
+    "name": "tile-13-2",
+    "box": [
+      192,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P100"
+  },
+  {
+    "name": "tile-17-2",
+    "box": [
+      256,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-17-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P101"
+  },
+  {
+    "name": "tile-18-2",
+    "box": [
+      272,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-18-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P102"
+  },
+  {
+    "name": "tile-19-2",
+    "box": [
+      288,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-19-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P103"
+  },
+  {
+    "name": "tile-20-2",
+    "box": [
+      304,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-20-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P104"
+  },
+  {
+    "name": "tile-21-2",
+    "box": [
+      320,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-21-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P105"
+  },
+  {
+    "name": "tile-22-2",
+    "box": [
+      336,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-22-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P106"
+  },
+  {
+    "name": "tile-23-2",
+    "box": [
+      352,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-23-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P107"
+  },
+  {
+    "name": "tile-24-2",
+    "box": [
+      368,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P101. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P108",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P101",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        256,
+        16,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-25-2",
+    "box": [
+      384,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P102. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P109",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P102",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        272,
+        16,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-26-2",
+    "box": [
+      400,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P103. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P110",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P103",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        288,
+        16,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-27-2",
+    "box": [
+      416,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P101. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P111",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P101",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        256,
+        16,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-28-2",
+    "box": [
+      432,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P102. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P112",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P102",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        272,
+        16,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-29-2",
+    "box": [
+      448,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P103. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P113",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P103",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        288,
+        16,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-1-3",
+    "box": [
+      0,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P101. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P114",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P101",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        256,
+        16,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-2-3",
+    "box": [
+      16,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P102. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P115",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P102",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        272,
+        16,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-3-3",
+    "box": [
+      32,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P103. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P116",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P103",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        288,
+        16,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-4-3",
+    "box": [
+      48,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P104. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P117",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P104",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        304,
+        16,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-5-3",
+    "box": [
+      64,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P118"
+  },
+  {
+    "name": "tile-6-3",
+    "box": [
+      80,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-6-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P119"
+  },
+  {
+    "name": "tile-7-3",
+    "box": [
+      96,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P107. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P120",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P107",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        352,
+        16,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-8-3",
+    "box": [
+      112,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-8-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P121"
+  },
+  {
+    "name": "tile-9-3",
+    "box": [
+      128,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-9-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P122"
+  },
+  {
+    "name": "tile-10-3",
+    "box": [
+      144,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P123"
+  },
+  {
+    "name": "tile-11-3",
+    "box": [
+      160,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P124"
+  },
+  {
+    "name": "tile-12-3",
+    "box": [
+      176,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P122. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P125",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P122",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        128,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-13-3",
+    "box": [
+      192,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P126"
+  },
+  {
+    "name": "tile-17-3",
+    "box": [
+      256,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P72. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P127",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P72",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        160,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-18-3",
+    "box": [
+      272,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P73. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P128",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P73",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        176,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-19-3",
+    "box": [
+      288,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P71. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P129",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P71",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        144,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-20-3",
+    "box": [
+      304,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-20-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P130"
+  },
+  {
+    "name": "tile-21-3",
+    "box": [
+      320,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-21-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P131"
+  },
+  {
+    "name": "tile-22-3",
+    "box": [
+      336,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-22-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P132"
+  },
+  {
+    "name": "tile-23-3",
+    "box": [
+      352,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-23-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P133"
+  },
+  {
+    "name": "tile-24-3",
+    "box": [
+      368,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P69. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P134",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P69",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        112,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-25-3",
+    "box": [
+      384,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P73. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P135",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P73",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        176,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-26-3",
+    "box": [
+      400,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P71. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P136",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P71",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        144,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-27-3",
+    "box": [
+      416,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P72. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P137",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P72",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        160,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-28-3",
+    "box": [
+      432,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P70. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P138",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P70",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        128,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-29-3",
+    "box": [
+      448,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P71. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P139",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P71",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        144,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-1-4",
+    "box": [
+      0,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P72. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P140",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P72",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        160,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-2-4",
+    "box": [
+      16,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P73. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P141",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P73",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        176,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-3-4",
+    "box": [
+      32,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P71. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P142",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P71",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        144,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-4-4",
+    "box": [
+      48,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-4",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P143"
+  },
+  {
+    "name": "tile-5-4",
+    "box": [
+      64,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-4",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P144"
+  },
+  {
+    "name": "tile-6-4",
+    "box": [
+      80,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P144. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P145",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P144",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        64,
+        48,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-7-4",
+    "box": [
+      96,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P101. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P146",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P101",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        256,
+        16,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-8-4",
+    "box": [
+      112,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P72. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P147",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P72",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        160,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-9-4",
+    "box": [
+      128,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P73. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P148",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P73",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        176,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-10-4",
+    "box": [
+      144,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P71. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P149",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P71",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        144,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-11-4",
+    "box": [
+      160,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P72. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P150",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P72",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        160,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-12-4",
+    "box": [
+      176,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P73. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P151",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P73",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        176,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-13-4",
+    "box": [
+      192,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P71. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P152",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P71",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        144,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-17-4",
+    "box": [
+      256,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-17-4",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P153"
+  },
+  {
+    "name": "tile-18-4",
+    "box": [
+      272,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P144. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P154",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P144",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        64,
+        48,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-19-4",
+    "box": [
+      288,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-19-4",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P155"
+  },
+  {
+    "name": "tile-20-4",
+    "box": [
+      304,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-20-4",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P156"
+  },
+  {
+    "name": "tile-21-4",
+    "box": [
+      320,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-21-4",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P157"
+  },
+  {
+    "name": "tile-22-4",
+    "box": [
+      336,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-22-4",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P158"
+  },
+  {
+    "name": "tile-23-4",
+    "box": [
+      352,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-23-4",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P159"
+  },
+  {
+    "name": "tile-24-4",
+    "box": [
+      368,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-24-4",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P160"
+  },
+  {
+    "name": "tile-25-4",
+    "box": [
+      384,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-25-4",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P161"
+  },
+  {
+    "name": "tile-26-4",
+    "box": [
+      400,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P123. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P162",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P123",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        144,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-27-4",
+    "box": [
+      416,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P121. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P163",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P121",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        112,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-28-4",
+    "box": [
+      432,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-28-4",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P164"
+  },
+  {
+    "name": "tile-29-4",
+    "box": [
+      448,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-29-4",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P165"
+  },
+  {
+    "name": "tile-1-5",
+    "box": [
+      0,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-1-5",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P166"
+  },
+  {
+    "name": "tile-2-5",
+    "box": [
+      16,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-2-5",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P167"
+  },
+  {
+    "name": "tile-3-5",
+    "box": [
+      32,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-5",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P168"
+  },
+  {
+    "name": "tile-4-5",
+    "box": [
+      48,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P130. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P169",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P130",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        304,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-5-5",
+    "box": [
+      64,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P131. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P170",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P131",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        320,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-6-5",
+    "box": [
+      80,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P132. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P171",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P132",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        336,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-7-5",
+    "box": [
+      96,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P133. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P172",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P133",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        352,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-8-5",
+    "box": [
+      112,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-8-5",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P173"
+  },
+  {
+    "name": "tile-9-5",
+    "box": [
+      128,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P167. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P174",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P167",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        16,
+        64,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-10-5",
+    "box": [
+      144,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-5",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P175"
+  },
+  {
+    "name": "tile-11-5",
+    "box": [
+      160,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-5",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P176"
+  },
+  {
+    "name": "tile-12-5",
+    "box": [
+      176,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-5",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P177"
+  },
+  {
+    "name": "tile-13-5",
+    "box": [
+      192,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P168. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P178",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P168",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        32,
+        64,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-17-5",
+    "box": [
+      256,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-17-5",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P179"
+  },
+  {
+    "name": "tile-18-5",
+    "box": [
+      272,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-18-5",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P180"
+  },
+  {
+    "name": "tile-19-5",
+    "box": [
+      288,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-19-5",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P181"
+  },
+  {
+    "name": "tile-20-5",
+    "box": [
+      304,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-20-5",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P182"
+  },
+  {
+    "name": "tile-31-5",
+    "box": [
+      480,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-31-5",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P183"
+  },
+  {
+    "name": "tile-1-6",
+    "box": [
+      0,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P153. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P184",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P153",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        256,
+        48,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-2-6",
+    "box": [
+      16,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P144. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P185",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P144",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        64,
+        48,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-3-6",
+    "box": [
+      32,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P155. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P186",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P155",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        288,
+        48,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-4-6",
+    "box": [
+      48,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P156. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P187",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P156",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        304,
+        48,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-5-6",
+    "box": [
+      64,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P157. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P188",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P157",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        320,
+        48,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-6-6",
+    "box": [
+      80,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P158. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P189",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P158",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        336,
+        48,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-7-6",
+    "box": [
+      96,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P159. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P190",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P159",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        352,
+        48,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-8-6",
+    "box": [
+      112,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P160. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P191",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P160",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        368,
+        48,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-9-6",
+    "box": [
+      128,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P122. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P192",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P122",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        128,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-10-6",
+    "box": [
+      144,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P155. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P193",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P155",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        288,
+        48,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-11-6",
+    "box": [
+      160,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P153. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P194",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P153",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        256,
+        48,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-12-6",
+    "box": [
+      176,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P144. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P195",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P144",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        64,
+        48,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-13-6",
+    "box": [
+      192,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P123. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P196",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P123",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        144,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-17-6",
+    "box": [
+      256,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-17-6",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P197"
+  },
+  {
+    "name": "tile-20-6",
+    "box": [
+      304,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-20-6",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P198"
+  },
+  {
+    "name": "tile-1-7",
+    "box": [
+      0,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P179. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P199",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P179",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        256,
+        64,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-2-7",
+    "box": [
+      16,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P180. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P200",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P180",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        272,
+        64,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-3-7",
+    "box": [
+      32,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P181. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P201",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P181",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        288,
+        64,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-4-7",
+    "box": [
+      48,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P182. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P202",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P182",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        304,
+        64,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-17-7",
+    "box": [
+      256,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-17-7",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P203"
+  },
+  {
+    "name": "tile-18-7",
+    "box": [
+      272,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P131. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P204",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P131",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        320,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-19-7",
+    "box": [
+      288,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P132. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P205",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P132",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        336,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-20-7",
+    "box": [
+      304,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-20-7",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P206"
+  },
+  {
+    "name": "tile-1-8",
+    "box": [
+      0,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P197. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P207",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P197",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        256,
+        80,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-4-8",
+    "box": [
+      48,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P198. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P208",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P198",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        304,
+        80,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-17-8",
+    "box": [
+      256,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-17-8",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P209"
+  },
+  {
+    "name": "tile-18-8",
+    "box": [
+      272,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-18-8",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P210"
+  },
+  {
+    "name": "tile-19-8",
+    "box": [
+      288,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-19-8",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P211"
+  },
+  {
+    "name": "tile-20-8",
+    "box": [
+      304,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-20-8",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P212"
+  },
+  {
+    "name": "tile-1-9",
+    "box": [
+      0,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P203. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P213",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P203",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        256,
+        96,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-2-9",
+    "box": [
+      16,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P131. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P214",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P131",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        320,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-3-9",
+    "box": [
+      32,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P132. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P215",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P132",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        336,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-4-9",
+    "box": [
+      48,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P206. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P216",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P206",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        304,
+        96,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-17-9",
+    "box": [
+      256,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-17-9",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P217"
+  },
+  {
+    "name": "tile-18-9",
+    "box": [
+      272,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-18-9",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P218"
+  },
+  {
+    "name": "tile-19-9",
+    "box": [
+      288,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-19-9",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P219"
+  },
+  {
+    "name": "tile-1-10",
+    "box": [
+      0,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P209. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P220",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P209",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        256,
+        112,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-2-10",
+    "box": [
+      16,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P210. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P221",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P210",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        272,
+        112,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-3-10",
+    "box": [
+      32,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P211. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P222",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P211",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        288,
+        112,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-4-10",
+    "box": [
+      48,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P212. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P223",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P212",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        304,
+        112,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-17-10",
+    "box": [
+      256,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-17-10",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P224"
+  },
+  {
+    "name": "tile-19-10",
+    "box": [
+      288,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-19-10",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P225"
+  },
+  {
+    "name": "tile-17-11",
+    "box": [
+      256,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-17-11",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P226"
+  },
+  {
+    "name": "tile-18-11",
+    "box": [
+      272,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-18-11",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P227"
+  },
+  {
+    "name": "tile-19-11",
+    "box": [
+      288,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-19-11",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P228"
+  },
+  {
+    "name": "tile-30-11",
+    "box": [
+      464,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-30-11",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P229"
+  },
+  {
+    "name": "tile-31-11",
+    "box": [
+      480,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P227. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P230",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P227",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        272,
+        160,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-32-11",
+    "box": [
+      496,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P228. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P231",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P228",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        288,
+        160,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-1-12",
+    "box": [
+      0,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P217. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P232",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P217",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        256,
+        128,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-2-12",
+    "box": [
+      16,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P218. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P233",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P218",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        272,
+        128,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-3-12",
+    "box": [
+      32,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P219. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P234",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P219",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        288,
+        128,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-30-12",
+    "box": [
+      464,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P160. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P235",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P160",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        368,
+        48,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-31-12",
+    "box": [
+      480,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P161. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P236",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P161",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        384,
+        48,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-32-12",
+    "box": [
+      496,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P123. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P237",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P123",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        144,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-1-13",
+    "box": [
+      0,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P224. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P238",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P224",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        256,
+        144,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-3-13",
+    "box": [
+      32,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P225. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P239",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P225",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        288,
+        144,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-30-13",
+    "box": [
+      464,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P226. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P240",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P226",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        256,
+        160,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-31-13",
+    "box": [
+      480,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-31-13",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P241"
+  },
+  {
+    "name": "tile-32-13",
+    "box": [
+      496,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P228. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P242",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P228",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        288,
+        160,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-1-14",
+    "box": [
+      0,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P229. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P243",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P229",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        464,
+        160,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-2-14",
+    "box": [
+      16,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P241. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P244",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P241",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        480,
+        192,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-3-14",
+    "box": [
+      32,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P228. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P245",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P228",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        288,
+        160,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-4-14",
+    "box": [
+      48,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P226. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P246",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P226",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        256,
+        160,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-5-14",
+    "box": [
+      64,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P227. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P247",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P227",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        272,
+        160,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-6-14",
+    "box": [
+      80,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P228. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P248",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P228",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        288,
+        160,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-7-14",
+    "box": [
+      96,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P227. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P249",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P227",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        272,
+        160,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-8-14",
+    "box": [
+      112,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P226. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P250",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P226",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        256,
+        160,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-9-14",
+    "box": [
+      128,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P227. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P251",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P227",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        272,
+        160,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-10-14",
+    "box": [
+      144,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P228. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P252",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P228",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        288,
+        160,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-11-14",
+    "box": [
+      160,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P226. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P253",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P226",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        256,
+        160,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-12-14",
+    "box": [
+      176,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P227. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P254",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P227",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        272,
+        160,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-13-14",
+    "box": [
+      192,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P228. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P255",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P228",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        288,
+        160,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-14-14",
+    "box": [
+      208,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-14",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P256"
+  },
+  {
+    "name": "tile-15-14",
+    "box": [
+      224,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-14",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P257"
+  },
+  {
+    "name": "tile-16-14",
+    "box": [
+      240,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-14",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P258"
+  },
+  {
+    "name": "tile-30-14",
+    "box": [
+      464,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P121. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P259",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P121",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        112,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-31-14",
+    "box": [
+      480,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P164. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P260",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P164",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        432,
+        48,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-32-14",
+    "box": [
+      496,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P165. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P261",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P165",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        448,
+        48,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-1-15",
+    "box": [
+      0,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P95. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P262",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P95",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        112,
+        16,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-2-15",
+    "box": [
+      16,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P96. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P263",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P96",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        128,
+        16,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-3-15",
+    "box": [
+      32,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P97. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P264",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P97",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        144,
+        16,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-4-15",
+    "box": [
+      48,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P98. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P265",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P98",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        160,
+        16,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-5-15",
+    "box": [
+      64,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P99. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P266",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P99",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        176,
+        16,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-6-15",
+    "box": [
+      80,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P100. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P267",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P100",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        192,
+        16,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-7-15",
+    "box": [
+      96,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P167. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P268",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P167",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        16,
+        64,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-8-15",
+    "box": [
+      112,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P173. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P269",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P173",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        112,
+        64,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-9-15",
+    "box": [
+      128,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P167. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P270",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P167",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        16,
+        64,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-10-15",
+    "box": [
+      144,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P175. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P271",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P175",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        144,
+        64,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-11-15",
+    "box": [
+      160,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P176. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P272",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P176",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        160,
+        64,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-12-15",
+    "box": [
+      176,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P177. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P273",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P177",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        176,
+        64,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-13-15",
+    "box": [
+      192,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P168. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P274",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P168",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        32,
+        64,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-30-15",
+    "box": [
+      464,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P226. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P275",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P226",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        256,
+        160,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-31-15",
+    "box": [
+      480,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P227. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P276",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P227",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        272,
+        160,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-32-15",
+    "box": [
+      496,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P228. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P277",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P228",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        288,
+        160,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-1-16",
+    "box": [
+      0,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P121. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P278",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P121",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        112,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-2-16",
+    "box": [
+      16,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P122. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P279",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P122",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        128,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-3-16",
+    "box": [
+      32,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P123. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P280",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P123",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        144,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-4-16",
+    "box": [
+      48,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P124. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P281",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P124",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        160,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-5-16",
+    "box": [
+      64,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P122. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P282",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P122",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        128,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-6-16",
+    "box": [
+      80,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P126. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P283",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P126",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        192,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-7-16",
+    "box": [
+      96,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P144. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P284",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P144",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        64,
+        48,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-8-16",
+    "box": [
+      112,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P160. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P285",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P160",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        368,
+        48,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-9-16",
+    "box": [
+      128,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P122. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P286",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P122",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        128,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-10-16",
+    "box": [
+      144,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P155. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P287",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P155",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        288,
+        48,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-11-16",
+    "box": [
+      160,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P153. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P288",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P153",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        256,
+        48,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-12-16",
+    "box": [
+      176,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P144. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P289",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P144",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        64,
+        48,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-13-16",
+    "box": [
+      192,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P123. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P290",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P123",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        144,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-30-16",
+    "box": [
+      464,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P153. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P291",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P153",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        256,
+        48,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-31-16",
+    "box": [
+      480,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P144. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P292",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P144",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        64,
+        48,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-32-16",
+    "box": [
+      496,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P155. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P293",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P155",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        288,
+        48,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-1-17",
+    "box": [
+      0,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-1-17",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P294"
+  },
+  {
+    "name": "tile-2-17",
+    "box": [
+      16,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-2-17",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P295"
+  },
+  {
+    "name": "tile-3-17",
+    "box": [
+      32,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-17",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P296"
+  },
+  {
+    "name": "tile-4-17",
+    "box": [
+      48,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-17",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P297"
+  },
+  {
+    "name": "tile-5-17",
+    "box": [
+      64,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-17",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P298"
+  },
+  {
+    "name": "tile-7-17",
+    "box": [
+      96,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-7-17",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P299"
+  },
+  {
+    "name": "tile-8-17",
+    "box": [
+      112,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-8-17",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P300"
+  },
+  {
+    "name": "tile-9-17",
+    "box": [
+      128,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-9-17",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P301"
+  },
+  {
+    "name": "tile-10-17",
+    "box": [
+      144,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-17",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P302"
+  },
+  {
+    "name": "tile-11-17",
+    "box": [
+      160,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-17",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P303"
+  },
+  {
+    "name": "tile-13-17",
+    "box": [
+      192,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-17",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P304"
+  },
+  {
+    "name": "tile-14-17",
+    "box": [
+      208,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-17",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P305"
+  },
+  {
+    "name": "tile-15-17",
+    "box": [
+      224,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-17",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P306"
+  },
+  {
+    "name": "tile-20-17",
+    "box": [
+      280,
+      256,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "The former right-edge fragment belongs to this complete cross. Do not use. Reuse P34. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P307",
+    "reviewChanged": true,
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P34",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        240,
+        256,
+        32,
+        32
+      ]
+    }
+  },
+  {
+    "name": "tile-21-17",
+    "box": [
+      320,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-21-17",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P308"
+  },
+  {
+    "name": "tile-22-17",
+    "box": [
+      336,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-22-17",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P309"
+  },
+  {
+    "name": "tile-23-17",
+    "box": [
+      352,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-23-17",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P310"
+  },
+  {
+    "name": "tile-24-17",
+    "box": [
+      368,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-24-17",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P311"
+  },
+  {
+    "name": "tile-1-18",
+    "box": [
+      0,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-1-18",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P312"
+  },
+  {
+    "name": "tile-2-18",
+    "box": [
+      16,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-2-18",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P313"
+  },
+  {
+    "name": "tile-3-18",
+    "box": [
+      32,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-18",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P314"
+  },
+  {
+    "name": "tile-4-18",
+    "box": [
+      48,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-18",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P315"
+  },
+  {
+    "name": "tile-5-18",
+    "box": [
+      64,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-18",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P316"
+  },
+  {
+    "name": "tile-7-18",
+    "box": [
+      96,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-7-18",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P317"
+  },
+  {
+    "name": "tile-8-18",
+    "box": [
+      112,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-8-18",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P318"
+  },
+  {
+    "name": "tile-9-18",
+    "box": [
+      128,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-9-18",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P319"
+  },
+  {
+    "name": "tile-10-18",
+    "box": [
+      144,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-18",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P320"
+  },
+  {
+    "name": "tile-11-18",
+    "box": [
+      160,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-18",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P321"
+  },
+  {
+    "name": "tile-21-18",
+    "box": [
+      320,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-21-18",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P322"
+  },
+  {
+    "name": "tile-22-18",
+    "box": [
+      336,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-22-18",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P323"
+  },
+  {
+    "name": "tile-23-18",
+    "box": [
+      352,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-23-18",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P324"
+  },
+  {
+    "name": "tile-24-18",
+    "box": [
+      368,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-24-18",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P325"
+  },
+  {
+    "name": "tile-1-19",
+    "box": [
+      0,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-1-19",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P326"
+  },
+  {
+    "name": "tile-2-19",
+    "box": [
+      16,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-2-19",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P327"
+  },
+  {
+    "name": "tile-3-19",
+    "box": [
+      32,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-19",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P328"
+  },
+  {
+    "name": "tile-4-19",
+    "box": [
+      48,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-19",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P329"
+  },
+  {
+    "name": "tile-5-19",
+    "box": [
+      64,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-19",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P330"
+  },
+  {
+    "name": "tile-7-19",
+    "box": [
+      96,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-7-19",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P331"
+  },
+  {
+    "name": "tile-8-19",
+    "box": [
+      112,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-8-19",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P332"
+  },
+  {
+    "name": "tile-9-19",
+    "box": [
+      128,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-9-19",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P333"
+  },
+  {
+    "name": "tile-10-19",
+    "box": [
+      144,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-19",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P334"
+  },
+  {
+    "name": "tile-11-19",
+    "box": [
+      160,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-19",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P335"
+  },
+  {
+    "name": "tile-20-19",
+    "box": [
+      280,
+      288,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "The former right-edge fragment belongs to this complete cross. Do not use. Reuse P35. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P336",
+    "reviewChanged": true,
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P35",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        240,
+        288,
+        32,
+        32
+      ]
+    }
+  },
+  {
+    "name": "tile-21-19",
+    "box": [
+      320,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-21-19",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P337"
+  },
+  {
+    "name": "tile-22-19",
+    "box": [
+      336,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-22-19",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P338"
+  },
+  {
+    "name": "tile-21-20",
+    "box": [
+      320,
+      304,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-21-20",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P339"
+  },
+  {
+    "name": "tile-22-20",
+    "box": [
+      336,
+      304,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-22-20",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P340"
+  },
+  {
+    "name": "tile-13-21",
+    "box": [
+      192,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-21",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P341"
+  },
+  {
+    "name": "tile-14-21",
+    "box": [
+      208,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-21",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P342"
+  },
+  {
+    "name": "tile-15-21",
+    "box": [
+      224,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-21",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P343"
+  },
+  {
+    "name": "tile-20-21",
+    "box": [
+      280,
+      320,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "The former right-edge fragment belongs to this complete cross. Do not use. Reuse P36. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P344",
+    "reviewChanged": true,
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P36",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        240,
+        320,
+        32,
+        32
+      ]
+    }
+  },
+  {
+    "name": "tile-21-21",
+    "box": [
+      320,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-21-21",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P345"
+  },
+  {
+    "name": "tile-22-21",
+    "box": [
+      336,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-22-21",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P346"
+  },
+  {
+    "name": "tile-13-22",
+    "box": [
+      192,
+      336,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-22",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P347"
+  },
+  {
+    "name": "tile-14-22",
+    "box": [
+      208,
+      336,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-22",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P348"
+  },
+  {
+    "name": "tile-15-22",
+    "box": [
+      224,
+      336,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-22",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P349"
+  },
+  {
+    "name": "tile-13-23",
+    "box": [
+      192,
+      352,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-23",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P350"
+  },
+  {
+    "name": "tile-14-23",
+    "box": [
+      208,
+      352,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-23",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P351"
+  },
+  {
+    "name": "tile-15-23",
+    "box": [
+      224,
+      352,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P349. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P352",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P349",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        224,
+        336,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-16-23",
+    "box": [
+      240,
+      352,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-23",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P353"
+  },
+  {
+    "name": "tile-17-23",
+    "box": [
+      256,
+      352,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-17-23",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P354"
+  },
+  {
+    "name": "tile-18-23",
+    "box": [
+      272,
+      352,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-18-23",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P355"
+  },
+  {
+    "name": "tile-13-24",
+    "box": [
+      192,
+      368,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-24",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P356"
+  },
+  {
+    "name": "tile-14-24",
+    "box": [
+      208,
+      368,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-24",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P357"
+  },
+  {
+    "name": "tile-15-24",
+    "box": [
+      224,
+      368,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-24",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P358"
+  },
+  {
+    "name": "tile-16-24",
+    "box": [
+      240,
+      368,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-24",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P359"
+  },
+  {
+    "name": "tile-17-24",
+    "box": [
+      256,
+      368,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-17-24",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P360"
+  },
+  {
+    "name": "tile-18-24",
+    "box": [
+      272,
+      368,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P360. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P361",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P360",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        256,
+        368,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-13-25",
+    "box": [
+      192,
+      384,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-25",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P362"
+  },
+  {
+    "name": "tile-14-25",
+    "box": [
+      208,
+      384,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P351. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P363",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P351",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        208,
+        352,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-15-25",
+    "box": [
+      224,
+      384,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-25",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P364"
+  },
+  {
+    "name": "tile-1-26",
+    "box": [
+      0,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-1-26",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P365"
+  },
+  {
+    "name": "tile-2-26",
+    "box": [
+      16,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-2-26",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P366"
+  },
+  {
+    "name": "tile-3-26",
+    "box": [
+      32,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-26",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P367"
+  },
+  {
+    "name": "tile-4-26",
+    "box": [
+      48,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-26",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P368"
+  },
+  {
+    "name": "tile-5-26",
+    "box": [
+      64,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-26",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P369"
+  },
+  {
+    "name": "tile-6-26",
+    "box": [
+      80,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-6-26",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P370"
+  },
+  {
+    "name": "tile-7-26",
+    "box": [
+      96,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-7-26",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P371"
+  },
+  {
+    "name": "tile-8-26",
+    "box": [
+      112,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-8-26",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P372"
+  },
+  {
+    "name": "tile-9-26",
+    "box": [
+      128,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-9-26",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P373"
+  },
+  {
+    "name": "tile-10-26",
+    "box": [
+      144,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-26",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P374"
+  },
+  {
+    "name": "tile-11-26",
+    "box": [
+      160,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-26",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P375"
+  },
+  {
+    "name": "tile-14-26",
+    "box": [
+      208,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-26",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P376"
+  },
+  {
+    "name": "tile-15-26",
+    "box": [
+      224,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-26",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P377"
+  },
+  {
+    "name": "tile-24-26",
+    "box": [
+      368,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P373. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P378",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P373",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        128,
+        400,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-2-27",
+    "box": [
+      16,
+      416,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-2-27",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P379"
+  },
+  {
+    "name": "tile-3-27",
+    "box": [
+      32,
+      416,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-27",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P380"
+  },
+  {
+    "name": "tile-4-27",
+    "box": [
+      48,
+      416,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-27",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P381"
+  },
+  {
+    "name": "tile-5-27",
+    "box": [
+      64,
+      416,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-27",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P382"
+  },
+  {
+    "name": "tile-6-27",
+    "box": [
+      80,
+      416,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-6-27",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P383"
+  },
+  {
+    "name": "tile-7-27",
+    "box": [
+      96,
+      416,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P383. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P384",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P383",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        80,
+        416,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-8-27",
+    "box": [
+      112,
+      416,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P383. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P385",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P383",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        80,
+        416,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-9-27",
+    "box": [
+      128,
+      416,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-9-27",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P386"
+  },
+  {
+    "name": "tile-10-27",
+    "box": [
+      144,
+      416,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-27",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P387"
+  },
+  {
+    "name": "tile-11-27",
+    "box": [
+      160,
+      416,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-27",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P388"
+  },
+  {
+    "name": "tile-24-27",
+    "box": [
+      368,
+      416,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P386. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P389",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P386",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        128,
+        416,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-1-28",
+    "box": [
+      0,
+      432,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-1-28",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P390"
+  },
+  {
+    "name": "tile-2-28",
+    "box": [
+      16,
+      432,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-2-28",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P391"
+  },
+  {
+    "name": "tile-3-28",
+    "box": [
+      32,
+      432,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-28",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P392"
+  },
+  {
+    "name": "tile-4-28",
+    "box": [
+      48,
+      432,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-28",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P393"
+  },
+  {
+    "name": "tile-6-28",
+    "box": [
+      80,
+      432,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-6-28",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P394"
+  },
+  {
+    "name": "tile-7-28",
+    "box": [
+      96,
+      432,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-7-28",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P395"
+  },
+  {
+    "name": "tile-8-28",
+    "box": [
+      112,
+      432,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-8-28",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P396"
+  },
+  {
+    "name": "tile-24-28",
+    "box": [
+      368,
+      432,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-24-28",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P397"
+  },
+  {
+    "name": "tile-2-29",
+    "box": [
+      16,
+      448,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-2-29",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P398"
+  },
+  {
+    "name": "tile-3-29",
+    "box": [
+      32,
+      448,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-29",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P399"
+  },
+  {
+    "name": "tile-4-29",
+    "box": [
+      48,
+      448,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-29",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P400"
+  },
+  {
+    "name": "tile-6-29",
+    "box": [
+      80,
+      448,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-6-29",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P401"
+  },
+  {
+    "name": "tile-24-29",
+    "box": [
+      368,
+      448,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-24-29",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P402"
+  },
+  {
+    "name": "tile-1-30",
+    "box": [
+      0,
+      464,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-1-30",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P403"
+  },
+  {
+    "name": "tile-2-30",
+    "box": [
+      16,
+      464,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-2-30",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P404"
+  },
+  {
+    "name": "tile-4-30",
+    "box": [
+      48,
+      464,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse P404. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "P405",
+    "reuseProposal": {
+      "sheetId": "P",
+      "reviewId": "P404",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-dark-castle-purple-source-06d159988f67.png",
+      "box": [
+        16,
+        464,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-5-30",
+    "box": [
+      64,
+      464,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-30",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P406"
+  },
+  {
+    "name": "tile-6-30",
+    "box": [
+      80,
+      464,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-6-30",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P407"
+  },
+  {
+    "name": "tile-16-30",
+    "box": [
+      240,
+      464,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-30",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P408"
+  },
+  {
+    "name": "tile-17-30",
+    "box": [
+      256,
+      464,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-17-30",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P409"
+  },
+  {
+    "name": "tile-18-30",
+    "box": [
+      272,
+      464,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-18-30",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P410"
+  },
+  {
+    "name": "tile-19-30",
+    "box": [
+      288,
+      464,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-19-30",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P411"
+  },
+  {
+    "name": "tile-20-30",
+    "box": [
+      304,
+      464,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-20-30",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P412"
+  },
+  {
+    "name": "tile-21-30",
+    "box": [
+      320,
+      464,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-21-30",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P413"
+  },
+  {
+    "name": "tile-22-30",
+    "box": [
+      336,
+      464,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-22-30",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P414"
+  },
+  {
+    "name": "tile-23-30",
+    "box": [
+      352,
+      464,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-23-30",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P415"
+  },
+  {
+    "name": "tile-24-30",
+    "box": [
+      368,
+      464,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-24-30",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P416"
+  },
+  {
+    "name": "tile-25-30",
+    "box": [
+      384,
+      464,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-25-30",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P417"
+  },
+  {
+    "name": "tile-26-30",
+    "box": [
+      400,
+      464,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-26-30",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P418"
+  },
+  {
+    "name": "tile-27-30",
+    "box": [
+      416,
+      464,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-27-30",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P419"
+  },
+  {
+    "name": "tile-28-30",
+    "box": [
+      432,
+      464,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-28-30",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P420"
+  },
+  {
+    "name": "tile-29-30",
+    "box": [
+      448,
+      464,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-29-30",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P421"
+  },
+  {
+    "name": "tile-2-31",
+    "box": [
+      16,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-2-31",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P422"
+  },
+  {
+    "name": "tile-3-31",
+    "box": [
+      32,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-31",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P423"
+  },
+  {
+    "name": "tile-4-31",
+    "box": [
+      48,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-31",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P424"
+  },
+  {
+    "name": "tile-6-31",
+    "box": [
+      80,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-6-31",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P425"
+  },
+  {
+    "name": "tile-16-31",
+    "box": [
+      240,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-31",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P426"
+  },
+  {
+    "name": "tile-17-31",
+    "box": [
+      256,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-17-31",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P427"
+  },
+  {
+    "name": "tile-18-31",
+    "box": [
+      272,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-18-31",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P428"
+  },
+  {
+    "name": "tile-19-31",
+    "box": [
+      288,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-19-31",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P429"
+  },
+  {
+    "name": "tile-20-31",
+    "box": [
+      304,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-20-31",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P430"
+  },
+  {
+    "name": "tile-21-31",
+    "box": [
+      320,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-21-31",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P431"
+  },
+  {
+    "name": "tile-22-31",
+    "box": [
+      336,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-22-31",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P432"
+  },
+  {
+    "name": "tile-23-31",
+    "box": [
+      352,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-23-31",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P433"
+  },
+  {
+    "name": "tile-24-31",
+    "box": [
+      368,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-24-31",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P434"
+  },
+  {
+    "name": "tile-25-31",
+    "box": [
+      384,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-25-31",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P435"
+  },
+  {
+    "name": "tile-26-31",
+    "box": [
+      400,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-26-31",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P436"
+  },
+  {
+    "name": "tile-27-31",
+    "box": [
+      416,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-27-31",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P437"
+  },
+  {
+    "name": "tile-28-31",
+    "box": [
+      432,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-28-31",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P438"
+  },
+  {
+    "name": "tile-30-31",
+    "box": [
+      464,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-30-31",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P439"
+  },
+  {
+    "name": "tile-31-31",
+    "box": [
+      480,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-31-31",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P440"
+  },
+  {
+    "name": "tile-2-32",
+    "box": [
+      16,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-2-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P441"
+  },
+  {
+    "name": "tile-3-32",
+    "box": [
+      32,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P442"
+  },
+  {
+    "name": "tile-4-32",
+    "box": [
+      48,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P443"
+  },
+  {
+    "name": "tile-6-32",
+    "box": [
+      80,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-6-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P444"
+  },
+  {
+    "name": "tile-16-32",
+    "box": [
+      240,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P445"
+  },
+  {
+    "name": "tile-17-32",
+    "box": [
+      256,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-17-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P446"
+  },
+  {
+    "name": "tile-18-32",
+    "box": [
+      272,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-18-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P447"
+  },
+  {
+    "name": "tile-19-32",
+    "box": [
+      288,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-19-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P448"
+  },
+  {
+    "name": "tile-20-32",
+    "box": [
+      304,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-20-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P449"
+  },
+  {
+    "name": "tile-21-32",
+    "box": [
+      320,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-21-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P450"
+  },
+  {
+    "name": "tile-22-32",
+    "box": [
+      336,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-22-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P451"
+  },
+  {
+    "name": "tile-23-32",
+    "box": [
+      352,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-23-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P452"
+  },
+  {
+    "name": "tile-24-32",
+    "box": [
+      368,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-24-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P453"
+  },
+  {
+    "name": "tile-25-32",
+    "box": [
+      384,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-25-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P454"
+  },
+  {
+    "name": "tile-26-32",
+    "box": [
+      400,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-26-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P455"
+  },
+  {
+    "name": "tile-27-32",
+    "box": [
+      416,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-27-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P456"
+  },
+  {
+    "name": "tile-28-32",
+    "box": [
+      432,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-28-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P457"
+  },
+  {
+    "name": "tile-29-32",
+    "box": [
+      448,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-29-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P458"
+  },
+  {
+    "name": "tile-30-32",
+    "box": [
+      464,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-30-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P459"
+  },
+  {
+    "name": "tile-31-32",
+    "box": [
+      480,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-31-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "P460"
+  }
+]

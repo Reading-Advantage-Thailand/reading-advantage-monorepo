@@ -1,0 +1,8356 @@
+[
+  {
+    "name": "cave-left",
+    "box": [
+      0,
+      0,
+      80,
+      96
+    ],
+    "kind": "part",
+    "group": "cave-left",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M01"
+  },
+  {
+    "name": "pillar-left",
+    "box": [
+      0,
+      96,
+      80,
+      80
+    ],
+    "kind": "part",
+    "group": "pillar-left",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M02"
+  },
+  {
+    "name": "cave-right",
+    "box": [
+      80,
+      0,
+      80,
+      96
+    ],
+    "kind": "part",
+    "group": "cave-right",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M03"
+  },
+  {
+    "name": "pillar-right",
+    "box": [
+      80,
+      96,
+      80,
+      80
+    ],
+    "kind": "part",
+    "group": "pillar-right",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M04"
+  },
+  {
+    "name": "pit-round-black",
+    "box": [
+      160,
+      0,
+      48,
+      96
+    ],
+    "kind": "part",
+    "group": "pit-round-black",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M05"
+  },
+  {
+    "name": "pit-round-clear",
+    "box": [
+      208,
+      0,
+      48,
+      96
+    ],
+    "kind": "part",
+    "group": "pit-round-clear",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M06"
+  },
+  {
+    "name": "pit-square-black",
+    "box": [
+      160,
+      96,
+      48,
+      80
+    ],
+    "kind": "part",
+    "group": "pit-square-black",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M07"
+  },
+  {
+    "name": "pit-square-clear",
+    "box": [
+      208,
+      96,
+      48,
+      80
+    ],
+    "kind": "part",
+    "group": "pit-square-clear",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M08"
+  },
+  {
+    "name": "stairs-tall",
+    "box": [
+      256,
+      0,
+      96,
+      96
+    ],
+    "kind": "part",
+    "group": "stairs-tall",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M09"
+  },
+  {
+    "name": "stairs-short",
+    "box": [
+      352,
+      0,
+      96,
+      96
+    ],
+    "kind": "part",
+    "group": "stairs-short",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M10"
+  },
+  {
+    "name": "stairs-top",
+    "box": [
+      448,
+      16,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "stairs-top",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M11"
+  },
+  {
+    "name": "stairs-bottom",
+    "box": [
+      448,
+      64,
+      48,
+      32
+    ],
+    "kind": "part",
+    "group": "stairs-bottom",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M12"
+  },
+  {
+    "name": "door-left",
+    "box": [
+      288,
+      112,
+      48,
+      32
+    ],
+    "kind": "part",
+    "group": "door-left",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M13"
+  },
+  {
+    "name": "door-right",
+    "box": [
+      352,
+      112,
+      48,
+      32
+    ],
+    "kind": "part",
+    "group": "door-right",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M14"
+  },
+  {
+    "name": "pit-bottom-0",
+    "box": [
+      0,
+      192,
+      48,
+      64
+    ],
+    "kind": "part",
+    "group": "pit-bottom-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M15"
+  },
+  {
+    "name": "pit-bottom-48",
+    "box": [
+      48,
+      192,
+      48,
+      64
+    ],
+    "kind": "part",
+    "group": "pit-bottom-48",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M16"
+  },
+  {
+    "name": "pit-bottom-96",
+    "box": [
+      96,
+      192,
+      48,
+      64
+    ],
+    "kind": "part",
+    "group": "pit-bottom-96",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M17"
+  },
+  {
+    "name": "pit-bottom-144",
+    "box": [
+      144,
+      192,
+      48,
+      64
+    ],
+    "kind": "part",
+    "group": "pit-bottom-144",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M18"
+  },
+  {
+    "name": "cave-water",
+    "box": [
+      0,
+      256,
+      80,
+      96
+    ],
+    "kind": "part",
+    "group": "cave-water",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M19"
+  },
+  {
+    "name": "pit-water",
+    "box": [
+      80,
+      272,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "pit-water",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M20"
+  },
+  {
+    "name": "cave-water-floor",
+    "box": [
+      112,
+      256,
+      48,
+      80
+    ],
+    "kind": "part",
+    "group": "cave-water-floor",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M21"
+  },
+  {
+    "name": "cave-dark",
+    "box": [
+      432,
+      384,
+      80,
+      80
+    ],
+    "kind": "part",
+    "group": "cave-dark",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M22"
+  },
+  {
+    "name": "mine-entrance",
+    "box": [
+      368,
+      416,
+      64,
+      64
+    ],
+    "kind": "part",
+    "group": "mine-entrance",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M23"
+  },
+  {
+    "name": "door-wood",
+    "box": [
+      368,
+      480,
+      48,
+      32
+    ],
+    "kind": "part",
+    "group": "door-wood",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M24"
+  },
+  {
+    "name": "rail-vertical",
+    "box": [
+      264,
+      336,
+      32,
+      48
+    ],
+    "kind": "part",
+    "group": "rail-vertical",
+    "frame": null,
+    "notes": "The boundary moves eight pixels right to preserve both rails.",
+    "placement": null,
+    "reviewId": "M25",
+    "reviewChanged": true
+  },
+  {
+    "name": "rail-horizontal",
+    "box": [
+      304,
+      336,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "rail-horizontal",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M26"
+  },
+  {
+    "name": "rail-oval",
+    "box": [
+      352,
+      336,
+      32,
+      48
+    ],
+    "kind": "part",
+    "group": "rail-oval",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M27"
+  },
+  {
+    "name": "rock-small-256-176",
+    "box": [
+      256,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "rock-small-256-176",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M28"
+  },
+  {
+    "name": "rock-small-256-192",
+    "box": [
+      256,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "rock-small-256-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M29"
+  },
+  {
+    "name": "rock-small-256-208",
+    "box": [
+      256,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "rock-small-256-208",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M30"
+  },
+  {
+    "name": "rock-small-288-176",
+    "box": [
+      288,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "rock-small-288-176",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M31"
+  },
+  {
+    "name": "rock-small-288-192",
+    "box": [
+      288,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "rock-small-288-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M32"
+  },
+  {
+    "name": "rock-small-288-208",
+    "box": [
+      288,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "rock-small-288-208",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M33"
+  },
+  {
+    "name": "rock-pillar-320",
+    "box": [
+      320,
+      192,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-pillar-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M34"
+  },
+  {
+    "name": "rock-pillar-336",
+    "box": [
+      336,
+      192,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-pillar-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M35"
+  },
+  {
+    "name": "rock-cluster-256",
+    "box": [
+      256,
+      224,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-cluster-256",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M36"
+  },
+  {
+    "name": "rock-cluster-288",
+    "box": [
+      288,
+      224,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-cluster-288",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M37"
+  },
+  {
+    "name": "rock-pillar-bottom-320",
+    "box": [
+      320,
+      224,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-pillar-bottom-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M38"
+  },
+  {
+    "name": "rock-pillar-bottom-336",
+    "box": [
+      336,
+      224,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-pillar-bottom-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M39"
+  },
+  {
+    "name": "rock-large-192",
+    "box": [
+      352,
+      192,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-large-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M40"
+  },
+  {
+    "name": "rock-large-224",
+    "box": [
+      352,
+      224,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-large-224",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M41"
+  },
+  {
+    "name": "stump-cluster-320",
+    "box": [
+      320,
+      288,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "stump-cluster-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M42"
+  },
+  {
+    "name": "stump-cluster-352",
+    "box": [
+      352,
+      288,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "stump-cluster-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M43"
+  },
+  {
+    "name": "lamp-left-off-on",
+    "box": [
+      384,
+      288,
+      32,
+      16
+    ],
+    "kind": "state-strip",
+    "group": "lamp-left-off-on",
+    "frame": null,
+    "notes": "Two lamp states: off, then on. Playback compares the states.",
+    "placement": null,
+    "reviewId": "M44",
+    "frameBoxes": [
+      [
+        384,
+        288,
+        16,
+        16
+      ],
+      [
+        400,
+        288,
+        16,
+        16
+      ]
+    ],
+    "reviewChanged": true
+  },
+  {
+    "name": "lamp-right-off-on",
+    "box": [
+      416,
+      288,
+      32,
+      16
+    ],
+    "kind": "state-strip",
+    "group": "lamp-right-off-on",
+    "frame": null,
+    "notes": "Two lamp states: off, then on. Playback compares the states.",
+    "placement": null,
+    "reviewId": "M45",
+    "frameBoxes": [
+      [
+        416,
+        288,
+        16,
+        16
+      ],
+      [
+        432,
+        288,
+        16,
+        16
+      ]
+    ],
+    "reviewChanged": true
+  },
+  {
+    "name": "chest-448",
+    "box": [
+      448,
+      288,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "chest-448",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M46"
+  },
+  {
+    "name": "chest-480",
+    "box": [
+      480,
+      288,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "chest-480",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M47"
+  },
+  {
+    "name": "crate-cluster-384",
+    "box": [
+      384,
+      304,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fg-village-review-parts-bench-256-0.png",
+    "placement": null,
+    "reviewId": "M48",
+    "reuseAsset": "top-down/native/farming-game-world/processed/fg-village-review-parts/fg-village-review-parts-bench-256-0.png"
+  },
+  {
+    "name": "crate-cluster-416",
+    "box": [
+      416,
+      304,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fg-village-review-parts-bench-288-0.png",
+    "placement": null,
+    "reviewId": "M49",
+    "reuseAsset": "top-down/native/farming-game-world/processed/fg-village-review-parts/fg-village-review-parts-bench-288-0.png"
+  },
+  {
+    "name": "crate-cluster-448",
+    "box": [
+      448,
+      304,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fg-village-review-parts-bench-320-0.png",
+    "placement": null,
+    "reviewId": "M50",
+    "reuseAsset": "top-down/native/farming-game-world/processed/fg-village-review-parts/fg-village-review-parts-bench-320-0.png"
+  },
+  {
+    "name": "crate-cluster-480",
+    "box": [
+      480,
+      304,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "crate-cluster-480",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M51"
+  },
+  {
+    "name": "cart-384",
+    "box": [
+      384,
+      352,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "cart-384",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M52"
+  },
+  {
+    "name": "cart-400",
+    "box": [
+      400,
+      352,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "cart-400",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M53"
+  },
+  {
+    "name": "cart-416",
+    "box": [
+      416,
+      352,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "cart-416",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M54"
+  },
+  {
+    "name": "cart-448",
+    "box": [
+      448,
+      352,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "cart-448",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M55"
+  },
+  {
+    "name": "cart-480",
+    "box": [
+      480,
+      352,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "cart-480",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M56"
+  },
+  {
+    "name": "cart-496",
+    "box": [
+      496,
+      352,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "cart-496",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M57"
+  },
+  {
+    "name": "arch-416",
+    "box": [
+      256,
+      416,
+      48,
+      32
+    ],
+    "kind": "part",
+    "group": "arch-416",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M58"
+  },
+  {
+    "name": "lantern-304-416",
+    "box": [
+      304,
+      416,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "lantern-304-416",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M59"
+  },
+  {
+    "name": "lantern-336-416",
+    "box": [
+      336,
+      416,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "lantern-336-416",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M60"
+  },
+  {
+    "name": "arch-448",
+    "box": [
+      256,
+      448,
+      48,
+      32
+    ],
+    "kind": "part",
+    "group": "arch-448",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M61"
+  },
+  {
+    "name": "lantern-304-448",
+    "box": [
+      304,
+      448,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "lantern-304-448",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M62"
+  },
+  {
+    "name": "lantern-336-448",
+    "box": [
+      336,
+      448,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "lantern-336-448",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M63"
+  },
+  {
+    "name": "arch-480",
+    "box": [
+      256,
+      480,
+      48,
+      32
+    ],
+    "kind": "part",
+    "group": "arch-480",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M64"
+  },
+  {
+    "name": "lantern-304-480",
+    "box": [
+      304,
+      480,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "lantern-304-480",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M65"
+  },
+  {
+    "name": "lantern-336-480",
+    "box": [
+      336,
+      480,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "lantern-336-480",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M66"
+  },
+  {
+    "name": "gem-base-288-528",
+    "box": [
+      288,
+      528,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "gem-base-288-528",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M67"
+  },
+  {
+    "name": "gem-base-304-528",
+    "box": [
+      304,
+      528,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "gem-base-304-528",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M68"
+  },
+  {
+    "name": "gem-base-320-528",
+    "box": [
+      320,
+      528,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "gem-base-320-528",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M69"
+  },
+  {
+    "name": "gem-base-336-528",
+    "box": [
+      336,
+      528,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "gem-base-336-528",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M70"
+  },
+  {
+    "name": "gem-base-288-544",
+    "box": [
+      288,
+      544,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "gem-base-288-544",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M71"
+  },
+  {
+    "name": "gem-base-304-544",
+    "box": [
+      304,
+      544,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "gem-base-304-544",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M72"
+  },
+  {
+    "name": "gem-base-320-544",
+    "box": [
+      320,
+      544,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "gem-base-320-544",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M73"
+  },
+  {
+    "name": "gem-base-336-544",
+    "box": [
+      336,
+      544,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "gem-base-336-544",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M74"
+  },
+  {
+    "name": "gem-base-352-528",
+    "box": [
+      352,
+      528,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "gem-base-352-528",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M75"
+  },
+  {
+    "name": "gem-base-368-528",
+    "box": [
+      368,
+      528,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "gem-base-368-528",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M76"
+  },
+  {
+    "name": "gem-base-384-528",
+    "box": [
+      384,
+      528,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "gem-base-384-528",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M77"
+  },
+  {
+    "name": "gem-base-400-528",
+    "box": [
+      400,
+      528,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "gem-base-400-528",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M78"
+  },
+  {
+    "name": "gem-base-352-544",
+    "box": [
+      352,
+      544,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "gem-base-352-544",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M79"
+  },
+  {
+    "name": "gem-base-368-544",
+    "box": [
+      368,
+      544,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "gem-base-368-544",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M80"
+  },
+  {
+    "name": "gem-base-384-544",
+    "box": [
+      384,
+      544,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "gem-base-384-544",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M81"
+  },
+  {
+    "name": "gem-base-400-544",
+    "box": [
+      400,
+      544,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "gem-base-400-544",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M82"
+  },
+  {
+    "name": "gem-base-288-592",
+    "box": [
+      288,
+      592,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "gem-base-288-592",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M83"
+  },
+  {
+    "name": "gem-base-304-592",
+    "box": [
+      304,
+      592,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "gem-base-304-592",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M84"
+  },
+  {
+    "name": "gem-base-320-592",
+    "box": [
+      320,
+      592,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "gem-base-320-592",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M85"
+  },
+  {
+    "name": "gem-base-336-592",
+    "box": [
+      336,
+      592,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "gem-base-336-592",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M86"
+  },
+  {
+    "name": "gem-base-288-608",
+    "box": [
+      288,
+      608,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "gem-base-288-608",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M87"
+  },
+  {
+    "name": "gem-base-304-608",
+    "box": [
+      304,
+      608,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "gem-base-304-608",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M88"
+  },
+  {
+    "name": "gem-base-320-608",
+    "box": [
+      320,
+      608,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "gem-base-320-608",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M89"
+  },
+  {
+    "name": "gem-base-336-608",
+    "box": [
+      336,
+      608,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "gem-base-336-608",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M90"
+  },
+  {
+    "name": "gem-base-352-592",
+    "box": [
+      352,
+      592,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "gem-base-352-592",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M91"
+  },
+  {
+    "name": "gem-base-368-592",
+    "box": [
+      368,
+      592,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "gem-base-368-592",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M92"
+  },
+  {
+    "name": "gem-base-384-592",
+    "box": [
+      384,
+      592,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "gem-base-384-592",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M93"
+  },
+  {
+    "name": "gem-base-400-592",
+    "box": [
+      400,
+      592,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "gem-base-400-592",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M94"
+  },
+  {
+    "name": "gem-base-352-608",
+    "box": [
+      352,
+      608,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "gem-base-352-608",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M95"
+  },
+  {
+    "name": "gem-base-368-608",
+    "box": [
+      368,
+      608,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "gem-base-368-608",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M96"
+  },
+  {
+    "name": "gem-base-384-608",
+    "box": [
+      384,
+      608,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "gem-base-384-608",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M97"
+  },
+  {
+    "name": "gem-base-400-608",
+    "box": [
+      400,
+      608,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "gem-base-400-608",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M98"
+  },
+  {
+    "name": "gem-pillar-288-560",
+    "box": [
+      288,
+      560,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "gem-pillar-288-560",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M99"
+  },
+  {
+    "name": "gem-pillar-304-560",
+    "box": [
+      304,
+      560,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "gem-pillar-304-560",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M100"
+  },
+  {
+    "name": "gem-pillar-320-560",
+    "box": [
+      320,
+      560,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "gem-pillar-320-560",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M101"
+  },
+  {
+    "name": "gem-pillar-336-560",
+    "box": [
+      336,
+      560,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "gem-pillar-336-560",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M102"
+  },
+  {
+    "name": "gem-pillar-352-560",
+    "box": [
+      352,
+      560,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M99. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "M103",
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M99",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        288,
+        560,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "gem-pillar-368-560",
+    "box": [
+      368,
+      560,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M100. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "M104",
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M100",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        304,
+        560,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "gem-pillar-384-560",
+    "box": [
+      384,
+      560,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M101. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "M105",
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M101",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        320,
+        560,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "gem-pillar-400-560",
+    "box": [
+      400,
+      560,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M102. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "M106",
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M102",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        336,
+        560,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "gem-pillar-288-624",
+    "box": [
+      288,
+      624,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M99. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "M107",
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M99",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        288,
+        560,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "gem-pillar-304-624",
+    "box": [
+      304,
+      624,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M100. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "M108",
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M100",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        304,
+        560,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "gem-pillar-320-624",
+    "box": [
+      320,
+      624,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M101. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "M109",
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M101",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        320,
+        560,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "gem-pillar-336-624",
+    "box": [
+      336,
+      624,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M102. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "M110",
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M102",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        336,
+        560,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "gem-pillar-352-624",
+    "box": [
+      352,
+      624,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M99. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "M111",
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M99",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        288,
+        560,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "gem-pillar-368-624",
+    "box": [
+      368,
+      624,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M100. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "M112",
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M100",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        304,
+        560,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "gem-pillar-384-624",
+    "box": [
+      384,
+      624,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M101. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "M113",
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M101",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        320,
+        560,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "gem-pillar-400-624",
+    "box": [
+      400,
+      624,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M102. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "M114",
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M102",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        336,
+        560,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "ore-80-528",
+    "box": [
+      80,
+      528,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ore-80-528",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M115"
+  },
+  {
+    "name": "ore-96-528",
+    "box": [
+      96,
+      528,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ore-96-528",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M116"
+  },
+  {
+    "name": "ore-144-528",
+    "box": [
+      144,
+      528,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ore-144-528",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M117"
+  },
+  {
+    "name": "ore-160-528",
+    "box": [
+      160,
+      528,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ore-160-528",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M118"
+  },
+  {
+    "name": "ore-208-528",
+    "box": [
+      208,
+      528,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ore-208-528",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M119"
+  },
+  {
+    "name": "ore-224-528",
+    "box": [
+      224,
+      528,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ore-224-528",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M120"
+  },
+  {
+    "name": "ore-80-560",
+    "box": [
+      80,
+      560,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ore-80-560",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M121"
+  },
+  {
+    "name": "ore-96-560",
+    "box": [
+      96,
+      560,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ore-96-560",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M122"
+  },
+  {
+    "name": "ore-144-560",
+    "box": [
+      144,
+      560,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ore-144-560",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M123"
+  },
+  {
+    "name": "ore-160-560",
+    "box": [
+      160,
+      560,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ore-160-560",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M124"
+  },
+  {
+    "name": "ore-208-560",
+    "box": [
+      208,
+      560,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ore-208-560",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M125"
+  },
+  {
+    "name": "ore-224-560",
+    "box": [
+      224,
+      560,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ore-224-560",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M126"
+  },
+  {
+    "name": "ore-cluster-80-544",
+    "box": [
+      80,
+      544,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "ore-cluster-80-544",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M127"
+  },
+  {
+    "name": "ore-cluster-144-544",
+    "box": [
+      144,
+      544,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "ore-cluster-144-544",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M128"
+  },
+  {
+    "name": "ore-cluster-208-544",
+    "box": [
+      208,
+      544,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "ore-cluster-208-544",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M129"
+  },
+  {
+    "name": "ore-cluster-80-576",
+    "box": [
+      80,
+      576,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "ore-cluster-80-576",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M130"
+  },
+  {
+    "name": "ore-cluster-144-576",
+    "box": [
+      144,
+      576,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "ore-cluster-144-576",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M131"
+  },
+  {
+    "name": "ore-cluster-208-576",
+    "box": [
+      208,
+      576,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "ore-cluster-208-576",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M132"
+  },
+  {
+    "name": "ore-cluster-80-608",
+    "box": [
+      80,
+      608,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "ore-cluster-80-608",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M133"
+  },
+  {
+    "name": "ore-cluster-144-608",
+    "box": [
+      144,
+      608,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "ore-cluster-144-608",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M134"
+  },
+  {
+    "name": "ore-cluster-208-608",
+    "box": [
+      208,
+      608,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "ore-cluster-208-608",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M135"
+  },
+  {
+    "name": "ore-cart-112-528",
+    "box": [
+      112,
+      520,
+      16,
+      24
+    ],
+    "kind": "part",
+    "group": "ore-cart-112-528",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M136"
+  },
+  {
+    "name": "ore-cart-112-560",
+    "box": [
+      112,
+      552,
+      16,
+      24
+    ],
+    "kind": "part",
+    "group": "ore-cart-112-560",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M137"
+  },
+  {
+    "name": "ore-cart-176-528",
+    "box": [
+      176,
+      520,
+      16,
+      24
+    ],
+    "kind": "part",
+    "group": "ore-cart-176-528",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M138"
+  },
+  {
+    "name": "ore-cart-176-560",
+    "box": [
+      176,
+      552,
+      16,
+      24
+    ],
+    "kind": "part",
+    "group": "ore-cart-176-560",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M139"
+  },
+  {
+    "name": "ore-cart-240-528",
+    "box": [
+      240,
+      520,
+      16,
+      24
+    ],
+    "kind": "part",
+    "group": "ore-cart-240-528",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M140"
+  },
+  {
+    "name": "ore-cart-240-560",
+    "box": [
+      240,
+      552,
+      16,
+      24
+    ],
+    "kind": "part",
+    "group": "ore-cart-240-560",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M141"
+  },
+  {
+    "name": "cave-bottom-edge",
+    "box": [
+      448,
+      464,
+      48,
+      16
+    ],
+    "kind": "part",
+    "group": "cave-bottom-edge",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M142"
+  },
+  {
+    "name": "water-pillar-160-336",
+    "box": [
+      160,
+      336,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "water-pillar-160-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M143"
+  },
+  {
+    "name": "water-pillar-128-400",
+    "box": [
+      128,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "water-pillar-128-400",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M144"
+  },
+  {
+    "name": "water-pillar-144-400",
+    "box": [
+      144,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "water-pillar-144-400",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M145"
+  },
+  {
+    "name": "water-pillar-160-400",
+    "box": [
+      160,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "water-pillar-160-400",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M146"
+  },
+  {
+    "name": "water-pillar-176-400",
+    "box": [
+      176,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "water-pillar-176-400",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M147"
+  },
+  {
+    "name": "water-pillar-128-464",
+    "box": [
+      128,
+      464,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M144. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "M148",
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M144",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        128,
+        400,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "water-pillar-144-464",
+    "box": [
+      144,
+      464,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M145. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "M149",
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M145",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        144,
+        400,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "water-pillar-160-464",
+    "box": [
+      160,
+      464,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M146. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "M150",
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M146",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        160,
+        400,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "water-pillar-176-464",
+    "box": [
+      176,
+      464,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M147. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "M151",
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M147",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        176,
+        400,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "water-rock-64-352",
+    "box": [
+      64,
+      352,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "water-rock-64-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M152"
+  },
+  {
+    "name": "water-rock-80-352",
+    "box": [
+      80,
+      352,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "water-rock-80-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M153"
+  },
+  {
+    "name": "water-rock-large-96-352",
+    "box": [
+      96,
+      352,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "water-rock-large-96-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M154"
+  },
+  {
+    "name": "water-rock-cluster-0-416",
+    "box": [
+      0,
+      416,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "water-rock-cluster-0-416",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M155"
+  },
+  {
+    "name": "water-rock-cluster-32-416",
+    "box": [
+      32,
+      416,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "water-rock-cluster-32-416",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M156"
+  },
+  {
+    "name": "water-rock-64-416",
+    "box": [
+      64,
+      416,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "water-rock-64-416",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M157"
+  },
+  {
+    "name": "water-rock-80-416",
+    "box": [
+      80,
+      416,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "water-rock-80-416",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M158"
+  },
+  {
+    "name": "water-rock-large-96-416",
+    "box": [
+      96,
+      416,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "water-rock-large-96-416",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M159"
+  },
+  {
+    "name": "water-rock-cluster-0-448",
+    "box": [
+      0,
+      448,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "water-rock-cluster-0-448",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M160"
+  },
+  {
+    "name": "water-rock-cluster-32-448",
+    "box": [
+      32,
+      448,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "water-rock-cluster-32-448",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M161"
+  },
+  {
+    "name": "water-rock-64-448",
+    "box": [
+      64,
+      448,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "water-rock-64-448",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M162"
+  },
+  {
+    "name": "water-rock-80-448",
+    "box": [
+      80,
+      448,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "water-rock-80-448",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M163"
+  },
+  {
+    "name": "water-rock-large-96-448",
+    "box": [
+      96,
+      448,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "water-rock-large-96-448",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M164"
+  },
+  {
+    "name": "water-rock-64-384",
+    "box": [
+      64,
+      384,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "water-rock-64-384",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M165"
+  },
+  {
+    "name": "water-rock-80-384",
+    "box": [
+      80,
+      384,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "water-rock-80-384",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M166"
+  },
+  {
+    "name": "water-rock-large-96-384",
+    "box": [
+      96,
+      384,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "water-rock-large-96-384",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M167"
+  },
+  {
+    "name": "sign-256-384",
+    "box": [
+      256,
+      384,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fg-village-review-parts-sign-448-160.png",
+    "placement": null,
+    "reviewId": "M168",
+    "reuseAsset": "top-down/native/farming-game-world/processed/fg-village-review-parts/fg-village-review-parts-sign-448-160.png"
+  },
+  {
+    "name": "sign-272-384",
+    "box": [
+      272,
+      384,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fg-village-review-parts-sign-464-160.png",
+    "placement": null,
+    "reviewId": "M169",
+    "reuseAsset": "top-down/native/farming-game-world/processed/fg-village-review-parts/fg-village-review-parts-sign-464-160.png"
+  },
+  {
+    "name": "sign-288-384",
+    "box": [
+      288,
+      384,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fg-village-review-parts-sign-480-160.png",
+    "placement": null,
+    "reviewId": "M170",
+    "reuseAsset": "top-down/native/farming-game-world/processed/fg-village-review-parts/fg-village-review-parts-sign-480-160.png"
+  },
+  {
+    "name": "sign-304-384",
+    "box": [
+      304,
+      384,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fg-village-review-parts-sign-496-160.png",
+    "placement": null,
+    "reviewId": "M171",
+    "reuseAsset": "top-down/native/farming-game-world/processed/fg-village-review-parts/fg-village-review-parts-sign-496-160.png"
+  },
+  {
+    "name": "sign-320-384",
+    "box": [
+      320,
+      384,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "sign-320-384",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M172"
+  },
+  {
+    "name": "sign-336-384",
+    "box": [
+      336,
+      384,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "sign-336-384",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M173"
+  },
+  {
+    "name": "sign-256-400",
+    "box": [
+      256,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fg-village-review-parts-sign-448-176.png",
+    "placement": null,
+    "reviewId": "M174",
+    "reuseAsset": "top-down/native/farming-game-world/processed/fg-village-review-parts/fg-village-review-parts-sign-448-176.png"
+  },
+  {
+    "name": "sign-272-400",
+    "box": [
+      272,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fg-village-review-parts-sign-464-176.png",
+    "placement": null,
+    "reviewId": "M175",
+    "reuseAsset": "top-down/native/farming-game-world/processed/fg-village-review-parts/fg-village-review-parts-sign-464-176.png"
+  },
+  {
+    "name": "sign-288-400",
+    "box": [
+      288,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fg-village-review-parts-sign-480-176.png",
+    "placement": null,
+    "reviewId": "M176",
+    "reuseAsset": "top-down/native/farming-game-world/processed/fg-village-review-parts/fg-village-review-parts-sign-480-176.png"
+  },
+  {
+    "name": "sign-304-400",
+    "box": [
+      304,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fg-village-review-parts-sign-496-176.png",
+    "placement": null,
+    "reviewId": "M177",
+    "reuseAsset": "top-down/native/farming-game-world/processed/fg-village-review-parts/fg-village-review-parts-sign-496-176.png"
+  },
+  {
+    "name": "sign-320-400",
+    "box": [
+      320,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "sign-320-400",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M178"
+  },
+  {
+    "name": "sign-336-400",
+    "box": [
+      336,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "sign-336-400",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M179"
+  },
+  {
+    "name": "tool-352-384",
+    "box": [
+      352,
+      384,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "tool-352-384",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M180"
+  },
+  {
+    "name": "tool-368-384",
+    "box": [
+      368,
+      384,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "tool-368-384",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "M181"
+  },
+  {
+    "name": "tile-27-8",
+    "box": [
+      416,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-27-8",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M182"
+  },
+  {
+    "name": "tile-28-8",
+    "box": [
+      432,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-28-8",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M183"
+  },
+  {
+    "name": "tile-29-8",
+    "box": [
+      448,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-29-8",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M184"
+  },
+  {
+    "name": "tile-30-8",
+    "box": [
+      464,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-30-8",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M185"
+  },
+  {
+    "name": "tile-31-8",
+    "box": [
+      480,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-31-8",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M186"
+  },
+  {
+    "name": "tile-27-9",
+    "box": [
+      416,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-27-9",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M187"
+  },
+  {
+    "name": "tile-28-9",
+    "box": [
+      432,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-28-9",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M188"
+  },
+  {
+    "name": "tile-29-9",
+    "box": [
+      448,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-29-9",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M189"
+  },
+  {
+    "name": "tile-30-9",
+    "box": [
+      464,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-30-9",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M190"
+  },
+  {
+    "name": "tile-31-9",
+    "box": [
+      480,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-31-9",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M191"
+  },
+  {
+    "name": "tile-17-10",
+    "box": [
+      256,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-17-10",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M192"
+  },
+  {
+    "name": "tile-18-10",
+    "box": [
+      272,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-18-10",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M193"
+  },
+  {
+    "name": "tile-19-10",
+    "box": [
+      288,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-19-10",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M194"
+  },
+  {
+    "name": "tile-20-10",
+    "box": [
+      304,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-20-10",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M195"
+  },
+  {
+    "name": "tile-21-10",
+    "box": [
+      320,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-21-10",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M196"
+  },
+  {
+    "name": "tile-22-10",
+    "box": [
+      336,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-22-10",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M197"
+  },
+  {
+    "name": "tile-23-10",
+    "box": [
+      352,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-23-10",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M198"
+  },
+  {
+    "name": "tile-24-10",
+    "box": [
+      368,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-24-10",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M199"
+  },
+  {
+    "name": "tile-25-10",
+    "box": [
+      384,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-25-10",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M200"
+  },
+  {
+    "name": "tile-26-10",
+    "box": [
+      400,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-26-10",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M201"
+  },
+  {
+    "name": "tile-27-10",
+    "box": [
+      416,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-27-10",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M202"
+  },
+  {
+    "name": "tile-28-10",
+    "box": [
+      432,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-28-10",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M203"
+  },
+  {
+    "name": "tile-29-10",
+    "box": [
+      448,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-29-10",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M204"
+  },
+  {
+    "name": "tile-30-10",
+    "box": [
+      464,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-30-10",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M205"
+  },
+  {
+    "name": "tile-31-10",
+    "box": [
+      480,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-31-10",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M206"
+  },
+  {
+    "name": "tile-32-10",
+    "box": [
+      496,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-32-10",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M207"
+  },
+  {
+    "name": "tile-17-11",
+    "box": [
+      256,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-17-11",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M208"
+  },
+  {
+    "name": "tile-18-11",
+    "box": [
+      272,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-18-11",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M209"
+  },
+  {
+    "name": "tile-19-11",
+    "box": [
+      288,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-19-11",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M210"
+  },
+  {
+    "name": "tile-20-11",
+    "box": [
+      304,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-20-11",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M211"
+  },
+  {
+    "name": "tile-21-11",
+    "box": [
+      320,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-21-11",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M212"
+  },
+  {
+    "name": "tile-22-11",
+    "box": [
+      336,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-22-11",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M213"
+  },
+  {
+    "name": "tile-23-11",
+    "box": [
+      352,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-23-11",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M214"
+  },
+  {
+    "name": "tile-24-11",
+    "box": [
+      368,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-24-11",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M215"
+  },
+  {
+    "name": "tile-25-11",
+    "box": [
+      384,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-25-11",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M216"
+  },
+  {
+    "name": "tile-26-11",
+    "box": [
+      400,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-26-11",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M217"
+  },
+  {
+    "name": "tile-27-11",
+    "box": [
+      416,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-27-11",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M218"
+  },
+  {
+    "name": "tile-28-11",
+    "box": [
+      432,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-28-11",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M219"
+  },
+  {
+    "name": "tile-29-11",
+    "box": [
+      448,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-29-11",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M220"
+  },
+  {
+    "name": "tile-30-11",
+    "box": [
+      464,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-30-11",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M221"
+  },
+  {
+    "name": "tile-31-11",
+    "box": [
+      480,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-31-11",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M222"
+  },
+  {
+    "name": "tile-32-11",
+    "box": [
+      496,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-32-11",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M223"
+  },
+  {
+    "name": "tile-14-12",
+    "box": [
+      208,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-12",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M224"
+  },
+  {
+    "name": "tile-18-12",
+    "box": [
+      272,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-18-12",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M225"
+  },
+  {
+    "name": "tile-20-12",
+    "box": [
+      304,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-20-12",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M226"
+  },
+  {
+    "name": "tile-25-12",
+    "box": [
+      384,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M99. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "M227",
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M99",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        288,
+        560,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-26-12",
+    "box": [
+      400,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M100. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "M228",
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M100",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        304,
+        560,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-27-12",
+    "box": [
+      416,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M101. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "M229",
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M101",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        320,
+        560,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-28-12",
+    "box": [
+      432,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M102. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "M230",
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M102",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        336,
+        560,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-29-12",
+    "box": [
+      448,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M99. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "M231",
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M99",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        288,
+        560,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-30-12",
+    "box": [
+      464,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M100. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "M232",
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M100",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        304,
+        560,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-31-12",
+    "box": [
+      480,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M101. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "M233",
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M101",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        320,
+        560,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-32-12",
+    "box": [
+      496,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M102. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "M234",
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M102",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        336,
+        560,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-13-13",
+    "box": [
+      192,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-13",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M235"
+  },
+  {
+    "name": "tile-14-13",
+    "box": [
+      208,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-13",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M236"
+  },
+  {
+    "name": "tile-15-13",
+    "box": [
+      224,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-13",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M237"
+  },
+  {
+    "name": "tile-16-13",
+    "box": [
+      240,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-13",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M238"
+  },
+  {
+    "name": "tile-18-13",
+    "box": [
+      272,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-18-13",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M239"
+  },
+  {
+    "name": "tile-20-13",
+    "box": [
+      304,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-20-13",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M240"
+  },
+  {
+    "name": "tile-25-13",
+    "box": [
+      384,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-25-13",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M241"
+  },
+  {
+    "name": "tile-27-13",
+    "box": [
+      416,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-27-13",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M242"
+  },
+  {
+    "name": "tile-28-13",
+    "box": [
+      432,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-28-13",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M243"
+  },
+  {
+    "name": "tile-29-13",
+    "box": [
+      448,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-29-13",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M244"
+  },
+  {
+    "name": "tile-30-13",
+    "box": [
+      464,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-30-13",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M245"
+  },
+  {
+    "name": "tile-31-13",
+    "box": [
+      480,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-31-13",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M246"
+  },
+  {
+    "name": "tile-32-13",
+    "box": [
+      496,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-32-13",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M247"
+  },
+  {
+    "name": "tile-14-14",
+    "box": [
+      208,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fg-mountains-review-parts-tile-32-11.png",
+    "placement": null,
+    "reviewId": "M248",
+    "reuseAsset": "top-down/native/farming-game-world/processed/fg-mountains-review-parts/fg-mountains-review-parts-tile-32-11.png"
+  },
+  {
+    "name": "tile-18-14",
+    "box": [
+      272,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-18-14",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M249"
+  },
+  {
+    "name": "tile-20-14",
+    "box": [
+      304,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-20-14",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M250"
+  },
+  {
+    "name": "tile-25-14",
+    "box": [
+      384,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-25-14",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M251"
+  },
+  {
+    "name": "tile-26-14",
+    "box": [
+      400,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-26-14",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M252"
+  },
+  {
+    "name": "tile-29-14",
+    "box": [
+      448,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-29-14",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M253"
+  },
+  {
+    "name": "tile-30-14",
+    "box": [
+      464,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-30-14",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M254"
+  },
+  {
+    "name": "tile-31-14",
+    "box": [
+      480,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-31-14",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M255"
+  },
+  {
+    "name": "tile-32-14",
+    "box": [
+      496,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-32-14",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M256"
+  },
+  {
+    "name": "tile-13-15",
+    "box": [
+      192,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-15",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M257"
+  },
+  {
+    "name": "tile-14-15",
+    "box": [
+      208,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-15",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M258"
+  },
+  {
+    "name": "tile-15-15",
+    "box": [
+      224,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-15",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M259"
+  },
+  {
+    "name": "tile-16-15",
+    "box": [
+      240,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-15",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M260"
+  },
+  {
+    "name": "tile-25-15",
+    "box": [
+      384,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-25-15",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M261"
+  },
+  {
+    "name": "tile-26-15",
+    "box": [
+      400,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-26-15",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M262"
+  },
+  {
+    "name": "tile-28-15",
+    "box": [
+      432,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-28-15",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M263"
+  },
+  {
+    "name": "tile-29-15",
+    "box": [
+      448,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-29-15",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M264"
+  },
+  {
+    "name": "tile-30-15",
+    "box": [
+      464,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-30-15",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M265"
+  },
+  {
+    "name": "tile-31-15",
+    "box": [
+      480,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-31-15",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M266"
+  },
+  {
+    "name": "tile-32-15",
+    "box": [
+      496,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-32-15",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M267"
+  },
+  {
+    "name": "tile-25-16",
+    "box": [
+      384,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-25-16",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M268"
+  },
+  {
+    "name": "tile-26-16",
+    "box": [
+      400,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-26-16",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M269"
+  },
+  {
+    "name": "tile-28-16",
+    "box": [
+      432,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-28-16",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M270"
+  },
+  {
+    "name": "tile-29-16",
+    "box": [
+      448,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-29-16",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M271"
+  },
+  {
+    "name": "tile-30-16",
+    "box": [
+      464,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-30-16",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M272"
+  },
+  {
+    "name": "tile-31-16",
+    "box": [
+      480,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-31-16",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M273"
+  },
+  {
+    "name": "tile-32-16",
+    "box": [
+      496,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-32-16",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M274"
+  },
+  {
+    "name": "tile-17-17",
+    "box": [
+      256,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-17-17",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M275"
+  },
+  {
+    "name": "tile-18-17",
+    "box": [
+      272,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-18-17",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M276"
+  },
+  {
+    "name": "tile-19-17",
+    "box": [
+      288,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-19-17",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M277"
+  },
+  {
+    "name": "tile-20-17",
+    "box": [
+      304,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-20-17",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M278"
+  },
+  {
+    "name": "tile-21-17",
+    "box": [
+      320,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fg-magma-dungeon-review-parts-tile-29-17.png",
+    "placement": null,
+    "reviewId": "M279",
+    "reuseAsset": "top-down/native/farming-game-world/processed/fg-magma-dungeon-review-parts/fg-magma-dungeon-review-parts-tile-29-17.png"
+  },
+  {
+    "name": "tile-22-17",
+    "box": [
+      336,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fg-magma-dungeon-review-parts-tile-30-17.png",
+    "placement": null,
+    "reviewId": "M280",
+    "reuseAsset": "top-down/native/farming-game-world/processed/fg-magma-dungeon-review-parts/fg-magma-dungeon-review-parts-tile-30-17.png"
+  },
+  {
+    "name": "tile-23-17",
+    "box": [
+      352,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fg-magma-dungeon-review-parts-tile-31-17.png",
+    "placement": null,
+    "reviewId": "M281",
+    "reuseAsset": "top-down/native/farming-game-world/processed/fg-magma-dungeon-review-parts/fg-magma-dungeon-review-parts-tile-31-17.png"
+  },
+  {
+    "name": "tile-24-17",
+    "box": [
+      368,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fg-magma-dungeon-review-parts-tile-32-17.png",
+    "placement": null,
+    "reviewId": "M282",
+    "reuseAsset": "top-down/native/farming-game-world/processed/fg-magma-dungeon-review-parts/fg-magma-dungeon-review-parts-tile-32-17.png"
+  },
+  {
+    "name": "tile-25-17",
+    "box": [
+      384,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-25-17",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M283"
+  },
+  {
+    "name": "tile-26-17",
+    "box": [
+      400,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-26-17",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M284"
+  },
+  {
+    "name": "tile-28-17",
+    "box": [
+      432,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fg-fortress-review-parts-crate-1-1.png",
+    "placement": null,
+    "reviewId": "M285",
+    "reuseAsset": "top-down/native/farming-game-world/processed/fg-fortress-review-parts/fg-fortress-review-parts-crate-1-1.png"
+  },
+  {
+    "name": "tile-29-17",
+    "box": [
+      448,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fg-fortress-review-parts-crate-2-1.png",
+    "placement": null,
+    "reviewId": "M286",
+    "reuseAsset": "top-down/native/farming-game-world/processed/fg-fortress-review-parts/fg-fortress-review-parts-crate-2-1.png"
+  },
+  {
+    "name": "tile-30-17",
+    "box": [
+      464,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fg-fortress-review-parts-crate-1-3.png",
+    "placement": null,
+    "reviewId": "M287",
+    "reuseAsset": "top-down/native/farming-game-world/processed/fg-fortress-review-parts/fg-fortress-review-parts-crate-1-3.png"
+  },
+  {
+    "name": "tile-31-17",
+    "box": [
+      480,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fg-fortress-review-parts-crate-1-2.png",
+    "placement": null,
+    "reviewId": "M288",
+    "reuseAsset": "top-down/native/farming-game-world/processed/fg-fortress-review-parts/fg-fortress-review-parts-crate-1-2.png"
+  },
+  {
+    "name": "tile-32-17",
+    "box": [
+      496,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fg-fortress-review-parts-crate-2-3.png",
+    "placement": null,
+    "reviewId": "M289",
+    "reuseAsset": "top-down/native/farming-game-world/processed/fg-fortress-review-parts/fg-fortress-review-parts-crate-2-3.png"
+  },
+  {
+    "name": "tile-12-18",
+    "box": [
+      176,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-18",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M290"
+  },
+  {
+    "name": "tile-13-18",
+    "box": [
+      192,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-18",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M291"
+  },
+  {
+    "name": "tile-14-18",
+    "box": [
+      208,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-18",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M292"
+  },
+  {
+    "name": "tile-15-18",
+    "box": [
+      224,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-18",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M293"
+  },
+  {
+    "name": "tile-17-18",
+    "box": [
+      256,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-17-18",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M294"
+  },
+  {
+    "name": "tile-18-18",
+    "box": [
+      272,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fg-village-review-parts-wood-piece-288-96.png",
+    "placement": null,
+    "reviewId": "M295",
+    "reuseAsset": "top-down/native/farming-game-world/processed/fg-village-review-parts/fg-village-review-parts-wood-piece-288-96.png"
+  },
+  {
+    "name": "tile-19-18",
+    "box": [
+      288,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-19-18",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M296"
+  },
+  {
+    "name": "tile-20-18",
+    "box": [
+      304,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fg-village-review-parts-wood-piece-272-112.png",
+    "placement": null,
+    "reviewId": "M297",
+    "reuseAsset": "top-down/native/farming-game-world/processed/fg-village-review-parts/fg-village-review-parts-wood-piece-272-112.png"
+  },
+  {
+    "name": "tile-21-18",
+    "box": [
+      320,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-21-18",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M298"
+  },
+  {
+    "name": "tile-22-18",
+    "box": [
+      336,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-22-18",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M299"
+  },
+  {
+    "name": "tile-23-18",
+    "box": [
+      352,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-23-18",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M300"
+  },
+  {
+    "name": "tile-24-18",
+    "box": [
+      368,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-24-18",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M301"
+  },
+  {
+    "name": "tile-25-18",
+    "box": [
+      384,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-25-18",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M302"
+  },
+  {
+    "name": "tile-26-18",
+    "box": [
+      400,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M302. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "M303",
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M302",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        384,
+        272,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-27-18",
+    "box": [
+      416,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M302. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "M304",
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M302",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        384,
+        272,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-28-18",
+    "box": [
+      432,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M302. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "M305",
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M302",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        384,
+        272,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-29-18",
+    "box": [
+      448,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-29-18",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M306"
+  },
+  {
+    "name": "tile-30-18",
+    "box": [
+      464,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-30-18",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M307"
+  },
+  {
+    "name": "tile-31-18",
+    "box": [
+      480,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-31-18",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M308"
+  },
+  {
+    "name": "tile-32-18",
+    "box": [
+      496,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-32-18",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M309"
+  },
+  {
+    "name": "tile-12-19",
+    "box": [
+      176,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-19",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M310"
+  },
+  {
+    "name": "tile-13-19",
+    "box": [
+      192,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-19",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M311"
+  },
+  {
+    "name": "tile-14-19",
+    "box": [
+      208,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-19",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M312"
+  },
+  {
+    "name": "tile-15-19",
+    "box": [
+      224,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-19",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M313"
+  },
+  {
+    "name": "tile-17-19",
+    "box": [
+      256,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-17-19",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M314"
+  },
+  {
+    "name": "tile-18-19",
+    "box": [
+      272,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-18-19",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M315"
+  },
+  {
+    "name": "tile-19-19",
+    "box": [
+      288,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-19-19",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M316"
+  },
+  {
+    "name": "tile-20-19",
+    "box": [
+      304,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-20-19",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M317"
+  },
+  {
+    "name": "tile-6-20",
+    "box": [
+      80,
+      304,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-6-20",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M318"
+  },
+  {
+    "name": "tile-7-20",
+    "box": [
+      96,
+      304,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M318. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "M319",
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M318",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        80,
+        304,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-12-20",
+    "box": [
+      176,
+      304,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-20",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M320"
+  },
+  {
+    "name": "tile-13-20",
+    "box": [
+      192,
+      304,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-20",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M321"
+  },
+  {
+    "name": "tile-14-20",
+    "box": [
+      208,
+      304,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-20",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M322"
+  },
+  {
+    "name": "tile-15-20",
+    "box": [
+      224,
+      304,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-20",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M323"
+  },
+  {
+    "name": "tile-17-20",
+    "box": [
+      256,
+      304,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-17-20",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M324"
+  },
+  {
+    "name": "tile-18-20",
+    "box": [
+      272,
+      304,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-18-20",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M325"
+  },
+  {
+    "name": "tile-19-20",
+    "box": [
+      288,
+      304,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-19-20",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M326"
+  },
+  {
+    "name": "tile-21-20",
+    "box": [
+      320,
+      304,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-21-20",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M327"
+  },
+  {
+    "name": "tile-22-20",
+    "box": [
+      336,
+      304,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-22-20",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M328"
+  },
+  {
+    "name": "tile-23-20",
+    "box": [
+      352,
+      304,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-23-20",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M329"
+  },
+  {
+    "name": "tile-24-20",
+    "box": [
+      368,
+      304,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-24-20",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M330"
+  },
+  {
+    "name": "tile-6-21",
+    "box": [
+      80,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-6-21",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M331"
+  },
+  {
+    "name": "tile-7-21",
+    "box": [
+      96,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-7-21",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M332"
+  },
+  {
+    "name": "tile-13-21",
+    "box": [
+      192,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-21",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M333"
+  },
+  {
+    "name": "tile-14-21",
+    "box": [
+      208,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-21",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M334"
+  },
+  {
+    "name": "tile-15-21",
+    "box": [
+      224,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-21",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M335"
+  },
+  {
+    "name": "tile-16-21",
+    "box": [
+      240,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-21",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M336"
+  },
+  {
+    "name": "tile-17-21",
+    "box": [
+      256,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-17-21",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M337"
+  },
+  {
+    "name": "tile-18-21",
+    "box": [
+      272,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-18-21",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M338"
+  },
+  {
+    "name": "tile-19-21",
+    "box": [
+      288,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-19-21",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M339"
+  },
+  {
+    "name": "tile-20-21",
+    "box": [
+      304,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-20-21",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M340"
+  },
+  {
+    "name": "tile-21-21",
+    "box": [
+      320,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-21-21",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M341"
+  },
+  {
+    "name": "tile-22-21",
+    "box": [
+      336,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-22-21",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M342"
+  },
+  {
+    "name": "tile-23-21",
+    "box": [
+      352,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-23-21",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M343"
+  },
+  {
+    "name": "tile-24-21",
+    "box": [
+      368,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-24-21",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M344"
+  },
+  {
+    "name": "tile-13-22",
+    "box": [
+      192,
+      336,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-22",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M345"
+  },
+  {
+    "name": "tile-14-22",
+    "box": [
+      208,
+      336,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-22",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M346"
+  },
+  {
+    "name": "tile-15-22",
+    "box": [
+      224,
+      336,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-22",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M347"
+  },
+  {
+    "name": "tile-16-22",
+    "box": [
+      240,
+      336,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-22",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M348"
+  },
+  {
+    "name": "tile-19-22",
+    "box": [
+      264,
+      336,
+      32,
+      48
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M25. The complete crop is identical. The former rail fragment now references the complete rail.",
+    "placement": null,
+    "reviewId": "M349",
+    "reviewChanged": true,
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M25",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        264,
+        336,
+        32,
+        48
+      ]
+    }
+  },
+  {
+    "name": "tile-25-22",
+    "box": [
+      384,
+      336,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-25-22",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M350"
+  },
+  {
+    "name": "tile-26-22",
+    "box": [
+      400,
+      336,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-26-22",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M351"
+  },
+  {
+    "name": "tile-1-23",
+    "box": [
+      0,
+      352,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-1-23",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M352"
+  },
+  {
+    "name": "tile-2-23",
+    "box": [
+      16,
+      352,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M352. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "M353",
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M352",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        0,
+        352,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-3-23",
+    "box": [
+      32,
+      352,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M352. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "M354",
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M352",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        0,
+        352,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-4-23",
+    "box": [
+      48,
+      352,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M352. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "M355",
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M352",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        0,
+        352,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-9-23",
+    "box": [
+      128,
+      352,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-9-23",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M356"
+  },
+  {
+    "name": "tile-10-23",
+    "box": [
+      144,
+      352,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-23",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M357"
+  },
+  {
+    "name": "tile-11-23",
+    "box": [
+      160,
+      352,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-23",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M358"
+  },
+  {
+    "name": "tile-12-23",
+    "box": [
+      176,
+      352,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-23",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M359"
+  },
+  {
+    "name": "tile-13-23",
+    "box": [
+      192,
+      352,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-23",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M360"
+  },
+  {
+    "name": "tile-14-23",
+    "box": [
+      208,
+      352,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-23",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M361"
+  },
+  {
+    "name": "tile-15-23",
+    "box": [
+      224,
+      352,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-23",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M362"
+  },
+  {
+    "name": "tile-16-23",
+    "box": [
+      240,
+      352,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-23",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M363"
+  },
+  {
+    "name": "tile-19-23",
+    "box": [
+      264,
+      336,
+      32,
+      48
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M25. The complete crop is identical. The former rail fragment now references the complete rail.",
+    "placement": null,
+    "reviewId": "M364",
+    "reviewChanged": true,
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M25",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        264,
+        336,
+        32,
+        48
+      ]
+    }
+  },
+  {
+    "name": "tile-1-24",
+    "box": [
+      0,
+      368,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-1-24",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M365"
+  },
+  {
+    "name": "tile-2-24",
+    "box": [
+      16,
+      368,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-2-24",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M366"
+  },
+  {
+    "name": "tile-3-24",
+    "box": [
+      32,
+      368,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-24",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M367"
+  },
+  {
+    "name": "tile-4-24",
+    "box": [
+      48,
+      368,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-24",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M368"
+  },
+  {
+    "name": "tile-9-24",
+    "box": [
+      128,
+      368,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-9-24",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M369"
+  },
+  {
+    "name": "tile-10-24",
+    "box": [
+      144,
+      368,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-24",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M370"
+  },
+  {
+    "name": "tile-11-24",
+    "box": [
+      160,
+      368,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-24",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M371"
+  },
+  {
+    "name": "tile-12-24",
+    "box": [
+      176,
+      368,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-24",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M372"
+  },
+  {
+    "name": "tile-13-24",
+    "box": [
+      192,
+      368,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-24",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M373"
+  },
+  {
+    "name": "tile-14-24",
+    "box": [
+      208,
+      368,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-24",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M374"
+  },
+  {
+    "name": "tile-15-24",
+    "box": [
+      224,
+      368,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-24",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M375"
+  },
+  {
+    "name": "tile-16-24",
+    "box": [
+      240,
+      368,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-24",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M376"
+  },
+  {
+    "name": "tile-19-24",
+    "box": [
+      264,
+      336,
+      32,
+      48
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M25. The complete crop is identical. The former rail fragment now references the complete rail.",
+    "placement": null,
+    "reviewId": "M377",
+    "reviewChanged": true,
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M25",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        264,
+        336,
+        32,
+        48
+      ]
+    }
+  },
+  {
+    "name": "tile-28-24",
+    "box": [
+      432,
+      368,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-28-24",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M378"
+  },
+  {
+    "name": "tile-30-24",
+    "box": [
+      464,
+      368,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-30-24",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M379"
+  },
+  {
+    "name": "tile-1-25",
+    "box": [
+      0,
+      384,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-1-25",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M380"
+  },
+  {
+    "name": "tile-2-25",
+    "box": [
+      16,
+      384,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-2-25",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M381"
+  },
+  {
+    "name": "tile-3-25",
+    "box": [
+      32,
+      384,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-25",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M382"
+  },
+  {
+    "name": "tile-4-25",
+    "box": [
+      48,
+      384,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-25",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M383"
+  },
+  {
+    "name": "tile-9-25",
+    "box": [
+      128,
+      384,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-9-25",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M384"
+  },
+  {
+    "name": "tile-10-25",
+    "box": [
+      144,
+      384,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-25",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M385"
+  },
+  {
+    "name": "tile-11-25",
+    "box": [
+      160,
+      384,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-25",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M386"
+  },
+  {
+    "name": "tile-12-25",
+    "box": [
+      176,
+      384,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-25",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M387"
+  },
+  {
+    "name": "tile-13-25",
+    "box": [
+      192,
+      384,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-25",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M388"
+  },
+  {
+    "name": "tile-14-25",
+    "box": [
+      208,
+      384,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-25",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M389"
+  },
+  {
+    "name": "tile-15-25",
+    "box": [
+      224,
+      384,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-25",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M390"
+  },
+  {
+    "name": "tile-16-25",
+    "box": [
+      240,
+      384,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-25",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M391"
+  },
+  {
+    "name": "tile-1-26",
+    "box": [
+      0,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-1-26",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M392"
+  },
+  {
+    "name": "tile-2-26",
+    "box": [
+      16,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-2-26",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M393"
+  },
+  {
+    "name": "tile-3-26",
+    "box": [
+      32,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-26",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M394"
+  },
+  {
+    "name": "tile-4-26",
+    "box": [
+      48,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-26",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M395"
+  },
+  {
+    "name": "tile-13-26",
+    "box": [
+      192,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-26",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M396"
+  },
+  {
+    "name": "tile-14-26",
+    "box": [
+      208,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-26",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M397"
+  },
+  {
+    "name": "tile-15-26",
+    "box": [
+      224,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-26",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M398"
+  },
+  {
+    "name": "tile-16-26",
+    "box": [
+      240,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-26",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M399"
+  },
+  {
+    "name": "tile-9-27",
+    "box": [
+      128,
+      416,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M216. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "M400",
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M216",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        384,
+        160,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-10-27",
+    "box": [
+      144,
+      416,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M217. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "M401",
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M217",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        400,
+        160,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-11-27",
+    "box": [
+      160,
+      416,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M218. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "M402",
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M218",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        416,
+        160,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-12-27",
+    "box": [
+      176,
+      416,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M219. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "M403",
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M219",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        432,
+        160,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-13-27",
+    "box": [
+      192,
+      416,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-27",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M404"
+  },
+  {
+    "name": "tile-14-27",
+    "box": [
+      208,
+      416,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-27",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M405"
+  },
+  {
+    "name": "tile-15-27",
+    "box": [
+      224,
+      416,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-27",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M406"
+  },
+  {
+    "name": "tile-16-27",
+    "box": [
+      240,
+      416,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-27",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M407"
+  },
+  {
+    "name": "tile-9-28",
+    "box": [
+      128,
+      432,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-9-28",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M408"
+  },
+  {
+    "name": "tile-10-28",
+    "box": [
+      144,
+      432,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-28",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M409"
+  },
+  {
+    "name": "tile-11-28",
+    "box": [
+      160,
+      432,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-28",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M410"
+  },
+  {
+    "name": "tile-12-28",
+    "box": [
+      176,
+      432,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-28",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M411"
+  },
+  {
+    "name": "tile-13-28",
+    "box": [
+      192,
+      432,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M360. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "M412",
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M360",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        192,
+        352,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-14-28",
+    "box": [
+      208,
+      432,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M245. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "M413",
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M245",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        464,
+        192,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-15-28",
+    "box": [
+      224,
+      432,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M246. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "M414",
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M246",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        480,
+        192,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-16-28",
+    "box": [
+      240,
+      432,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M247. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "M415",
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M247",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        496,
+        192,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-9-29",
+    "box": [
+      128,
+      448,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-9-29",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M416"
+  },
+  {
+    "name": "tile-10-29",
+    "box": [
+      144,
+      448,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-29",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M417"
+  },
+  {
+    "name": "tile-11-29",
+    "box": [
+      160,
+      448,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-29",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M418"
+  },
+  {
+    "name": "tile-12-29",
+    "box": [
+      176,
+      448,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-29",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M419"
+  },
+  {
+    "name": "tile-13-29",
+    "box": [
+      192,
+      448,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M373. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "M420",
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M373",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        192,
+        368,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-14-29",
+    "box": [
+      208,
+      448,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M254. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "M421",
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M254",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        464,
+        208,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-15-29",
+    "box": [
+      224,
+      448,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M255. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "M422",
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M255",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        480,
+        208,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-16-29",
+    "box": [
+      240,
+      448,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M256. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "M423",
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M256",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        496,
+        208,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-13-30",
+    "box": [
+      192,
+      464,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-30",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M424"
+  },
+  {
+    "name": "tile-14-30",
+    "box": [
+      208,
+      464,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M265. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "M425",
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M265",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        464,
+        224,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-15-30",
+    "box": [
+      224,
+      464,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M266. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "M426",
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M266",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        480,
+        224,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-16-30",
+    "box": [
+      240,
+      464,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M267. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "M427",
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M267",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        496,
+        224,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-1-31",
+    "box": [
+      0,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-1-31",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M428"
+  },
+  {
+    "name": "tile-2-31",
+    "box": [
+      16,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-2-31",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M429"
+  },
+  {
+    "name": "tile-3-31",
+    "box": [
+      32,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-31",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M430"
+  },
+  {
+    "name": "tile-4-31",
+    "box": [
+      48,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-31",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M431"
+  },
+  {
+    "name": "tile-5-31",
+    "box": [
+      64,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-31",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M432"
+  },
+  {
+    "name": "tile-6-31",
+    "box": [
+      80,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-6-31",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M433"
+  },
+  {
+    "name": "tile-7-31",
+    "box": [
+      96,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-7-31",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M434"
+  },
+  {
+    "name": "tile-8-31",
+    "box": [
+      112,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-8-31",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M435"
+  },
+  {
+    "name": "tile-9-31",
+    "box": [
+      128,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M220. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "M436",
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M220",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        448,
+        160,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-10-31",
+    "box": [
+      144,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M221. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "M437",
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M221",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        464,
+        160,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-11-31",
+    "box": [
+      160,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M222. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "M438",
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M222",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        480,
+        160,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-12-31",
+    "box": [
+      176,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M223. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "M439",
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M223",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        496,
+        160,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-13-31",
+    "box": [
+      192,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M396. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "M440",
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M396",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        192,
+        400,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-14-31",
+    "box": [
+      208,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M397. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "M441",
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M397",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        208,
+        400,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-15-31",
+    "box": [
+      224,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M398. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "M442",
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M398",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        224,
+        400,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-16-31",
+    "box": [
+      240,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M399. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "M443",
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M399",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        240,
+        400,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-28-31",
+    "box": [
+      432,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-flower-mushroom-clump-128.png",
+    "placement": null,
+    "reviewId": "M444",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-flower-mushroom-clump-128.png"
+  },
+  {
+    "name": "tile-29-31",
+    "box": [
+      448,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-flower-mushroom-clump-144.png",
+    "placement": null,
+    "reviewId": "M445",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-flower-mushroom-clump-144.png"
+  },
+  {
+    "name": "tile-30-31",
+    "box": [
+      464,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-flower-mushroom-clump-160.png",
+    "placement": null,
+    "reviewId": "M446",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-flower-mushroom-clump-160.png"
+  },
+  {
+    "name": "tile-31-31",
+    "box": [
+      480,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-flower-mushroom-clump-176.png",
+    "placement": null,
+    "reviewId": "M447",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-flower-mushroom-clump-176.png"
+  },
+  {
+    "name": "tile-1-32",
+    "box": [
+      0,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-1-32",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M448"
+  },
+  {
+    "name": "tile-2-32",
+    "box": [
+      16,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-2-32",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M449"
+  },
+  {
+    "name": "tile-3-32",
+    "box": [
+      32,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-32",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M450"
+  },
+  {
+    "name": "tile-4-32",
+    "box": [
+      48,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-32",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M451"
+  },
+  {
+    "name": "tile-5-32",
+    "box": [
+      64,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-32",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M452"
+  },
+  {
+    "name": "tile-6-32",
+    "box": [
+      80,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-6-32",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M453"
+  },
+  {
+    "name": "tile-7-32",
+    "box": [
+      96,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-7-32",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M454"
+  },
+  {
+    "name": "tile-8-32",
+    "box": [
+      112,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-8-32",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M455"
+  },
+  {
+    "name": "tile-9-32",
+    "box": [
+      128,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M408. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "M456",
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M408",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        128,
+        432,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-10-32",
+    "box": [
+      144,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M409. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "M457",
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M409",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        144,
+        432,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-11-32",
+    "box": [
+      160,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M410. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "M458",
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M410",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        160,
+        432,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-12-32",
+    "box": [
+      176,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M411. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "M459",
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M411",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        176,
+        432,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-13-32",
+    "box": [
+      192,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M404. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "M460",
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M404",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        192,
+        416,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-14-32",
+    "box": [
+      208,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M405. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "M461",
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M405",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        208,
+        416,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-15-32",
+    "box": [
+      224,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M406. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "M462",
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M406",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        224,
+        416,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-16-32",
+    "box": [
+      240,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M407. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "M463",
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M407",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        240,
+        416,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-28-32",
+    "box": [
+      432,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-flower-mushroom-clump-64.png",
+    "placement": null,
+    "reviewId": "M464",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-flower-mushroom-clump-64.png"
+  },
+  {
+    "name": "tile-29-32",
+    "box": [
+      448,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-flower-mushroom-clump-80.png",
+    "placement": null,
+    "reviewId": "M465",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-flower-mushroom-clump-80.png"
+  },
+  {
+    "name": "tile-30-32",
+    "box": [
+      464,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-flower-mushroom-clump-96.png",
+    "placement": null,
+    "reviewId": "M466",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-flower-mushroom-clump-96.png"
+  },
+  {
+    "name": "tile-31-32",
+    "box": [
+      480,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-flower-mushroom-clump-112.png",
+    "placement": null,
+    "reviewId": "M467",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-flower-mushroom-clump-112.png"
+  },
+  {
+    "name": "tile-19-33",
+    "box": [
+      288,
+      512,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fg-magma-dungeon-review-parts-tile-19-26.png",
+    "placement": null,
+    "reviewId": "M468",
+    "reuseAsset": "top-down/native/farming-game-world/processed/fg-magma-dungeon-review-parts/fg-magma-dungeon-review-parts-tile-19-26.png"
+  },
+  {
+    "name": "tile-23-33",
+    "box": [
+      352,
+      512,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fg-magma-dungeon-review-parts-tile-17-26.png",
+    "placement": null,
+    "reviewId": "M469",
+    "reuseAsset": "top-down/native/farming-game-world/processed/fg-magma-dungeon-review-parts/fg-magma-dungeon-review-parts-tile-17-26.png"
+  },
+  {
+    "name": "tile-9-37",
+    "box": [
+      128,
+      576,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-9-37",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M470"
+  },
+  {
+    "name": "tile-13-37",
+    "box": [
+      192,
+      576,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M470. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "M471",
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M470",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        128,
+        576,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-17-37",
+    "box": [
+      256,
+      576,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M470. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "M472",
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M470",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        128,
+        576,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-19-37",
+    "box": [
+      288,
+      576,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fg-magma-dungeon-review-parts-tile-20-26.png",
+    "placement": null,
+    "reviewId": "M473",
+    "reuseAsset": "top-down/native/farming-game-world/processed/fg-magma-dungeon-review-parts/fg-magma-dungeon-review-parts-tile-20-26.png"
+  },
+  {
+    "name": "tile-23-37",
+    "box": [
+      352,
+      576,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fg-magma-dungeon-review-parts-tile-18-26.png",
+    "placement": null,
+    "reviewId": "M474",
+    "reuseAsset": "top-down/native/farming-game-world/processed/fg-magma-dungeon-review-parts/fg-magma-dungeon-review-parts-tile-18-26.png"
+  },
+  {
+    "name": "tile-7-38",
+    "box": [
+      96,
+      592,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-7-38",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M475"
+  },
+  {
+    "name": "tile-8-38",
+    "box": [
+      112,
+      592,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-8-38",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M476"
+  },
+  {
+    "name": "tile-9-38",
+    "box": [
+      128,
+      592,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-9-38",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M477"
+  },
+  {
+    "name": "tile-11-38",
+    "box": [
+      160,
+      592,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-38",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M478"
+  },
+  {
+    "name": "tile-12-38",
+    "box": [
+      176,
+      592,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-38",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M479"
+  },
+  {
+    "name": "tile-13-38",
+    "box": [
+      192,
+      592,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-38",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M480"
+  },
+  {
+    "name": "tile-15-38",
+    "box": [
+      224,
+      592,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-38",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M481"
+  },
+  {
+    "name": "tile-16-38",
+    "box": [
+      240,
+      592,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-38",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M482"
+  },
+  {
+    "name": "tile-17-38",
+    "box": [
+      256,
+      592,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-17-38",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M483"
+  },
+  {
+    "name": "tile-7-39",
+    "box": [
+      96,
+      608,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-7-39",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M484"
+  },
+  {
+    "name": "tile-8-39",
+    "box": [
+      112,
+      608,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-8-39",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M485"
+  },
+  {
+    "name": "tile-9-39",
+    "box": [
+      128,
+      608,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M470. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "M486",
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M470",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        128,
+        576,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-11-39",
+    "box": [
+      160,
+      608,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-39",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M487"
+  },
+  {
+    "name": "tile-12-39",
+    "box": [
+      176,
+      608,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-39",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M488"
+  },
+  {
+    "name": "tile-13-39",
+    "box": [
+      192,
+      608,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M470. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "M489",
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M470",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        128,
+        576,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-15-39",
+    "box": [
+      224,
+      608,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-39",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M490"
+  },
+  {
+    "name": "tile-16-39",
+    "box": [
+      240,
+      608,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-39",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M491"
+  },
+  {
+    "name": "tile-17-39",
+    "box": [
+      256,
+      608,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse M470. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "M492",
+    "reuseProposal": {
+      "sheetId": "M",
+      "reviewId": "M470",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-abandoned-mines-source-c35ae24139e5.png",
+      "box": [
+        128,
+        576,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-7-40",
+    "box": [
+      96,
+      624,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-7-40",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M493"
+  },
+  {
+    "name": "tile-8-40",
+    "box": [
+      112,
+      624,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-8-40",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M494"
+  },
+  {
+    "name": "tile-9-40",
+    "box": [
+      128,
+      624,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-9-40",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M495"
+  },
+  {
+    "name": "tile-11-40",
+    "box": [
+      160,
+      624,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-40",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M496"
+  },
+  {
+    "name": "tile-12-40",
+    "box": [
+      176,
+      624,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-40",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M497"
+  },
+  {
+    "name": "tile-13-40",
+    "box": [
+      192,
+      624,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-40",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M498"
+  },
+  {
+    "name": "tile-15-40",
+    "box": [
+      224,
+      624,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-40",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M499"
+  },
+  {
+    "name": "tile-16-40",
+    "box": [
+      240,
+      624,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-40",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M500"
+  },
+  {
+    "name": "tile-17-40",
+    "box": [
+      256,
+      624,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-17-40",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "M501"
+  }
+]

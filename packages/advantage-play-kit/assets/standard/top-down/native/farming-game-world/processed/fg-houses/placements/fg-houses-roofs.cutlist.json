@@ -1,0 +1,338 @@
+[
+  {
+    "name": "blue-roof-front-gable",
+    "box": [
+      0,
+      0,
+      112,
+      128
+    ],
+    "kind": "structure",
+    "group": "roof-front-gable",
+    "frame": 0,
+    "notes": "Roof assembly with the attached facade. Preserve the complete assembly.",
+    "placement": null
+  },
+  {
+    "name": "blue-roof-left-wing-gable",
+    "box": [
+      112,
+      0,
+      160,
+      144
+    ],
+    "kind": "structure",
+    "group": "roof-left-wing-gable",
+    "frame": 0,
+    "notes": "Roof assembly with the attached facade. Preserve the complete assembly.",
+    "placement": null
+  },
+  {
+    "name": "blue-roof-right-wing-gable",
+    "box": [
+      0,
+      128,
+      160,
+      128
+    ],
+    "kind": "structure",
+    "group": "roof-right-wing-gable",
+    "frame": 0,
+    "notes": "Roof assembly with the attached facade. Preserve the complete assembly.",
+    "placement": null
+  },
+  {
+    "name": "blue-roof-small-front-gable",
+    "box": [
+      160,
+      144,
+      96,
+      112
+    ],
+    "kind": "structure",
+    "group": "roof-small-front-gable",
+    "frame": 0,
+    "notes": "Roof assembly with the attached facade. Preserve the complete assembly.",
+    "placement": null
+  },
+  {
+    "name": "blue-roof-narrow-front-gable",
+    "box": [
+      512,
+      0,
+      96,
+      128
+    ],
+    "kind": "structure",
+    "group": "roof-narrow-front-gable",
+    "frame": 0,
+    "notes": "Roof assembly with the attached facade. Preserve the complete assembly.",
+    "placement": null
+  },
+  {
+    "name": "blue-roof-narrow-left-wing-gable",
+    "box": [
+      608,
+      0,
+      144,
+      144
+    ],
+    "kind": "structure",
+    "group": "roof-narrow-left-wing-gable",
+    "frame": 0,
+    "notes": "Roof assembly with the attached facade. Preserve the complete assembly.",
+    "placement": null
+  },
+  {
+    "name": "blue-roof-narrow-right-wing-gable",
+    "box": [
+      512,
+      128,
+      144,
+      128
+    ],
+    "kind": "structure",
+    "group": "roof-narrow-right-wing-gable",
+    "frame": 0,
+    "notes": "Roof assembly with the attached facade. Preserve the complete assembly.",
+    "placement": null
+  },
+  {
+    "name": "blue-roof-wide-front-gable",
+    "box": [
+      656,
+      144,
+      112,
+      112
+    ],
+    "kind": "structure",
+    "group": "roof-wide-front-gable",
+    "frame": 0,
+    "notes": "Roof assembly with the attached facade. Preserve the complete assembly.",
+    "placement": null
+  },
+  {
+    "name": "red-roof-front-gable",
+    "box": [
+      0,
+      256,
+      112,
+      128
+    ],
+    "kind": "structure",
+    "group": "roof-front-gable",
+    "frame": 1,
+    "notes": "Roof assembly with the attached facade. Preserve the complete assembly.",
+    "placement": null
+  },
+  {
+    "name": "red-roof-left-wing-gable",
+    "box": [
+      112,
+      256,
+      160,
+      144
+    ],
+    "kind": "structure",
+    "group": "roof-left-wing-gable",
+    "frame": 1,
+    "notes": "Roof assembly with the attached facade. Preserve the complete assembly.",
+    "placement": null
+  },
+  {
+    "name": "red-roof-right-wing-gable",
+    "box": [
+      0,
+      384,
+      160,
+      128
+    ],
+    "kind": "structure",
+    "group": "roof-right-wing-gable",
+    "frame": 1,
+    "notes": "Roof assembly with the attached facade. Preserve the complete assembly.",
+    "placement": null
+  },
+  {
+    "name": "red-roof-small-front-gable",
+    "box": [
+      160,
+      400,
+      96,
+      112
+    ],
+    "kind": "structure",
+    "group": "roof-small-front-gable",
+    "frame": 1,
+    "notes": "Roof assembly with the attached facade. Preserve the complete assembly.",
+    "placement": null
+  },
+  {
+    "name": "red-roof-narrow-front-gable",
+    "box": [
+      512,
+      256,
+      96,
+      128
+    ],
+    "kind": "structure",
+    "group": "roof-narrow-front-gable",
+    "frame": 1,
+    "notes": "Roof assembly with the attached facade. Preserve the complete assembly.",
+    "placement": null
+  },
+  {
+    "name": "red-roof-narrow-left-wing-gable",
+    "box": [
+      608,
+      256,
+      144,
+      144
+    ],
+    "kind": "structure",
+    "group": "roof-narrow-left-wing-gable",
+    "frame": 1,
+    "notes": "Roof assembly with the attached facade. Preserve the complete assembly.",
+    "placement": null
+  },
+  {
+    "name": "red-roof-narrow-right-wing-gable",
+    "box": [
+      512,
+      384,
+      144,
+      128
+    ],
+    "kind": "structure",
+    "group": "roof-narrow-right-wing-gable",
+    "frame": 1,
+    "notes": "Roof assembly with the attached facade. Preserve the complete assembly.",
+    "placement": null
+  },
+  {
+    "name": "red-roof-wide-front-gable",
+    "box": [
+      656,
+      400,
+      112,
+      112
+    ],
+    "kind": "structure",
+    "group": "roof-wide-front-gable",
+    "frame": 1,
+    "notes": "Roof assembly with the attached facade. Preserve the complete assembly.",
+    "placement": null
+  },
+  {
+    "name": "gray-roof-front-gable",
+    "box": [
+      0,
+      512,
+      112,
+      128
+    ],
+    "kind": "structure",
+    "group": "roof-front-gable",
+    "frame": 2,
+    "notes": "Roof assembly with the attached facade. Preserve the complete assembly.",
+    "placement": null
+  },
+  {
+    "name": "gray-roof-left-wing-gable",
+    "box": [
+      112,
+      512,
+      160,
+      144
+    ],
+    "kind": "structure",
+    "group": "roof-left-wing-gable",
+    "frame": 2,
+    "notes": "Roof assembly with the attached facade. Preserve the complete assembly.",
+    "placement": null
+  },
+  {
+    "name": "gray-roof-right-wing-gable",
+    "box": [
+      0,
+      640,
+      160,
+      128
+    ],
+    "kind": "structure",
+    "group": "roof-right-wing-gable",
+    "frame": 2,
+    "notes": "Roof assembly with the attached facade. Preserve the complete assembly.",
+    "placement": null
+  },
+  {
+    "name": "gray-roof-small-front-gable",
+    "box": [
+      160,
+      656,
+      96,
+      112
+    ],
+    "kind": "structure",
+    "group": "roof-small-front-gable",
+    "frame": 2,
+    "notes": "Roof assembly with the attached facade. Preserve the complete assembly.",
+    "placement": null
+  },
+  {
+    "name": "gray-roof-narrow-front-gable",
+    "box": [
+      512,
+      512,
+      96,
+      128
+    ],
+    "kind": "structure",
+    "group": "roof-narrow-front-gable",
+    "frame": 2,
+    "notes": "Roof assembly with the attached facade. Preserve the complete assembly.",
+    "placement": null
+  },
+  {
+    "name": "gray-roof-narrow-left-wing-gable",
+    "box": [
+      608,
+      512,
+      144,
+      144
+    ],
+    "kind": "structure",
+    "group": "roof-narrow-left-wing-gable",
+    "frame": 2,
+    "notes": "Roof assembly with the attached facade. Preserve the complete assembly.",
+    "placement": null
+  },
+  {
+    "name": "gray-roof-narrow-right-wing-gable",
+    "box": [
+      512,
+      640,
+      144,
+      128
+    ],
+    "kind": "structure",
+    "group": "roof-narrow-right-wing-gable",
+    "frame": 2,
+    "notes": "Roof assembly with the attached facade. Preserve the complete assembly.",
+    "placement": null
+  },
+  {
+    "name": "gray-roof-wide-front-gable",
+    "box": [
+      656,
+      656,
+      112,
+      112
+    ],
+    "kind": "structure",
+    "group": "roof-wide-front-gable",
+    "frame": 2,
+    "notes": "Roof assembly with the attached facade. Preserve the complete assembly.",
+    "placement": null
+  }
+]

@@ -1,0 +1,4778 @@
+[
+  {
+    "name": "blue-roof-front-gable",
+    "box": [
+      0,
+      0,
+      112,
+      128
+    ],
+    "kind": "part",
+    "group": "blue-roof-front-gable",
+    "frame": null,
+    "notes": "Preserve the complete roof assembly. Reuse an approved cut when the pixels match.",
+    "placement": null,
+    "reviewId": "W01"
+  },
+  {
+    "name": "blue-roof-left-wing-gable",
+    "box": [
+      112,
+      0,
+      160,
+      144
+    ],
+    "kind": "part",
+    "group": "blue-roof-left-wing-gable",
+    "frame": null,
+    "notes": "Preserve the complete roof assembly. Reuse an approved cut when the pixels match.",
+    "placement": null,
+    "clearRects": [
+      [
+        144,
+        128,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "W02"
+  },
+  {
+    "name": "blue-roof-right-wing-gable",
+    "box": [
+      0,
+      128,
+      160,
+      128
+    ],
+    "kind": "part",
+    "group": "blue-roof-right-wing-gable",
+    "frame": null,
+    "notes": "Preserve the complete roof assembly. Reuse an approved cut when the pixels match.",
+    "placement": null,
+    "reviewId": "W03"
+  },
+  {
+    "name": "blue-roof-small-front-gable",
+    "box": [
+      160,
+      144,
+      96,
+      112
+    ],
+    "kind": "part",
+    "group": "blue-roof-small-front-gable",
+    "frame": null,
+    "notes": "Preserve the complete roof assembly. Reuse an approved cut when the pixels match.",
+    "placement": null,
+    "reviewId": "W04"
+  },
+  {
+    "name": "blue-roof-narrow-front-gable",
+    "box": [
+      512,
+      0,
+      96,
+      128
+    ],
+    "kind": "part",
+    "group": "blue-roof-narrow-front-gable",
+    "frame": null,
+    "notes": "Preserve the complete roof assembly. Reuse an approved cut when the pixels match.",
+    "placement": null,
+    "reviewId": "W05"
+  },
+  {
+    "name": "blue-roof-narrow-left-wing-gable",
+    "box": [
+      608,
+      0,
+      144,
+      144
+    ],
+    "kind": "part",
+    "group": "blue-roof-narrow-left-wing-gable",
+    "frame": null,
+    "notes": "Preserve the complete roof assembly. Reuse an approved cut when the pixels match.",
+    "placement": null,
+    "reviewId": "W06"
+  },
+  {
+    "name": "blue-roof-narrow-right-wing-gable",
+    "box": [
+      512,
+      128,
+      144,
+      128
+    ],
+    "kind": "part",
+    "group": "blue-roof-narrow-right-wing-gable",
+    "frame": null,
+    "notes": "Preserve the complete roof assembly. Reuse an approved cut when the pixels match.",
+    "placement": null,
+    "reviewId": "W07"
+  },
+  {
+    "name": "blue-roof-wide-front-gable",
+    "box": [
+      656,
+      144,
+      112,
+      112
+    ],
+    "kind": "part",
+    "group": "blue-roof-wide-front-gable",
+    "frame": null,
+    "notes": "Preserve the complete roof assembly. Reuse an approved cut when the pixels match.",
+    "placement": null,
+    "reviewId": "W08"
+  },
+  {
+    "name": "red-roof-front-gable",
+    "box": [
+      0,
+      256,
+      112,
+      128
+    ],
+    "kind": "part",
+    "group": "red-roof-front-gable",
+    "frame": null,
+    "notes": "Preserve the complete roof assembly. Reuse an approved cut when the pixels match.",
+    "placement": null,
+    "reviewId": "W09"
+  },
+  {
+    "name": "red-roof-left-wing-gable",
+    "box": [
+      112,
+      256,
+      160,
+      144
+    ],
+    "kind": "part",
+    "group": "red-roof-left-wing-gable",
+    "frame": null,
+    "notes": "Preserve the complete roof assembly. Reuse an approved cut when the pixels match.",
+    "placement": null,
+    "clearRects": [
+      [
+        144,
+        128,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "W10"
+  },
+  {
+    "name": "red-roof-right-wing-gable",
+    "box": [
+      0,
+      384,
+      160,
+      128
+    ],
+    "kind": "part",
+    "group": "red-roof-right-wing-gable",
+    "frame": null,
+    "notes": "Preserve the complete roof assembly. Reuse an approved cut when the pixels match.",
+    "placement": null,
+    "reviewId": "W11"
+  },
+  {
+    "name": "red-roof-small-front-gable",
+    "box": [
+      160,
+      400,
+      96,
+      112
+    ],
+    "kind": "part",
+    "group": "red-roof-small-front-gable",
+    "frame": null,
+    "notes": "Preserve the complete roof assembly. Reuse an approved cut when the pixels match.",
+    "placement": null,
+    "reviewId": "W12"
+  },
+  {
+    "name": "red-roof-narrow-front-gable",
+    "box": [
+      512,
+      256,
+      96,
+      128
+    ],
+    "kind": "part",
+    "group": "red-roof-narrow-front-gable",
+    "frame": null,
+    "notes": "Preserve the complete roof assembly. Reuse an approved cut when the pixels match.",
+    "placement": null,
+    "reviewId": "W13"
+  },
+  {
+    "name": "red-roof-narrow-left-wing-gable",
+    "box": [
+      608,
+      256,
+      144,
+      144
+    ],
+    "kind": "part",
+    "group": "red-roof-narrow-left-wing-gable",
+    "frame": null,
+    "notes": "Preserve the complete roof assembly. Reuse an approved cut when the pixels match.",
+    "placement": null,
+    "reviewId": "W14"
+  },
+  {
+    "name": "red-roof-narrow-right-wing-gable",
+    "box": [
+      512,
+      384,
+      144,
+      128
+    ],
+    "kind": "part",
+    "group": "red-roof-narrow-right-wing-gable",
+    "frame": null,
+    "notes": "Preserve the complete roof assembly. Reuse an approved cut when the pixels match.",
+    "placement": null,
+    "reviewId": "W15"
+  },
+  {
+    "name": "red-roof-wide-front-gable",
+    "box": [
+      656,
+      400,
+      112,
+      112
+    ],
+    "kind": "part",
+    "group": "red-roof-wide-front-gable",
+    "frame": null,
+    "notes": "Preserve the complete roof assembly. Reuse an approved cut when the pixels match.",
+    "placement": null,
+    "reviewId": "W16"
+  },
+  {
+    "name": "gray-roof-front-gable",
+    "box": [
+      0,
+      512,
+      112,
+      128
+    ],
+    "kind": "part",
+    "group": "gray-roof-front-gable",
+    "frame": null,
+    "notes": "Preserve the complete roof assembly. Reuse an approved cut when the pixels match.",
+    "placement": null,
+    "reviewId": "W17"
+  },
+  {
+    "name": "gray-roof-left-wing-gable",
+    "box": [
+      112,
+      512,
+      160,
+      144
+    ],
+    "kind": "part",
+    "group": "gray-roof-left-wing-gable",
+    "frame": null,
+    "notes": "Preserve the complete roof assembly. Reuse an approved cut when the pixels match.",
+    "placement": null,
+    "clearRects": [
+      [
+        144,
+        128,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "W18"
+  },
+  {
+    "name": "gray-roof-right-wing-gable",
+    "box": [
+      0,
+      640,
+      160,
+      128
+    ],
+    "kind": "part",
+    "group": "gray-roof-right-wing-gable",
+    "frame": null,
+    "notes": "Preserve the complete roof assembly. Reuse an approved cut when the pixels match.",
+    "placement": null,
+    "reviewId": "W19"
+  },
+  {
+    "name": "gray-roof-small-front-gable",
+    "box": [
+      160,
+      656,
+      96,
+      112
+    ],
+    "kind": "part",
+    "group": "gray-roof-small-front-gable",
+    "frame": null,
+    "notes": "Preserve the complete roof assembly. Reuse an approved cut when the pixels match.",
+    "placement": null,
+    "reviewId": "W20"
+  },
+  {
+    "name": "gray-roof-narrow-front-gable",
+    "box": [
+      512,
+      512,
+      96,
+      128
+    ],
+    "kind": "part",
+    "group": "gray-roof-narrow-front-gable",
+    "frame": null,
+    "notes": "Preserve the complete roof assembly. Reuse an approved cut when the pixels match.",
+    "placement": null,
+    "reviewId": "W21"
+  },
+  {
+    "name": "gray-roof-narrow-left-wing-gable",
+    "box": [
+      608,
+      512,
+      144,
+      144
+    ],
+    "kind": "part",
+    "group": "gray-roof-narrow-left-wing-gable",
+    "frame": null,
+    "notes": "Preserve the complete roof assembly. Reuse an approved cut when the pixels match.",
+    "placement": null,
+    "reviewId": "W22"
+  },
+  {
+    "name": "gray-roof-narrow-right-wing-gable",
+    "box": [
+      512,
+      640,
+      144,
+      128
+    ],
+    "kind": "part",
+    "group": "gray-roof-narrow-right-wing-gable",
+    "frame": null,
+    "notes": "Preserve the complete roof assembly. Reuse an approved cut when the pixels match.",
+    "placement": null,
+    "reviewId": "W23"
+  },
+  {
+    "name": "gray-roof-wide-front-gable",
+    "box": [
+      656,
+      656,
+      112,
+      112
+    ],
+    "kind": "part",
+    "group": "gray-roof-wide-front-gable",
+    "frame": null,
+    "notes": "Preserve the complete roof assembly. Reuse an approved cut when the pixels match.",
+    "placement": null,
+    "reviewId": "W24"
+  },
+  {
+    "name": "red-small-roof-ridge",
+    "box": [
+      800,
+      384,
+      64,
+      64
+    ],
+    "kind": "part",
+    "group": "red-small-roof-ridge",
+    "frame": null,
+    "notes": "Preserve the complete roof assembly. Reuse an approved cut when the pixels match.",
+    "placement": null,
+    "reviewId": "W25"
+  },
+  {
+    "name": "gray-small-roof-ridge",
+    "box": [
+      864,
+      384,
+      64,
+      64
+    ],
+    "kind": "part",
+    "group": "gray-small-roof-ridge",
+    "frame": null,
+    "notes": "Preserve the complete roof assembly. Reuse an approved cut when the pixels match.",
+    "placement": null,
+    "reviewId": "W26"
+  },
+  {
+    "name": "blue-small-roof-ridge",
+    "box": [
+      928,
+      384,
+      64,
+      64
+    ],
+    "kind": "part",
+    "group": "blue-small-roof-ridge",
+    "frame": null,
+    "notes": "Preserve the complete roof assembly. Reuse an approved cut when the pixels match.",
+    "placement": null,
+    "reviewId": "W27"
+  },
+  {
+    "name": "red-roof-stone-gable",
+    "box": [
+      768,
+      512,
+      112,
+      144
+    ],
+    "kind": "part",
+    "group": "red-roof-stone-gable",
+    "frame": null,
+    "notes": "Preserve the complete roof assembly. Reuse an approved cut when the pixels match.",
+    "placement": null,
+    "reviewId": "W28"
+  },
+  {
+    "name": "gray-roof-brick-gable",
+    "box": [
+      896,
+      512,
+      112,
+      144
+    ],
+    "kind": "part",
+    "group": "gray-roof-brick-gable",
+    "frame": null,
+    "notes": "Preserve the complete roof assembly. Reuse an approved cut when the pixels match.",
+    "placement": null,
+    "reviewId": "W29"
+  },
+  {
+    "name": "blue-roof-wall-section",
+    "box": [
+      768,
+      656,
+      112,
+      112
+    ],
+    "kind": "part",
+    "group": "blue-roof-wall-section",
+    "frame": null,
+    "notes": "Preserve the complete roof assembly. Reuse an approved cut when the pixels match.",
+    "placement": null,
+    "reviewId": "W30"
+  },
+  {
+    "name": "blue-roof-gable-cap",
+    "box": [
+      912,
+      656,
+      80,
+      32
+    ],
+    "kind": "part",
+    "group": "blue-roof-gable-cap",
+    "frame": null,
+    "notes": "Preserve the complete roof assembly. Reuse an approved cut when the pixels match.",
+    "placement": null,
+    "reviewId": "W31"
+  },
+  {
+    "name": "blue-roof-door-overlay-provisional",
+    "box": [
+      896,
+      704,
+      112,
+      64
+    ],
+    "kind": "part",
+    "group": "blue-roof-door-overlay-provisional",
+    "frame": null,
+    "notes": "Preserve the complete roof assembly. Reuse an approved cut when the pixels match.",
+    "placement": null,
+    "reviewId": "W32"
+  },
+  {
+    "name": "central-roof-0",
+    "box": [
+      288,
+      0,
+      208,
+      128
+    ],
+    "kind": "part",
+    "group": "central-roof-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W33"
+  },
+  {
+    "name": "gable-wall-128",
+    "box": [
+      256,
+      128,
+      112,
+      48
+    ],
+    "kind": "part",
+    "group": "gable-wall-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W34"
+  },
+  {
+    "name": "roof-wall-384-128",
+    "box": [
+      384,
+      128,
+      64,
+      48
+    ],
+    "kind": "part",
+    "group": "roof-wall-384-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W35"
+  },
+  {
+    "name": "roof-wall-448-128",
+    "box": [
+      448,
+      128,
+      64,
+      48
+    ],
+    "kind": "part",
+    "group": "roof-wall-448-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W36"
+  },
+  {
+    "name": "gable-wall-176",
+    "box": [
+      256,
+      176,
+      112,
+      32
+    ],
+    "kind": "part",
+    "group": "gable-wall-176",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W37"
+  },
+  {
+    "name": "roof-wall-384-176",
+    "box": [
+      384,
+      176,
+      64,
+      32
+    ],
+    "kind": "part",
+    "group": "roof-wall-384-176",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W38"
+  },
+  {
+    "name": "roof-wall-448-176",
+    "box": [
+      448,
+      176,
+      64,
+      32
+    ],
+    "kind": "part",
+    "group": "roof-wall-448-176",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W39"
+  },
+  {
+    "name": "gable-wall-208",
+    "box": [
+      256,
+      208,
+      112,
+      48
+    ],
+    "kind": "part",
+    "group": "gable-wall-208",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W40"
+  },
+  {
+    "name": "roof-wall-384-208",
+    "box": [
+      384,
+      208,
+      64,
+      48
+    ],
+    "kind": "part",
+    "group": "roof-wall-384-208",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W41"
+  },
+  {
+    "name": "roof-wall-448-208",
+    "box": [
+      448,
+      208,
+      64,
+      48
+    ],
+    "kind": "part",
+    "group": "roof-wall-448-208",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W42"
+  },
+  {
+    "name": "central-roof-256",
+    "box": [
+      288,
+      256,
+      208,
+      128
+    ],
+    "kind": "part",
+    "group": "central-roof-256",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W43"
+  },
+  {
+    "name": "gable-wall-384",
+    "box": [
+      256,
+      384,
+      112,
+      48
+    ],
+    "kind": "part",
+    "group": "gable-wall-384",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W44"
+  },
+  {
+    "name": "roof-wall-384-384",
+    "box": [
+      384,
+      384,
+      64,
+      48
+    ],
+    "kind": "part",
+    "group": "roof-wall-384-384",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W45"
+  },
+  {
+    "name": "roof-wall-448-384",
+    "box": [
+      448,
+      384,
+      64,
+      48
+    ],
+    "kind": "part",
+    "group": "roof-wall-448-384",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W46"
+  },
+  {
+    "name": "gable-wall-432",
+    "box": [
+      256,
+      432,
+      112,
+      32
+    ],
+    "kind": "part",
+    "group": "gable-wall-432",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W47"
+  },
+  {
+    "name": "roof-wall-384-432",
+    "box": [
+      384,
+      432,
+      64,
+      32
+    ],
+    "kind": "part",
+    "group": "roof-wall-384-432",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W48"
+  },
+  {
+    "name": "roof-wall-448-432",
+    "box": [
+      448,
+      432,
+      64,
+      32
+    ],
+    "kind": "part",
+    "group": "roof-wall-448-432",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W49"
+  },
+  {
+    "name": "gable-wall-464",
+    "box": [
+      256,
+      464,
+      112,
+      48
+    ],
+    "kind": "part",
+    "group": "gable-wall-464",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W50"
+  },
+  {
+    "name": "roof-wall-384-464",
+    "box": [
+      384,
+      464,
+      64,
+      48
+    ],
+    "kind": "part",
+    "group": "roof-wall-384-464",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W51"
+  },
+  {
+    "name": "roof-wall-448-464",
+    "box": [
+      448,
+      464,
+      64,
+      48
+    ],
+    "kind": "part",
+    "group": "roof-wall-448-464",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W52"
+  },
+  {
+    "name": "central-roof-512",
+    "box": [
+      288,
+      512,
+      208,
+      128
+    ],
+    "kind": "part",
+    "group": "central-roof-512",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W53"
+  },
+  {
+    "name": "gable-wall-640",
+    "box": [
+      256,
+      640,
+      112,
+      48
+    ],
+    "kind": "part",
+    "group": "gable-wall-640",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W54"
+  },
+  {
+    "name": "roof-wall-384-640",
+    "box": [
+      384,
+      640,
+      64,
+      48
+    ],
+    "kind": "part",
+    "group": "roof-wall-384-640",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W55"
+  },
+  {
+    "name": "roof-wall-448-640",
+    "box": [
+      448,
+      640,
+      64,
+      48
+    ],
+    "kind": "part",
+    "group": "roof-wall-448-640",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W56"
+  },
+  {
+    "name": "gable-wall-688",
+    "box": [
+      256,
+      688,
+      112,
+      32
+    ],
+    "kind": "part",
+    "group": "gable-wall-688",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W57"
+  },
+  {
+    "name": "roof-wall-384-688",
+    "box": [
+      384,
+      688,
+      64,
+      32
+    ],
+    "kind": "part",
+    "group": "roof-wall-384-688",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W58"
+  },
+  {
+    "name": "roof-wall-448-688",
+    "box": [
+      448,
+      688,
+      64,
+      32
+    ],
+    "kind": "part",
+    "group": "roof-wall-448-688",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W59"
+  },
+  {
+    "name": "gable-wall-720",
+    "box": [
+      256,
+      720,
+      112,
+      48
+    ],
+    "kind": "part",
+    "group": "gable-wall-720",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W60"
+  },
+  {
+    "name": "roof-wall-384-720",
+    "box": [
+      384,
+      720,
+      64,
+      48
+    ],
+    "kind": "part",
+    "group": "roof-wall-384-720",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W61"
+  },
+  {
+    "name": "roof-wall-448-720",
+    "box": [
+      448,
+      720,
+      64,
+      48
+    ],
+    "kind": "part",
+    "group": "roof-wall-448-720",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W62"
+  },
+  {
+    "name": "sign-double-48-1-1",
+    "box": [
+      768,
+      176,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "sign-double-48-1-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W63"
+  },
+  {
+    "name": "sign-double-48-2-1",
+    "box": [
+      784,
+      176,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "sign-double-48-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W64"
+  },
+  {
+    "name": "sign-double-48-3-1",
+    "box": [
+      800,
+      176,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "sign-double-48-3-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W65"
+  },
+  {
+    "name": "sign-double-48-4-1",
+    "box": [
+      816,
+      176,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "sign-double-48-4-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W66"
+  },
+  {
+    "name": "sign-double-48-5-1",
+    "box": [
+      832,
+      176,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "sign-double-48-5-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W67"
+  },
+  {
+    "name": "sign-double-48-6-1",
+    "box": [
+      848,
+      176,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "sign-double-48-6-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W68"
+  },
+  {
+    "name": "sign-double-48-7-1",
+    "box": [
+      864,
+      176,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "sign-double-48-7-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W69"
+  },
+  {
+    "name": "sign-double-48-8-1",
+    "box": [
+      880,
+      176,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "sign-double-48-8-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W70"
+  },
+  {
+    "name": "sign-double-96-1-1",
+    "box": [
+      768,
+      224,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "sign-double-96-1-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W71"
+  },
+  {
+    "name": "sign-double-96-2-1",
+    "box": [
+      784,
+      224,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "sign-double-96-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W72"
+  },
+  {
+    "name": "sign-double-96-3-1",
+    "box": [
+      800,
+      224,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "sign-double-96-3-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W73"
+  },
+  {
+    "name": "sign-double-96-4-1",
+    "box": [
+      816,
+      224,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "sign-double-96-4-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W74"
+  },
+  {
+    "name": "sign-double-96-5-1",
+    "box": [
+      832,
+      224,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "sign-double-96-5-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W75"
+  },
+  {
+    "name": "sign-double-96-6-1",
+    "box": [
+      848,
+      224,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "sign-double-96-6-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W76"
+  },
+  {
+    "name": "sign-double-96-7-1",
+    "box": [
+      864,
+      224,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "sign-double-96-7-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W77"
+  },
+  {
+    "name": "sign-double-96-8-1",
+    "box": [
+      880,
+      224,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "sign-double-96-8-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W78"
+  },
+  {
+    "name": "door-960-0",
+    "box": [
+      960,
+      128,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "door-960-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W79"
+  },
+  {
+    "name": "door-960-32",
+    "box": [
+      960,
+      160,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "door-960-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W80"
+  },
+  {
+    "name": "door-960-64",
+    "box": [
+      960,
+      192,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "door-960-64",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W81"
+  },
+  {
+    "name": "door-984-0",
+    "box": [
+      984,
+      128,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "door-984-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W82"
+  },
+  {
+    "name": "door-984-32",
+    "box": [
+      984,
+      160,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "door-984-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W83"
+  },
+  {
+    "name": "door-984-64",
+    "box": [
+      984,
+      192,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "door-984-64",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W84"
+  },
+  {
+    "name": "door-984-96",
+    "box": [
+      984,
+      224,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "door-984-96",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W85"
+  },
+  {
+    "name": "window-upper-128-1-1",
+    "box": [
+      896,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "window-upper-128-1-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W86"
+  },
+  {
+    "name": "window-upper-128-2-1",
+    "box": [
+      912,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "window-upper-128-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W87"
+  },
+  {
+    "name": "window-upper-128-3-1",
+    "box": [
+      928,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "window-upper-128-3-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W88"
+  },
+  {
+    "name": "window-upper-128-4-1",
+    "box": [
+      944,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "window-upper-128-4-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W89"
+  },
+  {
+    "name": "window-upper-128-5-1",
+    "box": [
+      960,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "window-upper-128-5-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W90"
+  },
+  {
+    "name": "window-upper-128-6-1",
+    "box": [
+      976,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "window-upper-128-6-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W91"
+  },
+  {
+    "name": "window-upper-144-1-1",
+    "box": [
+      896,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "window-upper-144-1-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W92"
+  },
+  {
+    "name": "window-upper-144-2-1",
+    "box": [
+      912,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "window-upper-144-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W93"
+  },
+  {
+    "name": "window-upper-144-3-1",
+    "box": [
+      928,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "window-upper-144-3-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W94"
+  },
+  {
+    "name": "window-upper-144-4-1",
+    "box": [
+      944,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "window-upper-144-4-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W95"
+  },
+  {
+    "name": "window-upper-144-5-1",
+    "box": [
+      960,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "window-upper-144-5-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W96"
+  },
+  {
+    "name": "window-upper-144-6-1",
+    "box": [
+      976,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "window-upper-144-6-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W97"
+  },
+  {
+    "name": "window-904-160",
+    "box": [
+      904,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse W86. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "W98",
+    "reuseProposal": {
+      "sheetId": "W",
+      "reviewId": "W86",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-houses-winter-source-f35cd32b8e54.png",
+      "box": [
+        896,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "window-936-160",
+    "box": [
+      936,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse W87. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "W99",
+    "reuseProposal": {
+      "sheetId": "W",
+      "reviewId": "W87",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-houses-winter-source-f35cd32b8e54.png",
+      "box": [
+        912,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "window-968-160",
+    "box": [
+      968,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse W88. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "W100",
+    "reuseProposal": {
+      "sheetId": "W",
+      "reviewId": "W88",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-houses-winter-source-f35cd32b8e54.png",
+      "box": [
+        928,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "window-1000-160",
+    "box": [
+      1000,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse W89. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "W101",
+    "reuseProposal": {
+      "sheetId": "W",
+      "reviewId": "W89",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-houses-winter-source-f35cd32b8e54.png",
+      "box": [
+        944,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "window-904-192",
+    "box": [
+      904,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse W96. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "W102",
+    "reuseProposal": {
+      "sheetId": "W",
+      "reviewId": "W96",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-houses-winter-source-f35cd32b8e54.png",
+      "box": [
+        960,
+        16,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "window-936-192",
+    "box": [
+      936,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse W97. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "W103",
+    "reuseProposal": {
+      "sheetId": "W",
+      "reviewId": "W97",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-houses-winter-source-f35cd32b8e54.png",
+      "box": [
+        976,
+        16,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "flowers-968",
+    "box": [
+      968,
+      48,
+      16,
+      24
+    ],
+    "kind": "part",
+    "group": "flowers-968",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W104"
+  },
+  {
+    "name": "flowers-1000",
+    "box": [
+      1000,
+      48,
+      16,
+      24
+    ],
+    "kind": "part",
+    "group": "flowers-1000",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W105"
+  },
+  {
+    "name": "window-square-904",
+    "box": [
+      904,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse W90. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "W106",
+    "reuseProposal": {
+      "sheetId": "W",
+      "reviewId": "W90",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-houses-winter-source-f35cd32b8e54.png",
+      "box": [
+        960,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "window-square-936",
+    "box": [
+      936,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse W91. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "W107",
+    "reuseProposal": {
+      "sheetId": "W",
+      "reviewId": "W91",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-houses-winter-source-f35cd32b8e54.png",
+      "box": [
+        976,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "window-left-144-1-1",
+    "box": [
+      768,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "window-left-144-1-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W108"
+  },
+  {
+    "name": "window-left-144-2-1",
+    "box": [
+      784,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "window-left-144-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W109"
+  },
+  {
+    "name": "window-left-144-3-1",
+    "box": [
+      800,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "window-left-144-3-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W110"
+  },
+  {
+    "name": "window-left-144-4-1",
+    "box": [
+      816,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "window-left-144-4-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W111"
+  },
+  {
+    "name": "window-left-144-5-1",
+    "box": [
+      832,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "window-left-144-5-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W112"
+  },
+  {
+    "name": "window-left-144-6-1",
+    "box": [
+      848,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "window-left-144-6-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W113"
+  },
+  {
+    "name": "window-left-176-1-1",
+    "box": [
+      768,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "window-left-176-1-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W114"
+  },
+  {
+    "name": "window-left-176-2-1",
+    "box": [
+      784,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "window-left-176-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W115"
+  },
+  {
+    "name": "window-left-176-3-1",
+    "box": [
+      800,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "window-left-176-3-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W116"
+  },
+  {
+    "name": "window-left-176-4-1",
+    "box": [
+      816,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "window-left-176-4-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W117"
+  },
+  {
+    "name": "window-left-176-5-1",
+    "box": [
+      832,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "window-left-176-5-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W118"
+  },
+  {
+    "name": "window-left-176-6-1",
+    "box": [
+      848,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "window-left-176-6-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W119"
+  },
+  {
+    "name": "window-left-208-1-1",
+    "box": [
+      768,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "window-left-208-1-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W120"
+  },
+  {
+    "name": "window-left-208-2-1",
+    "box": [
+      784,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "window-left-208-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W121"
+  },
+  {
+    "name": "window-left-208-3-1",
+    "box": [
+      800,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "window-left-208-3-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W122"
+  },
+  {
+    "name": "window-left-208-4-1",
+    "box": [
+      816,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse W113. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "W123",
+    "reuseProposal": {
+      "sheetId": "W",
+      "reviewId": "W113",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-houses-winter-source-f35cd32b8e54.png",
+      "box": [
+        848,
+        16,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "window-left-208-5-1",
+    "box": [
+      832,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "window-left-208-5-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W124"
+  },
+  {
+    "name": "window-left-208-6-1",
+    "box": [
+      848,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "window-left-208-6-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W125"
+  },
+  {
+    "name": "window-left-240-1-1",
+    "box": [
+      768,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "window-left-240-1-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W126"
+  },
+  {
+    "name": "window-left-240-2-1",
+    "box": [
+      784,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "window-left-240-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W127"
+  },
+  {
+    "name": "window-left-240-3-1",
+    "box": [
+      800,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "window-left-240-3-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W128"
+  },
+  {
+    "name": "window-left-240-4-1",
+    "box": [
+      816,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "window-left-240-4-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W129"
+  },
+  {
+    "name": "window-left-240-5-1",
+    "box": [
+      832,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "window-left-240-5-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W130"
+  },
+  {
+    "name": "window-left-240-6-1",
+    "box": [
+      848,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "window-left-240-6-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W131"
+  },
+  {
+    "name": "wall-panel-864",
+    "box": [
+      864,
+      96,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "wall-panel-864",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W132"
+  },
+  {
+    "name": "wall-panel-880",
+    "box": [
+      880,
+      96,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "wall-panel-880",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W133"
+  },
+  {
+    "name": "wall-panel-896",
+    "box": [
+      896,
+      96,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "wall-panel-896",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W134"
+  },
+  {
+    "name": "wall-panel-912",
+    "box": [
+      912,
+      96,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "wall-panel-912",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W135"
+  },
+  {
+    "name": "wall-panel-928",
+    "box": [
+      928,
+      96,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "wall-panel-928",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W136"
+  },
+  {
+    "name": "wall-panel-944",
+    "box": [
+      944,
+      96,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "wall-panel-944",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W137"
+  },
+  {
+    "name": "wall-panel-960",
+    "box": [
+      960,
+      96,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "wall-panel-960",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W138"
+  },
+  {
+    "name": "wall-panel-976",
+    "box": [
+      976,
+      96,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "wall-panel-976",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W139"
+  },
+  {
+    "name": "wall-panel-992",
+    "box": [
+      992,
+      96,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "wall-panel-992",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W140"
+  },
+  {
+    "name": "wall-panel-1008",
+    "box": [
+      1008,
+      96,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "wall-panel-1008",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W141"
+  },
+  {
+    "name": "stone-part-784-256",
+    "box": [
+      784,
+      256,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "stone-part-784-256",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W142"
+  },
+  {
+    "name": "stone-part-848-256",
+    "box": [
+      848,
+      256,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "stone-part-848-256",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W143"
+  },
+  {
+    "name": "stone-part-784-304",
+    "box": [
+      784,
+      304,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "stone-part-784-304",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W144"
+  },
+  {
+    "name": "stone-part-912-256",
+    "box": [
+      912,
+      256,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "stone-part-912-256",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W145"
+  },
+  {
+    "name": "stone-part-960-256",
+    "box": [
+      960,
+      256,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "stone-part-960-256",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W146"
+  },
+  {
+    "name": "stone-part-960-304",
+    "box": [
+      960,
+      304,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "stone-part-960-304",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W147"
+  },
+  {
+    "name": "stone-part-848-288",
+    "box": [
+      848,
+      288,
+      16,
+      48
+    ],
+    "kind": "part",
+    "group": "stone-part-848-288",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W148"
+  },
+  {
+    "name": "stone-part-864-288",
+    "box": [
+      864,
+      288,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "stone-part-864-288",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W149"
+  },
+  {
+    "name": "stone-part-880-304",
+    "box": [
+      880,
+      304,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "stone-part-880-304",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W150"
+  },
+  {
+    "name": "stone-part-896-288",
+    "box": [
+      896,
+      288,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "stone-part-896-288",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W151"
+  },
+  {
+    "name": "stone-part-912-288",
+    "box": [
+      912,
+      288,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "stone-part-912-288",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W152"
+  },
+  {
+    "name": "stone-part-928-304",
+    "box": [
+      928,
+      304,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "stone-part-928-304",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W153"
+  },
+  {
+    "name": "stone-part-880-328",
+    "box": [
+      880,
+      328,
+      16,
+      24
+    ],
+    "kind": "part",
+    "group": "stone-part-880-328",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W154"
+  },
+  {
+    "name": "stone-part-896-328",
+    "box": [
+      896,
+      328,
+      16,
+      24
+    ],
+    "kind": "part",
+    "group": "stone-part-896-328",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W155"
+  },
+  {
+    "name": "tile-49-1",
+    "box": [
+      768,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-49-1",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W156"
+  },
+  {
+    "name": "tile-50-1",
+    "box": [
+      784,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-50-1",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W157"
+  },
+  {
+    "name": "tile-51-1",
+    "box": [
+      800,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse W156. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "W158",
+    "reuseProposal": {
+      "sheetId": "W",
+      "reviewId": "W156",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-houses-winter-source-f35cd32b8e54.png",
+      "box": [
+        768,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-52-1",
+    "box": [
+      816,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse W157. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "W159",
+    "reuseProposal": {
+      "sheetId": "W",
+      "reviewId": "W157",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-houses-winter-source-f35cd32b8e54.png",
+      "box": [
+        784,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-53-1",
+    "box": [
+      832,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-53-1",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W160"
+  },
+  {
+    "name": "tile-54-1",
+    "box": [
+      848,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-54-1",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W161"
+  },
+  {
+    "name": "tile-63-1",
+    "box": [
+      992,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-63-1",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W162"
+  },
+  {
+    "name": "tile-64-1",
+    "box": [
+      1008,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-64-1",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W163"
+  },
+  {
+    "name": "tile-55-2",
+    "box": [
+      864,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse W124. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "W164",
+    "reuseProposal": {
+      "sheetId": "W",
+      "reviewId": "W124",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-houses-winter-source-f35cd32b8e54.png",
+      "box": [
+        832,
+        80,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-56-2",
+    "box": [
+      880,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse W125. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "W165",
+    "reuseProposal": {
+      "sheetId": "W",
+      "reviewId": "W125",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-houses-winter-source-f35cd32b8e54.png",
+      "box": [
+        848,
+        80,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-63-2",
+    "box": [
+      992,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-63-2",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W166"
+  },
+  {
+    "name": "tile-64-2",
+    "box": [
+      1008,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-64-2",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W167"
+  },
+  {
+    "name": "tile-49-3",
+    "box": [
+      768,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse W156. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "W168",
+    "reuseProposal": {
+      "sheetId": "W",
+      "reviewId": "W156",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-houses-winter-source-f35cd32b8e54.png",
+      "box": [
+        768,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-50-3",
+    "box": [
+      784,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse W157. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "W169",
+    "reuseProposal": {
+      "sheetId": "W",
+      "reviewId": "W157",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-houses-winter-source-f35cd32b8e54.png",
+      "box": [
+        784,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-51-3",
+    "box": [
+      800,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse W156. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "W170",
+    "reuseProposal": {
+      "sheetId": "W",
+      "reviewId": "W156",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-houses-winter-source-f35cd32b8e54.png",
+      "box": [
+        768,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-52-3",
+    "box": [
+      816,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse W157. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "W171",
+    "reuseProposal": {
+      "sheetId": "W",
+      "reviewId": "W157",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-houses-winter-source-f35cd32b8e54.png",
+      "box": [
+        784,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-53-3",
+    "box": [
+      832,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse W160. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "W172",
+    "reuseProposal": {
+      "sheetId": "W",
+      "reviewId": "W160",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-houses-winter-source-f35cd32b8e54.png",
+      "box": [
+        832,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-54-3",
+    "box": [
+      848,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse W161. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "W173",
+    "reuseProposal": {
+      "sheetId": "W",
+      "reviewId": "W161",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-houses-winter-source-f35cd32b8e54.png",
+      "box": [
+        848,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-55-4",
+    "box": [
+      864,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse W130. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "W174",
+    "reuseProposal": {
+      "sheetId": "W",
+      "reviewId": "W130",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-houses-winter-source-f35cd32b8e54.png",
+      "box": [
+        832,
+        112,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-56-4",
+    "box": [
+      880,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse W131. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "W175",
+    "reuseProposal": {
+      "sheetId": "W",
+      "reviewId": "W131",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-houses-winter-source-f35cd32b8e54.png",
+      "box": [
+        848,
+        112,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-49-5",
+    "box": [
+      768,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-49-5",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W176"
+  },
+  {
+    "name": "tile-50-5",
+    "box": [
+      784,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-50-5",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W177"
+  },
+  {
+    "name": "tile-51-5",
+    "box": [
+      800,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-51-5",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W178"
+  },
+  {
+    "name": "tile-52-5",
+    "box": [
+      816,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-52-5",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W179"
+  },
+  {
+    "name": "tile-55-5",
+    "box": [
+      864,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-55-5",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W180"
+  },
+  {
+    "name": "tile-56-5",
+    "box": [
+      880,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-56-5",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W181"
+  },
+  {
+    "name": "tile-55-6",
+    "box": [
+      864,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-55-6",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W182"
+  },
+  {
+    "name": "tile-56-6",
+    "box": [
+      880,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-56-6",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W183"
+  },
+  {
+    "name": "tile-57-6",
+    "box": [
+      896,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-57-6",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W184"
+  },
+  {
+    "name": "tile-58-6",
+    "box": [
+      912,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-58-6",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W185"
+  },
+  {
+    "name": "tile-59-6",
+    "box": [
+      928,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-59-6",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W186"
+  },
+  {
+    "name": "tile-60-6",
+    "box": [
+      944,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-60-6",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W187"
+  },
+  {
+    "name": "tile-49-7",
+    "box": [
+      768,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-49-7",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W188"
+  },
+  {
+    "name": "tile-50-7",
+    "box": [
+      784,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-50-7",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W189"
+  },
+  {
+    "name": "tile-51-7",
+    "box": [
+      800,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-51-7",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W190"
+  },
+  {
+    "name": "tile-52-7",
+    "box": [
+      816,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-52-7",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W191"
+  },
+  {
+    "name": "tile-49-9",
+    "box": [
+      768,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fg-village-winter-review-parts-tile-8-18.png",
+    "placement": null,
+    "reviewId": "W192",
+    "reuseAsset": "top-down/native/farming-game-world/processed/fg-village-winter-review-parts/fg-village-winter-review-parts-tile-8-18.png"
+  },
+  {
+    "name": "tile-50-9",
+    "box": [
+      784,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fg-village-winter-review-parts-tile-8-19.png",
+    "placement": null,
+    "reviewId": "W193",
+    "reuseAsset": "top-down/native/farming-game-world/processed/fg-village-winter-review-parts/fg-village-winter-review-parts-tile-8-19.png"
+  },
+  {
+    "name": "tile-51-9",
+    "box": [
+      800,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fg-village-winter-review-parts-tile-8-20.png",
+    "placement": null,
+    "reviewId": "W194",
+    "reuseAsset": "top-down/native/farming-game-world/processed/fg-village-winter-review-parts/fg-village-winter-review-parts-tile-8-20.png"
+  },
+  {
+    "name": "tile-52-9",
+    "box": [
+      816,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fg-village-winter-review-parts-tile-8-21.png",
+    "placement": null,
+    "reviewId": "W195",
+    "reuseAsset": "top-down/native/farming-game-world/processed/fg-village-winter-review-parts/fg-village-winter-review-parts-tile-8-21.png"
+  },
+  {
+    "name": "tile-53-9",
+    "box": [
+      832,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fg-village-winter-review-parts-tile-8-22.png",
+    "placement": null,
+    "reviewId": "W196",
+    "reuseAsset": "top-down/native/farming-game-world/processed/fg-village-winter-review-parts/fg-village-winter-review-parts-tile-8-22.png"
+  },
+  {
+    "name": "tile-54-9",
+    "box": [
+      848,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fg-village-winter-review-parts-tile-8-23.png",
+    "placement": null,
+    "reviewId": "W197",
+    "reuseAsset": "top-down/native/farming-game-world/processed/fg-village-winter-review-parts/fg-village-winter-review-parts-tile-8-23.png"
+  },
+  {
+    "name": "tile-55-9",
+    "box": [
+      864,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fg-village-winter-review-parts-tile-8-24.png",
+    "placement": null,
+    "reviewId": "W198",
+    "reuseAsset": "top-down/native/farming-game-world/processed/fg-village-winter-review-parts/fg-village-winter-review-parts-tile-8-24.png"
+  },
+  {
+    "name": "tile-56-9",
+    "box": [
+      880,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fg-village-winter-review-parts-tile-8-25.png",
+    "placement": null,
+    "reviewId": "W199",
+    "reuseAsset": "top-down/native/farming-game-world/processed/fg-village-winter-review-parts/fg-village-winter-review-parts-tile-8-25.png"
+  },
+  {
+    "name": "tile-57-9",
+    "box": [
+      896,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-57-9",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W200"
+  },
+  {
+    "name": "tile-58-9",
+    "box": [
+      912,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-58-9",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W201"
+  },
+  {
+    "name": "tile-59-9",
+    "box": [
+      928,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-59-9",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W202"
+  },
+  {
+    "name": "tile-60-9",
+    "box": [
+      944,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-60-9",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W203"
+  },
+  {
+    "name": "tile-49-10",
+    "box": [
+      768,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-49-10",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W204"
+  },
+  {
+    "name": "tile-50-10",
+    "box": [
+      784,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-50-10",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W205"
+  },
+  {
+    "name": "tile-51-10",
+    "box": [
+      800,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-51-10",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W206"
+  },
+  {
+    "name": "tile-52-10",
+    "box": [
+      816,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-52-10",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W207"
+  },
+  {
+    "name": "tile-53-10",
+    "box": [
+      832,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-53-10",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W208"
+  },
+  {
+    "name": "tile-54-10",
+    "box": [
+      848,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-54-10",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W209"
+  },
+  {
+    "name": "tile-55-10",
+    "box": [
+      864,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-55-10",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W210"
+  },
+  {
+    "name": "tile-56-10",
+    "box": [
+      880,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-56-10",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W211"
+  },
+  {
+    "name": "tile-57-10",
+    "box": [
+      896,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-57-10",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W212"
+  },
+  {
+    "name": "tile-58-10",
+    "box": [
+      912,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-58-10",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W213"
+  },
+  {
+    "name": "tile-59-10",
+    "box": [
+      928,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-59-10",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W214"
+  },
+  {
+    "name": "tile-60-10",
+    "box": [
+      944,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-60-10",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W215"
+  },
+  {
+    "name": "tile-49-11",
+    "box": [
+      768,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-winter-direction-sign-288-320.png",
+    "placement": null,
+    "reviewId": "W216",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-winter/forest-winter-direction-sign-288-320.png"
+  },
+  {
+    "name": "tile-50-11",
+    "box": [
+      784,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-winter-sign-80-448.png",
+    "placement": null,
+    "reviewId": "W217",
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-winter/grassland-winter-sign-80-448.png"
+  },
+  {
+    "name": "tile-51-11",
+    "box": [
+      800,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-winter-direction-sign-320-320.png",
+    "placement": null,
+    "reviewId": "W218",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-winter/forest-winter-direction-sign-320-320.png"
+  },
+  {
+    "name": "tile-52-11",
+    "box": [
+      816,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-winter-sign-112-448.png",
+    "placement": null,
+    "reviewId": "W219",
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-winter/grassland-winter-sign-112-448.png"
+  },
+  {
+    "name": "tile-53-11",
+    "box": [
+      832,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-winter-sign-64-464.png",
+    "placement": null,
+    "reviewId": "W220",
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-winter/grassland-winter-sign-64-464.png"
+  },
+  {
+    "name": "tile-54-11",
+    "box": [
+      848,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-winter-sign-80-464.png",
+    "placement": null,
+    "reviewId": "W221",
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-winter/grassland-winter-sign-80-464.png"
+  },
+  {
+    "name": "tile-55-11",
+    "box": [
+      864,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-winter-sign-96-464.png",
+    "placement": null,
+    "reviewId": "W222",
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-winter/grassland-winter-sign-96-464.png"
+  },
+  {
+    "name": "tile-56-11",
+    "box": [
+      880,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-winter-sign-112-464.png",
+    "placement": null,
+    "reviewId": "W223",
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-winter/grassland-winter-sign-112-464.png"
+  },
+  {
+    "name": "tile-57-11",
+    "box": [
+      896,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-57-11",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W224"
+  },
+  {
+    "name": "tile-58-11",
+    "box": [
+      912,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-58-11",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W225"
+  },
+  {
+    "name": "tile-59-11",
+    "box": [
+      928,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-59-11",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W226"
+  },
+  {
+    "name": "tile-60-11",
+    "box": [
+      944,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-60-11",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W227"
+  },
+  {
+    "name": "tile-57-12",
+    "box": [
+      896,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-57-12",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W228"
+  },
+  {
+    "name": "tile-58-12",
+    "box": [
+      912,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-58-12",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W229"
+  },
+  {
+    "name": "tile-59-12",
+    "box": [
+      928,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-59-12",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W230"
+  },
+  {
+    "name": "tile-60-12",
+    "box": [
+      944,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-60-12",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W231"
+  },
+  {
+    "name": "tile-57-13",
+    "box": [
+      896,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-57-13",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W232"
+  },
+  {
+    "name": "tile-58-13",
+    "box": [
+      912,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-58-13",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W233"
+  },
+  {
+    "name": "tile-59-13",
+    "box": [
+      928,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-59-13",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W234"
+  },
+  {
+    "name": "tile-60-13",
+    "box": [
+      944,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-60-13",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W235"
+  },
+  {
+    "name": "tile-49-14",
+    "box": [
+      768,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-winter-direction-sign-288-352.png",
+    "placement": null,
+    "reviewId": "W236",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-winter/forest-winter-direction-sign-288-352.png"
+  },
+  {
+    "name": "tile-50-14",
+    "box": [
+      784,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-winter-sign-80-480.png",
+    "placement": null,
+    "reviewId": "W237",
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-winter/grassland-winter-sign-80-480.png"
+  },
+  {
+    "name": "tile-51-14",
+    "box": [
+      800,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-winter-direction-sign-320-352.png",
+    "placement": null,
+    "reviewId": "W238",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-winter/forest-winter-direction-sign-320-352.png"
+  },
+  {
+    "name": "tile-52-14",
+    "box": [
+      816,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-winter-sign-112-480.png",
+    "placement": null,
+    "reviewId": "W239",
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-winter/grassland-winter-sign-112-480.png"
+  },
+  {
+    "name": "tile-53-14",
+    "box": [
+      832,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-winter-sign-64-496.png",
+    "placement": null,
+    "reviewId": "W240",
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-winter/grassland-winter-sign-64-496.png"
+  },
+  {
+    "name": "tile-54-14",
+    "box": [
+      848,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-winter-sign-80-496.png",
+    "placement": null,
+    "reviewId": "W241",
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-winter/grassland-winter-sign-80-496.png"
+  },
+  {
+    "name": "tile-55-14",
+    "box": [
+      864,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-winter-sign-96-496.png",
+    "placement": null,
+    "reviewId": "W242",
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-winter/grassland-winter-sign-96-496.png"
+  },
+  {
+    "name": "tile-56-14",
+    "box": [
+      880,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-winter-sign-112-496.png",
+    "placement": null,
+    "reviewId": "W243",
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-winter/grassland-winter-sign-112-496.png"
+  },
+  {
+    "name": "tile-57-14",
+    "box": [
+      896,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-57-14",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W244"
+  },
+  {
+    "name": "tile-58-14",
+    "box": [
+      912,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-58-14",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W245"
+  },
+  {
+    "name": "tile-59-14",
+    "box": [
+      928,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-59-14",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W246"
+  },
+  {
+    "name": "tile-60-14",
+    "box": [
+      944,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-60-14",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W247"
+  },
+  {
+    "name": "tile-57-15",
+    "box": [
+      896,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-57-15",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W248"
+  },
+  {
+    "name": "tile-58-15",
+    "box": [
+      912,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-58-15",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W249"
+  },
+  {
+    "name": "tile-59-15",
+    "box": [
+      928,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-59-15",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W250"
+  },
+  {
+    "name": "tile-60-15",
+    "box": [
+      944,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-60-15",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W251"
+  },
+  {
+    "name": "tile-57-16",
+    "box": [
+      896,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-57-16",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W252"
+  },
+  {
+    "name": "tile-58-16",
+    "box": [
+      912,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-58-16",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W253"
+  },
+  {
+    "name": "tile-59-16",
+    "box": [
+      928,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-59-16",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W254"
+  },
+  {
+    "name": "tile-60-16",
+    "box": [
+      944,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-60-16",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W255"
+  },
+  {
+    "name": "tile-49-17",
+    "box": [
+      768,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-49-17",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W256"
+  },
+  {
+    "name": "tile-53-17",
+    "box": [
+      832,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-53-17",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W257"
+  },
+  {
+    "name": "tile-60-17",
+    "box": [
+      944,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-60-17",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W258"
+  },
+  {
+    "name": "tile-64-17",
+    "box": [
+      1008,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-64-17",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W259"
+  },
+  {
+    "name": "tile-49-18",
+    "box": [
+      768,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-49-18",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W260"
+  },
+  {
+    "name": "tile-53-18",
+    "box": [
+      832,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-53-18",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W261"
+  },
+  {
+    "name": "tile-60-18",
+    "box": [
+      944,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-60-18",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W262"
+  },
+  {
+    "name": "tile-64-18",
+    "box": [
+      1008,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-64-18",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W263"
+  },
+  {
+    "name": "tile-49-20",
+    "box": [
+      768,
+      304,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-49-20",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W264"
+  },
+  {
+    "name": "tile-53-20",
+    "box": [
+      832,
+      304,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-53-20",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W265"
+  },
+  {
+    "name": "tile-60-20",
+    "box": [
+      944,
+      304,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-60-20",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W266"
+  },
+  {
+    "name": "tile-64-20",
+    "box": [
+      1008,
+      304,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-64-20",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W267"
+  },
+  {
+    "name": "tile-49-21",
+    "box": [
+      768,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-49-21",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W268"
+  },
+  {
+    "name": "tile-53-21",
+    "box": [
+      832,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-53-21",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W269"
+  },
+  {
+    "name": "tile-60-21",
+    "box": [
+      944,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-60-21",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W270"
+  },
+  {
+    "name": "tile-64-21",
+    "box": [
+      1008,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-64-21",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W271"
+  },
+  {
+    "name": "tile-49-23",
+    "box": [
+      768,
+      352,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-49-23",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W272"
+  },
+  {
+    "name": "tile-50-23",
+    "box": [
+      784,
+      352,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-winter-ground-stone-128-240.png",
+    "placement": null,
+    "reviewId": "W273",
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-winter/grassland-winter-ground-stone-128-240.png"
+  },
+  {
+    "name": "tile-51-23",
+    "box": [
+      800,
+      352,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-winter-ground-stone-144-240.png",
+    "placement": null,
+    "reviewId": "W274",
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-winter/grassland-winter-ground-stone-144-240.png"
+  },
+  {
+    "name": "tile-52-23",
+    "box": [
+      816,
+      352,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-winter-ground-stone-160-240.png",
+    "placement": null,
+    "reviewId": "W275",
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-winter/grassland-winter-ground-stone-160-240.png"
+  },
+  {
+    "name": "tile-53-23",
+    "box": [
+      832,
+      352,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-winter-ground-stone-224-240.png",
+    "placement": null,
+    "reviewId": "W276",
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-winter/grassland-winter-ground-stone-224-240.png"
+  },
+  {
+    "name": "tile-54-23",
+    "box": [
+      848,
+      352,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-winter-ground-stone-192-240.png",
+    "placement": null,
+    "reviewId": "W277",
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-winter/grassland-winter-ground-stone-192-240.png"
+  },
+  {
+    "name": "tile-55-23",
+    "box": [
+      864,
+      352,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-winter-ground-stone-208-240.png",
+    "placement": null,
+    "reviewId": "W278",
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-winter/grassland-winter-ground-stone-208-240.png"
+  },
+  {
+    "name": "tile-57-23",
+    "box": [
+      896,
+      352,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-57-23",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W279"
+  },
+  {
+    "name": "tile-58-23",
+    "box": [
+      912,
+      352,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-winter-ground-stone-128-208.png",
+    "placement": null,
+    "reviewId": "W280",
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-winter/grassland-winter-ground-stone-128-208.png"
+  },
+  {
+    "name": "tile-59-23",
+    "box": [
+      928,
+      352,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-winter-ground-stone-144-208.png",
+    "placement": null,
+    "reviewId": "W281",
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-winter/grassland-winter-ground-stone-144-208.png"
+  },
+  {
+    "name": "tile-60-23",
+    "box": [
+      944,
+      352,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-winter-ground-stone-160-208.png",
+    "placement": null,
+    "reviewId": "W282",
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-winter/grassland-winter-ground-stone-160-208.png"
+  },
+  {
+    "name": "tile-61-23",
+    "box": [
+      960,
+      352,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-winter-ground-stone-224-208.png",
+    "placement": null,
+    "reviewId": "W283",
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-winter/grassland-winter-ground-stone-224-208.png"
+  },
+  {
+    "name": "tile-62-23",
+    "box": [
+      976,
+      352,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-winter-ground-stone-192-208.png",
+    "placement": null,
+    "reviewId": "W284",
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-winter/grassland-winter-ground-stone-192-208.png"
+  },
+  {
+    "name": "tile-63-23",
+    "box": [
+      992,
+      352,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-winter-ground-stone-208-208.png",
+    "placement": null,
+    "reviewId": "W285",
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-winter/grassland-winter-ground-stone-208-208.png"
+  },
+  {
+    "name": "tile-49-24",
+    "box": [
+      768,
+      368,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-49-24",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W286"
+  },
+  {
+    "name": "tile-50-24",
+    "box": [
+      784,
+      368,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-50-24",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W287"
+  },
+  {
+    "name": "tile-51-24",
+    "box": [
+      800,
+      368,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-51-24",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W288"
+  },
+  {
+    "name": "tile-52-24",
+    "box": [
+      816,
+      368,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-52-24",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W289"
+  },
+  {
+    "name": "tile-53-24",
+    "box": [
+      832,
+      368,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-53-24",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W290"
+  },
+  {
+    "name": "tile-54-24",
+    "box": [
+      848,
+      368,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-54-24",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W291"
+  },
+  {
+    "name": "tile-55-24",
+    "box": [
+      864,
+      368,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-55-24",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W292"
+  },
+  {
+    "name": "tile-57-24",
+    "box": [
+      896,
+      368,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-57-24",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W293"
+  },
+  {
+    "name": "tile-58-24",
+    "box": [
+      912,
+      368,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-58-24",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W294"
+  },
+  {
+    "name": "tile-59-24",
+    "box": [
+      928,
+      368,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-59-24",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W295"
+  },
+  {
+    "name": "tile-60-24",
+    "box": [
+      944,
+      368,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-60-24",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W296"
+  },
+  {
+    "name": "tile-61-24",
+    "box": [
+      960,
+      368,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-61-24",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W297"
+  },
+  {
+    "name": "tile-62-24",
+    "box": [
+      976,
+      368,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-62-24",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W298"
+  },
+  {
+    "name": "tile-63-24",
+    "box": [
+      992,
+      368,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-63-24",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "W299"
+  }
+]

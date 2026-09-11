@@ -1,0 +1,18 @@
+[
+  {"name":"spark-a-0","box":[0,0,48,48],"kind":"anim-frame","group":"spark-a","frame":0,"notes":"FX spark. Cols 0-2 identical; bottom half duplicates top.","placement":null},
+  {"name":"spark-a-1","box":[144,0,48,48],"kind":"anim-frame","group":"spark-a","frame":1,"notes":"FX spark frame 1. Cols 3-5 identical.","placement":null},
+  {"name":"spark-b-0","box":[0,48,48,48],"kind":"anim-frame","group":"spark-b","frame":0,"notes":"FX spark. Cols 0-2 identical; bottom half duplicates top.","placement":null},
+  {"name":"spark-b-1","box":[144,48,48,48],"kind":"anim-frame","group":"spark-b","frame":1,"notes":"FX spark frame 1. Cols 3-5 identical.","placement":null},
+  {"name":"spark-c-0","box":[0,96,48,48],"kind":"anim-frame","group":"spark-c","frame":0,"notes":"FX spark. Cols 0-2 identical; bottom half duplicates top.","placement":null},
+  {"name":"spark-c-1","box":[144,96,48,48],"kind":"anim-frame","group":"spark-c","frame":1,"notes":"FX spark frame 1. Cols 3-5 identical.","placement":null},
+  {"name":"spark-d-0","box":[0,144,48,48],"kind":"anim-frame","group":"spark-d","frame":0,"notes":"FX spark. Cols 0-2 identical; bottom half duplicates top.","placement":null},
+  {"name":"spark-d-1","box":[144,144,48,48],"kind":"anim-frame","group":"spark-d","frame":1,"notes":"FX spark frame 1. Cols 3-5 identical.","placement":null},
+  {"name":"sliding-door-0","box":[288,0,48,48],"kind":"anim-frame","group":"sliding-door","frame":0,"notes":"Door sliding up. 4 frames. 3 RM columns are copies. Bottom half copies top.","placement":null},
+  {"name":"sliding-door-1","box":[288,48,48,48],"kind":"anim-frame","group":"sliding-door","frame":1,"notes":"Door sliding up. 4 frames. 3 RM columns are copies. Bottom half copies top.","placement":null},
+  {"name":"sliding-door-2","box":[288,96,48,48],"kind":"anim-frame","group":"sliding-door","frame":2,"notes":"Door sliding up. 4 frames. 3 RM columns are copies. Bottom half copies top.","placement":null},
+  {"name":"sliding-door-3","box":[288,144,48,48],"kind":"anim-frame","group":"sliding-door","frame":3,"notes":"Door sliding up. 4 frames. 3 RM columns are copies. Bottom half copies top.","placement":null},
+  {"name":"gate-strip-0","box":[432,0,48,48],"kind":"anim-frame","group":"gate-strip","frame":0,"notes":"Gate/fence strip. 3 columns identical. 0=bars, 3=open.","placement":null},
+  {"name":"gate-strip-1","box":[432,48,48,48],"kind":"anim-frame","group":"gate-strip","frame":1,"notes":"Gate/fence strip. 3 columns identical. 0=bars, 3=open.","placement":null},
+  {"name":"gate-strip-2","box":[432,96,48,48],"kind":"anim-frame","group":"gate-strip","frame":2,"notes":"Gate/fence strip. 3 columns identical. 0=bars, 3=open.","placement":null},
+  {"name":"gate-strip-3","box":[432,144,48,48],"kind":"anim-frame","group":"gate-strip","frame":3,"notes":"Gate/fence strip. 3 columns identical. 0=bars, 3=open.","placement":null}
+]

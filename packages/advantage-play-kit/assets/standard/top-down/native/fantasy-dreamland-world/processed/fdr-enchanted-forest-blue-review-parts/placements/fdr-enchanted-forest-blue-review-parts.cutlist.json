@@ -1,0 +1,2778 @@
+[
+  {
+    "name": "palette-1-mushroom-small-1-1",
+    "box": [
+      0,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-1-mushroom-small-1-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B01"
+  },
+  {
+    "name": "palette-1-mushroom-small-2-1",
+    "box": [
+      16,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-1-mushroom-small-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B02"
+  },
+  {
+    "name": "palette-1-mushroom-small-3-1",
+    "box": [
+      32,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-1-mushroom-small-3-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B03"
+  },
+  {
+    "name": "palette-1-mushroom-small-4-1",
+    "box": [
+      48,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-1-mushroom-small-4-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B04"
+  },
+  {
+    "name": "palette-1-mushroom-small-1-2",
+    "box": [
+      0,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-1-mushroom-small-1-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B05"
+  },
+  {
+    "name": "palette-1-mushroom-small-2-2",
+    "box": [
+      16,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-1-mushroom-small-2-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B06"
+  },
+  {
+    "name": "palette-1-mushroom-small-3-2",
+    "box": [
+      32,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-1-mushroom-small-3-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B07"
+  },
+  {
+    "name": "palette-1-mushroom-small-4-2",
+    "box": [
+      48,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-1-mushroom-small-4-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B08"
+  },
+  {
+    "name": "palette-1-mushroom-cluster-0-48",
+    "box": [
+      0,
+      48,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "palette-1-mushroom-cluster-0-48",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B09"
+  },
+  {
+    "name": "palette-1-ground-overlay-0-48",
+    "box": [
+      0,
+      80,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-1-ground-overlay-0-48",
+    "frame": null,
+    "notes": "The source overlay has a flat top. Preserve this edge.",
+    "placement": null,
+    "reviewId": "B10",
+    "reviewChanged": true
+  },
+  {
+    "name": "palette-1-mushroom-cluster-32-48",
+    "box": [
+      32,
+      48,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "palette-1-mushroom-cluster-32-48",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B11"
+  },
+  {
+    "name": "palette-1-ground-overlay-32-48",
+    "box": [
+      32,
+      80,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-1-ground-overlay-32-48",
+    "frame": null,
+    "notes": "The source overlay has a flat top. Preserve this edge.",
+    "placement": null,
+    "reviewId": "B12",
+    "reviewChanged": true
+  },
+  {
+    "name": "palette-1-mushroom-cluster-0-96",
+    "box": [
+      0,
+      96,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "palette-1-mushroom-cluster-0-96",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B13"
+  },
+  {
+    "name": "palette-1-ground-overlay-0-96",
+    "box": [
+      0,
+      128,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-1-ground-overlay-0-96",
+    "frame": null,
+    "notes": "The source overlay has a flat top. Preserve this edge.",
+    "placement": null,
+    "reviewId": "B14",
+    "reviewChanged": true
+  },
+  {
+    "name": "palette-1-mushroom-cluster-32-96",
+    "box": [
+      32,
+      96,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "palette-1-mushroom-cluster-32-96",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B15"
+  },
+  {
+    "name": "palette-1-ground-overlay-32-96",
+    "box": [
+      32,
+      128,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-1-ground-overlay-32-96",
+    "frame": null,
+    "notes": "The source overlay has a flat top. Preserve this edge.",
+    "placement": null,
+    "reviewId": "B16",
+    "reviewChanged": true
+  },
+  {
+    "name": "palette-1-house-wide-left-a",
+    "box": [
+      64,
+      0,
+      96,
+      96
+    ],
+    "kind": "part",
+    "group": "palette-1-house-wide-left-a",
+    "frame": null,
+    "notes": "Preserve the complete mushroom house.",
+    "placement": null,
+    "reviewId": "B17a",
+    "reviewChanged": true
+  },
+  {
+    "name": "palette-1-house-wide-left-b",
+    "box": [
+      64,
+      96,
+      96,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-1-house-wide-left-b",
+    "frame": null,
+    "notes": "Separate house base overlay with mushrooms. Preserve its flat top edge.",
+    "placement": null,
+    "reviewId": "B17b",
+    "reviewChanged": true
+  },
+  {
+    "name": "palette-1-house-wide-right-a",
+    "box": [
+      160,
+      0,
+      96,
+      96
+    ],
+    "kind": "part",
+    "group": "palette-1-house-wide-right-a",
+    "frame": null,
+    "notes": "Preserve the complete mushroom house.",
+    "placement": null,
+    "reviewId": "B18a",
+    "reviewChanged": true
+  },
+  {
+    "name": "palette-1-house-wide-right-b",
+    "box": [
+      160,
+      96,
+      96,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-1-house-wide-right-b",
+    "frame": null,
+    "notes": "Separate house base overlay with mushrooms. Preserve its flat top edge.",
+    "placement": null,
+    "reviewId": "B18b",
+    "reviewChanged": true
+  },
+  {
+    "name": "palette-1-roof-left",
+    "box": [
+      64,
+      112,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "palette-1-roof-left",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B19"
+  },
+  {
+    "name": "palette-1-roof-right",
+    "box": [
+      128,
+      112,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "palette-1-roof-right",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B20"
+  },
+  {
+    "name": "palette-1-roof-small-top",
+    "box": [
+      160,
+      144,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "palette-1-roof-small-top",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B21"
+  },
+  {
+    "name": "palette-1-roof-small-bottom",
+    "box": [
+      160,
+      176,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "palette-1-roof-small-bottom",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B22"
+  },
+  {
+    "name": "palette-1-house-small-left-a",
+    "box": [
+      0,
+      144,
+      80,
+      96
+    ],
+    "kind": "part",
+    "group": "palette-1-house-small-left-a",
+    "frame": null,
+    "notes": "Preserve the complete mushroom house.",
+    "placement": null,
+    "reviewId": "B23a",
+    "reviewChanged": true
+  },
+  {
+    "name": "palette-1-house-small-left-b",
+    "box": [
+      0,
+      240,
+      80,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-1-house-small-left-b",
+    "frame": null,
+    "notes": "Separate house base overlay with mushrooms. Preserve its flat top edge.",
+    "placement": null,
+    "reviewId": "B23b",
+    "reviewChanged": true
+  },
+  {
+    "name": "palette-1-house-small-right-a",
+    "box": [
+      80,
+      144,
+      80,
+      96
+    ],
+    "kind": "part",
+    "group": "palette-1-house-small-right-a",
+    "frame": null,
+    "notes": "Preserve the complete mushroom house.",
+    "placement": null,
+    "reviewId": "B24a",
+    "reviewChanged": true
+  },
+  {
+    "name": "palette-1-house-small-right-b",
+    "box": [
+      80,
+      240,
+      80,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-1-house-small-right-b",
+    "frame": null,
+    "notes": "Separate house base overlay with mushrooms. Preserve its flat top edge.",
+    "placement": null,
+    "reviewId": "B24b",
+    "reviewChanged": true
+  },
+  {
+    "name": "palette-1-mushroom-top-left",
+    "box": [
+      192,
+      144,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "palette-1-mushroom-top-left",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B25"
+  },
+  {
+    "name": "palette-1-mushroom-top-right",
+    "box": [
+      224,
+      128,
+      32,
+      48
+    ],
+    "kind": "part",
+    "group": "palette-1-mushroom-top-right",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B26"
+  },
+  {
+    "name": "palette-1-mushroom-bottom-left",
+    "box": [
+      192,
+      192,
+      32,
+      48
+    ],
+    "kind": "part",
+    "group": "palette-1-mushroom-bottom-left",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B27"
+  },
+  {
+    "name": "palette-1-mushroom-bottom-right",
+    "box": [
+      224,
+      192,
+      32,
+      48
+    ],
+    "kind": "part",
+    "group": "palette-1-mushroom-bottom-right",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B28"
+  },
+  {
+    "name": "palette-1-treasure-1-1",
+    "box": [
+      160,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-1-treasure-1-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B29"
+  },
+  {
+    "name": "palette-1-treasure-2-1",
+    "box": [
+      176,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-1-treasure-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B30"
+  },
+  {
+    "name": "palette-1-treasure-1-2",
+    "box": [
+      160,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-1-treasure-1-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B31"
+  },
+  {
+    "name": "palette-1-treasure-2-2",
+    "box": [
+      176,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-1-treasure-2-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B32"
+  },
+  {
+    "name": "palette-1-mushroom-overlay-192-176",
+    "box": [
+      192,
+      176,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-1-mushroom-overlay-192-176",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B33"
+  },
+  {
+    "name": "palette-1-mushroom-overlay-224-176",
+    "box": [
+      224,
+      176,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-1-mushroom-overlay-224-176",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B34"
+  },
+  {
+    "name": "palette-1-mushroom-overlay-192-240",
+    "box": [
+      192,
+      240,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-1-mushroom-overlay-192-240",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B35"
+  },
+  {
+    "name": "palette-1-mushroom-overlay-224-240",
+    "box": [
+      224,
+      240,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-1-mushroom-overlay-224-240",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B36"
+  },
+  {
+    "name": "palette-1-flowers-1-1",
+    "box": [
+      160,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-1-flowers-1-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B37"
+  },
+  {
+    "name": "palette-1-flowers-2-1",
+    "box": [
+      176,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-1-flowers-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B38"
+  },
+  {
+    "name": "palette-1-flowers-3-1",
+    "box": [
+      192,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-1-flowers-3-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B39"
+  },
+  {
+    "name": "palette-1-flowers-4-1",
+    "box": [
+      208,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-1-flowers-4-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B40"
+  },
+  {
+    "name": "palette-1-flowers-5-1",
+    "box": [
+      224,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-1-flowers-5-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B41"
+  },
+  {
+    "name": "palette-1-flowers-6-1",
+    "box": [
+      240,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-1-flowers-6-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B42"
+  },
+  {
+    "name": "palette-2-mushroom-small-1-1",
+    "box": [
+      256,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-2-mushroom-small-1-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B43"
+  },
+  {
+    "name": "palette-2-mushroom-small-2-1",
+    "box": [
+      272,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-2-mushroom-small-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B44"
+  },
+  {
+    "name": "palette-2-mushroom-small-3-1",
+    "box": [
+      288,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-2-mushroom-small-3-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B45"
+  },
+  {
+    "name": "palette-2-mushroom-small-4-1",
+    "box": [
+      304,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-2-mushroom-small-4-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B46"
+  },
+  {
+    "name": "palette-2-mushroom-small-1-2",
+    "box": [
+      256,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-2-mushroom-small-1-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B47"
+  },
+  {
+    "name": "palette-2-mushroom-small-2-2",
+    "box": [
+      272,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-2-mushroom-small-2-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B48"
+  },
+  {
+    "name": "palette-2-mushroom-small-3-2",
+    "box": [
+      288,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-2-mushroom-small-3-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B49"
+  },
+  {
+    "name": "palette-2-mushroom-small-4-2",
+    "box": [
+      304,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-2-mushroom-small-4-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B50"
+  },
+  {
+    "name": "palette-2-mushroom-cluster-0-48",
+    "box": [
+      256,
+      48,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "palette-2-mushroom-cluster-0-48",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B51"
+  },
+  {
+    "name": "palette-2-ground-overlay-0-48",
+    "box": [
+      256,
+      80,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-2-ground-overlay-0-48",
+    "frame": null,
+    "notes": "The source overlay has a flat top. Preserve this edge.",
+    "placement": null,
+    "reviewId": "B52",
+    "reviewChanged": true
+  },
+  {
+    "name": "palette-2-mushroom-cluster-32-48",
+    "box": [
+      288,
+      48,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "palette-2-mushroom-cluster-32-48",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B53"
+  },
+  {
+    "name": "palette-2-ground-overlay-32-48",
+    "box": [
+      288,
+      80,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-2-ground-overlay-32-48",
+    "frame": null,
+    "notes": "The source overlay has a flat top. Preserve this edge.",
+    "placement": null,
+    "reviewId": "B54",
+    "reviewChanged": true
+  },
+  {
+    "name": "palette-2-mushroom-cluster-0-96",
+    "box": [
+      256,
+      96,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "palette-2-mushroom-cluster-0-96",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B55"
+  },
+  {
+    "name": "palette-2-ground-overlay-0-96",
+    "box": [
+      256,
+      128,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-2-ground-overlay-0-96",
+    "frame": null,
+    "notes": "The source overlay has a flat top. Preserve this edge.",
+    "placement": null,
+    "reviewId": "B56",
+    "reviewChanged": true
+  },
+  {
+    "name": "palette-2-mushroom-cluster-32-96",
+    "box": [
+      288,
+      96,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "palette-2-mushroom-cluster-32-96",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B57"
+  },
+  {
+    "name": "palette-2-ground-overlay-32-96",
+    "box": [
+      288,
+      128,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-2-ground-overlay-32-96",
+    "frame": null,
+    "notes": "The source overlay has a flat top. Preserve this edge.",
+    "placement": null,
+    "reviewId": "B58",
+    "reviewChanged": true
+  },
+  {
+    "name": "palette-2-house-wide-left-a",
+    "box": [
+      320,
+      0,
+      96,
+      96
+    ],
+    "kind": "part",
+    "group": "palette-2-house-wide-left-a",
+    "frame": null,
+    "notes": "Preserve the complete mushroom house.",
+    "placement": null,
+    "reviewId": "B59a",
+    "reviewChanged": true
+  },
+  {
+    "name": "palette-2-house-wide-left-b",
+    "box": [
+      320,
+      96,
+      96,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-2-house-wide-left-b",
+    "frame": null,
+    "notes": "Separate house base overlay with mushrooms. Preserve its flat top edge.",
+    "placement": null,
+    "reviewId": "B59b",
+    "reviewChanged": true
+  },
+  {
+    "name": "palette-2-house-wide-right-a",
+    "box": [
+      416,
+      0,
+      96,
+      96
+    ],
+    "kind": "part",
+    "group": "palette-2-house-wide-right-a",
+    "frame": null,
+    "notes": "Preserve the complete mushroom house.",
+    "placement": null,
+    "reviewId": "B60a",
+    "reviewChanged": true
+  },
+  {
+    "name": "palette-2-house-wide-right-b",
+    "box": [
+      416,
+      96,
+      96,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-2-house-wide-right-b",
+    "frame": null,
+    "notes": "Separate house base overlay with mushrooms. Preserve its flat top edge.",
+    "placement": null,
+    "reviewId": "B60b",
+    "reviewChanged": true
+  },
+  {
+    "name": "palette-2-roof-left",
+    "box": [
+      320,
+      112,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "palette-2-roof-left",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B61"
+  },
+  {
+    "name": "palette-2-roof-right",
+    "box": [
+      384,
+      112,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "palette-2-roof-right",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B62"
+  },
+  {
+    "name": "palette-2-roof-small-top",
+    "box": [
+      416,
+      144,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "palette-2-roof-small-top",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B63"
+  },
+  {
+    "name": "palette-2-roof-small-bottom",
+    "box": [
+      416,
+      176,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "palette-2-roof-small-bottom",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B64"
+  },
+  {
+    "name": "palette-2-house-small-left-a",
+    "box": [
+      256,
+      144,
+      80,
+      96
+    ],
+    "kind": "part",
+    "group": "palette-2-house-small-left-a",
+    "frame": null,
+    "notes": "Preserve the complete mushroom house.",
+    "placement": null,
+    "reviewId": "B65a",
+    "reviewChanged": true
+  },
+  {
+    "name": "palette-2-house-small-left-b",
+    "box": [
+      256,
+      240,
+      80,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-2-house-small-left-b",
+    "frame": null,
+    "notes": "Separate house base overlay with mushrooms. Preserve its flat top edge.",
+    "placement": null,
+    "reviewId": "B65b",
+    "reviewChanged": true
+  },
+  {
+    "name": "palette-2-house-small-right-a",
+    "box": [
+      336,
+      144,
+      80,
+      96
+    ],
+    "kind": "part",
+    "group": "palette-2-house-small-right-a",
+    "frame": null,
+    "notes": "Preserve the complete mushroom house.",
+    "placement": null,
+    "reviewId": "B66a",
+    "reviewChanged": true
+  },
+  {
+    "name": "palette-2-house-small-right-b",
+    "box": [
+      336,
+      240,
+      80,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-2-house-small-right-b",
+    "frame": null,
+    "notes": "Separate house base overlay with mushrooms. Preserve its flat top edge.",
+    "placement": null,
+    "reviewId": "B66b",
+    "reviewChanged": true
+  },
+  {
+    "name": "palette-2-mushroom-top-left",
+    "box": [
+      448,
+      144,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "palette-2-mushroom-top-left",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B67"
+  },
+  {
+    "name": "palette-2-mushroom-top-right",
+    "box": [
+      480,
+      128,
+      32,
+      48
+    ],
+    "kind": "part",
+    "group": "palette-2-mushroom-top-right",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B68"
+  },
+  {
+    "name": "palette-2-mushroom-bottom-left",
+    "box": [
+      448,
+      192,
+      32,
+      48
+    ],
+    "kind": "part",
+    "group": "palette-2-mushroom-bottom-left",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B69"
+  },
+  {
+    "name": "palette-2-mushroom-bottom-right",
+    "box": [
+      480,
+      192,
+      32,
+      48
+    ],
+    "kind": "part",
+    "group": "palette-2-mushroom-bottom-right",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B70"
+  },
+  {
+    "name": "palette-2-treasure-1-1",
+    "box": [
+      416,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse B29. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "B71",
+    "reuseProposal": {
+      "sheetId": "B",
+      "reviewId": "B29",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-enchanted-forest-blue-source-9aaa4d915936.png",
+      "box": [
+        160,
+        224,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "palette-2-treasure-2-1",
+    "box": [
+      432,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse B30. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "B72",
+    "reuseProposal": {
+      "sheetId": "B",
+      "reviewId": "B30",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-enchanted-forest-blue-source-9aaa4d915936.png",
+      "box": [
+        176,
+        224,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "palette-2-treasure-1-2",
+    "box": [
+      416,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse B31. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "B73",
+    "reuseProposal": {
+      "sheetId": "B",
+      "reviewId": "B31",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-enchanted-forest-blue-source-9aaa4d915936.png",
+      "box": [
+        160,
+        240,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "palette-2-treasure-2-2",
+    "box": [
+      432,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse B32. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "B74",
+    "reuseProposal": {
+      "sheetId": "B",
+      "reviewId": "B32",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-enchanted-forest-blue-source-9aaa4d915936.png",
+      "box": [
+        176,
+        240,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "palette-2-mushroom-overlay-192-176",
+    "box": [
+      448,
+      176,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-2-mushroom-overlay-192-176",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B75"
+  },
+  {
+    "name": "palette-2-mushroom-overlay-224-176",
+    "box": [
+      480,
+      176,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-2-mushroom-overlay-224-176",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B76"
+  },
+  {
+    "name": "palette-2-mushroom-overlay-192-240",
+    "box": [
+      448,
+      240,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-2-mushroom-overlay-192-240",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B77"
+  },
+  {
+    "name": "palette-2-mushroom-overlay-224-240",
+    "box": [
+      480,
+      240,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-2-mushroom-overlay-224-240",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B78"
+  },
+  {
+    "name": "palette-2-flowers-1-1",
+    "box": [
+      416,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse B37. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "B79",
+    "reuseProposal": {
+      "sheetId": "B",
+      "reviewId": "B37",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-enchanted-forest-blue-source-9aaa4d915936.png",
+      "box": [
+        160,
+        112,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "palette-2-flowers-2-1",
+    "box": [
+      432,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse B38. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "B80",
+    "reuseProposal": {
+      "sheetId": "B",
+      "reviewId": "B38",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-enchanted-forest-blue-source-9aaa4d915936.png",
+      "box": [
+        176,
+        112,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "palette-2-flowers-3-1",
+    "box": [
+      448,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse B39. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "B81",
+    "reuseProposal": {
+      "sheetId": "B",
+      "reviewId": "B39",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-enchanted-forest-blue-source-9aaa4d915936.png",
+      "box": [
+        192,
+        112,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "palette-2-flowers-4-1",
+    "box": [
+      464,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse B40. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "B82",
+    "reuseProposal": {
+      "sheetId": "B",
+      "reviewId": "B40",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-enchanted-forest-blue-source-9aaa4d915936.png",
+      "box": [
+        208,
+        112,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "palette-2-flowers-5-1",
+    "box": [
+      480,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse B41. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "B83",
+    "reuseProposal": {
+      "sheetId": "B",
+      "reviewId": "B41",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-enchanted-forest-blue-source-9aaa4d915936.png",
+      "box": [
+        224,
+        112,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "palette-2-flowers-6-1",
+    "box": [
+      496,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse B42. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "B84",
+    "reuseProposal": {
+      "sheetId": "B",
+      "reviewId": "B42",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-enchanted-forest-blue-source-9aaa4d915936.png",
+      "box": [
+        240,
+        112,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "palette-3-mushroom-small-1-1",
+    "box": [
+      0,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-3-mushroom-small-1-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B85"
+  },
+  {
+    "name": "palette-3-mushroom-small-2-1",
+    "box": [
+      16,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-3-mushroom-small-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B86"
+  },
+  {
+    "name": "palette-3-mushroom-small-3-1",
+    "box": [
+      32,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-3-mushroom-small-3-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B87"
+  },
+  {
+    "name": "palette-3-mushroom-small-4-1",
+    "box": [
+      48,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-3-mushroom-small-4-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B88"
+  },
+  {
+    "name": "palette-3-mushroom-small-1-2",
+    "box": [
+      0,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-3-mushroom-small-1-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B89"
+  },
+  {
+    "name": "palette-3-mushroom-small-2-2",
+    "box": [
+      16,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-3-mushroom-small-2-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B90"
+  },
+  {
+    "name": "palette-3-mushroom-small-3-2",
+    "box": [
+      32,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-3-mushroom-small-3-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B91"
+  },
+  {
+    "name": "palette-3-mushroom-small-4-2",
+    "box": [
+      48,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-3-mushroom-small-4-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B92"
+  },
+  {
+    "name": "palette-3-mushroom-cluster-0-48",
+    "box": [
+      0,
+      304,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "palette-3-mushroom-cluster-0-48",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B93"
+  },
+  {
+    "name": "palette-3-ground-overlay-0-48",
+    "box": [
+      0,
+      336,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-3-ground-overlay-0-48",
+    "frame": null,
+    "notes": "The source overlay has a flat top. Preserve this edge.",
+    "placement": null,
+    "reviewId": "B94",
+    "reviewChanged": true
+  },
+  {
+    "name": "palette-3-mushroom-cluster-32-48",
+    "box": [
+      32,
+      304,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "palette-3-mushroom-cluster-32-48",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B95"
+  },
+  {
+    "name": "palette-3-ground-overlay-32-48",
+    "box": [
+      32,
+      336,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-3-ground-overlay-32-48",
+    "frame": null,
+    "notes": "The source overlay has a flat top. Preserve this edge.",
+    "placement": null,
+    "reviewId": "B96",
+    "reviewChanged": true
+  },
+  {
+    "name": "palette-3-mushroom-cluster-0-96",
+    "box": [
+      0,
+      352,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "palette-3-mushroom-cluster-0-96",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B97"
+  },
+  {
+    "name": "palette-3-ground-overlay-0-96",
+    "box": [
+      0,
+      384,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-3-ground-overlay-0-96",
+    "frame": null,
+    "notes": "The source overlay has a flat top. Preserve this edge.",
+    "placement": null,
+    "reviewId": "B98",
+    "reviewChanged": true
+  },
+  {
+    "name": "palette-3-mushroom-cluster-32-96",
+    "box": [
+      32,
+      352,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "palette-3-mushroom-cluster-32-96",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B99"
+  },
+  {
+    "name": "palette-3-ground-overlay-32-96",
+    "box": [
+      32,
+      384,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-3-ground-overlay-32-96",
+    "frame": null,
+    "notes": "The source overlay has a flat top. Preserve this edge.",
+    "placement": null,
+    "reviewId": "B100",
+    "reviewChanged": true
+  },
+  {
+    "name": "palette-3-house-wide-left-a",
+    "box": [
+      64,
+      256,
+      96,
+      96
+    ],
+    "kind": "part",
+    "group": "palette-3-house-wide-left-a",
+    "frame": null,
+    "notes": "Preserve the complete mushroom house.",
+    "placement": null,
+    "reviewId": "B101a",
+    "reviewChanged": true
+  },
+  {
+    "name": "palette-3-house-wide-left-b",
+    "box": [
+      64,
+      352,
+      96,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-3-house-wide-left-b",
+    "frame": null,
+    "notes": "Separate house base overlay with mushrooms. Preserve its flat top edge.",
+    "placement": null,
+    "reviewId": "B101b",
+    "reviewChanged": true
+  },
+  {
+    "name": "palette-3-house-wide-right-a",
+    "box": [
+      160,
+      256,
+      96,
+      96
+    ],
+    "kind": "part",
+    "group": "palette-3-house-wide-right-a",
+    "frame": null,
+    "notes": "Preserve the complete mushroom house.",
+    "placement": null,
+    "reviewId": "B102a",
+    "reviewChanged": true
+  },
+  {
+    "name": "palette-3-house-wide-right-b",
+    "box": [
+      160,
+      352,
+      96,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-3-house-wide-right-b",
+    "frame": null,
+    "notes": "Separate house base overlay with mushrooms. Preserve its flat top edge.",
+    "placement": null,
+    "reviewId": "B102b",
+    "reviewChanged": true
+  },
+  {
+    "name": "palette-3-roof-left",
+    "box": [
+      64,
+      368,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "palette-3-roof-left",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B103"
+  },
+  {
+    "name": "palette-3-roof-right",
+    "box": [
+      128,
+      368,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "palette-3-roof-right",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B104"
+  },
+  {
+    "name": "palette-3-roof-small-top",
+    "box": [
+      160,
+      400,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "palette-3-roof-small-top",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B105"
+  },
+  {
+    "name": "palette-3-roof-small-bottom",
+    "box": [
+      160,
+      432,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "palette-3-roof-small-bottom",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B106"
+  },
+  {
+    "name": "palette-3-house-small-left-a",
+    "box": [
+      0,
+      400,
+      80,
+      96
+    ],
+    "kind": "part",
+    "group": "palette-3-house-small-left-a",
+    "frame": null,
+    "notes": "Preserve the complete mushroom house.",
+    "placement": null,
+    "reviewId": "B107a",
+    "reviewChanged": true
+  },
+  {
+    "name": "palette-3-house-small-left-b",
+    "box": [
+      0,
+      496,
+      80,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-3-house-small-left-b",
+    "frame": null,
+    "notes": "Separate house base overlay with mushrooms. Preserve its flat top edge.",
+    "placement": null,
+    "reviewId": "B107b",
+    "reviewChanged": true
+  },
+  {
+    "name": "palette-3-house-small-right-a",
+    "box": [
+      80,
+      400,
+      80,
+      96
+    ],
+    "kind": "part",
+    "group": "palette-3-house-small-right-a",
+    "frame": null,
+    "notes": "Preserve the complete mushroom house.",
+    "placement": null,
+    "reviewId": "B108a",
+    "reviewChanged": true
+  },
+  {
+    "name": "palette-3-house-small-right-b",
+    "box": [
+      80,
+      496,
+      80,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-3-house-small-right-b",
+    "frame": null,
+    "notes": "Separate house base overlay with mushrooms. Preserve its flat top edge.",
+    "placement": null,
+    "reviewId": "B108b",
+    "reviewChanged": true
+  },
+  {
+    "name": "palette-3-mushroom-top-left",
+    "box": [
+      192,
+      400,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "palette-3-mushroom-top-left",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B109"
+  },
+  {
+    "name": "palette-3-mushroom-top-right",
+    "box": [
+      224,
+      384,
+      32,
+      48
+    ],
+    "kind": "part",
+    "group": "palette-3-mushroom-top-right",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B110"
+  },
+  {
+    "name": "palette-3-mushroom-bottom-left",
+    "box": [
+      192,
+      448,
+      32,
+      48
+    ],
+    "kind": "part",
+    "group": "palette-3-mushroom-bottom-left",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B111"
+  },
+  {
+    "name": "palette-3-mushroom-bottom-right",
+    "box": [
+      224,
+      448,
+      32,
+      48
+    ],
+    "kind": "part",
+    "group": "palette-3-mushroom-bottom-right",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B112"
+  },
+  {
+    "name": "palette-3-treasure-1-1",
+    "box": [
+      160,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse B29. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "B113",
+    "reuseProposal": {
+      "sheetId": "B",
+      "reviewId": "B29",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-enchanted-forest-blue-source-9aaa4d915936.png",
+      "box": [
+        160,
+        224,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "palette-3-treasure-2-1",
+    "box": [
+      176,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse B30. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "B114",
+    "reuseProposal": {
+      "sheetId": "B",
+      "reviewId": "B30",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-enchanted-forest-blue-source-9aaa4d915936.png",
+      "box": [
+        176,
+        224,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "palette-3-treasure-1-2",
+    "box": [
+      160,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse B31. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "B115",
+    "reuseProposal": {
+      "sheetId": "B",
+      "reviewId": "B31",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-enchanted-forest-blue-source-9aaa4d915936.png",
+      "box": [
+        160,
+        240,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "palette-3-treasure-2-2",
+    "box": [
+      176,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse B32. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "B116",
+    "reuseProposal": {
+      "sheetId": "B",
+      "reviewId": "B32",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-enchanted-forest-blue-source-9aaa4d915936.png",
+      "box": [
+        176,
+        240,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "palette-3-mushroom-overlay-192-176",
+    "box": [
+      192,
+      432,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-3-mushroom-overlay-192-176",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B117"
+  },
+  {
+    "name": "palette-3-mushroom-overlay-224-176",
+    "box": [
+      224,
+      432,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-3-mushroom-overlay-224-176",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B118"
+  },
+  {
+    "name": "palette-3-mushroom-overlay-192-240",
+    "box": [
+      192,
+      496,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-3-mushroom-overlay-192-240",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B119"
+  },
+  {
+    "name": "palette-3-mushroom-overlay-224-240",
+    "box": [
+      224,
+      496,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "palette-3-mushroom-overlay-224-240",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B120"
+  },
+  {
+    "name": "palette-3-flowers-1-1",
+    "box": [
+      160,
+      368,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse B37. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "B121",
+    "reuseProposal": {
+      "sheetId": "B",
+      "reviewId": "B37",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-enchanted-forest-blue-source-9aaa4d915936.png",
+      "box": [
+        160,
+        112,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "palette-3-flowers-2-1",
+    "box": [
+      176,
+      368,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse B38. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "B122",
+    "reuseProposal": {
+      "sheetId": "B",
+      "reviewId": "B38",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-enchanted-forest-blue-source-9aaa4d915936.png",
+      "box": [
+        176,
+        112,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "palette-3-flowers-3-1",
+    "box": [
+      192,
+      368,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse B39. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "B123",
+    "reuseProposal": {
+      "sheetId": "B",
+      "reviewId": "B39",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-enchanted-forest-blue-source-9aaa4d915936.png",
+      "box": [
+        192,
+        112,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "palette-3-flowers-4-1",
+    "box": [
+      208,
+      368,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse B40. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "B124",
+    "reuseProposal": {
+      "sheetId": "B",
+      "reviewId": "B40",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-enchanted-forest-blue-source-9aaa4d915936.png",
+      "box": [
+        208,
+        112,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "palette-3-flowers-5-1",
+    "box": [
+      224,
+      368,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse B41. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "B125",
+    "reuseProposal": {
+      "sheetId": "B",
+      "reviewId": "B41",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-enchanted-forest-blue-source-9aaa4d915936.png",
+      "box": [
+        224,
+        112,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "palette-3-flowers-6-1",
+    "box": [
+      240,
+      368,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse B42. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "B126",
+    "reuseProposal": {
+      "sheetId": "B",
+      "reviewId": "B42",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-enchanted-forest-blue-source-9aaa4d915936.png",
+      "box": [
+        240,
+        112,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "mushroom-1-variant-1",
+    "box": [
+      256,
+      256,
+      48,
+      64
+    ],
+    "kind": "part",
+    "group": "mushroom-1-variant-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B127"
+  },
+  {
+    "name": "mushroom-1-overlay-1",
+    "box": [
+      256,
+      320,
+      48,
+      16
+    ],
+    "kind": "part",
+    "group": "mushroom-1-overlay-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B128"
+  },
+  {
+    "name": "mushroom-1-variant-2",
+    "box": [
+      304,
+      256,
+      48,
+      64
+    ],
+    "kind": "part",
+    "group": "mushroom-1-variant-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B129"
+  },
+  {
+    "name": "mushroom-1-overlay-2",
+    "box": [
+      304,
+      320,
+      48,
+      16
+    ],
+    "kind": "part",
+    "group": "mushroom-1-overlay-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B130"
+  },
+  {
+    "name": "mushroom-1-variant-3",
+    "box": [
+      352,
+      256,
+      48,
+      64
+    ],
+    "kind": "part",
+    "group": "mushroom-1-variant-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B131"
+  },
+  {
+    "name": "mushroom-1-overlay-3",
+    "box": [
+      352,
+      320,
+      48,
+      16
+    ],
+    "kind": "part",
+    "group": "mushroom-1-overlay-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B132"
+  },
+  {
+    "name": "mushroom-1-variant-4",
+    "box": [
+      400,
+      256,
+      48,
+      64
+    ],
+    "kind": "part",
+    "group": "mushroom-1-variant-4",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B133"
+  },
+  {
+    "name": "mushroom-1-overlay-4",
+    "box": [
+      400,
+      320,
+      48,
+      16
+    ],
+    "kind": "part",
+    "group": "mushroom-1-overlay-4",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B134"
+  },
+  {
+    "name": "mushroom-1-variant-5",
+    "box": [
+      448,
+      256,
+      48,
+      64
+    ],
+    "kind": "part",
+    "group": "mushroom-1-variant-5",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B135"
+  },
+  {
+    "name": "mushroom-1-overlay-5",
+    "box": [
+      448,
+      320,
+      48,
+      16
+    ],
+    "kind": "part",
+    "group": "mushroom-1-overlay-5",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B136"
+  },
+  {
+    "name": "mushroom-2-variant-1",
+    "box": [
+      256,
+      336,
+      48,
+      64
+    ],
+    "kind": "part",
+    "group": "mushroom-2-variant-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B137"
+  },
+  {
+    "name": "mushroom-2-overlay-1",
+    "box": [
+      256,
+      400,
+      48,
+      16
+    ],
+    "kind": "part",
+    "group": "mushroom-2-overlay-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B138"
+  },
+  {
+    "name": "mushroom-2-variant-2",
+    "box": [
+      304,
+      336,
+      48,
+      64
+    ],
+    "kind": "part",
+    "group": "mushroom-2-variant-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B139"
+  },
+  {
+    "name": "mushroom-2-overlay-2",
+    "box": [
+      304,
+      400,
+      48,
+      16
+    ],
+    "kind": "part",
+    "group": "mushroom-2-overlay-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B140"
+  },
+  {
+    "name": "mushroom-2-variant-3",
+    "box": [
+      352,
+      336,
+      48,
+      64
+    ],
+    "kind": "part",
+    "group": "mushroom-2-variant-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B141"
+  },
+  {
+    "name": "mushroom-2-overlay-3",
+    "box": [
+      352,
+      400,
+      48,
+      16
+    ],
+    "kind": "part",
+    "group": "mushroom-2-overlay-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B142"
+  },
+  {
+    "name": "mushroom-2-variant-4",
+    "box": [
+      400,
+      336,
+      48,
+      64
+    ],
+    "kind": "part",
+    "group": "mushroom-2-variant-4",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B143"
+  },
+  {
+    "name": "mushroom-2-overlay-4",
+    "box": [
+      400,
+      400,
+      48,
+      16
+    ],
+    "kind": "part",
+    "group": "mushroom-2-overlay-4",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B144"
+  },
+  {
+    "name": "mushroom-2-variant-5",
+    "box": [
+      448,
+      336,
+      48,
+      64
+    ],
+    "kind": "part",
+    "group": "mushroom-2-variant-5",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B145"
+  },
+  {
+    "name": "mushroom-2-overlay-5",
+    "box": [
+      448,
+      400,
+      48,
+      16
+    ],
+    "kind": "part",
+    "group": "mushroom-2-overlay-5",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B146"
+  },
+  {
+    "name": "mushroom-3-variant-1",
+    "box": [
+      256,
+      416,
+      48,
+      64
+    ],
+    "kind": "part",
+    "group": "mushroom-3-variant-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B147"
+  },
+  {
+    "name": "mushroom-3-overlay-1",
+    "box": [
+      256,
+      480,
+      48,
+      16
+    ],
+    "kind": "part",
+    "group": "mushroom-3-overlay-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B148"
+  },
+  {
+    "name": "mushroom-3-variant-2",
+    "box": [
+      304,
+      416,
+      48,
+      64
+    ],
+    "kind": "part",
+    "group": "mushroom-3-variant-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B149"
+  },
+  {
+    "name": "mushroom-3-overlay-2",
+    "box": [
+      304,
+      480,
+      48,
+      16
+    ],
+    "kind": "part",
+    "group": "mushroom-3-overlay-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B150"
+  },
+  {
+    "name": "mushroom-3-variant-3",
+    "box": [
+      352,
+      416,
+      48,
+      64
+    ],
+    "kind": "part",
+    "group": "mushroom-3-variant-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B151"
+  },
+  {
+    "name": "mushroom-3-overlay-3",
+    "box": [
+      352,
+      480,
+      48,
+      16
+    ],
+    "kind": "part",
+    "group": "mushroom-3-overlay-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B152"
+  },
+  {
+    "name": "mushroom-3-variant-4",
+    "box": [
+      400,
+      416,
+      48,
+      64
+    ],
+    "kind": "part",
+    "group": "mushroom-3-variant-4",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B153"
+  },
+  {
+    "name": "mushroom-3-overlay-4",
+    "box": [
+      400,
+      480,
+      48,
+      16
+    ],
+    "kind": "part",
+    "group": "mushroom-3-overlay-4",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B154"
+  },
+  {
+    "name": "mushroom-3-variant-5",
+    "box": [
+      448,
+      416,
+      48,
+      64
+    ],
+    "kind": "part",
+    "group": "mushroom-3-variant-5",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B155"
+  },
+  {
+    "name": "mushroom-3-overlay-5",
+    "box": [
+      448,
+      480,
+      48,
+      16
+    ],
+    "kind": "part",
+    "group": "mushroom-3-overlay-5",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B156"
+  }
+]

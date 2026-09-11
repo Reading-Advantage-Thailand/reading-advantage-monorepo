@@ -1,0 +1,2237 @@
+[
+  {
+    "name": "grass-clump-16-0",
+    "box": [
+      16,
+      0,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "grass-clump-16-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W01"
+  },
+  {
+    "name": "grass-clump-32-0",
+    "box": [
+      32,
+      0,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "grass-clump-32-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W02"
+  },
+  {
+    "name": "grass-clump-48-0",
+    "box": [
+      48,
+      0,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "grass-clump-48-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W03"
+  },
+  {
+    "name": "grass-clump-64-0",
+    "box": [
+      64,
+      0,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "grass-clump-64-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W04"
+  },
+  {
+    "name": "grass-clump-80-0",
+    "box": [
+      80,
+      0,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "grass-clump-80-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W05"
+  },
+  {
+    "name": "grass-clump-96-0",
+    "box": [
+      96,
+      0,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "grass-clump-96-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W06"
+  },
+  {
+    "name": "grass-clump-112-0",
+    "box": [
+      112,
+      0,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "grass-clump-112-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W07"
+  },
+  {
+    "name": "grass-clump-128-0",
+    "box": [
+      128,
+      0,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "grass-clump-128-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W08"
+  },
+  {
+    "name": "grass-clump-0-16",
+    "box": [
+      0,
+      16,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "grass-clump-0-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W09"
+  },
+  {
+    "name": "grass-clump-16-16",
+    "box": [
+      16,
+      16,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "grass-clump-16-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W10"
+  },
+  {
+    "name": "grass-clump-32-16",
+    "box": [
+      32,
+      16,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "grass-clump-32-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W11"
+  },
+  {
+    "name": "grass-clump-48-16",
+    "box": [
+      48,
+      16,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "grass-clump-48-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W12"
+  },
+  {
+    "name": "grass-clump-64-16",
+    "box": [
+      64,
+      16,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "grass-clump-64-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W13"
+  },
+  {
+    "name": "grass-clump-80-16",
+    "box": [
+      80,
+      16,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "grass-clump-80-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W14"
+  },
+  {
+    "name": "grass-clump-96-16",
+    "box": [
+      96,
+      16,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "grass-clump-96-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W15"
+  },
+  {
+    "name": "grass-clump-112-16",
+    "box": [
+      112,
+      16,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "grass-clump-112-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W16"
+  },
+  {
+    "name": "grass-clump-128-16",
+    "box": [
+      128,
+      16,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "grass-clump-128-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W17"
+  },
+  {
+    "name": "flower-mushroom-clump-64",
+    "box": [
+      64,
+      32,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "flower-mushroom-clump-64",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W18"
+  },
+  {
+    "name": "flower-mushroom-clump-80",
+    "box": [
+      80,
+      32,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "flower-mushroom-clump-80",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W19"
+  },
+  {
+    "name": "flower-mushroom-clump-96",
+    "box": [
+      96,
+      32,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "flower-mushroom-clump-96",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W20"
+  },
+  {
+    "name": "flower-mushroom-clump-112",
+    "box": [
+      112,
+      32,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "flower-mushroom-clump-112",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W21"
+  },
+  {
+    "name": "flower-mushroom-clump-128",
+    "box": [
+      128,
+      32,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "flower-mushroom-clump-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W22"
+  },
+  {
+    "name": "flower-mushroom-clump-144",
+    "box": [
+      144,
+      32,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "flower-mushroom-clump-144",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W23"
+  },
+  {
+    "name": "flower-mushroom-clump-160",
+    "box": [
+      160,
+      32,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "flower-mushroom-clump-160",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W24"
+  },
+  {
+    "name": "flower-mushroom-clump-176",
+    "box": [
+      176,
+      32,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "flower-mushroom-clump-176",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W25"
+  },
+  {
+    "name": "large-mushroom-sequence",
+    "box": [
+      192,
+      32,
+      64,
+      16
+    ],
+    "kind": "prop",
+    "group": "large-mushroom-sequence",
+    "frame": null,
+    "notes": "Preserve the complete animation strip.",
+    "placement": null,
+    "reviewId": "W26"
+  },
+  {
+    "name": "chest-208-0",
+    "box": [
+      208,
+      0,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "chest-208-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W27"
+  },
+  {
+    "name": "chest-224-0",
+    "box": [
+      224,
+      0,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "chest-224-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W28"
+  },
+  {
+    "name": "chest-240-0",
+    "box": [
+      240,
+      0,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "chest-240-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W29"
+  },
+  {
+    "name": "chest-208-16",
+    "box": [
+      208,
+      16,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "chest-208-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W30"
+  },
+  {
+    "name": "chest-224-16",
+    "box": [
+      224,
+      16,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "chest-224-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W31"
+  },
+  {
+    "name": "chest-240-16",
+    "box": [
+      240,
+      16,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "chest-240-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W32"
+  },
+  {
+    "name": "brown-hollow-log",
+    "box": [
+      256,
+      0,
+      48,
+      64
+    ],
+    "kind": "prop",
+    "group": "brown-hollow-log",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W33"
+  },
+  {
+    "name": "brown-arched-log",
+    "box": [
+      304,
+      0,
+      48,
+      48
+    ],
+    "kind": "prop",
+    "group": "brown-arched-log",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W34"
+  },
+  {
+    "name": "brown-narrow-log",
+    "box": [
+      352,
+      0,
+      16,
+      48
+    ],
+    "kind": "prop",
+    "group": "brown-narrow-log",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W35"
+  },
+  {
+    "name": "brown-root-304",
+    "box": [
+      304,
+      48,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "brown-root-304",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W36"
+  },
+  {
+    "name": "brown-root-320",
+    "box": [
+      320,
+      48,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "brown-root-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W37"
+  },
+  {
+    "name": "brown-root-336",
+    "box": [
+      336,
+      48,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "brown-root-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W38"
+  },
+  {
+    "name": "brown-root-352",
+    "box": [
+      352,
+      48,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "brown-root-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W39"
+  },
+  {
+    "name": "pale-hollow-log",
+    "box": [
+      384,
+      0,
+      48,
+      64
+    ],
+    "kind": "prop",
+    "group": "pale-hollow-log",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W40"
+  },
+  {
+    "name": "pale-arched-log",
+    "box": [
+      432,
+      0,
+      48,
+      48
+    ],
+    "kind": "prop",
+    "group": "pale-arched-log",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W41"
+  },
+  {
+    "name": "pale-narrow-log",
+    "box": [
+      480,
+      0,
+      16,
+      48
+    ],
+    "kind": "prop",
+    "group": "pale-narrow-log",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W42"
+  },
+  {
+    "name": "pale-root-304",
+    "box": [
+      432,
+      48,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "pale-root-304",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W43"
+  },
+  {
+    "name": "pale-root-320",
+    "box": [
+      448,
+      48,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "pale-root-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W44"
+  },
+  {
+    "name": "pale-root-336",
+    "box": [
+      464,
+      48,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "pale-root-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W45"
+  },
+  {
+    "name": "pale-root-352",
+    "box": [
+      480,
+      48,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "pale-root-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W46"
+  },
+  {
+    "name": "brown-branch-tree-0-64",
+    "box": [
+      0,
+      64,
+      48,
+      64
+    ],
+    "kind": "prop",
+    "group": "brown-branch-tree-0-64",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W47"
+  },
+  {
+    "name": "brown-branch-tree-48-64",
+    "box": [
+      48,
+      64,
+      48,
+      64
+    ],
+    "kind": "prop",
+    "group": "brown-branch-tree-48-64",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W48"
+  },
+  {
+    "name": "brown-branch-tree-0-128",
+    "box": [
+      0,
+      128,
+      48,
+      64
+    ],
+    "kind": "prop",
+    "group": "brown-branch-tree-0-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W49"
+  },
+  {
+    "name": "brown-branch-tree-48-128",
+    "box": [
+      48,
+      128,
+      48,
+      64
+    ],
+    "kind": "prop",
+    "group": "brown-branch-tree-48-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W50"
+  },
+  {
+    "name": "brown-branch-tree-0-192",
+    "box": [
+      0,
+      192,
+      48,
+      64
+    ],
+    "kind": "prop",
+    "group": "brown-branch-tree-0-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W51"
+  },
+  {
+    "name": "brown-branch-tree-48-192",
+    "box": [
+      48,
+      192,
+      48,
+      64
+    ],
+    "kind": "prop",
+    "group": "brown-branch-tree-48-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W52"
+  },
+  {
+    "name": "brown-small-tree-96",
+    "box": [
+      96,
+      64,
+      32,
+      40
+    ],
+    "kind": "prop",
+    "group": "brown-small-tree-96",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W53"
+  },
+  {
+    "name": "brown-small-tree-128",
+    "box": [
+      128,
+      64,
+      32,
+      40
+    ],
+    "kind": "prop",
+    "group": "brown-small-tree-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W54"
+  },
+  {
+    "name": "brown-small-tree-160",
+    "box": [
+      160,
+      64,
+      32,
+      40
+    ],
+    "kind": "prop",
+    "group": "brown-small-tree-160",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W55"
+  },
+  {
+    "name": "brown-small-tree-192",
+    "box": [
+      192,
+      64,
+      32,
+      40
+    ],
+    "kind": "prop",
+    "group": "brown-small-tree-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W56"
+  },
+  {
+    "name": "brown-round-tree-96",
+    "box": [
+      96,
+      104,
+      48,
+      56
+    ],
+    "kind": "prop",
+    "group": "brown-round-tree-96",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W57"
+  },
+  {
+    "name": "brown-round-tree-144",
+    "box": [
+      144,
+      104,
+      48,
+      56
+    ],
+    "kind": "prop",
+    "group": "brown-round-tree-144",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W58"
+  },
+  {
+    "name": "brown-round-small-tree-192",
+    "box": [
+      192,
+      112,
+      32,
+      48
+    ],
+    "kind": "prop",
+    "group": "brown-round-small-tree-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W59"
+  },
+  {
+    "name": "brown-round-small-tree-224",
+    "box": [
+      224,
+      112,
+      32,
+      48
+    ],
+    "kind": "prop",
+    "group": "brown-round-small-tree-224",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W60"
+  },
+  {
+    "name": "brown-large-branch-tree-96",
+    "box": [
+      96,
+      160,
+      80,
+      96
+    ],
+    "kind": "prop",
+    "group": "brown-large-branch-tree-96",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W61"
+  },
+  {
+    "name": "brown-large-branch-tree-176",
+    "box": [
+      176,
+      160,
+      80,
+      96
+    ],
+    "kind": "prop",
+    "group": "brown-large-branch-tree-176",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W62"
+  },
+  {
+    "name": "pale-branch-tree-0-64",
+    "box": [
+      256,
+      64,
+      48,
+      64
+    ],
+    "kind": "prop",
+    "group": "pale-branch-tree-0-64",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W63"
+  },
+  {
+    "name": "pale-branch-tree-48-64",
+    "box": [
+      304,
+      64,
+      48,
+      64
+    ],
+    "kind": "prop",
+    "group": "pale-branch-tree-48-64",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W64"
+  },
+  {
+    "name": "pale-branch-tree-0-128",
+    "box": [
+      256,
+      128,
+      48,
+      64
+    ],
+    "kind": "prop",
+    "group": "pale-branch-tree-0-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W65"
+  },
+  {
+    "name": "pale-branch-tree-48-128",
+    "box": [
+      304,
+      128,
+      48,
+      64
+    ],
+    "kind": "prop",
+    "group": "pale-branch-tree-48-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W66"
+  },
+  {
+    "name": "pale-branch-tree-0-192",
+    "box": [
+      256,
+      192,
+      48,
+      64
+    ],
+    "kind": "prop",
+    "group": "pale-branch-tree-0-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W67"
+  },
+  {
+    "name": "pale-branch-tree-48-192",
+    "box": [
+      304,
+      192,
+      48,
+      64
+    ],
+    "kind": "prop",
+    "group": "pale-branch-tree-48-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W68"
+  },
+  {
+    "name": "pale-small-tree-96",
+    "box": [
+      352,
+      64,
+      32,
+      40
+    ],
+    "kind": "prop",
+    "group": "pale-small-tree-96",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W69"
+  },
+  {
+    "name": "pale-small-tree-128",
+    "box": [
+      384,
+      64,
+      32,
+      40
+    ],
+    "kind": "prop",
+    "group": "pale-small-tree-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W70"
+  },
+  {
+    "name": "pale-small-tree-160",
+    "box": [
+      416,
+      64,
+      32,
+      40
+    ],
+    "kind": "prop",
+    "group": "pale-small-tree-160",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W71"
+  },
+  {
+    "name": "pale-small-tree-192",
+    "box": [
+      448,
+      64,
+      32,
+      40
+    ],
+    "kind": "prop",
+    "group": "pale-small-tree-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W72"
+  },
+  {
+    "name": "pale-round-tree-96",
+    "box": [
+      352,
+      104,
+      48,
+      56
+    ],
+    "kind": "prop",
+    "group": "pale-round-tree-96",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W73"
+  },
+  {
+    "name": "pale-round-tree-144",
+    "box": [
+      400,
+      104,
+      48,
+      56
+    ],
+    "kind": "prop",
+    "group": "pale-round-tree-144",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W74"
+  },
+  {
+    "name": "pale-round-small-tree-192",
+    "box": [
+      448,
+      112,
+      32,
+      48
+    ],
+    "kind": "prop",
+    "group": "pale-round-small-tree-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W75"
+  },
+  {
+    "name": "pale-round-small-tree-224",
+    "box": [
+      480,
+      112,
+      32,
+      48
+    ],
+    "kind": "prop",
+    "group": "pale-round-small-tree-224",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W76"
+  },
+  {
+    "name": "pale-large-branch-tree-96",
+    "box": [
+      352,
+      160,
+      80,
+      96
+    ],
+    "kind": "prop",
+    "group": "pale-large-branch-tree-96",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W77"
+  },
+  {
+    "name": "pale-large-branch-tree-176",
+    "box": [
+      432,
+      160,
+      80,
+      96
+    ],
+    "kind": "prop",
+    "group": "pale-large-branch-tree-176",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W78"
+  },
+  {
+    "name": "stone-304",
+    "box": [
+      304,
+      288,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "stone-304",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W79"
+  },
+  {
+    "name": "stone-320",
+    "box": [
+      320,
+      288,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "stone-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W80"
+  },
+  {
+    "name": "stone-336",
+    "box": [
+      336,
+      288,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "stone-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W81"
+  },
+  {
+    "name": "stone-352",
+    "box": [
+      352,
+      288,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "stone-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W82"
+  },
+  {
+    "name": "stone-384",
+    "box": [
+      384,
+      288,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "stone-384",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W83"
+  },
+  {
+    "name": "stone-400",
+    "box": [
+      400,
+      288,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "stone-400",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W84"
+  },
+  {
+    "name": "stone-416",
+    "box": [
+      416,
+      288,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "stone-416",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W85"
+  },
+  {
+    "name": "stone-432",
+    "box": [
+      432,
+      288,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "stone-432",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W86"
+  },
+  {
+    "name": "brown-fence-post-32-336",
+    "box": [
+      32,
+      336,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "brown-fence-post-32-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W87"
+  },
+  {
+    "name": "brown-fence-post-16-352",
+    "box": [
+      16,
+      352,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "brown-fence-post-16-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W88"
+  },
+  {
+    "name": "brown-fence-post-32-352",
+    "box": [
+      32,
+      352,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "brown-fence-post-32-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W89"
+  },
+  {
+    "name": "brown-fence-post-16-368",
+    "box": [
+      16,
+      368,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "brown-fence-post-16-368",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W90"
+  },
+  {
+    "name": "brown-fence-post-32-368",
+    "box": [
+      32,
+      368,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "brown-fence-post-32-368",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W91"
+  },
+  {
+    "name": "brown-fence-assembly-48",
+    "box": [
+      48,
+      336,
+      48,
+      48
+    ],
+    "kind": "structure",
+    "group": "brown-fence-assembly-48",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W92"
+  },
+  {
+    "name": "brown-fence-assembly-96",
+    "box": [
+      96,
+      336,
+      48,
+      48
+    ],
+    "kind": "structure",
+    "group": "brown-fence-assembly-96",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W93"
+  },
+  {
+    "name": "pale-fence-post-32-336",
+    "box": [
+      160,
+      336,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "pale-fence-post-32-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W94"
+  },
+  {
+    "name": "pale-fence-post-16-352",
+    "box": [
+      144,
+      352,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "pale-fence-post-16-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W95"
+  },
+  {
+    "name": "pale-fence-post-32-352",
+    "box": [
+      160,
+      352,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "pale-fence-post-32-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W96"
+  },
+  {
+    "name": "pale-fence-post-16-368",
+    "box": [
+      144,
+      368,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "pale-fence-post-16-368",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W97"
+  },
+  {
+    "name": "pale-fence-post-32-368",
+    "box": [
+      160,
+      368,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "pale-fence-post-32-368",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W98"
+  },
+  {
+    "name": "pale-fence-assembly-48",
+    "box": [
+      176,
+      336,
+      48,
+      48
+    ],
+    "kind": "structure",
+    "group": "pale-fence-assembly-48",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W99"
+  },
+  {
+    "name": "pale-fence-assembly-96",
+    "box": [
+      224,
+      336,
+      48,
+      48
+    ],
+    "kind": "structure",
+    "group": "pale-fence-assembly-96",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W100"
+  },
+  {
+    "name": "direction-sign-288-320",
+    "box": [
+      288,
+      320,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-288-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W101"
+  },
+  {
+    "name": "direction-sign-304-320",
+    "box": [
+      304,
+      320,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-304-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W102"
+  },
+  {
+    "name": "direction-sign-320-320",
+    "box": [
+      320,
+      320,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-320-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W103"
+  },
+  {
+    "name": "direction-sign-336-320",
+    "box": [
+      336,
+      320,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-336-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W104"
+  },
+  {
+    "name": "direction-sign-352-320",
+    "box": [
+      352,
+      320,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-352-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W105"
+  },
+  {
+    "name": "direction-sign-368-320",
+    "box": [
+      368,
+      320,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-368-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W106"
+  },
+  {
+    "name": "direction-sign-384-320",
+    "box": [
+      384,
+      320,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-384-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W107"
+  },
+  {
+    "name": "direction-sign-400-320",
+    "box": [
+      400,
+      320,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-400-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W108"
+  },
+  {
+    "name": "direction-sign-416-320",
+    "box": [
+      416,
+      320,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-416-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W109"
+  },
+  {
+    "name": "direction-sign-432-320",
+    "box": [
+      432,
+      320,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-432-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W110"
+  },
+  {
+    "name": "direction-sign-448-320",
+    "box": [
+      448,
+      320,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-448-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W111"
+  },
+  {
+    "name": "direction-sign-464-320",
+    "box": [
+      464,
+      320,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-464-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W112"
+  },
+  {
+    "name": "direction-sign-288-336",
+    "box": [
+      288,
+      336,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-288-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W113"
+  },
+  {
+    "name": "direction-sign-304-336",
+    "box": [
+      304,
+      336,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-304-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W114"
+  },
+  {
+    "name": "direction-sign-320-336",
+    "box": [
+      320,
+      336,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-320-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W115"
+  },
+  {
+    "name": "direction-sign-336-336",
+    "box": [
+      336,
+      336,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-336-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W116"
+  },
+  {
+    "name": "direction-sign-352-336",
+    "box": [
+      352,
+      336,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-352-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W117"
+  },
+  {
+    "name": "direction-sign-368-336",
+    "box": [
+      368,
+      336,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-368-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W118"
+  },
+  {
+    "name": "direction-sign-384-336",
+    "box": [
+      384,
+      336,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-384-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W119"
+  },
+  {
+    "name": "direction-sign-400-336",
+    "box": [
+      400,
+      336,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-400-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W120"
+  },
+  {
+    "name": "direction-sign-416-336",
+    "box": [
+      416,
+      336,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-416-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W121"
+  },
+  {
+    "name": "direction-sign-432-336",
+    "box": [
+      432,
+      336,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-432-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W122"
+  },
+  {
+    "name": "direction-sign-448-336",
+    "box": [
+      448,
+      336,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-448-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W123"
+  },
+  {
+    "name": "direction-sign-464-336",
+    "box": [
+      464,
+      336,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-464-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W124"
+  },
+  {
+    "name": "direction-sign-288-352",
+    "box": [
+      288,
+      352,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-288-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W125"
+  },
+  {
+    "name": "direction-sign-304-352",
+    "box": [
+      304,
+      352,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-304-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W126"
+  },
+  {
+    "name": "direction-sign-320-352",
+    "box": [
+      320,
+      352,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-320-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W127"
+  },
+  {
+    "name": "direction-sign-336-352",
+    "box": [
+      336,
+      352,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-336-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W128"
+  },
+  {
+    "name": "direction-sign-352-352",
+    "box": [
+      352,
+      352,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-352-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W129"
+  },
+  {
+    "name": "direction-sign-368-352",
+    "box": [
+      368,
+      352,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-368-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W130"
+  },
+  {
+    "name": "direction-sign-384-352",
+    "box": [
+      384,
+      352,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-384-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W131"
+  },
+  {
+    "name": "direction-sign-400-352",
+    "box": [
+      400,
+      352,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-400-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W132"
+  },
+  {
+    "name": "direction-sign-416-352",
+    "box": [
+      416,
+      352,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-416-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W133"
+  },
+  {
+    "name": "direction-sign-432-352",
+    "box": [
+      432,
+      352,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-432-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W134"
+  },
+  {
+    "name": "direction-sign-448-352",
+    "box": [
+      448,
+      352,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-448-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W135"
+  },
+  {
+    "name": "direction-sign-464-352",
+    "box": [
+      464,
+      352,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-464-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W136"
+  },
+  {
+    "name": "direction-sign-288-368",
+    "box": [
+      288,
+      368,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-288-368",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W137"
+  },
+  {
+    "name": "direction-sign-304-368",
+    "box": [
+      304,
+      368,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-304-368",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W138"
+  },
+  {
+    "name": "direction-sign-320-368",
+    "box": [
+      320,
+      368,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-320-368",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W139"
+  },
+  {
+    "name": "direction-sign-336-368",
+    "box": [
+      336,
+      368,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-336-368",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W140"
+  },
+  {
+    "name": "direction-sign-352-368",
+    "box": [
+      352,
+      368,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-352-368",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W141"
+  },
+  {
+    "name": "direction-sign-368-368",
+    "box": [
+      368,
+      368,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-368-368",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W142"
+  },
+  {
+    "name": "direction-sign-384-368",
+    "box": [
+      384,
+      368,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-384-368",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W143"
+  },
+  {
+    "name": "direction-sign-400-368",
+    "box": [
+      400,
+      368,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-400-368",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W144"
+  },
+  {
+    "name": "direction-sign-416-368",
+    "box": [
+      416,
+      368,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-416-368",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W145"
+  },
+  {
+    "name": "direction-sign-432-368",
+    "box": [
+      432,
+      368,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-432-368",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W146"
+  },
+  {
+    "name": "direction-sign-448-368",
+    "box": [
+      448,
+      368,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-448-368",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W147"
+  },
+  {
+    "name": "direction-sign-464-368",
+    "box": [
+      464,
+      368,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-464-368",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "W148"
+  },
+  {
+    "name": "snow-terrain-atlas",
+    "box": [
+      0,
+      256,
+      96,
+      80
+    ],
+    "kind": "part",
+    "group": "snow-terrain-atlas",
+    "frame": null,
+    "notes": "Keep the connected snow tiles on their original grid.",
+    "placement": null,
+    "reviewId": "W149"
+  }
+]

@@ -1,0 +1,30 @@
+[
+  {
+    "name": "cavern-1",
+    "box": [
+      0,
+      0,
+      80,
+      112
+    ],
+    "kind": "part",
+    "group": "cavern-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cavern-2",
+    "box": [
+      80,
+      0,
+      80,
+      112
+    ],
+    "kind": "part",
+    "group": "cavern-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  }
+]

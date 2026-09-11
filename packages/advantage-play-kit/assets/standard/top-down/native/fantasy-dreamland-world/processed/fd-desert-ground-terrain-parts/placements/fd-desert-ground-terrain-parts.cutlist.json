@@ -1,0 +1,1388 @@
+[
+  {
+    "name": "style-1-border-1-1",
+    "box": [
+      0,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-1-border-1-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-1-border-2-1",
+    "box": [
+      16,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-1-border-2-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-1-border-3-1",
+    "box": [
+      32,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-1-border-3-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-1-border-1-2",
+    "box": [
+      0,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-1-border-1-2",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-1-border-3-2",
+    "box": [
+      32,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-1-border-3-2",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-1-border-1-3",
+    "box": [
+      0,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-1-border-1-3",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-1-border-2-3",
+    "box": [
+      16,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-1-border-2-3",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-1-border-3-3",
+    "box": [
+      32,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-1-border-3-3",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-1-patch",
+    "box": [
+      0,
+      48,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "style-1-patch",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-2-border-1-1",
+    "box": [
+      64,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-2-border-1-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-2-border-2-1",
+    "box": [
+      80,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-2-border-2-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-2-border-3-1",
+    "box": [
+      96,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-2-border-3-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-2-border-1-2",
+    "box": [
+      64,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-2-border-1-2",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-2-border-3-2",
+    "box": [
+      96,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-2-border-3-2",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-2-border-1-3",
+    "box": [
+      64,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-2-border-1-3",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-2-border-2-3",
+    "box": [
+      80,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-2-border-2-3",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-2-border-3-3",
+    "box": [
+      96,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-2-border-3-3",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-2-patch",
+    "box": [
+      64,
+      48,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "style-2-patch",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-3-border-1-1",
+    "box": [
+      128,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-3-border-1-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-3-border-2-1",
+    "box": [
+      144,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-3-border-2-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-3-border-3-1",
+    "box": [
+      160,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-3-border-3-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-3-border-1-2",
+    "box": [
+      128,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-3-border-1-2",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-3-border-3-2",
+    "box": [
+      160,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-3-border-3-2",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-3-border-1-3",
+    "box": [
+      128,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-3-border-1-3",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-3-border-2-3",
+    "box": [
+      144,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-3-border-2-3",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-3-border-3-3",
+    "box": [
+      160,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-3-border-3-3",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-3-patch",
+    "box": [
+      128,
+      48,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "style-3-patch",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-4-border-1-1",
+    "box": [
+      192,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-4-border-1-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-4-border-2-1",
+    "box": [
+      208,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-4-border-2-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-4-border-3-1",
+    "box": [
+      224,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-4-border-3-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-4-border-1-2",
+    "box": [
+      192,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-4-border-1-2",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-4-border-3-2",
+    "box": [
+      224,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-4-border-3-2",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-4-border-1-3",
+    "box": [
+      192,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-4-border-1-3",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-4-border-2-3",
+    "box": [
+      208,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-4-border-2-3",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-4-border-3-3",
+    "box": [
+      224,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-4-border-3-3",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-4-patch",
+    "box": [
+      192,
+      48,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "style-4-patch",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-5-border-1-1",
+    "box": [
+      0,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-5-border-1-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-5-border-2-1",
+    "box": [
+      16,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-5-border-2-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-5-border-3-1",
+    "box": [
+      32,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-5-border-3-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-5-border-1-2",
+    "box": [
+      0,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-5-border-1-2",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-5-border-3-2",
+    "box": [
+      32,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-5-border-3-2",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-5-border-1-3",
+    "box": [
+      0,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-5-border-1-3",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-5-border-2-3",
+    "box": [
+      16,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-5-border-2-3",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-5-border-3-3",
+    "box": [
+      32,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-5-border-3-3",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-5-patch",
+    "box": [
+      0,
+      160,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "style-5-patch",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-6-border-1-1",
+    "box": [
+      64,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-6-border-1-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-6-border-2-1",
+    "box": [
+      80,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-6-border-2-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-6-border-3-1",
+    "box": [
+      96,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-6-border-3-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-6-border-1-2",
+    "box": [
+      64,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-6-border-1-2",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-6-border-3-2",
+    "box": [
+      96,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-6-border-3-2",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-6-border-1-3",
+    "box": [
+      64,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-6-border-1-3",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-6-border-2-3",
+    "box": [
+      80,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-6-border-2-3",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-6-border-3-3",
+    "box": [
+      96,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-6-border-3-3",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-6-patch",
+    "box": [
+      64,
+      160,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "style-6-patch",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-7-border-1-1",
+    "box": [
+      128,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-7-border-1-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-7-border-2-1",
+    "box": [
+      144,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-7-border-2-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-7-border-3-1",
+    "box": [
+      160,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-7-border-3-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-7-border-1-2",
+    "box": [
+      128,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-7-border-1-2",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-7-border-3-2",
+    "box": [
+      160,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-7-border-3-2",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-7-border-1-3",
+    "box": [
+      128,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-7-border-1-3",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-7-border-2-3",
+    "box": [
+      144,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-7-border-2-3",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-7-border-3-3",
+    "box": [
+      160,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-7-border-3-3",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-7-patch",
+    "box": [
+      128,
+      160,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "style-7-patch",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-8-border-1-1",
+    "box": [
+      192,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-8-border-1-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-8-border-2-1",
+    "box": [
+      208,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-8-border-2-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-8-border-3-1",
+    "box": [
+      224,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-8-border-3-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-8-border-1-2",
+    "box": [
+      192,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-8-border-1-2",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-8-border-3-2",
+    "box": [
+      224,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-8-border-3-2",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-8-border-1-3",
+    "box": [
+      192,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-8-border-1-3",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-8-border-2-3",
+    "box": [
+      208,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-8-border-2-3",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-8-border-3-3",
+    "box": [
+      224,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-8-border-3-3",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-8-patch",
+    "box": [
+      192,
+      160,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "style-8-patch",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-9-border-1-1",
+    "box": [
+      0,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-9-border-1-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-9-border-2-1",
+    "box": [
+      16,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-9-border-2-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-9-border-3-1",
+    "box": [
+      32,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-9-border-3-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-9-border-1-2",
+    "box": [
+      0,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-9-border-1-2",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-9-border-3-2",
+    "box": [
+      32,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-9-border-3-2",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-9-border-1-3",
+    "box": [
+      0,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-9-border-1-3",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-9-border-2-3",
+    "box": [
+      16,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-9-border-2-3",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-9-border-3-3",
+    "box": [
+      32,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-9-border-3-3",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-9-patch",
+    "box": [
+      0,
+      272,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "style-9-patch",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-10-border-1-1",
+    "box": [
+      64,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-10-border-1-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-10-border-2-1",
+    "box": [
+      80,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-10-border-2-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-10-border-3-1",
+    "box": [
+      96,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-10-border-3-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-10-border-1-2",
+    "box": [
+      64,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-10-border-1-2",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-10-border-3-2",
+    "box": [
+      96,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-10-border-3-2",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-10-border-1-3",
+    "box": [
+      64,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-10-border-1-3",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-10-border-2-3",
+    "box": [
+      80,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-10-border-2-3",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-10-border-3-3",
+    "box": [
+      96,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-10-border-3-3",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-10-patch",
+    "box": [
+      64,
+      272,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "style-10-patch",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-11-border-1-1",
+    "box": [
+      128,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-11-border-1-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-11-border-2-1",
+    "box": [
+      144,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-11-border-2-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-11-border-3-1",
+    "box": [
+      160,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-11-border-3-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-11-border-1-2",
+    "box": [
+      128,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-11-border-1-2",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-11-border-3-2",
+    "box": [
+      160,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-11-border-3-2",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-11-border-1-3",
+    "box": [
+      128,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-11-border-1-3",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-11-border-2-3",
+    "box": [
+      144,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-11-border-2-3",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-11-border-3-3",
+    "box": [
+      160,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-11-border-3-3",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "style-11-patch",
+    "box": [
+      128,
+      272,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "style-11-patch",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  }
+]

@@ -1,0 +1,2689 @@
+[
+  {
+    "name": "style-1-border-1-1",
+    "box": [
+      16,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-1-border-1-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-1-border-2-1",
+    "box": [
+      32,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-1-border-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-1-border-3-1",
+    "box": [
+      48,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-1-border-3-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-1-border-1-2",
+    "box": [
+      16,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-1-border-1-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-1-border-3-2",
+    "box": [
+      48,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-1-border-3-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-1-border-1-3",
+    "box": [
+      16,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-1-border-1-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-1-border-2-3",
+    "box": [
+      32,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-1-border-2-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-1-border-3-3",
+    "box": [
+      48,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-1-border-3-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-1-patch",
+    "box": [
+      64,
+      0,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "style-1-patch",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-1-corner-1-1",
+    "box": [
+      48,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-fall-grass-terrain-atlas-style-1-corner-0-32.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-fall/grassland-fall-grass-terrain-atlas-style-1-corner-0-32.png"
+  },
+  {
+    "name": "style-1-corner-2-1",
+    "box": [
+      64,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-fall-grass-terrain-atlas-style-1-corner-16-32.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-fall/grassland-fall-grass-terrain-atlas-style-1-corner-16-32.png"
+  },
+  {
+    "name": "style-2-border-1-1",
+    "box": [
+      112,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-2-border-1-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-2-border-2-1",
+    "box": [
+      128,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-2-border-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-2-border-3-1",
+    "box": [
+      144,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-2-border-3-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-2-border-1-2",
+    "box": [
+      112,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-2-border-1-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-2-border-3-2",
+    "box": [
+      144,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-2-border-3-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-2-border-1-3",
+    "box": [
+      112,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-2-border-1-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-2-border-2-3",
+    "box": [
+      128,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-2-border-2-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-2-border-3-3",
+    "box": [
+      144,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-2-border-3-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-2-patch",
+    "box": [
+      160,
+      0,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "style-2-patch",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-2-corner-1-1",
+    "box": [
+      144,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-fall-grass-terrain-atlas-style-2-corner-0-32.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-fall/grassland-fall-grass-terrain-atlas-style-2-corner-0-32.png"
+  },
+  {
+    "name": "style-2-corner-2-1",
+    "box": [
+      160,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-fall-grass-terrain-atlas-style-2-corner-16-32.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-fall/grassland-fall-grass-terrain-atlas-style-2-corner-16-32.png"
+  },
+  {
+    "name": "style-3-border-1-1",
+    "box": [
+      240,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-3-border-1-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-3-border-2-1",
+    "box": [
+      256,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-3-border-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-3-border-3-1",
+    "box": [
+      272,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-3-border-3-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-3-border-1-2",
+    "box": [
+      240,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-3-border-1-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-3-border-3-2",
+    "box": [
+      272,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-3-border-3-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-3-border-1-3",
+    "box": [
+      240,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-3-border-1-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-3-border-2-3",
+    "box": [
+      256,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-3-border-2-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-3-border-3-3",
+    "box": [
+      272,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-3-border-3-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-3-patch",
+    "box": [
+      288,
+      0,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-grass-terrain-48.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-grass-terrain-48.png"
+  },
+  {
+    "name": "style-3-corner-1-1",
+    "box": [
+      272,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-loose-grass-48.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-loose-grass-48.png"
+  },
+  {
+    "name": "style-3-corner-2-1",
+    "box": [
+      288,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-loose-grass-64.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-loose-grass-64.png"
+  },
+  {
+    "name": "style-4-border-1-1",
+    "box": [
+      336,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-4-border-1-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-4-border-2-1",
+    "box": [
+      352,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-4-border-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-4-border-3-1",
+    "box": [
+      368,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-4-border-3-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-4-border-1-2",
+    "box": [
+      336,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-4-border-1-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-4-border-3-2",
+    "box": [
+      368,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-4-border-3-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-4-border-1-3",
+    "box": [
+      336,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-4-border-1-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-4-border-2-3",
+    "box": [
+      352,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-4-border-2-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-4-border-3-3",
+    "box": [
+      368,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-4-border-3-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-4-patch",
+    "box": [
+      384,
+      0,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "style-4-patch",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-4-corner-1-1",
+    "box": [
+      368,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-spring-grass-terrain-atlas-style-2-corner-0-32.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-spring/grassland-spring-grass-terrain-atlas-style-2-corner-0-32.png"
+  },
+  {
+    "name": "style-4-corner-2-1",
+    "box": [
+      384,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-spring-grass-terrain-atlas-style-2-corner-16-32.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-spring/grassland-spring-grass-terrain-atlas-style-2-corner-16-32.png"
+  },
+  {
+    "name": "style-5-border-1-1",
+    "box": [
+      16,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-5-border-1-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-5-border-2-1",
+    "box": [
+      32,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-5-border-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-5-border-3-1",
+    "box": [
+      48,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-5-border-3-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-5-border-1-2",
+    "box": [
+      16,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-5-border-1-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-5-border-3-2",
+    "box": [
+      48,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-5-border-3-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-5-border-1-3",
+    "box": [
+      16,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-5-border-1-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-5-border-2-3",
+    "box": [
+      32,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-5-border-2-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-5-border-3-3",
+    "box": [
+      48,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-5-border-3-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-5-patch",
+    "box": [
+      64,
+      64,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "style-5-patch",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-5-corner-1-1",
+    "box": [
+      48,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-fall-grass-terrain-atlas-style-5-corner-0-32.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-fall/grassland-fall-grass-terrain-atlas-style-5-corner-0-32.png"
+  },
+  {
+    "name": "style-5-corner-2-1",
+    "box": [
+      64,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-fall-grass-terrain-atlas-style-5-corner-16-32.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-fall/grassland-fall-grass-terrain-atlas-style-5-corner-16-32.png"
+  },
+  {
+    "name": "style-6-border-1-1",
+    "box": [
+      112,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-6-border-1-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-6-border-2-1",
+    "box": [
+      128,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-6-border-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-6-border-3-1",
+    "box": [
+      144,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-6-border-3-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-6-border-1-2",
+    "box": [
+      112,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-6-border-1-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-6-border-3-2",
+    "box": [
+      144,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-6-border-3-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-6-border-1-3",
+    "box": [
+      112,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-6-border-1-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-6-border-2-3",
+    "box": [
+      128,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-6-border-2-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-6-border-3-3",
+    "box": [
+      144,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-6-border-3-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-6-patch",
+    "box": [
+      160,
+      64,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "style-6-patch",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-6-corner-1-1",
+    "box": [
+      144,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-fall-grass-terrain-atlas-style-6-corner-0-32.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-fall/grassland-fall-grass-terrain-atlas-style-6-corner-0-32.png"
+  },
+  {
+    "name": "style-6-corner-2-1",
+    "box": [
+      160,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-fall-grass-terrain-atlas-style-6-corner-16-32.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-fall/grassland-fall-grass-terrain-atlas-style-6-corner-16-32.png"
+  },
+  {
+    "name": "style-7-border-1-1",
+    "box": [
+      240,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-7-border-1-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-7-border-2-1",
+    "box": [
+      256,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-7-border-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-7-border-3-1",
+    "box": [
+      272,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-7-border-3-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-7-border-1-2",
+    "box": [
+      240,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-7-border-1-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-7-border-3-2",
+    "box": [
+      272,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-7-border-3-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-7-border-1-3",
+    "box": [
+      240,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-7-border-1-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-7-border-2-3",
+    "box": [
+      256,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-7-border-2-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-7-border-3-3",
+    "box": [
+      272,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-7-border-3-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-7-patch",
+    "box": [
+      288,
+      64,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "style-7-patch",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-7-corner-1-1",
+    "box": [
+      272,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-spring-grass-terrain-atlas-style-5-corner-0-32.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-spring/grassland-spring-grass-terrain-atlas-style-5-corner-0-32.png"
+  },
+  {
+    "name": "style-7-corner-2-1",
+    "box": [
+      288,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-spring-grass-terrain-atlas-style-5-corner-16-32.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-spring/grassland-spring-grass-terrain-atlas-style-5-corner-16-32.png"
+  },
+  {
+    "name": "style-8-border-1-1",
+    "box": [
+      336,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-8-border-1-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-8-border-2-1",
+    "box": [
+      352,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-8-border-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-8-border-3-1",
+    "box": [
+      368,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-8-border-3-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-8-border-1-2",
+    "box": [
+      336,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-8-border-1-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-8-border-3-2",
+    "box": [
+      368,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-8-border-3-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-8-border-1-3",
+    "box": [
+      336,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-8-border-1-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-8-border-2-3",
+    "box": [
+      352,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-8-border-2-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-8-border-3-3",
+    "box": [
+      368,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-8-border-3-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-8-patch",
+    "box": [
+      384,
+      64,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "style-8-patch",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-8-corner-1-1",
+    "box": [
+      368,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-spring-grass-terrain-atlas-style-6-corner-0-32.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-spring/grassland-spring-grass-terrain-atlas-style-6-corner-0-32.png"
+  },
+  {
+    "name": "style-8-corner-2-1",
+    "box": [
+      384,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-spring-grass-terrain-atlas-style-6-corner-16-32.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-spring/grassland-spring-grass-terrain-atlas-style-6-corner-16-32.png"
+  },
+  {
+    "name": "style-9-border-1-1",
+    "box": [
+      16,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-9-border-1-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-9-border-2-1",
+    "box": [
+      32,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-9-border-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-9-border-3-1",
+    "box": [
+      48,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-9-border-3-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-9-border-1-2",
+    "box": [
+      16,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-9-border-1-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-9-border-3-2",
+    "box": [
+      48,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-9-border-3-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-9-border-1-3",
+    "box": [
+      16,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-9-border-1-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-9-border-2-3",
+    "box": [
+      32,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-9-border-2-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-9-border-3-3",
+    "box": [
+      48,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-9-border-3-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-9-patch",
+    "box": [
+      64,
+      128,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "style-9-patch",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-9-corner-1-1",
+    "box": [
+      48,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-9-corner-1-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-9-corner-2-1",
+    "box": [
+      64,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-9-corner-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-10-border-1-1",
+    "box": [
+      112,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-10-border-1-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-10-border-2-1",
+    "box": [
+      128,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-10-border-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-10-border-3-1",
+    "box": [
+      144,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-10-border-3-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-10-border-1-2",
+    "box": [
+      112,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-10-border-1-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-10-border-3-2",
+    "box": [
+      144,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-10-border-3-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-10-border-1-3",
+    "box": [
+      112,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-10-border-1-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-10-border-2-3",
+    "box": [
+      128,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-10-border-2-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-10-border-3-3",
+    "box": [
+      144,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-10-border-3-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-10-patch",
+    "box": [
+      160,
+      128,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "style-10-patch",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-10-corner-1-1",
+    "box": [
+      144,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-10-corner-1-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-10-corner-2-1",
+    "box": [
+      160,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-10-corner-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-11-border-1-1",
+    "box": [
+      240,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-11-border-1-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-11-border-2-1",
+    "box": [
+      256,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-11-border-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-11-border-3-1",
+    "box": [
+      272,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-11-border-3-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-11-border-1-2",
+    "box": [
+      240,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-11-border-1-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-11-border-3-2",
+    "box": [
+      272,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-11-border-3-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-11-border-1-3",
+    "box": [
+      240,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-11-border-1-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-11-border-2-3",
+    "box": [
+      256,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-11-border-2-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-11-border-3-3",
+    "box": [
+      272,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-11-border-3-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-11-patch",
+    "box": [
+      288,
+      128,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "style-11-patch",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-11-corner-1-1",
+    "box": [
+      272,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-winter-grass-terrain-atlas-style-1-corner-0-32.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-winter/grassland-winter-grass-terrain-atlas-style-1-corner-0-32.png"
+  },
+  {
+    "name": "style-11-corner-2-1",
+    "box": [
+      288,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-winter-grass-terrain-atlas-style-1-corner-16-32.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-winter/grassland-winter-grass-terrain-atlas-style-1-corner-16-32.png"
+  },
+  {
+    "name": "style-12-border-1-1",
+    "box": [
+      336,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-12-border-1-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-12-border-2-1",
+    "box": [
+      352,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-12-border-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-12-border-3-1",
+    "box": [
+      368,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-12-border-3-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-12-border-1-2",
+    "box": [
+      336,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-12-border-1-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-12-border-3-2",
+    "box": [
+      368,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-12-border-3-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-12-border-1-3",
+    "box": [
+      336,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-12-border-1-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-12-border-2-3",
+    "box": [
+      352,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-12-border-2-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-12-border-3-3",
+    "box": [
+      368,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-12-border-3-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-12-patch",
+    "box": [
+      384,
+      128,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "style-12-patch",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-12-corner-1-1",
+    "box": [
+      368,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-winter-grass-terrain-atlas-style-2-corner-0-32.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-winter/grassland-winter-grass-terrain-atlas-style-2-corner-0-32.png"
+  },
+  {
+    "name": "style-12-corner-2-1",
+    "box": [
+      384,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-winter-grass-terrain-atlas-style-2-corner-16-32.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-winter/grassland-winter-grass-terrain-atlas-style-2-corner-16-32.png"
+  },
+  {
+    "name": "style-13-border-1-1",
+    "box": [
+      16,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-13-border-1-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-13-border-2-1",
+    "box": [
+      32,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-13-border-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-13-border-3-1",
+    "box": [
+      48,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-13-border-3-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-13-border-1-2",
+    "box": [
+      16,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-13-border-1-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-13-border-3-2",
+    "box": [
+      48,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-13-border-3-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-13-border-1-3",
+    "box": [
+      16,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-13-border-1-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-13-border-2-3",
+    "box": [
+      32,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-13-border-2-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-13-border-3-3",
+    "box": [
+      48,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-13-border-3-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-13-patch",
+    "box": [
+      64,
+      192,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "style-13-patch",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-13-corner-1-1",
+    "box": [
+      48,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-13-corner-1-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-13-corner-2-1",
+    "box": [
+      64,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-13-corner-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-14-border-1-1",
+    "box": [
+      112,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-14-border-1-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-14-border-2-1",
+    "box": [
+      128,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-14-border-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-14-border-3-1",
+    "box": [
+      144,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-14-border-3-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-14-border-1-2",
+    "box": [
+      112,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-14-border-1-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-14-border-3-2",
+    "box": [
+      144,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-14-border-3-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-14-border-1-3",
+    "box": [
+      112,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-14-border-1-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-14-border-2-3",
+    "box": [
+      128,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-14-border-2-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-14-border-3-3",
+    "box": [
+      144,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-14-border-3-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-14-patch",
+    "box": [
+      160,
+      192,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "style-14-patch",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-14-corner-1-1",
+    "box": [
+      144,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-14-corner-1-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-14-corner-2-1",
+    "box": [
+      160,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "style-14-corner-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "style-15-border-1-1",
+    "box": [
+      240,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse F111. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "F",
+      "reviewId": "F111",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grounds-source-0158e605400a.png",
+      "box": [
+        240,
+        128,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "style-15-border-2-1",
+    "box": [
+      256,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse F112. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "F",
+      "reviewId": "F112",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grounds-source-0158e605400a.png",
+      "box": [
+        256,
+        128,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "style-15-border-3-1",
+    "box": [
+      272,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse F113. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "F",
+      "reviewId": "F113",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grounds-source-0158e605400a.png",
+      "box": [
+        272,
+        128,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "style-15-border-1-2",
+    "box": [
+      240,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse F114. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "F",
+      "reviewId": "F114",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grounds-source-0158e605400a.png",
+      "box": [
+        240,
+        144,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "style-15-border-3-2",
+    "box": [
+      272,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse F115. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "F",
+      "reviewId": "F115",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grounds-source-0158e605400a.png",
+      "box": [
+        272,
+        144,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "style-15-border-1-3",
+    "box": [
+      240,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse F116. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "F",
+      "reviewId": "F116",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grounds-source-0158e605400a.png",
+      "box": [
+        240,
+        160,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "style-15-border-2-3",
+    "box": [
+      256,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse F117. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "F",
+      "reviewId": "F117",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grounds-source-0158e605400a.png",
+      "box": [
+        256,
+        160,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "style-15-border-3-3",
+    "box": [
+      272,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse F118. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "F",
+      "reviewId": "F118",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grounds-source-0158e605400a.png",
+      "box": [
+        272,
+        160,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "style-15-patch",
+    "box": [
+      288,
+      192,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse F119. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "F",
+      "reviewId": "F119",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grounds-source-0158e605400a.png",
+      "box": [
+        288,
+        128,
+        48,
+        48
+      ]
+    }
+  },
+  {
+    "name": "style-15-corner-1-1",
+    "box": [
+      272,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-winter-grass-terrain-atlas-style-1-corner-0-32.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-winter/grassland-winter-grass-terrain-atlas-style-1-corner-0-32.png"
+  },
+  {
+    "name": "style-15-corner-2-1",
+    "box": [
+      288,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-winter-grass-terrain-atlas-style-1-corner-16-32.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-winter/grassland-winter-grass-terrain-atlas-style-1-corner-16-32.png"
+  },
+  {
+    "name": "style-16-border-1-1",
+    "box": [
+      336,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse F122. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "F",
+      "reviewId": "F122",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grounds-source-0158e605400a.png",
+      "box": [
+        336,
+        128,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "style-16-border-2-1",
+    "box": [
+      352,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse F123. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "F",
+      "reviewId": "F123",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grounds-source-0158e605400a.png",
+      "box": [
+        352,
+        128,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "style-16-border-3-1",
+    "box": [
+      368,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse F124. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "F",
+      "reviewId": "F124",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grounds-source-0158e605400a.png",
+      "box": [
+        368,
+        128,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "style-16-border-1-2",
+    "box": [
+      336,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse F125. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "F",
+      "reviewId": "F125",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grounds-source-0158e605400a.png",
+      "box": [
+        336,
+        144,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "style-16-border-3-2",
+    "box": [
+      368,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse F126. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "F",
+      "reviewId": "F126",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grounds-source-0158e605400a.png",
+      "box": [
+        368,
+        144,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "style-16-border-1-3",
+    "box": [
+      336,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse F127. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "F",
+      "reviewId": "F127",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grounds-source-0158e605400a.png",
+      "box": [
+        336,
+        160,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "style-16-border-2-3",
+    "box": [
+      352,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse F128. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "F",
+      "reviewId": "F128",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grounds-source-0158e605400a.png",
+      "box": [
+        352,
+        160,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "style-16-border-3-3",
+    "box": [
+      368,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse F129. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "F",
+      "reviewId": "F129",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grounds-source-0158e605400a.png",
+      "box": [
+        368,
+        160,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "style-16-patch",
+    "box": [
+      384,
+      192,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse F130. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "F",
+      "reviewId": "F130",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grounds-source-0158e605400a.png",
+      "box": [
+        384,
+        128,
+        48,
+        48
+      ]
+    }
+  },
+  {
+    "name": "style-16-corner-1-1",
+    "box": [
+      368,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-winter-grass-terrain-atlas-style-2-corner-0-32.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-winter/grassland-winter-grass-terrain-atlas-style-2-corner-0-32.png"
+  },
+  {
+    "name": "style-16-corner-2-1",
+    "box": [
+      384,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-winter-grass-terrain-atlas-style-2-corner-16-32.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-winter/grassland-winter-grass-terrain-atlas-style-2-corner-16-32.png"
+  }
+]

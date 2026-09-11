@@ -1,0 +1,226 @@
+[
+  {
+    "name": "marsh-ground-effect-01-01",
+    "box": [
+      0,
+      16,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "marsh-ground-effect-01-01",
+    "frame": null,
+    "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "marsh-ground-effect-01-02",
+    "box": [
+      80,
+      16,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "marsh-ground-effect-01-02",
+    "frame": null,
+    "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "marsh-ground-effect-01-03",
+    "box": [
+      160,
+      16,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "marsh-ground-effect-01-03",
+    "frame": null,
+    "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "marsh-ground-effect-02-01",
+    "box": [
+      0,
+      32,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "marsh-ground-effect-02-01",
+    "frame": null,
+    "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "marsh-ground-effect-02-02",
+    "box": [
+      80,
+      32,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "marsh-ground-effect-02-02",
+    "frame": null,
+    "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "marsh-ground-effect-02-03",
+    "box": [
+      160,
+      32,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "marsh-ground-effect-02-03",
+    "frame": null,
+    "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "marsh-ground-effect-03-01",
+    "box": [
+      0,
+      48,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "marsh-ground-effect-03-01",
+    "frame": null,
+    "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "marsh-ground-effect-03-02",
+    "box": [
+      80,
+      48,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "marsh-ground-effect-03-02",
+    "frame": null,
+    "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "marsh-ground-effect-03-03",
+    "box": [
+      160,
+      48,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "marsh-ground-effect-03-03",
+    "frame": null,
+    "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "marsh-plant-01-01",
+    "box": [
+      0,
+      64,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "marsh-plant-01-01",
+    "frame": null,
+    "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "marsh-plant-01-02",
+    "box": [
+      80,
+      64,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "marsh-plant-01-02",
+    "frame": null,
+    "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "marsh-plant-02-01",
+    "box": [
+      0,
+      80,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "marsh-plant-02-01",
+    "frame": null,
+    "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "marsh-plant-02-02",
+    "box": [
+      80,
+      80,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "marsh-plant-02-02",
+    "frame": null,
+    "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "marsh-small-leaves-01",
+    "box": [
+      0,
+      96,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "marsh-small-leaves-01",
+    "frame": null,
+    "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "marsh-small-leaves-02",
+    "box": [
+      80,
+      96,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "marsh-small-leaves-02",
+    "frame": null,
+    "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "marsh-small-leaves-03",
+    "box": [
+      160,
+      96,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "marsh-small-leaves-03",
+    "frame": null,
+    "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+    "placement": null
+  }
+]

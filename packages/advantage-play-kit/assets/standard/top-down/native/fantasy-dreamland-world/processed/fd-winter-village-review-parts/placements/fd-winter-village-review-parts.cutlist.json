@@ -1,0 +1,5613 @@
+[
+  {
+    "name": "house-red-tall",
+    "box": [
+      256,
+      96,
+      64,
+      80
+    ],
+    "kind": "part",
+    "group": "house-red-tall",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "house-red-short",
+    "box": [
+      320,
+      112,
+      64,
+      64
+    ],
+    "kind": "part",
+    "group": "house-red-short",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "house-gray-tall",
+    "box": [
+      256,
+      176,
+      64,
+      80
+    ],
+    "kind": "part",
+    "group": "house-gray-tall",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "house-gray-short",
+    "box": [
+      320,
+      192,
+      64,
+      64
+    ],
+    "kind": "part",
+    "group": "house-gray-short",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "house-yellow-tall",
+    "box": [
+      384,
+      176,
+      64,
+      80
+    ],
+    "kind": "part",
+    "group": "house-yellow-tall",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "house-yellow-short",
+    "box": [
+      448,
+      192,
+      64,
+      64
+    ],
+    "kind": "part",
+    "group": "house-yellow-short",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "logs-large",
+    "box": [
+      416,
+      144,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "logs-large",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "logs-tall",
+    "box": [
+      448,
+      144,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "logs-tall",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "logs-row",
+    "box": [
+      432,
+      128,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "logs-row",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "snow-logs-large",
+    "box": [
+      464,
+      144,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "snow-logs-large",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "snow-logs-tall",
+    "box": [
+      496,
+      144,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "snow-logs-tall",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "snow-logs-row",
+    "box": [
+      480,
+      128,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "snow-logs-row",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "house-0-256",
+    "box": [
+      0,
+      256,
+      64,
+      64
+    ],
+    "kind": "part",
+    "group": "house-0-256",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "house-0-320",
+    "box": [
+      0,
+      320,
+      64,
+      96
+    ],
+    "kind": "part",
+    "group": "house-0-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "house-0-416",
+    "box": [
+      0,
+      416,
+      64,
+      80
+    ],
+    "kind": "part",
+    "group": "house-0-416",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "house-64-256",
+    "box": [
+      64,
+      256,
+      64,
+      64
+    ],
+    "kind": "part",
+    "group": "house-64-256",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "house-64-320",
+    "box": [
+      64,
+      320,
+      64,
+      96
+    ],
+    "kind": "part",
+    "group": "house-64-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "house-64-416",
+    "box": [
+      64,
+      416,
+      64,
+      80
+    ],
+    "kind": "part",
+    "group": "house-64-416",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "house-128-256",
+    "box": [
+      128,
+      256,
+      64,
+      64
+    ],
+    "kind": "part",
+    "group": "house-128-256",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "house-128-320",
+    "box": [
+      128,
+      320,
+      64,
+      96
+    ],
+    "kind": "part",
+    "group": "house-128-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "house-128-416",
+    "box": [
+      128,
+      416,
+      64,
+      80
+    ],
+    "kind": "part",
+    "group": "house-128-416",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "fence-frame-0-0",
+    "box": [
+      256,
+      0,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "fence-frame-0-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "fence-frame-0-48",
+    "box": [
+      256,
+      48,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "fence-frame-0-48",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "fence-frame-80-0",
+    "box": [
+      336,
+      0,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "fence-frame-80-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "fence-frame-80-48",
+    "box": [
+      336,
+      48,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "fence-frame-80-48",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "fence-pieces-320-0",
+    "box": [
+      320,
+      0,
+      16,
+      48
+    ],
+    "kind": "part",
+    "group": "fence-pieces-320-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "fence-pieces-320-48",
+    "box": [
+      320,
+      48,
+      16,
+      48
+    ],
+    "kind": "part",
+    "group": "fence-pieces-320-48",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "fence-pieces-400-0",
+    "box": [
+      400,
+      0,
+      16,
+      48
+    ],
+    "kind": "part",
+    "group": "fence-pieces-400-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "fence-pieces-400-48",
+    "box": [
+      400,
+      48,
+      16,
+      48
+    ],
+    "kind": "part",
+    "group": "fence-pieces-400-48",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "tree-round",
+    "box": [
+      96,
+      32,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "tree-round",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "tree-round-snow",
+    "box": [
+      96,
+      64,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "tree-round-snow",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "tree-thin-192",
+    "box": [
+      192,
+      0,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "tree-thin-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "tree-thin-208",
+    "box": [
+      208,
+      0,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "tree-thin-208",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "lamp-80",
+    "box": [
+      80,
+      96,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "lamp-80",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "lamp-96",
+    "box": [
+      96,
+      96,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "lamp-96",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "lamp-112",
+    "box": [
+      112,
+      96,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "lamp-112",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "lamp-128",
+    "box": [
+      128,
+      96,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "lamp-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "lamp-144",
+    "box": [
+      144,
+      96,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "lamp-144",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "lamp-160",
+    "box": [
+      160,
+      96,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "lamp-160",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "lamp-176",
+    "box": [
+      176,
+      96,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "lamp-176",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "lamp-192",
+    "box": [
+      192,
+      96,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "lamp-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "lamp-lower-192",
+    "box": [
+      192,
+      192,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "lamp-lower-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "lamp-lower-208",
+    "box": [
+      208,
+      192,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "lamp-lower-208",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "lamp-lower-224",
+    "box": [
+      224,
+      192,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "lamp-lower-224",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "lamp-lower-240",
+    "box": [
+      240,
+      192,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "lamp-lower-240",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "rock-0-192",
+    "box": [
+      0,
+      192,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-0-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "rock-16-192",
+    "box": [
+      16,
+      192,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-16-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "rock-32-192",
+    "box": [
+      32,
+      192,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-32-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "rock-48-192",
+    "box": [
+      48,
+      192,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-48-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "rock-64-192",
+    "box": [
+      64,
+      192,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-64-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "rock-80-192",
+    "box": [
+      80,
+      192,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-80-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "rock-96-192",
+    "box": [
+      96,
+      192,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-96-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "rock-112-192",
+    "box": [
+      112,
+      192,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-112-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "rock-128-192",
+    "box": [
+      128,
+      192,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-128-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "rock-144-192",
+    "box": [
+      144,
+      192,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-144-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "rock-cluster-192",
+    "box": [
+      160,
+      192,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-cluster-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "rock-0-224",
+    "box": [
+      0,
+      224,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-0-224",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "rock-32-224",
+    "box": [
+      32,
+      224,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-32-224",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "rock-64-224",
+    "box": [
+      64,
+      224,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-64-224",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "rock-96-224",
+    "box": [
+      96,
+      224,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-96-224",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "rock-128-224",
+    "box": [
+      128,
+      224,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-128-224",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "rock-cluster-224",
+    "box": [
+      160,
+      224,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-cluster-224",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "tree-thin-bottom-416",
+    "box": [
+      416,
+      256,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "tree-thin-bottom-416",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "tree-thin-bottom-432",
+    "box": [
+      432,
+      256,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "tree-thin-bottom-432",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "tree-round-bottom-256",
+    "box": [
+      448,
+      256,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "tree-round-bottom-256",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "tree-round-bottom-352",
+    "box": [
+      448,
+      352,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "tree-round-bottom-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "tree-large-416-416",
+    "box": [
+      416,
+      416,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "tree-large-416-416",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "tree-large-416-464",
+    "box": [
+      416,
+      464,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "tree-large-416-464",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "tree-large-464-416",
+    "box": [
+      464,
+      416,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "tree-large-464-416",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "tree-large-464-464",
+    "box": [
+      464,
+      464,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "tree-large-464-464",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "barrel-cluster-192-280",
+    "box": [
+      192,
+      280,
+      32,
+      24
+    ],
+    "kind": "part",
+    "group": "barrel-cluster-192-280",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "barrel-cluster-224-280",
+    "box": [
+      224,
+      280,
+      32,
+      24
+    ],
+    "kind": "part",
+    "group": "barrel-cluster-224-280",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "barrel-cluster-192-312",
+    "box": [
+      192,
+      312,
+      32,
+      24
+    ],
+    "kind": "part",
+    "group": "barrel-cluster-192-312",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "barrel-cluster-224-312",
+    "box": [
+      224,
+      312,
+      32,
+      24
+    ],
+    "kind": "part",
+    "group": "barrel-cluster-224-312",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "barrel-cluster-192-360",
+    "box": [
+      192,
+      360,
+      32,
+      24
+    ],
+    "kind": "part",
+    "group": "barrel-cluster-192-360",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "barrel-cluster-224-360",
+    "box": [
+      224,
+      360,
+      32,
+      24
+    ],
+    "kind": "part",
+    "group": "barrel-cluster-224-360",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "barrel-cluster-192-392",
+    "box": [
+      192,
+      392,
+      32,
+      24
+    ],
+    "kind": "part",
+    "group": "barrel-cluster-192-392",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "barrel-cluster-224-392",
+    "box": [
+      224,
+      392,
+      32,
+      24
+    ],
+    "kind": "part",
+    "group": "barrel-cluster-224-392",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cliff-cap-256-256",
+    "box": [
+      256,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "cliff-cap-256-256",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cliff-upper-256-256",
+    "box": [
+      272,
+      256,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "cliff-upper-256-256",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cliff-face-256-256",
+    "box": [
+      256,
+      272,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "cliff-face-256-256",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cliff-needle-256-256",
+    "box": [
+      304,
+      256,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "cliff-needle-256-256",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cliff-side-256-256",
+    "box": [
+      304,
+      272,
+      32,
+      48
+    ],
+    "kind": "part",
+    "group": "cliff-side-256-256",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cliff-cap-256-320",
+    "box": [
+      256,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse N79. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "N",
+      "reviewId": "N79",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-winter-village-source-30d93662dd18.png",
+      "box": [
+        256,
+        256,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "cliff-upper-256-320",
+    "box": [
+      272,
+      320,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "cliff-upper-256-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cliff-face-256-320",
+    "box": [
+      256,
+      336,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "cliff-face-256-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cliff-needle-256-320",
+    "box": [
+      304,
+      320,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "cliff-needle-256-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cliff-side-256-320",
+    "box": [
+      304,
+      336,
+      32,
+      48
+    ],
+    "kind": "part",
+    "group": "cliff-side-256-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cliff-cap-256-384",
+    "box": [
+      256,
+      384,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse N79. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "N",
+      "reviewId": "N79",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-winter-village-source-30d93662dd18.png",
+      "box": [
+        256,
+        256,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "cliff-upper-256-384",
+    "box": [
+      272,
+      384,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "cliff-upper-256-384",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cliff-face-256-384",
+    "box": [
+      256,
+      400,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "cliff-face-256-384",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cliff-needle-256-384",
+    "box": [
+      304,
+      384,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "cliff-needle-256-384",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cliff-side-256-384",
+    "box": [
+      304,
+      400,
+      32,
+      48
+    ],
+    "kind": "part",
+    "group": "cliff-side-256-384",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cliff-cap-256-448",
+    "box": [
+      256,
+      448,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse N79. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "N",
+      "reviewId": "N79",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-winter-village-source-30d93662dd18.png",
+      "box": [
+        256,
+        256,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "cliff-upper-256-448",
+    "box": [
+      272,
+      448,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "cliff-upper-256-448",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cliff-face-256-448",
+    "box": [
+      256,
+      464,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "cliff-face-256-448",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cliff-needle-256-448",
+    "box": [
+      304,
+      448,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "cliff-needle-256-448",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cliff-side-256-448",
+    "box": [
+      304,
+      464,
+      32,
+      48
+    ],
+    "kind": "part",
+    "group": "cliff-side-256-448",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cliff-cap-336-256",
+    "box": [
+      336,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "cliff-cap-336-256",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cliff-upper-336-256",
+    "box": [
+      352,
+      256,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "cliff-upper-336-256",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cliff-face-336-256",
+    "box": [
+      336,
+      272,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "cliff-face-336-256",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cliff-needle-336-256",
+    "box": [
+      384,
+      256,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "cliff-needle-336-256",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cliff-side-336-256",
+    "box": [
+      384,
+      272,
+      32,
+      48
+    ],
+    "kind": "part",
+    "group": "cliff-side-336-256",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cliff-cap-336-320",
+    "box": [
+      336,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse N99. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "N",
+      "reviewId": "N99",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-winter-village-source-30d93662dd18.png",
+      "box": [
+        336,
+        256,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "cliff-upper-336-320",
+    "box": [
+      352,
+      320,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "cliff-upper-336-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cliff-face-336-320",
+    "box": [
+      336,
+      336,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "cliff-face-336-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cliff-needle-336-320",
+    "box": [
+      384,
+      320,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "cliff-needle-336-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cliff-side-336-320",
+    "box": [
+      384,
+      336,
+      32,
+      48
+    ],
+    "kind": "part",
+    "group": "cliff-side-336-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cliff-cap-336-384",
+    "box": [
+      336,
+      384,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse N99. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "N",
+      "reviewId": "N99",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-winter-village-source-30d93662dd18.png",
+      "box": [
+        336,
+        256,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "cliff-upper-336-384",
+    "box": [
+      352,
+      384,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "cliff-upper-336-384",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cliff-face-336-384",
+    "box": [
+      336,
+      400,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "cliff-face-336-384",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cliff-needle-336-384",
+    "box": [
+      384,
+      384,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "cliff-needle-336-384",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cliff-side-336-384",
+    "box": [
+      384,
+      400,
+      32,
+      48
+    ],
+    "kind": "part",
+    "group": "cliff-side-336-384",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cliff-cap-336-448",
+    "box": [
+      336,
+      448,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse N99. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "N",
+      "reviewId": "N99",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-winter-village-source-30d93662dd18.png",
+      "box": [
+        336,
+        256,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "cliff-upper-336-448",
+    "box": [
+      352,
+      448,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "cliff-upper-336-448",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cliff-face-336-448",
+    "box": [
+      336,
+      464,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "cliff-face-336-448",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cliff-needle-336-448",
+    "box": [
+      384,
+      448,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "cliff-needle-336-448",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cliff-side-336-448",
+    "box": [
+      384,
+      464,
+      32,
+      48
+    ],
+    "kind": "part",
+    "group": "cliff-side-336-448",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cliff-bare-upper-0",
+    "box": [
+      432,
+      0,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "cliff-bare-upper-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cliff-bare-face-0",
+    "box": [
+      416,
+      16,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "cliff-bare-face-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cliff-bare-needle-0",
+    "box": [
+      464,
+      0,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "cliff-bare-needle-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cliff-bare-side-0",
+    "box": [
+      464,
+      16,
+      32,
+      48
+    ],
+    "kind": "part",
+    "group": "cliff-bare-side-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cliff-bare-upper-64",
+    "box": [
+      432,
+      64,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "cliff-bare-upper-64",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cliff-bare-face-64",
+    "box": [
+      416,
+      80,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "cliff-bare-face-64",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cliff-bare-needle-64",
+    "box": [
+      464,
+      64,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "cliff-bare-needle-64",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cliff-bare-side-64",
+    "box": [
+      464,
+      80,
+      32,
+      48
+    ],
+    "kind": "part",
+    "group": "cliff-bare-side-64",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "ground-0-80",
+    "box": [
+      0,
+      80,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "ground-0-80",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "ground-48-64",
+    "box": [
+      48,
+      64,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "ground-48-64",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "ground-112-512",
+    "box": [
+      112,
+      512,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "ground-112-512",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "ground-160-512",
+    "box": [
+      160,
+      512,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "ground-160-512",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "ground-224-512",
+    "box": [
+      224,
+      512,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "ground-224-512",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "ground-280-528",
+    "box": [
+      280,
+      528,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "ground-280-528",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "ground-336-512",
+    "box": [
+      336,
+      512,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "ground-336-512",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "tile-2-1",
+    "box": [
+      16,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse W121. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "W",
+      "reviewId": "W121",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-winter-village-source-72de75cfb7b4.png",
+      "box": [
+        0,
+        64,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-3-1",
+    "box": [
+      32,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-1",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-4-1",
+    "box": [
+      48,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-1",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-5-1",
+    "box": [
+      64,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-1",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-6-1",
+    "box": [
+      80,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-6-1",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-7-1",
+    "box": [
+      96,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-7-1",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-8-1",
+    "box": [
+      112,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse N139. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "N",
+      "reviewId": "N139",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-winter-village-source-30d93662dd18.png",
+      "box": [
+        96,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-9-1",
+    "box": [
+      128,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse N139. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "N",
+      "reviewId": "N139",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-winter-village-source-30d93662dd18.png",
+      "box": [
+        96,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-10-1",
+    "box": [
+      144,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-1",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-11-1",
+    "box": [
+      160,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse N142. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "N",
+      "reviewId": "N142",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-winter-village-source-30d93662dd18.png",
+      "box": [
+        144,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-12-1",
+    "box": [
+      176,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse N142. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "N",
+      "reviewId": "N142",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-winter-village-source-30d93662dd18.png",
+      "box": [
+        144,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-20-1",
+    "box": [
+      304,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-20-1",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-25-1",
+    "box": [
+      384,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-25-1",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-27-1",
+    "box": [
+      416,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse N79. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "N",
+      "reviewId": "N79",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-winter-village-source-30d93662dd18.png",
+      "box": [
+        256,
+        256,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-1-2",
+    "box": [
+      0,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-1-2",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-2-2",
+    "box": [
+      16,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-2-2",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-3-2",
+    "box": [
+      32,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-2",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-4-2",
+    "box": [
+      48,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse W122. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "W",
+      "reviewId": "W122",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-winter-village-source-72de75cfb7b4.png",
+      "box": [
+        16,
+        64,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-5-2",
+    "box": [
+      64,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse W123. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "W",
+      "reviewId": "W123",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-winter-village-source-72de75cfb7b4.png",
+      "box": [
+        32,
+        64,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-6-2",
+    "box": [
+      80,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse W124. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "W",
+      "reviewId": "W124",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-winter-village-source-72de75cfb7b4.png",
+      "box": [
+        48,
+        64,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-7-2",
+    "box": [
+      96,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-7-2",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-8-2",
+    "box": [
+      112,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-8-2",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-9-2",
+    "box": [
+      128,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-9-2",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-10-2",
+    "box": [
+      144,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-2",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-11-2",
+    "box": [
+      160,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-2",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-12-2",
+    "box": [
+      176,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-2",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-20-2",
+    "box": [
+      304,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-20-2",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-25-2",
+    "box": [
+      384,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-25-2",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-2-3",
+    "box": [
+      16,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-2-3",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-3-3",
+    "box": [
+      32,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-3",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-4-3",
+    "box": [
+      48,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-3",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-5-3",
+    "box": [
+      64,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-3",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-6-3",
+    "box": [
+      80,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-6-3",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-9-3",
+    "box": [
+      128,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-9-3",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-10-3",
+    "box": [
+      144,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-3",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-11-3",
+    "box": [
+      160,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-3",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-12-3",
+    "box": [
+      176,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-3",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-13-3",
+    "box": [
+      192,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-3",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-14-3",
+    "box": [
+      208,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-3",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-15-3",
+    "box": [
+      224,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-3",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-16-3",
+    "box": [
+      240,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-3",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-20-3",
+    "box": [
+      304,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-20-3",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-25-3",
+    "box": [
+      384,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-25-3",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-1-4",
+    "box": [
+      0,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-1-4",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-2-4",
+    "box": [
+      16,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-2-4",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-3-4",
+    "box": [
+      32,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-4",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-4-4",
+    "box": [
+      48,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-4",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-5-4",
+    "box": [
+      64,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-4",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-6-4",
+    "box": [
+      80,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-6-4",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-9-4",
+    "box": [
+      128,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse N168. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "N",
+      "reviewId": "N168",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-winter-village-source-30d93662dd18.png",
+      "box": [
+        144,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-10-4",
+    "box": [
+      144,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse N167. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "N",
+      "reviewId": "N167",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-winter-village-source-30d93662dd18.png",
+      "box": [
+        128,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-11-4",
+    "box": [
+      160,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse N170. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "N",
+      "reviewId": "N170",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-winter-village-source-30d93662dd18.png",
+      "box": [
+        176,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-12-4",
+    "box": [
+      176,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse N169. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "N",
+      "reviewId": "N169",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-winter-village-source-30d93662dd18.png",
+      "box": [
+        160,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-13-4",
+    "box": [
+      192,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse N172. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "N",
+      "reviewId": "N172",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-winter-village-source-30d93662dd18.png",
+      "box": [
+        208,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-14-4",
+    "box": [
+      208,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse N171. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "N",
+      "reviewId": "N171",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-winter-village-source-30d93662dd18.png",
+      "box": [
+        192,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-15-4",
+    "box": [
+      224,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse N174. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "N",
+      "reviewId": "N174",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-winter-village-source-30d93662dd18.png",
+      "box": [
+        240,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-16-4",
+    "box": [
+      240,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse N173. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "N",
+      "reviewId": "N173",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-winter-village-source-30d93662dd18.png",
+      "box": [
+        224,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-20-4",
+    "box": [
+      304,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-20-4",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-25-4",
+    "box": [
+      384,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-25-4",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-2-5",
+    "box": [
+      16,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse W128. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "W",
+      "reviewId": "W128",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-winter-village-source-72de75cfb7b4.png",
+      "box": [
+        128,
+        64,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-3-5",
+    "box": [
+      32,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-5",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-9-5",
+    "box": [
+      128,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-9-5",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-10-5",
+    "box": [
+      144,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse N170. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "N",
+      "reviewId": "N170",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-winter-village-source-30d93662dd18.png",
+      "box": [
+        176,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-11-5",
+    "box": [
+      160,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse N167. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "N",
+      "reviewId": "N167",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-winter-village-source-30d93662dd18.png",
+      "box": [
+        128,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-12-5",
+    "box": [
+      176,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-5",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-13-5",
+    "box": [
+      192,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse N195. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "N",
+      "reviewId": "N195",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-winter-village-source-30d93662dd18.png",
+      "box": [
+        128,
+        64,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-14-5",
+    "box": [
+      208,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse N174. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "N",
+      "reviewId": "N174",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-winter-village-source-30d93662dd18.png",
+      "box": [
+        240,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-15-5",
+    "box": [
+      224,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse N171. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "N",
+      "reviewId": "N171",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-winter-village-source-30d93662dd18.png",
+      "box": [
+        192,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-16-5",
+    "box": [
+      240,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse N198. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "N",
+      "reviewId": "N198",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-winter-village-source-30d93662dd18.png",
+      "box": [
+        176,
+        64,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-20-5",
+    "box": [
+      304,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-20-5",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-25-5",
+    "box": [
+      384,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-25-5",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-27-5",
+    "box": [
+      416,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse N99. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "N",
+      "reviewId": "N99",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-winter-village-source-30d93662dd18.png",
+      "box": [
+        336,
+        256,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-10-6",
+    "box": [
+      144,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse N195. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "N",
+      "reviewId": "N195",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-winter-village-source-30d93662dd18.png",
+      "box": [
+        128,
+        64,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-11-6",
+    "box": [
+      160,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse N198. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "N",
+      "reviewId": "N198",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-winter-village-source-30d93662dd18.png",
+      "box": [
+        176,
+        64,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-14-6",
+    "box": [
+      208,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse N195. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "N",
+      "reviewId": "N195",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-winter-village-source-30d93662dd18.png",
+      "box": [
+        128,
+        64,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-15-6",
+    "box": [
+      224,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse N198. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "N",
+      "reviewId": "N198",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-winter-village-source-30d93662dd18.png",
+      "box": [
+        176,
+        64,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-20-6",
+    "box": [
+      304,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-20-6",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-25-6",
+    "box": [
+      384,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-25-6",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-4-7",
+    "box": [
+      48,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-7",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-5-7",
+    "box": [
+      64,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-7",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-14-7",
+    "box": [
+      208,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-7",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-15-7",
+    "box": [
+      224,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-7",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-16-7",
+    "box": [
+      240,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-7",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-4-8",
+    "box": [
+      48,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-8",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-5-8",
+    "box": [
+      64,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-8",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-14-8",
+    "box": [
+      208,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-8",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-15-8",
+    "box": [
+      224,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-8",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-16-8",
+    "box": [
+      240,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-8",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-1-9",
+    "box": [
+      0,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-1-9",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-2-9",
+    "box": [
+      16,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-2-9",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-3-9",
+    "box": [
+      32,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-9",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-4-9",
+    "box": [
+      48,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-9",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-5-9",
+    "box": [
+      64,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-9",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-6-9",
+    "box": [
+      80,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-6-9",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-7-9",
+    "box": [
+      96,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-7-9",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-8-9",
+    "box": [
+      112,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-8-9",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-9-9",
+    "box": [
+      128,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-9-9",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-10-9",
+    "box": [
+      144,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-9",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-11-9",
+    "box": [
+      160,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-9",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-12-9",
+    "box": [
+      176,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-9",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-13-9",
+    "box": [
+      192,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-9",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-14-9",
+    "box": [
+      208,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-9",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-15-9",
+    "box": [
+      224,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-9",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-16-9",
+    "box": [
+      240,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-9",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-27-9",
+    "box": [
+      416,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-27-9",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-30-9",
+    "box": [
+      464,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-30-9",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-1-10",
+    "box": [
+      0,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-1-10",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-2-10",
+    "box": [
+      16,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-2-10",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-3-10",
+    "box": [
+      32,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-10",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-4-10",
+    "box": [
+      48,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-10",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-5-10",
+    "box": [
+      64,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-10",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-6-10",
+    "box": [
+      80,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-6-10",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-7-10",
+    "box": [
+      96,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-7-10",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-8-10",
+    "box": [
+      112,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-8-10",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-9-10",
+    "box": [
+      128,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-9-10",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-10-10",
+    "box": [
+      144,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-10",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-11-10",
+    "box": [
+      160,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-10",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-12-10",
+    "box": [
+      176,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-10",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-13-10",
+    "box": [
+      192,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-10",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-14-10",
+    "box": [
+      208,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-10",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-15-10",
+    "box": [
+      224,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-10",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-16-10",
+    "box": [
+      240,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-10",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-1-11",
+    "box": [
+      0,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-1-11",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-2-11",
+    "box": [
+      16,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-2-11",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-3-11",
+    "box": [
+      32,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-11",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-4-11",
+    "box": [
+      48,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-11",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-5-11",
+    "box": [
+      64,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-11",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-6-11",
+    "box": [
+      80,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-6-11",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-7-11",
+    "box": [
+      96,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-7-11",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-8-11",
+    "box": [
+      112,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-8-11",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-9-11",
+    "box": [
+      128,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-9-11",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-10-11",
+    "box": [
+      144,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-11",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-11-11",
+    "box": [
+      160,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-11",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-12-11",
+    "box": [
+      176,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-11",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-13-11",
+    "box": [
+      192,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-11",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-14-11",
+    "box": [
+      208,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-11",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-15-11",
+    "box": [
+      224,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-11",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-16-11",
+    "box": [
+      240,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-11",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-1-12",
+    "box": [
+      0,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-1-12",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-2-12",
+    "box": [
+      16,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-2-12",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-3-12",
+    "box": [
+      32,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-12",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-4-12",
+    "box": [
+      48,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-12",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-5-12",
+    "box": [
+      64,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-12",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-6-12",
+    "box": [
+      80,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-6-12",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-7-12",
+    "box": [
+      96,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-7-12",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-8-12",
+    "box": [
+      112,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-8-12",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-9-12",
+    "box": [
+      128,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-9-12",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-10-12",
+    "box": [
+      144,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-12",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-11-12",
+    "box": [
+      160,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-12",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-12-12",
+    "box": [
+      176,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-12",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-13-12",
+    "box": [
+      192,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-12",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-14-12",
+    "box": [
+      208,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-12",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-15-12",
+    "box": [
+      224,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-12",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-16-12",
+    "box": [
+      240,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-12",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-13-17",
+    "box": [
+      192,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: blacksmith-workshop-workbench-part-0-112.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/blacksmith-workshop/blacksmith-workshop-workbench-part-0-112.png"
+  },
+  {
+    "name": "tile-14-17",
+    "box": [
+      208,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: blacksmith-workshop-workbench-part-16-112.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/blacksmith-workshop/blacksmith-workshop-workbench-part-16-112.png"
+  },
+  {
+    "name": "tile-15-17",
+    "box": [
+      224,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-17",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-16-17",
+    "box": [
+      240,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-17",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-31-17",
+    "box": [
+      480,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse N172. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "N",
+      "reviewId": "N172",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-winter-village-source-30d93662dd18.png",
+      "box": [
+        208,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-32-17",
+    "box": [
+      496,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse N173. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "N",
+      "reviewId": "N173",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-winter-village-source-30d93662dd18.png",
+      "box": [
+        224,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-31-18",
+    "box": [
+      480,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-31-18",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-32-18",
+    "box": [
+      496,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-32-18",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-29-19",
+    "box": [
+      448,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse N167. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "N",
+      "reviewId": "N167",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-winter-village-source-30d93662dd18.png",
+      "box": [
+        128,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-30-19",
+    "box": [
+      464,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse N168. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "N",
+      "reviewId": "N168",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-winter-village-source-30d93662dd18.png",
+      "box": [
+        144,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-31-19",
+    "box": [
+      480,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse N169. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "N",
+      "reviewId": "N169",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-winter-village-source-30d93662dd18.png",
+      "box": [
+        160,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-32-19",
+    "box": [
+      496,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse N170. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "N",
+      "reviewId": "N170",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-winter-village-source-30d93662dd18.png",
+      "box": [
+        176,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-29-20",
+    "box": [
+      448,
+      304,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse N168. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "N",
+      "reviewId": "N168",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-winter-village-source-30d93662dd18.png",
+      "box": [
+        144,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-30-20",
+    "box": [
+      464,
+      304,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse N167. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "N",
+      "reviewId": "N167",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-winter-village-source-30d93662dd18.png",
+      "box": [
+        128,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-31-20",
+    "box": [
+      480,
+      304,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse N170. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "N",
+      "reviewId": "N170",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-winter-village-source-30d93662dd18.png",
+      "box": [
+        176,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-32-20",
+    "box": [
+      496,
+      304,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse N169. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "N",
+      "reviewId": "N169",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-winter-village-source-30d93662dd18.png",
+      "box": [
+        160,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-29-21",
+    "box": [
+      448,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse N294. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "N",
+      "reviewId": "N294",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-winter-village-source-30d93662dd18.png",
+      "box": [
+        480,
+        272,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-30-21",
+    "box": [
+      464,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse N170. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "N",
+      "reviewId": "N170",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-winter-village-source-30d93662dd18.png",
+      "box": [
+        176,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-31-21",
+    "box": [
+      480,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse N167. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "N",
+      "reviewId": "N167",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-winter-village-source-30d93662dd18.png",
+      "box": [
+        128,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-32-21",
+    "box": [
+      496,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse N295. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "N",
+      "reviewId": "N295",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-winter-village-source-30d93662dd18.png",
+      "box": [
+        496,
+        272,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-13-22",
+    "box": [
+      192,
+      336,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-22",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-14-22",
+    "box": [
+      208,
+      336,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-22",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-15-22",
+    "box": [
+      224,
+      336,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-22",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-16-22",
+    "box": [
+      240,
+      336,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-22",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-30-22",
+    "box": [
+      464,
+      336,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse N294. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "N",
+      "reviewId": "N294",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-winter-village-source-30d93662dd18.png",
+      "box": [
+        480,
+        272,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-31-22",
+    "box": [
+      480,
+      336,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse N295. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "N",
+      "reviewId": "N295",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-winter-village-source-30d93662dd18.png",
+      "box": [
+        496,
+        272,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-31-23",
+    "box": [
+      480,
+      352,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse N173. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "N",
+      "reviewId": "N173",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-winter-village-source-30d93662dd18.png",
+      "box": [
+        224,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-32-23",
+    "box": [
+      496,
+      352,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse N174. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "N",
+      "reviewId": "N174",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-winter-village-source-30d93662dd18.png",
+      "box": [
+        240,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-31-24",
+    "box": [
+      480,
+      368,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse N174. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "N",
+      "reviewId": "N174",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-winter-village-source-30d93662dd18.png",
+      "box": [
+        240,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-32-24",
+    "box": [
+      496,
+      368,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse N173. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "N",
+      "reviewId": "N173",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-winter-village-source-30d93662dd18.png",
+      "box": [
+        224,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-29-25",
+    "box": [
+      448,
+      384,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse N294. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "N",
+      "reviewId": "N294",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-winter-village-source-30d93662dd18.png",
+      "box": [
+        480,
+        272,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-30-25",
+    "box": [
+      464,
+      384,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse N174. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "N",
+      "reviewId": "N174",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-winter-village-source-30d93662dd18.png",
+      "box": [
+        240,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-31-25",
+    "box": [
+      480,
+      384,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse N171. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "N",
+      "reviewId": "N171",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-winter-village-source-30d93662dd18.png",
+      "box": [
+        192,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-32-25",
+    "box": [
+      496,
+      384,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse N295. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "N",
+      "reviewId": "N295",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-winter-village-source-30d93662dd18.png",
+      "box": [
+        496,
+        272,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-30-26",
+    "box": [
+      464,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse N294. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "N",
+      "reviewId": "N294",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-winter-village-source-30d93662dd18.png",
+      "box": [
+        480,
+        272,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-31-26",
+    "box": [
+      480,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse N295. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "N",
+      "reviewId": "N295",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-winter-village-source-30d93662dd18.png",
+      "box": [
+        496,
+        272,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-13-28",
+    "box": [
+      192,
+      432,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-28",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-14-28",
+    "box": [
+      208,
+      432,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-28",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-15-28",
+    "box": [
+      224,
+      432,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: desert-houses-chest-224-224.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/desert-houses/desert-houses-chest-224-224.png"
+  },
+  {
+    "name": "tile-16-28",
+    "box": [
+      240,
+      432,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: desert-houses-chest-240-224.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/desert-houses/desert-houses-chest-240-224.png"
+  },
+  {
+    "name": "tile-13-29",
+    "box": [
+      192,
+      448,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-29",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-14-29",
+    "box": [
+      208,
+      448,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-29",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-15-29",
+    "box": [
+      224,
+      448,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-29",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-16-29",
+    "box": [
+      240,
+      448,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-29",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-5-33",
+    "box": [
+      64,
+      512,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-33",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-6-33",
+    "box": [
+      80,
+      512,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-6-33",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-7-33",
+    "box": [
+      96,
+      512,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-7-33",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-18-33",
+    "box": [
+      272,
+      512,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-18-33",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-19-33",
+    "box": [
+      288,
+      512,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse W100. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "W",
+      "reviewId": "W100",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-winter-village-source-72de75cfb7b4.png",
+      "box": [
+        16,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-20-33",
+    "box": [
+      304,
+      512,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-20-33",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-25-33",
+    "box": [
+      384,
+      512,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-25-33",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-26-33",
+    "box": [
+      400,
+      512,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-26-33",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-27-33",
+    "box": [
+      416,
+      512,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-27-33",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-5-34",
+    "box": [
+      64,
+      528,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-34",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-7-34",
+    "box": [
+      96,
+      528,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-7-34",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-25-34",
+    "box": [
+      384,
+      528,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-25-34",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-26-34",
+    "box": [
+      400,
+      528,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse W121. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "W",
+      "reviewId": "W121",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-winter-village-source-72de75cfb7b4.png",
+      "box": [
+        0,
+        64,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-27-34",
+    "box": [
+      416,
+      528,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-27-34",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-5-35",
+    "box": [
+      64,
+      544,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-35",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-6-35",
+    "box": [
+      80,
+      544,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-6-35",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-7-35",
+    "box": [
+      96,
+      544,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-7-35",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-25-35",
+    "box": [
+      384,
+      544,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-25-35",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-26-35",
+    "box": [
+      400,
+      544,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-26-35",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-27-35",
+    "box": [
+      416,
+      544,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-27-35",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  }
+]

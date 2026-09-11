@@ -1,0 +1,13 @@
+{
+  "keepSheet": true,
+  "cellWidth": 32,
+  "cellHeight": 32,
+  "columns": 9,
+  "rows": 8,
+  "contentHeight": 256,
+  "notes": [
+    "Each row is one tower type. Every cell is 32x32.",
+    "Columns 1-4: building. Column 5: complete. Columns 6-9: destroying.",
+    "The colour-palette strip at y=256 is not a frame."
+  ]
+}

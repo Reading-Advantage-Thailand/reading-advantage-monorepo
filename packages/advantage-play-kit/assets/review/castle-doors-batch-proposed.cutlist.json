@@ -1,0 +1,58 @@
+[
+  {
+    "name": "castle-door-style-01-01",
+    "box": [
+      0,
+      0,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "castle-door-style-01-01",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "castle-door-style-01-02",
+    "box": [
+      80,
+      0,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "castle-door-style-01-02",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "castle-door-style-02-01",
+    "box": [
+      0,
+      16,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "castle-door-style-02-01",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "castle-door-style-02-02",
+    "box": [
+      80,
+      16,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "castle-door-style-02-02",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the complete strip.",
+    "placement": null
+  }
+]

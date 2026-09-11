@@ -1,0 +1,156 @@
+[
+  {
+    "name": "dungeon-portcullis-01",
+    "box": [
+      0,
+      16,
+      192,
+      32
+    ],
+    "kind": "structure",
+    "group": "dungeon-portcullis-01",
+    "frame": null,
+    "notes": "Four animation frames. Preserve the strip.",
+    "placement": null
+  },
+  {
+    "name": "dungeon-portcullis-02",
+    "box": [
+      0,
+      48,
+      192,
+      32
+    ],
+    "kind": "structure",
+    "group": "dungeon-portcullis-02",
+    "frame": null,
+    "notes": "Four animation frames. Preserve the strip.",
+    "placement": null
+  },
+  {
+    "name": "dungeon-portcullis-03",
+    "box": [
+      0,
+      80,
+      192,
+      32
+    ],
+    "kind": "structure",
+    "group": "dungeon-portcullis-03",
+    "frame": null,
+    "notes": "Four animation frames. Preserve the strip.",
+    "placement": null
+  },
+  {
+    "name": "dungeon-portcullis-04",
+    "box": [
+      0,
+      112,
+      192,
+      32
+    ],
+    "kind": "structure",
+    "group": "dungeon-portcullis-04",
+    "frame": null,
+    "notes": "Four animation frames. Preserve the strip.",
+    "placement": null
+  },
+  {
+    "name": "dungeon-stone-door-01",
+    "box": [
+      208,
+      16,
+      192,
+      32
+    ],
+    "kind": "structure",
+    "group": "dungeon-stone-door-01",
+    "frame": null,
+    "notes": "Four animation frames. Preserve the strip.",
+    "placement": null
+  },
+  {
+    "name": "dungeon-stone-door-02",
+    "box": [
+      208,
+      48,
+      192,
+      32
+    ],
+    "kind": "structure",
+    "group": "dungeon-stone-door-02",
+    "frame": null,
+    "notes": "Four animation frames. Preserve the strip.",
+    "placement": null
+  },
+  {
+    "name": "dungeon-stone-door-03",
+    "box": [
+      208,
+      80,
+      192,
+      32
+    ],
+    "kind": "structure",
+    "group": "dungeon-stone-door-03",
+    "frame": null,
+    "notes": "Four animation frames. Preserve the strip.",
+    "placement": null
+  },
+  {
+    "name": "dungeon-stone-door-04",
+    "box": [
+      208,
+      112,
+      192,
+      32
+    ],
+    "kind": "structure",
+    "group": "dungeon-stone-door-04",
+    "frame": null,
+    "notes": "Four animation frames. Preserve the strip.",
+    "placement": null
+  },
+  {
+    "name": "dungeon-small-wood-door",
+    "box": [
+      208,
+      0,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "dungeon-small-wood-door",
+    "frame": null,
+    "notes": "Four animation frames. Preserve the strip.",
+    "placement": null
+  },
+  {
+    "name": "small-gate-bars-animation",
+    "box": [
+      128,
+      0,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "small-gate-bars-animation",
+    "frame": null,
+    "notes": "Four animation frames. Preserve the strip.",
+    "placement": null
+  },
+  {
+    "name": "large-gate-bars-animation",
+    "box": [
+      96,
+      144,
+      192,
+      32
+    ],
+    "kind": "structure",
+    "group": "large-gate-bars-animation",
+    "frame": null,
+    "notes": "Four animation frames. Preserve the strip.",
+    "placement": null
+  }
+]

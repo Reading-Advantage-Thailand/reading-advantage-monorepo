@@ -1,0 +1,5727 @@
+[
+  {
+    "name": "slime-bright",
+    "box": [
+      112,
+      0,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "slime-bright",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B01"
+  },
+  {
+    "name": "slime-dark",
+    "box": [
+      144,
+      0,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "slime-dark",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B02"
+  },
+  {
+    "name": "rib-large-top",
+    "box": [
+      176,
+      0,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "rib-large-top",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B03"
+  },
+  {
+    "name": "rib-medium-top",
+    "box": [
+      208,
+      0,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "rib-medium-top",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B04"
+  },
+  {
+    "name": "rib-large-bottom",
+    "box": [
+      176,
+      32,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "rib-large-bottom",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B05"
+  },
+  {
+    "name": "rib-medium-bottom",
+    "box": [
+      208,
+      32,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "rib-medium-bottom",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B06"
+  },
+  {
+    "name": "tusk-heart-bright",
+    "box": [
+      176,
+      160,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "tusk-heart-bright",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B07"
+  },
+  {
+    "name": "tusk-heart-dark",
+    "box": [
+      208,
+      160,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "tusk-heart-dark",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B08"
+  },
+  {
+    "name": "tusk-empty-bright",
+    "box": [
+      176,
+      192,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "tusk-empty-bright",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B09"
+  },
+  {
+    "name": "tusk-empty-dark",
+    "box": [
+      208,
+      192,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "tusk-empty-dark",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B10"
+  },
+  {
+    "name": "statue-left",
+    "box": [
+      176,
+      128,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "statue-left",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B11"
+  },
+  {
+    "name": "statue-right",
+    "box": [
+      208,
+      128,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "statue-right",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B12"
+  },
+  {
+    "name": "mouth-bright",
+    "box": [
+      112,
+      176,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "mouth-bright",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B13"
+  },
+  {
+    "name": "mouth-dark",
+    "box": [
+      144,
+      176,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "mouth-dark",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B14"
+  },
+  {
+    "name": "jelly-small-bright",
+    "box": [
+      272,
+      128,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "jelly-small-bright",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B15"
+  },
+  {
+    "name": "jelly-small-dark",
+    "box": [
+      288,
+      128,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "jelly-small-dark",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B16"
+  },
+  {
+    "name": "jelly-large-bright",
+    "box": [
+      264,
+      160,
+      32,
+      48
+    ],
+    "kind": "part",
+    "group": "jelly-large-bright",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B17"
+  },
+  {
+    "name": "jelly-cluster-left-bright",
+    "box": [
+      296,
+      160,
+      32,
+      48
+    ],
+    "kind": "part",
+    "group": "jelly-cluster-left-bright",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B18"
+  },
+  {
+    "name": "jelly-cluster-right-bright",
+    "box": [
+      328,
+      160,
+      32,
+      48
+    ],
+    "kind": "part",
+    "group": "jelly-cluster-right-bright",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B19"
+  },
+  {
+    "name": "jelly-large-dark",
+    "box": [
+      264,
+      208,
+      32,
+      48
+    ],
+    "kind": "part",
+    "group": "jelly-large-dark",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B20"
+  },
+  {
+    "name": "jelly-cluster-left-dark",
+    "box": [
+      296,
+      208,
+      32,
+      48
+    ],
+    "kind": "part",
+    "group": "jelly-cluster-left-dark",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B21"
+  },
+  {
+    "name": "jelly-cluster-right-dark",
+    "box": [
+      328,
+      208,
+      32,
+      48
+    ],
+    "kind": "part",
+    "group": "jelly-cluster-right-dark",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B22"
+  },
+  {
+    "name": "rock-cluster-112-48",
+    "box": [
+      112,
+      48,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "rock-cluster-112-48",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B23"
+  },
+  {
+    "name": "rock-cluster-112-64",
+    "box": [
+      112,
+      64,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "rock-cluster-112-64",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B24"
+  },
+  {
+    "name": "rock-cluster-112-80",
+    "box": [
+      112,
+      80,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "rock-cluster-112-80",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B25"
+  },
+  {
+    "name": "rock-cluster-144-48",
+    "box": [
+      144,
+      48,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "rock-cluster-144-48",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B26"
+  },
+  {
+    "name": "rock-cluster-144-64",
+    "box": [
+      144,
+      64,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "rock-cluster-144-64",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B27"
+  },
+  {
+    "name": "rock-cluster-144-80",
+    "box": [
+      144,
+      80,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "rock-cluster-144-80",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B28"
+  },
+  {
+    "name": "pillar-112-96",
+    "box": [
+      112,
+      96,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "pillar-112-96",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B29"
+  },
+  {
+    "name": "pillar-112-128",
+    "box": [
+      112,
+      128,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "pillar-112-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B30"
+  },
+  {
+    "name": "pillar-128-96",
+    "box": [
+      128,
+      96,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "pillar-128-96",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B31"
+  },
+  {
+    "name": "pillar-128-128",
+    "box": [
+      128,
+      128,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "pillar-128-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B32"
+  },
+  {
+    "name": "pillar-144-96",
+    "box": [
+      144,
+      96,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "pillar-144-96",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B33"
+  },
+  {
+    "name": "pillar-144-128",
+    "box": [
+      144,
+      128,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "pillar-144-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B34"
+  },
+  {
+    "name": "pillar-160-96",
+    "box": [
+      160,
+      96,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "pillar-160-96",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B35"
+  },
+  {
+    "name": "pillar-160-128",
+    "box": [
+      160,
+      128,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "pillar-160-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B36"
+  },
+  {
+    "name": "pillar-animation-32-256",
+    "box": [
+      32,
+      256,
+      64,
+      32
+    ],
+    "kind": "part",
+    "group": "pillar-animation-32-256",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        32,
+        256,
+        16,
+        32
+      ],
+      [
+        48,
+        256,
+        16,
+        32
+      ],
+      [
+        64,
+        256,
+        16,
+        32
+      ],
+      [
+        80,
+        256,
+        16,
+        32
+      ]
+    ],
+    "reviewId": "B37"
+  },
+  {
+    "name": "pillar-animation-112-256",
+    "box": [
+      112,
+      256,
+      64,
+      32
+    ],
+    "kind": "part",
+    "group": "pillar-animation-112-256",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        112,
+        256,
+        16,
+        32
+      ],
+      [
+        128,
+        256,
+        16,
+        32
+      ],
+      [
+        144,
+        256,
+        16,
+        32
+      ],
+      [
+        160,
+        256,
+        16,
+        32
+      ]
+    ],
+    "reviewId": "B38"
+  },
+  {
+    "name": "pillar-animation-192-256",
+    "box": [
+      192,
+      256,
+      64,
+      32
+    ],
+    "kind": "part",
+    "group": "pillar-animation-192-256",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        192,
+        256,
+        16,
+        32
+      ],
+      [
+        208,
+        256,
+        16,
+        32
+      ],
+      [
+        224,
+        256,
+        16,
+        32
+      ],
+      [
+        240,
+        256,
+        16,
+        32
+      ]
+    ],
+    "reviewId": "B39"
+  },
+  {
+    "name": "pillar-animation-272-256",
+    "box": [
+      272,
+      256,
+      64,
+      32
+    ],
+    "kind": "part",
+    "group": "pillar-animation-272-256",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        272,
+        256,
+        16,
+        32
+      ],
+      [
+        288,
+        256,
+        16,
+        32
+      ],
+      [
+        304,
+        256,
+        16,
+        32
+      ],
+      [
+        320,
+        256,
+        16,
+        32
+      ]
+    ],
+    "reviewId": "B40"
+  },
+  {
+    "name": "organ-animation-16-288",
+    "box": [
+      16,
+      288,
+      64,
+      16
+    ],
+    "kind": "part",
+    "group": "organ-animation-16-288",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        16,
+        288,
+        16,
+        16
+      ],
+      [
+        32,
+        288,
+        16,
+        16
+      ],
+      [
+        48,
+        288,
+        16,
+        16
+      ],
+      [
+        64,
+        288,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "B41"
+  },
+  {
+    "name": "organ-animation-80-288",
+    "box": [
+      80,
+      288,
+      64,
+      16
+    ],
+    "kind": "part",
+    "group": "organ-animation-80-288",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        80,
+        288,
+        16,
+        16
+      ],
+      [
+        96,
+        288,
+        16,
+        16
+      ],
+      [
+        112,
+        288,
+        16,
+        16
+      ],
+      [
+        128,
+        288,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "B42"
+  },
+  {
+    "name": "organ-animation-144-288",
+    "box": [
+      144,
+      288,
+      64,
+      16
+    ],
+    "kind": "part",
+    "group": "organ-animation-144-288",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        144,
+        288,
+        16,
+        16
+      ],
+      [
+        160,
+        288,
+        16,
+        16
+      ],
+      [
+        176,
+        288,
+        16,
+        16
+      ],
+      [
+        192,
+        288,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "B43"
+  },
+  {
+    "name": "organ-animation-208-288",
+    "box": [
+      208,
+      288,
+      64,
+      16
+    ],
+    "kind": "part",
+    "group": "organ-animation-208-288",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        208,
+        288,
+        16,
+        16
+      ],
+      [
+        224,
+        288,
+        16,
+        16
+      ],
+      [
+        240,
+        288,
+        16,
+        16
+      ],
+      [
+        256,
+        288,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "B44"
+  },
+  {
+    "name": "organ-animation-272-288",
+    "box": [
+      272,
+      288,
+      64,
+      16
+    ],
+    "kind": "part",
+    "group": "organ-animation-272-288",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        272,
+        288,
+        16,
+        16
+      ],
+      [
+        288,
+        288,
+        16,
+        16
+      ],
+      [
+        304,
+        288,
+        16,
+        16
+      ],
+      [
+        320,
+        288,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "B45"
+  },
+  {
+    "name": "ground-animation-16-304",
+    "box": [
+      16,
+      304,
+      64,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-animation-16-304",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        16,
+        304,
+        16,
+        16
+      ],
+      [
+        32,
+        304,
+        16,
+        16
+      ],
+      [
+        48,
+        304,
+        16,
+        16
+      ],
+      [
+        64,
+        304,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "B46"
+  },
+  {
+    "name": "ground-animation-80-304",
+    "box": [
+      80,
+      304,
+      64,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-animation-80-304",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        80,
+        304,
+        16,
+        16
+      ],
+      [
+        96,
+        304,
+        16,
+        16
+      ],
+      [
+        112,
+        304,
+        16,
+        16
+      ],
+      [
+        128,
+        304,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "B47"
+  },
+  {
+    "name": "ground-animation-144-304",
+    "box": [
+      144,
+      304,
+      64,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-animation-144-304",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        144,
+        304,
+        16,
+        16
+      ],
+      [
+        160,
+        304,
+        16,
+        16
+      ],
+      [
+        176,
+        304,
+        16,
+        16
+      ],
+      [
+        192,
+        304,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "B48"
+  },
+  {
+    "name": "ground-animation-208-304",
+    "box": [
+      208,
+      304,
+      64,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-animation-208-304",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        208,
+        304,
+        16,
+        16
+      ],
+      [
+        224,
+        304,
+        16,
+        16
+      ],
+      [
+        240,
+        304,
+        16,
+        16
+      ],
+      [
+        256,
+        304,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "B49"
+  },
+  {
+    "name": "cluster-animation-320",
+    "box": [
+      48,
+      320,
+      128,
+      16
+    ],
+    "kind": "part",
+    "group": "cluster-animation-320",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        48,
+        320,
+        32,
+        16
+      ],
+      [
+        80,
+        320,
+        32,
+        16
+      ],
+      [
+        112,
+        320,
+        32,
+        16
+      ],
+      [
+        144,
+        320,
+        32,
+        16
+      ]
+    ],
+    "reviewId": "B50"
+  },
+  {
+    "name": "cluster-animation-336",
+    "box": [
+      48,
+      336,
+      128,
+      16
+    ],
+    "kind": "part",
+    "group": "cluster-animation-336",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        48,
+        336,
+        32,
+        16
+      ],
+      [
+        80,
+        336,
+        32,
+        16
+      ],
+      [
+        112,
+        336,
+        32,
+        16
+      ],
+      [
+        144,
+        336,
+        32,
+        16
+      ]
+    ],
+    "reviewId": "B51"
+  },
+  {
+    "name": "cluster-animation-352",
+    "box": [
+      48,
+      352,
+      128,
+      16
+    ],
+    "kind": "part",
+    "group": "cluster-animation-352",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        48,
+        352,
+        32,
+        16
+      ],
+      [
+        80,
+        352,
+        32,
+        16
+      ],
+      [
+        112,
+        352,
+        32,
+        16
+      ],
+      [
+        144,
+        352,
+        32,
+        16
+      ]
+    ],
+    "reviewId": "B52"
+  },
+  {
+    "name": "slime-animation-320",
+    "box": [
+      192,
+      320,
+      128,
+      32
+    ],
+    "kind": "part",
+    "group": "slime-animation-320",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        192,
+        320,
+        32,
+        32
+      ],
+      [
+        224,
+        320,
+        32,
+        32
+      ],
+      [
+        256,
+        320,
+        32,
+        32
+      ],
+      [
+        288,
+        320,
+        32,
+        32
+      ]
+    ],
+    "reviewId": "B53"
+  },
+  {
+    "name": "slime-animation-352",
+    "box": [
+      192,
+      352,
+      128,
+      32
+    ],
+    "kind": "part",
+    "group": "slime-animation-352",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        192,
+        352,
+        32,
+        32
+      ],
+      [
+        224,
+        352,
+        32,
+        32
+      ],
+      [
+        256,
+        352,
+        32,
+        32
+      ],
+      [
+        288,
+        352,
+        32,
+        32
+      ]
+    ],
+    "reviewId": "B54"
+  },
+  {
+    "name": "tusk-animation-48-384",
+    "box": [
+      48,
+      384,
+      128,
+      32
+    ],
+    "kind": "part",
+    "group": "tusk-animation-48-384",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        48,
+        384,
+        32,
+        32
+      ],
+      [
+        80,
+        384,
+        32,
+        32
+      ],
+      [
+        112,
+        384,
+        32,
+        32
+      ],
+      [
+        144,
+        384,
+        32,
+        32
+      ]
+    ],
+    "reviewId": "B55"
+  },
+  {
+    "name": "tusk-animation-176-384",
+    "box": [
+      176,
+      384,
+      128,
+      32
+    ],
+    "kind": "part",
+    "group": "tusk-animation-176-384",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        176,
+        384,
+        32,
+        32
+      ],
+      [
+        208,
+        384,
+        32,
+        32
+      ],
+      [
+        240,
+        384,
+        32,
+        32
+      ],
+      [
+        272,
+        384,
+        32,
+        32
+      ]
+    ],
+    "reviewId": "B56"
+  },
+  {
+    "name": "pillar-animation-32-416",
+    "box": [
+      32,
+      416,
+      64,
+      32
+    ],
+    "kind": "part",
+    "group": "pillar-animation-32-416",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        32,
+        416,
+        16,
+        32
+      ],
+      [
+        48,
+        416,
+        16,
+        32
+      ],
+      [
+        64,
+        416,
+        16,
+        32
+      ],
+      [
+        80,
+        416,
+        16,
+        32
+      ]
+    ],
+    "reviewId": "B57"
+  },
+  {
+    "name": "pillar-animation-112-416",
+    "box": [
+      112,
+      416,
+      64,
+      32
+    ],
+    "kind": "part",
+    "group": "pillar-animation-112-416",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        112,
+        416,
+        16,
+        32
+      ],
+      [
+        128,
+        416,
+        16,
+        32
+      ],
+      [
+        144,
+        416,
+        16,
+        32
+      ],
+      [
+        160,
+        416,
+        16,
+        32
+      ]
+    ],
+    "reviewId": "B58"
+  },
+  {
+    "name": "pillar-animation-192-416",
+    "box": [
+      192,
+      416,
+      64,
+      32
+    ],
+    "kind": "part",
+    "group": "pillar-animation-192-416",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        192,
+        416,
+        16,
+        32
+      ],
+      [
+        208,
+        416,
+        16,
+        32
+      ],
+      [
+        224,
+        416,
+        16,
+        32
+      ],
+      [
+        240,
+        416,
+        16,
+        32
+      ]
+    ],
+    "reviewId": "B59"
+  },
+  {
+    "name": "pillar-animation-272-416",
+    "box": [
+      272,
+      416,
+      64,
+      32
+    ],
+    "kind": "part",
+    "group": "pillar-animation-272-416",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        272,
+        416,
+        16,
+        32
+      ],
+      [
+        288,
+        416,
+        16,
+        32
+      ],
+      [
+        304,
+        416,
+        16,
+        32
+      ],
+      [
+        320,
+        416,
+        16,
+        32
+      ]
+    ],
+    "reviewId": "B60"
+  },
+  {
+    "name": "organ-animation-16-448",
+    "box": [
+      16,
+      448,
+      64,
+      16
+    ],
+    "kind": "part",
+    "group": "organ-animation-16-448",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        16,
+        448,
+        16,
+        16
+      ],
+      [
+        32,
+        448,
+        16,
+        16
+      ],
+      [
+        48,
+        448,
+        16,
+        16
+      ],
+      [
+        64,
+        448,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "B61"
+  },
+  {
+    "name": "organ-animation-80-448",
+    "box": [
+      80,
+      448,
+      64,
+      16
+    ],
+    "kind": "part",
+    "group": "organ-animation-80-448",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        80,
+        448,
+        16,
+        16
+      ],
+      [
+        96,
+        448,
+        16,
+        16
+      ],
+      [
+        112,
+        448,
+        16,
+        16
+      ],
+      [
+        128,
+        448,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "B62"
+  },
+  {
+    "name": "organ-animation-144-448",
+    "box": [
+      144,
+      448,
+      64,
+      16
+    ],
+    "kind": "part",
+    "group": "organ-animation-144-448",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        144,
+        448,
+        16,
+        16
+      ],
+      [
+        160,
+        448,
+        16,
+        16
+      ],
+      [
+        176,
+        448,
+        16,
+        16
+      ],
+      [
+        192,
+        448,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "B63"
+  },
+  {
+    "name": "organ-animation-208-448",
+    "box": [
+      208,
+      448,
+      64,
+      16
+    ],
+    "kind": "part",
+    "group": "organ-animation-208-448",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        208,
+        448,
+        16,
+        16
+      ],
+      [
+        224,
+        448,
+        16,
+        16
+      ],
+      [
+        240,
+        448,
+        16,
+        16
+      ],
+      [
+        256,
+        448,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "B64"
+  },
+  {
+    "name": "organ-animation-272-448",
+    "box": [
+      272,
+      448,
+      64,
+      16
+    ],
+    "kind": "part",
+    "group": "organ-animation-272-448",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        272,
+        448,
+        16,
+        16
+      ],
+      [
+        288,
+        448,
+        16,
+        16
+      ],
+      [
+        304,
+        448,
+        16,
+        16
+      ],
+      [
+        320,
+        448,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "B65"
+  },
+  {
+    "name": "ground-animation-16-464",
+    "box": [
+      16,
+      464,
+      64,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-animation-16-464",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        16,
+        464,
+        16,
+        16
+      ],
+      [
+        32,
+        464,
+        16,
+        16
+      ],
+      [
+        48,
+        464,
+        16,
+        16
+      ],
+      [
+        64,
+        464,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "B66"
+  },
+  {
+    "name": "ground-animation-80-464",
+    "box": [
+      80,
+      464,
+      64,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-animation-80-464",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        80,
+        464,
+        16,
+        16
+      ],
+      [
+        96,
+        464,
+        16,
+        16
+      ],
+      [
+        112,
+        464,
+        16,
+        16
+      ],
+      [
+        128,
+        464,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "B67"
+  },
+  {
+    "name": "ground-animation-144-464",
+    "box": [
+      144,
+      464,
+      64,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-animation-144-464",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        144,
+        464,
+        16,
+        16
+      ],
+      [
+        160,
+        464,
+        16,
+        16
+      ],
+      [
+        176,
+        464,
+        16,
+        16
+      ],
+      [
+        192,
+        464,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "B68"
+  },
+  {
+    "name": "ground-animation-208-464",
+    "box": [
+      208,
+      464,
+      64,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-animation-208-464",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        208,
+        464,
+        16,
+        16
+      ],
+      [
+        224,
+        464,
+        16,
+        16
+      ],
+      [
+        240,
+        464,
+        16,
+        16
+      ],
+      [
+        256,
+        464,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "B69"
+  },
+  {
+    "name": "cluster-animation-480",
+    "box": [
+      48,
+      480,
+      128,
+      16
+    ],
+    "kind": "part",
+    "group": "cluster-animation-480",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        48,
+        480,
+        32,
+        16
+      ],
+      [
+        80,
+        480,
+        32,
+        16
+      ],
+      [
+        112,
+        480,
+        32,
+        16
+      ],
+      [
+        144,
+        480,
+        32,
+        16
+      ]
+    ],
+    "reviewId": "B70"
+  },
+  {
+    "name": "cluster-animation-496",
+    "box": [
+      48,
+      496,
+      128,
+      16
+    ],
+    "kind": "part",
+    "group": "cluster-animation-496",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        48,
+        496,
+        32,
+        16
+      ],
+      [
+        80,
+        496,
+        32,
+        16
+      ],
+      [
+        112,
+        496,
+        32,
+        16
+      ],
+      [
+        144,
+        496,
+        32,
+        16
+      ]
+    ],
+    "reviewId": "B71"
+  },
+  {
+    "name": "cluster-animation-512",
+    "box": [
+      48,
+      512,
+      128,
+      16
+    ],
+    "kind": "part",
+    "group": "cluster-animation-512",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        48,
+        512,
+        32,
+        16
+      ],
+      [
+        80,
+        512,
+        32,
+        16
+      ],
+      [
+        112,
+        512,
+        32,
+        16
+      ],
+      [
+        144,
+        512,
+        32,
+        16
+      ]
+    ],
+    "reviewId": "B72"
+  },
+  {
+    "name": "slime-animation-480",
+    "box": [
+      192,
+      480,
+      128,
+      32
+    ],
+    "kind": "part",
+    "group": "slime-animation-480",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        192,
+        480,
+        32,
+        32
+      ],
+      [
+        224,
+        480,
+        32,
+        32
+      ],
+      [
+        256,
+        480,
+        32,
+        32
+      ],
+      [
+        288,
+        480,
+        32,
+        32
+      ]
+    ],
+    "reviewId": "B73"
+  },
+  {
+    "name": "slime-animation-512",
+    "box": [
+      192,
+      512,
+      128,
+      32
+    ],
+    "kind": "part",
+    "group": "slime-animation-512",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        192,
+        512,
+        32,
+        32
+      ],
+      [
+        224,
+        512,
+        32,
+        32
+      ],
+      [
+        256,
+        512,
+        32,
+        32
+      ],
+      [
+        288,
+        512,
+        32,
+        32
+      ]
+    ],
+    "reviewId": "B74"
+  },
+  {
+    "name": "tusk-animation-48-544",
+    "box": [
+      48,
+      544,
+      128,
+      32
+    ],
+    "kind": "part",
+    "group": "tusk-animation-48-544",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        48,
+        544,
+        32,
+        32
+      ],
+      [
+        80,
+        544,
+        32,
+        32
+      ],
+      [
+        112,
+        544,
+        32,
+        32
+      ],
+      [
+        144,
+        544,
+        32,
+        32
+      ]
+    ],
+    "reviewId": "B75"
+  },
+  {
+    "name": "tusk-animation-176-544",
+    "box": [
+      176,
+      544,
+      128,
+      32
+    ],
+    "kind": "part",
+    "group": "tusk-animation-176-544",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        176,
+        544,
+        32,
+        32
+      ],
+      [
+        208,
+        544,
+        32,
+        32
+      ],
+      [
+        240,
+        544,
+        32,
+        32
+      ],
+      [
+        272,
+        544,
+        32,
+        32
+      ]
+    ],
+    "reviewId": "B76"
+  },
+  {
+    "name": "panel-animation-576",
+    "box": [
+      48,
+      576,
+      256,
+      16
+    ],
+    "kind": "part",
+    "group": "panel-animation-576",
+    "frame": null,
+    "notes": "8 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        48,
+        576,
+        32,
+        16
+      ],
+      [
+        80,
+        576,
+        32,
+        16
+      ],
+      [
+        112,
+        576,
+        32,
+        16
+      ],
+      [
+        144,
+        576,
+        32,
+        16
+      ],
+      [
+        176,
+        576,
+        32,
+        16
+      ],
+      [
+        208,
+        576,
+        32,
+        16
+      ],
+      [
+        240,
+        576,
+        32,
+        16
+      ],
+      [
+        272,
+        576,
+        32,
+        16
+      ]
+    ],
+    "reviewId": "B77"
+  },
+  {
+    "name": "panel-animation-592",
+    "box": [
+      48,
+      592,
+      256,
+      16
+    ],
+    "kind": "part",
+    "group": "panel-animation-592",
+    "frame": null,
+    "notes": "8 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        48,
+        592,
+        32,
+        16
+      ],
+      [
+        80,
+        592,
+        32,
+        16
+      ],
+      [
+        112,
+        592,
+        32,
+        16
+      ],
+      [
+        144,
+        592,
+        32,
+        16
+      ],
+      [
+        176,
+        592,
+        32,
+        16
+      ],
+      [
+        208,
+        592,
+        32,
+        16
+      ],
+      [
+        240,
+        592,
+        32,
+        16
+      ],
+      [
+        272,
+        592,
+        32,
+        16
+      ]
+    ],
+    "reviewId": "B78"
+  },
+  {
+    "name": "panel-small-animation-608",
+    "box": [
+      48,
+      608,
+      128,
+      16
+    ],
+    "kind": "part",
+    "group": "panel-small-animation-608",
+    "frame": null,
+    "notes": "8 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        48,
+        608,
+        16,
+        16
+      ],
+      [
+        64,
+        608,
+        16,
+        16
+      ],
+      [
+        80,
+        608,
+        16,
+        16
+      ],
+      [
+        96,
+        608,
+        16,
+        16
+      ],
+      [
+        112,
+        608,
+        16,
+        16
+      ],
+      [
+        128,
+        608,
+        16,
+        16
+      ],
+      [
+        144,
+        608,
+        16,
+        16
+      ],
+      [
+        160,
+        608,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "B79"
+  },
+  {
+    "name": "panel-small-animation-624",
+    "box": [
+      48,
+      624,
+      128,
+      16
+    ],
+    "kind": "part",
+    "group": "panel-small-animation-624",
+    "frame": null,
+    "notes": "8 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        48,
+        624,
+        16,
+        16
+      ],
+      [
+        64,
+        624,
+        16,
+        16
+      ],
+      [
+        80,
+        624,
+        16,
+        16
+      ],
+      [
+        96,
+        624,
+        16,
+        16
+      ],
+      [
+        112,
+        624,
+        16,
+        16
+      ],
+      [
+        128,
+        624,
+        16,
+        16
+      ],
+      [
+        144,
+        624,
+        16,
+        16
+      ],
+      [
+        160,
+        624,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "B80"
+  },
+  {
+    "name": "panel-tall-animation-640",
+    "box": [
+      48,
+      640,
+      128,
+      32
+    ],
+    "kind": "part",
+    "group": "panel-tall-animation-640",
+    "frame": null,
+    "notes": "8 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        48,
+        640,
+        16,
+        32
+      ],
+      [
+        64,
+        640,
+        16,
+        32
+      ],
+      [
+        80,
+        640,
+        16,
+        32
+      ],
+      [
+        96,
+        640,
+        16,
+        32
+      ],
+      [
+        112,
+        640,
+        16,
+        32
+      ],
+      [
+        128,
+        640,
+        16,
+        32
+      ],
+      [
+        144,
+        640,
+        16,
+        32
+      ],
+      [
+        160,
+        640,
+        16,
+        32
+      ]
+    ],
+    "reviewId": "B81"
+  },
+  {
+    "name": "panel-tall-animation-672",
+    "box": [
+      48,
+      672,
+      128,
+      32
+    ],
+    "kind": "part",
+    "group": "panel-tall-animation-672",
+    "frame": null,
+    "notes": "8 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        48,
+        672,
+        16,
+        32
+      ],
+      [
+        64,
+        672,
+        16,
+        32
+      ],
+      [
+        80,
+        672,
+        16,
+        32
+      ],
+      [
+        96,
+        672,
+        16,
+        32
+      ],
+      [
+        112,
+        672,
+        16,
+        32
+      ],
+      [
+        128,
+        672,
+        16,
+        32
+      ],
+      [
+        144,
+        672,
+        16,
+        32
+      ],
+      [
+        160,
+        672,
+        16,
+        32
+      ]
+    ],
+    "reviewId": "B82"
+  },
+  {
+    "name": "wall-animation-608",
+    "box": [
+      192,
+      608,
+      64,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-animation-608",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        192,
+        608,
+        16,
+        16
+      ],
+      [
+        208,
+        608,
+        16,
+        16
+      ],
+      [
+        224,
+        608,
+        16,
+        16
+      ],
+      [
+        240,
+        608,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "B83"
+  },
+  {
+    "name": "wall-animation-624",
+    "box": [
+      192,
+      624,
+      64,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-animation-624",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        192,
+        624,
+        16,
+        16
+      ],
+      [
+        208,
+        624,
+        16,
+        16
+      ],
+      [
+        224,
+        624,
+        16,
+        16
+      ],
+      [
+        240,
+        624,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "B84"
+  },
+  {
+    "name": "wall-wide-animation-656",
+    "box": [
+      176,
+      656,
+      128,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-wide-animation-656",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        176,
+        656,
+        32,
+        16
+      ],
+      [
+        208,
+        656,
+        32,
+        16
+      ],
+      [
+        240,
+        656,
+        32,
+        16
+      ],
+      [
+        272,
+        656,
+        32,
+        16
+      ]
+    ],
+    "reviewId": "B85"
+  },
+  {
+    "name": "wall-wide-animation-672",
+    "box": [
+      176,
+      672,
+      128,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-wide-animation-672",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        176,
+        672,
+        32,
+        16
+      ],
+      [
+        208,
+        672,
+        32,
+        16
+      ],
+      [
+        240,
+        672,
+        32,
+        16
+      ],
+      [
+        272,
+        672,
+        32,
+        16
+      ]
+    ],
+    "reviewId": "B86"
+  },
+  {
+    "name": "tile-2-1",
+    "box": [
+      16,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-2-1",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B87"
+  },
+  {
+    "name": "tile-3-1",
+    "box": [
+      32,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-1",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B88"
+  },
+  {
+    "name": "tile-4-1",
+    "box": [
+      48,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-1",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B89"
+  },
+  {
+    "name": "tile-5-1",
+    "box": [
+      64,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-1",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B90"
+  },
+  {
+    "name": "tile-6-1",
+    "box": [
+      80,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-6-1",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B91"
+  },
+  {
+    "name": "tile-7-1",
+    "box": [
+      96,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-7-1",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B92"
+  },
+  {
+    "name": "tile-16-1",
+    "box": [
+      240,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-1",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B93"
+  },
+  {
+    "name": "tile-19-1",
+    "box": [
+      288,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-19-1",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B94"
+  },
+  {
+    "name": "tile-20-1",
+    "box": [
+      304,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-20-1",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B95"
+  },
+  {
+    "name": "tile-21-1",
+    "box": [
+      320,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-21-1",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B96"
+  },
+  {
+    "name": "tile-22-1",
+    "box": [
+      336,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-22-1",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B97"
+  },
+  {
+    "name": "tile-23-1",
+    "box": [
+      352,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-23-1",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B98"
+  },
+  {
+    "name": "tile-1-2",
+    "box": [
+      0,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-1-2",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B99"
+  },
+  {
+    "name": "tile-2-2",
+    "box": [
+      16,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-2-2",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B100"
+  },
+  {
+    "name": "tile-3-2",
+    "box": [
+      32,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-2",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B101"
+  },
+  {
+    "name": "tile-4-2",
+    "box": [
+      48,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-2",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B102"
+  },
+  {
+    "name": "tile-5-2",
+    "box": [
+      64,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-2",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B103"
+  },
+  {
+    "name": "tile-6-2",
+    "box": [
+      80,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-6-2",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B104"
+  },
+  {
+    "name": "tile-7-2",
+    "box": [
+      96,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-7-2",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B105"
+  },
+  {
+    "name": "tile-16-2",
+    "box": [
+      240,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-2",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B106"
+  },
+  {
+    "name": "tile-17-2",
+    "box": [
+      256,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-17-2",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B107"
+  },
+  {
+    "name": "tile-18-2",
+    "box": [
+      272,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-18-2",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B108"
+  },
+  {
+    "name": "tile-19-2",
+    "box": [
+      288,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-19-2",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B109"
+  },
+  {
+    "name": "tile-20-2",
+    "box": [
+      304,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-20-2",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B110"
+  },
+  {
+    "name": "tile-21-2",
+    "box": [
+      320,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-21-2",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B111"
+  },
+  {
+    "name": "tile-22-2",
+    "box": [
+      336,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-22-2",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B112"
+  },
+  {
+    "name": "tile-23-2",
+    "box": [
+      352,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-23-2",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B113"
+  },
+  {
+    "name": "tile-1-3",
+    "box": [
+      0,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse B99. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "B114",
+    "reuseProposal": {
+      "sheetId": "B",
+      "reviewId": "B99",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-beast-interior-source-3b90eb665877.png",
+      "box": [
+        0,
+        16,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-2-3",
+    "box": [
+      16,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-2-3",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B115"
+  },
+  {
+    "name": "tile-3-3",
+    "box": [
+      32,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-3",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B116"
+  },
+  {
+    "name": "tile-4-3",
+    "box": [
+      48,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-3",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B117"
+  },
+  {
+    "name": "tile-5-3",
+    "box": [
+      64,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-3",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B118"
+  },
+  {
+    "name": "tile-6-3",
+    "box": [
+      80,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-6-3",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B119"
+  },
+  {
+    "name": "tile-7-3",
+    "box": [
+      96,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-7-3",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B120"
+  },
+  {
+    "name": "tile-8-3",
+    "box": [
+      112,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-8-3",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B121"
+  },
+  {
+    "name": "tile-9-3",
+    "box": [
+      128,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-9-3",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B122"
+  },
+  {
+    "name": "tile-10-3",
+    "box": [
+      144,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-3",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B123"
+  },
+  {
+    "name": "tile-11-3",
+    "box": [
+      160,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-3",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B124"
+  },
+  {
+    "name": "tile-16-3",
+    "box": [
+      240,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-3",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B125"
+  },
+  {
+    "name": "tile-17-3",
+    "box": [
+      256,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-17-3",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B126"
+  },
+  {
+    "name": "tile-18-3",
+    "box": [
+      272,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-18-3",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B127"
+  },
+  {
+    "name": "tile-19-3",
+    "box": [
+      288,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-19-3",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B128"
+  },
+  {
+    "name": "tile-20-3",
+    "box": [
+      304,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-20-3",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B129"
+  },
+  {
+    "name": "tile-21-3",
+    "box": [
+      320,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-21-3",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B130"
+  },
+  {
+    "name": "tile-3-4",
+    "box": [
+      32,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-4",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B131"
+  },
+  {
+    "name": "tile-4-4",
+    "box": [
+      48,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-4",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B132"
+  },
+  {
+    "name": "tile-5-4",
+    "box": [
+      64,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-4",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B133"
+  },
+  {
+    "name": "tile-6-4",
+    "box": [
+      80,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-6-4",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B134"
+  },
+  {
+    "name": "tile-7-4",
+    "box": [
+      96,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-7-4",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B135"
+  },
+  {
+    "name": "tile-16-4",
+    "box": [
+      240,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-4",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B136"
+  },
+  {
+    "name": "tile-19-4",
+    "box": [
+      288,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-19-4",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B137"
+  },
+  {
+    "name": "tile-20-4",
+    "box": [
+      304,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-20-4",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B138"
+  },
+  {
+    "name": "tile-21-4",
+    "box": [
+      320,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-21-4",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B139"
+  },
+  {
+    "name": "tile-22-4",
+    "box": [
+      336,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-22-4",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B140"
+  },
+  {
+    "name": "tile-23-4",
+    "box": [
+      352,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-23-4",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B141"
+  },
+  {
+    "name": "tile-1-5",
+    "box": [
+      0,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-1-5",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B142"
+  },
+  {
+    "name": "tile-2-5",
+    "box": [
+      16,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-2-5",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B143"
+  },
+  {
+    "name": "tile-3-5",
+    "box": [
+      32,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-5",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B144"
+  },
+  {
+    "name": "tile-4-5",
+    "box": [
+      48,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse B100. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "B145",
+    "reuseProposal": {
+      "sheetId": "B",
+      "reviewId": "B100",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-beast-interior-source-3b90eb665877.png",
+      "box": [
+        16,
+        16,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-5-5",
+    "box": [
+      64,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-5",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B146"
+  },
+  {
+    "name": "tile-6-5",
+    "box": [
+      80,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-6-5",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B147"
+  },
+  {
+    "name": "tile-7-5",
+    "box": [
+      96,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-7-5",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B148"
+  },
+  {
+    "name": "tile-12-5",
+    "box": [
+      176,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-5",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B149"
+  },
+  {
+    "name": "tile-13-5",
+    "box": [
+      192,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-5",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B150"
+  },
+  {
+    "name": "tile-14-5",
+    "box": [
+      208,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-5",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B151"
+  },
+  {
+    "name": "tile-15-5",
+    "box": [
+      224,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-5",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B152"
+  },
+  {
+    "name": "tile-16-5",
+    "box": [
+      240,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-5",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B153"
+  },
+  {
+    "name": "tile-17-5",
+    "box": [
+      256,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-17-5",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B154"
+  },
+  {
+    "name": "tile-18-5",
+    "box": [
+      272,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-18-5",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B155"
+  },
+  {
+    "name": "tile-19-5",
+    "box": [
+      288,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-19-5",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B156"
+  },
+  {
+    "name": "tile-20-5",
+    "box": [
+      304,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-20-5",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B157"
+  },
+  {
+    "name": "tile-21-5",
+    "box": [
+      320,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-21-5",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B158"
+  },
+  {
+    "name": "tile-22-5",
+    "box": [
+      336,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-22-5",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B159"
+  },
+  {
+    "name": "tile-23-5",
+    "box": [
+      352,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-23-5",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B160"
+  },
+  {
+    "name": "tile-1-6",
+    "box": [
+      0,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-1-6",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B161"
+  },
+  {
+    "name": "tile-2-6",
+    "box": [
+      16,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-2-6",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B162"
+  },
+  {
+    "name": "tile-3-6",
+    "box": [
+      32,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-6",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B163"
+  },
+  {
+    "name": "tile-4-6",
+    "box": [
+      48,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-6",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B164"
+  },
+  {
+    "name": "tile-5-6",
+    "box": [
+      64,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-6",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B165"
+  },
+  {
+    "name": "tile-12-6",
+    "box": [
+      176,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-6",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B166"
+  },
+  {
+    "name": "tile-13-6",
+    "box": [
+      192,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-6",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B167"
+  },
+  {
+    "name": "tile-14-6",
+    "box": [
+      208,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-6",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B168"
+  },
+  {
+    "name": "tile-15-6",
+    "box": [
+      224,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-6",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B169"
+  },
+  {
+    "name": "tile-16-6",
+    "box": [
+      240,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-6",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B170"
+  },
+  {
+    "name": "tile-17-6",
+    "box": [
+      256,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-17-6",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B171"
+  },
+  {
+    "name": "tile-18-6",
+    "box": [
+      272,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-18-6",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B172"
+  },
+  {
+    "name": "tile-19-6",
+    "box": [
+      288,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-19-6",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B173"
+  },
+  {
+    "name": "tile-20-6",
+    "box": [
+      304,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-20-6",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B174"
+  },
+  {
+    "name": "tile-21-6",
+    "box": [
+      320,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-21-6",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B175"
+  },
+  {
+    "name": "tile-3-7",
+    "box": [
+      32,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-7",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B176"
+  },
+  {
+    "name": "tile-4-7",
+    "box": [
+      48,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-7",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B177"
+  },
+  {
+    "name": "tile-5-7",
+    "box": [
+      64,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-7",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B178"
+  },
+  {
+    "name": "tile-6-7",
+    "box": [
+      80,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-6-7",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B179"
+  },
+  {
+    "name": "tile-7-7",
+    "box": [
+      96,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-7-7",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B180"
+  },
+  {
+    "name": "tile-12-7",
+    "box": [
+      176,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-7",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B181"
+  },
+  {
+    "name": "tile-13-7",
+    "box": [
+      192,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-7",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B182"
+  },
+  {
+    "name": "tile-14-7",
+    "box": [
+      208,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse B151. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "B183",
+    "reuseProposal": {
+      "sheetId": "B",
+      "reviewId": "B151",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-beast-interior-source-3b90eb665877.png",
+      "box": [
+        208,
+        64,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-15-7",
+    "box": [
+      224,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse B152. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "B184",
+    "reuseProposal": {
+      "sheetId": "B",
+      "reviewId": "B152",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-beast-interior-source-3b90eb665877.png",
+      "box": [
+        224,
+        64,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-16-7",
+    "box": [
+      240,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-7",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B185"
+  },
+  {
+    "name": "tile-17-7",
+    "box": [
+      256,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-17-7",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B186"
+  },
+  {
+    "name": "tile-18-7",
+    "box": [
+      272,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-18-7",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B187"
+  },
+  {
+    "name": "tile-19-7",
+    "box": [
+      288,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-19-7",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B188"
+  },
+  {
+    "name": "tile-20-7",
+    "box": [
+      304,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-20-7",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B189"
+  },
+  {
+    "name": "tile-21-7",
+    "box": [
+      320,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-21-7",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B190"
+  },
+  {
+    "name": "tile-22-7",
+    "box": [
+      336,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-22-7",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B191"
+  },
+  {
+    "name": "tile-1-8",
+    "box": [
+      0,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-1-8",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B192"
+  },
+  {
+    "name": "tile-2-8",
+    "box": [
+      16,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-2-8",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B193"
+  },
+  {
+    "name": "tile-3-8",
+    "box": [
+      32,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-8",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B194"
+  },
+  {
+    "name": "tile-4-8",
+    "box": [
+      48,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse B103. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "B195",
+    "reuseProposal": {
+      "sheetId": "B",
+      "reviewId": "B103",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-beast-interior-source-3b90eb665877.png",
+      "box": [
+        64,
+        16,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-5-8",
+    "box": [
+      64,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-8",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B196"
+  },
+  {
+    "name": "tile-6-8",
+    "box": [
+      80,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-6-8",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B197"
+  },
+  {
+    "name": "tile-7-8",
+    "box": [
+      96,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-7-8",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B198"
+  },
+  {
+    "name": "tile-12-8",
+    "box": [
+      176,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-8",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B199"
+  },
+  {
+    "name": "tile-13-8",
+    "box": [
+      192,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-8",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B200"
+  },
+  {
+    "name": "tile-14-8",
+    "box": [
+      208,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-8",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B201"
+  },
+  {
+    "name": "tile-15-8",
+    "box": [
+      224,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-8",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B202"
+  },
+  {
+    "name": "tile-16-8",
+    "box": [
+      240,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-8",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B203"
+  },
+  {
+    "name": "tile-17-8",
+    "box": [
+      256,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-17-8",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B204"
+  },
+  {
+    "name": "tile-18-8",
+    "box": [
+      272,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-18-8",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B205"
+  },
+  {
+    "name": "tile-19-8",
+    "box": [
+      288,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-19-8",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B206"
+  },
+  {
+    "name": "tile-20-8",
+    "box": [
+      304,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-20-8",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B207"
+  },
+  {
+    "name": "tile-21-8",
+    "box": [
+      320,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-21-8",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B208"
+  },
+  {
+    "name": "tile-22-8",
+    "box": [
+      336,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-22-8",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B209"
+  },
+  {
+    "name": "tile-1-9",
+    "box": [
+      0,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-1-9",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B210"
+  },
+  {
+    "name": "tile-2-9",
+    "box": [
+      16,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-2-9",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B211"
+  },
+  {
+    "name": "tile-3-9",
+    "box": [
+      32,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-9",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B212"
+  },
+  {
+    "name": "tile-4-9",
+    "box": [
+      48,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-9",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B213"
+  },
+  {
+    "name": "tile-5-9",
+    "box": [
+      64,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-9",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B214"
+  },
+  {
+    "name": "tile-21-9",
+    "box": [
+      320,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-21-9",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B215"
+  },
+  {
+    "name": "tile-22-9",
+    "box": [
+      336,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-22-9",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B216"
+  },
+  {
+    "name": "tile-3-10",
+    "box": [
+      32,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-10",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B217"
+  },
+  {
+    "name": "tile-4-10",
+    "box": [
+      48,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-10",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B218"
+  },
+  {
+    "name": "tile-5-10",
+    "box": [
+      64,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-10",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B219"
+  },
+  {
+    "name": "tile-6-10",
+    "box": [
+      80,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-6-10",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B220"
+  },
+  {
+    "name": "tile-7-10",
+    "box": [
+      96,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-7-10",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B221"
+  },
+  {
+    "name": "tile-1-11",
+    "box": [
+      0,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-1-11",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B222"
+  },
+  {
+    "name": "tile-2-11",
+    "box": [
+      16,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-2-11",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B223"
+  },
+  {
+    "name": "tile-3-11",
+    "box": [
+      32,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-11",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B224"
+  },
+  {
+    "name": "tile-4-11",
+    "box": [
+      48,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse B99. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "B225",
+    "reuseProposal": {
+      "sheetId": "B",
+      "reviewId": "B99",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-beast-interior-source-3b90eb665877.png",
+      "box": [
+        0,
+        16,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-5-11",
+    "box": [
+      64,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-11",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B226"
+  },
+  {
+    "name": "tile-6-11",
+    "box": [
+      80,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-6-11",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B227"
+  },
+  {
+    "name": "tile-7-11",
+    "box": [
+      96,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-7-11",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B228"
+  },
+  {
+    "name": "tile-8-11",
+    "box": [
+      112,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-8-11",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B229"
+  },
+  {
+    "name": "tile-9-11",
+    "box": [
+      128,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-9-11",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B230"
+  },
+  {
+    "name": "tile-10-11",
+    "box": [
+      144,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-11",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B231"
+  },
+  {
+    "name": "tile-11-11",
+    "box": [
+      160,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-11",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B232"
+  },
+  {
+    "name": "tile-1-12",
+    "box": [
+      0,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-1-12",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B233"
+  },
+  {
+    "name": "tile-2-12",
+    "box": [
+      16,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-2-12",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B234"
+  },
+  {
+    "name": "tile-3-12",
+    "box": [
+      32,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-12",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B235"
+  },
+  {
+    "name": "tile-4-12",
+    "box": [
+      48,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-12",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B236"
+  },
+  {
+    "name": "tile-5-12",
+    "box": [
+      64,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-12",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B237"
+  },
+  {
+    "name": "tile-3-13",
+    "box": [
+      32,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-13",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B238"
+  },
+  {
+    "name": "tile-4-13",
+    "box": [
+      48,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-13",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B239"
+  },
+  {
+    "name": "tile-5-13",
+    "box": [
+      64,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-13",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B240"
+  },
+  {
+    "name": "tile-6-13",
+    "box": [
+      80,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-6-13",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B241"
+  },
+  {
+    "name": "tile-7-13",
+    "box": [
+      96,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-7-13",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B242"
+  },
+  {
+    "name": "tile-1-14",
+    "box": [
+      0,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-1-14",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B243"
+  },
+  {
+    "name": "tile-2-14",
+    "box": [
+      16,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-2-14",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B244"
+  },
+  {
+    "name": "tile-3-14",
+    "box": [
+      32,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-14",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B245"
+  },
+  {
+    "name": "tile-4-14",
+    "box": [
+      48,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-14",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B246"
+  },
+  {
+    "name": "tile-5-14",
+    "box": [
+      64,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-14",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B247"
+  },
+  {
+    "name": "tile-6-14",
+    "box": [
+      80,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-6-14",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B248"
+  },
+  {
+    "name": "tile-7-14",
+    "box": [
+      96,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-7-14",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B249"
+  },
+  {
+    "name": "tile-8-14",
+    "box": [
+      112,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-8-14",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B250"
+  },
+  {
+    "name": "tile-9-14",
+    "box": [
+      128,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-9-14",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B251"
+  },
+  {
+    "name": "tile-10-14",
+    "box": [
+      144,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-14",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B252"
+  },
+  {
+    "name": "tile-11-14",
+    "box": [
+      160,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-14",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B253"
+  },
+  {
+    "name": "tile-1-15",
+    "box": [
+      0,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-1-15",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B254"
+  },
+  {
+    "name": "tile-2-15",
+    "box": [
+      16,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-2-15",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B255"
+  },
+  {
+    "name": "tile-3-15",
+    "box": [
+      32,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-15",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B256"
+  },
+  {
+    "name": "tile-4-15",
+    "box": [
+      48,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-15",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B257"
+  },
+  {
+    "name": "tile-5-15",
+    "box": [
+      64,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-15",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B258"
+  },
+  {
+    "name": "tile-6-15",
+    "box": [
+      80,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-6-15",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B259"
+  },
+  {
+    "name": "tile-7-15",
+    "box": [
+      96,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-7-15",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B260"
+  },
+  {
+    "name": "tile-8-15",
+    "box": [
+      112,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-8-15",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B261"
+  },
+  {
+    "name": "tile-9-15",
+    "box": [
+      128,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-9-15",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B262"
+  },
+  {
+    "name": "tile-10-15",
+    "box": [
+      144,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-15",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B263"
+  },
+  {
+    "name": "tile-11-15",
+    "box": [
+      160,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-15",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B264"
+  },
+  {
+    "name": "tile-12-15",
+    "box": [
+      176,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-15",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B265"
+  },
+  {
+    "name": "tile-13-15",
+    "box": [
+      192,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-15",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B266"
+  },
+  {
+    "name": "tile-14-15",
+    "box": [
+      208,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-15",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B267"
+  },
+  {
+    "name": "tile-15-15",
+    "box": [
+      224,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-15",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B268"
+  },
+  {
+    "name": "tile-16-15",
+    "box": [
+      240,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-15",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B269"
+  },
+  {
+    "name": "tile-3-16",
+    "box": [
+      32,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-16",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B270"
+  },
+  {
+    "name": "tile-4-16",
+    "box": [
+      48,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-16",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B271"
+  },
+  {
+    "name": "tile-5-16",
+    "box": [
+      64,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-16",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B272"
+  },
+  {
+    "name": "tile-8-16",
+    "box": [
+      112,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-8-16",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B273"
+  },
+  {
+    "name": "tile-9-16",
+    "box": [
+      128,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-9-16",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B274"
+  },
+  {
+    "name": "tile-10-16",
+    "box": [
+      144,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-16",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B275"
+  },
+  {
+    "name": "tile-11-16",
+    "box": [
+      160,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-16",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B276"
+  },
+  {
+    "name": "tile-12-16",
+    "box": [
+      176,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-16",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B277"
+  },
+  {
+    "name": "tile-13-16",
+    "box": [
+      192,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-16",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B278"
+  },
+  {
+    "name": "tile-14-16",
+    "box": [
+      208,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-16",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B279"
+  },
+  {
+    "name": "tile-15-16",
+    "box": [
+      224,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-16",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B280"
+  },
+  {
+    "name": "tile-16-16",
+    "box": [
+      240,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-16",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "B281"
+  }
+]

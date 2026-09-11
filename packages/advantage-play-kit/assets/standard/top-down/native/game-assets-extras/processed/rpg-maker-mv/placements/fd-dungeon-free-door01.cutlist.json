@@ -1,0 +1,6 @@
+[
+  {"name":"door-open-0","box":[0,0,96,96],"kind":"anim-frame","group":"door-open","frame":0,"notes":"Portcullis open clip. Columns 2 and 3 are byte-identical copies; not cut.","placement":null},
+  {"name":"door-open-1","box":[0,96,96,96],"kind":"anim-frame","group":"door-open","frame":1,"notes":"Portcullis open clip. Columns 2 and 3 are byte-identical copies; not cut.","placement":null},
+  {"name":"door-open-2","box":[0,192,96,96],"kind":"anim-frame","group":"door-open","frame":2,"notes":"Portcullis open clip. Columns 2 and 3 are byte-identical copies; not cut.","placement":null},
+  {"name":"door-open-3","box":[0,288,96,96],"kind":"anim-frame","group":"door-open","frame":3,"notes":"Portcullis open clip. Columns 2 and 3 are byte-identical copies; not cut.","placement":null}
+]

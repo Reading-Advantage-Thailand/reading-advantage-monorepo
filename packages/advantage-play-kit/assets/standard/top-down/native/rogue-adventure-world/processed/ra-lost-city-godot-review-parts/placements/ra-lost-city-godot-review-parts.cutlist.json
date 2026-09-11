@@ -1,0 +1,6320 @@
+[
+  {
+    "name": "torch-animation-48",
+    "box": [
+      512,
+      48,
+      128,
+      32
+    ],
+    "kind": "part",
+    "group": "torch-animation-48",
+    "frame": null,
+    "notes": "8 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        512,
+        48,
+        16,
+        32
+      ],
+      [
+        528,
+        48,
+        16,
+        32
+      ],
+      [
+        544,
+        48,
+        16,
+        32
+      ],
+      [
+        560,
+        48,
+        16,
+        32
+      ],
+      [
+        576,
+        48,
+        16,
+        32
+      ],
+      [
+        592,
+        48,
+        16,
+        32
+      ],
+      [
+        608,
+        48,
+        16,
+        32
+      ],
+      [
+        624,
+        48,
+        16,
+        32
+      ]
+    ],
+    "reviewId": "L01"
+  },
+  {
+    "name": "torch-animation-96",
+    "box": [
+      512,
+      96,
+      128,
+      16
+    ],
+    "kind": "part",
+    "group": "torch-animation-96",
+    "frame": null,
+    "notes": "8 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        512,
+        96,
+        16,
+        16
+      ],
+      [
+        528,
+        96,
+        16,
+        16
+      ],
+      [
+        544,
+        96,
+        16,
+        16
+      ],
+      [
+        560,
+        96,
+        16,
+        16
+      ],
+      [
+        576,
+        96,
+        16,
+        16
+      ],
+      [
+        592,
+        96,
+        16,
+        16
+      ],
+      [
+        608,
+        96,
+        16,
+        16
+      ],
+      [
+        624,
+        96,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "L02"
+  },
+  {
+    "name": "torch-animation-128",
+    "box": [
+      512,
+      128,
+      128,
+      32
+    ],
+    "kind": "part",
+    "group": "torch-animation-128",
+    "frame": null,
+    "notes": "8 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        512,
+        128,
+        16,
+        32
+      ],
+      [
+        528,
+        128,
+        16,
+        32
+      ],
+      [
+        544,
+        128,
+        16,
+        32
+      ],
+      [
+        560,
+        128,
+        16,
+        32
+      ],
+      [
+        576,
+        128,
+        16,
+        32
+      ],
+      [
+        592,
+        128,
+        16,
+        32
+      ],
+      [
+        608,
+        128,
+        16,
+        32
+      ],
+      [
+        624,
+        128,
+        16,
+        32
+      ]
+    ],
+    "reviewId": "L03"
+  },
+  {
+    "name": "torch-animation-176",
+    "box": [
+      512,
+      176,
+      128,
+      32
+    ],
+    "kind": "part",
+    "group": "torch-animation-176",
+    "frame": null,
+    "notes": "8 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        512,
+        176,
+        16,
+        32
+      ],
+      [
+        528,
+        176,
+        16,
+        32
+      ],
+      [
+        544,
+        176,
+        16,
+        32
+      ],
+      [
+        560,
+        176,
+        16,
+        32
+      ],
+      [
+        576,
+        176,
+        16,
+        32
+      ],
+      [
+        592,
+        176,
+        16,
+        32
+      ],
+      [
+        608,
+        176,
+        16,
+        32
+      ],
+      [
+        624,
+        176,
+        16,
+        32
+      ]
+    ],
+    "reviewId": "L04"
+  },
+  {
+    "name": "water-cross-animation",
+    "box": [
+      0,
+      272,
+      640,
+      80
+    ],
+    "kind": "part",
+    "group": "water-cross-animation",
+    "frame": null,
+    "notes": "8 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        0,
+        272,
+        80,
+        80
+      ],
+      [
+        80,
+        272,
+        80,
+        80
+      ],
+      [
+        160,
+        272,
+        80,
+        80
+      ],
+      [
+        240,
+        272,
+        80,
+        80
+      ],
+      [
+        320,
+        272,
+        80,
+        80
+      ],
+      [
+        400,
+        272,
+        80,
+        80
+      ],
+      [
+        480,
+        272,
+        80,
+        80
+      ],
+      [
+        560,
+        272,
+        80,
+        80
+      ]
+    ],
+    "reviewId": "L05"
+  },
+  {
+    "name": "platform-cross-small",
+    "box": [
+      160,
+      0,
+      80,
+      80
+    ],
+    "kind": "part",
+    "group": "platform-cross-small",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "L06"
+  },
+  {
+    "name": "bridge-horizontal",
+    "box": [
+      128,
+      112,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "bridge-horizontal",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "L07"
+  },
+  {
+    "name": "bridge-vertical",
+    "box": [
+      176,
+      112,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "bridge-vertical",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "L08"
+  },
+  {
+    "name": "barrel-single",
+    "box": [
+      448,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "barrel-single",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "L09"
+  },
+  {
+    "name": "urn-group-0",
+    "box": [
+      0,
+      192,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "urn-group-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "L10"
+  },
+  {
+    "name": "urn-group-16",
+    "box": [
+      16,
+      192,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "urn-group-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "L11"
+  },
+  {
+    "name": "urn-group-48",
+    "box": [
+      48,
+      192,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "urn-group-48",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "L12"
+  },
+  {
+    "name": "urn-group-80",
+    "box": [
+      80,
+      192,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "urn-group-80",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "L13"
+  },
+  {
+    "name": "urn-group-112",
+    "box": [
+      112,
+      192,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "urn-group-112",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "L14"
+  },
+  {
+    "name": "pillar-224",
+    "box": [
+      224,
+      96,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "pillar-224",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "L15"
+  },
+  {
+    "name": "pillar-240",
+    "box": [
+      240,
+      96,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "pillar-240",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "L16"
+  },
+  {
+    "name": "tile-3-1",
+    "box": [
+      32,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-1",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L17"
+  },
+  {
+    "name": "tile-4-1",
+    "box": [
+      48,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-1",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L18"
+  },
+  {
+    "name": "tile-5-1",
+    "box": [
+      64,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-1",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L19"
+  },
+  {
+    "name": "tile-6-1",
+    "box": [
+      80,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-6-1",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L20"
+  },
+  {
+    "name": "tile-7-1",
+    "box": [
+      96,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-7-1",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L21"
+  },
+  {
+    "name": "tile-17-1",
+    "box": [
+      256,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-17-1",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L22"
+  },
+  {
+    "name": "tile-18-1",
+    "box": [
+      272,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-18-1",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L23"
+  },
+  {
+    "name": "tile-19-1",
+    "box": [
+      288,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-19-1",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L24"
+  },
+  {
+    "name": "tile-20-1",
+    "box": [
+      304,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-20-1",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L25"
+  },
+  {
+    "name": "tile-21-1",
+    "box": [
+      320,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-21-1",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L26"
+  },
+  {
+    "name": "tile-25-1",
+    "box": [
+      384,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-25-1",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L27"
+  },
+  {
+    "name": "tile-26-1",
+    "box": [
+      400,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L27. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L28",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L27",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        384,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-27-1",
+    "box": [
+      416,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L27. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L29",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L27",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        384,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-28-1",
+    "box": [
+      432,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L27. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L30",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L27",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        384,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-29-1",
+    "box": [
+      448,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L27. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L31",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L27",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        384,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-30-1",
+    "box": [
+      464,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L27. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L32",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L27",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        384,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-31-1",
+    "box": [
+      480,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L27. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L33",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L27",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        384,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-3-2",
+    "box": [
+      32,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-2",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L34"
+  },
+  {
+    "name": "tile-4-2",
+    "box": [
+      48,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-2",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L35"
+  },
+  {
+    "name": "tile-5-2",
+    "box": [
+      64,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: ra-ancient-ruins-review-parts-tile-23-14.png",
+    "placement": null,
+    "reviewId": "L36",
+    "reuseAsset": "top-down/native/rogue-adventure-world/processed/ra-ancient-ruins-review-parts/ra-ancient-ruins-review-parts-tile-23-14.png"
+  },
+  {
+    "name": "tile-6-2",
+    "box": [
+      80,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-6-2",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L37"
+  },
+  {
+    "name": "tile-7-2",
+    "box": [
+      96,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-7-2",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L38"
+  },
+  {
+    "name": "tile-17-2",
+    "box": [
+      256,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-17-2",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L39"
+  },
+  {
+    "name": "tile-18-2",
+    "box": [
+      272,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-18-2",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L40"
+  },
+  {
+    "name": "tile-19-2",
+    "box": [
+      288,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: ra-ancient-ruins-review-parts-tile-23-14.png",
+    "placement": null,
+    "reviewId": "L41",
+    "reuseAsset": "top-down/native/rogue-adventure-world/processed/ra-ancient-ruins-review-parts/ra-ancient-ruins-review-parts-tile-23-14.png"
+  },
+  {
+    "name": "tile-20-2",
+    "box": [
+      304,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-20-2",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L42"
+  },
+  {
+    "name": "tile-21-2",
+    "box": [
+      320,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-21-2",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L43"
+  },
+  {
+    "name": "tile-22-2",
+    "box": [
+      336,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-22-2",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L44"
+  },
+  {
+    "name": "tile-23-2",
+    "box": [
+      352,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L44. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L45",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L44",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        336,
+        16,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-25-2",
+    "box": [
+      384,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L27. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L46",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L27",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        384,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-26-2",
+    "box": [
+      400,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L27. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L47",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L27",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        384,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-27-2",
+    "box": [
+      416,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-27-2",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L48"
+  },
+  {
+    "name": "tile-28-2",
+    "box": [
+      432,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-28-2",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L49"
+  },
+  {
+    "name": "tile-29-2",
+    "box": [
+      448,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-29-2",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L50"
+  },
+  {
+    "name": "tile-30-2",
+    "box": [
+      464,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L27. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L51",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L27",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        384,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-31-2",
+    "box": [
+      480,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L27. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L52",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L27",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        384,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-1-3",
+    "box": [
+      0,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L17. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L53",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L17",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        32,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-2-3",
+    "box": [
+      16,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L18. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L54",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L18",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        48,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-3-3",
+    "box": [
+      32,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L19. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L55",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L19",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        64,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-4-3",
+    "box": [
+      48,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-3",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L56"
+  },
+  {
+    "name": "tile-5-3",
+    "box": [
+      64,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: ra-ancient-ruins-review-parts-tile-23-14.png",
+    "placement": null,
+    "reviewId": "L57",
+    "reuseAsset": "top-down/native/rogue-adventure-world/processed/ra-ancient-ruins-review-parts/ra-ancient-ruins-review-parts-tile-23-14.png"
+  },
+  {
+    "name": "tile-6-3",
+    "box": [
+      80,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-6-3",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L58"
+  },
+  {
+    "name": "tile-7-3",
+    "box": [
+      96,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L19. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L59",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L19",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        64,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-8-3",
+    "box": [
+      112,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L20. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L60",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L20",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        80,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-9-3",
+    "box": [
+      128,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L21. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L61",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L21",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        96,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-17-3",
+    "box": [
+      256,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-17-3",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L62"
+  },
+  {
+    "name": "tile-18-3",
+    "box": [
+      272,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-18-3",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L63"
+  },
+  {
+    "name": "tile-19-3",
+    "box": [
+      288,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L44. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L64",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L44",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        336,
+        16,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-20-3",
+    "box": [
+      304,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-20-3",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L65"
+  },
+  {
+    "name": "tile-21-3",
+    "box": [
+      320,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-21-3",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L66"
+  },
+  {
+    "name": "tile-22-3",
+    "box": [
+      336,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-22-3",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L67"
+  },
+  {
+    "name": "tile-23-3",
+    "box": [
+      352,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-23-3",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L68"
+  },
+  {
+    "name": "tile-25-3",
+    "box": [
+      384,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L27. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L69",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L27",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        384,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-26-3",
+    "box": [
+      400,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L48. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L70",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L48",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        416,
+        16,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-27-3",
+    "box": [
+      416,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-27-3",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L71"
+  },
+  {
+    "name": "tile-28-3",
+    "box": [
+      432,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-28-3",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L72"
+  },
+  {
+    "name": "tile-29-3",
+    "box": [
+      448,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-29-3",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L73"
+  },
+  {
+    "name": "tile-30-3",
+    "box": [
+      464,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L50. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L74",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L50",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        448,
+        16,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-31-3",
+    "box": [
+      480,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L27. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L75",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L27",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        384,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-1-4",
+    "box": [
+      0,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L34. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L76",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L34",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        32,
+        16,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-2-4",
+    "box": [
+      16,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L35. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L77",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L35",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        48,
+        16,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-3-4",
+    "box": [
+      32,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: ra-ancient-ruins-review-parts-tile-23-14.png",
+    "placement": null,
+    "reviewId": "L78",
+    "reuseAsset": "top-down/native/rogue-adventure-world/processed/ra-ancient-ruins-review-parts/ra-ancient-ruins-review-parts-tile-23-14.png"
+  },
+  {
+    "name": "tile-4-4",
+    "box": [
+      48,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: ra-ancient-ruins-review-parts-tile-23-14.png",
+    "placement": null,
+    "reviewId": "L79",
+    "reuseAsset": "top-down/native/rogue-adventure-world/processed/ra-ancient-ruins-review-parts/ra-ancient-ruins-review-parts-tile-23-14.png"
+  },
+  {
+    "name": "tile-5-4",
+    "box": [
+      64,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: ra-ancient-ruins-review-parts-tile-23-14.png",
+    "placement": null,
+    "reviewId": "L80",
+    "reuseAsset": "top-down/native/rogue-adventure-world/processed/ra-ancient-ruins-review-parts/ra-ancient-ruins-review-parts-tile-23-14.png"
+  },
+  {
+    "name": "tile-6-4",
+    "box": [
+      80,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: ra-ancient-ruins-review-parts-tile-23-14.png",
+    "placement": null,
+    "reviewId": "L81",
+    "reuseAsset": "top-down/native/rogue-adventure-world/processed/ra-ancient-ruins-review-parts/ra-ancient-ruins-review-parts-tile-23-14.png"
+  },
+  {
+    "name": "tile-7-4",
+    "box": [
+      96,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: ra-ancient-ruins-review-parts-tile-23-14.png",
+    "placement": null,
+    "reviewId": "L82",
+    "reuseAsset": "top-down/native/rogue-adventure-world/processed/ra-ancient-ruins-review-parts/ra-ancient-ruins-review-parts-tile-23-14.png"
+  },
+  {
+    "name": "tile-8-4",
+    "box": [
+      112,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L37. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L83",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L37",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        80,
+        16,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-9-4",
+    "box": [
+      128,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L38. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L84",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L38",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        96,
+        16,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-17-4",
+    "box": [
+      256,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-17-4",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L85"
+  },
+  {
+    "name": "tile-18-4",
+    "box": [
+      272,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-18-4",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L86"
+  },
+  {
+    "name": "tile-19-4",
+    "box": [
+      288,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-19-4",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L87"
+  },
+  {
+    "name": "tile-20-4",
+    "box": [
+      304,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-20-4",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L88"
+  },
+  {
+    "name": "tile-21-4",
+    "box": [
+      320,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-21-4",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L89"
+  },
+  {
+    "name": "tile-25-4",
+    "box": [
+      384,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L27. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L90",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L27",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        384,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-26-4",
+    "box": [
+      400,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-26-4",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L91"
+  },
+  {
+    "name": "tile-27-4",
+    "box": [
+      416,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-27-4",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L92"
+  },
+  {
+    "name": "tile-29-4",
+    "box": [
+      448,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-29-4",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L93"
+  },
+  {
+    "name": "tile-30-4",
+    "box": [
+      464,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-30-4",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L94"
+  },
+  {
+    "name": "tile-31-4",
+    "box": [
+      480,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L27. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L95",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L27",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        384,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-1-5",
+    "box": [
+      0,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-1-5",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L96"
+  },
+  {
+    "name": "tile-2-5",
+    "box": [
+      16,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-2-5",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L97"
+  },
+  {
+    "name": "tile-3-5",
+    "box": [
+      32,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-5",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L98"
+  },
+  {
+    "name": "tile-4-5",
+    "box": [
+      48,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-5",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L99"
+  },
+  {
+    "name": "tile-5-5",
+    "box": [
+      64,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: ra-ancient-ruins-review-parts-tile-23-14.png",
+    "placement": null,
+    "reviewId": "L100",
+    "reuseAsset": "top-down/native/rogue-adventure-world/processed/ra-ancient-ruins-review-parts/ra-ancient-ruins-review-parts-tile-23-14.png"
+  },
+  {
+    "name": "tile-6-5",
+    "box": [
+      80,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-6-5",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L101"
+  },
+  {
+    "name": "tile-7-5",
+    "box": [
+      96,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-7-5",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L102"
+  },
+  {
+    "name": "tile-8-5",
+    "box": [
+      112,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-8-5",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L103"
+  },
+  {
+    "name": "tile-9-5",
+    "box": [
+      128,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-9-5",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L104"
+  },
+  {
+    "name": "tile-17-5",
+    "box": [
+      256,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-17-5",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L105"
+  },
+  {
+    "name": "tile-18-5",
+    "box": [
+      272,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-18-5",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L106"
+  },
+  {
+    "name": "tile-19-5",
+    "box": [
+      288,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L106. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L107",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L106",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        272,
+        64,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-20-5",
+    "box": [
+      304,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L106. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L108",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L106",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        272,
+        64,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-21-5",
+    "box": [
+      320,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-21-5",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L109"
+  },
+  {
+    "name": "tile-22-5",
+    "box": [
+      336,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L44. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L110",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L44",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        336,
+        16,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-25-5",
+    "box": [
+      384,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L27. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L111",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L27",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        384,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-26-5",
+    "box": [
+      400,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L91. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L112",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L91",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        400,
+        48,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-30-5",
+    "box": [
+      464,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L94. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L113",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L94",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        464,
+        48,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-31-5",
+    "box": [
+      480,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L27. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L114",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L27",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        384,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-1-6",
+    "box": [
+      0,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-1-6",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L115"
+  },
+  {
+    "name": "tile-2-6",
+    "box": [
+      16,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-2-6",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L116"
+  },
+  {
+    "name": "tile-3-6",
+    "box": [
+      32,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-6",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L117"
+  },
+  {
+    "name": "tile-4-6",
+    "box": [
+      48,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-6",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L118"
+  },
+  {
+    "name": "tile-5-6",
+    "box": [
+      64,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: ra-ancient-ruins-review-parts-tile-23-14.png",
+    "placement": null,
+    "reviewId": "L119",
+    "reuseAsset": "top-down/native/rogue-adventure-world/processed/ra-ancient-ruins-review-parts/ra-ancient-ruins-review-parts-tile-23-14.png"
+  },
+  {
+    "name": "tile-6-6",
+    "box": [
+      80,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-6-6",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L120"
+  },
+  {
+    "name": "tile-7-6",
+    "box": [
+      96,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-7-6",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L121"
+  },
+  {
+    "name": "tile-8-6",
+    "box": [
+      112,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-8-6",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L122"
+  },
+  {
+    "name": "tile-9-6",
+    "box": [
+      128,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-9-6",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L123"
+  },
+  {
+    "name": "tile-10-6",
+    "box": [
+      144,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-6",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L124"
+  },
+  {
+    "name": "tile-11-6",
+    "box": [
+      160,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-6",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L125"
+  },
+  {
+    "name": "tile-12-6",
+    "box": [
+      176,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-6",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L126"
+  },
+  {
+    "name": "tile-13-6",
+    "box": [
+      192,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-6",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L127"
+  },
+  {
+    "name": "tile-14-6",
+    "box": [
+      208,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-6",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L128"
+  },
+  {
+    "name": "tile-15-6",
+    "box": [
+      224,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-6",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L129"
+  },
+  {
+    "name": "tile-17-6",
+    "box": [
+      256,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L93. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L130",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L93",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        448,
+        48,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-18-6",
+    "box": [
+      272,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L72. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L131",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L72",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        432,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-19-6",
+    "box": [
+      288,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L72. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L132",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L72",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        432,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-20-6",
+    "box": [
+      304,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L72. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L133",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L72",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        432,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-21-6",
+    "box": [
+      320,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L92. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L134",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L92",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        416,
+        48,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-22-6",
+    "box": [
+      336,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-22-6",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L135"
+  },
+  {
+    "name": "tile-25-6",
+    "box": [
+      384,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L27. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L136",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L27",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        384,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-26-6",
+    "box": [
+      400,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-26-6",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L137"
+  },
+  {
+    "name": "tile-27-6",
+    "box": [
+      416,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-27-6",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L138"
+  },
+  {
+    "name": "tile-29-6",
+    "box": [
+      448,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-29-6",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L139"
+  },
+  {
+    "name": "tile-30-6",
+    "box": [
+      464,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-30-6",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L140"
+  },
+  {
+    "name": "tile-31-6",
+    "box": [
+      480,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L27. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L141",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L27",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        384,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-33-6",
+    "box": [
+      512,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-33-6",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L142"
+  },
+  {
+    "name": "tile-34-6",
+    "box": [
+      528,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-34-6",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L143"
+  },
+  {
+    "name": "tile-35-6",
+    "box": [
+      544,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-35-6",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L144"
+  },
+  {
+    "name": "tile-36-6",
+    "box": [
+      560,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-36-6",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L145"
+  },
+  {
+    "name": "tile-38-6",
+    "box": [
+      592,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-38-6",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L146"
+  },
+  {
+    "name": "tile-39-6",
+    "box": [
+      608,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-39-6",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L147"
+  },
+  {
+    "name": "tile-1-7",
+    "box": [
+      0,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-1-7",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L148"
+  },
+  {
+    "name": "tile-2-7",
+    "box": [
+      16,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-2-7",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L149"
+  },
+  {
+    "name": "tile-3-7",
+    "box": [
+      32,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L96. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L150",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L96",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        0,
+        64,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-4-7",
+    "box": [
+      48,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L97. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L151",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L97",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        16,
+        64,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-5-7",
+    "box": [
+      64,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L98. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L152",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L98",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        32,
+        64,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-6-7",
+    "box": [
+      80,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L103. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L153",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L103",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        112,
+        64,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-7-7",
+    "box": [
+      96,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L104. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L154",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L104",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        128,
+        64,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-8-7",
+    "box": [
+      112,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-8-7",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L155"
+  },
+  {
+    "name": "tile-10-7",
+    "box": [
+      144,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-7",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L156"
+  },
+  {
+    "name": "tile-11-7",
+    "box": [
+      160,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-7",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L157"
+  },
+  {
+    "name": "tile-12-7",
+    "box": [
+      176,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-7",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L158"
+  },
+  {
+    "name": "tile-17-7",
+    "box": [
+      256,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-17-7",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L159"
+  },
+  {
+    "name": "tile-18-7",
+    "box": [
+      272,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-18-7",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L160"
+  },
+  {
+    "name": "tile-19-7",
+    "box": [
+      288,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-19-7",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L161"
+  },
+  {
+    "name": "tile-21-7",
+    "box": [
+      320,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-21-7",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L162"
+  },
+  {
+    "name": "tile-22-7",
+    "box": [
+      336,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L160. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L163",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L160",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        272,
+        96,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-23-7",
+    "box": [
+      352,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-23-7",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L164"
+  },
+  {
+    "name": "tile-25-7",
+    "box": [
+      384,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L27. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L165",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L27",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        384,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-26-7",
+    "box": [
+      400,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L27. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L166",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L27",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        384,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-27-7",
+    "box": [
+      416,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L137. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L167",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L137",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        400,
+        80,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-28-7",
+    "box": [
+      432,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-28-7",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L168"
+  },
+  {
+    "name": "tile-29-7",
+    "box": [
+      448,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-29-7",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L169"
+  },
+  {
+    "name": "tile-30-7",
+    "box": [
+      464,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L27. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L170",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L27",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        384,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-31-7",
+    "box": [
+      480,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L27. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L171",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L27",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        384,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-1-8",
+    "box": [
+      0,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-1-8",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L172"
+  },
+  {
+    "name": "tile-2-8",
+    "box": [
+      16,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-2-8",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L173"
+  },
+  {
+    "name": "tile-3-8",
+    "box": [
+      32,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L115. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L174",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L115",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        0,
+        80,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-4-8",
+    "box": [
+      48,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L116. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L175",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L116",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        16,
+        80,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-5-8",
+    "box": [
+      64,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-8",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L176"
+  },
+  {
+    "name": "tile-6-8",
+    "box": [
+      80,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L122. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L177",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L122",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        112,
+        80,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-7-8",
+    "box": [
+      96,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L123. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L178",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L123",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        128,
+        80,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-8-8",
+    "box": [
+      112,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-8-8",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L179"
+  },
+  {
+    "name": "tile-17-8",
+    "box": [
+      256,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-17-8",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L180"
+  },
+  {
+    "name": "tile-18-8",
+    "box": [
+      272,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: ra-ancient-ruins-review-parts-tile-23-14.png",
+    "placement": null,
+    "reviewId": "L181",
+    "reuseAsset": "top-down/native/rogue-adventure-world/processed/ra-ancient-ruins-review-parts/ra-ancient-ruins-review-parts-tile-23-14.png"
+  },
+  {
+    "name": "tile-19-8",
+    "box": [
+      288,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-19-8",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L182"
+  },
+  {
+    "name": "tile-21-8",
+    "box": [
+      320,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-21-8",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L183"
+  },
+  {
+    "name": "tile-22-8",
+    "box": [
+      336,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: ra-ancient-ruins-review-parts-tile-23-14.png",
+    "placement": null,
+    "reviewId": "L184",
+    "reuseAsset": "top-down/native/rogue-adventure-world/processed/ra-ancient-ruins-review-parts/ra-ancient-ruins-review-parts-tile-23-14.png"
+  },
+  {
+    "name": "tile-23-8",
+    "box": [
+      352,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-23-8",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L185"
+  },
+  {
+    "name": "tile-25-8",
+    "box": [
+      384,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-25-8",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L186"
+  },
+  {
+    "name": "tile-27-8",
+    "box": [
+      416,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-27-8",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L187"
+  },
+  {
+    "name": "tile-29-8",
+    "box": [
+      448,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-29-8",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L188"
+  },
+  {
+    "name": "tile-31-8",
+    "box": [
+      480,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-31-8",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L189"
+  },
+  {
+    "name": "tile-1-9",
+    "box": [
+      0,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-1-9",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L190"
+  },
+  {
+    "name": "tile-2-9",
+    "box": [
+      16,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-2-9",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L191"
+  },
+  {
+    "name": "tile-8-9",
+    "box": [
+      112,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: ra-ancient-ruins-review-parts-tile-23-14.png",
+    "placement": null,
+    "reviewId": "L192",
+    "reuseAsset": "top-down/native/rogue-adventure-world/processed/ra-ancient-ruins-review-parts/ra-ancient-ruins-review-parts-tile-23-14.png"
+  },
+  {
+    "name": "tile-15-9",
+    "box": [
+      224,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-9",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L193"
+  },
+  {
+    "name": "tile-16-9",
+    "box": [
+      240,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L193. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L194",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L193",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        224,
+        128,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-17-9",
+    "box": [
+      256,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-17-9",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L195"
+  },
+  {
+    "name": "tile-18-9",
+    "box": [
+      272,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: ra-ancient-ruins-review-parts-tile-23-14.png",
+    "placement": null,
+    "reviewId": "L196",
+    "reuseAsset": "top-down/native/rogue-adventure-world/processed/ra-ancient-ruins-review-parts/ra-ancient-ruins-review-parts-tile-23-14.png"
+  },
+  {
+    "name": "tile-19-9",
+    "box": [
+      288,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-19-9",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L197"
+  },
+  {
+    "name": "tile-21-9",
+    "box": [
+      320,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-21-9",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L198"
+  },
+  {
+    "name": "tile-22-9",
+    "box": [
+      336,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: ra-ancient-ruins-review-parts-tile-23-14.png",
+    "placement": null,
+    "reviewId": "L199",
+    "reuseAsset": "top-down/native/rogue-adventure-world/processed/ra-ancient-ruins-review-parts/ra-ancient-ruins-review-parts-tile-23-14.png"
+  },
+  {
+    "name": "tile-23-9",
+    "box": [
+      352,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-23-9",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L200"
+  },
+  {
+    "name": "tile-26-9",
+    "box": [
+      400,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-26-9",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L201"
+  },
+  {
+    "name": "tile-29-9",
+    "box": [
+      448,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-29-9",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L202"
+  },
+  {
+    "name": "tile-30-9",
+    "box": [
+      464,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-30-9",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L203"
+  },
+  {
+    "name": "tile-1-10",
+    "box": [
+      0,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-1-10",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L204"
+  },
+  {
+    "name": "tile-2-10",
+    "box": [
+      16,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-2-10",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L205"
+  },
+  {
+    "name": "tile-3-10",
+    "box": [
+      32,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-10",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L206"
+  },
+  {
+    "name": "tile-4-10",
+    "box": [
+      48,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-10",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L207"
+  },
+  {
+    "name": "tile-5-10",
+    "box": [
+      64,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-10",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L208"
+  },
+  {
+    "name": "tile-6-10",
+    "box": [
+      80,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-6-10",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L209"
+  },
+  {
+    "name": "tile-7-10",
+    "box": [
+      96,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-7-10",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L210"
+  },
+  {
+    "name": "tile-8-10",
+    "box": [
+      112,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-8-10",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L211"
+  },
+  {
+    "name": "tile-15-10",
+    "box": [
+      224,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-10",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L212"
+  },
+  {
+    "name": "tile-16-10",
+    "box": [
+      240,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-10",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L213"
+  },
+  {
+    "name": "tile-17-10",
+    "box": [
+      256,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-17-10",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L214"
+  },
+  {
+    "name": "tile-18-10",
+    "box": [
+      272,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-18-10",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L215"
+  },
+  {
+    "name": "tile-19-10",
+    "box": [
+      288,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-19-10",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L216"
+  },
+  {
+    "name": "tile-21-10",
+    "box": [
+      320,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-21-10",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L217"
+  },
+  {
+    "name": "tile-22-10",
+    "box": [
+      336,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L215. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L218",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L215",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        272,
+        144,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-23-10",
+    "box": [
+      352,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-23-10",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L219"
+  },
+  {
+    "name": "tile-25-10",
+    "box": [
+      384,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-25-10",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L220"
+  },
+  {
+    "name": "tile-26-10",
+    "box": [
+      400,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-26-10",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L221"
+  },
+  {
+    "name": "tile-27-10",
+    "box": [
+      416,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-27-10",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L222"
+  },
+  {
+    "name": "tile-29-10",
+    "box": [
+      448,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-29-10",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L223"
+  },
+  {
+    "name": "tile-30-10",
+    "box": [
+      464,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-30-10",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L224"
+  },
+  {
+    "name": "tile-1-11",
+    "box": [
+      0,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-1-11",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L225"
+  },
+  {
+    "name": "tile-3-11",
+    "box": [
+      32,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L225. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L226",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L225",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        0,
+        160,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-4-11",
+    "box": [
+      48,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-11",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L227"
+  },
+  {
+    "name": "tile-5-11",
+    "box": [
+      64,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-11",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L228"
+  },
+  {
+    "name": "tile-6-11",
+    "box": [
+      80,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-6-11",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L229"
+  },
+  {
+    "name": "tile-7-11",
+    "box": [
+      96,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L210. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L230",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L210",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        96,
+        144,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-8-11",
+    "box": [
+      112,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-8-11",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L231"
+  },
+  {
+    "name": "tile-11-11",
+    "box": [
+      160,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-11",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L232"
+  },
+  {
+    "name": "tile-12-11",
+    "box": [
+      176,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-11",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L233"
+  },
+  {
+    "name": "tile-14-11",
+    "box": [
+      208,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L233. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L234",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L233",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        176,
+        160,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-15-11",
+    "box": [
+      224,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L232. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L235",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L232",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        160,
+        160,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-17-11",
+    "box": [
+      256,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-17-11",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L236"
+  },
+  {
+    "name": "tile-18-11",
+    "box": [
+      272,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-18-11",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L237"
+  },
+  {
+    "name": "tile-19-11",
+    "box": [
+      288,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-19-11",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L238"
+  },
+  {
+    "name": "tile-21-11",
+    "box": [
+      320,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L237. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L239",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L237",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        272,
+        160,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-22-11",
+    "box": [
+      336,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L237. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L240",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L237",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        272,
+        160,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-23-11",
+    "box": [
+      352,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L109. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L241",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L109",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        320,
+        64,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-26-11",
+    "box": [
+      400,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-26-11",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L242"
+  },
+  {
+    "name": "tile-1-12",
+    "box": [
+      0,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-1-12",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L243"
+  },
+  {
+    "name": "tile-2-12",
+    "box": [
+      16,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L205. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L244",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L205",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        16,
+        144,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-3-12",
+    "box": [
+      32,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-12",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L245"
+  },
+  {
+    "name": "tile-4-12",
+    "box": [
+      48,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-12",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L246"
+  },
+  {
+    "name": "tile-5-12",
+    "box": [
+      64,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-12",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L247"
+  },
+  {
+    "name": "tile-6-12",
+    "box": [
+      80,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-6-12",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L248"
+  },
+  {
+    "name": "tile-7-12",
+    "box": [
+      96,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-7-12",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L249"
+  },
+  {
+    "name": "tile-8-12",
+    "box": [
+      112,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-8-12",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L250"
+  },
+  {
+    "name": "tile-11-12",
+    "box": [
+      160,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-12",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L251"
+  },
+  {
+    "name": "tile-12-12",
+    "box": [
+      176,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-12",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L252"
+  },
+  {
+    "name": "tile-13-12",
+    "box": [
+      192,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-12",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L253"
+  },
+  {
+    "name": "tile-14-12",
+    "box": [
+      208,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-12",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L254"
+  },
+  {
+    "name": "tile-15-12",
+    "box": [
+      224,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L251. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L255",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L251",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        160,
+        176,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-16-12",
+    "box": [
+      240,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-12",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L256"
+  },
+  {
+    "name": "tile-17-12",
+    "box": [
+      256,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-17-12",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L257"
+  },
+  {
+    "name": "tile-18-12",
+    "box": [
+      272,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-18-12",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L258"
+  },
+  {
+    "name": "tile-19-12",
+    "box": [
+      288,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-19-12",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L259"
+  },
+  {
+    "name": "tile-21-12",
+    "box": [
+      320,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L258. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L260",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L258",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        272,
+        176,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-22-12",
+    "box": [
+      336,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L258. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L261",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L258",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        272,
+        176,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-23-12",
+    "box": [
+      352,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L92. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L262",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L92",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        416,
+        48,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-25-12",
+    "box": [
+      384,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-25-12",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L263"
+  },
+  {
+    "name": "tile-26-12",
+    "box": [
+      400,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-26-12",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L264"
+  },
+  {
+    "name": "tile-27-12",
+    "box": [
+      416,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-27-12",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L265"
+  },
+  {
+    "name": "tile-30-12",
+    "box": [
+      464,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-30-12",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L266"
+  },
+  {
+    "name": "tile-31-12",
+    "box": [
+      480,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-31-12",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L267"
+  },
+  {
+    "name": "tile-11-13",
+    "box": [
+      160,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L233. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L268",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L233",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        176,
+        160,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-12-13",
+    "box": [
+      176,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-13",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L269"
+  },
+  {
+    "name": "tile-13-13",
+    "box": [
+      192,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-13",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L270"
+  },
+  {
+    "name": "tile-14-13",
+    "box": [
+      208,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-13",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L271"
+  },
+  {
+    "name": "tile-15-13",
+    "box": [
+      224,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L233. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L272",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L233",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        176,
+        160,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-16-13",
+    "box": [
+      240,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-13",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L273"
+  },
+  {
+    "name": "tile-17-13",
+    "box": [
+      256,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-17-13",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L274"
+  },
+  {
+    "name": "tile-18-13",
+    "box": [
+      272,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-18-13",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L275"
+  },
+  {
+    "name": "tile-19-13",
+    "box": [
+      288,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-19-13",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L276"
+  },
+  {
+    "name": "tile-20-13",
+    "box": [
+      304,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-20-13",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L277"
+  },
+  {
+    "name": "tile-21-13",
+    "box": [
+      320,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-21-13",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L278"
+  },
+  {
+    "name": "tile-22-13",
+    "box": [
+      336,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-22-13",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L279"
+  },
+  {
+    "name": "tile-25-13",
+    "box": [
+      384,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-25-13",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L280"
+  },
+  {
+    "name": "tile-26-13",
+    "box": [
+      400,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-26-13",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L281"
+  },
+  {
+    "name": "tile-27-13",
+    "box": [
+      416,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-27-13",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L282"
+  },
+  {
+    "name": "tile-29-13",
+    "box": [
+      448,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-29-13",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L283"
+  },
+  {
+    "name": "tile-30-13",
+    "box": [
+      464,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-30-13",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L284"
+  },
+  {
+    "name": "tile-31-13",
+    "box": [
+      480,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-31-13",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L285"
+  },
+  {
+    "name": "tile-11-14",
+    "box": [
+      160,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-14",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L286"
+  },
+  {
+    "name": "tile-12-14",
+    "box": [
+      176,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-14",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L287"
+  },
+  {
+    "name": "tile-13-14",
+    "box": [
+      192,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-14",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L288"
+  },
+  {
+    "name": "tile-14-14",
+    "box": [
+      208,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-14",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L289"
+  },
+  {
+    "name": "tile-15-14",
+    "box": [
+      224,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-14",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L290"
+  },
+  {
+    "name": "tile-16-14",
+    "box": [
+      240,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-14",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L291"
+  },
+  {
+    "name": "tile-17-14",
+    "box": [
+      256,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-17-14",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L292"
+  },
+  {
+    "name": "tile-18-14",
+    "box": [
+      272,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-18-14",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L293"
+  },
+  {
+    "name": "tile-19-14",
+    "box": [
+      288,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-19-14",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L294"
+  },
+  {
+    "name": "tile-20-14",
+    "box": [
+      304,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-20-14",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L295"
+  },
+  {
+    "name": "tile-21-14",
+    "box": [
+      320,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-21-14",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L296"
+  },
+  {
+    "name": "tile-22-14",
+    "box": [
+      336,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-22-14",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L297"
+  },
+  {
+    "name": "tile-25-14",
+    "box": [
+      384,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-25-14",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L298"
+  },
+  {
+    "name": "tile-26-14",
+    "box": [
+      400,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L298. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L299",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L298",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        384,
+        208,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-27-14",
+    "box": [
+      416,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L298. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L300",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L298",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        384,
+        208,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-28-14",
+    "box": [
+      432,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L298. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L301",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L298",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        384,
+        208,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-29-14",
+    "box": [
+      448,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L298. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L302",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L298",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        384,
+        208,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-1-15",
+    "box": [
+      0,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-1-15",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L303"
+  },
+  {
+    "name": "tile-2-15",
+    "box": [
+      16,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-2-15",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L304"
+  },
+  {
+    "name": "tile-5-15",
+    "box": [
+      64,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-15",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L305"
+  },
+  {
+    "name": "tile-7-15",
+    "box": [
+      96,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-7-15",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L306"
+  },
+  {
+    "name": "tile-8-15",
+    "box": [
+      112,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-8-15",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L307"
+  },
+  {
+    "name": "tile-9-15",
+    "box": [
+      128,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-9-15",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L308"
+  },
+  {
+    "name": "tile-10-15",
+    "box": [
+      144,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-15",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L309"
+  },
+  {
+    "name": "tile-11-15",
+    "box": [
+      160,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-15",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L310"
+  },
+  {
+    "name": "tile-12-15",
+    "box": [
+      176,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L310. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L311",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L310",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        160,
+        224,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-13-15",
+    "box": [
+      192,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L270. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L312",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L270",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        192,
+        192,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-14-15",
+    "box": [
+      208,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-15",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L313"
+  },
+  {
+    "name": "tile-15-15",
+    "box": [
+      224,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L313. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L314",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L313",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        208,
+        224,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-16-15",
+    "box": [
+      240,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-15",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L315"
+  },
+  {
+    "name": "tile-17-15",
+    "box": [
+      256,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-17-15",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L316"
+  },
+  {
+    "name": "tile-18-15",
+    "box": [
+      272,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-18-15",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L317"
+  },
+  {
+    "name": "tile-20-15",
+    "box": [
+      304,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-20-15",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L318"
+  },
+  {
+    "name": "tile-25-15",
+    "box": [
+      384,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-25-15",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L319"
+  },
+  {
+    "name": "tile-26-15",
+    "box": [
+      400,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-26-15",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L320"
+  },
+  {
+    "name": "tile-27-15",
+    "box": [
+      416,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-27-15",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L321"
+  },
+  {
+    "name": "tile-28-15",
+    "box": [
+      432,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-28-15",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L322"
+  },
+  {
+    "name": "tile-29-15",
+    "box": [
+      448,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-29-15",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L323"
+  },
+  {
+    "name": "tile-1-16",
+    "box": [
+      0,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-1-16",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L324"
+  },
+  {
+    "name": "tile-2-16",
+    "box": [
+      16,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-2-16",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L325"
+  },
+  {
+    "name": "tile-3-16",
+    "box": [
+      32,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-16",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L326"
+  },
+  {
+    "name": "tile-4-16",
+    "box": [
+      48,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-16",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L327"
+  },
+  {
+    "name": "tile-5-16",
+    "box": [
+      64,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-16",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L328"
+  },
+  {
+    "name": "tile-6-16",
+    "box": [
+      80,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-6-16",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L329"
+  },
+  {
+    "name": "tile-7-16",
+    "box": [
+      96,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-7-16",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L330"
+  },
+  {
+    "name": "tile-8-16",
+    "box": [
+      112,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-8-16",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L331"
+  },
+  {
+    "name": "tile-9-16",
+    "box": [
+      128,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-9-16",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L332"
+  },
+  {
+    "name": "tile-10-16",
+    "box": [
+      144,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-16",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L333"
+  },
+  {
+    "name": "tile-12-16",
+    "box": [
+      176,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse L315. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "L334",
+    "reuseProposal": {
+      "sheetId": "L",
+      "reviewId": "L315",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-lost-city-godot-source-80145e4031dd.png",
+      "box": [
+        240,
+        224,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-14-16",
+    "box": [
+      208,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-16",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L335"
+  },
+  {
+    "name": "tile-17-16",
+    "box": [
+      256,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-17-16",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L336"
+  },
+  {
+    "name": "tile-18-16",
+    "box": [
+      272,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-18-16",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L337"
+  },
+  {
+    "name": "tile-20-16",
+    "box": [
+      304,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-20-16",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L338"
+  },
+  {
+    "name": "tile-25-16",
+    "box": [
+      384,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-25-16",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L339"
+  },
+  {
+    "name": "tile-26-16",
+    "box": [
+      400,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-26-16",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L340"
+  },
+  {
+    "name": "tile-27-16",
+    "box": [
+      416,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-27-16",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L341"
+  },
+  {
+    "name": "tile-28-16",
+    "box": [
+      432,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-28-16",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "L342"
+  },
+  {
+    "name": "tile-30-16",
+    "box": [
+      464,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: ra-harbor-review-parts-tile-8-5.png",
+    "placement": null,
+    "reviewId": "L343",
+    "reuseAsset": "top-down/native/rogue-adventure-world/processed/ra-harbor-review-parts/ra-harbor-review-parts-tile-8-5.png"
+  },
+  {
+    "name": "tile-31-16",
+    "box": [
+      480,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: ra-harbor-review-parts-tile-9-5.png",
+    "placement": null,
+    "reviewId": "L344",
+    "reuseAsset": "top-down/native/rogue-adventure-world/processed/ra-harbor-review-parts/ra-harbor-review-parts-tile-9-5.png"
+  }
+]

@@ -1,0 +1,2326 @@
+[
+  {
+    "name": "grass-clump-16-0",
+    "box": [
+      16,
+      0,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "grass-clump-16-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "grass-clump-32-0",
+    "box": [
+      32,
+      0,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "grass-clump-32-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "grass-clump-48-0",
+    "box": [
+      48,
+      0,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "grass-clump-48-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "grass-clump-64-0",
+    "box": [
+      64,
+      0,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "grass-clump-64-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "grass-clump-80-0",
+    "box": [
+      80,
+      0,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "grass-clump-80-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "grass-clump-96-0",
+    "box": [
+      96,
+      0,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "grass-clump-96-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "grass-clump-112-0",
+    "box": [
+      112,
+      0,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "grass-clump-112-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "grass-clump-128-0",
+    "box": [
+      128,
+      0,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "grass-clump-128-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "grass-clump-0-16",
+    "box": [
+      0,
+      16,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "grass-clump-0-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "grass-clump-16-16",
+    "box": [
+      16,
+      16,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "grass-clump-16-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "grass-clump-32-16",
+    "box": [
+      32,
+      16,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "grass-clump-32-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "grass-clump-48-16",
+    "box": [
+      48,
+      16,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "grass-clump-48-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "grass-clump-64-16",
+    "box": [
+      64,
+      16,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "grass-clump-64-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "grass-clump-80-16",
+    "box": [
+      80,
+      16,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "grass-clump-80-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "grass-clump-96-16",
+    "box": [
+      96,
+      16,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "grass-clump-96-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "grass-clump-112-16",
+    "box": [
+      112,
+      16,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "grass-clump-112-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "grass-clump-128-16",
+    "box": [
+      128,
+      16,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "grass-clump-128-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "plant-sequence-0",
+    "box": [
+      144,
+      0,
+      64,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-sequence-0",
+    "frame": null,
+    "notes": "Preserve the complete animation strip.",
+    "placement": null
+  },
+  {
+    "name": "plant-sequence-16",
+    "box": [
+      144,
+      16,
+      64,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-sequence-16",
+    "frame": null,
+    "notes": "Preserve the complete animation strip.",
+    "placement": null
+  },
+  {
+    "name": "flower-mushroom-clump-16",
+    "box": [
+      16,
+      32,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "flower-mushroom-clump-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "flower-mushroom-clump-32",
+    "box": [
+      32,
+      32,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "flower-mushroom-clump-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "flower-mushroom-clump-48",
+    "box": [
+      48,
+      32,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "flower-mushroom-clump-48",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "flower-mushroom-clump-64",
+    "box": [
+      64,
+      32,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "flower-mushroom-clump-64",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "flower-mushroom-clump-80",
+    "box": [
+      80,
+      32,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "flower-mushroom-clump-80",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "flower-mushroom-clump-96",
+    "box": [
+      96,
+      32,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "flower-mushroom-clump-96",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "flower-mushroom-clump-112",
+    "box": [
+      112,
+      32,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "flower-mushroom-clump-112",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "flower-mushroom-clump-128",
+    "box": [
+      128,
+      32,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "flower-mushroom-clump-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "flower-mushroom-clump-144",
+    "box": [
+      144,
+      32,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "flower-mushroom-clump-144",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "flower-mushroom-clump-160",
+    "box": [
+      160,
+      32,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "flower-mushroom-clump-160",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "flower-mushroom-clump-176",
+    "box": [
+      176,
+      32,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "flower-mushroom-clump-176",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "large-mushroom-sequence",
+    "box": [
+      192,
+      32,
+      64,
+      16
+    ],
+    "kind": "prop",
+    "group": "large-mushroom-sequence",
+    "frame": null,
+    "notes": "Preserve the complete animation strip.",
+    "placement": null
+  },
+  {
+    "name": "chest-208-0",
+    "box": [
+      208,
+      0,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "chest-208-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "chest-224-0",
+    "box": [
+      224,
+      0,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "chest-224-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "chest-240-0",
+    "box": [
+      240,
+      0,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "chest-240-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "chest-208-16",
+    "box": [
+      208,
+      16,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "chest-208-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "chest-224-16",
+    "box": [
+      224,
+      16,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "chest-224-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "chest-240-16",
+    "box": [
+      240,
+      16,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "chest-240-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "brown-hollow-log",
+    "box": [
+      256,
+      0,
+      48,
+      64
+    ],
+    "kind": "prop",
+    "group": "brown-hollow-log",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "brown-arched-log",
+    "box": [
+      304,
+      0,
+      48,
+      48
+    ],
+    "kind": "prop",
+    "group": "brown-arched-log",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "brown-narrow-log",
+    "box": [
+      352,
+      0,
+      16,
+      48
+    ],
+    "kind": "prop",
+    "group": "brown-narrow-log",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "brown-root-304",
+    "box": [
+      304,
+      48,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "brown-root-304",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "brown-root-320",
+    "box": [
+      320,
+      48,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "brown-root-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "brown-root-336",
+    "box": [
+      336,
+      48,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "brown-root-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "brown-root-352",
+    "box": [
+      352,
+      48,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "brown-root-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "pale-hollow-log",
+    "box": [
+      384,
+      0,
+      48,
+      64
+    ],
+    "kind": "prop",
+    "group": "pale-hollow-log",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "pale-arched-log",
+    "box": [
+      432,
+      0,
+      48,
+      48
+    ],
+    "kind": "prop",
+    "group": "pale-arched-log",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "pale-narrow-log",
+    "box": [
+      480,
+      0,
+      16,
+      48
+    ],
+    "kind": "prop",
+    "group": "pale-narrow-log",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "pale-root-304",
+    "box": [
+      432,
+      48,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "pale-root-304",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "pale-root-320",
+    "box": [
+      448,
+      48,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "pale-root-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "pale-root-336",
+    "box": [
+      464,
+      48,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "pale-root-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "pale-root-352",
+    "box": [
+      480,
+      48,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "pale-root-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "brown-branch-tree-0-64",
+    "box": [
+      0,
+      64,
+      48,
+      64
+    ],
+    "kind": "prop",
+    "group": "brown-branch-tree-0-64",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "brown-branch-tree-48-64",
+    "box": [
+      48,
+      64,
+      48,
+      64
+    ],
+    "kind": "prop",
+    "group": "brown-branch-tree-48-64",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "brown-branch-tree-0-128",
+    "box": [
+      0,
+      128,
+      48,
+      64
+    ],
+    "kind": "prop",
+    "group": "brown-branch-tree-0-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "brown-branch-tree-48-128",
+    "box": [
+      48,
+      128,
+      48,
+      64
+    ],
+    "kind": "prop",
+    "group": "brown-branch-tree-48-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "brown-branch-tree-0-192",
+    "box": [
+      0,
+      192,
+      48,
+      64
+    ],
+    "kind": "prop",
+    "group": "brown-branch-tree-0-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "brown-branch-tree-48-192",
+    "box": [
+      48,
+      192,
+      48,
+      64
+    ],
+    "kind": "prop",
+    "group": "brown-branch-tree-48-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "brown-small-tree-96",
+    "box": [
+      96,
+      64,
+      32,
+      40
+    ],
+    "kind": "prop",
+    "group": "brown-small-tree-96",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "brown-small-tree-128",
+    "box": [
+      128,
+      64,
+      32,
+      40
+    ],
+    "kind": "prop",
+    "group": "brown-small-tree-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "brown-small-tree-160",
+    "box": [
+      160,
+      64,
+      32,
+      40
+    ],
+    "kind": "prop",
+    "group": "brown-small-tree-160",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "brown-small-tree-192",
+    "box": [
+      192,
+      64,
+      32,
+      40
+    ],
+    "kind": "prop",
+    "group": "brown-small-tree-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "brown-round-tree-96",
+    "box": [
+      96,
+      104,
+      48,
+      56
+    ],
+    "kind": "prop",
+    "group": "brown-round-tree-96",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "brown-round-tree-144",
+    "box": [
+      144,
+      104,
+      48,
+      56
+    ],
+    "kind": "prop",
+    "group": "brown-round-tree-144",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "brown-round-small-tree-192",
+    "box": [
+      192,
+      112,
+      32,
+      48
+    ],
+    "kind": "prop",
+    "group": "brown-round-small-tree-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "brown-round-small-tree-224",
+    "box": [
+      224,
+      112,
+      32,
+      48
+    ],
+    "kind": "prop",
+    "group": "brown-round-small-tree-224",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "brown-large-branch-tree-96",
+    "box": [
+      96,
+      160,
+      80,
+      96
+    ],
+    "kind": "prop",
+    "group": "brown-large-branch-tree-96",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "brown-large-branch-tree-176",
+    "box": [
+      176,
+      160,
+      80,
+      96
+    ],
+    "kind": "prop",
+    "group": "brown-large-branch-tree-176",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "pale-branch-tree-0-64",
+    "box": [
+      256,
+      64,
+      48,
+      64
+    ],
+    "kind": "prop",
+    "group": "pale-branch-tree-0-64",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "pale-branch-tree-48-64",
+    "box": [
+      304,
+      64,
+      48,
+      64
+    ],
+    "kind": "prop",
+    "group": "pale-branch-tree-48-64",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "pale-branch-tree-0-128",
+    "box": [
+      256,
+      128,
+      48,
+      64
+    ],
+    "kind": "prop",
+    "group": "pale-branch-tree-0-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "pale-branch-tree-48-128",
+    "box": [
+      304,
+      128,
+      48,
+      64
+    ],
+    "kind": "prop",
+    "group": "pale-branch-tree-48-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "pale-branch-tree-0-192",
+    "box": [
+      256,
+      192,
+      48,
+      64
+    ],
+    "kind": "prop",
+    "group": "pale-branch-tree-0-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "pale-branch-tree-48-192",
+    "box": [
+      304,
+      192,
+      48,
+      64
+    ],
+    "kind": "prop",
+    "group": "pale-branch-tree-48-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "pale-small-tree-96",
+    "box": [
+      352,
+      64,
+      32,
+      40
+    ],
+    "kind": "prop",
+    "group": "pale-small-tree-96",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "pale-small-tree-128",
+    "box": [
+      384,
+      64,
+      32,
+      40
+    ],
+    "kind": "prop",
+    "group": "pale-small-tree-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "pale-small-tree-160",
+    "box": [
+      416,
+      64,
+      32,
+      40
+    ],
+    "kind": "prop",
+    "group": "pale-small-tree-160",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "pale-small-tree-192",
+    "box": [
+      448,
+      64,
+      32,
+      40
+    ],
+    "kind": "prop",
+    "group": "pale-small-tree-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "pale-round-tree-96",
+    "box": [
+      352,
+      104,
+      48,
+      56
+    ],
+    "kind": "prop",
+    "group": "pale-round-tree-96",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "pale-round-tree-144",
+    "box": [
+      400,
+      104,
+      48,
+      56
+    ],
+    "kind": "prop",
+    "group": "pale-round-tree-144",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "pale-round-small-tree-192",
+    "box": [
+      448,
+      112,
+      32,
+      48
+    ],
+    "kind": "prop",
+    "group": "pale-round-small-tree-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "pale-round-small-tree-224",
+    "box": [
+      480,
+      112,
+      32,
+      48
+    ],
+    "kind": "prop",
+    "group": "pale-round-small-tree-224",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "pale-large-branch-tree-96",
+    "box": [
+      352,
+      160,
+      80,
+      96
+    ],
+    "kind": "prop",
+    "group": "pale-large-branch-tree-96",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "pale-large-branch-tree-176",
+    "box": [
+      432,
+      160,
+      80,
+      96
+    ],
+    "kind": "prop",
+    "group": "pale-large-branch-tree-176",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "solid-grass-tile",
+    "box": [
+      16,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "solid-grass-tile",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "loose-grass-48",
+    "box": [
+      48,
+      272,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "loose-grass-48",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "loose-grass-64",
+    "box": [
+      64,
+      272,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "loose-grass-64",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "grass-terrain-0",
+    "box": [
+      0,
+      288,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "grass-terrain-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "grass-terrain-48",
+    "box": [
+      48,
+      288,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "grass-terrain-48",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "loose-leaf-clump-96",
+    "box": [
+      96,
+      272,
+      48,
+      16
+    ],
+    "kind": "prop",
+    "group": "loose-leaf-clump-96",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "leaf-terrain-96",
+    "box": [
+      96,
+      288,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "leaf-terrain-96",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "loose-leaf-clump-144",
+    "box": [
+      144,
+      272,
+      48,
+      16
+    ],
+    "kind": "prop",
+    "group": "loose-leaf-clump-144",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "leaf-terrain-144",
+    "box": [
+      144,
+      288,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "leaf-terrain-144",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "loose-leaf-clump-192",
+    "box": [
+      192,
+      272,
+      48,
+      16
+    ],
+    "kind": "prop",
+    "group": "loose-leaf-clump-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "leaf-terrain-192",
+    "box": [
+      192,
+      288,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "leaf-terrain-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "loose-leaf-clump-240",
+    "box": [
+      240,
+      272,
+      48,
+      16
+    ],
+    "kind": "prop",
+    "group": "loose-leaf-clump-240",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "leaf-terrain-240",
+    "box": [
+      240,
+      288,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "leaf-terrain-240",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-304",
+    "box": [
+      304,
+      288,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "stone-304",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-320",
+    "box": [
+      320,
+      288,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "stone-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-336",
+    "box": [
+      336,
+      288,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "stone-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-352",
+    "box": [
+      352,
+      288,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "stone-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-384",
+    "box": [
+      384,
+      288,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "stone-384",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-400",
+    "box": [
+      400,
+      288,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "stone-400",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-416",
+    "box": [
+      416,
+      288,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "stone-416",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-432",
+    "box": [
+      432,
+      288,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "stone-432",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "brown-fence-post-32-336",
+    "box": [
+      32,
+      336,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "brown-fence-post-32-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "brown-fence-post-16-352",
+    "box": [
+      16,
+      352,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "brown-fence-post-16-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "brown-fence-post-32-352",
+    "box": [
+      32,
+      352,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "brown-fence-post-32-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "brown-fence-post-16-368",
+    "box": [
+      16,
+      368,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "brown-fence-post-16-368",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "brown-fence-post-32-368",
+    "box": [
+      32,
+      368,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "brown-fence-post-32-368",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "brown-fence-assembly-48",
+    "box": [
+      48,
+      336,
+      48,
+      48
+    ],
+    "kind": "structure",
+    "group": "brown-fence-assembly-48",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "brown-fence-assembly-96",
+    "box": [
+      96,
+      336,
+      48,
+      48
+    ],
+    "kind": "structure",
+    "group": "brown-fence-assembly-96",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "pale-fence-post-32-336",
+    "box": [
+      160,
+      336,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "pale-fence-post-32-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "pale-fence-post-16-352",
+    "box": [
+      144,
+      352,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "pale-fence-post-16-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "pale-fence-post-32-352",
+    "box": [
+      160,
+      352,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "pale-fence-post-32-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "pale-fence-post-16-368",
+    "box": [
+      144,
+      368,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "pale-fence-post-16-368",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "pale-fence-post-32-368",
+    "box": [
+      160,
+      368,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "pale-fence-post-32-368",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "pale-fence-assembly-48",
+    "box": [
+      176,
+      336,
+      48,
+      48
+    ],
+    "kind": "structure",
+    "group": "pale-fence-assembly-48",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "pale-fence-assembly-96",
+    "box": [
+      224,
+      336,
+      48,
+      48
+    ],
+    "kind": "structure",
+    "group": "pale-fence-assembly-96",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "direction-sign-288-320",
+    "box": [
+      288,
+      320,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-288-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "direction-sign-304-320",
+    "box": [
+      304,
+      320,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-304-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "direction-sign-320-320",
+    "box": [
+      320,
+      320,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-320-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "direction-sign-336-320",
+    "box": [
+      336,
+      320,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-336-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "direction-sign-352-320",
+    "box": [
+      352,
+      320,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-352-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "direction-sign-368-320",
+    "box": [
+      368,
+      320,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-368-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "direction-sign-384-320",
+    "box": [
+      384,
+      320,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-384-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "direction-sign-400-320",
+    "box": [
+      400,
+      320,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-400-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "direction-sign-416-320",
+    "box": [
+      416,
+      320,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-416-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "direction-sign-432-320",
+    "box": [
+      432,
+      320,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-432-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "direction-sign-448-320",
+    "box": [
+      448,
+      320,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-448-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "direction-sign-464-320",
+    "box": [
+      464,
+      320,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-464-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "direction-sign-288-336",
+    "box": [
+      288,
+      336,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-288-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "direction-sign-304-336",
+    "box": [
+      304,
+      336,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-304-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "direction-sign-320-336",
+    "box": [
+      320,
+      336,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-320-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "direction-sign-336-336",
+    "box": [
+      336,
+      336,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-336-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "direction-sign-352-336",
+    "box": [
+      352,
+      336,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-352-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "direction-sign-368-336",
+    "box": [
+      368,
+      336,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-368-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "direction-sign-384-336",
+    "box": [
+      384,
+      336,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-384-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "direction-sign-400-336",
+    "box": [
+      400,
+      336,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-400-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "direction-sign-416-336",
+    "box": [
+      416,
+      336,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-416-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "direction-sign-432-336",
+    "box": [
+      432,
+      336,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-432-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "direction-sign-448-336",
+    "box": [
+      448,
+      336,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-448-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "direction-sign-464-336",
+    "box": [
+      464,
+      336,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-464-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "direction-sign-288-352",
+    "box": [
+      288,
+      352,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-288-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "direction-sign-304-352",
+    "box": [
+      304,
+      352,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-304-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "direction-sign-320-352",
+    "box": [
+      320,
+      352,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-320-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "direction-sign-336-352",
+    "box": [
+      336,
+      352,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-336-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "direction-sign-352-352",
+    "box": [
+      352,
+      352,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-352-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "direction-sign-368-352",
+    "box": [
+      368,
+      352,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-368-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "direction-sign-384-352",
+    "box": [
+      384,
+      352,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-384-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "direction-sign-400-352",
+    "box": [
+      400,
+      352,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-400-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "direction-sign-416-352",
+    "box": [
+      416,
+      352,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-416-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "direction-sign-432-352",
+    "box": [
+      432,
+      352,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-432-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "direction-sign-448-352",
+    "box": [
+      448,
+      352,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-448-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "direction-sign-464-352",
+    "box": [
+      464,
+      352,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-464-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "direction-sign-288-368",
+    "box": [
+      288,
+      368,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-288-368",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "direction-sign-304-368",
+    "box": [
+      304,
+      368,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-304-368",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "direction-sign-320-368",
+    "box": [
+      320,
+      368,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-320-368",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "direction-sign-336-368",
+    "box": [
+      336,
+      368,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-336-368",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "direction-sign-352-368",
+    "box": [
+      352,
+      368,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-352-368",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "direction-sign-368-368",
+    "box": [
+      368,
+      368,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-368-368",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "direction-sign-384-368",
+    "box": [
+      384,
+      368,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-384-368",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "direction-sign-400-368",
+    "box": [
+      400,
+      368,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-400-368",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "direction-sign-416-368",
+    "box": [
+      416,
+      368,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-416-368",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "direction-sign-432-368",
+    "box": [
+      432,
+      368,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-432-368",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "direction-sign-448-368",
+    "box": [
+      448,
+      368,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-448-368",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "direction-sign-464-368",
+    "box": [
+      464,
+      368,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "direction-sign-464-368",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  }
+]

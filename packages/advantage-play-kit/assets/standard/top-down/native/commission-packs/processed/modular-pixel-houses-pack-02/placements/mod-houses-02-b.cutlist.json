@@ -1,0 +1,524 @@
+[
+  {
+    "name": "upper-house",
+    "box": [
+      0,
+      0,
+      112,
+      80
+    ],
+    "kind": "structure",
+    "group": null,
+    "frame": null,
+    "notes": "Complete top structure with a central ridge, roof, side walls, and front wall.",
+    "placement": null
+  },
+  {
+    "name": "middle-left-house",
+    "box": [
+      0,
+      80,
+      48,
+      80
+    ],
+    "kind": "structure",
+    "group": null,
+    "frame": null,
+    "notes": "Complete middle-left structure with a gable roof and lower wall.",
+    "placement": null
+  },
+  {
+    "name": "roof-variation-overlay",
+    "box": [
+      48,
+      80,
+      48,
+      64
+    ],
+    "kind": "overlay",
+    "group": null,
+    "frame": null,
+    "notes": "Left roof-variation overlay from old entry 3; owner override places it flush with the top of middle-left-house at [0, 0].",
+    "placement": {
+      "target": "middle-left-house",
+      "offset": [
+        0,
+        0
+      ]
+    }
+  },
+  {
+    "name": "window-overlay-rounded",
+    "box": [
+      96,
+      80,
+      16,
+      32
+    ],
+    "kind": "overlay",
+    "group": null,
+    "frame": null,
+    "notes": "Top roundish window overlay from old entry 3; best match to middle-left-house is [16, 38]. It shares the sibling window hole with the square overlay.",
+    "placement": {
+      "target": "middle-left-house",
+      "offset": [
+        16,
+        38
+      ]
+    }
+  },
+  {
+    "name": "window-overlay-square",
+    "box": [
+      96,
+      112,
+      16,
+      32
+    ],
+    "kind": "overlay",
+    "group": null,
+    "frame": null,
+    "notes": "Bottom square window overlay from old entry 3; best match to middle-left-house is [16, 38]. It shares the sibling window hole with the rounded overlay.",
+    "placement": {
+      "target": "middle-left-house",
+      "offset": [
+        16,
+        38
+      ]
+    }
+  },
+  {
+    "name": "lower-left-small-house",
+    "box": [
+      48,
+      144,
+      32,
+      32
+    ],
+    "kind": "structure",
+    "group": null,
+    "frame": null,
+    "notes": "Small lower-left house module.",
+    "placement": null
+  },
+  {
+    "name": "lower-right-small-house",
+    "box": [
+      80,
+      144,
+      32,
+      32
+    ],
+    "kind": "structure",
+    "group": null,
+    "frame": null,
+    "notes": "Small lower-right house module.",
+    "placement": null
+  },
+  {
+    "name": "left-wall-strip",
+    "box": [
+      0,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": null,
+    "frame": null,
+    "notes": "Partial green wall strip beside the charm row; likely continues middle-left-house.",
+    "placement": null
+  },
+  {
+    "name": "charm-sword",
+    "box": [
+      17,
+      176,
+      14,
+      15
+    ],
+    "kind": "prop",
+    "group": null,
+    "frame": null,
+    "notes": "White diagonal sword charm; tight alpha bounds.",
+    "placement": null
+  },
+  {
+    "name": "charm-shield",
+    "box": [
+      33,
+      176,
+      14,
+      15
+    ],
+    "kind": "prop",
+    "group": null,
+    "frame": null,
+    "notes": "Gray shield charm; tight alpha bounds.",
+    "placement": null
+  },
+  {
+    "name": "charm-gem-0",
+    "box": [
+      49,
+      176,
+      14,
+      15
+    ],
+    "kind": "prop",
+    "group": null,
+    "frame": null,
+    "notes": "Blue gem charm; tight alpha bounds.",
+    "placement": null
+  },
+  {
+    "name": "charm-letter-0",
+    "box": [
+      65,
+      176,
+      14,
+      15
+    ],
+    "kind": "prop",
+    "group": null,
+    "frame": null,
+    "notes": "Pink envelope or letter charm; tight alpha bounds.",
+    "placement": null
+  },
+  {
+    "name": "charm-gem-1",
+    "box": [
+      81,
+      176,
+      14,
+      15
+    ],
+    "kind": "prop",
+    "group": null,
+    "frame": null,
+    "notes": "Blue gem charm; tight alpha bounds.",
+    "placement": null
+  },
+  {
+    "name": "charm-potion-0",
+    "box": [
+      97,
+      176,
+      14,
+      15
+    ],
+    "kind": "prop",
+    "group": null,
+    "frame": null,
+    "notes": "Red potion charm; tight alpha bounds.",
+    "placement": null
+  },
+  {
+    "name": "charm-blank-0",
+    "box": [
+      1,
+      192,
+      14,
+      15
+    ],
+    "kind": "prop",
+    "group": null,
+    "frame": null,
+    "notes": "Blank pink charm silhouette; tight alpha bounds.",
+    "placement": null
+  },
+  {
+    "name": "charm-potion-1",
+    "box": [
+      17,
+      192,
+      14,
+      15
+    ],
+    "kind": "prop",
+    "group": null,
+    "frame": null,
+    "notes": "Orange potion charm; tight alpha bounds.",
+    "placement": null
+  },
+  {
+    "name": "charm-feather-0",
+    "box": [
+      33,
+      192,
+      14,
+      15
+    ],
+    "kind": "prop",
+    "group": null,
+    "frame": null,
+    "notes": "Blue-gray feather charm; tight alpha bounds.",
+    "placement": null
+  },
+  {
+    "name": "charm-heart-0",
+    "box": [
+      49,
+      192,
+      14,
+      15
+    ],
+    "kind": "prop",
+    "group": null,
+    "frame": null,
+    "notes": "Brown and red heart charm; tight alpha bounds.",
+    "placement": null
+  },
+  {
+    "name": "charm-gem-2",
+    "box": [
+      65,
+      192,
+      14,
+      15
+    ],
+    "kind": "prop",
+    "group": null,
+    "frame": null,
+    "notes": "Pink and gold gem charm; tight alpha bounds.",
+    "placement": null
+  },
+  {
+    "name": "charm-potion-2",
+    "box": [
+      81,
+      192,
+      14,
+      15
+    ],
+    "kind": "prop",
+    "group": null,
+    "frame": null,
+    "notes": "Red and green potion charm; tight alpha bounds.",
+    "placement": null
+  },
+  {
+    "name": "chimney-0",
+    "box": [
+      0,
+      208,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": null,
+    "frame": null,
+    "notes": "Upper stacked chimney item from the first packed source column; free placement on rooftops.",
+    "placement": null
+  },
+  {
+    "name": "chimney-1",
+    "box": [
+      0,
+      232,
+      16,
+      20
+    ],
+    "kind": "prop",
+    "group": null,
+    "frame": null,
+    "notes": "Lower stacked chimney item from the first packed source column; free placement on rooftops.",
+    "placement": null
+  },
+  {
+    "name": "chimney-2",
+    "box": [
+      16,
+      208,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": null,
+    "frame": null,
+    "notes": "Upper stacked chimney item from the second packed source column; free placement on rooftops.",
+    "placement": null
+  },
+  {
+    "name": "chimney-3",
+    "box": [
+      16,
+      232,
+      16,
+      20
+    ],
+    "kind": "prop",
+    "group": null,
+    "frame": null,
+    "notes": "Lower stacked chimney item from the second packed source column; free placement on rooftops.",
+    "placement": null
+  },
+  {
+    "name": "chimney-4",
+    "box": [
+      0,
+      256,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": null,
+    "frame": null,
+    "notes": "Tapered chimney variant; free placement on rooftops.",
+    "placement": null
+  },
+  {
+    "name": "chimney-5",
+    "box": [
+      16,
+      256,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": null,
+    "frame": null,
+    "notes": "Tapered chimney variant; free placement on rooftops.",
+    "placement": null
+  },
+  {
+    "name": "window-square-0",
+    "box": [
+      32,
+      208,
+      16,
+      43
+    ],
+    "kind": "part",
+    "group": null,
+    "frame": null,
+    "notes": "Square-pane window variant with a packed frame and lower trim; generic placement.",
+    "placement": null
+  },
+  {
+    "name": "window-square-1",
+    "box": [
+      32,
+      256,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": null,
+    "frame": null,
+    "notes": "Square-pane window variant with a packed frame and lower trim; generic placement.",
+    "placement": null
+  },
+  {
+    "name": "door-open-short-0",
+    "box": [
+      48,
+      220,
+      16,
+      20
+    ],
+    "kind": "anim-frame",
+    "group": "door-opening-short",
+    "frame": 0,
+    "notes": "Closed state; generic doors, free placement.",
+    "placement": null
+  },
+  {
+    "name": "door-open-short-1",
+    "box": [
+      64,
+      220,
+      16,
+      20
+    ],
+    "kind": "anim-frame",
+    "group": "door-opening-short",
+    "frame": 1,
+    "notes": "Intermediate opening state; generic doors, free placement.",
+    "placement": null
+  },
+  {
+    "name": "door-open-short-2",
+    "box": [
+      80,
+      220,
+      16,
+      20
+    ],
+    "kind": "anim-frame",
+    "group": "door-opening-short",
+    "frame": 2,
+    "notes": "Intermediate opening state; generic doors, free placement.",
+    "placement": null
+  },
+  {
+    "name": "door-open-short-3",
+    "box": [
+      96,
+      220,
+      16,
+      20
+    ],
+    "kind": "anim-frame",
+    "group": "door-opening-short",
+    "frame": 3,
+    "notes": "Fully open state; generic doors, free placement.",
+    "placement": null
+  },
+  {
+    "name": "door-open-tall-0",
+    "box": [
+      48,
+      252,
+      16,
+      19
+    ],
+    "kind": "anim-frame",
+    "group": "door-opening-tall",
+    "frame": 0,
+    "notes": "Closed state; corrected true art bounds; generic doors, free placement.",
+    "placement": null
+  },
+  {
+    "name": "door-open-tall-1",
+    "box": [
+      64,
+      252,
+      16,
+      19
+    ],
+    "kind": "anim-frame",
+    "group": "door-opening-tall",
+    "frame": 1,
+    "notes": "Intermediate opening state; corrected true art bounds; generic doors, free placement.",
+    "placement": null
+  },
+  {
+    "name": "door-open-tall-2",
+    "box": [
+      80,
+      252,
+      16,
+      19
+    ],
+    "kind": "anim-frame",
+    "group": "door-opening-tall",
+    "frame": 2,
+    "notes": "Intermediate opening state; corrected true art bounds; generic doors, free placement.",
+    "placement": null
+  },
+  {
+    "name": "door-open-tall-3",
+    "box": [
+      96,
+      252,
+      16,
+      19
+    ],
+    "kind": "anim-frame",
+    "group": "door-opening-tall",
+    "frame": 3,
+    "notes": "Fully open state; corrected true art bounds; generic doors, free placement.",
+    "placement": null
+  }
+]

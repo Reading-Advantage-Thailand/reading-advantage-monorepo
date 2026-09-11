@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sewers Tileset — asset review</title><style>
+:root { color-scheme: dark; --bg: #10151c; --panel: #18212b; --panel-2: #202c38;
+  --text: #ecf3f8; --muted: #9db0bd; --line: #344654; --accent: #78d5bd;
+  --approved: #49c891; --rejected: #f07979; --warning: #f2c76e; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 14px/1.45 system-ui, sans-serif; }
+a { color: var(--accent); }
+button, input { font: inherit; }
+button, .button { border: 1px solid var(--line); border-radius: 7px; background: var(--panel-2);
+  color: var(--text); cursor: pointer; padding: 8px 11px; }
+button:hover, .button:hover { border-color: var(--accent); }
+.site-header { position: sticky; top: 0; z-index: 5; display: flex; flex-wrap: wrap; gap: 16px;
+  align-items: center; justify-content: space-between; padding: 16px 24px; background: #121a22ee;
+  border-bottom: 1px solid var(--line); backdrop-filter: blur(10px); }
+.site-header h1 { margin: 2px 0; font-size: clamp(20px, 3vw, 30px); }
+.site-header p { margin: 0; color: var(--muted); }
+.brand { color: var(--muted); text-decoration: none; font-weight: 700; }
+.actions, .toolbar, .pack-stats { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.actions input { display: none; }
+main { max-width: 1800px; margin: 0 auto; padding: 22px 24px 56px; }
+.toolbar { position: sticky; top: 86px; z-index: 4; margin: 0 0 16px; padding: 10px 12px;
+  background: var(--panel); border: 1px solid var(--line); border-radius: 9px; }
+.toolbar strong { margin-right: 8px; }
+.muted { color: var(--muted); }
+.description { margin: 0 0 20px; background: var(--panel); border: 1px solid var(--line); border-radius: 9px; }
+.description summary { cursor: pointer; padding: 11px 14px; font-weight: 700; }
+.description pre { max-height: 360px; overflow: auto; margin: 0; padding: 0 14px 14px; color: #c8d5dd;
+  white-space: pre-wrap; font: 12px/1.5 ui-monospace, monospace; }
+.folder { margin: 0 0 14px; background: #141c24; border: 1px solid var(--line); border-radius: 9px; }
+.folder summary { cursor: pointer; padding: 12px 14px; font-weight: 700; }
+.folder summary::marker { color: var(--accent); }
+.folder-count { float: right; color: var(--muted); font-weight: 400; }
+.asset-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 10px; padding: 0 10px 10px; }
+.asset-card { position: relative; min-width: 0; overflow: hidden; padding: 10px; border: 2px solid var(--line);
+  border-radius: 8px; background: var(--panel); cursor: pointer; transition: border-color .12s, background .12s; }
+.asset-card:hover, .asset-card:focus-visible { border-color: var(--accent); outline: none; }
+.asset-card[data-flag="approved"] { border-color: var(--approved); background: #123025; }
+.asset-card[data-flag="needs-work"] { border-color: var(--warning); background: #3a3017; }
+.asset-card[data-flag="rejected"] { border-color: var(--rejected); background: #351d24; }
+.flag-status { display: block; min-height: 20px; margin-bottom: 5px; color: var(--muted); font-size: 11px;
+  font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.asset-card[data-flag="approved"] .flag-status { color: var(--approved); }
+.asset-card[data-flag="needs-work"] .flag-status { color: var(--warning); }
+.asset-card[data-flag="rejected"] .flag-status { color: var(--rejected); }
+.visuals { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 7px; align-items: start; }
+.visual { min-width: 0; min-height: 100px; display: grid; place-items: center; padding: 5px;
+  border: 1px solid #30404d; border-radius: 6px; background: #0c1116; }
+.visual img, .visual canvas { max-width: 100%; max-height: 128px; image-rendering: pixelated; object-fit: contain; }
+.visual canvas { height: auto; }
+.visual.single { grid-column: 1 / -1; }
+.grid-toggle { display: block; margin: 5px auto 0; padding: 4px 7px; font-size: 11px; }
+.asset-heading { display: block; margin: 9px 0 4px; }
+.asset-heading code { display: block; overflow-wrap: anywhere; color: #f7fbfd; font-weight: 700; }
+.suspects { display: flex; flex-wrap: wrap; gap: 4px; justify-content: flex-start; margin-top: 5px; }
+.suspect { display: inline-block; border-radius: 4px; padding: 2px 5px; background: #59451e; color: #ffe5a6;
+  font-size: 10px; font-weight: 700; white-space: nowrap; }
+.asset-meta { display: grid; grid-template-columns: auto 1fr; gap: 2px 7px; margin: 0; color: var(--muted); font-size: 11px; }
+.asset-meta dt { color: #b6c8d2; }
+.asset-meta dd { min-width: 0; margin: 0; overflow-wrap: anywhere; }
+.asset-meta code, .provenance code { color: #d7e5eb; font: inherit; }
+.provenance { margin-top: 7px; color: var(--muted); font-size: 11px; }
+.provenance summary { cursor: pointer; }
+.asset-description { margin: 8px 0 0; padding-top: 7px; border-top: 1px solid #30404d; color: #dbe8e1; font-size: 12px; }
+.pack-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 14px; }
+.pack-card { display: block; padding: 16px; border: 1px solid var(--line); border-radius: 10px; background: var(--panel);
+  color: var(--text); text-decoration: none; }
+.pack-card:hover { border-color: var(--accent); transform: translateY(-1px); }
+.pack-card h2 { margin: 0 0 8px; font-size: 18px; }
+.pack-card p { margin: 4px 0; color: var(--muted); }
+.pack-card progress { width: 100%; height: 8px; accent-color: var(--approved); }
+footer { max-width: 1800px; margin: 0 auto; padding: 0 24px 34px; color: var(--muted); font-size: 12px; }
+footer p { max-width: 1000px; }
+@media (max-width: 700px) { .site-header { position: static; padding: 14px 16px; }
+  .toolbar { position: static; } main { padding: 16px 12px 42px; } footer { padding: 0 12px 24px; }
+  .asset-grid { grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); padding: 0 6px 6px; } }
+</style></head>
+<body data-page="pack"><header class="site-header"><div><a class="brand" href="index.html">Asset review</a><h1>Sewers Tileset</h1><p>5 assets from Sewers Tileset.zip</p></div><div class="actions"><button type="button" data-export-flags>Export flags</button><label class="button" for="import-flags">Import flags</label><input id="import-flags" type="file" accept="application/json" data-import-flags></div></header>
+<main><div class="toolbar"><strong>Flags</strong><div class="pack-stats"><span><b data-approved-count>0</b> approved</span><span><b data-needs-work-count>0</b> needs-work</span><span><b data-rejected-count>0</b> rejected</span><span><b data-unreviewed-count>0</b> unreviewed</span></div><span class="muted">Click an asset to cycle unreviewed → approved (usable as-is) → needs-work (valid, not usable as-is) → rejected (defective/unusable) → unreviewed.</span></div>
+<details class="description"><summary>Pack description markdown</summary><pre># Sewers Tileset.zip - Asset Descriptions
+
+This archive is a small pixel-art sewer and underground tileset focused on stone walls, pipes, wood, doors, grates, and animated water and torch tiles.
+
+## Tilesets
+
+- sewers_tiles.png: complete sewer tileset containing:
+  - grey and dark brick walls with interior and exterior faces,
+  - metal pipes, valves, junctions, and connecting pieces,
+  - brown wood planks, crates, and barrels,
+  - brown wooden doors with round metal handles,
+  - metal floor grates and dark grate walls,
+  - large green animated water tiles for pools and rivers,
+  - small torch sprites with flame animations.
+
+## RPG Maker Variants
+
+- RPG Maker MV/characters/!Sewers_Torch.png: animated torch for RPG Maker MV characters layer.
+- RPG Maker MV/tilesets/rm_sewers_B.png: prebuilt RPG Maker MV tileset in 512x512 layout.
+- RPG Maker VX folder contains equivalent `characters` and `tilesets` builds.
+
+## License
+
+- License.txt included in the root of the archive.
+
+This archive contains environment tiles and props only. It does not include any character, hero, monster, or creature sprites.</pre></details>
+<details class="folder" open><summary>top-down/native/sewers-tileset/rpg-maker-mv/characters<span class="folder-count">1 assets</span></summary><div class="asset-grid"><article class="asset-card" tabindex="0" role="button" data-asset-id="top-down/native/sewers-tileset/rpg-maker-mv/characters/sewers-torch-source-4af4b0887b03.png" aria-label="Review top-down/native/sewers-tileset/rpg-maker-mv/characters/sewers-torch-source-4af4b0887b03.png"><span class="flag-status">unreviewed · click to flag</span><div class="visuals"><div class="visual single"><img loading="lazy" src="../standard/top-down/native/sewers-tileset/rpg-maker-mv/characters/sewers-torch-source-4af4b0887b03.png" alt="sewers-torch-source-4af4b0887b03.png"></div></div><div class="asset-heading"><code>sewers-torch-source-4af4b0887b03.png</code><span class="suspects"></span></div><dl class="asset-meta"><dt>ID</dt><dd><code>top-down/native/sewers-tileset/rpg-maker-mv/characters/sewers-torch-source-4af4b0887b03.png</code></dd><dt>Dimensions</dt><dd>144 × 384</dd><dt>Cell size</dt><dd>native</dd><dt>Source member</dt><dd><code>Sewers Tileset/RPG Maker/RPG Maker MV/characters/!Sewers_Torch.png</code></dd></dl><details class="provenance"><summary>Show destination</summary><code>top-down/native/sewers-tileset/rpg-maker-mv/characters/sewers-torch-source-4af4b0887b03.png</code></details></article></div></details><details class="folder"><summary>top-down/native/sewers-tileset/rpg-maker-mv/tilesets<span class="folder-count">1 assets</span></summary><div class="asset-grid"><article class="asset-card" tabindex="0" role="button" data-asset-id="top-down/native/sewers-tileset/rpg-maker-mv/tilesets/rm-sewers-b-source-134df822313e.png" aria-label="Review top-down/native/sewers-tileset/rpg-maker-mv/tilesets/rm-sewers-b-source-134df822313e.png"><span class="flag-status">unreviewed · click to flag</span><div class="visuals"><div class="visual single"><img loading="lazy" src="../standard/top-down/native/sewers-tileset/rpg-maker-mv/tilesets/rm-sewers-b-source-134df822313e.png" alt="rm-sewers-b-source-134df822313e.png"></div></div><div class="asset-heading"><code>rm-sewers-b-source-134df822313e.png</code><span class="suspects"></span></div><dl class="asset-meta"><dt>ID</dt><dd><code>top-down/native/sewers-tileset/rpg-maker-mv/tilesets/rm-sewers-b-source-134df822313e.png</code></dd><dt>Dimensions</dt><dd>768 × 768</dd><dt>Cell size</dt><dd>native</dd><dt>Source member</dt><dd><code>Sewers Tileset/RPG Maker/RPG Maker MV/tilesets/rm_sewers_B.png</code></dd></dl><details class="provenance"><summary>Show destination</summary><code>top-down/native/sewers-tileset/rpg-maker-mv/tilesets/rm-sewers-b-source-134df822313e.png</code></details></article></div></details><details class="folder"><summary>top-down/native/sewers-tileset/rpg-maker-vx/characters<span class="folder-count">1 assets</span></summary><div class="asset-grid"><article class="asset-card" tabindex="0" role="button" data-asset-id="top-down/native/sewers-tileset/rpg-maker-vx/characters/sewers-torch-source-4d4801dcb7ba.png" aria-label="Review top-down/native/sewers-tileset/rpg-maker-vx/characters/sewers-torch-source-4d4801dcb7ba.png"><span class="flag-status">unreviewed · click to flag</span><div class="visuals"><div class="visual single"><img loading="lazy" src="../standard/top-down/native/sewers-tileset/rpg-maker-vx/characters/sewers-torch-source-4d4801dcb7ba.png" alt="sewers-torch-source-4d4801dcb7ba.png"></div></div><div class="asset-heading"><code>sewers-torch-source-4d4801dcb7ba.png</code><span class="suspects"></span></div><dl class="asset-meta"><dt>ID</dt><dd><code>top-down/native/sewers-tileset/rpg-maker-vx/characters/sewers-torch-source-4d4801dcb7ba.png</code></dd><dt>Dimensions</dt><dd>96 × 256</dd><dt>Cell size</dt><dd>native</dd><dt>Source member</dt><dd><code>Sewers Tileset/RPG Maker/RPG Maker VX/characters/!Sewers_Torch.png</code></dd></dl><details class="provenance"><summary>Show destination</summary><code>top-down/native/sewers-tileset/rpg-maker-vx/characters/sewers-torch-source-4d4801dcb7ba.png</code></details></article></div></details><details class="folder"><summary>top-down/native/sewers-tileset/rpg-maker-vx/tilesets<span class="folder-count">1 assets</span></summary><div class="asset-grid"><article class="asset-card" tabindex="0" role="button" data-asset-id="top-down/native/sewers-tileset/rpg-maker-vx/tilesets/rm-sewers-b-source-412d97462bc5.png" aria-label="Review top-down/native/sewers-tileset/rpg-maker-vx/tilesets/rm-sewers-b-source-412d97462bc5.png"><span class="flag-status">unreviewed · click to flag</span><div class="visuals"><div class="visual single"><img loading="lazy" src="../standard/top-down/native/sewers-tileset/rpg-maker-vx/tilesets/rm-sewers-b-source-412d97462bc5.png" alt="rm-sewers-b-source-412d97462bc5.png"></div></div><div class="asset-heading"><code>rm-sewers-b-source-412d97462bc5.png</code><span class="suspects"></span></div><dl class="asset-meta"><dt>ID</dt><dd><code>top-down/native/sewers-tileset/rpg-maker-vx/tilesets/rm-sewers-b-source-412d97462bc5.png</code></dd><dt>Dimensions</dt><dd>512 × 512</dd><dt>Cell size</dt><dd>native</dd><dt>Source member</dt><dd><code>Sewers Tileset/RPG Maker/RPG Maker VX/tilesets/rm_sewers_B.png</code></dd></dl><details class="provenance"><summary>Show destination</summary><code>top-down/native/sewers-tileset/rpg-maker-vx/tilesets/rm-sewers-b-source-412d97462bc5.png</code></details></article></div></details><details class="folder"><summary>top-down/native/sewers-tileset/sewers-tileset/tilesets<span class="folder-count">1 assets</span></summary><div class="asset-grid"><article class="asset-card" tabindex="0" role="button" data-asset-id="top-down/native/sewers-tileset/sewers-tileset/tilesets/sewers-tiles-source-b27509108a85.png" aria-label="Review top-down/native/sewers-tileset/sewers-tileset/tilesets/sewers-tiles-source-b27509108a85.png"><span class="flag-status">unreviewed · click to flag</span><div class="visuals"><div class="visual single"><img loading="lazy" src="../standard/top-down/native/sewers-tileset/sewers-tileset/tilesets/sewers-tiles-source-b27509108a85.png" alt="sewers-tiles-source-b27509108a85.png"></div></div><div class="asset-heading"><code>sewers-tiles-source-b27509108a85.png</code><span class="suspects"></span></div><dl class="asset-meta"><dt>ID</dt><dd><code>top-down/native/sewers-tileset/sewers-tileset/tilesets/sewers-tiles-source-b27509108a85.png</code></dd><dt>Dimensions</dt><dd>256 × 496</dd><dt>Cell size</dt><dd>native</dd><dt>Source member</dt><dd><code>Sewers Tileset/Tilesets/sewers_tiles.png</code></dd></dl><details class="provenance"><summary>Show destination</summary><code>top-down/native/sewers-tileset/sewers-tileset/tilesets/sewers-tiles-source-b27509108a85.png</code></details><p class="asset-description">complete sewer tileset containing:</p></article></div></details></main><footer><p><b>Review heuristics:</b> “grid does not divide dimensions evenly” means the declared cell width or height leaves a remainder. “Fully transparent frame” means every pixel in a grid frame has zero alpha. “Edge-continuation suspect” compares each frame’s right edge with the next frame’s first three columns and flags repeated rows where the current edge is opaque while the neighbor edge is at least 75% transparent. These warnings are simple review cues, not decisions.</p><p>Pixel art assets by ElvGames.</p></footer>
+<script>window.PAGE_ASSET_IDS=["top-down/native/sewers-tileset/rpg-maker-mv/characters/sewers-torch-source-4af4b0887b03.png","top-down/native/sewers-tileset/rpg-maker-mv/tilesets/rm-sewers-b-source-134df822313e.png","top-down/native/sewers-tileset/rpg-maker-vx/characters/sewers-torch-source-4d4801dcb7ba.png","top-down/native/sewers-tileset/rpg-maker-vx/tilesets/rm-sewers-b-source-412d97462bc5.png","top-down/native/sewers-tileset/sewers-tileset/tilesets/sewers-tiles-source-b27509108a85.png"];</script><script>
+const STORAGE_KEY = "standard-asset-review-flags-v1";
+const FLAG_STATUSES = new Set(["approved", "needs-work", "rejected"]);
+let flags = readFlags();
+
+function readFlags() {
+  try {
+    const value = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+    if (!value || Array.isArray(value) || typeof value !== "object") return {};
+    return Object.fromEntries(Object.entries(value).filter(([, status]) => FLAG_STATUSES.has(status)));
+  } catch (_error) { return {}; }
+}
+
+function saveFlags() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(flags)); } catch (_error) { /* file:// storage can be unavailable */ }
+}
+
+function updateCard(card) {
+  const status = flags[card.dataset.assetId];
+  if (status) card.dataset.flag = status;
+  else delete card.dataset.flag;
+  const label = card.querySelector(".flag-status");
+  if (label) label.textContent = status || "unreviewed · click to flag";
+}
+
+function countStatuses(ids) {
+  let approved = 0;
+  let needsWork = 0;
+  let rejected = 0;
+  ids.forEach((id) => {
+    if (flags[id] === "approved") approved += 1;
+    if (flags[id] === "needs-work") needsWork += 1;
+    if (flags[id] === "rejected") rejected += 1;
+  });
+  return { approved, needsWork, rejected, unreviewed: ids.length - approved - needsWork - rejected };
+}
+
+function updatePackCounts() {
+  const ids = window.PAGE_ASSET_IDS || [];
+  const counts = countStatuses(ids);
+  document.querySelectorAll("[data-approved-count]").forEach((node) => { node.textContent = counts.approved; });
+  document.querySelectorAll("[data-needs-work-count]").forEach((node) => { node.textContent = counts.needsWork; });
+  document.querySelectorAll("[data-rejected-count]").forEach((node) => { node.textContent = counts.rejected; });
+  document.querySelectorAll("[data-unreviewed-count]").forEach((node) => { node.textContent = counts.unreviewed; });
+  document.querySelectorAll(".asset-card").forEach(updateCard);
+}
+
+function updateIndexCounts() {
+  document.querySelectorAll(".pack-card").forEach((card) => {
+    const counts = countStatuses(JSON.parse(card.dataset.assetIds));
+    card.querySelector("[data-approved-count]").textContent = counts.approved;
+    card.querySelector("[data-needs-work-count]").textContent = counts.needsWork;
+    card.querySelector("[data-rejected-count]").textContent = counts.rejected;
+    card.querySelector("[data-unreviewed-count]").textContent = counts.unreviewed;
+    card.querySelector("progress").value = counts.approved + counts.needsWork + counts.rejected;
+  });
+}
+
+function cycleFlag(card) {
+  const current = flags[card.dataset.assetId];
+  if (!current) flags[card.dataset.assetId] = "approved";
+  else if (current === "approved") flags[card.dataset.assetId] = "needs-work";
+  else if (current === "needs-work") flags[card.dataset.assetId] = "rejected";
+  else delete flags[card.dataset.assetId];
+  saveFlags();
+  updatePackCounts();
+}
+
+function wireCards() {
+  document.querySelectorAll(".asset-card").forEach((card) => {
+    updateCard(card);
+    card.addEventListener("click", (event) => {
+      if (event.target.closest("button, a, input, summary, details.provenance")) return;
+      cycleFlag(card);
+    });
+    card.addEventListener("keydown", (event) => {
+      if ((event.key === "Enter" || event.key === " ") && event.target === card) {
+        event.preventDefault(); cycleFlag(card);
+      }
+    });
+  });
+}
+
+function setupCanvases() {
+  const players = [];
+  document.querySelectorAll("canvas[data-cell-width]").forEach((canvas) => {
+    const image = canvas.closest(".asset-card").querySelector("img");
+    const player = { canvas, image, ctx: canvas.getContext("2d"), active: false, last: 0, frame: 0 };
+    player.columns = Number(canvas.dataset.columns);
+    player.rows = Number(canvas.dataset.rows);
+    player.cellWidth = Number(canvas.dataset.cellWidth);
+    player.cellHeight = Number(canvas.dataset.cellHeight);
+    player.frameCount = Math.max(1, player.columns * player.rows);
+    players.push(player);
+    const draw = () => drawFrame(player, performance.now());
+    if (image.complete) draw(); else image.addEventListener("load", draw, { once: true });
+    const toggle = canvas.parentElement.querySelector(".grid-toggle");
+    if (toggle) toggle.addEventListener("click", (event) => {
+      event.stopPropagation();
+      canvas.classList.toggle("grid-on");
+      toggle.setAttribute("aria-pressed", canvas.classList.contains("grid-on"));
+      draw();
+    });
+  });
+  if ("IntersectionObserver" in window) {
+    const observer = new IntersectionObserver((entries) => entries.forEach((entry) => {
+      const player = players.find((item) => item.canvas === entry.target);
+      if (player) player.active = entry.isIntersecting;
+    }));
+    players.forEach((player) => observer.observe(player.canvas));
+  } else players.forEach((player) => { player.active = true; });
+  requestAnimationFrame((now) => animateCanvases(players, now));
+}
+
+function drawFrame(player, now) {
+  if (!player.image.complete || !player.image.naturalWidth) return;
+  const frame = player.frame % player.frameCount;
+  const sx = (frame % player.columns) * player.cellWidth;
+  const sy = Math.floor(frame / player.columns) * player.cellHeight;
+  player.ctx.clearRect(0, 0, player.cellWidth, player.cellHeight);
+  player.ctx.imageSmoothingEnabled = false;
+  player.ctx.drawImage(player.image, sx, sy, player.cellWidth, player.cellHeight, 0, 0, player.cellWidth, player.cellHeight);
+  if (player.canvas.classList.contains("grid-on")) {
+    player.ctx.strokeStyle = "rgba(255,255,255,.65)";
+    player.ctx.lineWidth = Math.max(1, player.cellWidth / 64);
+    player.ctx.strokeRect(.5, .5, player.cellWidth - 1, player.cellHeight - 1);
+  }
+  player.last = now;
+}
+
+function animateCanvases(players, now) {
+  players.forEach((player) => {
+    if (player.active && now - player.last >= 130) { player.frame += 1; drawFrame(player, now); }
+  });
+  requestAnimationFrame((next) => animateCanvases(players, next));
+}
+
+function wireFlagFiles() {
+  document.querySelectorAll("[data-export-flags]").forEach((button) => button.addEventListener("click", () => {
+    const blob = new Blob([JSON.stringify(flags, null, 2)], { type: "application/json" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob); link.download = "asset-review-flags.json"; link.click();
+    setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+  }));
+  document.querySelectorAll("[data-import-flags]").forEach((input) => input.addEventListener("change", () => {
+    const file = input.files && input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const imported = JSON.parse(String(reader.result));
+        if (!imported || Array.isArray(imported) || typeof imported !== "object") throw new Error("root must be an object");
+        const valid = Object.fromEntries(Object.entries(imported).filter(([id, status]) => typeof id === "string" && FLAG_STATUSES.has(status)));
+        flags = { ...flags, ...valid }; saveFlags(); updatePackCounts(); updateIndexCounts();
+      } catch (error) { window.alert(`Could not import flags: ${error.message}`); }
+      input.value = "";
+    };
+    reader.readAsText(file);
+  }));
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  wireFlagFiles();
+  if (document.body.dataset.page === "index") updateIndexCounts();
+  else { wireCards(); setupCanvases(); updatePackCounts(); }
+});
+</script></body></html>

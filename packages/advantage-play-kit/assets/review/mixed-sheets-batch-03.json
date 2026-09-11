@@ -1,0 +1,846 @@
+[
+  {
+    "id": "B",
+    "title": "Large cave minerals",
+    "slug": "large-cave-minerals",
+    "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-caves-minerals-big-source-32d7ec32ff95.png",
+    "entries": [
+      {
+        "name": "brown-large-mineral-01-01",
+        "box": [
+          0,
+          0,
+          128,
+          32
+        ],
+        "kind": "structure",
+        "group": "brown-large-mineral-01-01",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the strip.",
+        "placement": null
+      },
+      {
+        "name": "brown-large-mineral-01-02",
+        "box": [
+          160,
+          0,
+          128,
+          32
+        ],
+        "kind": "structure",
+        "group": "brown-large-mineral-01-02",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the strip.",
+        "placement": null
+      },
+      {
+        "name": "brown-large-mineral-02-01",
+        "box": [
+          0,
+          32,
+          128,
+          32
+        ],
+        "kind": "structure",
+        "group": "brown-large-mineral-02-01",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the strip.",
+        "placement": null
+      },
+      {
+        "name": "brown-large-mineral-02-02",
+        "box": [
+          160,
+          32,
+          128,
+          32
+        ],
+        "kind": "structure",
+        "group": "brown-large-mineral-02-02",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the strip.",
+        "placement": null
+      },
+      {
+        "name": "brown-large-mineral-03-01",
+        "box": [
+          0,
+          64,
+          128,
+          32
+        ],
+        "kind": "structure",
+        "group": "brown-large-mineral-03-01",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the strip.",
+        "placement": null
+      },
+      {
+        "name": "brown-large-mineral-03-02",
+        "box": [
+          160,
+          64,
+          128,
+          32
+        ],
+        "kind": "structure",
+        "group": "brown-large-mineral-03-02",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the strip.",
+        "placement": null
+      },
+      {
+        "name": "brown-large-mineral-04-01",
+        "box": [
+          0,
+          96,
+          128,
+          32
+        ],
+        "kind": "structure",
+        "group": "brown-large-mineral-04-01",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the strip.",
+        "placement": null
+      },
+      {
+        "name": "brown-large-mineral-04-02",
+        "box": [
+          160,
+          96,
+          128,
+          32
+        ],
+        "kind": "structure",
+        "group": "brown-large-mineral-04-02",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the strip.",
+        "placement": null
+      },
+      {
+        "name": "brown-large-mineral-05-01",
+        "box": [
+          0,
+          128,
+          128,
+          32
+        ],
+        "kind": "structure",
+        "group": "brown-large-mineral-05-01",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the strip.",
+        "placement": null
+      },
+      {
+        "name": "brown-large-mineral-05-02",
+        "box": [
+          160,
+          128,
+          128,
+          32
+        ],
+        "kind": "structure",
+        "group": "brown-large-mineral-05-02",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the strip.",
+        "placement": null
+      },
+      {
+        "name": "brown-large-mineral-06-01",
+        "box": [
+          0,
+          160,
+          128,
+          32
+        ],
+        "kind": "structure",
+        "group": "brown-large-mineral-06-01",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the strip.",
+        "placement": null
+      },
+      {
+        "name": "brown-large-mineral-06-02",
+        "box": [
+          160,
+          160,
+          128,
+          32
+        ],
+        "kind": "structure",
+        "group": "brown-large-mineral-06-02",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the strip.",
+        "placement": null
+      },
+      {
+        "name": "pink-large-mineral-01-01",
+        "box": [
+          0,
+          192,
+          128,
+          32
+        ],
+        "kind": "structure",
+        "group": "pink-large-mineral-01-01",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the strip.",
+        "placement": null
+      },
+      {
+        "name": "pink-large-mineral-01-02",
+        "box": [
+          160,
+          192,
+          128,
+          32
+        ],
+        "kind": "structure",
+        "group": "pink-large-mineral-01-02",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the strip.",
+        "placement": null
+      },
+      {
+        "name": "pink-large-mineral-02-01",
+        "box": [
+          0,
+          224,
+          128,
+          32
+        ],
+        "kind": "structure",
+        "group": "pink-large-mineral-02-01",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the strip.",
+        "placement": null
+      },
+      {
+        "name": "pink-large-mineral-02-02",
+        "box": [
+          160,
+          224,
+          128,
+          32
+        ],
+        "kind": "structure",
+        "group": "pink-large-mineral-02-02",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the strip.",
+        "placement": null
+      },
+      {
+        "name": "pink-large-mineral-03-01",
+        "box": [
+          0,
+          256,
+          128,
+          32
+        ],
+        "kind": "structure",
+        "group": "pink-large-mineral-03-01",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the strip.",
+        "placement": null
+      },
+      {
+        "name": "pink-large-mineral-03-02",
+        "box": [
+          160,
+          256,
+          128,
+          32
+        ],
+        "kind": "structure",
+        "group": "pink-large-mineral-03-02",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the strip.",
+        "placement": null
+      },
+      {
+        "name": "pink-large-mineral-04-01",
+        "box": [
+          0,
+          288,
+          128,
+          32
+        ],
+        "kind": "structure",
+        "group": "pink-large-mineral-04-01",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the strip.",
+        "placement": null
+      },
+      {
+        "name": "pink-large-mineral-04-02",
+        "box": [
+          160,
+          288,
+          128,
+          32
+        ],
+        "kind": "structure",
+        "group": "pink-large-mineral-04-02",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the strip.",
+        "placement": null
+      },
+      {
+        "name": "pink-large-mineral-05-01",
+        "box": [
+          0,
+          320,
+          128,
+          32
+        ],
+        "kind": "structure",
+        "group": "pink-large-mineral-05-01",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the strip.",
+        "placement": null
+      },
+      {
+        "name": "pink-large-mineral-05-02",
+        "box": [
+          160,
+          320,
+          128,
+          32
+        ],
+        "kind": "structure",
+        "group": "pink-large-mineral-05-02",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the strip.",
+        "placement": null
+      },
+      {
+        "name": "pink-large-mineral-06-01",
+        "box": [
+          0,
+          352,
+          128,
+          32
+        ],
+        "kind": "structure",
+        "group": "pink-large-mineral-06-01",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the strip.",
+        "placement": null
+      },
+      {
+        "name": "pink-large-mineral-06-02",
+        "box": [
+          160,
+          352,
+          128,
+          32
+        ],
+        "kind": "structure",
+        "group": "pink-large-mineral-06-02",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the strip.",
+        "placement": null
+      }
+    ],
+    "animated": true,
+    "frameWidth": 32,
+    "size": [
+      320,
+      384
+    ],
+    "duplicates": [],
+    "status": "approved-and-processed"
+  },
+  {
+    "id": "A",
+    "title": "Mountain animations",
+    "slug": "mountain-animations",
+    "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-mountains-animations-source-beca7be423b8.png",
+    "entries": [
+      {
+        "name": "mountain-object-01-01",
+        "box": [
+          16,
+          16,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "mountain-object-01-01",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the strip.",
+        "placement": null
+      },
+      {
+        "name": "mountain-object-01-02",
+        "box": [
+          96,
+          16,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "mountain-object-01-02",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the strip.",
+        "placement": null
+      },
+      {
+        "name": "mountain-object-01-03",
+        "box": [
+          176,
+          16,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "mountain-object-01-03",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the strip.",
+        "placement": null
+      },
+      {
+        "name": "mountain-object-02-01",
+        "box": [
+          16,
+          32,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "mountain-object-02-01",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the strip.",
+        "placement": null
+      },
+      {
+        "name": "mountain-object-02-02",
+        "box": [
+          96,
+          32,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "mountain-object-02-02",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the strip.",
+        "placement": null
+      },
+      {
+        "name": "mountain-object-02-03",
+        "box": [
+          176,
+          32,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "mountain-object-02-03",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the strip.",
+        "placement": null
+      },
+      {
+        "name": "mountain-object-03-01",
+        "box": [
+          16,
+          48,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "mountain-object-03-01",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the strip.",
+        "placement": null
+      },
+      {
+        "name": "mountain-object-03-02",
+        "box": [
+          96,
+          48,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "mountain-object-03-02",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the strip.",
+        "placement": null
+      },
+      {
+        "name": "mountain-object-03-03",
+        "box": [
+          176,
+          48,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "mountain-object-03-03",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the strip.",
+        "placement": null
+      },
+      {
+        "name": "mountain-object-04-01",
+        "box": [
+          16,
+          64,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "mountain-object-04-01",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the strip.",
+        "placement": null
+      },
+      {
+        "name": "mountain-object-04-02",
+        "box": [
+          96,
+          64,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "mountain-object-04-02",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the strip.",
+        "placement": null
+      },
+      {
+        "name": "mountain-object-04-03",
+        "box": [
+          176,
+          64,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "mountain-object-04-03",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the strip.",
+        "placement": null
+      },
+      {
+        "name": "mountain-object-05-01",
+        "box": [
+          16,
+          80,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "mountain-object-05-01",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the strip.",
+        "placement": null
+      },
+      {
+        "name": "mountain-object-05-02",
+        "box": [
+          96,
+          80,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "mountain-object-05-02",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the strip.",
+        "placement": null
+      },
+      {
+        "name": "mountain-object-05-03",
+        "box": [
+          176,
+          80,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "mountain-object-05-03",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the strip.",
+        "placement": null
+      },
+      {
+        "name": "mountain-object-06-01",
+        "box": [
+          16,
+          96,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "mountain-object-06-01",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the strip.",
+        "placement": null
+      },
+      {
+        "name": "mountain-object-06-02",
+        "box": [
+          96,
+          96,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "mountain-object-06-02",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the strip.",
+        "placement": null
+      },
+      {
+        "name": "mountain-object-06-03",
+        "box": [
+          176,
+          96,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "mountain-object-06-03",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the strip.",
+        "placement": null
+      },
+      {
+        "name": "mountain-object-07-01",
+        "box": [
+          16,
+          112,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "mountain-object-07-01",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the strip.",
+        "placement": null
+      },
+      {
+        "name": "mountain-object-07-02",
+        "box": [
+          96,
+          112,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "mountain-object-07-02",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the strip.",
+        "placement": null
+      },
+      {
+        "name": "mountain-object-07-03",
+        "box": [
+          176,
+          112,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "mountain-object-07-03",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the strip.",
+        "placement": null
+      }
+    ],
+    "animated": true,
+    "frameWidth": 16,
+    "size": [
+      256,
+      144
+    ],
+    "duplicates": [],
+    "status": "approved-and-processed"
+  },
+  {
+    "id": "D",
+    "title": "Dungeon doors and gate parts",
+    "slug": "dungeon-doors",
+    "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-dungeon-doors-source-aa174f9b9302.png",
+    "entries": [
+      {
+        "name": "dungeon-portcullis-01",
+        "box": [
+          0,
+          16,
+          192,
+          32
+        ],
+        "kind": "structure",
+        "group": "dungeon-portcullis-01",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the strip.",
+        "placement": null
+      },
+      {
+        "name": "dungeon-portcullis-02",
+        "box": [
+          0,
+          48,
+          192,
+          32
+        ],
+        "kind": "structure",
+        "group": "dungeon-portcullis-02",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the strip.",
+        "placement": null
+      },
+      {
+        "name": "dungeon-portcullis-03",
+        "box": [
+          0,
+          80,
+          192,
+          32
+        ],
+        "kind": "structure",
+        "group": "dungeon-portcullis-03",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the strip.",
+        "placement": null
+      },
+      {
+        "name": "dungeon-portcullis-04",
+        "box": [
+          0,
+          112,
+          192,
+          32
+        ],
+        "kind": "structure",
+        "group": "dungeon-portcullis-04",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the strip.",
+        "placement": null
+      },
+      {
+        "name": "dungeon-stone-door-01",
+        "box": [
+          208,
+          16,
+          192,
+          32
+        ],
+        "kind": "structure",
+        "group": "dungeon-stone-door-01",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the strip.",
+        "placement": null
+      },
+      {
+        "name": "dungeon-stone-door-02",
+        "box": [
+          208,
+          48,
+          192,
+          32
+        ],
+        "kind": "structure",
+        "group": "dungeon-stone-door-02",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the strip.",
+        "placement": null
+      },
+      {
+        "name": "dungeon-stone-door-03",
+        "box": [
+          208,
+          80,
+          192,
+          32
+        ],
+        "kind": "structure",
+        "group": "dungeon-stone-door-03",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the strip.",
+        "placement": null
+      },
+      {
+        "name": "dungeon-stone-door-04",
+        "box": [
+          208,
+          112,
+          192,
+          32
+        ],
+        "kind": "structure",
+        "group": "dungeon-stone-door-04",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the strip.",
+        "placement": null
+      },
+      {
+        "name": "dungeon-small-wood-door",
+        "box": [
+          208,
+          0,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "dungeon-small-wood-door",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the strip.",
+        "placement": null
+      },
+      {
+        "name": "small-gate-bars-animation",
+        "box": [
+          128,
+          0,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "small-gate-bars-animation",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the strip.",
+        "placement": null
+      },
+      {
+        "name": "large-gate-bars-animation",
+        "box": [
+          96,
+          144,
+          192,
+          32
+        ],
+        "kind": "structure",
+        "group": "large-gate-bars-animation",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the strip.",
+        "placement": null
+      }
+    ],
+    "animated": false,
+    "animationWidths": {
+      "0": 48,
+      "1": 48,
+      "2": 48,
+      "3": 48,
+      "4": 48,
+      "5": 48,
+      "6": 48,
+      "7": 48,
+      "8": 16,
+      "9": 16,
+      "10": 48
+    },
+    "size": [
+      400,
+      176
+    ],
+    "duplicates": [],
+    "status": "approved-and-processed"
+  }
+]

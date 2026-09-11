@@ -1,0 +1,1864 @@
+[
+  {
+    "name": "block-1-patch",
+    "box": [
+      0,
+      0,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "block-1-patch",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-1-corner-1",
+    "box": [
+      0,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-1-corner-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-2-border-1-1",
+    "box": [
+      48,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-2-border-1-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-2-border-2-1",
+    "box": [
+      64,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-2-border-2-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-2-border-3-1",
+    "box": [
+      80,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-2-border-3-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-2-border-1-2",
+    "box": [
+      48,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-2-border-1-2",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-2-border-3-2",
+    "box": [
+      80,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-2-border-3-2",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-2-border-1-3",
+    "box": [
+      48,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-2-border-1-3",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-2-border-2-3",
+    "box": [
+      64,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-2-border-2-3",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-2-border-3-3",
+    "box": [
+      80,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-2-border-3-3",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-2-corner-1",
+    "box": [
+      48,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-2-corner-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-2-corner-2",
+    "box": [
+      80,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-2-corner-2",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-3-patch",
+    "box": [
+      96,
+      0,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "block-3-patch",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-4-border-1-1",
+    "box": [
+      144,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-4-border-1-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-4-border-2-1",
+    "box": [
+      160,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-4-border-2-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-4-border-3-1",
+    "box": [
+      176,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-4-border-3-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-4-border-1-2",
+    "box": [
+      144,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-4-border-1-2",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-4-border-3-2",
+    "box": [
+      176,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-4-border-3-2",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-4-border-1-3",
+    "box": [
+      144,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-4-border-1-3",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-4-border-2-3",
+    "box": [
+      160,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-4-border-2-3",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-4-border-3-3",
+    "box": [
+      176,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-4-border-3-3",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-4-corner-1",
+    "box": [
+      144,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-4-corner-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-4-corner-2",
+    "box": [
+      176,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-4-corner-2",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-5-patch",
+    "box": [
+      192,
+      0,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "block-5-patch",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-6-border-1-1",
+    "box": [
+      240,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-6-border-1-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-6-border-2-1",
+    "box": [
+      256,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-6-border-2-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-6-border-3-1",
+    "box": [
+      272,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-6-border-3-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-6-border-1-2",
+    "box": [
+      240,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-6-border-1-2",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-6-border-3-2",
+    "box": [
+      272,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-6-border-3-2",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-6-border-1-3",
+    "box": [
+      240,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-6-border-1-3",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-6-border-2-3",
+    "box": [
+      256,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-6-border-2-3",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-6-border-3-3",
+    "box": [
+      272,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-6-border-3-3",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-6-corner-1",
+    "box": [
+      240,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-6-corner-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-6-corner-2",
+    "box": [
+      272,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-6-corner-2",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-7-patch",
+    "box": [
+      288,
+      0,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "block-7-patch",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-8-border-1-1",
+    "box": [
+      336,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-8-border-1-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-8-border-2-1",
+    "box": [
+      352,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-8-border-2-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-8-border-3-1",
+    "box": [
+      368,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-8-border-3-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-8-border-1-2",
+    "box": [
+      336,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-8-border-1-2",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-8-border-3-2",
+    "box": [
+      368,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-8-border-3-2",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-8-border-1-3",
+    "box": [
+      336,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-8-border-1-3",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-8-border-2-3",
+    "box": [
+      352,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-8-border-2-3",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-8-border-3-3",
+    "box": [
+      368,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-8-border-3-3",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-8-corner-1",
+    "box": [
+      336,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-8-corner-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-8-corner-2",
+    "box": [
+      368,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-8-corner-2",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-9-patch",
+    "box": [
+      0,
+      64,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "block-9-patch",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-10-border-1-1",
+    "box": [
+      48,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-10-border-1-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-10-border-2-1",
+    "box": [
+      64,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-10-border-2-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-10-border-3-1",
+    "box": [
+      80,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-10-border-3-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-10-border-1-2",
+    "box": [
+      48,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-10-border-1-2",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-10-border-3-2",
+    "box": [
+      80,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-10-border-3-2",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-10-border-1-3",
+    "box": [
+      48,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-10-border-1-3",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-10-border-2-3",
+    "box": [
+      64,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-10-border-2-3",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-10-border-3-3",
+    "box": [
+      80,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-10-border-3-3",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-10-corner-1",
+    "box": [
+      48,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-10-corner-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-10-corner-2",
+    "box": [
+      80,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-10-corner-2",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-11-patch",
+    "box": [
+      96,
+      64,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "block-11-patch",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-12-border-1-1",
+    "box": [
+      144,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-12-border-1-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-12-border-2-1",
+    "box": [
+      160,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-12-border-2-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-12-border-3-1",
+    "box": [
+      176,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-12-border-3-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-12-border-1-2",
+    "box": [
+      144,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-12-border-1-2",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-12-border-3-2",
+    "box": [
+      176,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-12-border-3-2",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-12-border-1-3",
+    "box": [
+      144,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-12-border-1-3",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-12-border-2-3",
+    "box": [
+      160,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-12-border-2-3",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-12-border-3-3",
+    "box": [
+      176,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-12-border-3-3",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-12-corner-1",
+    "box": [
+      144,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-12-corner-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-12-corner-2",
+    "box": [
+      176,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-12-corner-2",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-13-patch",
+    "box": [
+      192,
+      64,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "block-13-patch",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-14-border-1-1",
+    "box": [
+      240,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-14-border-1-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-14-border-2-1",
+    "box": [
+      256,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-14-border-2-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-14-border-3-1",
+    "box": [
+      272,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-14-border-3-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-14-border-1-2",
+    "box": [
+      240,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-14-border-1-2",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-14-border-3-2",
+    "box": [
+      272,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-14-border-3-2",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-14-border-1-3",
+    "box": [
+      240,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-14-border-1-3",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-14-border-2-3",
+    "box": [
+      256,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-14-border-2-3",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-14-border-3-3",
+    "box": [
+      272,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-14-border-3-3",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-14-corner-1",
+    "box": [
+      240,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-14-corner-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-14-corner-2",
+    "box": [
+      272,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-14-corner-2",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-15-patch",
+    "box": [
+      288,
+      64,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "block-15-patch",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-16-border-1-1",
+    "box": [
+      336,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-16-border-1-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-16-border-2-1",
+    "box": [
+      352,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-16-border-2-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-16-border-3-1",
+    "box": [
+      368,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-16-border-3-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-16-border-1-2",
+    "box": [
+      336,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-16-border-1-2",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-16-border-3-2",
+    "box": [
+      368,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-16-border-3-2",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-16-border-1-3",
+    "box": [
+      336,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-16-border-1-3",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-16-border-2-3",
+    "box": [
+      352,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-16-border-2-3",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-16-border-3-3",
+    "box": [
+      368,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-16-border-3-3",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-16-corner-1",
+    "box": [
+      336,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-16-corner-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-16-corner-2",
+    "box": [
+      368,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-16-corner-2",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-17-patch",
+    "box": [
+      0,
+      128,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "block-17-patch",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-18-border-1-1",
+    "box": [
+      48,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-18-border-1-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-18-border-2-1",
+    "box": [
+      64,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-18-border-2-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-18-border-3-1",
+    "box": [
+      80,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-18-border-3-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-18-border-1-2",
+    "box": [
+      48,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-18-border-1-2",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-18-border-3-2",
+    "box": [
+      80,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-18-border-3-2",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-18-border-1-3",
+    "box": [
+      48,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-18-border-1-3",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-18-border-2-3",
+    "box": [
+      64,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-18-border-2-3",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-18-border-3-3",
+    "box": [
+      80,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-18-border-3-3",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-18-corner-1",
+    "box": [
+      48,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-18-corner-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-18-corner-2",
+    "box": [
+      80,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-18-corner-2",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-19-patch",
+    "box": [
+      96,
+      128,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "block-19-patch",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-20-border-1-1",
+    "box": [
+      144,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-20-border-1-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-20-border-2-1",
+    "box": [
+      160,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-20-border-2-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-20-border-3-1",
+    "box": [
+      176,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-20-border-3-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-20-border-1-2",
+    "box": [
+      144,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-20-border-1-2",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-20-border-3-2",
+    "box": [
+      176,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-20-border-3-2",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-20-border-1-3",
+    "box": [
+      144,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-20-border-1-3",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-20-border-2-3",
+    "box": [
+      160,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-20-border-2-3",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-20-border-3-3",
+    "box": [
+      176,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-20-border-3-3",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-20-corner-1",
+    "box": [
+      144,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-20-corner-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-20-corner-2",
+    "box": [
+      176,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-20-corner-2",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-21-patch",
+    "box": [
+      192,
+      128,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "block-21-patch",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-22-border-1-1",
+    "box": [
+      240,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-22-border-1-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-22-border-2-1",
+    "box": [
+      256,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-22-border-2-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-22-border-3-1",
+    "box": [
+      272,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-22-border-3-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-22-border-1-2",
+    "box": [
+      240,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-22-border-1-2",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-22-border-3-2",
+    "box": [
+      272,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-22-border-3-2",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-22-border-1-3",
+    "box": [
+      240,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-22-border-1-3",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-22-border-2-3",
+    "box": [
+      256,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-22-border-2-3",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-22-border-3-3",
+    "box": [
+      272,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-22-border-3-3",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-22-corner-1",
+    "box": [
+      240,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-22-corner-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-22-corner-2",
+    "box": [
+      272,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-22-corner-2",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-23-patch",
+    "box": [
+      288,
+      128,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "block-23-patch",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-24-border-1-1",
+    "box": [
+      336,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-24-border-1-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-24-border-2-1",
+    "box": [
+      352,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-24-border-2-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-24-border-3-1",
+    "box": [
+      368,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-24-border-3-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-24-border-1-2",
+    "box": [
+      336,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-24-border-1-2",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-24-border-3-2",
+    "box": [
+      368,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-24-border-3-2",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-24-border-1-3",
+    "box": [
+      336,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-24-border-1-3",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-24-border-2-3",
+    "box": [
+      352,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-24-border-2-3",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-24-border-3-3",
+    "box": [
+      368,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-24-border-3-3",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-24-corner-1",
+    "box": [
+      336,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-24-corner-1",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  },
+  {
+    "name": "block-24-corner-2",
+    "box": [
+      368,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "block-24-corner-2",
+    "frame": null,
+    "notes": "Preserve the complete terrain piece.",
+    "placement": null
+  }
+]

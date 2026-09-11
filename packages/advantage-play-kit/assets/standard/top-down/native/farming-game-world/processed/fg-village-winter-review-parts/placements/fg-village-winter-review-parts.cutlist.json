@@ -1,0 +1,4182 @@
+[
+  {
+    "name": "house-gray",
+    "box": [
+      0,
+      0,
+      144,
+      128
+    ],
+    "kind": "part",
+    "group": "house-gray",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "house-red",
+    "box": [
+      144,
+      0,
+      112,
+      128
+    ],
+    "kind": "part",
+    "group": "house-red",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "house-blue",
+    "box": [
+      64,
+      128,
+      96,
+      128
+    ],
+    "kind": "part",
+    "group": "house-blue",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "house-green",
+    "box": [
+      160,
+      128,
+      96,
+      128
+    ],
+    "kind": "part",
+    "group": "house-green",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "house-orange",
+    "box": [
+      0,
+      256,
+      112,
+      144
+    ],
+    "kind": "part",
+    "group": "house-orange",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "bridge-wide-0",
+    "box": [
+      384,
+      0,
+      64,
+      48
+    ],
+    "kind": "part",
+    "group": "bridge-wide-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "bridge-short-0",
+    "box": [
+      464,
+      0,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "bridge-short-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "bridge-horizontal-0",
+    "box": [
+      384,
+      48,
+      80,
+      48
+    ],
+    "kind": "part",
+    "group": "bridge-horizontal-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "planks-horizontal-0",
+    "box": [
+      464,
+      48,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "planks-horizontal-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "planks-tall-0",
+    "box": [
+      368,
+      96,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "planks-tall-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "planks-square-0",
+    "box": [
+      416,
+      96,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "planks-square-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "planks-small-0",
+    "box": [
+      464,
+      96,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "planks-small-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "fence-square-0",
+    "box": [
+      256,
+      208,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "fence-square-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "fence-square-second-0",
+    "box": [
+      304,
+      208,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "fence-square-second-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "frame-0",
+    "box": [
+      256,
+      128,
+      64,
+      32
+    ],
+    "kind": "part",
+    "group": "frame-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "bench-256-0",
+    "box": [
+      256,
+      32,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "bench-256-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "bench-288-0",
+    "box": [
+      288,
+      32,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "bench-288-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "bench-320-0",
+    "box": [
+      320,
+      32,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "bench-320-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "seesaw-256-0",
+    "box": [
+      256,
+      160,
+      64,
+      32
+    ],
+    "kind": "part",
+    "group": "seesaw-256-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "seesaw-320-0",
+    "box": [
+      320,
+      160,
+      64,
+      32
+    ],
+    "kind": "part",
+    "group": "seesaw-320-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "seesaw-384-0",
+    "box": [
+      384,
+      160,
+      64,
+      32
+    ],
+    "kind": "part",
+    "group": "seesaw-384-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "sign-448-160",
+    "box": [
+      448,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "sign-448-160",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "sign-448-176",
+    "box": [
+      448,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "sign-448-176",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "sign-464-160",
+    "box": [
+      464,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "sign-464-160",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "sign-464-176",
+    "box": [
+      464,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "sign-464-176",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "sign-480-160",
+    "box": [
+      480,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "sign-480-160",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "sign-480-176",
+    "box": [
+      480,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "sign-480-176",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "sign-496-160",
+    "box": [
+      496,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "sign-496-160",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "sign-496-176",
+    "box": [
+      496,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "sign-496-176",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "forked-sign-384-192",
+    "box": [
+      384,
+      192,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "forked-sign-384-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "forked-sign-384-224",
+    "box": [
+      384,
+      224,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "forked-sign-384-224",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "forked-sign-400-192",
+    "box": [
+      400,
+      192,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "forked-sign-400-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "forked-sign-400-224",
+    "box": [
+      400,
+      224,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "forked-sign-400-224",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "forked-sign-416-192",
+    "box": [
+      416,
+      192,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "forked-sign-416-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "forked-sign-416-224",
+    "box": [
+      416,
+      224,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "forked-sign-416-224",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "forked-sign-432-192",
+    "box": [
+      432,
+      192,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "forked-sign-432-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "forked-sign-432-224",
+    "box": [
+      432,
+      224,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "forked-sign-432-224",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "forked-sign-448-192",
+    "box": [
+      448,
+      192,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "forked-sign-448-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "forked-sign-448-224",
+    "box": [
+      448,
+      224,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "forked-sign-448-224",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "forked-sign-464-192",
+    "box": [
+      464,
+      192,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "forked-sign-464-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "forked-sign-464-224",
+    "box": [
+      464,
+      224,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "forked-sign-464-224",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "forked-sign-480-192",
+    "box": [
+      480,
+      192,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "forked-sign-480-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "forked-sign-480-224",
+    "box": [
+      480,
+      224,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "forked-sign-480-224",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "forked-sign-496-192",
+    "box": [
+      496,
+      192,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "forked-sign-496-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "forked-sign-496-224",
+    "box": [
+      496,
+      224,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "forked-sign-496-224",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wood-piece-304-0",
+    "box": [
+      304,
+      0,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "wood-piece-304-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wood-piece-320-0",
+    "box": [
+      320,
+      0,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "wood-piece-320-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wood-piece-336-0",
+    "box": [
+      336,
+      0,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "wood-piece-336-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wood-piece-352-0",
+    "box": [
+      352,
+      0,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "wood-piece-352-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wood-piece-352-16",
+    "box": [
+      352,
+      16,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "wood-piece-352-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wood-piece-352-32",
+    "box": [
+      352,
+      32,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "wood-piece-352-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wood-piece-352-48",
+    "box": [
+      352,
+      48,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "wood-piece-352-48",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wood-piece-256-80",
+    "box": [
+      256,
+      80,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "wood-piece-256-80",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wood-piece-272-64",
+    "box": [
+      272,
+      64,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "wood-piece-272-64",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wood-piece-272-96",
+    "box": [
+      272,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wood-piece-272-96",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wood-piece-272-112",
+    "box": [
+      272,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wood-piece-272-112",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wood-piece-288-64",
+    "box": [
+      288,
+      64,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "wood-piece-288-64",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wood-piece-288-96",
+    "box": [
+      288,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wood-piece-288-96",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wood-piece-304-80",
+    "box": [
+      304,
+      80,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "wood-piece-304-80",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wood-piece-320-80",
+    "box": [
+      320,
+      80,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "wood-piece-320-80",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wood-piece-320-112",
+    "box": [
+      320,
+      112,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "wood-piece-320-112",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wood-piece-320-128",
+    "box": [
+      320,
+      128,
+      48,
+      16
+    ],
+    "kind": "part",
+    "group": "wood-piece-320-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wood-piece-320-144",
+    "box": [
+      320,
+      144,
+      48,
+      16
+    ],
+    "kind": "part",
+    "group": "wood-piece-320-144",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wood-piece-352-80",
+    "box": [
+      352,
+      80,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "wood-piece-352-80",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "bridge-wide-256",
+    "box": [
+      384,
+      256,
+      64,
+      48
+    ],
+    "kind": "part",
+    "group": "bridge-wide-256",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "bridge-short-256",
+    "box": [
+      464,
+      256,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "bridge-short-256",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "bridge-horizontal-256",
+    "box": [
+      384,
+      304,
+      80,
+      48
+    ],
+    "kind": "part",
+    "group": "bridge-horizontal-256",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "planks-horizontal-256",
+    "box": [
+      464,
+      304,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "planks-horizontal-256",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "planks-tall-256",
+    "box": [
+      368,
+      352,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "planks-tall-256",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "planks-square-256",
+    "box": [
+      416,
+      352,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "planks-square-256",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "planks-small-256",
+    "box": [
+      464,
+      352,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "planks-small-256",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "fence-square-256",
+    "box": [
+      256,
+      464,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "fence-square-256",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "fence-square-second-256",
+    "box": [
+      304,
+      464,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "fence-square-second-256",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "frame-256",
+    "box": [
+      256,
+      384,
+      64,
+      32
+    ],
+    "kind": "part",
+    "group": "frame-256",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "bench-256-256",
+    "box": [
+      256,
+      288,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "bench-256-256",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "bench-288-256",
+    "box": [
+      288,
+      288,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "bench-288-256",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "bench-320-256",
+    "box": [
+      320,
+      288,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "bench-320-256",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "seesaw-256-256",
+    "box": [
+      256,
+      416,
+      64,
+      32
+    ],
+    "kind": "part",
+    "group": "seesaw-256-256",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "seesaw-320-256",
+    "box": [
+      320,
+      416,
+      64,
+      32
+    ],
+    "kind": "part",
+    "group": "seesaw-320-256",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "seesaw-384-256",
+    "box": [
+      384,
+      416,
+      64,
+      32
+    ],
+    "kind": "part",
+    "group": "seesaw-384-256",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "sign-448-416",
+    "box": [
+      448,
+      416,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "sign-448-416",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "sign-448-432",
+    "box": [
+      448,
+      432,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "sign-448-432",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "sign-464-416",
+    "box": [
+      464,
+      416,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "sign-464-416",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "sign-464-432",
+    "box": [
+      464,
+      432,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "sign-464-432",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "sign-480-416",
+    "box": [
+      480,
+      416,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "sign-480-416",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "sign-480-432",
+    "box": [
+      480,
+      432,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "sign-480-432",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "sign-496-416",
+    "box": [
+      496,
+      416,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "sign-496-416",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "sign-496-432",
+    "box": [
+      496,
+      432,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "sign-496-432",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "forked-sign-384-448",
+    "box": [
+      384,
+      448,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "forked-sign-384-448",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "forked-sign-384-480",
+    "box": [
+      384,
+      480,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "forked-sign-384-480",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "forked-sign-400-448",
+    "box": [
+      400,
+      448,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "forked-sign-400-448",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "forked-sign-400-480",
+    "box": [
+      400,
+      480,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "forked-sign-400-480",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "forked-sign-416-448",
+    "box": [
+      416,
+      448,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "forked-sign-416-448",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "forked-sign-416-480",
+    "box": [
+      416,
+      480,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "forked-sign-416-480",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "forked-sign-432-448",
+    "box": [
+      432,
+      448,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "forked-sign-432-448",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "forked-sign-432-480",
+    "box": [
+      432,
+      480,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "forked-sign-432-480",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "forked-sign-448-448",
+    "box": [
+      448,
+      448,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "forked-sign-448-448",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "forked-sign-448-480",
+    "box": [
+      448,
+      480,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "forked-sign-448-480",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "forked-sign-464-448",
+    "box": [
+      464,
+      448,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "forked-sign-464-448",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "forked-sign-464-480",
+    "box": [
+      464,
+      480,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "forked-sign-464-480",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "forked-sign-480-448",
+    "box": [
+      480,
+      448,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "forked-sign-480-448",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "forked-sign-480-480",
+    "box": [
+      480,
+      480,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "forked-sign-480-480",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "forked-sign-496-448",
+    "box": [
+      496,
+      448,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "forked-sign-496-448",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "forked-sign-496-480",
+    "box": [
+      496,
+      480,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "forked-sign-496-480",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wood-piece-304-256",
+    "box": [
+      304,
+      256,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "wood-piece-304-256",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wood-piece-320-256",
+    "box": [
+      320,
+      256,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "wood-piece-320-256",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wood-piece-336-256",
+    "box": [
+      336,
+      256,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "wood-piece-336-256",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wood-piece-352-256",
+    "box": [
+      352,
+      256,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "wood-piece-352-256",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wood-piece-352-272",
+    "box": [
+      352,
+      272,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "wood-piece-352-272",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wood-piece-352-288",
+    "box": [
+      352,
+      288,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "wood-piece-352-288",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wood-piece-352-304",
+    "box": [
+      352,
+      304,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "wood-piece-352-304",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wood-piece-256-336",
+    "box": [
+      256,
+      336,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "wood-piece-256-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wood-piece-272-320",
+    "box": [
+      272,
+      320,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "wood-piece-272-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wood-piece-272-352",
+    "box": [
+      272,
+      352,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wood-piece-272-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wood-piece-272-368",
+    "box": [
+      272,
+      368,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wood-piece-272-368",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wood-piece-288-320",
+    "box": [
+      288,
+      320,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "wood-piece-288-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wood-piece-288-352",
+    "box": [
+      288,
+      352,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "wood-piece-288-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wood-piece-304-336",
+    "box": [
+      304,
+      336,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "wood-piece-304-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wood-piece-320-336",
+    "box": [
+      320,
+      336,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "wood-piece-320-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wood-piece-320-368",
+    "box": [
+      320,
+      368,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "wood-piece-320-368",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wood-piece-320-384",
+    "box": [
+      320,
+      384,
+      48,
+      16
+    ],
+    "kind": "part",
+    "group": "wood-piece-320-384",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wood-piece-320-400",
+    "box": [
+      320,
+      400,
+      48,
+      16
+    ],
+    "kind": "part",
+    "group": "wood-piece-320-400",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wood-piece-352-336",
+    "box": [
+      352,
+      336,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "wood-piece-352-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "shrub-0",
+    "box": [
+      0,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "shrub-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "shrub-16",
+    "box": [
+      16,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "shrub-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "shrub-32",
+    "box": [
+      32,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "shrub-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "shrub-48",
+    "box": [
+      48,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "shrub-48",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "shrub-64",
+    "box": [
+      64,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "shrub-64",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "shrub-80",
+    "box": [
+      80,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "shrub-80",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "shrub-96",
+    "box": [
+      96,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S127. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S127",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-village-winter-source-49c9c01ae316.png",
+      "box": [
+        48,
+        400,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "shrub-112",
+    "box": [
+      112,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S128. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S128",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-village-winter-source-49c9c01ae316.png",
+      "box": [
+        64,
+        400,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "shrub-128",
+    "box": [
+      128,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "shrub-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "logs-0-416",
+    "box": [
+      0,
+      416,
+      32,
+      48
+    ],
+    "kind": "part",
+    "group": "logs-0-416",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "logs-32-416",
+    "box": [
+      32,
+      416,
+      32,
+      48
+    ],
+    "kind": "part",
+    "group": "logs-32-416",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "logs-64-416",
+    "box": [
+      64,
+      416,
+      16,
+      48
+    ],
+    "kind": "part",
+    "group": "logs-64-416",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "logs-80-416",
+    "box": [
+      80,
+      416,
+      32,
+      48
+    ],
+    "kind": "part",
+    "group": "logs-80-416",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "logs-112-416",
+    "box": [
+      112,
+      416,
+      16,
+      48
+    ],
+    "kind": "part",
+    "group": "logs-112-416",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "logs-0-464",
+    "box": [
+      0,
+      464,
+      32,
+      48
+    ],
+    "kind": "part",
+    "group": "logs-0-464",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "logs-32-464",
+    "box": [
+      32,
+      464,
+      32,
+      48
+    ],
+    "kind": "part",
+    "group": "logs-32-464",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "logs-64-464",
+    "box": [
+      64,
+      464,
+      16,
+      48
+    ],
+    "kind": "part",
+    "group": "logs-64-464",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "logs-80-464",
+    "box": [
+      80,
+      464,
+      32,
+      48
+    ],
+    "kind": "part",
+    "group": "logs-80-464",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "logs-112-464",
+    "box": [
+      112,
+      464,
+      16,
+      48
+    ],
+    "kind": "part",
+    "group": "logs-112-464",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wood-horizontal-320-0",
+    "box": [
+      320,
+      64,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "wood-horizontal-320-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wood-horizontal-352-0",
+    "box": [
+      352,
+      64,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "wood-horizontal-352-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wood-horizontal-320-256",
+    "box": [
+      320,
+      320,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "wood-horizontal-320-256",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wood-horizontal-352-256",
+    "box": [
+      352,
+      320,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "wood-horizontal-352-256",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wall-sign-128",
+    "box": [
+      16,
+      128,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-sign-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wall-sign-144",
+    "box": [
+      16,
+      144,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-sign-144",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wall-sign-160",
+    "box": [
+      16,
+      160,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-sign-160",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wall-sign-176",
+    "box": [
+      16,
+      176,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-sign-176",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wall-sign-192",
+    "box": [
+      16,
+      192,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-sign-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wall-sign-208",
+    "box": [
+      16,
+      208,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-sign-208",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wall-sign-224",
+    "box": [
+      16,
+      224,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-sign-224",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "wall-sign-240",
+    "box": [
+      16,
+      240,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-sign-240",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "tile-18-1",
+    "box": [
+      272,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-18-1",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-19-1",
+    "box": [
+      288,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-19-1",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-17-2",
+    "box": [
+      256,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-17-2",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-18-2",
+    "box": [
+      272,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-18-2",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-19-2",
+    "box": [
+      288,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-19-2",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-27-10",
+    "box": [
+      416,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-27-10",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-28-10",
+    "box": [
+      432,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-28-10",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-29-10",
+    "box": [
+      448,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-29-10",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-30-10",
+    "box": [
+      464,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-30-10",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-31-10",
+    "box": [
+      480,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-31-10",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-32-10",
+    "box": [
+      496,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S164. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S164",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-village-winter-source-49c9c01ae316.png",
+      "box": [
+        480,
+        144,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-23-14",
+    "box": [
+      352,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-23-14",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-24-14",
+    "box": [
+      368,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-24-14",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-23-15",
+    "box": [
+      352,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-23-15",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-24-15",
+    "box": [
+      368,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-24-15",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-23-16",
+    "box": [
+      352,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-23-16",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-10-17",
+    "box": [
+      144,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-17",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-11-17",
+    "box": [
+      160,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-17",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-12-17",
+    "box": [
+      176,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-17",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-13-17",
+    "box": [
+      192,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-17",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-14-17",
+    "box": [
+      208,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-17",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-15-17",
+    "box": [
+      224,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-17",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-16-17",
+    "box": [
+      240,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-17",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-18-17",
+    "box": [
+      272,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-18-17",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-19-17",
+    "box": [
+      288,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-19-17",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-8-18",
+    "box": [
+      112,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-8-18",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-10-18",
+    "box": [
+      144,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-18",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-11-18",
+    "box": [
+      160,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-winter-grass-terrain-atlas-style-1-fill.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-winter/grassland-winter-grass-terrain-atlas-style-1-fill.png"
+  },
+  {
+    "name": "tile-12-18",
+    "box": [
+      176,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-18",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-13-18",
+    "box": [
+      192,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-18",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-15-18",
+    "box": [
+      224,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-18",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-16-18",
+    "box": [
+      240,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-18",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-17-18",
+    "box": [
+      256,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-17-18",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-18-18",
+    "box": [
+      272,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-18-18",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-19-18",
+    "box": [
+      288,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-19-18",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-8-19",
+    "box": [
+      112,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-8-19",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-10-19",
+    "box": [
+      144,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-19",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-11-19",
+    "box": [
+      160,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-19",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-12-19",
+    "box": [
+      176,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-19",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-13-19",
+    "box": [
+      192,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-19",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-14-19",
+    "box": [
+      208,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-19",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-15-19",
+    "box": [
+      224,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-19",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-8-20",
+    "box": [
+      112,
+      304,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-8-20",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-10-20",
+    "box": [
+      144,
+      304,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-20",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-11-20",
+    "box": [
+      160,
+      304,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-20",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-12-20",
+    "box": [
+      176,
+      304,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-20",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-13-20",
+    "box": [
+      192,
+      304,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-20",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-14-20",
+    "box": [
+      208,
+      304,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-20",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-15-20",
+    "box": [
+      224,
+      304,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-20",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-16-20",
+    "box": [
+      240,
+      304,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-20",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-8-21",
+    "box": [
+      112,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-8-21",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-10-21",
+    "box": [
+      144,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-21",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-11-21",
+    "box": [
+      160,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-21",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-12-21",
+    "box": [
+      176,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-21",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-13-21",
+    "box": [
+      192,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S208. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S208",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-village-winter-source-49c9c01ae316.png",
+      "box": [
+        176,
+        320,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-15-21",
+    "box": [
+      224,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S206. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S206",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-village-winter-source-49c9c01ae316.png",
+      "box": [
+        144,
+        320,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-16-21",
+    "box": [
+      240,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-21",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-8-22",
+    "box": [
+      112,
+      336,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-8-22",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-10-22",
+    "box": [
+      144,
+      336,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-22",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-11-22",
+    "box": [
+      160,
+      336,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S202. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S202",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-village-winter-source-49c9c01ae316.png",
+      "box": [
+        208,
+        304,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-12-22",
+    "box": [
+      176,
+      336,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-22",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-13-22",
+    "box": [
+      192,
+      336,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-22",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-14-22",
+    "box": [
+      208,
+      336,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S199. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S199",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-village-winter-source-49c9c01ae316.png",
+      "box": [
+        160,
+        304,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-15-22",
+    "box": [
+      224,
+      336,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-22",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-8-23",
+    "box": [
+      112,
+      352,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-8-23",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-10-23",
+    "box": [
+      144,
+      352,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-23",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-11-23",
+    "box": [
+      160,
+      352,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-23",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-12-23",
+    "box": [
+      176,
+      352,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-23",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-13-23",
+    "box": [
+      192,
+      352,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-23",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-14-23",
+    "box": [
+      208,
+      352,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-23",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-15-23",
+    "box": [
+      224,
+      352,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-23",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-16-23",
+    "box": [
+      240,
+      352,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-23",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-8-24",
+    "box": [
+      112,
+      368,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-8-24",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-10-24",
+    "box": [
+      144,
+      368,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-24",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-11-24",
+    "box": [
+      160,
+      368,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-24",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-12-24",
+    "box": [
+      176,
+      368,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-24",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-13-24",
+    "box": [
+      192,
+      368,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S230. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S230",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-village-winter-source-49c9c01ae316.png",
+      "box": [
+        176,
+        368,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-15-24",
+    "box": [
+      224,
+      368,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S228. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S228",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-village-winter-source-49c9c01ae316.png",
+      "box": [
+        144,
+        368,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-16-24",
+    "box": [
+      240,
+      368,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-24",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-8-25",
+    "box": [
+      112,
+      384,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-8-25",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-10-25",
+    "box": [
+      144,
+      384,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-25",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-11-25",
+    "box": [
+      160,
+      384,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S224. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S224",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-village-winter-source-49c9c01ae316.png",
+      "box": [
+        208,
+        352,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-12-25",
+    "box": [
+      176,
+      384,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-25",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-13-25",
+    "box": [
+      192,
+      384,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-25",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-14-25",
+    "box": [
+      208,
+      384,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S221. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S221",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-village-winter-source-49c9c01ae316.png",
+      "box": [
+        160,
+        352,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-15-25",
+    "box": [
+      224,
+      384,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-25",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-10-26",
+    "box": [
+      144,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-winter-plant-352-0.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-winter/grassland-winter-plant-352-0.png"
+  },
+  {
+    "name": "tile-11-26",
+    "box": [
+      160,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-winter-plant-352-0.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-winter/grassland-winter-plant-352-0.png"
+  },
+  {
+    "name": "tile-12-26",
+    "box": [
+      176,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-winter-plant-352-0.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-winter/grassland-winter-plant-352-0.png"
+  },
+  {
+    "name": "tile-13-26",
+    "box": [
+      192,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-winter-plant-400-0.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-winter/grassland-winter-plant-400-0.png"
+  },
+  {
+    "name": "tile-14-26",
+    "box": [
+      208,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-winter-plant-400-0.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-winter/grassland-winter-plant-400-0.png"
+  },
+  {
+    "name": "tile-15-26",
+    "box": [
+      224,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-winter-plant-400-0.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-winter/grassland-winter-plant-400-0.png"
+  },
+  {
+    "name": "tile-27-26",
+    "box": [
+      416,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-27-26",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-28-26",
+    "box": [
+      432,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-28-26",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-29-26",
+    "box": [
+      448,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-29-26",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-30-26",
+    "box": [
+      464,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-30-26",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-31-26",
+    "box": [
+      480,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-31-26",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-32-26",
+    "box": [
+      496,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S251. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S251",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-village-winter-source-49c9c01ae316.png",
+      "box": [
+        480,
+        400,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-10-27",
+    "box": [
+      144,
+      416,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-27",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-11-27",
+    "box": [
+      160,
+      416,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-27",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-12-27",
+    "box": [
+      176,
+      416,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-27",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-13-27",
+    "box": [
+      192,
+      416,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-27",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-14-27",
+    "box": [
+      208,
+      416,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-27",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-15-27",
+    "box": [
+      224,
+      416,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-27",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-10-28",
+    "box": [
+      144,
+      432,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-28",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-11-28",
+    "box": [
+      160,
+      432,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-28",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-12-28",
+    "box": [
+      176,
+      432,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-28",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-14-28",
+    "box": [
+      208,
+      432,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-28",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-15-28",
+    "box": [
+      224,
+      432,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-28",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-13-29",
+    "box": [
+      192,
+      448,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-winter-ground-stone-16-192.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-winter/grassland-winter-ground-stone-16-192.png"
+  },
+  {
+    "name": "tile-14-29",
+    "box": [
+      208,
+      448,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-winter-ground-stone-32-192.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-winter/grassland-winter-ground-stone-32-192.png"
+  },
+  {
+    "name": "tile-15-29",
+    "box": [
+      224,
+      448,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-winter-ground-stone-48-192.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-winter/grassland-winter-ground-stone-48-192.png"
+  },
+  {
+    "name": "tile-10-30",
+    "box": [
+      144,
+      464,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-30",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-11-30",
+    "box": [
+      160,
+      464,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-30",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-12-30",
+    "box": [
+      176,
+      464,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-30",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-13-30",
+    "box": [
+      192,
+      464,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-30",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-14-30",
+    "box": [
+      208,
+      464,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-30",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-15-30",
+    "box": [
+      224,
+      464,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-30",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-23-30",
+    "box": [
+      352,
+      464,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-23-30",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-24-30",
+    "box": [
+      368,
+      464,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-24-30",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-10-31",
+    "box": [
+      144,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-31",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-11-31",
+    "box": [
+      160,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-31",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-12-31",
+    "box": [
+      176,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-31",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-14-31",
+    "box": [
+      208,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-31",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-15-31",
+    "box": [
+      224,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-31",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-23-31",
+    "box": [
+      352,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-23-31",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-24-31",
+    "box": [
+      368,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-24-31",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  },
+  {
+    "name": "tile-10-32",
+    "box": [
+      144,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-winter-grass-clump-16-16.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-winter/forest-winter-grass-clump-16-16.png"
+  },
+  {
+    "name": "tile-11-32",
+    "box": [
+      160,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-winter-grass-clump-32-0.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-winter/forest-winter-grass-clump-32-0.png"
+  },
+  {
+    "name": "tile-12-32",
+    "box": [
+      176,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-winter-grass-clump-48-0.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-winter/forest-winter-grass-clump-48-0.png"
+  },
+  {
+    "name": "tile-13-32",
+    "box": [
+      192,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-winter-ground-stone-16-224.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-winter/grassland-winter-ground-stone-16-224.png"
+  },
+  {
+    "name": "tile-14-32",
+    "box": [
+      208,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-winter-ground-stone-32-224.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-winter/grassland-winter-ground-stone-32-224.png"
+  },
+  {
+    "name": "tile-15-32",
+    "box": [
+      224,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-winter-ground-stone-48-224.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-winter/grassland-winter-ground-stone-48-224.png"
+  },
+  {
+    "name": "tile-23-32",
+    "box": [
+      352,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-23-32",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null
+  }
+]

@@ -1,0 +1,750 @@
+[
+  {
+    "id": "L",
+    "title": "Castle candle animations",
+    "slug": "castle-candle-animations",
+    "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-castle-animations-source-5e82f5c819d1.png",
+    "entries": [
+      {
+        "name": "castle-candle-01-01",
+        "box": [
+          0,
+          0,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "castle-candle-01-01",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "castle-candle-01-02",
+        "box": [
+          80,
+          0,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "castle-candle-01-02",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "castle-candle-02-01",
+        "box": [
+          0,
+          16,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "castle-candle-02-01",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "castle-candle-02-02",
+        "box": [
+          80,
+          16,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "castle-candle-02-02",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+        "placement": null
+      }
+    ],
+    "animated": true,
+    "frameWidth": 16,
+    "size": [
+      160,
+      32
+    ],
+    "duplicates": [],
+    "status": "approved-and-processed"
+  },
+  {
+    "id": "R",
+    "title": "Marshland animations",
+    "slug": "marshland-animations",
+    "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-marshlands-animations-source-7803613a99cc.png",
+    "entries": [
+      {
+        "name": "marsh-ground-effect-01-01",
+        "box": [
+          0,
+          16,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "marsh-ground-effect-01-01",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "marsh-ground-effect-01-02",
+        "box": [
+          80,
+          16,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "marsh-ground-effect-01-02",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "marsh-ground-effect-01-03",
+        "box": [
+          160,
+          16,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "marsh-ground-effect-01-03",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "marsh-ground-effect-02-01",
+        "box": [
+          0,
+          32,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "marsh-ground-effect-02-01",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "marsh-ground-effect-02-02",
+        "box": [
+          80,
+          32,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "marsh-ground-effect-02-02",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "marsh-ground-effect-02-03",
+        "box": [
+          160,
+          32,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "marsh-ground-effect-02-03",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "marsh-ground-effect-03-01",
+        "box": [
+          0,
+          48,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "marsh-ground-effect-03-01",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "marsh-ground-effect-03-02",
+        "box": [
+          80,
+          48,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "marsh-ground-effect-03-02",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "marsh-ground-effect-03-03",
+        "box": [
+          160,
+          48,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "marsh-ground-effect-03-03",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "marsh-plant-01-01",
+        "box": [
+          0,
+          64,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "marsh-plant-01-01",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "marsh-plant-01-02",
+        "box": [
+          80,
+          64,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "marsh-plant-01-02",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "marsh-plant-02-01",
+        "box": [
+          0,
+          80,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "marsh-plant-02-01",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "marsh-plant-02-02",
+        "box": [
+          80,
+          80,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "marsh-plant-02-02",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "marsh-small-leaves-01",
+        "box": [
+          0,
+          96,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "marsh-small-leaves-01",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "marsh-small-leaves-02",
+        "box": [
+          80,
+          96,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "marsh-small-leaves-02",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "marsh-small-leaves-03",
+        "box": [
+          160,
+          96,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "marsh-small-leaves-03",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+        "placement": null
+      }
+    ],
+    "animated": true,
+    "frameWidth": 16,
+    "size": [
+      240,
+      128
+    ],
+    "duplicates": [],
+    "status": "approved-and-processed"
+  },
+  {
+    "id": "G",
+    "title": "Grassland animations",
+    "slug": "grassland-animations",
+    "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-grasslands-animations-source-1c0bcf54c4d6.png",
+    "entries": [
+      {
+        "name": "grassland-object-01-01",
+        "box": [
+          0,
+          16,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "grassland-object-01-01",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "grassland-object-01-02",
+        "box": [
+          80,
+          16,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "grassland-object-01-02",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "grassland-object-01-03",
+        "box": [
+          160,
+          16,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "grassland-object-01-03",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "grassland-object-01-04",
+        "box": [
+          240,
+          16,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "grassland-object-01-04",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "grassland-object-02-01",
+        "box": [
+          0,
+          32,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "grassland-object-02-01",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "grassland-object-02-02",
+        "box": [
+          80,
+          32,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "grassland-object-02-02",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "grassland-object-02-03",
+        "box": [
+          160,
+          32,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "grassland-object-02-03",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "grassland-object-02-04",
+        "box": [
+          240,
+          32,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "grassland-object-02-04",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "grassland-object-03-01",
+        "box": [
+          0,
+          48,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "grassland-object-03-01",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "grassland-object-03-02",
+        "box": [
+          80,
+          48,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "grassland-object-03-02",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "grassland-object-03-03",
+        "box": [
+          160,
+          48,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "grassland-object-03-03",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "grassland-object-03-04",
+        "box": [
+          240,
+          48,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "grassland-object-03-04",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "grassland-object-04-01",
+        "box": [
+          0,
+          64,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "grassland-object-04-01",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "grassland-object-04-02",
+        "box": [
+          80,
+          64,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "grassland-object-04-02",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "grassland-object-04-03",
+        "box": [
+          160,
+          64,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "grassland-object-04-03",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "grassland-object-04-04",
+        "box": [
+          240,
+          64,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "grassland-object-04-04",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "green-flower-01",
+        "box": [
+          0,
+          80,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "green-flower-01",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "blue-flower-01",
+        "box": [
+          80,
+          80,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "blue-flower-01",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "green-flower-02",
+        "box": [
+          0,
+          96,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "green-flower-02",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "blue-flower-02",
+        "box": [
+          80,
+          96,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "blue-flower-02",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "green-flower-03",
+        "box": [
+          0,
+          112,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "green-flower-03",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "blue-flower-03",
+        "box": [
+          80,
+          112,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "blue-flower-03",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "green-flower-04",
+        "box": [
+          0,
+          128,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "green-flower-04",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "blue-flower-04",
+        "box": [
+          80,
+          128,
+          64,
+          16
+        ],
+        "kind": "structure",
+        "group": "blue-flower-04",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "gray-stone-sequence-01",
+        "box": [
+          160,
+          80,
+          64,
+          32
+        ],
+        "kind": "structure",
+        "group": "gray-stone-sequence-01",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "tan-stone-sequence-01",
+        "box": [
+          240,
+          80,
+          64,
+          32
+        ],
+        "kind": "structure",
+        "group": "tan-stone-sequence-01",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "gray-stone-sequence-02",
+        "box": [
+          160,
+          112,
+          64,
+          32
+        ],
+        "kind": "structure",
+        "group": "gray-stone-sequence-02",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "tan-stone-sequence-02",
+        "box": [
+          240,
+          112,
+          64,
+          32
+        ],
+        "kind": "structure",
+        "group": "tan-stone-sequence-02",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "gray-stone-sequence-03",
+        "box": [
+          160,
+          144,
+          64,
+          32
+        ],
+        "kind": "structure",
+        "group": "gray-stone-sequence-03",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "tan-stone-sequence-03",
+        "box": [
+          240,
+          144,
+          64,
+          32
+        ],
+        "kind": "structure",
+        "group": "tan-stone-sequence-03",
+        "frame": null,
+        "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+        "placement": null
+      }
+    ],
+    "animated": true,
+    "frameWidth": 16,
+    "size": [
+      320,
+      192
+    ],
+    "duplicates": [],
+    "status": "approved-and-processed"
+  }
+]

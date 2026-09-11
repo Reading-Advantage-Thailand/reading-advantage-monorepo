@@ -1,0 +1,590 @@
+[
+  {
+    "name": "gold-tree-large-brown-trunk",
+    "box": [
+      16,
+      0,
+      64,
+      80
+    ],
+    "kind": "prop",
+    "group": "gold-tree-large-brown-trunk",
+    "frame": null,
+    "notes": "",
+    "placement": null
+  },
+  {
+    "name": "gold-tree-small-brown-trunk",
+    "box": [
+      80,
+      0,
+      64,
+      80
+    ],
+    "kind": "prop",
+    "group": "gold-tree-small-brown-trunk",
+    "frame": null,
+    "notes": "",
+    "placement": null
+  },
+  {
+    "name": "gold-tree-large-gray-trunk",
+    "box": [
+      144,
+      0,
+      64,
+      80
+    ],
+    "kind": "prop",
+    "group": "gold-tree-large-gray-trunk",
+    "frame": null,
+    "notes": "",
+    "placement": null
+  },
+  {
+    "name": "gold-tree-small-gray-trunk",
+    "box": [
+      224,
+      0,
+      32,
+      80
+    ],
+    "kind": "prop",
+    "group": "gold-tree-small-gray-trunk",
+    "frame": null,
+    "notes": "Center the small tree in a 32-pixel-wide box. Exclude adjacent fruit sprites.",
+    "placement": null
+  },
+  {
+    "name": "green-tree-large-brown-trunk",
+    "box": [
+      16,
+      80,
+      64,
+      80
+    ],
+    "kind": "prop",
+    "group": "green-tree-large-brown-trunk",
+    "frame": null,
+    "notes": "",
+    "placement": null
+  },
+  {
+    "name": "green-tree-small-brown-trunk",
+    "box": [
+      80,
+      80,
+      64,
+      80
+    ],
+    "kind": "prop",
+    "group": "green-tree-small-brown-trunk",
+    "frame": null,
+    "notes": "",
+    "placement": null
+  },
+  {
+    "name": "green-tree-large-gray-trunk",
+    "box": [
+      144,
+      80,
+      64,
+      80
+    ],
+    "kind": "prop",
+    "group": "green-tree-large-gray-trunk",
+    "frame": null,
+    "notes": "",
+    "placement": null
+  },
+  {
+    "name": "green-tree-small-gray-trunk",
+    "box": [
+      224,
+      80,
+      32,
+      80
+    ],
+    "kind": "prop",
+    "group": "green-tree-small-gray-trunk",
+    "frame": null,
+    "notes": "Center the small tree in a 32-pixel-wide box. Exclude adjacent fruit sprites.",
+    "placement": null
+  },
+  {
+    "name": "olive-tree-large-brown-trunk",
+    "box": [
+      16,
+      160,
+      64,
+      80
+    ],
+    "kind": "prop",
+    "group": "olive-tree-large-brown-trunk",
+    "frame": null,
+    "notes": "",
+    "placement": null
+  },
+  {
+    "name": "olive-tree-small-brown-trunk",
+    "box": [
+      80,
+      160,
+      64,
+      80
+    ],
+    "kind": "prop",
+    "group": "olive-tree-small-brown-trunk",
+    "frame": null,
+    "notes": "",
+    "placement": null
+  },
+  {
+    "name": "olive-tree-large-gray-trunk",
+    "box": [
+      144,
+      160,
+      64,
+      80
+    ],
+    "kind": "prop",
+    "group": "olive-tree-large-gray-trunk",
+    "frame": null,
+    "notes": "",
+    "placement": null
+  },
+  {
+    "name": "olive-tree-small-gray-trunk",
+    "box": [
+      224,
+      160,
+      32,
+      80
+    ],
+    "kind": "prop",
+    "group": "olive-tree-small-gray-trunk",
+    "frame": null,
+    "notes": "Center the small tree in a 32-pixel-wide box. Exclude adjacent fruit sprites.",
+    "placement": null
+  },
+  {
+    "name": "blue-tree-large-brown-trunk",
+    "box": [
+      16,
+      240,
+      64,
+      80
+    ],
+    "kind": "prop",
+    "group": "blue-tree-large-brown-trunk",
+    "frame": null,
+    "notes": "",
+    "placement": null
+  },
+  {
+    "name": "bare-tree-small-brown-trunk",
+    "box": [
+      80,
+      240,
+      64,
+      80
+    ],
+    "kind": "prop",
+    "group": "bare-tree-small-brown-trunk",
+    "frame": null,
+    "notes": "",
+    "placement": null
+  },
+  {
+    "name": "blue-tree-large-gray-trunk",
+    "box": [
+      144,
+      240,
+      64,
+      80
+    ],
+    "kind": "prop",
+    "group": "blue-tree-large-gray-trunk",
+    "frame": null,
+    "notes": "",
+    "placement": null
+  },
+  {
+    "name": "bare-tree-small-gray-trunk",
+    "box": [
+      208,
+      240,
+      48,
+      80
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse E14 with its 64\u00d780 canvas. The tree artwork is identical. A wider source box would include nearby fruit.",
+    "placement": null
+  },
+  {
+    "name": "gold-fruit-cluster-animation",
+    "box": [
+      256,
+      32,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "gold-fruit-cluster-animation",
+    "frame": null,
+    "notes": "Four 16\u00d716 fruit frames. Preserve the animation strip.",
+    "placement": null
+  },
+  {
+    "name": "gold-fruit-single-animation",
+    "box": [
+      256,
+      48,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "gold-fruit-single-animation",
+    "frame": null,
+    "notes": "Four 16\u00d716 fruit frames. Preserve the animation strip.",
+    "placement": null
+  },
+  {
+    "name": "green-fruit-cluster-animation",
+    "box": [
+      256,
+      112,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "green-fruit-cluster-animation",
+    "frame": null,
+    "notes": "Four 16\u00d716 fruit frames. Preserve the animation strip.",
+    "placement": null
+  },
+  {
+    "name": "green-fruit-single-animation",
+    "box": [
+      256,
+      128,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "green-fruit-single-animation",
+    "frame": null,
+    "notes": "Four 16\u00d716 fruit frames. Preserve the animation strip.",
+    "placement": null
+  },
+  {
+    "name": "olive-fruit-cluster-animation",
+    "box": [
+      256,
+      192,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "olive-fruit-cluster-animation",
+    "frame": null,
+    "notes": "Four 16\u00d716 fruit frames. Preserve the animation strip.",
+    "placement": null
+  },
+  {
+    "name": "olive-fruit-single-animation",
+    "box": [
+      256,
+      208,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "olive-fruit-single-animation",
+    "frame": null,
+    "notes": "Four 16\u00d716 fruit frames. Preserve the animation strip.",
+    "placement": null
+  },
+  {
+    "name": "blue-fruit-cluster",
+    "box": [
+      256,
+      272,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "blue-fruit-cluster",
+    "frame": null,
+    "notes": "The next three cells repeat this frame exactly. Reuse this crop.",
+    "placement": null
+  },
+  {
+    "name": "blue-fruit-single",
+    "box": [
+      256,
+      288,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "blue-fruit-single",
+    "frame": null,
+    "notes": "The next three cells repeat this frame exactly. Reuse this crop.",
+    "placement": null
+  },
+  {
+    "name": "small-chest-style-01-01",
+    "box": [
+      256,
+      64,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "small-chest-style-01-01",
+    "frame": null,
+    "notes": "Chest state and palette follow the source position.",
+    "placement": null
+  },
+  {
+    "name": "small-chest-style-01-02",
+    "box": [
+      272,
+      64,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "small-chest-style-01-02",
+    "frame": null,
+    "notes": "Chest state and palette follow the source position.",
+    "placement": null
+  },
+  {
+    "name": "small-chest-style-01-03",
+    "box": [
+      288,
+      64,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "small-chest-style-01-03",
+    "frame": null,
+    "notes": "Chest state and palette follow the source position.",
+    "placement": null
+  },
+  {
+    "name": "small-chest-style-01-04",
+    "box": [
+      304,
+      64,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "small-chest-style-01-04",
+    "frame": null,
+    "notes": "Chest state and palette follow the source position.",
+    "placement": null
+  },
+  {
+    "name": "small-chest-style-02-01",
+    "box": [
+      256,
+      80,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "small-chest-style-02-01",
+    "frame": null,
+    "notes": "Chest state and palette follow the source position.",
+    "placement": null
+  },
+  {
+    "name": "small-chest-style-02-02",
+    "box": [
+      272,
+      80,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "small-chest-style-02-02",
+    "frame": null,
+    "notes": "Chest state and palette follow the source position.",
+    "placement": null
+  },
+  {
+    "name": "small-chest-style-02-03",
+    "box": [
+      288,
+      80,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "small-chest-style-02-03",
+    "frame": null,
+    "notes": "Chest state and palette follow the source position.",
+    "placement": null
+  },
+  {
+    "name": "small-chest-style-02-04",
+    "box": [
+      304,
+      80,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "small-chest-style-02-04",
+    "frame": null,
+    "notes": "Chest state and palette follow the source position.",
+    "placement": null
+  },
+  {
+    "name": "small-chest-style-03-01",
+    "box": [
+      256,
+      144,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "small-chest-style-03-01",
+    "frame": null,
+    "notes": "Chest state and palette follow the source position.",
+    "placement": null
+  },
+  {
+    "name": "small-chest-style-03-02",
+    "box": [
+      272,
+      144,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "small-chest-style-03-02",
+    "frame": null,
+    "notes": "Chest state and palette follow the source position.",
+    "placement": null
+  },
+  {
+    "name": "small-chest-style-03-03",
+    "box": [
+      288,
+      144,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "small-chest-style-03-03",
+    "frame": null,
+    "notes": "Chest state and palette follow the source position.",
+    "placement": null
+  },
+  {
+    "name": "small-chest-style-03-04",
+    "box": [
+      304,
+      144,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "small-chest-style-03-04",
+    "frame": null,
+    "notes": "Chest state and palette follow the source position.",
+    "placement": null
+  },
+  {
+    "name": "small-chest-style-04-01",
+    "box": [
+      256,
+      160,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "small-chest-style-04-01",
+    "frame": null,
+    "notes": "Chest state and palette follow the source position.",
+    "placement": null
+  },
+  {
+    "name": "small-chest-style-04-02",
+    "box": [
+      272,
+      160,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "small-chest-style-04-02",
+    "frame": null,
+    "notes": "Chest state and palette follow the source position.",
+    "placement": null
+  },
+  {
+    "name": "small-chest-style-04-03",
+    "box": [
+      288,
+      160,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "small-chest-style-04-03",
+    "frame": null,
+    "notes": "Chest state and palette follow the source position.",
+    "placement": null
+  },
+  {
+    "name": "small-chest-style-04-04",
+    "box": [
+      304,
+      160,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "small-chest-style-04-04",
+    "frame": null,
+    "notes": "Chest state and palette follow the source position.",
+    "placement": null
+  },
+  {
+    "name": "large-gold-chest-closed",
+    "box": [
+      256,
+      224,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "large-gold-chest",
+    "frame": 0,
+    "notes": "",
+    "placement": null
+  },
+  {
+    "name": "large-gold-chest-open",
+    "box": [
+      288,
+      224,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "large-gold-chest",
+    "frame": 1,
+    "notes": "",
+    "placement": null
+  }
+]

@@ -1,0 +1,1562 @@
+[
+  {
+    "name": "left-wall-intact",
+    "box": [
+      0,
+      16,
+      48,
+      80
+    ],
+    "kind": "structure",
+    "group": "left-wall-intact",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D01"
+  },
+  {
+    "name": "gable-intact-part-01",
+    "box": [
+      48,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "gable-intact-part-01",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D02a"
+  },
+  {
+    "name": "gable-intact-part-02-left",
+    "box": [
+      64,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "gable-intact-part-02-left",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D02b"
+  },
+  {
+    "name": "gable-intact-part-02-right",
+    "box": [
+      80,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "gable-intact-part-02-right",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D02c"
+  },
+  {
+    "name": "gable-intact-part-03",
+    "box": [
+      96,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "gable-intact-part-03",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D02d"
+  },
+  {
+    "name": "gable-intact-part-05",
+    "box": [
+      48,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "gable-intact-part-05",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D02e"
+  },
+  {
+    "name": "gable-intact-part-06-left",
+    "box": [
+      64,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "gable-intact-part-06-left",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D02f"
+  },
+  {
+    "name": "gable-intact-part-06-right",
+    "box": [
+      80,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "gable-intact-part-06-right",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D02g"
+  },
+  {
+    "name": "gable-intact-part-07",
+    "box": [
+      96,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "gable-intact-part-07",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D02h"
+  },
+  {
+    "name": "gable-intact-part-09",
+    "box": [
+      48,
+      32,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "gable-intact-part-09",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D02i"
+  },
+  {
+    "name": "gable-intact-part-10-left",
+    "box": [
+      64,
+      32,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "gable-intact-part-10-left",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D02j"
+  },
+  {
+    "name": "gable-intact-part-10-right",
+    "box": [
+      80,
+      32,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "gable-intact-part-10-right",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D02k"
+  },
+  {
+    "name": "gable-intact-part-11",
+    "box": [
+      96,
+      32,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "gable-intact-part-11",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D02l"
+  },
+  {
+    "name": "gable-intact-part-12",
+    "box": [
+      112,
+      32,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "gable-intact-part-12",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D02m"
+  },
+  {
+    "name": "gable-intact-part-13",
+    "box": [
+      48,
+      64,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "gable-intact-part-13",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D02n"
+  },
+  {
+    "name": "gable-intact-part-14-left",
+    "box": [
+      64,
+      64,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "gable-intact-part-14-left",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D02o"
+  },
+  {
+    "name": "gable-intact-part-14-right",
+    "box": [
+      80,
+      64,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "gable-intact-part-14-right",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D02p"
+  },
+  {
+    "name": "gable-intact-part-15",
+    "box": [
+      96,
+      64,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "gable-intact-part-15",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D02q"
+  },
+  {
+    "name": "gable-intact-part-16",
+    "box": [
+      112,
+      64,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "gable-intact-part-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D02r"
+  },
+  {
+    "name": "left-wall-damaged",
+    "box": [
+      0,
+      96,
+      48,
+      64
+    ],
+    "kind": "structure",
+    "group": "left-wall-damaged",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D03"
+  },
+  {
+    "name": "gable-damaged-part-01",
+    "box": [
+      48,
+      96,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "gable-damaged-part-01",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D04a"
+  },
+  {
+    "name": "gable-damaged-part-02-left",
+    "box": [
+      64,
+      96,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "gable-damaged-part-02-left",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D04b"
+  },
+  {
+    "name": "gable-damaged-part-02-right",
+    "box": [
+      80,
+      96,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse D02k. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "D04c"
+  },
+  {
+    "name": "gable-damaged-part-03",
+    "box": [
+      96,
+      96,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "gable-damaged-part-03",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D04d"
+  },
+  {
+    "name": "gable-damaged-part-04",
+    "box": [
+      112,
+      96,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "gable-damaged-part-04",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D04e"
+  },
+  {
+    "name": "gable-damaged-part-05",
+    "box": [
+      48,
+      128,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "gable-damaged-part-05",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D04f"
+  },
+  {
+    "name": "gable-damaged-part-06-left",
+    "box": [
+      64,
+      128,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "gable-damaged-part-06-left",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D04g"
+  },
+  {
+    "name": "gable-damaged-part-06-right",
+    "box": [
+      80,
+      128,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse D02p. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "D04h"
+  },
+  {
+    "name": "gable-damaged-part-07",
+    "box": [
+      96,
+      128,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "gable-damaged-part-07",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D04i"
+  },
+  {
+    "name": "gable-damaged-part-08",
+    "box": [
+      112,
+      128,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "gable-damaged-part-08",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D04j"
+  },
+  {
+    "name": "left-wall-damaged-tall",
+    "box": [
+      0,
+      160,
+      48,
+      96
+    ],
+    "kind": "structure",
+    "group": "left-wall-damaged-tall",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D05"
+  },
+  {
+    "name": "gable-damaged-low-part-01",
+    "box": [
+      48,
+      160,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "gable-damaged-low-part-01",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D06a"
+  },
+  {
+    "name": "gable-damaged-low-part-02-left",
+    "box": [
+      64,
+      160,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "gable-damaged-low-part-02-left",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D06b"
+  },
+  {
+    "name": "gable-damaged-low-part-02-right",
+    "box": [
+      80,
+      160,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "gable-damaged-low-part-02-right",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D06c"
+  },
+  {
+    "name": "gable-damaged-low-part-03",
+    "box": [
+      96,
+      160,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "gable-damaged-low-part-03",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D06d"
+  },
+  {
+    "name": "gable-damaged-low-part-04",
+    "box": [
+      112,
+      160,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "gable-damaged-low-part-04",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D06e"
+  },
+  {
+    "name": "gable-damaged-low-part-05",
+    "box": [
+      48,
+      192,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "gable-damaged-low-part-05",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D06f"
+  },
+  {
+    "name": "gable-damaged-low-part-06-left",
+    "box": [
+      64,
+      192,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "gable-damaged-low-part-06-left",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D06g"
+  },
+  {
+    "name": "gable-damaged-low-part-06-right",
+    "box": [
+      80,
+      192,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "gable-damaged-low-part-06-right",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D06h"
+  },
+  {
+    "name": "gable-damaged-low-part-07",
+    "box": [
+      96,
+      192,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "gable-damaged-low-part-07",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D06i"
+  },
+  {
+    "name": "gable-damaged-low-part-08",
+    "box": [
+      112,
+      192,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "gable-damaged-low-part-08",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D06j"
+  },
+  {
+    "name": "gable-foot-left",
+    "box": [
+      48,
+      224,
+      32,
+      32
+    ],
+    "kind": "structure",
+    "group": "gable-foot-left",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D07"
+  },
+  {
+    "name": "gable-foot-right",
+    "box": [
+      96,
+      224,
+      32,
+      32
+    ],
+    "kind": "structure",
+    "group": "gable-foot-right",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D08"
+  },
+  {
+    "name": "small-house-01",
+    "box": [
+      256,
+      16,
+      48,
+      64
+    ],
+    "kind": "structure",
+    "group": "small-house-01",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D09"
+  },
+  {
+    "name": "small-house-02",
+    "box": [
+      304,
+      0,
+      48,
+      80
+    ],
+    "kind": "structure",
+    "group": "small-house-02",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D10"
+  },
+  {
+    "name": "small-house-03",
+    "box": [
+      256,
+      80,
+      48,
+      96
+    ],
+    "kind": "structure",
+    "group": "small-house-03",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D11"
+  },
+  {
+    "name": "small-house-side",
+    "box": [
+      304,
+      80,
+      32,
+      80
+    ],
+    "kind": "structure",
+    "group": "small-house-side",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D12"
+  },
+  {
+    "name": "small-house-04",
+    "box": [
+      256,
+      176,
+      48,
+      80
+    ],
+    "kind": "structure",
+    "group": "small-house-04",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D13"
+  },
+  {
+    "name": "small-house-side-low",
+    "box": [
+      304,
+      192,
+      24,
+      64
+    ],
+    "kind": "structure",
+    "group": "small-house-side-low",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D14"
+  },
+  {
+    "name": "large-house",
+    "box": [
+      368,
+      0,
+      144,
+      112
+    ],
+    "kind": "structure",
+    "group": "large-house",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D15"
+  },
+  {
+    "name": "medium-house",
+    "box": [
+      336,
+      128,
+      80,
+      80
+    ],
+    "kind": "structure",
+    "group": "medium-house",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D16"
+  },
+  {
+    "name": "medium-house-low",
+    "box": [
+      336,
+      208,
+      80,
+      48
+    ],
+    "kind": "structure",
+    "group": "medium-house-low",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D17"
+  },
+  {
+    "name": "medium-house-side",
+    "box": [
+      416,
+      160,
+      16,
+      48
+    ],
+    "kind": "structure",
+    "group": "medium-house-side",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D18"
+  },
+  {
+    "name": "medium-house-side-low",
+    "box": [
+      416,
+      208,
+      16,
+      48
+    ],
+    "kind": "structure",
+    "group": "medium-house-side-low",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D19"
+  },
+  {
+    "name": "right-house",
+    "box": [
+      432,
+      160,
+      80,
+      96
+    ],
+    "kind": "structure",
+    "group": "right-house",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D20"
+  },
+  {
+    "name": "wall-part-128-0",
+    "box": [
+      128,
+      0,
+      32,
+      48
+    ],
+    "kind": "part",
+    "group": "wall-part-128-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D21"
+  },
+  {
+    "name": "wall-part-128-48",
+    "box": [
+      128,
+      48,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-part-128-48",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D22"
+  },
+  {
+    "name": "wall-part-128-64",
+    "box": [
+      128,
+      64,
+      32,
+      48
+    ],
+    "kind": "part",
+    "group": "wall-part-128-64",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D23"
+  },
+  {
+    "name": "wall-part-128-112",
+    "box": [
+      128,
+      112,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-part-128-112",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D24"
+  },
+  {
+    "name": "wall-part-160-0",
+    "box": [
+      160,
+      0,
+      24,
+      48
+    ],
+    "kind": "part",
+    "group": "wall-part-160-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D25"
+  },
+  {
+    "name": "wall-part-160-48",
+    "box": [
+      160,
+      48,
+      24,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-part-160-48",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D26"
+  },
+  {
+    "name": "wall-part-160-64",
+    "box": [
+      160,
+      64,
+      24,
+      48
+    ],
+    "kind": "part",
+    "group": "wall-part-160-64",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D27"
+  },
+  {
+    "name": "wall-part-160-112",
+    "box": [
+      160,
+      112,
+      24,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-part-160-112",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D28"
+  },
+  {
+    "name": "wall-part-200-0",
+    "box": [
+      200,
+      0,
+      24,
+      48
+    ],
+    "kind": "part",
+    "group": "wall-part-200-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D29"
+  },
+  {
+    "name": "wall-part-200-48",
+    "box": [
+      200,
+      48,
+      24,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-part-200-48",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D30"
+  },
+  {
+    "name": "wall-part-200-64",
+    "box": [
+      200,
+      64,
+      24,
+      48
+    ],
+    "kind": "part",
+    "group": "wall-part-200-64",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D31"
+  },
+  {
+    "name": "wall-part-200-112",
+    "box": [
+      200,
+      112,
+      24,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-part-200-112",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D32"
+  },
+  {
+    "name": "wall-part-224-0",
+    "box": [
+      224,
+      0,
+      32,
+      48
+    ],
+    "kind": "part",
+    "group": "wall-part-224-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D33"
+  },
+  {
+    "name": "wall-part-224-48",
+    "box": [
+      224,
+      48,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-part-224-48",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D34"
+  },
+  {
+    "name": "wall-part-224-64",
+    "box": [
+      224,
+      64,
+      32,
+      48
+    ],
+    "kind": "part",
+    "group": "wall-part-224-64",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D35"
+  },
+  {
+    "name": "wall-part-224-112",
+    "box": [
+      224,
+      112,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "wall-part-224-112",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D36"
+  },
+  {
+    "name": "window-128-128",
+    "box": [
+      128,
+      128,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "window-128-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D37"
+  },
+  {
+    "name": "window-144-128",
+    "box": [
+      144,
+      128,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "window-144-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D38"
+  },
+  {
+    "name": "window-160-128",
+    "box": [
+      160,
+      128,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "window-160-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D39"
+  },
+  {
+    "name": "window-176-128",
+    "box": [
+      176,
+      128,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "window-176-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D40"
+  },
+  {
+    "name": "window-192-128",
+    "box": [
+      192,
+      128,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "window-192-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D41"
+  },
+  {
+    "name": "window-208-128",
+    "box": [
+      208,
+      128,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "window-208-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D42"
+  },
+  {
+    "name": "window-224-128",
+    "box": [
+      224,
+      128,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "window-224-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D43"
+  },
+  {
+    "name": "window-240-128",
+    "box": [
+      240,
+      128,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "window-240-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D44"
+  },
+  {
+    "name": "window-128-144",
+    "box": [
+      128,
+      144,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "window-128-144",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D45"
+  },
+  {
+    "name": "window-144-144",
+    "box": [
+      144,
+      144,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "window-144-144",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D46"
+  },
+  {
+    "name": "window-160-144",
+    "box": [
+      160,
+      144,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "window-160-144",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D47"
+  },
+  {
+    "name": "window-176-144",
+    "box": [
+      176,
+      144,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "window-176-144",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D48"
+  },
+  {
+    "name": "window-192-144",
+    "box": [
+      192,
+      144,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "window-192-144",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D49"
+  },
+  {
+    "name": "window-208-144",
+    "box": [
+      208,
+      144,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "window-208-144",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D50"
+  },
+  {
+    "name": "window-224-144",
+    "box": [
+      224,
+      144,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "window-224-144",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D51"
+  },
+  {
+    "name": "window-240-144",
+    "box": [
+      240,
+      144,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "window-240-144",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D52"
+  },
+  {
+    "name": "large-window-128",
+    "box": [
+      128,
+      160,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "large-window-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D53"
+  },
+  {
+    "name": "large-window-160",
+    "box": [
+      160,
+      160,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "large-window-160",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D54"
+  },
+  {
+    "name": "small-window-128",
+    "box": [
+      128,
+      192,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "small-window-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D55"
+  },
+  {
+    "name": "small-window-144",
+    "box": [
+      144,
+      192,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "small-window-144",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D56"
+  },
+  {
+    "name": "container-pile-192",
+    "box": [
+      192,
+      160,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "container-pile-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D57"
+  },
+  {
+    "name": "container-pile-224",
+    "box": [
+      224,
+      160,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "container-pile-224",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D58"
+  },
+  {
+    "name": "container-192",
+    "box": [
+      192,
+      192,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "container-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D59"
+  },
+  {
+    "name": "container-208",
+    "box": [
+      208,
+      192,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "container-208",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D60"
+  },
+  {
+    "name": "container-224",
+    "box": [
+      224,
+      192,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "container-224",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D61"
+  },
+  {
+    "name": "container-240",
+    "box": [
+      240,
+      192,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "container-240",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D62"
+  },
+  {
+    "name": "chest-224-208",
+    "box": [
+      224,
+      208,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "chest-224-208",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D63"
+  },
+  {
+    "name": "chest-240-208",
+    "box": [
+      240,
+      208,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "chest-240-208",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D64"
+  },
+  {
+    "name": "chest-224-224",
+    "box": [
+      224,
+      224,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "chest-224-224",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D65"
+  },
+  {
+    "name": "chest-240-224",
+    "box": [
+      240,
+      224,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "chest-240-224",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D66"
+  },
+  {
+    "name": "door-frame-136",
+    "box": [
+      136,
+      208,
+      32,
+      32
+    ],
+    "kind": "structure",
+    "group": "door-frame-136",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D67"
+  },
+  {
+    "name": "door-frame-184",
+    "box": [
+      184,
+      208,
+      32,
+      32
+    ],
+    "kind": "structure",
+    "group": "door-frame-184",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "D68"
+  },
+  {
+    "name": "trapdoor-opening",
+    "box": [
+      128,
+      240,
+      64,
+      16
+    ],
+    "kind": "prop",
+    "group": "trapdoor-opening",
+    "frame": null,
+    "notes": "Preserve the complete animation strip.",
+    "placement": null,
+    "reviewId": "D69"
+  }
+]

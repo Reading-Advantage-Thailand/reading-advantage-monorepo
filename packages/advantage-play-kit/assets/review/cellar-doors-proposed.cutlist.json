@@ -1,0 +1,226 @@
+[
+  {
+    "name": "gray-door-gray-rail-crest",
+    "box": [
+      16,
+      16,
+      64,
+      32
+    ],
+    "kind": "structure",
+    "group": "gray-door-gray-rail-crest",
+    "frame": null,
+    "notes": "Four 16\u00d732 animation frames. Preserve the strip.",
+    "placement": null
+  },
+  {
+    "name": "gray-door-gray-rail-chevron",
+    "box": [
+      96,
+      16,
+      64,
+      32
+    ],
+    "kind": "structure",
+    "group": "gray-door-gray-rail-chevron",
+    "frame": null,
+    "notes": "Four 16\u00d732 animation frames. Preserve the strip.",
+    "placement": null
+  },
+  {
+    "name": "gray-door-gray-rail-mask",
+    "box": [
+      176,
+      16,
+      64,
+      32
+    ],
+    "kind": "structure",
+    "group": "gray-door-gray-rail-mask",
+    "frame": null,
+    "notes": "Four 16\u00d732 animation frames. Preserve the strip.",
+    "placement": null
+  },
+  {
+    "name": "bronze-door-gray-rail-crest",
+    "box": [
+      16,
+      48,
+      64,
+      32
+    ],
+    "kind": "structure",
+    "group": "bronze-door-gray-rail-crest",
+    "frame": null,
+    "notes": "Four 16\u00d732 animation frames. Preserve the strip.",
+    "placement": null
+  },
+  {
+    "name": "bronze-door-gray-rail-chevron",
+    "box": [
+      96,
+      48,
+      64,
+      32
+    ],
+    "kind": "structure",
+    "group": "bronze-door-gray-rail-chevron",
+    "frame": null,
+    "notes": "Four 16\u00d732 animation frames. Preserve the strip.",
+    "placement": null
+  },
+  {
+    "name": "bronze-door-gray-rail-mask",
+    "box": [
+      176,
+      48,
+      64,
+      32
+    ],
+    "kind": "structure",
+    "group": "bronze-door-gray-rail-mask",
+    "frame": null,
+    "notes": "Four 16\u00d732 animation frames. Preserve the strip.",
+    "placement": null
+  },
+  {
+    "name": "gray-door-bronze-rail-crest",
+    "box": [
+      16,
+      80,
+      64,
+      32
+    ],
+    "kind": "structure",
+    "group": "gray-door-bronze-rail-crest",
+    "frame": null,
+    "notes": "Four 16\u00d732 animation frames. Preserve the strip.",
+    "placement": null
+  },
+  {
+    "name": "gray-door-bronze-rail-chevron",
+    "box": [
+      96,
+      80,
+      64,
+      32
+    ],
+    "kind": "structure",
+    "group": "gray-door-bronze-rail-chevron",
+    "frame": null,
+    "notes": "Four 16\u00d732 animation frames. Preserve the strip.",
+    "placement": null
+  },
+  {
+    "name": "gray-door-bronze-rail-mask",
+    "box": [
+      176,
+      80,
+      64,
+      32
+    ],
+    "kind": "structure",
+    "group": "gray-door-bronze-rail-mask",
+    "frame": null,
+    "notes": "Four 16\u00d732 animation frames. Preserve the strip.",
+    "placement": null
+  },
+  {
+    "name": "bronze-door-bronze-rail-crest",
+    "box": [
+      16,
+      112,
+      64,
+      32
+    ],
+    "kind": "structure",
+    "group": "bronze-door-bronze-rail-crest",
+    "frame": null,
+    "notes": "Four 16\u00d732 animation frames. Preserve the strip.",
+    "placement": null
+  },
+  {
+    "name": "bronze-door-bronze-rail-chevron",
+    "box": [
+      96,
+      112,
+      64,
+      32
+    ],
+    "kind": "structure",
+    "group": "bronze-door-bronze-rail-chevron",
+    "frame": null,
+    "notes": "Four 16\u00d732 animation frames. Preserve the strip.",
+    "placement": null
+  },
+  {
+    "name": "bronze-door-bronze-rail-mask",
+    "box": [
+      176,
+      112,
+      64,
+      32
+    ],
+    "kind": "structure",
+    "group": "bronze-door-bronze-rail-mask",
+    "frame": null,
+    "notes": "Four 16\u00d732 animation frames. Preserve the strip.",
+    "placement": null
+  },
+  {
+    "name": "green-door-swing-left",
+    "box": [
+      16,
+      144,
+      64,
+      32
+    ],
+    "kind": "structure",
+    "group": "green-door-swing-left",
+    "frame": null,
+    "notes": "Four 16\u00d732 animation frames. The fourth frame shows the open door edge. Preserve the strip.",
+    "placement": null
+  },
+  {
+    "name": "green-door-swing-right",
+    "box": [
+      96,
+      144,
+      64,
+      32
+    ],
+    "kind": "structure",
+    "group": "green-door-swing-right",
+    "frame": null,
+    "notes": "Four 16\u00d732 animation frames. The fourth frame shows the open door edge. Preserve the strip.",
+    "placement": null
+  },
+  {
+    "name": "brown-door-swing-left",
+    "box": [
+      16,
+      176,
+      64,
+      32
+    ],
+    "kind": "structure",
+    "group": "brown-door-swing-left",
+    "frame": null,
+    "notes": "Four 16\u00d732 animation frames. The fourth frame shows the open door edge. Preserve the strip.",
+    "placement": null
+  },
+  {
+    "name": "brown-door-swing-right",
+    "box": [
+      96,
+      176,
+      64,
+      32
+    ],
+    "kind": "structure",
+    "group": "brown-door-swing-right",
+    "frame": null,
+    "notes": "Four 16\u00d732 animation frames. The fourth frame shows the open door edge. Preserve the strip.",
+    "placement": null
+  }
+]

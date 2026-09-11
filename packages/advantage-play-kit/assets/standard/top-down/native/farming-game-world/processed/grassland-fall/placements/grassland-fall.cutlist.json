@@ -1,0 +1,8823 @@
+[
+  {
+    "name": "plant-256-0",
+    "box": [
+      256,
+      0,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-autumn-flower-mushroom-clump-16.png",
+    "placement": null,
+    "reviewId": "A01",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-autumn/forest-autumn-flower-mushroom-clump-16.png"
+  },
+  {
+    "name": "plant-272-0",
+    "box": [
+      272,
+      0,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-autumn-flower-mushroom-clump-32.png",
+    "placement": null,
+    "reviewId": "A02",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-autumn/forest-autumn-flower-mushroom-clump-32.png"
+  },
+  {
+    "name": "plant-288-0",
+    "box": [
+      288,
+      0,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-autumn-flower-mushroom-clump-48.png",
+    "placement": null,
+    "reviewId": "A03",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-autumn/forest-autumn-flower-mushroom-clump-48.png"
+  },
+  {
+    "name": "plant-304-0",
+    "box": [
+      304,
+      0,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-304-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A04"
+  },
+  {
+    "name": "plant-320-0",
+    "box": [
+      320,
+      0,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-320-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A05"
+  },
+  {
+    "name": "plant-336-0",
+    "box": [
+      336,
+      0,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-336-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A06"
+  },
+  {
+    "name": "plant-352-0",
+    "box": [
+      352,
+      0,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-352-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A07"
+  },
+  {
+    "name": "plant-368-0",
+    "box": [
+      368,
+      0,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-368-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A08"
+  },
+  {
+    "name": "plant-384-0",
+    "box": [
+      384,
+      0,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-384-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A09"
+  },
+  {
+    "name": "plant-400-0",
+    "box": [
+      400,
+      0,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-400-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A10"
+  },
+  {
+    "name": "plant-416-0",
+    "box": [
+      416,
+      0,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-416-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A11"
+  },
+  {
+    "name": "plant-432-0",
+    "box": [
+      432,
+      0,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-432-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A12"
+  },
+  {
+    "name": "plant-448-0",
+    "box": [
+      448,
+      0,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-448-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A13"
+  },
+  {
+    "name": "plant-464-0",
+    "box": [
+      464,
+      0,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-464-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A14"
+  },
+  {
+    "name": "plant-480-0",
+    "box": [
+      480,
+      0,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-480-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A15"
+  },
+  {
+    "name": "plant-256-16",
+    "box": [
+      256,
+      16,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-256-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A16"
+  },
+  {
+    "name": "plant-272-16",
+    "box": [
+      272,
+      16,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-272-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A17"
+  },
+  {
+    "name": "plant-288-16",
+    "box": [
+      288,
+      16,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-288-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A18"
+  },
+  {
+    "name": "plant-304-16",
+    "box": [
+      304,
+      16,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-304-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A19"
+  },
+  {
+    "name": "plant-320-16",
+    "box": [
+      320,
+      16,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-320-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A20"
+  },
+  {
+    "name": "plant-336-16",
+    "box": [
+      336,
+      16,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-336-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A21"
+  },
+  {
+    "name": "plant-352-16",
+    "box": [
+      352,
+      16,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-352-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A22"
+  },
+  {
+    "name": "plant-368-16",
+    "box": [
+      368,
+      16,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-368-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A23"
+  },
+  {
+    "name": "plant-384-16",
+    "box": [
+      384,
+      16,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-384-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A24"
+  },
+  {
+    "name": "plant-400-16",
+    "box": [
+      400,
+      16,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-400-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A25"
+  },
+  {
+    "name": "plant-416-16",
+    "box": [
+      416,
+      16,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-416-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A26"
+  },
+  {
+    "name": "plant-432-16",
+    "box": [
+      432,
+      16,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-432-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A27"
+  },
+  {
+    "name": "plant-448-16",
+    "box": [
+      448,
+      16,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-448-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A28"
+  },
+  {
+    "name": "plant-464-16",
+    "box": [
+      464,
+      16,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-464-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A29"
+  },
+  {
+    "name": "plant-480-16",
+    "box": [
+      480,
+      16,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-480-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A30"
+  },
+  {
+    "name": "plant-256-32",
+    "box": [
+      256,
+      32,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-256-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A31"
+  },
+  {
+    "name": "plant-272-32",
+    "box": [
+      272,
+      32,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-272-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A32"
+  },
+  {
+    "name": "plant-288-32",
+    "box": [
+      288,
+      32,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-288-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A33"
+  },
+  {
+    "name": "plant-304-32",
+    "box": [
+      304,
+      32,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-304-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A34"
+  },
+  {
+    "name": "plant-320-32",
+    "box": [
+      320,
+      32,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-320-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A35"
+  },
+  {
+    "name": "plant-336-32",
+    "box": [
+      336,
+      32,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-336-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A36"
+  },
+  {
+    "name": "plant-352-32",
+    "box": [
+      352,
+      32,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-352-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A37"
+  },
+  {
+    "name": "plant-368-32",
+    "box": [
+      368,
+      32,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-368-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A38"
+  },
+  {
+    "name": "plant-384-32",
+    "box": [
+      384,
+      32,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-384-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A39"
+  },
+  {
+    "name": "plant-400-32",
+    "box": [
+      400,
+      32,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-400-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A40"
+  },
+  {
+    "name": "plant-416-32",
+    "box": [
+      416,
+      32,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-416-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A41"
+  },
+  {
+    "name": "plant-432-32",
+    "box": [
+      432,
+      32,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-432-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A42"
+  },
+  {
+    "name": "plant-448-32",
+    "box": [
+      448,
+      32,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-448-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A43"
+  },
+  {
+    "name": "plant-464-32",
+    "box": [
+      464,
+      32,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-464-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A44"
+  },
+  {
+    "name": "plant-480-32",
+    "box": [
+      480,
+      32,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-480-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A45"
+  },
+  {
+    "name": "plant-496-32",
+    "box": [
+      496,
+      32,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-496-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A46"
+  },
+  {
+    "name": "brown-rock-256-48",
+    "box": [
+      256,
+      48,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-stone-304.png",
+    "placement": null,
+    "reviewId": "A47",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-stone-304.png"
+  },
+  {
+    "name": "brown-rock-272-48",
+    "box": [
+      272,
+      48,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-stone-320.png",
+    "placement": null,
+    "reviewId": "A48",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-stone-320.png"
+  },
+  {
+    "name": "brown-rock-288-48",
+    "box": [
+      288,
+      48,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-stone-336.png",
+    "placement": null,
+    "reviewId": "A49",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-stone-336.png"
+  },
+  {
+    "name": "brown-rock-304-48",
+    "box": [
+      304,
+      48,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-stone-352.png",
+    "placement": null,
+    "reviewId": "A50",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-stone-352.png"
+  },
+  {
+    "name": "brown-rock-256-64",
+    "box": [
+      256,
+      64,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S51. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A51",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S51",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        256,
+        64,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "brown-rock-272-64",
+    "box": [
+      272,
+      64,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S52. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A52",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S52",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        272,
+        64,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "brown-rock-288-64",
+    "box": [
+      288,
+      64,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S53. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A53",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S53",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        288,
+        64,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "brown-rock-304-64",
+    "box": [
+      304,
+      64,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S54. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A54",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S54",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        304,
+        64,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "brown-rock-256-80",
+    "box": [
+      256,
+      80,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S55. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A55",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S55",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        256,
+        80,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "brown-rock-272-80",
+    "box": [
+      272,
+      80,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S56. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A56",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S56",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        272,
+        80,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "brown-rock-288-80",
+    "box": [
+      288,
+      80,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S57. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A57",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S57",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        288,
+        80,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "brown-rock-304-80",
+    "box": [
+      304,
+      80,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S58. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A58",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S58",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        304,
+        80,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "brown-rock-320-48",
+    "box": [
+      320,
+      48,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S59. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A59",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S59",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        320,
+        48,
+        16,
+        32
+      ]
+    }
+  },
+  {
+    "name": "brown-rock-336-48",
+    "box": [
+      336,
+      48,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S60. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A60",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S60",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        336,
+        48,
+        16,
+        32
+      ]
+    }
+  },
+  {
+    "name": "brown-rock-352-48",
+    "box": [
+      352,
+      48,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S61. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A61",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S61",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        352,
+        48,
+        32,
+        32
+      ]
+    }
+  },
+  {
+    "name": "brown-rock-320-80",
+    "box": [
+      320,
+      80,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S62. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A62",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S62",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        320,
+        80,
+        16,
+        32
+      ]
+    }
+  },
+  {
+    "name": "brown-rock-336-80",
+    "box": [
+      336,
+      80,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S63. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A63",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S63",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        336,
+        80,
+        16,
+        32
+      ]
+    }
+  },
+  {
+    "name": "brown-rock-352-80",
+    "box": [
+      352,
+      80,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S64. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A64",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S64",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        352,
+        80,
+        32,
+        32
+      ]
+    }
+  },
+  {
+    "name": "brown-rock-256-96",
+    "box": [
+      256,
+      96,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S65. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A65",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S65",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        256,
+        96,
+        32,
+        32
+      ]
+    }
+  },
+  {
+    "name": "brown-rock-288-96",
+    "box": [
+      288,
+      96,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S66. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A66",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S66",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        288,
+        96,
+        32,
+        32
+      ]
+    }
+  },
+  {
+    "name": "brown-bush-320",
+    "box": [
+      320,
+      112,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "brown-bush-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A67"
+  },
+  {
+    "name": "brown-bush-336",
+    "box": [
+      336,
+      112,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "brown-bush-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A68"
+  },
+  {
+    "name": "brown-bush-352",
+    "box": [
+      352,
+      112,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "brown-bush-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A69"
+  },
+  {
+    "name": "brown-bush-368",
+    "box": [
+      368,
+      112,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "brown-bush-368",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A70"
+  },
+  {
+    "name": "gray-rock-256-48",
+    "box": [
+      384,
+      48,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-stone-384.png",
+    "placement": null,
+    "reviewId": "A71",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-stone-384.png"
+  },
+  {
+    "name": "gray-rock-272-48",
+    "box": [
+      400,
+      48,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-stone-400.png",
+    "placement": null,
+    "reviewId": "A72",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-stone-400.png"
+  },
+  {
+    "name": "gray-rock-288-48",
+    "box": [
+      416,
+      48,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-stone-416.png",
+    "placement": null,
+    "reviewId": "A73",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-stone-416.png"
+  },
+  {
+    "name": "gray-rock-304-48",
+    "box": [
+      432,
+      48,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-stone-432.png",
+    "placement": null,
+    "reviewId": "A74",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-stone-432.png"
+  },
+  {
+    "name": "gray-rock-256-64",
+    "box": [
+      384,
+      64,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S75. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A75",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S75",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        384,
+        64,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "gray-rock-272-64",
+    "box": [
+      400,
+      64,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S76. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A76",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S76",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        400,
+        64,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "gray-rock-288-64",
+    "box": [
+      416,
+      64,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S77. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A77",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S77",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        416,
+        64,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "gray-rock-304-64",
+    "box": [
+      432,
+      64,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S78. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A78",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S78",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        432,
+        64,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "gray-rock-256-80",
+    "box": [
+      384,
+      80,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S79. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A79",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S79",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        384,
+        80,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "gray-rock-272-80",
+    "box": [
+      400,
+      80,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S80. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A80",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S80",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        400,
+        80,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "gray-rock-288-80",
+    "box": [
+      416,
+      80,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S81. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A81",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S81",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        416,
+        80,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "gray-rock-304-80",
+    "box": [
+      432,
+      80,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S82. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A82",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S82",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        432,
+        80,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "gray-rock-320-48",
+    "box": [
+      448,
+      48,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S83. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A83",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S83",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        448,
+        48,
+        16,
+        32
+      ]
+    }
+  },
+  {
+    "name": "gray-rock-336-48",
+    "box": [
+      464,
+      48,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S84. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A84",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S84",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        464,
+        48,
+        16,
+        32
+      ]
+    }
+  },
+  {
+    "name": "gray-rock-352-48",
+    "box": [
+      480,
+      48,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S85. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A85",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S85",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        480,
+        48,
+        32,
+        32
+      ]
+    }
+  },
+  {
+    "name": "gray-rock-320-80",
+    "box": [
+      448,
+      80,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S86. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A86",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S86",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        448,
+        80,
+        16,
+        32
+      ]
+    }
+  },
+  {
+    "name": "gray-rock-336-80",
+    "box": [
+      464,
+      80,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S87. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A87",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S87",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        464,
+        80,
+        16,
+        32
+      ]
+    }
+  },
+  {
+    "name": "gray-rock-352-80",
+    "box": [
+      480,
+      80,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S88. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A88",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S88",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        480,
+        80,
+        32,
+        32
+      ]
+    }
+  },
+  {
+    "name": "gray-rock-256-96",
+    "box": [
+      384,
+      96,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S89. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A89",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S89",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        384,
+        96,
+        32,
+        32
+      ]
+    }
+  },
+  {
+    "name": "gray-rock-288-96",
+    "box": [
+      416,
+      96,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S90. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A90",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S90",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        416,
+        96,
+        32,
+        32
+      ]
+    }
+  },
+  {
+    "name": "gray-bush-320",
+    "box": [
+      448,
+      112,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "gray-bush-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A91"
+  },
+  {
+    "name": "gray-bush-336",
+    "box": [
+      464,
+      112,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "gray-bush-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A92"
+  },
+  {
+    "name": "gray-bush-352",
+    "box": [
+      480,
+      112,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "gray-bush-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A93"
+  },
+  {
+    "name": "gray-bush-368",
+    "box": [
+      496,
+      112,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "gray-bush-368",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A94"
+  },
+  {
+    "name": "earth-border",
+    "box": [
+      0,
+      128,
+      64,
+      64
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S95. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A95",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S95",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        0,
+        128,
+        64,
+        64
+      ]
+    }
+  },
+  {
+    "name": "earth-small",
+    "box": [
+      64,
+      128,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S96. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A96",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S96",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        64,
+        128,
+        32,
+        32
+      ]
+    }
+  },
+  {
+    "name": "stone-border",
+    "box": [
+      96,
+      128,
+      48,
+      64
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S97. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A97",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S97",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        96,
+        128,
+        48,
+        64
+      ]
+    }
+  },
+  {
+    "name": "stone-small",
+    "box": [
+      144,
+      128,
+      32,
+      48
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S98. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A98",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S98",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        144,
+        128,
+        32,
+        48
+      ]
+    }
+  },
+  {
+    "name": "grass-176-128",
+    "box": [
+      176,
+      128,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "grass-176-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A99"
+  },
+  {
+    "name": "grass-192-128",
+    "box": [
+      192,
+      128,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "grass-192-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A100"
+  },
+  {
+    "name": "grass-208-128",
+    "box": [
+      208,
+      128,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "grass-208-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A101"
+  },
+  {
+    "name": "grass-224-128",
+    "box": [
+      224,
+      128,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "grass-224-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A102"
+  },
+  {
+    "name": "grass-240-128",
+    "box": [
+      240,
+      128,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "grass-240-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A103"
+  },
+  {
+    "name": "grass-176-144",
+    "box": [
+      176,
+      144,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "grass-176-144",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A104"
+  },
+  {
+    "name": "grass-192-144",
+    "box": [
+      192,
+      144,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "grass-192-144",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A105"
+  },
+  {
+    "name": "grass-208-144",
+    "box": [
+      208,
+      144,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "grass-208-144",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A106"
+  },
+  {
+    "name": "grass-224-144",
+    "box": [
+      224,
+      144,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "grass-224-144",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A107"
+  },
+  {
+    "name": "grass-240-144",
+    "box": [
+      240,
+      144,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "grass-240-144",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A108"
+  },
+  {
+    "name": "grass-176-160",
+    "box": [
+      176,
+      160,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "grass-176-160",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A109"
+  },
+  {
+    "name": "grass-176-176",
+    "box": [
+      176,
+      176,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "grass-176-176",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A110"
+  },
+  {
+    "name": "grass-small-192-160",
+    "box": [
+      192,
+      160,
+      16,
+      8
+    ],
+    "kind": "prop",
+    "group": "grass-small-192-160",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A111"
+  },
+  {
+    "name": "grass-small-208-160",
+    "box": [
+      208,
+      160,
+      16,
+      8
+    ],
+    "kind": "prop",
+    "group": "grass-small-208-160",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A112"
+  },
+  {
+    "name": "grass-small-240-160",
+    "box": [
+      240,
+      160,
+      16,
+      8
+    ],
+    "kind": "prop",
+    "group": "grass-small-240-160",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A113"
+  },
+  {
+    "name": "grass-small-192-168",
+    "box": [
+      192,
+      168,
+      16,
+      8
+    ],
+    "kind": "prop",
+    "group": "grass-small-192-168",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A114"
+  },
+  {
+    "name": "grass-small-208-168",
+    "box": [
+      208,
+      168,
+      16,
+      8
+    ],
+    "kind": "prop",
+    "group": "grass-small-208-168",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A115"
+  },
+  {
+    "name": "grass-small-240-168",
+    "box": [
+      240,
+      168,
+      16,
+      8
+    ],
+    "kind": "prop",
+    "group": "grass-small-240-168",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A116"
+  },
+  {
+    "name": "brown-fence-256",
+    "box": [
+      256,
+      128,
+      48,
+      48
+    ],
+    "kind": "structure",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S117. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A117",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S117",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        256,
+        128,
+        48,
+        48
+      ]
+    }
+  },
+  {
+    "name": "brown-fence-304",
+    "box": [
+      304,
+      128,
+      48,
+      48
+    ],
+    "kind": "structure",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S118. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A118",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S118",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        304,
+        128,
+        48,
+        48
+      ]
+    }
+  },
+  {
+    "name": "brown-post-352-128",
+    "box": [
+      352,
+      128,
+      32,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S119. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A119",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S119",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        352,
+        128,
+        32,
+        16
+      ]
+    }
+  },
+  {
+    "name": "brown-post-352-144",
+    "box": [
+      352,
+      144,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S120. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A120",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S120",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        352,
+        144,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "brown-post-368-144",
+    "box": [
+      368,
+      144,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S121. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A121",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S121",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        368,
+        144,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "brown-post-352-160",
+    "box": [
+      352,
+      160,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S122. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A122",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S122",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        352,
+        160,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "pale-fence-256",
+    "box": [
+      256,
+      176,
+      48,
+      48
+    ],
+    "kind": "structure",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S123. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A123",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S123",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        256,
+        176,
+        48,
+        48
+      ]
+    }
+  },
+  {
+    "name": "pale-fence-304",
+    "box": [
+      304,
+      176,
+      48,
+      48
+    ],
+    "kind": "structure",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S124. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A124",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S124",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        304,
+        176,
+        48,
+        48
+      ]
+    }
+  },
+  {
+    "name": "pale-post-352-128",
+    "box": [
+      352,
+      176,
+      32,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S125. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A125",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S125",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        352,
+        176,
+        32,
+        16
+      ]
+    }
+  },
+  {
+    "name": "pale-post-352-144",
+    "box": [
+      352,
+      192,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S126. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A126",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S126",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        352,
+        192,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "pale-post-368-144",
+    "box": [
+      368,
+      192,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S127. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A127",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S127",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        368,
+        192,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "pale-post-352-160",
+    "box": [
+      352,
+      208,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S128. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A128",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S128",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        352,
+        208,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "large-tree",
+    "box": [
+      384,
+      128,
+      48,
+      64
+    ],
+    "kind": "structure",
+    "group": "large-tree",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A129"
+  },
+  {
+    "name": "small-tree",
+    "box": [
+      448,
+      144,
+      48,
+      48
+    ],
+    "kind": "structure",
+    "group": "small-tree",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A130"
+  },
+  {
+    "name": "tree-part-432-160",
+    "box": [
+      432,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tree-part-432-160",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A131"
+  },
+  {
+    "name": "tree-part-432-176",
+    "box": [
+      432,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tree-part-432-176",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A132"
+  },
+  {
+    "name": "tree-part-432-192",
+    "box": [
+      432,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S133. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A133",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S133",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        432,
+        192,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tree-part-432-208",
+    "box": [
+      432,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S134. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A134",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S134",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        432,
+        208,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tree-part-480-128",
+    "box": [
+      480,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S135. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A135",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S135",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        480,
+        128,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tree-part-496-128",
+    "box": [
+      496,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S136. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A136",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S136",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        496,
+        128,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tree-part-496-176",
+    "box": [
+      496,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S137. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A137",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S137",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        496,
+        176,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tree-part-496-192",
+    "box": [
+      496,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S138. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A138",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S138",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        496,
+        192,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tree-part-496-208",
+    "box": [
+      496,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S139. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A139",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S139",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        496,
+        208,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tree-part-496-160",
+    "box": [
+      496,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tree-part-496-160",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A140"
+  },
+  {
+    "name": "tree-shadow-384",
+    "box": [
+      384,
+      192,
+      48,
+      32
+    ],
+    "kind": "overlay",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S141. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A141",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S141",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        384,
+        192,
+        48,
+        32
+      ]
+    }
+  },
+  {
+    "name": "tree-shadow-448",
+    "box": [
+      448,
+      192,
+      48,
+      32
+    ],
+    "kind": "overlay",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S142. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A142",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S142",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        448,
+        192,
+        48,
+        32
+      ]
+    }
+  },
+  {
+    "name": "ground-stone-0-192",
+    "box": [
+      0,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S143. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A143",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S143",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        0,
+        192,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "ground-stone-16-192",
+    "box": [
+      16,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S144. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A144",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S144",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        16,
+        192,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "ground-stone-32-192",
+    "box": [
+      32,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S145. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A145",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S145",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        32,
+        192,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "ground-stone-48-192",
+    "box": [
+      48,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S146. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A146",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S146",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        48,
+        192,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "ground-stone-64-192",
+    "box": [
+      64,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S147. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A147",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S147",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        64,
+        192,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "ground-stone-80-192",
+    "box": [
+      80,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S148. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A148",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S148",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        80,
+        192,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "ground-stone-96-192",
+    "box": [
+      96,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S149. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A149",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S149",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        96,
+        192,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "ground-stone-112-192",
+    "box": [
+      112,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S150. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A150",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S150",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        112,
+        192,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "ground-stone-128-192",
+    "box": [
+      128,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S151. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A151",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S151",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        128,
+        192,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "ground-stone-144-192",
+    "box": [
+      144,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S152. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A152",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S152",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        144,
+        192,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "ground-stone-160-192",
+    "box": [
+      160,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S153. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A153",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S153",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        160,
+        192,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "ground-stone-176-192",
+    "box": [
+      176,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S154. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A154",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S154",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        176,
+        192,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "ground-stone-192-192",
+    "box": [
+      192,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S155. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A155",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S155",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        192,
+        192,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "ground-stone-208-192",
+    "box": [
+      208,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S156. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A156",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S156",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        208,
+        192,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "ground-stone-224-192",
+    "box": [
+      224,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S157. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A157",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S157",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        224,
+        192,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "ground-stone-240-192",
+    "box": [
+      240,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S158. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A158",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S158",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        240,
+        192,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "ground-stone-0-208",
+    "box": [
+      0,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S159. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A159",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S159",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        0,
+        208,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "ground-stone-16-208",
+    "box": [
+      16,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S160. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A160",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S160",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        16,
+        208,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "ground-stone-32-208",
+    "box": [
+      32,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S161. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A161",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S161",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        32,
+        208,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "ground-stone-48-208",
+    "box": [
+      48,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S162. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A162",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S162",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        48,
+        208,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "ground-stone-64-208",
+    "box": [
+      64,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S163. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A163",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S163",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        64,
+        208,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "ground-stone-80-208",
+    "box": [
+      80,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S164. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A164",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S164",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        80,
+        208,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "ground-stone-96-208",
+    "box": [
+      96,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S165. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A165",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S165",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        96,
+        208,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "ground-stone-112-208",
+    "box": [
+      112,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S166. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A166",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S166",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        112,
+        208,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "ground-stone-128-208",
+    "box": [
+      128,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S167. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A167",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S167",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        128,
+        208,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "ground-stone-144-208",
+    "box": [
+      144,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S168. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A168",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S168",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        144,
+        208,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "ground-stone-160-208",
+    "box": [
+      160,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S169. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A169",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S169",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        160,
+        208,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "ground-stone-176-208",
+    "box": [
+      176,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S170. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A170",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S170",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        176,
+        208,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "ground-stone-192-208",
+    "box": [
+      192,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S171. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A171",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S171",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        192,
+        208,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "ground-stone-208-208",
+    "box": [
+      208,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S172. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A172",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S172",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        208,
+        208,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "ground-stone-224-208",
+    "box": [
+      224,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S173. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A173",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S173",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        224,
+        208,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "ground-stone-240-208",
+    "box": [
+      240,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S174. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A174",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S174",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        240,
+        208,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "ground-stone-0-224",
+    "box": [
+      0,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S175. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A175",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S175",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        0,
+        224,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "ground-stone-16-224",
+    "box": [
+      16,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S176. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A176",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S176",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        16,
+        224,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "ground-stone-32-224",
+    "box": [
+      32,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S177. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A177",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S177",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        32,
+        224,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "ground-stone-48-224",
+    "box": [
+      48,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S178. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A178",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S178",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        48,
+        224,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "ground-stone-64-224",
+    "box": [
+      64,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S179. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A179",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S179",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        64,
+        224,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "ground-stone-80-224",
+    "box": [
+      80,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S180. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A180",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S180",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        80,
+        224,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "ground-stone-96-224",
+    "box": [
+      96,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S181. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A181",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S181",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        96,
+        224,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "ground-stone-112-224",
+    "box": [
+      112,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S182. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A182",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S182",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        112,
+        224,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "ground-stone-128-224",
+    "box": [
+      128,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S183. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A183",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S183",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        128,
+        224,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "ground-stone-144-224",
+    "box": [
+      144,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S184. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A184",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S184",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        144,
+        224,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "ground-stone-160-224",
+    "box": [
+      160,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S185. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A185",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S185",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        160,
+        224,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "ground-stone-176-224",
+    "box": [
+      176,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S186. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A186",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S186",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        176,
+        224,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "ground-stone-192-224",
+    "box": [
+      192,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S187. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A187",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S187",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        192,
+        224,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "ground-stone-208-224",
+    "box": [
+      208,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S188. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A188",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S188",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        208,
+        224,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "ground-stone-224-224",
+    "box": [
+      224,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S189. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A189",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S189",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        224,
+        224,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "ground-stone-240-224",
+    "box": [
+      240,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S190. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A190",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S190",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        240,
+        224,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "ground-stone-0-240",
+    "box": [
+      0,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S191. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A191",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S191",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        0,
+        240,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "ground-stone-16-240",
+    "box": [
+      16,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S192. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A192",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S192",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        16,
+        240,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "ground-stone-32-240",
+    "box": [
+      32,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S193. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A193",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S193",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        32,
+        240,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "ground-stone-48-240",
+    "box": [
+      48,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S194. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A194",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S194",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        48,
+        240,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "ground-stone-64-240",
+    "box": [
+      64,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S195. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A195",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S195",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        64,
+        240,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "ground-stone-80-240",
+    "box": [
+      80,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S196. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A196",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S196",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        80,
+        240,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "ground-stone-96-240",
+    "box": [
+      96,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S197. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A197",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S197",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        96,
+        240,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "ground-stone-112-240",
+    "box": [
+      112,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S198. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A198",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S198",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        112,
+        240,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "ground-stone-128-240",
+    "box": [
+      128,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S199. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A199",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S199",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        128,
+        240,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "ground-stone-144-240",
+    "box": [
+      144,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S200. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A200",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S200",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        144,
+        240,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "ground-stone-160-240",
+    "box": [
+      160,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S201. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A201",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S201",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        160,
+        240,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "ground-stone-176-240",
+    "box": [
+      176,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S202. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A202",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S202",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        176,
+        240,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "ground-stone-192-240",
+    "box": [
+      192,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S203. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A203",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S203",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        192,
+        240,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "ground-stone-208-240",
+    "box": [
+      208,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S204. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A204",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S204",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        208,
+        240,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "ground-stone-224-240",
+    "box": [
+      224,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S205. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A205",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S205",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        224,
+        240,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "ground-stone-240-240",
+    "box": [
+      240,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S206. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A206",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S206",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        240,
+        240,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "water-edge-one",
+    "box": [
+      0,
+      256,
+      64,
+      48
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S207. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A207",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S207",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        0,
+        256,
+        64,
+        48
+      ]
+    }
+  },
+  {
+    "name": "water-post-one",
+    "box": [
+      64,
+      256,
+      32,
+      48
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S208. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A208",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S208",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        64,
+        256,
+        32,
+        48
+      ]
+    }
+  },
+  {
+    "name": "water-edge-two",
+    "box": [
+      96,
+      256,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S209. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A209",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S209",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        96,
+        256,
+        48,
+        48
+      ]
+    }
+  },
+  {
+    "name": "water-post-two",
+    "box": [
+      144,
+      256,
+      32,
+      48
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S210. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A210",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S210",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        144,
+        256,
+        32,
+        48
+      ]
+    }
+  },
+  {
+    "name": "water-detail-one",
+    "box": [
+      176,
+      256,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S211. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A211",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S211",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        176,
+        256,
+        48,
+        48
+      ]
+    }
+  },
+  {
+    "name": "water-detail-two",
+    "box": [
+      224,
+      256,
+      32,
+      48
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S212. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A212",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S212",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        224,
+        256,
+        32,
+        48
+      ]
+    }
+  },
+  {
+    "name": "water-grass-16-304",
+    "box": [
+      16,
+      304,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S213. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A213",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S213",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        16,
+        304,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "water-grass-32-304",
+    "box": [
+      32,
+      304,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S214. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A214",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S214",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        32,
+        304,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "water-grass-48-304",
+    "box": [
+      48,
+      304,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S215. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A215",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S215",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        48,
+        304,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "water-grass-64-304",
+    "box": [
+      64,
+      304,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S216. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A216",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S216",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        64,
+        304,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "water-grass-80-304",
+    "box": [
+      80,
+      304,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S217. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A217",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S217",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        80,
+        304,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "water-grass-96-304",
+    "box": [
+      96,
+      304,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S218. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A218",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S218",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        96,
+        304,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "water-grass-16-320",
+    "box": [
+      16,
+      320,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S219. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A219",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S219",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        16,
+        320,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "water-grass-32-320",
+    "box": [
+      32,
+      320,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S220. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A220",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S220",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        32,
+        320,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "water-grass-48-320",
+    "box": [
+      48,
+      320,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S221. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A221",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S221",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        48,
+        320,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "water-grass-64-320",
+    "box": [
+      64,
+      320,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S222. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A222",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S222",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        64,
+        320,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "water-grass-80-320",
+    "box": [
+      80,
+      320,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S223. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A223",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S223",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        80,
+        320,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "water-grass-small-48-336",
+    "box": [
+      48,
+      336,
+      16,
+      8
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S224. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A224",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S224",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        48,
+        336,
+        16,
+        8
+      ]
+    }
+  },
+  {
+    "name": "water-grass-small-80-336",
+    "box": [
+      80,
+      336,
+      16,
+      8
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S225. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A225",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S225",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        80,
+        336,
+        16,
+        8
+      ]
+    }
+  },
+  {
+    "name": "water-grass-small-48-344",
+    "box": [
+      48,
+      344,
+      16,
+      8
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S226. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A226",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S226",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        48,
+        344,
+        16,
+        8
+      ]
+    }
+  },
+  {
+    "name": "water-grass-small-80-344",
+    "box": [
+      80,
+      344,
+      16,
+      8
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S227. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A227",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S227",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        80,
+        344,
+        16,
+        8
+      ]
+    }
+  },
+  {
+    "name": "water-grass-16-336",
+    "box": [
+      16,
+      336,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S228. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A228",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S228",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        16,
+        336,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "water-grass-32-336",
+    "box": [
+      32,
+      336,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S229. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A229",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S229",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        32,
+        336,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "brown-water-rock-128-304",
+    "box": [
+      128,
+      304,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S230. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A230",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S230",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        128,
+        304,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "brown-water-rock-144-304",
+    "box": [
+      144,
+      304,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S231. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A231",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S231",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        144,
+        304,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "brown-water-rock-160-304",
+    "box": [
+      160,
+      304,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S232. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A232",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S232",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        160,
+        304,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "brown-water-rock-176-304",
+    "box": [
+      176,
+      304,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S233. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A233",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S233",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        176,
+        304,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "brown-water-rock-128-320",
+    "box": [
+      128,
+      320,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S234. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A234",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S234",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        128,
+        320,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "brown-water-rock-144-320",
+    "box": [
+      144,
+      320,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S235. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A235",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S235",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        144,
+        320,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "brown-water-rock-160-320",
+    "box": [
+      160,
+      320,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S236. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A236",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S236",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        160,
+        320,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "brown-water-rock-176-320",
+    "box": [
+      176,
+      320,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S237. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A237",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S237",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        176,
+        320,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "brown-water-rock-128-336",
+    "box": [
+      128,
+      336,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S238. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A238",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S238",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        128,
+        336,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "brown-water-rock-144-336",
+    "box": [
+      144,
+      336,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S239. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A239",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S239",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        144,
+        336,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "brown-water-rock-160-336",
+    "box": [
+      160,
+      336,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S240. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A240",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S240",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        160,
+        336,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "brown-water-rock-176-336",
+    "box": [
+      176,
+      336,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S241. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A241",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S241",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        176,
+        336,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "brown-water-tall-rock-128-352",
+    "box": [
+      128,
+      352,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S242. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A242",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S242",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        128,
+        352,
+        16,
+        32
+      ]
+    }
+  },
+  {
+    "name": "brown-water-tall-rock-144-352",
+    "box": [
+      144,
+      352,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S243. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A243",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S243",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        144,
+        352,
+        16,
+        32
+      ]
+    }
+  },
+  {
+    "name": "brown-water-large-rock-352",
+    "box": [
+      160,
+      352,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S244. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A244",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S244",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        160,
+        352,
+        32,
+        32
+      ]
+    }
+  },
+  {
+    "name": "brown-water-tall-rock-128-384",
+    "box": [
+      128,
+      384,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S245. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A245",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S245",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        128,
+        384,
+        16,
+        32
+      ]
+    }
+  },
+  {
+    "name": "brown-water-tall-rock-144-384",
+    "box": [
+      144,
+      384,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S246. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A246",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S246",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        144,
+        384,
+        16,
+        32
+      ]
+    }
+  },
+  {
+    "name": "brown-water-large-rock-384",
+    "box": [
+      160,
+      384,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S247. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A247",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S247",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        160,
+        384,
+        32,
+        32
+      ]
+    }
+  },
+  {
+    "name": "brown-water-stump-128",
+    "box": [
+      128,
+      416,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S248. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A248",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S248",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        128,
+        416,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "brown-water-stump-144",
+    "box": [
+      144,
+      416,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S249. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A249",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S249",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        144,
+        416,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "brown-water-large-stump",
+    "box": [
+      160,
+      416,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S250. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A250",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S250",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        160,
+        416,
+        32,
+        32
+      ]
+    }
+  },
+  {
+    "name": "gray-water-rock-128-304",
+    "box": [
+      192,
+      304,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S251. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A251",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S251",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        192,
+        304,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "gray-water-rock-144-304",
+    "box": [
+      208,
+      304,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S252. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A252",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S252",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        208,
+        304,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "gray-water-rock-160-304",
+    "box": [
+      224,
+      304,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S253. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A253",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S253",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        224,
+        304,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "gray-water-rock-176-304",
+    "box": [
+      240,
+      304,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S254. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A254",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S254",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        240,
+        304,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "gray-water-rock-128-320",
+    "box": [
+      192,
+      320,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S255. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A255",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S255",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        192,
+        320,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "gray-water-rock-144-320",
+    "box": [
+      208,
+      320,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S256. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A256",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S256",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        208,
+        320,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "gray-water-rock-160-320",
+    "box": [
+      224,
+      320,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S257. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A257",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S257",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        224,
+        320,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "gray-water-rock-176-320",
+    "box": [
+      240,
+      320,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S258. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A258",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S258",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        240,
+        320,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "gray-water-rock-128-336",
+    "box": [
+      192,
+      336,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S259. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A259",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S259",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        192,
+        336,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "gray-water-rock-144-336",
+    "box": [
+      208,
+      336,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S260. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A260",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S260",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        208,
+        336,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "gray-water-rock-160-336",
+    "box": [
+      224,
+      336,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S261. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A261",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S261",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        224,
+        336,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "gray-water-rock-176-336",
+    "box": [
+      240,
+      336,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S262. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A262",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S262",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        240,
+        336,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "gray-water-tall-rock-128-352",
+    "box": [
+      192,
+      352,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S263. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A263",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S263",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        192,
+        352,
+        16,
+        32
+      ]
+    }
+  },
+  {
+    "name": "gray-water-tall-rock-144-352",
+    "box": [
+      208,
+      352,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S264. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A264",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S264",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        208,
+        352,
+        16,
+        32
+      ]
+    }
+  },
+  {
+    "name": "gray-water-large-rock-352",
+    "box": [
+      224,
+      352,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S265. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A265",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S265",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        224,
+        352,
+        32,
+        32
+      ]
+    }
+  },
+  {
+    "name": "gray-water-tall-rock-128-384",
+    "box": [
+      192,
+      384,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S266. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A266",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S266",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        192,
+        384,
+        16,
+        32
+      ]
+    }
+  },
+  {
+    "name": "gray-water-tall-rock-144-384",
+    "box": [
+      208,
+      384,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S267. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A267",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S267",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        208,
+        384,
+        16,
+        32
+      ]
+    }
+  },
+  {
+    "name": "gray-water-large-rock-384",
+    "box": [
+      224,
+      384,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S268. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A268",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S268",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        224,
+        384,
+        32,
+        32
+      ]
+    }
+  },
+  {
+    "name": "gray-water-stump-128",
+    "box": [
+      192,
+      416,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S269. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A269",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S269",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        192,
+        416,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "gray-water-stump-144",
+    "box": [
+      208,
+      416,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S270. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A270",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S270",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        208,
+        416,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "gray-water-large-stump",
+    "box": [
+      224,
+      416,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S271. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A271",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S271",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        224,
+        416,
+        32,
+        32
+      ]
+    }
+  },
+  {
+    "name": "bridge-0",
+    "box": [
+      0,
+      352,
+      64,
+      80
+    ],
+    "kind": "structure",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S272. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A272",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S272",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        0,
+        352,
+        64,
+        80
+      ]
+    }
+  },
+  {
+    "name": "bridge-64",
+    "box": [
+      64,
+      352,
+      64,
+      80
+    ],
+    "kind": "structure",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S273. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A273",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S273",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        64,
+        352,
+        64,
+        80
+      ]
+    }
+  },
+  {
+    "name": "bridge-post-16",
+    "box": [
+      16,
+      432,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S274. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A274",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S274",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        16,
+        432,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "bridge-post-48",
+    "box": [
+      48,
+      432,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S275. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A275",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S275",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        48,
+        432,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "bridge-floor-0",
+    "box": [
+      0,
+      448,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S276. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A276",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S276",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        0,
+        448,
+        16,
+        32
+      ]
+    }
+  },
+  {
+    "name": "bridge-floor-48",
+    "box": [
+      48,
+      448,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S277. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A277",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S277",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        48,
+        448,
+        16,
+        32
+      ]
+    }
+  },
+  {
+    "name": "bridge-lower-part-0",
+    "box": [
+      0,
+      480,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S278. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A278",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S278",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        0,
+        480,
+        16,
+        32
+      ]
+    }
+  },
+  {
+    "name": "bridge-lower-part-16",
+    "box": [
+      16,
+      480,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S279. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A279",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S279",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        16,
+        480,
+        16,
+        32
+      ]
+    }
+  },
+  {
+    "name": "bridge-lower-part-32",
+    "box": [
+      32,
+      480,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S280. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A280",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S280",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        32,
+        480,
+        16,
+        32
+      ]
+    }
+  },
+  {
+    "name": "bridge-lower-part-48",
+    "box": [
+      48,
+      480,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S281. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A281",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S281",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        48,
+        480,
+        16,
+        32
+      ]
+    }
+  },
+  {
+    "name": "sign-64-448",
+    "box": [
+      64,
+      448,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-288-320.png",
+    "placement": null,
+    "reviewId": "A282",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-288-320.png"
+  },
+  {
+    "name": "sign-80-448",
+    "box": [
+      80,
+      448,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-304-320.png",
+    "placement": null,
+    "reviewId": "A283",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-304-320.png"
+  },
+  {
+    "name": "sign-96-448",
+    "box": [
+      96,
+      448,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-320-320.png",
+    "placement": null,
+    "reviewId": "A284",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-320-320.png"
+  },
+  {
+    "name": "sign-112-448",
+    "box": [
+      112,
+      448,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-336-320.png",
+    "placement": null,
+    "reviewId": "A285",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-336-320.png"
+  },
+  {
+    "name": "sign-128-448",
+    "box": [
+      128,
+      448,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-352-320.png",
+    "placement": null,
+    "reviewId": "A286",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-352-320.png"
+  },
+  {
+    "name": "sign-144-448",
+    "box": [
+      144,
+      448,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-368-320.png",
+    "placement": null,
+    "reviewId": "A287",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-368-320.png"
+  },
+  {
+    "name": "sign-160-448",
+    "box": [
+      160,
+      448,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-384-320.png",
+    "placement": null,
+    "reviewId": "A288",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-384-320.png"
+  },
+  {
+    "name": "sign-176-448",
+    "box": [
+      176,
+      448,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-400-320.png",
+    "placement": null,
+    "reviewId": "A289",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-400-320.png"
+  },
+  {
+    "name": "sign-192-448",
+    "box": [
+      192,
+      448,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-416-320.png",
+    "placement": null,
+    "reviewId": "A290",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-416-320.png"
+  },
+  {
+    "name": "sign-208-448",
+    "box": [
+      208,
+      448,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-432-320.png",
+    "placement": null,
+    "reviewId": "A291",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-432-320.png"
+  },
+  {
+    "name": "sign-224-448",
+    "box": [
+      224,
+      448,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-448-320.png",
+    "placement": null,
+    "reviewId": "A292",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-448-320.png"
+  },
+  {
+    "name": "sign-240-448",
+    "box": [
+      240,
+      448,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-464-320.png",
+    "placement": null,
+    "reviewId": "A293",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-464-320.png"
+  },
+  {
+    "name": "sign-64-464",
+    "box": [
+      64,
+      464,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-288-336.png",
+    "placement": null,
+    "reviewId": "A294",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-288-336.png"
+  },
+  {
+    "name": "sign-80-464",
+    "box": [
+      80,
+      464,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-304-336.png",
+    "placement": null,
+    "reviewId": "A295",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-304-336.png"
+  },
+  {
+    "name": "sign-96-464",
+    "box": [
+      96,
+      464,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-320-336.png",
+    "placement": null,
+    "reviewId": "A296",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-320-336.png"
+  },
+  {
+    "name": "sign-112-464",
+    "box": [
+      112,
+      464,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-336-336.png",
+    "placement": null,
+    "reviewId": "A297",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-336-336.png"
+  },
+  {
+    "name": "sign-128-464",
+    "box": [
+      128,
+      464,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-352-336.png",
+    "placement": null,
+    "reviewId": "A298",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-352-336.png"
+  },
+  {
+    "name": "sign-144-464",
+    "box": [
+      144,
+      464,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-368-336.png",
+    "placement": null,
+    "reviewId": "A299",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-368-336.png"
+  },
+  {
+    "name": "sign-160-464",
+    "box": [
+      160,
+      464,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-384-336.png",
+    "placement": null,
+    "reviewId": "A300",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-384-336.png"
+  },
+  {
+    "name": "sign-176-464",
+    "box": [
+      176,
+      464,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-400-336.png",
+    "placement": null,
+    "reviewId": "A301",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-400-336.png"
+  },
+  {
+    "name": "sign-192-464",
+    "box": [
+      192,
+      464,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-416-336.png",
+    "placement": null,
+    "reviewId": "A302",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-416-336.png"
+  },
+  {
+    "name": "sign-208-464",
+    "box": [
+      208,
+      464,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-432-336.png",
+    "placement": null,
+    "reviewId": "A303",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-432-336.png"
+  },
+  {
+    "name": "sign-224-464",
+    "box": [
+      224,
+      464,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-448-336.png",
+    "placement": null,
+    "reviewId": "A304",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-448-336.png"
+  },
+  {
+    "name": "sign-240-464",
+    "box": [
+      240,
+      464,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-464-336.png",
+    "placement": null,
+    "reviewId": "A305",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-464-336.png"
+  },
+  {
+    "name": "sign-64-480",
+    "box": [
+      64,
+      480,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-288-352.png",
+    "placement": null,
+    "reviewId": "A306",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-288-352.png"
+  },
+  {
+    "name": "sign-80-480",
+    "box": [
+      80,
+      480,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-304-352.png",
+    "placement": null,
+    "reviewId": "A307",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-304-352.png"
+  },
+  {
+    "name": "sign-96-480",
+    "box": [
+      96,
+      480,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-320-352.png",
+    "placement": null,
+    "reviewId": "A308",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-320-352.png"
+  },
+  {
+    "name": "sign-112-480",
+    "box": [
+      112,
+      480,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-336-352.png",
+    "placement": null,
+    "reviewId": "A309",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-336-352.png"
+  },
+  {
+    "name": "sign-128-480",
+    "box": [
+      128,
+      480,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-352-352.png",
+    "placement": null,
+    "reviewId": "A310",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-352-352.png"
+  },
+  {
+    "name": "sign-144-480",
+    "box": [
+      144,
+      480,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-368-352.png",
+    "placement": null,
+    "reviewId": "A311",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-368-352.png"
+  },
+  {
+    "name": "sign-160-480",
+    "box": [
+      160,
+      480,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-384-352.png",
+    "placement": null,
+    "reviewId": "A312",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-384-352.png"
+  },
+  {
+    "name": "sign-176-480",
+    "box": [
+      176,
+      480,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-400-352.png",
+    "placement": null,
+    "reviewId": "A313",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-400-352.png"
+  },
+  {
+    "name": "sign-192-480",
+    "box": [
+      192,
+      480,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-416-352.png",
+    "placement": null,
+    "reviewId": "A314",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-416-352.png"
+  },
+  {
+    "name": "sign-208-480",
+    "box": [
+      208,
+      480,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-432-352.png",
+    "placement": null,
+    "reviewId": "A315",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-432-352.png"
+  },
+  {
+    "name": "sign-224-480",
+    "box": [
+      224,
+      480,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-448-352.png",
+    "placement": null,
+    "reviewId": "A316",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-448-352.png"
+  },
+  {
+    "name": "sign-240-480",
+    "box": [
+      240,
+      480,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-464-352.png",
+    "placement": null,
+    "reviewId": "A317",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-464-352.png"
+  },
+  {
+    "name": "sign-64-496",
+    "box": [
+      64,
+      496,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-288-368.png",
+    "placement": null,
+    "reviewId": "A318",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-288-368.png"
+  },
+  {
+    "name": "sign-80-496",
+    "box": [
+      80,
+      496,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-304-368.png",
+    "placement": null,
+    "reviewId": "A319",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-304-368.png"
+  },
+  {
+    "name": "sign-96-496",
+    "box": [
+      96,
+      496,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-320-368.png",
+    "placement": null,
+    "reviewId": "A320",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-320-368.png"
+  },
+  {
+    "name": "sign-112-496",
+    "box": [
+      112,
+      496,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-336-368.png",
+    "placement": null,
+    "reviewId": "A321",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-336-368.png"
+  },
+  {
+    "name": "sign-128-496",
+    "box": [
+      128,
+      496,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-352-368.png",
+    "placement": null,
+    "reviewId": "A322",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-352-368.png"
+  },
+  {
+    "name": "sign-144-496",
+    "box": [
+      144,
+      496,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-368-368.png",
+    "placement": null,
+    "reviewId": "A323",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-368-368.png"
+  },
+  {
+    "name": "sign-160-496",
+    "box": [
+      160,
+      496,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-384-368.png",
+    "placement": null,
+    "reviewId": "A324",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-384-368.png"
+  },
+  {
+    "name": "sign-176-496",
+    "box": [
+      176,
+      496,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-400-368.png",
+    "placement": null,
+    "reviewId": "A325",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-400-368.png"
+  },
+  {
+    "name": "sign-192-496",
+    "box": [
+      192,
+      496,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-416-368.png",
+    "placement": null,
+    "reviewId": "A326",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-416-368.png"
+  },
+  {
+    "name": "sign-208-496",
+    "box": [
+      208,
+      496,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-432-368.png",
+    "placement": null,
+    "reviewId": "A327",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-432-368.png"
+  },
+  {
+    "name": "sign-224-496",
+    "box": [
+      224,
+      496,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-448-368.png",
+    "placement": null,
+    "reviewId": "A328",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-448-368.png"
+  },
+  {
+    "name": "sign-240-496",
+    "box": [
+      240,
+      496,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-464-368.png",
+    "placement": null,
+    "reviewId": "A329",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-464-368.png"
+  },
+  {
+    "name": "grassy-cliff-tiles-large-ring",
+    "box": [
+      272,
+      224,
+      48,
+      64
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S330a. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A330a",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S330a",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        272,
+        224,
+        48,
+        64
+      ]
+    }
+  },
+  {
+    "name": "grassy-cliff-tiles-small-ring",
+    "box": [
+      320,
+      224,
+      48,
+      64
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S330b. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A330b",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S330b",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        320,
+        224,
+        48,
+        64
+      ]
+    }
+  },
+  {
+    "name": "grassy-cliff-tiles-upper-cap-left",
+    "box": [
+      368,
+      224,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S330c. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A330c",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S330c",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        368,
+        224,
+        32,
+        16
+      ]
+    }
+  },
+  {
+    "name": "grassy-cliff-tiles-upper-cap-right",
+    "box": [
+      400,
+      224,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S330d. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A330d",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S330d",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        400,
+        224,
+        32,
+        16
+      ]
+    }
+  },
+  {
+    "name": "grassy-cliff-tiles-end-left",
+    "box": [
+      368,
+      240,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S330e. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A330e",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S330e",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        368,
+        240,
+        32,
+        32
+      ]
+    }
+  },
+  {
+    "name": "grassy-cliff-tiles-end-right",
+    "box": [
+      400,
+      240,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S330f. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A330f",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S330f",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        400,
+        240,
+        32,
+        32
+      ]
+    }
+  },
+  {
+    "name": "grassy-cliff-tiles-crest-straight",
+    "box": [
+      320,
+      288,
+      48,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S330g. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A330g",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S330g",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        320,
+        288,
+        48,
+        16
+      ]
+    }
+  },
+  {
+    "name": "grassy-cliff-tiles-crest-rise",
+    "box": [
+      368,
+      272,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S330h. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A330h",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S330h",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        368,
+        272,
+        32,
+        32
+      ]
+    }
+  },
+  {
+    "name": "grassy-cliff-tiles-crest-fall",
+    "box": [
+      400,
+      272,
+      48,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S330i. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A330i",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S330i",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        400,
+        272,
+        48,
+        32
+      ]
+    }
+  },
+  {
+    "name": "grassy-cliff-tiles-funnel",
+    "box": [
+      272,
+      288,
+      48,
+      80
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S330j. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A330j",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S330j",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        272,
+        288,
+        48,
+        80
+      ]
+    }
+  },
+  {
+    "name": "grassy-cliff-tiles-small-pocket",
+    "box": [
+      320,
+      320,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S330k. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A330k",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S330k",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        320,
+        320,
+        48,
+        48
+      ]
+    }
+  },
+  {
+    "name": "grassy-cliff-tiles-hill-face",
+    "box": [
+      368,
+      304,
+      80,
+      64
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S330l. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A330l",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S330l",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        368,
+        304,
+        80,
+        64
+      ]
+    }
+  },
+  {
+    "name": "grassy-cliff-tiles-solid-platform",
+    "box": [
+      464,
+      224,
+      48,
+      64
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S330m. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A330m",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S330m",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        464,
+        224,
+        48,
+        64
+      ]
+    }
+  },
+  {
+    "name": "grassy-cliff-tiles-wall-opening",
+    "box": [
+      464,
+      288,
+      48,
+      64
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S330n. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A330n",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S330n",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        464,
+        288,
+        48,
+        64
+      ]
+    }
+  },
+  {
+    "name": "grassy-cliff-tiles-wall-base",
+    "box": [
+      464,
+      352,
+      48,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S330o. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A330o",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S330o",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        464,
+        352,
+        48,
+        16
+      ]
+    }
+  },
+  {
+    "name": "bare-cliff-tiles-large-ring",
+    "box": [
+      272,
+      368,
+      48,
+      64
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S331a. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A331a",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S331a",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        272,
+        368,
+        48,
+        64
+      ]
+    }
+  },
+  {
+    "name": "bare-cliff-tiles-small-ring",
+    "box": [
+      320,
+      368,
+      48,
+      64
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S331b. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A331b",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S331b",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        320,
+        368,
+        48,
+        64
+      ]
+    }
+  },
+  {
+    "name": "bare-cliff-tiles-upper-cap-left",
+    "box": [
+      368,
+      368,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S331c. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A331c",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S331c",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        368,
+        368,
+        32,
+        16
+      ]
+    }
+  },
+  {
+    "name": "bare-cliff-tiles-upper-cap-right",
+    "box": [
+      400,
+      368,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S331d. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A331d",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S331d",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        400,
+        368,
+        32,
+        16
+      ]
+    }
+  },
+  {
+    "name": "bare-cliff-tiles-end-left",
+    "box": [
+      368,
+      384,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S331e. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A331e",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S331e",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        368,
+        384,
+        32,
+        32
+      ]
+    }
+  },
+  {
+    "name": "bare-cliff-tiles-end-right",
+    "box": [
+      400,
+      384,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S331f. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A331f",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S331f",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        400,
+        384,
+        32,
+        32
+      ]
+    }
+  },
+  {
+    "name": "bare-cliff-tiles-crest-straight",
+    "box": [
+      320,
+      432,
+      48,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S331g. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A331g",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S331g",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        320,
+        432,
+        48,
+        16
+      ]
+    }
+  },
+  {
+    "name": "bare-cliff-tiles-crest-rise",
+    "box": [
+      368,
+      416,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S331h. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A331h",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S331h",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        368,
+        416,
+        32,
+        32
+      ]
+    }
+  },
+  {
+    "name": "bare-cliff-tiles-crest-fall",
+    "box": [
+      400,
+      416,
+      48,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S331i. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A331i",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S331i",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        400,
+        416,
+        48,
+        32
+      ]
+    }
+  },
+  {
+    "name": "bare-cliff-tiles-funnel",
+    "box": [
+      272,
+      432,
+      48,
+      80
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S331j. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A331j",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S331j",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        272,
+        432,
+        48,
+        80
+      ]
+    }
+  },
+  {
+    "name": "bare-cliff-tiles-small-pocket",
+    "box": [
+      320,
+      464,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S331k. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A331k",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S331k",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        320,
+        464,
+        48,
+        48
+      ]
+    }
+  },
+  {
+    "name": "bare-cliff-tiles-hill-face",
+    "box": [
+      368,
+      448,
+      80,
+      64
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S331l. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A331l",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S331l",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        368,
+        448,
+        80,
+        64
+      ]
+    }
+  },
+  {
+    "name": "bare-cliff-tiles-solid-platform",
+    "box": [
+      464,
+      368,
+      48,
+      64
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S331m. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A331m",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S331m",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        464,
+        368,
+        48,
+        64
+      ]
+    }
+  },
+  {
+    "name": "bare-cliff-tiles-wall-opening",
+    "box": [
+      464,
+      432,
+      48,
+      64
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S331n. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A331n",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S331n",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        464,
+        432,
+        48,
+        64
+      ]
+    }
+  },
+  {
+    "name": "grass-terrain-atlas-style-1-border",
+    "box": [
+      16,
+      0,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-1-border",
+    "frame": null,
+    "notes": "Terrain border. The six groups have different fill patterns.",
+    "placement": null,
+    "reviewId": "A332a"
+  },
+  {
+    "name": "grass-terrain-atlas-style-1-fill",
+    "box": [
+      32,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-1-fill",
+    "frame": null,
+    "notes": "Separate terrain fill tile.",
+    "placement": null,
+    "reviewId": "A332b"
+  },
+  {
+    "name": "grass-terrain-atlas-style-1-corner-0-0",
+    "box": [
+      64,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-1-corner-0-0",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "A332c"
+  },
+  {
+    "name": "grass-terrain-atlas-style-1-corner-16-0",
+    "box": [
+      80,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-1-corner-16-0",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "A332d"
+  },
+  {
+    "name": "grass-terrain-atlas-style-1-corner-0-16",
+    "box": [
+      64,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-1-corner-0-16",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "A332e"
+  },
+  {
+    "name": "grass-terrain-atlas-style-1-corner-16-16",
+    "box": [
+      80,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-1-corner-16-16",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "A332f"
+  },
+  {
+    "name": "grass-terrain-atlas-style-1-corner-0-32",
+    "box": [
+      64,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-1-corner-0-32",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "A332g"
+  },
+  {
+    "name": "grass-terrain-atlas-style-1-corner-16-32",
+    "box": [
+      80,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-1-corner-16-32",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "A332h"
+  },
+  {
+    "name": "grass-terrain-atlas-style-2-border",
+    "box": [
+      96,
+      0,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-2-border",
+    "frame": null,
+    "notes": "Terrain border. The six groups have different fill patterns.",
+    "placement": null,
+    "reviewId": "A332i"
+  },
+  {
+    "name": "grass-terrain-atlas-style-2-fill",
+    "box": [
+      112,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-2-fill",
+    "frame": null,
+    "notes": "Separate terrain fill tile.",
+    "placement": null,
+    "reviewId": "A332j"
+  },
+  {
+    "name": "grass-terrain-atlas-style-2-corner-0-0",
+    "box": [
+      144,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-2-corner-0-0",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "A332k"
+  },
+  {
+    "name": "grass-terrain-atlas-style-2-corner-16-0",
+    "box": [
+      160,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-2-corner-16-0",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "A332l"
+  },
+  {
+    "name": "grass-terrain-atlas-style-2-corner-0-16",
+    "box": [
+      144,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-2-corner-0-16",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "A332m"
+  },
+  {
+    "name": "grass-terrain-atlas-style-2-corner-16-16",
+    "box": [
+      160,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-2-corner-16-16",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "A332n"
+  },
+  {
+    "name": "grass-terrain-atlas-style-2-corner-0-32",
+    "box": [
+      144,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-2-corner-0-32",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "A332o"
+  },
+  {
+    "name": "grass-terrain-atlas-style-2-corner-16-32",
+    "box": [
+      160,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-2-corner-16-32",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "A332p"
+  },
+  {
+    "name": "grass-terrain-atlas-style-3-border",
+    "box": [
+      176,
+      0,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-3-border",
+    "frame": null,
+    "notes": "Terrain border. The six groups have different fill patterns.",
+    "placement": null,
+    "reviewId": "A332q"
+  },
+  {
+    "name": "grass-terrain-atlas-style-3-fill",
+    "box": [
+      192,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-3-fill",
+    "frame": null,
+    "notes": "Separate terrain fill tile.",
+    "placement": null,
+    "reviewId": "A332r"
+  },
+  {
+    "name": "grass-terrain-atlas-style-3-corner-0-0",
+    "box": [
+      224,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-3-corner-0-0",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "A332s"
+  },
+  {
+    "name": "grass-terrain-atlas-style-3-corner-16-0",
+    "box": [
+      240,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-3-corner-16-0",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "A332t"
+  },
+  {
+    "name": "grass-terrain-atlas-style-3-corner-0-16",
+    "box": [
+      224,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-3-corner-0-16",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "A332u"
+  },
+  {
+    "name": "grass-terrain-atlas-style-3-corner-16-16",
+    "box": [
+      240,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-3-corner-16-16",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "A332v"
+  },
+  {
+    "name": "grass-terrain-atlas-style-3-corner-0-32",
+    "box": [
+      224,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-3-corner-0-32",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "A332w"
+  },
+  {
+    "name": "grass-terrain-atlas-style-3-corner-16-32",
+    "box": [
+      240,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-3-corner-16-32",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "A332x"
+  },
+  {
+    "name": "grass-terrain-atlas-style-4-border",
+    "box": [
+      0,
+      64,
+      64,
+      48
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-4-border",
+    "frame": null,
+    "notes": "Terrain border. The six groups have different fill patterns.",
+    "placement": null,
+    "reviewId": "A332y"
+  },
+  {
+    "name": "grass-terrain-atlas-style-4-fill",
+    "box": [
+      32,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-4-fill",
+    "frame": null,
+    "notes": "Separate terrain fill tile.",
+    "placement": null,
+    "reviewId": "A332z"
+  },
+  {
+    "name": "grass-terrain-atlas-style-4-corner-0-0",
+    "box": [
+      64,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-4-corner-0-0",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "A332aa"
+  },
+  {
+    "name": "grass-terrain-atlas-style-4-corner-16-0",
+    "box": [
+      80,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-4-corner-16-0",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "A332ab"
+  },
+  {
+    "name": "grass-terrain-atlas-style-4-corner-0-16",
+    "box": [
+      64,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-4-corner-0-16",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "A332ac"
+  },
+  {
+    "name": "grass-terrain-atlas-style-4-corner-16-16",
+    "box": [
+      80,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-4-corner-16-16",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "A332ad"
+  },
+  {
+    "name": "grass-terrain-atlas-style-4-corner-0-32",
+    "box": [
+      64,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-4-corner-0-32",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "A332ae"
+  },
+  {
+    "name": "grass-terrain-atlas-style-4-corner-16-32",
+    "box": [
+      80,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-4-corner-16-32",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "A332af"
+  },
+  {
+    "name": "grass-terrain-atlas-style-5-border",
+    "box": [
+      96,
+      64,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-5-border",
+    "frame": null,
+    "notes": "Terrain border. The six groups have different fill patterns.",
+    "placement": null,
+    "reviewId": "A332ag"
+  },
+  {
+    "name": "grass-terrain-atlas-style-5-fill",
+    "box": [
+      112,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-5-fill",
+    "frame": null,
+    "notes": "Separate terrain fill tile.",
+    "placement": null,
+    "reviewId": "A332ah"
+  },
+  {
+    "name": "grass-terrain-atlas-style-5-corner-0-0",
+    "box": [
+      144,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-5-corner-0-0",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "A332ai"
+  },
+  {
+    "name": "grass-terrain-atlas-style-5-corner-16-0",
+    "box": [
+      160,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-5-corner-16-0",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "A332aj"
+  },
+  {
+    "name": "grass-terrain-atlas-style-5-corner-0-16",
+    "box": [
+      144,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-5-corner-0-16",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "A332ak"
+  },
+  {
+    "name": "grass-terrain-atlas-style-5-corner-16-16",
+    "box": [
+      160,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-5-corner-16-16",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "A332al"
+  },
+  {
+    "name": "grass-terrain-atlas-style-5-corner-0-32",
+    "box": [
+      144,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-5-corner-0-32",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "A332am"
+  },
+  {
+    "name": "grass-terrain-atlas-style-5-corner-16-32",
+    "box": [
+      160,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-5-corner-16-32",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "A332an"
+  },
+  {
+    "name": "grass-terrain-atlas-style-6-border",
+    "box": [
+      176,
+      64,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-6-border",
+    "frame": null,
+    "notes": "Terrain border. The six groups have different fill patterns.",
+    "placement": null,
+    "reviewId": "A332ao"
+  },
+  {
+    "name": "grass-terrain-atlas-style-6-fill",
+    "box": [
+      192,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-6-fill",
+    "frame": null,
+    "notes": "Separate terrain fill tile.",
+    "placement": null,
+    "reviewId": "A332ap"
+  },
+  {
+    "name": "grass-terrain-atlas-style-6-corner-0-0",
+    "box": [
+      224,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-6-corner-0-0",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "A332aq"
+  },
+  {
+    "name": "grass-terrain-atlas-style-6-corner-16-0",
+    "box": [
+      240,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-6-corner-16-0",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "A332ar"
+  },
+  {
+    "name": "grass-terrain-atlas-style-6-corner-0-16",
+    "box": [
+      224,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-6-corner-0-16",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "A332as"
+  },
+  {
+    "name": "grass-terrain-atlas-style-6-corner-16-16",
+    "box": [
+      240,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-6-corner-16-16",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "A332at"
+  },
+  {
+    "name": "grass-terrain-atlas-style-6-corner-0-32",
+    "box": [
+      224,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-6-corner-0-32",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "A332au"
+  },
+  {
+    "name": "grass-terrain-atlas-style-6-corner-16-32",
+    "box": [
+      240,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-6-corner-16-32",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "A332av"
+  },
+  {
+    "name": "grass-small-224-160",
+    "box": [
+      224,
+      160,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "grass-small-224-160",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "A333"
+  },
+  {
+    "name": "water-grass-small-64-336",
+    "box": [
+      64,
+      336,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S334. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A334",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S334",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        64,
+        336,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "bridge-floor-16",
+    "box": [
+      16,
+      448,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S335. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A335",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S335",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        16,
+        448,
+        16,
+        32
+      ]
+    }
+  },
+  {
+    "name": "bridge-floor-32",
+    "box": [
+      32,
+      448,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S336. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A336",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S336",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        32,
+        448,
+        16,
+        32
+      ]
+    }
+  },
+  {
+    "name": "brown-water-stump-128-lower",
+    "box": [
+      128,
+      432,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S337. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A337",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S337",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        128,
+        432,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "brown-water-stump-144-lower",
+    "box": [
+      144,
+      432,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S338. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A338",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S338",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        144,
+        432,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "gray-water-stump-128-lower",
+    "box": [
+      192,
+      432,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S339. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A339",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S339",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        192,
+        432,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "gray-water-stump-144-lower",
+    "box": [
+      208,
+      432,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S340. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "A340",
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S340",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-grasslands-spring-source-deb537657f7b.png",
+      "box": [
+        208,
+        432,
+        16,
+        16
+      ]
+    }
+  }
+]

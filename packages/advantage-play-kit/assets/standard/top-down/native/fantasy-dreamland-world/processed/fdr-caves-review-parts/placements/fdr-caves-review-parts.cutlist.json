@@ -1,0 +1,6520 @@
+[
+  {
+    "name": "cave-wide-left-0",
+    "box": [
+      0,
+      16,
+      48,
+      80
+    ],
+    "kind": "part",
+    "group": "cave-wide-left-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R01"
+  },
+  {
+    "name": "cave-small-0",
+    "box": [
+      48,
+      32,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "cave-small-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R02"
+  },
+  {
+    "name": "cave-wide-right-0",
+    "box": [
+      96,
+      16,
+      48,
+      80
+    ],
+    "kind": "part",
+    "group": "cave-wide-right-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R03"
+  },
+  {
+    "name": "cave-tall-0",
+    "box": [
+      144,
+      32,
+      48,
+      64
+    ],
+    "kind": "part",
+    "group": "cave-tall-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R04"
+  },
+  {
+    "name": "door-0",
+    "box": [
+      208,
+      64,
+      48,
+      32
+    ],
+    "kind": "part",
+    "group": "door-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R05"
+  },
+  {
+    "name": "stairs-0",
+    "box": [
+      208,
+      16,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "stairs-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R06"
+  },
+  {
+    "name": "cave-wide-left-96",
+    "box": [
+      0,
+      112,
+      48,
+      80
+    ],
+    "kind": "part",
+    "group": "cave-wide-left-96",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R07"
+  },
+  {
+    "name": "cave-small-96",
+    "box": [
+      48,
+      128,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "cave-small-96",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R08"
+  },
+  {
+    "name": "cave-wide-right-96",
+    "box": [
+      96,
+      112,
+      48,
+      80
+    ],
+    "kind": "part",
+    "group": "cave-wide-right-96",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R09"
+  },
+  {
+    "name": "cave-tall-96",
+    "box": [
+      144,
+      128,
+      48,
+      64
+    ],
+    "kind": "part",
+    "group": "cave-tall-96",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R10"
+  },
+  {
+    "name": "door-96",
+    "box": [
+      208,
+      160,
+      48,
+      32
+    ],
+    "kind": "part",
+    "group": "door-96",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R11"
+  },
+  {
+    "name": "stairs-96",
+    "box": [
+      208,
+      112,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "stairs-96",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R12"
+  },
+  {
+    "name": "bridge-stairs",
+    "box": [
+      256,
+      112,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-bridge-stairs.png",
+    "placement": null,
+    "reviewId": "R13",
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-bridge-stairs.png"
+  },
+  {
+    "name": "bridge-planks",
+    "box": [
+      304,
+      112,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-bridge-planks.png",
+    "placement": null,
+    "reviewId": "R14",
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-bridge-planks.png"
+  },
+  {
+    "name": "planks-row",
+    "box": [
+      256,
+      160,
+      48,
+      16
+    ],
+    "kind": "part",
+    "group": "planks-row",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R15"
+  },
+  {
+    "name": "cave-diagonal-brown",
+    "box": [
+      256,
+      176,
+      80,
+      80
+    ],
+    "kind": "part",
+    "group": "cave-diagonal-brown",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R16"
+  },
+  {
+    "name": "cave-diagonal-gray",
+    "box": [
+      336,
+      176,
+      80,
+      80
+    ],
+    "kind": "part",
+    "group": "cave-diagonal-gray",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R17"
+  },
+  {
+    "name": "mining-arch",
+    "box": [
+      400,
+      128,
+      48,
+      32
+    ],
+    "kind": "part",
+    "group": "mining-arch",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R18"
+  },
+  {
+    "name": "hatch-shut",
+    "box": [
+      448,
+      64,
+      48,
+      32
+    ],
+    "kind": "part",
+    "group": "hatch-shut",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R19"
+  },
+  {
+    "name": "hatch-open",
+    "box": [
+      448,
+      96,
+      48,
+      32
+    ],
+    "kind": "part",
+    "group": "hatch-open",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R20"
+  },
+  {
+    "name": "hatch-dark",
+    "box": [
+      448,
+      128,
+      48,
+      32
+    ],
+    "kind": "part",
+    "group": "hatch-dark",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R21"
+  },
+  {
+    "name": "hatch-pit",
+    "box": [
+      448,
+      160,
+      48,
+      32
+    ],
+    "kind": "part",
+    "group": "hatch-pit",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R22"
+  },
+  {
+    "name": "stairs-wood",
+    "box": [
+      432,
+      160,
+      16,
+      48
+    ],
+    "kind": "part",
+    "group": "stairs-wood",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R23"
+  },
+  {
+    "name": "rail-frame",
+    "box": [
+      432,
+      208,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "rail-frame",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R24"
+  },
+  {
+    "name": "rail-tall-left-a",
+    "box": [
+      480,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "rail-tall-left-a",
+    "frame": null,
+    "notes": "Separate rail piece. Preserve the complete 16-pixel tile.",
+    "placement": null,
+    "reviewId": "R25a",
+    "reviewChanged": true
+  },
+  {
+    "name": "rail-tall-left-b",
+    "box": [
+      480,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "rail-tall-left-b",
+    "frame": null,
+    "notes": "Separate rail piece. Preserve the complete 16-pixel tile.",
+    "placement": null,
+    "reviewId": "R25b",
+    "reviewChanged": true
+  },
+  {
+    "name": "rail-tall-left-c",
+    "box": [
+      480,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "rail-tall-left-c",
+    "frame": null,
+    "notes": "Separate rail piece. Preserve the complete 16-pixel tile.",
+    "placement": null,
+    "reviewId": "R25c",
+    "reviewChanged": true
+  },
+  {
+    "name": "rail-tall-right-a",
+    "box": [
+      496,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "rail-tall-right-a",
+    "frame": null,
+    "notes": "Separate rail piece. Preserve the complete 16-pixel tile.",
+    "placement": null,
+    "reviewId": "R26a",
+    "reviewChanged": true
+  },
+  {
+    "name": "rail-tall-right-b",
+    "box": [
+      496,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "rail-tall-right-b",
+    "frame": null,
+    "notes": "Separate rail piece. Preserve the complete 16-pixel tile.",
+    "placement": null,
+    "reviewId": "R26b",
+    "reviewChanged": true
+  },
+  {
+    "name": "logs-tall",
+    "box": [
+      288,
+      16,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "logs-tall",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R27"
+  },
+  {
+    "name": "logs-row",
+    "box": [
+      256,
+      32,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "logs-row",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R28"
+  },
+  {
+    "name": "barrels-top",
+    "box": [
+      480,
+      0,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "barrels-top",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R29"
+  },
+  {
+    "name": "barrels-bottom",
+    "box": [
+      480,
+      32,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "barrels-bottom",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R30"
+  },
+  {
+    "name": "crates-top-left",
+    "box": [
+      416,
+      0,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "crates-top-left",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R31"
+  },
+  {
+    "name": "crates-top-right",
+    "box": [
+      448,
+      0,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "crates-top-right",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R32"
+  },
+  {
+    "name": "crates-bottom-left",
+    "box": [
+      416,
+      32,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "crates-bottom-left",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R33"
+  },
+  {
+    "name": "crates-bottom-right",
+    "box": [
+      448,
+      32,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "crates-bottom-right",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R34"
+  },
+  {
+    "name": "lantern-small-256-48",
+    "box": [
+      256,
+      48,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "lantern-small-256-48",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R35"
+  },
+  {
+    "name": "lantern-small-272-48",
+    "box": [
+      272,
+      48,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "lantern-small-272-48",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R36"
+  },
+  {
+    "name": "lantern-large-288-48",
+    "box": [
+      288,
+      48,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "lantern-large-288-48",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R37"
+  },
+  {
+    "name": "lantern-large-320-48",
+    "box": [
+      320,
+      48,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "lantern-large-320-48",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R38"
+  },
+  {
+    "name": "lantern-small-256-80",
+    "box": [
+      256,
+      80,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "lantern-small-256-80",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R39"
+  },
+  {
+    "name": "lantern-small-272-80",
+    "box": [
+      272,
+      80,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "lantern-small-272-80",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R40"
+  },
+  {
+    "name": "lantern-large-288-80",
+    "box": [
+      288,
+      80,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "lantern-large-288-80",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R41"
+  },
+  {
+    "name": "lantern-large-320-80",
+    "box": [
+      320,
+      80,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "lantern-large-320-80",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R42"
+  },
+  {
+    "name": "rock-pillar-64-272",
+    "box": [
+      64,
+      272,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-pillar-64-272",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R43"
+  },
+  {
+    "name": "rock-pillar-80-272",
+    "box": [
+      80,
+      272,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-pillar-80-272",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R44"
+  },
+  {
+    "name": "rock-pillar-96-272",
+    "box": [
+      96,
+      272,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-pillar-96-272",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R45"
+  },
+  {
+    "name": "rock-pillar-112-272",
+    "box": [
+      112,
+      272,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-pillar-112-272",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R46"
+  },
+  {
+    "name": "rock-pillar-192-272",
+    "box": [
+      192,
+      272,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-pillar-192-272",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R47"
+  },
+  {
+    "name": "rock-pillar-208-272",
+    "box": [
+      208,
+      272,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-pillar-208-272",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R48"
+  },
+  {
+    "name": "rock-pillar-224-272",
+    "box": [
+      224,
+      272,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-pillar-224-272",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R49"
+  },
+  {
+    "name": "rock-pillar-240-272",
+    "box": [
+      240,
+      272,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-pillar-240-272",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R50"
+  },
+  {
+    "name": "rock-pillar-64-416",
+    "box": [
+      64,
+      416,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-pillar-64-416",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R51"
+  },
+  {
+    "name": "rock-pillar-80-416",
+    "box": [
+      80,
+      416,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-pillar-80-416",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R52"
+  },
+  {
+    "name": "rock-pillar-96-416",
+    "box": [
+      96,
+      416,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-pillar-96-416",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R53"
+  },
+  {
+    "name": "rock-pillar-112-416",
+    "box": [
+      112,
+      416,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-pillar-112-416",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R54"
+  },
+  {
+    "name": "rock-pillar-192-400",
+    "box": [
+      192,
+      400,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-pillar-192-400",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R55"
+  },
+  {
+    "name": "rock-pillar-208-400",
+    "box": [
+      208,
+      400,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-pillar-208-400",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R56"
+  },
+  {
+    "name": "rock-pillar-224-400",
+    "box": [
+      224,
+      400,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-pillar-224-400",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R57"
+  },
+  {
+    "name": "rock-pillar-240-400",
+    "box": [
+      240,
+      400,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-pillar-240-400",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R58"
+  },
+  {
+    "name": "rock-cluster-0-304",
+    "box": [
+      0,
+      304,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-cluster-0-304",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R59"
+  },
+  {
+    "name": "rock-cluster-32-304",
+    "box": [
+      32,
+      304,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-cluster-32-304",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R60"
+  },
+  {
+    "name": "rock-cluster-64-304",
+    "box": [
+      64,
+      304,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-cluster-64-304",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R61"
+  },
+  {
+    "name": "rock-cluster-96-304",
+    "box": [
+      96,
+      304,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-cluster-96-304",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R62"
+  },
+  {
+    "name": "rock-cluster-0-448",
+    "box": [
+      0,
+      448,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-cluster-0-448",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R63"
+  },
+  {
+    "name": "rock-cluster-32-448",
+    "box": [
+      32,
+      448,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-cluster-32-448",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R64"
+  },
+  {
+    "name": "rock-cluster-64-448",
+    "box": [
+      64,
+      448,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-cluster-64-448",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R65"
+  },
+  {
+    "name": "rock-cluster-96-448",
+    "box": [
+      96,
+      448,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-cluster-96-448",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R66"
+  },
+  {
+    "name": "rock-cluster-final-64",
+    "box": [
+      64,
+      480,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-cluster-final-64",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R67"
+  },
+  {
+    "name": "rock-cluster-final-96",
+    "box": [
+      96,
+      480,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-cluster-final-96",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R68"
+  },
+  {
+    "name": "rock-large-top",
+    "box": [
+      128,
+      304,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-large-top",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R69"
+  },
+  {
+    "name": "rock-small-top",
+    "box": [
+      160,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "rock-small-top",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R70"
+  },
+  {
+    "name": "crystal-left",
+    "box": [
+      176,
+      304,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "crystal-left",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R71"
+  },
+  {
+    "name": "crystal-right",
+    "box": [
+      192,
+      304,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "crystal-right",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R72"
+  },
+  {
+    "name": "rock-pillar-plain",
+    "box": [
+      0,
+      336,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-pillar-plain",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R73"
+  },
+  {
+    "name": "rock-pillar-tall",
+    "box": [
+      32,
+      336,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-pillar-tall",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R74"
+  },
+  {
+    "name": "rock-cluster-bottom",
+    "box": [
+      0,
+      368,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-cluster-bottom",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R75"
+  },
+  {
+    "name": "rock-pillar-bottom",
+    "box": [
+      32,
+      368,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-pillar-bottom",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R76"
+  },
+  {
+    "name": "fence-stone",
+    "box": [
+      64,
+      336,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-fence-frame.png",
+    "placement": null,
+    "reviewId": "R77",
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-fence-frame.png"
+  },
+  {
+    "name": "fence-wood",
+    "box": [
+      160,
+      336,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "fence-wood",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R78"
+  },
+  {
+    "name": "rock-bottom-final",
+    "box": [
+      0,
+      480,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-bottom-final",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R79"
+  },
+  {
+    "name": "rock-bottom-final-right",
+    "box": [
+      32,
+      480,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-bottom-final-right",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R80"
+  },
+  {
+    "name": "flame-animation-304",
+    "box": [
+      320,
+      304,
+      128,
+      32
+    ],
+    "kind": "part",
+    "group": "flame-animation-304",
+    "frame": null,
+    "notes": "8 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        320,
+        304,
+        16,
+        32
+      ],
+      [
+        336,
+        304,
+        16,
+        32
+      ],
+      [
+        352,
+        304,
+        16,
+        32
+      ],
+      [
+        368,
+        304,
+        16,
+        32
+      ],
+      [
+        384,
+        304,
+        16,
+        32
+      ],
+      [
+        400,
+        304,
+        16,
+        32
+      ],
+      [
+        416,
+        304,
+        16,
+        32
+      ],
+      [
+        432,
+        304,
+        16,
+        32
+      ]
+    ],
+    "reviewId": "R81"
+  },
+  {
+    "name": "flame-animation-336",
+    "box": [
+      320,
+      336,
+      128,
+      32
+    ],
+    "kind": "part",
+    "group": "flame-animation-336",
+    "frame": null,
+    "notes": "8 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        320,
+        336,
+        16,
+        32
+      ],
+      [
+        336,
+        336,
+        16,
+        32
+      ],
+      [
+        352,
+        336,
+        16,
+        32
+      ],
+      [
+        368,
+        336,
+        16,
+        32
+      ],
+      [
+        384,
+        336,
+        16,
+        32
+      ],
+      [
+        400,
+        336,
+        16,
+        32
+      ],
+      [
+        416,
+        336,
+        16,
+        32
+      ],
+      [
+        432,
+        336,
+        16,
+        32
+      ]
+    ],
+    "reviewId": "R82"
+  },
+  {
+    "name": "flame-animation-368",
+    "box": [
+      320,
+      368,
+      128,
+      32
+    ],
+    "kind": "part",
+    "group": "flame-animation-368",
+    "frame": null,
+    "notes": "8 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        320,
+        368,
+        16,
+        32
+      ],
+      [
+        336,
+        368,
+        16,
+        32
+      ],
+      [
+        352,
+        368,
+        16,
+        32
+      ],
+      [
+        368,
+        368,
+        16,
+        32
+      ],
+      [
+        384,
+        368,
+        16,
+        32
+      ],
+      [
+        400,
+        368,
+        16,
+        32
+      ],
+      [
+        416,
+        368,
+        16,
+        32
+      ],
+      [
+        432,
+        368,
+        16,
+        32
+      ]
+    ],
+    "reviewId": "R83"
+  },
+  {
+    "name": "pedestal-208-304",
+    "box": [
+      208,
+      304,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "pedestal-208-304",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R84"
+  },
+  {
+    "name": "pedestal-208-320",
+    "box": [
+      208,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "pedestal-208-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R85"
+  },
+  {
+    "name": "pedestal-224-304",
+    "box": [
+      224,
+      304,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "pedestal-224-304",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R86"
+  },
+  {
+    "name": "pedestal-224-320",
+    "box": [
+      224,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "pedestal-224-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R87"
+  },
+  {
+    "name": "pedestal-animation-304-416",
+    "box": [
+      304,
+      416,
+      64,
+      16
+    ],
+    "kind": "part",
+    "group": "pedestal-animation-304-416",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        304,
+        416,
+        16,
+        16
+      ],
+      [
+        320,
+        416,
+        16,
+        16
+      ],
+      [
+        336,
+        416,
+        16,
+        16
+      ],
+      [
+        352,
+        416,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "R88"
+  },
+  {
+    "name": "pedestal-animation-304-432",
+    "box": [
+      304,
+      432,
+      64,
+      16
+    ],
+    "kind": "part",
+    "group": "pedestal-animation-304-432",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        304,
+        432,
+        16,
+        16
+      ],
+      [
+        320,
+        432,
+        16,
+        16
+      ],
+      [
+        336,
+        432,
+        16,
+        16
+      ],
+      [
+        352,
+        432,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "R89"
+  },
+  {
+    "name": "pedestal-animation-304-448",
+    "box": [
+      304,
+      448,
+      64,
+      16
+    ],
+    "kind": "part",
+    "group": "pedestal-animation-304-448",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        304,
+        448,
+        16,
+        16
+      ],
+      [
+        320,
+        448,
+        16,
+        16
+      ],
+      [
+        336,
+        448,
+        16,
+        16
+      ],
+      [
+        352,
+        448,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "R90"
+  },
+  {
+    "name": "pedestal-animation-304-464",
+    "box": [
+      304,
+      464,
+      64,
+      16
+    ],
+    "kind": "part",
+    "group": "pedestal-animation-304-464",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        304,
+        464,
+        16,
+        16
+      ],
+      [
+        320,
+        464,
+        16,
+        16
+      ],
+      [
+        336,
+        464,
+        16,
+        16
+      ],
+      [
+        352,
+        464,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "R91"
+  },
+  {
+    "name": "crystal-animation-304",
+    "box": [
+      304,
+      480,
+      64,
+      32
+    ],
+    "kind": "part",
+    "group": "crystal-animation-304",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        304,
+        480,
+        16,
+        32
+      ],
+      [
+        320,
+        480,
+        16,
+        32
+      ],
+      [
+        336,
+        480,
+        16,
+        32
+      ],
+      [
+        352,
+        480,
+        16,
+        32
+      ]
+    ],
+    "reviewId": "R92"
+  },
+  {
+    "name": "pedestal-animation-400-416",
+    "box": [
+      400,
+      416,
+      64,
+      16
+    ],
+    "kind": "part",
+    "group": "pedestal-animation-400-416",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        400,
+        416,
+        16,
+        16
+      ],
+      [
+        416,
+        416,
+        16,
+        16
+      ],
+      [
+        432,
+        416,
+        16,
+        16
+      ],
+      [
+        448,
+        416,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "R93"
+  },
+  {
+    "name": "pedestal-animation-400-432",
+    "box": [
+      400,
+      432,
+      64,
+      16
+    ],
+    "kind": "part",
+    "group": "pedestal-animation-400-432",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        400,
+        432,
+        16,
+        16
+      ],
+      [
+        416,
+        432,
+        16,
+        16
+      ],
+      [
+        432,
+        432,
+        16,
+        16
+      ],
+      [
+        448,
+        432,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "R94"
+  },
+  {
+    "name": "pedestal-animation-400-448",
+    "box": [
+      400,
+      448,
+      64,
+      16
+    ],
+    "kind": "part",
+    "group": "pedestal-animation-400-448",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        400,
+        448,
+        16,
+        16
+      ],
+      [
+        416,
+        448,
+        16,
+        16
+      ],
+      [
+        432,
+        448,
+        16,
+        16
+      ],
+      [
+        448,
+        448,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "R95"
+  },
+  {
+    "name": "pedestal-animation-400-464",
+    "box": [
+      400,
+      464,
+      64,
+      16
+    ],
+    "kind": "part",
+    "group": "pedestal-animation-400-464",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        400,
+        464,
+        16,
+        16
+      ],
+      [
+        416,
+        464,
+        16,
+        16
+      ],
+      [
+        432,
+        464,
+        16,
+        16
+      ],
+      [
+        448,
+        464,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "R96"
+  },
+  {
+    "name": "crystal-animation-400",
+    "box": [
+      400,
+      480,
+      64,
+      32
+    ],
+    "kind": "part",
+    "group": "crystal-animation-400",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        400,
+        480,
+        16,
+        32
+      ],
+      [
+        416,
+        480,
+        16,
+        32
+      ],
+      [
+        432,
+        480,
+        16,
+        32
+      ],
+      [
+        448,
+        480,
+        16,
+        32
+      ]
+    ],
+    "reviewId": "R97"
+  },
+  {
+    "name": "tile-2-1",
+    "box": [
+      16,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-6-1.png",
+    "placement": null,
+    "reviewId": "R98",
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-6-1.png"
+  },
+  {
+    "name": "tile-3-1",
+    "box": [
+      32,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-1",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R99"
+  },
+  {
+    "name": "tile-4-1",
+    "box": [
+      48,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-1",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R100"
+  },
+  {
+    "name": "tile-6-1",
+    "box": [
+      80,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-6-1",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R101"
+  },
+  {
+    "name": "tile-7-1",
+    "box": [
+      96,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-7-1",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R102"
+  },
+  {
+    "name": "tile-8-1",
+    "box": [
+      112,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-8-1",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R103"
+  },
+  {
+    "name": "tile-10-1",
+    "box": [
+      144,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-1",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R104"
+  },
+  {
+    "name": "tile-11-1",
+    "box": [
+      160,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-1",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R105"
+  },
+  {
+    "name": "tile-12-1",
+    "box": [
+      176,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-1",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R106"
+  },
+  {
+    "name": "tile-14-1",
+    "box": [
+      208,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-1",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R107"
+  },
+  {
+    "name": "tile-15-1",
+    "box": [
+      224,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-1",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R108"
+  },
+  {
+    "name": "tile-16-1",
+    "box": [
+      240,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-1",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R109"
+  },
+  {
+    "name": "tile-17-1",
+    "box": [
+      256,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-17-1",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R110"
+  },
+  {
+    "name": "tile-18-1",
+    "box": [
+      272,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-18-1",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R111"
+  },
+  {
+    "name": "tile-19-1",
+    "box": [
+      288,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-19-1",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R112"
+  },
+  {
+    "name": "tile-21-1",
+    "box": [
+      320,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-21-1",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R113"
+  },
+  {
+    "name": "tile-22-1",
+    "box": [
+      336,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-22-1",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R114"
+  },
+  {
+    "name": "tile-23-1",
+    "box": [
+      352,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-23-1",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R115"
+  },
+  {
+    "name": "tile-24-1",
+    "box": [
+      368,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-24-1",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R116"
+  },
+  {
+    "name": "tile-25-1",
+    "box": [
+      384,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-25-1",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R117"
+  },
+  {
+    "name": "tile-26-1",
+    "box": [
+      400,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-26-1",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R118"
+  },
+  {
+    "name": "tile-4-2",
+    "box": [
+      48,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-2",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R119"
+  },
+  {
+    "name": "tile-5-2",
+    "box": [
+      64,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-2",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R120"
+  },
+  {
+    "name": "tile-6-2",
+    "box": [
+      80,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-6-2",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R121"
+  },
+  {
+    "name": "tile-10-2",
+    "box": [
+      144,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R119. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "R122",
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R119",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-caves-source-5fcc7d50d594.png",
+      "box": [
+        48,
+        16,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-11-2",
+    "box": [
+      160,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R120. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "R123",
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R120",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-caves-source-5fcc7d50d594.png",
+      "box": [
+        64,
+        16,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-12-2",
+    "box": [
+      176,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R121. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "R124",
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R121",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-caves-source-5fcc7d50d594.png",
+      "box": [
+        80,
+        16,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-16-2",
+    "box": [
+      240,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-2",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R125"
+  },
+  {
+    "name": "tile-17-2",
+    "box": [
+      256,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-5-11.png",
+    "placement": null,
+    "reviewId": "R126",
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-5-11.png"
+  },
+  {
+    "name": "tile-18-2",
+    "box": [
+      272,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-6-11.png",
+    "placement": null,
+    "reviewId": "R127",
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-6-11.png"
+  },
+  {
+    "name": "tile-21-2",
+    "box": [
+      320,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-21-2",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R128"
+  },
+  {
+    "name": "tile-22-2",
+    "box": [
+      336,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-22-2",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R129"
+  },
+  {
+    "name": "tile-23-2",
+    "box": [
+      352,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-23-2",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R130"
+  },
+  {
+    "name": "tile-24-2",
+    "box": [
+      368,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-24-2",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R131"
+  },
+  {
+    "name": "tile-25-2",
+    "box": [
+      384,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-25-2",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R132"
+  },
+  {
+    "name": "tile-26-2",
+    "box": [
+      400,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-26-2",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R133"
+  },
+  {
+    "name": "tile-14-3",
+    "box": [
+      208,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-3",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R134"
+  },
+  {
+    "name": "tile-15-3",
+    "box": [
+      224,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-3",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R135"
+  },
+  {
+    "name": "tile-16-3",
+    "box": [
+      240,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-3",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R136"
+  },
+  {
+    "name": "tile-21-3",
+    "box": [
+      320,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-21-3",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R137"
+  },
+  {
+    "name": "tile-22-3",
+    "box": [
+      336,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-22-3",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R138"
+  },
+  {
+    "name": "tile-23-3",
+    "box": [
+      352,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-23-3",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R139"
+  },
+  {
+    "name": "tile-24-3",
+    "box": [
+      368,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-24-3",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R140"
+  },
+  {
+    "name": "tile-25-3",
+    "box": [
+      384,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-25-3",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R141"
+  },
+  {
+    "name": "tile-26-3",
+    "box": [
+      400,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-26-3",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R142"
+  },
+  {
+    "name": "tile-14-4",
+    "box": [
+      208,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-4",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R143"
+  },
+  {
+    "name": "tile-15-4",
+    "box": [
+      224,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R143. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "R144",
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R143",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-caves-source-5fcc7d50d594.png",
+      "box": [
+        208,
+        48,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-16-4",
+    "box": [
+      240,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R143. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "R145",
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R143",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-caves-source-5fcc7d50d594.png",
+      "box": [
+        208,
+        48,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-23-4",
+    "box": [
+      352,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-23-4",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R146"
+  },
+  {
+    "name": "tile-23-5",
+    "box": [
+      352,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: remastered-blacksmith-workbench-small-416.png",
+    "placement": null,
+    "reviewId": "R147",
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/remastered-blacksmith/remastered-blacksmith-workbench-small-416.png"
+  },
+  {
+    "name": "tile-24-5",
+    "box": [
+      368,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-24-5",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R148"
+  },
+  {
+    "name": "tile-25-5",
+    "box": [
+      384,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: remastered-blacksmith-workbench-small-416.png",
+    "placement": null,
+    "reviewId": "R149",
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/remastered-blacksmith/remastered-blacksmith-workbench-small-416.png"
+  },
+  {
+    "name": "tile-26-5",
+    "box": [
+      400,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-26-5",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R150"
+  },
+  {
+    "name": "tile-27-5",
+    "box": [
+      416,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-27-5",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R151"
+  },
+  {
+    "name": "tile-28-5",
+    "box": [
+      432,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-28-5",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R152"
+  },
+  {
+    "name": "tile-32-5",
+    "box": [
+      496,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-1-9.png",
+    "placement": null,
+    "reviewId": "R153",
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-1-9.png"
+  },
+  {
+    "name": "tile-23-6",
+    "box": [
+      352,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-23-6",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R154"
+  },
+  {
+    "name": "tile-24-6",
+    "box": [
+      368,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-24-6",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R155"
+  },
+  {
+    "name": "tile-25-6",
+    "box": [
+      384,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-25-6",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R156"
+  },
+  {
+    "name": "tile-26-6",
+    "box": [
+      400,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-26-6",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R157"
+  },
+  {
+    "name": "tile-27-6",
+    "box": [
+      416,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-27-6",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R158"
+  },
+  {
+    "name": "tile-28-6",
+    "box": [
+      432,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-28-6",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R159"
+  },
+  {
+    "name": "tile-32-6",
+    "box": [
+      496,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-1-10.png",
+    "placement": null,
+    "reviewId": "R160",
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-1-10.png"
+  },
+  {
+    "name": "tile-14-7",
+    "box": [
+      208,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-7",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R161"
+  },
+  {
+    "name": "tile-15-7",
+    "box": [
+      224,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-7",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R162"
+  },
+  {
+    "name": "tile-16-7",
+    "box": [
+      240,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-7",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R163"
+  },
+  {
+    "name": "tile-23-7",
+    "box": [
+      352,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-23-7",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R164"
+  },
+  {
+    "name": "tile-24-7",
+    "box": [
+      368,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-24-7",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R165"
+  },
+  {
+    "name": "tile-25-7",
+    "box": [
+      384,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-25-7",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R166"
+  },
+  {
+    "name": "tile-27-7",
+    "box": [
+      416,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-27-7",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R167"
+  },
+  {
+    "name": "tile-32-7",
+    "box": [
+      496,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-1-11.png",
+    "placement": null,
+    "reviewId": "R168",
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-1-11.png"
+  },
+  {
+    "name": "tile-4-8",
+    "box": [
+      48,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-8",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R169"
+  },
+  {
+    "name": "tile-5-8",
+    "box": [
+      64,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-8",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R170"
+  },
+  {
+    "name": "tile-6-8",
+    "box": [
+      80,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-6-8",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R171"
+  },
+  {
+    "name": "tile-10-8",
+    "box": [
+      144,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R169. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "R172",
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R169",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-caves-source-5fcc7d50d594.png",
+      "box": [
+        48,
+        112,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-11-8",
+    "box": [
+      160,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R170. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "R173",
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R170",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-caves-source-5fcc7d50d594.png",
+      "box": [
+        64,
+        112,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-12-8",
+    "box": [
+      176,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R171. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "R174",
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R171",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-caves-source-5fcc7d50d594.png",
+      "box": [
+        80,
+        112,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-16-8",
+    "box": [
+      240,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-8",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R175"
+  },
+  {
+    "name": "tile-23-8",
+    "box": [
+      352,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-23-8",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R176"
+  },
+  {
+    "name": "tile-24-8",
+    "box": [
+      368,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-24-8",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R177"
+  },
+  {
+    "name": "tile-25-8",
+    "box": [
+      384,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-25-8",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R178"
+  },
+  {
+    "name": "tile-26-8",
+    "box": [
+      400,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-26-8",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R179"
+  },
+  {
+    "name": "tile-27-8",
+    "box": [
+      416,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-27-8",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R180"
+  },
+  {
+    "name": "tile-28-8",
+    "box": [
+      432,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-28-8",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R181"
+  },
+  {
+    "name": "tile-32-8",
+    "box": [
+      496,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-1-12.png",
+    "placement": null,
+    "reviewId": "R182",
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-1-12.png"
+  },
+  {
+    "name": "tile-14-9",
+    "box": [
+      208,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-9",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R183"
+  },
+  {
+    "name": "tile-15-9",
+    "box": [
+      224,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-9",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R184"
+  },
+  {
+    "name": "tile-16-9",
+    "box": [
+      240,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-9",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R185"
+  },
+  {
+    "name": "tile-23-9",
+    "box": [
+      352,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-7-30.png",
+    "placement": null,
+    "reviewId": "R186",
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-7-30.png"
+  },
+  {
+    "name": "tile-24-9",
+    "box": [
+      368,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-8-30.png",
+    "placement": null,
+    "reviewId": "R187",
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-8-30.png"
+  },
+  {
+    "name": "tile-25-9",
+    "box": [
+      384,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-9-30.png",
+    "placement": null,
+    "reviewId": "R188",
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-9-30.png"
+  },
+  {
+    "name": "tile-32-9",
+    "box": [
+      496,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-1-13.png",
+    "placement": null,
+    "reviewId": "R189",
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-1-13.png"
+  },
+  {
+    "name": "tile-14-10",
+    "box": [
+      208,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-10",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R190"
+  },
+  {
+    "name": "tile-15-10",
+    "box": [
+      224,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R190. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "R191",
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R190",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-caves-source-5fcc7d50d594.png",
+      "box": [
+        208,
+        144,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-16-10",
+    "box": [
+      240,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R190. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "R192",
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R190",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-caves-source-5fcc7d50d594.png",
+      "box": [
+        208,
+        144,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-23-10",
+    "box": [
+      352,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-7-31.png",
+    "placement": null,
+    "reviewId": "R193",
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-7-31.png"
+  },
+  {
+    "name": "tile-24-10",
+    "box": [
+      368,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-8-31.png",
+    "placement": null,
+    "reviewId": "R194",
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-8-31.png"
+  },
+  {
+    "name": "tile-25-10",
+    "box": [
+      384,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-9-31.png",
+    "placement": null,
+    "reviewId": "R195",
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-9-31.png"
+  },
+  {
+    "name": "tile-32-10",
+    "box": [
+      496,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-1-14.png",
+    "placement": null,
+    "reviewId": "R196",
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-1-14.png"
+  },
+  {
+    "name": "tile-20-11",
+    "box": [
+      304,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-20-11",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R197"
+  },
+  {
+    "name": "tile-21-11",
+    "box": [
+      320,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-21-11",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R198"
+  },
+  {
+    "name": "tile-22-11",
+    "box": [
+      336,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-22-11",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R199"
+  },
+  {
+    "name": "tile-23-11",
+    "box": [
+      352,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-7-32.png",
+    "placement": null,
+    "reviewId": "R200",
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-7-32.png"
+  },
+  {
+    "name": "tile-24-11",
+    "box": [
+      368,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-8-32.png",
+    "placement": null,
+    "reviewId": "R201",
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-8-32.png"
+  },
+  {
+    "name": "tile-25-11",
+    "box": [
+      384,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-9-32.png",
+    "placement": null,
+    "reviewId": "R202",
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-9-32.png"
+  },
+  {
+    "name": "tile-26-11",
+    "box": [
+      400,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-26-11",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R203"
+  },
+  {
+    "name": "tile-32-11",
+    "box": [
+      496,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-1-15.png",
+    "placement": null,
+    "reviewId": "R204",
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-1-15.png"
+  },
+  {
+    "name": "tile-32-12",
+    "box": [
+      496,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-1-16.png",
+    "placement": null,
+    "reviewId": "R205",
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-1-16.png"
+  },
+  {
+    "name": "tile-11-13",
+    "box": [
+      160,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R143. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "R206",
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R143",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-caves-source-5fcc7d50d594.png",
+      "box": [
+        208,
+        48,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-12-13",
+    "box": [
+      176,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-13",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R207"
+  },
+  {
+    "name": "tile-13-13",
+    "box": [
+      192,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R143. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "R208",
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R143",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-caves-source-5fcc7d50d594.png",
+      "box": [
+        208,
+        48,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-14-13",
+    "box": [
+      208,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R190. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "R209",
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R190",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-caves-source-5fcc7d50d594.png",
+      "box": [
+        208,
+        144,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-15-13",
+    "box": [
+      224,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-13",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R210"
+  },
+  {
+    "name": "tile-16-13",
+    "box": [
+      240,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R190. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "R211",
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R190",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-caves-source-5fcc7d50d594.png",
+      "box": [
+        208,
+        144,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-1-14",
+    "box": [
+      0,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-1-14",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R212"
+  },
+  {
+    "name": "tile-2-14",
+    "box": [
+      16,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-2-14",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R213"
+  },
+  {
+    "name": "tile-3-14",
+    "box": [
+      32,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R213. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "R214",
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R213",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-caves-source-5fcc7d50d594.png",
+      "box": [
+        16,
+        208,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-4-14",
+    "box": [
+      48,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-14",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R215"
+  },
+  {
+    "name": "tile-5-14",
+    "box": [
+      64,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-14",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R216"
+  },
+  {
+    "name": "tile-6-14",
+    "box": [
+      80,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-6-14",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R217"
+  },
+  {
+    "name": "tile-7-14",
+    "box": [
+      96,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R217. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "R218",
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R217",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-caves-source-5fcc7d50d594.png",
+      "box": [
+        80,
+        208,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-8-14",
+    "box": [
+      112,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-8-14",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R219"
+  },
+  {
+    "name": "tile-9-14",
+    "box": [
+      128,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-9-14",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R220"
+  },
+  {
+    "name": "tile-10-14",
+    "box": [
+      144,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R220. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "R221",
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R220",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-caves-source-5fcc7d50d594.png",
+      "box": [
+        128,
+        208,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-11-14",
+    "box": [
+      160,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-14",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R222"
+  },
+  {
+    "name": "tile-12-14",
+    "box": [
+      176,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-14",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R223"
+  },
+  {
+    "name": "tile-13-14",
+    "box": [
+      192,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-14",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R224"
+  },
+  {
+    "name": "tile-14-14",
+    "box": [
+      208,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-14",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R225"
+  },
+  {
+    "name": "tile-15-14",
+    "box": [
+      224,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-14",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R226"
+  },
+  {
+    "name": "tile-16-14",
+    "box": [
+      240,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-14",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R227"
+  },
+  {
+    "name": "tile-1-15",
+    "box": [
+      0,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R99. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "R228",
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R99",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-caves-source-5fcc7d50d594.png",
+      "box": [
+        32,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-2-15",
+    "box": [
+      16,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R99. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "R229",
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R99",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-caves-source-5fcc7d50d594.png",
+      "box": [
+        32,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-3-15",
+    "box": [
+      32,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R99. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "R230",
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R99",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-caves-source-5fcc7d50d594.png",
+      "box": [
+        32,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-4-15",
+    "box": [
+      48,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R99. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "R231",
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R99",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-caves-source-5fcc7d50d594.png",
+      "box": [
+        32,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-5-15",
+    "box": [
+      64,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R102. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "R232",
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R102",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-caves-source-5fcc7d50d594.png",
+      "box": [
+        96,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-6-15",
+    "box": [
+      80,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R102. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "R233",
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R102",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-caves-source-5fcc7d50d594.png",
+      "box": [
+        96,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-7-15",
+    "box": [
+      96,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R102. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "R234",
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R102",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-caves-source-5fcc7d50d594.png",
+      "box": [
+        96,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-8-15",
+    "box": [
+      112,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R102. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "R235",
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R102",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-caves-source-5fcc7d50d594.png",
+      "box": [
+        96,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-9-15",
+    "box": [
+      128,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-8-31.png",
+    "placement": null,
+    "reviewId": "R236",
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-8-31.png"
+  },
+  {
+    "name": "tile-10-15",
+    "box": [
+      144,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-8-31.png",
+    "placement": null,
+    "reviewId": "R237",
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-8-31.png"
+  },
+  {
+    "name": "tile-11-15",
+    "box": [
+      160,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-15",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R238"
+  },
+  {
+    "name": "tile-12-15",
+    "box": [
+      176,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-15",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R239"
+  },
+  {
+    "name": "tile-13-15",
+    "box": [
+      192,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R125. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "R240",
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R125",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-caves-source-5fcc7d50d594.png",
+      "box": [
+        240,
+        16,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-14-15",
+    "box": [
+      208,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-15",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R241"
+  },
+  {
+    "name": "tile-15-15",
+    "box": [
+      224,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-15",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R242"
+  },
+  {
+    "name": "tile-16-15",
+    "box": [
+      240,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-15",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R243"
+  },
+  {
+    "name": "tile-27-15",
+    "box": [
+      416,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-27-15",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R244"
+  },
+  {
+    "name": "tile-1-16",
+    "box": [
+      0,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-1-16",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R245"
+  },
+  {
+    "name": "tile-2-16",
+    "box": [
+      16,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-2-16",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R246"
+  },
+  {
+    "name": "tile-3-16",
+    "box": [
+      32,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R246. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "R247",
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R246",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-caves-source-5fcc7d50d594.png",
+      "box": [
+        16,
+        240,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-4-16",
+    "box": [
+      48,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-16",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R248"
+  },
+  {
+    "name": "tile-5-16",
+    "box": [
+      64,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-16",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R249"
+  },
+  {
+    "name": "tile-6-16",
+    "box": [
+      80,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-6-16",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R250"
+  },
+  {
+    "name": "tile-7-16",
+    "box": [
+      96,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R250. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "R251",
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R250",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-caves-source-5fcc7d50d594.png",
+      "box": [
+        80,
+        240,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-8-16",
+    "box": [
+      112,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-8-16",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R252"
+  },
+  {
+    "name": "tile-9-16",
+    "box": [
+      128,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-9-16",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R253"
+  },
+  {
+    "name": "tile-10-16",
+    "box": [
+      144,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R253. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "R254",
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R253",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-caves-source-5fcc7d50d594.png",
+      "box": [
+        128,
+        240,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-11-16",
+    "box": [
+      160,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R134. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "R255",
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R134",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-caves-source-5fcc7d50d594.png",
+      "box": [
+        208,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-12-16",
+    "box": [
+      176,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R135. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "R256",
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R135",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-caves-source-5fcc7d50d594.png",
+      "box": [
+        224,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-13-16",
+    "box": [
+      192,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R136. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "R257",
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R136",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-caves-source-5fcc7d50d594.png",
+      "box": [
+        240,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-14-16",
+    "box": [
+      208,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R183. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "R258",
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R183",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-caves-source-5fcc7d50d594.png",
+      "box": [
+        208,
+        128,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-15-16",
+    "box": [
+      224,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R184. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "R259",
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R184",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-caves-source-5fcc7d50d594.png",
+      "box": [
+        224,
+        128,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-16-16",
+    "box": [
+      240,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R185. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "R260",
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R185",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-caves-source-5fcc7d50d594.png",
+      "box": [
+        240,
+        128,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-27-16",
+    "box": [
+      416,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-27-16",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R261"
+  },
+  {
+    "name": "tile-1-17",
+    "box": [
+      0,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-1-17",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R262"
+  },
+  {
+    "name": "tile-2-17",
+    "box": [
+      16,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-2-17",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R263"
+  },
+  {
+    "name": "tile-3-17",
+    "box": [
+      32,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-17",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R264"
+  },
+  {
+    "name": "tile-4-17",
+    "box": [
+      48,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-17",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R265"
+  },
+  {
+    "name": "tile-5-17",
+    "box": [
+      64,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-17",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R266"
+  },
+  {
+    "name": "tile-6-17",
+    "box": [
+      80,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-6-17",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R267"
+  },
+  {
+    "name": "tile-7-17",
+    "box": [
+      96,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-7-17",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R268"
+  },
+  {
+    "name": "tile-8-17",
+    "box": [
+      112,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-8-17",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R269"
+  },
+  {
+    "name": "tile-9-17",
+    "box": [
+      128,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-9-17",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R270"
+  },
+  {
+    "name": "tile-10-17",
+    "box": [
+      144,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-17",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R271"
+  },
+  {
+    "name": "tile-11-17",
+    "box": [
+      160,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-17",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R272"
+  },
+  {
+    "name": "tile-12-17",
+    "box": [
+      176,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-17",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R273"
+  },
+  {
+    "name": "tile-13-17",
+    "box": [
+      192,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-17",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R274"
+  },
+  {
+    "name": "tile-14-17",
+    "box": [
+      208,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-17",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R275"
+  },
+  {
+    "name": "tile-15-17",
+    "box": [
+      224,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-17",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R276"
+  },
+  {
+    "name": "tile-16-17",
+    "box": [
+      240,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-17",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R277"
+  },
+  {
+    "name": "tile-1-18",
+    "box": [
+      0,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-1-18",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R278"
+  },
+  {
+    "name": "tile-2-18",
+    "box": [
+      16,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-2-18",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R279"
+  },
+  {
+    "name": "tile-3-18",
+    "box": [
+      32,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-18",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R280"
+  },
+  {
+    "name": "tile-4-18",
+    "box": [
+      48,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-18",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R281"
+  },
+  {
+    "name": "tile-9-18",
+    "box": [
+      128,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-9-18",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R282"
+  },
+  {
+    "name": "tile-10-18",
+    "box": [
+      144,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-18",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R283"
+  },
+  {
+    "name": "tile-11-18",
+    "box": [
+      160,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-18",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R284"
+  },
+  {
+    "name": "tile-12-18",
+    "box": [
+      176,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-18",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R285"
+  },
+  {
+    "name": "tile-1-19",
+    "box": [
+      0,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-1-19",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R286"
+  },
+  {
+    "name": "tile-2-19",
+    "box": [
+      16,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-2-19",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R287"
+  },
+  {
+    "name": "tile-3-19",
+    "box": [
+      32,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-19",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R288"
+  },
+  {
+    "name": "tile-4-19",
+    "box": [
+      48,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-19",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R289"
+  },
+  {
+    "name": "tile-9-19",
+    "box": [
+      128,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-9-19",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R290"
+  },
+  {
+    "name": "tile-10-19",
+    "box": [
+      144,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-19",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R291"
+  },
+  {
+    "name": "tile-11-19",
+    "box": [
+      160,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-19",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R292"
+  },
+  {
+    "name": "tile-12-19",
+    "box": [
+      176,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-19",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R293"
+  },
+  {
+    "name": "tile-8-22",
+    "box": [
+      112,
+      336,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-11-14.png",
+    "placement": null,
+    "reviewId": "R294",
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-11-14.png"
+  },
+  {
+    "name": "tile-9-22",
+    "box": [
+      128,
+      336,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-12-14.png",
+    "placement": null,
+    "reviewId": "R295",
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-12-14.png"
+  },
+  {
+    "name": "tile-14-22",
+    "box": [
+      208,
+      336,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-22",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R296"
+  },
+  {
+    "name": "tile-15-22",
+    "box": [
+      224,
+      336,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-22",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R297"
+  },
+  {
+    "name": "tile-8-23",
+    "box": [
+      112,
+      352,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-11-15.png",
+    "placement": null,
+    "reviewId": "R298",
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-11-15.png"
+  },
+  {
+    "name": "tile-9-23",
+    "box": [
+      128,
+      352,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-12-15.png",
+    "placement": null,
+    "reviewId": "R299",
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-12-15.png"
+  },
+  {
+    "name": "tile-14-23",
+    "box": [
+      208,
+      352,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-23",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R300"
+  },
+  {
+    "name": "tile-15-23",
+    "box": [
+      224,
+      352,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-23",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R301"
+  },
+  {
+    "name": "tile-9-25",
+    "box": [
+      128,
+      384,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-9-25",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R302"
+  },
+  {
+    "name": "tile-10-25",
+    "box": [
+      144,
+      384,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-25",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R303"
+  },
+  {
+    "name": "tile-11-25",
+    "box": [
+      160,
+      384,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-25",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R304"
+  },
+  {
+    "name": "tile-12-25",
+    "box": [
+      176,
+      384,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-25",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R305"
+  },
+  {
+    "name": "tile-13-25",
+    "box": [
+      192,
+      384,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-25",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R306"
+  },
+  {
+    "name": "tile-14-25",
+    "box": [
+      208,
+      384,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-25",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R307"
+  },
+  {
+    "name": "tile-15-25",
+    "box": [
+      224,
+      384,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-25",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R308"
+  },
+  {
+    "name": "tile-16-25",
+    "box": [
+      240,
+      384,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-25",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R309"
+  },
+  {
+    "name": "tile-1-26",
+    "box": [
+      0,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-1-26",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R310"
+  },
+  {
+    "name": "tile-2-26",
+    "box": [
+      16,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-2-26",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R311"
+  },
+  {
+    "name": "tile-3-26",
+    "box": [
+      32,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-26",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R312"
+  },
+  {
+    "name": "tile-4-26",
+    "box": [
+      48,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-26",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R313"
+  },
+  {
+    "name": "tile-5-26",
+    "box": [
+      64,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-26",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R314"
+  },
+  {
+    "name": "tile-6-26",
+    "box": [
+      80,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-6-26",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R315"
+  },
+  {
+    "name": "tile-7-26",
+    "box": [
+      96,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-7-26",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R316"
+  },
+  {
+    "name": "tile-8-26",
+    "box": [
+      112,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-8-26",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R317"
+  },
+  {
+    "name": "tile-9-26",
+    "box": [
+      128,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-9-26",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R318"
+  },
+  {
+    "name": "tile-10-26",
+    "box": [
+      144,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-26",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R319"
+  },
+  {
+    "name": "tile-11-26",
+    "box": [
+      160,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-26",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R320"
+  },
+  {
+    "name": "tile-12-26",
+    "box": [
+      176,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-26",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R321"
+  },
+  {
+    "name": "tile-1-27",
+    "box": [
+      0,
+      416,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-1-27",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R322"
+  },
+  {
+    "name": "tile-2-27",
+    "box": [
+      16,
+      416,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-2-27",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R323"
+  },
+  {
+    "name": "tile-3-27",
+    "box": [
+      32,
+      416,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-27",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R324"
+  },
+  {
+    "name": "tile-4-27",
+    "box": [
+      48,
+      416,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-27",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R325"
+  },
+  {
+    "name": "tile-9-27",
+    "box": [
+      128,
+      416,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-9-27",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R326"
+  },
+  {
+    "name": "tile-10-27",
+    "box": [
+      144,
+      416,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-27",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R327"
+  },
+  {
+    "name": "tile-11-27",
+    "box": [
+      160,
+      416,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-27",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R328"
+  },
+  {
+    "name": "tile-12-27",
+    "box": [
+      176,
+      416,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-27",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R329"
+  },
+  {
+    "name": "tile-1-28",
+    "box": [
+      0,
+      432,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-1-28",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R330"
+  },
+  {
+    "name": "tile-2-28",
+    "box": [
+      16,
+      432,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-2-28",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R331"
+  },
+  {
+    "name": "tile-3-28",
+    "box": [
+      32,
+      432,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-28",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R332"
+  },
+  {
+    "name": "tile-4-28",
+    "box": [
+      48,
+      432,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-28",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R333"
+  },
+  {
+    "name": "tile-9-28",
+    "box": [
+      128,
+      432,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-9-28",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R334"
+  },
+  {
+    "name": "tile-10-28",
+    "box": [
+      144,
+      432,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-28",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R335"
+  },
+  {
+    "name": "tile-12-28",
+    "box": [
+      176,
+      432,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-28",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R336"
+  },
+  {
+    "name": "tile-13-28",
+    "box": [
+      192,
+      432,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-28",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R337"
+  },
+  {
+    "name": "tile-14-28",
+    "box": [
+      208,
+      432,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-28",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R338"
+  },
+  {
+    "name": "tile-15-28",
+    "box": [
+      224,
+      432,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-28",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R339"
+  },
+  {
+    "name": "tile-9-29",
+    "box": [
+      128,
+      448,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-9-29",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R340"
+  },
+  {
+    "name": "tile-10-29",
+    "box": [
+      144,
+      448,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-29",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R341"
+  },
+  {
+    "name": "tile-11-29",
+    "box": [
+      160,
+      448,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-29",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R342"
+  },
+  {
+    "name": "tile-12-29",
+    "box": [
+      176,
+      448,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-29",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R343"
+  },
+  {
+    "name": "tile-13-29",
+    "box": [
+      192,
+      448,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-29",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R344"
+  },
+  {
+    "name": "tile-14-29",
+    "box": [
+      208,
+      448,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-29",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R345"
+  },
+  {
+    "name": "tile-15-29",
+    "box": [
+      224,
+      448,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-29",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R346"
+  },
+  {
+    "name": "tile-9-30",
+    "box": [
+      128,
+      464,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-9-30",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R347"
+  },
+  {
+    "name": "tile-10-30",
+    "box": [
+      144,
+      464,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-30",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R348"
+  },
+  {
+    "name": "tile-11-30",
+    "box": [
+      160,
+      464,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R348. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "R349",
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R348",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-caves-source-5fcc7d50d594.png",
+      "box": [
+        144,
+        464,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-12-30",
+    "box": [
+      176,
+      464,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-30",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R350"
+  },
+  {
+    "name": "tile-13-30",
+    "box": [
+      192,
+      464,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-30",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R351"
+  },
+  {
+    "name": "tile-14-30",
+    "box": [
+      208,
+      464,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-30",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R352"
+  },
+  {
+    "name": "tile-15-30",
+    "box": [
+      224,
+      464,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R352. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "R353",
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R352",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-caves-source-5fcc7d50d594.png",
+      "box": [
+        208,
+        464,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-16-30",
+    "box": [
+      240,
+      464,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-30",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R354"
+  },
+  {
+    "name": "tile-9-31",
+    "box": [
+      128,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-6-1.png",
+    "placement": null,
+    "reviewId": "R355",
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-6-1.png"
+  },
+  {
+    "name": "tile-10-31",
+    "box": [
+      144,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-6-1.png",
+    "placement": null,
+    "reviewId": "R356",
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-6-1.png"
+  },
+  {
+    "name": "tile-11-31",
+    "box": [
+      160,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-6-1.png",
+    "placement": null,
+    "reviewId": "R357",
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-6-1.png"
+  },
+  {
+    "name": "tile-12-31",
+    "box": [
+      176,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-6-1.png",
+    "placement": null,
+    "reviewId": "R358",
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-6-1.png"
+  },
+  {
+    "name": "tile-13-31",
+    "box": [
+      192,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R101. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "R359",
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R101",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-caves-source-5fcc7d50d594.png",
+      "box": [
+        80,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-14-31",
+    "box": [
+      208,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R101. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "R360",
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R101",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-caves-source-5fcc7d50d594.png",
+      "box": [
+        80,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-15-31",
+    "box": [
+      224,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R101. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "R361",
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R101",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-caves-source-5fcc7d50d594.png",
+      "box": [
+        80,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-16-31",
+    "box": [
+      240,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R101. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "R362",
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R101",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-caves-source-5fcc7d50d594.png",
+      "box": [
+        80,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-9-32",
+    "box": [
+      128,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-9-32",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R363"
+  },
+  {
+    "name": "tile-10-32",
+    "box": [
+      144,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-32",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R364"
+  },
+  {
+    "name": "tile-11-32",
+    "box": [
+      160,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R364. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "R365",
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R364",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-caves-source-5fcc7d50d594.png",
+      "box": [
+        144,
+        496,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-12-32",
+    "box": [
+      176,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-32",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R366"
+  },
+  {
+    "name": "tile-13-32",
+    "box": [
+      192,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-32",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R367"
+  },
+  {
+    "name": "tile-14-32",
+    "box": [
+      208,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-32",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R368"
+  },
+  {
+    "name": "tile-15-32",
+    "box": [
+      224,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R368. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "R369",
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R368",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-caves-source-5fcc7d50d594.png",
+      "box": [
+        208,
+        496,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-16-32",
+    "box": [
+      240,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-32",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "R370"
+  }
+]

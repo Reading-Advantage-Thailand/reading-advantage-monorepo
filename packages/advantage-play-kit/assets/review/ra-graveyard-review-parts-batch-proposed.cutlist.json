@@ -1,0 +1,5874 @@
+[
+  {
+    "name": "rock-small-96-0",
+    "box": [
+      96,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: ra-cavern-review-parts-tile-17-4.png",
+    "placement": null,
+    "reviewId": "G01",
+    "reuseAsset": "top-down/native/rogue-adventure-world/processed/ra-cavern-review-parts/ra-cavern-review-parts-tile-17-4.png"
+  },
+  {
+    "name": "rock-small-96-16",
+    "box": [
+      96,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: ra-cavern-review-parts-tile-17-5.png",
+    "placement": null,
+    "reviewId": "G02",
+    "reuseAsset": "top-down/native/rogue-adventure-world/processed/ra-cavern-review-parts/ra-cavern-review-parts-tile-17-5.png"
+  },
+  {
+    "name": "rock-small-112-0",
+    "box": [
+      112,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: ra-cavern-review-parts-tile-18-4.png",
+    "placement": null,
+    "reviewId": "G03",
+    "reuseAsset": "top-down/native/rogue-adventure-world/processed/ra-cavern-review-parts/ra-cavern-review-parts-tile-18-4.png"
+  },
+  {
+    "name": "rock-small-112-16",
+    "box": [
+      112,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: ra-cavern-review-parts-tile-18-5.png",
+    "placement": null,
+    "reviewId": "G04",
+    "reuseAsset": "top-down/native/rogue-adventure-world/processed/ra-cavern-review-parts/ra-cavern-review-parts-tile-18-5.png"
+  },
+  {
+    "name": "rock-small-128-0",
+    "box": [
+      128,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: ra-cavern-review-parts-tile-19-4.png",
+    "placement": null,
+    "reviewId": "G05",
+    "reuseAsset": "top-down/native/rogue-adventure-world/processed/ra-cavern-review-parts/ra-cavern-review-parts-tile-19-4.png"
+  },
+  {
+    "name": "rock-small-128-16",
+    "box": [
+      128,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: ra-cavern-review-parts-tile-19-5.png",
+    "placement": null,
+    "reviewId": "G06",
+    "reuseAsset": "top-down/native/rogue-adventure-world/processed/ra-cavern-review-parts/ra-cavern-review-parts-tile-19-5.png"
+  },
+  {
+    "name": "rock-small-144-0",
+    "box": [
+      144,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: ra-cavern-review-parts-tile-20-4.png",
+    "placement": null,
+    "reviewId": "G07",
+    "reuseAsset": "top-down/native/rogue-adventure-world/processed/ra-cavern-review-parts/ra-cavern-review-parts-tile-20-4.png"
+  },
+  {
+    "name": "rock-small-144-16",
+    "box": [
+      144,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: ra-cavern-review-parts-tile-20-5.png",
+    "placement": null,
+    "reviewId": "G08",
+    "reuseAsset": "top-down/native/rogue-adventure-world/processed/ra-cavern-review-parts/ra-cavern-review-parts-tile-20-5.png"
+  },
+  {
+    "name": "rock-small-160-0",
+    "box": [
+      160,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: ra-cavern-review-parts-tile-21-4.png",
+    "placement": null,
+    "reviewId": "G09",
+    "reuseAsset": "top-down/native/rogue-adventure-world/processed/ra-cavern-review-parts/ra-cavern-review-parts-tile-21-4.png"
+  },
+  {
+    "name": "rock-small-160-16",
+    "box": [
+      160,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: ra-cavern-review-parts-tile-21-5.png",
+    "placement": null,
+    "reviewId": "G10",
+    "reuseAsset": "top-down/native/rogue-adventure-world/processed/ra-cavern-review-parts/ra-cavern-review-parts-tile-21-5.png"
+  },
+  {
+    "name": "rock-cluster-48",
+    "box": [
+      48,
+      32,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: ra-cavern-review-parts-rock-336-96.png",
+    "placement": null,
+    "reviewId": "G11",
+    "reuseAsset": "top-down/native/rogue-adventure-world/processed/ra-cavern-review-parts/ra-cavern-review-parts-rock-336-96.png"
+  },
+  {
+    "name": "rock-cluster-80",
+    "box": [
+      80,
+      32,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: ra-cavern-review-parts-rock-368-96.png",
+    "placement": null,
+    "reviewId": "G12",
+    "reuseAsset": "top-down/native/rogue-adventure-world/processed/ra-cavern-review-parts/ra-cavern-review-parts-rock-368-96.png"
+  },
+  {
+    "name": "rock-cluster-112",
+    "box": [
+      112,
+      32,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: ra-cavern-review-parts-rock-416-64.png",
+    "placement": null,
+    "reviewId": "G13",
+    "reuseAsset": "top-down/native/rogue-adventure-world/processed/ra-cavern-review-parts/ra-cavern-review-parts-rock-416-64.png"
+  },
+  {
+    "name": "rock-cluster-144",
+    "box": [
+      144,
+      32,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: ra-cavern-review-parts-rock-416-96.png",
+    "placement": null,
+    "reviewId": "G14",
+    "reuseAsset": "top-down/native/rogue-adventure-world/processed/ra-cavern-review-parts/ra-cavern-review-parts-rock-416-96.png"
+  },
+  {
+    "name": "stone-pit",
+    "box": [
+      0,
+      64,
+      48,
+      64
+    ],
+    "kind": "part",
+    "group": "stone-pit",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G15"
+  },
+  {
+    "name": "stone-pit-narrow",
+    "box": [
+      48,
+      80,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "stone-pit-narrow",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G16"
+  },
+  {
+    "name": "stone-edge-left",
+    "box": [
+      96,
+      64,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: ra-cavern-review-parts-rock-368-64.png",
+    "placement": null,
+    "reviewId": "G17",
+    "reuseAsset": "top-down/native/rogue-adventure-world/processed/ra-cavern-review-parts/ra-cavern-review-parts-rock-368-64.png"
+  },
+  {
+    "name": "stone-edge-right",
+    "box": [
+      128,
+      64,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: ra-cavern-review-parts-rock-336-64.png",
+    "placement": null,
+    "reviewId": "G18",
+    "reuseAsset": "top-down/native/rogue-adventure-world/processed/ra-cavern-review-parts/ra-cavern-review-parts-rock-336-64.png"
+  },
+  {
+    "name": "wood-fence-square",
+    "box": [
+      0,
+      144,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: ra-cavern-review-parts-fence-frame.png",
+    "placement": null,
+    "reviewId": "G19",
+    "reuseAsset": "top-down/native/rogue-adventure-world/processed/ra-cavern-review-parts/ra-cavern-review-parts-fence-frame.png"
+  },
+  {
+    "name": "stone-fence-square",
+    "box": [
+      0,
+      208,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "stone-fence-square",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G20"
+  },
+  {
+    "name": "grave-large-green",
+    "box": [
+      544,
+      128,
+      80,
+      64
+    ],
+    "kind": "part",
+    "group": "grave-large-green",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G21"
+  },
+  {
+    "name": "grave-large-left",
+    "box": [
+      432,
+      192,
+      48,
+      64
+    ],
+    "kind": "part",
+    "group": "grave-large-left",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G22"
+  },
+  {
+    "name": "grave-large-middle",
+    "box": [
+      480,
+      192,
+      48,
+      64
+    ],
+    "kind": "part",
+    "group": "grave-large-middle",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G23"
+  },
+  {
+    "name": "grave-large-right",
+    "box": [
+      544,
+      192,
+      80,
+      64
+    ],
+    "kind": "part",
+    "group": "grave-large-right",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G24"
+  },
+  {
+    "name": "gravestone-176-0",
+    "box": [
+      176,
+      0,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "gravestone-176-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G25"
+  },
+  {
+    "name": "gravestone-176-32",
+    "box": [
+      176,
+      32,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "gravestone-176-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G26"
+  },
+  {
+    "name": "gravestone-192-0",
+    "box": [
+      192,
+      0,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "gravestone-192-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G27"
+  },
+  {
+    "name": "gravestone-192-32",
+    "box": [
+      192,
+      32,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "gravestone-192-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G28"
+  },
+  {
+    "name": "gravestone-208-0",
+    "box": [
+      208,
+      0,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "gravestone-208-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G29"
+  },
+  {
+    "name": "gravestone-208-32",
+    "box": [
+      208,
+      32,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "gravestone-208-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G30"
+  },
+  {
+    "name": "gravestone-224-0",
+    "box": [
+      224,
+      0,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "gravestone-224-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G31"
+  },
+  {
+    "name": "gravestone-224-32",
+    "box": [
+      224,
+      32,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "gravestone-224-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G32"
+  },
+  {
+    "name": "gravestone-240-0",
+    "box": [
+      240,
+      0,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "gravestone-240-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G33"
+  },
+  {
+    "name": "gravestone-240-32",
+    "box": [
+      240,
+      32,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "gravestone-240-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G34"
+  },
+  {
+    "name": "gravestone-256-0",
+    "box": [
+      256,
+      0,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "gravestone-256-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G35"
+  },
+  {
+    "name": "gravestone-256-32",
+    "box": [
+      256,
+      32,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "gravestone-256-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G36"
+  },
+  {
+    "name": "gravestone-272-0",
+    "box": [
+      272,
+      0,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "gravestone-272-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G37"
+  },
+  {
+    "name": "gravestone-272-32",
+    "box": [
+      272,
+      32,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "gravestone-272-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G38"
+  },
+  {
+    "name": "gravestone-304-0",
+    "box": [
+      304,
+      0,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "gravestone-304-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G39"
+  },
+  {
+    "name": "gravestone-304-32",
+    "box": [
+      304,
+      32,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "gravestone-304-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G40"
+  },
+  {
+    "name": "gravestone-336-0",
+    "box": [
+      336,
+      0,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "gravestone-336-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G41"
+  },
+  {
+    "name": "gravestone-336-32",
+    "box": [
+      336,
+      32,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "gravestone-336-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G42"
+  },
+  {
+    "name": "gravestone-352-0",
+    "box": [
+      352,
+      0,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "gravestone-352-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G43"
+  },
+  {
+    "name": "gravestone-352-32",
+    "box": [
+      352,
+      32,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "gravestone-352-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G44"
+  },
+  {
+    "name": "gravestone-368-0",
+    "box": [
+      368,
+      0,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "gravestone-368-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G45"
+  },
+  {
+    "name": "gravestone-368-32",
+    "box": [
+      368,
+      32,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "gravestone-368-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G46"
+  },
+  {
+    "name": "gravestone-400-0",
+    "box": [
+      400,
+      0,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "gravestone-400-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G47"
+  },
+  {
+    "name": "gravestone-400-32",
+    "box": [
+      400,
+      32,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "gravestone-400-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G48"
+  },
+  {
+    "name": "grave-basin-176-64",
+    "box": [
+      176,
+      64,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "grave-basin-176-64",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G49"
+  },
+  {
+    "name": "grave-basin-176-96",
+    "box": [
+      176,
+      96,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "grave-basin-176-96",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G50"
+  },
+  {
+    "name": "grave-basin-208-64",
+    "box": [
+      208,
+      64,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "grave-basin-208-64",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G51"
+  },
+  {
+    "name": "grave-basin-208-96",
+    "box": [
+      208,
+      96,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "grave-basin-208-96",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G52"
+  },
+  {
+    "name": "grave-basin-240-64",
+    "box": [
+      240,
+      64,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "grave-basin-240-64",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G53"
+  },
+  {
+    "name": "grave-basin-240-96",
+    "box": [
+      240,
+      96,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "grave-basin-240-96",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G54"
+  },
+  {
+    "name": "grave-basin-272-64",
+    "box": [
+      272,
+      64,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "grave-basin-272-64",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G55"
+  },
+  {
+    "name": "grave-basin-272-96",
+    "box": [
+      272,
+      96,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "grave-basin-272-96",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G56"
+  },
+  {
+    "name": "grave-basin-304-64",
+    "box": [
+      304,
+      64,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "grave-basin-304-64",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G57"
+  },
+  {
+    "name": "grave-basin-304-96",
+    "box": [
+      304,
+      96,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "grave-basin-304-96",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G58"
+  },
+  {
+    "name": "gravestone-176-128",
+    "box": [
+      176,
+      128,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "gravestone-176-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G59"
+  },
+  {
+    "name": "gravestone-176-160",
+    "box": [
+      176,
+      160,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "gravestone-176-160",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G60"
+  },
+  {
+    "name": "gravestone-192-128",
+    "box": [
+      192,
+      128,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "gravestone-192-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G61"
+  },
+  {
+    "name": "gravestone-192-160",
+    "box": [
+      192,
+      160,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "gravestone-192-160",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G62"
+  },
+  {
+    "name": "gravestone-208-128",
+    "box": [
+      208,
+      128,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "gravestone-208-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G63"
+  },
+  {
+    "name": "gravestone-208-160",
+    "box": [
+      208,
+      160,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "gravestone-208-160",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G64"
+  },
+  {
+    "name": "gravestone-224-128",
+    "box": [
+      224,
+      128,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "gravestone-224-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G65"
+  },
+  {
+    "name": "gravestone-224-160",
+    "box": [
+      224,
+      160,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "gravestone-224-160",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G66"
+  },
+  {
+    "name": "gravestone-240-128",
+    "box": [
+      240,
+      128,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "gravestone-240-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G67"
+  },
+  {
+    "name": "gravestone-240-160",
+    "box": [
+      240,
+      160,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "gravestone-240-160",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G68"
+  },
+  {
+    "name": "gravestone-256-128",
+    "box": [
+      256,
+      128,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "gravestone-256-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G69"
+  },
+  {
+    "name": "gravestone-256-160",
+    "box": [
+      256,
+      160,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "gravestone-256-160",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G70"
+  },
+  {
+    "name": "gravestone-272-128",
+    "box": [
+      272,
+      128,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "gravestone-272-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G71"
+  },
+  {
+    "name": "gravestone-272-160",
+    "box": [
+      272,
+      160,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "gravestone-272-160",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G72"
+  },
+  {
+    "name": "gravestone-304-128",
+    "box": [
+      304,
+      128,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "gravestone-304-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G73"
+  },
+  {
+    "name": "gravestone-304-160",
+    "box": [
+      304,
+      160,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "gravestone-304-160",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G74"
+  },
+  {
+    "name": "gravestone-336-128",
+    "box": [
+      336,
+      128,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "gravestone-336-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G75"
+  },
+  {
+    "name": "gravestone-336-160",
+    "box": [
+      336,
+      160,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "gravestone-336-160",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G76"
+  },
+  {
+    "name": "gravestone-352-128",
+    "box": [
+      352,
+      128,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "gravestone-352-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G77"
+  },
+  {
+    "name": "gravestone-352-160",
+    "box": [
+      352,
+      160,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "gravestone-352-160",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G78"
+  },
+  {
+    "name": "gravestone-368-128",
+    "box": [
+      368,
+      128,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "gravestone-368-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G79"
+  },
+  {
+    "name": "gravestone-368-160",
+    "box": [
+      368,
+      160,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "gravestone-368-160",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G80"
+  },
+  {
+    "name": "gravestone-400-128",
+    "box": [
+      400,
+      128,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "gravestone-400-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G81"
+  },
+  {
+    "name": "gravestone-400-160",
+    "box": [
+      400,
+      160,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "gravestone-400-160",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G82"
+  },
+  {
+    "name": "grave-basin-176-192",
+    "box": [
+      176,
+      192,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "grave-basin-176-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G83"
+  },
+  {
+    "name": "grave-basin-176-224",
+    "box": [
+      176,
+      224,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "grave-basin-176-224",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G84"
+  },
+  {
+    "name": "grave-basin-208-192",
+    "box": [
+      208,
+      192,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "grave-basin-208-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G85"
+  },
+  {
+    "name": "grave-basin-208-224",
+    "box": [
+      208,
+      224,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "grave-basin-208-224",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G86"
+  },
+  {
+    "name": "grave-basin-240-192",
+    "box": [
+      240,
+      192,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "grave-basin-240-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G87"
+  },
+  {
+    "name": "grave-basin-240-224",
+    "box": [
+      240,
+      224,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "grave-basin-240-224",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G88"
+  },
+  {
+    "name": "grave-basin-272-192",
+    "box": [
+      272,
+      192,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "grave-basin-272-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G89"
+  },
+  {
+    "name": "grave-basin-272-224",
+    "box": [
+      272,
+      224,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "grave-basin-272-224",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G90"
+  },
+  {
+    "name": "grave-basin-304-192",
+    "box": [
+      304,
+      192,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "grave-basin-304-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G91"
+  },
+  {
+    "name": "grave-basin-304-224",
+    "box": [
+      304,
+      224,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "grave-basin-304-224",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "G92"
+  },
+  {
+    "name": "candle-small-16-256",
+    "box": [
+      16,
+      256,
+      64,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse W80. The complete crop is identical.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        16,
+        256,
+        16,
+        16
+      ],
+      [
+        32,
+        256,
+        16,
+        16
+      ],
+      [
+        48,
+        256,
+        16,
+        16
+      ],
+      [
+        64,
+        256,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "G93",
+    "reuseProposal": {
+      "sheetId": "W",
+      "reviewId": "W80",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-wasteland-source-5fa38575360a.png",
+      "box": [
+        144,
+        320,
+        64,
+        16
+      ],
+      "frameBoxes": [
+        [
+          144,
+          320,
+          16,
+          16
+        ],
+        [
+          160,
+          320,
+          16,
+          16
+        ],
+        [
+          176,
+          320,
+          16,
+          16
+        ],
+        [
+          192,
+          320,
+          16,
+          16
+        ]
+      ]
+    }
+  },
+  {
+    "name": "candle-small-96-256",
+    "box": [
+      96,
+      256,
+      64,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse W82. The complete crop is identical.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        96,
+        256,
+        16,
+        16
+      ],
+      [
+        112,
+        256,
+        16,
+        16
+      ],
+      [
+        128,
+        256,
+        16,
+        16
+      ],
+      [
+        144,
+        256,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "G94",
+    "reuseProposal": {
+      "sheetId": "W",
+      "reviewId": "W82",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-wasteland-source-5fa38575360a.png",
+      "box": [
+        144,
+        336,
+        64,
+        16
+      ],
+      "frameBoxes": [
+        [
+          144,
+          336,
+          16,
+          16
+        ],
+        [
+          160,
+          336,
+          16,
+          16
+        ],
+        [
+          176,
+          336,
+          16,
+          16
+        ],
+        [
+          192,
+          336,
+          16,
+          16
+        ]
+      ]
+    }
+  },
+  {
+    "name": "candle-small-16-272",
+    "box": [
+      16,
+      272,
+      64,
+      16
+    ],
+    "kind": "part",
+    "group": "candle-small-16-272",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        16,
+        272,
+        16,
+        16
+      ],
+      [
+        32,
+        272,
+        16,
+        16
+      ],
+      [
+        48,
+        272,
+        16,
+        16
+      ],
+      [
+        64,
+        272,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "G95"
+  },
+  {
+    "name": "candle-small-96-272",
+    "box": [
+      96,
+      272,
+      64,
+      16
+    ],
+    "kind": "part",
+    "group": "candle-small-96-272",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        96,
+        272,
+        16,
+        16
+      ],
+      [
+        112,
+        272,
+        16,
+        16
+      ],
+      [
+        128,
+        272,
+        16,
+        16
+      ],
+      [
+        144,
+        272,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "G96"
+  },
+  {
+    "name": "candle-small-16-288",
+    "box": [
+      16,
+      288,
+      64,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse W81. The complete crop is identical.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        16,
+        288,
+        16,
+        16
+      ],
+      [
+        32,
+        288,
+        16,
+        16
+      ],
+      [
+        48,
+        288,
+        16,
+        16
+      ],
+      [
+        64,
+        288,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "G97",
+    "reuseProposal": {
+      "sheetId": "W",
+      "reviewId": "W81",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-wasteland-source-5fa38575360a.png",
+      "box": [
+        224,
+        320,
+        64,
+        16
+      ],
+      "frameBoxes": [
+        [
+          224,
+          320,
+          16,
+          16
+        ],
+        [
+          240,
+          320,
+          16,
+          16
+        ],
+        [
+          256,
+          320,
+          16,
+          16
+        ],
+        [
+          272,
+          320,
+          16,
+          16
+        ]
+      ]
+    }
+  },
+  {
+    "name": "candle-small-96-288",
+    "box": [
+      96,
+      288,
+      64,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse W83. The complete crop is identical.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        96,
+        288,
+        16,
+        16
+      ],
+      [
+        112,
+        288,
+        16,
+        16
+      ],
+      [
+        128,
+        288,
+        16,
+        16
+      ],
+      [
+        144,
+        288,
+        16,
+        16
+      ]
+    ],
+    "reviewId": "G98",
+    "reuseProposal": {
+      "sheetId": "W",
+      "reviewId": "W83",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-wasteland-source-5fa38575360a.png",
+      "box": [
+        224,
+        336,
+        64,
+        16
+      ],
+      "frameBoxes": [
+        [
+          224,
+          336,
+          16,
+          16
+        ],
+        [
+          240,
+          336,
+          16,
+          16
+        ],
+        [
+          256,
+          336,
+          16,
+          16
+        ],
+        [
+          272,
+          336,
+          16,
+          16
+        ]
+      ]
+    }
+  },
+  {
+    "name": "grave-candle-animation-176-256",
+    "box": [
+      176,
+      256,
+      128,
+      32
+    ],
+    "kind": "part",
+    "group": "grave-candle-animation-176-256",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        176,
+        256,
+        32,
+        32
+      ],
+      [
+        208,
+        256,
+        32,
+        32
+      ],
+      [
+        240,
+        256,
+        32,
+        32
+      ],
+      [
+        272,
+        256,
+        32,
+        32
+      ]
+    ],
+    "reviewId": "G99"
+  },
+  {
+    "name": "grave-candle-animation-320-256",
+    "box": [
+      320,
+      256,
+      128,
+      32
+    ],
+    "kind": "part",
+    "group": "grave-candle-animation-320-256",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        320,
+        256,
+        32,
+        32
+      ],
+      [
+        352,
+        256,
+        32,
+        32
+      ],
+      [
+        384,
+        256,
+        32,
+        32
+      ],
+      [
+        416,
+        256,
+        32,
+        32
+      ]
+    ],
+    "reviewId": "G100"
+  },
+  {
+    "name": "grave-candle-animation-464-256",
+    "box": [
+      464,
+      256,
+      128,
+      32
+    ],
+    "kind": "part",
+    "group": "grave-candle-animation-464-256",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        464,
+        256,
+        32,
+        32
+      ],
+      [
+        496,
+        256,
+        32,
+        32
+      ],
+      [
+        528,
+        256,
+        32,
+        32
+      ],
+      [
+        560,
+        256,
+        32,
+        32
+      ]
+    ],
+    "reviewId": "G101"
+  },
+  {
+    "name": "grave-candle-animation-176-288",
+    "box": [
+      176,
+      288,
+      128,
+      32
+    ],
+    "kind": "part",
+    "group": "grave-candle-animation-176-288",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        176,
+        288,
+        32,
+        32
+      ],
+      [
+        208,
+        288,
+        32,
+        32
+      ],
+      [
+        240,
+        288,
+        32,
+        32
+      ],
+      [
+        272,
+        288,
+        32,
+        32
+      ]
+    ],
+    "reviewId": "G102"
+  },
+  {
+    "name": "grave-candle-animation-320-288",
+    "box": [
+      320,
+      288,
+      128,
+      32
+    ],
+    "kind": "part",
+    "group": "grave-candle-animation-320-288",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        320,
+        288,
+        32,
+        32
+      ],
+      [
+        352,
+        288,
+        32,
+        32
+      ],
+      [
+        384,
+        288,
+        32,
+        32
+      ],
+      [
+        416,
+        288,
+        32,
+        32
+      ]
+    ],
+    "reviewId": "G103"
+  },
+  {
+    "name": "grave-candle-animation-464-288",
+    "box": [
+      464,
+      288,
+      128,
+      32
+    ],
+    "kind": "part",
+    "group": "grave-candle-animation-464-288",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        464,
+        288,
+        32,
+        32
+      ],
+      [
+        496,
+        288,
+        32,
+        32
+      ],
+      [
+        528,
+        288,
+        32,
+        32
+      ],
+      [
+        560,
+        288,
+        32,
+        32
+      ]
+    ],
+    "reviewId": "G104"
+  },
+  {
+    "name": "candle-tall-16",
+    "box": [
+      16,
+      320,
+      64,
+      32
+    ],
+    "kind": "part",
+    "group": "candle-tall-16",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        16,
+        320,
+        16,
+        32
+      ],
+      [
+        32,
+        320,
+        16,
+        32
+      ],
+      [
+        48,
+        320,
+        16,
+        32
+      ],
+      [
+        64,
+        320,
+        16,
+        32
+      ]
+    ],
+    "reviewId": "G105"
+  },
+  {
+    "name": "candle-tall-96",
+    "box": [
+      96,
+      320,
+      64,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse W77. The complete crop is identical.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        96,
+        320,
+        16,
+        32
+      ],
+      [
+        112,
+        320,
+        16,
+        32
+      ],
+      [
+        128,
+        320,
+        16,
+        32
+      ],
+      [
+        144,
+        320,
+        16,
+        32
+      ]
+    ],
+    "reviewId": "G106",
+    "reuseProposal": {
+      "sheetId": "W",
+      "reviewId": "W77",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-wasteland-source-5fa38575360a.png",
+      "box": [
+        384,
+        320,
+        64,
+        32
+      ],
+      "frameBoxes": [
+        [
+          384,
+          320,
+          16,
+          32
+        ],
+        [
+          400,
+          320,
+          16,
+          32
+        ],
+        [
+          416,
+          320,
+          16,
+          32
+        ],
+        [
+          432,
+          320,
+          16,
+          32
+        ]
+      ]
+    }
+  },
+  {
+    "name": "candle-tall-176",
+    "box": [
+      176,
+      320,
+      64,
+      32
+    ],
+    "kind": "part",
+    "group": "candle-tall-176",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        176,
+        320,
+        16,
+        32
+      ],
+      [
+        192,
+        320,
+        16,
+        32
+      ],
+      [
+        208,
+        320,
+        16,
+        32
+      ],
+      [
+        224,
+        320,
+        16,
+        32
+      ]
+    ],
+    "reviewId": "G107"
+  },
+  {
+    "name": "candle-tall-256",
+    "box": [
+      256,
+      320,
+      64,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse W78. The complete crop is identical.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        256,
+        320,
+        16,
+        32
+      ],
+      [
+        272,
+        320,
+        16,
+        32
+      ],
+      [
+        288,
+        320,
+        16,
+        32
+      ],
+      [
+        304,
+        320,
+        16,
+        32
+      ]
+    ],
+    "reviewId": "G108",
+    "reuseProposal": {
+      "sheetId": "W",
+      "reviewId": "W78",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-wasteland-source-5fa38575360a.png",
+      "box": [
+        464,
+        320,
+        64,
+        32
+      ],
+      "frameBoxes": [
+        [
+          464,
+          320,
+          16,
+          32
+        ],
+        [
+          480,
+          320,
+          16,
+          32
+        ],
+        [
+          496,
+          320,
+          16,
+          32
+        ],
+        [
+          512,
+          320,
+          16,
+          32
+        ]
+      ]
+    }
+  },
+  {
+    "name": "candle-tall-336",
+    "box": [
+      336,
+      320,
+      64,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse W79. The complete crop is identical.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        336,
+        320,
+        16,
+        32
+      ],
+      [
+        352,
+        320,
+        16,
+        32
+      ],
+      [
+        368,
+        320,
+        16,
+        32
+      ],
+      [
+        384,
+        320,
+        16,
+        32
+      ]
+    ],
+    "reviewId": "G109",
+    "reuseProposal": {
+      "sheetId": "W",
+      "reviewId": "W79",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-wasteland-source-5fa38575360a.png",
+      "box": [
+        544,
+        320,
+        64,
+        32
+      ],
+      "frameBoxes": [
+        [
+          544,
+          320,
+          16,
+          32
+        ],
+        [
+          560,
+          320,
+          16,
+          32
+        ],
+        [
+          576,
+          320,
+          16,
+          32
+        ],
+        [
+          592,
+          320,
+          16,
+          32
+        ]
+      ]
+    }
+  },
+  {
+    "name": "candle-tall-416",
+    "box": [
+      416,
+      320,
+      64,
+      32
+    ],
+    "kind": "part",
+    "group": "candle-tall-416",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        416,
+        320,
+        16,
+        32
+      ],
+      [
+        432,
+        320,
+        16,
+        32
+      ],
+      [
+        448,
+        320,
+        16,
+        32
+      ],
+      [
+        464,
+        320,
+        16,
+        32
+      ]
+    ],
+    "reviewId": "G110"
+  },
+  {
+    "name": "tile-2-1",
+    "box": [
+      16,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: ra-cavern-review-parts-tile-18-3.png",
+    "placement": null,
+    "reviewId": "G111",
+    "reuseAsset": "top-down/native/rogue-adventure-world/processed/ra-cavern-review-parts/ra-cavern-review-parts-tile-18-3.png"
+  },
+  {
+    "name": "tile-3-1",
+    "box": [
+      32,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: ra-cavern-review-parts-tile-17-1.png",
+    "placement": null,
+    "reviewId": "G112",
+    "reuseAsset": "top-down/native/rogue-adventure-world/processed/ra-cavern-review-parts/ra-cavern-review-parts-tile-17-1.png"
+  },
+  {
+    "name": "tile-4-1",
+    "box": [
+      48,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: ra-cavern-review-parts-tile-18-1.png",
+    "placement": null,
+    "reviewId": "G113",
+    "reuseAsset": "top-down/native/rogue-adventure-world/processed/ra-cavern-review-parts/ra-cavern-review-parts-tile-18-1.png"
+  },
+  {
+    "name": "tile-5-1",
+    "box": [
+      64,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: ra-cavern-review-parts-tile-19-1.png",
+    "placement": null,
+    "reviewId": "G114",
+    "reuseAsset": "top-down/native/rogue-adventure-world/processed/ra-cavern-review-parts/ra-cavern-review-parts-tile-19-1.png"
+  },
+  {
+    "name": "tile-6-1",
+    "box": [
+      80,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: ra-cavern-review-parts-tile-20-1.png",
+    "placement": null,
+    "reviewId": "G115",
+    "reuseAsset": "top-down/native/rogue-adventure-world/processed/ra-cavern-review-parts/ra-cavern-review-parts-tile-20-1.png"
+  },
+  {
+    "name": "tile-28-1",
+    "box": [
+      432,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-28-1",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G116"
+  },
+  {
+    "name": "tile-29-1",
+    "box": [
+      448,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-29-1",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G117"
+  },
+  {
+    "name": "tile-30-1",
+    "box": [
+      464,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-30-1",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G118"
+  },
+  {
+    "name": "tile-31-1",
+    "box": [
+      480,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-31-1",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G119"
+  },
+  {
+    "name": "tile-32-1",
+    "box": [
+      496,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-32-1",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G120"
+  },
+  {
+    "name": "tile-33-1",
+    "box": [
+      512,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse G118. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "G121",
+    "reuseProposal": {
+      "sheetId": "G",
+      "reviewId": "G118",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-graveyard-source-647e57a87d25.png",
+      "box": [
+        464,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-34-1",
+    "box": [
+      528,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-34-1",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G122"
+  },
+  {
+    "name": "tile-35-1",
+    "box": [
+      544,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse G117. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "G123",
+    "reuseProposal": {
+      "sheetId": "G",
+      "reviewId": "G117",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-graveyard-source-647e57a87d25.png",
+      "box": [
+        448,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-36-1",
+    "box": [
+      560,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-36-1",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G124"
+  },
+  {
+    "name": "tile-37-1",
+    "box": [
+      576,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-37-1",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G125"
+  },
+  {
+    "name": "tile-38-1",
+    "box": [
+      592,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-38-1",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G126"
+  },
+  {
+    "name": "tile-39-1",
+    "box": [
+      608,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-39-1",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G127"
+  },
+  {
+    "name": "tile-1-2",
+    "box": [
+      0,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: ra-cavern-review-parts-tile-17-2.png",
+    "placement": null,
+    "reviewId": "G128",
+    "reuseAsset": "top-down/native/rogue-adventure-world/processed/ra-cavern-review-parts/ra-cavern-review-parts-tile-17-2.png"
+  },
+  {
+    "name": "tile-2-2",
+    "box": [
+      16,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: ra-cavern-review-parts-tile-18-2.png",
+    "placement": null,
+    "reviewId": "G129",
+    "reuseAsset": "top-down/native/rogue-adventure-world/processed/ra-cavern-review-parts/ra-cavern-review-parts-tile-18-2.png"
+  },
+  {
+    "name": "tile-3-2",
+    "box": [
+      32,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: ra-cavern-review-parts-tile-19-2.png",
+    "placement": null,
+    "reviewId": "G130",
+    "reuseAsset": "top-down/native/rogue-adventure-world/processed/ra-cavern-review-parts/ra-cavern-review-parts-tile-19-2.png"
+  },
+  {
+    "name": "tile-4-2",
+    "box": [
+      48,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: ra-cavern-review-parts-tile-20-2.png",
+    "placement": null,
+    "reviewId": "G131",
+    "reuseAsset": "top-down/native/rogue-adventure-world/processed/ra-cavern-review-parts/ra-cavern-review-parts-tile-20-2.png"
+  },
+  {
+    "name": "tile-5-2",
+    "box": [
+      64,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: ra-cavern-review-parts-tile-21-2.png",
+    "placement": null,
+    "reviewId": "G132",
+    "reuseAsset": "top-down/native/rogue-adventure-world/processed/ra-cavern-review-parts/ra-cavern-review-parts-tile-21-2.png"
+  },
+  {
+    "name": "tile-6-2",
+    "box": [
+      80,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: ra-cavern-review-parts-tile-19-3.png",
+    "placement": null,
+    "reviewId": "G133",
+    "reuseAsset": "top-down/native/rogue-adventure-world/processed/ra-cavern-review-parts/ra-cavern-review-parts-tile-19-3.png"
+  },
+  {
+    "name": "tile-28-2",
+    "box": [
+      432,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-28-2",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G134"
+  },
+  {
+    "name": "tile-29-2",
+    "box": [
+      448,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-29-2",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G135"
+  },
+  {
+    "name": "tile-30-2",
+    "box": [
+      464,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-30-2",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G136"
+  },
+  {
+    "name": "tile-31-2",
+    "box": [
+      480,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-31-2",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G137"
+  },
+  {
+    "name": "tile-32-2",
+    "box": [
+      496,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-32-2",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G138"
+  },
+  {
+    "name": "tile-33-2",
+    "box": [
+      512,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse G136. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "G139",
+    "reuseProposal": {
+      "sheetId": "G",
+      "reviewId": "G136",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-graveyard-source-647e57a87d25.png",
+      "box": [
+        464,
+        16,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-34-2",
+    "box": [
+      528,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-34-2",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G140"
+  },
+  {
+    "name": "tile-35-2",
+    "box": [
+      544,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse G135. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "G141",
+    "reuseProposal": {
+      "sheetId": "G",
+      "reviewId": "G135",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-graveyard-source-647e57a87d25.png",
+      "box": [
+        448,
+        16,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-36-2",
+    "box": [
+      560,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-36-2",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G142"
+  },
+  {
+    "name": "tile-37-2",
+    "box": [
+      576,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-37-2",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G143"
+  },
+  {
+    "name": "tile-38-2",
+    "box": [
+      592,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-38-2",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G144"
+  },
+  {
+    "name": "tile-39-2",
+    "box": [
+      608,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-39-2",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G145"
+  },
+  {
+    "name": "tile-1-3",
+    "box": [
+      0,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: ra-cavern-review-parts-tile-17-3.png",
+    "placement": null,
+    "reviewId": "G146",
+    "reuseAsset": "top-down/native/rogue-adventure-world/processed/ra-cavern-review-parts/ra-cavern-review-parts-tile-17-3.png"
+  },
+  {
+    "name": "tile-2-3",
+    "box": [
+      16,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: ra-cavern-review-parts-tile-21-1.png",
+    "placement": null,
+    "reviewId": "G147",
+    "reuseAsset": "top-down/native/rogue-adventure-world/processed/ra-cavern-review-parts/ra-cavern-review-parts-tile-21-1.png"
+  },
+  {
+    "name": "tile-3-3",
+    "box": [
+      32,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: ra-cavern-review-parts-tile-20-3.png",
+    "placement": null,
+    "reviewId": "G148",
+    "reuseAsset": "top-down/native/rogue-adventure-world/processed/ra-cavern-review-parts/ra-cavern-review-parts-tile-20-3.png"
+  },
+  {
+    "name": "tile-28-3",
+    "box": [
+      432,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-28-3",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G149"
+  },
+  {
+    "name": "tile-31-3",
+    "box": [
+      480,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse G149. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "G150",
+    "reuseProposal": {
+      "sheetId": "G",
+      "reviewId": "G149",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-graveyard-source-647e57a87d25.png",
+      "box": [
+        432,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-32-3",
+    "box": [
+      496,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse G117. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "G151",
+    "reuseProposal": {
+      "sheetId": "G",
+      "reviewId": "G117",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-graveyard-source-647e57a87d25.png",
+      "box": [
+        448,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-33-3",
+    "box": [
+      512,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-33-3",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G152"
+  },
+  {
+    "name": "tile-34-3",
+    "box": [
+      528,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse G122. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "G153",
+    "reuseProposal": {
+      "sheetId": "G",
+      "reviewId": "G122",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-graveyard-source-647e57a87d25.png",
+      "box": [
+        528,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-35-3",
+    "box": [
+      544,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse G117. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "G154",
+    "reuseProposal": {
+      "sheetId": "G",
+      "reviewId": "G117",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-graveyard-source-647e57a87d25.png",
+      "box": [
+        448,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-36-3",
+    "box": [
+      560,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-36-3",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G155"
+  },
+  {
+    "name": "tile-38-3",
+    "box": [
+      592,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-38-3",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G156"
+  },
+  {
+    "name": "tile-39-3",
+    "box": [
+      608,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse G127. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "G157",
+    "reuseProposal": {
+      "sheetId": "G",
+      "reviewId": "G127",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-graveyard-source-647e57a87d25.png",
+      "box": [
+        608,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-28-4",
+    "box": [
+      432,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-28-4",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G158"
+  },
+  {
+    "name": "tile-29-4",
+    "box": [
+      448,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse G117. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "G159",
+    "reuseProposal": {
+      "sheetId": "G",
+      "reviewId": "G117",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-graveyard-source-647e57a87d25.png",
+      "box": [
+        448,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-30-4",
+    "box": [
+      464,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse G118. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "G160",
+    "reuseProposal": {
+      "sheetId": "G",
+      "reviewId": "G118",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-graveyard-source-647e57a87d25.png",
+      "box": [
+        464,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-31-4",
+    "box": [
+      480,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-31-4",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G161"
+  },
+  {
+    "name": "tile-32-4",
+    "box": [
+      496,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse G135. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "G162",
+    "reuseProposal": {
+      "sheetId": "G",
+      "reviewId": "G135",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-graveyard-source-647e57a87d25.png",
+      "box": [
+        448,
+        16,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-33-4",
+    "box": [
+      512,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-33-4",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G163"
+  },
+  {
+    "name": "tile-34-4",
+    "box": [
+      528,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-34-4",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G164"
+  },
+  {
+    "name": "tile-35-4",
+    "box": [
+      544,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse G135. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "G165",
+    "reuseProposal": {
+      "sheetId": "G",
+      "reviewId": "G135",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-graveyard-source-647e57a87d25.png",
+      "box": [
+        448,
+        16,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-36-4",
+    "box": [
+      560,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-36-4",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G166"
+  },
+  {
+    "name": "tile-38-4",
+    "box": [
+      592,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-38-4",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G167"
+  },
+  {
+    "name": "tile-39-4",
+    "box": [
+      608,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse G145. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "G168",
+    "reuseProposal": {
+      "sheetId": "G",
+      "reviewId": "G145",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-graveyard-source-647e57a87d25.png",
+      "box": [
+        608,
+        16,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-4-5",
+    "box": [
+      48,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse W301. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "G169",
+    "reuseProposal": {
+      "sheetId": "W",
+      "reviewId": "W301",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-wasteland-source-5fa38575360a.png",
+      "box": [
+        64,
+        80,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-5-5",
+    "box": [
+      64,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: ra-cavern-review-parts-tile-4-15.png",
+    "placement": null,
+    "reviewId": "G170",
+    "reuseAsset": "top-down/native/rogue-adventure-world/processed/ra-cavern-review-parts/ra-cavern-review-parts-tile-4-15.png"
+  },
+  {
+    "name": "tile-6-5",
+    "box": [
+      80,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse W303. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "G171",
+    "reuseProposal": {
+      "sheetId": "W",
+      "reviewId": "W303",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-wasteland-source-5fa38575360a.png",
+      "box": [
+        96,
+        80,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-22-5",
+    "box": [
+      336,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-22-5",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G172"
+  },
+  {
+    "name": "tile-24-5",
+    "box": [
+      368,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: ra-crypt-review-parts-stone-altar-4-3.png",
+    "placement": null,
+    "reviewId": "G173",
+    "reuseAsset": "top-down/native/rogue-adventure-world/processed/ra-crypt-review-parts/ra-crypt-review-parts-stone-altar-4-3.png"
+  },
+  {
+    "name": "tile-25-5",
+    "box": [
+      384,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: ra-crypt-review-parts-stone-altar-4-5.png",
+    "placement": null,
+    "reviewId": "G174",
+    "reuseAsset": "top-down/native/rogue-adventure-world/processed/ra-crypt-review-parts/ra-crypt-review-parts-stone-altar-4-5.png"
+  },
+  {
+    "name": "tile-26-5",
+    "box": [
+      400,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-26-5",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G175"
+  },
+  {
+    "name": "tile-28-5",
+    "box": [
+      432,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-28-5",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G176"
+  },
+  {
+    "name": "tile-29-5",
+    "box": [
+      448,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse G135. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "G177",
+    "reuseProposal": {
+      "sheetId": "G",
+      "reviewId": "G135",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-graveyard-source-647e57a87d25.png",
+      "box": [
+        448,
+        16,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-30-5",
+    "box": [
+      464,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse G136. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "G178",
+    "reuseProposal": {
+      "sheetId": "G",
+      "reviewId": "G136",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-graveyard-source-647e57a87d25.png",
+      "box": [
+        464,
+        16,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-31-5",
+    "box": [
+      480,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-31-5",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G179"
+  },
+  {
+    "name": "tile-32-5",
+    "box": [
+      496,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-32-5",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G180"
+  },
+  {
+    "name": "tile-33-5",
+    "box": [
+      512,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-33-5",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G181"
+  },
+  {
+    "name": "tile-34-5",
+    "box": [
+      528,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-34-5",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G182"
+  },
+  {
+    "name": "tile-35-5",
+    "box": [
+      544,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-35-5",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G183"
+  },
+  {
+    "name": "tile-36-5",
+    "box": [
+      560,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-36-5",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G184"
+  },
+  {
+    "name": "tile-37-5",
+    "box": [
+      576,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse G125. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "G185",
+    "reuseProposal": {
+      "sheetId": "G",
+      "reviewId": "G125",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-graveyard-source-647e57a87d25.png",
+      "box": [
+        576,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-38-5",
+    "box": [
+      592,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-38-5",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G186"
+  },
+  {
+    "name": "tile-39-5",
+    "box": [
+      608,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-39-5",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G187"
+  },
+  {
+    "name": "tile-22-6",
+    "box": [
+      336,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-22-6",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G188"
+  },
+  {
+    "name": "tile-23-6",
+    "box": [
+      352,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-23-6",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G189"
+  },
+  {
+    "name": "tile-24-6",
+    "box": [
+      368,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-24-6",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G190"
+  },
+  {
+    "name": "tile-25-6",
+    "box": [
+      384,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-25-6",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G191"
+  },
+  {
+    "name": "tile-26-6",
+    "box": [
+      400,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-26-6",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G192"
+  },
+  {
+    "name": "tile-28-6",
+    "box": [
+      432,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-28-6",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G193"
+  },
+  {
+    "name": "tile-29-6",
+    "box": [
+      448,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse G183. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "G194",
+    "reuseProposal": {
+      "sheetId": "G",
+      "reviewId": "G183",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-graveyard-source-647e57a87d25.png",
+      "box": [
+        544,
+        64,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-30-6",
+    "box": [
+      464,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse G181. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "G195",
+    "reuseProposal": {
+      "sheetId": "G",
+      "reviewId": "G181",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-graveyard-source-647e57a87d25.png",
+      "box": [
+        512,
+        64,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-31-6",
+    "box": [
+      480,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-31-6",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G196"
+  },
+  {
+    "name": "tile-32-6",
+    "box": [
+      496,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-32-6",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G197"
+  },
+  {
+    "name": "tile-33-6",
+    "box": [
+      512,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-33-6",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G198"
+  },
+  {
+    "name": "tile-34-6",
+    "box": [
+      528,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-34-6",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G199"
+  },
+  {
+    "name": "tile-35-6",
+    "box": [
+      544,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-35-6",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G200"
+  },
+  {
+    "name": "tile-36-6",
+    "box": [
+      560,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-36-6",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G201"
+  },
+  {
+    "name": "tile-37-6",
+    "box": [
+      576,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse G143. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "G202",
+    "reuseProposal": {
+      "sheetId": "G",
+      "reviewId": "G143",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-graveyard-source-647e57a87d25.png",
+      "box": [
+        576,
+        16,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-38-6",
+    "box": [
+      592,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-38-6",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G203"
+  },
+  {
+    "name": "tile-39-6",
+    "box": [
+      608,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-39-6",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G204"
+  },
+  {
+    "name": "tile-7-7",
+    "box": [
+      96,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: ra-cavern-review-parts-tile-4-15.png",
+    "placement": null,
+    "reviewId": "G205",
+    "reuseAsset": "top-down/native/rogue-adventure-world/processed/ra-cavern-review-parts/ra-cavern-review-parts-tile-4-15.png"
+  },
+  {
+    "name": "tile-8-7",
+    "box": [
+      112,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse W129. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "G206",
+    "reuseProposal": {
+      "sheetId": "W",
+      "reviewId": "W129",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-wasteland-source-5fa38575360a.png",
+      "box": [
+        96,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-9-7",
+    "box": [
+      128,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse W130. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "G207",
+    "reuseProposal": {
+      "sheetId": "W",
+      "reviewId": "W130",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-wasteland-source-5fa38575360a.png",
+      "box": [
+        112,
+        0,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-10-7",
+    "box": [
+      144,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: ra-cavern-review-parts-tile-4-15.png",
+    "placement": null,
+    "reviewId": "G208",
+    "reuseAsset": "top-down/native/rogue-adventure-world/processed/ra-cavern-review-parts/ra-cavern-review-parts-tile-4-15.png"
+  },
+  {
+    "name": "tile-22-7",
+    "box": [
+      336,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-22-7",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G209"
+  },
+  {
+    "name": "tile-23-7",
+    "box": [
+      352,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-23-7",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G210"
+  },
+  {
+    "name": "tile-24-7",
+    "box": [
+      368,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse G209. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "G211",
+    "reuseProposal": {
+      "sheetId": "G",
+      "reviewId": "G209",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-graveyard-source-647e57a87d25.png",
+      "box": [
+        336,
+        96,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-25-7",
+    "box": [
+      384,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse G210. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "G212",
+    "reuseProposal": {
+      "sheetId": "G",
+      "reviewId": "G210",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-graveyard-source-647e57a87d25.png",
+      "box": [
+        352,
+        96,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-26-7",
+    "box": [
+      400,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-26-7",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G213"
+  },
+  {
+    "name": "tile-27-7",
+    "box": [
+      416,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-27-7",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G214"
+  },
+  {
+    "name": "tile-28-7",
+    "box": [
+      432,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-28-7",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G215"
+  },
+  {
+    "name": "tile-29-7",
+    "box": [
+      448,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse G200. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "G216",
+    "reuseProposal": {
+      "sheetId": "G",
+      "reviewId": "G200",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-graveyard-source-647e57a87d25.png",
+      "box": [
+        544,
+        80,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-30-7",
+    "box": [
+      464,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse G198. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "G217",
+    "reuseProposal": {
+      "sheetId": "G",
+      "reviewId": "G198",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-graveyard-source-647e57a87d25.png",
+      "box": [
+        512,
+        80,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-31-7",
+    "box": [
+      480,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-31-7",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G218"
+  },
+  {
+    "name": "tile-32-7",
+    "box": [
+      496,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse G183. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "G219",
+    "reuseProposal": {
+      "sheetId": "G",
+      "reviewId": "G183",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-graveyard-source-647e57a87d25.png",
+      "box": [
+        544,
+        64,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-33-7",
+    "box": [
+      512,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-33-7",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G220"
+  },
+  {
+    "name": "tile-34-7",
+    "box": [
+      528,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse G182. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "G221",
+    "reuseProposal": {
+      "sheetId": "G",
+      "reviewId": "G182",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-graveyard-source-647e57a87d25.png",
+      "box": [
+        528,
+        64,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-35-7",
+    "box": [
+      544,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse G183. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "G222",
+    "reuseProposal": {
+      "sheetId": "G",
+      "reviewId": "G183",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-graveyard-source-647e57a87d25.png",
+      "box": [
+        544,
+        64,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-36-7",
+    "box": [
+      560,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-36-7",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G223"
+  },
+  {
+    "name": "tile-38-7",
+    "box": [
+      592,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-38-7",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G224"
+  },
+  {
+    "name": "tile-39-7",
+    "box": [
+      608,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse G187. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "G225",
+    "reuseProposal": {
+      "sheetId": "G",
+      "reviewId": "G187",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-graveyard-source-647e57a87d25.png",
+      "box": [
+        608,
+        64,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-7-8",
+    "box": [
+      96,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: ra-cavern-review-parts-tile-1-16.png",
+    "placement": null,
+    "reviewId": "G226",
+    "reuseAsset": "top-down/native/rogue-adventure-world/processed/ra-cavern-review-parts/ra-cavern-review-parts-tile-1-16.png"
+  },
+  {
+    "name": "tile-8-8",
+    "box": [
+      112,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse W160. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "G227",
+    "reuseProposal": {
+      "sheetId": "W",
+      "reviewId": "W160",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-wasteland-source-5fa38575360a.png",
+      "box": [
+        96,
+        16,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-9-8",
+    "box": [
+      128,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse W161. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "G228",
+    "reuseProposal": {
+      "sheetId": "W",
+      "reviewId": "W161",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-wasteland-source-5fa38575360a.png",
+      "box": [
+        112,
+        16,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-10-8",
+    "box": [
+      144,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: ra-cavern-review-parts-tile-3-1.png",
+    "placement": null,
+    "reviewId": "G229",
+    "reuseAsset": "top-down/native/rogue-adventure-world/processed/ra-cavern-review-parts/ra-cavern-review-parts-tile-3-1.png"
+  },
+  {
+    "name": "tile-22-8",
+    "box": [
+      336,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-22-8",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G230"
+  },
+  {
+    "name": "tile-23-8",
+    "box": [
+      352,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-23-8",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G231"
+  },
+  {
+    "name": "tile-24-8",
+    "box": [
+      368,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-24-8",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G232"
+  },
+  {
+    "name": "tile-25-8",
+    "box": [
+      384,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-25-8",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G233"
+  },
+  {
+    "name": "tile-26-8",
+    "box": [
+      400,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-26-8",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G234"
+  },
+  {
+    "name": "tile-27-8",
+    "box": [
+      416,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-27-8",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G235"
+  },
+  {
+    "name": "tile-28-8",
+    "box": [
+      432,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-28-8",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G236"
+  },
+  {
+    "name": "tile-31-8",
+    "box": [
+      480,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse G236. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "G237",
+    "reuseProposal": {
+      "sheetId": "G",
+      "reviewId": "G236",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-graveyard-source-647e57a87d25.png",
+      "box": [
+        432,
+        112,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-32-8",
+    "box": [
+      496,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse G200. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "G238",
+    "reuseProposal": {
+      "sheetId": "G",
+      "reviewId": "G200",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-graveyard-source-647e57a87d25.png",
+      "box": [
+        544,
+        80,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-33-8",
+    "box": [
+      512,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-33-8",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G239"
+  },
+  {
+    "name": "tile-34-8",
+    "box": [
+      528,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-34-8",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G240"
+  },
+  {
+    "name": "tile-35-8",
+    "box": [
+      544,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse G200. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "G241",
+    "reuseProposal": {
+      "sheetId": "G",
+      "reviewId": "G200",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-graveyard-source-647e57a87d25.png",
+      "box": [
+        544,
+        80,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-36-8",
+    "box": [
+      560,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-36-8",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G242"
+  },
+  {
+    "name": "tile-38-8",
+    "box": [
+      592,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-38-8",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G243"
+  },
+  {
+    "name": "tile-39-8",
+    "box": [
+      608,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse G204. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "G244",
+    "reuseProposal": {
+      "sheetId": "G",
+      "reviewId": "G204",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-graveyard-source-647e57a87d25.png",
+      "box": [
+        608,
+        80,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-28-9",
+    "box": [
+      432,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-28-9",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G245"
+  },
+  {
+    "name": "tile-29-9",
+    "box": [
+      448,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse G183. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "G246",
+    "reuseProposal": {
+      "sheetId": "G",
+      "reviewId": "G183",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-graveyard-source-647e57a87d25.png",
+      "box": [
+        544,
+        64,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-30-9",
+    "box": [
+      464,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse G181. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "G247",
+    "reuseProposal": {
+      "sheetId": "G",
+      "reviewId": "G181",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-graveyard-source-647e57a87d25.png",
+      "box": [
+        512,
+        64,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-31-9",
+    "box": [
+      480,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-31-9",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G248"
+  },
+  {
+    "name": "tile-4-10",
+    "box": [
+      48,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: ra-cavern-review-parts-tile-4-29.png",
+    "placement": null,
+    "reviewId": "G249",
+    "reuseAsset": "top-down/native/rogue-adventure-world/processed/ra-cavern-review-parts/ra-cavern-review-parts-tile-4-29.png"
+  },
+  {
+    "name": "tile-5-10",
+    "box": [
+      64,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: ra-cavern-review-parts-tile-5-29.png",
+    "placement": null,
+    "reviewId": "G250",
+    "reuseAsset": "top-down/native/rogue-adventure-world/processed/ra-cavern-review-parts/ra-cavern-review-parts-tile-5-29.png"
+  },
+  {
+    "name": "tile-7-10",
+    "box": [
+      96,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-7-10",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G251"
+  },
+  {
+    "name": "tile-8-10",
+    "box": [
+      112,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-8-10",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G252"
+  },
+  {
+    "name": "tile-9-10",
+    "box": [
+      128,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-9-10",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G253"
+  },
+  {
+    "name": "tile-10-10",
+    "box": [
+      144,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-10",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G254"
+  },
+  {
+    "name": "tile-28-10",
+    "box": [
+      432,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-28-10",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G255"
+  },
+  {
+    "name": "tile-29-10",
+    "box": [
+      448,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse G200. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "G256",
+    "reuseProposal": {
+      "sheetId": "G",
+      "reviewId": "G200",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-graveyard-source-647e57a87d25.png",
+      "box": [
+        544,
+        80,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-30-10",
+    "box": [
+      464,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse G198. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "G257",
+    "reuseProposal": {
+      "sheetId": "G",
+      "reviewId": "G198",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-graveyard-source-647e57a87d25.png",
+      "box": [
+        512,
+        80,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-31-10",
+    "box": [
+      480,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-31-10",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G258"
+  },
+  {
+    "name": "tile-4-11",
+    "box": [
+      48,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: ra-cavern-review-parts-tile-4-30.png",
+    "placement": null,
+    "reviewId": "G259",
+    "reuseAsset": "top-down/native/rogue-adventure-world/processed/ra-cavern-review-parts/ra-cavern-review-parts-tile-4-30.png"
+  },
+  {
+    "name": "tile-5-11",
+    "box": [
+      64,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: ra-cavern-review-parts-tile-5-30.png",
+    "placement": null,
+    "reviewId": "G260",
+    "reuseAsset": "top-down/native/rogue-adventure-world/processed/ra-cavern-review-parts/ra-cavern-review-parts-tile-5-30.png"
+  },
+  {
+    "name": "tile-7-11",
+    "box": [
+      96,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-7-11",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G261"
+  },
+  {
+    "name": "tile-8-11",
+    "box": [
+      112,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-8-11",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G262"
+  },
+  {
+    "name": "tile-9-11",
+    "box": [
+      128,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-9-11",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G263"
+  },
+  {
+    "name": "tile-29-11",
+    "box": [
+      448,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-29-11",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G264"
+  },
+  {
+    "name": "tile-32-11",
+    "box": [
+      496,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-32-11",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G265"
+  },
+  {
+    "name": "tile-4-12",
+    "box": [
+      48,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: ra-cavern-review-parts-tile-4-31.png",
+    "placement": null,
+    "reviewId": "G266",
+    "reuseAsset": "top-down/native/rogue-adventure-world/processed/ra-cavern-review-parts/ra-cavern-review-parts-tile-4-31.png"
+  },
+  {
+    "name": "tile-7-12",
+    "box": [
+      96,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-7-12",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G267"
+  },
+  {
+    "name": "tile-8-12",
+    "box": [
+      112,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-8-12",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G268"
+  },
+  {
+    "name": "tile-9-12",
+    "box": [
+      128,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-9-12",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G269"
+  },
+  {
+    "name": "tile-29-12",
+    "box": [
+      448,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-29-12",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G270"
+  },
+  {
+    "name": "tile-32-12",
+    "box": [
+      496,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-32-12",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G271"
+  },
+  {
+    "name": "tile-22-13",
+    "box": [
+      336,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-22-13",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G272"
+  },
+  {
+    "name": "tile-24-13",
+    "box": [
+      368,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: ra-crypt-review-parts-moss-altar-4-3.png",
+    "placement": null,
+    "reviewId": "G273",
+    "reuseAsset": "top-down/native/rogue-adventure-world/processed/ra-crypt-review-parts/ra-crypt-review-parts-moss-altar-4-3.png"
+  },
+  {
+    "name": "tile-25-13",
+    "box": [
+      384,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: ra-crypt-review-parts-moss-altar-4-5.png",
+    "placement": null,
+    "reviewId": "G274",
+    "reuseAsset": "top-down/native/rogue-adventure-world/processed/ra-crypt-review-parts/ra-crypt-review-parts-moss-altar-4-5.png"
+  },
+  {
+    "name": "tile-26-13",
+    "box": [
+      400,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-26-13",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G275"
+  },
+  {
+    "name": "tile-4-14",
+    "box": [
+      48,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-14",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G276"
+  },
+  {
+    "name": "tile-5-14",
+    "box": [
+      64,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-14",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G277"
+  },
+  {
+    "name": "tile-7-14",
+    "box": [
+      96,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-7-14",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G278"
+  },
+  {
+    "name": "tile-8-14",
+    "box": [
+      112,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-8-14",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G279"
+  },
+  {
+    "name": "tile-9-14",
+    "box": [
+      128,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-9-14",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G280"
+  },
+  {
+    "name": "tile-10-14",
+    "box": [
+      144,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-14",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G281"
+  },
+  {
+    "name": "tile-22-14",
+    "box": [
+      336,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-22-14",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G282"
+  },
+  {
+    "name": "tile-23-14",
+    "box": [
+      352,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-23-14",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G283"
+  },
+  {
+    "name": "tile-24-14",
+    "box": [
+      368,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-24-14",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G284"
+  },
+  {
+    "name": "tile-25-14",
+    "box": [
+      384,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-25-14",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G285"
+  },
+  {
+    "name": "tile-26-14",
+    "box": [
+      400,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-26-14",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G286"
+  },
+  {
+    "name": "tile-4-15",
+    "box": [
+      48,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-15",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G287"
+  },
+  {
+    "name": "tile-5-15",
+    "box": [
+      64,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-15",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G288"
+  },
+  {
+    "name": "tile-7-15",
+    "box": [
+      96,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-7-15",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G289"
+  },
+  {
+    "name": "tile-8-15",
+    "box": [
+      112,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-8-15",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G290"
+  },
+  {
+    "name": "tile-9-15",
+    "box": [
+      128,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-9-15",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G291"
+  },
+  {
+    "name": "tile-22-15",
+    "box": [
+      336,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-22-15",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G292"
+  },
+  {
+    "name": "tile-23-15",
+    "box": [
+      352,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-23-15",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G293"
+  },
+  {
+    "name": "tile-24-15",
+    "box": [
+      368,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse G292. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "G294",
+    "reuseProposal": {
+      "sheetId": "G",
+      "reviewId": "G292",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-graveyard-source-647e57a87d25.png",
+      "box": [
+        336,
+        224,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-25-15",
+    "box": [
+      384,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse G293. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "G295",
+    "reuseProposal": {
+      "sheetId": "G",
+      "reviewId": "G293",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-graveyard-source-647e57a87d25.png",
+      "box": [
+        352,
+        224,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-26-15",
+    "box": [
+      400,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-26-15",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G296"
+  },
+  {
+    "name": "tile-27-15",
+    "box": [
+      416,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-27-15",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G297"
+  },
+  {
+    "name": "tile-4-16",
+    "box": [
+      48,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse G277. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "G298",
+    "reuseProposal": {
+      "sheetId": "G",
+      "reviewId": "G277",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-graveyard-source-647e57a87d25.png",
+      "box": [
+        64,
+        208,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-7-16",
+    "box": [
+      96,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-7-16",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G299"
+  },
+  {
+    "name": "tile-8-16",
+    "box": [
+      112,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-8-16",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G300"
+  },
+  {
+    "name": "tile-9-16",
+    "box": [
+      128,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-9-16",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G301"
+  },
+  {
+    "name": "tile-22-16",
+    "box": [
+      336,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-22-16",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G302"
+  },
+  {
+    "name": "tile-23-16",
+    "box": [
+      352,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-23-16",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G303"
+  },
+  {
+    "name": "tile-24-16",
+    "box": [
+      368,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-24-16",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G304"
+  },
+  {
+    "name": "tile-25-16",
+    "box": [
+      384,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-25-16",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G305"
+  },
+  {
+    "name": "tile-26-16",
+    "box": [
+      400,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-26-16",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G306"
+  },
+  {
+    "name": "tile-27-16",
+    "box": [
+      416,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-27-16",
+    "frame": null,
+    "notes": "Modular terrain or construction tile. Use the source view for placement.",
+    "placement": null,
+    "reviewId": "G307"
+  }
+]

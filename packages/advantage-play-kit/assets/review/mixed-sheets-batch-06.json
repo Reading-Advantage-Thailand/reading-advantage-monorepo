@@ -1,0 +1,4040 @@
+[
+  {
+    "id": "W",
+    "title": "Blacksmith workshop",
+    "slug": "blacksmith-workshop",
+    "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fd-blacksmith-source-fb77a0b39578.png",
+    "entries": [
+      {
+        "name": "workshop-building",
+        "box": [
+          0,
+          0,
+          128,
+          112
+        ],
+        "kind": "structure",
+        "group": "workshop-building",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null,
+        "reviewId": "W01"
+      },
+      {
+        "name": "roof-awning-128-0",
+        "box": [
+          128,
+          0,
+          24,
+          48
+        ],
+        "kind": "structure",
+        "group": "roof-awning-128-0",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null,
+        "reviewId": "W02"
+      },
+      {
+        "name": "roof-awning-128-64",
+        "box": [
+          128,
+          64,
+          24,
+          48
+        ],
+        "kind": "structure",
+        "group": "roof-awning-128-64",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null,
+        "reviewId": "W03"
+      },
+      {
+        "name": "floor-edge-16-part-1",
+        "box": [
+          160,
+          16,
+          16,
+          16
+        ],
+        "kind": "part",
+        "group": "floor-edge-16-part-1",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null,
+        "reviewId": "W04a"
+      },
+      {
+        "name": "floor-edge-16-part-2",
+        "box": [
+          160,
+          32,
+          16,
+          16
+        ],
+        "kind": "part",
+        "group": "floor-edge-16-part-2",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null,
+        "reviewId": "W04b"
+      },
+      {
+        "name": "floor-edge-16-part-3",
+        "box": [
+          160,
+          48,
+          16,
+          32
+        ],
+        "kind": "part",
+        "group": "floor-edge-16-part-3",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null,
+        "reviewId": "W04c"
+      },
+      {
+        "name": "floor-edge-16-part-4",
+        "box": [
+          160,
+          80,
+          16,
+          32
+        ],
+        "kind": "part",
+        "group": "floor-edge-16-part-4",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null,
+        "reviewId": "W04d"
+      },
+      {
+        "name": "floor-edge-128-part-1",
+        "box": [
+          160,
+          128,
+          16,
+          16
+        ],
+        "kind": "part",
+        "group": "floor-edge-128-part-1",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null,
+        "reviewId": "W05a"
+      },
+      {
+        "name": "floor-edge-128-part-2",
+        "box": [
+          160,
+          144,
+          16,
+          16
+        ],
+        "kind": "part",
+        "group": "floor-edge-128-part-2",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null,
+        "reviewId": "W05b"
+      },
+      {
+        "name": "floor-edge-128-part-3",
+        "box": [
+          160,
+          160,
+          16,
+          32
+        ],
+        "kind": "part",
+        "group": "floor-edge-128-part-3",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null,
+        "reviewId": "W05c"
+      },
+      {
+        "name": "floor-edge-128-part-4",
+        "box": [
+          160,
+          192,
+          16,
+          32
+        ],
+        "kind": "part",
+        "group": "floor-edge-128-part-4",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null,
+        "reviewId": "W05d"
+      },
+      {
+        "name": "wood-floor-0-part-1",
+        "box": [
+          176,
+          0,
+          16,
+          16
+        ],
+        "kind": "part",
+        "group": "wood-floor-0-part-1",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null,
+        "reviewId": "W06a"
+      },
+      {
+        "name": "wood-floor-0-part-2",
+        "box": [
+          192,
+          0,
+          16,
+          16
+        ],
+        "kind": "part",
+        "group": "wood-floor-0-part-2",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null,
+        "reviewId": "W06b"
+      },
+      {
+        "name": "wood-floor-0-part-3",
+        "box": [
+          208,
+          0,
+          16,
+          16
+        ],
+        "kind": "part",
+        "group": "wood-floor-0-part-3",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null,
+        "reviewId": "W06c"
+      },
+      {
+        "name": "wood-floor-0-part-4",
+        "box": [
+          224,
+          0,
+          16,
+          16
+        ],
+        "kind": "part",
+        "group": "wood-floor-0-part-4",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null,
+        "reviewId": "W06d"
+      },
+      {
+        "name": "wood-floor-0-part-5",
+        "box": [
+          240,
+          0,
+          16,
+          16
+        ],
+        "kind": "part",
+        "group": "wood-floor-0-part-5",
+        "frame": null,
+        "notes": "Preserve the complete piece.",
+        "placement": null,
+        "reviewId": "W06e"
+      },
+      {
+        "name": "wood-floor-112-part-1",
+        "box": [
+          176,
+          112,
+          16,
+          16
+        ],
+        "kind": "part",
+        "group": "unused",
+        "frame": null,
+        "notes": "Do not use. Reuse W06a. The complete crop is identical.",
+        "placement": null,
+        "reviewId": "W07a"
+      },
+      {
+        "name": "wood-floor-112-part-2",
+        "box": [
+          192,
+          112,
+          16,
+          16
+        ],
+        "kind": "part",
+        "group": "unused",
+        "frame": null,
+        "notes": "Do not use. Reuse W06b. The complete crop is identical.",
+        "placement": null,
+        "reviewId": "W07b"
+      },
+      {
+        "name": "wood-floor-112-part-3",
+        "box": [
+          208,
+          112,
+          16,
+          16
+        ],
+        "kind": "part",
+        "group": "unused",
+        "frame": null,
+        "notes": "Do not use. Reuse W06c. The complete crop is identical.",
+        "placement": null,
+        "reviewId": "W07c"
+      },
+      {
+        "name": "wood-floor-112-part-4",
+        "box": [
+          224,
+          112,
+          16,
+          16
+        ],
+        "kind": "part",
+        "group": "unused",
+        "frame": null,
+        "notes": "Do not use. Reuse W06d. The complete crop is identical.",
+        "placement": null,
+        "reviewId": "W07d"
+      },
+      {
+        "name": "wood-floor-112-part-5",
+        "box": [
+          240,
+          112,
+          16,
+          16
+        ],
+        "kind": "part",
+        "group": "unused",
+        "frame": null,
+        "notes": "Do not use. Reuse W06e. The complete crop is identical.",
+        "placement": null,
+        "reviewId": "W07e"
+      },
+      {
+        "name": "floor-panel-16",
+        "box": [
+          176,
+          16,
+          80,
+          96
+        ],
+        "kind": "part",
+        "group": "floor-panel-16",
+        "frame": null,
+        "notes": "Preserve the floor panel and its border.",
+        "placement": null,
+        "reviewId": "W08"
+      },
+      {
+        "name": "floor-panel-128",
+        "box": [
+          176,
+          128,
+          80,
+          96
+        ],
+        "kind": "part",
+        "group": "floor-panel-128",
+        "frame": null,
+        "notes": "Preserve the floor panel and its border.",
+        "placement": null,
+        "reviewId": "W09"
+      },
+      {
+        "name": "workbench-part-0-112",
+        "box": [
+          0,
+          112,
+          16,
+          16
+        ],
+        "kind": "part",
+        "group": "workbench-part-0-112",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null,
+        "reviewId": "W10"
+      },
+      {
+        "name": "workbench-part-16-112",
+        "box": [
+          16,
+          112,
+          16,
+          16
+        ],
+        "kind": "part",
+        "group": "workbench-part-16-112",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null,
+        "reviewId": "W11"
+      },
+      {
+        "name": "workbench-part-32-112",
+        "box": [
+          32,
+          112,
+          16,
+          16
+        ],
+        "kind": "part",
+        "group": "workbench-part-32-112",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null,
+        "reviewId": "W12"
+      },
+      {
+        "name": "workbench-part-48-112",
+        "box": [
+          48,
+          112,
+          16,
+          16
+        ],
+        "kind": "part",
+        "group": "workbench-part-48-112",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null,
+        "reviewId": "W13"
+      },
+      {
+        "name": "low-workbench",
+        "box": [
+          0,
+          128,
+          32,
+          16
+        ],
+        "kind": "prop",
+        "group": "low-workbench",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null,
+        "reviewId": "W14"
+      },
+      {
+        "name": "large-workbench",
+        "box": [
+          32,
+          128,
+          32,
+          32
+        ],
+        "kind": "prop",
+        "group": "large-workbench",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null,
+        "reviewId": "W15"
+      },
+      {
+        "name": "weapon-workbench",
+        "box": [
+          0,
+          144,
+          32,
+          32
+        ],
+        "kind": "prop",
+        "group": "weapon-workbench",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null,
+        "reviewId": "W16"
+      },
+      {
+        "name": "armor-workbench",
+        "box": [
+          0,
+          176,
+          32,
+          32
+        ],
+        "kind": "prop",
+        "group": "armor-workbench",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null,
+        "reviewId": "W17"
+      },
+      {
+        "name": "equipment-workbench-01",
+        "box": [
+          32,
+          160,
+          32,
+          32
+        ],
+        "kind": "prop",
+        "group": "equipment-workbench-01",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null,
+        "reviewId": "W18"
+      },
+      {
+        "name": "equipment-workbench-02",
+        "box": [
+          32,
+          192,
+          32,
+          32
+        ],
+        "kind": "prop",
+        "group": "equipment-workbench-02",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null,
+        "reviewId": "W19"
+      },
+      {
+        "name": "workshop-container-64-112",
+        "box": [
+          64,
+          112,
+          32,
+          16
+        ],
+        "kind": "prop",
+        "group": "workshop-container-64-112",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null,
+        "reviewId": "W20"
+      },
+      {
+        "name": "workshop-container-96-112",
+        "box": [
+          96,
+          112,
+          16,
+          32
+        ],
+        "kind": "prop",
+        "group": "workshop-container-96-112",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null,
+        "reviewId": "W21"
+      },
+      {
+        "name": "workshop-container-112-112",
+        "box": [
+          112,
+          112,
+          16,
+          32
+        ],
+        "kind": "prop",
+        "group": "workshop-container-112-112",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null,
+        "reviewId": "W22"
+      },
+      {
+        "name": "workshop-container-64-128",
+        "box": [
+          64,
+          128,
+          32,
+          16
+        ],
+        "kind": "prop",
+        "group": "workshop-container-64-128",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null,
+        "reviewId": "W23"
+      },
+      {
+        "name": "workshop-container-64-144",
+        "box": [
+          64,
+          144,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "workshop-container-64-144",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null,
+        "reviewId": "W24"
+      },
+      {
+        "name": "workshop-container-80-144",
+        "box": [
+          80,
+          144,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "workshop-container-80-144",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null,
+        "reviewId": "W25"
+      },
+      {
+        "name": "workshop-container-96-144",
+        "box": [
+          96,
+          144,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "workshop-container-96-144",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null,
+        "reviewId": "W26"
+      },
+      {
+        "name": "workshop-container-112-144",
+        "box": [
+          112,
+          144,
+          16,
+          32
+        ],
+        "kind": "prop",
+        "group": "workshop-container-112-144",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null,
+        "reviewId": "W27"
+      },
+      {
+        "name": "workshop-container-64-160",
+        "box": [
+          64,
+          160,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "workshop-container-64-160",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null,
+        "reviewId": "W28"
+      },
+      {
+        "name": "workshop-container-80-160",
+        "box": [
+          80,
+          160,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "workshop-container-80-160",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null,
+        "reviewId": "W29"
+      },
+      {
+        "name": "workshop-container-96-160",
+        "box": [
+          96,
+          160,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "unused",
+        "frame": null,
+        "notes": "Do not use. Reuse W11. The complete crop is identical.",
+        "placement": null,
+        "reviewId": "W30"
+      },
+      {
+        "name": "large-furnace-112",
+        "box": [
+          128,
+          112,
+          32,
+          32
+        ],
+        "kind": "prop",
+        "group": "large-furnace-112",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null,
+        "reviewId": "W31"
+      },
+      {
+        "name": "large-furnace-144",
+        "box": [
+          128,
+          144,
+          32,
+          32
+        ],
+        "kind": "prop",
+        "group": "large-furnace-144",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null,
+        "reviewId": "W32"
+      },
+      {
+        "name": "furnace-part-64-176",
+        "box": [
+          64,
+          176,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "furnace-part-64-176",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null,
+        "reviewId": "W33"
+      },
+      {
+        "name": "furnace-part-64-192",
+        "box": [
+          64,
+          192,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "furnace-part-64-192",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null,
+        "reviewId": "W34"
+      },
+      {
+        "name": "furnace-part-112-176",
+        "box": [
+          112,
+          176,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "furnace-part-112-176",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null,
+        "reviewId": "W35"
+      },
+      {
+        "name": "furnace-part-112-192",
+        "box": [
+          112,
+          192,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "furnace-part-112-192",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null,
+        "reviewId": "W36"
+      },
+      {
+        "name": "small-furnace-80",
+        "box": [
+          80,
+          176,
+          16,
+          32
+        ],
+        "kind": "prop",
+        "group": "small-furnace-80",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null,
+        "reviewId": "W37"
+      },
+      {
+        "name": "small-furnace-96",
+        "box": [
+          96,
+          176,
+          16,
+          32
+        ],
+        "kind": "prop",
+        "group": "small-furnace-96",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null,
+        "reviewId": "W38"
+      },
+      {
+        "name": "equipment-64-208",
+        "box": [
+          64,
+          208,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "equipment-64-208",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null,
+        "reviewId": "W39"
+      },
+      {
+        "name": "equipment-64-224",
+        "box": [
+          64,
+          224,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "equipment-64-224",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null,
+        "reviewId": "W40"
+      },
+      {
+        "name": "equipment-80-208",
+        "box": [
+          80,
+          208,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "equipment-80-208",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null,
+        "reviewId": "W41"
+      },
+      {
+        "name": "equipment-80-224",
+        "box": [
+          80,
+          224,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "equipment-80-224",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null,
+        "reviewId": "W42"
+      },
+      {
+        "name": "equipment-96-208",
+        "box": [
+          96,
+          208,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "equipment-96-208",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null,
+        "reviewId": "W43"
+      },
+      {
+        "name": "equipment-96-224",
+        "box": [
+          96,
+          224,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "equipment-96-224",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null,
+        "reviewId": "W44"
+      },
+      {
+        "name": "equipment-112-208",
+        "box": [
+          112,
+          208,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "equipment-112-208",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null,
+        "reviewId": "W45"
+      },
+      {
+        "name": "equipment-112-224",
+        "box": [
+          112,
+          224,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "equipment-112-224",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null,
+        "reviewId": "W46"
+      },
+      {
+        "name": "trapdoor-opening-sequence",
+        "box": [
+          136,
+          176,
+          16,
+          48
+        ],
+        "kind": "prop",
+        "group": "trapdoor-opening-sequence",
+        "frame": null,
+        "notes": "Preserve the complete animation strip.",
+        "placement": null,
+        "reviewId": "W47"
+      },
+      {
+        "name": "chair-0-224",
+        "box": [
+          0,
+          224,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "chair-0-224",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null,
+        "reviewId": "W48"
+      },
+      {
+        "name": "chair-0-240",
+        "box": [
+          0,
+          240,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "chair-0-240",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null,
+        "reviewId": "W49"
+      },
+      {
+        "name": "chair-16-224",
+        "box": [
+          16,
+          224,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "chair-16-224",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null,
+        "reviewId": "W50"
+      },
+      {
+        "name": "chair-16-240",
+        "box": [
+          16,
+          240,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "chair-16-240",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null,
+        "reviewId": "W51"
+      },
+      {
+        "name": "cabinet-32",
+        "box": [
+          32,
+          224,
+          16,
+          32
+        ],
+        "kind": "prop",
+        "group": "cabinet-32",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null,
+        "reviewId": "W52"
+      },
+      {
+        "name": "cabinet-48",
+        "box": [
+          48,
+          224,
+          16,
+          32
+        ],
+        "kind": "prop",
+        "group": "cabinet-48",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null,
+        "reviewId": "W53"
+      },
+      {
+        "name": "anvil-64",
+        "box": [
+          64,
+          240,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "anvil-64",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null,
+        "reviewId": "W54"
+      },
+      {
+        "name": "anvil-80",
+        "box": [
+          80,
+          240,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "anvil-80",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null,
+        "reviewId": "W55"
+      },
+      {
+        "name": "wide-anvil",
+        "box": [
+          96,
+          240,
+          32,
+          16
+        ],
+        "kind": "prop",
+        "group": "wide-anvil",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null,
+        "reviewId": "W56"
+      },
+      {
+        "name": "wooden-door-128",
+        "box": [
+          128,
+          224,
+          32,
+          32
+        ],
+        "kind": "prop",
+        "group": "wooden-door-128",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null,
+        "reviewId": "W57"
+      },
+      {
+        "name": "wooden-door-160",
+        "box": [
+          160,
+          224,
+          32,
+          32
+        ],
+        "kind": "prop",
+        "group": "wooden-door-160",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null,
+        "reviewId": "W58"
+      },
+      {
+        "name": "wooden-stairway-192",
+        "box": [
+          192,
+          224,
+          32,
+          32
+        ],
+        "kind": "structure",
+        "group": "wooden-stairway-192",
+        "frame": null,
+        "notes": "Preserve the complete stairway.",
+        "placement": null,
+        "reviewId": "W59"
+      },
+      {
+        "name": "wooden-stairway-224",
+        "box": [
+          224,
+          224,
+          32,
+          32
+        ],
+        "kind": "structure",
+        "group": "wooden-stairway-224",
+        "frame": null,
+        "notes": "Preserve the complete stairway.",
+        "placement": null,
+        "reviewId": "W60"
+      }
+    ],
+    "animated": false,
+    "animationWidths": {
+      "60": 16
+    },
+    "duplicates": [
+      {
+        "number": 17,
+        "reuse": 12
+      },
+      {
+        "number": 18,
+        "reuse": 13
+      },
+      {
+        "number": 19,
+        "reuse": 14
+      },
+      {
+        "number": 20,
+        "reuse": 15
+      },
+      {
+        "number": 21,
+        "reuse": 16
+      },
+      {
+        "number": 44,
+        "reuse": 25
+      }
+    ],
+    "animationHeights": {
+      "60": 16
+    },
+    "size": [
+      256,
+      256
+    ],
+    "status": "approved-and-processed"
+  },
+  {
+    "id": "Y",
+    "title": "Remastered Christmas",
+    "slug": "remastered-christmas",
+    "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-christmas-source-192d5b1245c6.png",
+    "entries": [
+      {
+        "name": "snow-terrain-panel-0-0",
+        "box": [
+          0,
+          0,
+          48,
+          48
+        ],
+        "kind": "part",
+        "group": "snow-terrain-panel-0-0",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "snow-terrain-panel-48-0",
+        "box": [
+          48,
+          0,
+          48,
+          48
+        ],
+        "kind": "part",
+        "group": "snow-terrain-panel-48-0",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "snow-terrain-panel-0-64",
+        "box": [
+          0,
+          64,
+          48,
+          48
+        ],
+        "kind": "part",
+        "group": "snow-terrain-panel-0-64",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "snow-terrain-panel-48-64",
+        "box": [
+          48,
+          64,
+          48,
+          48
+        ],
+        "kind": "part",
+        "group": "snow-terrain-panel-48-64",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "snow-edge-module-48",
+        "box": [
+          0,
+          48,
+          112,
+          16
+        ],
+        "kind": "part",
+        "group": "snow-edge-module-48",
+        "frame": null,
+        "notes": "Preserve the module. Use its 16-pixel tile grid.",
+        "placement": null
+      },
+      {
+        "name": "snow-edge-module-112",
+        "box": [
+          0,
+          112,
+          112,
+          16
+        ],
+        "kind": "part",
+        "group": "snow-edge-module-112",
+        "frame": null,
+        "notes": "Preserve the module. Use its 16-pixel tile grid.",
+        "placement": null
+      },
+      {
+        "name": "snow-decoration-112",
+        "box": [
+          112,
+          0,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "snow-decoration-112",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "snow-decoration-128",
+        "box": [
+          128,
+          0,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "snow-decoration-128",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "snow-decoration-144",
+        "box": [
+          144,
+          0,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "snow-decoration-144",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "snow-decoration-160",
+        "box": [
+          160,
+          0,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "snow-decoration-160",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "snow-decoration-176",
+        "box": [
+          176,
+          0,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "snow-decoration-176",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "snow-decoration-192",
+        "box": [
+          192,
+          0,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "snow-decoration-192",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "snow-decoration-208",
+        "box": [
+          208,
+          0,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "snow-decoration-208",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "snow-decoration-224",
+        "box": [
+          224,
+          0,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "snow-decoration-224",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "candy-cane-112-16",
+        "box": [
+          112,
+          16,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "candy-cane-112-16",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "candy-cane-112-32",
+        "box": [
+          112,
+          32,
+          16,
+          32
+        ],
+        "kind": "prop",
+        "group": "candy-cane-112-32",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "candy-cane-128-16",
+        "box": [
+          128,
+          16,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "candy-cane-128-16",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "candy-cane-128-32",
+        "box": [
+          128,
+          32,
+          16,
+          32
+        ],
+        "kind": "prop",
+        "group": "candy-cane-128-32",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "snowman-144-16",
+        "box": [
+          144,
+          16,
+          16,
+          32
+        ],
+        "kind": "prop",
+        "group": "unused",
+        "frame": null,
+        "notes": "Do not use. Reuse the approved asset: christmas-objects-snowman-0-01.png",
+        "placement": null,
+        "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-snowman-0-01.png"
+      },
+      {
+        "name": "snowman-144-48",
+        "box": [
+          144,
+          48,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "unused",
+        "frame": null,
+        "notes": "Do not use. Reuse the approved asset: christmas-objects-snowman-32-01.png",
+        "placement": null,
+        "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-snowman-32-01.png"
+      },
+      {
+        "name": "snowman-160-16",
+        "box": [
+          160,
+          16,
+          16,
+          32
+        ],
+        "kind": "prop",
+        "group": "unused",
+        "frame": null,
+        "notes": "Do not use. Reuse the approved asset: christmas-objects-snowman-0-02.png",
+        "placement": null,
+        "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-snowman-0-02.png"
+      },
+      {
+        "name": "snowman-160-48",
+        "box": [
+          160,
+          48,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "unused",
+        "frame": null,
+        "notes": "Do not use. Reuse the approved asset: christmas-objects-snowman-32-02.png",
+        "placement": null,
+        "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-snowman-32-02.png"
+      },
+      {
+        "name": "snowman-176-16",
+        "box": [
+          176,
+          16,
+          16,
+          32
+        ],
+        "kind": "prop",
+        "group": "unused",
+        "frame": null,
+        "notes": "Do not use. Reuse the approved asset: christmas-objects-snowman-0-03.png",
+        "placement": null,
+        "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-snowman-0-03.png"
+      },
+      {
+        "name": "snowman-176-48",
+        "box": [
+          176,
+          48,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "unused",
+        "frame": null,
+        "notes": "Do not use. Reuse the approved asset: christmas-objects-snowman-32-03.png",
+        "placement": null,
+        "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-snowman-32-03.png"
+      },
+      {
+        "name": "snowman-192-16",
+        "box": [
+          192,
+          16,
+          16,
+          32
+        ],
+        "kind": "prop",
+        "group": "unused",
+        "frame": null,
+        "notes": "Do not use. Reuse the approved asset: christmas-objects-snowman-0-04.png",
+        "placement": null,
+        "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-snowman-0-04.png"
+      },
+      {
+        "name": "snowman-192-48",
+        "box": [
+          192,
+          48,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "unused",
+        "frame": null,
+        "notes": "Do not use. Reuse the approved asset: christmas-objects-snowman-32-04.png",
+        "placement": null,
+        "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-snowman-32-04.png"
+      },
+      {
+        "name": "snowman-208-16",
+        "box": [
+          208,
+          16,
+          16,
+          32
+        ],
+        "kind": "prop",
+        "group": "unused",
+        "frame": null,
+        "notes": "Do not use. Reuse the approved asset: christmas-objects-snowman-0-05.png",
+        "placement": null,
+        "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-snowman-0-05.png"
+      },
+      {
+        "name": "snowman-208-48",
+        "box": [
+          208,
+          48,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "unused",
+        "frame": null,
+        "notes": "Do not use. Reuse the approved asset: christmas-objects-snowman-32-05.png",
+        "placement": null,
+        "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-snowman-32-05.png"
+      },
+      {
+        "name": "garland-32",
+        "box": [
+          224,
+          32,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "unused",
+        "frame": null,
+        "notes": "Do not use. Reuse the approved asset: christmas-objects-holiday-decoration-112-96.png",
+        "placement": null,
+        "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-holiday-decoration-112-96.png"
+      },
+      {
+        "name": "garland-48",
+        "box": [
+          224,
+          48,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "unused",
+        "frame": null,
+        "notes": "Do not use. Reuse the approved asset: christmas-objects-holiday-decoration-96-96.png",
+        "placement": null,
+        "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-holiday-decoration-96-96.png"
+      },
+      {
+        "name": "holiday-object-112-64",
+        "box": [
+          112,
+          64,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "unused",
+        "frame": null,
+        "notes": "Do not use. Reuse the approved asset: christmas-objects-gift-0-48.png",
+        "placement": null,
+        "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-gift-0-48.png"
+      },
+      {
+        "name": "holiday-object-128-64",
+        "box": [
+          128,
+          64,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "unused",
+        "frame": null,
+        "notes": "Do not use. Reuse the approved asset: christmas-objects-gift-16-48.png",
+        "placement": null,
+        "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-gift-16-48.png"
+      },
+      {
+        "name": "holiday-object-144-64",
+        "box": [
+          144,
+          64,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "unused",
+        "frame": null,
+        "notes": "Do not use. Reuse the approved asset: christmas-objects-gift-32-48.png",
+        "placement": null,
+        "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-gift-32-48.png"
+      },
+      {
+        "name": "holiday-object-160-64",
+        "box": [
+          160,
+          64,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "unused",
+        "frame": null,
+        "notes": "Do not use. Reuse the approved asset: christmas-objects-gift-48-48.png",
+        "placement": null,
+        "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-gift-48-48.png"
+      },
+      {
+        "name": "holiday-object-176-64",
+        "box": [
+          176,
+          64,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "unused",
+        "frame": null,
+        "notes": "Do not use. Reuse the approved asset: christmas-objects-gift-64-48.png",
+        "placement": null,
+        "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-gift-64-48.png"
+      },
+      {
+        "name": "holiday-object-192-64",
+        "box": [
+          192,
+          64,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "unused",
+        "frame": null,
+        "notes": "Do not use. Reuse the approved asset: christmas-objects-gift-80-48.png",
+        "placement": null,
+        "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-gift-80-48.png"
+      },
+      {
+        "name": "holiday-object-208-64",
+        "box": [
+          208,
+          64,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "unused",
+        "frame": null,
+        "notes": "Do not use. Reuse the approved asset: christmas-objects-gift-pile-96-48.png",
+        "placement": null,
+        "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-gift-pile-96-48.png"
+      },
+      {
+        "name": "holiday-object-224-64",
+        "box": [
+          224,
+          64,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "unused",
+        "frame": null,
+        "notes": "Do not use. Reuse the approved asset: christmas-objects-gift-pile-112-48.png",
+        "placement": null,
+        "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-gift-pile-112-48.png"
+      },
+      {
+        "name": "holiday-object-112-80",
+        "box": [
+          112,
+          80,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "unused",
+        "frame": null,
+        "notes": "Do not use. Reuse the approved asset: christmas-objects-gift-0-64.png",
+        "placement": null,
+        "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-gift-0-64.png"
+      },
+      {
+        "name": "holiday-object-128-80",
+        "box": [
+          128,
+          80,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "unused",
+        "frame": null,
+        "notes": "Do not use. Reuse the approved asset: christmas-objects-gift-16-64.png",
+        "placement": null,
+        "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-gift-16-64.png"
+      },
+      {
+        "name": "holiday-object-144-80",
+        "box": [
+          144,
+          80,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "unused",
+        "frame": null,
+        "notes": "Do not use. Reuse the approved asset: christmas-objects-gift-32-64.png",
+        "placement": null,
+        "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-gift-32-64.png"
+      },
+      {
+        "name": "holiday-object-160-80",
+        "box": [
+          160,
+          80,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "unused",
+        "frame": null,
+        "notes": "Do not use. Reuse the approved asset: christmas-objects-gift-48-64.png",
+        "placement": null,
+        "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-gift-48-64.png"
+      },
+      {
+        "name": "holiday-object-176-80",
+        "box": [
+          176,
+          80,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "unused",
+        "frame": null,
+        "notes": "Do not use. Reuse the approved asset: christmas-objects-gift-64-64.png",
+        "placement": null,
+        "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-gift-64-64.png"
+      },
+      {
+        "name": "holiday-object-192-80",
+        "box": [
+          192,
+          80,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "unused",
+        "frame": null,
+        "notes": "Do not use. Reuse the approved asset: christmas-objects-gift-80-64.png",
+        "placement": null,
+        "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-gift-80-64.png"
+      },
+      {
+        "name": "holiday-object-208-80",
+        "box": [
+          208,
+          80,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "unused",
+        "frame": null,
+        "notes": "Do not use. Reuse the approved asset: christmas-objects-gift-pile-96-64.png",
+        "placement": null,
+        "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-gift-pile-96-64.png"
+      },
+      {
+        "name": "holiday-object-224-80",
+        "box": [
+          224,
+          80,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "unused",
+        "frame": null,
+        "notes": "Do not use. Reuse the approved asset: christmas-objects-gift-pile-112-64.png",
+        "placement": null,
+        "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-gift-pile-112-64.png"
+      },
+      {
+        "name": "holiday-object-112-96",
+        "box": [
+          112,
+          96,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "unused",
+        "frame": null,
+        "notes": "Do not use. Reuse the approved asset: christmas-objects-holiday-decoration-0-80.png",
+        "placement": null,
+        "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-holiday-decoration-0-80.png"
+      },
+      {
+        "name": "holiday-object-128-96",
+        "box": [
+          128,
+          96,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "unused",
+        "frame": null,
+        "notes": "Do not use. Reuse the approved asset: christmas-objects-holiday-decoration-16-80.png",
+        "placement": null,
+        "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-holiday-decoration-16-80.png"
+      },
+      {
+        "name": "holiday-object-144-96",
+        "box": [
+          144,
+          96,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "unused",
+        "frame": null,
+        "notes": "Do not use. Reuse the approved asset: christmas-objects-holiday-decoration-32-80.png",
+        "placement": null,
+        "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-holiday-decoration-32-80.png"
+      },
+      {
+        "name": "holiday-object-160-96",
+        "box": [
+          160,
+          96,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "unused",
+        "frame": null,
+        "notes": "Do not use. Reuse the approved asset: christmas-objects-holiday-decoration-48-80.png",
+        "placement": null,
+        "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-holiday-decoration-48-80.png"
+      },
+      {
+        "name": "holiday-object-176-96",
+        "box": [
+          176,
+          96,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "unused",
+        "frame": null,
+        "notes": "Do not use. Reuse the approved asset: christmas-objects-holiday-decoration-64-80.png",
+        "placement": null,
+        "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-holiday-decoration-64-80.png"
+      },
+      {
+        "name": "holiday-object-192-96",
+        "box": [
+          192,
+          96,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "unused",
+        "frame": null,
+        "notes": "Do not use. Reuse the approved asset: christmas-objects-holiday-decoration-80-80.png",
+        "placement": null,
+        "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-holiday-decoration-80-80.png"
+      },
+      {
+        "name": "holiday-object-208-96",
+        "box": [
+          208,
+          96,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "unused",
+        "frame": null,
+        "notes": "Do not use. Reuse the approved asset: christmas-objects-holiday-decoration-96-80.png",
+        "placement": null,
+        "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-holiday-decoration-96-80.png"
+      },
+      {
+        "name": "holiday-object-224-96",
+        "box": [
+          224,
+          96,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "unused",
+        "frame": null,
+        "notes": "Do not use. Reuse the approved asset: christmas-objects-holiday-decoration-112-80.png",
+        "placement": null,
+        "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-holiday-decoration-112-80.png"
+      },
+      {
+        "name": "holiday-decoration-112",
+        "box": [
+          112,
+          112,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "unused",
+        "frame": null,
+        "notes": "Do not use. Reuse the approved asset: christmas-objects-holiday-decoration-0-96.png",
+        "placement": null,
+        "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-holiday-decoration-0-96.png"
+      },
+      {
+        "name": "holiday-decoration-128",
+        "box": [
+          128,
+          112,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "unused",
+        "frame": null,
+        "notes": "Do not use. Reuse the approved asset: christmas-objects-holiday-decoration-16-96.png",
+        "placement": null,
+        "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-holiday-decoration-16-96.png"
+      },
+      {
+        "name": "holiday-decoration-144",
+        "box": [
+          144,
+          112,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "holiday-decoration-144",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "holiday-decoration-160",
+        "box": [
+          160,
+          112,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "holiday-decoration-160",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "holiday-decoration-176",
+        "box": [
+          176,
+          112,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "holiday-decoration-176",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "bare-tree-112",
+        "box": [
+          200,
+          112,
+          32,
+          32
+        ],
+        "kind": "prop",
+        "group": "bare-tree-112",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "bare-tree-192",
+        "box": [
+          200,
+          192,
+          32,
+          32
+        ],
+        "kind": "prop",
+        "group": "bare-tree-192",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "round-snow-tree-144",
+        "box": [
+          192,
+          144,
+          48,
+          48
+        ],
+        "kind": "prop",
+        "group": "round-snow-tree-144",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "round-snow-tree-224",
+        "box": [
+          192,
+          224,
+          48,
+          32
+        ],
+        "kind": "prop",
+        "group": "round-snow-tree-224",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "blue-tree-0-128",
+        "box": [
+          0,
+          128,
+          48,
+          64
+        ],
+        "kind": "prop",
+        "group": "blue-tree-0-128",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "blue-tree-0-200",
+        "box": [
+          0,
+          200,
+          48,
+          56
+        ],
+        "kind": "prop",
+        "group": "blue-tree-0-200",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "blue-tree-48-128",
+        "box": [
+          48,
+          128,
+          48,
+          64
+        ],
+        "kind": "prop",
+        "group": "blue-tree-48-128",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "blue-tree-48-200",
+        "box": [
+          48,
+          200,
+          48,
+          56
+        ],
+        "kind": "prop",
+        "group": "blue-tree-48-200",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "blue-tree-96-128",
+        "box": [
+          96,
+          128,
+          48,
+          64
+        ],
+        "kind": "prop",
+        "group": "blue-tree-96-128",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "blue-tree-96-200",
+        "box": [
+          96,
+          200,
+          48,
+          56
+        ],
+        "kind": "prop",
+        "group": "blue-tree-96-200",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "blue-tree-144-128",
+        "box": [
+          144,
+          128,
+          48,
+          64
+        ],
+        "kind": "prop",
+        "group": "blue-tree-144-128",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "blue-tree-144-200",
+        "box": [
+          144,
+          200,
+          48,
+          56
+        ],
+        "kind": "prop",
+        "group": "blue-tree-144-200",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "green-tree-256-0",
+        "box": [
+          256,
+          0,
+          48,
+          64
+        ],
+        "kind": "prop",
+        "group": "green-tree-256-0",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "green-tree-256-72",
+        "box": [
+          256,
+          72,
+          48,
+          56
+        ],
+        "kind": "prop",
+        "group": "green-tree-256-72",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "green-tree-256-128",
+        "box": [
+          256,
+          128,
+          48,
+          64
+        ],
+        "kind": "prop",
+        "group": "green-tree-256-128",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "green-tree-256-200",
+        "box": [
+          256,
+          200,
+          48,
+          56
+        ],
+        "kind": "prop",
+        "group": "green-tree-256-200",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "green-tree-304-0",
+        "box": [
+          304,
+          0,
+          48,
+          64
+        ],
+        "kind": "prop",
+        "group": "green-tree-304-0",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "green-tree-304-72",
+        "box": [
+          304,
+          72,
+          48,
+          56
+        ],
+        "kind": "prop",
+        "group": "green-tree-304-72",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "green-tree-304-128",
+        "box": [
+          304,
+          128,
+          48,
+          64
+        ],
+        "kind": "prop",
+        "group": "green-tree-304-128",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "green-tree-304-200",
+        "box": [
+          304,
+          200,
+          48,
+          56
+        ],
+        "kind": "prop",
+        "group": "green-tree-304-200",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "green-tree-352-0",
+        "box": [
+          352,
+          0,
+          48,
+          64
+        ],
+        "kind": "prop",
+        "group": "green-tree-352-0",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "green-tree-352-72",
+        "box": [
+          352,
+          72,
+          48,
+          56
+        ],
+        "kind": "prop",
+        "group": "green-tree-352-72",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "green-tree-352-128",
+        "box": [
+          352,
+          128,
+          48,
+          64
+        ],
+        "kind": "prop",
+        "group": "green-tree-352-128",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "green-tree-352-200",
+        "box": [
+          352,
+          200,
+          48,
+          56
+        ],
+        "kind": "prop",
+        "group": "green-tree-352-200",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "green-tree-400-0",
+        "box": [
+          400,
+          0,
+          48,
+          64
+        ],
+        "kind": "prop",
+        "group": "green-tree-400-0",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "green-tree-400-72",
+        "box": [
+          400,
+          72,
+          48,
+          56
+        ],
+        "kind": "prop",
+        "group": "green-tree-400-72",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "green-tree-400-128",
+        "box": [
+          400,
+          128,
+          48,
+          64
+        ],
+        "kind": "prop",
+        "group": "green-tree-400-128",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "green-tree-400-200",
+        "box": [
+          400,
+          200,
+          48,
+          56
+        ],
+        "kind": "prop",
+        "group": "green-tree-400-200",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      }
+    ],
+    "animated": false,
+    "animationWidths": {},
+    "duplicates": [],
+    "size": [
+      512,
+      256
+    ],
+    "status": "approved-and-processed"
+  },
+  {
+    "id": "T",
+    "title": "Remastered Halloween",
+    "slug": "remastered-halloween",
+    "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-halloween-source-8989aa42c06d.png",
+    "entries": [
+      {
+        "name": "hanging-garland-0",
+        "box": [
+          16,
+          0,
+          48,
+          16
+        ],
+        "kind": "prop",
+        "group": "unused",
+        "frame": null,
+        "notes": "Do not use. Reuse the approved asset: halloween-objects-hanging-garland-160.png",
+        "placement": null,
+        "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/halloween-objects/halloween-objects-hanging-garland-160.png"
+      },
+      {
+        "name": "hanging-garland-16",
+        "box": [
+          16,
+          16,
+          48,
+          16
+        ],
+        "kind": "prop",
+        "group": "unused",
+        "frame": null,
+        "notes": "Do not use. Reuse the approved asset: halloween-objects-hanging-garland-176.png",
+        "placement": null,
+        "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/halloween-objects/halloween-objects-hanging-garland-176.png"
+      },
+      {
+        "name": "hanging-garland-32",
+        "box": [
+          0,
+          32,
+          64,
+          16
+        ],
+        "kind": "prop",
+        "group": "unused",
+        "frame": null,
+        "notes": "Do not use. Reuse the approved asset: halloween-objects-hanging-garland-192.png",
+        "placement": null,
+        "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/halloween-objects/halloween-objects-hanging-garland-192.png"
+      },
+      {
+        "name": "halloween-decoration-0-48",
+        "box": [
+          0,
+          48,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "unused",
+        "frame": null,
+        "notes": "Do not use. Reuse the approved asset: halloween-objects-halloween-decoration-0-208.png",
+        "placement": null,
+        "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/halloween-objects/halloween-objects-halloween-decoration-0-208.png"
+      },
+      {
+        "name": "halloween-decoration-16-48",
+        "box": [
+          16,
+          48,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "unused",
+        "frame": null,
+        "notes": "Do not use. Reuse the approved asset: halloween-objects-halloween-decoration-16-208.png",
+        "placement": null,
+        "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/halloween-objects/halloween-objects-halloween-decoration-16-208.png"
+      },
+      {
+        "name": "halloween-decoration-32-48",
+        "box": [
+          32,
+          48,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "unused",
+        "frame": null,
+        "notes": "Do not use. Reuse the approved asset: halloween-objects-halloween-decoration-32-208.png",
+        "placement": null,
+        "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/halloween-objects/halloween-objects-halloween-decoration-32-208.png"
+      },
+      {
+        "name": "halloween-decoration-0-64",
+        "box": [
+          0,
+          64,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "unused",
+        "frame": null,
+        "notes": "Do not use. Reuse the approved asset: halloween-objects-halloween-decoration-0-224.png",
+        "placement": null,
+        "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/halloween-objects/halloween-objects-halloween-decoration-0-224.png"
+      },
+      {
+        "name": "halloween-decoration-16-64",
+        "box": [
+          16,
+          64,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "unused",
+        "frame": null,
+        "notes": "Do not use. Reuse the approved asset: halloween-objects-halloween-decoration-16-224.png",
+        "placement": null,
+        "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/halloween-objects/halloween-objects-halloween-decoration-16-224.png"
+      },
+      {
+        "name": "halloween-decoration-32-64",
+        "box": [
+          32,
+          64,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "unused",
+        "frame": null,
+        "notes": "Do not use. Reuse the approved asset: halloween-objects-halloween-decoration-32-224.png",
+        "placement": null,
+        "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/halloween-objects/halloween-objects-halloween-decoration-32-224.png"
+      },
+      {
+        "name": "halloween-decoration-0-80",
+        "box": [
+          0,
+          80,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "halloween-decoration-0-80",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "halloween-decoration-16-80",
+        "box": [
+          16,
+          80,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "halloween-decoration-16-80",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "halloween-decoration-32-80",
+        "box": [
+          32,
+          80,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "halloween-decoration-32-80",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "halloween-decoration-0-96",
+        "box": [
+          0,
+          96,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "halloween-decoration-0-96",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "halloween-decoration-16-96",
+        "box": [
+          16,
+          96,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "halloween-decoration-16-96",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "halloween-decoration-32-96",
+        "box": [
+          32,
+          96,
+          16,
+          16
+        ],
+        "kind": "prop",
+        "group": "halloween-decoration-32-96",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "pumpkin-assembly-0-112",
+        "box": [
+          0,
+          112,
+          32,
+          32
+        ],
+        "kind": "prop",
+        "group": "pumpkin-assembly-0-112",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "pumpkin-assembly-32-112",
+        "box": [
+          32,
+          112,
+          32,
+          32
+        ],
+        "kind": "prop",
+        "group": "pumpkin-assembly-32-112",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "pumpkin-assembly-0-144",
+        "box": [
+          0,
+          144,
+          32,
+          32
+        ],
+        "kind": "prop",
+        "group": "pumpkin-assembly-0-144",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "pumpkin-assembly-32-144",
+        "box": [
+          32,
+          144,
+          32,
+          32
+        ],
+        "kind": "prop",
+        "group": "pumpkin-assembly-32-144",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "pumpkin-assembly-0-176",
+        "box": [
+          0,
+          176,
+          32,
+          32
+        ],
+        "kind": "prop",
+        "group": "pumpkin-assembly-0-176",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "pumpkin-assembly-32-176",
+        "box": [
+          32,
+          176,
+          32,
+          32
+        ],
+        "kind": "prop",
+        "group": "pumpkin-assembly-32-176",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "pumpkin-assembly-0-208",
+        "box": [
+          0,
+          208,
+          32,
+          32
+        ],
+        "kind": "prop",
+        "group": "pumpkin-assembly-0-208",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "pumpkin-assembly-32-208",
+        "box": [
+          32,
+          208,
+          32,
+          32
+        ],
+        "kind": "prop",
+        "group": "pumpkin-assembly-32-208",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "large-bare-tree-64-0",
+        "box": [
+          64,
+          0,
+          48,
+          64
+        ],
+        "kind": "prop",
+        "group": "large-bare-tree-64-0",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "large-bare-tree-112-0",
+        "box": [
+          112,
+          0,
+          48,
+          64
+        ],
+        "kind": "prop",
+        "group": "large-bare-tree-112-0",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "large-bare-tree-64-64",
+        "box": [
+          64,
+          64,
+          48,
+          64
+        ],
+        "kind": "prop",
+        "group": "large-bare-tree-64-64",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "large-bare-tree-112-64",
+        "box": [
+          112,
+          64,
+          48,
+          64
+        ],
+        "kind": "prop",
+        "group": "large-bare-tree-112-64",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "small-bare-tree-160-16",
+        "box": [
+          160,
+          16,
+          48,
+          48
+        ],
+        "kind": "prop",
+        "group": "small-bare-tree-160-16",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "small-bare-tree-208-16",
+        "box": [
+          208,
+          16,
+          48,
+          48
+        ],
+        "kind": "prop",
+        "group": "small-bare-tree-208-16",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "small-bare-tree-160-80",
+        "box": [
+          160,
+          80,
+          48,
+          48
+        ],
+        "kind": "prop",
+        "group": "small-bare-tree-160-80",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "small-bare-tree-208-80",
+        "box": [
+          208,
+          80,
+          48,
+          48
+        ],
+        "kind": "prop",
+        "group": "small-bare-tree-208-80",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "tree-stump-64-128",
+        "box": [
+          64,
+          128,
+          48,
+          32
+        ],
+        "kind": "prop",
+        "group": "tree-stump-64-128",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "tree-stump-120-128",
+        "box": [
+          120,
+          128,
+          32,
+          32
+        ],
+        "kind": "prop",
+        "group": "tree-stump-120-128",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "tree-stump-160-128",
+        "box": [
+          160,
+          128,
+          32,
+          32
+        ],
+        "kind": "prop",
+        "group": "tree-stump-160-128",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "tree-stump-64-160",
+        "box": [
+          64,
+          160,
+          48,
+          32
+        ],
+        "kind": "prop",
+        "group": "tree-stump-64-160",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "tree-stump-120-160",
+        "box": [
+          120,
+          160,
+          32,
+          32
+        ],
+        "kind": "prop",
+        "group": "tree-stump-120-160",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "tree-stump-160-160",
+        "box": [
+          160,
+          160,
+          32,
+          32
+        ],
+        "kind": "prop",
+        "group": "tree-stump-160-160",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "narrow-bare-tree-192",
+        "box": [
+          192,
+          128,
+          32,
+          32
+        ],
+        "kind": "prop",
+        "group": "narrow-bare-tree-192",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "narrow-bare-tree-224",
+        "box": [
+          224,
+          128,
+          32,
+          32
+        ],
+        "kind": "prop",
+        "group": "narrow-bare-tree-224",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "plain-memorial-64",
+        "box": [
+          64,
+          208,
+          32,
+          32
+        ],
+        "kind": "prop",
+        "group": "plain-memorial-64",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "plain-memorial-96",
+        "box": [
+          96,
+          208,
+          32,
+          32
+        ],
+        "kind": "prop",
+        "group": "plain-memorial-96",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "plain-memorial-128",
+        "box": [
+          128,
+          208,
+          32,
+          32
+        ],
+        "kind": "prop",
+        "group": "plain-memorial-128",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "gray-grave-part-256-0",
+        "box": [
+          256,
+          0,
+          32,
+          32
+        ],
+        "kind": "prop",
+        "group": "gray-grave-part-256-0",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "gray-grave-part-288-0",
+        "box": [
+          288,
+          0,
+          32,
+          32
+        ],
+        "kind": "prop",
+        "group": "gray-grave-part-288-0",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "gray-grave-part-320-0",
+        "box": [
+          320,
+          0,
+          16,
+          32
+        ],
+        "kind": "prop",
+        "group": "gray-grave-part-320-0",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "gray-grave-part-336-0",
+        "box": [
+          336,
+          0,
+          16,
+          32
+        ],
+        "kind": "prop",
+        "group": "gray-grave-part-336-0",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "gray-grave-part-352-0",
+        "box": [
+          352,
+          0,
+          16,
+          32
+        ],
+        "kind": "prop",
+        "group": "gray-grave-part-352-0",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "gray-grave-part-368-0",
+        "box": [
+          368,
+          0,
+          16,
+          32
+        ],
+        "kind": "prop",
+        "group": "gray-grave-part-368-0",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "gray-grave-part-384-0",
+        "box": [
+          384,
+          0,
+          16,
+          32
+        ],
+        "kind": "prop",
+        "group": "gray-grave-part-384-0",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "gray-grave-part-400-0",
+        "box": [
+          400,
+          0,
+          16,
+          32
+        ],
+        "kind": "prop",
+        "group": "gray-grave-part-400-0",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "gray-grave-part-416-0",
+        "box": [
+          416,
+          0,
+          16,
+          32
+        ],
+        "kind": "prop",
+        "group": "gray-grave-part-416-0",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "gray-grave-part-432-0",
+        "box": [
+          432,
+          0,
+          16,
+          32
+        ],
+        "kind": "prop",
+        "group": "gray-grave-part-432-0",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "gray-grave-part-448-0",
+        "box": [
+          448,
+          0,
+          32,
+          32
+        ],
+        "kind": "prop",
+        "group": "gray-grave-part-448-0",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "gray-grave-part-480-0",
+        "box": [
+          480,
+          0,
+          32,
+          32
+        ],
+        "kind": "prop",
+        "group": "gray-grave-part-480-0",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "gray-grave-part-256-32",
+        "box": [
+          256,
+          32,
+          32,
+          48
+        ],
+        "kind": "prop",
+        "group": "gray-grave-part-256-32",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "gray-grave-part-288-32",
+        "box": [
+          288,
+          32,
+          32,
+          48
+        ],
+        "kind": "prop",
+        "group": "gray-grave-part-288-32",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "gray-cross-floor-panel",
+        "box": [
+          320,
+          32,
+          48,
+          32
+        ],
+        "kind": "part",
+        "group": "gray-cross-floor-panel",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "gray-floor-decoration-320",
+        "box": [
+          320,
+          64,
+          16,
+          16
+        ],
+        "kind": "overlay",
+        "group": "gray-floor-decoration-320",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "gray-floor-decoration-336",
+        "box": [
+          336,
+          64,
+          16,
+          16
+        ],
+        "kind": "overlay",
+        "group": "gray-floor-decoration-336",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "gray-floor-decoration-352",
+        "box": [
+          352,
+          64,
+          16,
+          16
+        ],
+        "kind": "overlay",
+        "group": "gray-floor-decoration-352",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "gray-fence-post",
+        "box": [
+          368,
+          48,
+          16,
+          32
+        ],
+        "kind": "prop",
+        "group": "gray-fence-post",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "gray-burning-fence",
+        "box": [
+          384,
+          48,
+          128,
+          32
+        ],
+        "kind": "prop",
+        "group": "gray-burning-fence",
+        "frame": null,
+        "notes": "Preserve the complete animation strip.",
+        "placement": null
+      },
+      {
+        "name": "tan-grave-part-256-0",
+        "box": [
+          256,
+          80,
+          32,
+          32
+        ],
+        "kind": "prop",
+        "group": "tan-grave-part-256-0",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "tan-grave-part-288-0",
+        "box": [
+          288,
+          80,
+          32,
+          32
+        ],
+        "kind": "prop",
+        "group": "tan-grave-part-288-0",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "tan-grave-part-320-0",
+        "box": [
+          320,
+          80,
+          16,
+          32
+        ],
+        "kind": "prop",
+        "group": "tan-grave-part-320-0",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "tan-grave-part-336-0",
+        "box": [
+          336,
+          80,
+          16,
+          32
+        ],
+        "kind": "prop",
+        "group": "tan-grave-part-336-0",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "tan-grave-part-352-0",
+        "box": [
+          352,
+          80,
+          16,
+          32
+        ],
+        "kind": "prop",
+        "group": "tan-grave-part-352-0",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "tan-grave-part-368-0",
+        "box": [
+          368,
+          80,
+          16,
+          32
+        ],
+        "kind": "prop",
+        "group": "tan-grave-part-368-0",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "tan-grave-part-384-0",
+        "box": [
+          384,
+          80,
+          16,
+          32
+        ],
+        "kind": "prop",
+        "group": "tan-grave-part-384-0",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "tan-grave-part-400-0",
+        "box": [
+          400,
+          80,
+          16,
+          32
+        ],
+        "kind": "prop",
+        "group": "tan-grave-part-400-0",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "tan-grave-part-416-0",
+        "box": [
+          416,
+          80,
+          16,
+          32
+        ],
+        "kind": "prop",
+        "group": "tan-grave-part-416-0",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "tan-grave-part-432-0",
+        "box": [
+          432,
+          80,
+          16,
+          32
+        ],
+        "kind": "prop",
+        "group": "tan-grave-part-432-0",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "tan-grave-part-448-0",
+        "box": [
+          448,
+          80,
+          32,
+          32
+        ],
+        "kind": "prop",
+        "group": "tan-grave-part-448-0",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "tan-grave-part-480-0",
+        "box": [
+          480,
+          80,
+          32,
+          32
+        ],
+        "kind": "prop",
+        "group": "tan-grave-part-480-0",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "tan-grave-part-256-32",
+        "box": [
+          256,
+          112,
+          32,
+          48
+        ],
+        "kind": "prop",
+        "group": "tan-grave-part-256-32",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "tan-grave-part-288-32",
+        "box": [
+          288,
+          112,
+          32,
+          48
+        ],
+        "kind": "prop",
+        "group": "tan-grave-part-288-32",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "tan-cross-floor-panel",
+        "box": [
+          320,
+          112,
+          48,
+          32
+        ],
+        "kind": "part",
+        "group": "tan-cross-floor-panel",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "tan-floor-decoration-320",
+        "box": [
+          320,
+          144,
+          16,
+          16
+        ],
+        "kind": "overlay",
+        "group": "tan-floor-decoration-320",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "tan-floor-decoration-336",
+        "box": [
+          336,
+          144,
+          16,
+          16
+        ],
+        "kind": "overlay",
+        "group": "tan-floor-decoration-336",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "tan-floor-decoration-352",
+        "box": [
+          352,
+          144,
+          16,
+          16
+        ],
+        "kind": "overlay",
+        "group": "tan-floor-decoration-352",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "tan-fence-post",
+        "box": [
+          368,
+          128,
+          16,
+          32
+        ],
+        "kind": "prop",
+        "group": "tan-fence-post",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "tan-burning-fence",
+        "box": [
+          384,
+          128,
+          128,
+          32
+        ],
+        "kind": "prop",
+        "group": "tan-burning-fence",
+        "frame": null,
+        "notes": "Preserve the complete animation strip.",
+        "placement": null
+      },
+      {
+        "name": "brown-grave-part-256-0",
+        "box": [
+          256,
+          160,
+          32,
+          32
+        ],
+        "kind": "prop",
+        "group": "brown-grave-part-256-0",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "brown-grave-part-288-0",
+        "box": [
+          288,
+          160,
+          32,
+          32
+        ],
+        "kind": "prop",
+        "group": "brown-grave-part-288-0",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "brown-grave-part-320-0",
+        "box": [
+          320,
+          160,
+          16,
+          32
+        ],
+        "kind": "prop",
+        "group": "brown-grave-part-320-0",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "brown-grave-part-336-0",
+        "box": [
+          336,
+          160,
+          16,
+          32
+        ],
+        "kind": "prop",
+        "group": "brown-grave-part-336-0",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "brown-grave-part-352-0",
+        "box": [
+          352,
+          160,
+          16,
+          32
+        ],
+        "kind": "prop",
+        "group": "brown-grave-part-352-0",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "brown-grave-part-368-0",
+        "box": [
+          368,
+          160,
+          16,
+          32
+        ],
+        "kind": "prop",
+        "group": "brown-grave-part-368-0",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "brown-grave-part-384-0",
+        "box": [
+          384,
+          160,
+          16,
+          32
+        ],
+        "kind": "prop",
+        "group": "brown-grave-part-384-0",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "brown-grave-part-400-0",
+        "box": [
+          400,
+          160,
+          16,
+          32
+        ],
+        "kind": "prop",
+        "group": "brown-grave-part-400-0",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "brown-grave-part-416-0",
+        "box": [
+          416,
+          160,
+          16,
+          32
+        ],
+        "kind": "prop",
+        "group": "brown-grave-part-416-0",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "brown-grave-part-432-0",
+        "box": [
+          432,
+          160,
+          16,
+          32
+        ],
+        "kind": "prop",
+        "group": "brown-grave-part-432-0",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "brown-grave-part-448-0",
+        "box": [
+          448,
+          160,
+          32,
+          32
+        ],
+        "kind": "prop",
+        "group": "brown-grave-part-448-0",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "brown-grave-part-480-0",
+        "box": [
+          480,
+          160,
+          32,
+          32
+        ],
+        "kind": "prop",
+        "group": "brown-grave-part-480-0",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "brown-grave-part-256-32",
+        "box": [
+          256,
+          192,
+          32,
+          48
+        ],
+        "kind": "prop",
+        "group": "brown-grave-part-256-32",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "brown-grave-part-288-32",
+        "box": [
+          288,
+          192,
+          32,
+          48
+        ],
+        "kind": "prop",
+        "group": "brown-grave-part-288-32",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "brown-cross-floor-panel",
+        "box": [
+          320,
+          192,
+          48,
+          32
+        ],
+        "kind": "part",
+        "group": "brown-cross-floor-panel",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "brown-floor-decoration-320",
+        "box": [
+          320,
+          224,
+          16,
+          16
+        ],
+        "kind": "overlay",
+        "group": "brown-floor-decoration-320",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "brown-floor-decoration-336",
+        "box": [
+          336,
+          224,
+          16,
+          16
+        ],
+        "kind": "overlay",
+        "group": "brown-floor-decoration-336",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "brown-floor-decoration-352",
+        "box": [
+          352,
+          224,
+          16,
+          16
+        ],
+        "kind": "overlay",
+        "group": "brown-floor-decoration-352",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "brown-fence-post",
+        "box": [
+          368,
+          208,
+          16,
+          32
+        ],
+        "kind": "prop",
+        "group": "brown-fence-post",
+        "frame": null,
+        "notes": "Preserve the complete object.",
+        "placement": null
+      },
+      {
+        "name": "brown-burning-fence",
+        "box": [
+          384,
+          208,
+          128,
+          32
+        ],
+        "kind": "prop",
+        "group": "brown-burning-fence",
+        "frame": null,
+        "notes": "Preserve the complete animation strip.",
+        "placement": null
+      },
+      {
+        "name": "gray-tomb-door-sequence",
+        "box": [
+          256,
+          256,
+          256,
+          32
+        ],
+        "kind": "prop",
+        "group": "gray-tomb-door-sequence",
+        "frame": null,
+        "notes": "Preserve the complete animation strip.",
+        "placement": null
+      },
+      {
+        "name": "tan-tomb-door-sequence",
+        "box": [
+          256,
+          288,
+          256,
+          32
+        ],
+        "kind": "prop",
+        "group": "tan-tomb-door-sequence",
+        "frame": null,
+        "notes": "Preserve the complete animation strip.",
+        "placement": null
+      },
+      {
+        "name": "brown-tomb-door-sequence",
+        "box": [
+          256,
+          320,
+          256,
+          32
+        ],
+        "kind": "prop",
+        "group": "brown-tomb-door-sequence",
+        "frame": null,
+        "notes": "Preserve the complete animation strip.",
+        "placement": null
+      },
+      {
+        "name": "hanging-decoration-sequence-256",
+        "box": [
+          176,
+          256,
+          64,
+          16
+        ],
+        "kind": "prop",
+        "group": "unused",
+        "frame": null,
+        "notes": "Do not use. Reuse the approved asset: halloween-objects-hanging-decoration-sequence-272.png",
+        "placement": null,
+        "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/halloween-objects/halloween-objects-hanging-decoration-sequence-272.png"
+      },
+      {
+        "name": "hanging-decoration-sequence-272",
+        "box": [
+          176,
+          272,
+          64,
+          16
+        ],
+        "kind": "prop",
+        "group": "unused",
+        "frame": null,
+        "notes": "Do not use. Reuse the approved asset: halloween-objects-hanging-decoration-sequence-288.png",
+        "placement": null,
+        "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/halloween-objects/halloween-objects-hanging-decoration-sequence-288.png"
+      },
+      {
+        "name": "hanging-decoration-sequence-288",
+        "box": [
+          176,
+          288,
+          64,
+          16
+        ],
+        "kind": "prop",
+        "group": "unused",
+        "frame": null,
+        "notes": "Do not use. Reuse the approved asset: halloween-objects-hanging-decoration-sequence-304.png",
+        "placement": null,
+        "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/halloween-objects/halloween-objects-hanging-decoration-sequence-304.png"
+      },
+      {
+        "name": "pumpkin-sequence-304",
+        "box": [
+          176,
+          304,
+          64,
+          16
+        ],
+        "kind": "prop",
+        "group": "pumpkin-sequence-304",
+        "frame": null,
+        "notes": "Preserve the complete animation strip.",
+        "placement": null
+      },
+      {
+        "name": "pumpkin-sequence-320",
+        "box": [
+          176,
+          320,
+          64,
+          16
+        ],
+        "kind": "prop",
+        "group": "pumpkin-sequence-320",
+        "frame": null,
+        "notes": "Preserve the complete animation strip.",
+        "placement": null
+      },
+      {
+        "name": "root-edge-animation",
+        "box": [
+          32,
+          256,
+          128,
+          32
+        ],
+        "kind": "prop",
+        "group": "root-edge-animation",
+        "frame": null,
+        "notes": "Eight animation frames. The owner suggests a talking-tree face. Preserve the complete strip.",
+        "placement": null
+      },
+      {
+        "name": "root-face-animation",
+        "box": [
+          32,
+          288,
+          128,
+          32
+        ],
+        "kind": "prop",
+        "group": "root-face-animation",
+        "frame": null,
+        "notes": "Eight animation frames. The owner suggests a talking-tree face. Preserve the complete strip.",
+        "placement": null
+      }
+    ],
+    "animated": false,
+    "animationWidths": {
+      "61": 16,
+      "81": 16,
+      "101": 16,
+      "102": 32,
+      "103": 32,
+      "104": 32,
+      "105": 16,
+      "106": 16,
+      "107": 16,
+      "108": 16,
+      "109": 16,
+      "110": 16,
+      "111": 16
+    },
+    "duplicates": [],
+    "size": [
+      512,
+      352
+    ],
+    "status": "approved-and-processed"
+  }
+]

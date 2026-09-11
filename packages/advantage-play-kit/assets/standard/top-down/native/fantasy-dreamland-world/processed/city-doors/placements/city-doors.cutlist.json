@@ -1,0 +1,282 @@
+[
+  {
+    "name": "city-door-style-01-01",
+    "box": [
+      0,
+      0,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "city-door-style-01-01",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "city-door-style-01-02",
+    "box": [
+      80,
+      0,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "city-door-style-01-02",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "city-door-style-01-03",
+    "box": [
+      160,
+      0,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "city-door-style-01-03",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "city-door-style-02-01",
+    "box": [
+      0,
+      16,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "city-door-style-02-01",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "city-door-style-02-02",
+    "box": [
+      80,
+      16,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "city-door-style-02-02",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "city-door-style-02-03",
+    "box": [
+      160,
+      16,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "city-door-style-02-03",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "city-door-style-03-01",
+    "box": [
+      0,
+      32,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "city-door-style-03-01",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "city-door-style-03-02",
+    "box": [
+      80,
+      32,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "city-door-style-03-02",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "city-door-style-03-03",
+    "box": [
+      160,
+      32,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "city-door-style-03-03",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "city-door-style-04-01",
+    "box": [
+      0,
+      48,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "city-door-style-04-01",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "city-door-style-04-02",
+    "box": [
+      80,
+      48,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "city-door-style-04-02",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "city-door-style-04-03",
+    "box": [
+      160,
+      48,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "city-door-style-04-03",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "city-door-style-05-01",
+    "box": [
+      0,
+      64,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "city-door-style-05-01",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "city-door-style-05-02",
+    "box": [
+      80,
+      64,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "city-door-style-05-02",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "city-door-style-05-03",
+    "box": [
+      160,
+      64,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "city-door-style-05-03",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "city-door-style-06-01",
+    "box": [
+      0,
+      80,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "city-door-style-06-01",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "city-door-style-06-02",
+    "box": [
+      80,
+      80,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "city-door-style-06-02",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "city-door-style-06-03",
+    "box": [
+      160,
+      80,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "city-door-style-06-03",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "city-door-ornate-01",
+    "box": [
+      240,
+      0,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "city-door-ornate-01",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "city-door-ornate-02",
+    "box": [
+      240,
+      48,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "city-door-ornate-02",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the complete strip.",
+    "placement": null
+  }
+]

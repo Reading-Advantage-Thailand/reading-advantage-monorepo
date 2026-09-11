@@ -1,0 +1,1258 @@
+[
+  {
+    "name": "snow-terrain-panel-0-0",
+    "box": [
+      0,
+      0,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "snow-terrain-panel-0-0",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "snow-terrain-panel-48-0",
+    "box": [
+      48,
+      0,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "snow-terrain-panel-48-0",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "snow-terrain-panel-0-64",
+    "box": [
+      0,
+      64,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "snow-terrain-panel-0-64",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "snow-terrain-panel-48-64",
+    "box": [
+      48,
+      64,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "snow-terrain-panel-48-64",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "snow-edge-module-48",
+    "box": [
+      0,
+      48,
+      112,
+      16
+    ],
+    "kind": "part",
+    "group": "snow-edge-module-48",
+    "frame": null,
+    "notes": "Preserve the module. Use its 16-pixel tile grid.",
+    "placement": null
+  },
+  {
+    "name": "snow-edge-module-112",
+    "box": [
+      0,
+      112,
+      112,
+      16
+    ],
+    "kind": "part",
+    "group": "snow-edge-module-112",
+    "frame": null,
+    "notes": "Preserve the module. Use its 16-pixel tile grid.",
+    "placement": null
+  },
+  {
+    "name": "snow-decoration-112",
+    "box": [
+      112,
+      0,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "snow-decoration-112",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "snow-decoration-128",
+    "box": [
+      128,
+      0,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "snow-decoration-128",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "snow-decoration-144",
+    "box": [
+      144,
+      0,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "snow-decoration-144",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "snow-decoration-160",
+    "box": [
+      160,
+      0,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "snow-decoration-160",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "snow-decoration-176",
+    "box": [
+      176,
+      0,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "snow-decoration-176",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "snow-decoration-192",
+    "box": [
+      192,
+      0,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "snow-decoration-192",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "snow-decoration-208",
+    "box": [
+      208,
+      0,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "snow-decoration-208",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "snow-decoration-224",
+    "box": [
+      224,
+      0,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "snow-decoration-224",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "candy-cane-112-16",
+    "box": [
+      112,
+      16,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "candy-cane-112-16",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "candy-cane-112-32",
+    "box": [
+      112,
+      32,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "candy-cane-112-32",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "candy-cane-128-16",
+    "box": [
+      128,
+      16,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "candy-cane-128-16",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "candy-cane-128-32",
+    "box": [
+      128,
+      32,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "candy-cane-128-32",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "snowman-144-16",
+    "box": [
+      144,
+      16,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the approved asset: christmas-objects-snowman-0-01.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-snowman-0-01.png"
+  },
+  {
+    "name": "snowman-144-48",
+    "box": [
+      144,
+      48,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the approved asset: christmas-objects-snowman-32-01.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-snowman-32-01.png"
+  },
+  {
+    "name": "snowman-160-16",
+    "box": [
+      160,
+      16,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the approved asset: christmas-objects-snowman-0-02.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-snowman-0-02.png"
+  },
+  {
+    "name": "snowman-160-48",
+    "box": [
+      160,
+      48,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the approved asset: christmas-objects-snowman-32-02.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-snowman-32-02.png"
+  },
+  {
+    "name": "snowman-176-16",
+    "box": [
+      176,
+      16,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the approved asset: christmas-objects-snowman-0-03.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-snowman-0-03.png"
+  },
+  {
+    "name": "snowman-176-48",
+    "box": [
+      176,
+      48,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the approved asset: christmas-objects-snowman-32-03.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-snowman-32-03.png"
+  },
+  {
+    "name": "snowman-192-16",
+    "box": [
+      192,
+      16,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the approved asset: christmas-objects-snowman-0-04.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-snowman-0-04.png"
+  },
+  {
+    "name": "snowman-192-48",
+    "box": [
+      192,
+      48,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the approved asset: christmas-objects-snowman-32-04.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-snowman-32-04.png"
+  },
+  {
+    "name": "snowman-208-16",
+    "box": [
+      208,
+      16,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the approved asset: christmas-objects-snowman-0-05.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-snowman-0-05.png"
+  },
+  {
+    "name": "snowman-208-48",
+    "box": [
+      208,
+      48,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the approved asset: christmas-objects-snowman-32-05.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-snowman-32-05.png"
+  },
+  {
+    "name": "garland-32",
+    "box": [
+      224,
+      32,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the approved asset: christmas-objects-holiday-decoration-112-96.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-holiday-decoration-112-96.png"
+  },
+  {
+    "name": "garland-48",
+    "box": [
+      224,
+      48,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the approved asset: christmas-objects-holiday-decoration-96-96.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-holiday-decoration-96-96.png"
+  },
+  {
+    "name": "holiday-object-112-64",
+    "box": [
+      112,
+      64,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the approved asset: christmas-objects-gift-0-48.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-gift-0-48.png"
+  },
+  {
+    "name": "holiday-object-128-64",
+    "box": [
+      128,
+      64,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the approved asset: christmas-objects-gift-16-48.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-gift-16-48.png"
+  },
+  {
+    "name": "holiday-object-144-64",
+    "box": [
+      144,
+      64,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the approved asset: christmas-objects-gift-32-48.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-gift-32-48.png"
+  },
+  {
+    "name": "holiday-object-160-64",
+    "box": [
+      160,
+      64,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the approved asset: christmas-objects-gift-48-48.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-gift-48-48.png"
+  },
+  {
+    "name": "holiday-object-176-64",
+    "box": [
+      176,
+      64,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the approved asset: christmas-objects-gift-64-48.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-gift-64-48.png"
+  },
+  {
+    "name": "holiday-object-192-64",
+    "box": [
+      192,
+      64,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the approved asset: christmas-objects-gift-80-48.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-gift-80-48.png"
+  },
+  {
+    "name": "holiday-object-208-64",
+    "box": [
+      208,
+      64,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the approved asset: christmas-objects-gift-pile-96-48.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-gift-pile-96-48.png"
+  },
+  {
+    "name": "holiday-object-224-64",
+    "box": [
+      224,
+      64,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the approved asset: christmas-objects-gift-pile-112-48.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-gift-pile-112-48.png"
+  },
+  {
+    "name": "holiday-object-112-80",
+    "box": [
+      112,
+      80,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the approved asset: christmas-objects-gift-0-64.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-gift-0-64.png"
+  },
+  {
+    "name": "holiday-object-128-80",
+    "box": [
+      128,
+      80,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the approved asset: christmas-objects-gift-16-64.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-gift-16-64.png"
+  },
+  {
+    "name": "holiday-object-144-80",
+    "box": [
+      144,
+      80,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the approved asset: christmas-objects-gift-32-64.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-gift-32-64.png"
+  },
+  {
+    "name": "holiday-object-160-80",
+    "box": [
+      160,
+      80,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the approved asset: christmas-objects-gift-48-64.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-gift-48-64.png"
+  },
+  {
+    "name": "holiday-object-176-80",
+    "box": [
+      176,
+      80,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the approved asset: christmas-objects-gift-64-64.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-gift-64-64.png"
+  },
+  {
+    "name": "holiday-object-192-80",
+    "box": [
+      192,
+      80,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the approved asset: christmas-objects-gift-80-64.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-gift-80-64.png"
+  },
+  {
+    "name": "holiday-object-208-80",
+    "box": [
+      208,
+      80,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the approved asset: christmas-objects-gift-pile-96-64.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-gift-pile-96-64.png"
+  },
+  {
+    "name": "holiday-object-224-80",
+    "box": [
+      224,
+      80,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the approved asset: christmas-objects-gift-pile-112-64.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-gift-pile-112-64.png"
+  },
+  {
+    "name": "holiday-object-112-96",
+    "box": [
+      112,
+      96,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the approved asset: christmas-objects-holiday-decoration-0-80.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-holiday-decoration-0-80.png"
+  },
+  {
+    "name": "holiday-object-128-96",
+    "box": [
+      128,
+      96,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the approved asset: christmas-objects-holiday-decoration-16-80.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-holiday-decoration-16-80.png"
+  },
+  {
+    "name": "holiday-object-144-96",
+    "box": [
+      144,
+      96,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the approved asset: christmas-objects-holiday-decoration-32-80.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-holiday-decoration-32-80.png"
+  },
+  {
+    "name": "holiday-object-160-96",
+    "box": [
+      160,
+      96,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the approved asset: christmas-objects-holiday-decoration-48-80.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-holiday-decoration-48-80.png"
+  },
+  {
+    "name": "holiday-object-176-96",
+    "box": [
+      176,
+      96,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the approved asset: christmas-objects-holiday-decoration-64-80.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-holiday-decoration-64-80.png"
+  },
+  {
+    "name": "holiday-object-192-96",
+    "box": [
+      192,
+      96,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the approved asset: christmas-objects-holiday-decoration-80-80.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-holiday-decoration-80-80.png"
+  },
+  {
+    "name": "holiday-object-208-96",
+    "box": [
+      208,
+      96,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the approved asset: christmas-objects-holiday-decoration-96-80.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-holiday-decoration-96-80.png"
+  },
+  {
+    "name": "holiday-object-224-96",
+    "box": [
+      224,
+      96,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the approved asset: christmas-objects-holiday-decoration-112-80.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-holiday-decoration-112-80.png"
+  },
+  {
+    "name": "holiday-decoration-112",
+    "box": [
+      112,
+      112,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the approved asset: christmas-objects-holiday-decoration-0-96.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-holiday-decoration-0-96.png"
+  },
+  {
+    "name": "holiday-decoration-128",
+    "box": [
+      128,
+      112,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the approved asset: christmas-objects-holiday-decoration-16-96.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/christmas-objects/christmas-objects-holiday-decoration-16-96.png"
+  },
+  {
+    "name": "holiday-decoration-144",
+    "box": [
+      144,
+      112,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "holiday-decoration-144",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "holiday-decoration-160",
+    "box": [
+      160,
+      112,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "holiday-decoration-160",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "holiday-decoration-176",
+    "box": [
+      176,
+      112,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "holiday-decoration-176",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "bare-tree-112",
+    "box": [
+      200,
+      112,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "bare-tree-112",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "bare-tree-192",
+    "box": [
+      200,
+      192,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "bare-tree-192",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "round-snow-tree-144",
+    "box": [
+      192,
+      144,
+      48,
+      48
+    ],
+    "kind": "prop",
+    "group": "round-snow-tree-144",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "round-snow-tree-224",
+    "box": [
+      192,
+      224,
+      48,
+      32
+    ],
+    "kind": "prop",
+    "group": "round-snow-tree-224",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "blue-tree-0-128",
+    "box": [
+      0,
+      128,
+      48,
+      64
+    ],
+    "kind": "prop",
+    "group": "blue-tree-0-128",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "blue-tree-0-200",
+    "box": [
+      0,
+      200,
+      48,
+      56
+    ],
+    "kind": "prop",
+    "group": "blue-tree-0-200",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "blue-tree-48-128",
+    "box": [
+      48,
+      128,
+      48,
+      64
+    ],
+    "kind": "prop",
+    "group": "blue-tree-48-128",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "blue-tree-48-200",
+    "box": [
+      48,
+      200,
+      48,
+      56
+    ],
+    "kind": "prop",
+    "group": "blue-tree-48-200",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "blue-tree-96-128",
+    "box": [
+      96,
+      128,
+      48,
+      64
+    ],
+    "kind": "prop",
+    "group": "blue-tree-96-128",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "blue-tree-96-200",
+    "box": [
+      96,
+      200,
+      48,
+      56
+    ],
+    "kind": "prop",
+    "group": "blue-tree-96-200",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "blue-tree-144-128",
+    "box": [
+      144,
+      128,
+      48,
+      64
+    ],
+    "kind": "prop",
+    "group": "blue-tree-144-128",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "blue-tree-144-200",
+    "box": [
+      144,
+      200,
+      48,
+      56
+    ],
+    "kind": "prop",
+    "group": "blue-tree-144-200",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "green-tree-256-0",
+    "box": [
+      256,
+      0,
+      48,
+      64
+    ],
+    "kind": "prop",
+    "group": "green-tree-256-0",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "green-tree-256-72",
+    "box": [
+      256,
+      72,
+      48,
+      56
+    ],
+    "kind": "prop",
+    "group": "green-tree-256-72",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "green-tree-256-128",
+    "box": [
+      256,
+      128,
+      48,
+      64
+    ],
+    "kind": "prop",
+    "group": "green-tree-256-128",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "green-tree-256-200",
+    "box": [
+      256,
+      200,
+      48,
+      56
+    ],
+    "kind": "prop",
+    "group": "green-tree-256-200",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "green-tree-304-0",
+    "box": [
+      304,
+      0,
+      48,
+      64
+    ],
+    "kind": "prop",
+    "group": "green-tree-304-0",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "green-tree-304-72",
+    "box": [
+      304,
+      72,
+      48,
+      56
+    ],
+    "kind": "prop",
+    "group": "green-tree-304-72",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "green-tree-304-128",
+    "box": [
+      304,
+      128,
+      48,
+      64
+    ],
+    "kind": "prop",
+    "group": "green-tree-304-128",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "green-tree-304-200",
+    "box": [
+      304,
+      200,
+      48,
+      56
+    ],
+    "kind": "prop",
+    "group": "green-tree-304-200",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "green-tree-352-0",
+    "box": [
+      352,
+      0,
+      48,
+      64
+    ],
+    "kind": "prop",
+    "group": "green-tree-352-0",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "green-tree-352-72",
+    "box": [
+      352,
+      72,
+      48,
+      56
+    ],
+    "kind": "prop",
+    "group": "green-tree-352-72",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "green-tree-352-128",
+    "box": [
+      352,
+      128,
+      48,
+      64
+    ],
+    "kind": "prop",
+    "group": "green-tree-352-128",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "green-tree-352-200",
+    "box": [
+      352,
+      200,
+      48,
+      56
+    ],
+    "kind": "prop",
+    "group": "green-tree-352-200",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "green-tree-400-0",
+    "box": [
+      400,
+      0,
+      48,
+      64
+    ],
+    "kind": "prop",
+    "group": "green-tree-400-0",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "green-tree-400-72",
+    "box": [
+      400,
+      72,
+      48,
+      56
+    ],
+    "kind": "prop",
+    "group": "green-tree-400-72",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "green-tree-400-128",
+    "box": [
+      400,
+      128,
+      48,
+      64
+    ],
+    "kind": "prop",
+    "group": "green-tree-400-128",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "green-tree-400-200",
+    "box": [
+      400,
+      200,
+      48,
+      56
+    ],
+    "kind": "prop",
+    "group": "green-tree-400-200",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  }
+]

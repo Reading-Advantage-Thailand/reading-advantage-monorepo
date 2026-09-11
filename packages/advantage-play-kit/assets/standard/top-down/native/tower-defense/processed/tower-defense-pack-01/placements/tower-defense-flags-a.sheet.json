@@ -1,0 +1,8 @@
+{
+  "keepSheet": true,
+  "cellWidth": 16,
+  "cellHeight": 16,
+  "columns": 8,
+  "rows": 10,
+  "notes": "Uniform banner atlas. Every cell is 16x16. Do not crop into files."
+}

@@ -1,0 +1,6276 @@
+[
+  {
+    "name": "plant-256-0",
+    "box": [
+      256,
+      0,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-flower-mushroom-clump-16.png",
+    "placement": null,
+    "reviewId": "S01",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-flower-mushroom-clump-16.png"
+  },
+  {
+    "name": "plant-272-0",
+    "box": [
+      272,
+      0,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-flower-mushroom-clump-32.png",
+    "placement": null,
+    "reviewId": "S02",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-flower-mushroom-clump-32.png"
+  },
+  {
+    "name": "plant-288-0",
+    "box": [
+      288,
+      0,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-flower-mushroom-clump-48.png",
+    "placement": null,
+    "reviewId": "S03",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-flower-mushroom-clump-48.png"
+  },
+  {
+    "name": "plant-304-0",
+    "box": [
+      304,
+      0,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-304-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S04"
+  },
+  {
+    "name": "plant-320-0",
+    "box": [
+      320,
+      0,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-320-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S05"
+  },
+  {
+    "name": "plant-336-0",
+    "box": [
+      336,
+      0,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-336-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S06"
+  },
+  {
+    "name": "plant-352-0",
+    "box": [
+      352,
+      0,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-352-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S07"
+  },
+  {
+    "name": "plant-368-0",
+    "box": [
+      368,
+      0,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-368-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S08"
+  },
+  {
+    "name": "plant-384-0",
+    "box": [
+      384,
+      0,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-384-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S09"
+  },
+  {
+    "name": "plant-400-0",
+    "box": [
+      400,
+      0,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-400-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S10"
+  },
+  {
+    "name": "plant-416-0",
+    "box": [
+      416,
+      0,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-416-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S11"
+  },
+  {
+    "name": "plant-432-0",
+    "box": [
+      432,
+      0,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-432-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S12"
+  },
+  {
+    "name": "plant-448-0",
+    "box": [
+      448,
+      0,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-448-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S13"
+  },
+  {
+    "name": "plant-464-0",
+    "box": [
+      464,
+      0,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-464-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S14"
+  },
+  {
+    "name": "plant-480-0",
+    "box": [
+      480,
+      0,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-480-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S15"
+  },
+  {
+    "name": "plant-256-16",
+    "box": [
+      256,
+      16,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-256-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S16"
+  },
+  {
+    "name": "plant-272-16",
+    "box": [
+      272,
+      16,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-272-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S17"
+  },
+  {
+    "name": "plant-288-16",
+    "box": [
+      288,
+      16,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-288-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S18"
+  },
+  {
+    "name": "plant-304-16",
+    "box": [
+      304,
+      16,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-304-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S19"
+  },
+  {
+    "name": "plant-320-16",
+    "box": [
+      320,
+      16,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-320-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S20"
+  },
+  {
+    "name": "plant-336-16",
+    "box": [
+      336,
+      16,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-336-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S21"
+  },
+  {
+    "name": "plant-352-16",
+    "box": [
+      352,
+      16,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-352-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S22"
+  },
+  {
+    "name": "plant-368-16",
+    "box": [
+      368,
+      16,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-368-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S23"
+  },
+  {
+    "name": "plant-384-16",
+    "box": [
+      384,
+      16,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-384-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S24"
+  },
+  {
+    "name": "plant-400-16",
+    "box": [
+      400,
+      16,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-400-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S25"
+  },
+  {
+    "name": "plant-416-16",
+    "box": [
+      416,
+      16,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-416-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S26"
+  },
+  {
+    "name": "plant-432-16",
+    "box": [
+      432,
+      16,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-432-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S27"
+  },
+  {
+    "name": "plant-448-16",
+    "box": [
+      448,
+      16,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-448-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S28"
+  },
+  {
+    "name": "plant-464-16",
+    "box": [
+      464,
+      16,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-464-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S29"
+  },
+  {
+    "name": "plant-480-16",
+    "box": [
+      480,
+      16,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-480-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S30"
+  },
+  {
+    "name": "plant-256-32",
+    "box": [
+      256,
+      32,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-256-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S31"
+  },
+  {
+    "name": "plant-272-32",
+    "box": [
+      272,
+      32,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-272-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S32"
+  },
+  {
+    "name": "plant-288-32",
+    "box": [
+      288,
+      32,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-288-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S33"
+  },
+  {
+    "name": "plant-304-32",
+    "box": [
+      304,
+      32,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-304-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S34"
+  },
+  {
+    "name": "plant-320-32",
+    "box": [
+      320,
+      32,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-320-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S35"
+  },
+  {
+    "name": "plant-336-32",
+    "box": [
+      336,
+      32,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-336-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S36"
+  },
+  {
+    "name": "plant-352-32",
+    "box": [
+      352,
+      32,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-352-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S37"
+  },
+  {
+    "name": "plant-368-32",
+    "box": [
+      368,
+      32,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-368-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S38"
+  },
+  {
+    "name": "plant-384-32",
+    "box": [
+      384,
+      32,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-384-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S39"
+  },
+  {
+    "name": "plant-400-32",
+    "box": [
+      400,
+      32,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-400-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S40"
+  },
+  {
+    "name": "plant-416-32",
+    "box": [
+      416,
+      32,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-416-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S41"
+  },
+  {
+    "name": "plant-432-32",
+    "box": [
+      432,
+      32,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-432-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S42"
+  },
+  {
+    "name": "plant-448-32",
+    "box": [
+      448,
+      32,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-448-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S43"
+  },
+  {
+    "name": "plant-464-32",
+    "box": [
+      464,
+      32,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-464-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S44"
+  },
+  {
+    "name": "plant-480-32",
+    "box": [
+      480,
+      32,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-480-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S45"
+  },
+  {
+    "name": "plant-496-32",
+    "box": [
+      496,
+      32,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "plant-496-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S46"
+  },
+  {
+    "name": "brown-rock-256-48",
+    "box": [
+      256,
+      48,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-stone-304.png",
+    "placement": null,
+    "reviewId": "S47",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-stone-304.png"
+  },
+  {
+    "name": "brown-rock-272-48",
+    "box": [
+      272,
+      48,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-stone-320.png",
+    "placement": null,
+    "reviewId": "S48",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-stone-320.png"
+  },
+  {
+    "name": "brown-rock-288-48",
+    "box": [
+      288,
+      48,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-stone-336.png",
+    "placement": null,
+    "reviewId": "S49",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-stone-336.png"
+  },
+  {
+    "name": "brown-rock-304-48",
+    "box": [
+      304,
+      48,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-stone-352.png",
+    "placement": null,
+    "reviewId": "S50",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-stone-352.png"
+  },
+  {
+    "name": "brown-rock-256-64",
+    "box": [
+      256,
+      64,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "brown-rock-256-64",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S51"
+  },
+  {
+    "name": "brown-rock-272-64",
+    "box": [
+      272,
+      64,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "brown-rock-272-64",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S52"
+  },
+  {
+    "name": "brown-rock-288-64",
+    "box": [
+      288,
+      64,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "brown-rock-288-64",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S53"
+  },
+  {
+    "name": "brown-rock-304-64",
+    "box": [
+      304,
+      64,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "brown-rock-304-64",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S54"
+  },
+  {
+    "name": "brown-rock-256-80",
+    "box": [
+      256,
+      80,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "brown-rock-256-80",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S55"
+  },
+  {
+    "name": "brown-rock-272-80",
+    "box": [
+      272,
+      80,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "brown-rock-272-80",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S56"
+  },
+  {
+    "name": "brown-rock-288-80",
+    "box": [
+      288,
+      80,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "brown-rock-288-80",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S57"
+  },
+  {
+    "name": "brown-rock-304-80",
+    "box": [
+      304,
+      80,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "brown-rock-304-80",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S58"
+  },
+  {
+    "name": "brown-rock-320-48",
+    "box": [
+      320,
+      48,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "brown-rock-320-48",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S59"
+  },
+  {
+    "name": "brown-rock-336-48",
+    "box": [
+      336,
+      48,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "brown-rock-336-48",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S60"
+  },
+  {
+    "name": "brown-rock-352-48",
+    "box": [
+      352,
+      48,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "brown-rock-352-48",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S61"
+  },
+  {
+    "name": "brown-rock-320-80",
+    "box": [
+      320,
+      80,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "brown-rock-320-80",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S62"
+  },
+  {
+    "name": "brown-rock-336-80",
+    "box": [
+      336,
+      80,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "brown-rock-336-80",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S63"
+  },
+  {
+    "name": "brown-rock-352-80",
+    "box": [
+      352,
+      80,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "brown-rock-352-80",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S64"
+  },
+  {
+    "name": "brown-rock-256-96",
+    "box": [
+      256,
+      96,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "brown-rock-256-96",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S65"
+  },
+  {
+    "name": "brown-rock-288-96",
+    "box": [
+      288,
+      96,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "brown-rock-288-96",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S66"
+  },
+  {
+    "name": "brown-bush-320",
+    "box": [
+      320,
+      112,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "brown-bush-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S67"
+  },
+  {
+    "name": "brown-bush-336",
+    "box": [
+      336,
+      112,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "brown-bush-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S68"
+  },
+  {
+    "name": "brown-bush-352",
+    "box": [
+      352,
+      112,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "brown-bush-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S69"
+  },
+  {
+    "name": "brown-bush-368",
+    "box": [
+      368,
+      112,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "brown-bush-368",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S70"
+  },
+  {
+    "name": "gray-rock-256-48",
+    "box": [
+      384,
+      48,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-stone-384.png",
+    "placement": null,
+    "reviewId": "S71",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-stone-384.png"
+  },
+  {
+    "name": "gray-rock-272-48",
+    "box": [
+      400,
+      48,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-stone-400.png",
+    "placement": null,
+    "reviewId": "S72",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-stone-400.png"
+  },
+  {
+    "name": "gray-rock-288-48",
+    "box": [
+      416,
+      48,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-stone-416.png",
+    "placement": null,
+    "reviewId": "S73",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-stone-416.png"
+  },
+  {
+    "name": "gray-rock-304-48",
+    "box": [
+      432,
+      48,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-stone-432.png",
+    "placement": null,
+    "reviewId": "S74",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-stone-432.png"
+  },
+  {
+    "name": "gray-rock-256-64",
+    "box": [
+      384,
+      64,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "gray-rock-256-64",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S75"
+  },
+  {
+    "name": "gray-rock-272-64",
+    "box": [
+      400,
+      64,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "gray-rock-272-64",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S76"
+  },
+  {
+    "name": "gray-rock-288-64",
+    "box": [
+      416,
+      64,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "gray-rock-288-64",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S77"
+  },
+  {
+    "name": "gray-rock-304-64",
+    "box": [
+      432,
+      64,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "gray-rock-304-64",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S78"
+  },
+  {
+    "name": "gray-rock-256-80",
+    "box": [
+      384,
+      80,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "gray-rock-256-80",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S79"
+  },
+  {
+    "name": "gray-rock-272-80",
+    "box": [
+      400,
+      80,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "gray-rock-272-80",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S80"
+  },
+  {
+    "name": "gray-rock-288-80",
+    "box": [
+      416,
+      80,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "gray-rock-288-80",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S81"
+  },
+  {
+    "name": "gray-rock-304-80",
+    "box": [
+      432,
+      80,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "gray-rock-304-80",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S82"
+  },
+  {
+    "name": "gray-rock-320-48",
+    "box": [
+      448,
+      48,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "gray-rock-320-48",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S83"
+  },
+  {
+    "name": "gray-rock-336-48",
+    "box": [
+      464,
+      48,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "gray-rock-336-48",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S84"
+  },
+  {
+    "name": "gray-rock-352-48",
+    "box": [
+      480,
+      48,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "gray-rock-352-48",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S85"
+  },
+  {
+    "name": "gray-rock-320-80",
+    "box": [
+      448,
+      80,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "gray-rock-320-80",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S86"
+  },
+  {
+    "name": "gray-rock-336-80",
+    "box": [
+      464,
+      80,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "gray-rock-336-80",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S87"
+  },
+  {
+    "name": "gray-rock-352-80",
+    "box": [
+      480,
+      80,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "gray-rock-352-80",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S88"
+  },
+  {
+    "name": "gray-rock-256-96",
+    "box": [
+      384,
+      96,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "gray-rock-256-96",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S89"
+  },
+  {
+    "name": "gray-rock-288-96",
+    "box": [
+      416,
+      96,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "gray-rock-288-96",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S90"
+  },
+  {
+    "name": "gray-bush-320",
+    "box": [
+      448,
+      112,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "gray-bush-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S91"
+  },
+  {
+    "name": "gray-bush-336",
+    "box": [
+      464,
+      112,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "gray-bush-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S92"
+  },
+  {
+    "name": "gray-bush-352",
+    "box": [
+      480,
+      112,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "gray-bush-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S93"
+  },
+  {
+    "name": "gray-bush-368",
+    "box": [
+      496,
+      112,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "gray-bush-368",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S94"
+  },
+  {
+    "name": "earth-border",
+    "box": [
+      0,
+      128,
+      64,
+      64
+    ],
+    "kind": "part",
+    "group": "earth-border",
+    "frame": null,
+    "notes": "Keep this terrain tile assembly together.",
+    "placement": null,
+    "reviewId": "S95"
+  },
+  {
+    "name": "earth-small",
+    "box": [
+      64,
+      128,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "earth-small",
+    "frame": null,
+    "notes": "Keep this terrain tile assembly together.",
+    "placement": null,
+    "reviewId": "S96"
+  },
+  {
+    "name": "stone-border",
+    "box": [
+      96,
+      128,
+      48,
+      64
+    ],
+    "kind": "part",
+    "group": "stone-border",
+    "frame": null,
+    "notes": "Keep this terrain tile assembly together.",
+    "placement": null,
+    "reviewId": "S97"
+  },
+  {
+    "name": "stone-small",
+    "box": [
+      144,
+      128,
+      32,
+      48
+    ],
+    "kind": "part",
+    "group": "stone-small",
+    "frame": null,
+    "notes": "Keep this terrain tile assembly together.",
+    "placement": null,
+    "reviewId": "S98"
+  },
+  {
+    "name": "grass-176-128",
+    "box": [
+      176,
+      128,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "grass-176-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S99"
+  },
+  {
+    "name": "grass-192-128",
+    "box": [
+      192,
+      128,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "grass-192-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S100"
+  },
+  {
+    "name": "grass-208-128",
+    "box": [
+      208,
+      128,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "grass-208-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S101"
+  },
+  {
+    "name": "grass-224-128",
+    "box": [
+      224,
+      128,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "grass-224-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S102"
+  },
+  {
+    "name": "grass-240-128",
+    "box": [
+      240,
+      128,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "grass-240-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S103"
+  },
+  {
+    "name": "grass-176-144",
+    "box": [
+      176,
+      144,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "grass-176-144",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S104"
+  },
+  {
+    "name": "grass-192-144",
+    "box": [
+      192,
+      144,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "grass-192-144",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S105"
+  },
+  {
+    "name": "grass-208-144",
+    "box": [
+      208,
+      144,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "grass-208-144",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S106"
+  },
+  {
+    "name": "grass-224-144",
+    "box": [
+      224,
+      144,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "grass-224-144",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S107"
+  },
+  {
+    "name": "grass-240-144",
+    "box": [
+      240,
+      144,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "grass-240-144",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S108"
+  },
+  {
+    "name": "grass-176-160",
+    "box": [
+      176,
+      160,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "grass-176-160",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S109"
+  },
+  {
+    "name": "grass-176-176",
+    "box": [
+      176,
+      176,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "grass-176-176",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S110"
+  },
+  {
+    "name": "grass-small-192-160",
+    "box": [
+      192,
+      160,
+      16,
+      8
+    ],
+    "kind": "prop",
+    "group": "grass-small-192-160",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S111"
+  },
+  {
+    "name": "grass-small-208-160",
+    "box": [
+      208,
+      160,
+      16,
+      8
+    ],
+    "kind": "prop",
+    "group": "grass-small-208-160",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S112"
+  },
+  {
+    "name": "grass-small-240-160",
+    "box": [
+      240,
+      160,
+      16,
+      8
+    ],
+    "kind": "prop",
+    "group": "grass-small-240-160",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S113"
+  },
+  {
+    "name": "grass-small-192-168",
+    "box": [
+      192,
+      168,
+      16,
+      8
+    ],
+    "kind": "prop",
+    "group": "grass-small-192-168",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S114"
+  },
+  {
+    "name": "grass-small-208-168",
+    "box": [
+      208,
+      168,
+      16,
+      8
+    ],
+    "kind": "prop",
+    "group": "grass-small-208-168",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S115"
+  },
+  {
+    "name": "grass-small-240-168",
+    "box": [
+      240,
+      168,
+      16,
+      8
+    ],
+    "kind": "prop",
+    "group": "grass-small-240-168",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S116"
+  },
+  {
+    "name": "brown-fence-256",
+    "box": [
+      256,
+      128,
+      48,
+      48
+    ],
+    "kind": "structure",
+    "group": "brown-fence-256",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S117"
+  },
+  {
+    "name": "brown-fence-304",
+    "box": [
+      304,
+      128,
+      48,
+      48
+    ],
+    "kind": "structure",
+    "group": "brown-fence-304",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S118"
+  },
+  {
+    "name": "brown-post-352-128",
+    "box": [
+      352,
+      128,
+      32,
+      16
+    ],
+    "kind": "prop",
+    "group": "brown-post-352-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S119"
+  },
+  {
+    "name": "brown-post-352-144",
+    "box": [
+      352,
+      144,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "brown-post-352-144",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S120"
+  },
+  {
+    "name": "brown-post-368-144",
+    "box": [
+      368,
+      144,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "brown-post-368-144",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S121"
+  },
+  {
+    "name": "brown-post-352-160",
+    "box": [
+      352,
+      160,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "brown-post-352-160",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S122"
+  },
+  {
+    "name": "pale-fence-256",
+    "box": [
+      256,
+      176,
+      48,
+      48
+    ],
+    "kind": "structure",
+    "group": "pale-fence-256",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S123"
+  },
+  {
+    "name": "pale-fence-304",
+    "box": [
+      304,
+      176,
+      48,
+      48
+    ],
+    "kind": "structure",
+    "group": "pale-fence-304",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S124"
+  },
+  {
+    "name": "pale-post-352-128",
+    "box": [
+      352,
+      176,
+      32,
+      16
+    ],
+    "kind": "prop",
+    "group": "pale-post-352-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S125"
+  },
+  {
+    "name": "pale-post-352-144",
+    "box": [
+      352,
+      192,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "pale-post-352-144",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S126"
+  },
+  {
+    "name": "pale-post-368-144",
+    "box": [
+      368,
+      192,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "pale-post-368-144",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S127"
+  },
+  {
+    "name": "pale-post-352-160",
+    "box": [
+      352,
+      208,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "pale-post-352-160",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S128"
+  },
+  {
+    "name": "large-tree",
+    "box": [
+      384,
+      128,
+      48,
+      64
+    ],
+    "kind": "structure",
+    "group": "large-tree",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S129"
+  },
+  {
+    "name": "small-tree",
+    "box": [
+      448,
+      144,
+      48,
+      48
+    ],
+    "kind": "structure",
+    "group": "small-tree",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S130"
+  },
+  {
+    "name": "tree-part-432-160",
+    "box": [
+      432,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tree-part-432-160",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S131"
+  },
+  {
+    "name": "tree-part-432-176",
+    "box": [
+      432,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tree-part-432-176",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S132"
+  },
+  {
+    "name": "tree-part-432-192",
+    "box": [
+      432,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tree-part-432-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S133"
+  },
+  {
+    "name": "tree-part-432-208",
+    "box": [
+      432,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tree-part-432-208",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S134"
+  },
+  {
+    "name": "tree-part-480-128",
+    "box": [
+      480,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tree-part-480-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S135"
+  },
+  {
+    "name": "tree-part-496-128",
+    "box": [
+      496,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tree-part-496-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S136"
+  },
+  {
+    "name": "tree-part-496-176",
+    "box": [
+      496,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tree-part-496-176",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S137"
+  },
+  {
+    "name": "tree-part-496-192",
+    "box": [
+      496,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tree-part-496-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S138"
+  },
+  {
+    "name": "tree-part-496-208",
+    "box": [
+      496,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tree-part-496-208",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S139"
+  },
+  {
+    "name": "tree-part-496-160",
+    "box": [
+      496,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tree-part-496-160",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S140"
+  },
+  {
+    "name": "tree-shadow-384",
+    "box": [
+      384,
+      192,
+      48,
+      32
+    ],
+    "kind": "overlay",
+    "group": "tree-shadow-384",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S141"
+  },
+  {
+    "name": "tree-shadow-448",
+    "box": [
+      448,
+      192,
+      48,
+      32
+    ],
+    "kind": "overlay",
+    "group": "tree-shadow-448",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S142"
+  },
+  {
+    "name": "ground-stone-0-192",
+    "box": [
+      0,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-stone-0-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S143"
+  },
+  {
+    "name": "ground-stone-16-192",
+    "box": [
+      16,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-stone-16-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S144"
+  },
+  {
+    "name": "ground-stone-32-192",
+    "box": [
+      32,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-stone-32-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S145"
+  },
+  {
+    "name": "ground-stone-48-192",
+    "box": [
+      48,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-stone-48-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S146"
+  },
+  {
+    "name": "ground-stone-64-192",
+    "box": [
+      64,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-stone-64-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S147"
+  },
+  {
+    "name": "ground-stone-80-192",
+    "box": [
+      80,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-stone-80-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S148"
+  },
+  {
+    "name": "ground-stone-96-192",
+    "box": [
+      96,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-stone-96-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S149"
+  },
+  {
+    "name": "ground-stone-112-192",
+    "box": [
+      112,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-stone-112-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S150"
+  },
+  {
+    "name": "ground-stone-128-192",
+    "box": [
+      128,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-stone-128-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S151"
+  },
+  {
+    "name": "ground-stone-144-192",
+    "box": [
+      144,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-stone-144-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S152"
+  },
+  {
+    "name": "ground-stone-160-192",
+    "box": [
+      160,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-stone-160-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S153"
+  },
+  {
+    "name": "ground-stone-176-192",
+    "box": [
+      176,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-stone-176-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S154"
+  },
+  {
+    "name": "ground-stone-192-192",
+    "box": [
+      192,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-stone-192-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S155"
+  },
+  {
+    "name": "ground-stone-208-192",
+    "box": [
+      208,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-stone-208-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S156"
+  },
+  {
+    "name": "ground-stone-224-192",
+    "box": [
+      224,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-stone-224-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S157"
+  },
+  {
+    "name": "ground-stone-240-192",
+    "box": [
+      240,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-stone-240-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S158"
+  },
+  {
+    "name": "ground-stone-0-208",
+    "box": [
+      0,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-stone-0-208",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S159"
+  },
+  {
+    "name": "ground-stone-16-208",
+    "box": [
+      16,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-stone-16-208",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S160"
+  },
+  {
+    "name": "ground-stone-32-208",
+    "box": [
+      32,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-stone-32-208",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S161"
+  },
+  {
+    "name": "ground-stone-48-208",
+    "box": [
+      48,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-stone-48-208",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S162"
+  },
+  {
+    "name": "ground-stone-64-208",
+    "box": [
+      64,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-stone-64-208",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S163"
+  },
+  {
+    "name": "ground-stone-80-208",
+    "box": [
+      80,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-stone-80-208",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S164"
+  },
+  {
+    "name": "ground-stone-96-208",
+    "box": [
+      96,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-stone-96-208",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S165"
+  },
+  {
+    "name": "ground-stone-112-208",
+    "box": [
+      112,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-stone-112-208",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S166"
+  },
+  {
+    "name": "ground-stone-128-208",
+    "box": [
+      128,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-stone-128-208",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S167"
+  },
+  {
+    "name": "ground-stone-144-208",
+    "box": [
+      144,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-stone-144-208",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S168"
+  },
+  {
+    "name": "ground-stone-160-208",
+    "box": [
+      160,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-stone-160-208",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S169"
+  },
+  {
+    "name": "ground-stone-176-208",
+    "box": [
+      176,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-stone-176-208",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S170"
+  },
+  {
+    "name": "ground-stone-192-208",
+    "box": [
+      192,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-stone-192-208",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S171"
+  },
+  {
+    "name": "ground-stone-208-208",
+    "box": [
+      208,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-stone-208-208",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S172"
+  },
+  {
+    "name": "ground-stone-224-208",
+    "box": [
+      224,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-stone-224-208",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S173"
+  },
+  {
+    "name": "ground-stone-240-208",
+    "box": [
+      240,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-stone-240-208",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S174"
+  },
+  {
+    "name": "ground-stone-0-224",
+    "box": [
+      0,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-stone-0-224",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S175"
+  },
+  {
+    "name": "ground-stone-16-224",
+    "box": [
+      16,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-stone-16-224",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S176"
+  },
+  {
+    "name": "ground-stone-32-224",
+    "box": [
+      32,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-stone-32-224",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S177"
+  },
+  {
+    "name": "ground-stone-48-224",
+    "box": [
+      48,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-stone-48-224",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S178"
+  },
+  {
+    "name": "ground-stone-64-224",
+    "box": [
+      64,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-stone-64-224",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S179"
+  },
+  {
+    "name": "ground-stone-80-224",
+    "box": [
+      80,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-stone-80-224",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S180"
+  },
+  {
+    "name": "ground-stone-96-224",
+    "box": [
+      96,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-stone-96-224",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S181"
+  },
+  {
+    "name": "ground-stone-112-224",
+    "box": [
+      112,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-stone-112-224",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S182"
+  },
+  {
+    "name": "ground-stone-128-224",
+    "box": [
+      128,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-stone-128-224",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S183"
+  },
+  {
+    "name": "ground-stone-144-224",
+    "box": [
+      144,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-stone-144-224",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S184"
+  },
+  {
+    "name": "ground-stone-160-224",
+    "box": [
+      160,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-stone-160-224",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S185"
+  },
+  {
+    "name": "ground-stone-176-224",
+    "box": [
+      176,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-stone-176-224",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S186"
+  },
+  {
+    "name": "ground-stone-192-224",
+    "box": [
+      192,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-stone-192-224",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S187"
+  },
+  {
+    "name": "ground-stone-208-224",
+    "box": [
+      208,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-stone-208-224",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S188"
+  },
+  {
+    "name": "ground-stone-224-224",
+    "box": [
+      224,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-stone-224-224",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S189"
+  },
+  {
+    "name": "ground-stone-240-224",
+    "box": [
+      240,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-stone-240-224",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S190"
+  },
+  {
+    "name": "ground-stone-0-240",
+    "box": [
+      0,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-stone-0-240",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S191"
+  },
+  {
+    "name": "ground-stone-16-240",
+    "box": [
+      16,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-stone-16-240",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S192"
+  },
+  {
+    "name": "ground-stone-32-240",
+    "box": [
+      32,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-stone-32-240",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S193"
+  },
+  {
+    "name": "ground-stone-48-240",
+    "box": [
+      48,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-stone-48-240",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S194"
+  },
+  {
+    "name": "ground-stone-64-240",
+    "box": [
+      64,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-stone-64-240",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S195"
+  },
+  {
+    "name": "ground-stone-80-240",
+    "box": [
+      80,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-stone-80-240",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S196"
+  },
+  {
+    "name": "ground-stone-96-240",
+    "box": [
+      96,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-stone-96-240",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S197"
+  },
+  {
+    "name": "ground-stone-112-240",
+    "box": [
+      112,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-stone-112-240",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S198"
+  },
+  {
+    "name": "ground-stone-128-240",
+    "box": [
+      128,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-stone-128-240",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S199"
+  },
+  {
+    "name": "ground-stone-144-240",
+    "box": [
+      144,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-stone-144-240",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S200"
+  },
+  {
+    "name": "ground-stone-160-240",
+    "box": [
+      160,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-stone-160-240",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S201"
+  },
+  {
+    "name": "ground-stone-176-240",
+    "box": [
+      176,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-stone-176-240",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S202"
+  },
+  {
+    "name": "ground-stone-192-240",
+    "box": [
+      192,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-stone-192-240",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S203"
+  },
+  {
+    "name": "ground-stone-208-240",
+    "box": [
+      208,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-stone-208-240",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S204"
+  },
+  {
+    "name": "ground-stone-224-240",
+    "box": [
+      224,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-stone-224-240",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S205"
+  },
+  {
+    "name": "ground-stone-240-240",
+    "box": [
+      240,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "ground-stone-240-240",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S206"
+  },
+  {
+    "name": "water-edge-one",
+    "box": [
+      0,
+      256,
+      64,
+      48
+    ],
+    "kind": "part",
+    "group": "water-edge-one",
+    "frame": null,
+    "notes": "Keep the water tiles on their original grid.",
+    "placement": null,
+    "reviewId": "S207"
+  },
+  {
+    "name": "water-post-one",
+    "box": [
+      64,
+      256,
+      32,
+      48
+    ],
+    "kind": "part",
+    "group": "water-post-one",
+    "frame": null,
+    "notes": "Keep the water tiles on their original grid.",
+    "placement": null,
+    "reviewId": "S208"
+  },
+  {
+    "name": "water-edge-two",
+    "box": [
+      96,
+      256,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "water-edge-two",
+    "frame": null,
+    "notes": "Keep the water tiles on their original grid.",
+    "placement": null,
+    "reviewId": "S209"
+  },
+  {
+    "name": "water-post-two",
+    "box": [
+      144,
+      256,
+      32,
+      48
+    ],
+    "kind": "part",
+    "group": "water-post-two",
+    "frame": null,
+    "notes": "Keep the water tiles on their original grid.",
+    "placement": null,
+    "reviewId": "S210"
+  },
+  {
+    "name": "water-detail-one",
+    "box": [
+      176,
+      256,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "water-detail-one",
+    "frame": null,
+    "notes": "Keep the water tiles on their original grid.",
+    "placement": null,
+    "reviewId": "S211"
+  },
+  {
+    "name": "water-detail-two",
+    "box": [
+      224,
+      256,
+      32,
+      48
+    ],
+    "kind": "part",
+    "group": "water-detail-two",
+    "frame": null,
+    "notes": "Keep the water tiles on their original grid.",
+    "placement": null,
+    "reviewId": "S212"
+  },
+  {
+    "name": "water-grass-16-304",
+    "box": [
+      16,
+      304,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "water-grass-16-304",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S213"
+  },
+  {
+    "name": "water-grass-32-304",
+    "box": [
+      32,
+      304,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "water-grass-32-304",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S214"
+  },
+  {
+    "name": "water-grass-48-304",
+    "box": [
+      48,
+      304,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "water-grass-48-304",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S215"
+  },
+  {
+    "name": "water-grass-64-304",
+    "box": [
+      64,
+      304,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "water-grass-64-304",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S216"
+  },
+  {
+    "name": "water-grass-80-304",
+    "box": [
+      80,
+      304,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "water-grass-80-304",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S217"
+  },
+  {
+    "name": "water-grass-96-304",
+    "box": [
+      96,
+      304,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "water-grass-96-304",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S218"
+  },
+  {
+    "name": "water-grass-16-320",
+    "box": [
+      16,
+      320,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "water-grass-16-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S219"
+  },
+  {
+    "name": "water-grass-32-320",
+    "box": [
+      32,
+      320,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "water-grass-32-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S220"
+  },
+  {
+    "name": "water-grass-48-320",
+    "box": [
+      48,
+      320,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "water-grass-48-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S221"
+  },
+  {
+    "name": "water-grass-64-320",
+    "box": [
+      64,
+      320,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "water-grass-64-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S222"
+  },
+  {
+    "name": "water-grass-80-320",
+    "box": [
+      80,
+      320,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "water-grass-80-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S223"
+  },
+  {
+    "name": "water-grass-small-48-336",
+    "box": [
+      48,
+      336,
+      16,
+      8
+    ],
+    "kind": "prop",
+    "group": "water-grass-small-48-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S224"
+  },
+  {
+    "name": "water-grass-small-80-336",
+    "box": [
+      80,
+      336,
+      16,
+      8
+    ],
+    "kind": "prop",
+    "group": "water-grass-small-80-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S225"
+  },
+  {
+    "name": "water-grass-small-48-344",
+    "box": [
+      48,
+      344,
+      16,
+      8
+    ],
+    "kind": "prop",
+    "group": "water-grass-small-48-344",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S226"
+  },
+  {
+    "name": "water-grass-small-80-344",
+    "box": [
+      80,
+      344,
+      16,
+      8
+    ],
+    "kind": "prop",
+    "group": "water-grass-small-80-344",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S227"
+  },
+  {
+    "name": "water-grass-16-336",
+    "box": [
+      16,
+      336,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "water-grass-16-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S228"
+  },
+  {
+    "name": "water-grass-32-336",
+    "box": [
+      32,
+      336,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "water-grass-32-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S229"
+  },
+  {
+    "name": "brown-water-rock-128-304",
+    "box": [
+      128,
+      304,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "brown-water-rock-128-304",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S230"
+  },
+  {
+    "name": "brown-water-rock-144-304",
+    "box": [
+      144,
+      304,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "brown-water-rock-144-304",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S231"
+  },
+  {
+    "name": "brown-water-rock-160-304",
+    "box": [
+      160,
+      304,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "brown-water-rock-160-304",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S232"
+  },
+  {
+    "name": "brown-water-rock-176-304",
+    "box": [
+      176,
+      304,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "brown-water-rock-176-304",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S233"
+  },
+  {
+    "name": "brown-water-rock-128-320",
+    "box": [
+      128,
+      320,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "brown-water-rock-128-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S234"
+  },
+  {
+    "name": "brown-water-rock-144-320",
+    "box": [
+      144,
+      320,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "brown-water-rock-144-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S235"
+  },
+  {
+    "name": "brown-water-rock-160-320",
+    "box": [
+      160,
+      320,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "brown-water-rock-160-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S236"
+  },
+  {
+    "name": "brown-water-rock-176-320",
+    "box": [
+      176,
+      320,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "brown-water-rock-176-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S237"
+  },
+  {
+    "name": "brown-water-rock-128-336",
+    "box": [
+      128,
+      336,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "brown-water-rock-128-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S238"
+  },
+  {
+    "name": "brown-water-rock-144-336",
+    "box": [
+      144,
+      336,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "brown-water-rock-144-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S239"
+  },
+  {
+    "name": "brown-water-rock-160-336",
+    "box": [
+      160,
+      336,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "brown-water-rock-160-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S240"
+  },
+  {
+    "name": "brown-water-rock-176-336",
+    "box": [
+      176,
+      336,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "brown-water-rock-176-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S241"
+  },
+  {
+    "name": "brown-water-tall-rock-128-352",
+    "box": [
+      128,
+      352,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "brown-water-tall-rock-128-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S242"
+  },
+  {
+    "name": "brown-water-tall-rock-144-352",
+    "box": [
+      144,
+      352,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "brown-water-tall-rock-144-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S243"
+  },
+  {
+    "name": "brown-water-large-rock-352",
+    "box": [
+      160,
+      352,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "brown-water-large-rock-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S244"
+  },
+  {
+    "name": "brown-water-tall-rock-128-384",
+    "box": [
+      128,
+      384,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "brown-water-tall-rock-128-384",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S245"
+  },
+  {
+    "name": "brown-water-tall-rock-144-384",
+    "box": [
+      144,
+      384,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "brown-water-tall-rock-144-384",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S246"
+  },
+  {
+    "name": "brown-water-large-rock-384",
+    "box": [
+      160,
+      384,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "brown-water-large-rock-384",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S247"
+  },
+  {
+    "name": "brown-water-stump-128",
+    "box": [
+      128,
+      416,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "brown-water-stump-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S248"
+  },
+  {
+    "name": "brown-water-stump-144",
+    "box": [
+      144,
+      416,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "brown-water-stump-144",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S249"
+  },
+  {
+    "name": "brown-water-large-stump",
+    "box": [
+      160,
+      416,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "brown-water-large-stump",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S250"
+  },
+  {
+    "name": "gray-water-rock-128-304",
+    "box": [
+      192,
+      304,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "gray-water-rock-128-304",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S251"
+  },
+  {
+    "name": "gray-water-rock-144-304",
+    "box": [
+      208,
+      304,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "gray-water-rock-144-304",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S252"
+  },
+  {
+    "name": "gray-water-rock-160-304",
+    "box": [
+      224,
+      304,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "gray-water-rock-160-304",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S253"
+  },
+  {
+    "name": "gray-water-rock-176-304",
+    "box": [
+      240,
+      304,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "gray-water-rock-176-304",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S254"
+  },
+  {
+    "name": "gray-water-rock-128-320",
+    "box": [
+      192,
+      320,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "gray-water-rock-128-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S255"
+  },
+  {
+    "name": "gray-water-rock-144-320",
+    "box": [
+      208,
+      320,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "gray-water-rock-144-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S256"
+  },
+  {
+    "name": "gray-water-rock-160-320",
+    "box": [
+      224,
+      320,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "gray-water-rock-160-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S257"
+  },
+  {
+    "name": "gray-water-rock-176-320",
+    "box": [
+      240,
+      320,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "gray-water-rock-176-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S258"
+  },
+  {
+    "name": "gray-water-rock-128-336",
+    "box": [
+      192,
+      336,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "gray-water-rock-128-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S259"
+  },
+  {
+    "name": "gray-water-rock-144-336",
+    "box": [
+      208,
+      336,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "gray-water-rock-144-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S260"
+  },
+  {
+    "name": "gray-water-rock-160-336",
+    "box": [
+      224,
+      336,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "gray-water-rock-160-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S261"
+  },
+  {
+    "name": "gray-water-rock-176-336",
+    "box": [
+      240,
+      336,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "gray-water-rock-176-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S262"
+  },
+  {
+    "name": "gray-water-tall-rock-128-352",
+    "box": [
+      192,
+      352,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "gray-water-tall-rock-128-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S263"
+  },
+  {
+    "name": "gray-water-tall-rock-144-352",
+    "box": [
+      208,
+      352,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "gray-water-tall-rock-144-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S264"
+  },
+  {
+    "name": "gray-water-large-rock-352",
+    "box": [
+      224,
+      352,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "gray-water-large-rock-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S265"
+  },
+  {
+    "name": "gray-water-tall-rock-128-384",
+    "box": [
+      192,
+      384,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "gray-water-tall-rock-128-384",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S266"
+  },
+  {
+    "name": "gray-water-tall-rock-144-384",
+    "box": [
+      208,
+      384,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "gray-water-tall-rock-144-384",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S267"
+  },
+  {
+    "name": "gray-water-large-rock-384",
+    "box": [
+      224,
+      384,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "gray-water-large-rock-384",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S268"
+  },
+  {
+    "name": "gray-water-stump-128",
+    "box": [
+      192,
+      416,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "gray-water-stump-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S269"
+  },
+  {
+    "name": "gray-water-stump-144",
+    "box": [
+      208,
+      416,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "gray-water-stump-144",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S270"
+  },
+  {
+    "name": "gray-water-large-stump",
+    "box": [
+      224,
+      416,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "gray-water-large-stump",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S271"
+  },
+  {
+    "name": "bridge-0",
+    "box": [
+      0,
+      352,
+      64,
+      80
+    ],
+    "kind": "structure",
+    "group": "bridge-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S272"
+  },
+  {
+    "name": "bridge-64",
+    "box": [
+      64,
+      352,
+      64,
+      80
+    ],
+    "kind": "structure",
+    "group": "bridge-64",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S273"
+  },
+  {
+    "name": "bridge-post-16",
+    "box": [
+      16,
+      432,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "bridge-post-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S274"
+  },
+  {
+    "name": "bridge-post-48",
+    "box": [
+      48,
+      432,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "bridge-post-48",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S275"
+  },
+  {
+    "name": "bridge-floor-0",
+    "box": [
+      0,
+      448,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "bridge-floor-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S276"
+  },
+  {
+    "name": "bridge-floor-48",
+    "box": [
+      48,
+      448,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "bridge-floor-48",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S277"
+  },
+  {
+    "name": "bridge-lower-part-0",
+    "box": [
+      0,
+      480,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "bridge-lower-part-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S278"
+  },
+  {
+    "name": "bridge-lower-part-16",
+    "box": [
+      16,
+      480,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "bridge-lower-part-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S279"
+  },
+  {
+    "name": "bridge-lower-part-32",
+    "box": [
+      32,
+      480,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "bridge-lower-part-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S280"
+  },
+  {
+    "name": "bridge-lower-part-48",
+    "box": [
+      48,
+      480,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "bridge-lower-part-48",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S281"
+  },
+  {
+    "name": "sign-64-448",
+    "box": [
+      64,
+      448,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-288-320.png",
+    "placement": null,
+    "reviewId": "S282",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-288-320.png"
+  },
+  {
+    "name": "sign-80-448",
+    "box": [
+      80,
+      448,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-304-320.png",
+    "placement": null,
+    "reviewId": "S283",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-304-320.png"
+  },
+  {
+    "name": "sign-96-448",
+    "box": [
+      96,
+      448,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-320-320.png",
+    "placement": null,
+    "reviewId": "S284",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-320-320.png"
+  },
+  {
+    "name": "sign-112-448",
+    "box": [
+      112,
+      448,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-336-320.png",
+    "placement": null,
+    "reviewId": "S285",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-336-320.png"
+  },
+  {
+    "name": "sign-128-448",
+    "box": [
+      128,
+      448,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-352-320.png",
+    "placement": null,
+    "reviewId": "S286",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-352-320.png"
+  },
+  {
+    "name": "sign-144-448",
+    "box": [
+      144,
+      448,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-368-320.png",
+    "placement": null,
+    "reviewId": "S287",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-368-320.png"
+  },
+  {
+    "name": "sign-160-448",
+    "box": [
+      160,
+      448,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-384-320.png",
+    "placement": null,
+    "reviewId": "S288",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-384-320.png"
+  },
+  {
+    "name": "sign-176-448",
+    "box": [
+      176,
+      448,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-400-320.png",
+    "placement": null,
+    "reviewId": "S289",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-400-320.png"
+  },
+  {
+    "name": "sign-192-448",
+    "box": [
+      192,
+      448,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-416-320.png",
+    "placement": null,
+    "reviewId": "S290",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-416-320.png"
+  },
+  {
+    "name": "sign-208-448",
+    "box": [
+      208,
+      448,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-432-320.png",
+    "placement": null,
+    "reviewId": "S291",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-432-320.png"
+  },
+  {
+    "name": "sign-224-448",
+    "box": [
+      224,
+      448,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-448-320.png",
+    "placement": null,
+    "reviewId": "S292",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-448-320.png"
+  },
+  {
+    "name": "sign-240-448",
+    "box": [
+      240,
+      448,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-464-320.png",
+    "placement": null,
+    "reviewId": "S293",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-464-320.png"
+  },
+  {
+    "name": "sign-64-464",
+    "box": [
+      64,
+      464,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-288-336.png",
+    "placement": null,
+    "reviewId": "S294",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-288-336.png"
+  },
+  {
+    "name": "sign-80-464",
+    "box": [
+      80,
+      464,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-304-336.png",
+    "placement": null,
+    "reviewId": "S295",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-304-336.png"
+  },
+  {
+    "name": "sign-96-464",
+    "box": [
+      96,
+      464,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-320-336.png",
+    "placement": null,
+    "reviewId": "S296",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-320-336.png"
+  },
+  {
+    "name": "sign-112-464",
+    "box": [
+      112,
+      464,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-336-336.png",
+    "placement": null,
+    "reviewId": "S297",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-336-336.png"
+  },
+  {
+    "name": "sign-128-464",
+    "box": [
+      128,
+      464,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-352-336.png",
+    "placement": null,
+    "reviewId": "S298",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-352-336.png"
+  },
+  {
+    "name": "sign-144-464",
+    "box": [
+      144,
+      464,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-368-336.png",
+    "placement": null,
+    "reviewId": "S299",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-368-336.png"
+  },
+  {
+    "name": "sign-160-464",
+    "box": [
+      160,
+      464,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-384-336.png",
+    "placement": null,
+    "reviewId": "S300",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-384-336.png"
+  },
+  {
+    "name": "sign-176-464",
+    "box": [
+      176,
+      464,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-400-336.png",
+    "placement": null,
+    "reviewId": "S301",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-400-336.png"
+  },
+  {
+    "name": "sign-192-464",
+    "box": [
+      192,
+      464,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-416-336.png",
+    "placement": null,
+    "reviewId": "S302",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-416-336.png"
+  },
+  {
+    "name": "sign-208-464",
+    "box": [
+      208,
+      464,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-432-336.png",
+    "placement": null,
+    "reviewId": "S303",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-432-336.png"
+  },
+  {
+    "name": "sign-224-464",
+    "box": [
+      224,
+      464,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-448-336.png",
+    "placement": null,
+    "reviewId": "S304",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-448-336.png"
+  },
+  {
+    "name": "sign-240-464",
+    "box": [
+      240,
+      464,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-464-336.png",
+    "placement": null,
+    "reviewId": "S305",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-464-336.png"
+  },
+  {
+    "name": "sign-64-480",
+    "box": [
+      64,
+      480,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-288-352.png",
+    "placement": null,
+    "reviewId": "S306",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-288-352.png"
+  },
+  {
+    "name": "sign-80-480",
+    "box": [
+      80,
+      480,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-304-352.png",
+    "placement": null,
+    "reviewId": "S307",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-304-352.png"
+  },
+  {
+    "name": "sign-96-480",
+    "box": [
+      96,
+      480,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-320-352.png",
+    "placement": null,
+    "reviewId": "S308",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-320-352.png"
+  },
+  {
+    "name": "sign-112-480",
+    "box": [
+      112,
+      480,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-336-352.png",
+    "placement": null,
+    "reviewId": "S309",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-336-352.png"
+  },
+  {
+    "name": "sign-128-480",
+    "box": [
+      128,
+      480,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-352-352.png",
+    "placement": null,
+    "reviewId": "S310",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-352-352.png"
+  },
+  {
+    "name": "sign-144-480",
+    "box": [
+      144,
+      480,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-368-352.png",
+    "placement": null,
+    "reviewId": "S311",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-368-352.png"
+  },
+  {
+    "name": "sign-160-480",
+    "box": [
+      160,
+      480,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-384-352.png",
+    "placement": null,
+    "reviewId": "S312",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-384-352.png"
+  },
+  {
+    "name": "sign-176-480",
+    "box": [
+      176,
+      480,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-400-352.png",
+    "placement": null,
+    "reviewId": "S313",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-400-352.png"
+  },
+  {
+    "name": "sign-192-480",
+    "box": [
+      192,
+      480,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-416-352.png",
+    "placement": null,
+    "reviewId": "S314",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-416-352.png"
+  },
+  {
+    "name": "sign-208-480",
+    "box": [
+      208,
+      480,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-432-352.png",
+    "placement": null,
+    "reviewId": "S315",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-432-352.png"
+  },
+  {
+    "name": "sign-224-480",
+    "box": [
+      224,
+      480,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-448-352.png",
+    "placement": null,
+    "reviewId": "S316",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-448-352.png"
+  },
+  {
+    "name": "sign-240-480",
+    "box": [
+      240,
+      480,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-464-352.png",
+    "placement": null,
+    "reviewId": "S317",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-464-352.png"
+  },
+  {
+    "name": "sign-64-496",
+    "box": [
+      64,
+      496,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-288-368.png",
+    "placement": null,
+    "reviewId": "S318",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-288-368.png"
+  },
+  {
+    "name": "sign-80-496",
+    "box": [
+      80,
+      496,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-304-368.png",
+    "placement": null,
+    "reviewId": "S319",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-304-368.png"
+  },
+  {
+    "name": "sign-96-496",
+    "box": [
+      96,
+      496,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-320-368.png",
+    "placement": null,
+    "reviewId": "S320",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-320-368.png"
+  },
+  {
+    "name": "sign-112-496",
+    "box": [
+      112,
+      496,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-336-368.png",
+    "placement": null,
+    "reviewId": "S321",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-336-368.png"
+  },
+  {
+    "name": "sign-128-496",
+    "box": [
+      128,
+      496,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-352-368.png",
+    "placement": null,
+    "reviewId": "S322",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-352-368.png"
+  },
+  {
+    "name": "sign-144-496",
+    "box": [
+      144,
+      496,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-368-368.png",
+    "placement": null,
+    "reviewId": "S323",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-368-368.png"
+  },
+  {
+    "name": "sign-160-496",
+    "box": [
+      160,
+      496,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-384-368.png",
+    "placement": null,
+    "reviewId": "S324",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-384-368.png"
+  },
+  {
+    "name": "sign-176-496",
+    "box": [
+      176,
+      496,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-400-368.png",
+    "placement": null,
+    "reviewId": "S325",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-400-368.png"
+  },
+  {
+    "name": "sign-192-496",
+    "box": [
+      192,
+      496,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-416-368.png",
+    "placement": null,
+    "reviewId": "S326",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-416-368.png"
+  },
+  {
+    "name": "sign-208-496",
+    "box": [
+      208,
+      496,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-432-368.png",
+    "placement": null,
+    "reviewId": "S327",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-432-368.png"
+  },
+  {
+    "name": "sign-224-496",
+    "box": [
+      224,
+      496,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-448-368.png",
+    "placement": null,
+    "reviewId": "S328",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-448-368.png"
+  },
+  {
+    "name": "sign-240-496",
+    "box": [
+      240,
+      496,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-direction-sign-464-368.png",
+    "placement": null,
+    "reviewId": "S329",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-direction-sign-464-368.png"
+  },
+  {
+    "name": "grassy-cliff-tiles-large-ring",
+    "box": [
+      272,
+      224,
+      48,
+      64
+    ],
+    "kind": "part",
+    "group": "grassy-cliff-tiles-large-ring",
+    "frame": null,
+    "notes": "Separate cliff component. Preserve the original tile alignment.",
+    "placement": null,
+    "reviewId": "S330a"
+  },
+  {
+    "name": "grassy-cliff-tiles-small-ring",
+    "box": [
+      320,
+      224,
+      48,
+      64
+    ],
+    "kind": "part",
+    "group": "grassy-cliff-tiles-small-ring",
+    "frame": null,
+    "notes": "Separate cliff component. Preserve the original tile alignment.",
+    "placement": null,
+    "reviewId": "S330b"
+  },
+  {
+    "name": "grassy-cliff-tiles-upper-cap-left",
+    "box": [
+      368,
+      224,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "grassy-cliff-tiles-upper-cap-left",
+    "frame": null,
+    "notes": "Separate cliff component. Preserve the original tile alignment.",
+    "placement": null,
+    "reviewId": "S330c"
+  },
+  {
+    "name": "grassy-cliff-tiles-upper-cap-right",
+    "box": [
+      400,
+      224,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "grassy-cliff-tiles-upper-cap-right",
+    "frame": null,
+    "notes": "Separate cliff component. Preserve the original tile alignment.",
+    "placement": null,
+    "reviewId": "S330d"
+  },
+  {
+    "name": "grassy-cliff-tiles-end-left",
+    "box": [
+      368,
+      240,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "grassy-cliff-tiles-end-left",
+    "frame": null,
+    "notes": "Separate cliff component. Preserve the original tile alignment.",
+    "placement": null,
+    "reviewId": "S330e"
+  },
+  {
+    "name": "grassy-cliff-tiles-end-right",
+    "box": [
+      400,
+      240,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "grassy-cliff-tiles-end-right",
+    "frame": null,
+    "notes": "Separate cliff component. Preserve the original tile alignment.",
+    "placement": null,
+    "reviewId": "S330f"
+  },
+  {
+    "name": "grassy-cliff-tiles-crest-straight",
+    "box": [
+      320,
+      288,
+      48,
+      16
+    ],
+    "kind": "part",
+    "group": "grassy-cliff-tiles-crest-straight",
+    "frame": null,
+    "notes": "Separate cliff component. Preserve the original tile alignment.",
+    "placement": null,
+    "reviewId": "S330g"
+  },
+  {
+    "name": "grassy-cliff-tiles-crest-rise",
+    "box": [
+      368,
+      272,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "grassy-cliff-tiles-crest-rise",
+    "frame": null,
+    "notes": "Separate cliff component. Preserve the original tile alignment.",
+    "placement": null,
+    "reviewId": "S330h"
+  },
+  {
+    "name": "grassy-cliff-tiles-crest-fall",
+    "box": [
+      400,
+      272,
+      48,
+      32
+    ],
+    "kind": "part",
+    "group": "grassy-cliff-tiles-crest-fall",
+    "frame": null,
+    "notes": "Separate cliff component. Preserve the original tile alignment.",
+    "placement": null,
+    "reviewId": "S330i"
+  },
+  {
+    "name": "grassy-cliff-tiles-funnel",
+    "box": [
+      272,
+      288,
+      48,
+      80
+    ],
+    "kind": "part",
+    "group": "grassy-cliff-tiles-funnel",
+    "frame": null,
+    "notes": "Separate cliff component. Preserve the original tile alignment.",
+    "placement": null,
+    "reviewId": "S330j"
+  },
+  {
+    "name": "grassy-cliff-tiles-small-pocket",
+    "box": [
+      320,
+      320,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "grassy-cliff-tiles-small-pocket",
+    "frame": null,
+    "notes": "Separate cliff component. Preserve the original tile alignment.",
+    "placement": null,
+    "reviewId": "S330k"
+  },
+  {
+    "name": "grassy-cliff-tiles-hill-face",
+    "box": [
+      368,
+      304,
+      80,
+      64
+    ],
+    "kind": "part",
+    "group": "grassy-cliff-tiles-hill-face",
+    "frame": null,
+    "notes": "Separate cliff component. Preserve the original tile alignment.",
+    "placement": null,
+    "reviewId": "S330l"
+  },
+  {
+    "name": "grassy-cliff-tiles-solid-platform",
+    "box": [
+      464,
+      224,
+      48,
+      64
+    ],
+    "kind": "part",
+    "group": "grassy-cliff-tiles-solid-platform",
+    "frame": null,
+    "notes": "Separate cliff component. Preserve the original tile alignment.",
+    "placement": null,
+    "reviewId": "S330m"
+  },
+  {
+    "name": "grassy-cliff-tiles-wall-opening",
+    "box": [
+      464,
+      288,
+      48,
+      64
+    ],
+    "kind": "part",
+    "group": "grassy-cliff-tiles-wall-opening",
+    "frame": null,
+    "notes": "Separate cliff component. Preserve the original tile alignment.",
+    "placement": null,
+    "reviewId": "S330n"
+  },
+  {
+    "name": "grassy-cliff-tiles-wall-base",
+    "box": [
+      464,
+      352,
+      48,
+      16
+    ],
+    "kind": "part",
+    "group": "grassy-cliff-tiles-wall-base",
+    "frame": null,
+    "notes": "Separate cliff component. Preserve the original tile alignment.",
+    "placement": null,
+    "reviewId": "S330o"
+  },
+  {
+    "name": "bare-cliff-tiles-large-ring",
+    "box": [
+      272,
+      368,
+      48,
+      64
+    ],
+    "kind": "part",
+    "group": "bare-cliff-tiles-large-ring",
+    "frame": null,
+    "notes": "Separate cliff component. Preserve the original tile alignment.",
+    "placement": null,
+    "reviewId": "S331a"
+  },
+  {
+    "name": "bare-cliff-tiles-small-ring",
+    "box": [
+      320,
+      368,
+      48,
+      64
+    ],
+    "kind": "part",
+    "group": "bare-cliff-tiles-small-ring",
+    "frame": null,
+    "notes": "Separate cliff component. Preserve the original tile alignment.",
+    "placement": null,
+    "reviewId": "S331b"
+  },
+  {
+    "name": "bare-cliff-tiles-upper-cap-left",
+    "box": [
+      368,
+      368,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "bare-cliff-tiles-upper-cap-left",
+    "frame": null,
+    "notes": "Separate cliff component. Preserve the original tile alignment.",
+    "placement": null,
+    "reviewId": "S331c"
+  },
+  {
+    "name": "bare-cliff-tiles-upper-cap-right",
+    "box": [
+      400,
+      368,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "bare-cliff-tiles-upper-cap-right",
+    "frame": null,
+    "notes": "Separate cliff component. Preserve the original tile alignment.",
+    "placement": null,
+    "reviewId": "S331d"
+  },
+  {
+    "name": "bare-cliff-tiles-end-left",
+    "box": [
+      368,
+      384,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "bare-cliff-tiles-end-left",
+    "frame": null,
+    "notes": "Separate cliff component. Preserve the original tile alignment.",
+    "placement": null,
+    "reviewId": "S331e"
+  },
+  {
+    "name": "bare-cliff-tiles-end-right",
+    "box": [
+      400,
+      384,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "bare-cliff-tiles-end-right",
+    "frame": null,
+    "notes": "Separate cliff component. Preserve the original tile alignment.",
+    "placement": null,
+    "reviewId": "S331f"
+  },
+  {
+    "name": "bare-cliff-tiles-crest-straight",
+    "box": [
+      320,
+      432,
+      48,
+      16
+    ],
+    "kind": "part",
+    "group": "bare-cliff-tiles-crest-straight",
+    "frame": null,
+    "notes": "Separate cliff component. Preserve the original tile alignment.",
+    "placement": null,
+    "reviewId": "S331g"
+  },
+  {
+    "name": "bare-cliff-tiles-crest-rise",
+    "box": [
+      368,
+      416,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "bare-cliff-tiles-crest-rise",
+    "frame": null,
+    "notes": "Separate cliff component. Preserve the original tile alignment.",
+    "placement": null,
+    "reviewId": "S331h"
+  },
+  {
+    "name": "bare-cliff-tiles-crest-fall",
+    "box": [
+      400,
+      416,
+      48,
+      32
+    ],
+    "kind": "part",
+    "group": "bare-cliff-tiles-crest-fall",
+    "frame": null,
+    "notes": "Separate cliff component. Preserve the original tile alignment.",
+    "placement": null,
+    "reviewId": "S331i"
+  },
+  {
+    "name": "bare-cliff-tiles-funnel",
+    "box": [
+      272,
+      432,
+      48,
+      80
+    ],
+    "kind": "part",
+    "group": "bare-cliff-tiles-funnel",
+    "frame": null,
+    "notes": "Separate cliff component. Preserve the original tile alignment.",
+    "placement": null,
+    "reviewId": "S331j"
+  },
+  {
+    "name": "bare-cliff-tiles-small-pocket",
+    "box": [
+      320,
+      464,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "bare-cliff-tiles-small-pocket",
+    "frame": null,
+    "notes": "Separate cliff component. Preserve the original tile alignment.",
+    "placement": null,
+    "reviewId": "S331k"
+  },
+  {
+    "name": "bare-cliff-tiles-hill-face",
+    "box": [
+      368,
+      448,
+      80,
+      64
+    ],
+    "kind": "part",
+    "group": "bare-cliff-tiles-hill-face",
+    "frame": null,
+    "notes": "Separate cliff component. Preserve the original tile alignment.",
+    "placement": null,
+    "reviewId": "S331l"
+  },
+  {
+    "name": "bare-cliff-tiles-solid-platform",
+    "box": [
+      464,
+      368,
+      48,
+      64
+    ],
+    "kind": "part",
+    "group": "bare-cliff-tiles-solid-platform",
+    "frame": null,
+    "notes": "Separate cliff component. Preserve the original tile alignment.",
+    "placement": null,
+    "reviewId": "S331m"
+  },
+  {
+    "name": "bare-cliff-tiles-wall-opening",
+    "box": [
+      464,
+      432,
+      48,
+      64
+    ],
+    "kind": "part",
+    "group": "bare-cliff-tiles-wall-opening",
+    "frame": null,
+    "notes": "Separate cliff component. Preserve the original tile alignment.",
+    "placement": null,
+    "reviewId": "S331n"
+  },
+  {
+    "name": "grass-terrain-atlas-style-1-border",
+    "box": [
+      16,
+      0,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-grass-terrain-0.png",
+    "placement": null,
+    "reviewId": "S332a",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-grass-terrain-0.png"
+  },
+  {
+    "name": "grass-terrain-atlas-style-1-fill",
+    "box": [
+      32,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-solid-grass-tile.png",
+    "placement": null,
+    "reviewId": "S332b",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-solid-grass-tile.png"
+  },
+  {
+    "name": "grass-terrain-atlas-style-1-corner-0-0",
+    "box": [
+      64,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-1-corner-0-0",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "S332c"
+  },
+  {
+    "name": "grass-terrain-atlas-style-1-corner-16-0",
+    "box": [
+      80,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-1-corner-16-0",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "S332d"
+  },
+  {
+    "name": "grass-terrain-atlas-style-1-corner-0-16",
+    "box": [
+      64,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-1-corner-0-16",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "S332e"
+  },
+  {
+    "name": "grass-terrain-atlas-style-1-corner-16-16",
+    "box": [
+      80,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-1-corner-16-16",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "S332f"
+  },
+  {
+    "name": "grass-terrain-atlas-style-1-corner-0-32",
+    "box": [
+      64,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-loose-grass-48.png",
+    "placement": null,
+    "reviewId": "S332g",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-loose-grass-48.png"
+  },
+  {
+    "name": "grass-terrain-atlas-style-1-corner-16-32",
+    "box": [
+      80,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-loose-grass-64.png",
+    "placement": null,
+    "reviewId": "S332h",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-loose-grass-64.png"
+  },
+  {
+    "name": "grass-terrain-atlas-style-2-border",
+    "box": [
+      96,
+      0,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-2-border",
+    "frame": null,
+    "notes": "Terrain border. The six groups have different fill patterns.",
+    "placement": null,
+    "reviewId": "S332i"
+  },
+  {
+    "name": "grass-terrain-atlas-style-2-fill",
+    "box": [
+      112,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-2-fill",
+    "frame": null,
+    "notes": "Separate terrain fill tile.",
+    "placement": null,
+    "reviewId": "S332j"
+  },
+  {
+    "name": "grass-terrain-atlas-style-2-corner-0-0",
+    "box": [
+      144,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-2-corner-0-0",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "S332k"
+  },
+  {
+    "name": "grass-terrain-atlas-style-2-corner-16-0",
+    "box": [
+      160,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-2-corner-16-0",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "S332l"
+  },
+  {
+    "name": "grass-terrain-atlas-style-2-corner-0-16",
+    "box": [
+      144,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-2-corner-0-16",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "S332m"
+  },
+  {
+    "name": "grass-terrain-atlas-style-2-corner-16-16",
+    "box": [
+      160,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-2-corner-16-16",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "S332n"
+  },
+  {
+    "name": "grass-terrain-atlas-style-2-corner-0-32",
+    "box": [
+      144,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-2-corner-0-32",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "S332o"
+  },
+  {
+    "name": "grass-terrain-atlas-style-2-corner-16-32",
+    "box": [
+      160,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-2-corner-16-32",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "S332p"
+  },
+  {
+    "name": "grass-terrain-atlas-style-3-border",
+    "box": [
+      176,
+      0,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: forest-spring-leaf-terrain-96.png",
+    "placement": null,
+    "reviewId": "S332q",
+    "reuseAsset": "top-down/native/farming-game-world/processed/forest-spring/forest-spring-leaf-terrain-96.png"
+  },
+  {
+    "name": "grass-terrain-atlas-style-3-fill",
+    "box": [
+      192,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-3-fill",
+    "frame": null,
+    "notes": "Separate terrain fill tile.",
+    "placement": null,
+    "reviewId": "S332r"
+  },
+  {
+    "name": "grass-terrain-atlas-style-3-corner-0-0",
+    "box": [
+      224,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-3-corner-0-0",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "S332s"
+  },
+  {
+    "name": "grass-terrain-atlas-style-3-corner-16-0",
+    "box": [
+      240,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-3-corner-16-0",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "S332t"
+  },
+  {
+    "name": "grass-terrain-atlas-style-3-corner-0-16",
+    "box": [
+      224,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-3-corner-0-16",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "S332u"
+  },
+  {
+    "name": "grass-terrain-atlas-style-3-corner-16-16",
+    "box": [
+      240,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-3-corner-16-16",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "S332v"
+  },
+  {
+    "name": "grass-terrain-atlas-style-3-corner-0-32",
+    "box": [
+      224,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-3-corner-0-32",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "S332w"
+  },
+  {
+    "name": "grass-terrain-atlas-style-3-corner-16-32",
+    "box": [
+      240,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-3-corner-16-32",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "S332x"
+  },
+  {
+    "name": "grass-terrain-atlas-style-4-border",
+    "box": [
+      0,
+      64,
+      64,
+      48
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-4-border",
+    "frame": null,
+    "notes": "Terrain border. The six groups have different fill patterns.",
+    "placement": null,
+    "reviewId": "S332y"
+  },
+  {
+    "name": "grass-terrain-atlas-style-4-fill",
+    "box": [
+      32,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-4-fill",
+    "frame": null,
+    "notes": "Separate terrain fill tile.",
+    "placement": null,
+    "reviewId": "S332z"
+  },
+  {
+    "name": "grass-terrain-atlas-style-4-corner-0-0",
+    "box": [
+      64,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-4-corner-0-0",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "S332aa"
+  },
+  {
+    "name": "grass-terrain-atlas-style-4-corner-16-0",
+    "box": [
+      80,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-4-corner-16-0",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "S332ab"
+  },
+  {
+    "name": "grass-terrain-atlas-style-4-corner-0-16",
+    "box": [
+      64,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-4-corner-0-16",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "S332ac"
+  },
+  {
+    "name": "grass-terrain-atlas-style-4-corner-16-16",
+    "box": [
+      80,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-4-corner-16-16",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "S332ad"
+  },
+  {
+    "name": "grass-terrain-atlas-style-4-corner-0-32",
+    "box": [
+      64,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-4-corner-0-32",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "S332ae"
+  },
+  {
+    "name": "grass-terrain-atlas-style-4-corner-16-32",
+    "box": [
+      80,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-4-corner-16-32",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "S332af"
+  },
+  {
+    "name": "grass-terrain-atlas-style-5-border",
+    "box": [
+      96,
+      64,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-5-border",
+    "frame": null,
+    "notes": "Terrain border. The six groups have different fill patterns.",
+    "placement": null,
+    "reviewId": "S332ag"
+  },
+  {
+    "name": "grass-terrain-atlas-style-5-fill",
+    "box": [
+      112,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-5-fill",
+    "frame": null,
+    "notes": "Separate terrain fill tile.",
+    "placement": null,
+    "reviewId": "S332ah"
+  },
+  {
+    "name": "grass-terrain-atlas-style-5-corner-0-0",
+    "box": [
+      144,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-5-corner-0-0",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "S332ai"
+  },
+  {
+    "name": "grass-terrain-atlas-style-5-corner-16-0",
+    "box": [
+      160,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-5-corner-16-0",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "S332aj"
+  },
+  {
+    "name": "grass-terrain-atlas-style-5-corner-0-16",
+    "box": [
+      144,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-5-corner-0-16",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "S332ak"
+  },
+  {
+    "name": "grass-terrain-atlas-style-5-corner-16-16",
+    "box": [
+      160,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-5-corner-16-16",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "S332al"
+  },
+  {
+    "name": "grass-terrain-atlas-style-5-corner-0-32",
+    "box": [
+      144,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-5-corner-0-32",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "S332am"
+  },
+  {
+    "name": "grass-terrain-atlas-style-5-corner-16-32",
+    "box": [
+      160,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-5-corner-16-32",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "S332an"
+  },
+  {
+    "name": "grass-terrain-atlas-style-6-border",
+    "box": [
+      176,
+      64,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-6-border",
+    "frame": null,
+    "notes": "Terrain border. The six groups have different fill patterns.",
+    "placement": null,
+    "reviewId": "S332ao"
+  },
+  {
+    "name": "grass-terrain-atlas-style-6-fill",
+    "box": [
+      192,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-6-fill",
+    "frame": null,
+    "notes": "Separate terrain fill tile.",
+    "placement": null,
+    "reviewId": "S332ap"
+  },
+  {
+    "name": "grass-terrain-atlas-style-6-corner-0-0",
+    "box": [
+      224,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-6-corner-0-0",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "S332aq"
+  },
+  {
+    "name": "grass-terrain-atlas-style-6-corner-16-0",
+    "box": [
+      240,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-6-corner-16-0",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "S332ar"
+  },
+  {
+    "name": "grass-terrain-atlas-style-6-corner-0-16",
+    "box": [
+      224,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-6-corner-0-16",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "S332as"
+  },
+  {
+    "name": "grass-terrain-atlas-style-6-corner-16-16",
+    "box": [
+      240,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-6-corner-16-16",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "S332at"
+  },
+  {
+    "name": "grass-terrain-atlas-style-6-corner-0-32",
+    "box": [
+      224,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-6-corner-0-32",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "S332au"
+  },
+  {
+    "name": "grass-terrain-atlas-style-6-corner-16-32",
+    "box": [
+      240,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "grass-terrain-atlas-style-6-corner-16-32",
+    "frame": null,
+    "notes": "Separate terrain corner tile.",
+    "placement": null,
+    "reviewId": "S332av"
+  },
+  {
+    "name": "grass-small-224-160",
+    "box": [
+      224,
+      160,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "grass-small-224-160",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S333"
+  },
+  {
+    "name": "water-grass-small-64-336",
+    "box": [
+      64,
+      336,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "water-grass-small-64-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S334"
+  },
+  {
+    "name": "bridge-floor-16",
+    "box": [
+      16,
+      448,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "bridge-floor-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S335"
+  },
+  {
+    "name": "bridge-floor-32",
+    "box": [
+      32,
+      448,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "bridge-floor-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S336"
+  },
+  {
+    "name": "brown-water-stump-128-lower",
+    "box": [
+      128,
+      432,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "brown-water-stump-128-lower",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S337"
+  },
+  {
+    "name": "brown-water-stump-144-lower",
+    "box": [
+      144,
+      432,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "brown-water-stump-144-lower",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S338"
+  },
+  {
+    "name": "gray-water-stump-128-lower",
+    "box": [
+      192,
+      432,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "gray-water-stump-128-lower",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S339"
+  },
+  {
+    "name": "gray-water-stump-144-lower",
+    "box": [
+      208,
+      432,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "gray-water-stump-144-lower",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "S340"
+  }
+]

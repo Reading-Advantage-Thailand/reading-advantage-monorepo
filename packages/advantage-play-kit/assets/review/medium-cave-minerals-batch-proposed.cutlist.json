@@ -1,0 +1,338 @@
+[
+  {
+    "name": "brown-medium-mineral-01-01",
+    "box": [
+      0,
+      0,
+      64,
+      32
+    ],
+    "kind": "structure",
+    "group": "brown-medium-mineral-01-01",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "brown-medium-mineral-01-02",
+    "box": [
+      0,
+      32,
+      64,
+      32
+    ],
+    "kind": "structure",
+    "group": "brown-medium-mineral-01-02",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "brown-medium-mineral-01-03",
+    "box": [
+      0,
+      64,
+      64,
+      32
+    ],
+    "kind": "structure",
+    "group": "brown-medium-mineral-01-03",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "brown-medium-mineral-02-01",
+    "box": [
+      80,
+      0,
+      64,
+      32
+    ],
+    "kind": "structure",
+    "group": "brown-medium-mineral-02-01",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "brown-medium-mineral-02-02",
+    "box": [
+      80,
+      32,
+      64,
+      32
+    ],
+    "kind": "structure",
+    "group": "brown-medium-mineral-02-02",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "brown-medium-mineral-02-03",
+    "box": [
+      80,
+      64,
+      64,
+      32
+    ],
+    "kind": "structure",
+    "group": "brown-medium-mineral-02-03",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "brown-medium-mineral-03-01",
+    "box": [
+      160,
+      0,
+      64,
+      32
+    ],
+    "kind": "structure",
+    "group": "brown-medium-mineral-03-01",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "brown-medium-mineral-03-02",
+    "box": [
+      160,
+      32,
+      64,
+      32
+    ],
+    "kind": "structure",
+    "group": "brown-medium-mineral-03-02",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "brown-medium-mineral-03-03",
+    "box": [
+      160,
+      64,
+      64,
+      32
+    ],
+    "kind": "structure",
+    "group": "brown-medium-mineral-03-03",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "brown-medium-mineral-04-01",
+    "box": [
+      240,
+      0,
+      64,
+      32
+    ],
+    "kind": "structure",
+    "group": "brown-medium-mineral-04-01",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "brown-medium-mineral-04-02",
+    "box": [
+      240,
+      32,
+      64,
+      32
+    ],
+    "kind": "structure",
+    "group": "brown-medium-mineral-04-02",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "brown-medium-mineral-04-03",
+    "box": [
+      240,
+      64,
+      64,
+      32
+    ],
+    "kind": "structure",
+    "group": "brown-medium-mineral-04-03",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "pink-medium-mineral-01-01",
+    "box": [
+      0,
+      96,
+      64,
+      32
+    ],
+    "kind": "structure",
+    "group": "pink-medium-mineral-01-01",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "pink-medium-mineral-01-02",
+    "box": [
+      0,
+      128,
+      64,
+      32
+    ],
+    "kind": "structure",
+    "group": "pink-medium-mineral-01-02",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "pink-medium-mineral-01-03",
+    "box": [
+      0,
+      160,
+      64,
+      32
+    ],
+    "kind": "structure",
+    "group": "pink-medium-mineral-01-03",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "pink-medium-mineral-02-01",
+    "box": [
+      80,
+      96,
+      64,
+      32
+    ],
+    "kind": "structure",
+    "group": "pink-medium-mineral-02-01",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "pink-medium-mineral-02-02",
+    "box": [
+      80,
+      128,
+      64,
+      32
+    ],
+    "kind": "structure",
+    "group": "pink-medium-mineral-02-02",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "pink-medium-mineral-02-03",
+    "box": [
+      80,
+      160,
+      64,
+      32
+    ],
+    "kind": "structure",
+    "group": "pink-medium-mineral-02-03",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "pink-medium-mineral-03-01",
+    "box": [
+      160,
+      96,
+      64,
+      32
+    ],
+    "kind": "structure",
+    "group": "pink-medium-mineral-03-01",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "pink-medium-mineral-03-02",
+    "box": [
+      160,
+      128,
+      64,
+      32
+    ],
+    "kind": "structure",
+    "group": "pink-medium-mineral-03-02",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "pink-medium-mineral-03-03",
+    "box": [
+      160,
+      160,
+      64,
+      32
+    ],
+    "kind": "structure",
+    "group": "pink-medium-mineral-03-03",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "pink-medium-mineral-04-01",
+    "box": [
+      240,
+      96,
+      64,
+      32
+    ],
+    "kind": "structure",
+    "group": "pink-medium-mineral-04-01",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "pink-medium-mineral-04-02",
+    "box": [
+      240,
+      128,
+      64,
+      32
+    ],
+    "kind": "structure",
+    "group": "pink-medium-mineral-04-02",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "pink-medium-mineral-04-03",
+    "box": [
+      240,
+      160,
+      64,
+      32
+    ],
+    "kind": "structure",
+    "group": "pink-medium-mineral-04-03",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the complete strip.",
+    "placement": null
+  }
+]

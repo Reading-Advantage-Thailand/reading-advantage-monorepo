@@ -1,0 +1,1582 @@
+[
+  {
+    "name": "hanging-garland-0",
+    "box": [
+      16,
+      0,
+      48,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the approved asset: halloween-objects-hanging-garland-160.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/halloween-objects/halloween-objects-hanging-garland-160.png"
+  },
+  {
+    "name": "hanging-garland-16",
+    "box": [
+      16,
+      16,
+      48,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the approved asset: halloween-objects-hanging-garland-176.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/halloween-objects/halloween-objects-hanging-garland-176.png"
+  },
+  {
+    "name": "hanging-garland-32",
+    "box": [
+      0,
+      32,
+      64,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the approved asset: halloween-objects-hanging-garland-192.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/halloween-objects/halloween-objects-hanging-garland-192.png"
+  },
+  {
+    "name": "halloween-decoration-0-48",
+    "box": [
+      0,
+      48,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the approved asset: halloween-objects-halloween-decoration-0-208.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/halloween-objects/halloween-objects-halloween-decoration-0-208.png"
+  },
+  {
+    "name": "halloween-decoration-16-48",
+    "box": [
+      16,
+      48,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the approved asset: halloween-objects-halloween-decoration-16-208.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/halloween-objects/halloween-objects-halloween-decoration-16-208.png"
+  },
+  {
+    "name": "halloween-decoration-32-48",
+    "box": [
+      32,
+      48,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the approved asset: halloween-objects-halloween-decoration-32-208.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/halloween-objects/halloween-objects-halloween-decoration-32-208.png"
+  },
+  {
+    "name": "halloween-decoration-0-64",
+    "box": [
+      0,
+      64,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the approved asset: halloween-objects-halloween-decoration-0-224.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/halloween-objects/halloween-objects-halloween-decoration-0-224.png"
+  },
+  {
+    "name": "halloween-decoration-16-64",
+    "box": [
+      16,
+      64,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the approved asset: halloween-objects-halloween-decoration-16-224.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/halloween-objects/halloween-objects-halloween-decoration-16-224.png"
+  },
+  {
+    "name": "halloween-decoration-32-64",
+    "box": [
+      32,
+      64,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the approved asset: halloween-objects-halloween-decoration-32-224.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/halloween-objects/halloween-objects-halloween-decoration-32-224.png"
+  },
+  {
+    "name": "halloween-decoration-0-80",
+    "box": [
+      0,
+      80,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "halloween-decoration-0-80",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "halloween-decoration-16-80",
+    "box": [
+      16,
+      80,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "halloween-decoration-16-80",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "halloween-decoration-32-80",
+    "box": [
+      32,
+      80,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "halloween-decoration-32-80",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "halloween-decoration-0-96",
+    "box": [
+      0,
+      96,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "halloween-decoration-0-96",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "halloween-decoration-16-96",
+    "box": [
+      16,
+      96,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "halloween-decoration-16-96",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "halloween-decoration-32-96",
+    "box": [
+      32,
+      96,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "halloween-decoration-32-96",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "pumpkin-assembly-0-112",
+    "box": [
+      0,
+      112,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "pumpkin-assembly-0-112",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "pumpkin-assembly-32-112",
+    "box": [
+      32,
+      112,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "pumpkin-assembly-32-112",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "pumpkin-assembly-0-144",
+    "box": [
+      0,
+      144,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "pumpkin-assembly-0-144",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "pumpkin-assembly-32-144",
+    "box": [
+      32,
+      144,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "pumpkin-assembly-32-144",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "pumpkin-assembly-0-176",
+    "box": [
+      0,
+      176,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "pumpkin-assembly-0-176",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "pumpkin-assembly-32-176",
+    "box": [
+      32,
+      176,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "pumpkin-assembly-32-176",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "pumpkin-assembly-0-208",
+    "box": [
+      0,
+      208,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "pumpkin-assembly-0-208",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "pumpkin-assembly-32-208",
+    "box": [
+      32,
+      208,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "pumpkin-assembly-32-208",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "large-bare-tree-64-0",
+    "box": [
+      64,
+      0,
+      48,
+      64
+    ],
+    "kind": "prop",
+    "group": "large-bare-tree-64-0",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "large-bare-tree-112-0",
+    "box": [
+      112,
+      0,
+      48,
+      64
+    ],
+    "kind": "prop",
+    "group": "large-bare-tree-112-0",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "large-bare-tree-64-64",
+    "box": [
+      64,
+      64,
+      48,
+      64
+    ],
+    "kind": "prop",
+    "group": "large-bare-tree-64-64",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "large-bare-tree-112-64",
+    "box": [
+      112,
+      64,
+      48,
+      64
+    ],
+    "kind": "prop",
+    "group": "large-bare-tree-112-64",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "small-bare-tree-160-16",
+    "box": [
+      160,
+      16,
+      48,
+      48
+    ],
+    "kind": "prop",
+    "group": "small-bare-tree-160-16",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "small-bare-tree-208-16",
+    "box": [
+      208,
+      16,
+      48,
+      48
+    ],
+    "kind": "prop",
+    "group": "small-bare-tree-208-16",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "small-bare-tree-160-80",
+    "box": [
+      160,
+      80,
+      48,
+      48
+    ],
+    "kind": "prop",
+    "group": "small-bare-tree-160-80",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "small-bare-tree-208-80",
+    "box": [
+      208,
+      80,
+      48,
+      48
+    ],
+    "kind": "prop",
+    "group": "small-bare-tree-208-80",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "tree-stump-64-128",
+    "box": [
+      64,
+      128,
+      48,
+      32
+    ],
+    "kind": "prop",
+    "group": "tree-stump-64-128",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "tree-stump-120-128",
+    "box": [
+      120,
+      128,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "tree-stump-120-128",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "tree-stump-160-128",
+    "box": [
+      160,
+      128,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "tree-stump-160-128",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "tree-stump-64-160",
+    "box": [
+      64,
+      160,
+      48,
+      32
+    ],
+    "kind": "prop",
+    "group": "tree-stump-64-160",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "tree-stump-120-160",
+    "box": [
+      120,
+      160,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "tree-stump-120-160",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "tree-stump-160-160",
+    "box": [
+      160,
+      160,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "tree-stump-160-160",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "narrow-bare-tree-192",
+    "box": [
+      192,
+      128,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "narrow-bare-tree-192",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "narrow-bare-tree-224",
+    "box": [
+      224,
+      128,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "narrow-bare-tree-224",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "plain-memorial-64",
+    "box": [
+      64,
+      208,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "plain-memorial-64",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "plain-memorial-96",
+    "box": [
+      96,
+      208,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "plain-memorial-96",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "plain-memorial-128",
+    "box": [
+      128,
+      208,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "plain-memorial-128",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "gray-grave-part-256-0",
+    "box": [
+      256,
+      0,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "gray-grave-part-256-0",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "gray-grave-part-288-0",
+    "box": [
+      288,
+      0,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "gray-grave-part-288-0",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "gray-grave-part-320-0",
+    "box": [
+      320,
+      0,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "gray-grave-part-320-0",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "gray-grave-part-336-0",
+    "box": [
+      336,
+      0,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "gray-grave-part-336-0",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "gray-grave-part-352-0",
+    "box": [
+      352,
+      0,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "gray-grave-part-352-0",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "gray-grave-part-368-0",
+    "box": [
+      368,
+      0,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "gray-grave-part-368-0",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "gray-grave-part-384-0",
+    "box": [
+      384,
+      0,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "gray-grave-part-384-0",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "gray-grave-part-400-0",
+    "box": [
+      400,
+      0,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "gray-grave-part-400-0",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "gray-grave-part-416-0",
+    "box": [
+      416,
+      0,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "gray-grave-part-416-0",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "gray-grave-part-432-0",
+    "box": [
+      432,
+      0,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "gray-grave-part-432-0",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "gray-grave-part-448-0",
+    "box": [
+      448,
+      0,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "gray-grave-part-448-0",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "gray-grave-part-480-0",
+    "box": [
+      480,
+      0,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "gray-grave-part-480-0",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "gray-grave-part-256-32",
+    "box": [
+      256,
+      32,
+      32,
+      48
+    ],
+    "kind": "prop",
+    "group": "gray-grave-part-256-32",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "gray-grave-part-288-32",
+    "box": [
+      288,
+      32,
+      32,
+      48
+    ],
+    "kind": "prop",
+    "group": "gray-grave-part-288-32",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "gray-cross-floor-panel",
+    "box": [
+      320,
+      32,
+      48,
+      32
+    ],
+    "kind": "part",
+    "group": "gray-cross-floor-panel",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "gray-floor-decoration-320",
+    "box": [
+      320,
+      64,
+      16,
+      16
+    ],
+    "kind": "overlay",
+    "group": "gray-floor-decoration-320",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "gray-floor-decoration-336",
+    "box": [
+      336,
+      64,
+      16,
+      16
+    ],
+    "kind": "overlay",
+    "group": "gray-floor-decoration-336",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "gray-floor-decoration-352",
+    "box": [
+      352,
+      64,
+      16,
+      16
+    ],
+    "kind": "overlay",
+    "group": "gray-floor-decoration-352",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "gray-fence-post",
+    "box": [
+      368,
+      48,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "gray-fence-post",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "gray-burning-fence",
+    "box": [
+      384,
+      48,
+      128,
+      32
+    ],
+    "kind": "prop",
+    "group": "gray-burning-fence",
+    "frame": null,
+    "notes": "Preserve the complete animation strip.",
+    "placement": null
+  },
+  {
+    "name": "tan-grave-part-256-0",
+    "box": [
+      256,
+      80,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "tan-grave-part-256-0",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "tan-grave-part-288-0",
+    "box": [
+      288,
+      80,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "tan-grave-part-288-0",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "tan-grave-part-320-0",
+    "box": [
+      320,
+      80,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "tan-grave-part-320-0",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "tan-grave-part-336-0",
+    "box": [
+      336,
+      80,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "tan-grave-part-336-0",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "tan-grave-part-352-0",
+    "box": [
+      352,
+      80,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "tan-grave-part-352-0",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "tan-grave-part-368-0",
+    "box": [
+      368,
+      80,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "tan-grave-part-368-0",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "tan-grave-part-384-0",
+    "box": [
+      384,
+      80,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "tan-grave-part-384-0",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "tan-grave-part-400-0",
+    "box": [
+      400,
+      80,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "tan-grave-part-400-0",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "tan-grave-part-416-0",
+    "box": [
+      416,
+      80,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "tan-grave-part-416-0",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "tan-grave-part-432-0",
+    "box": [
+      432,
+      80,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "tan-grave-part-432-0",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "tan-grave-part-448-0",
+    "box": [
+      448,
+      80,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "tan-grave-part-448-0",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "tan-grave-part-480-0",
+    "box": [
+      480,
+      80,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "tan-grave-part-480-0",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "tan-grave-part-256-32",
+    "box": [
+      256,
+      112,
+      32,
+      48
+    ],
+    "kind": "prop",
+    "group": "tan-grave-part-256-32",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "tan-grave-part-288-32",
+    "box": [
+      288,
+      112,
+      32,
+      48
+    ],
+    "kind": "prop",
+    "group": "tan-grave-part-288-32",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "tan-cross-floor-panel",
+    "box": [
+      320,
+      112,
+      48,
+      32
+    ],
+    "kind": "part",
+    "group": "tan-cross-floor-panel",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "tan-floor-decoration-320",
+    "box": [
+      320,
+      144,
+      16,
+      16
+    ],
+    "kind": "overlay",
+    "group": "tan-floor-decoration-320",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "tan-floor-decoration-336",
+    "box": [
+      336,
+      144,
+      16,
+      16
+    ],
+    "kind": "overlay",
+    "group": "tan-floor-decoration-336",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "tan-floor-decoration-352",
+    "box": [
+      352,
+      144,
+      16,
+      16
+    ],
+    "kind": "overlay",
+    "group": "tan-floor-decoration-352",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "tan-fence-post",
+    "box": [
+      368,
+      128,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "tan-fence-post",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "tan-burning-fence",
+    "box": [
+      384,
+      128,
+      128,
+      32
+    ],
+    "kind": "prop",
+    "group": "tan-burning-fence",
+    "frame": null,
+    "notes": "Preserve the complete animation strip.",
+    "placement": null
+  },
+  {
+    "name": "brown-grave-part-256-0",
+    "box": [
+      256,
+      160,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "brown-grave-part-256-0",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "brown-grave-part-288-0",
+    "box": [
+      288,
+      160,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "brown-grave-part-288-0",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "brown-grave-part-320-0",
+    "box": [
+      320,
+      160,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "brown-grave-part-320-0",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "brown-grave-part-336-0",
+    "box": [
+      336,
+      160,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "brown-grave-part-336-0",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "brown-grave-part-352-0",
+    "box": [
+      352,
+      160,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "brown-grave-part-352-0",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "brown-grave-part-368-0",
+    "box": [
+      368,
+      160,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "brown-grave-part-368-0",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "brown-grave-part-384-0",
+    "box": [
+      384,
+      160,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "brown-grave-part-384-0",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "brown-grave-part-400-0",
+    "box": [
+      400,
+      160,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "brown-grave-part-400-0",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "brown-grave-part-416-0",
+    "box": [
+      416,
+      160,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "brown-grave-part-416-0",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "brown-grave-part-432-0",
+    "box": [
+      432,
+      160,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "brown-grave-part-432-0",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "brown-grave-part-448-0",
+    "box": [
+      448,
+      160,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "brown-grave-part-448-0",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "brown-grave-part-480-0",
+    "box": [
+      480,
+      160,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "brown-grave-part-480-0",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "brown-grave-part-256-32",
+    "box": [
+      256,
+      192,
+      32,
+      48
+    ],
+    "kind": "prop",
+    "group": "brown-grave-part-256-32",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "brown-grave-part-288-32",
+    "box": [
+      288,
+      192,
+      32,
+      48
+    ],
+    "kind": "prop",
+    "group": "brown-grave-part-288-32",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "brown-cross-floor-panel",
+    "box": [
+      320,
+      192,
+      48,
+      32
+    ],
+    "kind": "part",
+    "group": "brown-cross-floor-panel",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "brown-floor-decoration-320",
+    "box": [
+      320,
+      224,
+      16,
+      16
+    ],
+    "kind": "overlay",
+    "group": "brown-floor-decoration-320",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "brown-floor-decoration-336",
+    "box": [
+      336,
+      224,
+      16,
+      16
+    ],
+    "kind": "overlay",
+    "group": "brown-floor-decoration-336",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "brown-floor-decoration-352",
+    "box": [
+      352,
+      224,
+      16,
+      16
+    ],
+    "kind": "overlay",
+    "group": "brown-floor-decoration-352",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "brown-fence-post",
+    "box": [
+      368,
+      208,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "brown-fence-post",
+    "frame": null,
+    "notes": "Preserve the complete object.",
+    "placement": null
+  },
+  {
+    "name": "brown-burning-fence",
+    "box": [
+      384,
+      208,
+      128,
+      32
+    ],
+    "kind": "prop",
+    "group": "brown-burning-fence",
+    "frame": null,
+    "notes": "Preserve the complete animation strip.",
+    "placement": null
+  },
+  {
+    "name": "gray-tomb-door-sequence",
+    "box": [
+      256,
+      256,
+      256,
+      32
+    ],
+    "kind": "prop",
+    "group": "gray-tomb-door-sequence",
+    "frame": null,
+    "notes": "Preserve the complete animation strip.",
+    "placement": null
+  },
+  {
+    "name": "tan-tomb-door-sequence",
+    "box": [
+      256,
+      288,
+      256,
+      32
+    ],
+    "kind": "prop",
+    "group": "tan-tomb-door-sequence",
+    "frame": null,
+    "notes": "Preserve the complete animation strip.",
+    "placement": null
+  },
+  {
+    "name": "brown-tomb-door-sequence",
+    "box": [
+      256,
+      320,
+      256,
+      32
+    ],
+    "kind": "prop",
+    "group": "brown-tomb-door-sequence",
+    "frame": null,
+    "notes": "Preserve the complete animation strip.",
+    "placement": null
+  },
+  {
+    "name": "hanging-decoration-sequence-256",
+    "box": [
+      176,
+      256,
+      64,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the approved asset: halloween-objects-hanging-decoration-sequence-272.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/halloween-objects/halloween-objects-hanging-decoration-sequence-272.png"
+  },
+  {
+    "name": "hanging-decoration-sequence-272",
+    "box": [
+      176,
+      272,
+      64,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the approved asset: halloween-objects-hanging-decoration-sequence-288.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/halloween-objects/halloween-objects-hanging-decoration-sequence-288.png"
+  },
+  {
+    "name": "hanging-decoration-sequence-288",
+    "box": [
+      176,
+      288,
+      64,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the approved asset: halloween-objects-hanging-decoration-sequence-304.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/halloween-objects/halloween-objects-hanging-decoration-sequence-304.png"
+  },
+  {
+    "name": "pumpkin-sequence-304",
+    "box": [
+      176,
+      304,
+      64,
+      16
+    ],
+    "kind": "prop",
+    "group": "pumpkin-sequence-304",
+    "frame": null,
+    "notes": "Preserve the complete animation strip.",
+    "placement": null
+  },
+  {
+    "name": "pumpkin-sequence-320",
+    "box": [
+      176,
+      320,
+      64,
+      16
+    ],
+    "kind": "prop",
+    "group": "pumpkin-sequence-320",
+    "frame": null,
+    "notes": "Preserve the complete animation strip.",
+    "placement": null
+  },
+  {
+    "name": "root-edge-animation",
+    "box": [
+      32,
+      256,
+      128,
+      32
+    ],
+    "kind": "prop",
+    "group": "root-edge-animation",
+    "frame": null,
+    "notes": "Eight animation frames. Preserve the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "root-face-animation",
+    "box": [
+      32,
+      288,
+      128,
+      32
+    ],
+    "kind": "prop",
+    "group": "root-face-animation",
+    "frame": null,
+    "notes": "Eight animation frames. Preserve the complete strip.",
+    "placement": null
+  }
+]

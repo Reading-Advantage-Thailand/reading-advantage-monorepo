@@ -1,0 +1,254 @@
+[
+  {
+    "name": "brown-village-door-style-01-01",
+    "box": [
+      16,
+      16,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "brown-village-door-style-01-01",
+    "frame": null,
+    "notes": "Four 16\u00d716 opening frames. Preserve the animation strip.",
+    "placement": null
+  },
+  {
+    "name": "brown-village-door-style-01-02",
+    "box": [
+      96,
+      16,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "brown-village-door-style-01-02",
+    "frame": null,
+    "notes": "Four 16\u00d716 opening frames. Preserve the animation strip.",
+    "placement": null
+  },
+  {
+    "name": "brown-village-door-style-01-03",
+    "box": [
+      176,
+      16,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "brown-village-door-style-01-03",
+    "frame": null,
+    "notes": "Four 16\u00d716 opening frames. Preserve the animation strip.",
+    "placement": null
+  },
+  {
+    "name": "brown-village-door-style-02-01",
+    "box": [
+      16,
+      32,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "brown-village-door-style-02-01",
+    "frame": null,
+    "notes": "Four 16\u00d716 opening frames. Preserve the animation strip.",
+    "placement": null
+  },
+  {
+    "name": "brown-village-door-style-02-02",
+    "box": [
+      96,
+      32,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "brown-village-door-style-02-02",
+    "frame": null,
+    "notes": "Four 16\u00d716 opening frames. Preserve the animation strip.",
+    "placement": null
+  },
+  {
+    "name": "brown-village-door-style-02-03",
+    "box": [
+      176,
+      32,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "brown-village-door-style-02-03",
+    "frame": null,
+    "notes": "Four 16\u00d716 opening frames. Preserve the animation strip.",
+    "placement": null
+  },
+  {
+    "name": "brown-village-door-style-03-01",
+    "box": [
+      16,
+      48,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "brown-village-door-style-03-01",
+    "frame": null,
+    "notes": "Four 16\u00d716 opening frames. Preserve the animation strip.",
+    "placement": null
+  },
+  {
+    "name": "brown-village-door-style-03-02",
+    "box": [
+      96,
+      48,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "brown-village-door-style-03-02",
+    "frame": null,
+    "notes": "Four 16\u00d716 opening frames. Preserve the animation strip.",
+    "placement": null
+  },
+  {
+    "name": "brown-village-door-style-03-03",
+    "box": [
+      176,
+      48,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "brown-village-door-style-03-03",
+    "frame": null,
+    "notes": "Four 16\u00d716 opening frames. Preserve the animation strip.",
+    "placement": null
+  },
+  {
+    "name": "gray-village-door-style-01-01",
+    "box": [
+      16,
+      64,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "gray-village-door-style-01-01",
+    "frame": null,
+    "notes": "Four 16\u00d716 opening frames. Preserve the animation strip.",
+    "placement": null
+  },
+  {
+    "name": "gray-village-door-style-01-02",
+    "box": [
+      96,
+      64,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "gray-village-door-style-01-02",
+    "frame": null,
+    "notes": "Four 16\u00d716 opening frames. Preserve the animation strip.",
+    "placement": null
+  },
+  {
+    "name": "gray-village-door-style-01-03",
+    "box": [
+      176,
+      64,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "gray-village-door-style-01-03",
+    "frame": null,
+    "notes": "Four 16\u00d716 opening frames. Preserve the animation strip.",
+    "placement": null
+  },
+  {
+    "name": "gray-village-door-style-02-01",
+    "box": [
+      16,
+      80,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "gray-village-door-style-02-01",
+    "frame": null,
+    "notes": "Four 16\u00d716 opening frames. Preserve the animation strip.",
+    "placement": null
+  },
+  {
+    "name": "gray-village-door-style-02-02",
+    "box": [
+      96,
+      80,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "gray-village-door-style-02-02",
+    "frame": null,
+    "notes": "Four 16\u00d716 opening frames. Preserve the animation strip.",
+    "placement": null
+  },
+  {
+    "name": "gray-village-door-style-02-03",
+    "box": [
+      176,
+      80,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "gray-village-door-style-02-03",
+    "frame": null,
+    "notes": "Four 16\u00d716 opening frames. Preserve the animation strip.",
+    "placement": null
+  },
+  {
+    "name": "gray-village-door-style-03-01",
+    "box": [
+      16,
+      96,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "gray-village-door-style-03-01",
+    "frame": null,
+    "notes": "Four 16\u00d716 opening frames. Preserve the animation strip.",
+    "placement": null
+  },
+  {
+    "name": "gray-village-door-style-03-02",
+    "box": [
+      96,
+      96,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "gray-village-door-style-03-02",
+    "frame": null,
+    "notes": "Four 16\u00d716 opening frames. Preserve the animation strip.",
+    "placement": null
+  },
+  {
+    "name": "gray-village-door-style-03-03",
+    "box": [
+      176,
+      96,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "gray-village-door-style-03-03",
+    "frame": null,
+    "notes": "Four 16\u00d716 opening frames. Preserve the animation strip.",
+    "placement": null
+  }
+]

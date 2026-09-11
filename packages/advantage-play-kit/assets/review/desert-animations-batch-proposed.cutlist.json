@@ -1,0 +1,324 @@
+[
+  {
+    "name": "desert-sequence-01-01",
+    "box": [
+      16,
+      0,
+      64,
+      16
+    ],
+    "kind": "prop",
+    "group": "desert-sequence-01-01",
+    "frame": null,
+    "notes": "Four animation frames. Preserve the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "desert-sequence-01-02",
+    "box": [
+      16,
+      16,
+      64,
+      32
+    ],
+    "kind": "prop",
+    "group": "desert-sequence-01-02",
+    "frame": null,
+    "notes": "Four animation frames. Preserve the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "desert-sequence-01-03",
+    "box": [
+      16,
+      48,
+      64,
+      32
+    ],
+    "kind": "prop",
+    "group": "desert-sequence-01-03",
+    "frame": null,
+    "notes": "Four animation frames. Preserve the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "desert-sequence-01-04",
+    "box": [
+      16,
+      80,
+      64,
+      32
+    ],
+    "kind": "prop",
+    "group": "desert-sequence-01-04",
+    "frame": null,
+    "notes": "Four animation frames. Preserve the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "desert-sequence-01-05",
+    "box": [
+      16,
+      112,
+      64,
+      16
+    ],
+    "kind": "prop",
+    "group": "desert-sequence-01-05",
+    "frame": null,
+    "notes": "Four animation frames. Preserve the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "desert-sequence-01-06",
+    "box": [
+      16,
+      128,
+      64,
+      16
+    ],
+    "kind": "prop",
+    "group": "desert-sequence-01-06",
+    "frame": null,
+    "notes": "Four animation frames. Preserve the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "desert-sequence-01-07",
+    "box": [
+      16,
+      144,
+      64,
+      16
+    ],
+    "kind": "prop",
+    "group": "desert-sequence-01-07",
+    "frame": null,
+    "notes": "Four animation frames. Preserve the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "desert-sequence-02-01",
+    "box": [
+      96,
+      0,
+      64,
+      16
+    ],
+    "kind": "prop",
+    "group": "desert-sequence-02-01",
+    "frame": null,
+    "notes": "Four animation frames. Preserve the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "desert-sequence-02-02",
+    "box": [
+      96,
+      16,
+      64,
+      32
+    ],
+    "kind": "prop",
+    "group": "desert-sequence-02-02",
+    "frame": null,
+    "notes": "Four animation frames. Preserve the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "desert-sequence-02-03",
+    "box": [
+      96,
+      48,
+      64,
+      32
+    ],
+    "kind": "prop",
+    "group": "desert-sequence-02-03",
+    "frame": null,
+    "notes": "Four animation frames. Preserve the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "desert-sequence-02-04",
+    "box": [
+      96,
+      80,
+      64,
+      32
+    ],
+    "kind": "prop",
+    "group": "desert-sequence-02-04",
+    "frame": null,
+    "notes": "Four animation frames. Preserve the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "desert-sequence-02-05",
+    "box": [
+      96,
+      112,
+      64,
+      16
+    ],
+    "kind": "prop",
+    "group": "desert-sequence-02-05",
+    "frame": null,
+    "notes": "Four animation frames. Preserve the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "desert-sequence-02-06",
+    "box": [
+      96,
+      128,
+      64,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S12. The complete animation strip is identical.",
+    "placement": null
+  },
+  {
+    "name": "desert-cactus-sequence-01",
+    "box": [
+      176,
+      0,
+      64,
+      16
+    ],
+    "kind": "prop",
+    "group": "desert-cactus-sequence-01",
+    "frame": null,
+    "notes": "Four animation frames. Preserve the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "desert-cactus-sequence-02",
+    "box": [
+      176,
+      16,
+      64,
+      16
+    ],
+    "kind": "prop",
+    "group": "desert-cactus-sequence-02",
+    "frame": null,
+    "notes": "Four animation frames. Preserve the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "desert-cactus-sequence-03",
+    "box": [
+      176,
+      32,
+      64,
+      16
+    ],
+    "kind": "prop",
+    "group": "desert-cactus-sequence-03",
+    "frame": null,
+    "notes": "Four animation frames. Preserve the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "desert-cactus-sequence-04",
+    "box": [
+      176,
+      48,
+      64,
+      16
+    ],
+    "kind": "prop",
+    "group": "desert-cactus-sequence-04",
+    "frame": null,
+    "notes": "Four animation frames. Preserve the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "desert-cactus-sequence-05",
+    "box": [
+      176,
+      64,
+      64,
+      16
+    ],
+    "kind": "prop",
+    "group": "desert-cactus-sequence-05",
+    "frame": null,
+    "notes": "Four animation frames. Preserve the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "desert-cactus-sequence-06",
+    "box": [
+      176,
+      80,
+      64,
+      16
+    ],
+    "kind": "prop",
+    "group": "desert-cactus-sequence-06",
+    "frame": null,
+    "notes": "Four animation frames. Preserve the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "desert-cactus-sequence-07",
+    "box": [
+      176,
+      96,
+      64,
+      16
+    ],
+    "kind": "prop",
+    "group": "desert-cactus-sequence-07",
+    "frame": null,
+    "notes": "Four animation frames. Preserve the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "desert-cactus-sequence-08",
+    "box": [
+      176,
+      112,
+      64,
+      16
+    ],
+    "kind": "prop",
+    "group": "desert-cactus-sequence-08",
+    "frame": null,
+    "notes": "Four animation frames. Preserve the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "desert-cactus-sequence-09",
+    "box": [
+      176,
+      128,
+      64,
+      16
+    ],
+    "kind": "prop",
+    "group": "desert-cactus-sequence-09",
+    "frame": null,
+    "notes": "Four animation frames. Preserve the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "desert-cactus-sequence-10",
+    "box": [
+      176,
+      144,
+      64,
+      16
+    ],
+    "kind": "prop",
+    "group": "desert-cactus-sequence-10",
+    "frame": null,
+    "notes": "Four animation frames. Preserve the complete strip.",
+    "placement": null
+  }
+]

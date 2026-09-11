@@ -1,0 +1,6955 @@
+[
+  {
+    "name": "cave-left",
+    "box": [
+      0,
+      0,
+      80,
+      96
+    ],
+    "kind": "part",
+    "group": "cave-left",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "I01"
+  },
+  {
+    "name": "pillar-left",
+    "box": [
+      0,
+      96,
+      80,
+      80
+    ],
+    "kind": "part",
+    "group": "pillar-left",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "I02"
+  },
+  {
+    "name": "cave-right",
+    "box": [
+      80,
+      0,
+      80,
+      96
+    ],
+    "kind": "part",
+    "group": "cave-right",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "I03"
+  },
+  {
+    "name": "pillar-right",
+    "box": [
+      80,
+      96,
+      80,
+      80
+    ],
+    "kind": "part",
+    "group": "pillar-right",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "I04"
+  },
+  {
+    "name": "pit-round-black",
+    "box": [
+      160,
+      0,
+      48,
+      96
+    ],
+    "kind": "part",
+    "group": "pit-round-black",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "I05"
+  },
+  {
+    "name": "pit-round-clear",
+    "box": [
+      208,
+      0,
+      48,
+      96
+    ],
+    "kind": "part",
+    "group": "pit-round-clear",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "I06"
+  },
+  {
+    "name": "pit-square-black",
+    "box": [
+      160,
+      96,
+      48,
+      80
+    ],
+    "kind": "part",
+    "group": "pit-square-black",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "I07"
+  },
+  {
+    "name": "pit-square-clear",
+    "box": [
+      208,
+      96,
+      48,
+      80
+    ],
+    "kind": "part",
+    "group": "pit-square-clear",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "I08"
+  },
+  {
+    "name": "stairs-tall",
+    "box": [
+      256,
+      0,
+      96,
+      96
+    ],
+    "kind": "part",
+    "group": "stairs-tall",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "I09"
+  },
+  {
+    "name": "stairs-short",
+    "box": [
+      352,
+      0,
+      96,
+      96
+    ],
+    "kind": "part",
+    "group": "stairs-short",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "I10"
+  },
+  {
+    "name": "stairs-top",
+    "box": [
+      448,
+      16,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "stairs-top",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "I11"
+  },
+  {
+    "name": "stairs-bottom",
+    "box": [
+      448,
+      64,
+      48,
+      32
+    ],
+    "kind": "part",
+    "group": "stairs-bottom",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "I12"
+  },
+  {
+    "name": "door-left",
+    "box": [
+      288,
+      112,
+      48,
+      32
+    ],
+    "kind": "part",
+    "group": "door-left",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "I13"
+  },
+  {
+    "name": "door-right",
+    "box": [
+      352,
+      112,
+      48,
+      32
+    ],
+    "kind": "part",
+    "group": "door-right",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "I14"
+  },
+  {
+    "name": "pit-bottom-0",
+    "box": [
+      0,
+      192,
+      48,
+      64
+    ],
+    "kind": "part",
+    "group": "pit-bottom-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "I15"
+  },
+  {
+    "name": "pit-bottom-48",
+    "box": [
+      48,
+      192,
+      48,
+      64
+    ],
+    "kind": "part",
+    "group": "pit-bottom-48",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "I16"
+  },
+  {
+    "name": "pit-bottom-96",
+    "box": [
+      96,
+      192,
+      48,
+      64
+    ],
+    "kind": "part",
+    "group": "pit-bottom-96",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "I17"
+  },
+  {
+    "name": "pit-bottom-144",
+    "box": [
+      144,
+      192,
+      48,
+      64
+    ],
+    "kind": "part",
+    "group": "pit-bottom-144",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "I18"
+  },
+  {
+    "name": "cave-dark",
+    "box": [
+      384,
+      368,
+      80,
+      96
+    ],
+    "kind": "part",
+    "group": "cave-dark",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "I19"
+  },
+  {
+    "name": "pillar-dark",
+    "box": [
+      464,
+      384,
+      48,
+      80
+    ],
+    "kind": "part",
+    "group": "pillar-dark",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "I20"
+  },
+  {
+    "name": "door-wood",
+    "box": [
+      112,
+      352,
+      48,
+      32
+    ],
+    "kind": "part",
+    "group": "door-wood",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "I21"
+  },
+  {
+    "name": "arch-352",
+    "box": [
+      0,
+      352,
+      48,
+      32
+    ],
+    "kind": "part",
+    "group": "arch-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "I22"
+  },
+  {
+    "name": "lantern-48-352",
+    "box": [
+      48,
+      352,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "lantern-48-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "I23"
+  },
+  {
+    "name": "lantern-80-352",
+    "box": [
+      80,
+      352,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "lantern-80-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "I24"
+  },
+  {
+    "name": "arch-384",
+    "box": [
+      0,
+      384,
+      48,
+      32
+    ],
+    "kind": "part",
+    "group": "arch-384",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "I25"
+  },
+  {
+    "name": "lantern-48-384",
+    "box": [
+      48,
+      384,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "lantern-48-384",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "I26"
+  },
+  {
+    "name": "lantern-80-384",
+    "box": [
+      80,
+      384,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "lantern-80-384",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "I27"
+  },
+  {
+    "name": "arch-416",
+    "box": [
+      0,
+      416,
+      48,
+      32
+    ],
+    "kind": "part",
+    "group": "arch-416",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "I28"
+  },
+  {
+    "name": "lantern-48-416",
+    "box": [
+      48,
+      416,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "lantern-48-416",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "I29"
+  },
+  {
+    "name": "lantern-80-416",
+    "box": [
+      80,
+      416,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "lantern-80-416",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "I30"
+  },
+  {
+    "name": "ice-column-352-304",
+    "box": [
+      352,
+      304,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "ice-column-352-304",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "I31"
+  },
+  {
+    "name": "ice-column-368-304",
+    "box": [
+      368,
+      304,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "ice-column-368-304",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "I32"
+  },
+  {
+    "name": "ice-column-384-304",
+    "box": [
+      384,
+      304,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "ice-column-384-304",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "I33"
+  },
+  {
+    "name": "ice-column-400-304",
+    "box": [
+      400,
+      304,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "ice-column-400-304",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "I34"
+  },
+  {
+    "name": "ice-column-416-304",
+    "box": [
+      416,
+      304,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "ice-column-416-304",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "I35"
+  },
+  {
+    "name": "ice-column-432-304",
+    "box": [
+      432,
+      304,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "ice-column-432-304",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "I36"
+  },
+  {
+    "name": "ice-column-384-336",
+    "box": [
+      384,
+      336,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "ice-column-384-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "I37"
+  },
+  {
+    "name": "ice-column-400-336",
+    "box": [
+      400,
+      336,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "ice-column-400-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "I38"
+  },
+  {
+    "name": "ice-column-416-336",
+    "box": [
+      416,
+      336,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "ice-column-416-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "I39"
+  },
+  {
+    "name": "ice-column-432-336",
+    "box": [
+      432,
+      336,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "ice-column-432-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "I40"
+  },
+  {
+    "name": "ice-column-448-336",
+    "box": [
+      448,
+      336,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "ice-column-448-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "I41"
+  },
+  {
+    "name": "ice-column-464-336",
+    "box": [
+      464,
+      336,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "ice-column-464-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "I42"
+  },
+  {
+    "name": "ice-column-480-336",
+    "box": [
+      480,
+      336,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "ice-column-480-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "I43"
+  },
+  {
+    "name": "ice-column-496-336",
+    "box": [
+      496,
+      336,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "ice-column-496-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "I44"
+  },
+  {
+    "name": "rock-pillar-256",
+    "box": [
+      256,
+      416,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-pillar-256",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "I45"
+  },
+  {
+    "name": "rock-pillar-272",
+    "box": [
+      272,
+      416,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-pillar-272",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "I46"
+  },
+  {
+    "name": "rock-pillar-288",
+    "box": [
+      288,
+      416,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-pillar-288",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "I47"
+  },
+  {
+    "name": "rock-pillar-304",
+    "box": [
+      304,
+      416,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-pillar-304",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "I48"
+  },
+  {
+    "name": "rock-large-320",
+    "box": [
+      320,
+      416,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-large-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "I49"
+  },
+  {
+    "name": "rock-large-352",
+    "box": [
+      352,
+      416,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-large-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "I50"
+  },
+  {
+    "name": "rock-cluster-256",
+    "box": [
+      256,
+      448,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-cluster-256",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "I51"
+  },
+  {
+    "name": "rock-cluster-288",
+    "box": [
+      288,
+      448,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-cluster-288",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "I52"
+  },
+  {
+    "name": "stump-cluster-320",
+    "box": [
+      64,
+      288,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "stump-cluster-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "I53"
+  },
+  {
+    "name": "stump-cluster-352",
+    "box": [
+      96,
+      288,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "stump-cluster-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "I54"
+  },
+  {
+    "name": "lamp-left-off-on",
+    "box": [
+      128,
+      288,
+      32,
+      16
+    ],
+    "kind": "state-strip",
+    "group": "lamp-left-off-on",
+    "frame": null,
+    "notes": "Two lamp states: off, then on. Playback compares the states.",
+    "placement": null,
+    "reviewId": "I55",
+    "frameBoxes": [
+      [
+        128,
+        288,
+        16,
+        16
+      ],
+      [
+        144,
+        288,
+        16,
+        16
+      ]
+    ],
+    "reviewChanged": true
+  },
+  {
+    "name": "lamp-right-off-on",
+    "box": [
+      160,
+      288,
+      32,
+      16
+    ],
+    "kind": "state-strip",
+    "group": "lamp-right-off-on",
+    "frame": null,
+    "notes": "Two lamp states: off, then on. Playback compares the states.",
+    "placement": null,
+    "reviewId": "I56",
+    "frameBoxes": [
+      [
+        160,
+        288,
+        16,
+        16
+      ],
+      [
+        176,
+        288,
+        16,
+        16
+      ]
+    ],
+    "reviewChanged": true
+  },
+  {
+    "name": "chest-192",
+    "box": [
+      192,
+      288,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "chest-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "I57"
+  },
+  {
+    "name": "chest-224",
+    "box": [
+      224,
+      288,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "chest-224",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "I58"
+  },
+  {
+    "name": "crate-cluster-128",
+    "box": [
+      128,
+      304,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "crate-cluster-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "I59"
+  },
+  {
+    "name": "crate-cluster-160",
+    "box": [
+      160,
+      304,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "crate-cluster-160",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "I60"
+  },
+  {
+    "name": "crate-cluster-192",
+    "box": [
+      192,
+      304,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "crate-cluster-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "I61"
+  },
+  {
+    "name": "crate-cluster-224",
+    "box": [
+      224,
+      304,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "crate-cluster-224",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "I62"
+  },
+  {
+    "name": "tile-29-1",
+    "box": [
+      448,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-29-1",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I63"
+  },
+  {
+    "name": "tile-30-1",
+    "box": [
+      464,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-30-1",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I64"
+  },
+  {
+    "name": "tile-31-1",
+    "box": [
+      480,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-31-1",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I65"
+  },
+  {
+    "name": "tile-27-8",
+    "box": [
+      416,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-27-8",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I66"
+  },
+  {
+    "name": "tile-28-8",
+    "box": [
+      432,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-28-8",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I67"
+  },
+  {
+    "name": "tile-29-8",
+    "box": [
+      448,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-29-8",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I68"
+  },
+  {
+    "name": "tile-30-8",
+    "box": [
+      464,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-30-8",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I69"
+  },
+  {
+    "name": "tile-31-8",
+    "box": [
+      480,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-31-8",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I70"
+  },
+  {
+    "name": "tile-27-9",
+    "box": [
+      416,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-27-9",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I71"
+  },
+  {
+    "name": "tile-28-9",
+    "box": [
+      432,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-28-9",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I72"
+  },
+  {
+    "name": "tile-29-9",
+    "box": [
+      448,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-29-9",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I73"
+  },
+  {
+    "name": "tile-30-9",
+    "box": [
+      464,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-30-9",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I74"
+  },
+  {
+    "name": "tile-31-9",
+    "box": [
+      480,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-31-9",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I75"
+  },
+  {
+    "name": "tile-17-10",
+    "box": [
+      256,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-winter-grass-terrain-atlas-style-1-corner-0-0.png",
+    "placement": null,
+    "reviewId": "I76",
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-winter/grassland-winter-grass-terrain-atlas-style-1-corner-0-0.png"
+  },
+  {
+    "name": "tile-18-10",
+    "box": [
+      272,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fg-grounds-review-parts-style-11-border-2-3.png",
+    "placement": null,
+    "reviewId": "I77",
+    "reuseAsset": "top-down/native/farming-game-world/processed/fg-grounds-review-parts/fg-grounds-review-parts-style-11-border-2-3.png"
+  },
+  {
+    "name": "tile-19-10",
+    "box": [
+      288,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-winter-grass-terrain-atlas-style-1-corner-16-0.png",
+    "placement": null,
+    "reviewId": "I78",
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-winter/grassland-winter-grass-terrain-atlas-style-1-corner-16-0.png"
+  },
+  {
+    "name": "tile-20-10",
+    "box": [
+      304,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-winter-grass-terrain-atlas-style-2-corner-0-0.png",
+    "placement": null,
+    "reviewId": "I79",
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-winter/grassland-winter-grass-terrain-atlas-style-2-corner-0-0.png"
+  },
+  {
+    "name": "tile-21-10",
+    "box": [
+      320,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fg-grounds-review-parts-style-12-border-2-3.png",
+    "placement": null,
+    "reviewId": "I80",
+    "reuseAsset": "top-down/native/farming-game-world/processed/fg-grounds-review-parts/fg-grounds-review-parts-style-12-border-2-3.png"
+  },
+  {
+    "name": "tile-22-10",
+    "box": [
+      336,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-winter-grass-terrain-atlas-style-2-corner-16-0.png",
+    "placement": null,
+    "reviewId": "I81",
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-winter/grassland-winter-grass-terrain-atlas-style-2-corner-16-0.png"
+  },
+  {
+    "name": "tile-23-10",
+    "box": [
+      352,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-23-10",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I82"
+  },
+  {
+    "name": "tile-24-10",
+    "box": [
+      368,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-24-10",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I83"
+  },
+  {
+    "name": "tile-25-10",
+    "box": [
+      384,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-25-10",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I84"
+  },
+  {
+    "name": "tile-26-10",
+    "box": [
+      400,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-26-10",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I85"
+  },
+  {
+    "name": "tile-27-10",
+    "box": [
+      416,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-27-10",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I86"
+  },
+  {
+    "name": "tile-28-10",
+    "box": [
+      432,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-28-10",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I87"
+  },
+  {
+    "name": "tile-29-10",
+    "box": [
+      448,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-29-10",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I88"
+  },
+  {
+    "name": "tile-30-10",
+    "box": [
+      464,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-30-10",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I89"
+  },
+  {
+    "name": "tile-31-10",
+    "box": [
+      480,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-31-10",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I90"
+  },
+  {
+    "name": "tile-17-11",
+    "box": [
+      256,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fg-grounds-review-parts-style-11-border-3-2.png",
+    "placement": null,
+    "reviewId": "I91",
+    "reuseAsset": "top-down/native/farming-game-world/processed/fg-grounds-review-parts/fg-grounds-review-parts-style-11-border-3-2.png"
+  },
+  {
+    "name": "tile-18-11",
+    "box": [
+      272,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-winter-grass-terrain-atlas-style-1-fill.png",
+    "placement": null,
+    "reviewId": "I92",
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-winter/grassland-winter-grass-terrain-atlas-style-1-fill.png"
+  },
+  {
+    "name": "tile-19-11",
+    "box": [
+      288,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fg-grounds-review-parts-style-11-border-1-2.png",
+    "placement": null,
+    "reviewId": "I93",
+    "reuseAsset": "top-down/native/farming-game-world/processed/fg-grounds-review-parts/fg-grounds-review-parts-style-11-border-1-2.png"
+  },
+  {
+    "name": "tile-20-11",
+    "box": [
+      304,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fg-grounds-review-parts-style-12-border-3-2.png",
+    "placement": null,
+    "reviewId": "I94",
+    "reuseAsset": "top-down/native/farming-game-world/processed/fg-grounds-review-parts/fg-grounds-review-parts-style-12-border-3-2.png"
+  },
+  {
+    "name": "tile-21-11",
+    "box": [
+      320,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-winter-grass-terrain-atlas-style-2-fill.png",
+    "placement": null,
+    "reviewId": "I95",
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-winter/grassland-winter-grass-terrain-atlas-style-2-fill.png"
+  },
+  {
+    "name": "tile-22-11",
+    "box": [
+      336,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fg-grounds-review-parts-style-12-border-1-2.png",
+    "placement": null,
+    "reviewId": "I96",
+    "reuseAsset": "top-down/native/farming-game-world/processed/fg-grounds-review-parts/fg-grounds-review-parts-style-12-border-1-2.png"
+  },
+  {
+    "name": "tile-23-11",
+    "box": [
+      352,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-23-11",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I97"
+  },
+  {
+    "name": "tile-24-11",
+    "box": [
+      368,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-winter-grass-terrain-atlas-style-1-fill.png",
+    "placement": null,
+    "reviewId": "I98",
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-winter/grassland-winter-grass-terrain-atlas-style-1-fill.png"
+  },
+  {
+    "name": "tile-25-11",
+    "box": [
+      384,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-25-11",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I99"
+  },
+  {
+    "name": "tile-26-11",
+    "box": [
+      400,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-26-11",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I100"
+  },
+  {
+    "name": "tile-27-11",
+    "box": [
+      416,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-winter-grass-terrain-atlas-style-2-fill.png",
+    "placement": null,
+    "reviewId": "I101",
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-winter/grassland-winter-grass-terrain-atlas-style-2-fill.png"
+  },
+  {
+    "name": "tile-28-11",
+    "box": [
+      432,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-28-11",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I102"
+  },
+  {
+    "name": "tile-29-11",
+    "box": [
+      448,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-29-11",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I103"
+  },
+  {
+    "name": "tile-30-11",
+    "box": [
+      464,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-30-11",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I104"
+  },
+  {
+    "name": "tile-31-11",
+    "box": [
+      480,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-31-11",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I105"
+  },
+  {
+    "name": "tile-12-12",
+    "box": [
+      176,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fg-mountains-review-parts-tile-32-11.png",
+    "placement": null,
+    "reviewId": "I106",
+    "reuseAsset": "top-down/native/farming-game-world/processed/fg-mountains-review-parts/fg-mountains-review-parts-tile-32-11.png"
+  },
+  {
+    "name": "tile-13-12",
+    "box": [
+      192,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-12",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I107"
+  },
+  {
+    "name": "tile-14-12",
+    "box": [
+      208,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-winter-grass-terrain-atlas-style-1-fill.png",
+    "placement": null,
+    "reviewId": "I108",
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-winter/grassland-winter-grass-terrain-atlas-style-1-fill.png"
+  },
+  {
+    "name": "tile-15-12",
+    "box": [
+      224,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-winter-grass-terrain-atlas-style-2-fill.png",
+    "placement": null,
+    "reviewId": "I109",
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-winter/grassland-winter-grass-terrain-atlas-style-2-fill.png"
+  },
+  {
+    "name": "tile-16-12",
+    "box": [
+      240,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-12",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I110"
+  },
+  {
+    "name": "tile-17-12",
+    "box": [
+      256,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-winter-grass-terrain-atlas-style-1-corner-0-16.png",
+    "placement": null,
+    "reviewId": "I111",
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-winter/grassland-winter-grass-terrain-atlas-style-1-corner-0-16.png"
+  },
+  {
+    "name": "tile-18-12",
+    "box": [
+      272,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fg-grounds-review-parts-style-11-border-2-1.png",
+    "placement": null,
+    "reviewId": "I112",
+    "reuseAsset": "top-down/native/farming-game-world/processed/fg-grounds-review-parts/fg-grounds-review-parts-style-11-border-2-1.png"
+  },
+  {
+    "name": "tile-19-12",
+    "box": [
+      288,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-winter-grass-terrain-atlas-style-1-corner-16-16.png",
+    "placement": null,
+    "reviewId": "I113",
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-winter/grassland-winter-grass-terrain-atlas-style-1-corner-16-16.png"
+  },
+  {
+    "name": "tile-20-12",
+    "box": [
+      304,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-winter-grass-terrain-atlas-style-2-corner-0-16.png",
+    "placement": null,
+    "reviewId": "I114",
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-winter/grassland-winter-grass-terrain-atlas-style-2-corner-0-16.png"
+  },
+  {
+    "name": "tile-21-12",
+    "box": [
+      320,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fg-grounds-review-parts-style-12-border-2-1.png",
+    "placement": null,
+    "reviewId": "I115",
+    "reuseAsset": "top-down/native/farming-game-world/processed/fg-grounds-review-parts/fg-grounds-review-parts-style-12-border-2-1.png"
+  },
+  {
+    "name": "tile-22-12",
+    "box": [
+      336,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-winter-grass-terrain-atlas-style-2-corner-16-16.png",
+    "placement": null,
+    "reviewId": "I116",
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-winter/grassland-winter-grass-terrain-atlas-style-2-corner-16-16.png"
+  },
+  {
+    "name": "tile-23-12",
+    "box": [
+      352,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-23-12",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I117"
+  },
+  {
+    "name": "tile-24-12",
+    "box": [
+      368,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-24-12",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I118"
+  },
+  {
+    "name": "tile-25-12",
+    "box": [
+      384,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-25-12",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I119"
+  },
+  {
+    "name": "tile-26-12",
+    "box": [
+      400,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-26-12",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I120"
+  },
+  {
+    "name": "tile-27-12",
+    "box": [
+      416,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-27-12",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I121"
+  },
+  {
+    "name": "tile-28-12",
+    "box": [
+      432,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-28-12",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I122"
+  },
+  {
+    "name": "tile-29-12",
+    "box": [
+      448,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-29-12",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I123"
+  },
+  {
+    "name": "tile-30-12",
+    "box": [
+      464,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-30-12",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I124"
+  },
+  {
+    "name": "tile-31-12",
+    "box": [
+      480,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-31-12",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I125"
+  },
+  {
+    "name": "tile-13-13",
+    "box": [
+      192,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-13",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I126"
+  },
+  {
+    "name": "tile-14-13",
+    "box": [
+      208,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-13",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I127"
+  },
+  {
+    "name": "tile-15-13",
+    "box": [
+      224,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-13",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I128"
+  },
+  {
+    "name": "tile-16-13",
+    "box": [
+      240,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-13",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I129"
+  },
+  {
+    "name": "tile-17-13",
+    "box": [
+      256,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fg-grounds-review-parts-style-11-border-1-1.png",
+    "placement": null,
+    "reviewId": "I130",
+    "reuseAsset": "top-down/native/farming-game-world/processed/fg-grounds-review-parts/fg-grounds-review-parts-style-11-border-1-1.png"
+  },
+  {
+    "name": "tile-18-13",
+    "box": [
+      272,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fg-grounds-review-parts-style-11-border-2-1.png",
+    "placement": null,
+    "reviewId": "I131",
+    "reuseAsset": "top-down/native/farming-game-world/processed/fg-grounds-review-parts/fg-grounds-review-parts-style-11-border-2-1.png"
+  },
+  {
+    "name": "tile-19-13",
+    "box": [
+      288,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fg-grounds-review-parts-style-11-border-3-1.png",
+    "placement": null,
+    "reviewId": "I132",
+    "reuseAsset": "top-down/native/farming-game-world/processed/fg-grounds-review-parts/fg-grounds-review-parts-style-11-border-3-1.png"
+  },
+  {
+    "name": "tile-20-13",
+    "box": [
+      304,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fg-grounds-review-parts-style-12-border-1-1.png",
+    "placement": null,
+    "reviewId": "I133",
+    "reuseAsset": "top-down/native/farming-game-world/processed/fg-grounds-review-parts/fg-grounds-review-parts-style-12-border-1-1.png"
+  },
+  {
+    "name": "tile-21-13",
+    "box": [
+      320,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fg-grounds-review-parts-style-12-border-2-1.png",
+    "placement": null,
+    "reviewId": "I134",
+    "reuseAsset": "top-down/native/farming-game-world/processed/fg-grounds-review-parts/fg-grounds-review-parts-style-12-border-2-1.png"
+  },
+  {
+    "name": "tile-22-13",
+    "box": [
+      336,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fg-grounds-review-parts-style-12-border-3-1.png",
+    "placement": null,
+    "reviewId": "I135",
+    "reuseAsset": "top-down/native/farming-game-world/processed/fg-grounds-review-parts/fg-grounds-review-parts-style-12-border-3-1.png"
+  },
+  {
+    "name": "tile-23-13",
+    "box": [
+      352,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-23-13",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I136"
+  },
+  {
+    "name": "tile-24-13",
+    "box": [
+      368,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse I118. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "I137",
+    "reuseProposal": {
+      "sheetId": "I",
+      "reviewId": "I118",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-frozen-caves-source-e97244c8850b.png",
+      "box": [
+        368,
+        176,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-25-13",
+    "box": [
+      384,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-25-13",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I138"
+  },
+  {
+    "name": "tile-26-13",
+    "box": [
+      400,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-26-13",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I139"
+  },
+  {
+    "name": "tile-27-13",
+    "box": [
+      416,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse I121. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "I140",
+    "reuseProposal": {
+      "sheetId": "I",
+      "reviewId": "I121",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-frozen-caves-source-e97244c8850b.png",
+      "box": [
+        416,
+        176,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-28-13",
+    "box": [
+      432,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-28-13",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I141"
+  },
+  {
+    "name": "tile-29-13",
+    "box": [
+      448,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-29-13",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I142"
+  },
+  {
+    "name": "tile-30-13",
+    "box": [
+      464,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse I124. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "I143",
+    "reuseProposal": {
+      "sheetId": "I",
+      "reviewId": "I124",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-frozen-caves-source-e97244c8850b.png",
+      "box": [
+        464,
+        176,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-31-13",
+    "box": [
+      480,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-31-13",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I144"
+  },
+  {
+    "name": "tile-15-14",
+    "box": [
+      224,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-14",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I145"
+  },
+  {
+    "name": "tile-16-14",
+    "box": [
+      240,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-14",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I146"
+  },
+  {
+    "name": "tile-17-14",
+    "box": [
+      256,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fg-grounds-review-parts-style-11-border-1-2.png",
+    "placement": null,
+    "reviewId": "I147",
+    "reuseAsset": "top-down/native/farming-game-world/processed/fg-grounds-review-parts/fg-grounds-review-parts-style-11-border-1-2.png"
+  },
+  {
+    "name": "tile-19-14",
+    "box": [
+      288,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fg-grounds-review-parts-style-11-border-3-2.png",
+    "placement": null,
+    "reviewId": "I148",
+    "reuseAsset": "top-down/native/farming-game-world/processed/fg-grounds-review-parts/fg-grounds-review-parts-style-11-border-3-2.png"
+  },
+  {
+    "name": "tile-20-14",
+    "box": [
+      304,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fg-grounds-review-parts-style-12-border-1-2.png",
+    "placement": null,
+    "reviewId": "I149",
+    "reuseAsset": "top-down/native/farming-game-world/processed/fg-grounds-review-parts/fg-grounds-review-parts-style-12-border-1-2.png"
+  },
+  {
+    "name": "tile-22-14",
+    "box": [
+      336,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fg-grounds-review-parts-style-12-border-3-2.png",
+    "placement": null,
+    "reviewId": "I150",
+    "reuseAsset": "top-down/native/farming-game-world/processed/fg-grounds-review-parts/fg-grounds-review-parts-style-12-border-3-2.png"
+  },
+  {
+    "name": "tile-23-14",
+    "box": [
+      352,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse I99. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "I151",
+    "reuseProposal": {
+      "sheetId": "I",
+      "reviewId": "I99",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-frozen-caves-source-e97244c8850b.png",
+      "box": [
+        384,
+        160,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-24-14",
+    "box": [
+      368,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse I110. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "I152",
+    "reuseProposal": {
+      "sheetId": "I",
+      "reviewId": "I110",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-frozen-caves-source-e97244c8850b.png",
+      "box": [
+        240,
+        176,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-25-14",
+    "box": [
+      384,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse I97. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "I153",
+    "reuseProposal": {
+      "sheetId": "I",
+      "reviewId": "I97",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-frozen-caves-source-e97244c8850b.png",
+      "box": [
+        352,
+        160,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-26-14",
+    "box": [
+      400,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse I102. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "I154",
+    "reuseProposal": {
+      "sheetId": "I",
+      "reviewId": "I102",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-frozen-caves-source-e97244c8850b.png",
+      "box": [
+        432,
+        160,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-27-14",
+    "box": [
+      416,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse I110. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "I155",
+    "reuseProposal": {
+      "sheetId": "I",
+      "reviewId": "I110",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-frozen-caves-source-e97244c8850b.png",
+      "box": [
+        240,
+        176,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-28-14",
+    "box": [
+      432,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse I100. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "I156",
+    "reuseProposal": {
+      "sheetId": "I",
+      "reviewId": "I100",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-frozen-caves-source-e97244c8850b.png",
+      "box": [
+        400,
+        160,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-29-14",
+    "box": [
+      448,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse I105. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "I157",
+    "reuseProposal": {
+      "sheetId": "I",
+      "reviewId": "I105",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-frozen-caves-source-e97244c8850b.png",
+      "box": [
+        480,
+        160,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-30-14",
+    "box": [
+      464,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse I110. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "I158",
+    "reuseProposal": {
+      "sheetId": "I",
+      "reviewId": "I110",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-frozen-caves-source-e97244c8850b.png",
+      "box": [
+        240,
+        176,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-31-14",
+    "box": [
+      480,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse I103. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "I159",
+    "reuseProposal": {
+      "sheetId": "I",
+      "reviewId": "I103",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-frozen-caves-source-e97244c8850b.png",
+      "box": [
+        448,
+        160,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-17-15",
+    "box": [
+      256,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fg-grounds-review-parts-style-11-border-1-3.png",
+    "placement": null,
+    "reviewId": "I160",
+    "reuseAsset": "top-down/native/farming-game-world/processed/fg-grounds-review-parts/fg-grounds-review-parts-style-11-border-1-3.png"
+  },
+  {
+    "name": "tile-18-15",
+    "box": [
+      272,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fg-grounds-review-parts-style-11-border-2-3.png",
+    "placement": null,
+    "reviewId": "I161",
+    "reuseAsset": "top-down/native/farming-game-world/processed/fg-grounds-review-parts/fg-grounds-review-parts-style-11-border-2-3.png"
+  },
+  {
+    "name": "tile-19-15",
+    "box": [
+      288,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fg-grounds-review-parts-style-11-border-3-3.png",
+    "placement": null,
+    "reviewId": "I162",
+    "reuseAsset": "top-down/native/farming-game-world/processed/fg-grounds-review-parts/fg-grounds-review-parts-style-11-border-3-3.png"
+  },
+  {
+    "name": "tile-20-15",
+    "box": [
+      304,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fg-grounds-review-parts-style-12-border-1-3.png",
+    "placement": null,
+    "reviewId": "I163",
+    "reuseAsset": "top-down/native/farming-game-world/processed/fg-grounds-review-parts/fg-grounds-review-parts-style-12-border-1-3.png"
+  },
+  {
+    "name": "tile-21-15",
+    "box": [
+      320,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fg-grounds-review-parts-style-12-border-2-3.png",
+    "placement": null,
+    "reviewId": "I164",
+    "reuseAsset": "top-down/native/farming-game-world/processed/fg-grounds-review-parts/fg-grounds-review-parts-style-12-border-2-3.png"
+  },
+  {
+    "name": "tile-22-15",
+    "box": [
+      336,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fg-grounds-review-parts-style-12-border-3-3.png",
+    "placement": null,
+    "reviewId": "I165",
+    "reuseAsset": "top-down/native/farming-game-world/processed/fg-grounds-review-parts/fg-grounds-review-parts-style-12-border-3-3.png"
+  },
+  {
+    "name": "tile-23-15",
+    "box": [
+      352,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-23-15",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I166"
+  },
+  {
+    "name": "tile-24-15",
+    "box": [
+      368,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse I83. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "I167",
+    "reuseProposal": {
+      "sheetId": "I",
+      "reviewId": "I83",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-frozen-caves-source-e97244c8850b.png",
+      "box": [
+        368,
+        144,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-25-15",
+    "box": [
+      384,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-25-15",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I168"
+  },
+  {
+    "name": "tile-26-15",
+    "box": [
+      400,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-26-15",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I169"
+  },
+  {
+    "name": "tile-27-15",
+    "box": [
+      416,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse I86. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "I170",
+    "reuseProposal": {
+      "sheetId": "I",
+      "reviewId": "I86",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-frozen-caves-source-e97244c8850b.png",
+      "box": [
+        416,
+        144,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-28-15",
+    "box": [
+      432,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-28-15",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I171"
+  },
+  {
+    "name": "tile-29-15",
+    "box": [
+      448,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-29-15",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I172"
+  },
+  {
+    "name": "tile-30-15",
+    "box": [
+      464,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse I89. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "I173",
+    "reuseProposal": {
+      "sheetId": "I",
+      "reviewId": "I89",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-frozen-caves-source-e97244c8850b.png",
+      "box": [
+        464,
+        144,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-31-15",
+    "box": [
+      480,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-31-15",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I174"
+  },
+  {
+    "name": "tile-17-16",
+    "box": [
+      256,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-winter-grass-terrain-atlas-style-1-corner-0-32.png",
+    "placement": null,
+    "reviewId": "I175",
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-winter/grassland-winter-grass-terrain-atlas-style-1-corner-0-32.png"
+  },
+  {
+    "name": "tile-19-16",
+    "box": [
+      288,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-winter-grass-terrain-atlas-style-1-corner-16-32.png",
+    "placement": null,
+    "reviewId": "I176",
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-winter/grassland-winter-grass-terrain-atlas-style-1-corner-16-32.png"
+  },
+  {
+    "name": "tile-20-16",
+    "box": [
+      304,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-winter-grass-terrain-atlas-style-2-corner-0-32.png",
+    "placement": null,
+    "reviewId": "I177",
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-winter/grassland-winter-grass-terrain-atlas-style-2-corner-0-32.png"
+  },
+  {
+    "name": "tile-22-16",
+    "box": [
+      336,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: grassland-winter-grass-terrain-atlas-style-2-corner-16-32.png",
+    "placement": null,
+    "reviewId": "I178",
+    "reuseAsset": "top-down/native/farming-game-world/processed/grassland-winter/grassland-winter-grass-terrain-atlas-style-2-corner-16-32.png"
+  },
+  {
+    "name": "tile-23-16",
+    "box": [
+      352,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-23-16",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I179"
+  },
+  {
+    "name": "tile-25-16",
+    "box": [
+      384,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-25-16",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I180"
+  },
+  {
+    "name": "tile-26-16",
+    "box": [
+      400,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-26-16",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I181"
+  },
+  {
+    "name": "tile-28-16",
+    "box": [
+      432,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-28-16",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I182"
+  },
+  {
+    "name": "tile-29-16",
+    "box": [
+      448,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-29-16",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I183"
+  },
+  {
+    "name": "tile-31-16",
+    "box": [
+      480,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-31-16",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I184"
+  },
+  {
+    "name": "tile-1-17",
+    "box": [
+      0,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-1-17",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I185"
+  },
+  {
+    "name": "tile-2-17",
+    "box": [
+      16,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-2-17",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I186"
+  },
+  {
+    "name": "tile-3-17",
+    "box": [
+      32,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-17",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I187"
+  },
+  {
+    "name": "tile-4-17",
+    "box": [
+      48,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-17",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I188"
+  },
+  {
+    "name": "tile-5-17",
+    "box": [
+      64,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-17",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I189"
+  },
+  {
+    "name": "tile-6-17",
+    "box": [
+      80,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-6-17",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I190"
+  },
+  {
+    "name": "tile-7-17",
+    "box": [
+      96,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-7-17",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I191"
+  },
+  {
+    "name": "tile-8-17",
+    "box": [
+      112,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-8-17",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I192"
+  },
+  {
+    "name": "tile-12-17",
+    "box": [
+      176,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-17",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I193"
+  },
+  {
+    "name": "tile-13-17",
+    "box": [
+      192,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-17",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I194"
+  },
+  {
+    "name": "tile-14-17",
+    "box": [
+      208,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-17",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I195"
+  },
+  {
+    "name": "tile-15-17",
+    "box": [
+      224,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-17",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I196"
+  },
+  {
+    "name": "tile-16-17",
+    "box": [
+      240,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-17",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I197"
+  },
+  {
+    "name": "tile-17-17",
+    "box": [
+      256,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-17-17",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I198"
+  },
+  {
+    "name": "tile-18-17",
+    "box": [
+      272,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-18-17",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I199"
+  },
+  {
+    "name": "tile-19-17",
+    "box": [
+      288,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-19-17",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I200"
+  },
+  {
+    "name": "tile-20-17",
+    "box": [
+      304,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-20-17",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I201"
+  },
+  {
+    "name": "tile-21-17",
+    "box": [
+      320,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-21-17",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I202"
+  },
+  {
+    "name": "tile-22-17",
+    "box": [
+      336,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-22-17",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I203"
+  },
+  {
+    "name": "tile-23-17",
+    "box": [
+      352,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-23-17",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I204"
+  },
+  {
+    "name": "tile-24-17",
+    "box": [
+      368,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-24-17",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I205"
+  },
+  {
+    "name": "tile-25-17",
+    "box": [
+      384,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse I205. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "I206",
+    "reuseProposal": {
+      "sheetId": "I",
+      "reviewId": "I205",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-frozen-caves-source-e97244c8850b.png",
+      "box": [
+        368,
+        256,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-26-17",
+    "box": [
+      400,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse I205. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "I207",
+    "reuseProposal": {
+      "sheetId": "I",
+      "reviewId": "I205",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-frozen-caves-source-e97244c8850b.png",
+      "box": [
+        368,
+        256,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-27-17",
+    "box": [
+      416,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse I205. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "I208",
+    "reuseProposal": {
+      "sheetId": "I",
+      "reviewId": "I205",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-frozen-caves-source-e97244c8850b.png",
+      "box": [
+        368,
+        256,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-28-17",
+    "box": [
+      432,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse I205. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "I209",
+    "reuseProposal": {
+      "sheetId": "I",
+      "reviewId": "I205",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-frozen-caves-source-e97244c8850b.png",
+      "box": [
+        368,
+        256,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-29-17",
+    "box": [
+      448,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-29-17",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I210"
+  },
+  {
+    "name": "tile-1-18",
+    "box": [
+      0,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-1-18",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I211"
+  },
+  {
+    "name": "tile-2-18",
+    "box": [
+      16,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-2-18",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I212"
+  },
+  {
+    "name": "tile-3-18",
+    "box": [
+      32,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-18",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I213"
+  },
+  {
+    "name": "tile-4-18",
+    "box": [
+      48,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-18",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I214"
+  },
+  {
+    "name": "tile-5-18",
+    "box": [
+      64,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-18",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I215"
+  },
+  {
+    "name": "tile-6-18",
+    "box": [
+      80,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-6-18",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I216"
+  },
+  {
+    "name": "tile-7-18",
+    "box": [
+      96,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-7-18",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I217"
+  },
+  {
+    "name": "tile-8-18",
+    "box": [
+      112,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-8-18",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I218"
+  },
+  {
+    "name": "tile-9-18",
+    "box": [
+      128,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-9-18",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I219"
+  },
+  {
+    "name": "tile-10-18",
+    "box": [
+      144,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse I219. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "I220",
+    "reuseProposal": {
+      "sheetId": "I",
+      "reviewId": "I219",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-frozen-caves-source-e97244c8850b.png",
+      "box": [
+        128,
+        272,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-11-18",
+    "box": [
+      160,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse I219. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "I221",
+    "reuseProposal": {
+      "sheetId": "I",
+      "reviewId": "I219",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-frozen-caves-source-e97244c8850b.png",
+      "box": [
+        128,
+        272,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-12-18",
+    "box": [
+      176,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse I219. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "I222",
+    "reuseProposal": {
+      "sheetId": "I",
+      "reviewId": "I219",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-frozen-caves-source-e97244c8850b.png",
+      "box": [
+        128,
+        272,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-13-18",
+    "box": [
+      192,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-18",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I223"
+  },
+  {
+    "name": "tile-14-18",
+    "box": [
+      208,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-18",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I224"
+  },
+  {
+    "name": "tile-15-18",
+    "box": [
+      224,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-18",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I225"
+  },
+  {
+    "name": "tile-16-18",
+    "box": [
+      240,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-18",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I226"
+  },
+  {
+    "name": "tile-17-18",
+    "box": [
+      256,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-17-18",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I227"
+  },
+  {
+    "name": "tile-18-18",
+    "box": [
+      272,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-18-18",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I228"
+  },
+  {
+    "name": "tile-19-18",
+    "box": [
+      288,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-19-18",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I229"
+  },
+  {
+    "name": "tile-20-18",
+    "box": [
+      304,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-20-18",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I230"
+  },
+  {
+    "name": "tile-21-18",
+    "box": [
+      320,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-21-18",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I231"
+  },
+  {
+    "name": "tile-22-18",
+    "box": [
+      336,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-22-18",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I232"
+  },
+  {
+    "name": "tile-23-18",
+    "box": [
+      352,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-23-18",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I233"
+  },
+  {
+    "name": "tile-24-18",
+    "box": [
+      368,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse I66. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "I234",
+    "reuseProposal": {
+      "sheetId": "I",
+      "reviewId": "I66",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-frozen-caves-source-e97244c8850b.png",
+      "box": [
+        416,
+        112,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-25-18",
+    "box": [
+      384,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse I67. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "I235",
+    "reuseProposal": {
+      "sheetId": "I",
+      "reviewId": "I67",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-frozen-caves-source-e97244c8850b.png",
+      "box": [
+        432,
+        112,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-26-18",
+    "box": [
+      400,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse I68. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "I236",
+    "reuseProposal": {
+      "sheetId": "I",
+      "reviewId": "I68",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-frozen-caves-source-e97244c8850b.png",
+      "box": [
+        448,
+        112,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-27-18",
+    "box": [
+      416,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse I69. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "I237",
+    "reuseProposal": {
+      "sheetId": "I",
+      "reviewId": "I69",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-frozen-caves-source-e97244c8850b.png",
+      "box": [
+        464,
+        112,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-28-18",
+    "box": [
+      432,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse I70. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "I238",
+    "reuseProposal": {
+      "sheetId": "I",
+      "reviewId": "I70",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-frozen-caves-source-e97244c8850b.png",
+      "box": [
+        480,
+        112,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-29-18",
+    "box": [
+      448,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-29-18",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I239"
+  },
+  {
+    "name": "tile-30-18",
+    "box": [
+      464,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-30-18",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I240"
+  },
+  {
+    "name": "tile-31-18",
+    "box": [
+      480,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse I205. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "I241",
+    "reuseProposal": {
+      "sheetId": "I",
+      "reviewId": "I205",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-frozen-caves-source-e97244c8850b.png",
+      "box": [
+        368,
+        256,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-32-18",
+    "box": [
+      496,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse I210. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "I242",
+    "reuseProposal": {
+      "sheetId": "I",
+      "reviewId": "I210",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-frozen-caves-source-e97244c8850b.png",
+      "box": [
+        448,
+        256,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-1-19",
+    "box": [
+      0,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-1-19",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I243"
+  },
+  {
+    "name": "tile-2-19",
+    "box": [
+      16,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-2-19",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I244"
+  },
+  {
+    "name": "tile-3-19",
+    "box": [
+      32,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-19",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I245"
+  },
+  {
+    "name": "tile-4-19",
+    "box": [
+      48,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-19",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I246"
+  },
+  {
+    "name": "tile-17-19",
+    "box": [
+      256,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-17-19",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I247"
+  },
+  {
+    "name": "tile-18-19",
+    "box": [
+      272,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-18-19",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I248"
+  },
+  {
+    "name": "tile-19-19",
+    "box": [
+      288,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-19-19",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I249"
+  },
+  {
+    "name": "tile-20-19",
+    "box": [
+      304,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-20-19",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I250"
+  },
+  {
+    "name": "tile-21-19",
+    "box": [
+      320,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-21-19",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I251"
+  },
+  {
+    "name": "tile-22-19",
+    "box": [
+      336,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-22-19",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I252"
+  },
+  {
+    "name": "tile-23-19",
+    "box": [
+      352,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-23-19",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I253"
+  },
+  {
+    "name": "tile-24-19",
+    "box": [
+      368,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-24-19",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I254"
+  },
+  {
+    "name": "tile-25-19",
+    "box": [
+      384,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-25-19",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I255"
+  },
+  {
+    "name": "tile-26-19",
+    "box": [
+      400,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-26-19",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I256"
+  },
+  {
+    "name": "tile-27-19",
+    "box": [
+      416,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-27-19",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I257"
+  },
+  {
+    "name": "tile-28-19",
+    "box": [
+      432,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-28-19",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I258"
+  },
+  {
+    "name": "tile-29-19",
+    "box": [
+      448,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-29-19",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I259"
+  },
+  {
+    "name": "tile-30-19",
+    "box": [
+      464,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-30-19",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I260"
+  },
+  {
+    "name": "tile-31-19",
+    "box": [
+      480,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-31-19",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I261"
+  },
+  {
+    "name": "tile-32-19",
+    "box": [
+      496,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-32-19",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I262"
+  },
+  {
+    "name": "tile-1-20",
+    "box": [
+      0,
+      304,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-1-20",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I263"
+  },
+  {
+    "name": "tile-2-20",
+    "box": [
+      16,
+      304,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-2-20",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I264"
+  },
+  {
+    "name": "tile-3-20",
+    "box": [
+      32,
+      304,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-20",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I265"
+  },
+  {
+    "name": "tile-5-20",
+    "box": [
+      64,
+      304,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-20",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I266"
+  },
+  {
+    "name": "tile-6-20",
+    "box": [
+      80,
+      304,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-6-20",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I267"
+  },
+  {
+    "name": "tile-7-20",
+    "box": [
+      96,
+      304,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-7-20",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I268"
+  },
+  {
+    "name": "tile-8-20",
+    "box": [
+      112,
+      304,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-8-20",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I269"
+  },
+  {
+    "name": "tile-17-20",
+    "box": [
+      256,
+      304,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-17-20",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I270"
+  },
+  {
+    "name": "tile-18-20",
+    "box": [
+      272,
+      304,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-18-20",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I271"
+  },
+  {
+    "name": "tile-19-20",
+    "box": [
+      288,
+      304,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-19-20",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I272"
+  },
+  {
+    "name": "tile-20-20",
+    "box": [
+      304,
+      304,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-20-20",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I273"
+  },
+  {
+    "name": "tile-21-20",
+    "box": [
+      320,
+      304,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-21-20",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I274"
+  },
+  {
+    "name": "tile-22-20",
+    "box": [
+      336,
+      304,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-22-20",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I275"
+  },
+  {
+    "name": "tile-29-20",
+    "box": [
+      448,
+      304,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-29-20",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I276"
+  },
+  {
+    "name": "tile-30-20",
+    "box": [
+      464,
+      304,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-30-20",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I277"
+  },
+  {
+    "name": "tile-31-20",
+    "box": [
+      480,
+      304,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-31-20",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I278"
+  },
+  {
+    "name": "tile-32-20",
+    "box": [
+      496,
+      304,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-32-20",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I279"
+  },
+  {
+    "name": "tile-1-21",
+    "box": [
+      0,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-1-21",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I280"
+  },
+  {
+    "name": "tile-2-21",
+    "box": [
+      16,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-2-21",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I281"
+  },
+  {
+    "name": "tile-3-21",
+    "box": [
+      32,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-21",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I282"
+  },
+  {
+    "name": "tile-4-21",
+    "box": [
+      48,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-21",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I283"
+  },
+  {
+    "name": "tile-5-21",
+    "box": [
+      64,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-21",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I284"
+  },
+  {
+    "name": "tile-6-21",
+    "box": [
+      80,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-6-21",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I285"
+  },
+  {
+    "name": "tile-7-21",
+    "box": [
+      96,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-7-21",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I286"
+  },
+  {
+    "name": "tile-8-21",
+    "box": [
+      112,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-8-21",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I287"
+  },
+  {
+    "name": "tile-17-21",
+    "box": [
+      256,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-17-21",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I288"
+  },
+  {
+    "name": "tile-18-21",
+    "box": [
+      272,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-18-21",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I289"
+  },
+  {
+    "name": "tile-19-21",
+    "box": [
+      288,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-19-21",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I290"
+  },
+  {
+    "name": "tile-20-21",
+    "box": [
+      304,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-20-21",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I291"
+  },
+  {
+    "name": "tile-21-21",
+    "box": [
+      320,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-21-21",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I292"
+  },
+  {
+    "name": "tile-22-21",
+    "box": [
+      336,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-22-21",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I293"
+  },
+  {
+    "name": "tile-29-21",
+    "box": [
+      448,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-29-21",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I294"
+  },
+  {
+    "name": "tile-30-21",
+    "box": [
+      464,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-30-21",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I295"
+  },
+  {
+    "name": "tile-31-21",
+    "box": [
+      480,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-31-21",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I296"
+  },
+  {
+    "name": "tile-32-21",
+    "box": [
+      496,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-32-21",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I297"
+  },
+  {
+    "name": "tile-1-22",
+    "box": [
+      0,
+      336,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-1-22",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I298"
+  },
+  {
+    "name": "tile-2-22",
+    "box": [
+      16,
+      336,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-2-22",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I299"
+  },
+  {
+    "name": "tile-3-22",
+    "box": [
+      32,
+      336,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-22",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I300"
+  },
+  {
+    "name": "tile-4-22",
+    "box": [
+      48,
+      336,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-22",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I301"
+  },
+  {
+    "name": "tile-5-22",
+    "box": [
+      64,
+      336,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-22",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I302"
+  },
+  {
+    "name": "tile-6-22",
+    "box": [
+      80,
+      336,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-6-22",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I303"
+  },
+  {
+    "name": "tile-7-22",
+    "box": [
+      96,
+      336,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-7-22",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I304"
+  },
+  {
+    "name": "tile-8-22",
+    "box": [
+      112,
+      336,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-8-22",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I305"
+  },
+  {
+    "name": "tile-9-22",
+    "box": [
+      128,
+      336,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-9-22",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I306"
+  },
+  {
+    "name": "tile-10-22",
+    "box": [
+      144,
+      336,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-22",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I307"
+  },
+  {
+    "name": "tile-11-22",
+    "box": [
+      160,
+      336,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-22",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I308"
+  },
+  {
+    "name": "tile-12-22",
+    "box": [
+      176,
+      336,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-22",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I309"
+  },
+  {
+    "name": "tile-13-22",
+    "box": [
+      192,
+      336,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-22",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I310"
+  },
+  {
+    "name": "tile-14-22",
+    "box": [
+      208,
+      336,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-22",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I311"
+  },
+  {
+    "name": "tile-15-22",
+    "box": [
+      224,
+      336,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-22",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I312"
+  },
+  {
+    "name": "tile-16-22",
+    "box": [
+      240,
+      336,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-22",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I313"
+  },
+  {
+    "name": "tile-17-22",
+    "box": [
+      256,
+      336,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-17-22",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I314"
+  },
+  {
+    "name": "tile-18-22",
+    "box": [
+      272,
+      336,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-18-22",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I315"
+  },
+  {
+    "name": "tile-19-22",
+    "box": [
+      288,
+      336,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-19-22",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I316"
+  },
+  {
+    "name": "tile-20-22",
+    "box": [
+      304,
+      336,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-20-22",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I317"
+  },
+  {
+    "name": "tile-21-22",
+    "box": [
+      320,
+      336,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-21-22",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I318"
+  },
+  {
+    "name": "tile-22-22",
+    "box": [
+      336,
+      336,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-22-22",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I319"
+  },
+  {
+    "name": "tile-23-22",
+    "box": [
+      352,
+      336,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-23-22",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I320"
+  },
+  {
+    "name": "tile-24-22",
+    "box": [
+      368,
+      336,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-24-22",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I321"
+  },
+  {
+    "name": "tile-13-23",
+    "box": [
+      192,
+      352,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-23",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I322"
+  },
+  {
+    "name": "tile-14-23",
+    "box": [
+      208,
+      352,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-23",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I323"
+  },
+  {
+    "name": "tile-15-23",
+    "box": [
+      224,
+      352,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-23",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I324"
+  },
+  {
+    "name": "tile-16-23",
+    "box": [
+      240,
+      352,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-23",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I325"
+  },
+  {
+    "name": "tile-17-23",
+    "box": [
+      256,
+      352,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-17-23",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I326"
+  },
+  {
+    "name": "tile-18-23",
+    "box": [
+      272,
+      352,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-18-23",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I327"
+  },
+  {
+    "name": "tile-19-23",
+    "box": [
+      288,
+      352,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-19-23",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I328"
+  },
+  {
+    "name": "tile-20-23",
+    "box": [
+      304,
+      352,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-20-23",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I329"
+  },
+  {
+    "name": "tile-21-23",
+    "box": [
+      320,
+      352,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-21-23",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I330"
+  },
+  {
+    "name": "tile-22-23",
+    "box": [
+      336,
+      352,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-22-23",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I331"
+  },
+  {
+    "name": "tile-23-23",
+    "box": [
+      352,
+      352,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-23-23",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I332"
+  },
+  {
+    "name": "tile-24-23",
+    "box": [
+      368,
+      352,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-24-23",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I333"
+  },
+  {
+    "name": "tile-13-24",
+    "box": [
+      192,
+      368,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-24",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I334"
+  },
+  {
+    "name": "tile-14-24",
+    "box": [
+      208,
+      368,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-24",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I335"
+  },
+  {
+    "name": "tile-15-24",
+    "box": [
+      224,
+      368,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-24",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I336"
+  },
+  {
+    "name": "tile-16-24",
+    "box": [
+      240,
+      368,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-24",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I337"
+  },
+  {
+    "name": "tile-17-24",
+    "box": [
+      256,
+      368,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-17-24",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I338"
+  },
+  {
+    "name": "tile-18-24",
+    "box": [
+      272,
+      368,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-18-24",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I339"
+  },
+  {
+    "name": "tile-19-24",
+    "box": [
+      288,
+      368,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-19-24",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I340"
+  },
+  {
+    "name": "tile-20-24",
+    "box": [
+      304,
+      368,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-20-24",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I341"
+  },
+  {
+    "name": "tile-21-24",
+    "box": [
+      320,
+      368,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-21-24",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I342"
+  },
+  {
+    "name": "tile-22-24",
+    "box": [
+      336,
+      368,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-22-24",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I343"
+  },
+  {
+    "name": "tile-23-24",
+    "box": [
+      352,
+      368,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-23-24",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I344"
+  },
+  {
+    "name": "tile-24-24",
+    "box": [
+      368,
+      368,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-24-24",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I345"
+  },
+  {
+    "name": "tile-13-25",
+    "box": [
+      192,
+      384,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-25",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I346"
+  },
+  {
+    "name": "tile-14-25",
+    "box": [
+      208,
+      384,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-25",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I347"
+  },
+  {
+    "name": "tile-15-25",
+    "box": [
+      224,
+      384,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-25",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I348"
+  },
+  {
+    "name": "tile-16-25",
+    "box": [
+      240,
+      384,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-25",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I349"
+  },
+  {
+    "name": "tile-17-25",
+    "box": [
+      256,
+      384,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-17-25",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I350"
+  },
+  {
+    "name": "tile-18-25",
+    "box": [
+      272,
+      384,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-18-25",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I351"
+  },
+  {
+    "name": "tile-19-25",
+    "box": [
+      288,
+      384,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-19-25",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I352"
+  },
+  {
+    "name": "tile-20-25",
+    "box": [
+      304,
+      384,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-20-25",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I353"
+  },
+  {
+    "name": "tile-21-25",
+    "box": [
+      320,
+      384,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-21-25",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I354"
+  },
+  {
+    "name": "tile-22-25",
+    "box": [
+      336,
+      384,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-22-25",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I355"
+  },
+  {
+    "name": "tile-23-25",
+    "box": [
+      352,
+      384,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-23-25",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I356"
+  },
+  {
+    "name": "tile-24-25",
+    "box": [
+      368,
+      384,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-24-25",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I357"
+  },
+  {
+    "name": "tile-13-26",
+    "box": [
+      192,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse I322. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "I358",
+    "reuseProposal": {
+      "sheetId": "I",
+      "reviewId": "I322",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-frozen-caves-source-e97244c8850b.png",
+      "box": [
+        192,
+        352,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-14-26",
+    "box": [
+      208,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse I323. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "I359",
+    "reuseProposal": {
+      "sheetId": "I",
+      "reviewId": "I323",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-frozen-caves-source-e97244c8850b.png",
+      "box": [
+        208,
+        352,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-15-26",
+    "box": [
+      224,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse I324. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "I360",
+    "reuseProposal": {
+      "sheetId": "I",
+      "reviewId": "I324",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-frozen-caves-source-e97244c8850b.png",
+      "box": [
+        224,
+        352,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-16-26",
+    "box": [
+      240,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse I325. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "I361",
+    "reuseProposal": {
+      "sheetId": "I",
+      "reviewId": "I325",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-frozen-caves-source-e97244c8850b.png",
+      "box": [
+        240,
+        352,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-17-26",
+    "box": [
+      256,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-17-26",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I362"
+  },
+  {
+    "name": "tile-18-26",
+    "box": [
+      272,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-18-26",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I363"
+  },
+  {
+    "name": "tile-19-26",
+    "box": [
+      288,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-19-26",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I364"
+  },
+  {
+    "name": "tile-20-26",
+    "box": [
+      304,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-20-26",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I365"
+  },
+  {
+    "name": "tile-13-27",
+    "box": [
+      192,
+      416,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-27",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I366"
+  },
+  {
+    "name": "tile-14-27",
+    "box": [
+      208,
+      416,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-27",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I367"
+  },
+  {
+    "name": "tile-15-27",
+    "box": [
+      224,
+      416,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-27",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I368"
+  },
+  {
+    "name": "tile-16-27",
+    "box": [
+      240,
+      416,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-27",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I369"
+  },
+  {
+    "name": "tile-13-28",
+    "box": [
+      192,
+      432,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-28",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I370"
+  },
+  {
+    "name": "tile-14-28",
+    "box": [
+      208,
+      432,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-28",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I371"
+  },
+  {
+    "name": "tile-15-28",
+    "box": [
+      224,
+      432,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-28",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I372"
+  },
+  {
+    "name": "tile-16-28",
+    "box": [
+      240,
+      432,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-28",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I373"
+  },
+  {
+    "name": "tile-13-29",
+    "box": [
+      192,
+      448,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse I322. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "I374",
+    "reuseProposal": {
+      "sheetId": "I",
+      "reviewId": "I322",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-frozen-caves-source-e97244c8850b.png",
+      "box": [
+        192,
+        352,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-14-29",
+    "box": [
+      208,
+      448,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse I323. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "I375",
+    "reuseProposal": {
+      "sheetId": "I",
+      "reviewId": "I323",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-frozen-caves-source-e97244c8850b.png",
+      "box": [
+        208,
+        352,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-15-29",
+    "box": [
+      224,
+      448,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse I324. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "I376",
+    "reuseProposal": {
+      "sheetId": "I",
+      "reviewId": "I324",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-frozen-caves-source-e97244c8850b.png",
+      "box": [
+        224,
+        352,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-16-29",
+    "box": [
+      240,
+      448,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse I325. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "I377",
+    "reuseProposal": {
+      "sheetId": "I",
+      "reviewId": "I325",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-frozen-caves-source-e97244c8850b.png",
+      "box": [
+        240,
+        352,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-13-30",
+    "box": [
+      192,
+      464,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-30",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I378"
+  },
+  {
+    "name": "tile-14-30",
+    "box": [
+      208,
+      464,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-30",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I379"
+  },
+  {
+    "name": "tile-15-30",
+    "box": [
+      224,
+      464,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-30",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I380"
+  },
+  {
+    "name": "tile-16-30",
+    "box": [
+      240,
+      464,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-30",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I381"
+  },
+  {
+    "name": "tile-26-30",
+    "box": [
+      400,
+      464,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-26-30",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I382"
+  },
+  {
+    "name": "tile-27-30",
+    "box": [
+      416,
+      464,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-27-30",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I383"
+  },
+  {
+    "name": "tile-28-30",
+    "box": [
+      432,
+      464,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-28-30",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I384"
+  },
+  {
+    "name": "tile-29-30",
+    "box": [
+      448,
+      464,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-29-30",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I385"
+  },
+  {
+    "name": "tile-30-30",
+    "box": [
+      464,
+      464,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-30-30",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I386"
+  },
+  {
+    "name": "tile-31-30",
+    "box": [
+      480,
+      464,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-31-30",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I387"
+  },
+  {
+    "name": "tile-10-31",
+    "box": [
+      144,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fg-magma-dungeon-review-parts-tile-18-26.png",
+    "placement": null,
+    "reviewId": "I388",
+    "reuseAsset": "top-down/native/farming-game-world/processed/fg-magma-dungeon-review-parts/fg-magma-dungeon-review-parts-tile-18-26.png"
+  },
+  {
+    "name": "tile-11-31",
+    "box": [
+      160,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fg-magma-dungeon-review-parts-tile-19-26.png",
+    "placement": null,
+    "reviewId": "I389",
+    "reuseAsset": "top-down/native/farming-game-world/processed/fg-magma-dungeon-review-parts/fg-magma-dungeon-review-parts-tile-19-26.png"
+  },
+  {
+    "name": "tile-12-31",
+    "box": [
+      176,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fg-magma-dungeon-review-parts-tile-20-26.png",
+    "placement": null,
+    "reviewId": "I390",
+    "reuseAsset": "top-down/native/farming-game-world/processed/fg-magma-dungeon-review-parts/fg-magma-dungeon-review-parts-tile-20-26.png"
+  },
+  {
+    "name": "tile-13-31",
+    "box": [
+      192,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-31",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I391"
+  },
+  {
+    "name": "tile-14-31",
+    "box": [
+      208,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-31",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I392"
+  },
+  {
+    "name": "tile-15-31",
+    "box": [
+      224,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-31",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I393"
+  },
+  {
+    "name": "tile-16-31",
+    "box": [
+      240,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-31",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I394"
+  },
+  {
+    "name": "tile-17-31",
+    "box": [
+      256,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-17-31",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I395"
+  },
+  {
+    "name": "tile-18-31",
+    "box": [
+      272,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-18-31",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I396"
+  },
+  {
+    "name": "tile-19-31",
+    "box": [
+      288,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-19-31",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I397"
+  },
+  {
+    "name": "tile-20-31",
+    "box": [
+      304,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-20-31",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I398"
+  },
+  {
+    "name": "tile-21-31",
+    "box": [
+      320,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-21-31",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I399"
+  },
+  {
+    "name": "tile-22-31",
+    "box": [
+      336,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-22-31",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I400"
+  },
+  {
+    "name": "tile-26-31",
+    "box": [
+      400,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-26-31",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I401"
+  },
+  {
+    "name": "tile-27-31",
+    "box": [
+      416,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse I110. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "I402",
+    "reuseProposal": {
+      "sheetId": "I",
+      "reviewId": "I110",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-frozen-caves-source-e97244c8850b.png",
+      "box": [
+        240,
+        176,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-28-31",
+    "box": [
+      432,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-28-31",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I403"
+  },
+  {
+    "name": "tile-29-31",
+    "box": [
+      448,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse I403. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "I404",
+    "reuseProposal": {
+      "sheetId": "I",
+      "reviewId": "I403",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-frozen-caves-source-e97244c8850b.png",
+      "box": [
+        432,
+        480,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-31-31",
+    "box": [
+      480,
+      480,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse I401. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "I405",
+    "reuseProposal": {
+      "sheetId": "I",
+      "reviewId": "I401",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-frozen-caves-source-e97244c8850b.png",
+      "box": [
+        400,
+        480,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-9-32",
+    "box": [
+      128,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-9-32",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I406"
+  },
+  {
+    "name": "tile-10-32",
+    "box": [
+      144,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-32",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I407"
+  },
+  {
+    "name": "tile-11-32",
+    "box": [
+      160,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-32",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I408"
+  },
+  {
+    "name": "tile-12-32",
+    "box": [
+      176,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-32",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I409"
+  },
+  {
+    "name": "tile-13-32",
+    "box": [
+      192,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse I322. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "I410",
+    "reuseProposal": {
+      "sheetId": "I",
+      "reviewId": "I322",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-frozen-caves-source-e97244c8850b.png",
+      "box": [
+        192,
+        352,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-14-32",
+    "box": [
+      208,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse I323. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "I411",
+    "reuseProposal": {
+      "sheetId": "I",
+      "reviewId": "I323",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-frozen-caves-source-e97244c8850b.png",
+      "box": [
+        208,
+        352,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-15-32",
+    "box": [
+      224,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse I324. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "I412",
+    "reuseProposal": {
+      "sheetId": "I",
+      "reviewId": "I324",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-frozen-caves-source-e97244c8850b.png",
+      "box": [
+        224,
+        352,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-16-32",
+    "box": [
+      240,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse I325. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "I413",
+    "reuseProposal": {
+      "sheetId": "I",
+      "reviewId": "I325",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-frozen-caves-source-e97244c8850b.png",
+      "box": [
+        240,
+        352,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-18-32",
+    "box": [
+      272,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-18-32",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I414"
+  },
+  {
+    "name": "tile-19-32",
+    "box": [
+      288,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-19-32",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I415"
+  },
+  {
+    "name": "tile-20-32",
+    "box": [
+      304,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-20-32",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I416"
+  },
+  {
+    "name": "tile-21-32",
+    "box": [
+      320,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-21-32",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I417"
+  },
+  {
+    "name": "tile-22-32",
+    "box": [
+      336,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse I104. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "I418",
+    "reuseProposal": {
+      "sheetId": "I",
+      "reviewId": "I104",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-frozen-caves-source-e97244c8850b.png",
+      "box": [
+        464,
+        160,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-26-32",
+    "box": [
+      400,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-26-32",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I419"
+  },
+  {
+    "name": "tile-27-32",
+    "box": [
+      416,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse I386. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "I420",
+    "reuseProposal": {
+      "sheetId": "I",
+      "reviewId": "I386",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-frozen-caves-source-e97244c8850b.png",
+      "box": [
+        464,
+        464,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-28-32",
+    "box": [
+      432,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-28-32",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I421"
+  },
+  {
+    "name": "tile-29-32",
+    "box": [
+      448,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-29-32",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I422"
+  },
+  {
+    "name": "tile-30-32",
+    "box": [
+      464,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse I383. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "I423",
+    "reuseProposal": {
+      "sheetId": "I",
+      "reviewId": "I383",
+      "source": "top-down/native/farming-game-world/tilesets/sprites/fg-frozen-caves-source-e97244c8850b.png",
+      "box": [
+        416,
+        464,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "tile-31-32",
+    "box": [
+      480,
+      496,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-31-32",
+    "frame": null,
+    "notes": "Preserve the modular tile boundary.",
+    "placement": null,
+    "reviewId": "I424"
+  }
+]

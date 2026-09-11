@@ -1,0 +1,589 @@
+{
+  "source": "top-down/native/commission-packs/commission-packs/pixel-farming-houses-pack/com-houses-05-d-source-4dafa7c8b795.png",
+  "entries": [
+    {
+      "name": "left-roof",
+      "box": [
+        0,
+        16,
+        48,
+        80
+      ],
+      "kind": "part",
+      "group": null,
+      "frame": null,
+      "notes": "Row 1 left roof piece; includes the left 16-pixel roof-texture slice through x=47.",
+      "placement": null
+    },
+    {
+      "name": "left-gable",
+      "box": [
+        48,
+        8,
+        64,
+        88
+      ],
+      "kind": "part",
+      "group": null,
+      "frame": null,
+      "notes": "Row 1 left gable piece; central front bounds start at x=48 and end before x=112.",
+      "placement": null
+    },
+    {
+      "name": "right-roof",
+      "box": [
+        112,
+        16,
+        48,
+        80
+      ],
+      "kind": "part",
+      "group": null,
+      "frame": null,
+      "notes": "Row 1 right roof piece; includes the right 16-pixel roof-texture slice from x=112.",
+      "placement": null
+    },
+    {
+      "name": "right-gable",
+      "box": [
+        160,
+        8,
+        64,
+        88
+      ],
+      "kind": "part",
+      "group": null,
+      "frame": null,
+      "notes": "Row 1 right gable piece; tight opaque bounds.",
+      "placement": null
+    },
+    {
+      "name": "partial-house-tile",
+      "box": [
+        0,
+        96,
+        32,
+        28
+      ],
+      "kind": "overlay",
+      "group": null,
+      "frame": null,
+      "notes": "Attic-variant overlay for the top of left-gable; near-exact roof match at local offset [16, 40].",
+      "placement": {
+        "target": "left-gable",
+        "offset": [
+          16,
+          40
+        ]
+      }
+    },
+    {
+      "name": "double-door-open-0",
+      "box": [
+        32,
+        96,
+        32,
+        32
+      ],
+      "kind": "anim-frame",
+      "group": "double-door-opening",
+      "frame": 0,
+      "notes": "Closed state; sequence reads left to right toward open.",
+      "placement": {
+        "target": "left-gable",
+        "offset": [
+          16,
+          56
+        ]
+      }
+    },
+    {
+      "name": "double-door-open-1",
+      "box": [
+        64,
+        96,
+        32,
+        32
+      ],
+      "kind": "anim-frame",
+      "group": "double-door-opening",
+      "frame": 1,
+      "notes": "Intermediate opening state.",
+      "placement": {
+        "target": "left-gable",
+        "offset": [
+          16,
+          56
+        ]
+      }
+    },
+    {
+      "name": "double-door-open-2",
+      "box": [
+        96,
+        96,
+        32,
+        32
+      ],
+      "kind": "anim-frame",
+      "group": "double-door-opening",
+      "frame": 2,
+      "notes": "Intermediate opening state.",
+      "placement": {
+        "target": "left-gable",
+        "offset": [
+          16,
+          56
+        ]
+      }
+    },
+    {
+      "name": "double-door-open-3",
+      "box": [
+        128,
+        96,
+        32,
+        32
+      ],
+      "kind": "anim-frame",
+      "group": "double-door-opening",
+      "frame": 3,
+      "notes": "Fully open state.",
+      "placement": {
+        "target": "left-gable",
+        "offset": [
+          16,
+          56
+        ]
+      }
+    },
+    {
+      "name": "single-door-open-0",
+      "box": [
+        160,
+        96,
+        16,
+        32
+      ],
+      "kind": "anim-frame",
+      "group": "single-door-opening",
+      "frame": 0,
+      "notes": "Closed state; sequence reads left to right toward open.",
+      "placement": {
+        "target": "right-gable",
+        "offset": [
+          32,
+          56
+        ]
+      }
+    },
+    {
+      "name": "single-door-open-1",
+      "box": [
+        176,
+        96,
+        16,
+        32
+      ],
+      "kind": "anim-frame",
+      "group": "single-door-opening",
+      "frame": 1,
+      "notes": "Intermediate opening state.",
+      "placement": {
+        "target": "right-gable",
+        "offset": [
+          32,
+          56
+        ]
+      }
+    },
+    {
+      "name": "single-door-open-2",
+      "box": [
+        192,
+        96,
+        16,
+        32
+      ],
+      "kind": "anim-frame",
+      "group": "single-door-opening",
+      "frame": 2,
+      "notes": "Intermediate opening state.",
+      "placement": {
+        "target": "right-gable",
+        "offset": [
+          32,
+          56
+        ]
+      }
+    },
+    {
+      "name": "single-door-open-3",
+      "box": [
+        208,
+        96,
+        16,
+        32
+      ],
+      "kind": "anim-frame",
+      "group": "single-door-opening",
+      "frame": 3,
+      "notes": "Fully open state.",
+      "placement": {
+        "target": "right-gable",
+        "offset": [
+          32,
+          56
+        ]
+      }
+    },
+    {
+      "name": "barn",
+      "box": [
+        0,
+        136,
+        96,
+        104
+      ],
+      "kind": "structure",
+      "group": null,
+      "frame": null,
+      "notes": "Row 3 left complete structure; touches the sheet's left edge.",
+      "placement": null
+    },
+    {
+      "name": "storage-shed",
+      "box": [
+        176,
+        144,
+        48,
+        96
+      ],
+      "kind": "structure",
+      "group": null,
+      "frame": null,
+      "notes": "Row 3 right complete structure; touches the sheet's right edge.",
+      "placement": null
+    },
+    {
+      "name": "barn-person-door-open-0",
+      "box": [
+        96,
+        140,
+        16,
+        19
+      ],
+      "kind": "anim-frame",
+      "group": "barn-person-door-opening",
+      "frame": 0,
+      "notes": "Closed state; sequence reads left to right toward open.",
+      "placement": {
+        "target": "barn",
+        "offset": [
+          16,
+          84
+        ]
+      }
+    },
+    {
+      "name": "barn-person-door-open-1",
+      "box": [
+        112,
+        140,
+        16,
+        19
+      ],
+      "kind": "anim-frame",
+      "group": "barn-person-door-opening",
+      "frame": 1,
+      "notes": "Intermediate opening state.",
+      "placement": {
+        "target": "barn",
+        "offset": [
+          16,
+          84
+        ]
+      }
+    },
+    {
+      "name": "barn-person-door-open-2",
+      "box": [
+        128,
+        140,
+        16,
+        19
+      ],
+      "kind": "anim-frame",
+      "group": "barn-person-door-opening",
+      "frame": 2,
+      "notes": "Intermediate opening state.",
+      "placement": {
+        "target": "barn",
+        "offset": [
+          16,
+          84
+        ]
+      }
+    },
+    {
+      "name": "barn-person-door-open-3",
+      "box": [
+        144,
+        140,
+        16,
+        19
+      ],
+      "kind": "anim-frame",
+      "group": "barn-person-door-opening",
+      "frame": 3,
+      "notes": "Fully open state.",
+      "placement": {
+        "target": "barn",
+        "offset": [
+          16,
+          84
+        ]
+      }
+    },
+    {
+      "name": "storage-door-open-0",
+      "box": [
+        96,
+        171,
+        16,
+        20
+      ],
+      "kind": "anim-frame",
+      "group": "storage-door-opening-wide",
+      "frame": 0,
+      "notes": "Closed state; sequence reads left to right toward open.",
+      "placement": {
+        "target": "storage-shed",
+        "offset": [
+          9,
+          75
+        ]
+      }
+    },
+    {
+      "name": "storage-door-open-1",
+      "box": [
+        112,
+        171,
+        16,
+        20
+      ],
+      "kind": "anim-frame",
+      "group": "storage-door-opening-wide",
+      "frame": 1,
+      "notes": "Intermediate opening state.",
+      "placement": {
+        "target": "storage-shed",
+        "offset": [
+          9,
+          75
+        ]
+      }
+    },
+    {
+      "name": "storage-door-open-2",
+      "box": [
+        128,
+        171,
+        16,
+        20
+      ],
+      "kind": "anim-frame",
+      "group": "storage-door-opening-wide",
+      "frame": 2,
+      "notes": "Intermediate opening state.",
+      "placement": {
+        "target": "storage-shed",
+        "offset": [
+          9,
+          75
+        ]
+      }
+    },
+    {
+      "name": "storage-door-open-3",
+      "box": [
+        144,
+        171,
+        16,
+        20
+      ],
+      "kind": "anim-frame",
+      "group": "storage-door-opening-wide",
+      "frame": 3,
+      "notes": "Fully open state.",
+      "placement": {
+        "target": "storage-shed",
+        "offset": [
+          9,
+          75
+        ]
+      }
+    },
+    {
+      "name": "storage-small-door-open-0",
+      "box": [
+        96,
+        197,
+        16,
+        10
+      ],
+      "kind": "anim-frame",
+      "group": "storage-door-opening-small",
+      "frame": 0,
+      "notes": "Closed state; the 16-pixel cell preserves the packed frame grid.",
+      "placement": {
+        "target": "storage-shed",
+        "offset": [
+          25,
+          85
+        ]
+      }
+    },
+    {
+      "name": "storage-small-door-open-1",
+      "box": [
+        112,
+        197,
+        16,
+        10
+      ],
+      "kind": "anim-frame",
+      "group": "storage-door-opening-small",
+      "frame": 1,
+      "notes": "Intermediate opening state; the 16-pixel cell preserves the packed frame grid.",
+      "placement": {
+        "target": "storage-shed",
+        "offset": [
+          25,
+          85
+        ]
+      }
+    },
+    {
+      "name": "storage-small-door-open-2",
+      "box": [
+        128,
+        197,
+        16,
+        10
+      ],
+      "kind": "anim-frame",
+      "group": "storage-door-opening-small",
+      "frame": 2,
+      "notes": "Intermediate opening state; the 16-pixel cell preserves the packed frame grid.",
+      "placement": {
+        "target": "storage-shed",
+        "offset": [
+          25,
+          85
+        ]
+      }
+    },
+    {
+      "name": "storage-small-door-open-3",
+      "box": [
+        144,
+        197,
+        16,
+        10
+      ],
+      "kind": "anim-frame",
+      "group": "storage-door-opening-small",
+      "frame": 3,
+      "notes": "Fully open state; the 16-pixel cell preserves the packed frame grid.",
+      "placement": {
+        "target": "storage-shed",
+        "offset": [
+          25,
+          85
+        ]
+      }
+    },
+    {
+      "name": "barn-sliding-door-open-0",
+      "box": [
+        48,
+        240,
+        32,
+        31
+      ],
+      "kind": "anim-frame",
+      "group": "barn-sliding-door-opening",
+      "frame": 0,
+      "notes": "Closed state; sequence reads left to right toward open.",
+      "placement": {
+        "target": "barn",
+        "offset": [
+          48,
+          72
+        ]
+      }
+    },
+    {
+      "name": "barn-sliding-door-open-1",
+      "box": [
+        80,
+        240,
+        32,
+        31
+      ],
+      "kind": "anim-frame",
+      "group": "barn-sliding-door-opening",
+      "frame": 1,
+      "notes": "Intermediate opening state.",
+      "placement": {
+        "target": "barn",
+        "offset": [
+          48,
+          72
+        ]
+      }
+    },
+    {
+      "name": "barn-sliding-door-open-2",
+      "box": [
+        112,
+        240,
+        32,
+        31
+      ],
+      "kind": "anim-frame",
+      "group": "barn-sliding-door-opening",
+      "frame": 2,
+      "notes": "Intermediate opening state.",
+      "placement": {
+        "target": "barn",
+        "offset": [
+          48,
+          72
+        ]
+      }
+    },
+    {
+      "name": "barn-sliding-door-open-3",
+      "box": [
+        144,
+        240,
+        32,
+        31
+      ],
+      "kind": "anim-frame",
+      "group": "barn-sliding-door-opening",
+      "frame": 3,
+      "notes": "Fully open state.",
+      "placement": {
+        "target": "barn",
+        "offset": [
+          48,
+          72
+        ]
+      }
+    }
+  ]
+}

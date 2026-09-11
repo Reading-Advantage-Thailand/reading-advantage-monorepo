@@ -1,0 +1,3392 @@
+[
+  {
+    "name": "raised-rock-platform",
+    "box": [
+      16,
+      0,
+      80,
+      80
+    ],
+    "kind": "part",
+    "group": "raised-rock-platform",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "flat-rock-platform",
+    "box": [
+      24,
+      104,
+      64,
+      72
+    ],
+    "kind": "part",
+    "group": "flat-rock-platform",
+    "frame": null,
+    "notes": "Clear the lower right corner. These pixels belong to the adjacent cave.",
+    "placement": null,
+    "clearRects": [
+      [
+        56,
+        56,
+        8,
+        16
+      ]
+    ]
+  },
+  {
+    "name": "skull-left",
+    "box": [
+      272,
+      0,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "skull-left",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "skull-right",
+    "box": [
+      304,
+      0,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "skull-right",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "altar",
+    "box": [
+      336,
+      0,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "altar",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "horns-tall",
+    "box": [
+      272,
+      48,
+      32,
+      64
+    ],
+    "kind": "part",
+    "group": "horns-tall",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "horns-short",
+    "box": [
+      304,
+      64,
+      32,
+      48
+    ],
+    "kind": "part",
+    "group": "horns-short",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "pillar-main",
+    "box": [
+      352,
+      64,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "pillar-main",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "post-left",
+    "box": [
+      336,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "post-left",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "post-right",
+    "box": [
+      368,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "post-right",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cross",
+    "box": [
+      352,
+      96,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "cross",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "post-pair",
+    "box": [
+      336,
+      104,
+      16,
+      24
+    ],
+    "kind": "part",
+    "group": "post-pair",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "rock-cluster",
+    "box": [
+      224,
+      48,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-cluster",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cave-wide",
+    "box": [
+      80,
+      160,
+      48,
+      32
+    ],
+    "kind": "part",
+    "group": "cave-wide",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cave-narrow",
+    "box": [
+      144,
+      160,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "cave-narrow",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stairs-tall",
+    "box": [
+      288,
+      140,
+      48,
+      40
+    ],
+    "kind": "part",
+    "group": "stairs-tall",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stairs-short",
+    "box": [
+      336,
+      156,
+      48,
+      24
+    ],
+    "kind": "part",
+    "group": "stairs-short",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-fragment-1-1",
+    "box": [
+      96,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "stone-fragment-1-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-fragment-2-1",
+    "box": [
+      112,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "stone-fragment-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-fragment-3-1",
+    "box": [
+      128,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "stone-fragment-3-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-fragment-4-1",
+    "box": [
+      144,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "stone-fragment-4-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-fragment-5-1",
+    "box": [
+      160,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "stone-fragment-5-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-fragment-6-1",
+    "box": [
+      176,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "stone-fragment-6-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-fragment-7-1",
+    "box": [
+      192,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "stone-fragment-7-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-fragment-8-1",
+    "box": [
+      208,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "stone-fragment-8-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-fragment-1-2",
+    "box": [
+      96,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "stone-fragment-1-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-fragment-2-2",
+    "box": [
+      112,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "stone-fragment-2-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-fragment-3-2",
+    "box": [
+      128,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "stone-fragment-3-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-fragment-4-2",
+    "box": [
+      144,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "stone-fragment-4-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-fragment-5-2",
+    "box": [
+      160,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "stone-fragment-5-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-fragment-6-2",
+    "box": [
+      176,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "stone-fragment-6-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-fragment-7-2",
+    "box": [
+      192,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "stone-fragment-7-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stone-fragment-8-2",
+    "box": [
+      208,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "stone-fragment-8-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "bone-1-1",
+    "box": [
+      224,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "bone-1-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "bone-2-1",
+    "box": [
+      240,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "bone-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "bone-3-1",
+    "box": [
+      256,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "bone-3-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "bone-1-2",
+    "box": [
+      224,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "bone-1-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "bone-2-2",
+    "box": [
+      240,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "bone-2-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "bone-3-2",
+    "box": [
+      256,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "bone-3-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "rock-small-1-1",
+    "box": [
+      96,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "rock-small-1-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "rock-small-2-1",
+    "box": [
+      112,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "rock-small-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "rock-small-3-1",
+    "box": [
+      128,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "rock-small-3-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "rock-small-4-1",
+    "box": [
+      144,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "rock-small-4-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "rock-small-5-1",
+    "box": [
+      160,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "rock-small-5-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "rock-small-6-1",
+    "box": [
+      176,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "rock-small-6-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "rock-small-7-1",
+    "box": [
+      192,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "rock-small-7-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "rock-small-8-1",
+    "box": [
+      208,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "rock-small-8-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "rock-tall-1-1",
+    "box": [
+      96,
+      48,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-tall-1-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "rock-tall-2-1",
+    "box": [
+      112,
+      48,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-tall-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "rock-tall-3-1",
+    "box": [
+      128,
+      48,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-tall-3-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "rock-tall-4-1",
+    "box": [
+      144,
+      48,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-tall-4-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "rock-tall-5-1",
+    "box": [
+      160,
+      48,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-tall-5-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "rock-tall-6-1",
+    "box": [
+      176,
+      48,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-tall-6-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "rock-tall-7-1",
+    "box": [
+      192,
+      48,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-tall-7-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "rock-tall-8-1",
+    "box": [
+      208,
+      48,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-tall-8-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "floor-1-1",
+    "box": [
+      96,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "floor-1-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "floor-2-1",
+    "box": [
+      112,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "floor-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "floor-3-1",
+    "box": [
+      128,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "floor-3-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "floor-4-1",
+    "box": [
+      144,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "floor-4-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "floor-5-1",
+    "box": [
+      160,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "floor-5-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "floor-6-1",
+    "box": [
+      176,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "floor-6-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "floor-7-1",
+    "box": [
+      192,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "floor-7-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "floor-8-1",
+    "box": [
+      208,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "floor-8-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "floor-9-1",
+    "box": [
+      224,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "floor-9-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "floor-10-1",
+    "box": [
+      240,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "floor-10-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "floor-11-1",
+    "box": [
+      256,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "floor-11-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "lava-crack-1-1",
+    "box": [
+      16,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "lava-crack-1-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "lava-crack-2-1",
+    "box": [
+      32,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "lava-crack-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "lava-crack-3-1",
+    "box": [
+      48,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "lava-crack-3-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "lava-crack-4-1",
+    "box": [
+      64,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "lava-crack-4-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "lava-crack-5-1",
+    "box": [
+      80,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "lava-crack-5-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cliff-left-1-1",
+    "box": [
+      96,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "cliff-left-1-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cliff-left-2-1",
+    "box": [
+      112,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "cliff-left-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cliff-left-4-1",
+    "box": [
+      144,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "cliff-left-4-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cliff-left-5-1",
+    "box": [
+      160,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "cliff-left-5-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cliff-left-1-2",
+    "box": [
+      96,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "cliff-left-1-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cliff-left-2-2",
+    "box": [
+      112,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H72. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H72",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-hell-source-0f884e8baca5.png",
+      "box": [
+        96,
+        96,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "cliff-left-3-2",
+    "box": [
+      128,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "cliff-left-3-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cliff-left-4-2",
+    "box": [
+      144,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H75. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H75",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-hell-source-0f884e8baca5.png",
+      "box": [
+        160,
+        96,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "cliff-left-5-2",
+    "box": [
+      160,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "cliff-left-5-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cliff-left-1-3",
+    "box": [
+      96,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "cliff-left-1-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cliff-left-2-3",
+    "box": [
+      112,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "cliff-left-2-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cliff-left-3-3",
+    "box": [
+      128,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "cliff-left-3-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cliff-left-4-3",
+    "box": [
+      144,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "cliff-left-4-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cliff-left-5-3",
+    "box": [
+      160,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "cliff-left-5-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cliff-left-2-4",
+    "box": [
+      112,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "cliff-left-2-4",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cliff-left-3-4",
+    "box": [
+      128,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "cliff-left-3-4",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cliff-left-4-4",
+    "box": [
+      144,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "cliff-left-4-4",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cliff-right-2-1",
+    "box": [
+      208,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "cliff-right-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cliff-right-3-1",
+    "box": [
+      224,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "cliff-right-3-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cliff-right-4-1",
+    "box": [
+      240,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "cliff-right-4-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cliff-right-1-2",
+    "box": [
+      192,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H89. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H89",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-hell-source-0f884e8baca5.png",
+      "box": [
+        208,
+        96,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "cliff-right-2-2",
+    "box": [
+      208,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "cliff-right-2-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cliff-right-4-2",
+    "box": [
+      240,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "cliff-right-4-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cliff-right-5-2",
+    "box": [
+      256,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H91. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H91",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-hell-source-0f884e8baca5.png",
+      "box": [
+        240,
+        96,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "cliff-right-1-3",
+    "box": [
+      192,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "cliff-right-1-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cliff-right-5-3",
+    "box": [
+      256,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "cliff-right-5-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cliff-right-1-4",
+    "box": [
+      192,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H72. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H72",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-hell-source-0f884e8baca5.png",
+      "box": [
+        96,
+        96,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "cliff-right-2-4",
+    "box": [
+      208,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H73. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H73",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-hell-source-0f884e8baca5.png",
+      "box": [
+        112,
+        96,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "cliff-right-4-4",
+    "box": [
+      240,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H74. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H74",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-hell-source-0f884e8baca5.png",
+      "box": [
+        144,
+        96,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "cliff-right-5-4",
+    "box": [
+      256,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H75. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H75",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-hell-source-0f884e8baca5.png",
+      "box": [
+        160,
+        96,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "cliff-right-1-5",
+    "box": [
+      192,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "cliff-right-1-5",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cliff-right-2-5",
+    "box": [
+      208,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H72. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H72",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-hell-source-0f884e8baca5.png",
+      "box": [
+        96,
+        96,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "cliff-right-3-5",
+    "box": [
+      224,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H78. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H78",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-hell-source-0f884e8baca5.png",
+      "box": [
+        128,
+        112,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "cliff-right-4-5",
+    "box": [
+      240,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H75. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H75",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-hell-source-0f884e8baca5.png",
+      "box": [
+        160,
+        96,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "cliff-right-5-5",
+    "box": [
+      256,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "cliff-right-5-5",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cliff-right-2-6",
+    "box": [
+      208,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H102. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H102",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-hell-source-0f884e8baca5.png",
+      "box": [
+        192,
+        160,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "cliff-right-3-6",
+    "box": [
+      224,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "cliff-right-3-6",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "cliff-right-4-6",
+    "box": [
+      240,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H106. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H106",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-hell-source-0f884e8baca5.png",
+      "box": [
+        256,
+        160,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "lava-pool",
+    "box": [
+      16,
+      192,
+      384,
+      48
+    ],
+    "kind": "part",
+    "group": "lava-pool",
+    "frame": null,
+    "notes": "8 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        16,
+        192,
+        48,
+        48
+      ],
+      [
+        64,
+        192,
+        48,
+        48
+      ],
+      [
+        112,
+        192,
+        48,
+        48
+      ],
+      [
+        160,
+        192,
+        48,
+        48
+      ],
+      [
+        208,
+        192,
+        48,
+        48
+      ],
+      [
+        256,
+        192,
+        48,
+        48
+      ],
+      [
+        304,
+        192,
+        48,
+        48
+      ],
+      [
+        352,
+        192,
+        48,
+        48
+      ]
+    ]
+  },
+  {
+    "name": "lava-patch",
+    "box": [
+      16,
+      240,
+      368,
+      32
+    ],
+    "kind": "part",
+    "group": "lava-patch",
+    "frame": null,
+    "notes": "8 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        16,
+        240,
+        32,
+        32
+      ],
+      [
+        64,
+        240,
+        32,
+        32
+      ],
+      [
+        112,
+        240,
+        32,
+        32
+      ],
+      [
+        160,
+        240,
+        32,
+        32
+      ],
+      [
+        208,
+        240,
+        32,
+        32
+      ],
+      [
+        256,
+        240,
+        32,
+        32
+      ],
+      [
+        304,
+        240,
+        32,
+        32
+      ],
+      [
+        352,
+        240,
+        32,
+        32
+      ]
+    ]
+  },
+  {
+    "name": "rock-variants-1-1",
+    "box": [
+      0,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H40. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H40",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-hell-source-0f884e8baca5.png",
+      "box": [
+        96,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "rock-variants-2-1",
+    "box": [
+      16,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "rock-variants-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "rock-variants-3-1",
+    "box": [
+      32,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H113. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H113",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-hell-source-0f884e8baca5.png",
+      "box": [
+        16,
+        272,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "rock-variants-4-1",
+    "box": [
+      48,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H113. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H113",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-hell-source-0f884e8baca5.png",
+      "box": [
+        16,
+        272,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "rock-variants-5-1",
+    "box": [
+      64,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H40. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H40",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-hell-source-0f884e8baca5.png",
+      "box": [
+        96,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "rock-variants-6-1",
+    "box": [
+      80,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H40. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H40",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-hell-source-0f884e8baca5.png",
+      "box": [
+        96,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "rock-variants-7-1",
+    "box": [
+      96,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "rock-variants-7-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "rock-variants-8-1",
+    "box": [
+      112,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H118. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H118",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-hell-source-0f884e8baca5.png",
+      "box": [
+        96,
+        272,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "rock-variants-1-2",
+    "box": [
+      0,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H41. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H41",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-hell-source-0f884e8baca5.png",
+      "box": [
+        112,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "rock-variants-2-2",
+    "box": [
+      16,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "rock-variants-2-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "rock-variants-3-2",
+    "box": [
+      32,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H121. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H121",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-hell-source-0f884e8baca5.png",
+      "box": [
+        16,
+        288,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "rock-variants-4-2",
+    "box": [
+      48,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H121. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H121",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-hell-source-0f884e8baca5.png",
+      "box": [
+        16,
+        288,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "rock-variants-5-2",
+    "box": [
+      64,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H41. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H41",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-hell-source-0f884e8baca5.png",
+      "box": [
+        112,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "rock-variants-6-2",
+    "box": [
+      80,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H41. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H41",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-hell-source-0f884e8baca5.png",
+      "box": [
+        112,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "rock-variants-7-2",
+    "box": [
+      96,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "rock-variants-7-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "rock-variants-8-2",
+    "box": [
+      112,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H126. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H126",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-hell-source-0f884e8baca5.png",
+      "box": [
+        96,
+        288,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "rock-variants-1-3",
+    "box": [
+      0,
+      304,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H42. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H42",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-hell-source-0f884e8baca5.png",
+      "box": [
+        128,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "rock-variants-2-3",
+    "box": [
+      16,
+      304,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "rock-variants-2-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "rock-variants-3-3",
+    "box": [
+      32,
+      304,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H129. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H129",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-hell-source-0f884e8baca5.png",
+      "box": [
+        16,
+        304,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "rock-variants-4-3",
+    "box": [
+      48,
+      304,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H129. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H129",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-hell-source-0f884e8baca5.png",
+      "box": [
+        16,
+        304,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "rock-variants-5-3",
+    "box": [
+      64,
+      304,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H42. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H42",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-hell-source-0f884e8baca5.png",
+      "box": [
+        128,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "rock-variants-6-3",
+    "box": [
+      80,
+      304,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H42. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H42",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-hell-source-0f884e8baca5.png",
+      "box": [
+        128,
+        32,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "rock-variants-7-3",
+    "box": [
+      96,
+      304,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "rock-variants-7-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "rock-variants-8-3",
+    "box": [
+      112,
+      304,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H134. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H134",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-hell-source-0f884e8baca5.png",
+      "box": [
+        96,
+        304,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "rock-variants-1-4",
+    "box": [
+      0,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "rock-variants-1-4",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "rock-variants-2-4",
+    "box": [
+      16,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "rock-variants-2-4",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "rock-variants-3-4",
+    "box": [
+      32,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H137. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H137",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-hell-source-0f884e8baca5.png",
+      "box": [
+        16,
+        320,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "rock-variants-4-4",
+    "box": [
+      48,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H137. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H137",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-hell-source-0f884e8baca5.png",
+      "box": [
+        16,
+        320,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "rock-variants-5-4",
+    "box": [
+      64,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H136. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H136",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-hell-source-0f884e8baca5.png",
+      "box": [
+        0,
+        320,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "rock-variants-6-4",
+    "box": [
+      80,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H136. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H136",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-hell-source-0f884e8baca5.png",
+      "box": [
+        0,
+        320,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "rock-variants-7-4",
+    "box": [
+      96,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "rock-variants-7-4",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "rock-variants-8-4",
+    "box": [
+      112,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H142. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H142",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-hell-source-0f884e8baca5.png",
+      "box": [
+        96,
+        320,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "stalagmite-variants-1-1",
+    "box": [
+      144,
+      272,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H48. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H48",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-hell-source-0f884e8baca5.png",
+      "box": [
+        96,
+        48,
+        16,
+        32
+      ]
+    }
+  },
+  {
+    "name": "stalagmite-variants-2-1",
+    "box": [
+      160,
+      272,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "stalagmite-variants-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stalagmite-variants-3-1",
+    "box": [
+      176,
+      272,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H145. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H145",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-hell-source-0f884e8baca5.png",
+      "box": [
+        160,
+        272,
+        16,
+        32
+      ]
+    }
+  },
+  {
+    "name": "stalagmite-variants-4-1",
+    "box": [
+      192,
+      272,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H145. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H145",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-hell-source-0f884e8baca5.png",
+      "box": [
+        160,
+        272,
+        16,
+        32
+      ]
+    }
+  },
+  {
+    "name": "stalagmite-variants-5-1",
+    "box": [
+      208,
+      272,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H48. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H48",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-hell-source-0f884e8baca5.png",
+      "box": [
+        96,
+        48,
+        16,
+        32
+      ]
+    }
+  },
+  {
+    "name": "stalagmite-variants-6-1",
+    "box": [
+      224,
+      272,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H48. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H48",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-hell-source-0f884e8baca5.png",
+      "box": [
+        96,
+        48,
+        16,
+        32
+      ]
+    }
+  },
+  {
+    "name": "stalagmite-variants-7-1",
+    "box": [
+      240,
+      272,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "stalagmite-variants-7-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stalagmite-variants-8-1",
+    "box": [
+      256,
+      272,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H150. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H150",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-hell-source-0f884e8baca5.png",
+      "box": [
+        240,
+        272,
+        16,
+        32
+      ]
+    }
+  },
+  {
+    "name": "stalagmite-variants-1-2",
+    "box": [
+      144,
+      304,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H49. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H49",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-hell-source-0f884e8baca5.png",
+      "box": [
+        112,
+        48,
+        16,
+        32
+      ]
+    }
+  },
+  {
+    "name": "stalagmite-variants-2-2",
+    "box": [
+      160,
+      304,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "stalagmite-variants-2-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stalagmite-variants-3-2",
+    "box": [
+      176,
+      304,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H153. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H153",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-hell-source-0f884e8baca5.png",
+      "box": [
+        160,
+        304,
+        16,
+        32
+      ]
+    }
+  },
+  {
+    "name": "stalagmite-variants-4-2",
+    "box": [
+      192,
+      304,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H153. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H153",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-hell-source-0f884e8baca5.png",
+      "box": [
+        160,
+        304,
+        16,
+        32
+      ]
+    }
+  },
+  {
+    "name": "stalagmite-variants-5-2",
+    "box": [
+      208,
+      304,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H49. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H49",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-hell-source-0f884e8baca5.png",
+      "box": [
+        112,
+        48,
+        16,
+        32
+      ]
+    }
+  },
+  {
+    "name": "stalagmite-variants-6-2",
+    "box": [
+      224,
+      304,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H49. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H49",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-hell-source-0f884e8baca5.png",
+      "box": [
+        112,
+        48,
+        16,
+        32
+      ]
+    }
+  },
+  {
+    "name": "stalagmite-variants-7-2",
+    "box": [
+      240,
+      304,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "stalagmite-variants-7-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "stalagmite-variants-8-2",
+    "box": [
+      256,
+      304,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H158. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H158",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-hell-source-0f884e8baca5.png",
+      "box": [
+        240,
+        304,
+        16,
+        32
+      ]
+    }
+  },
+  {
+    "name": "rock-column-variants-1-1",
+    "box": [
+      288,
+      272,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H50. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H50",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-hell-source-0f884e8baca5.png",
+      "box": [
+        128,
+        48,
+        16,
+        32
+      ]
+    }
+  },
+  {
+    "name": "rock-column-variants-2-1",
+    "box": [
+      304,
+      272,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-column-variants-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "rock-column-variants-3-1",
+    "box": [
+      320,
+      272,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H161. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H161",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-hell-source-0f884e8baca5.png",
+      "box": [
+        304,
+        272,
+        16,
+        32
+      ]
+    }
+  },
+  {
+    "name": "rock-column-variants-4-1",
+    "box": [
+      336,
+      272,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H161. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H161",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-hell-source-0f884e8baca5.png",
+      "box": [
+        304,
+        272,
+        16,
+        32
+      ]
+    }
+  },
+  {
+    "name": "rock-column-variants-5-1",
+    "box": [
+      352,
+      272,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H50. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H50",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-hell-source-0f884e8baca5.png",
+      "box": [
+        128,
+        48,
+        16,
+        32
+      ]
+    }
+  },
+  {
+    "name": "rock-column-variants-6-1",
+    "box": [
+      368,
+      272,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H50. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H50",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-hell-source-0f884e8baca5.png",
+      "box": [
+        128,
+        48,
+        16,
+        32
+      ]
+    }
+  },
+  {
+    "name": "rock-column-variants-7-1",
+    "box": [
+      384,
+      272,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-column-variants-7-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "rock-column-variants-8-1",
+    "box": [
+      400,
+      272,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H166. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H166",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-hell-source-0f884e8baca5.png",
+      "box": [
+        384,
+        272,
+        16,
+        32
+      ]
+    }
+  },
+  {
+    "name": "rock-column-variants-1-2",
+    "box": [
+      288,
+      304,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-column-variants-1-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "rock-column-variants-2-2",
+    "box": [
+      304,
+      304,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-column-variants-2-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "rock-column-variants-3-2",
+    "box": [
+      320,
+      304,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H169. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H169",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-hell-source-0f884e8baca5.png",
+      "box": [
+        304,
+        304,
+        16,
+        32
+      ]
+    }
+  },
+  {
+    "name": "rock-column-variants-4-2",
+    "box": [
+      336,
+      304,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H169. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H169",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-hell-source-0f884e8baca5.png",
+      "box": [
+        304,
+        304,
+        16,
+        32
+      ]
+    }
+  },
+  {
+    "name": "rock-column-variants-5-2",
+    "box": [
+      352,
+      304,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H168. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H168",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-hell-source-0f884e8baca5.png",
+      "box": [
+        288,
+        304,
+        16,
+        32
+      ]
+    }
+  },
+  {
+    "name": "rock-column-variants-6-2",
+    "box": [
+      368,
+      304,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H168. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H168",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-hell-source-0f884e8baca5.png",
+      "box": [
+        288,
+        304,
+        16,
+        32
+      ]
+    }
+  },
+  {
+    "name": "rock-column-variants-7-2",
+    "box": [
+      384,
+      304,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "rock-column-variants-7-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "rock-column-variants-8-2",
+    "box": [
+      400,
+      304,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H174. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H174",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-hell-source-0f884e8baca5.png",
+      "box": [
+        384,
+        304,
+        16,
+        32
+      ]
+    }
+  },
+  {
+    "name": "candles-three-animation",
+    "box": [
+      16,
+      336,
+      64,
+      32
+    ],
+    "kind": "part",
+    "group": "candles-three-animation",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        16,
+        336,
+        16,
+        32
+      ],
+      [
+        32,
+        336,
+        16,
+        32
+      ],
+      [
+        48,
+        336,
+        16,
+        32
+      ],
+      [
+        64,
+        336,
+        16,
+        32
+      ]
+    ]
+  },
+  {
+    "name": "candle-single-animation",
+    "box": [
+      96,
+      336,
+      64,
+      32
+    ],
+    "kind": "part",
+    "group": "candle-single-animation",
+    "frame": null,
+    "notes": "4 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        96,
+        336,
+        16,
+        32
+      ],
+      [
+        112,
+        336,
+        16,
+        32
+      ],
+      [
+        128,
+        336,
+        16,
+        32
+      ],
+      [
+        144,
+        336,
+        16,
+        32
+      ]
+    ]
+  },
+  {
+    "name": "flame-small-animation",
+    "box": [
+      176,
+      352,
+      80,
+      16
+    ],
+    "kind": "part",
+    "group": "flame-small-animation",
+    "frame": null,
+    "notes": "5 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        176,
+        352,
+        16,
+        16
+      ],
+      [
+        192,
+        352,
+        16,
+        16
+      ],
+      [
+        208,
+        352,
+        16,
+        16
+      ],
+      [
+        224,
+        352,
+        16,
+        16
+      ],
+      [
+        240,
+        352,
+        16,
+        16
+      ]
+    ]
+  },
+  {
+    "name": "flame-tiny-animation",
+    "box": [
+      288,
+      352,
+      80,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse H178. The complete crop is identical.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        288,
+        352,
+        16,
+        16
+      ],
+      [
+        304,
+        352,
+        16,
+        16
+      ],
+      [
+        320,
+        352,
+        16,
+        16
+      ],
+      [
+        336,
+        352,
+        16,
+        16
+      ],
+      [
+        352,
+        352,
+        16,
+        16
+      ]
+    ],
+    "reuseProposal": {
+      "sheetId": "H",
+      "reviewId": "H178",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-hell-source-0f884e8baca5.png",
+      "box": [
+        176,
+        352,
+        80,
+        16
+      ]
+    }
+  }
+]

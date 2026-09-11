@@ -1,0 +1,114 @@
+[
+  {
+    "name": "red-small-roof-ridge",
+    "box": [
+      800,
+      384,
+      64,
+      64
+    ],
+    "kind": "structure",
+    "group": "small-roof-ridge",
+    "frame": 0,
+    "notes": "Preserve the roof assembly and its attached facade.",
+    "placement": null
+  },
+  {
+    "name": "gray-small-roof-ridge",
+    "box": [
+      864,
+      384,
+      64,
+      64
+    ],
+    "kind": "structure",
+    "group": "small-roof-ridge",
+    "frame": 1,
+    "notes": "Preserve the roof assembly and its attached facade.",
+    "placement": null
+  },
+  {
+    "name": "blue-small-roof-ridge",
+    "box": [
+      928,
+      384,
+      64,
+      64
+    ],
+    "kind": "structure",
+    "group": "small-roof-ridge",
+    "frame": 2,
+    "notes": "Preserve the roof assembly and its attached facade.",
+    "placement": null
+  },
+  {
+    "name": "red-roof-stone-gable",
+    "box": [
+      768,
+      512,
+      112,
+      144
+    ],
+    "kind": "structure",
+    "group": "red-roof-stone-gable",
+    "frame": null,
+    "notes": "Preserve the roof assembly and its attached facade.",
+    "placement": null
+  },
+  {
+    "name": "gray-roof-brick-gable",
+    "box": [
+      896,
+      512,
+      112,
+      144
+    ],
+    "kind": "structure",
+    "group": "gray-roof-brick-gable",
+    "frame": null,
+    "notes": "Preserve the roof assembly and its attached facade.",
+    "placement": null
+  },
+  {
+    "name": "blue-roof-wall-section",
+    "box": [
+      768,
+      656,
+      112,
+      112
+    ],
+    "kind": "part",
+    "group": "blue-roof-wall-assembly",
+    "frame": null,
+    "notes": "Combine with gable 31 above this section.",
+    "placement": null
+  },
+  {
+    "name": "blue-roof-gable-cap",
+    "box": [
+      912,
+      656,
+      80,
+      32
+    ],
+    "kind": "part",
+    "group": "blue-roof-wall-assembly",
+    "frame": null,
+    "notes": "Gable for section 30. Proposed placement: 16 pixels right and 32 pixels above section 30.",
+    "placement": null
+  },
+  {
+    "name": "blue-roof-door-overlay-provisional",
+    "box": [
+      896,
+      704,
+      112,
+      64
+    ],
+    "kind": "overlay",
+    "group": "blue-roof-wall-assembly",
+    "frame": null,
+    "notes": "Separate lower piece from the original box 31. Door overlay is a provisional interpretation. Proposed placement: align with the bottom of section 30.",
+    "placement": null
+  }
+]

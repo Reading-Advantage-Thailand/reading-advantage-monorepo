@@ -1,0 +1,8829 @@
+[
+  {
+    "name": "rock-pillar-48",
+    "box": [
+      48,
+      96,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-rock-pillar-64-272.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-rock-pillar-64-272.png",
+    "reviewId": "R01"
+  },
+  {
+    "name": "rock-pillar-64",
+    "box": [
+      64,
+      96,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-rock-pillar-80-272.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-rock-pillar-80-272.png",
+    "reviewId": "R02"
+  },
+  {
+    "name": "rock-pillar-128",
+    "box": [
+      128,
+      96,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-rock-pillar-192-272.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-rock-pillar-192-272.png",
+    "reviewId": "R03"
+  },
+  {
+    "name": "rock-pillar-144",
+    "box": [
+      144,
+      96,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-rock-pillar-208-272.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-rock-pillar-208-272.png",
+    "reviewId": "R04"
+  },
+  {
+    "name": "rock-cluster-0",
+    "box": [
+      0,
+      128,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-rock-cluster-0-304.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-rock-cluster-0-304.png",
+    "reviewId": "R05"
+  },
+  {
+    "name": "rock-cluster-32",
+    "box": [
+      32,
+      128,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-rock-cluster-32-304.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-rock-cluster-32-304.png",
+    "reviewId": "R06"
+  },
+  {
+    "name": "rock-cluster-64",
+    "box": [
+      64,
+      128,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-rock-cluster-64-304.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-rock-cluster-64-304.png",
+    "reviewId": "R07"
+  },
+  {
+    "name": "rock-cluster-96",
+    "box": [
+      96,
+      128,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-rock-cluster-96-304.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-rock-cluster-96-304.png",
+    "reviewId": "R08"
+  },
+  {
+    "name": "rock-cluster-128",
+    "box": [
+      128,
+      128,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-rock-pillar-plain.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-rock-pillar-plain.png",
+    "reviewId": "R09"
+  },
+  {
+    "name": "rock-cluster-160",
+    "box": [
+      160,
+      128,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-rock-pillar-tall.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-rock-pillar-tall.png",
+    "reviewId": "R10"
+  },
+  {
+    "name": "fence-stone",
+    "box": [
+      208,
+      96,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-fence-frame.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-fence-frame.png",
+    "reviewId": "R11"
+  },
+  {
+    "name": "fence-wood",
+    "box": [
+      0,
+      160,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-fence-wood-frame.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-fence-wood-frame.png",
+    "reviewId": "R12"
+  },
+  {
+    "name": "bridge-planks",
+    "box": [
+      208,
+      160,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-bridge-planks.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-bridge-planks.png",
+    "reviewId": "R13"
+  },
+  {
+    "name": "bridge-stairs",
+    "box": [
+      80,
+      208,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-bridge-stairs.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-bridge-stairs.png",
+    "reviewId": "R14"
+  },
+  {
+    "name": "stairs-left",
+    "box": [
+      128,
+      160,
+      16,
+      48
+    ],
+    "kind": "part",
+    "group": "stairs-left",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R15"
+  },
+  {
+    "name": "stairs-right",
+    "box": [
+      128,
+      208,
+      32,
+      48
+    ],
+    "kind": "part",
+    "group": "stairs-right",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R16"
+  },
+  {
+    "name": "planks-upper",
+    "box": [
+      160,
+      160,
+      48,
+      32
+    ],
+    "kind": "part",
+    "group": "planks-upper",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R17"
+  },
+  {
+    "name": "planks-lower",
+    "box": [
+      160,
+      224,
+      48,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-planks-row.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-planks-row.png",
+    "reviewId": "R18"
+  },
+  {
+    "name": "platform-large",
+    "box": [
+      256,
+      256,
+      80,
+      80
+    ],
+    "kind": "part",
+    "group": "platform-large",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R19"
+  },
+  {
+    "name": "platform-medium",
+    "box": [
+      336,
+      256,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "platform-medium",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R20"
+  },
+  {
+    "name": "platform-small",
+    "box": [
+      256,
+      352,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "platform-small",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R21"
+  },
+  {
+    "name": "platform-statue",
+    "box": [
+      288,
+      336,
+      32,
+      48
+    ],
+    "kind": "part",
+    "group": "platform-statue",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R22"
+  },
+  {
+    "name": "statue-cross",
+    "box": [
+      320,
+      336,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "statue-cross",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R23"
+  },
+  {
+    "name": "frame-left",
+    "box": [
+      400,
+      288,
+      48,
+      32
+    ],
+    "kind": "part",
+    "group": "frame-left",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R24"
+  },
+  {
+    "name": "frame-right",
+    "box": [
+      464,
+      288,
+      48,
+      32
+    ],
+    "kind": "part",
+    "group": "frame-right",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R25"
+  },
+  {
+    "name": "tree-large-0",
+    "box": [
+      0,
+      256,
+      32,
+      48
+    ],
+    "kind": "part",
+    "group": "tree-large-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R26"
+  },
+  {
+    "name": "tree-trunk-0",
+    "box": [
+      0,
+      304,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "tree-trunk-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R27"
+  },
+  {
+    "name": "tree-small-0",
+    "box": [
+      0,
+      336,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "tree-small-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R28"
+  },
+  {
+    "name": "tree-overlay-0",
+    "box": [
+      0,
+      368,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "tree-overlay-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R29"
+  },
+  {
+    "name": "tree-large-96",
+    "box": [
+      96,
+      256,
+      32,
+      48
+    ],
+    "kind": "part",
+    "group": "tree-large-96",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R30"
+  },
+  {
+    "name": "tree-trunk-96",
+    "box": [
+      96,
+      304,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R27. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R27",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        0,
+        304,
+        32,
+        16
+      ]
+    },
+    "reviewId": "R31"
+  },
+  {
+    "name": "tree-small-96",
+    "box": [
+      96,
+      336,
+      32,
+      32
+    ],
+    "kind": "part",
+    "group": "tree-small-96",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R32"
+  },
+  {
+    "name": "tree-overlay-96",
+    "box": [
+      96,
+      368,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "tree-overlay-96",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R33"
+  },
+  {
+    "name": "tree-single-256",
+    "box": [
+      192,
+      256,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "tree-single-256",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R34"
+  },
+  {
+    "name": "tree-single-304",
+    "box": [
+      192,
+      304,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "tree-single-304",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R35"
+  },
+  {
+    "name": "tree-single-352",
+    "box": [
+      192,
+      352,
+      48,
+      32
+    ],
+    "kind": "part",
+    "group": "tree-single-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R36"
+  },
+  {
+    "name": "tree-single-384",
+    "box": [
+      192,
+      384,
+      48,
+      32
+    ],
+    "kind": "part",
+    "group": "tree-single-384",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R37"
+  },
+  {
+    "name": "tree-single-416",
+    "box": [
+      192,
+      416,
+      48,
+      16
+    ],
+    "kind": "part",
+    "group": "tree-single-416",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R38"
+  },
+  {
+    "name": "tree-single-432",
+    "box": [
+      192,
+      432,
+      48,
+      16
+    ],
+    "kind": "part",
+    "group": "tree-single-432",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R39"
+  },
+  {
+    "name": "pillar-tall-400",
+    "box": [
+      400,
+      320,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "pillar-tall-400",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R40"
+  },
+  {
+    "name": "pillar-tall-496",
+    "box": [
+      496,
+      320,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "pillar-tall-496",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R41"
+  },
+  {
+    "name": "pillar-short-416",
+    "box": [
+      416,
+      336,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "pillar-short-416",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R42"
+  },
+  {
+    "name": "pillar-short-432",
+    "box": [
+      432,
+      336,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "pillar-short-432",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R43"
+  },
+  {
+    "name": "pillar-short-464",
+    "box": [
+      464,
+      336,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "pillar-short-464",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R44"
+  },
+  {
+    "name": "pillar-short-480",
+    "box": [
+      480,
+      336,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "pillar-short-480",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R45"
+  },
+  {
+    "name": "beam-384",
+    "box": [
+      384,
+      256,
+      48,
+      16
+    ],
+    "kind": "part",
+    "group": "beam-384",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R46"
+  },
+  {
+    "name": "beam-432",
+    "box": [
+      432,
+      256,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "beam-432",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R47"
+  },
+  {
+    "name": "beam-464",
+    "box": [
+      464,
+      256,
+      32,
+      16
+    ],
+    "kind": "part",
+    "group": "beam-464",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R48"
+  },
+  {
+    "name": "beam-curved",
+    "box": [
+      384,
+      272,
+      48,
+      16
+    ],
+    "kind": "part",
+    "group": "beam-curved",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R49"
+  },
+  {
+    "name": "stone-post-256",
+    "box": [
+      256,
+      384,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "stone-post-256",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R50"
+  },
+  {
+    "name": "stone-post-272",
+    "box": [
+      272,
+      384,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "stone-post-272",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R51"
+  },
+  {
+    "name": "stone-post-288",
+    "box": [
+      288,
+      384,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "stone-post-288",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R52"
+  },
+  {
+    "name": "stone-post-304",
+    "box": [
+      304,
+      384,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "stone-post-304",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R53"
+  },
+  {
+    "name": "stone-post-320",
+    "box": [
+      320,
+      384,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "stone-post-320",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R54"
+  },
+  {
+    "name": "stone-post-336",
+    "box": [
+      336,
+      384,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "stone-post-336",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R55"
+  },
+  {
+    "name": "stone-post-352",
+    "box": [
+      352,
+      384,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "stone-post-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R56"
+  },
+  {
+    "name": "stone-post-368",
+    "box": [
+      368,
+      384,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R51. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R51",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        272,
+        384,
+        16,
+        32
+      ]
+    },
+    "reviewId": "R57"
+  },
+  {
+    "name": "cross-animation",
+    "box": [
+      256,
+      416,
+      256,
+      32
+    ],
+    "kind": "part",
+    "group": "cross-animation",
+    "frame": null,
+    "notes": "8 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        256,
+        416,
+        32,
+        32
+      ],
+      [
+        288,
+        416,
+        32,
+        32
+      ],
+      [
+        320,
+        416,
+        32,
+        32
+      ],
+      [
+        352,
+        416,
+        32,
+        32
+      ],
+      [
+        384,
+        416,
+        32,
+        32
+      ],
+      [
+        416,
+        416,
+        32,
+        32
+      ],
+      [
+        448,
+        416,
+        32,
+        32
+      ],
+      [
+        480,
+        416,
+        32,
+        32
+      ]
+    ],
+    "reviewId": "R58"
+  },
+  {
+    "name": "flame-pedestal-animation-448",
+    "box": [
+      272,
+      448,
+      128,
+      32
+    ],
+    "kind": "part",
+    "group": "flame-pedestal-animation-448",
+    "frame": null,
+    "notes": "8 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        272,
+        448,
+        16,
+        32
+      ],
+      [
+        288,
+        448,
+        16,
+        32
+      ],
+      [
+        304,
+        448,
+        16,
+        32
+      ],
+      [
+        320,
+        448,
+        16,
+        32
+      ],
+      [
+        336,
+        448,
+        16,
+        32
+      ],
+      [
+        352,
+        448,
+        16,
+        32
+      ],
+      [
+        368,
+        448,
+        16,
+        32
+      ],
+      [
+        384,
+        448,
+        16,
+        32
+      ]
+    ],
+    "reviewId": "R59"
+  },
+  {
+    "name": "flame-pedestal-animation-480",
+    "box": [
+      272,
+      480,
+      128,
+      32
+    ],
+    "kind": "part",
+    "group": "flame-pedestal-animation-480",
+    "frame": null,
+    "notes": "8 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        272,
+        480,
+        16,
+        32
+      ],
+      [
+        288,
+        480,
+        16,
+        32
+      ],
+      [
+        304,
+        480,
+        16,
+        32
+      ],
+      [
+        320,
+        480,
+        16,
+        32
+      ],
+      [
+        336,
+        480,
+        16,
+        32
+      ],
+      [
+        352,
+        480,
+        16,
+        32
+      ],
+      [
+        368,
+        480,
+        16,
+        32
+      ],
+      [
+        384,
+        480,
+        16,
+        32
+      ]
+    ],
+    "reviewId": "R60"
+  },
+  {
+    "name": "pedestal-off-448",
+    "box": [
+      256,
+      448,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "pedestal-off-448",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R61"
+  },
+  {
+    "name": "pedestal-off-480",
+    "box": [
+      256,
+      480,
+      16,
+      32
+    ],
+    "kind": "part",
+    "group": "pedestal-off-480",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "R62"
+  },
+  {
+    "name": "tile-2-1",
+    "box": [
+      16,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-2-1.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-2-1.png",
+    "reviewId": "R63"
+  },
+  {
+    "name": "tile-3-1",
+    "box": [
+      32,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-3-1.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-3-1.png",
+    "reviewId": "R64"
+  },
+  {
+    "name": "tile-5-1",
+    "box": [
+      64,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-4-1.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-4-1.png",
+    "reviewId": "R65"
+  },
+  {
+    "name": "tile-6-1",
+    "box": [
+      80,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-5-1.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-5-1.png",
+    "reviewId": "R66"
+  },
+  {
+    "name": "tile-8-1",
+    "box": [
+      112,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-6-1.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-6-1.png",
+    "reviewId": "R67"
+  },
+  {
+    "name": "tile-9-1",
+    "box": [
+      128,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-7-1.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-7-1.png",
+    "reviewId": "R68"
+  },
+  {
+    "name": "tile-11-1",
+    "box": [
+      160,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-8-1.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-8-1.png",
+    "reviewId": "R69"
+  },
+  {
+    "name": "tile-12-1",
+    "box": [
+      176,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-9-1.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-9-1.png",
+    "reviewId": "R70"
+  },
+  {
+    "name": "tile-13-1",
+    "box": [
+      192,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-1",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R71"
+  },
+  {
+    "name": "tile-14-1",
+    "box": [
+      208,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-1",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R72"
+  },
+  {
+    "name": "tile-15-1",
+    "box": [
+      224,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-1",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R73"
+  },
+  {
+    "name": "tile-16-1",
+    "box": [
+      240,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-1",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R74"
+  },
+  {
+    "name": "tile-17-1",
+    "box": [
+      256,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-17-1",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R75"
+  },
+  {
+    "name": "tile-18-1",
+    "box": [
+      272,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-18-1",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R76"
+  },
+  {
+    "name": "tile-19-1",
+    "box": [
+      288,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-19-1",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R77"
+  },
+  {
+    "name": "tile-20-1",
+    "box": [
+      304,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-20-1",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R78"
+  },
+  {
+    "name": "tile-21-1",
+    "box": [
+      320,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-21-1",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R79"
+  },
+  {
+    "name": "tile-22-1",
+    "box": [
+      336,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-22-1",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R80"
+  },
+  {
+    "name": "tile-23-1",
+    "box": [
+      352,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R75. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R75",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        256,
+        0,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R81"
+  },
+  {
+    "name": "tile-24-1",
+    "box": [
+      368,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R76. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R76",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        272,
+        0,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R82"
+  },
+  {
+    "name": "tile-25-1",
+    "box": [
+      384,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-25-1",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R83"
+  },
+  {
+    "name": "tile-26-1",
+    "box": [
+      400,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R78. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R78",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        304,
+        0,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R84"
+  },
+  {
+    "name": "tile-27-1",
+    "box": [
+      416,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R79. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R79",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        320,
+        0,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R85"
+  },
+  {
+    "name": "tile-28-1",
+    "box": [
+      432,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R80. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R80",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        336,
+        0,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R86"
+  },
+  {
+    "name": "tile-30-1",
+    "box": [
+      464,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-tile-14-1.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-tile-14-1.png",
+    "reviewId": "R87"
+  },
+  {
+    "name": "tile-31-1",
+    "box": [
+      480,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-tile-15-1.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-tile-15-1.png",
+    "reviewId": "R88"
+  },
+  {
+    "name": "tile-32-1",
+    "box": [
+      496,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-tile-16-1.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-tile-16-1.png",
+    "reviewId": "R89"
+  },
+  {
+    "name": "tile-1-2",
+    "box": [
+      0,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-1-2",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R90"
+  },
+  {
+    "name": "tile-2-2",
+    "box": [
+      16,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-2-2",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R91"
+  },
+  {
+    "name": "tile-3-2",
+    "box": [
+      32,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-2",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R92"
+  },
+  {
+    "name": "tile-4-2",
+    "box": [
+      48,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-2",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R93"
+  },
+  {
+    "name": "tile-5-2",
+    "box": [
+      64,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-2",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R94"
+  },
+  {
+    "name": "tile-6-2",
+    "box": [
+      80,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-6-2",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R95"
+  },
+  {
+    "name": "tile-7-2",
+    "box": [
+      96,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-7-2",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R96"
+  },
+  {
+    "name": "tile-8-2",
+    "box": [
+      112,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-8-2",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R97"
+  },
+  {
+    "name": "tile-9-2",
+    "box": [
+      128,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-9-2",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R98"
+  },
+  {
+    "name": "tile-10-2",
+    "box": [
+      144,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-2",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R99"
+  },
+  {
+    "name": "tile-11-2",
+    "box": [
+      160,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-2",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R100"
+  },
+  {
+    "name": "tile-12-2",
+    "box": [
+      176,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-2",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R101"
+  },
+  {
+    "name": "tile-13-2",
+    "box": [
+      192,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-2",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R102"
+  },
+  {
+    "name": "tile-14-2",
+    "box": [
+      208,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-2",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R103"
+  },
+  {
+    "name": "tile-15-2",
+    "box": [
+      224,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-2",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R104"
+  },
+  {
+    "name": "tile-16-2",
+    "box": [
+      240,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-2",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R105"
+  },
+  {
+    "name": "tile-17-2",
+    "box": [
+      256,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-17-2",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R106"
+  },
+  {
+    "name": "tile-19-2",
+    "box": [
+      288,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-19-2",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R107"
+  },
+  {
+    "name": "tile-20-2",
+    "box": [
+      304,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-20-2",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R108"
+  },
+  {
+    "name": "tile-21-2",
+    "box": [
+      320,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-21-2",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R109"
+  },
+  {
+    "name": "tile-22-2",
+    "box": [
+      336,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-22-2",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R110"
+  },
+  {
+    "name": "tile-23-2",
+    "box": [
+      352,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-23-2",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R111"
+  },
+  {
+    "name": "tile-25-2",
+    "box": [
+      384,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-25-2",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R112"
+  },
+  {
+    "name": "tile-26-2",
+    "box": [
+      400,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R108. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R108",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        304,
+        16,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R113"
+  },
+  {
+    "name": "tile-27-2",
+    "box": [
+      416,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-27-2",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R114"
+  },
+  {
+    "name": "tile-28-2",
+    "box": [
+      432,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R110. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R110",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        336,
+        16,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R115"
+  },
+  {
+    "name": "tile-30-2",
+    "box": [
+      464,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-30-2",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R116"
+  },
+  {
+    "name": "tile-31-2",
+    "box": [
+      480,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-31-2",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R117"
+  },
+  {
+    "name": "tile-32-2",
+    "box": [
+      496,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-tile-16-2.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-tile-16-2.png",
+    "reviewId": "R118"
+  },
+  {
+    "name": "tile-1-3",
+    "box": [
+      0,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-1-3",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R119"
+  },
+  {
+    "name": "tile-2-3",
+    "box": [
+      16,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-2-3",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R120"
+  },
+  {
+    "name": "tile-3-3",
+    "box": [
+      32,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-3",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R121"
+  },
+  {
+    "name": "tile-4-3",
+    "box": [
+      48,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-3",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R122"
+  },
+  {
+    "name": "tile-5-3",
+    "box": [
+      64,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-3",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R123"
+  },
+  {
+    "name": "tile-6-3",
+    "box": [
+      80,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-6-3",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R124"
+  },
+  {
+    "name": "tile-7-3",
+    "box": [
+      96,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-7-3",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R125"
+  },
+  {
+    "name": "tile-8-3",
+    "box": [
+      112,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-8-3",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R126"
+  },
+  {
+    "name": "tile-9-3",
+    "box": [
+      128,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-9-3",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R127"
+  },
+  {
+    "name": "tile-10-3",
+    "box": [
+      144,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-3",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R128"
+  },
+  {
+    "name": "tile-11-3",
+    "box": [
+      160,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-3",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R129"
+  },
+  {
+    "name": "tile-12-3",
+    "box": [
+      176,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-3",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R130"
+  },
+  {
+    "name": "tile-13-3",
+    "box": [
+      192,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-3",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R131"
+  },
+  {
+    "name": "tile-14-3",
+    "box": [
+      208,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-3",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R132"
+  },
+  {
+    "name": "tile-15-3",
+    "box": [
+      224,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-3",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R133"
+  },
+  {
+    "name": "tile-16-3",
+    "box": [
+      240,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-3",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R134"
+  },
+  {
+    "name": "tile-17-3",
+    "box": [
+      256,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-17-3",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R135"
+  },
+  {
+    "name": "tile-18-3",
+    "box": [
+      272,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R79. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R79",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        320,
+        0,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R136"
+  },
+  {
+    "name": "tile-19-3",
+    "box": [
+      288,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-19-3",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R137"
+  },
+  {
+    "name": "tile-20-3",
+    "box": [
+      304,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R107. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R107",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        288,
+        16,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R138"
+  },
+  {
+    "name": "tile-22-3",
+    "box": [
+      336,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R106. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R106",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        256,
+        16,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R139"
+  },
+  {
+    "name": "tile-23-3",
+    "box": [
+      352,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-23-3",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R140"
+  },
+  {
+    "name": "tile-24-3",
+    "box": [
+      368,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-tile-14-4.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-tile-14-4.png",
+    "reviewId": "R141"
+  },
+  {
+    "name": "tile-25-3",
+    "box": [
+      384,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-25-3",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R142"
+  },
+  {
+    "name": "tile-26-3",
+    "box": [
+      400,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-26-3",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R143"
+  },
+  {
+    "name": "tile-27-3",
+    "box": [
+      416,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R109. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R109",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        320,
+        16,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R144"
+  },
+  {
+    "name": "tile-28-3",
+    "box": [
+      432,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-28-3",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R145"
+  },
+  {
+    "name": "tile-30-3",
+    "box": [
+      464,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-tile-14-3.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-tile-14-3.png",
+    "reviewId": "R146"
+  },
+  {
+    "name": "tile-31-3",
+    "box": [
+      480,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-tile-15-3.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-tile-15-3.png",
+    "reviewId": "R147"
+  },
+  {
+    "name": "tile-32-3",
+    "box": [
+      496,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-tile-16-3.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-tile-16-3.png",
+    "reviewId": "R148"
+  },
+  {
+    "name": "tile-1-4",
+    "box": [
+      0,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-1-4",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R149"
+  },
+  {
+    "name": "tile-2-4",
+    "box": [
+      16,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-2-4",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R150"
+  },
+  {
+    "name": "tile-3-4",
+    "box": [
+      32,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-4",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R151"
+  },
+  {
+    "name": "tile-4-4",
+    "box": [
+      48,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-4",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R152"
+  },
+  {
+    "name": "tile-5-4",
+    "box": [
+      64,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-4",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R153"
+  },
+  {
+    "name": "tile-6-4",
+    "box": [
+      80,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-6-4",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R154"
+  },
+  {
+    "name": "tile-7-4",
+    "box": [
+      96,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-7-4",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R155"
+  },
+  {
+    "name": "tile-8-4",
+    "box": [
+      112,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-8-4",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R156"
+  },
+  {
+    "name": "tile-9-4",
+    "box": [
+      128,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-9-4",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R157"
+  },
+  {
+    "name": "tile-10-4",
+    "box": [
+      144,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-4",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R158"
+  },
+  {
+    "name": "tile-11-4",
+    "box": [
+      160,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-4",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R159"
+  },
+  {
+    "name": "tile-12-4",
+    "box": [
+      176,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-4",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R160"
+  },
+  {
+    "name": "tile-13-4",
+    "box": [
+      192,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-4",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R161"
+  },
+  {
+    "name": "tile-14-4",
+    "box": [
+      208,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-4",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R162"
+  },
+  {
+    "name": "tile-15-4",
+    "box": [
+      224,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-4",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R163"
+  },
+  {
+    "name": "tile-16-4",
+    "box": [
+      240,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-4",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R164"
+  },
+  {
+    "name": "tile-17-4",
+    "box": [
+      256,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-17-4",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R165"
+  },
+  {
+    "name": "tile-18-4",
+    "box": [
+      272,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R109. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R109",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        320,
+        16,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R166"
+  },
+  {
+    "name": "tile-19-4",
+    "box": [
+      288,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-19-4",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R167"
+  },
+  {
+    "name": "tile-20-4",
+    "box": [
+      304,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-20-4",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R168"
+  },
+  {
+    "name": "tile-21-4",
+    "box": [
+      320,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R76. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R76",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        272,
+        0,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R169"
+  },
+  {
+    "name": "tile-22-4",
+    "box": [
+      336,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-22-4",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R170"
+  },
+  {
+    "name": "tile-23-4",
+    "box": [
+      352,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-23-4",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R171"
+  },
+  {
+    "name": "tile-24-4",
+    "box": [
+      368,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R114. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R114",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        416,
+        16,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R172"
+  },
+  {
+    "name": "tile-25-4",
+    "box": [
+      384,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-25-4",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R173"
+  },
+  {
+    "name": "tile-26-4",
+    "box": [
+      400,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R112. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R112",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        384,
+        16,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R174"
+  },
+  {
+    "name": "tile-28-4",
+    "box": [
+      432,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R111. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R111",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        352,
+        16,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R175"
+  },
+  {
+    "name": "tile-30-4",
+    "box": [
+      464,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-30-4",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R176"
+  },
+  {
+    "name": "tile-31-4",
+    "box": [
+      480,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-31-4",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R177"
+  },
+  {
+    "name": "tile-32-4",
+    "box": [
+      496,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-32-4",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R178"
+  },
+  {
+    "name": "tile-1-5",
+    "box": [
+      0,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-1-5",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R179"
+  },
+  {
+    "name": "tile-2-5",
+    "box": [
+      16,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fantasy-forest-flower-96-320.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fantasy-forest/fantasy-forest-flower-96-320.png",
+    "reviewId": "R180"
+  },
+  {
+    "name": "tile-3-5",
+    "box": [
+      32,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-5",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R181"
+  },
+  {
+    "name": "tile-4-5",
+    "box": [
+      48,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fantasy-forest-flower-48-336.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fantasy-forest/fantasy-forest-flower-48-336.png",
+    "reviewId": "R182"
+  },
+  {
+    "name": "tile-5-5",
+    "box": [
+      64,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-5",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R183"
+  },
+  {
+    "name": "tile-6-5",
+    "box": [
+      80,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-6-5",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R184"
+  },
+  {
+    "name": "tile-7-5",
+    "box": [
+      96,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-7-5",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R185"
+  },
+  {
+    "name": "tile-8-5",
+    "box": [
+      112,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-8-5",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R186"
+  },
+  {
+    "name": "tile-9-5",
+    "box": [
+      128,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-9-5",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R187"
+  },
+  {
+    "name": "tile-10-5",
+    "box": [
+      144,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-5",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R188"
+  },
+  {
+    "name": "tile-11-5",
+    "box": [
+      160,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-5",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R189"
+  },
+  {
+    "name": "tile-12-5",
+    "box": [
+      176,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-5",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R190"
+  },
+  {
+    "name": "tile-13-5",
+    "box": [
+      192,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-5",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R191"
+  },
+  {
+    "name": "tile-14-5",
+    "box": [
+      208,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fantasy-forest-blue-forest-tile-atlas-tile-384-96.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fantasy-forest/fantasy-forest-blue-forest-tile-atlas-tile-384-96.png",
+    "reviewId": "R192"
+  },
+  {
+    "name": "tile-15-5",
+    "box": [
+      224,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fantasy-forest-blue-forest-tile-atlas-tile-448-96.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fantasy-forest/fantasy-forest-blue-forest-tile-atlas-tile-448-96.png",
+    "reviewId": "R193"
+  },
+  {
+    "name": "tile-16-5",
+    "box": [
+      240,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-5",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R194"
+  },
+  {
+    "name": "tile-18-5",
+    "box": [
+      272,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-18-5",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R195"
+  },
+  {
+    "name": "tile-23-5",
+    "box": [
+      352,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-23-5",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R196"
+  },
+  {
+    "name": "tile-24-5",
+    "box": [
+      368,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R109. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R109",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        320,
+        16,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R197"
+  },
+  {
+    "name": "tile-25-5",
+    "box": [
+      384,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-25-5",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R198"
+  },
+  {
+    "name": "tile-26-5",
+    "box": [
+      400,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R168. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R168",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        304,
+        48,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R199"
+  },
+  {
+    "name": "tile-27-5",
+    "box": [
+      416,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R76. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R76",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        272,
+        0,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R200"
+  },
+  {
+    "name": "tile-28-5",
+    "box": [
+      432,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R170. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R170",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        336,
+        48,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R201"
+  },
+  {
+    "name": "tile-30-5",
+    "box": [
+      464,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-30-5",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R202"
+  },
+  {
+    "name": "tile-31-5",
+    "box": [
+      480,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-31-5",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R203"
+  },
+  {
+    "name": "tile-32-5",
+    "box": [
+      496,
+      64,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-32-5",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R204"
+  },
+  {
+    "name": "tile-1-6",
+    "box": [
+      0,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-tile-1-17.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-tile-1-17.png",
+    "reviewId": "R205"
+  },
+  {
+    "name": "tile-2-6",
+    "box": [
+      16,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-tile-2-17.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-tile-2-17.png",
+    "reviewId": "R206"
+  },
+  {
+    "name": "tile-3-6",
+    "box": [
+      32,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-tile-3-17.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-tile-3-17.png",
+    "reviewId": "R207"
+  },
+  {
+    "name": "tile-4-6",
+    "box": [
+      48,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-tile-4-17.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-tile-4-17.png",
+    "reviewId": "R208"
+  },
+  {
+    "name": "tile-5-6",
+    "box": [
+      64,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-tile-5-17.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-tile-5-17.png",
+    "reviewId": "R209"
+  },
+  {
+    "name": "tile-6-6",
+    "box": [
+      80,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-tile-6-17.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-tile-6-17.png",
+    "reviewId": "R210"
+  },
+  {
+    "name": "tile-7-6",
+    "box": [
+      96,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-7-6",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R211"
+  },
+  {
+    "name": "tile-8-6",
+    "box": [
+      112,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-8-6",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R212"
+  },
+  {
+    "name": "tile-9-6",
+    "box": [
+      128,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-9-6",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R213"
+  },
+  {
+    "name": "tile-10-6",
+    "box": [
+      144,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-6",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R214"
+  },
+  {
+    "name": "tile-11-6",
+    "box": [
+      160,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-6",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R215"
+  },
+  {
+    "name": "tile-12-6",
+    "box": [
+      176,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-6",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R216"
+  },
+  {
+    "name": "tile-13-6",
+    "box": [
+      192,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-6",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R217"
+  },
+  {
+    "name": "tile-14-6",
+    "box": [
+      208,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-14-6",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R218"
+  },
+  {
+    "name": "tile-15-6",
+    "box": [
+      224,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-15-6",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R219"
+  },
+  {
+    "name": "tile-16-6",
+    "box": [
+      240,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-16-6",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R220"
+  },
+  {
+    "name": "tile-17-6",
+    "box": [
+      256,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-17-6",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R221"
+  },
+  {
+    "name": "tile-18-6",
+    "box": [
+      272,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-18-6",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R222"
+  },
+  {
+    "name": "tile-19-6",
+    "box": [
+      288,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-19-6",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R223"
+  },
+  {
+    "name": "tile-20-6",
+    "box": [
+      304,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-20-6",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R224"
+  },
+  {
+    "name": "tile-21-6",
+    "box": [
+      320,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R176. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R176",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        464,
+        48,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R225"
+  },
+  {
+    "name": "tile-22-6",
+    "box": [
+      336,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-22-6",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R226"
+  },
+  {
+    "name": "tile-23-6",
+    "box": [
+      352,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R221. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R221",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        256,
+        80,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R227"
+  },
+  {
+    "name": "tile-24-6",
+    "box": [
+      368,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R222. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R222",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        272,
+        80,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R228"
+  },
+  {
+    "name": "tile-25-6",
+    "box": [
+      384,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-25-6",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R229"
+  },
+  {
+    "name": "tile-26-6",
+    "box": [
+      400,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R224. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R224",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        304,
+        80,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R230"
+  },
+  {
+    "name": "tile-27-6",
+    "box": [
+      416,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R176. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R176",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        464,
+        48,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R231"
+  },
+  {
+    "name": "tile-28-6",
+    "box": [
+      432,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R226. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R226",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        336,
+        80,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R232"
+  },
+  {
+    "name": "tile-30-6",
+    "box": [
+      464,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-tile-14-3.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-tile-14-3.png",
+    "reviewId": "R233"
+  },
+  {
+    "name": "tile-31-6",
+    "box": [
+      480,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-tile-15-3.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-tile-15-3.png",
+    "reviewId": "R234"
+  },
+  {
+    "name": "tile-32-6",
+    "box": [
+      496,
+      80,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-tile-16-3.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-tile-16-3.png",
+    "reviewId": "R235"
+  },
+  {
+    "name": "tile-1-7",
+    "box": [
+      0,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-tile-1-18.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-tile-1-18.png",
+    "reviewId": "R236"
+  },
+  {
+    "name": "tile-2-7",
+    "box": [
+      16,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-tile-2-18.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-tile-2-18.png",
+    "reviewId": "R237"
+  },
+  {
+    "name": "tile-3-7",
+    "box": [
+      32,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-7",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R238"
+  },
+  {
+    "name": "tile-6-7",
+    "box": [
+      80,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-tile-9-18.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-tile-9-18.png",
+    "reviewId": "R239"
+  },
+  {
+    "name": "tile-7-7",
+    "box": [
+      96,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-tile-10-18.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-tile-10-18.png",
+    "reviewId": "R240"
+  },
+  {
+    "name": "tile-8-7",
+    "box": [
+      112,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-8-7",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R241"
+  },
+  {
+    "name": "tile-12-7",
+    "box": [
+      176,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-11-14.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-11-14.png",
+    "reviewId": "R242"
+  },
+  {
+    "name": "tile-13-7",
+    "box": [
+      192,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-12-14.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-12-14.png",
+    "reviewId": "R243"
+  },
+  {
+    "name": "tile-17-7",
+    "box": [
+      256,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-17-7",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R244"
+  },
+  {
+    "name": "tile-18-7",
+    "box": [
+      272,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-2-1.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-2-1.png",
+    "reviewId": "R245"
+  },
+  {
+    "name": "tile-19-7",
+    "box": [
+      288,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-19-7",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R246"
+  },
+  {
+    "name": "tile-20-7",
+    "box": [
+      304,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-20-7",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R247"
+  },
+  {
+    "name": "tile-21-7",
+    "box": [
+      320,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-21-7",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R248"
+  },
+  {
+    "name": "tile-22-7",
+    "box": [
+      336,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-22-7",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R249"
+  },
+  {
+    "name": "tile-23-7",
+    "box": [
+      352,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-23-7",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R250"
+  },
+  {
+    "name": "tile-24-7",
+    "box": [
+      368,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-2-1.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-2-1.png",
+    "reviewId": "R251"
+  },
+  {
+    "name": "tile-25-7",
+    "box": [
+      384,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-25-7",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R252"
+  },
+  {
+    "name": "tile-26-7",
+    "box": [
+      400,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R247. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R247",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        304,
+        96,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R253"
+  },
+  {
+    "name": "tile-27-7",
+    "box": [
+      416,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-27-7",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R254"
+  },
+  {
+    "name": "tile-28-7",
+    "box": [
+      432,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R249. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R249",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        336,
+        96,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R255"
+  },
+  {
+    "name": "tile-30-7",
+    "box": [
+      464,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-tile-14-4.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-tile-14-4.png",
+    "reviewId": "R256"
+  },
+  {
+    "name": "tile-31-7",
+    "box": [
+      480,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-tile-12-13.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-tile-12-13.png",
+    "reviewId": "R257"
+  },
+  {
+    "name": "tile-32-7",
+    "box": [
+      496,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-tile-14-4.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-tile-14-4.png",
+    "reviewId": "R258"
+  },
+  {
+    "name": "tile-1-8",
+    "box": [
+      0,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-tile-1-19.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-tile-1-19.png",
+    "reviewId": "R259"
+  },
+  {
+    "name": "tile-2-8",
+    "box": [
+      16,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-tile-2-19.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-tile-2-19.png",
+    "reviewId": "R260"
+  },
+  {
+    "name": "tile-3-8",
+    "box": [
+      32,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-tile-3-19.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-tile-3-19.png",
+    "reviewId": "R261"
+  },
+  {
+    "name": "tile-6-8",
+    "box": [
+      80,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-tile-9-19.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-tile-9-19.png",
+    "reviewId": "R262"
+  },
+  {
+    "name": "tile-7-8",
+    "box": [
+      96,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-tile-10-19.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-tile-10-19.png",
+    "reviewId": "R263"
+  },
+  {
+    "name": "tile-8-8",
+    "box": [
+      112,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-tile-11-19.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-tile-11-19.png",
+    "reviewId": "R264"
+  },
+  {
+    "name": "tile-12-8",
+    "box": [
+      176,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-11-15.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-11-15.png",
+    "reviewId": "R265"
+  },
+  {
+    "name": "tile-13-8",
+    "box": [
+      192,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-12-15.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-12-15.png",
+    "reviewId": "R266"
+  },
+  {
+    "name": "tile-17-8",
+    "box": [
+      256,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-17-8",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R267"
+  },
+  {
+    "name": "tile-18-8",
+    "box": [
+      272,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R176. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R176",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        464,
+        48,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R268"
+  },
+  {
+    "name": "tile-19-8",
+    "box": [
+      288,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-19-8",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R269"
+  },
+  {
+    "name": "tile-20-8",
+    "box": [
+      304,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R246. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R246",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        288,
+        96,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R270"
+  },
+  {
+    "name": "tile-22-8",
+    "box": [
+      336,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R244. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R244",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        256,
+        96,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R271"
+  },
+  {
+    "name": "tile-23-8",
+    "box": [
+      352,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-23-8",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R272"
+  },
+  {
+    "name": "tile-24-8",
+    "box": [
+      368,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R176. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R176",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        464,
+        48,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R273"
+  },
+  {
+    "name": "tile-25-8",
+    "box": [
+      384,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-25-8",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R274"
+  },
+  {
+    "name": "tile-26-8",
+    "box": [
+      400,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-26-8",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R275"
+  },
+  {
+    "name": "tile-27-8",
+    "box": [
+      416,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R109. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R109",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        320,
+        16,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R276"
+  },
+  {
+    "name": "tile-28-8",
+    "box": [
+      432,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-28-8",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R277"
+  },
+  {
+    "name": "tile-30-8",
+    "box": [
+      464,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-tile-11-14.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-tile-11-14.png",
+    "reviewId": "R278"
+  },
+  {
+    "name": "tile-31-8",
+    "box": [
+      480,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-tile-12-14.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-tile-12-14.png",
+    "reviewId": "R279"
+  },
+  {
+    "name": "tile-32-8",
+    "box": [
+      496,
+      112,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-tile-13-14.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-tile-13-14.png",
+    "reviewId": "R280"
+  },
+  {
+    "name": "tile-17-9",
+    "box": [
+      256,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-17-9",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R281"
+  },
+  {
+    "name": "tile-18-9",
+    "box": [
+      272,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R248. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R248",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        320,
+        96,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R282"
+  },
+  {
+    "name": "tile-19-9",
+    "box": [
+      288,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-19-9",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R283"
+  },
+  {
+    "name": "tile-20-9",
+    "box": [
+      304,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-20-9",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R284"
+  },
+  {
+    "name": "tile-21-9",
+    "box": [
+      320,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R222. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R222",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        272,
+        80,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R285"
+  },
+  {
+    "name": "tile-22-9",
+    "box": [
+      336,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-22-9",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R286"
+  },
+  {
+    "name": "tile-23-9",
+    "box": [
+      352,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-23-9",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R287"
+  },
+  {
+    "name": "tile-24-9",
+    "box": [
+      368,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-24-9",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R288"
+  },
+  {
+    "name": "tile-25-9",
+    "box": [
+      384,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-25-9",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R289"
+  },
+  {
+    "name": "tile-26-9",
+    "box": [
+      400,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R252. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R252",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        384,
+        96,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R290"
+  },
+  {
+    "name": "tile-28-9",
+    "box": [
+      432,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R250. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R250",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        352,
+        96,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R291"
+  },
+  {
+    "name": "tile-30-9",
+    "box": [
+      464,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-tile-11-15.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-tile-11-15.png",
+    "reviewId": "R292"
+  },
+  {
+    "name": "tile-31-9",
+    "box": [
+      480,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-tile-12-15.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-tile-12-15.png",
+    "reviewId": "R293"
+  },
+  {
+    "name": "tile-32-9",
+    "box": [
+      496,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-tile-16-2.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-tile-16-2.png",
+    "reviewId": "R294"
+  },
+  {
+    "name": "tile-17-10",
+    "box": [
+      256,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-17-10",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R295"
+  },
+  {
+    "name": "tile-18-10",
+    "box": [
+      272,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-18-10",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R296"
+  },
+  {
+    "name": "tile-19-10",
+    "box": [
+      288,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-19-10",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R297"
+  },
+  {
+    "name": "tile-23-10",
+    "box": [
+      352,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R196. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R196",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        352,
+        64,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R298"
+  },
+  {
+    "name": "tile-24-10",
+    "box": [
+      368,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R109. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R109",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        320,
+        16,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R299"
+  },
+  {
+    "name": "tile-25-10",
+    "box": [
+      384,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R198. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R198",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        384,
+        64,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R300"
+  },
+  {
+    "name": "tile-26-10",
+    "box": [
+      400,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R284. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R284",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        304,
+        128,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R301"
+  },
+  {
+    "name": "tile-27-10",
+    "box": [
+      416,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R222. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R222",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        272,
+        80,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R302"
+  },
+  {
+    "name": "tile-28-10",
+    "box": [
+      432,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R286. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R286",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        336,
+        128,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R303"
+  },
+  {
+    "name": "tile-30-10",
+    "box": [
+      464,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-tile-14-3.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-tile-14-3.png",
+    "reviewId": "R304"
+  },
+  {
+    "name": "tile-31-10",
+    "box": [
+      480,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-tile-15-3.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-tile-15-3.png",
+    "reviewId": "R305"
+  },
+  {
+    "name": "tile-32-10",
+    "box": [
+      496,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-tile-16-3.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-tile-16-3.png",
+    "reviewId": "R306"
+  },
+  {
+    "name": "tile-4-11",
+    "box": [
+      48,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-11-11.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-11-11.png",
+    "reviewId": "R307"
+  },
+  {
+    "name": "tile-5-11",
+    "box": [
+      64,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-12-11.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-12-11.png",
+    "reviewId": "R308"
+  },
+  {
+    "name": "tile-6-11",
+    "box": [
+      80,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-13-11.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-13-11.png",
+    "reviewId": "R309"
+  },
+  {
+    "name": "tile-7-11",
+    "box": [
+      96,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-14-11.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-14-11.png",
+    "reviewId": "R310"
+  },
+  {
+    "name": "tile-8-11",
+    "box": [
+      112,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-15-11.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-15-11.png",
+    "reviewId": "R311"
+  },
+  {
+    "name": "tile-17-11",
+    "box": [
+      256,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R168. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R168",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        304,
+        48,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R312"
+  },
+  {
+    "name": "tile-18-11",
+    "box": [
+      272,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R76. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R76",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        272,
+        0,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R313"
+  },
+  {
+    "name": "tile-19-11",
+    "box": [
+      288,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R76. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R76",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        272,
+        0,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R314"
+  },
+  {
+    "name": "tile-20-11",
+    "box": [
+      304,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R170. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R170",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        336,
+        48,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R315"
+  },
+  {
+    "name": "tile-21-11",
+    "box": [
+      320,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R284. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R284",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        304,
+        128,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R316"
+  },
+  {
+    "name": "tile-22-11",
+    "box": [
+      336,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R222. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R222",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        272,
+        80,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R317"
+  },
+  {
+    "name": "tile-23-11",
+    "box": [
+      352,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R222. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R222",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        272,
+        80,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R318"
+  },
+  {
+    "name": "tile-24-11",
+    "box": [
+      368,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R286. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R286",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        336,
+        128,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R319"
+  },
+  {
+    "name": "tile-26-11",
+    "box": [
+      400,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-tile-14-4.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-tile-14-4.png",
+    "reviewId": "R320"
+  },
+  {
+    "name": "tile-27-11",
+    "box": [
+      416,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-tile-14-4.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-tile-14-4.png",
+    "reviewId": "R321"
+  },
+  {
+    "name": "tile-28-11",
+    "box": [
+      432,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-tile-14-4.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-tile-14-4.png",
+    "reviewId": "R322"
+  },
+  {
+    "name": "tile-30-11",
+    "box": [
+      464,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R176. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R176",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        464,
+        48,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R323"
+  },
+  {
+    "name": "tile-31-11",
+    "box": [
+      480,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R178. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R178",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        496,
+        48,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R324"
+  },
+  {
+    "name": "tile-32-11",
+    "box": [
+      496,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-32-11",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R325"
+  },
+  {
+    "name": "tile-4-12",
+    "box": [
+      48,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-11-12.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-11-12.png",
+    "reviewId": "R326"
+  },
+  {
+    "name": "tile-5-12",
+    "box": [
+      64,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-12-12.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-12-12.png",
+    "reviewId": "R327"
+  },
+  {
+    "name": "tile-6-12",
+    "box": [
+      80,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-13-12.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-13-12.png",
+    "reviewId": "R328"
+  },
+  {
+    "name": "tile-8-12",
+    "box": [
+      112,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-15-12.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-15-12.png",
+    "reviewId": "R329"
+  },
+  {
+    "name": "tile-21-12",
+    "box": [
+      320,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-2-1.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-2-1.png",
+    "reviewId": "R330"
+  },
+  {
+    "name": "tile-22-12",
+    "box": [
+      336,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-2-1.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-2-1.png",
+    "reviewId": "R331"
+  },
+  {
+    "name": "tile-23-12",
+    "box": [
+      352,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-2-1.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-2-1.png",
+    "reviewId": "R332"
+  },
+  {
+    "name": "tile-24-12",
+    "box": [
+      368,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-2-1.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-2-1.png",
+    "reviewId": "R333"
+  },
+  {
+    "name": "tile-26-12",
+    "box": [
+      400,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-26-12",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R334"
+  },
+  {
+    "name": "tile-27-12",
+    "box": [
+      416,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-27-12",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R335"
+  },
+  {
+    "name": "tile-28-12",
+    "box": [
+      432,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-28-12",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R336"
+  },
+  {
+    "name": "tile-30-12",
+    "box": [
+      464,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-30-12",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R337"
+  },
+  {
+    "name": "tile-31-12",
+    "box": [
+      480,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-31-12",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R338"
+  },
+  {
+    "name": "tile-32-12",
+    "box": [
+      496,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-32-12",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R339"
+  },
+  {
+    "name": "tile-4-13",
+    "box": [
+      48,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-11-13.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-11-13.png",
+    "reviewId": "R340"
+  },
+  {
+    "name": "tile-6-13",
+    "box": [
+      80,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-13-13.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-13-13.png",
+    "reviewId": "R341"
+  },
+  {
+    "name": "tile-8-13",
+    "box": [
+      112,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-15-13.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-15-13.png",
+    "reviewId": "R342"
+  },
+  {
+    "name": "tile-11-13",
+    "box": [
+      160,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-13",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R343"
+  },
+  {
+    "name": "tile-12-13",
+    "box": [
+      176,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-13",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R344"
+  },
+  {
+    "name": "tile-13-13",
+    "box": [
+      192,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-13",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R345"
+  },
+  {
+    "name": "tile-17-13",
+    "box": [
+      256,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-17-13",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R346"
+  },
+  {
+    "name": "tile-18-13",
+    "box": [
+      272,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-18-13",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R347"
+  },
+  {
+    "name": "tile-19-13",
+    "box": [
+      288,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R347. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R347",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        272,
+        192,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R348"
+  },
+  {
+    "name": "tile-20-13",
+    "box": [
+      304,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-20-13",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R349"
+  },
+  {
+    "name": "tile-21-13",
+    "box": [
+      320,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-21-13",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R350"
+  },
+  {
+    "name": "tile-22-13",
+    "box": [
+      336,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-22-13",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R351"
+  },
+  {
+    "name": "tile-23-13",
+    "box": [
+      352,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-23-13",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R352"
+  },
+  {
+    "name": "tile-24-13",
+    "box": [
+      368,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-24-13",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R353"
+  },
+  {
+    "name": "tile-26-13",
+    "box": [
+      400,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-26-13",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R354"
+  },
+  {
+    "name": "tile-27-13",
+    "box": [
+      416,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-27-13",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R355"
+  },
+  {
+    "name": "tile-28-13",
+    "box": [
+      432,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-28-13",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R356"
+  },
+  {
+    "name": "tile-30-13",
+    "box": [
+      464,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-tile-11-15.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-tile-11-15.png",
+    "reviewId": "R357"
+  },
+  {
+    "name": "tile-31-13",
+    "box": [
+      480,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-tile-12-15.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-tile-12-15.png",
+    "reviewId": "R358"
+  },
+  {
+    "name": "tile-32-13",
+    "box": [
+      496,
+      192,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-tile-16-2.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-tile-16-2.png",
+    "reviewId": "R359"
+  },
+  {
+    "name": "tile-1-14",
+    "box": [
+      0,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-tile-17-1.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-tile-17-1.png",
+    "reviewId": "R360"
+  },
+  {
+    "name": "tile-2-14",
+    "box": [
+      16,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-tile-18-1.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-tile-18-1.png",
+    "reviewId": "R361"
+  },
+  {
+    "name": "tile-3-14",
+    "box": [
+      32,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-tile-19-1.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-tile-19-1.png",
+    "reviewId": "R362"
+  },
+  {
+    "name": "tile-5-14",
+    "box": [
+      64,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: remastered-blacksmith-workbench-small-400.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/remastered-blacksmith/remastered-blacksmith-workbench-small-400.png",
+    "reviewId": "R363"
+  },
+  {
+    "name": "tile-11-14",
+    "box": [
+      160,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-14",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R364"
+  },
+  {
+    "name": "tile-12-14",
+    "box": [
+      176,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-14",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R365"
+  },
+  {
+    "name": "tile-13-14",
+    "box": [
+      192,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-13-14",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R366"
+  },
+  {
+    "name": "tile-14-14",
+    "box": [
+      208,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-7-30.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-7-30.png",
+    "reviewId": "R367"
+  },
+  {
+    "name": "tile-15-14",
+    "box": [
+      224,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-8-30.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-8-30.png",
+    "reviewId": "R368"
+  },
+  {
+    "name": "tile-16-14",
+    "box": [
+      240,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-9-30.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-9-30.png",
+    "reviewId": "R369"
+  },
+  {
+    "name": "tile-18-14",
+    "box": [
+      272,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-tile-9-14.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-tile-9-14.png",
+    "reviewId": "R370"
+  },
+  {
+    "name": "tile-19-14",
+    "box": [
+      288,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-tile-9-14.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-tile-9-14.png",
+    "reviewId": "R371"
+  },
+  {
+    "name": "tile-22-14",
+    "box": [
+      336,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-tile-9-14.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-tile-9-14.png",
+    "reviewId": "R372"
+  },
+  {
+    "name": "tile-23-14",
+    "box": [
+      352,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-tile-9-14.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-tile-9-14.png",
+    "reviewId": "R373"
+  },
+  {
+    "name": "tile-26-14",
+    "box": [
+      400,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R176. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R176",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        464,
+        48,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R374"
+  },
+  {
+    "name": "tile-27-14",
+    "box": [
+      416,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R176. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R176",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        464,
+        48,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R375"
+  },
+  {
+    "name": "tile-28-14",
+    "box": [
+      432,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R176. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R176",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        464,
+        48,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R376"
+  },
+  {
+    "name": "tile-30-14",
+    "box": [
+      464,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-tile-14-3.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-tile-14-3.png",
+    "reviewId": "R377"
+  },
+  {
+    "name": "tile-31-14",
+    "box": [
+      480,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-tile-15-3.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-tile-15-3.png",
+    "reviewId": "R378"
+  },
+  {
+    "name": "tile-32-14",
+    "box": [
+      496,
+      208,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-tile-16-3.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-tile-16-3.png",
+    "reviewId": "R379"
+  },
+  {
+    "name": "tile-1-15",
+    "box": [
+      0,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-5-11.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-5-11.png",
+    "reviewId": "R380"
+  },
+  {
+    "name": "tile-2-15",
+    "box": [
+      16,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-6-11.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-6-11.png",
+    "reviewId": "R381"
+  },
+  {
+    "name": "tile-3-15",
+    "box": [
+      32,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-15",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R382"
+  },
+  {
+    "name": "tile-4-15",
+    "box": [
+      48,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-15",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R383"
+  },
+  {
+    "name": "tile-5-15",
+    "box": [
+      64,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-15",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R384"
+  },
+  {
+    "name": "tile-14-15",
+    "box": [
+      208,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-7-31.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-7-31.png",
+    "reviewId": "R385"
+  },
+  {
+    "name": "tile-15-15",
+    "box": [
+      224,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-8-31.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-8-31.png",
+    "reviewId": "R386"
+  },
+  {
+    "name": "tile-16-15",
+    "box": [
+      240,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-9-31.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-9-31.png",
+    "reviewId": "R387"
+  },
+  {
+    "name": "tile-18-15",
+    "box": [
+      272,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-8-31.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-8-31.png",
+    "reviewId": "R388"
+  },
+  {
+    "name": "tile-19-15",
+    "box": [
+      288,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-8-31.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-8-31.png",
+    "reviewId": "R389"
+  },
+  {
+    "name": "tile-22-15",
+    "box": [
+      336,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-8-31.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-8-31.png",
+    "reviewId": "R390"
+  },
+  {
+    "name": "tile-23-15",
+    "box": [
+      352,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-8-31.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-8-31.png",
+    "reviewId": "R391"
+  },
+  {
+    "name": "tile-26-15",
+    "box": [
+      400,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-26-15",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R392"
+  },
+  {
+    "name": "tile-27-15",
+    "box": [
+      416,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-27-15",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R393"
+  },
+  {
+    "name": "tile-28-15",
+    "box": [
+      432,
+      224,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-28-15",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R394"
+  },
+  {
+    "name": "tile-1-16",
+    "box": [
+      0,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-tile-24-6.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-tile-24-6.png",
+    "reviewId": "R395"
+  },
+  {
+    "name": "tile-2-16",
+    "box": [
+      16,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: remastered-blacksmith-workbench-small-416.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/remastered-blacksmith/remastered-blacksmith-workbench-small-416.png",
+    "reviewId": "R396"
+  },
+  {
+    "name": "tile-3-16",
+    "box": [
+      32,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-16",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R397"
+  },
+  {
+    "name": "tile-4-16",
+    "box": [
+      48,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-16",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R398"
+  },
+  {
+    "name": "tile-5-16",
+    "box": [
+      64,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-16",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R399"
+  },
+  {
+    "name": "tile-11-16",
+    "box": [
+      160,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-tile-20-11.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-tile-20-11.png",
+    "reviewId": "R400"
+  },
+  {
+    "name": "tile-12-16",
+    "box": [
+      176,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-tile-21-11.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-tile-21-11.png",
+    "reviewId": "R401"
+  },
+  {
+    "name": "tile-13-16",
+    "box": [
+      192,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-tile-22-11.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-tile-22-11.png",
+    "reviewId": "R402"
+  },
+  {
+    "name": "tile-14-16",
+    "box": [
+      208,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-7-32.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-7-32.png",
+    "reviewId": "R403"
+  },
+  {
+    "name": "tile-15-16",
+    "box": [
+      224,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-8-32.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-8-32.png",
+    "reviewId": "R404"
+  },
+  {
+    "name": "tile-16-16",
+    "box": [
+      240,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-village-review-parts-tile-9-32.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-village-review-parts/fdr-village-review-parts-tile-9-32.png",
+    "reviewId": "R405"
+  },
+  {
+    "name": "tile-18-16",
+    "box": [
+      272,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-tile-9-16.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-tile-9-16.png",
+    "reviewId": "R406"
+  },
+  {
+    "name": "tile-19-16",
+    "box": [
+      288,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-tile-9-16.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-tile-9-16.png",
+    "reviewId": "R407"
+  },
+  {
+    "name": "tile-22-16",
+    "box": [
+      336,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-tile-9-16.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-tile-9-16.png",
+    "reviewId": "R408"
+  },
+  {
+    "name": "tile-23-16",
+    "box": [
+      352,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse the identical approved crop: fdr-caves-review-parts-tile-9-16.png",
+    "placement": null,
+    "reuseAsset": "top-down/native/fantasy-dreamland-world/processed/fdr-caves-review-parts/fdr-caves-review-parts-tile-9-16.png",
+    "reviewId": "R409"
+  },
+  {
+    "name": "tile-26-16",
+    "box": [
+      400,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R354. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R354",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        400,
+        192,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R410"
+  },
+  {
+    "name": "tile-27-16",
+    "box": [
+      416,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R355. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R355",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        416,
+        192,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R411"
+  },
+  {
+    "name": "tile-28-16",
+    "box": [
+      432,
+      240,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R356. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R356",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        432,
+        192,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R412"
+  },
+  {
+    "name": "tile-4-17",
+    "box": [
+      48,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-17",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R413"
+  },
+  {
+    "name": "tile-5-17",
+    "box": [
+      64,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-17",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R414"
+  },
+  {
+    "name": "tile-10-17",
+    "box": [
+      144,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-17",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R415"
+  },
+  {
+    "name": "tile-11-17",
+    "box": [
+      160,
+      256,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-17",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R416"
+  },
+  {
+    "name": "tile-3-18",
+    "box": [
+      32,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R413. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R413",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        48,
+        256,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R417"
+  },
+  {
+    "name": "tile-4-18",
+    "box": [
+      48,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-18",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R418"
+  },
+  {
+    "name": "tile-5-18",
+    "box": [
+      64,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-18",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R419"
+  },
+  {
+    "name": "tile-6-18",
+    "box": [
+      80,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R414. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R414",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        64,
+        256,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R420"
+  },
+  {
+    "name": "tile-9-18",
+    "box": [
+      128,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R415. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R415",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        144,
+        256,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R421"
+  },
+  {
+    "name": "tile-10-18",
+    "box": [
+      144,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-18",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R422"
+  },
+  {
+    "name": "tile-11-18",
+    "box": [
+      160,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-18",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R423"
+  },
+  {
+    "name": "tile-12-18",
+    "box": [
+      176,
+      272,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R416. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R416",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        160,
+        256,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R424"
+  },
+  {
+    "name": "tile-3-19",
+    "box": [
+      32,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-19",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R425"
+  },
+  {
+    "name": "tile-4-19",
+    "box": [
+      48,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R419. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R419",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        64,
+        272,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R426"
+  },
+  {
+    "name": "tile-5-19",
+    "box": [
+      64,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R418. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R418",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        48,
+        272,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R427"
+  },
+  {
+    "name": "tile-6-19",
+    "box": [
+      80,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-6-19",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R428"
+  },
+  {
+    "name": "tile-9-19",
+    "box": [
+      128,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-9-19",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R429"
+  },
+  {
+    "name": "tile-10-19",
+    "box": [
+      144,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R423. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R423",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        160,
+        272,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R430"
+  },
+  {
+    "name": "tile-11-19",
+    "box": [
+      160,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R422. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R422",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        144,
+        272,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R431"
+  },
+  {
+    "name": "tile-12-19",
+    "box": [
+      176,
+      288,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-19",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R432"
+  },
+  {
+    "name": "tile-3-20",
+    "box": [
+      32,
+      304,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-20",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R433"
+  },
+  {
+    "name": "tile-4-20",
+    "box": [
+      48,
+      304,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-20",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R434"
+  },
+  {
+    "name": "tile-5-20",
+    "box": [
+      64,
+      304,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-20",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R435"
+  },
+  {
+    "name": "tile-6-20",
+    "box": [
+      80,
+      304,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-6-20",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R436"
+  },
+  {
+    "name": "tile-9-20",
+    "box": [
+      128,
+      304,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R433. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R433",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        32,
+        304,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R437"
+  },
+  {
+    "name": "tile-10-20",
+    "box": [
+      144,
+      304,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-20",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R438"
+  },
+  {
+    "name": "tile-11-20",
+    "box": [
+      160,
+      304,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-20",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R439"
+  },
+  {
+    "name": "tile-12-20",
+    "box": [
+      176,
+      304,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R436. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R436",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        80,
+        304,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R440"
+  },
+  {
+    "name": "tile-3-21",
+    "box": [
+      32,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R433. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R433",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        32,
+        304,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R441"
+  },
+  {
+    "name": "tile-4-21",
+    "box": [
+      48,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R433. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R433",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        32,
+        304,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R442"
+  },
+  {
+    "name": "tile-5-21",
+    "box": [
+      64,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R436. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R436",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        80,
+        304,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R443"
+  },
+  {
+    "name": "tile-6-21",
+    "box": [
+      80,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R436. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R436",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        80,
+        304,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R444"
+  },
+  {
+    "name": "tile-9-21",
+    "box": [
+      128,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-9-21",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R445"
+  },
+  {
+    "name": "tile-10-21",
+    "box": [
+      144,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R433. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R433",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        32,
+        304,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R446"
+  },
+  {
+    "name": "tile-11-21",
+    "box": [
+      160,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R436. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R436",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        80,
+        304,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R447"
+  },
+  {
+    "name": "tile-12-21",
+    "box": [
+      176,
+      320,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-21",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R448"
+  },
+  {
+    "name": "tile-3-22",
+    "box": [
+      32,
+      336,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-22",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R449"
+  },
+  {
+    "name": "tile-4-22",
+    "box": [
+      48,
+      336,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-22",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R450"
+  },
+  {
+    "name": "tile-5-22",
+    "box": [
+      64,
+      336,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-22",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R451"
+  },
+  {
+    "name": "tile-6-22",
+    "box": [
+      80,
+      336,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-6-22",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R452"
+  },
+  {
+    "name": "tile-9-22",
+    "box": [
+      128,
+      336,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-9-22",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R453"
+  },
+  {
+    "name": "tile-10-22",
+    "box": [
+      144,
+      336,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-22",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R454"
+  },
+  {
+    "name": "tile-11-22",
+    "box": [
+      160,
+      336,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-22",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R455"
+  },
+  {
+    "name": "tile-12-22",
+    "box": [
+      176,
+      336,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-22",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R456"
+  },
+  {
+    "name": "tile-4-23",
+    "box": [
+      48,
+      352,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R453. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R453",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        128,
+        336,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R457"
+  },
+  {
+    "name": "tile-5-23",
+    "box": [
+      64,
+      352,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R456. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R456",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        176,
+        336,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R458"
+  },
+  {
+    "name": "tile-10-23",
+    "box": [
+      144,
+      352,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R453. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R453",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        128,
+        336,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R459"
+  },
+  {
+    "name": "tile-11-23",
+    "box": [
+      160,
+      352,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R456. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R456",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        176,
+        336,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R460"
+  },
+  {
+    "name": "tile-4-24",
+    "box": [
+      48,
+      368,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-24",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R461"
+  },
+  {
+    "name": "tile-5-24",
+    "box": [
+      64,
+      368,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-24",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R462"
+  },
+  {
+    "name": "tile-10-24",
+    "box": [
+      144,
+      368,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-24",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R463"
+  },
+  {
+    "name": "tile-11-24",
+    "box": [
+      160,
+      368,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-24",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R464"
+  },
+  {
+    "name": "tile-21-24",
+    "box": [
+      320,
+      368,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-21-24",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R465"
+  },
+  {
+    "name": "tile-22-24",
+    "box": [
+      336,
+      368,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-22-24",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R466"
+  },
+  {
+    "name": "tile-3-25",
+    "box": [
+      32,
+      384,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R461. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R461",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        48,
+        368,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R467"
+  },
+  {
+    "name": "tile-4-25",
+    "box": [
+      48,
+      384,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-25",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R468"
+  },
+  {
+    "name": "tile-5-25",
+    "box": [
+      64,
+      384,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-25",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R469"
+  },
+  {
+    "name": "tile-6-25",
+    "box": [
+      80,
+      384,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R462. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R462",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        64,
+        368,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R470"
+  },
+  {
+    "name": "tile-9-25",
+    "box": [
+      128,
+      384,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R463. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R463",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        144,
+        368,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R471"
+  },
+  {
+    "name": "tile-10-25",
+    "box": [
+      144,
+      384,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-25",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R472"
+  },
+  {
+    "name": "tile-11-25",
+    "box": [
+      160,
+      384,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-25",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R473"
+  },
+  {
+    "name": "tile-12-25",
+    "box": [
+      176,
+      384,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R464. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R464",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        160,
+        368,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R474"
+  },
+  {
+    "name": "tile-3-26",
+    "box": [
+      32,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-26",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R475"
+  },
+  {
+    "name": "tile-4-26",
+    "box": [
+      48,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R469. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R469",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        64,
+        384,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R476"
+  },
+  {
+    "name": "tile-5-26",
+    "box": [
+      64,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R468. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R468",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        48,
+        384,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R477"
+  },
+  {
+    "name": "tile-6-26",
+    "box": [
+      80,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-6-26",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R478"
+  },
+  {
+    "name": "tile-9-26",
+    "box": [
+      128,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-9-26",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R479"
+  },
+  {
+    "name": "tile-10-26",
+    "box": [
+      144,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R473. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R473",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        160,
+        384,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R480"
+  },
+  {
+    "name": "tile-11-26",
+    "box": [
+      160,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R472. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R472",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        144,
+        384,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R481"
+  },
+  {
+    "name": "tile-12-26",
+    "box": [
+      176,
+      400,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-26",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R482"
+  },
+  {
+    "name": "tile-4-27",
+    "box": [
+      48,
+      416,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R475. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R475",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        32,
+        400,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R483"
+  },
+  {
+    "name": "tile-5-27",
+    "box": [
+      64,
+      416,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R478. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R478",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        80,
+        400,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R484"
+  },
+  {
+    "name": "tile-10-27",
+    "box": [
+      144,
+      416,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R479. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R479",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        128,
+        400,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R485"
+  },
+  {
+    "name": "tile-11-27",
+    "box": [
+      160,
+      416,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R482. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R482",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        176,
+        400,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R486"
+  },
+  {
+    "name": "tile-3-28",
+    "box": [
+      32,
+      432,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-3-28",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R487"
+  },
+  {
+    "name": "tile-4-28",
+    "box": [
+      48,
+      432,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-4-28",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R488"
+  },
+  {
+    "name": "tile-5-28",
+    "box": [
+      64,
+      432,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-5-28",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R489"
+  },
+  {
+    "name": "tile-6-28",
+    "box": [
+      80,
+      432,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-6-28",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R490"
+  },
+  {
+    "name": "tile-9-28",
+    "box": [
+      128,
+      432,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-9-28",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R491"
+  },
+  {
+    "name": "tile-10-28",
+    "box": [
+      144,
+      432,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-10-28",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R492"
+  },
+  {
+    "name": "tile-11-28",
+    "box": [
+      160,
+      432,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-11-28",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R493"
+  },
+  {
+    "name": "tile-12-28",
+    "box": [
+      176,
+      432,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "tile-12-28",
+    "frame": null,
+    "notes": "Preserve the modular terrain or construction tile boundary.",
+    "placement": null,
+    "reviewId": "R494"
+  },
+  {
+    "name": "tile-4-29",
+    "box": [
+      48,
+      448,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R487. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R487",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        32,
+        432,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R495"
+  },
+  {
+    "name": "tile-5-29",
+    "box": [
+      64,
+      448,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R490. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R490",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        80,
+        432,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R496"
+  },
+  {
+    "name": "tile-10-29",
+    "box": [
+      144,
+      448,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R491. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R491",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        128,
+        432,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R497"
+  },
+  {
+    "name": "tile-11-29",
+    "box": [
+      160,
+      448,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse R494. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "R",
+      "reviewId": "R494",
+      "source": "top-down/native/fantasy-dreamland-world/tilesets/sprites/fdr-grasslands-source-e01a7ae38bc7.png",
+      "box": [
+        176,
+        432,
+        16,
+        16
+      ]
+    },
+    "reviewId": "R498"
+  }
+]

@@ -1,0 +1,2863 @@
+[
+  {
+    "name": "light-floor-1-1",
+    "box": [
+      0,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "light-floor-1-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "light-floor-2-1",
+    "box": [
+      16,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "light-floor-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "light-floor-3-1",
+    "box": [
+      32,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "light-floor-3-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "light-floor-1-2",
+    "box": [
+      0,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "light-floor-1-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "light-floor-2-2",
+    "box": [
+      16,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "light-floor-2-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "light-floor-3-2",
+    "box": [
+      32,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "light-floor-3-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "light-floor-1-3",
+    "box": [
+      0,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "light-floor-1-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "light-floor-2-3",
+    "box": [
+      16,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "light-floor-2-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "light-floor-3-3",
+    "box": [
+      32,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "light-floor-3-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "light-floor-1-4",
+    "box": [
+      0,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "light-floor-1-4",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "light-floor-2-4",
+    "box": [
+      16,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "light-floor-2-4",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "light-floor-3-4",
+    "box": [
+      32,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "light-floor-3-4",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "light-floor-edge-0",
+    "box": [
+      0,
+      64,
+      16,
+      25
+    ],
+    "kind": "part",
+    "group": "light-floor-edge-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "light-floor-edge-16",
+    "box": [
+      16,
+      64,
+      16,
+      25
+    ],
+    "kind": "part",
+    "group": "light-floor-edge-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "light-floor-edge-32",
+    "box": [
+      32,
+      64,
+      16,
+      25
+    ],
+    "kind": "part",
+    "group": "light-floor-edge-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "light-stairs-left-assembly",
+    "box": [
+      64,
+      16,
+      48,
+      72
+    ],
+    "kind": "part",
+    "group": "light-stairs-left-assembly",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "light-stairs-right-assembly",
+    "box": [
+      144,
+      16,
+      48,
+      72
+    ],
+    "kind": "part",
+    "group": "light-stairs-right-assembly",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "light-stairs-top",
+    "box": [
+      112,
+      0,
+      32,
+      48
+    ],
+    "kind": "part",
+    "group": "light-stairs-top",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "light-landing",
+    "box": [
+      112,
+      48,
+      32,
+      41
+    ],
+    "kind": "part",
+    "group": "light-landing",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "light-platform-top",
+    "box": [
+      200,
+      8,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "light-platform-top",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "light-platform-middle",
+    "box": [
+      200,
+      72,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "light-platform-middle",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "light-platform-bottom-left",
+    "box": [
+      96,
+      112,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S20. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S20",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-sanctuary-source-a8da6b0b0915.png",
+      "box": [
+        200,
+        8,
+        48,
+        48
+      ]
+    }
+  },
+  {
+    "name": "light-platform-bottom-right",
+    "box": [
+      144,
+      112,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S21. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S21",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-sanctuary-source-a8da6b0b0915.png",
+      "box": [
+        200,
+        72,
+        48,
+        48
+      ]
+    }
+  },
+  {
+    "name": "light-horn",
+    "box": [
+      8,
+      112,
+      32,
+      40
+    ],
+    "kind": "part",
+    "group": "light-horn",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "light-cross-left",
+    "box": [
+      48,
+      128,
+      16,
+      24
+    ],
+    "kind": "part",
+    "group": "light-cross-left",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "light-cross-right",
+    "box": [
+      64,
+      128,
+      16,
+      24
+    ],
+    "kind": "part",
+    "group": "light-cross-right",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "light-ladder",
+    "box": [
+      80,
+      128,
+      16,
+      24
+    ],
+    "kind": "part",
+    "group": "light-ladder",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "light-round-pillar-top",
+    "box": [
+      80,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "light-round-pillar-top",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "light-round-pillar-bottom",
+    "box": [
+      80,
+      198,
+      16,
+      26
+    ],
+    "kind": "part",
+    "group": "light-round-pillar-bottom",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "light-plain-floor-1-1",
+    "box": [
+      0,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "light-plain-floor-1-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "light-plain-floor-2-1",
+    "box": [
+      16,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "light-plain-floor-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "light-treasure-1-1",
+    "box": [
+      208,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "light-treasure-1-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "light-treasure-2-1",
+    "box": [
+      224,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "light-treasure-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "light-treasure-1-2",
+    "box": [
+      208,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "light-treasure-1-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "light-treasure-2-2",
+    "box": [
+      224,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "light-treasure-2-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "light-pillar-4-176",
+    "box": [
+      4,
+      176,
+      8,
+      16
+    ],
+    "kind": "part",
+    "group": "light-pillar-4-176",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "light-pillar-12-176",
+    "box": [
+      12,
+      176,
+      8,
+      16
+    ],
+    "kind": "part",
+    "group": "light-pillar-12-176",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "light-pillar-20-176",
+    "box": [
+      20,
+      176,
+      8,
+      16
+    ],
+    "kind": "part",
+    "group": "light-pillar-20-176",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "light-pillar-28-176",
+    "box": [
+      28,
+      176,
+      8,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S37. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S37",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-sanctuary-source-a8da6b0b0915.png",
+      "box": [
+        12,
+        176,
+        8,
+        16
+      ]
+    }
+  },
+  {
+    "name": "light-pillar-36-176",
+    "box": [
+      36,
+      176,
+      8,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S36. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S36",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-sanctuary-source-a8da6b0b0915.png",
+      "box": [
+        4,
+        176,
+        8,
+        16
+      ]
+    }
+  },
+  {
+    "name": "light-pillar-52-176",
+    "box": [
+      52,
+      176,
+      8,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S38. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S38",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-sanctuary-source-a8da6b0b0915.png",
+      "box": [
+        20,
+        176,
+        8,
+        16
+      ]
+    }
+  },
+  {
+    "name": "light-pillar-60-176",
+    "box": [
+      60,
+      176,
+      8,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S37. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S37",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-sanctuary-source-a8da6b0b0915.png",
+      "box": [
+        12,
+        176,
+        8,
+        16
+      ]
+    }
+  },
+  {
+    "name": "light-pillar-68-176",
+    "box": [
+      68,
+      176,
+      8,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S38. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S38",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-sanctuary-source-a8da6b0b0915.png",
+      "box": [
+        20,
+        176,
+        8,
+        16
+      ]
+    }
+  },
+  {
+    "name": "light-pillar-4-192",
+    "box": [
+      4,
+      192,
+      8,
+      16
+    ],
+    "kind": "part",
+    "group": "light-pillar-4-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "light-pillar-36-192",
+    "box": [
+      36,
+      192,
+      8,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S44. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S44",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-sanctuary-source-a8da6b0b0915.png",
+      "box": [
+        4,
+        192,
+        8,
+        16
+      ]
+    }
+  },
+  {
+    "name": "light-pillar-52-192",
+    "box": [
+      52,
+      192,
+      8,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S36. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S36",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-sanctuary-source-a8da6b0b0915.png",
+      "box": [
+        4,
+        176,
+        8,
+        16
+      ]
+    }
+  },
+  {
+    "name": "light-pillar-4-208",
+    "box": [
+      4,
+      208,
+      8,
+      16
+    ],
+    "kind": "part",
+    "group": "light-pillar-4-208",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "light-pillar-12-208",
+    "box": [
+      12,
+      208,
+      8,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S37. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S37",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-sanctuary-source-a8da6b0b0915.png",
+      "box": [
+        12,
+        176,
+        8,
+        16
+      ]
+    }
+  },
+  {
+    "name": "light-pillar-20-208",
+    "box": [
+      20,
+      208,
+      8,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S38. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S38",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-sanctuary-source-a8da6b0b0915.png",
+      "box": [
+        20,
+        176,
+        8,
+        16
+      ]
+    }
+  },
+  {
+    "name": "light-pillar-28-208",
+    "box": [
+      28,
+      208,
+      8,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S37. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S37",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-sanctuary-source-a8da6b0b0915.png",
+      "box": [
+        12,
+        176,
+        8,
+        16
+      ]
+    }
+  },
+  {
+    "name": "light-pillar-36-208",
+    "box": [
+      36,
+      208,
+      8,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S47. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S47",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-sanctuary-source-a8da6b0b0915.png",
+      "box": [
+        4,
+        208,
+        8,
+        16
+      ]
+    }
+  },
+  {
+    "name": "light-pillar-52-208",
+    "box": [
+      52,
+      208,
+      8,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S47. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S47",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-sanctuary-source-a8da6b0b0915.png",
+      "box": [
+        4,
+        208,
+        8,
+        16
+      ]
+    }
+  },
+  {
+    "name": "light-basin-96-176",
+    "box": [
+      96,
+      176,
+      32,
+      28
+    ],
+    "kind": "part",
+    "group": "light-basin-96-176",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "light-basin-96-204",
+    "box": [
+      96,
+      204,
+      32,
+      20
+    ],
+    "kind": "part",
+    "group": "light-basin-96-204",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "light-basin-128-176",
+    "box": [
+      128,
+      176,
+      32,
+      28
+    ],
+    "kind": "part",
+    "group": "light-basin-128-176",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "light-basin-128-204",
+    "box": [
+      128,
+      204,
+      32,
+      20
+    ],
+    "kind": "part",
+    "group": "light-basin-128-204",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "light-basin-160-176",
+    "box": [
+      160,
+      176,
+      32,
+      28
+    ],
+    "kind": "part",
+    "group": "light-basin-160-176",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "light-basin-160-204",
+    "box": [
+      160,
+      204,
+      32,
+      20
+    ],
+    "kind": "part",
+    "group": "light-basin-160-204",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "light-rune-animation-1",
+    "box": [
+      0,
+      256,
+      128,
+      16
+    ],
+    "kind": "part",
+    "group": "light-rune-animation-1",
+    "frame": null,
+    "notes": "8 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        0,
+        256,
+        16,
+        16
+      ],
+      [
+        16,
+        256,
+        16,
+        16
+      ],
+      [
+        32,
+        256,
+        16,
+        16
+      ],
+      [
+        48,
+        256,
+        16,
+        16
+      ],
+      [
+        64,
+        256,
+        16,
+        16
+      ],
+      [
+        80,
+        256,
+        16,
+        16
+      ],
+      [
+        96,
+        256,
+        16,
+        16
+      ],
+      [
+        112,
+        256,
+        16,
+        16
+      ]
+    ]
+  },
+  {
+    "name": "light-rune-animation-2",
+    "box": [
+      0,
+      272,
+      128,
+      16
+    ],
+    "kind": "part",
+    "group": "light-rune-animation-2",
+    "frame": null,
+    "notes": "8 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        0,
+        272,
+        16,
+        16
+      ],
+      [
+        16,
+        272,
+        16,
+        16
+      ],
+      [
+        32,
+        272,
+        16,
+        16
+      ],
+      [
+        48,
+        272,
+        16,
+        16
+      ],
+      [
+        64,
+        272,
+        16,
+        16
+      ],
+      [
+        80,
+        272,
+        16,
+        16
+      ],
+      [
+        96,
+        272,
+        16,
+        16
+      ],
+      [
+        112,
+        272,
+        16,
+        16
+      ]
+    ]
+  },
+  {
+    "name": "light-rune-animation-3",
+    "box": [
+      0,
+      288,
+      128,
+      16
+    ],
+    "kind": "part",
+    "group": "light-rune-animation-3",
+    "frame": null,
+    "notes": "8 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        0,
+        288,
+        16,
+        16
+      ],
+      [
+        16,
+        288,
+        16,
+        16
+      ],
+      [
+        32,
+        288,
+        16,
+        16
+      ],
+      [
+        48,
+        288,
+        16,
+        16
+      ],
+      [
+        64,
+        288,
+        16,
+        16
+      ],
+      [
+        80,
+        288,
+        16,
+        16
+      ],
+      [
+        96,
+        288,
+        16,
+        16
+      ],
+      [
+        112,
+        288,
+        16,
+        16
+      ]
+    ]
+  },
+  {
+    "name": "light-rune-animation-4",
+    "box": [
+      0,
+      304,
+      128,
+      16
+    ],
+    "kind": "part",
+    "group": "light-rune-animation-4",
+    "frame": null,
+    "notes": "8 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        0,
+        304,
+        16,
+        16
+      ],
+      [
+        16,
+        304,
+        16,
+        16
+      ],
+      [
+        32,
+        304,
+        16,
+        16
+      ],
+      [
+        48,
+        304,
+        16,
+        16
+      ],
+      [
+        64,
+        304,
+        16,
+        16
+      ],
+      [
+        80,
+        304,
+        16,
+        16
+      ],
+      [
+        96,
+        304,
+        16,
+        16
+      ],
+      [
+        112,
+        304,
+        16,
+        16
+      ]
+    ]
+  },
+  {
+    "name": "light-portal-animation",
+    "box": [
+      128,
+      256,
+      128,
+      48
+    ],
+    "kind": "part",
+    "group": "light-portal-animation",
+    "frame": null,
+    "notes": "8 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        128,
+        256,
+        16,
+        48
+      ],
+      [
+        144,
+        256,
+        16,
+        48
+      ],
+      [
+        160,
+        256,
+        16,
+        48
+      ],
+      [
+        176,
+        256,
+        16,
+        48
+      ],
+      [
+        192,
+        256,
+        16,
+        48
+      ],
+      [
+        208,
+        256,
+        16,
+        48
+      ],
+      [
+        224,
+        256,
+        16,
+        48
+      ],
+      [
+        240,
+        256,
+        16,
+        48
+      ]
+    ]
+  },
+  {
+    "name": "light-flame-raised-animation",
+    "box": [
+      0,
+      320,
+      128,
+      32
+    ],
+    "kind": "part",
+    "group": "light-flame-raised-animation",
+    "frame": null,
+    "notes": "8 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        0,
+        320,
+        16,
+        32
+      ],
+      [
+        16,
+        320,
+        16,
+        32
+      ],
+      [
+        32,
+        320,
+        16,
+        32
+      ],
+      [
+        48,
+        320,
+        16,
+        32
+      ],
+      [
+        64,
+        320,
+        16,
+        32
+      ],
+      [
+        80,
+        320,
+        16,
+        32
+      ],
+      [
+        96,
+        320,
+        16,
+        32
+      ],
+      [
+        112,
+        320,
+        16,
+        32
+      ]
+    ]
+  },
+  {
+    "name": "light-flame-low-animation",
+    "box": [
+      128,
+      320,
+      128,
+      32
+    ],
+    "kind": "part",
+    "group": "light-flame-low-animation",
+    "frame": null,
+    "notes": "8 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        128,
+        320,
+        16,
+        32
+      ],
+      [
+        144,
+        320,
+        16,
+        32
+      ],
+      [
+        160,
+        320,
+        16,
+        32
+      ],
+      [
+        176,
+        320,
+        16,
+        32
+      ],
+      [
+        192,
+        320,
+        16,
+        32
+      ],
+      [
+        208,
+        320,
+        16,
+        32
+      ],
+      [
+        224,
+        320,
+        16,
+        32
+      ],
+      [
+        240,
+        320,
+        16,
+        32
+      ]
+    ]
+  },
+  {
+    "name": "dark-floor-1-1",
+    "box": [
+      256,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "dark-floor-1-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "dark-floor-2-1",
+    "box": [
+      272,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "dark-floor-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "dark-floor-3-1",
+    "box": [
+      288,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "dark-floor-3-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "dark-floor-1-2",
+    "box": [
+      256,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "dark-floor-1-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "dark-floor-2-2",
+    "box": [
+      272,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "dark-floor-2-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "dark-floor-3-2",
+    "box": [
+      288,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "dark-floor-3-2",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "dark-floor-1-3",
+    "box": [
+      256,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "dark-floor-1-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "dark-floor-2-3",
+    "box": [
+      272,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "dark-floor-2-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "dark-floor-3-3",
+    "box": [
+      288,
+      32,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "dark-floor-3-3",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "dark-floor-1-4",
+    "box": [
+      256,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "dark-floor-1-4",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "dark-floor-2-4",
+    "box": [
+      272,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "dark-floor-2-4",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "dark-floor-3-4",
+    "box": [
+      288,
+      48,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "dark-floor-3-4",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "dark-floor-edge-0",
+    "box": [
+      256,
+      64,
+      16,
+      25
+    ],
+    "kind": "part",
+    "group": "dark-floor-edge-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "dark-floor-edge-16",
+    "box": [
+      272,
+      64,
+      16,
+      25
+    ],
+    "kind": "part",
+    "group": "dark-floor-edge-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "dark-floor-edge-32",
+    "box": [
+      288,
+      64,
+      16,
+      25
+    ],
+    "kind": "part",
+    "group": "dark-floor-edge-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "dark-stairs-left-assembly",
+    "box": [
+      320,
+      16,
+      48,
+      72
+    ],
+    "kind": "part",
+    "group": "dark-stairs-left-assembly",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "dark-stairs-right-assembly",
+    "box": [
+      400,
+      16,
+      48,
+      72
+    ],
+    "kind": "part",
+    "group": "dark-stairs-right-assembly",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "dark-stairs-top",
+    "box": [
+      368,
+      0,
+      32,
+      48
+    ],
+    "kind": "part",
+    "group": "dark-stairs-top",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "dark-landing",
+    "box": [
+      368,
+      48,
+      32,
+      41
+    ],
+    "kind": "part",
+    "group": "dark-landing",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "dark-platform-top",
+    "box": [
+      456,
+      8,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "dark-platform-top",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "dark-platform-middle",
+    "box": [
+      456,
+      72,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "dark-platform-middle",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "dark-platform-bottom-left",
+    "box": [
+      352,
+      112,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S85. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S85",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-sanctuary-source-a8da6b0b0915.png",
+      "box": [
+        456,
+        8,
+        48,
+        48
+      ]
+    }
+  },
+  {
+    "name": "dark-platform-bottom-right",
+    "box": [
+      400,
+      112,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S86. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S86",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-sanctuary-source-a8da6b0b0915.png",
+      "box": [
+        456,
+        72,
+        48,
+        48
+      ]
+    }
+  },
+  {
+    "name": "dark-horn",
+    "box": [
+      264,
+      112,
+      32,
+      40
+    ],
+    "kind": "part",
+    "group": "dark-horn",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "dark-cross-left",
+    "box": [
+      304,
+      128,
+      16,
+      24
+    ],
+    "kind": "part",
+    "group": "dark-cross-left",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "dark-cross-right",
+    "box": [
+      320,
+      128,
+      16,
+      24
+    ],
+    "kind": "part",
+    "group": "dark-cross-right",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "dark-ladder",
+    "box": [
+      336,
+      128,
+      16,
+      24
+    ],
+    "kind": "part",
+    "group": "dark-ladder",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "dark-round-pillar-top",
+    "box": [
+      336,
+      176,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "dark-round-pillar-top",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "dark-round-pillar-bottom",
+    "box": [
+      336,
+      198,
+      16,
+      26
+    ],
+    "kind": "part",
+    "group": "dark-round-pillar-bottom",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "dark-plain-floor-1-1",
+    "box": [
+      256,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "dark-plain-floor-1-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "dark-plain-floor-2-1",
+    "box": [
+      272,
+      96,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "dark-plain-floor-2-1",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "dark-treasure-1-1",
+    "box": [
+      464,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S32. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S32",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-sanctuary-source-a8da6b0b0915.png",
+      "box": [
+        208,
+        144,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "dark-treasure-2-1",
+    "box": [
+      480,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S33. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S33",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-sanctuary-source-a8da6b0b0915.png",
+      "box": [
+        224,
+        144,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "dark-treasure-1-2",
+    "box": [
+      464,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S34. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S34",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-sanctuary-source-a8da6b0b0915.png",
+      "box": [
+        208,
+        160,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "dark-treasure-2-2",
+    "box": [
+      480,
+      160,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S35. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S35",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-sanctuary-source-a8da6b0b0915.png",
+      "box": [
+        224,
+        160,
+        16,
+        16
+      ]
+    }
+  },
+  {
+    "name": "dark-pillar-4-176",
+    "box": [
+      260,
+      176,
+      8,
+      16
+    ],
+    "kind": "part",
+    "group": "dark-pillar-4-176",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "dark-pillar-12-176",
+    "box": [
+      268,
+      176,
+      8,
+      16
+    ],
+    "kind": "part",
+    "group": "dark-pillar-12-176",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "dark-pillar-20-176",
+    "box": [
+      276,
+      176,
+      8,
+      16
+    ],
+    "kind": "part",
+    "group": "dark-pillar-20-176",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "dark-pillar-28-176",
+    "box": [
+      284,
+      176,
+      8,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S102. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S102",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-sanctuary-source-a8da6b0b0915.png",
+      "box": [
+        268,
+        176,
+        8,
+        16
+      ]
+    }
+  },
+  {
+    "name": "dark-pillar-36-176",
+    "box": [
+      292,
+      176,
+      8,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S101. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S101",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-sanctuary-source-a8da6b0b0915.png",
+      "box": [
+        260,
+        176,
+        8,
+        16
+      ]
+    }
+  },
+  {
+    "name": "dark-pillar-52-176",
+    "box": [
+      308,
+      176,
+      8,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S103. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S103",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-sanctuary-source-a8da6b0b0915.png",
+      "box": [
+        276,
+        176,
+        8,
+        16
+      ]
+    }
+  },
+  {
+    "name": "dark-pillar-60-176",
+    "box": [
+      316,
+      176,
+      8,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S102. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S102",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-sanctuary-source-a8da6b0b0915.png",
+      "box": [
+        268,
+        176,
+        8,
+        16
+      ]
+    }
+  },
+  {
+    "name": "dark-pillar-68-176",
+    "box": [
+      324,
+      176,
+      8,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S103. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S103",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-sanctuary-source-a8da6b0b0915.png",
+      "box": [
+        276,
+        176,
+        8,
+        16
+      ]
+    }
+  },
+  {
+    "name": "dark-pillar-4-192",
+    "box": [
+      260,
+      192,
+      8,
+      16
+    ],
+    "kind": "part",
+    "group": "dark-pillar-4-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "dark-pillar-36-192",
+    "box": [
+      292,
+      192,
+      8,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S109. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S109",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-sanctuary-source-a8da6b0b0915.png",
+      "box": [
+        260,
+        192,
+        8,
+        16
+      ]
+    }
+  },
+  {
+    "name": "dark-pillar-52-192",
+    "box": [
+      308,
+      192,
+      8,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S101. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S101",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-sanctuary-source-a8da6b0b0915.png",
+      "box": [
+        260,
+        176,
+        8,
+        16
+      ]
+    }
+  },
+  {
+    "name": "dark-pillar-4-208",
+    "box": [
+      260,
+      208,
+      8,
+      16
+    ],
+    "kind": "part",
+    "group": "dark-pillar-4-208",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "dark-pillar-12-208",
+    "box": [
+      268,
+      208,
+      8,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S102. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S102",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-sanctuary-source-a8da6b0b0915.png",
+      "box": [
+        268,
+        176,
+        8,
+        16
+      ]
+    }
+  },
+  {
+    "name": "dark-pillar-20-208",
+    "box": [
+      276,
+      208,
+      8,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S103. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S103",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-sanctuary-source-a8da6b0b0915.png",
+      "box": [
+        276,
+        176,
+        8,
+        16
+      ]
+    }
+  },
+  {
+    "name": "dark-pillar-28-208",
+    "box": [
+      284,
+      208,
+      8,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S102. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S102",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-sanctuary-source-a8da6b0b0915.png",
+      "box": [
+        268,
+        176,
+        8,
+        16
+      ]
+    }
+  },
+  {
+    "name": "dark-pillar-36-208",
+    "box": [
+      292,
+      208,
+      8,
+      16
+    ],
+    "kind": "part",
+    "group": "dark-pillar-36-208",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "dark-pillar-52-208",
+    "box": [
+      308,
+      208,
+      8,
+      16
+    ],
+    "kind": "part",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse S116. The complete crop is identical.",
+    "placement": null,
+    "reuseProposal": {
+      "sheetId": "S",
+      "reviewId": "S116",
+      "source": "top-down/native/rogue-adventure-world/tilesets/sprites/ra-sanctuary-source-a8da6b0b0915.png",
+      "box": [
+        292,
+        208,
+        8,
+        16
+      ]
+    }
+  },
+  {
+    "name": "dark-basin-96-176",
+    "box": [
+      352,
+      176,
+      32,
+      28
+    ],
+    "kind": "part",
+    "group": "dark-basin-96-176",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "dark-basin-96-204",
+    "box": [
+      352,
+      204,
+      32,
+      20
+    ],
+    "kind": "part",
+    "group": "dark-basin-96-204",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "dark-basin-128-176",
+    "box": [
+      384,
+      176,
+      32,
+      28
+    ],
+    "kind": "part",
+    "group": "dark-basin-128-176",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "dark-basin-128-204",
+    "box": [
+      384,
+      204,
+      32,
+      20
+    ],
+    "kind": "part",
+    "group": "dark-basin-128-204",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "dark-basin-160-176",
+    "box": [
+      416,
+      176,
+      32,
+      28
+    ],
+    "kind": "part",
+    "group": "dark-basin-160-176",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "dark-basin-160-204",
+    "box": [
+      416,
+      204,
+      32,
+      20
+    ],
+    "kind": "part",
+    "group": "dark-basin-160-204",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null
+  },
+  {
+    "name": "dark-rune-animation-1",
+    "box": [
+      256,
+      256,
+      128,
+      16
+    ],
+    "kind": "part",
+    "group": "dark-rune-animation-1",
+    "frame": null,
+    "notes": "8 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        256,
+        256,
+        16,
+        16
+      ],
+      [
+        272,
+        256,
+        16,
+        16
+      ],
+      [
+        288,
+        256,
+        16,
+        16
+      ],
+      [
+        304,
+        256,
+        16,
+        16
+      ],
+      [
+        320,
+        256,
+        16,
+        16
+      ],
+      [
+        336,
+        256,
+        16,
+        16
+      ],
+      [
+        352,
+        256,
+        16,
+        16
+      ],
+      [
+        368,
+        256,
+        16,
+        16
+      ]
+    ]
+  },
+  {
+    "name": "dark-rune-animation-2",
+    "box": [
+      256,
+      272,
+      128,
+      16
+    ],
+    "kind": "part",
+    "group": "dark-rune-animation-2",
+    "frame": null,
+    "notes": "8 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        256,
+        272,
+        16,
+        16
+      ],
+      [
+        272,
+        272,
+        16,
+        16
+      ],
+      [
+        288,
+        272,
+        16,
+        16
+      ],
+      [
+        304,
+        272,
+        16,
+        16
+      ],
+      [
+        320,
+        272,
+        16,
+        16
+      ],
+      [
+        336,
+        272,
+        16,
+        16
+      ],
+      [
+        352,
+        272,
+        16,
+        16
+      ],
+      [
+        368,
+        272,
+        16,
+        16
+      ]
+    ]
+  },
+  {
+    "name": "dark-rune-animation-3",
+    "box": [
+      256,
+      288,
+      128,
+      16
+    ],
+    "kind": "part",
+    "group": "dark-rune-animation-3",
+    "frame": null,
+    "notes": "8 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        256,
+        288,
+        16,
+        16
+      ],
+      [
+        272,
+        288,
+        16,
+        16
+      ],
+      [
+        288,
+        288,
+        16,
+        16
+      ],
+      [
+        304,
+        288,
+        16,
+        16
+      ],
+      [
+        320,
+        288,
+        16,
+        16
+      ],
+      [
+        336,
+        288,
+        16,
+        16
+      ],
+      [
+        352,
+        288,
+        16,
+        16
+      ],
+      [
+        368,
+        288,
+        16,
+        16
+      ]
+    ]
+  },
+  {
+    "name": "dark-rune-animation-4",
+    "box": [
+      256,
+      304,
+      128,
+      16
+    ],
+    "kind": "part",
+    "group": "dark-rune-animation-4",
+    "frame": null,
+    "notes": "8 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        256,
+        304,
+        16,
+        16
+      ],
+      [
+        272,
+        304,
+        16,
+        16
+      ],
+      [
+        288,
+        304,
+        16,
+        16
+      ],
+      [
+        304,
+        304,
+        16,
+        16
+      ],
+      [
+        320,
+        304,
+        16,
+        16
+      ],
+      [
+        336,
+        304,
+        16,
+        16
+      ],
+      [
+        352,
+        304,
+        16,
+        16
+      ],
+      [
+        368,
+        304,
+        16,
+        16
+      ]
+    ]
+  },
+  {
+    "name": "dark-portal-animation",
+    "box": [
+      384,
+      256,
+      128,
+      48
+    ],
+    "kind": "part",
+    "group": "dark-portal-animation",
+    "frame": null,
+    "notes": "8 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        384,
+        256,
+        16,
+        48
+      ],
+      [
+        400,
+        256,
+        16,
+        48
+      ],
+      [
+        416,
+        256,
+        16,
+        48
+      ],
+      [
+        432,
+        256,
+        16,
+        48
+      ],
+      [
+        448,
+        256,
+        16,
+        48
+      ],
+      [
+        464,
+        256,
+        16,
+        48
+      ],
+      [
+        480,
+        256,
+        16,
+        48
+      ],
+      [
+        496,
+        256,
+        16,
+        48
+      ]
+    ]
+  },
+  {
+    "name": "dark-flame-raised-animation",
+    "box": [
+      256,
+      320,
+      128,
+      32
+    ],
+    "kind": "part",
+    "group": "dark-flame-raised-animation",
+    "frame": null,
+    "notes": "8 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        256,
+        320,
+        16,
+        32
+      ],
+      [
+        272,
+        320,
+        16,
+        32
+      ],
+      [
+        288,
+        320,
+        16,
+        32
+      ],
+      [
+        304,
+        320,
+        16,
+        32
+      ],
+      [
+        320,
+        320,
+        16,
+        32
+      ],
+      [
+        336,
+        320,
+        16,
+        32
+      ],
+      [
+        352,
+        320,
+        16,
+        32
+      ],
+      [
+        368,
+        320,
+        16,
+        32
+      ]
+    ]
+  },
+  {
+    "name": "dark-flame-low-animation",
+    "box": [
+      384,
+      320,
+      128,
+      32
+    ],
+    "kind": "part",
+    "group": "dark-flame-low-animation",
+    "frame": null,
+    "notes": "8 animation frames. Preserve the same boundary in each frame.",
+    "placement": null,
+    "frameBoxes": [
+      [
+        384,
+        320,
+        16,
+        32
+      ],
+      [
+        400,
+        320,
+        16,
+        32
+      ],
+      [
+        416,
+        320,
+        16,
+        32
+      ],
+      [
+        432,
+        320,
+        16,
+        32
+      ],
+      [
+        448,
+        320,
+        16,
+        32
+      ],
+      [
+        464,
+        320,
+        16,
+        32
+      ],
+      [
+        480,
+        320,
+        16,
+        32
+      ],
+      [
+        496,
+        320,
+        16,
+        32
+      ]
+    ]
+  }
+]

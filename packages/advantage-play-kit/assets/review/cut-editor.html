@@ -1,0 +1,822 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cut editor</title>
+<style>
+:root { color-scheme: dark; --bg: #10151c; --panel: #18212b; --panel-2: #202c38;
+  --text: #ecf3f8; --muted: #9db0bd; --line: #344654; --accent: #78d5bd;
+  --approved: #49c891; --rejected: #f07979; --warning: #f2c76e; }
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body { margin: 0; display: flex; flex-direction: column; background: var(--bg); color: var(--text);
+  font: 13px/1.4 system-ui, sans-serif; }
+a { color: var(--accent); }
+button, input, select, textarea { font: inherit; color: var(--text); }
+button, .button { border: 1px solid var(--line); border-radius: 7px; background: var(--panel-2);
+  cursor: pointer; padding: 6px 10px; }
+button:hover, .button:hover { border-color: var(--accent); }
+button.active { border-color: var(--accent); background: #1c3a36; color: var(--accent); }
+button.danger:hover { border-color: var(--rejected); color: var(--rejected); }
+button:disabled { opacity: .45; cursor: default; }
+input, select, textarea { background: #0c1116; border: 1px solid var(--line); border-radius: 6px; padding: 5px 7px; }
+textarea { width: 100%; min-height: 52px; resize: vertical; }
+label { display: grid; gap: 3px; color: var(--muted); font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+header { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between;
+  padding: 10px 14px; background: #121a22ee; border-bottom: 1px solid var(--line); }
+header h1 { margin: 0; font-size: 16px; }
+header p { margin: 0; color: var(--muted); }
+.brand { color: var(--muted); text-decoration: none; font-weight: 700; margin-right: 8px; }
+.row { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.hidden-file { display: none; }
+main { flex: 1; min-height: 0; display: grid; grid-template-columns: 1fr 320px; }
+#stage { position: relative; min-width: 0; background: #0a0e13;
+  background-image: linear-gradient(45deg, #121820 25%, transparent 25%),
+    linear-gradient(-45deg, #121820 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #121820 75%),
+    linear-gradient(-45deg, transparent 75%, #121820 75%);
+  background-size: 24px 24px; background-position: 0 0, 0 12px, 12px -12px, -12px 0; }
+canvas { display: block; width: 100%; height: 100%; cursor: crosshair; }
+#stage.pan canvas, #stage.space canvas { cursor: grab; }
+#stage.panning canvas { cursor: grabbing; }
+#hint { position: absolute; left: 10px; bottom: 8px; color: var(--muted); font: 12px/1.3 ui-monospace, monospace;
+  background: #10151ccc; padding: 4px 8px; border-radius: 6px; pointer-events: none; }
+aside { display: flex; flex-direction: column; min-height: 0; border-left: 1px solid var(--line); background: var(--panel); }
+.form { display: grid; gap: 8px; padding: 10px 12px; border-bottom: 1px solid var(--line); }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.form-grid .span2 { grid-column: 1 / -1; }
+#box-list { flex: 1; min-height: 0; overflow: auto; }
+#box-list button.item { display: grid; grid-template-columns: 28px 1fr auto; gap: 6px; width: 100%;
+  text-align: left; border: 0; border-bottom: 1px solid #24313c; border-radius: 0; background: transparent; padding: 7px 10px; }
+#box-list button.item:hover { background: #1d2832; }
+#box-list button.item.selected { background: #1c3a36; }
+#box-list .n { color: var(--warning); font-weight: 800; }
+#box-list .nm { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#box-list .bx { color: var(--muted); font: 11px ui-monospace, monospace; }
+.status { padding: 8px 12px; color: var(--muted); font-size: 11px; border-top: 1px solid var(--line); }
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <a class="brand" href="index.html">Asset review</a>
+    <h1>Cut editor</h1>
+    <p>Zoom, pan, draw a box, name it, delete it. Save writes cutlist JSON. See <a href="CUT-WORKFLOW.md">CUT-WORKFLOW.md</a>.</p>
+  </div>
+  <div class="row">
+    <button type="button" id="load-sewers">Load sewers</button>
+    <button type="button" id="load-td02">Load TD 02-a</button>
+    <button type="button" id="load-dungeon-b">Load dungeon-b</button>
+    <button type="button" id="load-dungeon-c">Load dungeon-c</button>
+    <button type="button" id="load-dungeon-a5-1">Load dungeon-a5-1</button>
+    <button type="button" id="load-dungeon-a5-2">Load dungeon-a5-2</button>
+    <button type="button" id="load-door01">Load door01</button>
+    <button type="button" id="load-door02">Load door02</button>
+    <button type="button" id="load-animated">Load animated</button>
+    <button type="button" id="load-cellar">Load cellar</button>
+    <label class="button" for="open-sheet">Open sheet</label>
+    <input id="open-sheet" class="hidden-file" type="file" accept="image/png,image/*">
+    <button type="button" id="pick-cutlist">Open cutlist</button>
+    <input id="open-cutlist" class="hidden-file" type="file" accept="application/json,.json">
+    <button type="button" id="save">Save</button>
+    <button type="button" id="save-as">Download JSON</button>
+  </div>
+</header>
+<div class="row" style="padding:8px 14px;border-bottom:1px solid var(--line);background:var(--panel)">
+  <button type="button" data-tool="select" class="active">Select</button>
+  <button type="button" data-tool="draw">Draw</button>
+  <button type="button" data-tool="pan">Pan</button>
+  <span class="row">Snap
+    <select id="snap"><option value="1">1 px</option><option value="8">8 px</option><option value="16" selected>16 px</option></select>
+  </span>
+  <button type="button" id="grid">Grid</button>
+  <button type="button" id="zoom-out">-</button>
+  <span id="zoom-label">3×</span>
+  <button type="button" id="zoom-in">+</button>
+  <button type="button" id="fit">Fit</button>
+  <button type="button" id="undo">Undo</button>
+  <button type="button" id="redo">Redo</button>
+  <button type="button" id="delete" class="danger">Delete</button>
+</div>
+<main>
+  <div id="stage"><canvas id="view"></canvas><div id="hint">No sheet loaded</div></div>
+  <aside>
+    <form class="form" id="fields" autocomplete="off">
+      <div class="form-grid">
+        <label class="span2">Name <input id="f-name" name="name"></label>
+        <label>Kind
+          <select id="f-kind">
+            <option>part</option><option>prop</option><option>anim-frame</option>
+            <option>structure</option><option>overlay</option>
+          </select>
+        </label>
+        <label>Frame <input id="f-frame" type="number" step="1"></label>
+        <label class="span2">Group <input id="f-group"></label>
+        <label class="span2">Box [x, y, w, h]
+          <span class="row">
+            <input id="f-x" type="number" step="1" style="width:25%">
+            <input id="f-y" type="number" step="1" style="width:25%">
+            <input id="f-w" type="number" step="1" min="1" style="width:25%">
+            <input id="f-h" type="number" step="1" min="1" style="width:25%">
+          </span>
+        </label>
+        <label class="span2">Notes <textarea id="f-notes"></textarea></label>
+      </div>
+    </form>
+    <div id="box-list"></div>
+    <div class="status" id="status">0 boxes</div>
+  </aside>
+</main>
+<script>
+const KINDS = {
+  part: "#50b4ff",
+  prop: "#c878ff",
+  "anim-frame": "#ff50b4",
+  structure: "#ffb450",
+  overlay: "#ffc83c",
+};
+const SHEETS = {
+  sewers: {
+    sheet: "../standard/top-down/native/sewers-tileset/sewers-tileset/tilesets/sewers-tiles-source-b27509108a85.png",
+    cutlist: "../standard/top-down/native/sewers-tileset/processed/sewers-tileset/placements/sewers-tiles.cutlist.json",
+    name: "sewers-tiles.cutlist.json",
+  },
+  "td-02-a": {
+    sheet: "../standard/top-down/native/tower-defense/tower-defense/tower-defense-pack-02/tower-defense-02-a-source-ceae06a6f669.png",
+    cutlist: "../standard/top-down/native/tower-defense/processed/tower-defense-pack-02/placements/tower-defense-02-a.cutlist.json",
+    name: "tower-defense-02-a.cutlist.json",
+  },
+  "dungeon-b": {
+    sheet: "../standard/top-down/native/game-assets-extras/rpg-maker-mv/tilesets/fd-dungeon-free-b-source-9f8fd10490a1.png",
+    cutlist: "../standard/top-down/native/game-assets-extras/processed/rpg-maker-mv/placements/fd-dungeon-free-b.cutlist.json",
+    name: "fd-dungeon-free-b.cutlist.json",
+  },
+  "dungeon-c": {
+    sheet: "../standard/top-down/native/game-assets-extras/rpg-maker-mv/tilesets/fd-dungeon-free-c-source-28a35df1a98c.png",
+    cutlist: "../standard/top-down/native/game-assets-extras/processed/rpg-maker-mv/placements/fd-dungeon-free-c.cutlist.json",
+    name: "fd-dungeon-free-c.cutlist.json",
+  },
+  "dungeon-a5-1": {
+    sheet: "../standard/top-down/native/game-assets-extras/rpg-maker-mv/tilesets/fd-dungeon-free-a5-1-source-f56f8da1fd8b.png",
+    cutlist: "../standard/top-down/native/game-assets-extras/processed/rpg-maker-mv/placements/fd-dungeon-free-a5-1.cutlist.json",
+    name: "fd-dungeon-free-a5-1.cutlist.json",
+  },
+  "dungeon-a5-2": {
+    sheet: "../standard/top-down/native/game-assets-extras/rpg-maker-mv/tilesets/fd-dungeon-free-a5-2-source-4e41265c41ff.png",
+    cutlist: "../standard/top-down/native/game-assets-extras/processed/rpg-maker-mv/placements/fd-dungeon-free-a5-2.cutlist.json",
+    name: "fd-dungeon-free-a5-2.cutlist.json",
+  },
+  "door01": {
+    sheet: "../standard/top-down/native/game-assets-extras/rpg-maker-mv/characters/fd-dungeon-free-door01-source-58e77aadc09d.png",
+    cutlist: "../standard/top-down/native/game-assets-extras/processed/rpg-maker-mv/placements/fd-dungeon-free-door01.cutlist.json",
+    name: "fd-dungeon-free-door01.cutlist.json",
+  },
+  "door02": {
+    sheet: "../standard/top-down/native/game-assets-extras/rpg-maker-mv/characters/fd-dungeon-free-door02-source-cd5ac4669d0a.png",
+    cutlist: "../standard/top-down/native/game-assets-extras/processed/rpg-maker-mv/placements/fd-dungeon-free-door02.cutlist.json",
+    name: "fd-dungeon-free-door02.cutlist.json",
+  },
+  "animated": {
+    sheet: "../standard/top-down/native/game-assets-extras/rpg-maker-mv/characters/fd-dungeon-free-animated-source-3d6d7cf467d9.png",
+    cutlist: "../standard/top-down/native/game-assets-extras/processed/rpg-maker-mv/placements/fd-dungeon-free-animated.cutlist.json",
+    name: "fd-dungeon-free-animated.cutlist.json",
+  },
+  cellar: {
+    sheet: "../standard/world/native/game-assets-extras/farm-game-dungeon-cellar-tileset/tilesets/fg-cellar-source-83cb353ad2f8.png",
+    cutlist: "../standard/world/native/game-assets-extras/processed/farm-game-dungeon-cellar-tileset/placements/fg-cellar.cutlist.json",
+    name: "fg-cellar.cutlist.json",
+  },
+};
+
+const view = document.getElementById("view");
+const ctx = view.getContext("2d");
+const stage = document.getElementById("stage");
+const hint = document.getElementById("hint");
+const boxList = document.getElementById("box-list");
+const statusEl = document.getElementById("status");
+const zoomLabel = document.getElementById("zoom-label");
+
+const state = {
+  img: null,
+  entries: [],
+  selected: -1,
+  tool: "select",
+  snap: 16,
+  grid: true,
+  scale: 3,
+  panX: 20,
+  panY: 20,
+  space: false,
+  panning: false,
+  drawing: null,
+  dragging: null,
+  history: [],
+  future: [],
+  cutlistHandle: null,
+  cutlistName: "sewers-tiles.cutlist.json",
+  dirty: false,
+};
+
+function blankEntry(box) {
+  return { name: "", box, kind: "part", group: null, frame: null, notes: "", placement: null };
+}
+
+function cloneEntries(list) {
+  return JSON.parse(JSON.stringify(list));
+}
+
+function pushHistory() {
+  state.history.push(cloneEntries(state.entries));
+  if (state.history.length > 80) state.history.shift();
+  state.future = [];
+  state.dirty = true;
+}
+
+function undo() {
+  if (!state.history.length) return;
+  state.future.push(cloneEntries(state.entries));
+  state.entries = state.history.pop();
+  if (state.selected >= state.entries.length) state.selected = state.entries.length - 1;
+  renderAll();
+}
+
+function redo() {
+  if (!state.future.length) return;
+  state.history.push(cloneEntries(state.entries));
+  state.entries = state.future.pop();
+  if (state.selected >= state.entries.length) state.selected = state.entries.length - 1;
+  renderAll();
+}
+
+function snapVal(v, mode) {
+  const s = state.snap;
+  if (s <= 1) return mode === "ceil" ? Math.ceil(v) : Math.floor(v);
+  if (mode === "ceil") return Math.ceil(v / s) * s;
+  return Math.floor(v / s) * s;
+}
+
+function clampBox(box) {
+  if (!state.img) return box;
+  let [x, y, w, h] = box;
+  if (w < 0) { x += w; w = -w; }
+  if (h < 0) { y += h; h = -h; }
+  x = Math.max(0, Math.min(x, state.img.width - 1));
+  y = Math.max(0, Math.min(y, state.img.height - 1));
+  w = Math.max(1, Math.min(w, state.img.width - x));
+  h = Math.max(1, Math.min(h, state.img.height - y));
+  return [x, y, w, h];
+}
+
+function screenToImage(clientX, clientY) {
+  const r = view.getBoundingClientRect();
+  return {
+    x: (clientX - r.left - state.panX) / state.scale,
+    y: (clientY - r.top - state.panY) / state.scale,
+  };
+}
+
+function imageRectFromDrag(a, b) {
+  const x0 = snapVal(Math.min(a.x, b.x), "floor");
+  const y0 = snapVal(Math.min(a.y, b.y), "floor");
+  let x1 = snapVal(Math.max(a.x, b.x), "ceil");
+  let y1 = snapVal(Math.max(a.y, b.y), "ceil");
+  if (x1 <= x0) x1 = x0 + Math.max(1, state.snap);
+  if (y1 <= y0) y1 = y0 + Math.max(1, state.snap);
+  return clampBox([x0, y0, x1 - x0, y1 - y0]);
+}
+
+function boxAt(imgX, imgY) {
+  let best = -1;
+  let bestArea = Infinity;
+  state.entries.forEach((e, i) => {
+    const [x, y, w, h] = e.box;
+    if (imgX >= x && imgX < x + w && imgY >= y && imgY < y + h) {
+      const area = w * h;
+      if (area < bestArea) { bestArea = area; best = i; }
+    }
+  });
+  return best;
+}
+
+function handleAt(imgX, imgY, entry) {
+  if (!entry) return null;
+  const [x, y, w, h] = entry.box;
+  const pad = Math.max(1, 6 / state.scale);
+  const pts = [
+    ["nw", x, y], ["n", x + w / 2, y], ["ne", x + w, y],
+    ["w", x, y + h / 2], ["e", x + w, y + h / 2],
+    ["sw", x, y + h], ["s", x + w / 2, y + h], ["se", x + w, y + h],
+  ];
+  for (const [name, px, py] of pts) {
+    if (Math.abs(imgX - px) <= pad && Math.abs(imgY - py) <= pad) return name;
+  }
+  if (imgX >= x && imgX < x + w && imgY >= y && imgY < y + h) return "move";
+  return null;
+}
+
+function resizeBox(box, handle, imgX, imgY) {
+  let [x, y, w, h] = box;
+  let x2 = x + w;
+  let y2 = y + h;
+  const sx = snapVal(imgX, handle.includes("e") || handle.includes("w") ? "floor" : "floor");
+  const sy = snapVal(imgY, "floor");
+  if (handle.includes("w")) x = sx;
+  if (handle.includes("e")) x2 = sx;
+  if (handle.includes("n")) y = sy;
+  if (handle.includes("s")) y2 = sy;
+  return clampBox([x, y, x2 - x, y2 - y]);
+}
+
+function setScale(next, around) {
+  const old = state.scale;
+  state.scale = Math.max(1, Math.min(24, next));
+  if (around) {
+    state.panX = around.sx - around.ix * state.scale;
+    state.panY = around.sy - around.iy * state.scale;
+  } else {
+    state.panX = around ? state.panX : state.panX;
+    const ratio = state.scale / old;
+    state.panX = view.width / 2 - (view.width / 2 - state.panX) * ratio;
+    state.panY = view.height / 2 - (view.height / 2 - state.panY) * ratio;
+  }
+  zoomLabel.textContent = state.scale + "×";
+  draw();
+}
+
+function fit() {
+  if (!state.img) return;
+  const pad = 24;
+  const w = stage.clientWidth;
+  const h = stage.clientHeight;
+  const sx = (w - pad * 2) / state.img.width;
+  const sy = (h - pad * 2) / state.img.height;
+  state.scale = Math.max(1, Math.floor(Math.min(sx, sy) || 1));
+  state.panX = Math.floor((w - state.img.width * state.scale) / 2);
+  state.panY = Math.floor((h - state.img.height * state.scale) / 2);
+  zoomLabel.textContent = state.scale + "×";
+  draw();
+}
+
+function draw() {
+  const dpr = window.devicePixelRatio || 1;
+  const w = stage.clientWidth;
+  const h = stage.clientHeight;
+  if (view.width !== Math.floor(w * dpr) || view.height !== Math.floor(h * dpr)) {
+    view.width = Math.floor(w * dpr);
+    view.height = Math.floor(h * dpr);
+    view.style.width = w + "px";
+    view.style.height = h + "px";
+  }
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, w, h);
+  if (!state.img) return;
+  ctx.imageSmoothingEnabled = false;
+  ctx.save();
+  ctx.translate(state.panX, state.panY);
+  ctx.scale(state.scale, state.scale);
+  ctx.drawImage(state.img, 0, 0);
+  if (state.grid && state.scale >= 2) {
+    ctx.strokeStyle = "rgba(255,255,255,0.12)";
+    ctx.lineWidth = 1 / state.scale;
+    ctx.beginPath();
+    const step = state.snap > 1 ? state.snap : 16;
+    for (let x = 0; x <= state.img.width; x += step) {
+      ctx.moveTo(x, 0); ctx.lineTo(x, state.img.height);
+    }
+    for (let y = 0; y <= state.img.height; y += step) {
+      ctx.moveTo(0, y); ctx.lineTo(state.img.width, y);
+    }
+    ctx.stroke();
+  }
+  const preview = state.drawing ? { box: state.drawing.box, kind: "part" } : null;
+  state.entries.forEach((e, i) => drawBox(e, i, i === state.selected));
+  if (preview) drawBox(preview, -1, true);
+  ctx.restore();
+}
+
+function drawBox(e, i, selected) {
+  const [x, y, w, h] = e.box;
+  const color = KINDS[e.kind] || KINDS.part;
+  ctx.strokeStyle = selected ? "#ffe650" : color;
+  ctx.lineWidth = (selected ? 2 : 1) / state.scale;
+  ctx.strokeRect(x + 0.5 / state.scale, y + 0.5 / state.scale, w, h);
+  if (i >= 0) {
+    const label = String(i + 1);
+    ctx.font = `${Math.max(10 / state.scale, 4)}px sans-serif`;
+    ctx.lineWidth = 3 / state.scale;
+    ctx.strokeStyle = "#000";
+    ctx.fillStyle = "#ffe650";
+    ctx.strokeText(label, x + 1, y + Math.max(8 / state.scale, 5));
+    ctx.fillText(label, x + 1, y + Math.max(8 / state.scale, 5));
+  }
+  if (selected) {
+    const s = Math.max(3 / state.scale, 1);
+    const pts = [
+      [x, y], [x + w / 2, y], [x + w, y],
+      [x, y + h / 2], [x + w, y + h / 2],
+      [x, y + h], [x + w / 2, y + h], [x + w, y + h],
+    ];
+    ctx.fillStyle = "#ffe650";
+    pts.forEach(([px, py]) => ctx.fillRect(px - s / 2, py - s / 2, s, s));
+  }
+}
+
+function renderList() {
+  boxList.innerHTML = "";
+  state.entries.forEach((e, i) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "item" + (i === state.selected ? " selected" : "");
+    b.innerHTML = `<span class="n">${i + 1}</span><span class="nm">${escapeHtml(e.name || "(unnamed)")}</span><span class="bx">${e.box.join(",")}</span>`;
+    b.addEventListener("click", () => { state.selected = i; renderAll(); });
+    boxList.appendChild(b);
+  });
+  if (state.selected >= 0) {
+    const el = boxList.children[state.selected];
+    if (el) el.scrollIntoView({ block: "nearest" });
+  }
+  const dirty = state.dirty ? " • unsaved" : "";
+  statusEl.textContent = `${state.entries.length} boxes${dirty}`;
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+
+function renderFields() {
+  const e = state.entries[state.selected];
+  const on = Boolean(e);
+  ["f-name","f-kind","f-frame","f-group","f-x","f-y","f-w","f-h","f-notes","delete"].forEach((id) => {
+    document.getElementById(id).disabled = !on && id !== "delete" ? true : !on;
+  });
+  if (!e) {
+    document.getElementById("f-name").value = "";
+    document.getElementById("f-kind").value = "part";
+    document.getElementById("f-frame").value = "";
+    document.getElementById("f-group").value = "";
+    document.getElementById("f-x").value = "";
+    document.getElementById("f-y").value = "";
+    document.getElementById("f-w").value = "";
+    document.getElementById("f-h").value = "";
+    document.getElementById("f-notes").value = "";
+    return;
+  }
+  document.getElementById("f-name").value = e.name || "";
+  document.getElementById("f-kind").value = e.kind || "part";
+  document.getElementById("f-frame").value = e.frame == null ? "" : e.frame;
+  document.getElementById("f-group").value = e.group || "";
+  document.getElementById("f-x").value = e.box[0];
+  document.getElementById("f-y").value = e.box[1];
+  document.getElementById("f-w").value = e.box[2];
+  document.getElementById("f-h").value = e.box[3];
+  document.getElementById("f-notes").value = e.notes || "";
+}
+
+function readFields() {
+  const e = state.entries[state.selected];
+  if (!e) return;
+  const frameRaw = document.getElementById("f-frame").value;
+  const groupRaw = document.getElementById("f-group").value.trim();
+  e.name = document.getElementById("f-name").value.trim();
+  e.kind = document.getElementById("f-kind").value;
+  e.frame = frameRaw === "" ? null : Number(frameRaw);
+  e.group = groupRaw === "" ? null : groupRaw;
+  e.notes = document.getElementById("f-notes").value;
+  e.box = clampBox([
+    Number(document.getElementById("f-x").value) || 0,
+    Number(document.getElementById("f-y").value) || 0,
+    Number(document.getElementById("f-w").value) || 1,
+    Number(document.getElementById("f-h").value) || 1,
+  ]);
+  state.dirty = true;
+  draw();
+  renderList();
+}
+
+function renderAll() {
+  draw();
+  renderList();
+  renderFields();
+  updateHint();
+}
+
+function updateHint(extra) {
+  const img = state.img ? `${state.img.width}×${state.img.height}` : "no sheet";
+  const sel = state.selected >= 0 ? ` #${state.selected + 1}` : "";
+  hint.textContent = extra || `${img}${sel}  ·  wheel zoom  ·  space/middle pan  ·  del deletes`;
+}
+
+function deleteSelected() {
+  if (state.selected < 0) return;
+  pushHistory();
+  state.entries.splice(state.selected, 1);
+  if (state.selected >= state.entries.length) state.selected = state.entries.length - 1;
+  renderAll();
+}
+
+function setTool(tool) {
+  state.tool = tool;
+  document.querySelectorAll("[data-tool]").forEach((b) => b.classList.toggle("active", b.dataset.tool === tool));
+  stage.classList.toggle("pan", tool === "pan");
+}
+
+function loadImage(src) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = () => reject(new Error("Could not load sheet"));
+    img.src = src;
+  });
+}
+
+async function loadPack(id) {
+  const spec = SHEETS[id];
+  if (!spec) throw new Error("Unknown sheet " + id);
+  const img = await loadImage(spec.sheet);
+  const res = await fetch(spec.cutlist);
+  const data = res.ok ? await res.json() : [];
+  state.img = img;
+  state.entries = Array.isArray(data) ? data : [];
+  state.selected = -1;
+  state.history = [];
+  state.future = [];
+  state.cutlistHandle = null;
+  state.cutlistName = spec.name;
+  state.dirty = false;
+  fit();
+  renderAll();
+}
+
+function cutlistJson() {
+  return JSON.stringify(state.entries, null, 2) + "\n";
+}
+
+async function saveCutlist() {
+  const text = cutlistJson();
+  if (state.cutlistHandle && state.cutlistHandle.createWritable) {
+    const w = await state.cutlistHandle.createWritable();
+    await w.write(text);
+    await w.close();
+    state.dirty = false;
+    renderList();
+    updateHint("Saved " + (state.cutlistHandle.name || state.cutlistName));
+    return;
+  }
+  downloadCutlist();
+}
+
+function downloadCutlist() {
+  const blob = new Blob([cutlistJson()], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = state.cutlistName;
+  a.click();
+  URL.revokeObjectURL(a.href);
+  state.dirty = false;
+  renderList();
+}
+
+document.getElementById("load-sewers").addEventListener("click", () => {
+  loadPack("sewers").catch((err) => { hint.textContent = err.message; });
+});
+document.getElementById("load-td02").addEventListener("click", () => {
+  loadPack("td-02-a").catch((err) => { hint.textContent = err.message; });
+});
+document.getElementById("load-dungeon-b").addEventListener("click", () => {
+  loadPack("dungeon-b").catch((err) => { hint.textContent = err.message; });
+});
+document.getElementById("load-dungeon-c").addEventListener("click", () => {
+  loadPack("dungeon-c").catch((err) => { hint.textContent = err.message; });
+});
+document.getElementById("load-dungeon-a5-1").addEventListener("click", () => {
+  loadPack("dungeon-a5-1").catch((err) => { hint.textContent = err.message; });
+});
+document.getElementById("load-dungeon-a5-2").addEventListener("click", () => {
+  loadPack("dungeon-a5-2").catch((err) => { hint.textContent = err.message; });
+});
+document.getElementById("load-door01").addEventListener("click", () => {
+  loadPack("door01").catch((err) => { hint.textContent = err.message; });
+});
+document.getElementById("load-door02").addEventListener("click", () => {
+  loadPack("door02").catch((err) => { hint.textContent = err.message; });
+});
+document.getElementById("load-animated").addEventListener("click", () => {
+  loadPack("animated").catch((err) => { hint.textContent = err.message; });
+});
+document.getElementById("load-cellar").addEventListener("click", () => {
+  loadPack("cellar").catch((err) => { hint.textContent = err.message; });
+});
+document.getElementById("open-sheet").addEventListener("change", (ev) => {
+  const file = ev.target.files[0];
+  if (!file) return;
+  const url = URL.createObjectURL(file);
+  loadImage(url).then((img) => {
+    state.img = img;
+    fit();
+    renderAll();
+  });
+});
+async function applyCutlistText(text, name, handle) {
+  state.entries = JSON.parse(text);
+  state.selected = -1;
+  state.history = [];
+  state.future = [];
+  state.cutlistName = name || "cutlist.json";
+  state.cutlistHandle = handle || null;
+  state.dirty = false;
+  renderAll();
+}
+
+document.getElementById("pick-cutlist").addEventListener("click", async () => {
+  try {
+    if (window.showOpenFilePicker) {
+      const [handle] = await window.showOpenFilePicker({
+        types: [{ description: "Cutlist JSON", accept: { "application/json": [".json"] } }],
+      });
+      const file = await handle.getFile();
+      await applyCutlistText(await file.text(), file.name, handle);
+      return;
+    }
+  } catch (err) {
+    if (err && err.name === "AbortError") return;
+  }
+  document.getElementById("open-cutlist").click();
+});
+document.getElementById("open-cutlist").addEventListener("change", async (ev) => {
+  const file = ev.target.files[0];
+  if (!file) return;
+  await applyCutlistText(await file.text(), file.name, null);
+});
+document.getElementById("save").addEventListener("click", () => {
+  saveCutlist().catch((err) => { hint.textContent = err.message; });
+});
+document.getElementById("save-as").addEventListener("click", downloadCutlist);
+document.getElementById("undo").addEventListener("click", undo);
+document.getElementById("redo").addEventListener("click", redo);
+document.getElementById("delete").addEventListener("click", deleteSelected);
+document.getElementById("zoom-in").addEventListener("click", () => setScale(state.scale + 1));
+document.getElementById("zoom-out").addEventListener("click", () => setScale(state.scale - 1));
+document.getElementById("fit").addEventListener("click", fit);
+document.getElementById("grid").addEventListener("click", (ev) => {
+  state.grid = !state.grid;
+  ev.currentTarget.classList.toggle("active", state.grid);
+  draw();
+});
+document.getElementById("snap").addEventListener("change", (ev) => {
+  state.snap = Number(ev.target.value);
+  draw();
+});
+document.querySelectorAll("[data-tool]").forEach((b) => {
+  b.addEventListener("click", () => setTool(b.dataset.tool));
+});
+["f-name","f-kind","f-frame","f-group","f-x","f-y","f-w","f-h","f-notes"].forEach((id) => {
+  document.getElementById(id).addEventListener("change", () => { pushHistory(); readFields(); });
+  document.getElementById(id).addEventListener("keydown", (ev) => ev.stopPropagation());
+});
+
+view.addEventListener("wheel", (ev) => {
+  ev.preventDefault();
+  const pt = screenToImage(ev.clientX, ev.clientY);
+  const r = view.getBoundingClientRect();
+  const dir = ev.deltaY < 0 ? 1 : -1;
+  setScale(state.scale + dir, {
+    sx: ev.clientX - r.left,
+    sy: ev.clientY - r.top,
+    ix: pt.x,
+    iy: pt.y,
+  });
+}, { passive: false });
+
+view.addEventListener("pointerdown", (ev) => {
+  if (!state.img) return;
+  view.setPointerCapture(ev.pointerId);
+  const pan = state.tool === "pan" || state.space || ev.button === 1;
+  const img = screenToImage(ev.clientX, ev.clientY);
+  if (pan) {
+    state.panning = { x: ev.clientX - state.panX, y: ev.clientY - state.panY };
+    stage.classList.add("panning");
+    return;
+  }
+  if (state.tool === "draw" || (state.tool === "select" && ev.shiftKey)) {
+    state.drawing = { start: img, box: imageRectFromDrag(img, img) };
+    return;
+  }
+  const sel = state.entries[state.selected];
+  const handle = sel ? handleAt(img.x, img.y, sel) : null;
+  if (handle && handle !== "move") {
+    pushHistory();
+    state.dragging = { type: "resize", handle, origin: sel.box.slice() };
+    return;
+  }
+  const hit = boxAt(img.x, img.y);
+  state.selected = hit;
+  if (hit >= 0 && handle === "move") {
+    pushHistory();
+    state.dragging = { type: "move", origin: state.entries[hit].box.slice(), start: img };
+  }
+  renderAll();
+});
+
+view.addEventListener("pointermove", (ev) => {
+  const img = screenToImage(ev.clientX, ev.clientY);
+  if (state.panning) {
+    state.panX = ev.clientX - state.panning.x;
+    state.panY = ev.clientY - state.panning.y;
+    draw();
+    return;
+  }
+  if (state.drawing) {
+    state.drawing.box = imageRectFromDrag(state.drawing.start, img);
+    updateHint(`new [${state.drawing.box.join(", ")}]`);
+    draw();
+    return;
+  }
+  if (state.dragging && state.selected >= 0) {
+    const e = state.entries[state.selected];
+    if (state.dragging.type === "move") {
+      const dx = snapVal(img.x - state.dragging.start.x, "floor");
+      const dy = snapVal(img.y - state.dragging.start.y, "floor");
+      const [x, y, w, h] = state.dragging.origin;
+      e.box = clampBox([x + dx, y + dy, w, h]);
+    } else {
+      e.box = resizeBox(state.dragging.origin, state.dragging.handle, img.x, img.y);
+    }
+    renderFields();
+    renderList();
+    draw();
+    updateHint(`#${state.selected + 1} [${e.box.join(", ")}]`);
+    return;
+  }
+  if (state.img) updateHint(`${Math.floor(img.x)}, ${Math.floor(img.y)}`);
+});
+
+view.addEventListener("pointerup", () => {
+  if (state.drawing) {
+    const box = clampBox(state.drawing.box);
+    if (box[2] >= 1 && box[3] >= 1) {
+      pushHistory();
+      state.entries.push(blankEntry(box));
+      state.selected = state.entries.length - 1;
+      setTool("select");
+      renderAll();
+      document.getElementById("f-name").focus();
+    }
+    state.drawing = null;
+  }
+  state.panning = false;
+  state.dragging = null;
+  stage.classList.remove("panning");
+  draw();
+});
+
+window.addEventListener("keydown", (ev) => {
+  if (ev.target.matches("input, textarea, select")) return;
+  if (ev.code === "Space") {
+    state.space = true;
+    stage.classList.add("space");
+    ev.preventDefault();
+  }
+  if ((ev.key === "Delete" || ev.key === "Backspace") && state.selected >= 0) {
+    ev.preventDefault();
+    deleteSelected();
+  }
+  if (ev.key === "z" && (ev.ctrlKey || ev.metaKey)) {
+    ev.preventDefault();
+    if (ev.shiftKey) redo(); else undo();
+  }
+  if (ev.key === "s" && (ev.ctrlKey || ev.metaKey)) {
+    ev.preventDefault();
+    saveCutlist();
+  }
+  if (["ArrowLeft","ArrowRight","ArrowUp","ArrowDown"].includes(ev.key) && state.selected >= 0) {
+    ev.preventDefault();
+    pushHistory();
+    const step = ev.shiftKey ? Math.max(1, state.snap) : 1;
+    const e = state.entries[state.selected];
+    const [x, y, w, h] = e.box;
+    const dx = ev.key === "ArrowLeft" ? -step : ev.key === "ArrowRight" ? step : 0;
+    const dy = ev.key === "ArrowUp" ? -step : ev.key === "ArrowDown" ? step : 0;
+    e.box = clampBox([x + dx, y + dy, w, h]);
+    renderAll();
+  }
+  if (ev.key === "d") setTool("draw");
+  if (ev.key === "v") setTool("select");
+  if (ev.key === "h") setTool("pan");
+});
+window.addEventListener("keyup", (ev) => {
+  if (ev.code === "Space") {
+    state.space = false;
+    stage.classList.remove("space");
+  }
+});
+window.addEventListener("resize", draw);
+document.getElementById("grid").classList.add("active");
+
+const boot = new URLSearchParams(location.search).get("sheet") || "td-02-a";
+loadPack(boot).catch(() => {
+  hint.textContent = "Open a sheet, or serve this folder and click a Load button.";
+});
+</script>
+</body>
+</html>

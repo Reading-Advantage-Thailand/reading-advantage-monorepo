@@ -1,0 +1,58 @@
+[
+  {
+    "name": "castle-candle-01-01",
+    "box": [
+      0,
+      0,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "castle-candle-01-01",
+    "frame": null,
+    "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "castle-candle-01-02",
+    "box": [
+      80,
+      0,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "castle-candle-01-02",
+    "frame": null,
+    "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "castle-candle-02-01",
+    "box": [
+      0,
+      16,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "castle-candle-02-01",
+    "frame": null,
+    "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+    "placement": null
+  },
+  {
+    "name": "castle-candle-02-02",
+    "box": [
+      80,
+      16,
+      64,
+      16
+    ],
+    "kind": "structure",
+    "group": "castle-candle-02-02",
+    "frame": null,
+    "notes": "Four animation frames. Preserve the full frame height and the complete strip.",
+    "placement": null
+  }
+]

@@ -1,0 +1,1637 @@
+[
+  {
+    "name": "left-building-top",
+    "box": [
+      0,
+      16,
+      112,
+      80
+    ],
+    "kind": "structure",
+    "group": "left-building-top",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B01"
+  },
+  {
+    "name": "main-building",
+    "box": [
+      112,
+      0,
+      112,
+      128
+    ],
+    "kind": "structure",
+    "group": "main-building",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B02"
+  },
+  {
+    "name": "left-building-middle",
+    "box": [
+      0,
+      96,
+      112,
+      80
+    ],
+    "kind": "structure",
+    "group": "left-building-middle",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B03"
+  },
+  {
+    "name": "left-building-bottom",
+    "box": [
+      0,
+      176,
+      112,
+      80
+    ],
+    "kind": "structure",
+    "group": "left-building-bottom",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B04"
+  },
+  {
+    "name": "roof-awning-160-128",
+    "box": [
+      160,
+      128,
+      40,
+      64
+    ],
+    "kind": "structure",
+    "group": "roof-awning-160-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B05"
+  },
+  {
+    "name": "roof-awning-216-128",
+    "box": [
+      216,
+      128,
+      40,
+      64
+    ],
+    "kind": "structure",
+    "group": "roof-awning-216-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B06"
+  },
+  {
+    "name": "roof-awning-160-192",
+    "box": [
+      160,
+      192,
+      40,
+      64
+    ],
+    "kind": "structure",
+    "group": "roof-awning-160-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B07"
+  },
+  {
+    "name": "roof-awning-216-192",
+    "box": [
+      216,
+      192,
+      40,
+      64
+    ],
+    "kind": "structure",
+    "group": "roof-awning-216-192",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B08"
+  },
+  {
+    "name": "chair-112-128",
+    "box": [
+      112,
+      128,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "chair-112-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B09"
+  },
+  {
+    "name": "chair-136-128",
+    "box": [
+      136,
+      128,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse B09. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "B10"
+  },
+  {
+    "name": "chair-112-160",
+    "box": [
+      112,
+      160,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "chair-112-160",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B11"
+  },
+  {
+    "name": "chair-136-160",
+    "box": [
+      136,
+      160,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse B11. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "B12"
+  },
+  {
+    "name": "sign-112",
+    "box": [
+      112,
+      200,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "sign-112",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B13"
+  },
+  {
+    "name": "sign-128",
+    "box": [
+      128,
+      200,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "sign-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B14"
+  },
+  {
+    "name": "wide-sign",
+    "box": [
+      112,
+      232,
+      32,
+      16
+    ],
+    "kind": "prop",
+    "group": "wide-sign",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B15"
+  },
+  {
+    "name": "window-0",
+    "box": [
+      224,
+      0,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "window-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B16"
+  },
+  {
+    "name": "window-32",
+    "box": [
+      224,
+      32,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "window-32",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B17"
+  },
+  {
+    "name": "window-64",
+    "box": [
+      224,
+      64,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "window-64",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B18"
+  },
+  {
+    "name": "window-96",
+    "box": [
+      224,
+      96,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "window-96",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B19"
+  },
+  {
+    "name": "workshop-door-opening",
+    "box": [
+      240,
+      0,
+      16,
+      128
+    ],
+    "kind": "prop",
+    "group": "workshop-door-opening",
+    "frame": null,
+    "notes": "Preserve the complete animation strip.",
+    "placement": null,
+    "reviewId": "B20"
+  },
+  {
+    "name": "square-floor",
+    "box": [
+      256,
+      0,
+      56,
+      64
+    ],
+    "kind": "part",
+    "group": "square-floor",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B21"
+  },
+  {
+    "name": "narrow-floor",
+    "box": [
+      312,
+      0,
+      40,
+      64
+    ],
+    "kind": "part",
+    "group": "narrow-floor",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B22"
+  },
+  {
+    "name": "octagonal-floor",
+    "box": [
+      256,
+      64,
+      80,
+      96
+    ],
+    "kind": "part",
+    "group": "octagonal-floor",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B23"
+  },
+  {
+    "name": "floor-edge-blue",
+    "box": [
+      256,
+      160,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "floor-edge-blue",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B24"
+  },
+  {
+    "name": "floor-angle-blue",
+    "box": [
+      304,
+      160,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "floor-angle-blue",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B25"
+  },
+  {
+    "name": "floor-edge-tan",
+    "box": [
+      256,
+      208,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "floor-edge-tan",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B26"
+  },
+  {
+    "name": "floor-angle-tan",
+    "box": [
+      304,
+      208,
+      48,
+      48
+    ],
+    "kind": "part",
+    "group": "floor-angle-tan",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B27"
+  },
+  {
+    "name": "floor-tile-352-0",
+    "box": [
+      352,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "floor-tile-352-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B28"
+  },
+  {
+    "name": "floor-tile-368-0",
+    "box": [
+      368,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "floor-tile-368-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B29"
+  },
+  {
+    "name": "floor-tile-384-0",
+    "box": [
+      384,
+      0,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "floor-tile-384-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B30"
+  },
+  {
+    "name": "floor-tile-352-16",
+    "box": [
+      352,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "floor-tile-352-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B31"
+  },
+  {
+    "name": "floor-tile-368-16",
+    "box": [
+      368,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "floor-tile-368-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B32"
+  },
+  {
+    "name": "floor-tile-384-16",
+    "box": [
+      384,
+      16,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "floor-tile-384-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B33"
+  },
+  {
+    "name": "water-panel-352",
+    "box": [
+      352,
+      40,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "water-panel-352",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B34"
+  },
+  {
+    "name": "water-panel-384",
+    "box": [
+      384,
+      40,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "water-panel-384",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B35"
+  },
+  {
+    "name": "water-panel-416",
+    "box": [
+      416,
+      40,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "water-panel-416",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B36"
+  },
+  {
+    "name": "cabinet-400",
+    "box": [
+      400,
+      0,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "cabinet-400",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B37"
+  },
+  {
+    "name": "cabinet-416",
+    "box": [
+      416,
+      0,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "cabinet-416",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B38"
+  },
+  {
+    "name": "cabinet-432",
+    "box": [
+      432,
+      0,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "cabinet-432",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B39"
+  },
+  {
+    "name": "cabinet-448",
+    "box": [
+      448,
+      0,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "cabinet-448",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B40"
+  },
+  {
+    "name": "container-464-0",
+    "box": [
+      464,
+      0,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "container-464-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B41"
+  },
+  {
+    "name": "container-480-0",
+    "box": [
+      480,
+      0,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "container-480-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B42"
+  },
+  {
+    "name": "container-496-0",
+    "box": [
+      496,
+      0,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "container-496-0",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B43"
+  },
+  {
+    "name": "container-464-16",
+    "box": [
+      464,
+      16,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "container-464-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B44"
+  },
+  {
+    "name": "container-480-16",
+    "box": [
+      480,
+      16,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "container-480-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B45"
+  },
+  {
+    "name": "container-496-16",
+    "box": [
+      496,
+      16,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "container-496-16",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B46"
+  },
+  {
+    "name": "tall-container-464",
+    "box": [
+      464,
+      32,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "tall-container-464",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B47"
+  },
+  {
+    "name": "tall-container-480",
+    "box": [
+      480,
+      32,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "tall-container-480",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B48"
+  },
+  {
+    "name": "tall-container-496",
+    "box": [
+      496,
+      32,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "tall-container-496",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B49"
+  },
+  {
+    "name": "workbench-48",
+    "box": [
+      448,
+      48,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "workbench-48",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B50"
+  },
+  {
+    "name": "workbench-64",
+    "box": [
+      448,
+      64,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "workbench-64",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B51"
+  },
+  {
+    "name": "anvil-workbench",
+    "box": [
+      464,
+      64,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "anvil-workbench",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B52"
+  },
+  {
+    "name": "wide-container-64",
+    "box": [
+      480,
+      64,
+      32,
+      16
+    ],
+    "kind": "prop",
+    "group": "wide-container-64",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B53"
+  },
+  {
+    "name": "wide-container-80",
+    "box": [
+      480,
+      80,
+      32,
+      16
+    ],
+    "kind": "prop",
+    "group": "wide-container-80",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B54"
+  },
+  {
+    "name": "wide-container-96",
+    "box": [
+      480,
+      96,
+      32,
+      16
+    ],
+    "kind": "prop",
+    "group": "wide-container-96",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B55"
+  },
+  {
+    "name": "equipment-336-80",
+    "box": [
+      336,
+      80,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "equipment-336-80",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B56"
+  },
+  {
+    "name": "equipment-352-80",
+    "box": [
+      352,
+      80,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "equipment-352-80",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B57"
+  },
+  {
+    "name": "equipment-368-80",
+    "box": [
+      368,
+      80,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "equipment-368-80",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B58"
+  },
+  {
+    "name": "equipment-384-80",
+    "box": [
+      384,
+      80,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "equipment-384-80",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B59"
+  },
+  {
+    "name": "equipment-336-96",
+    "box": [
+      336,
+      96,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "equipment-336-96",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B60"
+  },
+  {
+    "name": "equipment-352-96",
+    "box": [
+      352,
+      96,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "equipment-352-96",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B61"
+  },
+  {
+    "name": "equipment-368-96",
+    "box": [
+      368,
+      96,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "equipment-368-96",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B62"
+  },
+  {
+    "name": "equipment-384-96",
+    "box": [
+      384,
+      96,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "equipment-384-96",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B63"
+  },
+  {
+    "name": "equipment-336-112",
+    "box": [
+      336,
+      112,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "equipment-336-112",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B64"
+  },
+  {
+    "name": "equipment-352-112",
+    "box": [
+      352,
+      112,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "equipment-352-112",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B65"
+  },
+  {
+    "name": "equipment-368-112",
+    "box": [
+      368,
+      112,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "equipment-368-112",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B66"
+  },
+  {
+    "name": "equipment-384-112",
+    "box": [
+      384,
+      112,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "equipment-384-112",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B67"
+  },
+  {
+    "name": "equipment-336-128",
+    "box": [
+      336,
+      128,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "equipment-336-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B68"
+  },
+  {
+    "name": "equipment-352-128",
+    "box": [
+      352,
+      128,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "equipment-352-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B69"
+  },
+  {
+    "name": "equipment-368-128",
+    "box": [
+      368,
+      128,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "equipment-368-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B70"
+  },
+  {
+    "name": "equipment-384-128",
+    "box": [
+      384,
+      128,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "equipment-384-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B71"
+  },
+  {
+    "name": "workbench-small-400",
+    "box": [
+      400,
+      80,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "workbench-small-400",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B72"
+  },
+  {
+    "name": "workbench-small-416",
+    "box": [
+      416,
+      80,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "workbench-small-416",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B73"
+  },
+  {
+    "name": "workbench-wide",
+    "box": [
+      432,
+      80,
+      48,
+      16
+    ],
+    "kind": "prop",
+    "group": "workbench-wide",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B74"
+  },
+  {
+    "name": "workbench-large",
+    "box": [
+      432,
+      96,
+      48,
+      32
+    ],
+    "kind": "prop",
+    "group": "workbench-large",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B75"
+  },
+  {
+    "name": "weapon-workbench-400",
+    "box": [
+      400,
+      96,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "weapon-workbench-400",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B76"
+  },
+  {
+    "name": "weapon-workbench-416",
+    "box": [
+      416,
+      96,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "weapon-workbench-416",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B77"
+  },
+  {
+    "name": "anvil-400-128",
+    "box": [
+      400,
+      128,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "anvil-400-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B78"
+  },
+  {
+    "name": "anvil-416-128",
+    "box": [
+      416,
+      128,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "anvil-416-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B79"
+  },
+  {
+    "name": "anvil-400-144",
+    "box": [
+      400,
+      144,
+      32,
+      16
+    ],
+    "kind": "prop",
+    "group": "anvil-400-144",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B80"
+  },
+  {
+    "name": "anvil-432-144",
+    "box": [
+      432,
+      144,
+      32,
+      16
+    ],
+    "kind": "prop",
+    "group": "anvil-432-144",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B81"
+  },
+  {
+    "name": "floor-plate-432",
+    "box": [
+      432,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "floor-plate-432",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B82"
+  },
+  {
+    "name": "floor-plate-448",
+    "box": [
+      448,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "floor-plate-448",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B83"
+  },
+  {
+    "name": "floor-plate-464",
+    "box": [
+      464,
+      128,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "floor-plate-464",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B84"
+  },
+  {
+    "name": "small-furnace-480-112",
+    "box": [
+      480,
+      112,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "small-furnace-480-112",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B85"
+  },
+  {
+    "name": "small-furnace-496-112",
+    "box": [
+      496,
+      112,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "small-furnace-496-112",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B86"
+  },
+  {
+    "name": "small-furnace-480-128",
+    "box": [
+      480,
+      128,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "small-furnace-480-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B87"
+  },
+  {
+    "name": "small-furnace-496-128",
+    "box": [
+      496,
+      128,
+      16,
+      32
+    ],
+    "kind": "prop",
+    "group": "small-furnace-496-128",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B88"
+  },
+  {
+    "name": "small-furnace-416-160",
+    "box": [
+      416,
+      160,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "small-furnace-416-160",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B89"
+  },
+  {
+    "name": "small-furnace-432-160",
+    "box": [
+      432,
+      160,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "small-furnace-432-160",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B90"
+  },
+  {
+    "name": "wide-furnace-448",
+    "box": [
+      448,
+      160,
+      32,
+      16
+    ],
+    "kind": "prop",
+    "group": "wide-furnace-448",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B91"
+  },
+  {
+    "name": "wide-furnace-480",
+    "box": [
+      480,
+      160,
+      32,
+      16
+    ],
+    "kind": "prop",
+    "group": "wide-furnace-480",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B92"
+  },
+  {
+    "name": "large-furnace-416",
+    "box": [
+      416,
+      176,
+      32,
+      56
+    ],
+    "kind": "prop",
+    "group": "large-furnace-416",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B93"
+  },
+  {
+    "name": "large-furnace-448",
+    "box": [
+      448,
+      176,
+      32,
+      56
+    ],
+    "kind": "prop",
+    "group": "large-furnace-448",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B94"
+  },
+  {
+    "name": "large-furnace-480",
+    "box": [
+      480,
+      176,
+      32,
+      56
+    ],
+    "kind": "prop",
+    "group": "large-furnace-480",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B95"
+  },
+  {
+    "name": "wooden-box-352-176",
+    "box": [
+      352,
+      176,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "wooden-box-352-176",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B96"
+  },
+  {
+    "name": "wooden-box-368-176",
+    "box": [
+      368,
+      176,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "wooden-box-368-176",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B97"
+  },
+  {
+    "name": "wooden-box-384-168",
+    "box": [
+      384,
+      168,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse B96. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "B98"
+  },
+  {
+    "name": "wooden-box-400-168",
+    "box": [
+      400,
+      168,
+      16,
+      16
+    ],
+    "kind": "prop",
+    "group": "unused",
+    "frame": null,
+    "notes": "Do not use. Reuse B97. The complete crop is identical.",
+    "placement": null,
+    "reviewId": "B99"
+  },
+  {
+    "name": "wooden-chair-assembly-352-200",
+    "box": [
+      352,
+      200,
+      32,
+      24
+    ],
+    "kind": "prop",
+    "group": "wooden-chair-assembly-352-200",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B100"
+  },
+  {
+    "name": "wooden-chair-assembly-352-224",
+    "box": [
+      352,
+      224,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "wooden-chair-assembly-352-224",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B101"
+  },
+  {
+    "name": "wooden-chair-assembly-384-200",
+    "box": [
+      384,
+      200,
+      32,
+      24
+    ],
+    "kind": "prop",
+    "group": "wooden-chair-assembly-384-200",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B102"
+  },
+  {
+    "name": "wooden-chair-assembly-384-224",
+    "box": [
+      384,
+      224,
+      32,
+      32
+    ],
+    "kind": "prop",
+    "group": "wooden-chair-assembly-384-224",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B103"
+  },
+  {
+    "name": "trapdoor-opening",
+    "box": [
+      416,
+      232,
+      48,
+      24
+    ],
+    "kind": "prop",
+    "group": "trapdoor-opening",
+    "frame": null,
+    "notes": "Three animation frames. Preserve the complete strip.",
+    "placement": null,
+    "reviewId": "B104a"
+  },
+  {
+    "name": "stairway-reveal",
+    "box": [
+      464,
+      232,
+      48,
+      24
+    ],
+    "kind": "prop",
+    "group": "stairway-reveal",
+    "frame": null,
+    "notes": "Three animation frames. Preserve the complete strip.",
+    "placement": null,
+    "reviewId": "B104b"
+  },
+  {
+    "name": "floor-tile-352-144",
+    "box": [
+      352,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "floor-tile-352-144",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B105"
+  },
+  {
+    "name": "floor-tile-368-144",
+    "box": [
+      368,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "floor-tile-368-144",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B106"
+  },
+  {
+    "name": "floor-tile-384-144",
+    "box": [
+      384,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "floor-tile-384-144",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B107"
+  },
+  {
+    "name": "floor-plate-464-144",
+    "box": [
+      464,
+      144,
+      16,
+      16
+    ],
+    "kind": "part",
+    "group": "floor-plate-464-144",
+    "frame": null,
+    "notes": "Preserve the complete piece.",
+    "placement": null,
+    "reviewId": "B108"
+  }
+]
