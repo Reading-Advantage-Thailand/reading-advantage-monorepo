@@ -3,7 +3,6 @@ import { getCurrentUser } from "@/lib/session";
 import { redirect } from "next/navigation";
 import { Role } from "@/lib/enums";
 import { headers } from "next/headers";
-import { log } from "console";
 import { env } from "@/lib/env";
 
 export default async function AdminClassroomReportPage({

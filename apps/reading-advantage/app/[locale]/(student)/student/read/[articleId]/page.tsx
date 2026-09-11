@@ -148,7 +148,7 @@ export default async function ArticleQuizPage({
               page="article"
             />
           </div>
-          <div className="max-w-[400px]]">
+          <div className="max-w-[400px]">
             <SAQuestionCard
               userId={user.id}
               articleId={articleId}

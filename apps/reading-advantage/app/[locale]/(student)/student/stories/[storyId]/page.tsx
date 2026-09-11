@@ -16,7 +16,6 @@ import { CardDescription } from "@/components/ui/card";
 import { StoriesSummary } from "@/components/stories-summary";
 import ExportStoryWorkbooksButton from "@/components/teacher/export-story-workbooks-button";
 import { BookOpen, Users } from "lucide-react";
-import { log } from "console";
 
 export interface StoryBible {
   mainPlot: {
