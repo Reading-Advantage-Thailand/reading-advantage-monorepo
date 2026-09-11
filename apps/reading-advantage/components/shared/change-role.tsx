@@ -30,6 +30,18 @@ type Props = {
   className?: string;
 };
 
+// Static Tailwind lookup map so the compiler extracts every class.
+const ROLE_COLOR_CLASSES: Record<string, { idle: string; selected: string }> = {
+  blue: {
+    idle: "hover:dark:bg-blue-900",
+    selected: "dark:bg-blue-900 hover:dark:bg-blue-800",
+  },
+  red: {
+    idle: "hover:dark:bg-red-900",
+    selected: "dark:bg-red-900 hover:dark:bg-red-800",
+  },
+};
+
 export default function ChangeRole({ userId, userRole, className }: Props) {
   const roles: Array<{
     title: string;
@@ -181,12 +193,16 @@ const RoleSelectionItem = ({
   onClick: () => void;
   color: string;
 }) => {
+  const colorClasses =
+    ROLE_COLOR_CLASSES[color] ?? ROLE_COLOR_CLASSES.blue;
+
   return (
     <div
       onClick={onClick}
       className={cn(
-        `relative overflow-hidden rounded-lg border shadow-2x hover:shadow-3x cursor-pointer hover:dark:bg-${color}-900`,
-        isSelected && `dark:bg-${color}-900 hover:dark:bg-${color}-800`,
+        "relative overflow-hidden rounded-lg border shadow-2x hover:shadow-3x cursor-pointer",
+        colorClasses.idle,
+        isSelected && colorClasses.selected,
       )}
     >
       <div className="flex flex-col justify-between rounded-md p-3">

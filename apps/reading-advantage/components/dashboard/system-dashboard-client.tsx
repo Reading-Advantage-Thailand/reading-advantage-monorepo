@@ -38,9 +38,40 @@ import {
 import ModernLicenseUsage from "@/components/dashboard/modern-license-usage";
 import ModernActiveUsers from "@/components/dashboard/modern-active-users";
 
+// Static Tailwind lookup maps so the compiler extracts every class.
+const HEALTH_BADGE_CLASSES: Record<string, string> = {
+  emerald: "bg-emerald-600 dark:bg-emerald-500",
+  primary: "bg-primary",
+  amber: "bg-amber-600 dark:bg-amber-500",
+  red: "bg-red-600 dark:bg-red-500",
+  unknown: "bg-gray-500 dark:bg-gray-400",
+};
+
+const ACTIVITY_COLOR_CLASSES: Record<string, { dot: string; hover: string }> = {
+  emerald: {
+    dot: "bg-emerald-500 dark:bg-emerald-400",
+    hover: "hover:bg-emerald-500/5 dark:hover:bg-emerald-400/5 hover:border-emerald-500/20 dark:hover:border-emerald-400/20",
+  },
+  blue: {
+    dot: "bg-blue-500 dark:bg-blue-400",
+    hover: "hover:bg-blue-500/5 dark:hover:bg-blue-400/5 hover:border-blue-500/20 dark:hover:border-blue-400/20",
+  },
+  amber: {
+    dot: "bg-amber-500 dark:bg-amber-400",
+    hover: "hover:bg-amber-500/5 dark:hover:bg-amber-400/5 hover:border-amber-500/20 dark:hover:border-amber-400/20",
+  },
+  violet: {
+    dot: "bg-violet-500 dark:bg-violet-400",
+    hover: "hover:bg-violet-500/5 dark:hover:bg-violet-400/5 hover:border-violet-500/20 dark:hover:border-violet-400/20",
+  },
+  rose: {
+    dot: "bg-rose-500 dark:bg-rose-400",
+    hover: "hover:bg-rose-500/5 dark:hover:bg-rose-400/5 hover:border-rose-500/20 dark:hover:border-rose-400/20",
+  },
+};
+
 // Types for dashboard data
-interface DashboardData {
-  overview?: {
+interface DashboardData {  overview?: {
     totalSchools?: number;
     totalStudents?: number;
     totalTeachers?: number;
@@ -89,20 +120,20 @@ export default function SystemDashboardClient() {
   const [loading, setLoading] = useState(true);
 
   // Helper function to get badge color based on status
-  const getHealthBadgeClass = (status: string) => {
+  const getHealthBadgeClass = (status?: string) => {
     const statusLower = status?.toLowerCase() || "";
     if (statusLower.includes("excellent") || statusLower.includes("fast")) {
-      return "bg-emerald-600 dark:bg-emerald-500";
+      return HEALTH_BADGE_CLASSES.emerald;
     } else if (statusLower.includes("good")) {
-      return "bg-primary";
+      return HEALTH_BADGE_CLASSES.primary;
     } else if (statusLower.includes("slow") || statusLower.includes("medium")) {
-      return "bg-amber-600 dark:bg-amber-500";
+      return HEALTH_BADGE_CLASSES.amber;
     } else if (statusLower.includes("error") || statusLower.includes("high")) {
-      return "bg-red-600 dark:bg-red-500";
+      return HEALTH_BADGE_CLASSES.red;
     } else if (statusLower.includes("low")) {
-      return "bg-emerald-600 dark:bg-emerald-500";
+      return HEALTH_BADGE_CLASSES.emerald;
     }
-    return "bg-gray-500 dark:bg-gray-400";
+    return HEALTH_BADGE_CLASSES.unknown;
   };
 
   // Helper function to format activity type
@@ -448,11 +479,11 @@ export default function SystemDashboardClient() {
                             <Badge
                               variant="default"
                               className={getHealthBadgeClass(
-                                dashboardData?.health?.database || "excellent"
+                                dashboardData?.health?.database
                               )}
                             >
                               {dashboardData?.health?.database ||
-                                t("systemHealth.status.excellent")}
+                                t("systemHealth.status.unknown")}
                             </Badge>
                             {dashboardData?.health?.databaseResponseTime && (
                               <span className="text-xs text-muted-foreground">
@@ -472,11 +503,11 @@ export default function SystemDashboardClient() {
                             <Badge
                               variant="default"
                               className={getHealthBadgeClass(
-                                dashboardData?.health?.apiResponse || "good"
+                                dashboardData?.health?.apiResponse
                               )}
                             >
                               {dashboardData?.health?.apiResponse ||
-                                t("systemHealth.status.good")}
+                                t("systemHealth.status.unknown")}
                             </Badge>
                             {dashboardData?.health?.apiResponseTime && (
                               <span className="text-xs text-muted-foreground">
@@ -495,10 +526,11 @@ export default function SystemDashboardClient() {
                           <Badge
                             variant="default"
                             className={getHealthBadgeClass(
-                              dashboardData?.health?.errorRate || "low"
+                              dashboardData?.health?.errorRate
                             )}
                           >
-                            {t("systemHealth.status.low")}
+                            {dashboardData?.health?.errorRate ||
+                              t("systemHealth.status.unknown")}
                           </Badge>
                         </div>
                         <div className="flex items-center justify-between p-3 rounded-lg bg-amber-500/5 dark:bg-amber-400/5 border border-amber-500/20 dark:border-amber-400/20">
@@ -510,9 +542,12 @@ export default function SystemDashboardClient() {
                           </div>
                           <Badge
                             variant="default"
-                            className="bg-emerald-600 dark:bg-emerald-500"
+                            className={getHealthBadgeClass(
+                              dashboardData?.health?.uptime
+                            )}
                           >
-                            {dashboardData?.health?.uptime || "99.9%"}
+                            {dashboardData?.health?.uptime ||
+                              t("systemHealth.status.unknown")}
                           </Badge>
                         </div>
                         {dashboardData?.health?.lastChecked && (
@@ -551,14 +586,17 @@ export default function SystemDashboardClient() {
                                 activity.type,
                                 index
                               );
+                              const colorClasses =
+                                ACTIVITY_COLOR_CLASSES[color] ??
+                                ACTIVITY_COLOR_CLASSES.emerald;
                               return (
                                 <div
                                   key={activity.id}
-                                  className={`flex items-start gap-4 p-3 rounded-lg hover:bg-${color}-500/5 dark:hover:bg-${color}-400/5 transition-colors border border-transparent hover:border-${color}-500/20 dark:hover:border-${color}-400/20`}
+                                  className={`flex items-start gap-4 p-3 rounded-lg transition-colors border border-transparent ${colorClasses.hover}`}
                                 >
                                   <div className="flex-shrink-0 mt-1">
                                     <div
-                                      className={`w-2 h-2 rounded-full bg-${color}-500 dark:bg-${color}-400`}
+                                      className={`w-2 h-2 rounded-full ${colorClasses.dot}`}
                                     />
                                   </div>
                                   <div className="flex-1 min-w-0">

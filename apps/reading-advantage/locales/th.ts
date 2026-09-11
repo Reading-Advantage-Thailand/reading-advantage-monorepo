@@ -91,7 +91,12 @@ export default {
             apiResponse: "เวลาตอบกลับ API",
             errorRate: "อัตราข้อผิดพลาด",
             uptime: "ระยะเวลาการทำงานของระบบ",
-            status: { excellent: "ดีเลิศ", good: "ดี", low: "ต่ำ" },
+            status: {
+                excellent: "ดีเลิศ",
+                good: "ดี",
+                low: "ต่ำ",
+                unknown: "ไม่ทราบ",
+              },
           },
           recentActivity: {
             title: "กิจกรรมล่าสุด",
@@ -153,7 +158,7 @@ export default {
               tooltip: "รวมเซสชันการอ่านที่เสร็จสิ้น",
             },
             totalXp: {
-              title: "XP ทั้งหมด",
+              title: "เซสชันวันนี้",
               description: "เซสชันวันนี้",
               tooltip: "เซสชันการอ่านที่เสร็จสิ้นวันนี้",
             },

@@ -77,7 +77,12 @@ export default {
             apiResponse: "API 回應時間",
             errorRate: "錯誤率",
             uptime: "系統運行時間",
-            status: { excellent: "優秀", good: "良好", low: "低" },
+            status: {
+                excellent: "優秀",
+                good: "良好",
+                low: "低",
+                unknown: "未知",
+              },
           },
           recentActivity: {
             title: "近期活動",
@@ -136,7 +141,7 @@ export default {
               tooltip: "已完成的閱讀課程總數",
             },
             totalXp: {
-              title: "總 XP",
+              title: "今日課程",
               description: "今日課程",
               tooltip: "今日完成的閱讀課程",
             },

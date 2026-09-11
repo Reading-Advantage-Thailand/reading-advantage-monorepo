@@ -91,7 +91,12 @@ export default {
             apiResponse: "Thời gian phản hồi API",
             errorRate: "Tỷ lệ lỗi",
             uptime: "Thời gian hoạt động hệ thống",
-            status: { excellent: "Tuyệt vời", good: "Tốt", low: "Thấp" },
+            status: {
+                excellent: "Tuyệt vờI",
+                good: "Tốt",
+                low: "Thấp",
+                unknown: "Không xác định",
+              },
           },
           recentActivity: {
             title: "Hoạt động gần đây",
@@ -153,7 +158,7 @@ export default {
               tooltip: "Tổng số phiên đọc đã hoàn thành",
             },
             totalXp: {
-              title: "Tổng XP",
+              title: "Phiên hôm nay",
               description: "Phiên hôm nay",
               tooltip: "Phiên đọc hoàn thành hôm nay",
             },

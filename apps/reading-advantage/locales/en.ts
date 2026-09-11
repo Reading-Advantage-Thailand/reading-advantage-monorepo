@@ -94,7 +94,12 @@ export default {
             apiResponse: "API Response Time",
             errorRate: "Error Rate",
             uptime: "System Uptime",
-            status: { excellent: "Excellent", good: "Good", low: "Low" },
+            status: {
+                excellent: "Excellent",
+                good: "Good",
+                low: "Low",
+                unknown: "Unknown",
+              },
           },
           recentActivity: {
             title: "Recent Activity",
@@ -156,7 +161,7 @@ export default {
               tooltip: "Total reading sessions completed",
             },
             totalXp: {
-              title: "Total XP Earned",
+              title: "Sessions Today",
               description: "Sessions today",
               tooltip: "Reading sessions completed today",
             },

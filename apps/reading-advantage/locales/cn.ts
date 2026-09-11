@@ -75,7 +75,12 @@ export default {
             apiResponse: "API 响应时间",
             errorRate: "错误率",
             uptime: "系统运行时间",
-            status: { excellent: "优秀", good: "良好", low: "低" },
+            status: {
+                excellent: "优秀",
+                good: "良好",
+                low: "低",
+                unknown: "未知",
+              },
           },
           recentActivity: {
             title: "最近活动",
@@ -134,7 +139,7 @@ export default {
               tooltip: "完成的阅读会话总数",
             },
             totalXp: {
-              title: "总 XP",
+              title: "今日会话",
               description: "今日会话",
               tooltip: "今日完成的阅读会话",
             },
