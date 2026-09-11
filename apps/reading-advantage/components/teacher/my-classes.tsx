@@ -123,7 +123,7 @@ export default function MyClasses() {
         const classroomName: string = row.getValue("classroomName");
         const checkImported = row.original.importedFromGoogle;
         return (
-          <div className="captoliza ml-4 flex gap-4">
+          <div className="ml-4 flex gap-4">
             {classroomName ? classroomName : "Unknown"}{" "}
             {checkImported ? (
               <Link href={row.original.alternateLink} target="_blank">
@@ -145,7 +145,7 @@ export default function MyClasses() {
         return <div className="text-center">{tc("classCode")}</div>;
       },
       cell: ({ row }) => (
-        <div className="captoliza text-center">{row.getValue("classCode")}</div>
+        <div className="text-center">{row.getValue("classCode")}</div>
       ),
     },
     {
@@ -154,7 +154,7 @@ export default function MyClasses() {
         return <div className="text-center">{tc("studentCount")}</div>;
       },
       cell: ({ row }) => (
-        <div className="captoliza text-center">
+        <div className="text-center">
           {row.original?.student?.length || 0}
         </div>
       ),
@@ -218,7 +218,7 @@ export default function MyClasses() {
         const payment = row.original;
 
         return (
-          <div className="captoliza justify-center flex gap-2">
+          <div className="justify-center flex gap-2">
             {payment.importedFromGoogle ? null : (
               <EditClass classroomData={payment} />
             )}

@@ -137,7 +137,7 @@ export default function ClassRoster() {
           );
         },
         cell: ({ row }) => (
-          <div className="captoliza ml-4">{row.getValue("display_name")}</div>
+          <div className="ml-4">{row.getValue("display_name")}</div>
         ),
       },
       {
@@ -147,7 +147,7 @@ export default function ClassRoster() {
         },
         cell: ({ row }) => {
           return (
-            <div className="captoliza text-center">
+            <div className="text-center">
               {row.getValue("last_activity")
                 ? new Date(row.getValue("last_activity")).toLocaleString()
                 : "No Activity"}

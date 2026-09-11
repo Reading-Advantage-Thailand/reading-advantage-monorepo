@@ -82,7 +82,7 @@ export function ArticleRecordsTable({
         );
       },
       cell: ({ row }) => (
-        <div className="captoliza">{row.getValue("title")}</div>
+        <div>{row.getValue("title")}</div>
       ),
     },
     {

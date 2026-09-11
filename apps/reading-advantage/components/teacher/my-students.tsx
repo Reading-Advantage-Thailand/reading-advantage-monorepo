@@ -153,7 +153,7 @@ export default function MyStudents() {
       cell: ({ row }) => {
         const studentName: string = row.getValue("name");
         return (
-          <div className="captoliza ml-4">
+          <div className="ml-4">
             {studentName ? studentName : "Anonymous"}
           </div>
         );
@@ -167,7 +167,7 @@ export default function MyStudents() {
       cell: ({ row }) => {
         const studentEmail: string = row.getValue("email");
         return (
-          <div className="captoliza ">
+          <div>
             {studentEmail ? studentEmail : "Unknown"}
           </div>
         );

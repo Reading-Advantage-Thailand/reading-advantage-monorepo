@@ -491,7 +491,7 @@ export default function System({ fetchMoreData }: PassagesProps) {
                       return (
                         <div
                           key={index}
-                          className="captoliza ml-4 mb-4 grid sm:grid-cols-1 grid-flow-row gap-4 "
+                          className="ml-4 mb-4 grid sm:grid-cols-1 grid-flow-row gap-4 "
                         >
                           <ArticleShowcaseCard
                             key={index}
@@ -510,7 +510,7 @@ export default function System({ fetchMoreData }: PassagesProps) {
                       return (
                         <div
                           key={index}
-                          className="captoliza ml-4 mb-4 grid sm:grid-cols-1 grid-flow-row gap-4"
+                          className="ml-4 mb-4 grid sm:grid-cols-1 grid-flow-row gap-4"
                         >
                           <ArticleShowcaseCard key={index} article={passage} />
                         </div>

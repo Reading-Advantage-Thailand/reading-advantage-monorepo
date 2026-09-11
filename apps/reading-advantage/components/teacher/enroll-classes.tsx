@@ -173,7 +173,7 @@ export default function MyEnrollClasses() {
       cell: ({ row }) => {
         const classroomName: string = row.getValue("classroomName");
         return (
-          <div className="captoliza ml-4" onClick={() => row.toggleSelected}>
+          <div className="ml-4" onClick={() => row.toggleSelected}>
             {classroomName ? classroomName : "Anonymous"}
           </div>
         );

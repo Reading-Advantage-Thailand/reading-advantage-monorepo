@@ -117,7 +117,7 @@ export default function Reports() {
       },
       cell: ({ row }) => {
         return (
-          <div className="captoliza ml-4" onClick={() => row.toggleSelected}>
+          <div className="ml-4" onClick={() => row.toggleSelected}>
             {row.getValue("display_name")}
           </div>
         );
@@ -129,7 +129,7 @@ export default function Reports() {
         return <div className="text-center">{trp("xp")}</div>;
       },
       cell: ({ row }) => (
-        <div className="captoliza text-center">{row.getValue("xp")}</div>
+        <div className="text-center">{row.getValue("xp")}</div>
       ),
     },
     {
@@ -138,7 +138,7 @@ export default function Reports() {
         return <div className="text-center">{trp("level")}</div>;
       },
       cell: ({ row }) => (
-        <div className="captoliza text-center">{row.getValue("level")}</div>
+        <div className="text-center">{row.getValue("level")}</div>
       ),
     },
     {
@@ -148,7 +148,7 @@ export default function Reports() {
       },
       cell: ({ row }) => {
         return (
-          <div className="captoliza text-center">
+          <div className="text-center">
             {row.getValue("last_activity")
               ? new Date(row.getValue("last_activity")).toLocaleString()
               : "No Activity"}

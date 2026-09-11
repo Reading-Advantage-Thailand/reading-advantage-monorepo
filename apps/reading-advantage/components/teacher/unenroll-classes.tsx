@@ -155,7 +155,7 @@ export default function MyUnEnrollClasses() {
         );
       },
       cell: ({ row }) => (
-        <div className="captoliza ml-4" onClick={() => row.toggleSelected}>
+        <div className="ml-4" onClick={() => row.toggleSelected}>
           {row.getValue("classroomName") || "Unknown"}
         </div>
       ),
@@ -166,7 +166,7 @@ export default function MyUnEnrollClasses() {
         return <div className="text-center">{tu("unEnroll")}</div>;
       },
       cell: ({ row }) => (
-        <div className="captoliza text-center">
+        <div className="text-center">
           <RadioGroupItem value={row.original.id} />
         </div>
       ),

@@ -385,7 +385,7 @@ function HandleArticle() {
         </div>
         <ScrollArea>
           <div className="grid grid-cols-1">
-            <div className="captoliza ml-4 mb-4 grid sm:grid-cols-2 gap-4 ">
+            <div className="ml-4 mb-4 grid sm:grid-cols-2 gap-4 ">
               {articles.map((article: Passage, index: number) => {
                 const isLastArticle = index === articles.length - 1;
                 return (
