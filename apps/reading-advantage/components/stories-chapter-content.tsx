@@ -37,7 +37,7 @@ import {
   TrackNextIcon,
   TrackPreviousIcon,
 } from "@radix-ui/react-icons";
-import useAudio from "@/hooks/stories-chapter/useAudio";
+import useAudio from "@/hooks/use-audio";
 
 type Sentence = {
   sentence: string;

@@ -29,7 +29,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-import useAudio from "@/hooks/article-content/useAudio";
+import useAudio from "@/hooks/use-audio";
 
 type Props = {
   article: Article;
