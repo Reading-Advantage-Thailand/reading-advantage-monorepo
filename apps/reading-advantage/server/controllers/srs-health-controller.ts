@@ -161,7 +161,7 @@ async function checkSRSAccess(
 /**
  * Generate quick-action suggestions based on health data
  */
-function generateQuickActions(
+export function generateQuickActions(
   scope: 'student' | 'class' | 'school',
   healthData: any,
   atRiskStudents: any[]

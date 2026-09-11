@@ -8,63 +8,16 @@ import { Badge } from "@/components/ui/badge";
 import { Target, TrendingUp, ChevronRight, Plus } from "lucide-react";
 import { useScopedI18n } from "@/locales/client";
 import { useRouter } from "next/navigation";
-
-interface Goal {
-  id: string;
-  title: string;
-  currentValue: number;
-  targetValue: number;
-  unit: string;
-  targetDate: Date;
-  status: string;
-  priority: string;
-}
+import type { DashboardGoalProps } from "@/components/dashboard/student-dashboard-contract";
 
 interface ActiveGoalsWidgetProps {
-  userId: string;
+  goals: DashboardGoalProps[];
 }
 
-export function ActiveGoalsWidget({ userId }: ActiveGoalsWidgetProps) {
+export function ActiveGoalsWidget({ goals }: ActiveGoalsWidgetProps) {
   const t = useScopedI18n("pages.student.dashboard.activeGoals");
   const tc = useScopedI18n("components.activeGoalsWidget") as any;
   const router = useRouter();
-  const [goals, setGoals] = React.useState<Goal[]>([]);
-  const [loading, setLoading] = React.useState(true);
-
-  React.useEffect(() => {
-    const fetchGoals = async () => {
-      try {
-        const res = await fetch("/api/v1/goals?status=ACTIVE");
-        if (res.ok) {
-          const data = await res.json();
-          // Show top 3 active goals
-          setGoals(data.goals?.slice(0, 3) || []);
-        }
-      } catch (error) {
-        console.error("Error fetching goals:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchGoals();
-  }, []);
-
-  if (loading) {
-    return (
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Target className="h-5 w-5" />
-            {tc("title")}
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="text-sm text-muted-foreground">{tc("loading")}</div>
-        </CardContent>
-      </Card>
-    );
-  }
 
   if (goals.length === 0) {
     return (

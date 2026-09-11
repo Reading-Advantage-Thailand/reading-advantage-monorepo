@@ -22,7 +22,10 @@ import { Button } from "@/components/ui/button";
 import { Brain } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useDashboardTelemetry } from "@/lib/telemetry/dashboard-telemetry";
-import { useDashboardMetrice } from "@/hooks/student/useDashboardMetrice"
+import {
+  DashboardGoalProps,
+  StudentDashboardMetricsProps,
+} from "@/components/dashboard/student-dashboard-contract";
 
 interface StudentDashboardContentProps {
   userId: string;
@@ -34,16 +37,21 @@ interface StudentDashboardContentProps {
     cefr_level: string;
     xp: number;
   };
+  metrics: StudentDashboardMetricsProps;
+  goals: DashboardGoalProps[];
 }
 
 export default function StudentDashboardContent({
   userId,
   user,
+  metrics,
+  goals,
 }: StudentDashboardContentProps) {
   const t = useScopedI18n("pages.student.dashboard") as any;
   const router = useRouter();
   const { trackEvent } = useDashboardTelemetry();
-  const { data, loading, refresh } = useDashboardMetrice(userId);
+  const data = metrics;
+  const loading = false;
 
   // Track dashboard view
   React.useEffect(() => {
@@ -74,21 +82,18 @@ export default function StudentDashboardContent({
         <XPVelocityWidget
           data={data.velocity}
           loading={loading}
-          onRefresh={refresh}
         />
 
         {/* ETA Card - conditionally rendered */}
         <ETACard
           data={data.velocity}
           loading={loading}
-          onRefresh={refresh}
         />
 
         {/* Genre Engagement */}
         <GenreEngagementWidget
           data={data.genres}
           loading={loading}
-          onRefresh={refresh}
           onGenreClick={handleGenreClick}
         />
 
@@ -107,7 +112,7 @@ export default function StudentDashboardContent({
         <CEFRLevels currentLevel={user.cefr_level} />
 
         {/* Active Goals Widget */}
-        <ActiveGoalsWidget userId={userId} />
+        <ActiveGoalsWidget goals={goals} />
 
         {/* SRS Health Card */}
         <SRSHealthCard
@@ -151,7 +156,6 @@ export default function StudentDashboardContent({
               : null
           }
           loading={loading}
-          onRefresh={refresh}
           onPracticeClick={handlePracticeFlashcards}
         />
 
@@ -177,7 +181,6 @@ export default function StudentDashboardContent({
               : undefined
           }
           loading={loading}
-          onRefresh={refresh}
         />
       </div>
     </div>

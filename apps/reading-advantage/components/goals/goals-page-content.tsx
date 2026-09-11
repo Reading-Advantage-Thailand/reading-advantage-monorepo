@@ -32,16 +32,25 @@ interface GoalSummary {
   completionRate: number;
 }
 
-export default function GoalsPageContent({ userId }: { userId: string }) {
-  const [goals, setGoals] = React.useState<Goal[]>([]);
-  const [summary, setSummary] = React.useState<GoalSummary | null>(null);
-  const [loading, setLoading] = React.useState(true);
+interface GoalsPageContentProps {
+  userId: string;
+  initialGoals: Goal[];
+  initialSummary: GoalSummary | null;
+}
+
+export default function GoalsPageContent({
+  userId,
+  initialGoals,
+  initialSummary,
+}: GoalsPageContentProps) {
+  const [goals, setGoals] = React.useState<Goal[]>(initialGoals);
+  const [summary, setSummary] = React.useState<GoalSummary | null>(initialSummary);
   const [showCreateDialog, setShowCreateDialog] = React.useState(false);
   const [filter, setFilter] = React.useState<"all" | "active" | "completed">("all");
 
-  const fetchGoals = React.useCallback(async () => {
+  // Refetches goals after a mutation without a full-page loading state.
+  const refreshGoals = React.useCallback(async () => {
     try {
-      setLoading(true);
       const [goalsRes, summaryRes] = await Promise.all([
         fetch("/api/v1/goals?includeProgress=true"),
         fetch("/api/v1/goals/summary"),
@@ -57,15 +66,9 @@ export default function GoalsPageContent({ userId }: { userId: string }) {
         setSummary(summaryData.summary);
       }
     } catch (error) {
-      console.error("Error fetching goals:", error);
-    } finally {
-      setLoading(false);
+      console.error("Error refetching goals:", error);
     }
   }, []);
-
-  React.useEffect(() => {
-    fetchGoals();
-  }, [fetchGoals]);
 
   const filteredGoals = React.useMemo(() => {
     if (filter === "all") return goals;
@@ -76,12 +79,8 @@ export default function GoalsPageContent({ userId }: { userId: string }) {
 
   const handleGoalCreated = () => {
     setShowCreateDialog(false);
-    fetchGoals();
+    refreshGoals();
   };
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
 
   return (
     <div className="space-y-6">
@@ -182,8 +181,8 @@ export default function GoalsPageContent({ userId }: { userId: string }) {
             <GoalCard
               key={goal.id}
               goal={goal}
-              onUpdate={fetchGoals}
-              onDelete={fetchGoals}
+              onUpdate={refreshGoals}
+              onDelete={refreshGoals}
             />
           ))
         )}

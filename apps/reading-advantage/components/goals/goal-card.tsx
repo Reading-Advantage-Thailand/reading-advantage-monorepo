@@ -12,6 +12,16 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import {
   Target,
   Calendar,
   TrendingUp,
@@ -45,6 +55,7 @@ interface GoalCardProps {
 
 export function GoalCard({ goal, onUpdate, onDelete }: GoalCardProps) {
   const [loading, setLoading] = React.useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = React.useState(false);
 
   const progressPercentage = Math.min(
     (goal.currentValue / goal.targetValue) * 100,
@@ -76,8 +87,6 @@ export function GoalCard({ goal, onUpdate, onDelete }: GoalCardProps) {
   };
 
   const handleDelete = async () => {
-    if (!confirm("Are you sure you want to delete this goal?")) return;
-
     try {
       setLoading(true);
       const res = await fetch(`/api/v1/goals/${goal.id}`, {
@@ -85,6 +94,7 @@ export function GoalCard({ goal, onUpdate, onDelete }: GoalCardProps) {
       });
 
       if (res.ok) {
+        setShowDeleteDialog(false);
         onDelete();
       }
     } catch (error) {
@@ -165,7 +175,13 @@ export function GoalCard({ goal, onUpdate, onDelete }: GoalCardProps) {
                     Mark as Complete
                   </DropdownMenuItem>
                 )}
-                <DropdownMenuItem onClick={handleDelete} className="text-red-600">
+                <DropdownMenuItem
+                  onSelect={(event) => {
+                    event.preventDefault();
+                    setShowDeleteDialog(true);
+                  }}
+                  className="text-red-600"
+                >
                   <Trash2 className="mr-2 h-4 w-4" />
                   Delete Goal
                 </DropdownMenuItem>
@@ -212,6 +228,27 @@ export function GoalCard({ goal, onUpdate, onDelete }: GoalCardProps) {
           </div>
         </div>
       </CardContent>
+
+      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete this goal?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete the
+              goal &quot;{goal.title}&quot;.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDelete}
+              className="bg-red-600 hover:bg-red-700"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Card>
   );
 }
