@@ -111,9 +111,10 @@ describe("broken-ux-fixes — static source invariants", () => {
     expect(firstMeaningfulLine(source)).toMatch(/^"use client";?$/);
   });
 
-  test('FR-5: tab-matching-words.tsx declares "use client" as its first statement', () => {
-    const source = readSource("components/vocabulary/tab-matching-words.tsx");
-    expect(firstMeaningfulLine(source)).toMatch(/^"use client";?$/);
+  test('FR-5: tab-matching-words.tsx was merged into matching.tsx', () => {
+    // component_deduplication_20260911 merged the fork into matching.tsx,
+    // which keeps the restored "use client" statement asserted above.
+    expect(fs.existsSync(path.resolve(APP_ROOT, "components/vocabulary/tab-matching-words.tsx"))).toBe(false);
   });
 
   test("FR-6: student-assignment-dashboard.tsx does not import act", () => {
