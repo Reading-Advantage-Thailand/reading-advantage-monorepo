@@ -47,10 +47,9 @@ import {
   School,
   Eye,
   MoreHorizontal,
-  Copy,
-  Check,
 } from "lucide-react";
 import { CaretSortIcon } from "@radix-ui/react-icons";
+import CopyKeyButton from "@/components/copy-key-button";
 import {
   BarChart,
   Bar,
@@ -128,7 +127,6 @@ function SystemReports({}: SystemReportsProps) {
   const [selectedPeriod, setSelectedPeriod] = React.useState<string>("all");
   const [dateRange, setDateRange] = React.useState<DateRange | undefined>();
   const [isChartLoading, setIsChartLoading] = React.useState(false);
-  const [copiedKey, setCopiedKey] = React.useState<string | null>(null);
   const [selectedSchool, setSelectedSchool] = React.useState<LicenseData | null>(null);
   const [detailOpen, setDetailOpen] = React.useState(false);
   const t = useScopedI18n("components.articleRecordsTable");
@@ -386,35 +384,15 @@ function SystemReports({}: SystemReportsProps) {
       cell: ({ row }) => {
         const fullKey = row.getValue("key") as string;
         const truncatedKey = fullKey.substring(0, 10) + "...";
-        const isCopied = copiedKey === fullKey;
-
-        const handleCopy = async (e: React.MouseEvent) => {
-          e.stopPropagation();
-          try {
-            await navigator.clipboard.writeText(fullKey);
-            setCopiedKey(fullKey);
-            setTimeout(() => setCopiedKey(null), 2000);
-          } catch (err) {
-            console.error("Failed to copy:", err);
-          }
-        };
 
         return (
           <div className="font-mono text-sm hidden sm:flex items-center gap-2">
             <span>{truncatedKey}</span>
-            <Button
-              variant="ghost"
-              size="sm"
+            <CopyKeyButton
+              copyText={fullKey}
               className="h-6 w-6 p-0"
-              onClick={handleCopy}
               title="Copy license key"
-            >
-              {isCopied ? (
-                <Check className="h-4 w-4 text-green-600" />
-              ) : (
-                <Copy className="h-4 w-4" />
-              )}
-            </Button>
+            />
           </div>
         );
       },
@@ -864,27 +842,11 @@ function SystemReports({}: SystemReportsProps) {
                   <p className="text-sm font-mono bg-muted p-2 rounded flex-1 break-all">
                     {selectedSchool.key}
                   </p>
-                  <Button
+                  <CopyKeyButton
+                    copyText={selectedSchool.key}
                     variant="outline"
-                    size="sm"
-                    onClick={async (e) => {
-                      e.stopPropagation();
-                      try {
-                        await navigator.clipboard.writeText(selectedSchool.key);
-                        setCopiedKey(selectedSchool.key);
-                        setTimeout(() => setCopiedKey(null), 2000);
-                      } catch (err) {
-                        console.error("Failed to copy:", err);
-                      }
-                    }}
                     title="Copy license key"
-                  >
-                    {copiedKey === selectedSchool.key ? (
-                      <Check className="h-4 w-4 text-green-600" />
-                    ) : (
-                      <Copy className="h-4 w-4" />
-                    )}
-                  </Button>
+                  />
                 </div>
               </div>
               <div>

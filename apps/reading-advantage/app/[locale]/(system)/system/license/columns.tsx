@@ -2,6 +2,7 @@
 import { licenseService } from "@/client/services/firestore-client-services";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import CopyKeyButton from "@/components/copy-key-button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -127,11 +128,11 @@ export const columns: ColumnDef<License>[] = [
             >
               Delete
             </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(license.key)}
-            >
-              Copy License Key
-            </DropdownMenuItem>
+            <CopyKeyButton
+              asDropdownItem
+              copyText={license.key}
+              dropdownLabel="Copy License Key"
+            />
             <DropdownMenuSeparator />
             <DropdownMenuItem>View license details</DropdownMenuItem>
           </DropdownMenuContent>
