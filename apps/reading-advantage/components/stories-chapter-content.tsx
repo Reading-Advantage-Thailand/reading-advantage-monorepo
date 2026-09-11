@@ -173,84 +173,121 @@ export default function ChapterContent({
   };
 
   const saveToFlashcard = async () => {
-    //translate before save
-    if (!isTranslate) {
-      await handleTranslate();
-    } else {
-      try {
-        if (selectedSentence === -1) {
-          toast({
-            title: "Please select a sentence",
-            description:
-              "You need to select a sentence before saving to flashcard.",
-            variant: "destructive",
-          });
-          return;
+    try {
+      let targetIndex = selectedSentence as number;
+      // Fall back to the currently highlighted sentence
+      if (targetIndex === -1) {
+        if (selectedIndex !== -1) {
+          targetIndex = selectedIndex;
+        } else if (isPlaying && currentAudioIndex !== -1) {
+          targetIndex = currentAudioIndex;
         }
+      }
 
-        const selectedSentenceData = sentenceList[selectedSentence as number];
-        if (!selectedSentenceData) {
-          toast({
-            title: "Invalid sentence",
-            description: "The selected sentence is not valid.",
-            variant: "destructive",
-          });
-          return;
-        }
-
-        const card: Card = createEmptyCard();
-        const endTimepoint = selectedSentenceData.endTime;
-
-        const resSaveSentences = await fetch(
-          `/api/v1/users/sentences/${userId}`,
-          {
-            method: "POST",
-            body: JSON.stringify({
-              sentence: selectedSentenceData.sentence.replace("~~", ""),
-              sn: selectedSentence,
-              storyId: story.storyId,
-              chapterNumber,
-              translation: {
-                th: translate[selectedSentence as number],
-              },
-              audioUrl: selectedSentenceData.audioUrl,
-              timepoint: selectedSentenceData.startTime,
-              endTimepoint: endTimepoint,
-              difficulty: card.difficulty,
-              due: card.due,
-              elapsed_days: card.elapsed_days,
-              lapses: card.lapses,
-              reps: card.reps,
-              scheduled_days: card.scheduled_days,
-              stability: card.stability,
-              state: card.state,
-            }),
-          }
-        );
-
-        if (resSaveSentences.status === 200) {
-          toast({
-            title: "Success",
-            description: `You have saved "${selectedSentenceData.sentence.replace(
-              "~~",
-              ""
-            )}" to flashcard`,
-          });
-        } else if (resSaveSentences.status === 400) {
-          toast({
-            title: "Sentence already saved",
-            description: "You have already saved this sentence.",
-            variant: "destructive",
-          });
-        }
-      } catch (error) {
-        console.error("Error:", error);
+      if (targetIndex === -1) {
         toast({
-          title: "Something went wrong.",
-          description: "Your sentence was not saved. Please try again.",
+          title: "Please select a sentence",
+          description:
+            "You need to select a sentence before saving to flashcard.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const selectedSentenceData = sentenceList[targetIndex];
+      if (!selectedSentenceData) {
+        toast({
+          title: "Invalid sentence",
+          description: "The selected sentence is not valid.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      setLoading(true);
+      const card: Card = createEmptyCard();
+      const endTimepoint = selectedSentenceData.endTime;
+
+      // Fetch all supported languages before saving
+      const supportedLanguages = ["th", "zh-CN", "zh-TW", "vi"];
+      const translationObj: Record<string, string> = {};
+
+      const translationPromises = supportedLanguages.map(async (lang) => {
+        try {
+          const response = await getTranslateSentence(
+            story.storyId,
+            lang,
+            chapterNumber
+          );
+          if (response.message !== "error" && response.translated_sentences) {
+            translationObj[lang] = response.translated_sentences[targetIndex];
+          }
+        } catch (error) {
+          console.warn(`Failed to translate to ${lang}:`, error);
+        }
+      });
+
+      await Promise.all(translationPromises);
+
+      // Ensure we have at least one translation
+      if (Object.keys(translationObj).length === 0) {
+        toast({
+          title: "Translation failed",
+          description: "Could not translate the sentence. Please try again.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const resSaveSentences = await fetch(
+        `/api/v1/users/sentences/${userId}`,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            sentence: selectedSentenceData.sentence.replace("~~", ""),
+            sn: targetIndex,
+            storyId: story.storyId,
+            chapterNumber,
+            translation: translationObj,
+            audioUrl: selectedSentenceData.audioUrl,
+            timepoint: selectedSentenceData.startTime,
+            endTimepoint: endTimepoint,
+            difficulty: card.difficulty,
+            due: card.due,
+            elapsed_days: card.elapsed_days,
+            lapses: card.lapses,
+            reps: card.reps,
+            scheduled_days: card.scheduled_days,
+            stability: card.stability,
+            state: card.state,
+          }),
+        }
+      );
+
+      if (resSaveSentences.status === 200) {
+        toast({
+          title: "Success",
+          description: `You have saved "${selectedSentenceData.sentence.replace(
+            "~~",
+            ""
+          )}" to flashcard`,
+        });
+      } else if (resSaveSentences.status === 400) {
+        toast({
+          title: "Sentence already saved",
+          description: "You have already saved this sentence.",
           variant: "destructive",
         });
       }
+    } catch (error) {
+      console.error("Error:", error);
+      toast({
+        title: "Something went wrong.",
+        description: "Your sentence was not saved. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -402,7 +439,6 @@ export default function ChapterContent({
                 handleSentenceClick(sentence.startTime, index);
                 setSelectedSentence(index);
                 setSelectedIndex(index);
-                //console.log("Selected sentence:", index);
               }}
             >
               {renderSentence(sentence.sentence, index)}
