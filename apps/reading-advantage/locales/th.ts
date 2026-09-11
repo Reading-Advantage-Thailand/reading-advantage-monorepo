@@ -12,6 +12,11 @@ export default {
       loginDescription: "เข้าสู่ระบบด้วยบัญชีของคุณ",
       backButton: "กลับ",
     },
+    signInPage: {
+      signUp: "สมัครสมาชิก",
+      title: "เข้าสู่ระบบบัญชีของคุณ",
+      description: "ป้อนอีเมลและรหัสผ่านเพื่อเข้าสู่ระบบ",
+    },
     signInForm: {
       signIn: "เข้าสู่ระบบ",
       forgotPassword: "ลืมรหัสผ่าน?",
@@ -2204,6 +2209,26 @@ export default {
       contact: "ติดต่อ",
       authors: "ผู้เขียน",
     },
+    signInError: {
+      sessionErrorTitle: "ข้อผิดพลาดของเซสชัน",
+      networkErrorTitle: "ข้อผิดพลาดของเครือข่าย",
+      authErrorTitle: "ข้อผิดพลาดการยืนยันตัวตน",
+      sessionErrorDescription:
+        "เกิดปัญหากับเซสชันของคุณ สิ่งนี้สามารถเกิดขึ้นได้บนอุปกรณ์ iOS ในโหมดเรียกดูแบบส่วนตัว",
+      networkErrorDescription:
+        "โปรดตรวจสอบการเชื่อมต่ออินเทอร์เน็ตของคุณแล้วลองอีกครั้ง",
+      iosUsersNote:
+        "ผู้ใช้ iOS: ลองเข้าสู่ระบบด้วย Safari ในโหมดปกติ หรือล้างแคชของเบราว์เซอร์",
+    },
+    footer: {
+      tagline: "มอบประสบการณ์การเรียนรู้ภาษาอังกฤษที่ดีที่สุด",
+      legalTitle: "ข้อกำหนด",
+      contactTitle: "ติดต่อ",
+      privacyPolicy: "นโยบายความเป็นส่วนตัว",
+      terms: "ข้อกำหนดและเงื่อนไข",
+      emailLabel: "อีเมล: {email}",
+      copyright: "© {year} Reading Advantage™ สงวนลิขสิทธิ์",
+    },
     userAccountNav: {
       level: "ระดับ {level}",
       settings: "การตั้งค่า",
@@ -2722,6 +2747,14 @@ export default {
       assignments: "งานที่มอบหมาย",
       dashboard: "แดชบอร์ด",
       workbookGenerator: "สร้างเวิร์กบุ๊ก",
+      systemDashboard: "แดชบอร์ดระบบ",
+      schoolsDashboard: "แดชบอร์ดโรงเรียน",
+      handlePassages: "จัดการบทความ",
+      license: "ใบอนุญาต",
+      adminDashboard: "แดชบอร์ดผู้ดูแล",
+      adminManagement: "การจัดการผู้ดูแล",
+      adminArticlesCreation: "สร้างบทความผู้ดูแล",
+      teacherAssignments: "งานที่มอบหมายของครู",
     },
     sidebarTeacherNav: {
       dashboard: "แดชบอร์ด",

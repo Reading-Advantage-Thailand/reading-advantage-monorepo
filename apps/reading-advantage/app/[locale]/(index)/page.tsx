@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import { Button } from "@/components/ui/button";
 import { siteConfig } from "@/configs/site-config";
 import React from "react";
@@ -41,6 +42,11 @@ import StartTour from "@/components/tour/StartTour";
 import { buttonVariants } from "@/components/ui/button";
 
 type Props = {};
+
+export const metadata: Metadata = {
+  title: "Reading Advantage",
+  description: siteConfig.description,
+};
 
 export default async function IndexPage({}: Props) {
   const t = await getScopedI18n("pages.indexPage");

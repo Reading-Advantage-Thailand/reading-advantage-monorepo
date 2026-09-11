@@ -5,32 +5,36 @@ import { LocaleSwitcher } from "./switchers/locale-switcher";
 import Link from "next/link";
 import { Palette } from "lucide-react";
 import { ThemeCustomizer } from "./theme-customizer";
+import { getScopedI18n } from "@/locales/server";
+
+const CONTACT_EMAIL = "admin@reading-advantage.com";
 
 interface FooterProps {
   className?: string;
 }
 
-const info = [
-  {
-    title: "Legal",
-    links: [
-      { title: "Privacy Policy", href: "/privacy-policy" },
-      { title: "Terms & Conditions", href: "/terms" },
-    ],
-  },
-  {
-    title: "Contact",
-    links: [
-      {
-        title: "Email: info@readingadvantage.com",
-        href: "mailto:info@readingadvantage.com",
-      },
-      { title: "Phone: +1 (123) 456-7890", href: "tel:+11234567890" },
-    ],
-  },
-];
+export async function Footer({ className }: FooterProps) {
+  const t = await getScopedI18n("components.footer");
+  const year = new Date().getFullYear();
 
-export function Footer({ className }: FooterProps) {
+  const info = [
+    {
+      title: t("legalTitle"),
+      links: [
+        { title: t("privacyPolicy"), href: "/privacy-policy" },
+        { title: t("terms"), href: "/terms" },
+      ],
+    },
+    {
+      title: t("contactTitle"),
+      links: [
+        {
+          title: t("emailLabel", { email: CONTACT_EMAIL }),
+          href: `mailto:${CONTACT_EMAIL}`,
+        },
+      ],
+    },
+  ];
   return (
     <footer className="text-white md:mt-36">
       <svg viewBox="0 0 800 23" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -51,9 +55,7 @@ export function Footer({ className }: FooterProps) {
                   {siteConfig.name}
                 </span>
               </a>
-              <p className="mt-2 text-gray-400">
-                Providing the best English learning experience.
-              </p>
+              <p className="mt-2 text-gray-400">{t("tagline")}</p>
             </div>
             <div className="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-2">
               {info.map((item) => (
@@ -77,11 +79,7 @@ export function Footer({ className }: FooterProps) {
           <hr className="my-6 sm:mx-auto border-gray-700 lg:my-8" />
           <div className="sm:flex sm:items-center sm:justify-between">
             <span className="text-sm text-gray-400 sm:text-center">
-              © 2024{" "}
-              <a href="https://flowbite.com/" className="hover:underline">
-                Reading Advantage™
-              </a>
-              . All Rights Reserved.
+              {t("copyright", { year })}{" "}
             </span>
             <div className="flex gap-2 justify-center  items-center">
               <Link href={siteConfig.link.github} className="mr-2">

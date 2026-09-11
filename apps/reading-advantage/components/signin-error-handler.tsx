@@ -2,10 +2,12 @@
 
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useScopedI18n } from "@/locales/client";
 
 const SignInErrorHandler = () => {
   const searchParams = useSearchParams();
   const [error, setError] = useState<string | null>(null);
+  const t = useScopedI18n("components.signInError");
 
   useEffect(() => {
     const errorParam = searchParams.get("error");
@@ -18,17 +20,17 @@ const SignInErrorHandler = () => {
   if (!error) return null;
 
   const getErrorTitle = (error: string): string => {
-    if (error.includes("session_error")) return "Session Error";
-    if (error.includes("network_error")) return "Network Error";
-    return "Authentication Error";
+    if (error.includes("session_error")) return t("sessionErrorTitle");
+    if (error.includes("network_error")) return t("networkErrorTitle");
+    return t("authErrorTitle");
   };
 
   const getErrorDescription = (error: string): string => {
     if (error.includes("session_error")) {
-      return "There was an issue with your session. This can happen on iOS devices in private browsing mode.";
+      return t("sessionErrorDescription");
     }
     if (error.includes("network_error")) {
-      return "Please check your internet connection and try again.";
+      return t("networkErrorDescription");
     }
     return error;
   };
@@ -50,7 +52,7 @@ const SignInErrorHandler = () => {
           </p>
           {error.includes("session_error") && (
             <div className="mt-2 text-xs text-red-600">
-              <strong>iOS Users:</strong> Try signing in with Safari in normal mode, or clear your browser cache.
+              <strong>{t("iosUsersNote")}</strong>
             </div>
           )}
         </div>

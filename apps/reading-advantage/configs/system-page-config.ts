@@ -5,27 +5,27 @@ export const systemPageConfig: SystemPageConfig = {
   mainNav: [...sharedMainNav],
   systemSidebarNav: [
     {
-      title: "System Dashboard",
+      title: "systemDashboard",
       href: "/system/dashboard",
       icon: "dashboard",
     },
     {
-      title: "Schools Dashboard",
+      title: "schoolsDashboard",
       href: "/system/schooldashboard",
       icon: "MonitorCog",
     },
     {
-      title: "Handle Passages",
+      title: "handlePassages",
       href: "/system/handle-passages",
       icon: "book",
     },
     {
-      title: "Reports",
+      title: "reports",
       href: "/system/reports",
       icon: "report",
     },
     {
-      title: "License",
+      title: "license",
       href: "/system/license",
       icon: "scrollText",
     },

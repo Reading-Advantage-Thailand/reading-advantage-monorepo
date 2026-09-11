@@ -11,6 +11,11 @@ export default {
       loginDescription: "Đăng nhập vào tài khoản của bạn",
       backButton: "Quay lại",
     },
+    signInPage: {
+      signUp: "Đăng ký",
+      title: "Đăng nhập vào tài khoản của bạn",
+      description: "Nhập email và mật khẩu để đăng nhập.",
+    },
     signInForm: {
       signIn: "Đăng nhập",
       forgotPassword: "Quên mật khẩu?",
@@ -2282,6 +2287,26 @@ export default {
       contact: "Liên hệ",
       authors: "tác giả",
     },
+    signInError: {
+      sessionErrorTitle: "Lỗi phiên đăng nhập",
+      networkErrorTitle: "Lỗi mạng",
+      authErrorTitle: "Lỗi xác thực",
+      sessionErrorDescription:
+        "Đã xảy ra sự cố với phiên đăng nhập của bạn. Điều này có thể xảy ra trên thiết bị iOS ở chế độ duyệt web riêng tư.",
+      networkErrorDescription:
+        "Vui lòng kiểm tra kết nối internet của bạn và thử lại.",
+      iosUsersNote:
+        "Ngườ​i dùng iOS: Hãy thử đăng nhập bằng Safari ở chế độ bình thường hoặc xóa bộ nhớ đệm của trình duyệt.",
+    },
+    footer: {
+      tagline: "Mang đến trải nghiệm học tiếng Anh tốt nhất.",
+      legalTitle: "Pháp lý",
+      contactTitle: "Liên hệ",
+      privacyPolicy: "Chính sách quyền riêng tư",
+      terms: "Điều khoản và điều kiện",
+      emailLabel: "Email: {email}",
+      copyright: "© {year} Reading Advantage™. Bảo lưu mọi quyền.",
+    },
     userAccountNav: {
       level: "Trình độ {level}",
       settings: "Cài đặt",
@@ -2797,6 +2822,14 @@ export default {
       assignments: "Bài tập",
       dashboard: "Bảng Điều Khiển",
       workbookGenerator: "TạoWorkbook",
+      systemDashboard: "Bảng điều khiển hệ thống",
+      schoolsDashboard: "Bảng điều khiển trường học",
+      handlePassages: "Quản lý bài đọc",
+      license: "Giấy phép",
+      adminDashboard: "Bảng điều khiển quản trị",
+      adminManagement: "Quản lý quản trị",
+      adminArticlesCreation: "Tạo bài viết quản trị",
+      teacherAssignments: "Bài tập của giáo viên",
     },
     sidebarTeacherNav: {
       dashboard: "Bảng Điều Khiển",

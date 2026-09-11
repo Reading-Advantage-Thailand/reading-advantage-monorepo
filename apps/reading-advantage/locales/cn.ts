@@ -8,6 +8,11 @@ export default {
       loginDescription: "登录到您的账户",
       backButton: "返回",
     },
+    signInPage: {
+      signUp: "注册",
+      title: "登录您的账户",
+      description: "输入您的邮箱和密码登录。",
+    },
     signInForm: {
       signIn: "登录",
       forgotPassword: "忘记密码？",
@@ -2125,6 +2130,24 @@ export default {
       contact: "联系",
       authors: "作者",
     },
+    signInError: {
+      sessionErrorTitle: "会话错误",
+      networkErrorTitle: "网络错误",
+      authErrorTitle: "身份验证错误",
+      sessionErrorDescription:
+        "您的会话出现问题。这可能发生在 iOS 设备的私人浏览模式下。",
+      networkErrorDescription: "请检查您的网络连接后重试。",
+      iosUsersNote: "iOS 用户：请尝试使用 Safari 正常模式登录，或清除浏览器缓存。",
+    },
+    footer: {
+      tagline: "提供最佳的英语学习体验。",
+      legalTitle: "法律信息",
+      contactTitle: "联系我们",
+      privacyPolicy: "隐私政策",
+      terms: "条款与条件",
+      emailLabel: "邮箱：{email}",
+      copyright: "© {year} Reading Advantage™ 保留所有权利。",
+    },
     userAccountNav: {
       level: "等级 {level}",
       settings: "设置",
@@ -2607,6 +2630,14 @@ export default {
         assignments: "作业",
         dashboard: "控制台",
         workbookGenerator: "工作簿生成器",
+        systemDashboard: "系统控制台",
+        schoolsDashboard: "学校控制台",
+        handlePassages: "管理段落",
+        license: "许可证",
+        adminDashboard: "管理控制台",
+        adminManagement: "管理",
+        adminArticlesCreation: "管理员文章创建",
+        teacherAssignments: "教师作业",
       },
       sidebarTeacherNav: {
         dashboard: "控制台",

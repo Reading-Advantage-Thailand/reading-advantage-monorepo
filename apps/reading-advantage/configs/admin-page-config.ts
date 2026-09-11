@@ -5,27 +5,27 @@ export const adminPageConfig: AdminPageConfig = {
   mainNav: [...sharedMainNav],
   sidebarNav: [
     {
-      title: "Admin Dashboard",
+      title: "adminDashboard",
       href: "/admin/dashboard",
       icon: "dashboard",
     },
     {
-      title: "Admin Management",
+      title: "adminManagement",
       href: "/admin/management",
       icon: "MonitorCog",
     },
     {
-      title: "Admin Articles Creation",
+      title: "adminArticlesCreation",
       href: "/admin/article-creation",
       icon: "BookPlus",
     },
     {
-      title: "Reports",
+      title: "reports",
       href: "/admin/reports",
       icon: "report",
     },
     {
-      title: "Teacher Assignments",
+      title: "teacherAssignments",
       href: "/admin/teacher-assignments",
       icon: "clipboard",
     },

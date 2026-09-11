@@ -13,6 +13,11 @@ export default {
       loginDescription: "Log in to your account.",
       backButton: "Back",
     },
+    signInPage: {
+      signUp: "Sign up",
+      title: "Sign in to your account",
+      description: "Enter your email and password to sign in.",
+    },
     signInForm: {
       signIn: "Sign in",
       forgotPassword: "Forgot Password?",
@@ -2264,6 +2269,26 @@ export default {
       contact: "Contact",
       authors: "Authors",
     },
+    signInError: {
+      sessionErrorTitle: "Session Error",
+      networkErrorTitle: "Network Error",
+      authErrorTitle: "Authentication Error",
+      sessionErrorDescription:
+        "There was an issue with your session. This can happen on iOS devices in private browsing mode.",
+      networkErrorDescription:
+        "Please check your internet connection and try again.",
+      iosUsersNote:
+        "iOS Users: Try signing in with Safari in normal mode, or clear your browser cache.",
+    },
+    footer: {
+      tagline: "Providing the best English learning experience.",
+      legalTitle: "Legal",
+      contactTitle: "Contact",
+      privacyPolicy: "Privacy Policy",
+      terms: "Terms & Conditions",
+      emailLabel: "Email: {email}",
+      copyright: "© {year} Reading Advantage™. All Rights Reserved.",
+    },
     userAccountNav: {
       level: "Level {level}",
       settings: "Settings",
@@ -2772,6 +2797,14 @@ export default {
       assignments: "Assignments",
       dashboard: "Dashboard",
       workbookGenerator: "Workbook Generator",
+      systemDashboard: "System Dashboard",
+      schoolsDashboard: "Schools Dashboard",
+      handlePassages: "Handle Passages",
+      license: "License",
+      adminDashboard: "Admin Dashboard",
+      adminManagement: "Admin Management",
+      adminArticlesCreation: "Admin Articles Creation",
+      teacherAssignments: "Teacher Assignments",
     },
     sidebarTeacherNav: {
       dashboard: "Dashboard",
