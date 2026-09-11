@@ -1,5 +1,4 @@
-import { redirect } from "next/navigation";
-import { getCurrentUser } from "@/lib/session";
+import { requireUser } from "@/lib/auth-guard";
 import { MainNav } from "@/components/main-navbar";
 import { UserAccountNav } from "@/components/user-account-nav";
 import { SidebarNav } from "@/components/sidebar-nav";
@@ -34,12 +33,7 @@ export default async function AppLayout({
   disableSidebar,
   disableLeaderboard,
 }: AppLayoutProps) {
-  const user = await getCurrentUser();
-
-  // Redirect to sign in page if user is not logged in
-  if (!user) {
-    return redirect("/auth/signin");
-  }
+  const user = await requireUser();
 
   const feactlearderboard = async () => {
     if (!user.license_id) return [];
@@ -72,7 +66,7 @@ export default async function AppLayout({
     }
   };
 
-  const leaderboard = await feactlearderboard();
+  const leaderboard = disableLeaderboard ? [] : await feactlearderboard();
 
   // Redirect to level selection page if user has not selected a level
   // if (user.level === undefined || user.cefr_level === "") {

@@ -1,24 +1,8 @@
 import { TeacherPageConfig } from "@/types";
+import { sharedMainNav } from "./index-page-config";
 
 export const teacherPageConfig: TeacherPageConfig = {
-  mainNav: [
-    {
-      title: "home",
-      href: "/",
-    },
-    {
-      title: "about",
-      href: "/about",
-    },
-    {
-      title: "contact",
-      href: "/contact",
-    },
-    {
-      title: "authors",
-      href: "/authors",
-    },
-  ],
+  mainNav: [...sharedMainNav],
   teacherSidebarNav: [
     {
       title: "dashboard",

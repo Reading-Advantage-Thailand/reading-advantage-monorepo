@@ -1,16 +1,13 @@
 import AppLayout, { BaseAppLayoutProps } from "@/components/shared/app-layout";
 import { systemPageConfig } from "@/configs/system-page-config";
-import { getCurrentUser } from "@/lib/session";
-import { redirect } from "next/navigation";
 import { Role } from "@/lib/enums";
+import { requireRole } from "@/lib/auth-guard";
 
 export default async function LevelPageLayout({
   children,
 }: BaseAppLayoutProps) {
-  const user = await getCurrentUser();
-  if (user?.role !== Role.SYSTEM) {
-    return redirect("/");
-  }
+  await requireRole([Role.SYSTEM]);
+
   return (
     <AppLayout
       disableProgressBar={true}

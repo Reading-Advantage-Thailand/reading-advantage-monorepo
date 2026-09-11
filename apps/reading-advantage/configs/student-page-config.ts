@@ -1,24 +1,8 @@
 import { StudentPageConfig } from "@/types";
+import { sharedMainNav } from "./index-page-config";
 
 export const studentPageConfig: StudentPageConfig = {
-  mainNav: [
-    {
-      title: "home",
-      href: "/",
-    },
-    {
-      title: "about",
-      href: "/about",
-    },
-    {
-      title: "contact",
-      href: "/contact",
-    },
-    {
-      title: "authors",
-      href: "/authors",
-    },
-  ],
+  mainNav: [...sharedMainNav],
   sidebarNav: [
     {
       title: "read",

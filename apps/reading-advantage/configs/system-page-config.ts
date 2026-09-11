@@ -1,24 +1,8 @@
 import { SystemPageConfig } from "@/types";
+import { sharedMainNav } from "./index-page-config";
 
 export const systemPageConfig: SystemPageConfig = {
-  mainNav: [
-    {
-      title: "home",
-      href: "/",
-    },
-    {
-      title: "about",
-      href: "/about",
-    },
-    {
-      title: "contact",
-      href: "/contact",
-    },
-    {
-      title: "authors",
-      href: "/authors",
-    },
-  ],
+  mainNav: [...sharedMainNav],
   systemSidebarNav: [
     {
       title: "System Dashboard",

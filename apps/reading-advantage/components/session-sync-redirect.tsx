@@ -3,16 +3,23 @@
 import { useEffect } from "react";
 import { Loader2 } from "lucide-react";
 
-export function SessionSyncRedirect() {
+interface SessionSyncRedirectProps {
+  /** Locale-relative destination path. Defaults to the student reading page. */
+  destination?: string;
+}
+
+export function SessionSyncRedirect({
+  destination = "/student/read",
+}: SessionSyncRedirectProps) {
   useEffect(() => {
     // With cookie-based auth, just redirect after a brief delay
     // No session update() needed — cookies are already set
     const timer = setTimeout(() => {
-      window.location.href = "/student/read";
+      window.location.href = destination;
     }, 500);
 
     return () => clearTimeout(timer);
-  }, []);
+  }, [destination]);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[50vh] space-y-4">

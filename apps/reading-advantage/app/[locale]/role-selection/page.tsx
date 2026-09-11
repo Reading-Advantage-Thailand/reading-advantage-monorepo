@@ -24,7 +24,7 @@ export default async function FirstRoleSelectionPage() {
   } else if (user.role === Role.TEACHER) {
     return (
       <div className="flex justify-center pt-20">
-        <SessionSyncRedirect />
+        <SessionSyncRedirect destination="/teacher/my-classes" />
       </div>
     );
   } else if (user.role !== Role.USER) {
