@@ -78,8 +78,11 @@ Replace hardcoded English with existing i18n scopes in: goals pages, flashcards,
 - AC-7: Teacher pages issue no student-leaderboard fetch.
 - AC-8: `pnpm turbo run test --filter=reading-advantage`, `check-types`, and `build` pass.
 
-## Out of Scope
+## Implementation Notes
 
+- FR-4 trust boundary (implemented 2026-09-12): placement XP authority moved to the server. The client now posts only the AI assessment (`level`, `sublevel`, and metadata) to `POST /api/v1/level-test/placement`, Zod-validated in `level-test-controller.ts`. The server computes `systemXp` via `cefrToSystemXp` (moved to `lib/utils.ts`), records the `LEVEL_TEST` activity and XP log, sets the user's XP/level, and returns the placement. Client-sent XP values are ignored. The previous flow let the browser compute and POST its own placement XP through `/api/v1/users/:id/activitylog`.
+
+## Out of Scope
 - Framework upgrades. Version policy forbids them.
 - Rewriting the 294 legacy API routes. This track touches only the client usage listed above.
 - Signup/CTA copy realignment beyond the footer and auth i18n fixes. Owner decision required first.

@@ -135,6 +135,47 @@ export function splitTextIntoSentences(
   }
 }
 
+/**
+ * Converts a CEFR placement level to system XP.
+ * @param level The CEFR level, for example "B1".
+ * @param sublevel The optional sublevel sign, "+" or "-".
+ * @returns The system XP for the level, or 0 when unrecognized.
+ */
+export function cefrToSystemXp(level: string, sublevel?: string): number {
+  const cefrXpMap: Record<string, number> = {
+    "A1-": 0,
+    A1: 5000,
+    "A1+": 11000,
+    "A2-": 18000,
+    A2: 26000,
+    "A2+": 35000,
+    "B1-": 45000,
+    B1: 56000,
+    "B1+": 68000,
+    "B2-": 81000,
+    B2: 95000,
+    "B2+": 110000,
+    "C1-": 126000,
+    C1: 143000,
+    "C1+": 161000,
+    "C2-": 180000,
+    C2: 200000,
+    "C2+": 221000,
+  };
+
+  const cefrKey = `${level}${sublevel || ""}`;
+
+  if (cefrXpMap[cefrKey]) {
+    return cefrXpMap[cefrKey];
+  }
+
+  if (cefrXpMap[level]) {
+    return cefrXpMap[level];
+  }
+
+  return 0;
+}
+
 export function levelCalculation(xp: number): { cefrLevel: string; raLevel: number } {
   const levels = [
     { min: 0, max: 4999, cefrLevel: "A1-", raLevel: 1 },

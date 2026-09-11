@@ -33,7 +33,7 @@ export default async function LevelPage() {
 
   return (
     <div className="container py-8">
-      <LevelTestChat userId={user.id} />
+      <LevelTestChat />
     </div>
   );
 }

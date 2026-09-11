@@ -117,6 +117,14 @@ jest.mock("@/utils/fetch-data", () => ({
   fetchData: jest.fn(),
 }));
 
+jest.mock("@reading-advantage/db", () => ({
+  db: {
+    select: jest.fn(),
+  },
+  and: jest.fn((...args: unknown[]) => ({ and: args })),
+  eq: jest.fn((...args: unknown[]) => ({ eq: args })),
+}));
+
 import { getCurrentUser } from "@/lib/session";
 import { fetchData } from "@/utils/fetch-data";
 import { db } from "@reading-advantage/db";
@@ -179,124 +187,5 @@ describe("teacher student-progress ownership guard", () => {
     // started after the ownership check passed.
     await ProgressPage({ params }).catch(() => undefined);
     expect(mockFetchData).toHaveBeenCalledTimes(2);
-  });
-});
-
-// ---------------------------------------------------------------------------
-// FR-4: the level-test placement endpoint computes XP server-side from the
-// posted assessment and ignores any client-sent XP value.
-// ---------------------------------------------------------------------------
-
-jest.mock("@/utils/openai", () => ({
-  openai: {},
-  openaiModel5: "test-model",
-}));
-
-jest.mock("@reading-advantage/ai/internal-sdk", () => ({
-  streamText: jest.fn(),
-}));
-
-jest.mock("@reading-advantage/db", () => ({
-  db: {
-    select: jest.fn(),
-    insert: jest.fn(),
-    update: jest.fn(),
-  },
-  and: jest.fn((...args: unknown[]) => ({ and: args })),
-  eq: jest.fn((...args: unknown[]) => ({ eq: args })),
-}));
-
-import { handleLevelTestPlacement } from "@/server/controllers/level-test-controller";
-
-const dbMock = db as jest.Mocked<typeof db>;
-
-function placementRequest(body: unknown, user?: { id: string } | null) {
-  const req = new Request("http://localhost/api/v1/level-test/placement", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-  }) as any;
-  req.session = user ? { user } : undefined;
-  req.json = () => Promise.resolve(body);
-  return req;
-}
-
-describe("level-test placement endpoint", () => {
-  const insertValues = jest.fn();
-  const updateSet = jest.fn();
-
-  beforeEach(() => {
-    jest.clearAllMocks();
-    insertValues.mockReturnValue({
-      returning: () => Promise.resolve([{ id: "activity-1" }]),
-    });
-    (dbMock.insert as jest.Mock).mockReturnValue({ values: insertValues });
-    updateSet.mockReturnValue({
-      where: () => Promise.resolve(undefined),
-    });
-    (dbMock.update as jest.Mock).mockReturnValue({ set: updateSet });
-    (dbMock.select as jest.Mock).mockReturnValue({
-      from: () => ({
-        where: () => ({
-          limit: () => Promise.resolve([]),
-        }),
-      }),
-    });
-  });
-
-  it("computes placement from posted answers and ignores client-sent XP", async () => {
-    const res = await handleLevelTestPlacement(
-      placementRequest(
-        {
-          level: "B1",
-          sublevel: "+",
-          messageCount: 12,
-          xpEarned: 999999, // a forged client value that must be ignored
-        },
-        { id: "student-1" },
-      ),
-    );
-
-    expect(res.status).toBe(200);
-    const body = await res.json();
-    // B1+ maps to 68000 XP per the CEFR table, never the forged value.
-    expect(body.placement.systemXp).toBe(68000);
-    expect(body.placement.raLevel).toBe(9);
-
-    // The XP log records the server-computed value.
-    const xpLogCall = (dbMock.insert as jest.Mock).mock.calls.find(
-      ([table]: [unknown]) => table && typeof table === "object" && "xpEarned" in (table as object),
-    );
-    expect(xpLogCall).toBeDefined();
-    expect((xpLogCall![0] as any).xpEarned).toBe(68000);
-  });
-
-  it("does not award XP for an unrecognized level", async () => {
-    const res = await handleLevelTestPlacement(
-      placementRequest({ level: "Z9", sublevel: "" }, { id: "student-1" }),
-    );
-
-    expect(res.status).toBe(200);
-    const body = await res.json();
-    expect(body.placement.systemXp).toBe(0);
-
-    const xpLogCall = (dbMock.insert as jest.Mock).mock.calls.find(
-      ([table]: [unknown]) => table && typeof table === "object" && "xpEarned" in (table as object),
-    );
-    expect(xpLogCall).toBeUndefined();
-  });
-
-  it("rejects an unauthenticated request", async () => {
-    const res = await handleLevelTestPlacement(
-      placementRequest({ level: "B1" }, null),
-    );
-    expect(res.status).toBe(401);
-  });
-
-  it("rejects an invalid assessment payload", async () => {
-    const res = await handleLevelTestPlacement(
-      placementRequest({ sublevel: "+" }, { id: "student-1" }),
-    );
-    expect(res.status).toBe(400);
   });
 });

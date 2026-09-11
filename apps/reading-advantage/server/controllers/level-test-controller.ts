@@ -4,6 +4,10 @@ import { z } from "zod";
 import { streamText } from "@reading-advantage/ai/internal-sdk";
 import { openai, openaiModel5 } from "@/utils/openai";
 import { promptLevelTestChat } from "@/data/prompt-level-test-chat";
+import { db, and, eq } from "@reading-advantage/db";
+import { userActivity, xpLogs, users } from "@reading-advantage/db/schema";
+import { cefrToSystemXp, levelCalculation } from "@/lib/utils";
+import { ActivityType } from "@/lib/enums";
 
 // Schema for level test chat request
 const levelTestChatSchema = z.object({
@@ -90,6 +94,155 @@ const languageNames: Record<string, string> = {
   tw: "Chinese Traditional (繁體中文)",
   vi: "Vietnamese (Tiếng Việt)",
 };
+
+// ---------------------------------------------------------------------------
+// Level test placement (FR-4 of structural_ux_alignment_20260911)
+//
+// Trust boundary: the client posts the AI assessment (answers) and the server
+// computes the placement XP. A client-sent XP value is never trusted; the
+// previous flow let the browser compute and POST its own placement XP.
+// ---------------------------------------------------------------------------
+
+const LEVEL_TEST_TARGET_ID = "initial-level-test";
+
+const levelTestPlacementSchema = z.object({
+  level: z.string().min(1).max(10),
+  sublevel: z.string().max(3).optional(),
+  messageCount: z.number().int().min(0).optional(),
+  strengths: z.array(z.string()).optional(),
+  improvements: z.array(z.string()).optional(),
+  aiXp: z.number().optional(),
+});
+
+export type LevelTestPlacementRequest = z.infer<typeof levelTestPlacementSchema>;
+
+export interface LevelTestPlacement {
+  systemXp: number;
+  cefrLevel: string;
+  raLevel: number;
+  level: string;
+}
+
+/**
+ * Persists the initial level test placement. Computes the system XP from the
+ * posted CEFR level server-side, records the activity and XP log once, and
+ * sets the user's XP/level to the placement. Repeats return the existing
+ * placement without awarding XP again.
+ * @param req The extended request with session and JSON body.
+ * @returns The placement response.
+ */
+export async function handleLevelTestPlacement(req: ExtendedNextRequest) {
+  const session = req.session;
+  if (!session?.user?.id) {
+    return NextResponse.json(
+      { code: "UNAUTHORIZED", message: "Not authenticated" },
+      { status: 401 },
+    );
+  }
+
+  let rawBody: unknown;
+  try {
+    rawBody = await req.json();
+  } catch {
+    return NextResponse.json(
+      { code: "BAD_REQUEST", message: "Invalid JSON body" },
+      { status: 400 },
+    );
+  }
+
+  const parsed = levelTestPlacementSchema.safeParse(rawBody);
+  if (!parsed.success) {
+    return NextResponse.json(
+      {
+        code: "BAD_REQUEST",
+        message: "Invalid placement payload",
+        issues: parsed.error.issues.map((issue) => issue.path.join(".")),
+      },
+      { status: 400 },
+    );
+  }
+
+  const { level, sublevel, messageCount, strengths, improvements, aiXp } =
+    parsed.data;
+
+  // The server owns placement authority: derive XP from the CEFR level only.
+  const systemXp = cefrToSystemXp(level, sublevel);
+  const placement: LevelTestPlacement = {
+    systemXp,
+    ...levelCalculation(systemXp),
+    level: `${level}${sublevel || ""}`,
+  };
+
+  const userId = session.user.id;
+  const existingConditions = [
+    eq(userActivity.userId, userId),
+    eq(userActivity.activityType, ActivityType.LEVEL_TEST),
+    eq(userActivity.targetId, LEVEL_TEST_TARGET_ID),
+  ];
+
+  const [existing] = await db
+    .select({ id: userActivity.id })
+    .from(userActivity)
+    .where(and(...existingConditions))
+    .limit(1);
+
+  if (existing) {
+    return NextResponse.json(
+      { message: "Level test already recorded", placement },
+      { status: 200 },
+    );
+  }
+
+  const [activity] = await db
+    .insert(userActivity)
+    .values({
+      userId,
+      activityType: ActivityType.LEVEL_TEST,
+      targetId: LEVEL_TEST_TARGET_ID,
+      completed: true,
+      details: {
+        assessmentMethod: "chat",
+        cefrLevel: level,
+        sublevel,
+        aiXp,
+        systemXp,
+        messageCount,
+        strengths,
+        improvements,
+        cefr_level: placement.cefrLevel,
+      },
+    })
+    .onConflictDoNothing()
+    .returning();
+
+  if (!activity) {
+    return NextResponse.json(
+      { message: "Level test already recorded", placement },
+      { status: 200 },
+    );
+  }
+
+  if (systemXp > 0) {
+    await db.insert(xpLogs).values({
+      userId,
+      xpEarned: systemXp,
+      activityId: activity.id,
+      activityType: ActivityType.LEVEL_TEST,
+    });
+
+    await db
+      .update(users)
+      .set({
+        xp: systemXp,
+        level: placement.raLevel,
+        cefrLevel: placement.cefrLevel,
+        updatedAt: new Date(),
+      })
+      .where(eq(users.id, userId));
+  }
+
+  return NextResponse.json({ message: "Success", placement }, { status: 200 });
+}
 
 /**
  * Build system message for level test chat

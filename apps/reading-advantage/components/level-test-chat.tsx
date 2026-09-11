@@ -14,8 +14,6 @@ import { toast } from "./ui/use-toast";
 import { useRouter } from "next/navigation";
 import Confetti from "react-confetti";
 import { useScopedI18n, useCurrentLocale } from "@/locales/client";
-import { levelCalculation } from "@/lib/utils";
-import { ActivityStatus, ActivityType } from "./models/user-activity-log-model";
 import {
   Send,
   Loader2,
@@ -26,10 +24,6 @@ import {
   AlertTriangle,
 } from "lucide-react";
 import { ScrollArea } from "./ui/scroll-area";
-
-type Props = {
-  userId: string;
-};
 
 type Message = {
   text: string;
@@ -46,52 +40,18 @@ type Assessment = {
   nextSteps: string;
 };
 
+type Placement = {
+  systemXp: number;
+  cefrLevel: string;
+  raLevel: number;
+  level: string;
+};
+
 const SKIP_TIMEOUT_MS = 15000; // 15 seconds before showing skip button
 const MAX_SKIPS_BEFORE_WARNING = 3; // Warn user after 3 skips
 const MAX_SKIPS_BEFORE_END = 5; // End test early after 5 skips
 
-// Convert CEFR level to system XP
-// Based on levelCalculation ranges in lib/utils.ts
-const cefrToSystemXp = (level: string, sublevel?: string): number => {
-  const cefrXpMap: Record<string, number> = {
-    "A1-": 0,
-    A1: 5000,
-    "A1+": 11000,
-    "A2-": 18000,
-    A2: 26000,
-    "A2+": 35000,
-    "B1-": 45000,
-    B1: 56000,
-    "B1+": 68000,
-    "B2-": 81000,
-    B2: 95000,
-    "B2+": 110000,
-    "C1-": 126000,
-    C1: 143000,
-    "C1+": 161000,
-    "C2-": 180000,
-    C2: 200000,
-    "C2+": 221000,
-  };
-
-  // Construct CEFR key (e.g., "B1+", "A2-", "B2")
-  const cefrKey = `${level}${sublevel || ""}`;
-
-  // Try exact match first
-  if (cefrXpMap[cefrKey]) {
-    return cefrXpMap[cefrKey];
-  }
-
-  // Try level without sublevel
-  if (cefrXpMap[level]) {
-    return cefrXpMap[level];
-  }
-
-  // Default to A1-
-  return 0;
-};
-
-export default function LevelTestChat({ userId }: Props) {
+export default function LevelTestChat() {
   const t = useScopedI18n("components.levelTestChat");
   const router = useRouter();
   const currentLocale = useCurrentLocale();
@@ -103,6 +63,7 @@ export default function LevelTestChat({ userId }: Props) {
   const [isSaved, setIsSaved] = useState(false);
   const [testFinished, setTestFinished] = useState(false);
   const [assessment, setAssessment] = useState<Assessment | null>(null);
+  const [placement, setPlacement] = useState<Placement | null>(null);
   const [isInitialized, setIsInitialized] = useState(false);
   const [showSkipButton, setShowSkipButton] = useState(false);
   const [skipCount, setSkipCount] = useState(0);
@@ -406,35 +367,26 @@ export default function LevelTestChat({ userId }: Props) {
   ): Promise<boolean> => {
     setIsSaving(true);
     try {
-      // Convert AI's CEFR level to system XP
-      const systemXp = cefrToSystemXp(
-        assessmentData.level,
-        assessmentData.sublevel,
-      );
-      const calculatedLevel = levelCalculation(systemXp);
-
-      const updateResult = await fetch(`/api/v1/users/${userId}/activitylog`, {
+      // The server computes the placement XP from the CEFR level. The client
+      // only posts the answers and displays the returned placement.
+      const updateResult = await fetch("/api/v1/level-test/placement", {
         method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({
-          activityType: ActivityType.LevelTest,
-          activityStatus: ActivityStatus.Completed,
-          xpEarned: systemXp,
-          isInitialLevelTest: true,
-          details: {
-            assessmentMethod: "chat",
-            cefrLevel: assessmentData.level,
-            sublevel: assessmentData.sublevel,
-            aiXp: assessmentData.xp,
-            systemXp: systemXp,
-            messageCount: messages.length,
-            strengths: assessmentData.strengths,
-            improvements: assessmentData.improvements,
-            cefr_level: calculatedLevel.cefrLevel,
-          },
+          level: assessmentData.level,
+          sublevel: assessmentData.sublevel,
+          messageCount: messages.length,
+          strengths: assessmentData.strengths,
+          improvements: assessmentData.improvements,
+          aiXp: assessmentData.xp,
         }),
       });
 
       if (updateResult.status === 200) {
+        const data = await updateResult.json();
+        setPlacement(data.placement ?? null);
         setIsSaved(true);
         return true;
       } else {
@@ -496,9 +448,6 @@ export default function LevelTestChat({ userId }: Props) {
 
   // Display completed test result
   if (testFinished && assessment) {
-    const systemXp = cefrToSystemXp(assessment.level, assessment.sublevel);
-    const calculatedLevel = levelCalculation(systemXp);
-
     return (
       <div>
         <Confetti width={window.innerWidth} height={window.innerHeight} />
@@ -511,17 +460,24 @@ export default function LevelTestChat({ userId }: Props) {
             <CardDescription>{t("congratulationsDescription")}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg p-6 text-center">
-              <p className="text-lg font-medium mb-1">{t("yourCefrLevel")}</p>
-              <p className="text-5xl font-bold mb-2">
-                {assessment.level}
-                {assessment.sublevel || ""}
-              </p>
-              <p className="text-lg">{t("yourScore", { xp: systemXp })}</p>
-              <p className="text-sm mt-1">
-                RA Level: {calculatedLevel.raLevel}
-              </p>
-            </div>
+            {placement ? (
+              <div className="bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg p-6 text-center">
+                <p className="text-lg font-medium mb-1">{t("yourCefrLevel")}</p>
+                <p className="text-5xl font-bold mb-2">
+                  {assessment.level}
+                  {assessment.sublevel || ""}
+                </p>
+                <p className="text-lg">{t("yourScore", { xp: placement.systemXp })}</p>
+                <p className="text-sm mt-1">
+                  RA Level: {placement.raLevel}
+                </p>
+              </div>
+            ) : (
+              <div className="rounded-lg p-6 text-center space-y-2">
+                <Loader2 className="h-8 w-8 animate-spin mx-auto" />
+                <p className="text-sm text-muted-foreground">{t("saving")}</p>
+              </div>
+            )}
 
             <Button
               size="lg"
