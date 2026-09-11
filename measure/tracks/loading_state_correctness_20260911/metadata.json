@@ -1,0 +1,11 @@
+{
+  "track_id": "loading_state_correctness_20260911",
+  "type": "bug",
+  "status": "new",
+  "created_at": "2026-09-11T00:00:00Z",
+  "updated_at": "2026-09-11T00:00:00Z",
+  "description": "Fix loading and state defects in reading-advantage: double pagination, infinite-scroll race, stuck skeletons, translate request storm, render-phase side effects, and wrong KPI labels.",
+  "estimated_tasks": 17,
+  "actual_tasks": null,
+  "deviation_notes": ""
+}
