@@ -1,0 +1,11 @@
+{
+  "track_id": "structural_ux_alignment_20260911",
+  "type": "chore",
+  "status": "new",
+  "created_at": "2026-09-11T00:00:00Z",
+  "updated_at": "2026-09-11T00:00:00Z",
+  "description": "Structural alignment of reading-advantage UX: server-side dashboard/goals data, remove internal self-HTTP fetches, student-progress role check, server-owned level-test XP, i18n and accessibility passes, and shell/navigation cleanup.",
+  "estimated_tasks": 21,
+  "actual_tasks": null,
+  "deviation_notes": ""
+}
