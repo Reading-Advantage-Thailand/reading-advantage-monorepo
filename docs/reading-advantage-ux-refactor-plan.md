@@ -253,14 +253,14 @@ Each phase maps to one Measure track. Write tests for backend changes per projec
 
 ### Phase 2: Loading and state correctness
 
-1. Fix the teacher-assignments double pagination.
-2. Fix the `handle-article` infinite-scroll race.
-3. Fix the `system/reports` loading condition.
-4. Fix the showcase-card translate N+1 storm with the existing cache check.
+1. Fix the teacher-assignments double pagination. (done — loading_state_correctness_20260911)
+2. Fix the `handle-article` infinite-scroll race. (done — loading_state_correctness_20260911)
+3. Fix the `system/reports` loading condition. (done — loading_state_correctness_20260911)
+4. Fix the showcase-card translate N+1 storm with the existing cache check. (done — loading_state_correctness_20260911)
 5. Fix `AudioButton` interval leak and restart-not-stop bug.
-6. Assignments page: hoist the dialog, split the notification effect, use `router.push`.
-7. Health badges default to "unknown". Fix the Total XP KPI.
-8. `StudentCartridgeHost`: take `mode` from page props.
+6. Assignments page: hoist the dialog, split the notification effect, use `router.push`. (done — loading_state_correctness_20260911)
+7. Health badges default to "unknown". Fix the Total XP KPI. (done — loading_state_correctness_20260911)
+8. `StudentCartridgeHost`: take `mode` from page props. (done — loading_state_correctness_20260911)
 
 ### Phase 3: Duplication removal
 
