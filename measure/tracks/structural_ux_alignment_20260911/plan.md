@@ -33,6 +33,7 @@ All file paths are relative to `apps/reading-advantage/`. Run after `component_d
 - [x] Task: FR-8 shell cleanup part 1: `SessionSyncRedirect` destination, `sharedMainNav`, shared guard helper, `disableLeaderboard` `1d4ab96` `f95125d`
 - [x] Task: FR-8 shell cleanup part 2: theme-wrapper rename, delete dead context/imports, auth layout min-height, i18n routing links, index layout collapse, `user-account-nav` fixes `f95125d` `58746bb`
 - [x] Task: FR-8 page cleanup: workbook-generator decision (added to sidebar; owner review pending), `router.refresh()` replacements, per-group `error.tsx`, `Promise.all` fetches, license page ordering, admin guard dedup `58746bb`
+- [ ] Task: FR-9 hotfix `parseActivityType` case-mismatch regression with a regression test (amendment; discovered during FR-4)
 - [x] Task: Run `build-graph update ./graph.db` on all structurally edited files `bf2f528` `efc941c` `3614844`
 - [x] Task: Run new tests until green (984 passed, 2 known pre-existing failures; zero new tsc errors)
 - [ ] Task: Measure - User Manual Verification 'Phase 3: Implement' (Protocol in workflow.md) **PENDING owner verification**

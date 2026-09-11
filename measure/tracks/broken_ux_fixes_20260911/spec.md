@@ -49,7 +49,7 @@ Two history tables render the class string `captoliza`. Remove the typo in both 
 
 ### FR-10: Decide and enforce the games page auth policy
 
-`student/games/page.tsx` has no auth gate while sibling pages redirect to `/auth/signin`. Decide the policy with the owner, then align the page. If games require auth, add the same redirect used by sibling pages.
+`student/games/page.tsx` has no auth gate while sibling pages redirect to `/auth/signin`. **Owner decision 2026-09-11: games require sign-in.** Add the same redirect used by sibling pages. Note: this file carries uncommitted changes from another track (APK work); stage only the auth-gate hunk.
 
 ## Non-Functional Requirements
 

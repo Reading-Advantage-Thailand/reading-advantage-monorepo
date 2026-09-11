@@ -11,7 +11,7 @@ These fixes change no data contracts. This phase pins the invariants as greppabl
 - [x] Task: Define fix invariants as automated checks `8174d49`
   - [x] Write `__test__/broken-ux-fixes.test.ts` with static source assertions: no `captoliza` in `components/`, no `/teacher/class-detail/` in source, no hardcoded `/th/teacher` redirects, no `import { log } from "console"`, no `act` import in `student-assignment-dashboard.tsx`, `"use client"` present in `matching.tsx` and `tab-matching-words.tsx`.
   - [x] Confirm the new test file fails (Red) against the current source. (Red: 12 failed, 1 passed; Green: 13/13)
-  - [ ] Owner decision record for FR-10 games auth policy: note the chosen policy in this plan before implementation. **PENDING owner decision**
+  - [x] Owner decision record for FR-10 games auth policy: **2026-09-11 owner decision — games require sign-in; add the same `/auth/signin` redirect as sibling pages.**
 
 ## Phase 2: Test
 

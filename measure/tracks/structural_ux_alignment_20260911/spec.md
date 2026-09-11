@@ -60,6 +60,10 @@ Replace hardcoded English with existing i18n scopes in: goals pages, flashcards,
 - Parallelize sequential fetches with `Promise.all` in `admin/reports/page.tsx`, `system/schooldashboard/page.tsx`, and `create-new-student/page.tsx`. Run the auth check before the data fetch in `system/license/page.tsx`; add delete confirmation and null `expiresAt` guard.
 - Remove per-page role guards that duplicate the admin layout guard. Keep one failure mode: redirect.
 
+### FR-9: Hotfix the `parseActivityType` regression (amendment 2026-09-11)
+
+Discovered during FR-4 implementation. `parseActivityType` in `server/controllers/user-controller.ts` (introduced in `975816594`) uppercases the input and compares against lowercase enum values. It returns null for every activity type. `POST /api/v1/users/:id/activitylog` has returned 400 for all clients since 2026-09-08. This breaks quiz XP awards app-wide. Fix the comparison. Add a regression test that proves a valid activity type passes.
+
 ## Non-Functional Requirements
 
 - NFR-1: No new dependencies.
