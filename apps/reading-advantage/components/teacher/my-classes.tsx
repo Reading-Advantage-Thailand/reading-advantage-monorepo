@@ -1,13 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHeader,
-  TableRow,
-  TableHead,
-} from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -16,19 +8,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { CaretSortIcon, ChevronDownIcon } from "@radix-ui/react-icons";
-import {
-  ColumnDef,
-  ColumnFiltersState,
-  SortingState,
-  VisibilityState,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
-import { Input } from "@/components/ui/input";
+import { ColumnDef } from "@tanstack/react-table";
 import { useScopedI18n } from "@/locales/client";
 import { useRouter } from "next/navigation";
 import CreateNewClass from "./create-new-class";
@@ -38,6 +18,7 @@ import ArchiveClass from "./archive-class";
 import { Header } from "../header";
 import { useCourseStore, useClassroomStore } from "@/store/classroom-store";
 import { Icons } from "@/components/icons";
+import TeacherDataTable from "./teacher-data-table";
 import Image from "next/image";
 import {
   Dialog,
@@ -85,14 +66,6 @@ type CourseWithCount = Schema$Course & {
 };
 
 export default function MyClasses() {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  );
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
-  const [rowSelection, setRowSelection] = React.useState({});
-  const t = useScopedI18n("components.articleRecordsTable");
   const tc = useScopedI18n("components.myClasses");
   const router = useRouter();
   const { courses, setCourses, selectedCourses, setSelectedCourses } =
@@ -234,25 +207,6 @@ export default function MyClasses() {
     fetchClassrooms();
   }, []);
 
-  const table = useReactTable({
-    data: classrooms,
-    columns,
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    onColumnVisibilityChange: setColumnVisibility,
-    onRowSelectionChange: setRowSelection,
-    state: {
-      sorting,
-      columnFilters,
-      columnVisibility,
-      rowSelection,
-    },
-  });
-
   const syncClassroom = async () => {
     setLoading(true);
     try {
@@ -309,116 +263,44 @@ export default function MyClasses() {
     <>
       <div className="flex flex-col gap-4">
         <Header heading={tc("title")} />
-        <div className="flex justify-between items-end">
-          <Input
-            placeholder={tc("search")}
-            value={
-              (table.getColumn("classroomName")?.getFilterValue() as string) ??
-              ""
-            }
-            onChange={(event) =>
-              table
-                .getColumn("classroomName")
-                ?.setFilterValue(event.target.value)
-            }
-            className="max-w-sm"
-          />
-          <div className="flex items-end space-x-2">
-            <div className="flex-col space-y-2">
-              <p className="text-xs opacity-70">Import a new class from</p>
-              <Button onClick={() => syncClassroom()} disabled={loading}>
-                {loading ? (
-                  <>
-                    <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-                    Google Classroom
-                  </>
-                ) : (
-                  <>
-                    <Image
-                      className="mr-2"
-                      src={"/96x96_yellow_stroke_icon@1x.png"}
-                      alt="google-classroom"
-                      width={20}
-                      height={20}
-                    />
-                    Google Classroom
-                  </>
-                )}
-              </Button>
-            </div>
-            <CreateNewClass />
-          </div>
-        </div>
-        <div className="rounded-md border">
-          <Table style={{ tableLayout: "fixed", width: "100%" }}>
-            <TableHeader className="font-bold">
-              {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => {
-                    return (
-                      <TableHead key={header.id}>
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
-                      </TableHead>
-                    );
-                  })}
-                </TableRow>
-              ))}
-            </TableHeader>
-            <TableBody>
-              {table.getRowModel().rows?.length ? (
-                table.getRowModel().rows.map((row) => (
-                  <TableRow
-                    key={row.id}
-                    data-state={row.getIsSelected() && "selected"}
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell
-                    colSpan={columns.length}
-                    className="h-24 text-center"
-                  >
-                    Empty
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </div>
-        <div className="flex items-center justify-end space-x-2">
-          <div className="space-x-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage()}
-            >
-              {t("previous")}
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage()}
-            >
-              {t("next")}
-            </Button>
-          </div>
-        </div>
+        <TeacherDataTable
+          data={classrooms}
+          columns={columns}
+          searchColumn="classroomName"
+          searchPlaceholder={tc("search")}
+          toolbarClassName="flex justify-between items-end"
+          tableFixed
+          headerClassName="font-bold"
+          toolbar={
+            <>
+              <div className="flex items-end space-x-2">
+                <div className="flex-col space-y-2">
+                  <p className="text-xs opacity-70">Import a new class from</p>
+                  <Button onClick={() => syncClassroom()} disabled={loading}>
+                    {loading ? (
+                      <>
+                        <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+                        Google Classroom
+                      </>
+                    ) : (
+                      <>
+                        <Image
+                          className="mr-2"
+                          src={"/96x96_yellow_stroke_icon@1x.png"}
+                          alt="google-classroom"
+                          width={20}
+                          height={20}
+                        />
+                        Google Classroom
+                      </>
+                    )}
+                  </Button>
+                </div>
+                <CreateNewClass />
+              </div>
+            </>
+          }
+        />
       </div>
 
       <Dialog open={coursesOpen} onOpenChange={setCoursesOpen}>
