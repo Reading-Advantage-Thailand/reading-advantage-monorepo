@@ -198,7 +198,7 @@ export function ClassSummaryTable({
     if (onClassClick) {
       onClassClick(classId);
     } else {
-      router.push(`/teacher/class-detail/${classId}`);
+      router.push(`/teacher/reports/${classId}`);
     }
   };
 

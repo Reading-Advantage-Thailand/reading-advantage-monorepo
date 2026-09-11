@@ -120,7 +120,7 @@ export function ClassDetailDashboard({
             variant="outline"
             size="sm"
             onClick={() =>
-              router.push(`/th/teacher/my-classes/${classroomId}/settings`)
+              router.push("/teacher/my-classes")
             }
           >
             <Settings className="h-4 w-4 mr-2" />
