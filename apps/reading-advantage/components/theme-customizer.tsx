@@ -6,7 +6,7 @@ import { useTheme } from "next-themes";
 
 import { cn } from "@/lib/utils";
 import { useConfig } from "@/hooks/use-config";
-import { ThemeWrapper } from "@/components/theme-warpper";
+import { ThemeWrapper } from "@/components/theme-wrapper";
 import { Button } from "./ui/button";
 import { Drawer, DrawerContent, DrawerTrigger } from "./ui/drawer";
 import { Label } from "./ui/label";

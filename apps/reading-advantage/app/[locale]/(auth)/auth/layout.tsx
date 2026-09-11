@@ -1,6 +1,6 @@
 import React from 'react'
 import { siteConfig } from '@/configs/site-config'
-import Link from 'next/link'
+import { Link } from '@/i18n/routing'
 import { Icons } from '@/components/icons'
 
 type Props = {
@@ -16,7 +16,7 @@ export default function AuthLayout({
                 <div
                     className="lg:border-solid lg:border lg:rounded-lg bg-slate-50 dark:bg-background" >
                     <div
-                        className="relative h-[800px] flex-col items-center justify-center grid lg:max-w-none lg:grid-cols-2 lg:px-0"
+                        className="relative min-h-[800px] flex-col items-center justify-center grid lg:max-w-none lg:grid-cols-2 lg:px-0"
                     >
                         <div
                             className="relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex">

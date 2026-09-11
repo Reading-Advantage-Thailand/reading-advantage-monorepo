@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import Link from "next/link";
+import { Link, useRouter } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/icons";
@@ -14,6 +14,7 @@ interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function UserSignInForm({ className, ...props }: UserAuthFormProps) {
   const t = useI18n();
+  const router = useRouter();
   const { login, isLoading } = useAuth();
   const [error, setError] = React.useState<string>("");
   const [username, setUsername] = React.useState<string>("");
@@ -24,7 +25,8 @@ export function UserSignInForm({ className, ...props }: UserAuthFormProps) {
     setError("");
     try {
       await login(username, password);
-      window.location.href = "/";
+      router.push("/");
+      router.refresh();
     } catch (err: unknown) {
       const message =
         err instanceof Error ? err.message : "Login failed";

@@ -12,7 +12,7 @@ import { Viewport } from "next";
 import { AuthProvider } from "@reading-advantage/auth-client";
 import { TRPCProvider } from "@/components/providers/trpc-provider";
 import { LocaleProvider } from "@/components/providers/locale-provider";
-import { ThemeWrapper } from "@/components/theme-warpper";
+import { ThemeWrapper } from "@/components/theme-wrapper";
 
 const cabinSketch = localFont({
   src: "../../assets/fonts/CabinSketch-Regular.ttf",

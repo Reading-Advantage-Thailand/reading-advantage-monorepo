@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 import { Suspense } from "react";
 
 import { cn } from "@/lib/utils";

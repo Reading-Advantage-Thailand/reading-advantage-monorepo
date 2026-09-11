@@ -1,5 +1,4 @@
 "use client";
-import { useEffect } from "react";
 import Link from "next/link";
 import { useAuth } from "@reading-advantage/auth-client";
 import {
@@ -13,7 +12,7 @@ import { UserAvatar } from "@/components/user-avatar";
 import { useScopedI18n } from "@/locales/client";
 import { Icons } from "./icons";
 import { Badge } from "./ui/badge";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Role } from "@/lib/enums";
 
 interface UserAccountNavProps {
@@ -33,19 +32,12 @@ export function UserAccountNav({ user }: UserAccountNavProps) {
   const td = useScopedI18n("components.userAccountNav.users");
   const { logout } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
-  const [daysLeft, setDaysLeft] = useState<number>(0);
-  const currentDate = new Date();
-  const expirationDate = new Date(user.expired_date || 0);
-
-  useEffect(() => {
-    const calculateDaysBetween = () => {
-      const timeDifference = expirationDate.getTime() - currentDate.getTime();
-      const daysDifference = Math.ceil(timeDifference / (1000 * 60 * 60 * 24)); // Convert milliseconds to days
-      setDaysLeft(daysDifference);
-    };
-
-    calculateDaysBetween();
-  }, [currentDate, expirationDate]);
+  const hasExpiry = Boolean(user.expired_date);
+  const daysLeft = useMemo(() => {
+    if (!user.expired_date) return 0;
+    const timeDifference = new Date(user.expired_date).getTime() - Date.now();
+    return Math.ceil(timeDifference / (1000 * 60 * 60 * 24));
+  }, [user.expired_date]);
 
   const roles = {
     system: { label: "system", color: "bg-[#FFC107]" },
@@ -82,15 +74,16 @@ export function UserAccountNav({ user }: UserAccountNavProps) {
                 <Badge className={`${color} w-max`} variant="outline">
                   {td(userRoleLowerCase)}
                 </Badge>
-                {daysLeft > 0 ? ( // Check if the user has a free trial
-                  <Badge className="bg-green-700 w-max" variant="outline">
-                    {t("daysLeft", { daysLeft })}
-                  </Badge>
-                ) : (
-                  <Badge className="bg-red-700 w-max" variant="outline">
-                    {t("expires")}
-                  </Badge>
-                )}
+                {hasExpiry &&
+                  (daysLeft > 0 ? (
+                    <Badge className="bg-green-700 w-max" variant="outline">
+                      {t("daysLeft", { daysLeft })}
+                    </Badge>
+                  ) : (
+                    <Badge className="bg-red-700 w-max" variant="outline">
+                      {t("expires")}
+                    </Badge>
+                  ))}
               </div>
             </div>
           </div>
