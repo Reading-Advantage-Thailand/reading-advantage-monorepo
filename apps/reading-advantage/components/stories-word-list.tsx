@@ -73,7 +73,6 @@ export default function StoriesWordList({
   const handleWordList = useCallback(() => {
     try {
       setLoading(true);
-      console.log("chapter", chapter);
 
       let wordList: WordList[] = [];
       if (Array.isArray(chapter.chapter.words)) {
