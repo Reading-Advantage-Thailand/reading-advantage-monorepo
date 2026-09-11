@@ -1,0 +1,11 @@
+{
+  "track_id": "audio_highlight_correctness_20260911",
+  "type": "bug",
+  "status": "new",
+  "created_at": "2026-09-11T00:00:00Z",
+  "updated_at": "2026-09-11T00:00:00Z",
+  "description": "Consolidate four audio/highlight implementations in reading-advantage into one shared hook and fix the playback races, speed-switch restarts, timer leaks, and highlight color semantics.",
+  "estimated_tasks": 16,
+  "actual_tasks": null,
+  "deviation_notes": ""
+}
