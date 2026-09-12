@@ -15,7 +15,7 @@ import {
   licenses,
   licenseOnUsers,
 } from "@reading-advantage/db/schema";
-import { ActivityType, LicenseType } from "@/lib/enums";
+import { ActivityType, LicenseType, Role } from "@/lib/enums";
 import { ActivityType as ModelActivityType, UserXpEarned } from "@/components/models/user-activity-log-model";
 import { getCurrentUser } from "@/lib/session";
 import { recordAuditEventSafe } from "@/server/utils/audit-recorder";
@@ -255,31 +255,35 @@ export async function updateUser(
     const id = routeId;
     const data = await req.json();
 
-    // XP is server-owned: it is earned through activity logs and placement,
-    // never set directly through this PATCH contract.
+    const updateValues: Partial<typeof users.$inferInsert> = {};
+    if (Object.prototype.hasOwnProperty.call(data, "name")) {
+      updateValues.name = data.name;
+    }
+    if (Object.prototype.hasOwnProperty.call(data, "email")) {
+      updateValues.email = data.email;
+    }
+
+    const sessionRole = req.session?.user.role;
+    const canUpdateStaffFields =
+      sessionRole === Role.ADMIN || sessionRole === Role.SYSTEM;
+    if (canUpdateStaffFields) {
+      if (Object.prototype.hasOwnProperty.call(data, "role")) {
+        updateValues.role = data.role;
+      }
+      if (Object.prototype.hasOwnProperty.call(data, "license_id")) {
+        updateValues.licenseId = data.license_id;
+      }
+      if (Object.prototype.hasOwnProperty.call(data, "expired_date")) {
+        updateValues.expiredDate = data.expired_date;
+      }
+    }
+
+    // XP, level, and CEFR are server-owned and are never accepted here.
     const [user] = await db
       .update(users)
-      .set({
-        name: data.name,
-        email: data.email,
-        role: data.role,
-        level: data.level,
-        cefrLevel: data.cefr_level,
-        expiredDate: data.expired_date,
-        licenseId: data.license_id,
-      })
+      .set(updateValues)
       .where(eq(users.id, id))
       .returning();
-
-    if (data.resetXP) {
-      await db.transaction(async (tx) => {
-        await tx.delete(lessonRecords).where(eq(lessonRecords.userId, id));
-        await tx.delete(userActivity).where(eq(userActivity.userId, id));
-        await tx.delete(xpLogs).where(eq(xpLogs.userId, id));
-        await tx.delete(userWordRecords).where(eq(userWordRecords.userId, id));
-        await tx.delete(userSentenceRecords).where(eq(userSentenceRecords.userId, id));
-      });
-    }
 
     return NextResponse.json({
       data: user,
@@ -1011,6 +1015,14 @@ export async function getAllUsers(req: NextRequest) {
 
 export async function updateUserData(req: ExtendedNextRequest) {
   try {
+    const sessionRole = req.session?.user.role;
+    if (sessionRole !== Role.ADMIN && sessionRole !== Role.SYSTEM) {
+      return NextResponse.json(
+        { message: "Forbidden - Access denied to this resource" },
+        { status: 403 },
+      );
+    }
+
     const data = await req.json();
 
     const [user] = await db

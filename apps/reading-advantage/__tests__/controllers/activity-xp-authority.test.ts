@@ -66,6 +66,7 @@ import {
   postActivityLog,
   putActivityLog,
   resetUserProgress,
+  updateUserData,
   updateUser,
   xpForActivityType,
 } from "@/server/controllers/user-controller";
@@ -224,18 +225,114 @@ describe("putActivityLog XP authority", () => {
   });
 });
 
-describe("updateUser PATCH xp authority", () => {
+describe("updateUser PATCH authority", () => {
   beforeEach(resetDbDefaults);
 
-  it("strips xp from the accepted PATCH fields", async () => {
+  it("strips role, XP, level, and CEFR from a self PATCH", async () => {
     const res = await updateUser(
-      makeRequest("user-1", { xp: 999999 }, { method: "PATCH" }),
+      makeRequest(
+        "user-1",
+        {
+          role: "SYSTEM",
+          xp: 999999,
+          level: 18,
+          cefr_level: "C2",
+          license_id: "license-1",
+          expired_date: "2099-01-01T00:00:00.000Z",
+          name: "New",
+        },
+        { method: "PATCH" },
+      ),
       makeContext("user-1"),
     );
 
     expect(res.status).toBe(200);
     expect(setMock).toHaveBeenCalledTimes(1);
-    expect(setMock.mock.calls[0][0]).not.toHaveProperty("xp");
+    const payload = setMock.mock.calls[0][0] as Record<string, unknown>;
+    expect(payload).toMatchObject({ name: "New" });
+    expect(payload).not.toHaveProperty("role");
+    expect(payload).not.toHaveProperty("xp");
+    expect(payload).not.toHaveProperty("level");
+    expect(payload).not.toHaveProperty("cefrLevel");
+    expect(payload).not.toHaveProperty("licenseId");
+    expect(payload).not.toHaveProperty("expiredDate");
+  });
+
+  it("allows an ADMIN to update a target role through the staff branch", async () => {
+    limitMock.mockResolvedValueOnce([{ schoolId: "school-a" }]);
+
+    const res = await updateUser(
+      makeRequest(
+        "user-1",
+        { role: "TEACHER" },
+        {
+          method: "PATCH",
+          sessionUser: {
+            id: "admin-1",
+            role: "ADMIN",
+            school_id: "school-a",
+          },
+        },
+      ),
+      makeContext("user-1"),
+    );
+
+    expect(res.status).toBe(200);
+    expect(setMock).toHaveBeenCalledWith(expect.objectContaining({ role: "TEACHER" }));
+  });
+});
+
+describe("updateUserData staff authority", () => {
+  beforeEach(resetDbDefaults);
+
+  it("returns 403 for a student before the email lookup", async () => {
+    const res = await updateUserData(
+      makeRequest(
+        "user-1",
+        { email: "student@example.com", license_id: "license-1" },
+        {
+          method: "PATCH",
+          sessionUser: {
+            id: "student-1",
+            role: "STUDENT",
+            school_id: "school-a",
+          },
+        },
+      ),
+    );
+
+    expect(res.status).toBe(403);
+    expect(selectMock).not.toHaveBeenCalled();
+  });
+
+  it("allows a SYSTEM session to update a user by email", async () => {
+    limitMock
+      .mockResolvedValueOnce([{ id: "user-2", email: "student@example.com" }])
+      .mockResolvedValueOnce([{ id: "license-1", maxUsers: 10 }]);
+    whereMock
+      .mockImplementationOnce(() => ({ limit: limitMock }))
+      .mockImplementationOnce(() => ({ limit: limitMock }))
+      .mockImplementationOnce(() => Promise.resolve([{ licenseUserCount: 0 }]));
+
+    const res = await updateUserData(
+      makeRequest(
+        "user-1",
+        {
+          email: "student@example.com",
+          role: "TEACHER",
+          license_id: "license-1",
+        },
+        {
+          method: "PATCH",
+          sessionUser: { id: "system-1", role: "SYSTEM" },
+        },
+      ),
+    );
+
+    expect(res.status).toBe(200);
+    expect(setMock).toHaveBeenCalledWith(
+      expect.objectContaining({ role: "TEACHER", licenseId: "license-1" }),
+    );
   });
 });
 
@@ -290,5 +387,30 @@ describe("student data staff scope", () => {
       makeContext("student-1"),
     );
     expect(res.status).toBe(200);
+  });
+
+  it("returns 200 for a teacher linked to the classroom student", async () => {
+    limitMock
+      .mockResolvedValueOnce([{ id: "classroom-link" }])
+      .mockResolvedValueOnce([{ id: "student-1" }]);
+
+    const res = await resetUserProgress(
+      makeRequest(
+        "student-1",
+        {},
+        {
+          method: "POST",
+          sessionUser: {
+            id: "teacher-1",
+            role: "TEACHER",
+            school_id: "school-a",
+          },
+        },
+      ),
+      makeContext("student-1"),
+    );
+
+    expect(res.status).toBe(200);
+    expect(deleteMock).toHaveBeenCalled();
   });
 });

@@ -70,17 +70,9 @@ export default function MyStudents() {
   const handleResetProgress = async (selectedStudentId: string) => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/users/${selectedStudentId}`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/users/${selectedStudentId}/reset-all-progress`,
         {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            xp: 0,
-            level: 0,
-            cefr_level: "",
-          }),
+          method: "POST",
         }
       );
 

@@ -24,16 +24,10 @@ export default function ResetDialog({ users }: { users: string }) {
 
   const resetXP = async (userId: string) => {
     try {
-      const response = await fetch(`/api/v1/users/${userId}`, {
-        method: "PATCH",
-        body: JSON.stringify({
-          xp: 0,
-          level: 0,
-          cefrLevel: "",
-          cefr_level: "",
-          resetXP: true,
-        }),
-      });
+      const response = await fetch(
+        `/api/v1/users/${userId}/reset-all-progress`,
+        { method: "POST" },
+      );
 
       if (response.status === 400) {
         toast({
