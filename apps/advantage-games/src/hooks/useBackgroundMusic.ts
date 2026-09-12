@@ -1,6 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { withBasePath } from '@/lib/games-runtime'
 
 /** Catalog identifiers that have a dedicated `/sounds/music/{id}.mp3` track. */
 export const GAME_MUSIC_IDS = [
@@ -61,7 +62,7 @@ export function resolveGameMusicId(cartridgeId: string): GameMusicId {
 }
 
 function getMusicPath(gameId: GameMusicId): string {
-  return `/sounds/music/${gameId}.mp3`
+  return withBasePath(`/sounds/music/${gameId}.mp3`)
 }
 
 /**
@@ -73,6 +74,7 @@ export function useBackgroundMusic(gameId: GameMusicId) {
   const audioRef = useRef<HTMLAudioElement | null>(null)
   const [isPlaying, setIsPlaying] = useState(false)
   const isPlayingRef = useRef(false)
+  const duckOwners = useRef(new WeakMap<HTMLAudioElement, { count: number; volume: number }>())
 
   useEffect(() => {
     const audio = new Audio(getMusicPath(gameId))
@@ -124,5 +126,28 @@ export function useBackgroundMusic(gameId: GameMusicId) {
     setIsPlaying(false)
   }, [])
 
-  return { start, stop, pause, isPlaying }
+  const setMuted = useCallback((muted: boolean) => {
+    if (audioRef.current) audioRef.current.muted = muted
+  }, [])
+
+  const duck = useCallback(() => {
+    const audio = audioRef.current
+    if (!audio) return () => undefined
+    const ownership = duckOwners.current.get(audio) ?? { count: 0, volume: audio.volume }
+    ownership.count += 1
+    duckOwners.current.set(audio, ownership)
+    audio.volume = Math.min(ownership.volume, 0.12)
+    let released = false
+    return () => {
+      if (released) return
+      released = true
+      ownership.count -= 1
+      if (ownership.count === 0) {
+        audio.volume = ownership.volume
+        duckOwners.current.delete(audio)
+      }
+    }
+  }, [])
+
+  return { start, stop, pause, duck, setMuted, isPlaying }
 }

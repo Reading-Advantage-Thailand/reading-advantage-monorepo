@@ -157,6 +157,11 @@ export const PERMISSIONS = {
   // Phase 3: only student-authored paths. Teacher/admin views are Phase 4+.
   "games:complete": [ROLES.STUDENT, ROLES.TEACHER, ROLES.ADMIN, ROLES.SYSTEM],
   "games:read:own": [ROLES.STUDENT, ROLES.TEACHER, ROLES.ADMIN, ROLES.SYSTEM],
+  "rpg:read:own": [ROLES.STUDENT, ROLES.TEACHER, ROLES.ADMIN, ROLES.SYSTEM],
+  "rpg:equip:own": [ROLES.STUDENT],
+  "challenges:create": [ROLES.TEACHER, ROLES.ADMIN, ROLES.SYSTEM],
+  "challenges:read": [ROLES.STUDENT, ROLES.TEACHER, ROLES.ADMIN, ROLES.SYSTEM],
+  "challenges:start": [ROLES.STUDENT, ROLES.TEACHER],
 } as const satisfies Record<string, Role[]>;
 
 export type Permission = keyof typeof PERMISSIONS;

@@ -250,7 +250,6 @@ const EXPIRY_REPUTATION_PENALTY = 25;
 const CONVEYOR_SPEED = 90;
 const INGREDIENT_WIDTH = 104;
 const INGREDIENT_HEIGHT = 54;
-const DECOY_WORDS = Object.freeze(["moonleaf", "emberroot", "star-salt"]);
 const POTION_RUSH_ACTIONS: readonly InputActionId[] = Object.freeze([
   "move-left",
   "move-right",
@@ -321,7 +320,7 @@ function makeIngredient(
     id,
     word,
     sentenceIndex,
-    x: 82 + (ordinal % 7) * 126 + (seed === 0 ? 0 : (seededUnit(seed, ordinal, 23) - 0.5) * 48),
+    x: 82 + ordinal * 126 + (seed === 0 ? 0 : (seededUnit(seed, ordinal, 23) - 0.5) * 12),
     y: 0,
     width: INGREDIENT_WIDTH,
     selected: false,
@@ -439,12 +438,11 @@ export function createPotionRushController(
     slot: null,
   }));
   const initialWords = wordsBySentence.flatMap((words, sentenceIndex) => words.map((word) => ({ word, sentenceIndex })));
-  const decoys = requests.map((_request, index) => ({ word: DECOY_WORDS[index % DECOY_WORDS.length]!, sentenceIndex: -1 }));
   let customers: PotionRushCustomer[] = [...customersInitial];
   let activeCustomerIds: (string | null)[] = Array.from({ length: POTION_RUSH_CAULDRON_COUNT }, () => null);
   let cauldrons: PotionRushCauldron[] = Array.from({ length: POTION_RUSH_CAULDRON_COUNT }, (_, index) => makeEmptyCauldron(index, null));
-  let ingredientOrdinal = initialWords.length + decoys.length;
-  const arrangedIngredients = shuffleWithSeed([...initialWords, ...decoys], seed);
+  let ingredientOrdinal = initialWords.length;
+  const arrangedIngredients = shuffleWithSeed(initialWords, seed);
   let conveyor: PotionRushIngredient[] = arrangedIngredients.map(({ word, sentenceIndex }, index) =>
     makeIngredient(`ingredient:${index}`, word, sentenceIndex, index, seed),
   );
@@ -590,16 +588,18 @@ export function createPotionRushController(
   };
 
   const returnWordsToConveyor = (words: readonly string[]): void => {
+    const rightmostX = conveyor.reduce((rightmost, ingredient) => Math.max(rightmost, ingredient.x), 82 - 126);
     conveyor = [
       ...conveyor,
       ...words.map((word, index) => makeIngredient(
-        `ingredient:return:${ingredientOrdinal++}`,
+        `ingredient:return:${ingredientOrdinal + index}`,
         word,
         -1,
         ingredientOrdinal + index,
         seed,
-      )),
+      )).map((ingredient, index) => Object.freeze({ ...ingredient, x: rightmostX + (index + 1) * 126 })),
     ];
+    ingredientOrdinal += words.length;
   };
 
   const selectNextIngredient = (direction: -1 | 1): void => {
@@ -993,12 +993,16 @@ export function createPotionRushController(
       if (!Number.isFinite(viewportWidth) || viewportWidth <= 0) throw new Error("Potion Rush viewport width must be positive and finite");
       if (deltaSeconds === 0) return snapshot();
       const delta = Math.min(deltaSeconds, 0.05);
-      conveyor = conveyor.map((ingredient) => Object.freeze({
-        ...ingredient,
-        x: ingredient.x - CONVEYOR_SPEED * delta < -ingredient.width
-          ? viewportWidth + ingredient.width
-          : ingredient.x - CONVEYOR_SPEED * delta,
+      const moved = conveyor.map((ingredient) => ({
+        ingredient,
+        x: ingredient.x - CONVEYOR_SPEED * delta,
       }));
+      let rightmostX = moved.reduce((rightmost, candidate) => Math.max(rightmost, candidate.x), viewportWidth - 126);
+      conveyor = moved.map(({ ingredient, x }) => {
+        if (x >= -ingredient.width) return Object.freeze({ ...ingredient, x });
+        rightmostX += 126;
+        return Object.freeze({ ...ingredient, x: rightmostX });
+      });
       customers = customers.map((customer) => {
         if (customer.state !== "waiting" || customer.slot === null) return customer;
         const remaining = Math.max(0, customer.patience - delta);
@@ -1042,6 +1046,8 @@ export function createPotionRushController(
       activeCustomerIds = [...state.activeCustomerIds];
       cauldrons = state.cauldrons.map((cauldron) => Object.freeze({ ...cauldron, currentWords: Object.freeze([...cauldron.currentWords]) }));
       conveyor = state.conveyor.map((ingredient) => Object.freeze({ ...ingredient }));
+      const restoredOrdinals = conveyor.map((ingredient) => Number(ingredient.id.match(/(\d+)$/u)?.[1] ?? -1));
+      ingredientOrdinal = Math.max(initialWords.length + state.totalAttempts, ...restoredOrdinals.map((ordinal) => ordinal + 1));
       selectedIngredientId = state.selectedIngredientId;
       selectedCauldronIndex = state.selectedCauldronIndex;
       reputation = state.reputation;
@@ -1078,6 +1084,9 @@ interface PhaserGraphicsLike {
 interface PhaserTextLike {
   setPosition(x: number, y: number): this;
   setText(value: string): this;
+  setFontSize?(value: number): this;
+  setOrigin?(x: number, y?: number): this;
+  setWordWrapWidth?(width: number, useAdvancedWrap?: boolean): this;
   destroy(): void;
 }
 
@@ -1135,7 +1144,6 @@ function dimensions(scene: PhaserSceneLike): { readonly width: number; readonly 
 
 function createScene(context: PotionRushSceneContext): Readonly<Record<string, unknown>> {
   let resources: SceneResources | undefined;
-  let composition = context.composition;
   let previousKeys = new Set<string>();
   let animationMs = 0;
   let cleaned = false;
@@ -1173,9 +1181,13 @@ function createScene(context: PotionRushSceneContext): Readonly<Record<string, u
     const cauldronHeight = Math.min(144, height * 0.27);
     const beltY = height * 0.78;
     const pulse = Math.sin(animationMs / 420) * 4;
+    const displayWidth = scene.game?.canvas?.getBoundingClientRect?.().width ?? width;
+    const displayScale = Math.max(0.1, displayWidth / width);
+    const displayFontSize = (pixels: number): number => Math.ceil(pixels / displayScale);
+    const displayPosition = (pixels: number): number => Math.ceil(pixels / displayScale);
 
     activeResources.graphics.clear();
-    if (!activeResources.art.ground("world:ground", width, height)) activeResources.graphics.fillStyle(0x160f2c, 1).fillRect(0, 0, width, height);
+    activeResources.graphics.fillStyle(0x160f2c, 1).fillRect(0, 0, width, height);
     activeResources.graphics.fillStyle(0x2a1e4d, 1).fillRect(0, height * 0.18, width, height * 0.58);
     activeResources.graphics.fillStyle(0x3e2b5c, 1).fillRect(0, height * 0.76, width, height * 0.24);
     for (let shelf = 0; shelf < 3; shelf += 1) {
@@ -1204,12 +1216,12 @@ function createScene(context: PotionRushSceneContext): Readonly<Record<string, u
           .fillRoundedRect(centerX - 42, height * 0.34, 84 * patienceRatio, 9, 5);
         if (!activeResources.art.place(`customer:${slot}`, "enemy:idle", {
           x: centerX,
-          y: height * 0.39,
+          y: height * 0.30,
           width: 52,
           depth: 7,
           alpha: patienceRatio > 0.2 ? 1 : 0.7,
         })) {
-          activeResources.graphics.fillStyle(0xf9a8d4, 1).fillCircle(centerX, height * 0.39, 20);
+          activeResources.graphics.fillStyle(0xf9a8d4, 1).fillCircle(centerX, height * 0.30, 20);
         }
       }
       if (slot === state.selectedCauldronIndex) {
@@ -1221,43 +1233,58 @@ function createScene(context: PotionRushSceneContext): Readonly<Record<string, u
           depth: 8,
         });
       }
-      activeResources.customers[slot]?.setText(customer ? `${customer.request.translation}\n${Math.ceil(customer.patience)}s` : "Queue open")
-        .setPosition(centerX - cauldronWidth / 2 + 12, height * 0.38);
-      activeResources.cauldrons[slot]?.setText(`${cauldron.state.toUpperCase()}\n${cauldron.currentWords.join(" ") || "empty"}`)
-        .setPosition(centerX - cauldronWidth / 2 + 14, cauldronY + 18);
+      const customerText = activeResources.customers[slot];
+      customerText?.setFontSize?.(displayFontSize(14));
+      customerText?.setWordWrapWidth?.(Math.max(1, cauldronWidth - 16), true);
+      customerText?.setOrigin?.(0.5, 0.5);
+      customerText?.setText(customer ? `${customer.request.translation}\n${Math.ceil(customer.patience)}s` : "")
+        .setPosition(centerX, height * 0.40);
+      const cauldronText = activeResources.cauldrons[slot];
+      cauldronText?.setFontSize?.(displayFontSize(14));
+      cauldronText?.setWordWrapWidth?.(Math.max(1, cauldronWidth - 20), true);
+      cauldronText?.setOrigin?.(0.5, 0);
+      const stateMark = cauldron.state === "spoiled" ? "×" : cauldron.state === "completed" ? "✓" : "";
+      cauldronText?.setText(`${stateMark}${stateMark && cauldron.currentWords.length > 0 ? " " : ""}${cauldron.currentWords.join(" ")}`)
+        .setPosition(centerX, cauldronY + 18);
     }
 
     activeResources.graphics.fillStyle(0x111827, 1).fillRoundedRect(width * 0.04, beltY - 16, width * 0.92, 82, 18);
     activeResources.graphics.lineStyle(3, 0x94a3b8, 0.8).strokeRoundedRect(width * 0.04, beltY - 16, width * 0.92, 82, 18);
     activeResources.graphics.fillStyle(0x6b21a8, 0.9).fillCircle(width / 2, height * 0.7, 28 + pulse);
     activeResources.graphics.lineStyle(3, 0xd8b4fe, 0.9).strokeRoundedRect(width / 2 - 42, height * 0.7 - 30, 84, 60, 18);
-    activeResources.dump.setText("DUMP").setPosition(width / 2 - 23, height * 0.7 - 8);
+    activeResources.dump.setOrigin?.(0.5, 0.5);
+    activeResources.dump.setText("↺").setPosition(width / 2, height * 0.7 - 8);
     for (const [index, ingredient] of state.conveyor.entries()) {
       if (index >= activeResources.ingredients.length) break;
-      const x = clamp(ingredient.x, INGREDIENT_WIDTH / 2, width - INGREDIENT_WIDTH / 2);
+      const x = ingredient.x;
+      const ingredientText = activeResources.ingredients[index];
+      if (x < ingredient.width / 2 || x > width - ingredient.width / 2) {
+        ingredientText?.setText("");
+        continue;
+      }
       activeResources.graphics.fillStyle(ingredient.selected ? 0xf59e0b : ingredient.sentenceIndex < 0 ? 0x64748b : 0x0ea5e9, 1)
         .fillRoundedRect(x - ingredient.width / 2, beltY - INGREDIENT_HEIGHT / 2, ingredient.width, INGREDIENT_HEIGHT, 12);
-      activeResources.ingredients[index]?.setText(ingredient.word).setPosition(x - ingredient.width / 2 + 8, beltY - 8);
+      ingredientText?.setFontSize?.(displayFontSize(16));
+      ingredientText?.setWordWrapWidth?.(Math.max(1, ingredient.width - 12), true);
+      ingredientText?.setOrigin?.(0.5, 0.5);
+      ingredientText?.setText(ingredient.word).setPosition(x, beltY);
+    }
+    for (let index = state.conveyor.length; index < activeResources.ingredients.length; index += 1) {
+      activeResources.ingredients[index]?.setText("");
     }
 
     const active = activeCustomerFor(state.customers, state.activeCustomerIds, state.selectedCauldronIndex);
-    activeResources.title.setText("POTION RUSH").setPosition(26, 20);
-    activeResources.prompt.setText(active ? `Brew in order for: ${active.request.translation}` : "Serve the waiting shop").setPosition(26, 62);
+    activeResources.title.setText("").setPosition(26, 20);
+    activeResources.prompt.setFontSize?.(displayFontSize(26));
+    activeResources.prompt.setWordWrapWidth?.(Math.max(1, width - 40), true);
+    activeResources.prompt.setOrigin?.(0.5, 0);
+    activeResources.prompt.setText(active?.request.translation ?? "").setPosition(width / 2, displayPosition(18));
+    activeResources.progress.setFontSize?.(displayFontSize(15));
     activeResources.progress.setText(
-      `${composition?.profile === "compact" ? "Compact shop" : "Potion shop"}  •  Served ${state.servedCustomers}/${state.customers.length}  •  Reputation ${state.reputation}%  •  Score ${state.score}`,
-    ).setPosition(26, 102);
-    activeResources.feedback.setText(
-      state.phase === "victory"
-        ? "Every customer is served!"
-        : state.phase === "defeat"
-          ? "The shop has lost its reputation."
-          : state.lastOutcome === "wrong"
-            ? "Spoiled cauldron: dump it before brewing again."
-            : state.lastOutcome === "served"
-              ? "A happy customer leaves with a fresh potion."
-              : "Select or drag the next ingredient into its cauldron.",
-    ).setPosition(26, height - 68);
-    activeResources.instructions.setText("Keyboard: A/D choose ingredient • W/S choose cauldron • Enter brew or serve • Escape dump • Tap or drag").setPosition(26, height - 34);
+      `${state.servedCustomers}/${state.customers.length}  ♥ ${state.reputation}  ★ ${state.score}`,
+    ).setPosition(26, displayPosition(56));
+    activeResources.feedback.setText("").setPosition(26, height - 68);
+    activeResources.instructions.setText("").setPosition(26, height - 34);
     activeResources.art.sweep();
   };
 
@@ -1331,14 +1358,14 @@ function createScene(context: PotionRushSceneContext): Readonly<Record<string, u
   };
 
 
-  const artKeys = ["world:ground", "player:idle", "enemy:idle"] as const;
+  const artKeys = ["player:idle", "enemy:idle"] as const;
 
   const preload = function (this: PhaserSceneLike): void {
     if (!this.load) return;
     preloadAssetBindings(
       this.load,
       context.edition,
-      artKeys.filter((key) => context.edition.bindings[key]),
+      artKeys.filter((key) => context.edition?.bindings?.[key]),
     );
   };
 
@@ -1392,7 +1419,7 @@ function createScene(context: PotionRushSceneContext): Readonly<Record<string, u
         context.controller.restore(state as PotionRushSnapshot);
       },
       apkRecompose: (nextComposition: PotionRushSceneContext["composition"]) => {
-        composition = nextComposition;
+        void nextComposition;
       },
     },
   };

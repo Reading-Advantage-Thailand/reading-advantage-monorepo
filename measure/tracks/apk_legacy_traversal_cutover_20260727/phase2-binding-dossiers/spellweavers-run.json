@@ -5,7 +5,7 @@
   "status": "candidate",
   "source_manifest": {
     "path": "measure/tracks/apk_legacy_traversal_cutover_20260727/legacy-source-manifests/spellweavers-run.json",
-    "sha256": "f7172c9abf168cc564b20f32b56bb0ced29e3c656993462e127140d8a7ea4316",
+    "sha256": "e2c164a729ba8485773a844106d9af0358f802c945bcee227e946c132ec422fa",
     "evidence_binding": "accepted_traversal_batch_a",
     "status": "evidence-only"
   },
@@ -360,9 +360,9 @@
   "decisions": [
     {
       "role_id": "player-lane",
-      "outcome": "blocked",
-      "rationale": "Accepted evidence does not establish suitable physical asset adoption.",
-      "selected_asset_key": null,
+      "outcome": "ingest-canonical",
+      "rationale": "Dossier-bound legacy source bytes are missing; creation or ingestion of a canonical asset matching the dossier descriptor is required before use; approval does not claim ingestion complete.",
+      "selected_asset_key": "spellweavers-run/player-lane",
       "evidence": [
         {
           "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/claim-evidence-ledger-v2.json",
@@ -383,9 +383,9 @@
     },
     {
       "role_id": "word-orb",
-      "outcome": "blocked",
-      "rationale": "Accepted evidence does not establish suitable physical asset adoption.",
-      "selected_asset_key": null,
+      "outcome": "ingest-canonical",
+      "rationale": "Dossier-bound legacy source bytes are missing; creation or ingestion of a canonical asset matching the dossier descriptor is required before use; approval does not claim ingestion complete.",
+      "selected_asset_key": "spellweavers-run/word-orb",
       "evidence": [
         {
           "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/claim-evidence-ledger-v2.json",
@@ -406,9 +406,9 @@
     },
     {
       "role_id": "learning-feedback",
-      "outcome": "blocked",
-      "rationale": "Accepted evidence does not establish suitable physical asset adoption.",
-      "selected_asset_key": null,
+      "outcome": "ingest-canonical",
+      "rationale": "Dossier-bound legacy source bytes are missing; creation or ingestion of a canonical asset matching the dossier descriptor is required before use; approval does not claim ingestion complete.",
+      "selected_asset_key": "spellweavers-run/learning-feedback",
       "evidence": [
         {
           "artifact": "measure/archive/apk_corpus_audit_traversal_exploration_20260712/packages/catalog/spellweavers-run/claim-evidence-ledger-v2.json",
@@ -430,14 +430,20 @@
   ],
   "delivery": {
     "materialization": "selected-union-only",
-    "selected_union_keys": [],
+    "selected_union_keys": [
+      "spellweavers-run/player-lane",
+      "spellweavers-run/word-orb",
+      "spellweavers-run/learning-feedback"
+    ],
     "whole_pack_default": false,
     "app_local_asset_copies": false,
     "fallback": "none"
   },
   "owner_acceptance": {
-    "status": "pending",
+    "status": "accepted",
     "required_before_green": true,
-    "receipt": null
+    "receipt": {
+      "path": "measure/tracks/apk_legacy_traversal_cutover_20260727/phase2-binding-owner-receipt-20260817.json"
+    }
   }
 }

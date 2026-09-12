@@ -6,11 +6,10 @@ import {
 import {
   createActorSpriteLayer,
   createBoundedFrameScheduler,
+  calculateXp,
   createCompletionLatch,
   createInputActionNormalizer,
   createLanguageTargetProgression,
-  createResultAccountant,
-  finalizeResult,
   preloadAssetBindings,
   validateNonEmptyContent,
   type ActorSpriteLayer,
@@ -249,6 +248,8 @@ interface PhaserGraphicsLike {
   fillRoundedRect(x: number, y: number, width: number, height: number, radius?: number): this;
   lineStyle(lineWidth: number, color: number, alpha?: number): this;
   strokeRoundedRect(x: number, y: number, width: number, height: number, radius?: number): this;
+  lineBetween(x1: number, y1: number, x2: number, y2: number): this;
+  setDepth?(depth: number): this;
   destroy(): void;
 }
 
@@ -256,6 +257,8 @@ interface PhaserGraphicsLike {
 interface PhaserTextLike {
   setPosition(x: number, y: number): this;
   setText(value: string): this;
+  setOrigin?(x: number, y?: number): this;
+  setDepth?(depth: number): this;
   destroy(): void;
 }
 
@@ -292,11 +295,15 @@ interface PhaserSceneLike {
 interface SceneResources {
   readonly art: ActorSpriteLayer;
   readonly graphics: PhaserGraphicsLike;
+  readonly enemyOverlay: PhaserGraphicsLike;
   readonly title: PhaserTextLike;
   readonly prompt: PhaserTextLike;
   readonly progress: PhaserTextLike;
   readonly feedback: PhaserTextLike;
   readonly instructions: PhaserTextLike;
+  readonly controlLeft: PhaserTextLike;
+  readonly controlFire: PhaserTextLike;
+  readonly controlRight: PhaserTextLike;
   readonly enemyLabels: Map<string, PhaserTextLike>;
 }
 
@@ -311,6 +318,7 @@ interface AbyssalWellSceneContext {
 }
 
 const MAX_DELTA_MS = 50;
+const MAX_ACTIVE_ENEMIES = 4;
 const COLLISION_DEPTH = 0.12;
 const PROJECTILE_DEPTH_SPEED = ABYSSAL_WELL_CONFIG.player.projectileSpeed / 200_000;
 const DIFFICULTY_SPEED_MULTIPLIER: Readonly<Record<AbyssalWellDifficulty, number>> = Object.freeze({
@@ -434,11 +442,18 @@ function actionResult(
   return Object.freeze({ ...values, snapshot });
 }
 
-function resultFor(accountant: ReturnType<typeof createResultAccountant>): GameResults {
-  return gameResultsSchema.parse(finalizeResult(accountant, {
-    xpPerCorrect: 20,
-    xpPerAccuracyPoint: 10,
-  }));
+function resultFor(state: AbyssalWellState): GameResults {
+  const accuracy = state.totalAttempts === 0 ? 0 : state.correctWords / state.totalAttempts;
+  return gameResultsSchema.parse({
+    correctAnswers: state.correctWords,
+    totalAttempts: state.totalAttempts,
+    accuracy,
+    score: state.score,
+    xp: calculateXp(
+      { correctAnswers: state.correctWords, totalAttempts: state.totalAttempts, accuracy },
+      { xpPerCorrect: 20, xpPerAccuracyPoint: 10 },
+    ),
+  });
 }
 
 function normalizeDelta(deltaMs: number): number {
@@ -476,11 +491,11 @@ function resolveCollisions(state: AbyssalWellState, previousState = state): Abys
     const enemy = enemies[enemyIndex]!;
     projectiles.splice(projectileIndex, 1);
     enemies.splice(enemyIndex, 1);
-    const correct = enemy.wordIndex === targetIndex;
+    const correct = enemy.word === state.words[targetIndex];
     totalAttempts += 1;
     lastOutcome = correct ? "correct" : "incorrect";
     if (correct) {
-      const match = progression.match(`word:${enemy.wordIndex}`);
+      const match = progression.match(`word:${targetIndex}`);
       if (!match.matched) throw new Error("Abyssal Well progression rejected the current enemy");
       targetIndex = progression.currentIndex;
       correctWords += 1;
@@ -620,7 +635,7 @@ export function fireProjectile(state: AbyssalWellState): AbyssalWellState {
  * @returns State with one enemy, or the unchanged state when no slot exists.
  */
 export function spawnEnemy(state: AbyssalWellState, rng?: () => number): AbyssalWellState {
-  if (state.phase !== "playing" || state.destroyed) return state;
+  if (state.phase !== "playing" || state.destroyed || state.enemies.length >= MAX_ACTIVE_ENEMIES) return state;
   const available = availableWordIndexes(state);
   if (available.length === 0) return state;
   const randomWord = rng ? Math.floor(clampRandom(rng()) * available.length) : 0;
@@ -717,6 +732,59 @@ export function getLanePosition(
     x: centerX + Math.cos(angle) * radius,
     y: centerY + Math.sin(angle) * radius,
   });
+}
+
+/** One bounded English card position for a climbing enemy. */
+export interface AbyssalWellLabelLayout {
+  /** Enemy identity shown by the card. */
+  readonly id: string;
+  /** Card center horizontal coordinate. */
+  readonly x: number;
+  /** Card center vertical coordinate. */
+  readonly y: number;
+  /** Card width. */
+  readonly width: number;
+  /** Card height. */
+  readonly height: number;
+  /** Logical font size. */
+  readonly fontSize: number;
+  /** Moving enemy horizontal coordinate connected to the card. */
+  readonly actorX: number;
+  /** Moving enemy vertical coordinate connected to the card. */
+  readonly actorY: number;
+}
+
+/**
+ * Places up to four complete English cards without overlap.
+ * @param enemies Active climbing enemies.
+ * @param width Logical scene width.
+ * @param height Logical scene height.
+ * @param renderedWidth Displayed canvas width.
+ * @returns Stable card layouts keyed by enemy identity.
+ */
+export function getAbyssalWellLabelLayouts(
+  enemies: readonly AbyssalWellEnemy[],
+  width: number,
+  height: number,
+  renderedWidth = width,
+): readonly AbyssalWellLabelLayout[] {
+  const scale = renderedWidth > 0 ? renderedWidth / width : 1;
+  const cardWidth = scale < 0.75 ? Math.min(width * 0.4, Math.ceil(132 / scale)) : Math.min(150, width * 0.42);
+  const cardHeight = scale < 0.75 ? Math.ceil(44 / scale) : 48;
+  const fontSize = scale < 0.75 ? Math.ceil(16 / scale) : 16;
+  return Object.freeze(enemies.slice(0, MAX_ACTIVE_ENEMIES).map((enemy, index) => {
+    const actor = getLanePosition(enemy.lane, enemy.depth, width, height);
+    return Object.freeze({
+      id: enemy.id,
+      x: width * (index % 2 === 0 ? 0.24 : 0.76),
+      y: height * (index < 2 ? 0.31 : 0.72),
+      width: cardWidth,
+      height: cardHeight,
+      fontSize,
+      actorX: actor.x,
+      actorY: actor.y,
+    });
+  }));
 }
 
 /**
@@ -845,8 +913,9 @@ function validateRestoredState(state: AbyssalWellState, expected: AbyssalWellSta
     const isTutorialDecoy = enemy.wordIndex === -1;
     const validWord = isTutorialDecoy
       ? tutorialOnly && enemy.word === state.words[0]
-      : Number.isInteger(enemy.wordIndex) && enemy.wordIndex >= state.targetIndex
-        && enemy.wordIndex < state.targetCount && enemy.word === state.words[enemy.wordIndex];
+      : Number.isInteger(enemy.wordIndex) && enemy.wordIndex >= 0
+        && enemy.wordIndex < state.targetCount && enemy.word === state.words[enemy.wordIndex]
+        && (enemy.wordIndex >= state.targetIndex || enemy.word === state.answer);
     if (!Number.isInteger(enemy.lane) || enemy.lane < 0 || enemy.lane >= ABYSSAL_WELL_LANES
       || !Number.isFinite(enemy.depth) || enemy.depth < 0 || enemy.depth >= 1
       || !validWord || enemy.type !== state.creatureType || enemyWordIndexes.has(enemy.wordIndex)) {
@@ -902,22 +971,10 @@ export function createAbyssalWellController(
     if (terminalOutcome === undefined) throw new Error("Abyssal Well terminal outcome is missing");
     return deliver(result, terminalOutcome);
   });
-  let accountant = createResultAccountant();
-  let accountedAttempts = 0;
-  let accountedCorrect = 0;
   let delivered = false;
 
   const syncAccounting = (): void => {
-    while (accountedAttempts < state.totalAttempts) {
-      const correct = accountedCorrect < state.correctWords;
-      accountant.recordAttempt({ correct });
-      if (correct) {
-        accountedCorrect += 1;
-        accountant.addScore(100);
-      }
-      accountedAttempts += 1;
-    }
-    if (accountant.score !== state.score) throw new Error("Abyssal Well result accounting is inconsistent");
+    if (state.score !== state.correctWords * 100) throw new Error("Abyssal Well result accounting is inconsistent");
   };
 
   const finishIfTerminal = (): GameResults | undefined => {
@@ -925,7 +982,7 @@ export function createAbyssalWellController(
     syncAccounting();
     delivered = true;
     terminalOutcome = state.phase;
-    const result = resultFor(accountant);
+    const result = resultFor(state);
     state = withState(state, { result });
     completion.complete(result);
     return result;
@@ -1029,9 +1086,6 @@ export function createAbyssalWellController(
       if (nextState.phase === "playing" && nextState.result !== undefined) {
         throw new Error("Abyssal Well active state cannot contain a result");
       }
-      accountant = createResultAccountant();
-      accountedAttempts = 0;
-      accountedCorrect = 0;
       state = freezeState({ ...nextState });
       syncAccounting();
       if (state.phase !== "playing" || state.destroyed) {
@@ -1049,8 +1103,8 @@ export function createAbyssalWellController(
 
 function createScene(context: AbyssalWellSceneContext): Readonly<Record<string, unknown>> {
   let resources: SceneResources | undefined;
-  let composition = context.composition;
   let previousKeys = new Set<string>();
+  let heldMoveMs = 0;
   let animationMs = 0;
   let cleaned = false;
   const normalize = createInputActionNormalizer({
@@ -1104,15 +1158,24 @@ function createScene(context: AbyssalWellSceneContext): Readonly<Record<string, 
         resources.enemyLabels.delete(id);
       }
     }
+    const { width, height } = dimensions(scene);
+    const rect = scene.game?.canvas?.getBoundingClientRect?.();
+    const layouts = new Map(getAbyssalWellLabelLayouts(state.enemies, width, height, rect?.width ?? width)
+      .map((layout) => [layout.id, layout]));
     for (const enemy of state.enemies) {
+      const layout = layouts.get(enemy.id);
+      if (!layout) continue;
       const label = resources.enemyLabels.get(enemy.id) ?? scene.add.text(0, 0, "", {
         fontFamily: "Arial",
         color: "#f8fbff",
-        fontSize: "17px",
+        fontSize: `${layout.fontSize}px`,
         align: "center",
+        wordWrap: { width: layout.width - 16, useAdvancedWrap: true },
       });
+      label.setOrigin?.(0.5, 0.5);
+      label.setDepth?.(8);
       resources.enemyLabels.set(enemy.id, label);
-      label.setText(enemy.word);
+      label.setText(enemy.word).setPosition(layout.x, layout.y);
     }
   };
 
@@ -1124,14 +1187,26 @@ function createScene(context: AbyssalWellSceneContext): Readonly<Record<string, 
     const state = context.controller.snapshot();
     const center = getLanePosition(0, 0, width, height);
     const pulse = Math.sin(animationMs / 2_000 * Math.PI * 2) * 3;
+    const rect = scene.game?.canvas?.getBoundingClientRect?.();
+    const renderedScale = rect && rect.width > 0 ? rect.width / width : 1;
+    const labelLayouts = new Map(getAbyssalWellLabelLayouts(state.enemies, width, height, rect?.width ?? width)
+      .map((layout) => [layout.id, layout]));
     syncEnemyLabels(scene, state);
     view.graphics.clear();
+    view.enemyOverlay.clear();
     if (!art.ground("world:ground", width, height)) view.graphics.fillStyle(0x080b1a, 1).fillRect(0, 0, width, height);
     view.graphics.fillStyle(0x17143b, 0.95).fillCircle(center.x, center.y, Math.min(width, height) * 0.43);
     for (let ring = 4; ring >= 1; ring -= 1) {
       view.graphics.fillStyle(ring % 2 === 0 ? 0x24205a : 0x1c1948, 0.92)
         .fillCircle(center.x, center.y, Math.min(width, height) * (0.08 + ring * 0.085));
     }
+    art.place("well-mouth", "world:well-mouth", {
+      x: center.x,
+      y: center.y,
+      width: renderedScale < 0.75 ? Math.ceil(38 / renderedScale) : Math.min(76, width * 0.14),
+      depth: 3,
+      alpha: 0.96,
+    });
     for (let lane = 0; lane < ABYSSAL_WELL_LANES; lane += 1) {
       const point = getLanePosition(lane, 0.82, width, height);
       view.graphics.fillStyle(lane === state.player.lane ? 0x2dd4bf : 0x52608a, lane === state.player.lane ? 0.32 : 0.16)
@@ -1144,48 +1219,68 @@ function createScene(context: AbyssalWellSceneContext): Readonly<Record<string, 
     state.enemies.forEach((enemy, index) => {
       const point = getLanePosition(enemy.lane, enemy.depth, width, height);
       const radius = 13 + enemy.depth * 10;
-      const target = enemy.wordIndex === state.targetIndex;
+      const enemyVisibleWidth = renderedScale < 0.75 ? Math.ceil(22 / renderedScale) : Math.max(20, radius * 1.1);
+      const enemySourceWidth = enemyVisibleWidth * 2;
+      const enemyScale = enemySourceWidth / 48;
+      view.enemyOverlay.fillStyle(0x312e68, 0.96).fillCircle(point.x, point.y, radius + 7);
       const drawn = art.place(`enemy:${index}`, "enemy:idle", {
-        x: point.x,
-        y: point.y,
-        width: radius * 2.4,
+        x: point.x - 3 * enemyScale,
+        y: point.y - 13.5 * enemyScale,
+        width: enemySourceWidth,
         depth: 7,
-        alpha: target ? 1 : 0.9,
+        alpha: 0.94,
       });
       if (!drawn) {
-        view.graphics.fillStyle(target ? 0xf59e0b : 0x8b5cf6, 0.96).fillCircle(point.x, point.y, radius);
-        view.graphics.lineStyle(3, target ? 0xfef3c7 : 0xc4b5fd, 0.9).strokeRoundedRect(point.x - radius, point.y - radius, radius * 2, radius * 2, radius);
+        view.graphics.fillStyle(0x8b5cf6, 0.96).fillCircle(point.x, point.y, radius);
+        view.graphics.lineStyle(3, 0xc4b5fd, 0.9).strokeRoundedRect(point.x - radius, point.y - radius, radius * 2, radius * 2, radius);
       }
-      view.enemyLabels.get(enemy.id)?.setPosition(point.x - 48, point.y + radius + 4);
+      const labelLayout = labelLayouts.get(enemy.id);
+      if (labelLayout) {
+        view.enemyOverlay.lineStyle(2, 0xc4b5fd, 0.8)
+          .lineBetween(labelLayout.actorX, labelLayout.actorY, labelLayout.x, labelLayout.y);
+        view.enemyOverlay.fillStyle(0x413a83, 0.98).fillRoundedRect(
+          labelLayout.x - labelLayout.width / 2,
+          labelLayout.y - labelLayout.height / 2,
+          labelLayout.width,
+          labelLayout.height,
+          10,
+        );
+      }
     });
     const player = getLanePosition(state.player.lane, 1, width, height);
+    const playerVisibleWidth = renderedScale < 0.75 ? Math.ceil(24 / renderedScale) : 24;
+    const playerSourceWidth = playerVisibleWidth * 2;
+    const playerScale = playerSourceWidth / 24;
     if (!art.place("player", "player:idle", {
-      x: player.x,
-      y: player.y + pulse,
-      width: 46,
+      x: player.x - playerScale,
+      y: player.y + pulse - 1.5 * playerScale,
+      width: playerSourceWidth,
       depth: 8,
     })) {
       view.graphics.fillStyle(0x22d3ee, 1).fillCircle(player.x, player.y + pulse, 18);
     }
     art.sweep();
     view.graphics.lineStyle(3, 0xa5f3fc, 1).strokeRoundedRect(player.x - 22, player.y - 22 + pulse, 44, 44, 22);
-    view.title.setText("THE ABYSSAL WELL").setPosition(28, 18);
-    view.prompt.setText(`Defend the rim: ${state.sentence.translation}`).setPosition(28, 58);
+    const controlHeight = Math.min(64, height * 0.1);
+    for (let index = 0; index < 3; index += 1) {
+      view.graphics.fillStyle(0x24375d, 0.94).fillRoundedRect(
+        width * index / 3 + 8,
+        height - controlHeight - 8,
+        width / 3 - 16,
+        controlHeight,
+        10,
+      );
+    }
+    view.title.setText("").setPosition(28, 18);
+    view.prompt.setText(state.sentence.translation).setPosition(24, 18);
     view.progress
-      .setText(`${composition?.profile === "compact" ? "Compact well" : "Radial well"}  |  Target ${Math.min(state.targetIndex + 1, state.words.length)} of ${state.words.length}  |  Word ${state.words[state.targetIndex] ?? "complete"}  |  Lives ${state.player.lives}`)
-      .setPosition(28, 94);
-    view.feedback
-      .setText(state.phase === "victory"
-        ? "The ordered words sealed the well."
-        : state.phase === "defeat"
-          ? "The rim has fallen."
-          : state.lastOutcome === "incorrect"
-            ? "That orb fades. Keep the current word in order."
-            : "Rotate to a lane, then fire at the next word.")
-      .setPosition(28, height - 70);
-    view.instructions
-      .setText("Keyboard: A / ←, D / →, Space  •  Touch: left / center / right")
-      .setPosition(28, height - 36);
+      .setText(`${state.targetIndex}/${state.words.length}  •  ${state.player.lives}`)
+      .setPosition(24, 68);
+    view.feedback.setText("").setPosition(28, height - 70);
+    view.instructions.setText("").setPosition(28, height - 36);
+    view.controlLeft.setText("◀").setPosition(width / 6, height - controlHeight / 2 - 8);
+    view.controlFire.setText("●").setPosition(width / 2, height - controlHeight / 2 - 8);
+    view.controlRight.setText("▶").setPosition(width * 5 / 6, height - controlHeight / 2 - 8);
   };
 
   const cleanup = (): void => {
@@ -1196,11 +1291,15 @@ function createScene(context: AbyssalWellSceneContext): Readonly<Record<string, 
     context.controller.destroy();
     if (!resources) return;
     resources.graphics.destroy();
+    resources.enemyOverlay.destroy();
     resources.title.destroy();
     resources.prompt.destroy();
     resources.progress.destroy();
     resources.feedback.destroy();
     resources.instructions.destroy();
+    resources.controlLeft.destroy();
+    resources.controlFire.destroy();
+    resources.controlRight.destroy();
     for (const label of resources.enemyLabels.values()) label.destroy();
     resources.enemyLabels.clear();
     resources = undefined;
@@ -1208,7 +1307,7 @@ function createScene(context: AbyssalWellSceneContext): Readonly<Record<string, 
   };
 
 
-  const artKeys = ["world:ground", "player:idle", "enemy:idle"] as const;
+  const artKeys = ["world:ground", "world:well-mouth", "player:idle", "enemy:idle"] as const;
 
   const preload = function (this: PhaserSceneLike): void {
     if (!this.load) return;
@@ -1222,17 +1321,32 @@ function createScene(context: AbyssalWellSceneContext): Readonly<Record<string, 
   const create = function (this: PhaserSceneLike): void {
     if (resources) return;
     if (!this.add) throw new Error("The Abyssal Well requires Phaser display services");
+    const { width } = dimensions(this);
+    const rect = this.game?.canvas?.getBoundingClientRect?.();
+    const scale = rect && rect.width > 0 ? rect.width / width : 1;
+    const promptSize = scale < 0.75 ? Math.ceil(20 / scale) : width < 500 ? 20 : 26;
+    const hudSize = scale < 0.75 ? Math.ceil(16 / scale) : 16;
+    const controlSize = scale < 0.75 ? Math.ceil(18 / scale) : 18;
     const textStyle = { fontFamily: "Arial", color: "#f8fbff", fontSize: "20px" };
+    const enemyOverlay = this.add.graphics();
+    enemyOverlay.setDepth?.(6);
     resources = {
       graphics: this.add.graphics(),
+      enemyOverlay,
       art: createActorSpriteLayer(this, context.edition),
-      title: this.add.text(28, 18, "THE ABYSSAL WELL", { ...textStyle, fontSize: "29px", fontStyle: "bold" }),
-      prompt: this.add.text(28, 58, "", { ...textStyle, fontSize: "23px", wordWrap: { width: 860 } }),
-      progress: this.add.text(28, 94, "", { ...textStyle, fontSize: "16px", color: "#b7d9ff" }),
+      title: this.add.text(28, 18, "", { ...textStyle, fontSize: "29px", fontStyle: "bold" }),
+      prompt: this.add.text(24, 18, "", { ...textStyle, fontSize: `${promptSize}px`, wordWrap: { width: width - 48, useAdvancedWrap: true } }),
+      progress: this.add.text(24, 68, "", { ...textStyle, fontSize: `${hudSize}px`, color: "#b7d9ff" }),
       feedback: this.add.text(28, 0, "", { ...textStyle, fontSize: "17px", color: "#fde68a" }),
-      instructions: this.add.text(28, 0, "", { ...textStyle, fontSize: "15px", color: "#cbd5e1" }),
+      instructions: this.add.text(28, 0, "", { ...textStyle, fontSize: `${controlSize}px`, color: "#cbd5e1" }),
+      controlLeft: this.add.text(0, 0, "◀", { ...textStyle, fontSize: `${controlSize}px`, color: "#cbd5e1" }),
+      controlFire: this.add.text(0, 0, "●", { ...textStyle, fontSize: `${controlSize}px`, color: "#cbd5e1" }),
+      controlRight: this.add.text(0, 0, "▶", { ...textStyle, fontSize: `${controlSize}px`, color: "#cbd5e1" }),
       enemyLabels: new Map(),
     };
+    resources.controlLeft.setOrigin?.(0.5, 0.5);
+    resources.controlFire.setOrigin?.(0.5, 0.5);
+    resources.controlRight.setOrigin?.(0.5, 0.5);
     this.events?.once("shutdown", cleanup);
     this.events?.once("destroy", cleanup);
     context.diagnostic({
@@ -1253,6 +1367,17 @@ function createScene(context: AbyssalWellSceneContext): Readonly<Record<string, 
       for (const code of pressed) {
         const action = normalize({ modality: "keyboard", code })[0]?.action;
         if (action) applyAction(action);
+      }
+      const heldAction = input.keys.map((code) => normalize({ modality: "keyboard", code })[0]?.action)
+        .find((action): action is InputActionId => action === "move-left" || action === "move-right");
+      if (heldAction && !pressed.some((code) => normalize({ modality: "keyboard", code })[0]?.action === heldAction)) {
+        heldMoveMs += Math.min(50, Math.max(0, delta));
+        if (heldMoveMs >= 150) {
+          heldMoveMs -= 150;
+          applyAction(heldAction);
+        }
+      } else if (!heldAction) {
+        heldMoveMs = 0;
       }
       if (input.pointer.released && !input.pointer.cancelled) {
         const { width, height } = dimensions(this);
@@ -1276,7 +1401,7 @@ function createScene(context: AbyssalWellSceneContext): Readonly<Record<string, 
         context.controller.restore(state as AbyssalWellState);
       },
       apkRecompose: (nextComposition: AbyssalWellSceneContext["composition"]) => {
-        composition = nextComposition;
+        void nextComposition;
       },
     },
   };

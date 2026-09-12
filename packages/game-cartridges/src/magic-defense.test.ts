@@ -18,9 +18,9 @@ import {
 } from "./magic-defense.js";
 
 const VOCABULARY = [
-  { term: "ward", translation: "proteger" },
-  { term: "shield", translation: "escudo" },
-  { term: "spell", translation: "hechizo" },
+  { term: "ward", translation: "คุ้มครอง" },
+  { term: "shield", translation: "โล่" },
+  { term: "spell", translation: "คาถา" },
 ];
 
 function typeText(controller: MagicDefenseController, text: string): void {
@@ -35,9 +35,12 @@ function finishCurrentTarget(controller: MagicDefenseController) {
 function createText(value = "") {
   const text = {
     value,
+    height: 0,
     destroyed: false,
     setPosition: vi.fn(() => text),
     setText: vi.fn((next: string) => { text.value = next; return text; }),
+    setFontSize: vi.fn(() => text),
+    setWordWrapWidth: vi.fn(() => text),
     setDepth: vi.fn(() => text),
     destroy: vi.fn(() => { text.destroyed = true; }),
   };
@@ -57,7 +60,7 @@ function createImage() {
   return image;
 }
 
-function createSceneHarness() {
+function createSceneHarness(renderedWidth = 960) {
   const events = new Map<string, () => void>();
   const graphics = {
     clear: vi.fn(() => graphics),
@@ -118,7 +121,7 @@ function createSceneHarness() {
       }),
     },
     events: { once: vi.fn((event: string, listener: () => void) => events.set(event, listener)) },
-    game: { canvas: { getBoundingClientRect: () => ({ left: 0, top: 0, width: 960, height: 540 }) } },
+    game: { canvas: { getBoundingClientRect: () => ({ left: 0, top: 0, width: renderedWidth, height: renderedWidth * 9 / 16 }) } },
     scale: { width: 960, height: 540 },
   };
   let inputSnapshotCalls = 0;
@@ -176,7 +179,7 @@ describe("Magic Defense cartridge", () => {
     const initialMissile = falling.snapshot().activeMissiles[0];
     expect(initialMissile).toBeDefined();
     const ticked = falling.tick(8_000);
-    expect(ticked.snapshot.totalAttempts).toBe(1);
+    expect(ticked.snapshot.totalAttempts).toBe(0);
     expect(ticked.snapshot.lastOutcome).toBe("missed");
     expect(ticked.snapshot.activeMissiles.some((missile) => missile.id !== initialMissile?.id)).toBe(true);
   });
@@ -200,15 +203,15 @@ describe("Magic Defense cartridge", () => {
       phase: "playing",
       targetIndex: 0,
       targetCount: 3,
-      prompt: "ward",
-      answer: "proteger",
+      prompt: "คุ้มครอง",
+      answer: "ward",
       typingBuffer: "",
       score: 0,
       combo: 0,
       mana: 0,
       totalAttempts: 0,
       castleHealth: { left: 3, center: 3, right: 3 },
-      activeMissiles: [{ id: "missile:0", targetCastleId: "left", prompt: "ward" }],
+      activeMissiles: [{ id: "missile:0", targetCastleId: "left", prompt: "คุ้มครอง" }],
     });
   });
 
@@ -216,16 +219,16 @@ describe("Magic Defense cartridge", () => {
     expect(() => createMagicDefenseController([], vi.fn())).toThrow(/empty playable content/i);
 
     const controller = createMagicDefenseController(VOCABULARY, vi.fn());
-    typeText(controller, "protee");
+    typeText(controller, "warx");
     controller.backspace();
-    controller.typeCharacter("g");
-    expect(controller.snapshot().typingBuffer).toBe("proteg");
+    controller.typeCharacter("d");
+    expect(controller.snapshot().typingBuffer).toBe("ward");
 
     const wrong = controller.submitAnswer("wrong");
     expect(wrong).toMatchObject({ accepted: true, correct: false, progressed: false });
     expect(wrong.snapshot).toMatchObject({ combo: 0, totalAttempts: 1, targetIndex: 0, typingBuffer: "" });
 
-    typeText(controller, "PROTEGER");
+    typeText(controller, "WARD");
     const correct = controller.submitAnswer();
     expect(correct).toMatchObject({ accepted: true, correct: true, progressed: true });
     expect(correct.snapshot).toMatchObject({ targetIndex: 1, score: 100, combo: 1, mana: 10 });
@@ -259,6 +262,61 @@ describe("Magic Defense cartridge", () => {
     expect(correctPositions).toEqual([2, 1, 0]);
   });
 
+  it("uses the supplied answer as the only choice for a one-word deck", () => {
+    const controller = createMagicDefenseController([
+      { term: "bridge", translation: "สะพาน" },
+    ], vi.fn());
+
+    expect(controller.snapshot()).toMatchObject({
+      answer: "bridge",
+      answerChoices: ["bridge"],
+      availableActions: ["bridge"],
+    });
+    expect(controller.chooseAnswer("bridge")).toMatchObject({ correct: true, terminal: true });
+  });
+
+  it("maps one visible choice card to the full short-deck hit region", () => {
+    const harness = createSceneHarness();
+    const cartridge = createMagicDefenseCartridge();
+    const config = cartridge.createGameConfig({
+      input: [{ term: "bridge", translation: "สะพาน" }],
+      edition: { id: "short", title: "Short", inputMode: "vocabulary" },
+      complete: vi.fn(),
+      diagnostic: vi.fn(),
+      inputController: harness.inputController,
+      sessionMode: "playing",
+      composition: { profile: "compact", width: 960, height: 540 },
+    } as never);
+    const scene = config.scene as {
+      create: () => void;
+      update: (_time: number, delta: number) => void;
+      extend: { apkCaptureResponsiveState: () => MagicDefenseSnapshot };
+    };
+    scene.create.call(harness.scene);
+
+    expect(harness.texts.filter((text) => text.value === "bridge")).toHaveLength(1);
+    harness.setInput({ pressed: [], pointer: { released: true, x: 480, y: 490 } });
+    scene.update.call(harness.scene, 0, 0);
+    expect(scene.extend.apkCaptureResponsiveState()).toMatchObject({ phase: "victory", targetIndex: 1 });
+  });
+
+  it("uses distinct supplied terms for duplicate and short decks", () => {
+    const controller = createMagicDefenseController([
+      { term: "bridge", translation: "สะพาน" },
+      { term: "bridge", translation: "สะพานอีกครั้ง" },
+      { term: "forest", translation: "ป่า" },
+    ], vi.fn());
+    const suppliedTerms = new Set(["bridge", "forest"]);
+
+    while (controller.snapshot().phase === "playing") {
+      const state = controller.snapshot();
+      expect(state.answerChoices).toHaveLength(2);
+      expect(state.answerChoices).toContain(state.answer);
+      expect(state.answerChoices.every((choice) => suppliedTerms.has(choice))).toBe(true);
+      controller.chooseAnswer(state.answer);
+    }
+  });
+
   it("damages the missile target, resets combo, and replaces a missed current missile", () => {
     const controller = createMagicDefenseController(VOCABULARY, vi.fn());
     finishCurrentTarget(controller);
@@ -269,7 +327,7 @@ describe("Magic Defense cartridge", () => {
     expect(result.snapshot).toMatchObject({
       targetIndex: beforeMiss.targetIndex,
       combo: 0,
-      totalAttempts: beforeMiss.totalAttempts + 1,
+      totalAttempts: beforeMiss.totalAttempts,
       castleHealth: { left: 3, center: 2, right: 3 },
     });
     expect(result.snapshot.activeMissiles[0]?.id).not.toBe(beforeMiss.activeMissiles[0]?.id);
@@ -327,6 +385,23 @@ describe("Magic Defense cartridge", () => {
     });
   });
 
+  it("keeps passive impacts outside language accuracy while counting wrong submissions", () => {
+    const deliver = vi.fn();
+    const controller = createMagicDefenseController(VOCABULARY, deliver);
+    const livesBeforeImpact = controller.snapshot().lives;
+    controller.missMissile();
+    controller.missMissile();
+    expect(controller.snapshot()).toMatchObject({ lives: livesBeforeImpact - 2, correctAnswers: 0, totalAttempts: 0 });
+
+    while (controller.snapshot().phase === "playing") finishCurrentTarget(controller);
+    expect(gameResultsSchema.parse(deliver.mock.calls[0]?.[0])).toMatchObject({ correctAnswers: 3, totalAttempts: 3, accuracy: 1 });
+
+    const wrongSubmission = createMagicDefenseController(VOCABULARY, vi.fn());
+    const wrongLives = wrongSubmission.snapshot().lives;
+    wrongSubmission.submitAnswer("wrong");
+    expect(wrongSubmission.snapshot()).toMatchObject({ lives: wrongLives - 1, correctAnswers: 0, totalAttempts: 1 });
+  });
+
   it("fills mana, then uses one storm to clear every active missile", () => {
     const controller = createMagicDefenseController(
       Array.from({ length: 11 }, (_item, index) => ({ term: `word-${index}`, translation: `answer-${index}` })),
@@ -363,7 +438,7 @@ describe("Magic Defense cartridge", () => {
     let finalChoice: ReturnType<MagicDefenseController["submitAnswer"]> | undefined;
     while (controller.snapshot().phase === "playing") finalChoice = finishCurrentTarget(controller);
 
-    const terminal = controller.submitAnswer("proteger");
+    const terminal = controller.submitAnswer("ward");
     expect(controller.snapshot().phase).toBe("victory");
     expect(terminal).toMatchObject({ accepted: false, terminal: false });
     expect(finalChoice).toMatchObject({ accepted: true, correct: true, progressed: true, terminal: true, completed: true, result: expect.any(Object) });
@@ -405,9 +480,9 @@ describe("Magic Defense cartridge", () => {
       phase: "playing",
       targetIndex: 0,
       targetCount: VOCABULARY.length,
-      prompt: "ward",
-      answer: "proteger",
-      correctAction: "proteger",
+      prompt: "คุ้มครอง",
+      answer: "ward",
+      correctAction: "ward",
       availableActions: state.answerChoices,
       lives: 9,
       energy: 0,
@@ -481,7 +556,7 @@ describe("Magic Defense cartridge", () => {
     scene.update.call(harness.scene, 0, MAGIC_DEFENSE_MISSILE_SPAWN_INTERVAL_MS);
     expect((scene.extend.apkCaptureResponsiveState() as { activeMissiles: readonly unknown[] }).activeMissiles.length).toBeGreaterThan(1);
 
-    for (const code of ["KeyP", "KeyR", "KeyO", "KeyT", "KeyE", "KeyG", "KeyE", "KeyR", "Enter"]) {
+    for (const code of ["KeyW", "KeyA", "KeyR", "KeyD", "Enter"]) {
       harness.setInput({ keys: [], pressed: [code] });
       scene.update.call(harness.scene, 0, 0);
     }
@@ -505,6 +580,34 @@ describe("Magic Defense cartridge", () => {
     expect(harness.graphics.destroy).toHaveBeenCalledTimes(2);
     expect(harness.texts.every((text) => text.destroyed)).toBe(true);
     expect((scene.extend.apkCaptureResponsiveState() as { destroyed: boolean }).destroyed).toBe(true);
+  });
+
+  it("shows a readable Thai target with English answers and no live instructions", () => {
+    const harness = createSceneHarness(336);
+    const cartridge = createMagicDefenseCartridge();
+    const config = cartridge.createGameConfig({
+      input: [
+        { term: "bridge", translation: "สะพาน" },
+        { term: "forest", translation: "ป่า" },
+        { term: "river", translation: "แม่น้ำ" },
+      ],
+      edition: { id: "compact", title: "Compact", inputMode: "vocabulary" },
+      complete: vi.fn(),
+      diagnostic: vi.fn(),
+      inputController: harness.inputController,
+      sessionMode: "playing",
+      composition: { profile: "compact", width: 336, height: 733 },
+    } as never);
+    const scene = config.scene as { create: () => void; extend: { apkCaptureResponsiveState: () => MagicDefenseSnapshot } };
+    scene.create.call(harness.scene);
+
+    expect(scene.extend.apkCaptureResponsiveState()).toMatchObject({ prompt: "สะพาน", answer: "bridge" });
+    expect(harness.texts[1]).toMatchObject({ value: "สะพาน" });
+    expect(harness.texts[1]?.setFontSize).toHaveBeenLastCalledWith(52);
+    const choices = harness.texts.filter((text) => ["bridge", "forest", "river"].includes(text.value));
+    expect(choices).toHaveLength(3);
+    for (const choice of choices) expect(choice.setFontSize).toHaveBeenLastCalledWith(46);
+    expect(harness.texts.some((text) => /MAGIC DEFENSE|Type the translation|Defend the towers|Backspace erases|Tap a choice/iu.test(text.value))).toBe(false);
   });
 
   it("uses the wide scene, keyboard storm controls, and the pointer storm action", () => {
@@ -556,7 +659,7 @@ describe("Magic Defense cartridge", () => {
     expect(complete).not.toHaveBeenCalled();
   });
 
-  it("types a Thai translation from event.key characters and matches the target", () => {
+  it("types an English answer for a Thai target", () => {
     const thaiVocabulary = [
       { term: "bridge", translation: "สะพาน" },
       { term: "forest", translation: "ป่า" },
@@ -590,9 +693,8 @@ describe("Magic Defense cartridge", () => {
     expect(scene.extend.apkCaptureResponsiveState().typingBuffer).toBe("sa");
     typePressed(["Backspace", "Backspace"]);
 
-    const thaiAnswer = Array.from(thaiVocabulary[0]!.translation);
-    typePressed(thaiAnswer);
-    expect(scene.extend.apkCaptureResponsiveState().typingBuffer).toBe("สะพาน");
+    typePressed(["KeyB", "KeyR", "KeyI", "KeyD", "KeyG", "KeyE"]);
+    expect(scene.extend.apkCaptureResponsiveState().typingBuffer).toBe("bridge");
 
     typePressed(["Enter"]);
     expect(scene.extend.apkCaptureResponsiveState()).toMatchObject({

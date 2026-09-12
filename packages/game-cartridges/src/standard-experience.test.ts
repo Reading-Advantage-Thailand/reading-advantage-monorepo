@@ -80,6 +80,33 @@ describe("createCartridgeStandardExperience", () => {
       diagnostics: { report: vi.fn() },
     });
 
-    expect(executeTutorialAction).toHaveBeenCalledWith(step.actionId);
+    expect(executeTutorialAction).toHaveBeenCalledWith(
+      step.actionId,
+      {},
+      expect.objectContaining({ step }),
+    );
+  });
+
+  it("waits for learner advancement after each fixed-duration practice demonstration", () => {
+    const { definition } = createExperience();
+
+    expect(definition.tutorial.title).toBe("Practice");
+    expect(definition.tutorial.steps.map(({ title, explanation }) => ({ title, explanation }))).toEqual([
+      {
+        title: "Wrong choice",
+        explanation: "The target stays the same.",
+      },
+      {
+        title: "Correct choice",
+        explanation: "The next target appears.",
+      },
+    ]);
+    expect(definition.tutorial.lifecycle.advance).toBe("learner-controlled");
+    expect(definition.tutorial.lifecycle.complete).toEqual({ to: "playing" });
+    expect(definition.tutorial.steps).toHaveLength(2);
+    expect(definition.tutorial.steps.map((step) => step.timing)).toEqual([
+      { leadInMs: 500, demonstrationMs: 300, lingerMs: 600 },
+      { leadInMs: 500, demonstrationMs: 300, lingerMs: 600 },
+    ]);
   });
 });

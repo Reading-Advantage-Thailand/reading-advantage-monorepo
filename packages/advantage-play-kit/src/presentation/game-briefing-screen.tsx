@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  useEffect,
   useId,
   useRef,
   useState,
@@ -12,6 +13,10 @@ import type { VocabularyItem } from "@reading-advantage/game-contracts";
 
 import type { LayoutProfile, ResponsiveInputMode } from "../responsive/responsive-composition.js";
 import type { GameBriefing } from "./game-briefing-contract.js";
+import {
+  getRetroArcadeButtonStyle,
+  RETRO_ARCADE_PANEL_STYLE,
+} from "./retro-arcade-theme.js";
 
 /** Props for the host-neutral, pre-game briefing presentation. */
 export type GameBriefingScreenProps = Omit<
@@ -25,6 +30,10 @@ export type GameBriefingScreenProps = Omit<
   readonly learningItems: readonly VocabularyItem[];
   /** Requests one transition from briefing into the host-selected next phase. */
   readonly onStart: () => void;
+  /** Requests a safe practice tutorial before scored play. */
+  readonly onPractice?: () => void;
+  /** Accessible label for the practice action. */
+  readonly practiceLabel?: string;
   /** Requests a scored-session-free class demonstration of the real cartridge. */
   readonly onDemonstrate?: () => void;
   /** Accessible label for the class-demonstration action. */
@@ -40,16 +49,17 @@ export type GameBriefingScreenProps = Omit<
 };
 
 const sectionStyle: CSSProperties = {
-  border: "1px solid var(--apk-briefing-border, #335c4b)",
-  borderRadius: "var(--apk-briefing-radius, 10px)",
-  background: "var(--apk-briefing-surface, #0c1b16)",
-  padding: "var(--apk-briefing-card-padding, clamp(1rem, 3vw, 1.5rem))",
+  border: "2px solid var(--apk-briefing-border, #31577d)",
+  borderRadius: "var(--apk-briefing-radius, 2px)",
+  background: "var(--apk-briefing-surface, #101d32)",
+  boxShadow: "4px 4px 0 var(--apk-briefing-shadow, #030712)",
+  padding: "var(--apk-briefing-card-padding, clamp(0.75rem, 2vw, 1rem))",
 };
 
 const headingStyle: CSSProperties = {
   margin: 0,
   color: "var(--apk-briefing-text, #f4f0dc)",
-  fontFamily: "var(--apk-briefing-display-font, ui-serif, Georgia, serif)",
+  fontFamily: "var(--apk-briefing-display-font, 'Courier New', 'Noto Sans Thai', Tahoma, monospace)",
   fontSize: "clamp(1.1rem, 2vw, 1.45rem)",
   lineHeight: 1.2,
 };
@@ -79,6 +89,8 @@ export function GameBriefingScreen({
   briefing,
   learningItems,
   onStart,
+  onPractice,
+  practiceLabel = "Practice",
   onDemonstrate,
   demonstrateLabel = "Demonstrate for class",
   layoutProfile = "compact",
@@ -95,11 +107,16 @@ export function GameBriefingScreen({
   const learningHeadingId = useId();
   const controlsHeadingId = useId();
   const startActivatedRef = useRef(false);
+  const startButtonRef = useRef<HTMLButtonElement>(null);
   const [startActivated, setStartActivated] = useState(false);
   const labels = briefing.labels;
   const controls = briefing.controls.filter((control) => isControlApplicable(control.mode, inputMode));
   const startLabel = labels?.startAction ?? "Start game";
   const learningHeading = labels?.learningPreviewHeading ?? briefing.learningPreview.heading;
+
+  useEffect(() => {
+    startButtonRef.current?.focus({ preventScroll: true });
+  }, []);
 
   const handleStart = () => {
     if (startPending || startActivatedRef.current) return;
@@ -115,6 +132,13 @@ export function GameBriefingScreen({
     onDemonstrate();
   };
 
+  const handlePractice = () => {
+    if (startPending || startActivatedRef.current || onPractice === undefined) return;
+    startActivatedRef.current = true;
+    setStartActivated(true);
+    onPractice();
+  };
+
   return (
     <section
       {...sectionProps}
@@ -123,32 +147,36 @@ export function GameBriefingScreen({
       data-apk-briefing="true"
       data-apk-presentation="briefing"
       data-apk-region="modal"
+      data-apk-visual-theme="retro-arcade"
       data-apk-layout-profile={layoutProfile}
       {...(inputMode ? { "data-apk-input-mode": inputMode } : {})}
       role="dialog"
       style={{
+        ...RETRO_ARCADE_PANEL_STYLE,
         display: "flex",
         flexDirection: "column",
         minBlockSize: "100%",
         maxBlockSize: "100%",
         overflow: "hidden",
-        background: "var(--apk-briefing-background, #07110e)",
-        color: "var(--apk-briefing-text, #f4f0dc)",
-        fontFamily: "var(--apk-briefing-body-font, ui-sans-serif, system-ui, sans-serif)",
+        background: "var(--apk-briefing-background, #060b18)",
+        color: "var(--apk-briefing-text, #f7f2d0)",
+        fontFamily: "var(--apk-briefing-body-font, Tahoma, 'Noto Sans Thai', sans-serif)",
         ...style,
       }}
     >
       <header
         data-apk-briefing-region="header"
         style={{
-          borderBlockEnd: "1px solid var(--apk-briefing-border, #335c4b)",
-          padding: "clamp(1.25rem, 4vw, 2.25rem) clamp(1rem, 4vw, 2.5rem) 1.25rem",
+          borderBlockEnd: "2px solid var(--apk-briefing-border, #31577d)",
+          background: "linear-gradient(180deg, #122443 0%, #081225 100%)",
+          boxShadow: "inset 0 -4px 0 #030712",
+          padding: "clamp(0.8rem, 2vw, 1.25rem) clamp(0.8rem, 3vw, 1.5rem)",
         }}
       >
         <p
           style={{
             margin: "0 0 0.65rem",
-            color: "var(--apk-briefing-accent, #8ce0b8)",
+            color: "var(--apk-briefing-accent, #67e8f9)",
             fontFamily: "var(--apk-briefing-mono-font, ui-monospace, SFMono-Regular, monospace)",
             fontSize: "0.72rem",
             fontWeight: 700,
@@ -163,8 +191,8 @@ export function GameBriefingScreen({
           style={{
             margin: 0,
             color: "var(--apk-briefing-text, #f4f0dc)",
-            fontFamily: "var(--apk-briefing-display-font, ui-serif, Georgia, serif)",
-            fontSize: "clamp(2rem, 6vw, 3.8rem)",
+            fontFamily: "var(--apk-briefing-display-font, 'Courier New', 'Noto Sans Thai', Tahoma, monospace)",
+            fontSize: "clamp(1.65rem, 4vw, 2.8rem)",
             fontWeight: 800,
             letterSpacing: "-0.035em",
             lineHeight: 1,
@@ -185,10 +213,11 @@ export function GameBriefingScreen({
         style={{
           display: "grid",
           flex: "1 1 auto",
+          order: 2,
           gridTemplateColumns: layoutProfile === "wide" ? "minmax(0, 1fr) minmax(18rem, 0.8fr)" : "minmax(0, 1fr)",
           gap: "clamp(0.75rem, 2vw, 1.25rem)",
           overflowY: "auto",
-          padding: "clamp(1rem, 3vw, 1.75rem) clamp(1rem, 4vw, 2.5rem)",
+          padding: "clamp(0.75rem, 2vw, 1rem)",
           overscrollBehavior: "contain",
         }}
       >
@@ -198,8 +227,10 @@ export function GameBriefingScreen({
             <p id={objectiveId} style={{ ...mutedTextStyle, margin: "0.75rem 0 0" }}>{briefing.objective}</p>
           </section>
 
-          <section aria-labelledby={instructionsHeadingId} style={sectionStyle} data-apk-briefing-region="instructions">
-            <h2 id={instructionsHeadingId} style={headingStyle}>{labels?.instructionsHeading ?? "How to play"}</h2>
+          <details aria-labelledby={instructionsHeadingId} style={sectionStyle} data-apk-briefing-region="instructions">
+            <summary style={{ cursor: "pointer", color: "var(--apk-briefing-accent, #67e8f9)" }}>
+              <h2 id={instructionsHeadingId} style={{ ...headingStyle, display: "inline" }}>{labels?.instructionsHeading ?? "How to play"}</h2>
+            </summary>
             <ol
               style={{
                 display: "grid",
@@ -216,7 +247,7 @@ export function GameBriefingScreen({
                 </li>
               ))}
             </ol>
-          </section>
+          </details>
 
           {briefing.tip ? (
             <aside style={{ ...sectionStyle, borderInlineStart: "3px solid var(--apk-briefing-accent-warm, #f3c969)" }} data-apk-briefing-region="tip">
@@ -229,13 +260,13 @@ export function GameBriefingScreen({
         </div>
 
         <div data-apk-briefing-region="learning-and-controls" style={{ display: "grid", alignContent: "start", gap: "1rem" }}>
-          <section aria-labelledby={learningHeadingId} style={sectionStyle} data-apk-briefing-region="learning-preview">
-            <div style={{ display: "flex", flexWrap: "wrap", alignItems: "baseline", justifyContent: "space-between", gap: "0.75rem" }}>
-              <h2 id={learningHeadingId} style={headingStyle}>{learningHeading}</h2>
+          <details aria-labelledby={learningHeadingId} style={sectionStyle} data-apk-briefing-region="learning-preview">
+            <summary style={{ cursor: "pointer", color: "var(--apk-briefing-accent, #67e8f9)" }}>
+              <h2 id={learningHeadingId} style={{ ...headingStyle, display: "inline", marginInlineEnd: "0.75rem" }}>{learningHeading}</h2>
               <span style={{ ...mutedTextStyle, fontSize: "0.78rem", fontFamily: "var(--apk-briefing-mono-font, ui-monospace, monospace)" }}>
                 {learningItems.length} {labels?.itemCountLabel ?? "items"}
               </span>
-            </div>
+            </summary>
             <ul
               aria-label={learningHeading}
               style={{
@@ -265,10 +296,12 @@ export function GameBriefingScreen({
                 </li>
               ))}
             </ul>
-          </section>
+          </details>
 
-          <section aria-labelledby={controlsHeadingId} style={sectionStyle} data-apk-briefing-region="controls">
-            <h2 id={controlsHeadingId} style={headingStyle}>{labels?.controlsHeading ?? "Controls"}</h2>
+          <details aria-labelledby={controlsHeadingId} style={sectionStyle} data-apk-briefing-region="controls">
+            <summary style={{ cursor: "pointer", color: "var(--apk-briefing-accent, #67e8f9)" }}>
+              <h2 id={controlsHeadingId} style={{ ...headingStyle, display: "inline" }}>{labels?.controlsHeading ?? "Controls"}</h2>
+            </summary>
             <ul
               style={{
                 display: "grid",
@@ -313,7 +346,7 @@ export function GameBriefingScreen({
                 </li>
               ))}
             </ul>
-          </section>
+          </details>
         </div>
       </div>
 
@@ -321,13 +354,15 @@ export function GameBriefingScreen({
         data-apk-briefing-region="footer"
         style={{
           display: "flex",
+          order: 1,
           flexWrap: "wrap",
           alignItems: "center",
           justifyContent: "space-between",
           gap: "1rem",
-          borderBlockStart: "1px solid var(--apk-briefing-border, #335c4b)",
-          background: "var(--apk-briefing-footer-background, #0c1b16)",
-          padding: "1rem clamp(1rem, 4vw, 2.5rem) calc(1rem + env(safe-area-inset-bottom))",
+          borderBlockStart: "2px solid var(--apk-briefing-border, #31577d)",
+          background: "var(--apk-briefing-footer-background, #081225)",
+          boxShadow: "0 -4px 0 #030712",
+          padding: "0.75rem clamp(0.75rem, 3vw, 1.25rem) calc(0.75rem + env(safe-area-inset-bottom))",
         }}
       >
         {extension ? <div data-apk-briefing-region="extension" style={{ flex: "1 1 12rem", minInlineSize: 0 }}>{extension}</div> : null}
@@ -338,39 +373,53 @@ export function GameBriefingScreen({
             disabled={startPending || startActivated}
             onClick={handleDemonstrate}
             style={{
+              ...getRetroArcadeButtonStyle("secondary"),
               minBlockSize: "48px",
               minInlineSize: "min(100%, 12rem)",
-              border: "1px solid var(--apk-briefing-border, #335c4b)",
-              borderRadius: "var(--apk-briefing-action-radius, 6px)",
-              background: "transparent",
-              color: "var(--apk-briefing-text, #f4f0dc)",
               cursor: startPending || startActivated ? "wait" : "pointer",
               font: "inherit",
               fontWeight: 700,
-              padding: "0.75rem 1.25rem",
+              padding: "0.35rem 1rem",
             }}
           >
             {demonstrateLabel}
           </button>
         ) : null}
+        {onPractice ? (
+          <button
+            type="button"
+            data-apk-briefing-practice="true"
+            disabled={startPending || startActivated}
+            onClick={handlePractice}
+            style={{
+              ...getRetroArcadeButtonStyle("secondary"),
+              minBlockSize: "48px",
+              minInlineSize: "min(100%, 12rem)",
+              cursor: startPending || startActivated ? "wait" : "pointer",
+              font: "inherit",
+              fontWeight: 700,
+              padding: "0.35rem 1rem",
+            }}
+          >
+            {practiceLabel}
+          </button>
+        ) : null}
         <button
           type="button"
           aria-busy={startPending || startActivated || undefined}
-          autoFocus
+          ref={startButtonRef}
           data-apk-briefing-start="true"
           disabled={startPending || startActivated}
           onClick={handleStart}
           style={{
+            ...getRetroArcadeButtonStyle("primary"),
             minBlockSize: "48px",
             minInlineSize: "min(100%, 12rem)",
-            border: "1px solid var(--apk-briefing-action-border, #f3c969)",
-            borderRadius: "var(--apk-briefing-action-radius, 6px)",
-            background: "var(--apk-briefing-action-background, #f3c969)",
-            color: "var(--apk-briefing-action-text, #07110e)",
+            boxShadow: "4px 4px 0 #030712",
             cursor: startPending || startActivated ? "wait" : "pointer",
             font: "inherit",
             fontWeight: 800,
-            padding: "0.75rem 1.25rem",
+            padding: "0.35rem 1rem",
           }}
         >
           {startLabel}

@@ -1,5 +1,9 @@
 import { getCartridgeCatalogEntry } from "@reading-advantage/game-cartridges";
+import { SESSION_COOKIE_NAME, validateSession } from "@reading-advantage/auth";
+import { db } from "@reading-advantage/db";
+import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
+import { z } from "zod";
 
 import {
   AuthenticatedCartridgeHost,
@@ -8,7 +12,10 @@ import {
 
 type AuthenticatedApkPageProps = {
   params: Promise<{ locale: string; cartridgeId: string }>;
+  searchParams?: Promise<{ challengeId?: string | string[] }>;
 };
+
+const challengeIdSchema = z.string().uuid();
 
 /**
  * Maps an application route locale to a persisted flashcard locale.
@@ -40,10 +47,20 @@ function resolveRouteLocale(locale: string): AppRouteLocale {
  */
 export default async function AuthenticatedApkPage({
   params,
+  searchParams = Promise.resolve({}),
 }: AuthenticatedApkPageProps) {
-  const { locale, cartridgeId } = await params;
+  const [{ locale, cartridgeId }, query] = await Promise.all([params, searchParams]);
   const catalogEntry = getCartridgeCatalogEntry(cartridgeId);
   if (!catalogEntry) notFound();
+  const challengeIdResult = query.challengeId === undefined
+    ? { success: true as const, data: undefined }
+    : challengeIdSchema.safeParse(query.challengeId);
+  if (!challengeIdResult.success) notFound();
+  const sessionToken = (await cookies()).get(SESSION_COOKIE_NAME)?.value;
+  const session = sessionToken ? await validateSession(db, sessionToken) : null;
+  const ownerKey = session?.user.role === "STUDENT" && session.user.schoolId
+    ? `${session.user.schoolId}:${session.user.id}`
+    : undefined;
 
   return (
     <AuthenticatedCartridgeHost
@@ -52,6 +69,8 @@ export default async function AuthenticatedApkPage({
       inputMode={catalogEntry.inputMode}
       locale={resolveRouteLocale(locale)}
       contentLocale={resolveContentLocale(locale)}
+      ownerKey={ownerKey}
+      challengeId={challengeIdResult.data}
       title={catalogEntry.title}
     />
   );

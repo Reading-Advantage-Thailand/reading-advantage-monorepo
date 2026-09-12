@@ -4,6 +4,7 @@ import { PgDialect } from "drizzle-orm/pg-core";
 import type { TenantDB } from "../db-contract.js";
 import {
   gameLearningContentInputSchema,
+  gameLearningContentResultSchema,
   listGameLearningContent,
 } from "../games/learning-content.js";
 import { createMockDb } from "./mock-db.js";
@@ -26,6 +27,14 @@ const user = {
   cefrLevel: "A1",
 };
 const tenant = { schoolId: "school-1" };
+const answerAudioSession = {
+  modality: "read-to-select-audio",
+  promptLocale: "th-TH",
+  answerLocale: "en-US",
+  promptField: "translation",
+  answerField: "term",
+  scored: true,
+} as const;
 
 describe("listGameLearningContent", () => {
   beforeEach(() => {
@@ -62,6 +71,8 @@ describe("listGameLearningContent", () => {
     expect(result).toEqual({
       mode: "vocabulary",
       source: "student-flashcards",
+      requestedTargetLocale: "th",
+      selectedTargetLocales: ["th", "en"],
       content: [
         { term: "river", translation: "แม่น้ำ" },
         { term: "mountain", translation: "mountain" },
@@ -117,6 +128,8 @@ describe("listGameLearningContent", () => {
     expect(result).toEqual({
       mode: "sentence",
       source: "student-flashcards",
+      requestedTargetLocale: "th",
+      selectedTargetLocales: ["th"],
       content: [
         { term: "The moon is bright.", translation: "พระจันทร์สว่าง" },
       ],
@@ -146,6 +159,82 @@ describe("listGameLearningContent", () => {
     ]);
   });
 
+  it("returns exact Thai targets for an English answer-audio session", async () => {
+    const rawDb = createMockDb({
+      selectResults: [{
+        word: {
+          vocabulary: "river",
+          definition: { en: "river", th: "แม่น้ำ" },
+        },
+      }],
+    });
+
+    await expect(listGameLearningContent({
+      db: { unscoped: () => rawDb } as unknown as TenantDB,
+      user,
+      tenant,
+      input: {
+        mode: "vocabulary",
+        locale: "th",
+        answerAudioSession,
+      },
+    })).resolves.toEqual({
+      mode: "vocabulary",
+      source: "student-flashcards",
+      requestedTargetLocale: "th",
+      selectedTargetLocales: ["th"],
+      content: [{ term: "river", translation: "แม่น้ำ" }],
+      answerAudioSession,
+    });
+  });
+
+  it("rejects target fallback for an answer-audio session", async () => {
+    const rawDb = createMockDb({
+      selectResults: [{
+        word: {
+          vocabulary: "river",
+          definition: { en: "river" },
+        },
+      }],
+    });
+
+    await expect(listGameLearningContent({
+      db: { unscoped: () => rawDb } as unknown as TenantDB,
+      user,
+      tenant,
+      input: {
+        mode: "vocabulary",
+        locale: "th",
+        answerAudioSession,
+      },
+    })).rejects.toThrow(/exact Thai target content/i);
+  });
+
+  it("rejects answer audio outside Thai vocabulary and with legacy listening", () => {
+    expect(gameLearningContentInputSchema.safeParse({
+      mode: "sentence",
+      locale: "th",
+      answerAudioSession,
+    }).success).toBe(false);
+    expect(gameLearningContentInputSchema.safeParse({
+      mode: "vocabulary",
+      locale: "en",
+      answerAudioSession,
+    }).success).toBe(false);
+    expect(gameLearningContentInputSchema.safeParse({
+      mode: "vocabulary",
+      locale: "th",
+      answerAudioSession,
+      listeningSession: {
+        modality: "listen-to-select",
+        sourceLocale: "en-US",
+        targetLocale: "th",
+        scored: true,
+        targetLocaleFallback: "reject",
+      },
+    }).success).toBe(false);
+  });
+
   it("stops before database access when the student lacks content permission", async () => {
     const unscoped = vi.fn();
     assertCan.mockImplementationOnce(() => {
@@ -164,6 +253,105 @@ describe("listGameLearningContent", () => {
     expect(unscoped).not.toHaveBeenCalled();
   });
 
+  it("rejects a scored listening session with a target-locale fallback", async () => {
+    const rawDb = createMockDb({
+      selectResults: [
+        {
+          word: {
+            vocabulary: "mountain",
+            definition: { en: "mountain" },
+          },
+        },
+      ],
+    });
+
+    await expect(
+      listGameLearningContent({
+        db: { unscoped: () => rawDb } as unknown as TenantDB,
+        user,
+        tenant,
+        input: {
+          mode: "vocabulary",
+          locale: "th",
+          listeningSession: {
+            modality: "listen-to-select",
+            sourceLocale: "en-US",
+            targetLocale: "th",
+            scored: true,
+            targetLocaleFallback: "reject",
+          },
+        },
+      }),
+    ).rejects.toThrow(/target locale/i);
+  });
+
+  it("returns explicit fallback locales for unscored listening", async () => {
+    const rawDb = createMockDb({
+      selectResults: [
+        {
+          word: {
+            vocabulary: "mountain",
+            definition: { en: "mountain" },
+          },
+        },
+      ],
+    });
+
+    await expect(
+      listGameLearningContent({
+        db: { unscoped: () => rawDb } as unknown as TenantDB,
+        user,
+        tenant,
+        input: {
+          mode: "vocabulary",
+          locale: "th",
+          listeningSession: {
+            modality: "listen-to-select",
+            sourceLocale: "en-US",
+            targetLocale: "th",
+            scored: false,
+            targetLocaleFallback: "allow-explicit",
+          },
+        },
+      }),
+    ).resolves.toMatchObject({
+      requestedTargetLocale: "th",
+      selectedTargetLocales: ["en"],
+    });
+  });
+
+  it("enforces explicit fallback rejection during unscored listening", async () => {
+    const rawDb = createMockDb({
+      selectResults: [
+        {
+          word: {
+            vocabulary: "mountain",
+            definition: { en: "mountain" },
+          },
+        },
+      ],
+    });
+
+    await expect(
+      listGameLearningContent({
+        db: { unscoped: () => rawDb } as unknown as TenantDB,
+        user,
+        tenant,
+        input: {
+          mode: "vocabulary",
+          locale: "th",
+          listeningSession: {
+            modality: "listen-to-select",
+            sourceLocale: "en-US",
+            targetLocale: "th",
+            scored: false,
+            targetLocaleFallback: "reject",
+          },
+        },
+      }),
+    ).rejects.toThrow(/target locale/i);
+  });
+
   it("rejects unknown fields and invalid limits before database access", () => {
     expect(
       gameLearningContentInputSchema.safeParse({
@@ -177,6 +365,18 @@ describe("listGameLearningContent", () => {
         mode: "sentence",
         locale: "xx",
         extra: true,
+      }).success,
+    ).toBe(false);
+  });
+
+  it("rejects locale arrays that do not align with strict content items", () => {
+    expect(
+      gameLearningContentResultSchema.safeParse({
+        mode: "vocabulary",
+        source: "student-flashcards",
+        requestedTargetLocale: "th",
+        selectedTargetLocales: [],
+        content: [{ term: "river", translation: "แม่น้ำ" }],
       }).success,
     ).toBe(false);
   });

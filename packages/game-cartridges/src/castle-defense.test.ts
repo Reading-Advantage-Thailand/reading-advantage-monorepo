@@ -126,10 +126,15 @@ interface FakeGraphics {
 }
 
 interface FakeText {
+  height?: number;
   value: string;
+  width?: number;
   style: Readonly<Record<string, unknown>> | undefined;
+  setFontSize(size: number | string): FakeText;
   setPosition(x: number, y: number): FakeText;
   setText(value: string): FakeText;
+  setVisible(visible: boolean): FakeText;
+  setWordWrapWidth(width: number, useAdvancedWrap?: boolean): FakeText;
   destroy(): void;
 }
 
@@ -182,11 +187,14 @@ function createFakeScene(
         const text: FakeText = {
           value,
           style,
+          setFontSize: vi.fn(() => text),
           setPosition: vi.fn(() => text),
           setText: vi.fn((next: string) => {
             text.value = next;
             return text;
           }),
+          setVisible: vi.fn(() => text),
+          setWordWrapWidth: vi.fn(() => text),
           destroy: vi.fn(),
         };
         texts.push(text);
@@ -667,6 +675,41 @@ describe("Castle Defense bespoke APK cartridge", () => {
 
     expect(fake.graphics.destroy).toHaveBeenCalledOnce();
     for (const text of fake.texts) expect(text.destroy).toHaveBeenCalledOnce();
+  });
+
+  it("shows the Thai target and English choices without live-board instructions", () => {
+    const inputController = createMutableInputController();
+    const config = createCastleDefenseCartridge().createGameConfig({
+      input: PUBLIC_SENTENCES,
+      edition: PHASE3_RUNTIME_EDITION,
+      complete: vi.fn(),
+      diagnostic: vi.fn(),
+      inputController,
+      seed: 17,
+      sessionMode: "playing",
+      composition: { profile: "compact", safeRect: { width: 390 } } as never,
+    });
+    const scene = config.scene as unknown as { create(this: FakeScene): void };
+    const fake = createFakeScene({ left: 0, top: 0, width: 336, height: 190 });
+    scene.create.call(fake.scene);
+
+    expect(fake.texts[0]?.value).toBe("");
+    expect(fake.texts[1]?.value).toBe("มังกรข้ามสะพาน");
+    expect(fake.texts[1]?.setFontSize).toHaveBeenLastCalledWith(52);
+    const targetCount = PUBLIC_SENTENCES.reduce((count, sentence) => count + sentence.term.split(/\s+/u).length, 0);
+    expect(fake.texts[2]?.value).toMatch(new RegExp(`^♥ 100/100  ⚔ 1/2  ◇ 0/${targetCount}`, "u"));
+    expect(fake.texts[2]?.setFontSize).toHaveBeenLastCalledWith(35);
+    expect(fake.texts[3]?.value).toBe("");
+    expect(fake.texts[4]?.value).toBe("");
+    expect(fake.texts.slice(5).map(({ value }) => value)).toEqual(expect.arrayContaining([
+      "The",
+      "dragon",
+      "crosses",
+      "bridge",
+    ]));
+    for (const label of fake.texts.slice(5)) expect(label.setFontSize).toHaveBeenLastCalledWith(46);
+    const liveText = fake.texts.map(({ value }) => value).join(" ");
+    expect(liveText).not.toMatch(/Keyboard|Arrow keys|Swipe|Collect the glowing|Move near a slot/u);
   });
 
   it("maps pointer coordinates with the canvas top offset", () => {

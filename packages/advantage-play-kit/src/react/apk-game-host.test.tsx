@@ -7,6 +7,7 @@ import { DEFAULT_RESPONSIVE_LAYOUT_CONFIG } from "../responsive/responsive-compo
 import { createMockGameFactory } from "../testing/test-kit.js";
 import { createRuntimeCartridge, createRuntimeEdition, validResults } from "../testing/fixtures.js";
 import type { APKHostAdapter, GameFactory } from "../runtime/types.js";
+import type { AnswerChoiceAudioController, ListeningAudioController } from "../audio/index.js";
 
 const mountHostObserver = vi.hoisted(() => ({
   capture: undefined as ((host: APKHostAdapter) => void) | undefined,
@@ -26,6 +27,7 @@ vi.mock("../runtime/runtime.js", async (importOriginal) => {
 afterEach(() => {
   mountHostObserver.capture = undefined;
   cleanup();
+  vi.unstubAllGlobals();
 });
 
 const briefing = {
@@ -41,6 +43,39 @@ const learningInput = [
   { term: "แม่น้ำ", translation: "river" },
   { term: "ภูเขา", translation: "mountain" },
 ] as const;
+
+const listeningEvidence = {
+  schemaVersion: 1, declaredModality: "listen-to-select", effectiveModality: "listen-to-select",
+  sourceLocale: "en-US", targetLocale: "th", itemCount: 2,
+  assistedItemPositions: [], fallbackItemPositions: [], replayCounts: [], audioFailures: [],
+} as const;
+
+function createListeningController(): ListeningAudioController {
+  return {
+    prepare: vi.fn(),
+    play: vi.fn(),
+    replay: vi.fn(),
+    recordTranscriptAssistance: vi.fn(),
+    recordReadingFallback: vi.fn(),
+    pause: vi.fn(),
+    restart: vi.fn(),
+    destroy: vi.fn(),
+    getSnapshot: vi.fn(),
+    getEvidence: vi.fn(() => listeningEvidence),
+  } as unknown as ListeningAudioController;
+}
+
+function createAnswerAudioController(): AnswerChoiceAudioController {
+  return {
+    setQuestion: vi.fn(),
+    playChoice: vi.fn(),
+    getChoiceSnapshot: vi.fn(),
+    pause: vi.fn(),
+    restart: vi.fn(),
+    destroy: vi.fn(),
+    setMuted: vi.fn(),
+  } as unknown as AnswerChoiceAudioController;
+}
 
 const tutorial = {
   schemaVersion: 1,
@@ -95,7 +130,626 @@ const createReplayExperience = (replayEntry: "tutorial" | "playing") => ({
   createTutorialActionDriver: () => ({ execute: vi.fn() }),
 });
 
+const createPracticeExperience = () => ({
+  ...createReplayExperience("playing"),
+  definition: {
+    ...createReplayExperience("playing").definition,
+    briefing: { ...briefing, startPhase: "tutorial" as const },
+  },
+});
+
 describe("APKGameHost", () => {
+  it("tracks the live reduced-motion preference for Practice and removes its listener", async () => {
+    let matches = true;
+    const listeners = new Set<(event: MediaQueryListEvent) => void>();
+    const addEventListener = vi.fn((_type: "change", listener: (event: MediaQueryListEvent) => void) => {
+      listeners.add(listener);
+    });
+    const removeEventListener = vi.fn((_type: "change", listener: (event: MediaQueryListEvent) => void) => {
+      listeners.delete(listener);
+    });
+    vi.stubGlobal("matchMedia", vi.fn(() => ({
+      get matches() { return matches; },
+      media: "(prefers-reduced-motion: reduce)",
+      onchange: null,
+      addEventListener,
+      removeEventListener,
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    })));
+
+    const view = render(
+      <APKGameHost
+        cartridge={createRuntimeCartridge()}
+        input={learningInput}
+        edition={createRuntimeEdition()}
+        factory={createMockGameFactory()}
+        standardExperience={createPracticeExperience()}
+      />,
+    );
+    fireEvent.click(await screen.findByRole("button", { name: "Practice" }));
+
+    const tutorialScreen = await waitFor(() => {
+      const element = document.querySelector<HTMLElement>("[data-apk-tutorial-screen='true']");
+      expect(element).not.toBeNull();
+      return element as HTMLElement;
+    });
+    expect(tutorialScreen).toHaveAttribute("data-apk-reduced-motion", "true");
+    expect(tutorialScreen).toHaveAttribute("data-apk-tutorial-animation", "none");
+
+    matches = false;
+    act(() => {
+      for (const listener of listeners) listener({ matches } as MediaQueryListEvent);
+    });
+    expect(tutorialScreen).toHaveAttribute("data-apk-reduced-motion", "false");
+    expect(tutorialScreen).toHaveAttribute("data-apk-tutorial-animation", "host-controlled");
+
+    view.unmount();
+    expect(addEventListener).toHaveBeenCalledOnce();
+    expect(removeEventListener).toHaveBeenCalledWith("change", expect.any(Function));
+    expect(listeners).toHaveLength(0);
+  });
+
+  it("lets a student choose direct play or safe practice", async () => {
+    const directFactory = createMockGameFactory();
+    const experience = createPracticeExperience();
+    const direct = render(
+      <APKGameHost
+        cartridge={createRuntimeCartridge()}
+        input={learningInput}
+        edition={createRuntimeEdition()}
+        factory={directFactory}
+        standardExperience={experience}
+      />,
+    );
+
+    fireEvent.click(await screen.findByRole("button", { name: "Begin quest" }));
+    await screen.findByText("Game ready");
+    expect(directFactory.contexts).toHaveLength(1);
+    expect(directFactory.contexts[0]?.sessionMode).toBe("playing");
+    direct.unmount();
+
+    const practiceFactory = createMockGameFactory();
+    render(
+      <APKGameHost
+        cartridge={createRuntimeCartridge()}
+        input={learningInput}
+        edition={createRuntimeEdition()}
+        factory={practiceFactory}
+        standardExperience={experience}
+      />,
+    );
+    fireEvent.click(await screen.findByRole("button", { name: "Practice" }));
+    await screen.findByText("Guided tutorial ready");
+    expect(practiceFactory.contexts[0]?.sessionMode).toBe("tutorial");
+    act(() => practiceFactory.contexts[0]?.complete(validResults, "victory"));
+    expect(screen.queryByText("Game complete")).not.toBeInTheDocument();
+  });
+
+  it.each([false, true])(
+    "cleans a %s paused playing session before Exit navigates",
+    async (paused) => {
+      const factory = createMockGameFactory();
+      const onNavigate = vi.fn(() => {
+        expect(factory.instances[0]?.destroy).toHaveBeenCalledOnce();
+        expect(factory.liveInstances).toBe(0);
+      });
+      render(
+        <APKGameHost
+          cartridge={createRuntimeCartridge()}
+          input={learningInput}
+          edition={createRuntimeEdition()}
+          factory={factory}
+          standardExperience={createPracticeExperience()}
+          onNavigate={onNavigate}
+        />,
+      );
+
+      fireEvent.click(await screen.findByRole("button", { name: "Begin quest" }));
+      await screen.findByText("Game ready");
+      if (paused) fireEvent.click(screen.getByRole("button", { name: "Pause game" }));
+
+      const controls = screen.getByRole("group", { name: "Game controls" });
+      for (const control of controls.querySelectorAll("button")) {
+        expect(control).toHaveStyle({ minHeight: "48px" });
+      }
+      fireEvent.click(screen.getByRole("button", { name: "Exit game" }));
+
+      await waitFor(() => expect(onNavigate).toHaveBeenCalledWith("catalog"));
+      expect(factory.instances[0]?.destroy).toHaveBeenCalledOnce();
+    },
+  );
+
+  it("cleans practice before Exit navigates without recording a result", async () => {
+    const factory = createMockGameFactory();
+    const onComplete = vi.fn();
+    const onNavigate = vi.fn(() => {
+      expect(factory.instances[0]?.destroy).toHaveBeenCalledOnce();
+      expect(factory.liveInstances).toBe(0);
+    });
+    render(
+      <APKGameHost
+        cartridge={createRuntimeCartridge()}
+        input={learningInput}
+        edition={createRuntimeEdition()}
+        factory={factory}
+        standardExperience={createPracticeExperience()}
+        onComplete={onComplete}
+        onNavigate={onNavigate}
+      />,
+    );
+
+    fireEvent.click(await screen.findByRole("button", { name: "Practice" }));
+    await screen.findByText("Guided tutorial ready");
+    fireEvent.click(screen.getByRole("button", { name: "Exit practice" }));
+
+    await waitFor(() => expect(onNavigate).toHaveBeenCalledWith("catalog"));
+    expect(factory.instances[0]?.destroy).toHaveBeenCalledOnce();
+    expect(onComplete).not.toHaveBeenCalled();
+  });
+
+  it("keeps learner-controlled practice active after its demonstration timer until the student acts", async () => {
+    const factory = createMockGameFactory();
+    const callbacks: Array<() => void | Promise<void>> = [];
+    const tutorialClock = {
+      now: vi.fn(() => 0),
+      setTimeout: vi.fn((callback: () => void | Promise<void>) => {
+        callbacks.push(callback);
+        return callbacks.length;
+      }),
+      clearTimeout: vi.fn(),
+    };
+    const onComplete = vi.fn();
+    const onNavigate = vi.fn();
+    const experience = createPracticeExperience();
+    render(
+      <APKGameHost
+        cartridge={createRuntimeCartridge()}
+        input={learningInput}
+        edition={createRuntimeEdition()}
+        factory={factory}
+        standardExperience={{
+          ...experience,
+          definition: {
+            ...experience.definition,
+            briefing: {
+              ...experience.definition.briefing,
+              labels: { ...experience.definition.briefing.labels, startAction: "Play now" },
+            },
+            tutorial: {
+              ...experience.definition.tutorial,
+              steps: [
+                {
+                  ...experience.definition.tutorial.steps[0],
+                  id: "step:review-choice",
+                  timing: { leadInMs: 500, demonstrationMs: 300, lingerMs: 600 },
+                },
+                {
+                  ...experience.definition.tutorial.steps[0],
+                  id: "step:complete-choice",
+                  timing: { leadInMs: 500, demonstrationMs: 300, lingerMs: 600 },
+                },
+              ],
+              lifecycle: {
+                ...experience.definition.tutorial.lifecycle,
+                advance: "learner-controlled",
+              },
+            },
+          },
+        }}
+        tutorialClock={tutorialClock}
+        onComplete={onComplete}
+        onNavigate={onNavigate}
+      />,
+    );
+
+    const host = document.querySelector("[data-apk-session-phase]");
+    const runtimeMount = document.querySelector("[data-apk-runtime-mount]");
+    if (!(host instanceof HTMLElement) || !(runtimeMount instanceof HTMLElement)) {
+      throw new Error("Expected the APK host and runtime mount");
+    }
+    Object.defineProperties(runtimeMount, {
+      clientWidth: { configurable: true, get: () => 390 },
+      clientHeight: {
+        configurable: true,
+        get: () => host.dataset.apkSessionPhase === "tutorial" ? 592 : 704,
+      },
+    });
+    fireEvent.click(await screen.findByRole("button", { name: "Practice" }));
+    await screen.findByText("Guided tutorial ready");
+    await waitFor(() => expect(factory.instances[0]?.resize).toHaveBeenLastCalledWith(390, 592));
+    const practiceControls = screen.getByRole("group", { name: "Game controls" });
+    const canvasHost = document.querySelector("[data-apk-canvas-host]");
+    expect(practiceControls).toHaveAttribute("data-apk-practice-controls", "true");
+    expect(practiceControls.nextElementSibling).toBe(canvasHost);
+    expect(practiceControls.closest("[data-apk-session-phase]"))
+      .toHaveAttribute("data-apk-session-phase", "tutorial");
+    expect(screen.queryByRole("button", { name: "Restart game" })).not.toBeInTheDocument();
+    expect(screen.getAllByText("Choose the correct answer")).toHaveLength(1);
+    expect(screen.getAllByText("The tutorial chooses one matching answer.")).toHaveLength(1);
+    expect(screen.queryByText("mechanic:choice")).not.toBeInTheDocument();
+    expect(screen.queryByText("action:choose")).not.toBeInTheDocument();
+    await act(async () => {
+      while (callbacks.length > 0) await callbacks.shift()?.();
+    });
+
+    expect(screen.getByText("Guided tutorial ready")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Next tutorial step" })).toBeEnabled();
+    fireEvent.click(screen.getByRole("button", { name: "Next tutorial step" }));
+    await act(async () => {
+      while (callbacks.length > 0) await callbacks.shift()?.();
+    });
+
+    expect(screen.getByRole("button", { name: "Play now" })).toBeEnabled();
+    expect(factory.contexts).toHaveLength(1);
+    expect(factory.contexts[0]?.sessionMode).toBe("tutorial");
+    expect(tutorialClock.setTimeout.mock.calls.map(([, delay]) => delay)).toEqual([500, 300, 500, 300]);
+    expect(onComplete).not.toHaveBeenCalled();
+
+    fireEvent.click(screen.getByRole("button", { name: "Exit practice" }));
+    await waitFor(() => expect(onNavigate).toHaveBeenCalledWith("catalog"));
+    expect(factory.instances[0]?.destroy).toHaveBeenCalledOnce();
+    expect(onComplete).not.toHaveBeenCalled();
+  });
+
+  it("scales common controls with the responsive touch target", async () => {
+    const factory = createMockGameFactory();
+    render(
+      <APKGameHost
+        cartridge={createRuntimeCartridge()}
+        input={learningInput}
+        edition={createRuntimeEdition()}
+        factory={factory}
+        responsive={{
+          config: DEFAULT_RESPONSIVE_LAYOUT_CONFIG,
+          safeArea: { top: 0, right: 0, bottom: 0, left: 0 },
+          inputCapabilities: { touch: true, pointer: true, keyboard: true },
+          accessibility: { textScale: 1, touchScale: 1.5 },
+        }}
+      />,
+    );
+
+    for (const control of screen.getByRole("group", { name: "Game controls" }).querySelectorAll("button")) {
+      expect(control).toHaveStyle({ minHeight: "72px" });
+    }
+  });
+
+  it("returns to the briefing after Exit navigation fails", async () => {
+    const factory = createMockGameFactory();
+    render(
+      <APKGameHost
+        cartridge={createRuntimeCartridge()}
+        input={learningInput}
+        edition={createRuntimeEdition()}
+        factory={factory}
+        standardExperience={createPracticeExperience()}
+        onNavigate={() => {
+          throw new Error("catalog navigation failed");
+        }}
+      />,
+    );
+
+    fireEvent.click(await screen.findByRole("button", { name: "Begin quest" }));
+    await screen.findByText("Game ready");
+    fireEvent.click(screen.getByRole("button", { name: "Exit game" }));
+
+    expect(await screen.findByRole("alert")).toHaveTextContent("catalog navigation failed");
+    expect(await screen.findByRole("button", { name: "Begin quest" })).toBeEnabled();
+    expect(factory.instances[0]?.destroy).toHaveBeenCalledOnce();
+  });
+
+  it("cleans a completed session before result Exit navigates", async () => {
+    const factory = createMockGameFactory();
+    const onNavigate = vi.fn(() => {
+      expect(factory.instances[0]?.destroy).toHaveBeenCalledOnce();
+      expect(factory.liveInstances).toBe(0);
+    });
+    render(
+      <APKGameHost
+        cartridge={createRuntimeCartridge()}
+        input={learningInput}
+        edition={createRuntimeEdition()}
+        factory={factory}
+        onNavigate={onNavigate}
+      />,
+    );
+
+    await screen.findByText("Game ready");
+    act(() => factory.contexts[0]?.complete(validResults, "victory"));
+    fireEvent.click(await screen.findByRole("button", { name: "Exit" }));
+
+    await waitFor(() => expect(onNavigate).toHaveBeenCalledWith("catalog"));
+    expect(factory.instances[0]?.destroy).toHaveBeenCalledOnce();
+  });
+
+  it("creates a fresh listening controller for each playing mount", async () => {
+    const factory = createMockGameFactory();
+    const controllers = [createListeningController(), createListeningController()];
+    const createListeningSession = vi.fn()
+      .mockReturnValueOnce(controllers[0])
+      .mockReturnValueOnce(controllers[1]);
+    const { rerender } = render(
+      <APKGameHost
+        cartridge={createRuntimeCartridge()}
+        input={learningInput}
+        edition={createRuntimeEdition()}
+        factory={factory}
+        createListeningSession={createListeningSession}
+      />,
+    );
+    await screen.findByText("Game ready");
+    expect(factory.contexts[0]?.listening).toBe(controllers[0]);
+    rerender(
+      <APKGameHost
+        cartridge={createRuntimeCartridge()}
+        input={learningInput}
+        edition={createRuntimeEdition()}
+        factory={factory}
+        createListeningSession={createListeningSession}
+      />,
+    );
+    await waitFor(() => expect(factory.contexts).toHaveLength(2));
+    expect(createListeningSession).toHaveBeenCalledTimes(2);
+    expect(factory.contexts[1]?.listening).toBe(createListeningSession.mock.results[1]?.value);
+    expect(factory.contexts[1]?.listening).not.toBe(factory.contexts[0]?.listening);
+  });
+
+  it("creates answer audio only for each authoritative playing mount", async () => {
+    const factory = createMockGameFactory();
+    const controllers = [createAnswerAudioController(), createAnswerAudioController()];
+    const createAnswerAudioSession = vi.fn()
+      .mockReturnValueOnce(controllers[0])
+      .mockReturnValueOnce(controllers[1]);
+    const { rerender } = render(
+      <APKGameHost
+        cartridge={createRuntimeCartridge()}
+        input={learningInput}
+        edition={createRuntimeEdition()}
+        factory={factory}
+        createAnswerAudioSession={createAnswerAudioSession}
+      />,
+    );
+    await screen.findByText("Game ready");
+    expect(factory.contexts[0]?.answerAudio).toBe(controllers[0]);
+
+    rerender(
+      <APKGameHost
+        cartridge={createRuntimeCartridge()}
+        input={learningInput}
+        edition={createRuntimeEdition()}
+        factory={factory}
+        createAnswerAudioSession={createAnswerAudioSession}
+      />,
+    );
+    await waitFor(() => expect(factory.contexts).toHaveLength(2));
+    expect(createAnswerAudioSession).toHaveBeenCalledTimes(2);
+    expect(factory.contexts[1]?.answerAudio).toBe(controllers[1]);
+    expect(factory.contexts[1]?.answerAudio).not.toBe(factory.contexts[0]?.answerAudio);
+  });
+
+  it("gives audio Practice a restricted answer audio port with runtime lifecycle ownership", async () => {
+    const factory = createMockGameFactory();
+    const createListeningSession = vi.fn(() => createListeningController());
+    const answerAudio = [createAnswerAudioController(), createAnswerAudioController()];
+    const createAnswerAudioSession = vi.fn()
+      .mockReturnValueOnce(answerAudio[0])
+      .mockReturnValueOnce(answerAudio[1]);
+    const createTutorialActionDriver = vi.fn(() => ({ execute: vi.fn() }));
+    const experience = createPracticeExperience();
+    const onNavigate = vi.fn();
+    render(
+      <APKGameHost
+        cartridge={createRuntimeCartridge()}
+        input={learningInput}
+        edition={createRuntimeEdition()}
+        factory={factory}
+        standardExperience={{ ...experience, createTutorialActionDriver }}
+        createListeningSession={createListeningSession}
+        createAnswerAudioSession={createAnswerAudioSession}
+        onNavigate={onNavigate}
+      />,
+    );
+    fireEvent.click(await screen.findByRole("button", { name: "Practice" }));
+    await screen.findByText("Guided tutorial ready");
+    expect(factory.contexts[0]?.listening).toBeUndefined();
+    expect(factory.contexts[0]?.answerAudio).toBe(answerAudio[0]);
+    expect(createListeningSession).not.toHaveBeenCalled();
+    expect(createAnswerAudioSession).toHaveBeenCalledOnce();
+    const restrictedPort = createTutorialActionDriver.mock.calls[0]?.[0]?.answerAudio;
+    expect(Object.keys(restrictedPort ?? {}).sort()).toEqual([
+      "getChoiceSnapshot",
+      "playChoice",
+      "setQuestion",
+    ]);
+    expect(restrictedPort).not.toHaveProperty("confirmChoice");
+    expect(restrictedPort).not.toHaveProperty("getEvidence");
+
+    fireEvent.click(screen.getByRole("button", { name: "Pause tutorial" }));
+    await waitFor(() => expect(answerAudio[0]?.pause).toHaveBeenCalledOnce());
+    fireEvent.click(screen.getByRole("button", { name: "Resume tutorial" }));
+    await waitFor(() => expect(factory.instances[0]?.resume).toHaveBeenCalledOnce());
+
+    fireEvent.click(screen.getByRole("button", { name: "Replay tutorial" }));
+    await waitFor(() => expect(factory.contexts).toHaveLength(2));
+    expect(answerAudio[0]?.destroy).toHaveBeenCalledOnce();
+    expect(factory.contexts[1]?.answerAudio).toBe(answerAudio[1]);
+    expect(createAnswerAudioSession).toHaveBeenCalledTimes(2);
+
+    fireEvent.click(screen.getByRole("button", { name: "Exit practice" }));
+    await waitFor(() => expect(onNavigate).toHaveBeenCalledWith("catalog"));
+    expect(answerAudio[1]?.destroy).toHaveBeenCalledOnce();
+  });
+
+  it("waits for renderer destruction before mounting a Practice replay", async () => {
+    let finishDestroy: () => void = () => undefined;
+    const pendingDestroy = new Promise<void>((resolve) => {
+      finishDestroy = resolve;
+    });
+    const firstDestroy = vi.fn(() => pendingDestroy);
+    const factory: GameFactory = vi.fn()
+      .mockResolvedValueOnce({ pause: vi.fn(), resume: vi.fn(), resize: vi.fn(), destroy: firstDestroy })
+      .mockResolvedValueOnce({ pause: vi.fn(), resume: vi.fn(), resize: vi.fn(), destroy: vi.fn() });
+    render(
+      <APKGameHost
+        cartridge={createRuntimeCartridge()}
+        input={learningInput}
+        edition={createRuntimeEdition()}
+        factory={factory}
+        standardExperience={createPracticeExperience()}
+      />,
+    );
+
+    fireEvent.click(await screen.findByRole("button", { name: "Practice" }));
+    await screen.findByText("Guided tutorial ready");
+    fireEvent.click(screen.getByRole("button", { name: "Replay tutorial" }));
+    await waitFor(() => expect(firstDestroy).toHaveBeenCalledOnce());
+    expect(factory).toHaveBeenCalledOnce();
+
+    await act(async () => {
+      finishDestroy();
+      await pendingDestroy;
+    });
+    await waitFor(() => expect(factory).toHaveBeenCalledTimes(2));
+    expect(screen.getByText("Guided tutorial ready")).toBeInTheDocument();
+  });
+
+  it("releases listening audio when a playing mount fails", async () => {
+    const controller = createListeningController();
+    const factory: GameFactory = vi.fn().mockRejectedValue(new Error("mount failed"));
+    render(
+      <APKGameHost
+        cartridge={createRuntimeCartridge()}
+        input={learningInput}
+        edition={createRuntimeEdition()}
+        factory={factory}
+        createListeningSession={() => controller}
+      />,
+    );
+    expect(await screen.findByRole("alert")).toHaveTextContent("mount failed");
+    expect(controller.destroy).toHaveBeenCalled();
+  });
+
+  it("shows pending and confirmed persistence without trusting display XP", async () => {
+    const factory = createMockGameFactory();
+    let confirmSave!: (value: { xpEarned: number; duplicate: boolean }) => void;
+    const onComplete = vi.fn(() => new Promise<{ xpEarned: number; duplicate: boolean }>((resolve) => {
+      confirmSave = resolve;
+    }));
+    render(
+      <APKGameHost
+        cartridge={createRuntimeCartridge()}
+        input={learningInput}
+        edition={createRuntimeEdition()}
+        factory={factory}
+        onComplete={onComplete}
+      />,
+    );
+    await screen.findByText("Game ready");
+    act(() => factory.contexts[0]?.complete({ ...validResults, xp: 999 }, "victory"));
+    expect(await screen.findByText("Saving progress…")).toBeInTheDocument();
+    expect(screen.queryByText("999")).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Play again" })).toBeEnabled();
+
+    act(() => confirmSave({ xpEarned: 25, duplicate: false }));
+    expect(await screen.findByText("Confirmed XP")).toBeInTheDocument();
+    expect(screen.getByText("25")).toBeInTheDocument();
+  });
+
+  it("shows the reward extension only after a confirmed save and hides it on replay", async () => {
+    const factory = createMockGameFactory();
+    let confirmSave!: (value: { xpEarned: number; duplicate: boolean }) => void;
+    render(
+      <APKGameHost
+        cartridge={createRuntimeCartridge()}
+        input={learningInput}
+        edition={createRuntimeEdition()}
+        factory={factory}
+        onComplete={() => new Promise((resolve) => { confirmSave = resolve; })}
+        resultExtension={<p>New reward: Apprentice Wand</p>}
+      />,
+    );
+    await screen.findByText("Game ready");
+    expect(screen.queryByText("New reward: Apprentice Wand")).not.toBeInTheDocument();
+    act(() => factory.contexts[0]?.complete(validResults, "victory"));
+    await screen.findByText("Saving progress…");
+    expect(screen.queryByText("New reward: Apprentice Wand")).not.toBeInTheDocument();
+    act(() => confirmSave({ xpEarned: 25, duplicate: false }));
+    expect(await screen.findByText("New reward: Apprentice Wand")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Play again" }));
+    await waitFor(() => expect(screen.queryByText("New reward: Apprentice Wand")).not.toBeInTheDocument());
+  });
+
+  it("labels duplicate persistence without claiming zero earned XP", async () => {
+    const factory = createMockGameFactory();
+    const onComplete = vi.fn().mockResolvedValue({ xpEarned: 0, duplicate: true });
+    render(
+      <APKGameHost
+        cartridge={createRuntimeCartridge()}
+        input={learningInput}
+        edition={createRuntimeEdition()}
+        factory={factory}
+        onComplete={onComplete}
+      />,
+    );
+    await screen.findByText("Game ready");
+    act(() => factory.contexts[0]?.complete(validResults, "victory"));
+    expect(await screen.findByText("Progress already saved")).toBeInTheDocument();
+    expect(screen.queryByText("Confirmed XP")).not.toBeInTheDocument();
+  });
+
+  it("times out a stalled save and retries the same completed result", async () => {
+    const factory = createMockGameFactory();
+    const onComplete = vi.fn()
+      .mockImplementationOnce(() => new Promise(() => undefined))
+      .mockResolvedValueOnce({ xpEarned: 30, duplicate: false });
+    render(
+      <APKGameHost
+        cartridge={createRuntimeCartridge()}
+        input={learningInput}
+        edition={createRuntimeEdition()}
+        factory={factory}
+        onComplete={onComplete}
+        createListeningSession={() => createListeningController()}
+        persistenceTimeoutMs={20}
+      />,
+    );
+    await screen.findByText("Game ready");
+    act(() => factory.contexts[0]?.complete(validResults, "victory"));
+    expect(await screen.findByText("Game progress could not be confirmed in time.")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Retry save" }));
+    expect(await screen.findByText("Confirmed XP")).toBeInTheDocument();
+    expect(onComplete).toHaveBeenCalledTimes(2);
+    expect(onComplete).toHaveBeenNthCalledWith(1, validResults, "victory", listeningEvidence);
+    expect(onComplete).toHaveBeenNthCalledWith(2, validResults, "victory", listeningEvidence);
+  });
+
+  it("guards a failed save from rapid duplicate retry requests", async () => {
+    const factory = createMockGameFactory();
+    let resolveRetry!: (value: { xpEarned: number; duplicate: boolean }) => void;
+    const onComplete = vi.fn()
+      .mockRejectedValueOnce(new Error("Save failed."))
+      .mockImplementationOnce(() => new Promise((resolve) => {
+        resolveRetry = resolve;
+      }));
+    render(
+      <APKGameHost
+        cartridge={createRuntimeCartridge()}
+        input={learningInput}
+        edition={createRuntimeEdition()}
+        factory={factory}
+        onComplete={onComplete}
+      />,
+    );
+    await screen.findByText("Game ready");
+    act(() => factory.contexts[0]?.complete(validResults, "victory"));
+    const retry = await screen.findByRole("button", { name: "Retry save" });
+    fireEvent.click(retry);
+    fireEvent.click(retry);
+    await waitFor(() => expect(onComplete).toHaveBeenCalledTimes(2));
+    act(() => resolveRetry({ xpEarned: 25, duplicate: false }));
+    expect(await screen.findByText("Confirmed XP")).toBeInTheDocument();
+  });
   it("passes a compact host composition to the game factory", async () => {
     const width = vi.spyOn(HTMLElement.prototype, "clientWidth", "get").mockReturnValue(390);
     const height = vi.spyOn(HTMLElement.prototype, "clientHeight", "get").mockReturnValue(640);
@@ -159,6 +813,33 @@ describe("APKGameHost", () => {
 
     await screen.findByText("Game ready");
     expect(factory.contexts).toHaveLength(1);
+  });
+
+  it("keeps game controls hidden from briefing and results when host CSS sets flex", async () => {
+    const factory = createMockGameFactory();
+    const { container } = render(
+      <>
+        <style>{"[data-apk-game-controls] { display: flex; }"}</style>
+        <APKGameHost
+          cartridge={createRuntimeCartridge()}
+          input={learningInput}
+          edition={createRuntimeEdition()}
+          factory={factory}
+          briefing={briefing}
+        />
+      </>,
+    );
+
+    const controls = () => container.querySelector<HTMLElement>("[data-apk-game-controls]");
+    expect(controls()).toHaveStyle({ display: "none" });
+
+    fireEvent.click(screen.getByRole("button", { name: "Begin quest" }));
+    await screen.findByText("Game ready");
+    expect(controls()).toHaveStyle({ display: "flex" });
+
+    act(() => factory.contexts[0]?.complete(validResults));
+    await screen.findByText("Game complete");
+    expect(controls()).toHaveStyle({ display: "none" });
   });
 
   it("fails closed for invalid briefing data without creating a factory", async () => {
@@ -825,6 +1506,10 @@ describe("APKGameHost", () => {
   it("provides accessible status, canvas region, controls, and completion output", async () => {
     const factory = createMockGameFactory();
     const onComplete = vi.fn();
+    const onMutedChange = vi.fn()
+      .mockImplementationOnce(() => {
+        throw new Error("music observer failed");
+      });
     render(
       <APKGameHost
         aria-label="Gate runner QC"
@@ -833,6 +1518,7 @@ describe("APKGameHost", () => {
         edition={createRuntimeEdition()}
         factory={factory}
         onComplete={onComplete}
+        onMutedChange={onMutedChange}
         instructions="Choose the matching translation."
       />,
     );
@@ -850,6 +1536,8 @@ describe("APKGameHost", () => {
     expect(screen.getByRole("button", { name: "Unmute game" })).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Unmute game" }));
     expect(screen.getByRole("button", { name: "Mute game" })).toBeInTheDocument();
+    expect(onMutedChange).toHaveBeenNthCalledWith(1, true);
+    expect(onMutedChange).toHaveBeenNthCalledWith(2, false);
     fireEvent.click(screen.getByRole("button", { name: "Restart game" }));
     await screen.findByText("Game ready");
 
@@ -861,6 +1549,96 @@ describe("APKGameHost", () => {
     expect(screen.getByRole("button", { name: "Play again" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Exit" })).toBeInTheDocument();
     expect(onComplete).toHaveBeenCalledWith(validResults, "complete");
+  });
+
+  it("restores gameplay focus after Resume and active Mute controls", async () => {
+    const factory = createMockGameFactory();
+    render(
+      <APKGameHost
+        aria-label="Keyboard game"
+        cartridge={createRuntimeCartridge()}
+        input={learningInput}
+        edition={createRuntimeEdition()}
+        factory={factory}
+      />,
+    );
+
+    await screen.findByText("Game ready");
+    const gameSurface = screen.getByRole("region", { name: "Keyboard game" });
+    const pause = screen.getByRole("button", { name: "Pause game" });
+    pause.focus();
+    fireEvent.click(pause);
+    const resume = screen.getByRole("button", { name: "Resume game" });
+    expect(resume).toHaveFocus();
+
+    fireEvent.click(resume);
+    expect(gameSurface).toHaveFocus();
+    fireEvent.keyDown(window, { code: "ArrowUp", key: "ArrowUp" });
+    expect(factory.contexts[0]?.inputController.snapshot().keys).toContain("ArrowUp");
+    fireEvent.keyUp(window, { code: "ArrowUp", key: "ArrowUp" });
+
+    const mute = screen.getByRole("button", { name: "Mute game" });
+    fireEvent.click(mute);
+    expect(gameSurface).toHaveFocus();
+
+    fireEvent.click(screen.getByRole("button", { name: "Pause game" }));
+    const pausedMute = screen.getByRole("button", { name: "Unmute game" });
+    pausedMute.focus();
+    fireEvent.click(pausedMute);
+    expect(pausedMute).toHaveFocus();
+  });
+
+  it("releases external mute ownership when the host unmounts", async () => {
+    const factory = createMockGameFactory();
+    const onMutedChange = vi.fn();
+    const mounted = render(
+      <APKGameHost
+        cartridge={createRuntimeCartridge()}
+        input={learningInput}
+        edition={createRuntimeEdition()}
+        factory={factory}
+        onMutedChange={onMutedChange}
+      />,
+    );
+    await screen.findByText("Game ready");
+    fireEvent.click(screen.getByRole("button", { name: "Mute game" }));
+    mounted.unmount();
+
+    expect(onMutedChange).toHaveBeenNthCalledWith(1, true);
+    expect(onMutedChange).toHaveBeenNthCalledWith(2, false);
+  });
+
+  it("transfers external mute ownership between replacement mounts", async () => {
+    const factory = createMockGameFactory();
+    const cartridge = createRuntimeCartridge();
+    const edition = createRuntimeEdition();
+    const firstObserver = vi.fn();
+    const replacementObserver = vi.fn();
+    const mounted = render(
+      <APKGameHost
+        cartridge={cartridge}
+        input={learningInput}
+        edition={edition}
+        factory={factory}
+        onMutedChange={firstObserver}
+      />,
+    );
+    await screen.findByText("Game ready");
+    fireEvent.click(screen.getByRole("button", { name: "Mute game" }));
+
+    mounted.rerender(
+      <APKGameHost
+        cartridge={cartridge}
+        input={[{ term: "mountain", translation: "montagne" }]}
+        edition={edition}
+        factory={factory}
+        onMutedChange={replacementObserver}
+      />,
+    );
+    await waitFor(() => expect(factory.contexts).toHaveLength(2));
+
+    expect(firstObserver.mock.calls).toEqual([[true], [false]]);
+    expect(replacementObserver.mock.calls).toEqual([[true]]);
   });
 
   it("pauses authoritative gameplay before showing the completion panel", async () => {
@@ -1185,8 +1963,8 @@ describe("APKGameHost", () => {
       "Skip demonstration",
       "Mute game",
     ]) {
-      expect(screen.getByRole("button", { name: label })).toHaveClass("min-h-11");
-      expect(screen.getByRole("button", { name: label })).toHaveStyle({ minHeight: "44px" });
+      expect(screen.getByRole("button", { name: label })).toHaveClass("min-h-12");
+      expect(screen.getByRole("button", { name: label })).toHaveStyle({ minHeight: "48px" });
     }
   });
 
@@ -1474,7 +2252,7 @@ describe("APKGameHost", () => {
 
     fireEvent.click(await screen.findByRole("button", { name: "Demonstrate for class" }));
     await screen.findByText("Class demonstration ready");
-    expect(screen.getByRole("button", { name: "Exit demonstration" })).toHaveClass("min-h-11");
+    expect(screen.getByRole("button", { name: "Exit demonstration" })).toHaveClass("min-h-12");
     fireEvent.click(screen.getByRole("button", { name: "Exit demonstration" }));
 
     await waitFor(() => expect(onNavigate).toHaveBeenCalledWith("catalog"));
@@ -2518,10 +3296,10 @@ describe("APKGameHost", () => {
       await callbacks.shift()?.();
       await callbacks.shift()?.();
     });
-    await screen.findByRole("button", { name: "Next tutorial step" });
+    await screen.findByRole("button", { name: "Begin quest" });
 
     fireEvent.click(screen.getByRole("button", { name: "Skip tutorial" }));
-    fireEvent.click(screen.getByRole("button", { name: "Next tutorial step" }));
+    fireEvent.click(screen.getByRole("button", { name: "Begin quest" }));
     await waitFor(() => expect(tutorialActionDriver.destroy).toHaveBeenCalledOnce());
     expect(factory.contexts).toHaveLength(1);
     expect(onLifecycleTransition).not.toHaveBeenCalledWith(expect.objectContaining({ to: "playing" }));

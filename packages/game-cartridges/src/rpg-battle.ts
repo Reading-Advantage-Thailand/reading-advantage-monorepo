@@ -108,9 +108,9 @@ export interface RpgBattleSnapshot {
   readonly targetIndex: number;
   /** Number of required vocabulary targets. */
   readonly targetCount: number;
-  /** Current source-language vocabulary prompt. */
+  /** Current Thai translation prompt. */
   readonly prompt: string;
-  /** Correct translation for the current prompt. */
+  /** Correct English term for the current prompt. */
   readonly answer: string;
   /** Deterministic touch answer choices for the current prompt. */
   readonly answerChoices: readonly string[];
@@ -226,6 +226,8 @@ interface PhaserGraphicsLike {
 interface PhaserTextLike {
   setPosition(x: number, y: number): this;
   setText(value: string): this;
+  setFontSize?(value: number): this;
+  setWordWrapWidth?(width: number, useAdvancedWrap?: boolean): this;
   setDepth?(depth: number): this;
   destroy(): void;
 }
@@ -341,7 +343,7 @@ function damageFor(power: RpgBattleActionPower, streak: number): number {
 }
 
 function answerChoicesFor(
-  items: readonly { readonly translation: string }[],
+  items: readonly { readonly term: string }[],
   targetIndex: number,
   seed: number,
   actionPowers: readonly RpgBattleActionPower[],
@@ -350,14 +352,14 @@ function answerChoicesFor(
   correctChoiceIndex: number;
   powers: readonly RpgBattleActionPower[];
 }> {
-  const expected = items[targetIndex]?.translation ?? items[items.length - 1]!.translation;
-  const seenTranslations = new Set<string>([expected]);
+  const expected = items[targetIndex]?.term ?? items[items.length - 1]!.term;
+  const seenTerms = new Set<string>([expected]);
   const candidateIndices = items
     .map((_item, index) => index)
     .filter((index) => {
-      const translation = items[index]!.translation;
-      if (seenTranslations.has(translation)) return false;
-      seenTranslations.add(translation);
+      const term = items[index]!.term;
+      if (seenTerms.has(term)) return false;
+      seenTerms.add(term);
       return true;
     });
   const selectedIndices: number[] = [];
@@ -380,12 +382,12 @@ function answerChoicesFor(
     candidateIndices.splice(selectedIndex, 1);
   }
   let decoyIndex = 1;
-  const choices = selectedIndices.map((index) => items[index]!.translation);
+  const choices = selectedIndices.map((index) => items[index]!.term);
   const choicePowers = selectedIndices.map((index) => actionPowers[index] ?? "basic");
-  const onlyExpectedExists = !items.some((item) => item.translation !== expected);
+  const onlyExpectedExists = !items.some((item) => item.term !== expected);
   while (choices.length < 2) {
     const sourceIndex = (targetIndex + decoyIndex) % items.length;
-    const decoy = items[sourceIndex]!.translation;
+    const decoy = items[sourceIndex]!.term;
     decoyIndex += 1;
     if (decoy === expected && !onlyExpectedExists) continue;
     choices.push(decoy);
@@ -443,15 +445,29 @@ function assertFiniteDelta(deltaMs: number): void {
  * @param sceneWidth Current scene width.
  * @param sceneHeight Current scene height.
  * @param index Zero-based choice index.
+ * @param renderedScale Canvas display scale relative to scene coordinates.
  * @returns Pixel rectangle used for drawing and hit testing.
  */
 export function rpgBattleChoiceRect(
   sceneWidth: number,
   sceneHeight: number,
   index: number,
+  renderedScale = 1,
 ): { x: number; y: number; width: number; height: number } {
+  if (renderedScale < 0.75) {
+    const displayWidth = sceneWidth * renderedScale;
+    const gap = 6 / renderedScale;
+    const margin = 8 / renderedScale;
+    const width = (displayWidth - 28) / 3 / renderedScale;
+    return {
+      x: margin + index * (width + gap),
+      y: sceneHeight - 52 / renderedScale,
+      width,
+      height: 46 / renderedScale,
+    };
+  }
   const width = Math.min(420, sceneWidth * 0.46);
-  const height = Math.min(40, sceneHeight * 0.068);
+  const height = Math.min(48, Math.max(40, sceneHeight * 0.068));
   const gap = Math.min(8, sceneHeight * 0.012);
   return {
     x: sceneWidth * 0.5,
@@ -468,6 +484,7 @@ export function rpgBattleChoiceRect(
  * @param sceneWidth Current scene width.
  * @param sceneHeight Current scene height.
  * @param choiceCount Number of visible choices.
+ * @param renderedScale Canvas display scale relative to scene coordinates.
  * @returns The matching choice index, or undefined when the pointer misses.
  */
 export function getRpgBattleChoiceIndex(
@@ -476,10 +493,11 @@ export function getRpgBattleChoiceIndex(
   sceneWidth: number,
   sceneHeight: number,
   choiceCount = 3,
+  renderedScale = 1,
 ): number | undefined {
   if (choiceCount <= 0 || sceneWidth <= 0 || sceneHeight <= 0) return undefined;
   for (let index = 0; index < choiceCount; index += 1) {
-    const card = rpgBattleChoiceRect(sceneWidth, sceneHeight, index);
+    const card = rpgBattleChoiceRect(sceneWidth, sceneHeight, index, renderedScale);
     if (
       pointerX >= card.x
       && pointerX <= card.x + card.width
@@ -541,7 +559,7 @@ export function createRpgBattleController(
   let typedAnswer = "";
   let inputLocked = false;
   let lockRemainingMs = 0;
-  let feedback = "Choose a translation or type your answer.";
+  let feedback = "";
   let revealedTranslation: string | undefined;
   let lastOutcome: RpgBattleOutcome | undefined;
   let streak = 0;
@@ -569,11 +587,11 @@ export function createRpgBattleController(
       phase,
       targetIndex,
       targetCount: items.length,
-      prompt: current.term,
-      answer: current.translation,
+      prompt: current.translation,
+      answer: current.term,
       answerChoices: choices.choices,
       correctChoiceIndex: choices.correctChoiceIndex,
-      correctAction: current.translation,
+      correctAction: current.term,
       availableActions: choices.choices,
       actionPower: actionPowers[displayIndex]!,
       answerChoicePowers: choices.powers,
@@ -665,7 +683,7 @@ export function createRpgBattleController(
     const displayIndex = displayedTargetIndexFor(state.targetIndex);
     const current = items[displayIndex]!;
     const expectedChoices = answerChoicesFor(items, displayIndex, seed, actionPowers);
-    if (state.prompt !== current.term || state.answer !== current.translation || state.correctAction !== current.translation) {
+    if (state.prompt !== current.translation || state.answer !== current.term || state.correctAction !== current.term) {
       throw new Error("RPG Battle state target content is invalid");
     }
     if (!Array.isArray(state.answerChoices) || state.answerChoices.length !== expectedChoices.choices.length || state.answerChoices.some((choice, index) => choice !== expectedChoices.choices[index])) {
@@ -746,7 +764,7 @@ export function createRpgBattleController(
     if (input !== undefined) typedAnswer = input;
     const submitted = typedAnswer;
     if (submitted.trim().length === 0) {
-      feedback = "Type a translation before you submit.";
+      feedback = "English answer required.";
       return resultFor({
         accepted: false,
         correct: false,
@@ -760,7 +778,7 @@ export function createRpgBattleController(
     }
 
     const current = items[targetIndex]!;
-    const correct = normalizeAnswer(submitted) === normalizeAnswer(current.translation);
+    const correct = normalizeAnswer(submitted) === normalizeAnswer(current.term);
     accountant.recordAttempt({ correct });
     typedAnswer = "";
     lastOutcome = correct ? "correct" : "incorrect";
@@ -1090,10 +1108,10 @@ function ensureWorldLayer(
       const tileHeight = 16 * Math.ceil(height / 16);
       const tiled = scene.add.tileSprite(0, 0, tileWidth, tileHeight, ground.textureKey);
       tiled.setOrigin?.(0, 0);
-      tiled.setDepth?.(-25);
+      tiled.setDepth?.(-35);
       resources.ground = tiled;
     } else {
-      const image = placeImage(scene, width / 2, height / 2, ground, width, height, -25, 0.5, 0.5);
+      const image = placeImage(scene, width / 2, height / 2, ground, width, height, -35, 0.5, 0.5);
       if (image) resources.ground = image;
     }
   }
@@ -1167,18 +1185,24 @@ function createScene(context: RpgBattleSceneContext): Readonly<Record<string, un
     const active = resources;
     const { width, height } = dimensions(scene);
     const state = context.controller.snapshot();
+    const canvasWidth = scene.game?.canvas?.getBoundingClientRect?.().width ?? width;
+    const renderedScale = Math.min(1, canvasWidth / width);
+    const displayFontSize = (pixels: number): number => Math.ceil(pixels / renderedScale);
     const pulse = Math.sin(animationMs / 2_000 * Math.PI * 2) * 3;
     const playerX = width * 0.24;
     const enemyX = width * 0.76;
     const fighterY = height * FIGHTER_GROUND_Y_RATIO;
-    const commandY = height * 0.66;
+    const commandY = height * (renderedScale < 0.75 ? 0.54 : 0.66);
+    const statusWidth = Math.min(280, width * 0.42);
+    const statusRightX = width * 0.96 - statusWidth;
+    const statusBarWidth = statusWidth * 0.78;
 
     active.graphics.clear();
     if (arenaArt) {
       ensureWorldLayer(scene, active, context.edition, width, height);
       active.graphics.fillStyle(0x7ec8e3, 1).fillRect(0, 0, width, height * 0.4);
       active.graphics.fillStyle(0x6bbf4e, 0.35).fillRect(0, height * 0.36, width, height * 0.08);
-      const platform = { y: fighterY + 8, w: 200, h: 52 };
+      const platform = { y: fighterY + 8, w: Math.min(200, width * 0.38), h: 52 };
       active.graphics.fillStyle(0x6b4423, 1);
       if (active.graphics.fillEllipse) {
         active.graphics.fillEllipse(playerX, platform.y, platform.w, platform.h);
@@ -1195,19 +1219,19 @@ function createScene(context: RpgBattleSceneContext): Readonly<Record<string, un
       const playerPulse = state.turn === "player" ? pulse : 0;
       const enemyPulse = state.turn === "enemy" ? pulse : 0;
       if (playerTexture) {
-        active.playerSprite = syncFighter(scene, active.playerSprite, playerX, fighterY + playerPulse, playerTexture, 88, 6, false);
+        active.playerSprite = syncFighter(scene, active.playerSprite, playerX, fighterY + playerPulse, playerTexture, 100, 6, false);
       }
       if (enemyTexture) {
-        active.enemySprite = syncFighter(scene, active.enemySprite, enemyX, fighterY + enemyPulse, enemyTexture, 88, 6, true);
+        active.enemySprite = syncFighter(scene, active.enemySprite, enemyX, fighterY + enemyPulse, enemyTexture, 100, 6, true);
       }
-      active.graphics.fillStyle(0xf8f1d0, 0.96).fillRoundedRect(width * 0.04, height * 0.05, 280, 78, 10);
-      active.graphics.lineStyle(3, 0x2068a8, 1).strokeRoundedRect(width * 0.04, height * 0.05, 280, 78, 10);
-      active.graphics.fillStyle(0xf8f1d0, 0.96).fillRoundedRect(width * 0.66, height * 0.05, 300, 78, 10);
-      active.graphics.lineStyle(3, 0x2068a8, 1).strokeRoundedRect(width * 0.66, height * 0.05, 300, 78, 10);
-      active.graphics.fillStyle(0x111827, 1).fillRoundedRect(width * 0.07, height * 0.1, 220, 12, 6);
-      active.graphics.fillStyle(0xf26d78, 1).fillRoundedRect(width * 0.07, height * 0.1, 220 * (state.enemyHealth / state.enemyMaxHealth), 12, 6);
-      active.graphics.fillStyle(0x111827, 1).fillRoundedRect(width * 0.69, height * 0.1, 240, 12, 6);
-      active.graphics.fillStyle(0x52d273, 1).fillRoundedRect(width * 0.69, height * 0.1, 240 * (state.playerHealth / state.playerMaxHealth), 12, 6);
+      active.graphics.fillStyle(0xf8f1d0, 0.96).fillRoundedRect(width * 0.04, height * 0.05, statusWidth, 78, 10);
+      active.graphics.lineStyle(3, 0x2068a8, 1).strokeRoundedRect(width * 0.04, height * 0.05, statusWidth, 78, 10);
+      active.graphics.fillStyle(0xf8f1d0, 0.96).fillRoundedRect(statusRightX, height * 0.05, statusWidth, 78, 10);
+      active.graphics.lineStyle(3, 0x2068a8, 1).strokeRoundedRect(statusRightX, height * 0.05, statusWidth, 78, 10);
+      active.graphics.fillStyle(0x111827, 1).fillRoundedRect(width * 0.07, height * 0.1, statusBarWidth, 12, 6);
+      active.graphics.fillStyle(0x52d273, 1).fillRoundedRect(width * 0.07, height * 0.1, statusBarWidth * (state.playerHealth / state.playerMaxHealth), 12, 6);
+      active.graphics.fillStyle(0x111827, 1).fillRoundedRect(statusRightX + statusWidth * 0.08, height * 0.1, statusBarWidth, 12, 6);
+      active.graphics.fillStyle(0xf26d78, 1).fillRoundedRect(statusRightX + statusWidth * 0.08, height * 0.1, statusBarWidth * (state.enemyHealth / state.enemyMaxHealth), 12, 6);
       active.graphics.fillStyle(0x1e4b8c, 0.96).fillRoundedRect(width * 0.03, commandY, width * 0.94, height * 0.31, 12);
       active.graphics.lineStyle(4, 0xf8d030, 1).strokeRoundedRect(width * 0.03, commandY, width * 0.94, height * 0.31, 12);
     } else {
@@ -1224,43 +1248,41 @@ function createScene(context: RpgBattleSceneContext): Readonly<Record<string, un
       active.graphics.fillStyle(0xf26d78, 1).fillRoundedRect(width * 0.58, barY, enemyBarWidth * (state.enemyHealth / state.enemyMaxHealth), 16, 8);
     }
     state.answerChoices.forEach((_choice, index) => {
-      const card = rpgBattleChoiceRect(width, height, index);
+      const card = rpgBattleChoiceRect(width, height, index, renderedScale);
       active.graphics.fillStyle(state.inputLocked ? 0x475569 : arenaArt ? 0x2f6fad : 0x5b3a91, 0.92)
         .fillRoundedRect(card.x, card.y, card.width, card.height, 12);
       active.graphics.lineStyle(2, arenaArt ? 0xf8d030 : 0xbda4ff, 0.9)
         .strokeRoundedRect(card.x, card.y, card.width, card.height, 12);
       active.choices[index]
-        ?.setText(`${index + 1}. ${state.answerChoices[index]}  [${state.answerChoicePowers[index]}]`)
+        ?.setText(`${index + 1}. ${state.answerChoices[index]}`)
         .setPosition(card.x + 14, card.y + 10);
+      active.choices[index]?.setFontSize?.(displayFontSize(16));
+      active.choices[index]?.setWordWrapWidth?.(Math.max(1, card.width - 24), true);
     });
 
     if (arenaArt) {
-      active.title.setText("WILD BEAST").setPosition(width * 0.07, height * 0.06);
-      active.prompt.setText("What will HERO do?").setPosition(width * 0.05, commandY + 14);
-      active.health.setText(`HP ${state.enemyHealth}/${state.enemyMaxHealth}`).setPosition(width * 0.07, height * 0.125);
-      active.progress.setText("HERO").setPosition(width * 0.69, height * 0.06);
-      active.buffer.setText(`HP ${state.playerHealth}/${state.playerMaxHealth}`).setPosition(width * 0.69, height * 0.125);
-      active.feedback.setText(`Translate: ${state.prompt}`).setPosition(width * 0.05, commandY + 48);
-      active.instructions.setText(state.typedAnswer
-        ? `Typed: ${state.typedAnswer}`
-        : state.lastOutcome
-          ? state.feedback
-          : "").setPosition(width * 0.05, commandY + 82);
+      active.title.setText("").setPosition(width * 0.07, height * 0.06);
+      active.prompt.setFontSize?.(displayFontSize(28));
+      active.prompt.setWordWrapWidth?.(width * 0.9, true);
+      active.prompt.setText(state.prompt).setPosition(width * 0.05, commandY + 10);
+      active.health.setText(`HP ${state.playerHealth}/${state.playerMaxHealth}`).setPosition(width * 0.07, height * 0.06);
+      active.progress.setText("").setPosition(statusRightX + 10, height * 0.06);
+      active.buffer.setText(`HP ${state.enemyHealth}/${state.enemyMaxHealth}`).setPosition(statusRightX + 10, height * 0.06);
+      active.feedback.setText(state.lastOutcome ? state.feedback : "").setPosition(width * 0.05, commandY + 48);
+      active.instructions.setText(state.typedAnswer ? `> ${state.typedAnswer}` : "").setPosition(width * 0.05, commandY + 82);
     } else {
       const barY = height * 0.27;
-      active.title.setText("RPG BATTLE").setPosition(28, 20);
-      active.prompt.setText(`Translate to attack: ${state.prompt}`).setPosition(28, 64);
+      active.title.setText("").setPosition(28, 20);
+      active.prompt.setText(state.prompt).setPosition(28, 48);
       active.health
         .setText(`Hero ${state.playerHealth}/${state.playerMaxHealth}   |   Enemy ${state.enemyHealth}/${state.enemyMaxHealth}`)
         .setPosition(28, barY - 28);
       active.progress
-        .setText(`${composition?.profile === "compact" ? "Compact duel" : "Turn duel"}  |  Target ${Math.min(state.targetIndex + 1, state.targetCount)} of ${state.targetCount}  |  Score ${state.score}  |  Streak ${state.streak}`)
+        .setText(`${Math.min(state.targetIndex + 1, state.targetCount)}/${state.targetCount}  Score ${state.score}  Streak ${state.streak}`)
         .setPosition(28, height * 0.49);
-      active.buffer.setText(`Typed: ${state.typedAnswer || "_"}`).setPosition(28, height * 0.79);
-      active.feedback.setText(state.feedback).setPosition(28, height * 0.84);
-      active.instructions
-        .setText("Type with the keyboard and press Enter, or tap a translation choice.")
-        .setPosition(28, height - 30);
+      active.buffer.setText(`> ${state.typedAnswer || "_"}`).setPosition(28, height * 0.79);
+      active.feedback.setText(state.lastOutcome || state.feedback ? state.feedback : "").setPosition(28, height * 0.84);
+      active.instructions.setText("").setPosition(28, height - 30);
     }
   };
 
@@ -1324,10 +1346,10 @@ function createScene(context: RpgBattleSceneContext): Readonly<Record<string, un
     const graphics = this.add.graphics();
     graphics.setDepth?.(2);
     const title = this.add.text(0, 0, "", { ...style, fontSize: "22px", fontStyle: "bold", color: arenaArt ? "#1f2937" : "#ffffff" });
-    const prompt = this.add.text(0, 0, "", { ...style, fontSize: arenaArt ? "18px" : "24px" });
-    const health = this.add.text(0, 0, "", { ...style, fontSize: "15px", color: arenaArt ? "#1f2937" : "#d9f99d" });
+    const prompt = this.add.text(0, 0, "", { ...style, fontSize: arenaArt ? "28px" : "30px", fontStyle: "bold" });
+    const health = this.add.text(0, 0, "", { ...style, fontSize: "15px", color: arenaArt ? "#17324d" : "#d9f99d", ...(arenaArt ? { strokeThickness: 0 } : {}) });
     const progress = this.add.text(0, 0, "", { ...style, fontSize: "15px", color: arenaArt ? "#1f2937" : "#ddd6fe" });
-    const buffer = this.add.text(0, 0, "", { ...style, fontSize: "19px", color: arenaArt ? "#1f2937" : "#fef3c7" });
+    const buffer = this.add.text(0, 0, "", { ...style, fontSize: "19px", color: arenaArt ? "#6b1f2b" : "#fef3c7", ...(arenaArt ? { strokeThickness: 0 } : {}) });
     const feedback = this.add.text(0, 0, "", { ...style, fontSize: "16px", color: arenaArt ? "#fef3c7" : "#fcd34d" });
     const instructions = this.add.text(0, 0, "", { ...style, fontSize: "14px", color: arenaArt ? "#e2e8f0" : "#c4b5fd" });
     const choices = [0, 1, 2].map(() => this.add!.text(0, 0, "", { ...style, fontSize: "17px" }));
@@ -1380,6 +1402,7 @@ function createScene(context: RpgBattleSceneContext): Readonly<Record<string, un
             width,
             height,
             context.controller.snapshot().answerChoices.length,
+            Math.min(1, (this.game?.canvas?.getBoundingClientRect?.().width ?? width) / width),
           );
           if (choice !== undefined) processAnswer(choice);
         }
@@ -1412,10 +1435,10 @@ export function createRpgBattleCartridge(): StandardExperienceCartridge {
   const standardExperience = createCartridgeStandardExperience({
     id: RPG_BATTLE_ID,
     title: "RPG Battle",
-    description: "Defeat a fantasy enemy by translating vocabulary in a turn-based duel.",
+    description: "Defeat a fantasy enemy by answering each Thai target with its English term.",
     inputMode: "vocabulary",
-    objective: "Defeat the enemy by translating every required vocabulary target.",
-    mechanicInstruction: "Type the translation and press Enter, or tap a translation choice to attack.",
+    objective: "Defeat the enemy by answering every Thai target with its English term.",
+    mechanicInstruction: "Type the English term and press Enter, or tap an English choice to attack.",
     keyboardKeys: ["A-Z", "Backspace", "Enter"],
     executeTutorialAction: (actionId) => {
       const controller = activeController;

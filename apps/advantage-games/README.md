@@ -20,6 +20,16 @@ Choose the correct gate to gather enough dragons to defeat the boss
 Survive the zombie horde by running to collect magic orbs
 ![Wizard vs Zombie Gameplay](public/wizard-vs-zombie.png)
 
+The revised APK pilot shows a prominent Thai target and English answer crystals.
+Gameplay instructions appear in the briefing, outside the live board.
+Audio mode keeps the Thai target and provides numbered English recordings.
+Playback does not submit an answer; the player must contact the matching crystal after playback completes.
+
+Wizard content uses English in `term` and Thai in `translation`, such as `{ term: "bridge", translation: "สะพาน" }`.
+The public preview uses four sample recordings and does not save progress.
+Authenticated audio requires prepared recordings for every supplied item.
+The pilot remains under gameplay review.
+
 ### Rune Match
 Match vocabulary runes to defeat monsters in this RPG puzzle battle.
 ![Ruen Match Gameplay](public/rune-match.png)
@@ -39,34 +49,31 @@ All games must accept a vocabulary list in the following JSON format:
 
 ```typescript
 type VocabularyItem = {
-  term: string;       // The word/phrase to learn (e.g., "สวัสดี")
-  translation: string; // The answer/meaning (e.g., "Hello")
+  term: string;       // The English answer (e.g., "bridge").
+  translation: string; // The Thai prompt (e.g., "สะพาน").
 }
 
 // Example Input
 const vocabulary: VocabularyItem[] = [
-  { term: 'สวัสดี', translation: 'Hello' },
-  { term: 'แมว', translation: 'Cat' },
+  { term: 'bridge', translation: 'สะพาน' },
+  { term: 'forest', translation: 'ป่า' },
   // ...
 ];
 ```
 
 #### 2. Output: XP & Progression
-All games must calculate and expose a final **XP (Experience Points)** value upon game completion. This value is used to track user progress in the main database.
+APK cartridges emit strict game results and a separate victory or defeat outcome. The authenticated host sends this completion to the server.
 
-**XP Calculation Formula:**
-The standard formula for XP calculation is:
-```typescript
-XP = Math.floor(correctAnswers * accuracy)
-```
-*Where `accuracy` is `correctAnswers / totalAttempts`.*
-
-**Implementation Requirement:**
-Games should expose this final XP value (e.g., via a callback prop like `onComplete(xp)` or by updating a shared store) so it can be persisted.
+The server validates the completion, applies the student tenant, enforces idempotency, and calculates XP. Clients do not supply awarded XP.
 
 ### Vocabulary Management
 
-Legacy games may load vocabulary from dedicated JSON files in `public/vocab/`. APK games instead receive the stable vocabulary or sentence arrays from their host, so a public fixture file is not required for Dragon Flight, Dungeon Liberator, or Magic Defense.
+Legacy games may load vocabulary from dedicated JSON files in `public/vocab/`.
+APK games receive stable vocabulary or sentence arrays from their host.
+
+The public catalog contains 28 APK cartridges. Every game card links to the generic
+authenticated APK route. The legacy route implementations remain available until a
+separate retirement track removes them.
 
 #### File Structure
 

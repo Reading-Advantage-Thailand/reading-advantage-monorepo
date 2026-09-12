@@ -2,6 +2,77 @@ import { describe, expect, it, vi } from "vitest";
 import { createInputController } from "./input.js";
 
 describe("createInputController", () => {
+  it.each(["input", "textarea", "select"])("preserves keyboard input inside %s elements", (tag) => {
+    const surface = document.createElement("div");
+    const editor = document.createElement(tag);
+    document.body.append(editor);
+    const controller = createInputController(surface);
+    try {
+      const event = new KeyboardEvent("keydown", { code: "ArrowLeft", bubbles: true, cancelable: true });
+      editor.dispatchEvent(event);
+      expect(event.defaultPrevented).toBe(false);
+      expect(controller.snapshot()).toMatchObject({ keys: [], pressed: [] });
+    } finally {
+      controller.destroy();
+      editor.remove();
+    }
+  });
+
+  it("preserves keys from editable descendants and composing text", () => {
+    const surface = document.createElement("div");
+    const editor = document.createElement("div");
+    editor.setAttribute("contenteditable", "true");
+    const child = document.createElement("span");
+    editor.append(child);
+    document.body.append(editor);
+    const controller = createInputController(surface);
+    try {
+      const event = new KeyboardEvent("keydown", { code: "Space", bubbles: true, cancelable: true });
+      child.dispatchEvent(event);
+      window.dispatchEvent(new KeyboardEvent("keydown", { code: "KeyA", isComposing: true }));
+      expect(event.defaultPrevented).toBe(false);
+      expect(controller.snapshot()).toMatchObject({ keys: [], pressed: [] });
+    } finally {
+      controller.destroy();
+      editor.remove();
+    }
+  });
+
+  it("clears held input on blur and ignores a late pointer release", () => {
+    const surface = document.createElement("div");
+    const controller = createInputController(surface);
+    try {
+      window.dispatchEvent(new KeyboardEvent("keydown", { code: "ArrowLeft" }));
+      surface.dispatchEvent(new PointerEvent("pointerdown", { pointerId: 11, pointerType: "touch" }));
+      window.dispatchEvent(new Event("blur"));
+      surface.dispatchEvent(new PointerEvent("pointerup", { pointerId: 11, pointerType: "touch" }));
+      expect(controller.snapshot()).toMatchObject({ keys: [], pressed: [], pointer: { down: false, released: false, id: null } });
+      window.dispatchEvent(new KeyboardEvent("keydown", { code: "ArrowRight" }));
+      expect(controller.snapshot().keys).toEqual(["ArrowRight"]);
+    } finally {
+      controller.destroy();
+    }
+  });
+
+  it("clears input when the document becomes hidden and removes lifecycle listeners", () => {
+    const surface = document.createElement("div");
+    const controller = createInputController(surface);
+    const hidden = vi.spyOn(document, "hidden", "get").mockReturnValue(true);
+    try {
+      window.dispatchEvent(new KeyboardEvent("keydown", { code: "Space" }));
+      document.dispatchEvent(new Event("visibilitychange"));
+      expect(controller.snapshot()).toMatchObject({ keys: [], pressed: [] });
+      controller.destroy();
+      window.dispatchEvent(new Event("blur"));
+      document.dispatchEvent(new Event("visibilitychange"));
+      window.dispatchEvent(new KeyboardEvent("keydown", { code: "Space" }));
+      expect(controller.snapshot()).toMatchObject({ keys: [], pressed: [], destroyed: true });
+    } finally {
+      hidden.mockRestore();
+      controller.destroy();
+    }
+  });
+
   it("normalizes keyboard and pointer input and removes listeners", () => {
     const surface = document.createElement("div");
     const controller = createInputController(surface);
@@ -93,6 +164,25 @@ describe("createInputController", () => {
     surface.dispatchEvent(new PointerEvent("pointercancel", { pointerId: 5, pointerType: "touch", clientX: 62, clientY: 72 }));
     expect(controller.snapshot().pointer).toMatchObject({ down: false, released: false, cancelled: true });
     controller.destroy();
+  });
+
+  it("finishes outside pointer releases and cancellations once without leaking listeners", () => {
+    const surface = document.createElement("div");
+    const controller = createInputController(surface);
+    surface.dispatchEvent(new PointerEvent("pointerdown", { pointerId: 21, pointerType: "touch", clientX: 40, clientY: 50 }));
+    window.dispatchEvent(new PointerEvent("pointerup", { pointerId: 21, pointerType: "touch", clientX: 400, clientY: 500 }));
+    expect(controller.snapshot().pointer).toMatchObject({ down: false, released: true, cancelled: false, id: null, x: 400, y: 500 });
+    window.dispatchEvent(new PointerEvent("pointerup", { pointerId: 21, pointerType: "touch", clientX: 410, clientY: 510 }));
+    expect(controller.snapshot().pointer).toMatchObject({ released: false, x: 400, y: 500 });
+
+    surface.dispatchEvent(new PointerEvent("pointerdown", { pointerId: 22, pointerType: "pen", clientX: 60, clientY: 70 }));
+    window.dispatchEvent(new PointerEvent("pointercancel", { pointerId: 22, pointerType: "pen", clientX: 600, clientY: 700 }));
+    expect(controller.snapshot().pointer).toMatchObject({ down: false, released: false, cancelled: true, id: null, x: 600, y: 700 });
+
+    controller.destroy();
+    surface.dispatchEvent(new PointerEvent("pointerdown", { pointerId: 23, pointerType: "touch" }));
+    window.dispatchEvent(new PointerEvent("pointerup", { pointerId: 23, pointerType: "touch" }));
+    expect(controller.snapshot()).toMatchObject({ destroyed: true, pointer: { down: false, released: false, id: null } });
   });
 
   it("prevents gameplay scroll keys without blocking unrelated keyboard defaults", () => {

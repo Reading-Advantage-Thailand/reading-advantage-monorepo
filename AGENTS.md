@@ -4,6 +4,33 @@ Instructions for AI coding agents working in this repository.
 
 This document uses a provider-neutral, backend-as-code architecture optimized for Next.js, TypeScript, AI coding agents, and long-term portability.
 
+## Ponytail Rules
+
+Keep each change narrowly scoped.
+
+1. Does this need to exist? If no, skip it (YAGNI).
+2. Is it already in this codebase? Reuse it. Do not rewrite it.
+3. Does the standard library do it? Use it.
+4. Does the native platform do it? Use it.
+5. Is the dependency already installed? Use it.
+6. Can it fit on one line? Keep it on one line.
+7. Only then add the minimum implementation that works.
+
+## Hashing and Provenance Policy
+
+Do not introduce, expand, or propagate cryptographic hashing unless an existing specification, protocol, test, or external interface requires it.
+
+- Do not add SHA or checksum fields for screenshots, reports, snapshots, tests, manifests, review subjects, or source trees for auditability alone.
+- Do not broaden an existing hash to cover more files unless the documented contract requires it.
+- Do not create chains of derived hashes where one generated artifact hashes another generated artifact.
+- Prefer Git commit or tree identity for repository provenance.
+- Prefer tests and assertions for correctness.
+- Treat existing hash machinery as local legacy behavior, not as a pattern to generalize.
+- If a change appears to require a new hash or broader hash coverage, stop and explain why before implementing it.
+- Minimize manifest churn. Modify only hashes strictly necessary for the requested change.
+
+Principle: A hash proves content identity, not correctness. Do not use hashing as a substitute for tests, validation, or review. Do not improve auditability, provenance, reproducibility, or integrity unless explicitly asked.
+
 ---
 
 ## Core Architecture Decisions

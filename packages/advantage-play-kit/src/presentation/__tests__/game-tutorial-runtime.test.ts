@@ -346,9 +346,14 @@ async function loadRuntimeModule(): Promise<TutorialRuntimeModule> {
 async function createHarness(
   seed = tutorialSeed,
   shared?: { readonly clock: ManualClock; readonly driver: CartridgeMechanicDriver },
+  advancePolicy: "sequential" | "learner-controlled" = "sequential",
 ): Promise<TutorialHarness> {
   const runtimeModule = await loadRuntimeModule();
-  const tutorial = validateGameTutorialDefinition({ ...rawTutorial, seed });
+  const tutorial = validateGameTutorialDefinition({
+    ...rawTutorial,
+    seed,
+    lifecycle: { ...rawTutorial.lifecycle, advance: advancePolicy },
+  });
   const clock = shared?.clock ?? createManualClock();
   const driver = shared?.driver ?? createCartridgeMechanicDriver(clock);
   const effects = createTutorialEffects();
@@ -589,6 +594,152 @@ describe("guided gameplay tutorial runtime", () => {
       phase: "playing",
       progress: { completed: 3, total: 3 },
     });
+    expectNoProductionEffects(harness.effects);
+  });
+
+  it("waits for learner advance after each completed demonstration", async () => {
+    const harness = await createHarness(tutorialSeed, undefined, "learner-controlled");
+
+    await harness.runtime.start();
+    await harness.runtime.advance();
+    expect(harness.runtime.getSnapshot()).toMatchObject({
+      phase: "tutorial",
+      currentStepId: "step:notice-answer",
+      currentStepDemonstrated: false,
+      progress: { completed: 0, total: 3 },
+    });
+
+    await harness.clock.advanceBy(10_000);
+    expect(harness.clock.pendingCount).toBe(0);
+    expect(harness.driver.executed.map(({ stepId }) => stepId)).toEqual(["step:notice-answer"]);
+    expect(harness.runtime.getSnapshot()).toMatchObject({
+      phase: "tutorial",
+      status: "running",
+      currentStepId: "step:notice-answer",
+      currentStepDemonstrated: true,
+      progress: { completed: 0, total: 3 },
+    });
+    expect(harness.transitions).not.toHaveBeenCalled();
+
+    for (let completed = 1; completed <= harness.tutorial.steps.length; completed += 1) {
+      await harness.runtime.advance();
+      if (completed < harness.tutorial.steps.length) {
+        await harness.clock.advanceBy(10_000);
+        expect(harness.runtime.getSnapshot()).toMatchObject({
+          phase: "tutorial",
+          currentStepDemonstrated: true,
+          progress: { completed, total: 3 },
+        });
+        expect(harness.clock.pendingCount).toBe(0);
+      }
+    }
+
+    expect(harness.runtime.getSnapshot()).toMatchObject({
+      phase: "playing",
+      status: "complete",
+      progress: { completed: 3, total: 3 },
+    });
+    expect(harness.transitions).toHaveBeenCalledOnce();
+    expect(harness.transitions).toHaveBeenCalledWith({
+      from: "tutorial",
+      event: "tutorial-complete",
+      to: "playing",
+    });
+    expectNoProductionEffects(harness.effects);
+  });
+
+  it("keeps a failed action incomplete and permits replay recovery", async () => {
+    const harness = await createHarness(tutorialSeed, undefined, "learner-controlled");
+    harness.driver.execute.mockRejectedValueOnce(new Error("English clip failed"));
+
+    await harness.runtime.start();
+    await harness.clock.runAll();
+
+    expect(harness.runtime.getSnapshot()).toMatchObject({
+      phase: "tutorial",
+      status: "running",
+      currentStepId: "step:notice-answer",
+      currentStepDemonstrated: false,
+      currentStepFailure: "Practice audio could not play. Replay Practice to try again.",
+      progress: { completed: 0, total: 3 },
+    });
+    expect(harness.clock.pendingCount).toBe(0);
+    expect(harness.transitions).not.toHaveBeenCalled();
+    expectNoProductionEffects(harness.effects);
+
+    await harness.runtime.replay();
+    expect(harness.runtime.getSnapshot()).not.toHaveProperty("currentStepFailure");
+    await harness.runtime.start();
+    await harness.clock.advanceBy(25);
+
+    expect(harness.driver.executed.map(({ stepId }) => stepId)).toEqual(["step:notice-answer"]);
+    expect(harness.runtime.getSnapshot()).not.toHaveProperty("currentStepFailure");
+    expectNoProductionEffects(harness.effects);
+  });
+
+  it("aborts pending playback on pause and retries the step after resume", async () => {
+    const harness = await createHarness(tutorialSeed, undefined, "learner-controlled");
+    let resolvePlayback: () => void = () => undefined;
+    let actionSignal: AbortSignal | undefined;
+    const playback = new Promise<void>((resolve) => { resolvePlayback = resolve; });
+    harness.driver.execute.mockImplementationOnce((context) => {
+      actionSignal = context.signal;
+      return playback;
+    });
+
+    await harness.runtime.start();
+    const leadIn = harness.clock.advanceBy(25);
+    await Promise.resolve();
+    await harness.runtime.pause();
+    expect(actionSignal?.aborted).toBe(true);
+    resolvePlayback();
+    await leadIn;
+
+    expect(harness.runtime.getSnapshot()).toMatchObject({
+      status: "paused",
+      currentStepDemonstrated: false,
+      progress: { completed: 0, total: 3 },
+    });
+    expect(harness.runtime.getSnapshot()).not.toHaveProperty("currentStepFailure");
+
+    await harness.runtime.resume();
+    await harness.clock.advanceBy(50);
+    expect(harness.driver.executed.map(({ stepId }) => stepId)).toEqual(["step:notice-answer"]);
+    expect(harness.runtime.getSnapshot()).toMatchObject({
+      status: "running",
+      currentStepDemonstrated: true,
+      progress: { completed: 0, total: 3 },
+    });
+  });
+
+  it.each([
+    ["replay", "idle"],
+    ["exit", "exited"],
+  ] as const)("ignores pending playback after %s", async (command, expectedStatus) => {
+    const harness = await createHarness(tutorialSeed, undefined, "learner-controlled");
+    let resolvePlayback: () => void = () => undefined;
+    let actionSignal: AbortSignal | undefined;
+    const playback = new Promise<void>((resolve) => { resolvePlayback = resolve; });
+    harness.driver.execute.mockImplementationOnce((context) => {
+      actionSignal = context.signal;
+      return playback;
+    });
+
+    await harness.runtime.start();
+    const leadIn = harness.clock.advanceBy(25);
+    await Promise.resolve();
+    await harness.runtime[command]();
+    expect(actionSignal?.aborted).toBe(true);
+    resolvePlayback();
+    await leadIn;
+
+    expect(harness.runtime.getSnapshot()).toMatchObject({
+      status: expectedStatus,
+      currentStepDemonstrated: false,
+      progress: { completed: 0, total: 3 },
+    });
+    expect(harness.clock.pendingCount).toBe(0);
+    expect(harness.transitions).not.toHaveBeenCalled();
     expectNoProductionEffects(harness.effects);
   });
 

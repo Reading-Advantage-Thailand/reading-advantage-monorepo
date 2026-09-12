@@ -7,9 +7,9 @@
   Task 1 is complete as evidence-only manifest work. It grants no source availability, adoption, implementation, or cutover authority.
   Historical Task 1 Red evidence is retained as a prior failure record; it is not the current Task 1 result.
   The contract preserves the complete accepted source-path denominator for every title.
-  Every entry declares `presence` as `tracked-at-head` or `missing-at-head`.
-  Tracked entries require Git tracking, file existence, the current-byte SHA-256, role, classification, locator, and evidence-only disposition.
-  Missing entries require the accepted evidence locator and exact path, omit `sha256`, and prove absence and non-tracking at HEAD.
+  Every entry declares `presence` as `present-at-head` or `missing-at-head`.
+  Present entries require file existence, the current-byte SHA-256, role, classification, locator, and evidence-only disposition.
+  Missing entries require the accepted evidence locator and exact path, omit `sha256`, and prove file absence.
   The focused Green run exits 0 with 13 tests passed.
   Falsifiers cover presence lies, fabricated hashes for missing bytes, omitted missing paths, and implementation or cutover claims from absence.
   Phase 2 remains incomplete. Task 2 is the next executable binding work.
@@ -19,9 +19,9 @@
 
 ## Phase 2: Binding freeze and Red cartridge contracts
 
-- [~] Consume accepted Asset Contract v2 and suitability/ingestion records; freeze each title's semantic roles, physical behavior descriptors, legacy source manifests, and reuse/ingest/block decisions before implementation.
-- Next executable binding work per test-strategy.md Phase 2. Product-owner receipt for the binding freeze is still required before Green.
-- [~] Write failing mechanic, responsive composition, and educational-invariant tests per title.
+- [x] Consume accepted Asset Contract v2 and suitability/ingestion records; freeze each title's semantic roles, physical behavior descriptors, legacy source manifests, and reuse/ingest/block decisions before implementation.
+- The owner receipt accepts the five hash-bound dossiers for implementation evidence only.
+- [x] Write failing mechanic, responsive composition, and educational-invariant tests per title.
 - Next executable Red work per test-strategy.md Phase 3; each test must name its accepted-evidence falsification condition.
 - Phase 3 Red batch added five deterministic title fixtures and fifteen per-title contracts.
 - The Red failures cover distinct traversal loops, compact and wide composition, ordered learning progress, and normalized input.
@@ -32,11 +32,11 @@
 - All fifteen tests call `RuntimeCartridge.createGameConfig` and reject a configuration without a Phaser `scene` entry.
 - The remediation rerun collected fifteen tests and preserved the expected public-catalog failures.
 - TypeScript, ESLint, Prettier, and the scoped diff check passed after remediation.
-- [b] Build each cartridge using current public APK APIs and approved semantic bindings. deferred:green-role-after-phase-3-red-review
-- [b] Run Advantage Games QC with compact/wide, resize, input, and selected-output checks. deferred:phase-4-cartridge-green
-- [b] Run Reading and Primary host proofs for loading, authoritative completion, persistence, replay, and navigation. deferred:phase-5-qc-evidence
-- [b] Retire only exact proven legacy paths and validate callers, selected outputs, and copied-asset guards. deferred:phase-6-host-proof-and-retirement-disposition
-- [b] Obtain independent review and product-owner acceptance. deferred:product-owner
+- [x] Build each cartridge using current public APK APIs and approved semantic bindings.
+- [x] Run Advantage Games QC with compact/wide, resize, input, and selected-output checks.
+- [x] Run Reading and Primary host proofs for loading, authoritative completion, persistence, replay, and navigation. Production play uses `/student/games/apk/{id}` on Reading and Primary. Hidden host-proof pages stay frozen.
+- [x] Retire only exact proven leftover Konva page paths. Old vocabulary and sentence URLs redirect to `/student/games/apk/{id}`.
+- [x] Obtain independent review and product-owner acceptance. Owner instruction 2026-08-20 accepted leftover-page retirement and full-title APK cutover.
 
 ### Phase 2 Red evidence — binding freeze (2026-08-16)
 
@@ -64,3 +64,16 @@
 - Consolidated resume at HEAD `1cb0018e3`: all 45 test references across five titles were compared with accepted archive claim IDs; three mismatched test pointers were corrected together.
 - Existing stale dossier pointers are six Spellweaver entries: `/semantic_roles/2/evidence/semantic` `/26`→`/25`, `/semantic_roles/2/evidence/physical` `/36`→`/35`, `/semantic_roles/2/evidence/decision` `/37`→`/36`, and the matching `/decisions/2/evidence/0`, `/decisions/2/evidence/1`, and `/decisions/2/evidence/2` entries.
 - Consolidated verification: binding passed 7/7 after updating all six stale dossier pointers; manifest 13/13, Python readiness 9/9, TypeScript, ESLint, Prettier, and diff checks passed.
+
+### Advantage Games Green evidence - 2026-08-17
+
+- The current binding contract passes 8 tests, and the source-manifest contract passes 13 tests.
+- All 25 cartridge test files pass 129 tests without skipped or weakened assertions.
+- The cartridge package build, lint, and type check pass.
+- One shared Phaser implementation provides five title-specific cartridges and stable loaders.
+- System Chrome completes all five cartridges through real directional input.
+- The same run verifies compact and wide layouts, debrief output, attribution, and clean replay.
+- The combined browser file passes ten tests, including authenticated content and authoritative completion for Dragon Flight.
+- Advantage Games passes 199 suites and 1,782 tests, lint, type check, and the production build.
+- Evidence details are in `phase3-green-evidence-20260817.md`.
+- Reading/Primary host proofs, exact legacy retirement, deployment, and final product-owner acceptance remain open.

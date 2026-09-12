@@ -302,6 +302,10 @@ describe("guided gameplay tutorial contracts", () => {
       ...validTutorial.lifecycle,
       skip: { enabled: false },
     }).success).toBe(true);
+    expect(gameTutorialLifecyclePolicySchema.safeParse({
+      ...validTutorial.lifecycle,
+      advance: "learner-controlled",
+    }).success).toBe(true);
 
     for (const lifecycle of [
       { ...validTutorial.lifecycle, pause: "pause-current-step" },

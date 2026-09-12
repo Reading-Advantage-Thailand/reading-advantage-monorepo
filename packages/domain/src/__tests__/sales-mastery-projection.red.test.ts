@@ -11,17 +11,35 @@ import {
   companyIdentityClaimsSchema,
   type CompanyIdentityClaims,
 } from "../../../backend/src/modules/company-identity/contracts.js";
+import { salesCurriculumBindings } from "../../../sales-knowledge/src/index.js";
 import type { MasteryPersistencePort } from "../mastery/persistence-ports.js";
 
 const SALES_MASTERY_MODULE_PATH = "../sales-mastery.js";
 const ORGANIZATION_A = "20000000-0000-4000-8000-000000000003";
 const ORGANIZATION_B = "20000000-0000-4000-8000-000000000004";
-const LEARNER_A = "sales:00000000-0000-4000-8000-000000000001";
-const LEARNER_B = "sales:00000000-0000-4000-8000-000000000002";
 const SCHOOL_A = "30000000-0000-4000-8000-000000000001";
 const GRAPH_RELEASE = "knowledge-space-sales-mastery-v1.0.0";
 const BINDINGS_DIGEST =
   "e8843314e2f381a44143acb08c6ff6596bdeac4e9da32fbdb9a5851c8ed32197";
+
+/** Returns one approved quiz coordinate from the immutable Sales release. */
+function approvedQuizCoordinate(): {
+  readonly objectiveId: string;
+  readonly variantKey: string;
+  readonly rubricVersion: string;
+} {
+  const binding = salesCurriculumBindings.bindings.find(
+    (candidate) => candidate.activityKind === "quiz-question",
+  );
+  if (!binding || !binding.variantId || !binding.objectiveIds[0]) {
+    throw new Error("The approved Sales quiz binding is unavailable.");
+  }
+  return {
+    objectiveId: binding.objectiveIds[0],
+    variantKey: binding.variantId,
+    rubricVersion: "sales-rubric.v1",
+  };
+}
 
 interface SalesMasteryTenantBinding {
   readonly applicationKey: "sales";
@@ -33,7 +51,6 @@ interface SalesMasteryTenantBinding {
 
 interface SalesMasteryProjectionInput {
   readonly identity: CompanyIdentityClaims;
-  readonly principalId: string;
   readonly sourceAttemptId: string;
   readonly idempotencyKey: string;
   readonly sourceApplication: "sales-advantage";
@@ -61,8 +78,30 @@ interface SalesMasteryProjection {
 interface SalesMasteryProjectionModule {
   createSalesMasteryProjection(options: {
     readonly database: unknown;
-    readonly mastery: MasteryPersistencePort;
+    readonly companyIdentity: CompanyIdentityVerificationPort;
+    readonly masteryFactory: SalesPersistenceFactory;
   }): SalesMasteryProjection;
+}
+
+interface CompanyIdentityVerificationPort {
+  verify(input: {
+    readonly identity: unknown;
+    readonly expectedAudience: "sales";
+  }): Promise<{
+    readonly issuer: string;
+    readonly expiresAt: string;
+    readonly organizationId: string;
+    readonly organizationKey: "internal-company";
+    readonly principalId: string;
+  }>;
+}
+
+interface SalesPersistenceFactory {
+  create(options: {
+    readonly tenant: { readonly schoolId: string };
+    readonly sourceTenantKey: string;
+    readonly actorId: string;
+  }): MasteryPersistencePort;
 }
 
 interface TransactionalDatabaseProbe {
@@ -180,19 +219,44 @@ function projectionInput(
 ): SalesMasteryProjectionInput {
   return {
     identity,
-    principalId: LEARNER_A,
     sourceAttemptId: "quiz-attempt-phase2-001",
     idempotencyKey: "sales-projection-idempotency-phase2-001",
     sourceApplication: "sales-advantage",
     graphRelease: GRAPH_RELEASE,
     bindingsDigest: BINDINGS_DIGEST,
     payload: {
-      objectiveId: "sales.value-proposition",
-      variantKey: "quiz.recognition",
+      ...approvedQuizCoordinate(),
       score: 0.9,
-      rubricVersion: "sales-rubric.v1",
     },
     ...overrides,
+  };
+}
+
+/** Creates the trusted Company Identity verifier used by the projection seam. */
+function companyIdentityVerifier(): CompanyIdentityVerificationPort {
+  return {
+    verify: vi.fn(async ({ identity, expectedAudience }) => {
+      const parsed = companyIdentityClaimsSchema.safeParse(identity);
+      if (
+        !parsed.success ||
+        expectedAudience !== "sales" ||
+        parsed.data.aud !== "sales" ||
+        parsed.data.organizationKey !== "internal-company" ||
+        !parsed.data.roles.some((role) =>
+          ["SALES_ADMIN", "SALES_REP"].includes(role),
+        ) ||
+        parsed.data.exp <= Math.floor(Date.now() / 1000)
+      ) {
+        throw new Error("Company Identity authorization failed.");
+      }
+      return {
+        issuer: parsed.data.iss,
+        expiresAt: new Date(parsed.data.exp * 1000).toISOString(),
+        organizationId: parsed.data.organizationId,
+        organizationKey: "internal-company",
+        principalId: `sales:${parsed.data.sub}`,
+      };
+    }),
   };
 }
 
@@ -243,7 +307,7 @@ async function loadSalesMasteryProjection(): Promise<SalesMasteryProjectionModul
   }
 }
 
-/** Creates the real future projection seam with the existing Mastery adapter port. */
+/** Creates the trusted projection seam with a scoped Mastery factory. */
 async function createProjection(database: unknown = {}): Promise<{
   readonly projection: SalesMasteryProjection;
   readonly mastery: MasteryPersistencePort;
@@ -253,7 +317,10 @@ async function createProjection(database: unknown = {}): Promise<{
   return {
     projection: module.createSalesMasteryProjection({
       database,
-      mastery,
+      companyIdentity: companyIdentityVerifier(),
+      masteryFactory: {
+        create: () => mastery,
+      },
     }),
     mastery,
   };
@@ -364,7 +431,7 @@ describe("Sales Phase 2 tenant authorization and durable projection", () => {
     ).rejects.toThrow(/Codecamp|namespace|tenant/i);
   });
 
-  it("rejects cross-organization reads, writes, replay, and evidence reuse", async () => {
+  it("keeps reads isolated and rejects cross-organization source identity reuse", async () => {
     const { projection } = await createProjection();
     const organizationA = companyClaims(ORGANIZATION_A);
     const organizationB = companyClaims(ORGANIZATION_B, {
@@ -374,24 +441,17 @@ describe("Sales Phase 2 tenant authorization and durable projection", () => {
 
     await projection.project(input);
     await expect(
-      projection.readEvidence({
-        identity: organizationB,
-        principalId: LEARNER_B,
-      }),
-    ).rejects.toThrow(/organization|tenant|scope/i);
+      projection.readEvidence({ identity: organizationB }),
+    ).resolves.toEqual([]);
     await expect(
       projection.project({
         ...input,
         identity: organizationB,
-        principalId: LEARNER_B,
       }),
     ).rejects.toThrow(/organization|tenant|scope/i);
-    await expect(
-      projection.project({ ...input, identity: organizationB }),
-    ).rejects.toThrow(/organization|tenant|scope|idempotency/i);
   });
 
-  it("rejects cross-organization source-attempt and idempotency replay with the new learner principal", async () => {
+  it("rejects cross-organization source-attempt and idempotency reuse independently", async () => {
     const { projection } = await createProjection();
     const organizationA = companyClaims(ORGANIZATION_A);
     const organizationB = companyClaims(ORGANIZATION_B, {
@@ -404,7 +464,14 @@ describe("Sales Phase 2 tenant authorization and durable projection", () => {
       projection.project({
         ...input,
         identity: organizationB,
-        principalId: LEARNER_B,
+        idempotencyKey: "sales-projection-idempotency-phase2-org-b",
+      }),
+    ).rejects.toThrow(/organization|tenant|scope|replay|idempotency/i);
+    await expect(
+      projection.project({
+        ...input,
+        identity: organizationB,
+        sourceAttemptId: "quiz-attempt-phase2-org-b",
       }),
     ).rejects.toThrow(/organization|tenant|scope|replay|idempotency/i);
   });

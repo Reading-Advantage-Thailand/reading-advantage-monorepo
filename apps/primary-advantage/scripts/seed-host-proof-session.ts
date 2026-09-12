@@ -15,6 +15,7 @@ import { users, schools, classrooms, classroomStudents, accounts } from "@readin
 import { hashPassword } from "@reading-advantage/auth";
 import { and, eq } from "drizzle-orm";
 import { getHostProofTestCredentials } from "../host-proof-test-config";
+import { seedAuthenticatedStudentContent } from "../../advantage-games/tests/e2e/apk/seed-authenticated-student-content";
 
 const { classCode: CLASS_CODE, studentUsername: STUDENT_USERNAME } =
   getHostProofTestCredentials();
@@ -156,6 +157,8 @@ async function seedHostProofSession() {
       .set({ password: passwordHash, providerId: "credential" })
       .where(eq(accounts.userId, studentId));
   }
+
+  await seedAuthenticatedStudentContent(STUDENT_USERNAME);
 
   console.log("Host-proof test session seeded.");
   console.log(`  Class code: ${CLASS_CODE}`);

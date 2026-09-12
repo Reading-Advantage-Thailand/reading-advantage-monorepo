@@ -44,6 +44,37 @@ describe("gameplay primitives", () => {
     expect(spawner.elapsedMs).toBe(0);
   });
 
+  it("restores a partial spawn interval without changing threshold timing", () => {
+    const spawner = createDeterministicSpawner({ intervalMs: 100, maxPerTick: 2 });
+    spawner.setElapsed(75);
+
+    expect(spawner.advance(24)).toBe(0);
+    expect(spawner.elapsedMs).toBe(99);
+    expect(spawner.advance(1)).toBe(1);
+    expect(spawner.elapsedMs).toBe(0);
+  });
+
+  it("keeps the same schedule across repeated elapsed restorations", () => {
+    const spawner = createDeterministicSpawner({ intervalMs: 100, maxPerTick: 2 });
+
+    for (let cycle = 0; cycle < 3; cycle += 1) {
+      spawner.setElapsed(60);
+      expect(spawner.advance(39)).toBe(0);
+      expect(spawner.advance(1)).toBe(1);
+      expect(spawner.elapsedMs).toBe(0);
+    }
+  });
+
+  it("rejects invalid restored elapsed values without changing state", () => {
+    const spawner = createDeterministicSpawner({ intervalMs: 100, maxPerTick: 2 });
+    spawner.setElapsed(40);
+
+    for (const elapsedMs of [-1, 100, 101, Number.NaN, Number.POSITIVE_INFINITY]) {
+      expect(() => spawner.setElapsed(elapsedMs)).toThrow(/elapsed/i);
+      expect(spawner.elapsedMs).toBe(40);
+    }
+  });
+
   it("expires projectiles by lifetime or world bounds", () => {
     expect(stepProjectile({ position: { x: 0, y: 0 }, velocity: { x: 10, y: 0 }, ageMs: 0, lifetimeMs: 500 }, 100, { x: 0, y: 0, width: 100, height: 100 }).active).toBe(true);
     expect(stepProjectile({ position: { x: 99, y: 0 }, velocity: { x: 10, y: 0 }, ageMs: 0, lifetimeMs: 500 }, 200, { x: 0, y: 0, width: 100, height: 100 }).active).toBe(false);

@@ -1,5 +1,7 @@
+import type { AnswerChoiceAudioController, ListeningAudioController } from "../audio/index.js";
 import type {
   GameResults,
+  LearningEvidence,
   SentenceInput,
   VocabularyInput,
 } from "@reading-advantage/game-contracts";
@@ -230,6 +232,10 @@ export type APKDiagnosticInput = Omit<APKDiagnosticEvent, "timestamp"> & {
 
 /** Context supplied while a cartridge creates its Phaser configuration. */
 export interface CartridgeGameConfigContext {
+  /** Optional listening controller owned by the current playing session. */
+  listening?: ListeningAudioController;
+  /** Optional answer audio controller owned by the current playing session. */
+  answerAudio?: AnswerChoiceAudioController;
   /** Validated educational array. */
   input: GameInput;
   /** Validated audience edition. */
@@ -280,7 +286,11 @@ export interface APKDiagnosticEvent {
 /** Host callbacks available to the browser runtime. */
 export interface APKHostAdapter {
   /** Receives exactly one validated display result per mounted session. */
-  complete(result: GameResults, outcome?: GameTerminalOutcome): void | Promise<void>;
+  complete(
+    result: GameResults,
+    outcome?: GameTerminalOutcome,
+    evidence?: LearningEvidence,
+  ): void | Promise<void>;
   /** Receives diagnostics without coupling cartridges to app telemetry. */
   diagnostic?(event: APKDiagnosticEvent): void;
   /** Optional host navigation boundary. */
@@ -347,6 +357,10 @@ export interface APKGameInstance {
 
 /** Fully validated context passed to a renderer factory. */
 export interface GameFactoryContext {
+  /** Optional listening controller owned by the current playing session. */
+  listening?: ListeningAudioController;
+  /** Optional answer audio controller owned by the current playing session. */
+  answerAudio?: AnswerChoiceAudioController;
   /** DOM element that owns the game canvas. */
   container: HTMLElement;
   /** Cartridge definition for this launch. */
@@ -380,6 +394,8 @@ export interface ResponsiveRuntimeOptions {
   readonly config: ResponsiveLayoutConfig;
   /** Current browser/device safe-area insets. */
   readonly safeArea: SafeAreaInsets;
+  /** Optional browser inset resolver with the static safe area as its fallback. */
+  readonly resolveSafeArea?: (container: HTMLElement) => SafeAreaInsets;
   /** Current independently detected input capabilities. */
   readonly inputCapabilities: Readonly<{ touch: boolean; pointer: boolean; keyboard: boolean }>;
   /** Current accessibility scaling values. */
@@ -390,6 +406,10 @@ export interface ResponsiveRuntimeOptions {
 
 /** Options required to mount one cartridge session. */
 export interface MountCartridgeOptions {
+  /** Optional listening controller owned by the current playing session. */
+  listening?: ListeningAudioController;
+  /** Optional answer audio controller owned by the current playing session. */
+  answerAudio?: AnswerChoiceAudioController;
   /** DOM element that owns all game rendering. */
   container: HTMLElement;
   /** Cartridge definition to launch. */
@@ -414,6 +434,8 @@ export interface APKGameHandle {
   pause(): void;
   /** Resumes the session. */
   resume(): void;
+  /** Recomputes the renderer after a host-only layout change. */
+  resize?(): void;
   /** Recreates the session with the same validated launch options. */
   restart(): Promise<void>;
   /** Changes audio mute state. */

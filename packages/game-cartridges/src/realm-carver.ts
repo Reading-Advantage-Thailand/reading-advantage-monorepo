@@ -6,10 +6,9 @@ import {
 import {
   createActorSpriteLayer,
   createBoundedFrameScheduler,
+  calculateXp,
   createCompletionLatch,
   createInputActionNormalizer,
-  createResultAccountant,
-  finalizeResult,
   preloadAssetBindings,
   validateNonEmptyContent,
   type ActorSpriteLayer,
@@ -65,6 +64,8 @@ export interface RealmCarverWordSnapshot {
   readonly y: number;
   /** Whether the word remains available for capture. */
   readonly status: "active" | "captured";
+  /** Whether the active word belongs to the current visible beacon wave. */
+  readonly visible: boolean;
   /** Number of incorrect captures that relocated this word. */
   readonly relocations: number;
 }
@@ -266,6 +267,7 @@ interface PhaserGraphicsLike {
 interface PhaserTextLike {
   setPosition(x: number, y: number): this;
   setText(value: string): this;
+  setOrigin?(x: number, y?: number): this;
   destroy(): void;
 }
 
@@ -370,6 +372,87 @@ const MAX_TICK_DELTA_MS = 50;
 
 /** Modulus used to keep deterministic setup values within safe integer arithmetic. */
 const SEED_MODULUS = 2_147_483_647;
+
+/** Maximum number of English beacons shown in one territory wave. */
+export const REALM_CARVER_MAX_VISIBLE_WORDS = 4;
+
+function visibleWordIds(words: readonly { id: string; term: string; status: "active" | "captured" }[], targetIndex: number): ReadonlySet<string> {
+  const target = words[Math.min(targetIndex, words.length - 1)];
+  if (!target) return new Set();
+  const sentenceId = target.id.split(":")[1];
+  const active = words.filter((word) => word.status === "active" && word.id.split(":")[1] === sentenceId);
+  const matching = active.find((word) => word.term === target.term);
+  const ordered = [
+    ...(matching ? [matching] : []),
+    ...active.filter((word) => word.id !== matching?.id),
+  ];
+  return new Set(ordered.slice(0, REALM_CARVER_MAX_VISIBLE_WORDS).map((word) => word.id));
+}
+
+/** Responsive board and text measurements shared by rendering tests. */
+export interface RealmCarverSceneLayout {
+  /** Territory board left edge. */
+  readonly boardX: number;
+  /** Territory board top edge. */
+  readonly boardY: number;
+  /** Territory board side length. */
+  readonly boardSize: number;
+  /** Logical label size that preserves the minimum displayed size. */
+  readonly wordFontSize: number;
+  /** Logical Thai prompt size that preserves the minimum displayed size. */
+  readonly promptFontSize: number;
+}
+
+/** Shared visible and hittable D-pad geometry. */
+export interface RealmCarverDpadGeometry {
+  /** Horizontal D-pad center. */
+  readonly centerX: number;
+  /** Vertical D-pad center. */
+  readonly centerY: number;
+  /** Half-size of each touch button. */
+  readonly buttonHalfSize: number;
+  /** Distance from the center to each direction button. */
+  readonly offset: number;
+}
+
+/**
+ * Calculates D-pad geometry that stays inside the scene.
+ * @param width Current logical scene width.
+ * @param height Current logical scene height.
+ * @param renderedWidth Current displayed canvas width.
+ * @returns Shared render and pointer hit geometry.
+ */
+export function getRealmCarverDpadGeometry(width: number, height: number, renderedWidth = width): RealmCarverDpadGeometry {
+  const renderedScale = renderedWidth > 0 ? renderedWidth / width : 1;
+  const buttonHalfSize = Math.max(28, Math.min(42, width * 0.045), Math.ceil(22 / renderedScale));
+  const offset = Math.max(48, Math.min(58, height * 0.1), buttonHalfSize + 8);
+  const margin = 8;
+  return Object.freeze({
+    centerX: Math.max(offset + buttonHalfSize + margin, Math.min(100, width * 0.14)),
+    centerY: Math.max(offset + buttonHalfSize + margin, Math.min(height - offset - buttonHalfSize - margin, height * 0.76)),
+    buttonHalfSize,
+    offset,
+  });
+}
+
+/** Calculates bounded board and readable text measurements.
+ * @param width Current logical scene width.
+ * @param height Current logical scene height.
+ * @param renderedWidth Current displayed canvas width.
+ * @returns Board bounds and logical font sizes.
+ */
+export function getRealmCarverSceneLayout(width: number, height: number, renderedWidth = width): RealmCarverSceneLayout {
+  const renderedScale = renderedWidth > 0 ? renderedWidth / width : 1;
+  const compact = width < 500 || renderedScale < 0.75;
+  const boardSize = compact ? Math.min(width - 32, height * 0.62) : Math.min(width * 0.62, height * 0.67);
+  return Object.freeze({
+    boardX: compact ? (width - boardSize) / 2 : width - boardSize - width * 0.055,
+    boardY: compact ? height * (renderedScale < 0.75 ? 0.28 : 0.2) : height * 0.18,
+    boardSize,
+    wordFontSize: renderedScale < 0.75 ? Math.ceil(16 / renderedScale) : 16,
+    promptFontSize: renderedScale < 0.75 ? Math.ceil(20 / renderedScale) : width < 500 ? 20 : 26,
+  });
+}
 
 const directionDelta = (direction: RealmCarverDirection): MutablePoint => {
   switch (direction) {
@@ -492,11 +575,15 @@ function buildWords(input: unknown, seed: number): MutableWord[] {
   return words;
 }
 
-function resultFor(accountant: ReturnType<typeof createResultAccountant>): GameResults {
-  return gameResultsSchema.parse(finalizeResult(accountant, {
-    xpPerCorrect: 20,
-    xpPerAccuracyPoint: 10,
-  }));
+function resultFor(correctAnswers: number, totalAttempts: number, score: number): GameResults {
+  const accuracy = totalAttempts === 0 ? 0 : correctAnswers / totalAttempts;
+  return gameResultsSchema.parse({
+    correctAnswers,
+    totalAttempts,
+    accuracy,
+    score,
+    xp: calculateXp({ correctAnswers, totalAttempts, accuracy }, { xpPerCorrect: 20, xpPerAccuracyPoint: 10 }),
+  });
 }
 
 type RealmCarverActionValues = Omit<RealmCarverActionResult, keyof RealmCarverSnapshot | "snapshot"> & {
@@ -516,12 +603,11 @@ export function realmCarverDirectionFromPointer(
   pointerY: number,
   sceneWidth: number,
   sceneHeight: number,
+  renderedWidth = sceneWidth,
 ): RealmCarverDirection | undefined {
-  const centerX = Math.min(100, sceneWidth * 0.14);
-  const centerY = sceneHeight * 0.76;
-  const horizontalHalf = Math.max(28, Math.min(42, sceneWidth * 0.045));
-  const verticalHalf = Math.max(32, Math.min(42, sceneHeight * 0.052));
-  const offset = Math.max(48, Math.min(58, sceneHeight * 0.1));
+  const { centerX, centerY, buttonHalfSize, offset } = getRealmCarverDpadGeometry(sceneWidth, sceneHeight, renderedWidth);
+  const horizontalHalf = buttonHalfSize;
+  const verticalHalf = buttonHalfSize;
 
   if (pointerY >= centerY - horizontalHalf && pointerY <= centerY + horizontalHalf) {
     if (pointerX >= centerX - offset - horizontalHalf && pointerX <= centerX - offset + horizontalHalf) return "left";
@@ -561,7 +647,9 @@ export function createRealmCarverController(
   const seed = normalizeSeed(sourceSeed);
   const words = buildWords(input, seed);
   const completion = createCompletionLatch(deliver);
-  let accountant = createResultAccountant();
+  let correctAnswers = 0;
+  let totalAttempts = 0;
+  let score = 0;
   let grid = createInitialGrid();
   let trail: MutablePoint[] = [];
   let player: RealmCarverPlayerSnapshot = { x: 0, y: 0, hp: 3, maxHp: 3 };
@@ -577,6 +665,39 @@ export function createRealmCarverController(
   let terminalResultValue: GameResults | undefined;
 
   const currentWord = (): MutableWord => words[Math.min(targetIndex, words.length - 1)]!;
+
+  const refreshVisibleWordPositions = (): void => {
+    const visibleIds = visibleWordIds(words, targetIndex);
+    const visible = words.filter((word) => visibleIds.has(word.id));
+    const alreadySpaced = visible.every((word, index) => grid[word.position.y]?.[word.position.x] === "wild"
+      && visible.slice(0, index).every((other) =>
+        Math.max(Math.abs(word.position.x - other.position.x), Math.abs(word.position.y - other.position.y)) >= 4));
+    if (alreadySpaced) return;
+    const cells: MutablePoint[] = [];
+    for (let y = 1; y < REALM_CARVER_GRID_SIZE - 1; y += 1) {
+      for (let x = 1; x < REALM_CARVER_GRID_SIZE - 1; x += 1) {
+        if (grid[y]?.[x] === "wild") cells.push({ x, y });
+      }
+    }
+    const start = cells.length === 0 ? 0 : Math.floor(seededUnit(seed, targetIndex, 31) * cells.length);
+    const chosen: MutablePoint[] = [];
+    const fallbackCells: readonly MutablePoint[] = [{ x: 2, y: 2 }, { x: 8, y: 2 }, { x: 2, y: 8 }, { x: 8, y: 8 }];
+    for (const [visibleIndex, word] of visible.entries()) {
+      const candidate = Array.from({ length: cells.length }, (_, offset) => cells[(start + offset) % cells.length]!)
+        .find((cell) => chosen.every((other) => Math.max(Math.abs(cell.x - other.x), Math.abs(cell.y - other.y)) >= 4)
+          && !words.some((other) => other.id !== word.id && visibleIds.has(other.id) && pointKey(other.position) === pointKey(cell)))
+        ?? fallbackCells[visibleIndex];
+      if (!candidate) continue;
+      grid[candidate.y]![candidate.x] = "wild";
+      const previous = { ...word.position };
+      const occupant = words.find((other) => other.id !== word.id && pointKey(other.position) === pointKey(candidate));
+      word.position = { ...candidate };
+      if (occupant) occupant.position = previous;
+      chosen.push(candidate);
+    }
+  };
+
+  refreshVisibleWordPositions();
 
   const snapshot = (): RealmCarverSnapshot => Object.freeze({
     seed,
@@ -596,6 +717,7 @@ export function createRealmCarverController(
       x: word.position.x,
       y: word.position.y,
       status: word.status,
+      visible: visibleWordIds(words, targetIndex).has(word.id),
       relocations: word.relocations,
     }))),
     monsters: Object.freeze(monsters.map((monster) => Object.freeze({ ...monster }))),
@@ -610,9 +732,9 @@ export function createRealmCarverController(
     maxHp: player.maxHp,
     lives: player.hp,
     energy: player.hp,
-    score: accountant.score,
-    correctAnswers: accountant.correctAnswers,
-    totalAttempts: accountant.totalAttempts,
+    score,
+    correctAnswers,
+    totalAttempts,
     lastOutcome,
     lastEvent,
     gameTime,
@@ -633,14 +755,14 @@ export function createRealmCarverController(
 
   const enterDefeat = (): GameResults => {
     phase = "defeat";
-    terminalResultValue = resultFor(accountant);
+    terminalResultValue = resultFor(correctAnswers, totalAttempts, score);
     completion.complete(terminalResultValue);
     return terminalResultValue;
   };
 
   const enterComplete = (): GameResults => {
     phase = "victory";
-    terminalResultValue = resultFor(accountant);
+    terminalResultValue = resultFor(correctAnswers, totalAttempts, score);
     completion.complete(terminalResultValue);
     return terminalResultValue;
   };
@@ -722,14 +844,17 @@ export function createRealmCarverController(
   const evaluateCapture = (oldGrid: readonly (readonly RealmCarverCellState[])[]): RealmCarverActionResult | undefined => {
     const candidates = words
       .filter((word) => word.status === "active")
+      .filter((word) => visibleWordIds(words, targetIndex).has(word.id))
       .filter((word) => oldGrid[word.position.y]?.[word.position.x] !== "claimed" && grid[word.position.y]?.[word.position.x] === "claimed")
       .sort((left, right) => left.order - right.order);
     let captured = false;
     let progressed = false;
-    const word = candidates[0];
-    if (word?.order === targetIndex) {
-      accountant.recordAttempt({ correct: true });
-      accountant.addScore(100);
+    const answer = currentWord().term;
+    const word = candidates.find((candidate) => candidate.term === answer) ?? candidates[0];
+    if (word?.term === answer) {
+      correctAnswers += 1;
+      totalAttempts += 1;
+      score += 100;
       word.status = "captured";
       capturedWordIds.push(word.id);
       targetIndex += 1;
@@ -750,9 +875,11 @@ export function createRealmCarverController(
           result,
         });
       }
+      keepActiveWordsReachable();
+      refreshVisibleWordPositions();
     } else if (word) {
-      accountant.recordAttempt({ correct: false });
-      accountant.addScore(-Math.min(accountant.score, 50));
+      totalAttempts += 1;
+      score = Math.max(0, score - 50);
       lastOutcome = "incorrect";
       lastEvent = "word-wrong";
       relocate(word);
@@ -967,6 +1094,7 @@ export function createRealmCarverController(
         || restoredWord.translation !== expectedWord.translation
         || restoredWord.order !== expectedWord.order
         || (restoredWord.status !== "active" && restoredWord.status !== "captured")
+        || restoredWord.visible !== (restoredWord.status === "active" && visibleWordIds(state.words, state.targetIndex).has(restoredWord.id))
         || !Number.isInteger(restoredWord.relocations) || restoredWord.relocations < 0
         || !isPointInBounds(restoredWord.position)
         || restoredWord.x !== restoredWord.position.x || restoredWord.y !== restoredWord.position.y) {
@@ -975,7 +1103,7 @@ export function createRealmCarverController(
       const key = pointKey(restoredWord.position);
       if (wordKeys.has(key)) throw new Error("Realm Carver responsive word positions are duplicated");
       wordKeys.add(key);
-      const expectedStatus = index < state.targetIndex ? "captured" : "active";
+      const expectedStatus = state.capturedWordIds.includes(restoredWord.id) ? "captured" : "active";
       if (restoredWord.status !== expectedStatus) throw new Error("Realm Carver responsive word status is invalid");
       if (restoredWord.status === "active" && state.grid[restoredWord.position.y]?.[restoredWord.position.x] !== "wild") {
         throw new Error("Realm Carver responsive active word is inaccessible");
@@ -986,7 +1114,8 @@ export function createRealmCarverController(
     }
     if (!Array.isArray(state.capturedWordIds)
       || state.capturedWordIds.length !== state.targetIndex
-      || state.capturedWordIds.some((id, index) => id !== words[index]?.id)) {
+      || new Set(state.capturedWordIds).size !== state.capturedWordIds.length
+      || state.capturedWordIds.some((id) => !state.words.some((word) => word.id === id && word.status === "captured"))) {
       throw new Error("Realm Carver responsive captured words are invalid");
     }
     if (!Array.isArray(state.monsters) || state.monsters.length !== INITIAL_MONSTERS.length) throw new Error("Realm Carver responsive monsters are invalid");
@@ -1017,8 +1146,8 @@ export function createRealmCarverController(
       "moved", "blocked", "trail-started", "trail-extended", "trail-closed", "word-correct", "word-wrong",
       "player-trail-collision", "monster-trail-collision",
     ].includes(state.lastEvent)) throw new Error("Realm Carver responsive event is invalid");
-    if (!Number.isInteger(state.correctAnswers) || state.correctAnswers < 0 || state.correctAnswers > state.totalAttempts || !Number.isInteger(state.totalAttempts) || state.totalAttempts < 0) throw new Error("Realm Carver responsive counters are invalid");
-    if (state.correctAnswers !== state.targetIndex || !Number.isInteger(state.score) || state.score < 0 || state.score > state.correctAnswers * 100) throw new Error("Realm Carver responsive counters are inconsistent");
+    if (!Number.isSafeInteger(state.correctAnswers) || state.correctAnswers < 0 || state.correctAnswers > state.totalAttempts || !Number.isSafeInteger(state.totalAttempts) || state.totalAttempts < 0) throw new Error("Realm Carver responsive counters are invalid");
+    if (state.correctAnswers !== state.targetIndex || !Number.isSafeInteger(state.score) || state.score < 0 || state.score > state.correctAnswers * 100) throw new Error("Realm Carver responsive counters are inconsistent");
     if (!Number.isFinite(state.gameTime) || state.gameTime < 0 || !Number.isFinite(state.monsterMotionMs) || state.monsterMotionMs < 0 || state.monsterMotionMs >= 200 || typeof state.destroyed !== "boolean") throw new Error("Realm Carver responsive lifecycle state is invalid");
     const restoredResult = state.result === undefined ? undefined : gameResultsSchema.parse(state.result);
     if (state.phase === "playing" && restoredResult !== undefined) throw new Error("Realm Carver active state has a terminal result");
@@ -1068,9 +1197,9 @@ export function createRealmCarverController(
       gameTime = state.gameTime;
       monsterMotionMs = state.monsterMotionMs;
       terminalResultValue = state.result === undefined ? undefined : gameResultsSchema.parse(state.result);
-      accountant = createResultAccountant();
-      for (let index = 0; index < state.totalAttempts; index += 1) accountant.recordAttempt({ correct: index < state.correctAnswers });
-      accountant.addScore(state.score);
+      correctAnswers = state.correctAnswers;
+      totalAttempts = state.totalAttempts;
+      score = state.score;
       if (state.phase !== "playing" || state.destroyed) completion.sealWithoutDelivery();
       destroyed = state.destroyed;
     },
@@ -1084,8 +1213,8 @@ export function createRealmCarverController(
 
 function createScene(context: RealmCarverSceneContext): Readonly<Record<string, unknown>> {
   let resources: SceneResources | undefined;
-  let composition = context.composition;
   let previousKeys = new Set<string>();
+  let heldMoveMs = 0;
   const normalize = createInputActionNormalizer({ keyboard: KEYBOARD_BINDINGS, pointerTap: { action: "confirm" } });
   const frameScheduler = createBoundedFrameScheduler((deltaMs) => {
     if (context.sessionMode === "playing") context.controller.tick(deltaMs);
@@ -1111,14 +1240,16 @@ function createScene(context: RealmCarverSceneContext): Readonly<Record<string, 
     const activeResources = resources;
     const { width, height } = dimensions(scene);
     const state = context.controller.snapshot();
-    const boardSize = Math.min(width * 0.62, height * 0.67);
-    const boardX = width - boardSize - width * 0.055;
-    const boardY = height * 0.18;
+    const rect = scene.game?.canvas?.getBoundingClientRect?.();
+    const layout = getRealmCarverSceneLayout(width, height, rect?.width ?? width);
+    const renderedScale = rect && rect.width > 0 ? rect.width / width : 1;
+    const { boardSize, boardX, boardY } = layout;
     const cellSize = boardSize / REALM_CARVER_GRID_SIZE;
-    const centerX = Math.min(100, width * 0.14);
-    const centerY = height * 0.76;
-    const dpadSize = Math.max(28, Math.min(42, width * 0.045));
-    const dpadOffset = Math.max(48, Math.min(58, height * 0.1));
+    const dpad = getRealmCarverDpadGeometry(width, height, rect?.width ?? width);
+    const centerX = dpad.centerX;
+    const centerY = dpad.centerY;
+    const dpadSize = dpad.buttonHalfSize;
+    const dpadOffset = dpad.offset;
 
     activeResources.graphics.clear();
     if (!activeResources.art.ground("world:ground", width, height)) activeResources.graphics.fillStyle(0x08111f, 1).fillRect(0, 0, width, height);
@@ -1134,26 +1265,43 @@ function createScene(context: RealmCarverSceneContext): Readonly<Record<string, 
     state.monsters.forEach((monster, index) => {
       const monsterX = boardX + (monster.x + 0.5) * cellSize;
       const monsterY = boardY + (monster.y + 0.5) * cellSize;
+      const goblinVisibleWidth = renderedScale < 0.75
+        ? Math.ceil(22 / renderedScale)
+        : Math.max(18, Math.min(24, cellSize * 0.8));
+      const goblinSourceWidth = goblinVisibleWidth * (32 / 10);
+      const goblinScale = goblinSourceWidth / 32;
       if (activeResources.art.place(`monster:${index}`, "enemy:idle", {
-        x: monsterX,
-        y: monsterY,
-        width: Math.max(12, cellSize * 0.9),
+        x: monsterX - goblinScale,
+        y: monsterY - 8 * goblinScale,
+        width: goblinSourceWidth,
         depth: 7,
       })) return;
       activeResources.graphics.fillStyle(0xef4444, 1)
         .fillCircle(monsterX, monsterY, Math.max(5, cellSize * 0.24));
     });
     for (const word of state.words) {
-      if (word.status === "captured") continue;
-      activeResources.graphics.fillStyle(word.order === state.targetIndex ? 0xfbbf24 : 0xa78bfa, 1)
-        .fillCircle(boardX + (word.position.x + 0.5) * cellSize, boardY + (word.position.y + 0.5) * cellSize, Math.max(5, cellSize * 0.22));
+      if (word.status === "captured" || !word.visible) continue;
+      const labelWidth = Math.min(boardSize * 0.28, Math.max(cellSize * 2.4, 88));
+      const labelHeight = Math.max(cellSize * 0.86, layout.wordFontSize * 1.4);
+      activeResources.graphics.fillStyle(0x7668c9, 0.98).fillRoundedRect(
+        boardX + (word.position.x + 0.5) * cellSize - labelWidth / 2,
+        boardY + (word.position.y + 0.5) * cellSize - labelHeight / 2,
+        labelWidth,
+        labelHeight,
+        8,
+      );
     }
     const playerX = boardX + (state.player.x + 0.5) * cellSize;
     const playerY = boardY + (state.player.y + 0.5) * cellSize;
+    const playerVisibleWidth = renderedScale < 0.75
+      ? Math.ceil(24 / renderedScale)
+      : Math.max(19, Math.min(24, cellSize * 0.82));
+    const playerSourceWidth = playerVisibleWidth * 2;
+    const playerScale = playerSourceWidth / 24;
     if (!activeResources.art.place("player", "player:idle", {
       x: playerX,
-      y: playerY,
-      width: Math.max(14, cellSize * 1.05),
+      y: playerY - 2.5 * playerScale,
+      width: playerSourceWidth,
       depth: 8,
     })) {
       activeResources.graphics.fillStyle(0xfef3c7, 1)
@@ -1168,18 +1316,18 @@ function createScene(context: RealmCarverSceneContext): Readonly<Record<string, 
     activeResources.graphics.fillRoundedRect(centerX - dpadSize, centerY + dpadOffset - dpadSize, dpadSize * 2, dpadSize * 2, 12);
     activeResources.graphics.lineStyle(2, 0x93c5fd, 0.8).strokeRoundedRect(boardX, boardY, boardSize, boardSize, 8);
 
-    activeResources.title.setText("REALM CARVER").setPosition(28, 22);
-    activeResources.prompt.setText(`Enclose: ${state.prompt}  →  ${state.answer}`).setPosition(28, 72);
-    activeResources.hud.setText(`${composition?.profile === "compact" ? "Compact" : "Wide"}  |  Words ${state.targetIndex}/${state.targetCount}  |  HP ${state.player.hp}/${state.player.maxHp}  |  Score ${state.score}`).setPosition(28, 112);
-    activeResources.feedback.setText(state.phase === "victory" ? "The realm is fully carved." : state.phase === "defeat" ? "The wild magic took the realm." : state.lastOutcome === "incorrect" ? "That word returned to the wild." : "Draw a loop, return to claimed ground, then confirm.").setPosition(28, height - 72);
-    activeResources.instructions.setText("Keyboard: W A S D / Arrow keys to draw  •  Space or Enter to confirm  •  Touch D-pad or tap").setPosition(28, height - 40);
+    activeResources.title.setText("").setPosition(28, 22);
+    activeResources.prompt.setText(state.prompt).setPosition(20, 18);
+    activeResources.hud.setText(`${state.targetIndex}/${state.targetCount}  •  ${state.player.hp}/${state.player.maxHp} HP  •  ${state.score}`).setPosition(20, 66);
+    activeResources.feedback.setText("").setPosition(28, height - 72);
+    activeResources.instructions.setText("").setPosition(28, height - 40);
     activeResources.dpadUp.setText("▲").setPosition(centerX - 8, centerY - dpadOffset - 12);
     activeResources.dpadLeft.setText("◀").setPosition(centerX - dpadOffset - 10, centerY - 12);
     activeResources.dpadDown.setText("▼").setPosition(centerX - 8, centerY + dpadOffset - 12);
     activeResources.dpadRight.setText("▶").setPosition(centerX + dpadOffset - 8, centerY - 12);
     state.words.forEach((word, index) => {
-      activeResources.wordLabels[index]?.setText(word.status === "captured" ? "✓" : word.term)
-        .setPosition(boardX + (word.position.x + 0.5) * cellSize - 18, boardY + (word.position.y + 0.5) * cellSize + 10);
+      activeResources.wordLabels[index]?.setText(word.status === "active" && word.visible ? word.term : "")
+        .setPosition(boardX + (word.position.x + 0.5) * cellSize, boardY + (word.position.y + 0.5) * cellSize);
     });
   };
 
@@ -1231,12 +1379,15 @@ function createScene(context: RealmCarverSceneContext): Readonly<Record<string, 
 
   const create = function (this: PhaserSceneLike): void {
     if (!this.add) throw new Error("Realm Carver requires Phaser display services");
+    const { width, height } = dimensions(this);
+    const rect = this.game?.canvas?.getBoundingClientRect?.();
+    const layout = getRealmCarverSceneLayout(width, height, rect?.width ?? width);
     const style = { fontFamily: "Arial", color: "#f8fafc", fontSize: "18px" };
     resources = {
       graphics: this.add.graphics(),
       art: createActorSpriteLayer(this, context.edition),
       title: this.add.text(0, 0, "", { ...style, fontSize: "30px", fontStyle: "bold" }),
-      prompt: this.add.text(0, 0, "", { ...style, fontSize: "23px" }),
+      prompt: this.add.text(0, 0, "", { ...style, fontSize: `${layout.promptFontSize}px`, wordWrap: { width: width - 40, useAdvancedWrap: true } }),
       hud: this.add.text(0, 0, "", { ...style, fontSize: "16px", color: "#bfdbfe" }),
       feedback: this.add.text(0, 0, "", { ...style, fontSize: "17px", color: "#fde68a" }),
       instructions: this.add.text(0, 0, "", { ...style, fontSize: "14px", color: "#cbd5e1" }),
@@ -1244,7 +1395,16 @@ function createScene(context: RealmCarverSceneContext): Readonly<Record<string, 
       dpadLeft: this.add.text(0, 0, "", { ...style, fontSize: "20px" }),
       dpadDown: this.add.text(0, 0, "", { ...style, fontSize: "20px" }),
       dpadRight: this.add.text(0, 0, "", { ...style, fontSize: "20px" }),
-      wordLabels: context.controller.snapshot().words.map(() => this.add!.text(0, 0, "", { ...style, fontSize: "12px" })),
+      wordLabels: context.controller.snapshot().words.map(() => {
+        const label = this.add!.text(0, 0, "", {
+          ...style,
+          fontSize: `${layout.wordFontSize}px`,
+          align: "center",
+          wordWrap: { width: Math.min(layout.boardSize * 0.28, Math.max(layout.boardSize / REALM_CARVER_GRID_SIZE * 2.4, 88)), useAdvancedWrap: true },
+        });
+        label.setOrigin?.(0.5, 0.5);
+        return label;
+      }),
     };
     this.events?.once("shutdown", cleanup);
     this.events?.once("destroy", cleanup);
@@ -1260,11 +1420,33 @@ function createScene(context: RealmCarverSceneContext): Readonly<Record<string, 
       previousKeys = new Set(input.keys);
       for (const code of pressed) {
         const action = normalize({ modality: "keyboard", code })[0]?.action;
-        if (action) processAction(action);
+        if (action) {
+          processAction(action);
+          if (directionForAction(action)) heldMoveMs = 0;
+        }
+      }
+      const heldAction = input.keys.map((code) => normalize({ modality: "keyboard", code })[0]?.action)
+        .find((action): action is InputActionId => action !== undefined && directionForAction(action) !== undefined);
+      if (heldAction && !pressed.some((code) => normalize({ modality: "keyboard", code })[0]?.action === heldAction)) {
+        heldMoveMs += Math.min(Math.max(0, delta), 50);
+        if (heldMoveMs >= 140) {
+          heldMoveMs -= 140;
+          processAction(heldAction);
+        }
+      } else if (!heldAction) {
+        heldMoveMs = 0;
       }
       if (input.pointer.released && !input.pointer.cancelled) {
         const local = pointerPosition(this, input.pointer.x, input.pointer.y);
-        const direction = realmCarverDirectionFromPointer(local.x, local.y, dimensions(this).width, dimensions(this).height);
+        const sceneDimensions = dimensions(this);
+        const renderedWidth = this.game?.canvas?.getBoundingClientRect?.().width ?? sceneDimensions.width;
+        const direction = realmCarverDirectionFromPointer(
+          local.x,
+          local.y,
+          sceneDimensions.width,
+          sceneDimensions.height,
+          renderedWidth,
+        );
         if (direction) {
           processAction(actionForDirection(direction));
         } else if (normalize({ modality: "pointer", phase: "up", x: local.x, y: local.y })[0]?.action === "confirm") {
@@ -1287,7 +1469,7 @@ function createScene(context: RealmCarverSceneContext): Readonly<Record<string, 
         context.controller.restore(state as RealmCarverSnapshot);
       },
       apkRecompose: (nextComposition: RealmCarverSceneContext["composition"]) => {
-        composition = nextComposition;
+        void nextComposition;
       },
     },
   };

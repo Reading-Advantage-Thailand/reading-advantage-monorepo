@@ -11,6 +11,7 @@ import {
   sentenceInputSchema,
   vocabularyInputSchema,
   type GameResults,
+  type LearningEvidence,
 } from "@reading-advantage/game-contracts";
 
 import {
@@ -23,7 +24,10 @@ import {
 import { GameBriefingScreen } from "../presentation/game-briefing-screen.js";
 import { createGameTutorialController } from "../presentation/game-tutorial-controller.js";
 import { GameTutorialScreen } from "../presentation/game-tutorial-screen.js";
-import { GameResultPanel } from "../presentation/game-presentation.js";
+import {
+  GameResultPanel,
+  type GamePersistenceState,
+} from "../presentation/game-presentation.js";
 import {
   STANDARD_GAME_REQUIRED_CREDIT,
   type StandardGameDebrief,
@@ -50,6 +54,7 @@ import type {
   RuntimeCartridge,
   RuntimeEdition,
 } from "../runtime/types.js";
+import type { AnswerChoiceAudioController, ListeningAudioController } from "../audio/index.js";
 
 /** Props for the accessible React host surrounding one Phaser cartridge. */
 export type APKGameHostProps = Omit<ComponentProps<"section">, "onComplete" | "inputMode"> & {
@@ -83,10 +88,24 @@ export type APKGameHostProps = Omit<ComponentProps<"section">, "onComplete" | "i
   inputMode?: ResponsiveInputMode;
   /** One bounded host-owned extension rendered in the briefing footer. */
   briefingExtension?: ReactNode;
+  /** Host-owned rewards shown only after the completed result is saved. */
+  resultExtension?: ReactNode;
   /** Accessible instructions displayed outside the canvas. */
   instructions?: ReactNode;
-  /** Receives the validated cartridge display result and terminal outcome. */
-  onComplete?: (result: GameResults, outcome: GameTerminalOutcome) => void | Promise<void>;
+  /** Receives the validated result and returns an optional authoritative confirmation. */
+  onComplete?: (
+    result: GameResults,
+    outcome: GameTerminalOutcome,
+    evidence?: LearningEvidence,
+  ) => void | APKHostCompletionConfirmation | Promise<void | APKHostCompletionConfirmation>;
+  /** Maximum time to wait for host persistence before offering recovery actions. */
+  persistenceTimeoutMs?: number;
+  /** Creates one listening controller for each authoritative playing mount. */
+  createListeningSession?: () => ListeningAudioController;
+  /** Creates one answer audio controller for each authoritative playing mount. */
+  createAnswerAudioSession?: () => AnswerChoiceAudioController;
+  /** Receives changes to the host mute state for external audio. */
+  onMutedChange?: (muted: boolean) => void;
   /** Receives one validated transition emitted by the standard lifecycle host. */
   onLifecycleTransition?: (transition: GameLifecycleTransition) => void;
   /** Receives structured runtime and cartridge diagnostics. */
@@ -97,6 +116,14 @@ export type APKGameHostProps = Omit<ComponentProps<"section">, "onComplete" | "i
   launchPhase?: "briefing" | "demo";
 };
 
+/** Host-owned confirmation returned after authoritative completion persistence. */
+export interface APKHostCompletionConfirmation {
+  /** Server-confirmed XP grant. */
+  readonly xpEarned: number;
+  /** Whether the server recognized a repeated idempotent submission. */
+  readonly duplicate: boolean;
+}
+
 const DEFAULT_DEBRIEF: StandardGameDebrief = Object.freeze({
   outcome: "complete",
   requiredCredit: STANDARD_GAME_REQUIRED_CREDIT,
@@ -105,11 +132,12 @@ const DEFAULT_DEBRIEF: StandardGameDebrief = Object.freeze({
 });
 
 const DEFAULT_DEMO_SEED = 1;
-const DEMO_CONTROL_STYLE = { minHeight: "44px" } as const;
+const DEFAULT_PERSISTENCE_TIMEOUT_MS = 10_000;
 type ProvisionalCompletion = {
   generation: number;
   result: GameResults;
   outcome: GameTerminalOutcome;
+  evidence?: LearningEvidence;
 };
 
 type TutorialSession = {
@@ -169,16 +197,23 @@ export function APKGameHost({
   layoutProfile,
   inputMode,
   briefingExtension,
+  resultExtension,
   instructions,
   onComplete,
+  persistenceTimeoutMs = DEFAULT_PERSISTENCE_TIMEOUT_MS,
+  createListeningSession,
+  createAnswerAudioSession,
+  onMutedChange,
   onLifecycleTransition,
   onDiagnostic,
   onNavigate,
   launchPhase = "briefing",
   "aria-label": ariaLabel = "Language game",
+  tabIndex = -1,
   children,
+  style: hostStyle,
   ...sectionProps
-}: APKGameHostProps) {
+}: APKGameHostProps): import("react").ReactElement {
   const effectiveBriefing = standardExperience?.definition.briefing ?? briefing;
   const effectiveTutorial = standardExperience?.definition.tutorial ?? tutorial;
   const effectiveDebrief = standardExperience?.definition.debrief ?? DEFAULT_DEBRIEF;
@@ -192,6 +227,7 @@ export function APKGameHost({
   const provisionalPlayingGenerationRef = useRef<number | undefined>(undefined);
   const provisionalCompletionRef = useRef<ProvisionalCompletion | undefined>(undefined);
   const completionAuthorityRef = useRef(0);
+  const persistencePendingAuthorityRef = useRef<number | undefined>(undefined);
   const tutorialSessionRef = useRef<TutorialSession | undefined>(undefined);
   const tutorialTransitionTokenRef = useRef<object | undefined>(undefined);
   const tutorialCommandQueueRef = useRef<Promise<void>>(Promise.resolve());
@@ -207,11 +243,13 @@ export function APKGameHost({
   const onLifecycleTransitionRef = useRef(onLifecycleTransition);
   const onDiagnosticRef = useRef(onDiagnostic);
   const onNavigateRef = useRef(onNavigate);
+  const onMutedChangeRef = useRef(onMutedChange);
   const onTutorialSnapshotRef = useRef(onTutorialSnapshot);
   onCompleteRef.current = onComplete;
   onLifecycleTransitionRef.current = onLifecycleTransition;
   onDiagnosticRef.current = onDiagnostic;
   onNavigateRef.current = onNavigate;
+  onMutedChangeRef.current = onMutedChange;
   onTutorialSnapshotRef.current = onTutorialSnapshot;
   const resetTutorialCommandOwnership = (): void => {
     tutorialCommandQueueRef.current = Promise.resolve();
@@ -224,12 +262,29 @@ export function APKGameHost({
   const sessionModeRef = useRef<"playing" | "tutorial" | "demo">("playing");
   const [demoActive, setDemoActive] = useState(false);
   const [muted, setMuted] = useState(false);
+  const mutedRef = useRef(false);
   const [result, setResult] = useState<GameResults>();
+  const [resultEvidence, setResultEvidence] = useState<LearningEvidence>();
   const [resultOutcome, setResultOutcome] = useState<GameTerminalOutcome>("complete");
+  const [persistence, setPersistence] = useState<GamePersistenceState>({ status: "not-applicable" });
   const [error, setError] = useState<string>();
   const [briefingStarted, setBriefingStarted] = useState(false);
   const [briefingRevision, setBriefingRevision] = useState(0);
   const [tutorialSnapshot, setTutorialSnapshot] = useState<GameTutorialControllerSnapshot>();
+  const [reducedMotion, setReducedMotion] = useState(
+    () => typeof window !== "undefined"
+      && typeof window.matchMedia === "function"
+      && window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+  );
+
+  useEffect(() => {
+    if (typeof window.matchMedia !== "function") return;
+    const query = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const handleChange = (event: MediaQueryListEvent): void => setReducedMotion(event.matches);
+    setReducedMotion(query.matches);
+    query.addEventListener("change", handleChange);
+    return () => query.removeEventListener("change", handleChange);
+  }, []);
 
   const briefingValidation = effectiveBriefing === undefined
     ? undefined
@@ -262,6 +317,11 @@ export function APKGameHost({
       || (!demoActive && (status === "loading" || status === "countdown"))))
     || status === "complete"
     || !tutorialControlsReady;
+  const minimumControlHeight = Math.max(
+    48,
+    (responsive?.config.minimumTouchTargetPx ?? 48) * (responsive?.accessibility.touchScale ?? 1),
+  );
+  const controlStyle = { minHeight: `${minimumControlHeight}px` } as const;
 
   const detachTutorialController = (): GameTutorialController | undefined => {
     const controller = tutorialControllerRef.current;
@@ -465,11 +525,77 @@ export function APKGameHost({
     }
   };
 
+  const persistCompletion = async (
+    mountPoint: HTMLDivElement,
+    generation: number,
+    completionAuthority: number,
+    nextResult: GameResults,
+    outcome: GameTerminalOutcome,
+    evidence?: LearningEvidence,
+  ): Promise<void> => {
+    persistencePendingAuthorityRef.current = completionAuthority;
+    const complete = onCompleteRef.current;
+    if (!complete) {
+      setPersistence({ status: "not-applicable" });
+      persistencePendingAuthorityRef.current = undefined;
+      return;
+    }
+    setPersistence({ status: "pending" });
+    const timeoutMs = Number.isFinite(persistenceTimeoutMs) && persistenceTimeoutMs > 0
+      ? persistenceTimeoutMs
+      : DEFAULT_PERSISTENCE_TIMEOUT_MS;
+    let timeoutHandle: ReturnType<typeof setTimeout> | undefined;
+    try {
+      const confirmation = await Promise.race([
+        Promise.resolve().then(() => evidence
+          ? complete(nextResult, outcome, evidence)
+          : complete(nextResult, outcome)),
+        new Promise<never>((_resolve, reject) => {
+          timeoutHandle = setTimeout(
+            () => reject(new Error("Game progress could not be confirmed in time.")),
+            timeoutMs,
+          );
+        }),
+      ]);
+      if (!isCurrentMount(mountPoint, generation)
+        || completionAuthorityRef.current !== completionAuthority) return;
+      if (confirmation === undefined) {
+        setPersistence({ status: "not-applicable" });
+        return;
+      }
+      if (!Number.isInteger(confirmation.xpEarned)
+        || confirmation.xpEarned < 0
+        || typeof confirmation.duplicate !== "boolean") {
+        throw new Error("The host completion confirmation is invalid.");
+      }
+      setPersistence({
+        status: "confirmed",
+        xpEarned: confirmation.xpEarned,
+        duplicate: confirmation.duplicate,
+      });
+    } catch (completionError) {
+      if (!isCurrentMount(mountPoint, generation)
+        || completionAuthorityRef.current !== completionAuthority) return;
+      setPersistence({
+        status: "failed",
+        message: completionError instanceof Error
+          ? completionError.message
+          : "Game progress could not be saved.",
+      });
+    } finally {
+      if (timeoutHandle !== undefined) clearTimeout(timeoutHandle);
+      if (persistencePendingAuthorityRef.current === completionAuthority) {
+        persistencePendingAuthorityRef.current = undefined;
+      }
+    }
+  };
+
   const acceptCompletion = async (
     mountPoint: HTMLDivElement,
     generation: number,
     nextResult: GameResults,
     outcome: GameTerminalOutcome,
+    evidence?: LearningEvidence,
   ): Promise<boolean> => {
     if (!isCurrentMount(mountPoint, generation) || playingGenerationRef.current !== generation) return false;
     const activeHandle = handleRef.current;
@@ -503,17 +629,12 @@ export function APKGameHost({
       return false;
     }
     setResult(nextResult);
+    setResultEvidence(evidence);
     setResultOutcome(outcome);
     setStatus("complete");
     const completionAuthority = completionAuthorityRef.current + 1;
     completionAuthorityRef.current = completionAuthority;
-    try {
-      await onCompleteRef.current?.(nextResult, outcome);
-    } catch (completionError) {
-      if (isCurrentMount(mountPoint, generation) && completionAuthorityRef.current === completionAuthority) {
-        setError(completionError instanceof Error ? completionError.message : "Game result could not be saved");
-      }
-    }
+    void persistCompletion(mountPoint, generation, completionAuthority, nextResult, outcome, evidence);
     return true;
   };
 
@@ -545,7 +666,7 @@ export function APKGameHost({
     const pending = provisionalCompletionRef.current;
     provisionalCompletionRef.current = undefined;
     if (pending === undefined || pending.generation !== generation) return true;
-    return acceptCompletion(mountPoint, generation, pending.result, pending.outcome);
+    return acceptCompletion(mountPoint, generation, pending.result, pending.outcome, pending.evidence);
   };
 
   const activatePlayingMount = async (
@@ -608,6 +729,7 @@ export function APKGameHost({
     sessionMode: "playing" | "tutorial" | "demo" = "playing",
     pauseAfterMount = false,
     recoverToBriefingOnFailure = false,
+    providedAnswerAudio?: AnswerChoiceAudioController,
   ): Promise<APKGameHandle | undefined> => {
     const previousMount = mountQueueRef.current;
     let releaseMount: () => void = () => undefined;
@@ -616,6 +738,8 @@ export function APKGameHost({
     });
     mountQueueRef.current = currentMount;
     await previousMount.catch(() => undefined);
+    let unownedListening: ListeningAudioController | undefined;
+    let unownedAnswerAudio = providedAnswerAudio;
     try {
     try {
       await cleanupPendingResources();
@@ -637,6 +761,8 @@ export function APKGameHost({
     }
     const sessionSeed = sessionMode === "demo" && seed === undefined ? DEFAULT_DEMO_SEED : seed;
     try {
+      unownedListening = sessionMode === "playing" ? createListeningSession?.() : undefined;
+      unownedAnswerAudio ??= sessionMode === "playing" ? createAnswerAudioSession?.() : undefined;
       const handle = await mountCartridge(
         {
           container: mountPoint,
@@ -645,18 +771,23 @@ export function APKGameHost({
           edition,
           sessionMode,
           host: {
-            complete: async (nextResult, outcome = "complete") => {
+            complete: async (nextResult, outcome = "complete", evidence) => {
               if (!isCurrentMount(mountPoint, generation) || sessionMode !== "playing") return;
               if (playingGenerationRef.current !== generation) {
                 if (
                   provisionalPlayingGenerationRef.current === generation
                   || resumingGenerationRef.current === generation
                 ) {
-                  provisionalCompletionRef.current = { generation, result: nextResult, outcome };
+                  provisionalCompletionRef.current = {
+                    generation,
+                    result: nextResult,
+                    outcome,
+                    ...(evidence ? { evidence } : {}),
+                  };
                 }
                 return;
               }
-              await acceptCompletion(mountPoint, generation, nextResult, outcome);
+              await acceptCompletion(mountPoint, generation, nextResult, outcome, evidence);
             },
             navigate: (destination) => {
               if (!isCurrentMount(mountPoint, generation)) return;
@@ -673,9 +804,21 @@ export function APKGameHost({
           },
           ...(sessionSeed === undefined ? {} : { seed: sessionSeed }),
           ...(responsive === undefined ? {} : { responsive }),
+          ...(unownedListening === undefined ? {} : { listening: unownedListening }),
+          ...(unownedAnswerAudio === undefined ? {} : { answerAudio: unownedAnswerAudio }),
         },
         factory ?? createPhaserGameFactory(),
       );
+      unownedListening = undefined;
+      unownedAnswerAudio = undefined;
+      if (muted) {
+        try {
+          handle.setMuted(true);
+        } catch (muteError) {
+          await cleanupTutorialSession(mountPoint, undefined, handle).catch(() => undefined);
+          throw muteError;
+        }
+      }
       if (!isCurrentMount(mountPoint, generation)) {
         clearProvisionalPlaying(generation);
         await cleanupTutorialSession(mountPoint, undefined, handle).catch(() => undefined);
@@ -706,6 +849,18 @@ export function APKGameHost({
       );
       return handle;
     } catch (mountError: unknown) {
+      try {
+        unownedListening?.destroy();
+      } catch {
+        // Failed controller cleanup cannot replace the original mount error.
+      }
+      try {
+        unownedAnswerAudio?.destroy();
+      } catch {
+        // Failed controller cleanup cannot replace the original mount error.
+      }
+      unownedListening = undefined;
+      unownedAnswerAudio = undefined;
       if (!isCurrentMount(mountPoint, generation)) return undefined;
       clearProvisionalPlaying(generation);
       await destroyTutorialController().catch(() => undefined);
@@ -724,6 +879,11 @@ export function APKGameHost({
       return undefined;
     }
     } finally {
+      try {
+        unownedAnswerAudio?.destroy();
+      } catch {
+        // Failed controller cleanup cannot replace mount queue release.
+      }
       releaseMount();
       if (mountQueueRef.current === currentMount) mountQueueRef.current = Promise.resolve();
     }
@@ -797,9 +957,25 @@ export function APKGameHost({
     let actionDriver: (GameTutorialActionDriver & {
       readonly destroy?: () => void | Promise<void>;
     }) | undefined;
+    let tutorialAnswerAudio: AnswerChoiceAudioController | undefined;
     try {
-      actionDriver = standardExperience?.createTutorialActionDriver() ?? tutorialActionDriver;
+      tutorialAnswerAudio = standardExperience && createAnswerAudioSession
+        ? createAnswerAudioSession()
+        : undefined;
+      const answerAudio = tutorialAnswerAudio === undefined ? undefined : Object.freeze({
+        setQuestion: tutorialAnswerAudio.setQuestion.bind(tutorialAnswerAudio),
+        playChoice: tutorialAnswerAudio.playChoice.bind(tutorialAnswerAudio),
+        getChoiceSnapshot: tutorialAnswerAudio.getChoiceSnapshot.bind(tutorialAnswerAudio),
+      });
+      actionDriver = standardExperience?.createTutorialActionDriver(
+        answerAudio === undefined ? undefined : { answerAudio },
+      ) ?? tutorialActionDriver;
     } catch (actionDriverError) {
+      try {
+        tutorialAnswerAudio?.destroy();
+      } catch {
+        // Audio cleanup cannot replace the tutorial construction error.
+      }
       const message = actionDriverError instanceof Error ? actionDriverError.message : "The tutorial phase is not available in this host yet.";
       if (isCurrentMount(mountPoint, generation)) returnToBriefing(mountPoint, generation, message);
       return;
@@ -865,6 +1041,11 @@ export function APKGameHost({
           },
         });
       } catch (constructionError) {
+        try {
+          tutorialAnswerAudio?.destroy();
+        } catch {
+          // Audio cleanup cannot replace the tutorial construction error.
+        }
         await cleanupTutorialSession(mountPoint, undefined, undefined, actionDriver).catch(() => undefined);
         const message = constructionError instanceof Error
           ? constructionError.message
@@ -885,7 +1066,7 @@ export function APKGameHost({
       tutorialClock,
     };
     tutorialTransitionTokenRef.current = undefined;
-    const mounted = await mountGame(mountPoint, generation, "tutorial", false, true);
+    const mounted = await mountGame(mountPoint, generation, "tutorial", false, true, tutorialAnswerAudio);
     if (!mounted || generation !== mountGenerationRef.current) return;
     const recoverTutorialStart = async (message: string): Promise<void> => {
       tutorialSessionRef.current = undefined;
@@ -1047,6 +1228,71 @@ export function APKGameHost({
   };
 
   /**
+   * Cleans the current game or practice session before host-owned navigation.
+   * @returns A promise that resolves after cleanup and the navigation request.
+   */
+  const exitSession = async (): Promise<void> => {
+    if (demoTeardownRef.current || onNavigateRef.current === undefined) return;
+    demoTeardownRef.current = true;
+    setError(undefined);
+    completionAuthorityRef.current += 1;
+    persistencePendingAuthorityRef.current = undefined;
+    const mountPoint = mountPointRef.current;
+    const generation = mountGenerationRef.current + 1;
+    const activeHandle = handleRef.current;
+    const activeController = detachTutorialController();
+    handleRef.current = undefined;
+    playingGenerationRef.current = undefined;
+    resumingGenerationRef.current = undefined;
+    provisionalPlayingGenerationRef.current = undefined;
+    provisionalCompletionRef.current = undefined;
+    tutorialSessionRef.current = undefined;
+    tutorialTransitionTokenRef.current = undefined;
+    resetTutorialCommandOwnership();
+    mountGenerationRef.current = generation;
+    setStatus("loading");
+    try {
+      await cleanupTutorialSession(mountPoint, activeController, activeHandle);
+    } catch (cleanupError) {
+      demoTeardownRef.current = false;
+      if (mountPoint && isCurrentMount(mountPoint, generation)) {
+        returnToBriefing(
+          mountPoint,
+          generation,
+          cleanupError instanceof Error ? cleanupError.message : "The game could not exit.",
+        );
+      }
+      return;
+    }
+    if (!mountPoint || !isCurrentMount(mountPoint, generation)) {
+      demoTeardownRef.current = false;
+      return;
+    }
+    mountPoint.replaceChildren();
+    if (mutedRef.current) {
+      mutedRef.current = false;
+      setMuted(false);
+      try {
+        onMutedChangeRef.current?.(false);
+      } catch {
+        // External audio observers cannot interrupt game cleanup.
+      }
+    }
+    demoTeardownRef.current = false;
+    const navigate = onNavigateRef.current;
+    if (navigate === undefined) return;
+    try {
+      navigate(effectiveDebrief.exitDestination);
+    } catch (navigationError) {
+      returnToBriefing(
+        mountPoint,
+        generation,
+        navigationError instanceof Error ? navigationError.message : "Game navigation failed",
+      );
+    }
+  };
+
+  /**
    * Skips the class demonstration and starts authoritative gameplay immediately.
    * @returns A promise that resolves after the demo session is replaced with a scored session.
    */
@@ -1082,6 +1328,7 @@ export function APKGameHost({
   useEffect(() => {
     const surface = surfaceRef.current;
     if (!surface) return;
+    const externalMuteObserver = onMutedChangeRef.current;
     const existingMountPoint = surface.firstElementChild;
     const mountPoint = existingMountPoint instanceof HTMLDivElement
       && existingMountPoint.dataset.apkRuntimeMount === "true"
@@ -1092,6 +1339,13 @@ export function APKGameHost({
     mountPoint.style.height = "100%";
     surface.replaceChildren(mountPoint);
     mountPointRef.current = mountPoint;
+    if (mutedRef.current) {
+      try {
+        externalMuteObserver?.(true);
+      } catch {
+        // External audio observers cannot interrupt game mounting.
+      }
+    }
     const generation = mountGenerationRef.current + 1;
     mountGenerationRef.current = generation;
     briefingStartGuardRef.current = false;
@@ -1125,6 +1379,13 @@ export function APKGameHost({
     }
 
     return () => {
+      if (mutedRef.current) {
+        try {
+          externalMuteObserver?.(false);
+        } catch {
+          // External audio observers cannot interrupt game cleanup.
+        }
+      }
       mountGenerationRef.current += 1;
       const mountedHandle = handleRef.current;
       handleRef.current = undefined;
@@ -1143,6 +1404,8 @@ export function APKGameHost({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     cartridge,
+    createListeningSession,
+    createAnswerAudioSession,
     edition,
     factory,
     input,
@@ -1157,7 +1420,12 @@ export function APKGameHost({
     launchPhase,
   ]);
 
-  const startBriefing = async (): Promise<void> => {
+  useEffect(() => {
+    if (status !== "tutorial") return;
+    handleRef.current?.resize?.();
+  }, [status]);
+
+  const startBriefing = async (requestedPhase?: "tutorial" | "playing"): Promise<void> => {
     if (
       briefingStartGuardRef.current
       || effectiveBriefing === undefined
@@ -1171,7 +1439,7 @@ export function APKGameHost({
     setBriefingStarted(true);
     setError(undefined);
 
-    const resolvedStartPhase = resolveGameBriefingStartPhase(effectiveBriefing);
+    const resolvedStartPhase = requestedPhase ?? resolveGameBriefingStartPhase(effectiveBriefing);
     const transitionResult = gameLifecycleTransitionSchema.safeParse({
       from: "briefing",
       event: "start",
@@ -1275,8 +1543,9 @@ export function APKGameHost({
       resumingGenerationRef.current = generation;
       provisionalCompletionRef.current = undefined;
     }
+    const resuming = status === "paused";
     try {
-      if (status === "paused") handle.resume();
+      if (resuming) handle.resume();
       else handle.pause();
     } catch (commandError) {
       clearProvisionalPlaying(generation);
@@ -1300,16 +1569,31 @@ export function APKGameHost({
       }
     }
     if (handle.getDiagnostics().status === "completed") return;
-    setStatus(status === "paused" ? (sessionModeRef.current === "demo" ? "demo" : "ready") : "paused");
+    setStatus(resuming ? (sessionModeRef.current === "demo" ? "demo" : "ready") : "paused");
+    if (resuming && sessionModeRef.current === "playing") {
+      surfaceRef.current?.parentElement?.focus({ preventScroll: true });
+    }
   };
 
   const toggleMute = () => {
     const nextMuted = !muted;
     handleRef.current?.setMuted(nextMuted);
+    mutedRef.current = nextMuted;
     setMuted(nextMuted);
+    try {
+      onMutedChangeRef.current?.(nextMuted);
+    } catch {
+      // External audio observers cannot interrupt game controls.
+    }
+    if (status === "ready" && sessionModeRef.current === "playing") {
+      surfaceRef.current?.parentElement?.focus({ preventScroll: true });
+    }
   };
 
   const restart = async () => {
+    completionAuthorityRef.current += 1;
+    persistencePendingAuthorityRef.current = undefined;
+    setPersistence({ status: "not-applicable" });
     if (demoActive) {
       await restartDemo();
       return;
@@ -1424,6 +1708,23 @@ export function APKGameHost({
       setError(restartError instanceof Error ? restartError.message : "Game failed to restart");
       setStatus("error");
     }
+  };
+
+  const retryPersistence = (): void => {
+    const mountPoint = mountPointRef.current;
+    const generation = mountGenerationRef.current;
+    if (!mountPoint || !result || persistence.status !== "failed"
+      || persistencePendingAuthorityRef.current !== undefined) return;
+    const completionAuthority = completionAuthorityRef.current + 1;
+    completionAuthorityRef.current = completionAuthority;
+    void persistCompletion(
+      mountPoint,
+      generation,
+      completionAuthority,
+      result,
+      resultOutcome,
+      resultEvidence,
+    );
   };
 
   const replayTutorial = async (): Promise<void> => {
@@ -1550,12 +1851,55 @@ export function APKGameHost({
       queueTutorialCommand(controller, session.token, replayTutorial);
       return;
     }
+    if (command === "pause") {
+      queueTutorialCommand(controller, session.token, async () => {
+        await controller.pause();
+        handleRef.current?.pause();
+      });
+      return;
+    }
+    if (command === "resume") {
+      queueTutorialCommand(controller, session.token, async () => {
+        handleRef.current?.resume();
+        await controller.resume();
+      });
+      return;
+    }
     queueTutorialCommand(controller, session.token, () => controller[command]());
   };
 
   return (
-    <section aria-label={ariaLabel} {...sectionProps}>
-      <div aria-live="polite" aria-atomic="true">
+    <section
+      aria-label={ariaLabel}
+      tabIndex={tabIndex}
+      data-apk-visual-theme="retro-arcade"
+      {...sectionProps}
+      data-apk-session-phase={status}
+      style={{
+        position: "relative",
+        overflow: "hidden",
+        border: "2px solid var(--apk-shell-border, #31577d)",
+        borderRadius: "2px",
+        background: "var(--apk-shell-background, #060b18)",
+        boxShadow: "6px 6px 0 var(--apk-shell-shadow, #030712)",
+        color: "var(--apk-shell-text, #f7f2d0)",
+        fontFamily: "var(--apk-shell-body-font, Tahoma, 'Noto Sans Thai', sans-serif)",
+        ...hostStyle,
+      }}
+    >
+      <div
+        aria-live="polite"
+        aria-atomic="true"
+        data-apk-shell-status="true"
+        style={{
+          position: "absolute",
+          inlineSize: "1px",
+          blockSize: "1px",
+          overflow: "hidden",
+          clipPath: "inset(50%)",
+          whiteSpace: "nowrap",
+        }}
+      >
         {status === "loading" && "Loading game..."}
         {status === "briefing" && "Game briefing ready"}
         {status === "tutorial" && "Guided tutorial ready"}
@@ -1565,7 +1909,11 @@ export function APKGameHost({
         {status === "paused" && "Game paused"}
         {status === "complete" && "Game complete"}
       </div>
-      {instructions && <div>{instructions}</div>}
+      {instructions && (
+        <div style={{ borderBlockEnd: "1px solid #31577d", background: "#081225", color: "#a8c7dc", fontSize: "0.82rem", padding: "0.45rem 0.75rem" }}>
+          {instructions}
+        </div>
+      )}
       {(validationError ?? error) && (
         <div role="alert">
           Game could not start: {validationError ?? error}
@@ -1583,7 +1931,8 @@ export function APKGameHost({
           key={`briefing-${briefingRevision}`}
           briefing={briefingValidation.data}
           learningItems={inputValidation.data}
-          onStart={startBriefing}
+          onStart={() => void startBriefing(standardExperience ? "playing" : undefined)}
+          onPractice={effectiveTutorial ? () => void startBriefing("tutorial") : undefined}
           onDemonstrate={startDemoFromBriefing}
           layoutProfile={layoutProfile}
           inputMode={inputMode}
@@ -1605,60 +1954,95 @@ export function APKGameHost({
             tutorial={effectiveTutorial}
             snapshot={tutorialSnapshot}
             controller={tutorialControllerRef.current}
-            targetLabel={tutorialSnapshot.currentStep?.title}
-            actionLabel={tutorialSnapshot.currentAction?.id}
-            consequenceFeedback={tutorialSnapshot.currentStep?.explanation}
             layoutProfile={layoutProfile}
+            reducedMotion={reducedMotion}
             showControls={false}
+            compactLandmarks
           />
         ) : null}
+      {tutorialSnapshot?.phase === "tutorial" ? (
+        <div
+          role="group"
+          aria-label="Game controls"
+          data-apk-game-controls="true"
+          data-apk-practice-controls="true"
+          hidden={controlsHidden}
+          style={{
+            display: controlsHidden ? "none" : "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(min(7rem, 100%), 1fr))",
+            lineHeight: 1.1,
+          }}
+        >
+          <button
+            type="button"
+            aria-label={tutorialSnapshot.status === "paused" ? effectiveTutorial?.labels.resume : effectiveTutorial?.labels.pause}
+            className="min-h-12"
+            style={controlStyle}
+            onClick={() => runTutorialCommand(tutorialSnapshot.status === "paused" ? "resume" : "pause")}
+          >
+            {tutorialSnapshot.status === "paused" ? "Resume" : "Pause"}
+          </button>
+          <button
+            type="button"
+            aria-label={tutorialSnapshot.currentStepDemonstrated
+              && tutorialSnapshot.progress.completed === tutorialSnapshot.progress.total - 1
+              ? effectiveBriefing?.labels?.startAction ?? "Start game"
+              : effectiveTutorial?.labels.advance}
+            className="min-h-12"
+            style={controlStyle}
+            onClick={() => runTutorialCommand("advance")}
+          >
+            {tutorialSnapshot.currentStepDemonstrated
+              && tutorialSnapshot.progress.completed === tutorialSnapshot.progress.total - 1
+              ? effectiveBriefing?.labels?.startAction ?? "Start game"
+              : "Next"}
+          </button>
+          <button type="button" aria-label={effectiveTutorial?.labels.replay} className="min-h-12" style={controlStyle} onClick={() => runTutorialCommand("replay")}>Replay</button>
+          <button type="button" aria-label={effectiveTutorial?.labels.skip} className="min-h-12" style={controlStyle} onClick={() => runTutorialCommand("skip")}>Skip</button>
+          <button type="button" aria-label={muted ? "Unmute game" : "Mute game"} className="min-h-12" style={controlStyle} onClick={toggleMute} disabled={status === "loading" || status === "error" || controlsHidden}>
+            {muted ? "Unmute" : "Mute"}
+          </button>
+          {onNavigate ? (
+            <button type="button" aria-label="Exit practice" className="min-h-12" style={controlStyle} onClick={() => void exitSession()} disabled={status === "loading" || status === "error" || controlsHidden}>
+              Exit
+            </button>
+          ) : null}
+        </div>
+      ) : null}
       <div
         ref={surfaceRef}
         data-apk-canvas-host="true"
         aria-hidden="true"
         hidden={status === "complete"}
       />
-      <div
+      {tutorialSnapshot?.phase !== "tutorial" ? <div
         role="group"
         aria-label="Game controls"
         data-apk-game-controls="true"
         hidden={controlsHidden}
+        style={{ display: controlsHidden ? "none" : undefined }}
       >
-        {tutorialSnapshot?.phase === "tutorial" ? (
+        {demoActive ? (
           <>
-            <button
-              type="button"
-              className="min-h-11"
-              style={DEMO_CONTROL_STYLE}
-              onClick={() => runTutorialCommand(tutorialSnapshot.status === "paused" ? "resume" : "pause")}
-            >
-              {tutorialSnapshot.status === "paused" ? effectiveTutorial?.labels.resume : effectiveTutorial?.labels.pause}
-            </button>
-            <button type="button" className="min-h-11" style={DEMO_CONTROL_STYLE} onClick={() => runTutorialCommand("advance")}>{effectiveTutorial?.labels.advance}</button>
-            <button type="button" className="min-h-11" style={DEMO_CONTROL_STYLE} onClick={() => runTutorialCommand("replay")}>{effectiveTutorial?.labels.replay}</button>
-            <button type="button" className="min-h-11" style={DEMO_CONTROL_STYLE} onClick={() => runTutorialCommand("skip")}>{effectiveTutorial?.labels.skip}</button>
-          </>
-        ) : demoActive ? (
-          <>
-            <button type="button" className="min-h-11" style={DEMO_CONTROL_STYLE} onClick={() => void togglePause()} disabled={status === "loading" || status === "error"}>
+            <button type="button" className="min-h-12" style={controlStyle} onClick={() => void togglePause()} disabled={status === "loading" || status === "error"}>
               {status === "paused" ? "Resume demonstration" : "Pause demonstration"}
             </button>
-            <button type="button" className="min-h-11" style={DEMO_CONTROL_STYLE} onClick={() => void restartDemo()} disabled={status === "loading" || status === "error"}>
+            <button type="button" className="min-h-12" style={controlStyle} onClick={() => void restartDemo()} disabled={status === "loading" || status === "error"}>
               Restart demonstration
             </button>
             {effectiveBriefing !== undefined ? (
-              <button type="button" className="min-h-11" style={DEMO_CONTROL_STYLE} onClick={() => void endDemo()} disabled={status === "loading" || status === "error"}>
+              <button type="button" className="min-h-12" style={controlStyle} onClick={() => void endDemo()} disabled={status === "loading" || status === "error"}>
                 Advance demonstration
               </button>
             ) : null}
-            <button type="button" className="min-h-11" style={DEMO_CONTROL_STYLE} onClick={() => void skipDemo()} disabled={status === "loading" || status === "error"}>
+            <button type="button" className="min-h-12" style={controlStyle} onClick={() => void skipDemo()} disabled={status === "loading" || status === "error"}>
               Skip demonstration
             </button>
             {onNavigate ? (
               <button
                 type="button"
-                className="min-h-11"
-                style={DEMO_CONTROL_STYLE}
+                className="min-h-12"
+                style={controlStyle}
                 onClick={() => void exitDemo()}
                 disabled={status === "loading" || status === "error"}
               >
@@ -1667,19 +2051,24 @@ export function APKGameHost({
             ) : null}
           </>
         ) : (
-          <button type="button" className="min-h-11" style={DEMO_CONTROL_STYLE} onClick={() => void togglePause()} disabled={status === "loading" || status === "error" || controlsHidden}>
+          <button type="button" className="min-h-12" style={controlStyle} onClick={() => void togglePause()} disabled={status === "loading" || status === "error" || controlsHidden}>
             {status === "paused" ? "Resume game" : "Pause game"}
           </button>
         )}
-        <button type="button" className="min-h-11" style={DEMO_CONTROL_STYLE} onClick={toggleMute} disabled={status === "loading" || status === "error" || controlsHidden}>
+        <button type="button" className="min-h-12" style={controlStyle} onClick={toggleMute} disabled={status === "loading" || status === "error" || controlsHidden}>
           {muted ? "Unmute game" : "Mute game"}
         </button>
         {!demoActive && !(launchPhase === "demo" && briefingStarted) ? (
-          <button type="button" className="min-h-11" style={DEMO_CONTROL_STYLE} onClick={() => void restart()} disabled={status === "loading"}>
+          <button type="button" className="min-h-12" style={controlStyle} onClick={() => void restart()} disabled={status === "loading"}>
             Restart game
           </button>
         ) : null}
-      </div>
+        {!demoActive && onNavigate ? (
+          <button type="button" className="min-h-12" style={controlStyle} onClick={() => void exitSession()} disabled={status === "loading" || status === "error" || controlsHidden}>
+            Exit game
+          </button>
+        ) : null}
+      </div> : null}
       {result && (
         <GameResultPanel
           outcome={resultOutcome === "complete" ? effectiveDebrief.outcome : resultOutcome}
@@ -1688,11 +2077,14 @@ export function APKGameHost({
           correctAnswers={result.correctAnswers}
           totalAttempts={result.totalAttempts}
           xp={result.xp}
+          persistence={persistence}
           requiredCredit={effectiveDebrief.requiredCredit}
+          onRetrySave={retryPersistence}
           onReplay={() => void restart()}
-          onExit={() => notifyNavigation(effectiveDebrief.exitDestination)}
+          onExit={() => void exitSession()}
         />
       )}
+      {result && persistence.status === "confirmed" ? resultExtension : null}
       {children}
     </section>
   );

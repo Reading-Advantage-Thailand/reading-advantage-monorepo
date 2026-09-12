@@ -360,11 +360,22 @@ provide the behavior.
     - [ ] Confirm the forbidden case with a no-role identity
     - [ ] Write the acceptance note with `status: pass` and attach screenshots
 - [b] Task: Promote, wire DNS, and run production smoke deferred:owner
-    - [ ] Run `promote-accounting-candidate.sh` only after the acceptance note passes
-    - [ ] Create the domain mapping for `accounting.reading-advantage.com` and update the Squarespace DNS record
+    - [x] Run `promote-accounting-candidate.sh` only after the acceptance note passes
+    - [x] Create the domain mapping for `accounting.reading-advantage.com` and update the Squarespace DNS record
     - [ ] Run the production smoke cases: 2xx home, 401 unauthenticated API, 307 malformed return, authenticated expense submission with evidence
-    - [ ] Confirm no new Cloud Run error logs during the smoke window
-    - [ ] Keep the previous revision as the rollback anchor and record its revision name
+    - [x] Confirm no new Cloud Run error logs during the smoke window
+    - [x] Keep the previous revision as the rollback anchor and record its revision name
+
+### Production promotion evidence (2026-09-07)
+
+- The promotion script moved all traffic to accepted revision `accounting-00005-bup`.
+- The promotion script granted `roles/run.invoker` to `allUsers`.
+- The domain mapping reported `Ready=True` and `CertificateProvisioned=True`.
+- The public root returned HTTP 307 and redirected to `/login?returnTo=%2F`.
+- Chrome displayed the Accounting sign-in page at the canonical domain.
+- Cloud Logging returned no Accounting errors from the 15-minute smoke window.
+- Revision `accounting-00001-dog` remains the rollback anchor.
+- The authenticated production expense submission remains open.
 - [ ] Task: Create documentation
     - [ ] Create `apps/accounting/docs/accounting-dedicated-db-deploy-runbook-20260830.md` with the topology decision, provisioning commands, secrets, role provisioning, candidate and promotion flow, DNS, rollback anchor, the append-only grants contract, the export-and-import contingency, and the main-journal snapshot-pruning procedure for any future table relocation out of the main schema
 - [ ] Task: Run the generated-facts and architecture gates

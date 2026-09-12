@@ -104,6 +104,10 @@ export {
   intersects,
   stepProjectile,
 } from "./gameplay-primitives.js";
+
+/** Deterministic cached grid navigation for static rectangle maps. */
+export { createGridNavigator } from "./grid-navigation.js";
+export type { GridNavigator, GridNavigatorConfig } from "./grid-navigation.js";
 export type {
   DeterministicSpawner,
   DeterministicSpawnerConfig,

@@ -122,6 +122,8 @@ export type EnchantedLibraryDirection =
 
 /** One input frame supplied to the transport-independent rules. */
 export interface EnchantedLibraryInput {
+  /** Optional movement vector for continuous pointer steering. */
+  readonly steer?: Readonly<EnchantedLibraryPoint>;
   /** Whether the player moves upward during this frame. */
   readonly up?: boolean;
   /** Whether the player moves downward during this frame. */
@@ -154,7 +156,7 @@ export interface EnchantedLibraryPlayer extends EnchantedLibraryPoint {
   readonly maxShieldCharges: number;
 }
 
-/** A positioned translation book in the current library round. */
+/** A positioned English book in the current library round. */
 export interface EnchantedLibraryBook extends EnchantedLibraryPoint {
   /** Stable identity for the current deterministic layout. */
   readonly id: string;
@@ -162,7 +164,7 @@ export interface EnchantedLibraryBook extends EnchantedLibraryPoint {
   readonly radius: number;
   /** Source-language term represented by the book. */
   readonly term: string;
-  /** Translation printed on the book. */
+  /** Thai translation associated with the English book. */
   readonly translation: string;
   /** Whether this book matches the active target term. */
   readonly isCorrect: boolean;
@@ -217,9 +219,9 @@ export interface EnchantedLibrarySnapshot {
   readonly targetTerm: string;
   /** Alias of targetTerm used by the HUD. */
   readonly targetWord: string;
-  /** Current source-language prompt. */
+  /** Current Thai prompt. */
   readonly prompt: string;
-  /** Current target translation. */
+  /** Current English answer. */
   readonly answer: string;
   /** Semantic movement action toward the active book. */
   readonly correctAction: InputActionId;
@@ -323,7 +325,36 @@ const BOOK_ANCHORS: readonly EnchantedLibraryPoint[] = Object.freeze([
   Object.freeze({ x: 120, y: 300 }),
 ]);
 
+/** One shelf rectangle reserved along a room boundary. */
+export interface EnchantedLibraryShelfPlacement extends EnchantedLibraryPoint {
+  /** Rendered shelf width. */
+  readonly width: number;
+  /** Rendered shelf height. */
+  readonly height: number;
+  /** Semantic shelf binding used by the scene. */
+  readonly binding: "prop:0" | "prop:1";
+}
+
+/**
+ * Places shelves in the side margins outside every possible book card.
+ * @param width Current scene width.
+ * @param height Current scene height.
+ * @returns Six shelf rectangles along the left and right room boundaries.
+ */
+export function calculateEnchantedLibraryShelfPlacements(
+  width: number,
+  height: number,
+): readonly EnchantedLibraryShelfPlacement[] {
+  const shelfWidth = Math.min(32, Math.max(14, width * 0.035));
+  const shelfHeight = shelfWidth * 2;
+  return Object.freeze([0.32, 0.52, 0.72].flatMap((verticalRatio) => [
+    Object.freeze({ x: shelfWidth / 2 + 4, y: height * verticalRatio, width: shelfWidth, height: shelfHeight, binding: "prop:0" as const }),
+    Object.freeze({ x: width - shelfWidth / 2 - 4, y: height * verticalRatio, width: shelfWidth, height: shelfHeight, binding: "prop:1" as const }),
+  ]));
+}
+
 const EMPTY_INPUT: EnchantedLibraryInput = Object.freeze({
+  steer: Object.freeze({ x: 0, y: 0 }),
   up: false,
   down: false,
   left: false,
@@ -591,8 +622,8 @@ export function createEnchantedLibraryController(
       targetCount,
       targetTerm: target.term,
       targetWord: target.term,
-      prompt: target.term,
-      answer: target.translation,
+      prompt: target.translation,
+      answer: target.term,
       correctAction: correctBook ? directionActionFor(player, correctBook) : "confirm",
       availableActions: ENCHANTED_LIBRARY_ACTIONS,
       player,
@@ -798,7 +829,7 @@ export function createEnchantedLibraryController(
     }
     const target = targetItem(items, state.targetIndex);
     if (state.targetTerm !== target.term || state.targetWord !== target.term
-      || state.prompt !== target.term || state.answer !== target.translation) {
+      || state.prompt !== target.translation || state.answer !== target.term) {
       throw new Error("Enchanted Library state target content is invalid");
     }
     if (!Array.isArray(state.availableActions)
@@ -1012,11 +1043,17 @@ export function createEnchantedLibraryController(
       if (shieldTimer === 0) shieldActive = false;
     }
 
-    const vector = {
+    const vector = input.steer ?? {
       x: Number(Boolean(input.right)) - Number(Boolean(input.left)),
       y: Number(Boolean(input.down)) - Number(Boolean(input.up)),
     };
-    if (vector.x !== 0 || vector.y !== 0) movePlayer(vector, PLAYER_SPEED * deltaMs / 1_000);
+    if (vector.x !== 0 || vector.y !== 0) {
+      const frameDistance = PLAYER_SPEED * deltaMs / 1_000;
+      const movementDistance = input.steer
+        ? Math.min(frameDistance, Math.hypot(vector.x, vector.y))
+        : frameDistance;
+      movePlayer(vector, movementDistance);
+    }
     const bookResult = resolveBookCollision();
     if (bookResult) return bookResult;
 
@@ -1123,6 +1160,9 @@ interface PhaserGraphicsLike {
 interface PhaserTextLike {
   setPosition(x: number, y: number): this;
   setText(value: string): this;
+  setFontSize?(value: number): this;
+  setOrigin?(x: number, y?: number): this;
+  setWordWrapWidth?(width: number, useAdvancedWrap?: boolean): this;
   destroy(): void;
 }
 
@@ -1186,11 +1226,32 @@ function sceneDimensions(scene: PhaserSceneLike): { width: number; height: numbe
   };
 }
 
+function pointerInScene(scene: PhaserSceneLike, clientX: number, clientY: number, width: number, height: number): EnchantedLibraryPoint {
+  const rect = scene.game?.canvas?.getBoundingClientRect?.();
+  if (!rect || rect.width <= 0 || !rect.height || rect.height <= 0) return { x: clientX, y: clientY };
+  return {
+    x: (clientX - rect.left) * width / rect.width,
+    y: (clientY - (rect.top ?? 0)) * height / rect.height,
+  };
+}
+
+function shieldButtonBounds(width: number, displayScale: number): { x: number; y: number; width: number; height: number } {
+  const size = Math.ceil(48 / Math.max(0.1, displayScale));
+  return { x: width - size - 18, y: 12, width: size, height: size };
+}
+
+function containsPoint(bounds: { x: number; y: number; width: number; height: number }, point: EnchantedLibraryPoint): boolean {
+  return point.x >= bounds.x && point.x <= bounds.x + bounds.width
+    && point.y >= bounds.y && point.y <= bounds.y + bounds.height;
+}
+
 function sceneFor(context: EnchantedLibrarySceneContext): Readonly<Record<string, unknown>> {
   let resources: EnchantedLibrarySceneResources | undefined;
-  let composition = context.composition;
   let previousKeys = new Set<string>();
   let cleaned = false;
+  let pointerGestureTracked = false;
+  let pointerSteeringGesture = false;
+  let pointerStartedOnShield = false;
   const normalize = createInputActionNormalizer({
     keyboard: ENCHANTED_LIBRARY_KEYBOARD_BINDINGS,
     pointerTap: { action: "confirm" },
@@ -1210,12 +1271,21 @@ function sceneFor(context: EnchantedLibrarySceneContext): Readonly<Record<string
     const state = context.controller.snapshot();
     const scaleX = width / GAME_WIDTH;
     const scaleY = height / GAME_HEIGHT;
+    const displayWidth = scene.game?.canvas?.getBoundingClientRect?.().width ?? width;
+    const displayScale = Math.max(0.1, displayWidth / width);
+    const displayFontSize = (pixels: number): number => Math.ceil(pixels / displayScale);
+    const displayPosition = (pixels: number): number => Math.ceil(pixels / displayScale);
     const bookWidth = Math.min(172, width * 0.19);
     const bookHeight = Math.min(68, height * 0.14);
     resources.graphics.clear();
-    if (!resources.art.ground("world:ground", width, height)) resources.graphics.fillStyle(0x100c22, 1).fillRect(0, 0, width, height);
-    resources.graphics.fillStyle(0x2a1b4d, 0.96).fillRoundedRect(width * 0.04, height * 0.17, width * 0.92, height * 0.72, 26);
-    resources.graphics.lineStyle(3, 0xb78cff, 0.42).strokeRoundedRect(width * 0.04, height * 0.17, width * 0.92, height * 0.72, 26);
+    resources.graphics.fillStyle(0x271b18, 1).fillRect(0, 0, width, height);
+    resources.graphics.fillStyle(0x493126, 1).fillRoundedRect(width * 0.04, height * 0.17, width * 0.92, height * 0.72, 18);
+    resources.graphics.lineStyle(4, 0x8c6846, 0.9).strokeRoundedRect(width * 0.04, height * 0.17, width * 0.92, height * 0.72, 18);
+    resources.graphics.lineStyle(1, 0x76533b, 0.24);
+    for (let plank = 1; plank < 7; plank += 1) {
+      const plankY = height * (0.17 + plank * 0.09);
+      resources.graphics.fillStyle(0x76533b, 0.12).fillRect(width * 0.045, plankY, width * 0.91, 1);
+    }
 
     for (const [index, book] of state.books.entries()) {
       const x = book.x * scaleX;
@@ -1224,7 +1294,10 @@ function sceneFor(context: EnchantedLibrarySceneContext): Readonly<Record<string
         .fillRoundedRect(x - bookWidth / 2, y - bookHeight / 2, bookWidth, bookHeight, 12);
       resources.graphics.lineStyle(2, 0xd7c4ff, 0.9)
         .strokeRoundedRect(x - bookWidth / 2, y - bookHeight / 2, bookWidth, bookHeight, 12);
-      resources.books[index]?.setText(book.translation).setPosition(x - bookWidth * 0.42, y - 9);
+      resources.books[index]?.setFontSize?.(displayFontSize(16));
+      resources.books[index]?.setWordWrapWidth?.(Math.max(1, bookWidth - 16), true);
+      resources.books[index]?.setOrigin?.(0.5, 0.5);
+      resources.books[index]?.setText(book.term).setPosition(x, y);
     }
     for (let index = state.books.length; index < resources.books.length; index += 1) {
       resources.books[index]?.setText("");
@@ -1247,6 +1320,16 @@ function sceneFor(context: EnchantedLibrarySceneContext): Readonly<Record<string
       resources.graphics.lineStyle(5, 0x42d4ff, 0.88)
         .strokeRoundedRect(playerX - 34, playerY - 34, 68, 68, 34);
     }
+
+    for (const [index, shelf] of calculateEnchantedLibraryShelfPlacements(width, height).entries()) {
+      art.place(`library:shelf:${index}`, shelf.binding, {
+        x: shelf.x,
+        y: shelf.y,
+        width: shelf.width,
+        height: shelf.height,
+        depth: 2,
+      });
+    }
     state.spirits.forEach((spirit, index) => {
       const spiritRadius = Math.max(11, spirit.radius * artScale);
       if (art.place(`spirit:${index}`, "enemy:idle", {
@@ -1260,28 +1343,22 @@ function sceneFor(context: EnchantedLibrarySceneContext): Readonly<Record<string
     });
     art.sweep();
 
-    resources.title.setText("ENCHANTED LIBRARY").setPosition(28, 18);
-    resources.prompt.setText(`Find the translation for: ${state.targetTerm}`).setPosition(28, 58);
-    resources.target.setText(`Find: ${state.targetTerm}`).setPosition(28, 93);
+    resources.title.setText("").setPosition(28, 18);
+    resources.prompt.setFontSize?.(displayFontSize(26));
+    const shieldBounds = shieldButtonBounds(width, displayScale);
+    resources.prompt.setWordWrapWidth?.(Math.max(1, shieldBounds.x - 40), true);
+    resources.prompt.setText(state.prompt).setPosition(28, displayPosition(20));
+    resources.target.setText("").setPosition(28, 93);
+    resources.progress.setFontSize?.(displayFontSize(15));
     resources.progress.setText(
-      `${composition?.profile === "compact" ? "Compact stacks" : "Arcane stacks"}  •  Collection ${Math.min(state.targetIndex + 1, state.targetCount)} of ${state.targetCount}  •  Mana ${state.mana}  •  Time ${Math.ceil(state.timeRemaining / 1000)}s`,
-    ).setPosition(28, 125);
-    resources.shield.setText(
-      `Shield charges: ${state.player.shieldCharges}/${state.player.maxShieldCharges}${state.shieldActive ? "  ACTIVE" : ""}`,
-    ).setPosition(28, height - 92);
-    resources.feedback.setText(
-      state.phase === "victory"
-        ? "Every book is collected once. The library glows!"
-        : state.phase === "defeat"
-          ? "The library has gone dark."
-          : state.lastOutcome === "incorrect"
-            ? "That translation is not the target. Find the same term again."
-            : state.lastOutcome === "spirit-hit"
-              ? "A spirit drained mana. Activate a shield with confirm."
-              : "Walk into the book with the matching translation.",
-    ).setPosition(28, height - 64);
-    resources.instructions.setText("Keyboard: WASD / arrows move  •  Space or tap activates a shield  •  Swipe to move")
-      .setPosition(28, height - 34);
+      `${Math.min(state.targetIndex + 1, state.targetCount)}/${state.targetCount}  ♥ ${state.mana}  ◈ ${state.player.shieldCharges}/${state.player.maxShieldCharges}  ${Math.ceil(state.timeRemaining / 1000)}s`,
+    ).setPosition(28, displayPosition(58));
+    resources.graphics.fillStyle(0x172554, 0.92).fillRoundedRect(shieldBounds.x, shieldBounds.y, shieldBounds.width, shieldBounds.height, 12);
+    resources.graphics.lineStyle(2, 0x69e2ff, 0.9).strokeRoundedRect(shieldBounds.x, shieldBounds.y, shieldBounds.width, shieldBounds.height, 12);
+    resources.shield.setFontSize?.(displayFontSize(20));
+    resources.shield.setText(`◈ ${state.player.shieldCharges}`).setPosition(shieldBounds.x + 10, shieldBounds.y + shieldBounds.height / 2 - 10);
+    resources.feedback.setText("").setPosition(28, height - 64);
+    resources.instructions.setText("").setPosition(28, height - 34);
   };
 
   const cleanup = (): void => {
@@ -1306,14 +1383,14 @@ function sceneFor(context: EnchantedLibrarySceneContext): Readonly<Record<string
   };
 
 
-  const artKeys = ["world:ground", "player:idle", "enemy:idle"] as const;
+  const artKeys = ["world:ground", "player:idle", "enemy:idle", "prop:0", "prop:1"] as const;
 
   const preload = function (this: PhaserSceneLike): void {
     if (!this.load) return;
     preloadAssetBindings(
       this.load,
       context.edition,
-      artKeys.filter((key) => context.edition.bindings[key]),
+      artKeys.filter((key) => context.edition?.bindings?.[key]),
     );
   };
 
@@ -1323,7 +1400,7 @@ function sceneFor(context: EnchantedLibrarySceneContext): Readonly<Record<string
     resources = {
       graphics: this.add.graphics(),
       art: createActorSpriteLayer(this, context.edition),
-      title: this.add.text(28, 18, "ENCHANTED LIBRARY", { ...style, fontSize: "29px", fontStyle: "bold" }),
+      title: this.add.text(28, 18, "", { ...style, fontSize: "29px", fontStyle: "bold" }),
       prompt: this.add.text(28, 58, "", { ...style, fontSize: "23px" }),
       target: this.add.text(28, 93, "", { ...style, fontSize: "18px", color: "#ffd166" }),
       progress: this.add.text(28, 125, "", { ...style, fontSize: "15px", color: "#d5c4ff" }),
@@ -1344,7 +1421,13 @@ function sceneFor(context: EnchantedLibrarySceneContext): Readonly<Record<string
       const input = context.inputController.snapshot();
       const pressed = input.pressed ?? input.keys.filter((key) => !previousKeys.has(key));
       previousKeys = new Set(input.keys);
-      const movement = { up: false, down: false, left: false, right: false };
+      const movement: {
+        up: boolean;
+        down: boolean;
+        left: boolean;
+        right: boolean;
+        steer?: Readonly<EnchantedLibraryPoint>;
+      } = { up: false, down: false, left: false, right: false };
       for (const code of [...new Set([...input.keys, ...pressed])]) {
         const action = normalize({ modality: "keyboard", code })[0]?.action;
         if (action === "move-up") movement.up = true;
@@ -1354,39 +1437,42 @@ function sceneFor(context: EnchantedLibrarySceneContext): Readonly<Record<string
       }
 
       let cast = pressed.some((code) => normalize({ modality: "keyboard", code })[0]?.action === "confirm");
-      if (input.pointer.down) {
-        const drag = normalize({
-          modality: "pointer",
-          phase: "drag",
-          x: input.pointer.x,
-          y: input.pointer.y,
-          deltaX: input.pointer.x - input.pointer.startX,
-          deltaY: input.pointer.y - input.pointer.startY,
-        })[0]?.action;
-        if (drag === "move-up") movement.up = true;
-        if (drag === "move-down") movement.down = true;
-        if (drag === "move-left") movement.left = true;
-        if (drag === "move-right") movement.right = true;
+      let pointerWasSteering = pointerSteeringGesture;
+      const { width, height } = sceneDimensions(this);
+      const renderedWidth = this.game?.canvas?.getBoundingClientRect?.().width ?? width;
+      const shieldBounds = shieldButtonBounds(width, renderedWidth / width);
+      const arenaBounds = { x: width * 0.04, y: height * 0.17, width: width * 0.92, height: height * 0.72 };
+      if (input.pointer.cancelled) {
+        pointerGestureTracked = false;
+        pointerSteeringGesture = false;
+        pointerStartedOnShield = false;
+      } else if (input.pointer.down && !pointerGestureTracked) {
+        const origin = pointerInScene(this, input.pointer.startX, input.pointer.startY, width, height);
+        pointerGestureTracked = true;
+        pointerStartedOnShield = containsPoint(shieldBounds, origin);
+        pointerSteeringGesture = !pointerStartedOnShield
+          && containsPoint(arenaBounds, origin);
+        pointerWasSteering = pointerSteeringGesture;
+      }
+      const keyboardMoving = Boolean(movement.up || movement.down || movement.left || movement.right);
+      if (!keyboardMoving && pointerSteeringGesture && input.pointer.down) {
+        const point = pointerInScene(this, input.pointer.x, input.pointer.y, width, height);
+        if (containsPoint(arenaBounds, point)) {
+          const player = context.controller.snapshot().player;
+          movement.steer = { x: point.x * GAME_WIDTH / width - player.x, y: point.y * GAME_HEIGHT / height - player.y };
+        }
       }
       if (input.pointer.released && !input.pointer.cancelled) {
-        const distance = Math.hypot(input.pointer.x - input.pointer.startX, input.pointer.y - input.pointer.startY);
-        if (distance < 18) {
-          cast = normalize({ modality: "pointer", phase: "up", x: input.pointer.x, y: input.pointer.y })
-            .some((action) => action.action === "confirm");
-        } else {
-          const drag = normalize({
-            modality: "pointer",
-            phase: "drag",
-            x: input.pointer.x,
-            y: input.pointer.y,
-            deltaX: input.pointer.x - input.pointer.startX,
-            deltaY: input.pointer.y - input.pointer.startY,
-          })[0]?.action;
-          if (drag === "move-up") movement.up = true;
-          if (drag === "move-down") movement.down = true;
-          if (drag === "move-left") movement.left = true;
-          if (drag === "move-right") movement.right = true;
-        }
+        const origin = pointerInScene(this, input.pointer.startX, input.pointer.startY, width, height);
+        const point = pointerInScene(this, input.pointer.x, input.pointer.y, width, height);
+        if (!pointerWasSteering
+          && (pointerStartedOnShield || containsPoint(shieldBounds, origin))
+          && containsPoint(shieldBounds, point)) cast = true;
+      }
+      if (!input.pointer.down) {
+        pointerGestureTracked = false;
+        pointerSteeringGesture = false;
+        pointerStartedOnShield = false;
       }
       const result = context.controller.tick(delta, { ...movement, cast });
       if (result.event !== "none" || result.terminal) {
@@ -1419,7 +1505,7 @@ function sceneFor(context: EnchantedLibrarySceneContext): Readonly<Record<string
         context.controller.restore(game as EnchantedLibrarySnapshot);
       },
       apkRecompose: (nextComposition: EnchantedLibrarySceneContext["composition"]) => {
-        composition = nextComposition;
+        void nextComposition;
       },
     },
   };
@@ -1436,10 +1522,10 @@ export function createEnchantedLibraryCartridge(): StandardExperienceCartridge {
   const standardExperience = createCartridgeStandardExperience({
     id: ENCHANTED_LIBRARY_ID,
     title: "Enchanted Library",
-    description: "Collect translated books, restore mana, and protect the stacks from spirits.",
+    description: "Collect English books, restore mana, and protect the stacks from spirits.",
     inputMode: "vocabulary",
-    objective: "Collect the matching translation once for every vocabulary item before the library timer ends.",
-    mechanicInstruction: "Move in four directions to collide with the matching translation book. Confirm activates one shield charge.",
+    objective: "Collect the matching English word once for every Thai prompt before the library timer ends.",
+    mechanicInstruction: "Hold the library and drag to steer toward the matching English word. Use the shield button, Space, or Enter to block spirits.",
     keyboardKeys: ["W", "A", "S", "D", "Arrow keys", "Space"],
     executeTutorialAction: (actionId) => {
       const controller = activeController;
@@ -1466,7 +1552,7 @@ export function createEnchantedLibraryCartridge(): StandardExperienceCartridge {
     manifest: {
       id: ENCHANTED_LIBRARY_ID,
       title: "Enchanted Library",
-      description: "Collect translated books, restore mana, and protect the stacks from spirits.",
+      description: "Collect English books, restore mana, and protect the stacks from spirits.",
       runtimeApiVersion: "1.0.0",
       inputMode: "vocabulary",
       requiredAssetBindings: ["enchanted-library/arcane-shelves"],

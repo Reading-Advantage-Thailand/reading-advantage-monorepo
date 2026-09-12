@@ -12,6 +12,9 @@ export default defineConfig({
   reporter: process.env.CI ? [["dot"]] : [["list"]],
   use: {
     baseURL: BASE_URL,
+    launchOptions: process.env.PLAYWRIGHT_CHROME_PATH
+      ? { executablePath: process.env.PLAYWRIGHT_CHROME_PATH }
+      : {},
     viewport: {
       width: 390,
       height: 844,
@@ -25,7 +28,7 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: "npm run dev",
+    command: `npm run dev -- --port ${PORT}`,
     url: BASE_URL,
     reuseExistingServer: !process.env.CI,
     timeout: 120000,

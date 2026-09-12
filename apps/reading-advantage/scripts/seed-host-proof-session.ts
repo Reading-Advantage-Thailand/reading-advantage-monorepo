@@ -7,6 +7,7 @@
 
 import { loadEnvConfig } from "@next/env";
 import { getHostProofTestCredentials } from "../host-proof-test-config";
+import { seedAuthenticatedStudentContent } from "../../advantage-games/tests/e2e/apk/seed-authenticated-student-content";
 
 loadEnvConfig(process.cwd());
 
@@ -76,6 +77,8 @@ async function seedHostProofSession(): Promise<void> {
       password: passwordHash,
     });
   }
+
+  await seedAuthenticatedStudentContent(STUDENT_USERNAME);
 
   console.log(`Reading host-proof fixture ready: ${STUDENT_USERNAME}`);
 }

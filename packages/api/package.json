@@ -20,6 +20,10 @@
       "types": "./dist/routes/activity/index.d.ts",
       "import": "./dist/routes/activity/index.js"
     },
+    "./routes/apk-challenges": {
+      "types": "./dist/routes/apk-challenges/index.d.ts",
+      "import": "./dist/routes/apk-challenges/index.js"
+    },
     "./context": {
       "types": "./dist/context.d.ts",
       "import": "./dist/context.js"
@@ -48,6 +52,7 @@
     "@reading-advantage/db": "workspace:*",
     "@reading-advantage/auth": "workspace:*",
     "@reading-advantage/domain": "workspace:*",
+    "@reading-advantage/game-contracts": "workspace:*",
     "@reading-advantage/types": "workspace:*",
     "@trpc/server": "catalog:",
     "@trpc/client": "catalog:",

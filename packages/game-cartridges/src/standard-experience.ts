@@ -1,6 +1,7 @@
 import {
   STANDARD_GAME_REQUIRED_CREDIT,
   validateStandardGameExperienceDefinition,
+  type CreateTutorialActionDriverContext,
   type GameTutorialActionDriverContext,
   type GameTutorialActionDriverFrameContext,
   type StandardGameExperienceRuntime,
@@ -30,7 +31,11 @@ export interface CartridgeStandardExperienceOptions {
   /** Keyboard controls shown in the briefing. */
   readonly keyboardKeys: readonly [string, ...string[]];
   /** Executes a safe action through the active cartridge mechanic. */
-  readonly executeTutorialAction: (actionId: string) => void;
+  readonly executeTutorialAction: (
+    actionId: string,
+    context: CreateTutorialActionDriverContext,
+    execution: GameTutorialActionDriverContext,
+  ) => void | Promise<void>;
   /**
    * Advances a demonstration by one frame for a mechanic that shows motion.
    * A cartridge whose action is one discrete choice omits this option.
@@ -77,13 +82,13 @@ export function createCartridgeStandardExperience(
         { mode: "touch", label: "Tap", action: STANDARD_POINTER_TOUCH_ACTION },
       ],
       tip: "The guided tutorial is safe and does not save results or award XP.",
-      labels: { startAction: "Start guided tutorial" },
+      labels: { startAction: "Play now" },
       startPhase: "tutorial",
     },
     tutorial: {
       schemaVersion: 1,
       id: `${options.id}-tutorial`,
-      title: `${options.title} guided tutorial`,
+      title: "Practice",
       seed: 29,
       labels: {
         progress: "Tutorial progress",
@@ -104,16 +109,16 @@ export function createCartridgeStandardExperience(
       steps: [
         {
           id: "step:review-incorrect",
-          title: "See how feedback helps",
-          explanation: "The demonstration selects one incorrect option without changing the scored session.",
+          title: "Wrong choice",
+          explanation: "The target stays the same.",
           targetId: "feedback:incorrect-choice",
           actionId: "action:select-incorrect",
           timing: { leadInMs: 500, demonstrationMs: 300, lingerMs: 600 },
         },
         {
           id: "step:select-correct",
-          title: "Advance the learning target",
-          explanation: "The demonstration selects the correct option through the real game mechanic.",
+          title: "Correct choice",
+          explanation: "The next target appears.",
           targetId: "mechanic:correct-choice",
           actionId: "action:select-correct",
           timing: { leadInMs: 500, demonstrationMs: 300, lingerMs: 600 },
@@ -121,7 +126,7 @@ export function createCartridgeStandardExperience(
       ],
       lifecycle: {
         pause: "freeze-current-step",
-        advance: "sequential",
+        advance: "learner-controlled",
         replay: "restart-with-same-seed",
         skip: { enabled: true, to: "playing" },
         complete: { to: "playing" },
@@ -145,8 +150,9 @@ export function createCartridgeStandardExperience(
   const advanceTutorialAction = options.advanceTutorialAction;
   return Object.freeze({
     definition,
-    createTutorialActionDriver: () => ({
-      execute: ({ step }: GameTutorialActionDriverContext) => options.executeTutorialAction(step.actionId),
+    createTutorialActionDriver: (context = {}) => ({
+      execute: (execution: GameTutorialActionDriverContext) =>
+        options.executeTutorialAction(execution.step.actionId, context, execution),
       ...(advanceTutorialAction === undefined ? {} : {
         advanceFrame: ({ step, progress }: GameTutorialActionDriverFrameContext) =>
           advanceTutorialAction(step.actionId, progress),

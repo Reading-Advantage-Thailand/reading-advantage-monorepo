@@ -1,5 +1,10 @@
 import Link from "next/link";
 import Image from "next/image";
+import { cookies } from "next/headers";
+import { SESSION_COOKIE_NAME, validateSession } from "@reading-advantage/auth";
+import { db } from "@reading-advantage/db";
+import { StudentChallengeCatalogPanel, StudentRpgCatalogPanel } from "@reading-advantage/advantage-play-kit/react";
+import { CARTRIDGE_CHALLENGE_CAPABILITIES, getCartridgeCatalogEntry } from "@reading-advantage/game-cartridges";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -11,6 +16,7 @@ import {
 } from "@/components/ui/card";
 import { gameCards } from "@/lib/gameCards";
 import { cn } from "@/lib/utils";
+import { withBasePath } from "@/lib/games-runtime";
 
 type StudentGamesCatalogPageProps = {
   params: Promise<{ locale: string }>;
@@ -35,6 +41,16 @@ export default async function StudentGamesCatalogPage({
   params,
 }: StudentGamesCatalogPageProps) {
   const { locale } = await params;
+  const token = (await cookies()).get(SESSION_COOKIE_NAME)?.value;
+  const session = token ? await validateSession(db, token) : null;
+  const ownerKey = session?.user.role === "STUDENT" && session.user.schoolId
+    ? `${session.user.schoolId}:${session.user.id}`
+    : undefined;
+  const canManageChallenges = Boolean(session?.user.schoolId && (session.user.role === "TEACHER" || session.user.role === "ADMIN"));
+  const challengeGames = Object.fromEntries(Object.entries(CARTRIDGE_CHALLENGE_CAPABILITIES).flatMap(([gameId, capability]) => {
+    const entry = getCartridgeCatalogEntry(gameId);
+    return entry ? [[gameId, { title: entry.title, version: capability.version }]] : [];
+  }));
 
   return (
     <main className="min-h-screen bg-background flex flex-col items-center justify-center p-8">
@@ -49,8 +65,22 @@ export default async function StudentGamesCatalogPage({
           <p className="text-lg md:text-xl text-muted-foreground">
             High-precision vocabulary training
           </p>
+          {canManageChallenges ? <Link href={`/${locale}/teacher/game-challenges`}>Class challenges</Link> : null}
         </header>
 
+        <StudentRpgCatalogPanel
+          ownerKey={ownerKey}
+          endpoint={withBasePath("/api/v1/apk/rpg")}
+          basePath={withBasePath("/")}
+        />
+        <StudentChallengeCatalogPanel
+          ownerKey={ownerKey}
+          locale={locale}
+          games={challengeGames}
+          classesEndpoint={withBasePath("/api/v1/apk/classes")}
+          challengesEndpoint={withBasePath("/api/v1/apk/challenges")}
+          basePath={withBasePath("/")}
+        />
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
           {gameCards.map((game) => {
             const isPlayable = game.status === "playable";

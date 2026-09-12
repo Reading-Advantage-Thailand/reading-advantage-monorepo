@@ -65,6 +65,8 @@ export const gameCompletions = pgTable("game_completions", {
 }, (table) => [
   unique("game_completions_school_user_activity_unique")
     .on(table.schoolId, table.userId, table.activityId),
+  unique("game_completions_school_user_id_unique")
+    .on(table.schoolId, table.userId, table.id),
   index("game_completions_school_game_difficulty_idx")
     .on(table.schoolId, table.gameType, table.difficulty),
 ]);

@@ -59,7 +59,7 @@ describe('Devourer Slime Logic', () => {
   })
 
   it('should handle hit by enemy when smaller', () => {
-    let state = createSlimeState(mockSentences)
+    let state = createSlimeState(mockSentences, { rng: () => 0.1 })
     // Knight radius is 35, slime is 25
     state.enemies[0].pos = { ...state.slime.pos }
     

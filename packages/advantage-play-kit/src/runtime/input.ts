@@ -38,6 +38,8 @@ export interface APKInputController {
   snapshot(): APKInputSnapshot;
   /** Cancels an active pointer gesture before responsive targets move. */
   cancelActiveGesture(): void;
+  /** Clears held and queued input when play pauses or loses focus. */
+  reset?(): void;
   /** Releases listeners and restores host element styles. */
   destroy(): void;
 }
@@ -65,6 +67,12 @@ export function createInputController(surface: HTMLElement): APKInputController 
   let destroyed = false;
 
   const onKeyDown = (event: KeyboardEvent) => {
+    if (event.isComposing || event.composedPath().some((target) =>
+      target instanceof Element && (
+        target.matches("input, textarea, select, button, a[href], [role='textbox']")
+        || (target.hasAttribute("contenteditable") && target.getAttribute("contenteditable") !== "false")
+      ),
+    )) return;
     keys.add(event.code);
     if (!event.repeat) pressed.add(event.code);
     if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Space"].includes(event.code)) {
@@ -73,6 +81,7 @@ export function createInputController(surface: HTMLElement): APKInputController 
   };
   const onKeyUp = (event: KeyboardEvent) => keys.delete(event.code);
   const onPointerDown = (event: PointerEvent) => {
+    if (pointer.down) return;
     pointer.down = true;
     pointer.released = false;
     pointer.cancelled = false;
@@ -93,7 +102,7 @@ export function createInputController(surface: HTMLElement): APKInputController 
     pointer.y = event.clientY;
   };
   const finishPointer = (event: PointerEvent, cancelled: boolean) => {
-    if (pointer.id !== null && event.pointerId !== pointer.id) return;
+    if (!pointer.down || event.pointerId !== pointer.id) return;
     pointer.down = false;
     pointer.released = !cancelled;
     pointer.cancelled = cancelled;
@@ -109,14 +118,29 @@ export function createInputController(surface: HTMLElement): APKInputController 
   const onPointerUp = (event: PointerEvent) => finishPointer(event, false);
   const onPointerCancel = (event: PointerEvent) => finishPointer(event, true);
   const preventBrowserGesture = (event: Event) => event.preventDefault();
+  const reset = () => {
+    keys.clear();
+    pressed.clear();
+    pointer.cancelled = pointer.down || pointer.released === true;
+    pointer.down = false;
+    pointer.released = false;
+    pointer.id = null;
+  };
+  const onVisibilityChange = () => {
+    if (document.hidden) reset();
+  };
 
   surface.style.touchAction = "none";
   window.addEventListener("keydown", onKeyDown);
   window.addEventListener("keyup", onKeyUp);
+  window.addEventListener("blur", reset);
+  document.addEventListener("visibilitychange", onVisibilityChange);
   surface.addEventListener("pointerdown", onPointerDown);
   surface.addEventListener("pointermove", onPointerMove);
   surface.addEventListener("pointerup", onPointerUp);
   surface.addEventListener("pointercancel", onPointerCancel);
+  window.addEventListener("pointerup", onPointerUp);
+  window.addEventListener("pointercancel", onPointerCancel);
   surface.addEventListener("contextmenu", preventBrowserGesture);
 
   return {
@@ -138,6 +162,7 @@ export function createInputController(surface: HTMLElement): APKInputController 
       pointer.cancelled = true;
       pointer.id = null;
     },
+    reset,
     destroy: () => {
       if (destroyed) return;
       destroyed = true;
@@ -151,10 +176,14 @@ export function createInputController(surface: HTMLElement): APKInputController 
       surface.style.touchAction = previousTouchAction;
       window.removeEventListener("keydown", onKeyDown);
       window.removeEventListener("keyup", onKeyUp);
+      window.removeEventListener("blur", reset);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
       surface.removeEventListener("pointerdown", onPointerDown);
       surface.removeEventListener("pointermove", onPointerMove);
       surface.removeEventListener("pointerup", onPointerUp);
       surface.removeEventListener("pointercancel", onPointerCancel);
+      window.removeEventListener("pointerup", onPointerUp);
+      window.removeEventListener("pointercancel", onPointerCancel);
       surface.removeEventListener("contextmenu", preventBrowserGesture);
     },
   };

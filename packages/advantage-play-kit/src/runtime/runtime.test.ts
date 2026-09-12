@@ -19,6 +19,13 @@ class ResizeObserverStub {
   unobserve(): void {}
 }
 
+class VisualViewportStub extends EventTarget {
+  offsetLeft = 0;
+  offsetTop = 0;
+  width = 390;
+  height = 844;
+}
+
 describe("mountCartridge", () => {
   beforeEach(() => {
     ResizeObserverStub.instances = [];
@@ -27,6 +34,198 @@ describe("mountCartridge", () => {
 
   afterEach(() => {
     vi.unstubAllGlobals();
+  });
+
+  it("owns listening cancellation and forwards it only to playing sessions", async () => {
+    const listening = {
+      pause: vi.fn(), restart: vi.fn(), destroy: vi.fn(), setMuted: vi.fn(),
+    } as unknown as import("../audio/index.js").ListeningAudioController;
+    const contexts: Parameters<GameFactory>[0][] = [];
+    const factory: GameFactory = async (context) => {
+      contexts.push(context);
+      return { destroy: vi.fn() };
+    };
+    const options = {
+      container: document.createElement("div"),
+      cartridge: createRuntimeCartridge(),
+      input: [{ term: "river", translation: "แม่น้ำ" }],
+      edition: createRuntimeEdition(),
+      host: { complete: vi.fn() },
+      listening,
+    };
+    const handle = await mountCartridge(options, factory);
+    expect(contexts[0]?.listening).toBe(listening);
+    handle.pause();
+    expect(listening.pause).toHaveBeenCalledOnce();
+    handle.setMuted(true);
+    expect(listening.setMuted).toHaveBeenCalledWith(true);
+    await handle.restart();
+    expect(listening.restart).toHaveBeenCalledOnce();
+    await handle.destroy();
+    expect(listening.destroy).toHaveBeenCalledOnce();
+    const practice = await mountCartridge({ ...options, sessionMode: "tutorial" }, factory);
+    expect(contexts.at(-1)?.listening).toBeUndefined();
+    await practice.destroy();
+    expect(listening.destroy).toHaveBeenCalledOnce();
+  });
+
+  it("owns answer audio and forwards its validated evidence", async () => {
+    const evidence = {
+      schemaVersion: 1,
+      declaredModality: "read-to-select-audio",
+      effectiveModality: "read-to-select-audio",
+      promptLocale: "th-TH",
+      answerLocale: "en-US",
+      promptField: "translation",
+      answerField: "term",
+      itemCount: 1,
+      questions: [{
+        questionPosition: 0,
+        promptItemPosition: 0,
+        selectionAttempts: [{
+          attemptIndex: 0,
+          clipItemPosition: 0,
+          playbackResult: "completed",
+          submitted: true,
+          completedQuestion: true,
+        }],
+      }],
+      replayCounts: [],
+      audioFailures: [],
+    } as const;
+    const answerAudio = {
+      pause: vi.fn(() => { throw new Error("pause failed"); }),
+      restart: vi.fn(), destroy: vi.fn(), setMuted: vi.fn(), getEvidence: vi.fn(() => evidence),
+    } as unknown as import("../audio/index.js").AnswerChoiceAudioController;
+    const hostComplete = vi.fn();
+    const diagnostic = vi.fn();
+    const answerResult = { ...validResults, correctAnswers: 1, totalAttempts: 1 };
+    let context: Parameters<GameFactory>[0] | undefined;
+    const options = {
+      container: document.createElement("div"),
+      cartridge: createRuntimeCartridge(),
+      input: [{ term: "river", translation: "แม่น้ำ" }],
+      edition: createRuntimeEdition(),
+      host: { complete: hostComplete, diagnostic },
+      answerAudio,
+    };
+    const handle = await mountCartridge(options, async (nextContext) => {
+      context = nextContext;
+      return { destroy: vi.fn() };
+    });
+
+    expect(context?.answerAudio).toBe(answerAudio);
+    context?.complete(answerResult, "victory");
+    await vi.waitFor(() => expect(hostComplete).toHaveBeenCalledWith(answerResult, "victory", evidence));
+    expect(answerAudio.pause).toHaveBeenCalledOnce();
+    expect(diagnostic).toHaveBeenCalledWith(expect.objectContaining({ code: "ANSWER_AUDIO_PAUSE_FAILED" }));
+    handle.setMuted(true);
+    expect(answerAudio.setMuted).toHaveBeenCalledWith(true);
+    await handle.destroy();
+    expect(answerAudio.destroy).toHaveBeenCalledOnce();
+
+    const evidenceReads = answerAudio.getEvidence.mock.calls.length;
+    const tutorial = await mountCartridge({ ...options, sessionMode: "tutorial" }, async (nextContext) => {
+      context = nextContext;
+      return { destroy: vi.fn() };
+    });
+    expect(context?.answerAudio).toBe(answerAudio);
+    context?.complete(answerResult, "victory");
+    expect(hostComplete).toHaveBeenCalledOnce();
+    expect(answerAudio.getEvidence).toHaveBeenCalledTimes(evidenceReads);
+    await tutorial.destroy();
+    expect(answerAudio.destroy).toHaveBeenCalledTimes(2);
+  });
+
+  it("rejects sessions that configure both audio modes", async () => {
+    const listening = {} as import("../audio/index.js").ListeningAudioController;
+    const answerAudio = {} as import("../audio/index.js").AnswerChoiceAudioController;
+    await expect(mountCartridge({
+      container: document.createElement("div"),
+      cartridge: createRuntimeCartridge(),
+      input: [{ term: "river", translation: "แม่น้ำ" }],
+      edition: createRuntimeEdition(),
+      host: { complete: vi.fn() },
+      listening,
+      answerAudio,
+    }, async () => ({ destroy: vi.fn() }))).rejects.toMatchObject({ code: "INVALID_AUDIO_CONFIGURATION" });
+  });
+
+  it("rejects answer audio evidence that disagrees with result counts", async () => {
+    const diagnostic = vi.fn();
+    const complete = vi.fn();
+    const answerAudio = {
+      pause: vi.fn(), destroy: vi.fn(), setMuted: vi.fn(),
+      getEvidence: vi.fn(() => ({
+        schemaVersion: 1,
+        declaredModality: "read-to-select-audio",
+        effectiveModality: "read-to-select-audio",
+        promptLocale: "th-TH",
+        answerLocale: "en-US",
+        promptField: "translation",
+        answerField: "term",
+        itemCount: 1,
+        questions: [{
+          questionPosition: 0,
+          promptItemPosition: 0,
+          selectionAttempts: [{
+            attemptIndex: 0,
+            clipItemPosition: 0,
+            playbackResult: "completed",
+            submitted: true,
+            completedQuestion: true,
+          }],
+        }],
+        replayCounts: [],
+        audioFailures: [],
+      })),
+    } as unknown as import("../audio/index.js").AnswerChoiceAudioController;
+    let context: Parameters<GameFactory>[0] | undefined;
+    const handle = await mountCartridge({
+      container: document.createElement("div"),
+      cartridge: createRuntimeCartridge(),
+      input: [{ term: "river", translation: "แม่น้ำ" }],
+      edition: createRuntimeEdition(),
+      host: { complete, diagnostic },
+      answerAudio,
+    }, async (nextContext) => {
+      context = nextContext;
+      return { destroy: vi.fn() };
+    });
+
+    context?.complete(validResults);
+    await vi.waitFor(() => expect(diagnostic).toHaveBeenCalledWith(expect.objectContaining({
+      code: "INVALID_ANSWER_AUDIO_EVIDENCE",
+    })));
+    expect(complete).not.toHaveBeenCalled();
+    await handle.destroy();
+  });
+
+  it("clears queued controls across pause, resume, and restart", async () => {
+    let input: Parameters<GameFactory>[0]["inputController"] | undefined;
+    const handle = await mountCartridge({
+      container: document.createElement("div"),
+      cartridge: createRuntimeCartridge(),
+      input: [{ term: "river", translation: "riviere" }],
+      edition: createRuntimeEdition(),
+      host: { complete: vi.fn() },
+    }, async (context) => {
+      input = context.inputController;
+      return { pause: vi.fn(), resume: vi.fn(), destroy: vi.fn() };
+    });
+    try {
+      window.dispatchEvent(new KeyboardEvent("keydown", { code: "ArrowLeft" }));
+      handle.pause();
+      expect(input?.snapshot()).toMatchObject({ keys: [], pressed: [] });
+      window.dispatchEvent(new KeyboardEvent("keydown", { code: "Space" }));
+      handle.resume();
+      expect(input?.snapshot()).toMatchObject({ keys: [], pressed: [] });
+      window.dispatchEvent(new KeyboardEvent("keydown", { code: "ArrowRight" }));
+      await handle.restart();
+      expect(input?.snapshot()).toMatchObject({ keys: [], pressed: [] });
+    } finally {
+      await handle.destroy();
+    }
   });
 
   it("mounts, resizes, pauses for visibility, restarts, and destroys without leaks", async () => {
@@ -405,6 +604,14 @@ describe("mountCartridge", () => {
   it("validates completion and emits it exactly once", async () => {
     let complete: ((result: unknown) => void) | undefined;
     const hostComplete = vi.fn();
+    const evidence = {
+      schemaVersion: 1, declaredModality: "listen-to-select", effectiveModality: "listen-to-select",
+      sourceLocale: "en-US", targetLocale: "th", itemCount: 1,
+      assistedItemPositions: [], fallbackItemPositions: [], replayCounts: [], audioFailures: [],
+    } as const;
+    const listening = {
+      getEvidence: vi.fn(() => evidence), pause: vi.fn(), restart: vi.fn(), destroy: vi.fn(), setMuted: vi.fn(),
+    } as unknown as import("../audio/index.js").ListeningAudioController;
     const factory: GameFactory = vi.fn(async (context) => {
       complete = context.complete;
       return { destroy: vi.fn() };
@@ -416,6 +623,7 @@ describe("mountCartridge", () => {
         input: [{ term: "river", translation: "riviere" }],
         edition: createRuntimeEdition(),
         host: { complete: hostComplete },
+        listening,
       },
       factory,
     );
@@ -426,8 +634,39 @@ describe("mountCartridge", () => {
     await Promise.resolve();
 
     expect(hostComplete).toHaveBeenCalledTimes(1);
-    expect(hostComplete).toHaveBeenCalledWith(validResults, "complete");
+    expect(hostComplete).toHaveBeenCalledWith(validResults, "complete", evidence);
     expect(handle.getDiagnostics().completionCount).toBe(1);
+    await handle.destroy();
+  });
+
+  it("rejects invalid listening evidence before host completion", async () => {
+    let complete: ((result: unknown) => void) | undefined;
+    const hostComplete = vi.fn();
+    const diagnostic = vi.fn();
+    const listening = {
+      getEvidence: vi.fn(() => ({ schemaVersion: 1 })),
+      pause: vi.fn(), restart: vi.fn(), destroy: vi.fn(), setMuted: vi.fn(),
+    } as unknown as import("../audio/index.js").ListeningAudioController;
+    const handle = await mountCartridge({
+      container: document.createElement("div"),
+      cartridge: createRuntimeCartridge(),
+      input: [{ term: "river", translation: "riviere" }],
+      edition: createRuntimeEdition(),
+      host: { complete: hostComplete, diagnostic },
+      listening,
+    }, async (context) => {
+      complete = context.complete;
+      return { destroy: vi.fn() };
+    });
+
+    complete?.(validResults);
+    await Promise.resolve();
+
+    expect(hostComplete).not.toHaveBeenCalled();
+    expect(diagnostic).toHaveBeenCalledWith(expect.objectContaining({
+      code: "INVALID_LISTENING_EVIDENCE",
+    }));
+    expect(handle.getDiagnostics().completionCount).toBe(0);
     await handle.destroy();
   });
 
@@ -763,7 +1002,83 @@ describe("mountCartridge", () => {
     expect(instance.recompose).toHaveBeenCalledWith(expect.objectContaining({ profile: "wide" }));
     expect(instance.restoreResponsiveState).toHaveBeenCalledWith(state);
     expect(handle.getDiagnostics()).toMatchObject({ layoutProfile: "wide", inputMode: "hybrid" });
+
+    Object.defineProperties(container, {
+      clientWidth: { configurable: true, value: 390 },
+      clientHeight: { configurable: true, value: 592 },
+    });
+    handle.resize?.();
+
+    expect(instance.captureResponsiveState).toHaveBeenCalledTimes(2);
+    expect(instance.recompose).toHaveBeenLastCalledWith(expect.objectContaining({
+      profile: "compact",
+      safeRect: expect.objectContaining({ width: 390, height: 592 }),
+    }));
+    expect(instance.restoreResponsiveState).toHaveBeenLastCalledWith(state);
+
+    const resizeCallCount = vi.mocked(instance.resize!).mock.calls.length;
+    const recomposeCallCount = vi.mocked(instance.recompose!).mock.calls.length;
+    const pauseCallCount = vi.mocked(instance.pause).mock.calls.length;
+    Object.defineProperty(container, "clientHeight", { configurable: true, value: 591 });
+    handle.resize?.();
+
+    expect(instance.resize).toHaveBeenCalledTimes(resizeCallCount);
+    expect(instance.recompose).toHaveBeenCalledTimes(recomposeCallCount);
+    expect(instance.pause).toHaveBeenCalledTimes(pauseCallCount);
+    expect(handle.getDiagnostics().lastEvent).toMatchObject({
+      code: "UNSUPPORTED_VIEWPORT_SIZE",
+      level: "error",
+    });
     await handle.destroy();
+  });
+
+  it("recomposes when measured safe-area overlap changes without a container resize", async () => {
+    const visualViewport = new VisualViewportStub();
+    vi.stubGlobal("visualViewport", visualViewport);
+    const instance: APKGameInstance = {
+      pause: vi.fn(), resume: vi.fn(), resize: vi.fn(), recompose: vi.fn(), destroy: vi.fn(),
+    };
+    const container = document.createElement("div");
+    Object.defineProperties(container, {
+      clientWidth: { configurable: true, value: 390 },
+      clientHeight: { configurable: true, value: 844 },
+    });
+    let safeArea = { top: 0, right: 0, bottom: 0, left: 0 };
+    const resolveSafeArea = vi.fn(() => safeArea);
+    const handle = await mountCartridge({
+      container,
+      cartridge: createRuntimeCartridge(),
+      input: [{ term: "river", translation: "riviere" }],
+      edition: createRuntimeEdition(),
+      host: { complete: vi.fn() },
+      responsive: {
+        config: DEFAULT_RESPONSIVE_LAYOUT_CONFIG,
+        safeArea: { top: 0, right: 0, bottom: 0, left: 0 },
+        resolveSafeArea,
+        inputCapabilities: { touch: true, pointer: true, keyboard: true },
+        accessibility: { textScale: 1, touchScale: 1 },
+      },
+    }, async () => instance);
+
+    safeArea = { top: 20, right: 0, bottom: 16, left: 0 };
+    visualViewport.dispatchEvent(new Event("resize"));
+
+    expect(resolveSafeArea).toHaveBeenCalledWith(container);
+    expect(instance.recompose).toHaveBeenCalledWith(expect.objectContaining({
+      safeRect: expect.objectContaining({ y: 20, height: 808 }),
+    }));
+    window.dispatchEvent(new Event("scroll"));
+    expect(instance.recompose).toHaveBeenCalledOnce();
+    safeArea = { top: 20, right: 0, bottom: 16, left: 4 };
+    window.dispatchEvent(new Event("scroll"));
+    expect(instance.recompose).toHaveBeenCalledTimes(2);
+    await handle.destroy();
+    const callsAfterDestroy = resolveSafeArea.mock.calls.length;
+    visualViewport.dispatchEvent(new Event("resize"));
+    visualViewport.dispatchEvent(new Event("scroll"));
+    window.dispatchEvent(new Event("resize"));
+    window.dispatchEvent(new Event("scroll"));
+    expect(resolveSafeArea).toHaveBeenCalledTimes(callsAfterDestroy);
   });
 
   it("cleans up an initial unsupported responsive composition before a renderer can mount", async () => {
@@ -844,10 +1159,18 @@ describe("mountCartridge", () => {
     await handle.destroy();
   });
 
-  it("ignores a completion callback retained from a renderer generation after restart", async () => {
+  it("pairs current evidence and ignores stale completion callbacks after restart", async () => {
     const callbacks: Array<(result: unknown) => void> = [];
     const hostComplete = vi.fn();
     let attempts = 0;
+    const evidence = {
+      schemaVersion: 1, declaredModality: "listen-to-select", effectiveModality: "listen-to-select",
+      sourceLocale: "en-US", targetLocale: "th", itemCount: 1,
+      assistedItemPositions: [0], fallbackItemPositions: [], replayCounts: [], audioFailures: [],
+    } as const;
+    const listening = {
+      getEvidence: vi.fn(() => evidence), pause: vi.fn(), restart: vi.fn(), destroy: vi.fn(), setMuted: vi.fn(),
+    } as unknown as import("../audio/index.js").ListeningAudioController;
     const factory: GameFactory = vi.fn(async ({ complete }) => {
       callbacks.push(complete);
       attempts += 1;
@@ -859,14 +1182,18 @@ describe("mountCartridge", () => {
       input: [{ term: "river", translation: "riviere" }],
       edition: createRuntimeEdition(),
       host: { complete: hostComplete },
+      listening,
     }, factory);
 
     await handle.restart();
     callbacks[0]?.(validResults);
     expect(hostComplete).not.toHaveBeenCalled();
+    expect(listening.getEvidence).not.toHaveBeenCalled();
     callbacks[1]?.(validResults);
     await Promise.resolve();
     expect(hostComplete).toHaveBeenCalledOnce();
+    expect(hostComplete).toHaveBeenCalledWith(validResults, "complete", evidence);
+    expect(listening.getEvidence).toHaveBeenCalledOnce();
     await handle.destroy();
   });
 
@@ -931,6 +1258,63 @@ describe("mountCartridge", () => {
     await Promise.resolve();
     await Promise.resolve();
     expect(diagnostic).toHaveBeenCalledWith(expect.objectContaining({ code: "HOST_COMPLETION_FAILED" }));
+    await handle.destroy();
+  });
+
+  it("persists an accepted completion when listening pause throws", async () => {
+    const hostComplete = vi.fn();
+    const diagnostic = vi.fn();
+    const evidence = {
+      schemaVersion: 1, declaredModality: "listen-to-select", effectiveModality: "listen-to-select",
+      sourceLocale: "en-US", targetLocale: "th", itemCount: 1,
+      assistedItemPositions: [], fallbackItemPositions: [], replayCounts: [], audioFailures: [],
+    } as const;
+    const listening = {
+      pause: vi.fn(() => { throw new Error("pause failed"); }),
+      restart: vi.fn(), destroy: vi.fn(), setMuted: vi.fn(), getEvidence: vi.fn(() => evidence),
+    } as unknown as import("../audio/index.js").ListeningAudioController;
+    let complete: ((result: unknown) => void) | undefined;
+    const handle = await mountCartridge({
+      container: document.createElement("div"),
+      cartridge: createRuntimeCartridge(),
+      input: [{ term: "river", translation: "แม่น้ำ" }],
+      edition: createRuntimeEdition(),
+      host: { complete: hostComplete, diagnostic },
+      listening,
+    }, async (context) => {
+      complete = context.complete;
+      return { destroy: vi.fn() };
+    });
+
+    complete?.(validResults);
+    await Promise.resolve();
+    await Promise.resolve();
+    expect(hostComplete).toHaveBeenCalledWith(validResults, "complete", evidence);
+    expect(diagnostic).toHaveBeenCalledWith(expect.objectContaining({ code: "LISTENING_PAUSE_FAILED" }));
+    listening.pause.mockImplementation(() => undefined);
+    await handle.destroy();
+  });
+
+  it("pauses the renderer when listening pause throws", async () => {
+    const diagnostic = vi.fn();
+    const instance = { pause: vi.fn(), destroy: vi.fn() };
+    const listening = {
+      pause: vi.fn(() => { throw new Error("pause failed"); }),
+      restart: vi.fn(), destroy: vi.fn(), setMuted: vi.fn(), getEvidence: vi.fn(),
+    } as unknown as import("../audio/index.js").ListeningAudioController;
+    const handle = await mountCartridge({
+      container: document.createElement("div"),
+      cartridge: createRuntimeCartridge(),
+      input: [{ term: "river", translation: "แม่น้ำ" }],
+      edition: createRuntimeEdition(),
+      host: { complete: vi.fn(), diagnostic },
+      listening,
+    }, async () => instance);
+
+    expect(() => handle.pause()).not.toThrow();
+    expect(instance.pause).toHaveBeenCalledOnce();
+    expect(diagnostic).toHaveBeenCalledWith(expect.objectContaining({ code: "LISTENING_PAUSE_FAILED" }));
+    listening.pause.mockImplementation(() => undefined);
     await handle.destroy();
   });
 });

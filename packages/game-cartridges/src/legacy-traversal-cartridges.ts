@@ -134,6 +134,9 @@ interface SceneResources {
   readonly feedback: PhaserTextLike;
   readonly instructions: PhaserTextLike;
   readonly choices: readonly PhaserTextLike[];
+  ground?: PhaserImageLike;
+  groundWidth: number;
+  groundHeight: number;
 }
 
 const ACTION_LABELS: Readonly<Record<InputActionId, string>> = Object.freeze({
@@ -247,6 +250,71 @@ function createTraversalController(
   });
 }
 
+/**
+ * Returns the physical file for a bound key, or undefined when unbound.
+ * @param edition Audience edition.
+ * @param key Semantic binding key.
+ * @returns Physical file metadata.
+ */
+function fileForBinding(edition: RuntimeEdition, key: string): { readonly width: number; readonly height: number } | undefined {
+  const binding = edition.bindings[key];
+  if (!binding) return undefined;
+  const file = (edition.pack.files as Readonly<Record<string, { readonly width: number; readonly height: number }>>)[binding.file];
+  return file;
+}
+
+/**
+ * Destroys the tiled ground sprite.
+ * @param resources Live scene resources.
+ * @returns Nothing.
+ */
+function destroyGround(resources: SceneResources): void {
+  resources.ground?.destroy();
+  resources.ground = undefined;
+  resources.groundWidth = 0;
+  resources.groundHeight = 0;
+}
+
+/**
+ * Ensures a contiguous tiled ground plane is present for the current canvas size.
+ * @param scene Active Phaser scene.
+ * @param resources Live scene resources.
+ * @param edition Audience edition.
+ * @param width Current scene width.
+ * @param height Current scene height.
+ * @returns Nothing.
+ */
+function ensureGround(
+  scene: PhaserSceneLike,
+  resources: SceneResources,
+  edition: RuntimeEdition,
+  width: number,
+  height: number,
+): void {
+  if (resources.groundWidth === width && resources.groundHeight === height && resources.ground) return;
+  destroyGround(resources);
+  resources.groundWidth = width;
+  resources.groundHeight = height;
+  const binding = edition.bindings["world:ground"];
+  if (!binding) return;
+  const resolved = resolveAssetBinding(edition, "world:ground");
+  if (scene.add?.tileSprite) {
+    const tiled = scene.add.tileSprite(0, 0, width, height, resolved.textureKey);
+    tiled.setOrigin?.(0, 0);
+    tiled.setDepth?.(-35);
+    resources.ground = tiled;
+  } else {
+    const file = fileForBinding(edition, "world:ground");
+    const displayW = width;
+    const displayH = file ? displayW * (file.height / file.width) : height;
+    const image = scene.add?.image?.(width / 2, height / 2, resolved.textureKey);
+    image?.setOrigin?.(0.5, 0.5);
+    if (file) image?.setDisplaySize?.(displayW, displayH);
+    image?.setDepth?.(-35);
+    if (image) resources.ground = image;
+  }
+}
+
 function createScene(
   options: TraversalCartridgeOptions,
   controller: TraversalController,
@@ -314,28 +382,38 @@ function createScene(
     activeResources.graphics.clear();
     const flightArt = Boolean(edition.pack.files["dragon-rider-idle"] || edition.pack.files["dragon-flight-idle"]);
     if (flightArt) {
+      // Contiguous tiled ground with no full-screen tint overlay hiding it.
+      ensureGround(scene, activeResources, edition, width, height);
       if (parallax.sprites.length === 0) {
         parallax = createFlightParallax(scene, edition, width, height);
       }
       if (parallax.sprites.length === 0) {
         activeResources.graphics.fillStyle(0x6eb6e8, 1).fillRect(0, 0, width, height);
       }
-      const place = (current: PhaserImageLike | undefined, x: number, y: number, key: string, size: number): PhaserImageLike | undefined => {
-        const image = current ?? scene.add?.sprite?.(x, y, key) ?? scene.add?.image?.(x, y, key);
+      const place = (current: PhaserImageLike | undefined, x: number, y: number, bindingKey: string, textureKey: string, targetWidth: number): PhaserImageLike | undefined => {
+        const file = fileForBinding(edition, bindingKey);
+        // Preserve source aspect: height scales proportionally from targetWidth; no anisotropic stretch.
+        // Visible bbox for dragon-rider-idle is 96x69 within 96x96, for prop-sky-gate 84x96 within 96x96.
+        // Target width is chosen by visible bbox, display size is scaled by file aspect to keep art undistorted.
+        const displayW = targetWidth;
+        const displayH = file ? displayW * (file.height / file.width) : targetWidth;
+        const image = current ?? scene.add?.sprite?.(x, y, textureKey) ?? scene.add?.image?.(x, y, textureKey);
         image?.setOrigin?.(0.5, 0.5);
         image?.setPosition?.(x, y);
-        image?.setDisplaySize?.(size, size);
+        image?.setDisplaySize?.(displayW, displayH);
         image?.setDepth?.(6);
         return image;
       };
       if (edition.bindings["prop:gate"]) {
-        const gateKey = resolveAssetBinding(edition, "prop:gate").textureKey;
-        leftGateSprite = place(leftGateSprite, width * 0.28, height * 0.48, gateKey, 120);
-        rightGateSprite = place(rightGateSprite, width * 0.72, height * 0.48, gateKey, 120);
+        const gateResolved = resolveAssetBinding(edition, "prop:gate");
+        // Gate file 96x96, visible 84x96 — 120 width preserves aspect and sizes by visible bbox.
+        leftGateSprite = place(leftGateSprite, width * 0.28, height * 0.48, "prop:gate", gateResolved.textureKey, 120);
+        rightGateSprite = place(rightGateSprite, width * 0.72, height * 0.48, "prop:gate", gateResolved.textureKey, 120);
       }
       if (edition.bindings["player:idle"]) {
-        const dragonKey = resolveAssetBinding(edition, "player:idle").textureKey;
-        dragonSprite = place(dragonSprite, width / 2, height * 0.82, dragonKey, 96);
+        const dragonResolved = resolveAssetBinding(edition, "player:idle");
+        // Dragon file 96x96, visible 96x69 — 96 width preserves aspect; visible height 69 is the play-piece's bounding box.
+        dragonSprite = place(dragonSprite, width / 2, height * 0.82, "player:idle", dragonResolved.textureKey, 96);
       }
     } else {
       activeResources.graphics.fillStyle(options.colors.background, 1).fillRect(0, 0, width, height);
@@ -372,6 +450,7 @@ function createScene(
   const cleanup = (): void => {
     controller.destroy();
     destroyFlightParallax(parallax);
+    if (resources) destroyGround(resources);
     dragonSprite?.destroy();
     leftGateSprite?.destroy();
     rightGateSprite?.destroy();
@@ -393,7 +472,7 @@ function createScene(
   const preload = function (this: PhaserSceneLike): void {
     if (!this.load || !flightArt) return;
     preloadFlightParallax(this, edition);
-    const keys = ["player:idle", "prop:gate"].filter((key) => Boolean(edition.bindings[key]));
+    const keys = ["world:ground", "player:idle", "prop:gate"].filter((key) => Boolean(edition.bindings[key]));
     if (keys.length) preloadAssetBindings(this.load, edition, keys);
   };
 
@@ -408,6 +487,8 @@ function createScene(
       feedback: this.add.text(0, 0, "", { ...style, fontSize: "17px", color: "#fde68a" }),
       instructions: this.add.text(0, 0, "", { ...style, fontSize: "15px", color: "#cbd5e1" }),
       choices: options.actions.map(() => this.add!.text(0, 0, "", { ...style, fontSize: "17px" })),
+      groundWidth: 0,
+      groundHeight: 0,
     };
     this.events?.once("shutdown", cleanup);
     this.events?.once("destroy", cleanup);

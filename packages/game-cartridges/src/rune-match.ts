@@ -365,6 +365,8 @@ interface SceneGraphicsLike {
 interface SceneTextLike {
   setPosition(x: number, y: number): this;
   setText(value: string): this;
+  setFontSize?(size: number | string): this;
+  setWordWrapWidth?(width: number, useAdvancedWrap?: boolean): this;
   destroy(): void;
 }
 
@@ -463,6 +465,16 @@ function createVocabularyRune(index: number, item: VocabularyItem, id = `rune:${
 
 function createPowerRune(type: "heal" | "shield", index: number): RuneMatchRune {
   return Object.freeze({ id: `rune:${type}:${index}`, type });
+}
+
+function mixPlacementSeed(seed: number): number {
+  let value = Math.abs(Math.trunc(seed)) >>> 0;
+  value ^= value >>> 16;
+  value = Math.imul(value, 0x7feb352d);
+  value ^= value >>> 15;
+  value = Math.imul(value, 0x846ca68b);
+  value ^= value >>> 16;
+  return value >>> 0;
 }
 
 function validateGrid(grid: readonly (readonly RuneMatchRune[])[]): { rows: number; columns: number } {
@@ -668,8 +680,9 @@ function placeTargetMove(
   }
   if (triples.length === 0) return undefined;
 
+  const startIndex = mixPlacementSeed(seed) % triples.length;
   for (let offset = 0; offset < triples.length; offset += 1) {
-    const [first, middle, last] = triples[(offset + Math.abs(seed)) % triples.length]!;
+    const [first, middle, last] = triples[(startIndex + offset) % triples.length]!;
     const candidate = cloneGrid(grid);
     candidate[first.row]![first.col] = Object.freeze({ ...targetRune, id: `${targetRune.id}:${first.row}:${first.col}` });
     candidate[last.row]![last.col] = Object.freeze({ ...targetRune, id: `${targetRune.id}:${last.row}:${last.col}` });
@@ -1300,7 +1313,8 @@ export function createRuneMatchController(
     const cascaded = processRuneMatchCascades(swappedGrid, vocabulary, seed, state.refillIndex);
     const groups = cascaded.groups;
     const currentTarget = target();
-    const targetGroup = initialGroups.find((group) => group.type === "vocabulary"
+    const initialVocabularyGroups = initialGroups.filter((group) => group.type === "vocabulary");
+    const targetGroup = initialVocabularyGroups.find((group) => group.type === "vocabulary"
       && targetMatches(group.wordId, currentTarget, state.targetIndex, allowLabelFallback));
     const vocabularyGroups = groups.filter((group) => group.type === "vocabulary");
     const powerGroups = groups.filter((group) => group.type === "heal" || group.type === "shield");
@@ -1309,7 +1323,6 @@ export function createRuneMatchController(
       state.cascades = 0;
       state.lastRemovedCells = [];
       state.lastOutcome = "invalid-swap";
-      accountant.recordAttempt({ correct: false });
       state.player = Object.freeze({
         ...state.player,
         health: Math.max(0, state.player.health - invalidSwapDamage),
@@ -1328,7 +1341,7 @@ export function createRuneMatchController(
     state.lastRemovedCells = [...new Map(
       groups.flatMap((group) => group.cells).map((cell) => [`${cell.row}:${cell.col}`, { ...cell }]),
     ).values()];
-    accountant.recordAttempt({ correct: Boolean(targetGroup) });
+    if (initialVocabularyGroups.length > 0) accountant.recordAttempt({ correct: Boolean(targetGroup) });
     let outcome: RuneMatchOutcome = "match";
     let progressed = false;
     if (targetGroup) {
@@ -1543,33 +1556,54 @@ function createScene(context: SceneContext): Readonly<Record<string, unknown>> {
     const rows = state.grid.length;
     const columns = state.grid[0]?.length ?? 1;
     const layout = getRuneMatchBoardLayout(width, height, rows, columns);
+    const renderedWidth = scene.game?.canvas?.getBoundingClientRect?.().width ?? width;
+    const renderedScale = renderedWidth > 0 ? Math.min(1, renderedWidth / width) : 1;
+    const nativeCompact = renderedScale >= 0.75 && (width < 600 || composition?.profile === "compact");
+    const promptFontSize = nativeCompact ? 22 : Math.max(36, Math.ceil(18 / renderedScale));
+    const desiredCellFontSize = renderedScale < 0.75 ? Math.ceil(12 / renderedScale) : 16;
+    const cellFontSize = Math.max(12, Math.min(desiredCellFontSize, Math.floor(layout.cellSize * 0.68)));
     const pulse = Math.sin(animationMs / 3000 * Math.PI * 2) * 3;
     resources.graphics.clear();
     if (!resources.art.ground("world:ground", width, height)) resources.graphics.fillStyle(0x090d24, 1).fillRect(0, 0, width, height);
     resources.graphics.fillStyle(0x151f47, 0.96).fillRoundedRect(18, 12, width - 36, height - 24, 22);
-    const monsterX = width >= 720 ? width * 0.14 : width * 0.18;
+    const hasReservedActorArea = layout.x - 18 >= 120;
+    const monsterX = width * 0.14;
     const monsterY = height * 0.3;
-    if (!resources.art.place("monster", "enemy:idle", {
-      x: monsterX,
-      y: monsterY,
-      width: 104 + pulse * 2,
-      depth: 7,
-      alpha: state.monster.health === 0 ? 0.35 : 1,
-    })) {
-      resources.graphics.fillStyle(0x45266e, 0.9).fillCircle(monsterX, monsterY, 52 + pulse);
-      resources.graphics.fillStyle(0xd85c76, 0.9).fillCircle(monsterX, monsterY, 25 + pulse / 2);
+    if (hasReservedActorArea) {
+      if (!resources.art.place("monster", "enemy:idle", {
+        x: monsterX,
+        y: monsterY,
+        width: 104 + pulse * 2,
+        depth: 7,
+        alpha: state.monster.health === 0 ? 0.35 : 1,
+      })) {
+        resources.graphics.fillStyle(0x45266e, 0.9).fillCircle(monsterX, monsterY, 52 + pulse);
+        resources.graphics.fillStyle(0xd85c76, 0.9).fillCircle(monsterX, monsterY, 25 + pulse / 2);
+      }
+      // prop-tower is 32x80 (1:2.5) — preserve aspect; depth 2 above the panel, below actors.
+      const propTowerWidth = 48;
+      resources.art.place("prop:0", "prop:0", {
+        x: width * 0.06,
+        y: height * 0.74,
+        width: propTowerWidth,
+        height: propTowerWidth * (80 / 32),
+        originY: 1,
+        depth: 2,
+      });
+      resources.art.place("player", "player:idle", {
+        x: monsterX,
+        y: height * 0.62,
+        width: 72,
+        depth: 8,
+        alpha: state.player.hasShield ? 1 : 0.92,
+      });
     }
-    resources.art.place("player", "player:idle", {
-      x: monsterX,
-      y: height * 0.62,
-      width: 72,
-      depth: 8,
-      alpha: state.player.hasShield ? 1 : 0.92,
-    });
     resources.art.sweep();
-    const healthRatio = state.monster.maxHealth === 0 ? 0 : state.monster.health / state.monster.maxHealth;
-    resources.graphics.fillStyle(0x301b3f, 1).fillRoundedRect(30, height * 0.42, Math.min(180, width * 0.22), 12, 6);
-    resources.graphics.fillStyle(0xf15b74, 1).fillRoundedRect(30, height * 0.42, Math.min(180, width * 0.22) * healthRatio, 12, 6);
+    if (hasReservedActorArea) {
+      const healthRatio = state.monster.maxHealth === 0 ? 0 : state.monster.health / state.monster.maxHealth;
+      resources.graphics.fillStyle(0x301b3f, 1).fillRoundedRect(30, height * 0.42, Math.min(180, width * 0.22), 12, 6);
+      resources.graphics.fillStyle(0xf15b74, 1).fillRoundedRect(30, height * 0.42, Math.min(180, width * 0.22) * healthRatio, 12, 6);
+    }
     for (let row = 0; row < rows; row += 1) {
       for (let col = 0; col < columns; col += 1) {
         const rune = state.grid[row]![col]!;
@@ -1584,24 +1618,20 @@ function createScene(context: SceneContext): Readonly<Record<string, unknown>> {
             .strokeRoundedRect(x + 2, y + 2, layout.cellSize - 4, layout.cellSize - 4, 8);
         }
         const label = rune.type === "vocabulary" ? rune.term : rune.type === "heal" ? "+" : "◈";
-        resources.cells[row * columns + col]?.setText(label).setPosition(x + 8, y + layout.cellSize * 0.35);
+        resources.cells[row * columns + col]?.setFontSize?.(cellFontSize).setText(label).setPosition(x + 8, y + layout.cellSize * 0.35);
       }
     }
-    resources.title.setText("RUNE MATCH").setPosition(30, 28);
-    resources.prompt.setText(`Match the rune for: ${state.prompt}`).setPosition(30, 66);
-    resources.progress.setText(
-      `${composition?.profile === "compact" ? "Compact board" : "Rune board"}  •  Target ${Math.min(state.targetIndex + 1, state.targetCount)} of ${state.targetCount}  •  Attempts ${state.totalAttempts}`,
-    ).setPosition(30, 100);
+    resources.title.setText("").setPosition(30, 20);
+    resources.prompt.setFontSize?.(promptFontSize).setWordWrapWidth?.(width - 60, true).setText(state.prompt).setPosition(30, 42);
+    resources.progress.setText(`${Math.min(state.targetIndex + 1, state.targetCount)}/${state.targetCount}  •  ${state.totalAttempts}`).setPosition(30, 96);
     resources.status.setText(
       state.phase === "victory"
-        ? "Every target rune matched! Victory!"
+        ? "VICTORY"
         : state.phase === "defeat"
-          ? "Your runes are spent."
-          : `Player ${state.player.health}/${state.player.maxHealth}${state.player.hasShield ? "  Shielded" : ""}  •  Monster ${state.monster.health}/${state.monster.maxHealth}`,
+          ? "DEFEAT"
+          : `♥ ${state.player.health}/${state.player.maxHealth}${state.player.hasShield ? "  ◈" : ""}  •  👾 ${state.monster.health}/${state.monster.maxHealth}`,
     ).setPosition(30, height - 72);
-    resources.instructions.setText(
-      "Keyboard: arrows/WASD move • Enter or Space selects • Tap two adjacent runes",
-    ).setPosition(30, height - 40);
+    resources.instructions.setText("").setPosition(30, height - 40);
   };
 
   const perform = (result: RuneMatchActionResult): void => {
@@ -1638,7 +1668,7 @@ function createScene(context: SceneContext): Readonly<Record<string, unknown>> {
   };
 
 
-  const artKeys = ["world:ground", "player:idle", "enemy:idle"] as const;
+  const artKeys = ["world:ground", "player:idle", "enemy:idle", "prop:0"] as const;
 
   const preload = function (this: SceneLike): void {
     if (!this.load) return;

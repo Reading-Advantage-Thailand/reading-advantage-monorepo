@@ -5,7 +5,11 @@ const nextConfig: NextConfig = {
   devIndicators: false,
   allowedDevOrigins: ["127.0.0.1"],
   reactStrictMode: false,
-  transpilePackages: [],
+  transpilePackages: [
+    "@reading-advantage/advantage-play-kit",
+    "@reading-advantage/game-cartridges",
+    "@reading-advantage/game-contracts",
+  ],
   typescript: { ignoreBuildErrors: true },
   images: {
     remotePatterns: [

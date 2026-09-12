@@ -11,6 +11,9 @@ export {
   worldPointToContainer,
 } from "./responsive-composition.js";
 
+/** Browser safe-area measurement for responsive hosts. */
+export { resolveBrowserSafeAreaInsets } from "./browser-safe-area.js";
+
 /** Public responsive composition types. */
 export type {
   CameraTransform,

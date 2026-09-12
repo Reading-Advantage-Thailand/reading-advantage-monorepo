@@ -48,13 +48,15 @@ describe("flight parallax", () => {
     const layers = createFlightParallax(scene, edition, 960, 540);
     expect(scene.add.tileSprite).toHaveBeenCalledTimes(3);
     expect(FLIGHT_PARALLAX_KEYS).toEqual([
-      "world:parallax-near",
       "world:parallax-far",
       "world:parallax-mid",
+      "world:parallax-near",
     ]);
     expect(created[0]?.setDepth).toHaveBeenCalledWith(-30);
     expect(created[0]?.setAlpha).toHaveBeenCalledWith(1);
+    expect(created[1]?.setAlpha).toHaveBeenCalledWith(0.45);
     expect(created[2]?.setDepth).toHaveBeenCalledWith(-18);
+    expect(created[2]?.setAlpha).toHaveBeenCalledWith(0.85);
     tickFlightParallax(layers, 1000);
     expect(created.map((sprite) => sprite.setTilePosition.mock.calls[0]?.[1])).toEqual([
       18, 36, 64,

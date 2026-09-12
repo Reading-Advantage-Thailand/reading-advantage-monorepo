@@ -11,7 +11,7 @@
   "legacy_source_paths": [
     {
       "path": "apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.test.tsx",
-      "presence": "tracked-at-head",
+      "presence": "present-at-head",
       "role": "fixture-test",
       "classification": "test-source",
       "evidence_locator": {
@@ -24,7 +24,7 @@
     },
     {
       "path": "apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx",
-      "presence": "tracked-at-head",
+      "presence": "present-at-head",
       "role": "state",
       "classification": "current-source",
       "evidence_locator": {
@@ -37,7 +37,7 @@
     },
     {
       "path": "apps/reading-advantage/lib/games/dragonRider.test.ts",
-      "presence": "tracked-at-head",
+      "presence": "present-at-head",
       "role": "fixture-test",
       "classification": "test-source",
       "evidence_locator": {
@@ -50,7 +50,7 @@
     },
     {
       "path": "apps/reading-advantage/lib/games/dragonRider.ts",
-      "presence": "tracked-at-head",
+      "presence": "present-at-head",
       "role": "state",
       "classification": "current-source",
       "evidence_locator": {

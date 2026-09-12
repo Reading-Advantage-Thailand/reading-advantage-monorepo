@@ -5,9 +5,12 @@ import { describe, expect, it, vi } from "vitest";
 import {
   REALM_CARVER_GRID_SIZE,
   REALM_CARVER_KEYBOARD_BINDINGS,
+  REALM_CARVER_MAX_VISIBLE_WORDS,
   REALM_CARVER_AVAILABLE_ACTIONS,
   createRealmCarverCartridge,
   createRealmCarverController,
+  getRealmCarverDpadGeometry,
+  getRealmCarverSceneLayout,
   realmCarverDirectionFromPointer,
   type RealmCarverController,
   type RealmCarverDirection,
@@ -54,8 +57,49 @@ function closeCurrentTarget(controller: RealmCarverController): void {
     })),
   });
   const state = controller.snapshot();
-  const target = state.words.find((word) => word.order === state.targetIndex && word.status === "active");
+  const target = state.words.find((word) => word.term === state.answer && word.status === "active" && word.visible);
   if (!target) throw new Error("Expected an active Realm Carver target");
+
+  const directions = [
+    ["left", -1, 0, "right"],
+    ["right", 1, 0, "left"],
+    ["up", 0, -1, "down"],
+    ["down", 0, 1, "up"],
+  ] as const;
+  const approach = directions
+    .map(([intoTarget, dx, dy, leaveTarget]) => ({
+      intoTarget,
+      leaveTarget,
+      x: target.x - dx,
+      y: target.y - dy,
+    }))
+    .find((point) => state.grid[point.y]?.[point.x] === "claimed");
+  if (approach && state.grid[state.player.y]?.[state.player.x] === "claimed") {
+    const queue: Array<{ x: number; y: number; path: RealmCarverDirection[] }> = [{
+      x: state.player.x,
+      y: state.player.y,
+      path: [],
+    }];
+    const visited = new Set([`${state.player.x}:${state.player.y}`]);
+    for (let index = 0; index < queue.length; index += 1) {
+      const current = queue[index]!;
+      if (current.x === approach.x && current.y === approach.y) {
+        for (const direction of current.path) controller.move(direction);
+        controller.move(approach.intoTarget);
+        controller.move(approach.leaveTarget);
+        controller.confirm();
+        return;
+      }
+      for (const [direction, dx, dy] of directions) {
+        const x = current.x + dx;
+        const y = current.y + dy;
+        const key = `${x}:${y}`;
+        if (visited.has(key) || state.grid[y]?.[x] !== "claimed") continue;
+        visited.add(key);
+        queue.push({ x, y, path: [...current.path, direction] });
+      }
+    }
+  }
 
   move(controller, "left", state.player.x);
   move(controller, "up", state.player.y);
@@ -321,6 +365,115 @@ describe("Realm Carver bespoke territory cartridge", () => {
     });
   });
 
+  it("accepts an enclosed duplicate English term by visible value and restores its physical capture", () => {
+    const controller = createRealmCarverController([{ term: "echo echo", translation: "เสียงสะท้อน" }], vi.fn());
+
+    closeSecondWordOnly(controller);
+
+    const captured = controller.capture();
+    expect(captured).toMatchObject({ targetIndex: 1, correctAnswers: 1, totalAttempts: 1 });
+    expect(captured.capturedWordIds).toEqual(["word:0:1"]);
+    const restored = createRealmCarverController([{ term: "echo echo", translation: "เสียงสะท้อน" }], vi.fn());
+    restored.restore(captured);
+    expect(restored.snapshot()).toEqual(captured);
+    closeCurrentTarget(restored);
+    expect(restored.snapshot()).toMatchObject({ phase: "victory", correctAnswers: 2, totalAttempts: 2 });
+  });
+
+  it("keeps native and CSS-scaled boards bounded with readable text measurements", () => {
+    const native = getRealmCarverSceneLayout(390, 704, 390);
+    const scaled = getRealmCarverSceneLayout(960, 540, 336);
+
+    expect(native.boardX).toBeGreaterThanOrEqual(16);
+    expect(native.boardX + native.boardSize).toBeLessThanOrEqual(374);
+    expect(native.promptFontSize).toBeGreaterThanOrEqual(20);
+    expect(native.wordFontSize).toBeGreaterThanOrEqual(16);
+    expect(scaled.boardX * (336 / 960)).toBeGreaterThanOrEqual(5);
+    expect((scaled.boardX + scaled.boardSize) * (336 / 960)).toBeLessThanOrEqual(331);
+    expect(scaled.promptFontSize * (336 / 960)).toBeGreaterThanOrEqual(20);
+    expect(scaled.wordFontSize * (336 / 960)).toBeGreaterThanOrEqual(16);
+  });
+
+  it("advances beyond four physical beacons, restores the wave, and hides queued labels", () => {
+    const terms = Array.from({ length: 12 }, (_, index) => `word${index}`).join(" ");
+    const input = [{ term: terms, translation: "ประโยคยาว" }];
+    const controller = createRealmCarverController(input, vi.fn());
+    const state = controller.snapshot();
+    const visible = state.words.filter((word) => word.visible);
+
+    expect(state.words).toHaveLength(12);
+    expect(visible).toHaveLength(REALM_CARVER_MAX_VISIBLE_WORDS);
+    for (const [index, word] of visible.entries()) {
+      expect(state.grid[word.y]?.[word.x]).toBe("wild");
+      for (const other of visible.slice(0, index)) {
+        expect(Math.max(Math.abs(word.x - other.x), Math.abs(word.y - other.y))).toBeGreaterThanOrEqual(4);
+      }
+    }
+
+    for (let index = 0; index < 5; index += 1) closeCurrentTarget(controller);
+    const transition = controller.capture();
+    expect(transition).toMatchObject({ targetIndex: 5, correctAnswers: 5, totalAttempts: 5 });
+    expect(transition.words.filter((word) => word.visible)).toHaveLength(REALM_CARVER_MAX_VISIBLE_WORDS);
+    expect(transition.words.find((word) => word.visible && word.term === transition.answer)).toBeDefined();
+    const restored = createRealmCarverController(input, vi.fn());
+    restored.restore(transition);
+    expect(restored.snapshot()).toEqual(transition);
+    for (let index = 5; index < 12; index += 1) {
+      const before = restored.snapshot().targetIndex;
+      closeCurrentTarget(restored);
+      expect(restored.snapshot().targetIndex).toBe(before + 1);
+    }
+    expect(restored.snapshot()).toMatchObject({ phase: "victory", targetIndex: 12, correctAnswers: 12, totalAttempts: 12 });
+
+    const inputController = {
+      snapshot: vi.fn(() => inputSnapshot()),
+      cancelActiveGesture: vi.fn(),
+      destroy: vi.fn(),
+    };
+    const config = createRealmCarverCartridge().createGameConfig({
+      ...createContext(inputController),
+      input,
+    });
+    const scene = config.scene as { create: (this: unknown) => void };
+    const host = createSceneHost();
+    scene.create.call(host.host);
+    const wordTexts = host.texts.slice(9);
+    expect(wordTexts).toHaveLength(12);
+    expect(wordTexts.filter((text) => text.setText.mock.lastCall?.[0] !== "")).toHaveLength(REALM_CARVER_MAX_VISIBLE_WORDS);
+  });
+
+  it("renders a bare Thai target with neutral English beacons and repeats held movement", () => {
+    let currentInput = inputSnapshot();
+    const inputController = {
+      snapshot: vi.fn(() => currentInput),
+      cancelActiveGesture: vi.fn(),
+      destroy: vi.fn(),
+    };
+    const config = createRealmCarverCartridge().createGameConfig({
+      ...createContext(inputController),
+      input: [{ term: "environmental bridge", translation: "สะพานสิ่งแวดล้อม" }],
+    });
+    const scene = config.scene as {
+      create: (this: unknown) => void;
+      update: (this: unknown, time?: number, delta?: number) => void;
+      extend: { apkCaptureResponsiveState: () => ReturnType<RealmCarverController["snapshot"]> };
+    };
+    const host = createSceneHost();
+
+    scene.create.call(host.host);
+    expect(host.texts[1]?.setText).toHaveBeenLastCalledWith("สะพานสิ่งแวดล้อม");
+    expect(host.texts[1]?.setText).not.toHaveBeenCalledWith(expect.stringContaining("environmental"));
+    expect(host.graphics.fillStyle).not.toHaveBeenCalledWith(0xfbbf24, expect.anything());
+
+    currentInput = inputSnapshot({ keys: ["ArrowRight"], pressed: ["ArrowRight"] });
+    scene.update.call(host.host, 0, 16);
+    currentInput = inputSnapshot({ keys: ["ArrowRight"] });
+    scene.update.call(host.host, 16, 50);
+    scene.update.call(host.host, 66, 50);
+    scene.update.call(host.host, 116, 50);
+    expect(scene.extend.apkCaptureResponsiveState().player.x).toBe(2);
+  });
+
   it("uses the seed for deterministic setup and bounds direct simulation ticks", () => {
     const first = createRealmCarverController(SENTENCES, vi.fn(), { seed: 7 });
     const second = createRealmCarverController(SENTENCES, vi.fn(), { seed: 7 });
@@ -570,6 +723,22 @@ describe("Realm Carver bespoke territory cartridge", () => {
     expect(realmCarverDirectionFromPointer(145, 410, 960, 540)).toBe("right");
     expect(realmCarverDirectionFromPointer(100, 493, 960, 540)).toBe("down");
     expect(realmCarverDirectionFromPointer(700, 300, 960, 540)).toBeUndefined();
+  });
+
+  it("keeps every D-pad render and hit region inside native and CSS-scaled scenes", () => {
+    for (const [width, height, renderedWidth] of [[390, 704, 390], [960, 540, 336]] as const) {
+      const dpad = getRealmCarverDpadGeometry(width, height, renderedWidth);
+      const reach = dpad.offset + dpad.buttonHalfSize;
+      expect(dpad.centerX - reach).toBeGreaterThanOrEqual(8);
+      expect(dpad.centerX + reach).toBeLessThanOrEqual(width - 8);
+      expect(dpad.centerY - reach).toBeGreaterThanOrEqual(8);
+      expect(dpad.centerY + reach).toBeLessThanOrEqual(height - 8);
+      expect(dpad.buttonHalfSize * 2 * (renderedWidth / width)).toBeGreaterThanOrEqual(44);
+      expect(realmCarverDirectionFromPointer(dpad.centerX - dpad.offset, dpad.centerY, width, height, renderedWidth)).toBe("left");
+      expect(realmCarverDirectionFromPointer(dpad.centerX + dpad.offset, dpad.centerY, width, height, renderedWidth)).toBe("right");
+      expect(realmCarverDirectionFromPointer(dpad.centerX, dpad.centerY - dpad.offset, width, height, renderedWidth)).toBe("up");
+      expect(realmCarverDirectionFromPointer(dpad.centerX, dpad.centerY + dpad.offset, width, height, renderedWidth)).toBe("down");
+    }
   });
 
   it("processes keyboard and pointer scene input, responsive recomposition, and cleanup", () => {

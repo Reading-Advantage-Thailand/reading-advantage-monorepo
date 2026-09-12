@@ -42,21 +42,31 @@ const rootStyle: CSSProperties = {
   minBlockSize: "100%",
   maxBlockSize: "100%",
   overflow: "hidden",
-  background: "var(--apk-tutorial-background, #07110e)",
-  color: "var(--apk-tutorial-text, #f4f0dc)",
-  fontFamily: "var(--apk-tutorial-body-font, ui-sans-serif, system-ui, sans-serif)",
+  background: "var(--apk-tutorial-background, #060b18)",
+  color: "var(--apk-tutorial-text, #f7f2d0)",
+  fontFamily: "var(--apk-tutorial-body-font, Tahoma, 'Noto Sans Thai', sans-serif)",
 };
 
 const actionStyle: CSSProperties = {
   minBlockSize: "48px",
-  border: "1px solid var(--apk-tutorial-action-border, #8ce0b8)",
-  borderRadius: "var(--apk-tutorial-action-radius, 6px)",
-  background: "var(--apk-tutorial-action-background, #102820)",
+  border: "2px solid var(--apk-tutorial-action-border, #67e8f9)",
+  borderRadius: "var(--apk-tutorial-action-radius, 2px)",
+  background: "var(--apk-tutorial-action-background, #101d32)",
+  boxShadow: "4px 4px 0 #030712",
   color: "var(--apk-tutorial-text, #f4f0dc)",
   cursor: "pointer",
   font: "inherit",
   fontWeight: 700,
   padding: "0.7rem 1rem",
+};
+
+const visuallyHiddenStyle: CSSProperties = {
+  blockSize: "1px",
+  clipPath: "inset(50%)",
+  inlineSize: "1px",
+  overflow: "hidden",
+  position: "absolute",
+  whiteSpace: "nowrap",
 };
 
 /**
@@ -91,7 +101,7 @@ export function GameTutorialScreen({
 
   useEffect(() => {
     const heading = headingRef.current;
-    heading?.focus();
+    heading?.focus({ preventScroll: true });
     return () => {
       if (document.activeElement === heading) heading?.blur();
     };
@@ -112,7 +122,17 @@ export function GameTutorialScreen({
       controller.advance();
     }
   };
-  const narration = consequenceFeedback ?? consequenceLabel ?? `Step ${stepNumber} of ${total}`;
+  const fallbackNarration = `Step ${stepNumber} of ${total}`;
+  const requestedNarration = consequenceFeedback ?? consequenceLabel;
+  const narration = requestedNarration === currentStep.title || requestedNarration === currentStep.explanation
+    ? fallbackNarration
+    : requestedNarration ?? fallbackNarration;
+  const resolvedTargetLabel = targetLabel?.trim() && targetLabel !== currentStep.title
+    && targetLabel !== snapshot.currentTarget.id ? targetLabel : undefined;
+  const resolvedActionLabel = actionLabel?.trim() && actionLabel !== currentStep.title
+    && actionLabel !== currentStep.explanation && actionLabel !== snapshot.currentAction.id
+    ? actionLabel
+    : undefined;
   const regionLabel = tutorial.title.split(" — ")[0] ?? tutorial.title;
 
   return (
@@ -123,20 +143,40 @@ export function GameTutorialScreen({
       data-apk-reduced-motion={String(reducedMotion)}
       data-apk-tutorial-animation={reducedMotion ? "none" : "host-controlled"}
       data-apk-tutorial-screen="true"
+      data-apk-visual-theme="retro-arcade"
       role="region"
-      style={{ ...rootStyle, ...style }}
+      style={{
+        ...rootStyle,
+        ...(compactLandmarks ? { minBlockSize: "auto", maxBlockSize: "none" } : {}),
+        ...style,
+      }}
     >
-      <header style={{ borderBlockEnd: "1px solid var(--apk-tutorial-border, #335c4b)", padding: "clamp(1rem, 3vw, 1.5rem)" }}>
-        {compactLandmarks ? null : <h1 style={{ fontSize: "clamp(1.25rem, 3vw, 2rem)", margin: 0, overflowWrap: "anywhere" }}>{tutorial.title}</h1>}
-      </header>
+      {compactLandmarks ? null : (
+        <header style={{ borderBlockEnd: "2px solid var(--apk-tutorial-border, #31577d)", background: "#081225", padding: "clamp(0.75rem, 2vw, 1rem)" }}>
+          <h1 style={{ fontFamily: "'Courier New', 'Noto Sans Thai', Tahoma, monospace", fontSize: "clamp(1.25rem, 3vw, 2rem)", margin: 0, overflowWrap: "anywhere", textShadow: "2px 2px 0 #030712" }}>{tutorial.title}</h1>
+        </header>
+      )}
       <div
         data-apk-tutorial-region="body"
-        style={{ display: "grid", flex: "1 1 auto", gap: "1rem", minInlineSize: "0", overflowY: "auto", overscrollBehavior: "contain", padding: "clamp(1rem, 3vw, 1.5rem)" }}
+        style={{
+          display: "grid",
+          flex: compactLandmarks ? "0 0 auto" : "1 1 auto",
+          gap: compactLandmarks ? "0.35rem" : "1rem",
+          minInlineSize: "0",
+          overflowY: compactLandmarks ? "visible" : "auto",
+          overscrollBehavior: "contain",
+          padding: compactLandmarks ? "0.5rem" : "clamp(1rem, 3vw, 1.5rem)",
+        }}
       >
-        <article aria-label={`Tutorial step ${stepNumber}`} onKeyDown={handleCardKeyDown} style={{ border: "1px solid var(--apk-tutorial-border, #335c4b)", borderRadius: "8px", padding: "1rem" }}>
-          <h2 ref={headingRef} tabIndex={-1} style={{ margin: 0, overflowWrap: "anywhere" }}>{currentStep.title}</h2>
-          <p style={{ lineHeight: 1.6, overflowWrap: "anywhere" }}>{currentStep.explanation}</p>
-          <div aria-label={tutorial.labels.progress} aria-valuemax={total} aria-valuemin={0} aria-valuenow={completed} role="progressbar">
+        <article aria-label={`Tutorial step ${stepNumber}`} onKeyDown={handleCardKeyDown} style={{ border: "2px solid var(--apk-tutorial-border, #31577d)", borderRadius: "2px", background: "#101d32", boxShadow: compactLandmarks ? "none" : "4px 4px 0 #030712", padding: compactLandmarks ? "0.5rem 0.65rem" : "1rem", transition: reducedMotion ? "none" : "border-color 160ms ease" }}>
+          <h2 ref={headingRef} tabIndex={-1} style={{ color: "#fbbf24", fontFamily: "'Courier New', 'Noto Sans Thai', Tahoma, monospace", fontSize: compactLandmarks ? "1rem" : undefined, lineHeight: 1.25, margin: 0, overflowWrap: "anywhere" }}>{currentStep.title}</h2>
+          <p style={{ lineHeight: compactLandmarks ? 1.35 : 1.6, margin: compactLandmarks ? "0.2rem 0" : undefined, overflowWrap: "anywhere" }}>{currentStep.explanation}</p>
+          {snapshot.currentStepFailure ? (
+            <p role="alert" style={{ color: "#fecaca", fontWeight: 700, margin: "0.25rem 0 0" }}>
+              {snapshot.currentStepFailure}
+            </p>
+          ) : null}
+          <div aria-label={tutorial.labels.progress} aria-valuemax={total} aria-valuemin={0} aria-valuenow={completed} role="progressbar" style={compactLandmarks ? { fontSize: "0.75rem", lineHeight: 1.2 } : undefined}>
             {stepNumber} of {total}
           </div>
         </article>
@@ -146,13 +186,14 @@ export function GameTutorialScreen({
           data-apk-tutorial-target-id={snapshot.currentTarget.id}
           data-apk-tutorial-target-kind={snapshot.currentTarget.kind}
           role="region"
+          style={resolvedTargetLabel ? undefined : visuallyHiddenStyle}
         >
-          {targetLabel ?? snapshot.currentTarget.id}
+          {resolvedTargetLabel ?? "Tutorial example"}
         </div>
-        <div aria-label="Demonstrated tutorial action" role="region">{actionLabel ?? snapshot.currentAction.id}</div>
-        {compactLandmarks ? null : <div aria-live="polite" data-apk-tutorial-consequence={consequence} role="status">{narration}</div>}
+        {resolvedActionLabel ? <div aria-label="Demonstrated tutorial action" role="region">{resolvedActionLabel}</div> : null}
+        <div aria-atomic="true" aria-live="polite" data-apk-tutorial-consequence={consequence} role="status" style={compactLandmarks ? visuallyHiddenStyle : undefined}>{narration}</div>
       </div>
-      {showControls ? <footer style={{ display: "flex", flexWrap: "wrap", gap: "0.75rem", padding: "1rem", borderBlockStart: "1px solid var(--apk-tutorial-border, #335c4b)" }}>
+      {showControls ? <footer style={{ display: "flex", flexWrap: "wrap", gap: "0.75rem", padding: "1rem", borderBlockStart: "2px solid var(--apk-tutorial-border, #31577d)", background: "#081225" }}>
         {snapshot.status === "paused"
           ? <button type="button" onClick={controller.resume} style={actionStyle}>{tutorial.labels.resume}</button>
           : <button type="button" onClick={controller.pause} style={actionStyle}>{tutorial.labels.pause}</button>}

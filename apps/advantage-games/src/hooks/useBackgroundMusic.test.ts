@@ -1,12 +1,17 @@
 import { renderHook, act } from '@testing-library/react'
 import { isGameMusicId, resolveGameMusicId, useBackgroundMusic } from './useBackgroundMusic'
 
+jest.mock('@/lib/games-runtime', () => ({
+  withBasePath: (path: string) => `/school${path}`,
+}))
+
 describe('useBackgroundMusic', () => {
   let audioMock: {
     play: jest.Mock
     pause: jest.Mock
     loop: boolean
     volume: number
+    muted?: boolean
     currentTime: number
     src: string
     addEventListener: jest.Mock
@@ -42,7 +47,7 @@ describe('useBackgroundMusic', () => {
   it('creates an Audio instance with correct game track', () => {
     renderHook(() => useBackgroundMusic('wizard-vs-zombie'))
     
-    expect(window.Audio).toHaveBeenCalledWith('/sounds/music/wizard-vs-zombie.mp3')
+    expect(window.Audio).toHaveBeenCalledWith('/school/sounds/music/wizard-vs-zombie.mp3')
     expect(audioMock.loop).toBe(true)
   })
 
@@ -57,6 +62,29 @@ describe('useBackgroundMusic', () => {
     
     expect(audioMock.play).toHaveBeenCalled()
     expect(audioMock.loop).toBe(true)
+  })
+
+  it('keeps music muted when speech restores its volume', () => {
+    const { result } = renderHook(() => useBackgroundMusic('wizard-vs-zombie'))
+    const restore = result.current.duck()
+    result.current.setMuted(true)
+    restore()
+    expect(audioMock.muted).toBe(true)
+    result.current.setMuted(false)
+    expect(audioMock.muted).toBe(false)
+  })
+
+  it('ducks music until every speech owner releases it', () => {
+    const { result } = renderHook(() => useBackgroundMusic('wizard-vs-zombie'))
+    const originalVolume = audioMock.volume
+    const restoreFirst = result.current.duck()
+    const restoreSecond = result.current.duck()
+    expect(audioMock.volume).toBeLessThan(originalVolume)
+    restoreFirst()
+    restoreFirst()
+    expect(audioMock.volume).toBeLessThan(originalVolume)
+    restoreSecond()
+    expect(audioMock.volume).toBe(originalVolume)
   })
 
   it('stops playback on stop()', async () => {
@@ -102,12 +130,12 @@ describe('useBackgroundMusic', () => {
       { initialProps: { gameId: 'rune-match' as const } }
     )
     
-    expect(window.Audio).toHaveBeenCalledWith('/sounds/music/rune-match.mp3')
+    expect(window.Audio).toHaveBeenCalledWith('/school/sounds/music/rune-match.mp3')
     
     rerender({ gameId: 'magic-defense' })
     
     expect(audioMock.pause).toHaveBeenCalled()
-    expect(window.Audio).toHaveBeenCalledWith('/sounds/music/magic-defense.mp3')
+    expect(window.Audio).toHaveBeenCalledWith('/school/sounds/music/magic-defense.mp3')
   })
 
   it('handles play rejection gracefully (autoplay policy)', async () => {

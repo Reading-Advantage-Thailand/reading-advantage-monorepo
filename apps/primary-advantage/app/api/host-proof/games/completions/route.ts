@@ -1,3 +1,7 @@
+/**
+ * Frozen Task-5 host-proof adapter. Production play uses `/student/games/apk/{id}`.
+ * Do not extend this hidden surface.
+ */
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@reading-advantage/db";
 import { createTenantDB } from "@reading-advantage/domain";

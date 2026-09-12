@@ -36,8 +36,9 @@ Waves run five parallel agents. Shared-host blockers go first.
 - [x] Task: Generate unique medieval catalog BGM with mmx music-2.6 `a0a2ab0`
 - [x] Task: Lengthen babel-architect, rune-match, and sorcerer-ziggurat BGM `4f0f5c2`
 - [x] Task: Retune wizard-vs-zombie BGM for zombie survival `1bf470c`
+- [x] Task: Delete leftover Konva vocabulary and sentence pages. Redirect old URLs to `/student/games/apk/{id}`.
 
-Open: Phaser still does not load catalog art (C1/C2). Leftover pages will be deleted later.
+Owner instruction 2026-08-20: leftover Konva pages are retired. Catalog launch stays on APK.
 
 ## Catalog music
 

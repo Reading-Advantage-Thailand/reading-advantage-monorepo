@@ -40,12 +40,20 @@ const scaffold = generateCartridgeScaffold({
 });
 ```
 
-The scaffold generates `manifest.json`, `logic.ts`, `scene.ts`, `responsive.ts`,
-`presentation.tsx`, `assets.ts`, `attribution.ts`, `logic.test.ts`,
-`browser.test.ts`, and `qc-registration.json`. Every generated
-file pins the accepted standard-pack release, declares only accepted
-capabilities, registers the required ElvGames attribution, and uses public
-responsive, presentation, selected-union, and browser-QC APIs.
+The scaffold generates `manifest.json`, gameplay modules, a complete standard
+experience, a loadable cartridge, tests, and `qc-registration.json`. The
+generated `experience.ts` includes the briefing, safe tutorial, and debrief.
+The generated `cartridge.ts` publishes that experience through
+`standardExperience`.
+
+The generated runtime accepts keyboard, pointer, and touch input. It tracks
+learning progress, emits one validated result, and cleans its handlers during
+shutdown. `logic.test.ts`, `experience.test.ts`, and `browser.test.ts` cover the
+generated behavior. Every generated file uses public APK APIs.
+
+An end-to-end integration test writes the scaffold into a temporary project.
+It then compiles, imports, registers, launches, completes, and destroys the
+generated cartridge.
 
 ## Canonical standard-pack contract
 

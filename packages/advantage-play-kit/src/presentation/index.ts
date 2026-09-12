@@ -23,10 +23,36 @@ export type {
   GameBriefingScreenProps,
   GameNavigationControlsProps,
   GameProgressProps,
+  GamePersistenceState,
   GameResultPanelProps,
   InstructionsPanelProps,
   PresentationShellProps,
 } from "./game-presentation.js";
+
+/** Shared server-confirmed RPG reward panel. */
+export { RpgRewardPanel } from "./rpg-reward-panel.js";
+
+/** Public RPG reward panel props and asset URLs. */
+export type { RpgRewardAssetUrls, RpgRewardPanelProps } from "./rpg-reward-panel.js";
+
+/** Shared collapsed briefing disclosure for confirmed RPG rewards. */
+export { RpgRewardDisclosure } from "./rpg-reward-disclosure.js";
+
+/** Public RPG reward disclosure props. */
+export type { RpgRewardDisclosureProps } from "./rpg-reward-disclosure.js";
+
+/** Shared result notice for newly confirmed RPG rewards. */
+export { RpgUnlockNotice } from "./rpg-unlock-notice.js";
+
+/** Public RPG unlock notice props. */
+export type { RpgUnlockNoticeProps } from "./rpg-unlock-notice.js";
+
+/** Reviewed RPG reward assets, credit, and host URL resolver. */
+export {
+  RPG_REWARD_ASSET_PATHS,
+  RPG_REWARD_REQUIRED_CREDIT,
+  resolveRpgRewardAssetUrls,
+} from "./rpg-reward-assets.js";
 
 /** Standard briefing, guided tutorial, gameplay, and debrief contract. */
 export {
@@ -98,12 +124,14 @@ export type {
 
 /** Public guided tutorial contract and action-driver types. */
 export type {
+  CreateTutorialActionDriverContext,
   GameTutorialAction,
   GameTutorialActionConsequence,
   GameTutorialActionDiagnostics,
   GameTutorialActionDriver,
   GameTutorialActionDriverContext,
   GameTutorialActionDriverFrameContext,
+  GameTutorialAnswerAudioPort,
   GameTutorialCommand,
   GameTutorialDefinition,
   GameTutorialLabels,

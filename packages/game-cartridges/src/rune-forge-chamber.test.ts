@@ -45,6 +45,7 @@ function createInputController() {
 
 function createSceneDisplay() {
   const destroyed = vi.fn();
+  const textCalls: Array<{ value: string; style: Readonly<Record<string, unknown>> }> = [];
   type FakeText = {
     setPosition: (x: number, y: number) => FakeText;
     setText: (value: string) => FakeText;
@@ -61,7 +62,8 @@ function createSceneDisplay() {
     strokeRoundedRect: (x: number, y: number, width: number, height: number, radius?: number) => FakeGraphics;
     destroy: () => void;
   };
-  const text = (): FakeText => {
+  const text = (_x = 0, _y = 0, initial = "", style: Readonly<Record<string, unknown>> = {}): FakeText => {
+    textCalls.push({ value: initial, style });
     const value = {} as FakeText;
     value.setPosition = vi.fn(() => value);
     value.setText = vi.fn(() => value);
@@ -83,6 +85,7 @@ function createSceneDisplay() {
   };
   return {
     destroyed,
+    textCalls,
     add: {
       graphics,
       text,
@@ -179,7 +182,7 @@ describe("Rune Forge Chamber cartridge", () => {
 
     const correct = controller.selectRune(initial.nextRuneId);
     expect(correct).toMatchObject({ accepted: true, correct: true, progressed: true, terminal: false });
-    expect(correct.snapshot.runes[0]?.selected).toBe(true);
+    expect(correct.snapshot.runes.every((rune) => !rune.selected)).toBe(true);
     expect(correct.snapshot.wordIndex).toBe(1);
     expect(correct.snapshot.targetIndex).toBe(1);
   });
@@ -230,7 +233,7 @@ describe("Rune Forge Chamber cartridge", () => {
     const deliver = vi.fn();
     const controller = createRuneForgeChamberController(SENTENCES, deliver);
     let terminal: ReturnType<typeof controller.choose> | undefined;
-    while (controller.snapshot().phase === "playing") terminal = controller.choose("confirm");
+    while (controller.snapshot().phase === "playing") terminal = controller.selectRune(controller.snapshot().nextRuneId!);
     const result = gameResultsSchema.parse(deliver.mock.calls[0]?.[0]);
 
     expect(terminal).toBeDefined();
@@ -532,5 +535,69 @@ describe("Rune Forge Chamber cartridge", () => {
     destroyed.restore({ ...destroyedCapture, destroyed: true });
     destroyed.restore({ ...destroyedCapture, targetCount: 99 });
     expect(destroyed.snapshot().destroyed).toBe(true);
+  });
+
+  it("uses neutral seeded waves, spatial cursor moves, and fair duplicate words", () => {
+    const input = [{ term: "go go home safely now", translation: "กลับบ้านอย่างปลอดภัย" }];
+    const first = createRuneForgeChamberController(input, vi.fn(), { seed: 31 });
+    const second = createRuneForgeChamberController(input, vi.fn(), { seed: 31 });
+    const initial = first.snapshot();
+
+    expect(initial.runes).toHaveLength(4);
+    expect(initial.cursorRuneId).toBe(second.snapshot().cursorRuneId);
+    expect(initial.runes.map((rune) => rune.word)).toContain("go");
+    const matchingDuplicate = initial.runes.find((rune) => rune.word === "go" && rune.id !== initial.nextRuneId);
+    expect(matchingDuplicate).toBeDefined();
+    expect(first.selectRune(matchingDuplicate!.id)).toMatchObject({ correct: true, progressed: true });
+
+    const beforeMove = first.snapshot();
+    const current = beforeMove.runes.find((rune) => rune.id === beforeMove.cursorRuneId)!;
+    const moved = first.moveCursor("move-right");
+    const selected = moved.runes.find((rune) => rune.id === moved.cursorRuneId)!;
+    if (moved.cursorRuneId !== beforeMove.cursorRuneId) {
+      expect(Math.cos(selected.angle)).toBeGreaterThan(Math.cos(current.angle));
+    }
+
+    const captured = first.capture();
+    const restored = createRuneForgeChamberController(input, vi.fn(), { seed: 31 });
+    restored.restore(captured);
+    expect(restored.snapshot()).toEqual(captured);
+    expect(() => restored.restore({ ...captured, waveIndex: 99 })).toThrow(/wave index/i);
+  });
+
+  it("keeps complete compact rune cards inside native and CSS-scaled scenes throughout the orbit", () => {
+    const controller = createRuneForgeChamberController([
+      { term: "I see an environmental bridge", translation: "ฉันเห็นสะพานสิ่งแวดล้อม" },
+    ], vi.fn(), { seed: 41 });
+    const assertBounds = (width: number, height: number, scale: number, cardWidth: number): void => {
+      const points = getRuneForgeChamberRunePoints(controller.snapshot().runes, width, height, scale);
+      for (const point of points) {
+        expect(point.x - cardWidth / 2).toBeGreaterThanOrEqual(8);
+        expect(point.x + cardWidth / 2).toBeLessThanOrEqual(width - 8);
+      }
+    };
+
+    for (let step = 0; step < 8; step += 1) {
+      assertBounds(390, 704, 1, Math.min(124, 390 * 0.36));
+      assertBounds(960, 540, 336 / 960, Math.min(960 * 0.42, 380));
+      expect(controller.snapshot().runes.map((rune) => rune.label)).toContain("environmental");
+      controller.tick(500);
+    }
+
+    const config = createRuneForgeChamberCartridge().createGameConfig({
+      input: [{ term: "I see an environmental bridge", translation: "ฉันเห็นสะพานสิ่งแวดล้อม" }],
+      edition: PHASE3_RUNTIME_EDITION,
+      complete: vi.fn(),
+      diagnostic: vi.fn(),
+      inputController: createInputController(),
+      sessionMode: "playing",
+      seed: 41,
+    });
+    const scene = createSceneDisplay();
+    scene.scale = { width: 390, height: 704 };
+    scene.game.canvas.getBoundingClientRect = () => ({ left: 0, top: 0, width: 390, height: 704 });
+    (config.scene as { create: (this: typeof scene) => void }).create.call(scene);
+    expect(scene.textCalls[0]?.value).toBe("");
+    expect(scene.textCalls.some((call) => call.value === "environmental")).toBe(true);
   });
 });

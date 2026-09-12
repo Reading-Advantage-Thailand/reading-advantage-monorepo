@@ -1,6 +1,5 @@
 // @vitest-environment node
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { ZodError } from "zod";
 
 const mocks = vi.hoisted(() => ({
   legacyMode: vi.fn(),
@@ -98,6 +97,28 @@ describe("GET /api/auth/company/start", () => {
     expect(mocks.start).not.toHaveBeenCalled();
   });
 
+  it("sanitizes an unsafe returnTo before the callback-origin handoff", async () => {
+    const unsafeReturnTo = "https://attacker.example/private";
+    const warning = vi
+      .spyOn(console, "warn")
+      .mockImplementation(() => undefined);
+    mocks.publicOrigin.mockReturnValue(new URL(previewOrigin));
+
+    const response = await GET(
+      new Request(
+        `${previewOrigin}/api/auth/company/start?returnTo=${encodeURIComponent(unsafeReturnTo)}`,
+      ),
+    );
+    const location = new URL(response.headers.get("location")!);
+
+    expect(response.status).toBe(307);
+    expect(location.origin).toBe(callbackOrigin);
+    expect(location.searchParams.get("returnTo")).toBe("/");
+    expect(warning).toHaveBeenCalledTimes(1);
+    expect(String(warning.mock.calls[0]?.[0])).not.toContain(unsafeReturnTo);
+    expect(mocks.start).not.toHaveBeenCalled();
+  });
+
   it("redirects to the locale-prefixed landing page in legacy-school mode", async () => {
     mocks.legacyMode.mockReturnValue(true);
     mocks.authMode.mockReturnValue("legacy-school");
@@ -114,18 +135,11 @@ describe("GET /api/auth/company/start", () => {
     const warning = vi
       .spyOn(console, "warn")
       .mockImplementation(() => undefined);
-    mocks.start
-      .mockRejectedValueOnce(new ZodError([]))
-      .mockResolvedValueOnce({
-        authorizationUrl: "https://accounts.reading-advantage.com/authorize",
-        sealedTransaction: "sealed-transaction",
-      });
-
     const response = await GET(forwardedRequest(unsafeReturnTo));
 
     expect(response.status).toBe(307);
-    expect(mocks.start).toHaveBeenNthCalledWith(1, unsafeReturnTo);
-    expect(mocks.start).toHaveBeenNthCalledWith(2, "/");
+    expect(mocks.start).toHaveBeenCalledOnce();
+    expect(mocks.start).toHaveBeenCalledWith("/");
     expect(warning).toHaveBeenCalledTimes(1);
     const structuredWarning = warning.mock.calls[0]?.[0];
     expect(JSON.parse(String(structuredWarning))).toMatchObject({

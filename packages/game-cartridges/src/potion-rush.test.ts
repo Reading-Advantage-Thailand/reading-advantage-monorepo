@@ -94,7 +94,7 @@ function createFakeInput(): FakeInput {
   return input;
 }
 
-function createFakeScene(input: FakeInput) {
+function createFakeScene(input: FakeInput, canvasWidth = 960, sceneSize = { width: 960, height: 540 }) {
   const listeners = new Map<string, () => void>();
   const destroyed = vi.fn();
   const graphics = {
@@ -107,16 +107,33 @@ function createFakeScene(input: FakeInput) {
     strokeRoundedRect: vi.fn(function (this: object) { return this; }),
     destroy: destroyed,
   };
-  const textObjects: Array<{ setPosition: ReturnType<typeof vi.fn>; setText: ReturnType<typeof vi.fn>; destroy: ReturnType<typeof vi.fn> }> = [];
+  const textObjects: Array<{
+    setPosition: ReturnType<typeof vi.fn>;
+    setText: ReturnType<typeof vi.fn>;
+    setFontSize: ReturnType<typeof vi.fn>;
+    setOrigin: ReturnType<typeof vi.fn>;
+    setWordWrapWidth: ReturnType<typeof vi.fn>;
+    destroy: ReturnType<typeof vi.fn>;
+  }> = [];
+  const tileSprite = vi.fn(() => ({
+    setOrigin: vi.fn().mockReturnThis(),
+    setDisplaySize: vi.fn().mockReturnThis(),
+    setDepth: vi.fn().mockReturnThis(),
+    destroy: vi.fn(),
+  }));
   const scene = {
-    scale: { width: POTION_RUSH_CANVAS.width, height: POTION_RUSH_CANVAS.height },
-    game: { canvas: { getBoundingClientRect: () => ({ left: 0, top: 0, width: POTION_RUSH_CANVAS.width, height: POTION_RUSH_CANVAS.height }) } },
+    scale: sceneSize,
+    game: { canvas: { getBoundingClientRect: () => ({ left: 0, top: 0, width: canvasWidth, height: sceneSize.height }) } },
     add: {
       graphics: () => graphics,
+      tileSprite,
       text: () => {
         const text = {
           setPosition: vi.fn(function (this: object) { return this; }),
           setText: vi.fn(function (this: object) { return this; }),
+          setFontSize: vi.fn(function (this: object) { return this; }),
+          setOrigin: vi.fn(function (this: object) { return this; }),
+          setWordWrapWidth: vi.fn(function (this: object) { return this; }),
           destroy: vi.fn(),
         };
         textObjects.push(text);
@@ -131,6 +148,7 @@ function createFakeScene(input: FakeInput) {
     listeners,
     graphics,
     textObjects,
+    tileSprite,
     destroyed,
   };
 }
@@ -165,7 +183,7 @@ describe("Potion Rush bespoke cartridge", () => {
     expect(() => controller.tick(1, Number.NaN)).toThrow(/viewport/i);
   });
 
-  it("builds a deterministic customer queue and moving conveyor", () => {
+  it("builds a deterministic queue with only supplied sentence words and stable ingredient identities", () => {
     const controller = createPotionRushController(INPUT, vi.fn());
     const initial = controller.snapshot();
 
@@ -173,7 +191,10 @@ describe("Potion Rush bespoke cartridge", () => {
     expect(initial.activeCustomerIds).toEqual(["customer:0", "customer:1", null]);
     expect(initial.cauldrons).toHaveLength(3);
     expect(initial.conveyor.map((ingredient) => ingredient.word)).toEqual([
-      "brew", "red", "serve", "blue", "moonleaf", "emberroot",
+      "brew", "red", "serve", "blue",
+    ]);
+    expect(initial.conveyor.map((ingredient) => ingredient.id)).toEqual([
+      "ingredient:0", "ingredient:1", "ingredient:2", "ingredient:3",
     ]);
     const moved = controller.tick(1).conveyor;
     expect(moved[0]?.x).toBeLessThan(initial.conveyor[0]!.x);
@@ -192,23 +213,23 @@ describe("Potion Rush bespoke cartridge", () => {
 
   it("spoils a cauldron on a wrong ingredient and requires a dump", () => {
     const controller = createPotionRushController(INPUT, vi.fn());
-    const wrong = controller.placeIngredient(ingredientIdFor(controller, "moonleaf"), 0);
+    const wrong = controller.placeIngredient(ingredientIdFor(controller, "serve"), 0);
 
     expect(wrong).toMatchObject({ accepted: true, correct: false, progressed: false });
-    expect(wrong.snapshot.cauldrons[0]).toMatchObject({ state: "spoiled", currentWords: ["moonleaf"] });
+    expect(wrong.snapshot.cauldrons[0]).toMatchObject({ state: "spoiled", currentWords: ["serve"] });
     expect(getPotionRushPointerTarget(480, 378, 960, 540, wrong.snapshot)).toEqual({ kind: "dump", cauldronIndex: 0 });
     expect(controller.placeIngredient(ingredientIdFor(controller, "brew"), 0).accepted).toBe(false);
 
     const dumped = controller.dumpCauldron(0);
     expect(dumped).toMatchObject({ accepted: true, correct: false });
     expect(dumped.snapshot.cauldrons[0]).toMatchObject({ state: "idle", currentWords: [] });
-    expect(dumped.snapshot.conveyor.some((ingredient) => ingredient.word === "moonleaf")).toBe(true);
+    expect(dumped.snapshot.conveyor.some((ingredient) => ingredient.word === "serve")).toBe(true);
 
-    const expiring = createPotionRushController([{ term: "brew red", translation: "red brew" }], vi.fn());
-    expiring.placeIngredient(ingredientIdFor(expiring, "moonleaf"), 0);
+    const expiring = createPotionRushController(INPUT, vi.fn());
+    expiring.placeIngredient(ingredientIdFor(expiring, "serve"), 0);
     const expired = expiring.applyHazard();
     expect(expired.snapshot.lastOutcome).toBe("expired");
-    expect(expired.snapshot.conveyor.some((ingredient) => ingredient.word === "moonleaf")).toBe(true);
+    expect(expired.snapshot.conveyor.some((ingredient) => ingredient.word === "serve")).toBe(true);
   });
 
   it("serves only the matching completed customer after awarding word score", () => {
@@ -516,6 +537,100 @@ describe("Potion Rush bespoke cartridge", () => {
 
     expect(getPotionRushPointerTarget(950, 420, 960, 540, initial)).toEqual({ kind: "none" });
     expect(getPotionRushPointerTarget(480, 350, 960, 540, initial)).toEqual({ kind: "cauldron", cauldronIndex: 1 });
+  });
+
+  it("shows a bare Thai sentence and complete English ingredients on the quiet compact board", () => {
+    const input = createFakeInput();
+    const harness = createFakeScene(input, 336, { width: 336, height: 733 });
+    const config = createPotionRushCartridge().createGameConfig({
+      input: [
+        { term: "brew restoration potion", translation: "ปรุงยาฟื้นฟู" },
+        { term: "serve luminous tonic", translation: "เสิร์ฟยาบำรุงเรืองแสง" },
+      ],
+      edition: PHASE3_RUNTIME_EDITION,
+      complete: vi.fn(),
+      diagnostic: vi.fn(),
+      inputController: input,
+      sessionMode: "playing",
+    });
+    const scene = config.scene as { create(this: typeof harness.scene): void };
+
+    scene.create.call(harness.scene);
+
+    const latestText = (index: number): string => String(harness.textObjects[index]?.setText.mock.calls.at(-1)?.[0] ?? "");
+    expect(latestText(1)).toBe("ปรุงยาฟื้นฟู");
+    expect(harness.textObjects.slice(0, 5).map((_text, index) => latestText(index)).join(" "))
+      .not.toMatch(/POTION RUSH|Brew in order|Compact shop|Potion shop|Select or drag|Keyboard:/);
+    const ingredientLabels = harness.textObjects.slice(12, 18);
+    const visibleIngredients = ingredientLabels.filter((text) => text.setText.mock.calls.at(-1)?.[0]);
+    expect(visibleIngredients.map((text) => text.setText.mock.calls.at(-1)?.[0])).toEqual(["brew", "restoration"]);
+    expect(visibleIngredients.every((text) => text.setFontSize.mock.calls.at(-1)?.[0] === 16)).toBe(true);
+    expect(visibleIngredients.every((text) => text.setWordWrapWidth.mock.calls.at(-1)?.[1] === true)).toBe(true);
+    expect(harness.tileSprite).not.toHaveBeenCalled();
+    expect(harness.graphics.fillRect).toHaveBeenCalledWith(0, 0, 336, 733);
+  });
+
+  it("keeps native conveyor cards distinct for four supplied sentences", () => {
+    const input = createFakeInput();
+    const harness = createFakeScene(input, 390, { width: 390, height: 704 });
+    const vocabulary = [
+      { term: "mix red", translation: "ผสมสีแดง" },
+      { term: "pour blue", translation: "เทสีน้ำเงิน" },
+      { term: "stir gold", translation: "คนสีทอง" },
+      { term: "serve green", translation: "เสิร์ฟสีเขียว" },
+    ];
+    const config = createPotionRushCartridge().createGameConfig({
+      input: vocabulary,
+      edition: PHASE3_RUNTIME_EDITION,
+      complete: vi.fn(),
+      diagnostic: vi.fn(),
+      inputController: input,
+      sessionMode: "playing",
+    });
+    const scene = config.scene as { create(this: typeof harness.scene): void };
+
+    scene.create.call(harness.scene);
+
+    const ingredientLabels = harness.textObjects.slice(12, 20)
+      .filter((text) => text.setText.mock.calls.at(-1)?.[0]);
+    const bounds = ingredientLabels.map((text) => {
+      const x = Number(text.setPosition.mock.calls.at(-1)?.[0]);
+      return { left: x - 52, right: x + 52 };
+    }).sort((left, right) => left.left - right.left);
+    const suppliedWords = vocabulary.flatMap((item) => item.term.split(" "));
+
+    expect(ingredientLabels.length).toBeGreaterThan(1);
+    expect(ingredientLabels.map((text) => text.setText.mock.calls.at(-1)?.[0])
+      .every((word) => suppliedWords.includes(String(word)))).toBe(true);
+    expect(bounds.every((bound) => bound.left >= 0 && bound.right <= 390)).toBe(true);
+    expect(bounds.slice(1).every((bound, index) => bound.left >= bounds[index]!.right)).toBe(true);
+  });
+
+  it("keeps conveyor spacing through one full four-sentence circulation", () => {
+    const controller = createPotionRushController([
+      { term: "mix", translation: "ผสม" },
+      { term: "pour", translation: "เท" },
+      { term: "stir", translation: "คน" },
+      { term: "serve", translation: "เสิร์ฟ" },
+    ], vi.fn());
+    controller.placeIngredient(ingredientIdFor(controller, "pour"), 0);
+    controller.dumpCauldron(0);
+    const seen = new Set<string>();
+
+    for (let frame = 0; frame < 160; frame += 1) {
+      const state = controller.tick(0.05, 390);
+      const visible = state.conveyor
+        .filter((ingredient) => ingredient.x >= ingredient.width / 2 && ingredient.x <= 390 - ingredient.width / 2)
+        .sort((left, right) => left.x - right.x);
+      visible.forEach((ingredient) => seen.add(ingredient.id));
+      const bounds = visible.map((ingredient) => ({
+        left: ingredient.x - ingredient.width / 2,
+        right: ingredient.x + ingredient.width / 2,
+      }));
+      expect(bounds.slice(1).every((bound, index) => bound.left >= bounds[index]!.right)).toBe(true);
+    }
+
+    expect(seen).toEqual(new Set(["ingredient:0", "ingredient:2", "ingredient:3", "ingredient:return:4"]));
   });
 
   it("renders brewing and completed cauldrons before terminal service", () => {

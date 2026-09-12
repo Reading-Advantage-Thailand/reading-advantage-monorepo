@@ -1,5 +1,4 @@
 import { PageConfig } from "@/types";
-import type { Permission } from "@/lib/permissions";
 
 export const studentPageConfig: PageConfig = {
   mainNav: [
@@ -37,6 +36,12 @@ export const studentPageConfig: PageConfig = {
     //   icon: "BookAIcon",
     //   requiredPermissions: ["STUDENT_ACCESS"],
     // },
+    {
+      title: "games",
+      href: "/student/games",
+      icon: "BookIcon",
+      requiredPermissions: ["STUDENT_ACCESS"],
+    },
     {
       title: "assignments",
       href: "/student/assignments",

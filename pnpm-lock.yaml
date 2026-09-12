@@ -577,6 +577,9 @@ importers:
       '@reading-advantage/game-contracts':
         specifier: workspace:*
         version: link:../../packages/game-contracts
+      '@reading-advantage/storage':
+        specifier: workspace:*
+        version: link:../../packages/storage
       '@reading-advantage/ui':
         specifier: workspace:*
         version: link:../../packages/ui
@@ -1045,6 +1048,9 @@ importers:
       '@reading-advantage/game-contracts':
         specifier: workspace:*
         version: link:../../packages/game-contracts
+      '@reading-advantage/storage':
+        specifier: workspace:*
+        version: link:../../packages/storage
       '@reading-advantage/ui':
         specifier: workspace:*
         version: link:../../packages/ui
@@ -2426,6 +2432,9 @@ importers:
       '@reading-advantage/domain':
         specifier: workspace:*
         version: link:../domain
+      '@reading-advantage/game-contracts':
+        specifier: workspace:*
+        version: link:../game-contracts
       '@reading-advantage/types':
         specifier: workspace:*
         version: link:../types

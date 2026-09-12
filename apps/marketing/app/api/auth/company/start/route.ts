@@ -1,3 +1,4 @@
+import { parseCompanyOidcReturnTo } from "@reading-advantage/auth";
 import { NextResponse } from "next/server";
 import { ZodError } from "zod";
 
@@ -17,18 +18,10 @@ import {
  */
 export async function GET(request: Request): Promise<NextResponse> {
   const requestUrl = new URL(request.url);
-  const returnTo = requestUrl.searchParams.get("returnTo") ?? "/";
-  const publicOrigin = getPublicOrigin(request);
-  const callbackOrigin = getMarketingCallbackOrigin();
-  if (publicOrigin.origin !== callbackOrigin.origin) {
-    const handoffUrl = new URL(requestUrl.pathname, callbackOrigin);
-    handoffUrl.searchParams.set("returnTo", returnTo);
-    return NextResponse.redirect(handoffUrl);
-  }
-  const client = getMarketingOidcClient();
-  let started;
+  const requestedReturnTo = requestUrl.searchParams.get("returnTo") ?? "/";
+  let returnTo: string;
   try {
-    started = await client.start(returnTo);
+    returnTo = parseCompanyOidcReturnTo(requestedReturnTo);
   } catch (error) {
     if (!(error instanceof ZodError)) throw error;
     console.warn(
@@ -37,8 +30,17 @@ export async function GET(request: Request): Promise<NextResponse> {
         event: "marketing_sso_unsafe_return_to",
       }),
     );
-    started = await client.start("/");
+    returnTo = "/";
   }
+  const publicOrigin = getPublicOrigin(request);
+  const callbackOrigin = getMarketingCallbackOrigin();
+  if (publicOrigin.origin !== callbackOrigin.origin) {
+    const handoffUrl = new URL(requestUrl.pathname, callbackOrigin);
+    handoffUrl.searchParams.set("returnTo", returnTo);
+    return NextResponse.redirect(handoffUrl);
+  }
+  const client = getMarketingOidcClient();
+  const started = await client.start(returnTo);
   const response = NextResponse.redirect(started.authorizationUrl);
   response.cookies.set(MARKETING_TRANSACTION_COOKIE, started.sealedTransaction, {
     httpOnly: true,

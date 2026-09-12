@@ -2,15 +2,10 @@
 
 import dynamic from "next/dynamic";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
-import {
-  APK_RUNTIME_API_VERSION,
-  type RuntimeCartridge,
-  type RuntimeEdition,
-  type SemanticAssetBinding,
-} from "@reading-advantage/advantage-play-kit/runtime";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { createBrowserAudioClipPorts, createAnswerChoiceAudioController } from "@reading-advantage/advantage-play-kit";
 import type { StandardExperienceCartridge } from "@reading-advantage/advantage-play-kit/presentation";
-import { cartridgeLoaders } from "@reading-advantage/game-cartridges";
+import { cartridgeLoaders, createCatalogStandardEdition } from "@reading-advantage/game-cartridges";
 
 import {
   isGameMusicId,
@@ -46,23 +41,6 @@ const APKGameHost = dynamic(
   },
 );
 
-const DEVELOPER_PREVIEW_ASSET = {
-  id: "developer-preview",
-  path: "asset-6aeab3f50c0f6be4.png",
-  kind: "image",
-  view: "screen",
-  width: 192,
-  height: 384,
-  format: "png",
-  alpha: true,
-  byteSize: 3670,
-  sha256: "6aeab3f50c0f6be436eeb5594e7d9c1ae31f8f19ac3bdfa04d7fbcbf856ba5e4",
-  provenance: {
-    source: "Advantage Games standard-pack QC preview",
-    license: "LicenseRef-Reading-Advantage-Original",
-  },
-} as const;
-
 /** Props for a public, local-only cartridge launch surface. */
 export interface PublicCartridgeHostProps {
   /** Public catalog identifier for the cartridge. */
@@ -94,42 +72,6 @@ function getCartridgeLoader(cartridgeId: string): CartridgeLoader {
 }
 
 /**
- * Creates the local developer edition required by the current APK host.
- * @param cartridge Loaded public cartridge.
- * @returns A valid image-backed edition for every declared cartridge asset binding.
- */
-function createDeveloperEdition(cartridge: RuntimeCartridge): RuntimeEdition {
-  const bindings: Record<string, SemanticAssetBinding> = {};
-  for (const key of cartridge.manifest.requiredAssetBindings) {
-    bindings[key] = {
-      key,
-      file: DEVELOPER_PREVIEW_ASSET.id,
-      usage: "image",
-      view: DEVELOPER_PREVIEW_ASSET.view,
-    };
-  }
-
-  return {
-    id: "public-developer",
-    title: "Public developer preview",
-    runtimeApiVersion: APK_RUNTIME_API_VERSION,
-    pack: {
-      id: "standard-pack-qc",
-      version: "1.0.0",
-      root: withBasePath("/assets/apk/standard-pack-qc/"),
-      files: { [DEVELOPER_PREVIEW_ASSET.id]: DEVELOPER_PREVIEW_ASSET },
-    },
-    bindings,
-    tuning: {
-      speed: 1,
-      targetScale: 1,
-      collisionScale: 1,
-      intensity: 0.5,
-    },
-  };
-}
-
-/**
  * Loads one public cartridge and mounts the client-only APK game host.
  * @param props Public catalog fields for the selected cartridge.
  * @returns A public game surface without authentication or persistence.
@@ -142,13 +84,34 @@ export function PublicCartridgeHost({
   locale,
 }: PublicCartridgeHostProps) {
   const searchParams = useSearchParams();
-  const { start: startMusic, stop: stopMusic } = useBackgroundMusic(
+  const playSurfaceRef = useRef<HTMLElement>(null);
+  const { start: startMusic, stop: stopMusic, duck: duckMusic, setMuted: muteMusic } = useBackgroundMusic(
     resolveGameMusicId(cartridgeId),
   );
   const [cartridge, setCartridge] = useState<StandardExperienceCartridge>();
   const [loadError, setLoadError] = useState<string>();
+  const [learningMode, setLearningMode] = useState<"reading" | "answer-audio">("reading");
+  const supportsAnswerAudioPreview = cartridgeId === "wizard-vs-zombie" && inputMode === "vocabulary";
+  const createAnswerAudioSession = useCallback(() => createAnswerChoiceAudioController({
+    session: {
+      modality: "read-to-select-audio", promptLocale: "th-TH", answerLocale: "en-US",
+      promptField: "translation", answerField: "term", scored: false,
+    },
+    clips: PUBLIC_ARCADE_VOCABULARY_FIXTURE.map((item, itemPosition) => ({
+      itemPosition,
+      url: withBasePath(`/sounds/listening-preview/${item.term}.mp3`),
+      mediaType: "audio/mpeg" as const,
+    })),
+    preparationTimeoutMs: 10_000,
+    ...createBrowserAudioClipPorts(),
+    ducking: { duck: duckMusic },
+  }), [duckMusic]);
   const edition = useMemo(
-    () => (cartridge ? createDeveloperEdition(cartridge) : undefined),
+    () => (cartridge ? createCatalogStandardEdition(
+      cartridge.manifest.requiredAssetBindings,
+      withBasePath("/assets/apk/standard-pack-qc/"),
+      cartridge.manifest.id,
+    ) : undefined),
     [cartridge],
   );
   const input = inputMode === "sentence"
@@ -189,7 +152,7 @@ export function PublicCartridgeHost({
   }, [cartridgeId]);
 
   return (
-    <main className="min-h-screen bg-background px-4 py-6 text-foreground sm:px-6">
+    <main className="min-h-screen bg-background px-4 pb-28 pt-6 text-foreground sm:px-6">
       <div className="mx-auto w-full max-w-5xl">
         <header className="border-b border-border pb-4">
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
@@ -203,9 +166,23 @@ export function PublicCartridgeHost({
               This public preview uses built-in sample content and does not save progress.
             </p>
           </div>
+          {supportsAnswerAudioPreview ? (
+            <div className="mt-4" aria-label="Learning mode">
+              <div className="flex flex-wrap gap-2">
+                <button type="button" aria-pressed={learningMode === "reading"}
+                  className="min-h-11 border-2 border-cyan-400 px-4 py-2 aria-pressed:bg-cyan-400 aria-pressed:text-black"
+                  onClick={() => setLearningMode("reading")}>Read Thai</button>
+                <button type="button" aria-pressed={learningMode === "answer-audio"}
+                  className="min-h-11 border-2 border-cyan-400 px-4 py-2 aria-pressed:bg-cyan-400 aria-pressed:text-black"
+                  onClick={() => setLearningMode("answer-audio")}>Listen to English</button>
+              </div>
+              <p className="mt-2 text-sm text-muted-foreground">Choose the English meaning.</p>
+            </div>
+          ) : null}
         </header>
 
         <section
+          ref={playSurfaceRef}
           aria-label={`${title} play surface`}
           className="-mx-4 mt-6 min-h-[320px] overflow-hidden border-y border-border bg-black p-0 sm:mx-0 sm:rounded-lg sm:border sm:p-4"
         >
@@ -213,6 +190,8 @@ export function PublicCartridgeHost({
           {!loadError && !cartridge ? <p className="p-4 text-slate-100">Loading game...</p> : null}
           {cartridge && edition ? (
             <APKGameHost
+              key={`${cartridgeId}-${learningMode}`}
+              createAnswerAudioSession={supportsAnswerAudioPreview && learningMode === "answer-audio" ? createAnswerAudioSession : undefined}
               aria-label={`${title} game`}
               cartridge={cartridge}
               edition={edition}
@@ -222,10 +201,11 @@ export function PublicCartridgeHost({
               responsive={APK_HOST_RESPONSIVE_OPTIONS}
               standardExperience={cartridge.standardExperience}
               className={APK_HOST_LAYOUT_CLASS}
-              instructions="Use the controls displayed in the game."
+              onMutedChange={muteMusic}
               onLifecycleTransition={(transition) => {
-                if (transition.event === "start" || transition.to === "playing") {
+                if (transition.event === "start" || transition.to === "playing" || transition.to === "demo") {
                   void startMusic();
+                  requestAnimationFrame(() => playSurfaceRef.current?.scrollIntoView?.({ block: "start", behavior: "instant" }));
                 }
               }}
               onNavigate={(destination) => {

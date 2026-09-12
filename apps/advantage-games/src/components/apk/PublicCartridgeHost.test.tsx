@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 
 import { PUBLIC_ARCADE_SENTENCE_FIXTURE } from "@/lib/apk/public-sentence-fixture";
 import { PUBLIC_ARCADE_VOCABULARY_FIXTURE } from "@/lib/apk/public-vocabulary-fixture";
@@ -7,6 +7,12 @@ import { withBasePath } from "@/lib/games-runtime";
 import { PublicCartridgeHost, publicArcadeNavigation } from "./PublicCartridgeHost";
 
 const mockCartridgeLoader = jest.fn();
+const mockCreateCatalogStandardEdition = jest.fn((bindings: readonly string[], root: string, cartridgeId: string) => ({
+  id: `catalog-${cartridgeId}`,
+  pack: { root, files: { player: { path: "player.png" }, enemy: { path: "enemy.png" } } },
+  bindings,
+}));
+const mockCreateAnswerChoiceAudioController = jest.fn(() => ({ destroy: jest.fn() }));
 const mockStartMusic = jest.fn();
 const mockStopMusic = jest.fn();
 const mockUseSearchParams = jest.fn(() => null as { get: (key: string) => string | null } | null);
@@ -14,6 +20,7 @@ const mockUseBackgroundMusic = jest.fn(() => ({
   start: mockStartMusic,
   stop: mockStopMusic,
   pause: jest.fn(),
+  duck: jest.fn(() => jest.fn()),
   isPlaying: false,
 }));
 const mockAPKGameHost = jest.fn(
@@ -21,6 +28,7 @@ const mockAPKGameHost = jest.fn(
     cartridge: { manifest: { id: string } };
     input: unknown;
     edition: { pack: { root: string } };
+    createAnswerAudioSession?: () => unknown;
     standardExperience?: unknown;
     responsive?: unknown;
     className?: string;
@@ -37,6 +45,10 @@ const mockAPKGameHost = jest.fn(
   ),
 );
 
+jest.mock("@reading-advantage/advantage-play-kit", () => ({
+  createAnswerChoiceAudioController: (...args: unknown[]) => mockCreateAnswerChoiceAudioController(...args),
+  createBrowserAudioClipPorts: () => ({ preparation: {}, playback: {} }),
+}));
 jest.mock("next/dynamic", () => ({
   __esModule: true,
   default: () => (props: { cartridge: { manifest: { id: string } }; input: unknown; edition: unknown; standardExperience?: unknown }) =>
@@ -46,7 +58,9 @@ jest.mock("next/navigation", () => ({
   useSearchParams: () => mockUseSearchParams(),
 }));
 jest.mock("@reading-advantage/game-cartridges", () => ({
+  createCatalogStandardEdition: (...args: Parameters<typeof mockCreateCatalogStandardEdition>) => mockCreateCatalogStandardEdition(...args),
   cartridgeLoaders: {
+    "wizard-vs-zombie": (...args: unknown[]) => mockCartridgeLoader(...args),
     "dragon-flight": (...args: unknown[]) => mockCartridgeLoader(...args),
     "astral-mage": (...args: unknown[]) => mockCartridgeLoader(...args),
   },
@@ -91,6 +105,25 @@ describe("PublicCartridgeHost", () => {
       standardExperience,
       createGameConfig: jest.fn(() => ({ scene: {} })),
     });
+  });
+
+  it("offers English audio answers for the written Thai target", async () => {
+    render(<PublicCartridgeHost cartridgeId="wizard-vs-zombie" title="Wizard vs Zombie" description="Choose the English meaning." inputMode="vocabulary" />);
+    await screen.findByTestId("apk-game-host");
+    expect(mockAPKGameHost.mock.calls.at(-1)?.[0].createAnswerAudioSession).toBeUndefined();
+    fireEvent.click(screen.getByRole("button", { name: "Listen to English" }));
+    const createSession = mockAPKGameHost.mock.calls.at(-1)?.[0].createAnswerAudioSession;
+    expect(createSession).toEqual(expect.any(Function));
+    createSession?.();
+    expect(mockCreateAnswerChoiceAudioController).toHaveBeenCalledWith(expect.objectContaining({
+      session: { modality: "read-to-select-audio", promptLocale: "th-TH", answerLocale: "en-US",
+        promptField: "translation", answerField: "term", scored: false },
+      clips: PUBLIC_ARCADE_VOCABULARY_FIXTURE.map((item, itemPosition) => ({
+        itemPosition, url: withBasePath(`/sounds/listening-preview/${item.term}.mp3`), mediaType: "audio/mpeg",
+      })),
+    }));
+    fireEvent.click(screen.getByRole("button", { name: "Read Thai" }));
+    expect(mockAPKGameHost.mock.calls.at(-1)?.[0].createAnswerAudioSession).toBeUndefined();
   });
 
   it("uses the stable built-in vocabulary fixture for every host render", async () => {
@@ -142,14 +175,52 @@ describe("PublicCartridgeHost", () => {
         }),
         responsive: expect.objectContaining({
           inputCapabilities: { touch: true, pointer: true, keyboard: true },
+          resolveSafeArea: expect.any(Function),
         }),
-        className: expect.stringContaining("[&_[data-apk-canvas-host]]:h-[844px]"),
+        className: expect.stringContaining("[&_[data-apk-canvas-host]]:h-[min(844px,calc(100svh_-_140px_-_env(safe-area-inset-top)_-_env(safe-area-inset-bottom)))]"),
       }),
     );
     expect(screen.getByText("Preview mode")).toBeInTheDocument();
+    const layoutClass = mockAPKGameHost.mock.calls[0]?.[0].className;
+    expect(layoutClass).toContain("min-h-[calc(100svh_-_env(safe-area-inset-top)_-_env(safe-area-inset-bottom))]");
+    expect(layoutClass).toContain("[&_[data-apk-game-controls]_button]:min-h-12");
+    expect(layoutClass).toContain("[&[data-apk-session-phase=tutorial]_[data-apk-canvas-host]]:h-[clamp(592px,calc(100svh_-_252px_-_env(safe-area-inset-top)_-_env(safe-area-inset-bottom)),844px)]");
     expect(
       screen.getByText(/built-in sample content.*does not save progress/i),
     ).toBeInTheDocument();
+  });
+
+  it("omits generic instructions while preserving the Dragon Flight briefing and tutorial", async () => {
+    const briefing = { title: "Dragon Flight briefing" };
+    const tutorial = { steps: [{ title: "Choose a gate" }] };
+    mockCartridgeLoader.mockResolvedValue({
+      manifest: {
+        id: "dragon-flight",
+        inputMode: "vocabulary",
+        requiredAssetBindings: [],
+      },
+      standardExperience: {
+        definition: { briefing, tutorial, debrief: {} },
+        createTutorialActionDriver: jest.fn(),
+      },
+      createGameConfig: jest.fn(() => ({ scene: {} })),
+    });
+
+    render(
+      <PublicCartridgeHost
+        cartridgeId="dragon-flight"
+        description="Choose the correct gate."
+        inputMode="vocabulary"
+        title="Dragon Flight"
+      />,
+    );
+
+    await screen.findByTestId("apk-game-host");
+    const hostProps = mockAPKGameHost.mock.calls.at(-1)?.[0];
+    expect(hostProps).not.toHaveProperty("instructions");
+    expect(hostProps?.standardExperience).toEqual(expect.objectContaining({
+      definition: expect.objectContaining({ briefing, tutorial }),
+    }));
   });
 
   it("opens the public cartridge in demo mode when the route requests demo", async () => {
@@ -201,7 +272,7 @@ describe("PublicCartridgeHost", () => {
     );
   });
 
-  it("prefixes the developer pack root with withBasePath", async () => {
+  it("uses the selected catalog edition and preserves its asset root", async () => {
     render(
       <PublicCartridgeHost
         cartridgeId="dragon-flight"
@@ -218,6 +289,10 @@ describe("PublicCartridgeHost", () => {
     expect(mockAPKGameHost.mock.calls[0]?.[0].edition.pack.root).toBe(
       "/test-base/assets/apk/standard-pack-qc/",
     );
+    expect(mockCreateCatalogStandardEdition).toHaveBeenCalledWith(
+      ["player.hero"], "/test-base/assets/apk/standard-pack-qc/", "dragon-flight",
+    );
+    expect(mockAPKGameHost.mock.calls[0]?.[0].edition).toBe(mockCreateCatalogStandardEdition.mock.results[0]?.value);
   });
 
   it("assigns the locale-scoped games catalog when Exit navigates to catalog", async () => {

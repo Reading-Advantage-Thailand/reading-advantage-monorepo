@@ -496,4 +496,21 @@ export const sentinelProbes: Record<string, SentinelProbe> = {
     kind: "column",
     target: "science_attempts.selected_question_ids",
   },
+  "0058_acoustic_lady_deathstrike": {
+    tag: "0058_acoustic_lady_deathstrike",
+    kind: "all",
+    target: "student_rpg_progression",
+    allOf: [
+      {
+        tag: "0058_acoustic_lady_deathstrike",
+        kind: "table",
+        target: "student_cosmetic_unlocks",
+      },
+      {
+        tag: "0058_acoustic_lady_deathstrike",
+        kind: "table",
+        target: "student_rpg_profiles",
+      },
+    ],
+  },
 };

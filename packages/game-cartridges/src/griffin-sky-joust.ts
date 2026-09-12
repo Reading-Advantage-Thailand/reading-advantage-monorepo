@@ -11,6 +11,7 @@ import {
   createResultAccountant,
   finalizeResult,
   preloadAssetBindings,
+  resolveAssetBinding,
   validateNonEmptyContent,
   type ActorSpriteLayer,
   type ActorSpriteLike,
@@ -24,6 +25,13 @@ import {
 import type { StandardExperienceCartridge } from "@reading-advantage/advantage-play-kit/presentation";
 
 import { createCartridgeStandardExperience } from "./standard-experience.js";
+import {
+  createFlightParallax,
+  destroyFlightParallax,
+  preloadFlightParallax,
+  tickFlightParallax,
+  type FlightParallaxLayers,
+} from "./flight-parallax.js";
 
 /** Canonical world size used by Griffin Sky-Joust before host scaling. */
 export const GRIFFIN_SKY_JOUST_CANVAS = Object.freeze({ width: 960, height: 540 });
@@ -48,6 +56,12 @@ export const GRIFFIN_SKY_JOUST_MAX_HEALTH = 3;
 /** Maximum simulation delta accepted from one host frame. */
 export const GRIFFIN_SKY_JOUST_MAX_FRAME_DELTA_MS = 250;
 
+/** Maximum sentence words shown as moving knights at one time. */
+export const GRIFFIN_SKY_JOUST_MAX_ACTIVE_KNIGHTS = 8;
+
+/** Duration that shows one completed sentence before the next wave. */
+export const GRIFFIN_SKY_JOUST_SENTENCE_TRANSITION_MS = 900;
+
 /** Semantic actions shared by keyboard, pointer, touch, and test hosts. */
 export const GRIFFIN_SKY_JOUST_AVAILABLE_ACTIONS = Object.freeze([
   "move-left",
@@ -59,8 +73,8 @@ export const GRIFFIN_SKY_JOUST_AVAILABLE_ACTIONS = Object.freeze([
 /** Horizontal direction used by flap and drift input. */
 export type GriffinSkyJoustDirection = -1 | 0 | 1;
 
-/** Active or terminal phase in one Griffin Sky-Joust session. */
-export type GriffinSkyJoustPhase = "playing" | "victory" | "defeat";
+/** Active, transition, or terminal phase in one Griffin Sky-Joust session. */
+export type GriffinSkyJoustPhase = "playing" | "transition" | "victory" | "defeat";
 
 /** Collision class used by the aerial combat rules. */
 export type GriffinSkyJoustCollisionClass = "top-strike" | "side-below";
@@ -93,6 +107,10 @@ export interface GriffinSkyJoustKnight {
   readonly word: string;
   /** Zero-based ordered word position. */
   readonly wordIndex: number;
+  /** Zero-based source sentence position. */
+  readonly sentenceIndex: number;
+  /** Zero-based word position within the source sentence. */
+  readonly sentenceWordIndex: number;
   /** Horizontal world position. */
   readonly x: number;
   /** Vertical world position. */
@@ -109,12 +127,18 @@ export interface GriffinSkyJoustKnight {
 export interface GriffinSkyJoustSnapshot {
   /** Deterministic host session seed. */
   readonly seed: number;
-  /** Active or terminal session phase. */
+  /** Active, transition, or terminal session phase. */
   readonly phase: GriffinSkyJoustPhase;
   /** Index of the next ordered word. */
   readonly targetIndex: number;
   /** Number of words across all finite sentence entries. */
   readonly targetCount: number;
+  /** Zero-based sentence position for the next ordered word. */
+  readonly activeSentenceIndex: number;
+  /** Source sentence shown during a completed-wave transition. */
+  readonly completedSentence: string;
+  /** Game time when the next sentence wave starts. */
+  readonly transitionEndsAt: number;
   /** Current sentence translation prompt. */
   readonly prompt: string;
   /** Current ordered word to strike. */
@@ -217,6 +241,9 @@ interface GriffinSkyJoustTarget {
   readonly id: string;
   readonly word: string;
   readonly prompt: string;
+  readonly sentence: string;
+  readonly sentenceIndex: number;
+  readonly sentenceWordIndex: number;
 }
 
 interface GriffinSkyJoustSceneContext {
@@ -242,6 +269,25 @@ interface PhaserGraphicsLike {
 interface PhaserTextLike {
   setPosition(x: number, y: number): this;
   setText(value: string): this;
+  setFontSize?(value: number): this;
+  setBackgroundColor?(value: string): this;
+  setPadding?(left: number, top: number, right?: number, bottom?: number): this;
+  setOrigin?(x: number, y?: number): this;
+  setVisible?(value: boolean): this;
+  setWordWrapWidth?(width: number, useAdvancedWrap?: boolean): this;
+  getBounds?(): { readonly width: number };
+  readonly width?: number;
+  destroy(): void;
+}
+
+interface PhaserImageLike {
+  setOrigin?(x: number, y: number): this;
+  setDisplaySize?(width: number, height: number): this;
+  setDepth?(depth: number): this;
+  setPosition?(x: number, y: number): this;
+  setAlpha?(alpha: number): this;
+  setTilePosition?(x: number, y: number): this;
+  tilePositionY?: number;
   destroy(): void;
 }
 
@@ -249,9 +295,9 @@ interface PhaserSceneLike {
   add?: {
     graphics(): PhaserGraphicsLike;
     text(x: number, y: number, value: string, style?: Readonly<Record<string, unknown>>): PhaserTextLike;
-    image?(x: number, y: number, key: string, frame?: number): ActorSpriteLike;
-    sprite?(x: number, y: number, key: string, frame?: number): ActorSpriteLike;
-    tileSprite?(x: number, y: number, width: number, height: number, key: string): ActorSpriteLike;
+    image?(x: number, y: number, key: string, frame?: number): ActorSpriteLike & PhaserImageLike;
+    sprite?(x: number, y: number, key: string, frame?: number): ActorSpriteLike & PhaserImageLike;
+    tileSprite?(x: number, y: number, width: number, height: number, key: string): ActorSpriteLike & PhaserImageLike;
   };
   load?: {
     image?(key: string, url: string): unknown;
@@ -272,6 +318,11 @@ interface GriffinSkyJoustSceneResources {
   readonly feedback: PhaserTextLike;
   readonly instructions: PhaserTextLike;
   readonly knightLabels: readonly PhaserTextLike[];
+  ground?: PhaserImageLike;
+  griffin?: PhaserImageLike;
+  knightSprites: Map<string, PhaserImageLike>;
+  groundWidth: number;
+  groundHeight: number;
 }
 
 const TUTORIAL_DECOY_ID = "knight:tutorial-decoy";
@@ -348,6 +399,9 @@ function buildTargets(input: unknown): readonly GriffinSkyJoustTarget[] {
         id: `knight:${sentenceIndex}:${wordIndex}`,
         word,
         prompt: item.translation,
+        sentence: item.term.trim(),
+        sentenceIndex,
+        sentenceWordIndex: wordIndex,
       }));
     });
   });
@@ -364,13 +418,14 @@ function actionResult(
 }
 
 function noAction(snapshot: GriffinSkyJoustSnapshot): GriffinSkyJoustActionResult {
+  const terminal = snapshot.phase === "victory" || snapshot.phase === "defeat";
   return actionResult(snapshot, {
     accepted: false,
     correct: false,
     progressed: false,
     damaged: false,
-    terminal: snapshot.phase !== "playing",
-    completed: snapshot.phase !== "playing",
+    terminal,
+    completed: terminal,
     ...(snapshot.result === undefined ? {} : { result: snapshot.result }),
   });
 }
@@ -411,27 +466,43 @@ export function createGriffinSkyJoustController(
     invulnerableUntil: 0,
     radius: PHYSICS.playerRadius,
   };
-  const startingKnights: GriffinSkyJoustKnight[] = targets.map((target, index) => ({
+  const createKnight = (target: GriffinSkyJoustTarget, index: number): GriffinSkyJoustKnight => ({
     id: target.id,
     word: target.word,
     wordIndex: index,
+    sentenceIndex: target.sentenceIndex,
+    sentenceWordIndex: target.sentenceWordIndex,
     x: 120 + hashUnit(seed, index, 1) * (GRIFFIN_SKY_JOUST_CANVAS.width - 240),
     y: 160 + hashUnit(seed, index, 2) * 180,
     vx: hashUnit(seed, index, 3) > 0.5 ? PHYSICS.knightSpeed : -PHYSICS.knightSpeed,
     vy: 0,
     radius: PHYSICS.knightRadius,
-  }));
+  });
+  const knightsForTarget = (index: number): GriffinSkyJoustKnight[] => {
+    const sentenceIndex = targets[index]?.sentenceIndex;
+    if (sentenceIndex === undefined) return [];
+    const end = Math.min(targets.length, index + GRIFFIN_SKY_JOUST_MAX_ACTIVE_KNIGHTS);
+    const activeKnights: GriffinSkyJoustKnight[] = [];
+    for (let knightIndex = index; knightIndex < end; knightIndex += 1) {
+      const target = targets[knightIndex]!;
+      if (target.sentenceIndex !== sentenceIndex) break;
+      activeKnights.push(createKnight(target, knightIndex));
+    }
+    return activeKnights;
+  };
   let terminalOutcome: GameTerminalOutcome = "complete";
   const completion = createCompletionLatch<GameResults>((result) => deliver(result, terminalOutcome));
   let accountant = createResultAccountant();
   let player = startingPlayer;
-  let knights = startingKnights;
+  let knights = knightsForTarget(0);
   let phase: GriffinSkyJoustPhase = "playing";
   let targetIndex = 0;
   let gameTime = 0;
   let lastOutcome: GriffinSkyJoustSnapshot["lastOutcome"];
   let terminalResult: GameResults | undefined;
   let destroyed = false;
+  let completedSentence = "";
+  let transitionEndsAt = 0;
 
   const currentTarget = (): GriffinSkyJoustTarget => targets[Math.min(targetIndex, targets.length - 1)]!;
 
@@ -442,6 +513,9 @@ export function createGriffinSkyJoustController(
       phase,
       targetIndex,
       targetCount: targets.length,
+      activeSentenceIndex: currentTarget().sentenceIndex,
+      completedSentence,
+      transitionEndsAt,
       prompt: target?.prompt ?? "",
       targetWord: target?.word ?? "",
       answer: target?.word ?? "",
@@ -502,7 +576,7 @@ export function createGriffinSkyJoustController(
     if (state.player === null || typeof state.player !== "object" || !Array.isArray(state.knights) || !Array.isArray(state.availableActions)) {
       throw new Error("Griffin responsive state shape is invalid");
     }
-    if (!(["playing", "victory", "defeat"] as const).includes(state.phase)) {
+    if (!(["playing", "transition", "victory", "defeat"] as const).includes(state.phase)) {
       throw new Error("Griffin responsive state phase is invalid");
     }
     if (state.targetCount !== targets.length || !Number.isInteger(state.targetIndex) || state.targetIndex < 0 || state.targetIndex > targets.length) {
@@ -518,7 +592,7 @@ export function createGriffinSkyJoustController(
     if (!Number.isInteger(state.player.hp) || state.player.hp < 0 || state.player.hp > state.player.maxHp || state.player.maxHp !== maxHealth) {
       throw new Error("Griffin responsive state health is invalid");
     }
-    if (state.phase === "playing" && (state.targetIndex === targets.length || state.player.hp === 0)) {
+    if ((state.phase === "playing" || state.phase === "transition") && (state.targetIndex === targets.length || state.player.hp === 0)) {
       throw new Error("Griffin responsive state is terminal but marked playing");
     }
     if (state.phase === "victory" && state.targetIndex !== targets.length) {
@@ -544,6 +618,18 @@ export function createGriffinSkyJoustController(
     if (state.targetWord !== (target?.word ?? "") || state.answer !== (target?.word ?? "") || state.prompt !== (target?.prompt ?? "")) {
       throw new Error("Griffin responsive state target content is invalid");
     }
+    const restoredTarget = targets[Math.min(state.targetIndex, targets.length - 1)]!;
+    if (state.activeSentenceIndex !== restoredTarget.sentenceIndex || typeof state.completedSentence !== "string") {
+      throw new Error("Griffin responsive state sentence progress is invalid");
+    }
+    finiteNumber(state.transitionEndsAt, "Griffin transition end time");
+    if (state.phase === "transition") {
+      if (state.knights.length !== 0 || state.completedSentence.length === 0 || state.transitionEndsAt <= state.gameTime) {
+        throw new Error("Griffin responsive transition state is invalid");
+      }
+    } else if (state.completedSentence !== "" || state.transitionEndsAt !== 0) {
+      throw new Error("Griffin responsive state has stale transition content");
+    }
     if (state.correctAction !== "move-up" || state.availableActions.join(",") !== GRIFFIN_SKY_JOUST_AVAILABLE_ACTIONS.join(",")) {
       throw new Error("Griffin responsive action contract is invalid");
     }
@@ -552,7 +638,7 @@ export function createGriffinSkyJoustController(
     if (state.lastOutcome !== undefined && !["correct", "incorrect", "damage"].includes(state.lastOutcome)) {
       throw new Error("Griffin responsive outcome is invalid");
     }
-    const expectedKnights = targets.slice(state.targetIndex);
+    const expectedKnights = state.phase === "playing" || state.phase === "defeat" ? knightsForTarget(state.targetIndex) : [];
     const contentKnights = state.knights.filter((knight) => knight.id !== TUTORIAL_DECOY_ID);
     const decoyKnights = state.knights.filter((knight) => knight.id === TUTORIAL_DECOY_ID);
     if ((!tutorialOnly && decoyKnights.length > 0) || decoyKnights.length > 1) {
@@ -574,7 +660,9 @@ export function createGriffinSkyJoustController(
       const target = targets.find((candidate) => candidate.id === knight.id);
       const expectedTarget = expectedKnights[index];
       if (ids.has(knight.id) || !target || !expectedTarget || target.word !== knight.word || target.id !== knight.id
-        || knight.id !== expectedTarget.id || knight.wordIndex !== state.targetIndex + index) {
+        || knight.id !== expectedTarget.id || knight.wordIndex !== expectedTarget.wordIndex
+        || knight.sentenceIndex !== expectedTarget.sentenceIndex
+        || knight.sentenceWordIndex !== expectedTarget.sentenceWordIndex) {
         throw new Error("Griffin responsive state has an invalid knight identity");
       }
       ids.add(knight.id);
@@ -587,8 +675,12 @@ export function createGriffinSkyJoustController(
       ids.add(decoy.id);
       validateKnightGeometry(decoy);
     }
-    if (state.phase === "playing" && state.result !== undefined) throw new Error("Griffin active state has a terminal result");
-    if (state.phase !== "playing" && state.result === undefined) throw new Error("Griffin terminal state has no result");
+    if ((state.phase === "playing" || state.phase === "transition") && state.result !== undefined) {
+      throw new Error("Griffin active state has a terminal result");
+    }
+    if ((state.phase === "victory" || state.phase === "defeat") && state.result === undefined) {
+      throw new Error("Griffin terminal state has no result");
+    }
     if (state.result !== undefined) {
       const parsedResult = gameResultsSchema.parse(state.result);
       const accuracy = state.totalAttempts === 0 ? 0 : state.correctAnswers / state.totalAttempts;
@@ -613,6 +705,8 @@ export function createGriffinSkyJoustController(
     gameTime = state.gameTime;
     lastOutcome = state.lastOutcome;
     terminalResult = state.result;
+    completedSentence = state.completedSentence;
+    transitionEndsAt = state.transitionEndsAt;
     accountant = createResultAccountant();
     for (let index = 0; index < state.totalAttempts; index += 1) {
       accountant.recordAttempt({ correct: index < state.correctAnswers });
@@ -620,7 +714,7 @@ export function createGriffinSkyJoustController(
     accountant.addScore(state.score);
     destroyed = state.destroyed;
     terminalOutcome = phase === "defeat" ? "defeat" : phase === "victory" ? "victory" : "complete";
-    if (destroyed || phase !== "playing") completion.sealWithoutDelivery();
+    if (destroyed || phase === "victory" || phase === "defeat") completion.sealWithoutDelivery();
   };
 
   const motionResult = (): GriffinSkyJoustActionResult => actionResult(snapshot(), {
@@ -682,6 +776,17 @@ export function createGriffinSkyJoustController(
           result,
         });
       }
+      const completedTarget = targets[targetIndex - 1]!;
+      const nextTarget = targets[targetIndex]!;
+      if (nextTarget.sentenceIndex !== completedTarget.sentenceIndex) {
+        phase = "transition";
+        completedSentence = completedTarget.sentence;
+        transitionEndsAt = gameTime + GRIFFIN_SKY_JOUST_SENTENCE_TRANSITION_MS;
+        knights = [];
+      } else {
+        const remainingKnights = new Map(knights.map((candidate) => [candidate.id, candidate]));
+        knights = knightsForTarget(targetIndex).map((candidate) => remainingKnights.get(candidate.id) ?? candidate);
+      }
       return actionResult(snapshot(), {
         accepted: true,
         correct: true,
@@ -710,11 +815,20 @@ export function createGriffinSkyJoustController(
   };
 
   const tick = (deltaMs: number): GriffinSkyJoustSnapshot => {
-    if (destroyed || phase !== "playing") return snapshot();
+    if (destroyed || (phase !== "playing" && phase !== "transition")) return snapshot();
     if (!Number.isFinite(deltaMs) || deltaMs < 0) throw new Error("Griffin tick requires a nonnegative finite delta");
     const boundedDeltaMs = Math.min(GRIFFIN_SKY_JOUST_MAX_FRAME_DELTA_MS, deltaMs);
     const deltaSeconds = boundedDeltaMs / 1000;
     gameTime += boundedDeltaMs;
+    if (phase === "transition") {
+      if (gameTime >= transitionEndsAt) {
+        phase = "playing";
+        completedSentence = "";
+        transitionEndsAt = 0;
+        knights = knightsForTarget(targetIndex);
+      }
+      return snapshot();
+    }
 
     let nextX = player.x + player.vx * deltaSeconds;
     let nextY = player.y + player.vy * deltaSeconds;
@@ -798,6 +912,8 @@ export function createGriffinSkyJoustController(
       id: TUTORIAL_DECOY_ID,
       word: targets[0]!.word,
       wordIndex: -1,
+      sentenceIndex: targets[0]!.sentenceIndex,
+      sentenceWordIndex: -1,
       x,
       y,
       vx: PHYSICS.knightSpeed,
@@ -846,11 +962,59 @@ export function createGriffinSkyJoustController(
   });
 }
 
+function fileForBinding(
+  edition: RuntimeEdition,
+  key: string,
+): { readonly width: number; readonly height: number; readonly grid?: { readonly frameWidth: number; readonly frameHeight: number } } | undefined {
+  const binding = (edition as unknown as { bindings?: Record<string, { file: string }> })?.bindings?.[key];
+  if (!binding) return undefined;
+  return ((edition as unknown as { pack?: { files?: Record<string, { readonly width: number; readonly height: number; readonly grid?: { readonly frameWidth: number; readonly frameHeight: number } }> } })?.pack?.files as Record<string, { readonly width: number; readonly height: number; readonly grid?: { readonly frameWidth: number; readonly frameHeight: number } }> | undefined)?.[binding.file];
+}
+
+function destroyGround(resources: GriffinSkyJoustSceneResources): void {
+  resources.ground?.destroy();
+  resources.ground = undefined;
+  resources.groundWidth = 0;
+  resources.groundHeight = 0;
+}
+
+function ensureGround(
+  scene: PhaserSceneLike,
+  resources: GriffinSkyJoustSceneResources,
+  edition: RuntimeEdition,
+  width: number,
+  height: number,
+): void {
+  if (resources.groundWidth === width && resources.groundHeight === height && resources.ground) return;
+  destroyGround(resources);
+  resources.groundWidth = width;
+  resources.groundHeight = height;
+  const binding = (edition as unknown as { bindings?: Record<string, unknown> })?.bindings?.["world:ground"];
+  if (!binding) return;
+  const resolved = resolveAssetBinding(edition, "world:ground");
+  if (scene.add?.tileSprite) {
+    const tiled = scene.add.tileSprite(0, 0, width, height, resolved.textureKey);
+    tiled.setOrigin?.(0, 0);
+    tiled.setDepth?.(-35);
+    resources.ground = tiled;
+  } else {
+    const file = fileForBinding(edition, "world:ground");
+    const displayW = width;
+    const displayH = file ? displayW * (file.height / file.width) : height;
+    const image = scene.add?.image?.(width / 2, height / 2, resolved.textureKey);
+    image?.setOrigin?.(0.5, 0.5);
+    if (file) image?.setDisplaySize?.(displayW, displayH);
+    image?.setDepth?.(-35);
+    if (image) resources.ground = image;
+  }
+}
+
 function createScene(context: GriffinSkyJoustSceneContext): Readonly<Record<string, unknown>> {
   let resources: GriffinSkyJoustSceneResources | undefined;
   let composition = context.composition;
   let previousKeys = new Set<string>();
   let animationMs = 0;
+  let parallax: FlightParallaxLayers = { sprites: [], scrollY: 0 };
   const normalize = createInputActionNormalizer({
     keyboard: GRIFFIN_SKY_JOUST_KEYBOARD_BINDINGS,
     pointerTap: { action: "move-up" },
@@ -882,32 +1046,100 @@ function createScene(context: GriffinSkyJoustSceneContext): Readonly<Record<stri
     const { width, height } = dimensions(scene);
     const scaleX = width / GRIFFIN_SKY_JOUST_CANVAS.width;
     const scaleY = height / GRIFFIN_SKY_JOUST_CANVAS.height;
-    const scale = Math.min(scaleX, scaleY);
-    const offsetX = (width - GRIFFIN_SKY_JOUST_CANVAS.width * scale) / 2;
-    const offsetY = (height - GRIFFIN_SKY_JOUST_CANVAS.height * scale) / 2;
+    const portrait = height >= 600 && height > width * 1.2;
+    const portraitArenaTop = 148;
+    const portraitArenaBottom = 16;
+    const scale = portrait
+      ? Math.max(scaleX, (height - portraitArenaTop - portraitArenaBottom) / GRIFFIN_SKY_JOUST_CANVAS.height)
+      : Math.min(scaleX, scaleY);
+    // The portrait camera crops the world with one scale, so visible actors match their circular collision bounds.
+    const visibleWorldWidth = width / scale;
+    const cameraX = portrait
+      ? Math.max(
+        visibleWorldWidth / 2,
+        Math.min(GRIFFIN_SKY_JOUST_CANVAS.width - visibleWorldWidth / 2, state.player.x),
+      )
+      : GRIFFIN_SKY_JOUST_CANVAS.width / 2;
+    const offsetX = portrait
+      ? width / 2 - cameraX * scale
+      : (width - GRIFFIN_SKY_JOUST_CANVAS.width * scale) / 2;
+    const offsetY = portrait
+      ? portraitArenaTop
+      : (height - GRIFFIN_SKY_JOUST_CANVAS.height * scale) / 2;
     const worldX = (value: number): number => offsetX + value * scale;
     const worldY = (value: number): number => offsetY + value * scale;
+    const displayWidth = scene.game?.canvas?.getBoundingClientRect?.().width ?? width;
+    const displayScale = Math.max(0.1, displayWidth / width);
+    const displayFontSize = (pixels: number): number => Math.ceil(pixels / displayScale);
     const pulse = Math.sin(animationMs / 2_000 * Math.PI * 2) * 3;
 
     activeResources.graphics.clear();
-    if (!activeResources.art.ground("world:ground", width, height)) activeResources.graphics.fillStyle(0x071b3d, 1).fillRect(0, 0, width, height);
-    activeResources.graphics.fillStyle(0x0d4f82, 1).fillCircle(worldX(110), worldY(100), 54 * scale);
-    activeResources.graphics.fillStyle(0x12689a, 1).fillCircle(worldX(820), worldY(160), 72 * scale);
-    activeResources.graphics.fillStyle(0x184e77, 0.9).fillTriangle(
-      worldX(0), worldY(540), worldX(220), worldY(330), worldX(470), worldY(540),
-    );
-    activeResources.graphics.fillStyle(0x1d5b87, 0.9).fillTriangle(
-      worldX(490), worldY(540), worldX(735), worldY(290), worldX(960), worldY(540),
-    );
-    activeResources.graphics.fillStyle(0x123a5c, 0.92).fillRoundedRect(
-      worldX(24), worldY(16), Math.max(250 * scale, width - 48), 82 * scale, 18 * scale,
+    if (parallax.sprites.length === 0) {
+      try {
+        const next = createFlightParallax(scene, context.edition, width, height, { includeNear: false });
+        if (next.sprites.length > 0) {
+          next.sprites.forEach((sprite) => sprite.setTileScale?.(3));
+          parallax = next;
+        }
+      } catch {
+        // Edition without parallax bindings (tests use {}), keep empty parallax.
+      }
+    }
+    if (parallax.sprites.length === 0) {
+      activeResources.graphics.fillStyle(0x6eb6e8, 0.9).fillRect(0, 0, width, height);
+    }
+    // Light sky ornament, not a full-screen opaque overlay.
+    activeResources.graphics.fillStyle(0x8cd0f0, 0.35).fillCircle(worldX(110), worldY(90), 42 * scale);
+    activeResources.graphics.fillStyle(0xa8ddf5, 0.28).fillCircle(worldX(830), worldY(140), 56 * scale);
+    activeResources.graphics.fillStyle(0x123a5c, 0.88).fillRoundedRect(
+      24, 40, Math.max(250, width - 48), 96, 18,
     );
 
-    state.knights.forEach((knight, index) => {
+    const place = (
+      current: PhaserImageLike | undefined,
+      x: number,
+      y: number,
+      bindingKey: string,
+      textureKey: string,
+      targetWidth: number,
+      depth: number,
+      alpha: number,
+    ): PhaserImageLike | undefined => {
+      const file = fileForBinding(context.edition, bindingKey);
+      const fw = file?.grid?.frameWidth ?? file?.width;
+      const fh = file?.grid?.frameHeight ?? file?.height;
+      const displayW = targetWidth;
+      const displayH = fw && fh ? displayW * (fh / fw) : targetWidth;
+      const image = current
+        ?? scene.add?.sprite?.(x, y, textureKey)
+        ?? scene.add?.image?.(x, y, textureKey);
+      image?.setOrigin?.(0.5, 0.5);
+      image?.setPosition?.(x, y);
+      image?.setDisplaySize?.(displayW, displayH);
+      image?.setDepth?.(depth);
+      image?.setAlpha?.(alpha);
+      return image;
+    };
+
+    const griffinResolved = (context.edition as unknown as { bindings?: Record<string, unknown> })?.bindings?.["player:idle"] ? resolveAssetBinding(context.edition, "player:idle") : undefined;
+    const knightResolved = (context.edition as unknown as { bindings?: Record<string, unknown> })?.bindings?.["enemy:idle"] ? resolveAssetBinding(context.edition, "enemy:idle") : undefined;
+
+    const seenKnightIds = new Set<string>();
+    state.knights.forEach((knight) => {
       const knightX = worldX(knight.x);
       const knightY = worldY(knight.y);
       const targetKnight = knight.wordIndex === state.targetIndex;
-      if (!activeResources.art.place(`knight:${index}`, "enemy:idle", {
+      seenKnightIds.add(knight.id);
+      if (knightResolved) {
+        const targetW = knight.radius * 2.6 * scale;
+        const existing = activeResources.knightSprites.get(knight.id);
+        const placed = place(existing, knightX, knightY, "enemy:idle", knightResolved.textureKey, targetW, 7, targetKnight ? 1 : 0.88);
+        if (placed && !existing) activeResources.knightSprites.set(knight.id, placed);
+        // Fallback handled via art layer if binding missing
+        if (!placed) {
+          activeResources.graphics.fillStyle(targetKnight ? 0xfbbf24 : 0x64748b, 1).fillCircle(knightX, knightY, knight.radius * scale);
+        }
+      } else if (!activeResources.art.place(`knight:${knight.wordIndex}`, "enemy:idle", {
         x: knightX,
         y: knightY,
         width: knight.radius * 2.6 * scale,
@@ -916,25 +1148,60 @@ function createScene(context: GriffinSkyJoustSceneContext): Readonly<Record<stri
       })) {
         activeResources.graphics.fillStyle(targetKnight ? 0xfbbf24 : 0x64748b, 1)
           .fillCircle(knightX, knightY, knight.radius * scale);
-        activeResources.graphics.lineStyle(3 * scale, targetKnight ? 0xfff7ae : 0xcbd5e1, 0.9)
-          .strokeRoundedRect(knightX - knight.radius * scale, knightY - knight.radius * scale, knight.radius * 2 * scale, knight.radius * 2 * scale, 10 * scale);
-        activeResources.graphics.fillStyle(0xe2e8f0, 1).fillTriangle(
-          knightX - 6 * scale, knightY - 8 * scale,
-          knightX + 8 * scale, knightY - 5 * scale,
-          knightX, knightY + 10 * scale,
-        );
       }
-      activeResources.knightLabels[index]?.setText(knight.word).setPosition(
-        knightX - knight.radius * scale,
-        knightY + knight.radius * scale + 4,
-      );
+      const labelIndex = Math.max(0, state.knights.indexOf(knight));
+      const label = activeResources.knightLabels[labelIndex];
+      const labelY = knight.sentenceWordIndex % 2 === 0
+        ? knightY + knight.radius * scale + 6
+        : knightY - knight.radius * scale - displayFontSize(10);
+      if (knightX < 0 || knightX > width) {
+        label?.setVisible?.(false);
+        label?.setText("");
+        return;
+      }
+      label?.setFontSize?.(displayFontSize(16));
+      label?.setBackgroundColor?.("rgba(15, 23, 42, 0.88)");
+      label?.setPadding?.(displayFontSize(3), displayFontSize(2));
+      label?.setOrigin?.(0.5, 0.5);
+      label?.setWordWrapWidth?.(Math.max(1, width - 16), true);
+      label?.setText(knight.word);
+      label?.setVisible?.(true);
+      const estimatedWidth = displayFontSize(16) * knight.word.length * 0.62 + displayFontSize(6);
+      const labelWidth = Math.min(width - 16, label?.getBounds?.().width ?? label?.width ?? estimatedWidth);
+      const labelX = Math.max(labelWidth / 2, Math.min(width - labelWidth / 2, knightX));
+      label?.setPosition(labelX, labelY);
     });
-    activeResources.knightLabels.slice(state.knights.length).forEach((label) => label.setText(""));
+    const targetKnight = state.knights.find((knight) => knight.wordIndex === state.targetIndex);
+    if (portrait && targetKnight) {
+      const targetX = worldX(targetKnight.x);
+      if (targetX < 0 || targetX > width) {
+        const markerX = targetX < 0 ? 12 : width - 12;
+        const markerY = Math.max(portraitArenaTop + 18, Math.min(height - portraitArenaBottom - 18, worldY(targetKnight.y)));
+        activeResources.graphics.fillStyle(0xfbbf24, 1);
+        if (targetX < 0) activeResources.graphics.fillTriangle(markerX - 8, markerY, markerX + 8, markerY - 10, markerX + 8, markerY + 10);
+        else activeResources.graphics.fillTriangle(markerX + 8, markerY, markerX - 8, markerY - 10, markerX - 8, markerY + 10);
+      }
+    }
+    // Remove sprites for knights that left.
+    for (const [id, sprite] of activeResources.knightSprites) {
+      if (!seenKnightIds.has(id)) {
+        sprite.destroy();
+        activeResources.knightSprites.delete(id);
+      }
+    }
+    activeResources.knightLabels.slice(state.knights.length).forEach((label) => {
+      label.setText("");
+      label.setVisible?.(false);
+    });
 
     const playerX = worldX(state.player.x);
     const playerY = worldY(state.player.y) + pulse;
     const invulnerable = state.gameTime < state.player.invulnerableUntil;
-    if (!activeResources.art.place("player", "player:idle", {
+    if (griffinResolved) {
+      const targetW = state.player.radius * 2.8 * scale;
+      // dragon-rider-idle 96x96 visible 96x69, aspect via frame size preserves undistorted mount.
+      activeResources.griffin = place(activeResources.griffin, playerX, playerY, "player:idle", griffinResolved.textureKey, targetW, 8, invulnerable ? 0.6 : 1);
+    } else if (!activeResources.art.place("player", "player:idle", {
       x: playerX,
       y: playerY,
       width: state.player.radius * 2.8 * scale,
@@ -943,36 +1210,22 @@ function createScene(context: GriffinSkyJoustSceneContext): Readonly<Record<stri
     })) {
       activeResources.graphics.fillStyle(invulnerable ? 0xf8fafc : 0x38d9ff, 0.95)
         .fillCircle(playerX, playerY, state.player.radius * scale);
-      activeResources.graphics.fillStyle(0xffd166, 1).fillTriangle(
-        playerX + 14 * scale, playerY,
-        playerX + 42 * scale, playerY + 8 * scale,
-        playerX + 14 * scale, playerY + 15 * scale,
-      );
-      activeResources.graphics.fillStyle(0x8ef0ff, 0.9).fillTriangle(
-        playerX - 10 * scale, playerY - 3 * scale,
-        playerX - 70 * scale, playerY - 35 * scale,
-        playerX - 42 * scale, playerY + 22 * scale,
-      );
     }
     activeResources.art.sweep();
 
-    activeResources.title.setText("GRIFFIN SKY-JOUST").setPosition(36, 28);
-    activeResources.prompt.setText(`Target: ${state.targetWord}  •  ${state.prompt}`).setPosition(36, 66);
+    activeResources.title.setText("").setPosition(36, 28);
+    activeResources.prompt.setFontSize?.(displayFontSize(18));
+    activeResources.prompt.setText(
+      state.phase === "transition"
+        ? state.completedSentence
+        : state.prompt,
+    ).setPosition(36, 66);
+    activeResources.progress.setFontSize?.(displayFontSize(14));
     activeResources.progress.setText(
-      `${composition?.profile === "compact" ? "Compact flight" : "Sky route"}  |  Word ${Math.min(state.targetIndex + 1, state.targetCount)} of ${state.targetCount}  |  Health ${state.player.hp}  |  Score ${state.score}`,
+      `${Math.min(state.targetIndex + 1, state.targetCount)}/${state.targetCount}  ♥ ${state.player.hp}  ★ ${state.score}`,
     ).setPosition(36, 112);
-    activeResources.feedback.setText(
-      state.phase === "victory"
-        ? "Every sentence word was struck!"
-        : state.phase === "defeat"
-          ? "The griffin has left the joust."
-          : state.lastOutcome === "incorrect"
-            ? "Wrong word. Keep the next target active."
-            : state.lastOutcome === "damage"
-              ? "Avoid side and below collisions."
-              : "Strike the highlighted knight from above.",
-    ).setPosition(36, height - 62);
-    activeResources.instructions.setText("W / ↑ / Space: flap  •  A / D: drift  •  Touch either side to flap").setPosition(36, height - 30);
+    activeResources.feedback.setText("").setPosition(36, height - 62);
+    activeResources.instructions.setText("").setPosition(36, height - 30);
   };
 
   const cleanup = (): void => {
@@ -981,6 +1234,11 @@ function createScene(context: GriffinSkyJoustSceneContext): Readonly<Record<stri
     const activeResources = resources;
     if (!activeResources) return;
     resources = undefined;
+    destroyFlightParallax(parallax);
+    destroyGround(activeResources);
+    activeResources.griffin?.destroy();
+    for (const sprite of activeResources.knightSprites.values()) sprite.destroy();
+    activeResources.knightSprites.clear();
     activeResources.graphics.destroy();
     activeResources.title.destroy();
     activeResources.prompt.destroy();
@@ -992,14 +1250,15 @@ function createScene(context: GriffinSkyJoustSceneContext): Readonly<Record<stri
   };
 
 
-  const artKeys = ["world:ground", "player:idle", "enemy:idle"] as const;
+  const artKeys = ["player:idle", "enemy:idle", "world:parallax-far", "world:parallax-mid"] as const;
 
   const preload = function (this: PhaserSceneLike): void {
     if (!this.load) return;
+    try { preloadFlightParallax(this, context.edition, { includeNear: false }); } catch { /* tests use empty edition */ }
     preloadAssetBindings(
       this.load,
       context.edition,
-      artKeys.filter((key) => context.edition.bindings[key]),
+      artKeys.filter((key) => (context.edition as unknown as { bindings?: Record<string, unknown> })?.bindings?.[key]),
     );
   };
 
@@ -1016,6 +1275,9 @@ function createScene(context: GriffinSkyJoustSceneContext): Readonly<Record<stri
       instructions: this.add.text(0, 0, "", { ...style, fontSize: "14px", color: "#cbd5e1" }),
       knightLabels: Array.from({ length: context.controller.snapshot().targetCount }, () =>
         this.add!.text(0, 0, "", { ...style, fontSize: "17px", align: "center" })),
+      knightSprites: new Map(),
+      groundWidth: 0,
+      groundHeight: 0,
     };
     this.events?.once("shutdown", cleanup);
     this.events?.once("destroy", cleanup);
@@ -1048,6 +1310,7 @@ function createScene(context: GriffinSkyJoustSceneContext): Readonly<Record<stri
       }
     }
     frameScheduler.tick(delta);
+    tickFlightParallax(parallax, delta);
     updateView(this);
   };
 

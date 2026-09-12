@@ -15,6 +15,7 @@ import {
   SHIELD_DURATION_MS,
   SPIRIT_SPAWN_RATE_MS,
   calculateEnchantedLibraryXP,
+  calculateEnchantedLibraryShelfPlacements,
   createEnchantedLibraryCartridge,
   createEnchantedLibraryController,
   type EnchantedLibraryDirection,
@@ -22,10 +23,10 @@ import {
 } from "./enchanted-library.js";
 
 const VOCABULARY = [
-  { term: "luminous", translation: "bright" },
-  { term: "ancient", translation: "old" },
-  { term: "swift", translation: "fast" },
-  { term: "quiet", translation: "silent" },
+  { term: "luminous", translation: "ส่องสว่าง" },
+  { term: "ancient", translation: "โบราณ" },
+  { term: "swift", translation: "รวดเร็ว" },
+  { term: "quiet", translation: "เงียบ" },
 ] as const;
 
 type InputSnapshot = {
@@ -77,7 +78,7 @@ function createInputController() {
   };
 }
 
-function createSceneHost() {
+function createSceneHost(canvasWidth = 960, sceneSize = ENCHANTED_LIBRARY_CANVAS) {
   const graphics = {
     clear: vi.fn(),
     fillStyle: vi.fn(),
@@ -103,16 +104,25 @@ function createSceneHost() {
   const texts: Array<{
     readonly setPosition: ReturnType<typeof vi.fn>;
     readonly setText: ReturnType<typeof vi.fn>;
+    readonly setFontSize: ReturnType<typeof vi.fn>;
+    readonly setOrigin: ReturnType<typeof vi.fn>;
+    readonly setWordWrapWidth: ReturnType<typeof vi.fn>;
     readonly destroy: ReturnType<typeof vi.fn>;
   }> = [];
   const createText = () => {
     const text = {
       setPosition: vi.fn(),
       setText: vi.fn(),
+      setFontSize: vi.fn(),
+      setOrigin: vi.fn(),
+      setWordWrapWidth: vi.fn(),
       destroy: vi.fn(),
     };
     text.setPosition.mockReturnValue(text);
     text.setText.mockReturnValue(text);
+    text.setFontSize.mockReturnValue(text);
+    text.setOrigin.mockReturnValue(text);
+    text.setWordWrapWidth.mockReturnValue(text);
     texts.push(text);
     return text;
   };
@@ -128,10 +138,10 @@ function createSceneHost() {
     },
     game: {
       canvas: {
-        getBoundingClientRect: () => ({ left: 0, top: 0, width: 960, height: 540 }),
+        getBoundingClientRect: () => ({ left: 0, top: 0, width: canvasWidth, height: sceneSize.height }),
       },
     },
-    scale: { width: ENCHANTED_LIBRARY_CANVAS.width, height: ENCHANTED_LIBRARY_CANVAS.height },
+    scale: sceneSize,
   };
 
   return {
@@ -297,8 +307,8 @@ describe("Enchanted Library bespoke cartridge", () => {
       targetIndex: 0,
       targetCount: VOCABULARY.length,
       targetTerm: VOCABULARY[0].term,
-      prompt: VOCABULARY[0].term,
-      answer: VOCABULARY[0].translation,
+      prompt: VOCABULARY[0].translation,
+      answer: VOCABULARY[0].term,
       mana: INITIAL_MANA,
       correctAnswers: 0,
       totalAttempts: 0,
@@ -333,12 +343,9 @@ describe("Enchanted Library bespoke cartridge", () => {
     const cartridge = createEnchantedLibraryCartridge();
 
     expect(cartridge.standardExperience.definition.briefing.objective).toBe(
-      "Collect the matching translation once for every vocabulary item before the library timer ends.",
+      "Collect the matching English word once for every Thai prompt before the library timer ends.",
     );
     expect(cartridge.standardExperience.definition.briefing.objective).not.toMatch(/twice/i);
-    const source = readFileSync(new URL("./enchanted-library.ts", import.meta.url), "utf8");
-    expect(source).toContain("Every book is collected once. The library glows!");
-    expect(source).not.toContain("twice");
   });
 
   it("uses the four-way movement contract and deterministic book placement", () => {
@@ -381,8 +388,8 @@ describe("Enchanted Library bespoke cartridge", () => {
       mechanic: "book-collection-and-shield",
       targetIndex: 0,
       targetCount: VOCABULARY.length,
-      prompt: VOCABULARY[0].term,
-      answer: VOCABULARY[0].translation,
+      prompt: VOCABULARY[0].translation,
+      answer: VOCABULARY[0].term,
       correctAction: expect.stringMatching(/^move-/),
       availableActions: ENCHANTED_LIBRARY_ACTIONS,
       lives: INITIAL_MANA,
@@ -843,7 +850,7 @@ describe("Enchanted Library bespoke cartridge", () => {
     expect(run(0, INITIAL_MANA / MANA_LOSS_INCORRECT)).toHaveBeenCalledWith(expect.any(Object), "defeat");
   });
 
-  it("supports keyboard and pointer or touch scene input, responsive state, and cleanup", () => {
+  it("supports held keyboard, pointer steering, shield targeting, responsive state, and cleanup", () => {
     const input = createInputController();
     const complete = vi.fn();
     const diagnostic = vi.fn();
@@ -898,18 +905,74 @@ describe("Enchanted Library bespoke cartridge", () => {
 
     input.setSnapshot(inputSnapshot({
       pointer: {
+        down: true,
+        released: false,
+        cancelled: false,
+        id: null,
+        kind: "touch",
+        startX: 700,
+        startY: 300,
+        x: 700,
+        y: 300,
+      },
+    }));
+    scene.update.call(host.host, 32, 100);
+    const afterPointerHold = scene.extend.apkCaptureResponsiveState() as { game: EnchantedLibrarySnapshot };
+    expect(afterPointerHold.game.player.x).toBeGreaterThan(afterKeyboard.game.player.x);
+    input.setSnapshot(inputSnapshot({ pointer: {
+      down: true, released: false, cancelled: false, id: null, kind: "touch",
+      startX: 700, startY: 300, x: 200, y: 300,
+    } }));
+    scene.update.call(host.host, 132, 100);
+    const afterPointerRetarget = scene.extend.apkCaptureResponsiveState() as { game: EnchantedLibrarySnapshot };
+    expect(afterPointerRetarget.game.player.x).toBeLessThan(afterPointerHold.game.player.x);
+    input.setSnapshot(inputSnapshot({ pointer: {
+      down: false, released: true, cancelled: false, id: null, kind: "touch",
+      startX: 700, startY: 300, x: 200, y: 300,
+    } }));
+    scene.update.call(host.host, 200, 100);
+    expect((scene.extend.apkCaptureResponsiveState() as { game: EnchantedLibrarySnapshot }).game.player)
+      .toEqual(afterPointerRetarget.game.player);
+
+    input.setSnapshot(inputSnapshot({ pointer: {
+      down: true, released: false, cancelled: false, id: null, kind: "touch",
+      startX: 100, startY: 50, x: 920, y: 36,
+    } }));
+    scene.update.call(host.host, 208, 8);
+    input.setSnapshot(inputSnapshot({ pointer: {
+      down: false, released: true, cancelled: false, id: null, kind: "touch",
+      startX: 100, startY: 50, x: 920, y: 36,
+    } }));
+    scene.update.call(host.host, 212, 4);
+    expect((scene.extend.apkCaptureResponsiveState() as { game: EnchantedLibrarySnapshot }).game.shieldActive).toBe(false);
+
+    input.setSnapshot(inputSnapshot({ pointer: {
+      down: true, released: false, cancelled: false, id: null, kind: "touch",
+      startX: 920, startY: 36, x: 200, y: 300,
+    } }));
+    scene.update.call(host.host, 216, 16);
+    expect((scene.extend.apkCaptureResponsiveState() as { game: EnchantedLibrarySnapshot }).game.player)
+      .toEqual(afterPointerRetarget.game.player);
+    input.setSnapshot(inputSnapshot({
+      pointer: {
         down: false,
         released: true,
         cancelled: false,
         id: null,
         kind: "touch",
-        startX: 400,
-        startY: 250,
-        x: 400,
-        y: 250,
+        startX: 920,
+        startY: 36,
+        x: 200,
+        y: 300,
       },
     }));
-    scene.update.call(host.host, 16, 16);
+    scene.update.call(host.host, 232, 16);
+    expect((scene.extend.apkCaptureResponsiveState() as { game: EnchantedLibrarySnapshot }).game.shieldActive).toBe(false);
+    input.setSnapshot(inputSnapshot({ pointer: {
+      down: false, released: true, cancelled: false, id: null, kind: "touch",
+      startX: 920, startY: 36, x: 920, y: 36,
+    } }));
+    scene.update.call(host.host, 248, 16);
     const afterTouch = scene.extend.apkCaptureResponsiveState() as { game: EnchantedLibrarySnapshot };
     expect(afterTouch.game.shieldActive).toBe(true);
 
@@ -932,20 +995,20 @@ describe("Enchanted Library bespoke cartridge", () => {
     expect(diagnostic).toHaveBeenCalledWith(expect.objectContaining({ code: "ENCHANTED_LIBRARY_READY" }));
   });
 
-  it("does not print the target translation or uniquely gold-outline the correct book before collection", () => {
+  it("shows the Thai translation alone and prints English terms on every book", () => {
     const { scene, host, bookColors } = mountEnchantedLibraryScene();
     const term = VOCABULARY[0].term;
-    const answer = VOCABULARY[0].translation;
+    const translation = VOCABULARY[0].translation;
     const hudTexts = host.texts.slice(0, 7).map(latestText);
     const prompt = hudTexts[1];
+    const bookTexts = host.texts.slice(7).map(latestText).filter(Boolean);
     const goldBookStrokes = bookColors.strokes.filter((color) => color === 0xffd166);
 
-    expect(prompt).toContain(term);
-    expect(prompt).not.toContain(answer);
-    for (const text of hudTexts) {
-      expect(text).not.toContain(answer);
-    }
-    expect(hudTexts.join("\n")).not.toMatch(/Target book:/i);
+    expect(prompt).toBe(translation);
+    expect(hudTexts.join("\n")).not.toMatch(/ENCHANTED LIBRARY|Find:|Find the translation|Walk into|Keyboard:|Compact stacks|Arcane stacks/);
+    expect(bookTexts).toEqual(expect.arrayContaining(VOCABULARY.map((item) => item.term)));
+    expect(bookTexts).not.toContain(translation);
+    expect(bookTexts).toContain(term);
     expect(bookColors.fills).toHaveLength(4);
     expect(bookColors.strokes).toHaveLength(4);
     expect(new Set(bookColors.fills).size).toBe(1);
@@ -955,13 +1018,66 @@ describe("Enchanted Library bespoke cartridge", () => {
     bookColors.reset();
     scene.update.call(host.host, 0, 16);
     const hudAfterUpdate = host.texts.slice(0, 7).map(latestText);
-    expect(hudAfterUpdate[1]).toContain(term);
-    for (const text of hudAfterUpdate) {
-      expect(text).not.toContain(answer);
-    }
+    expect(hudAfterUpdate[1]).toBe(translation);
     expect(new Set(bookColors.fills).size).toBe(1);
     expect(new Set(bookColors.strokes).size).toBe(1);
     expect(bookColors.strokes.filter((color) => color === 0xffd166)).toHaveLength(0);
+  });
+
+  it("keeps the Thai target and complete English choices readable when CSS scales the canvas", () => {
+    const input = createInputController();
+    const cartridge = createEnchantedLibraryCartridge();
+    const config = cartridge.createGameConfig({
+      input: VOCABULARY,
+      edition: {
+        id: "test-edition",
+        title: "Test edition",
+        runtimeApiVersion: "1.0.0",
+        pack: { id: "test-pack", version: "1.0.0", root: "/test", files: {} },
+        bindings: {},
+        tuning: { speed: 1, targetScale: 1, collisionScale: 1, intensity: 0.5 },
+      },
+      complete: vi.fn(),
+      diagnostic: vi.fn(),
+      inputController: input,
+      seed: 19,
+    });
+    const scene = config.scene as { create(this: ReturnType<typeof createSceneHost>["host"]): void };
+    const host = createSceneHost(336);
+
+    scene.create.call(host.host);
+
+    expect(latestText(host.texts[1]!)).toBe(VOCABULARY[0].translation);
+    expect(host.texts[1]?.setFontSize).toHaveBeenLastCalledWith(75);
+    for (const book of host.texts.slice(7, 11)) {
+      expect(latestText(book)).toMatch(/\S/);
+      expect(book.setFontSize).toHaveBeenLastCalledWith(46);
+      expect(book.setWordWrapWidth).toHaveBeenLastCalledWith(expect.any(Number), true);
+    }
+  });
+
+  it("keeps every boundary shelf clear of every possible book label", () => {
+    const anchors = [
+      { x: 140, y: 160 }, { x: 660, y: 160 }, { x: 140, y: 440 }, { x: 660, y: 440 },
+      { x: 400, y: 120 }, { x: 680, y: 300 }, { x: 400, y: 480 }, { x: 120, y: 300 },
+    ];
+    for (const { width, height } of [{ width: 336, height: 733 }, { width: 960, height: 540 }]) {
+      const bookWidth = Math.min(172, width * 0.19);
+      const bookHeight = Math.min(68, height * 0.14);
+      const shelves = calculateEnchantedLibraryShelfPlacements(width, height);
+      expect(shelves).toHaveLength(6);
+      for (const shelf of shelves) {
+        for (const anchor of anchors) {
+          const bookX = anchor.x * (width / 800);
+          const bookY = anchor.y * (height / 600);
+          const separated = shelf.x + shelf.width / 2 < bookX - bookWidth / 2
+            || shelf.x - shelf.width / 2 > bookX + bookWidth / 2
+            || shelf.y + shelf.height / 2 < bookY - bookHeight / 2
+            || shelf.y - shelf.height / 2 > bookY + bookHeight / 2;
+          expect(separated).toBe(true);
+        }
+      }
+    }
   });
 
   it("does not call shared legacy catalog factories", () => {

@@ -407,6 +407,20 @@
       "when": 1788792942509,
       "tag": "0057_complex_sleeper",
       "breakpoints": true
+    },
+    {
+      "idx": 58,
+      "version": "7",
+      "when": 1788903803389,
+      "tag": "0058_acoustic_lady_deathstrike",
+      "breakpoints": true
+    },
+    {
+      "idx": 59,
+      "version": "7",
+      "when": 1788934304395,
+      "tag": "0059_game_challenges",
+      "breakpoints": true
     }
   ]
 }

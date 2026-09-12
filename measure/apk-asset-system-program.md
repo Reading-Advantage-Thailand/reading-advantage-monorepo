@@ -1,5 +1,14 @@
 # Advantage Play Kit Delivery Program
 
+## Product Owner Recovery Override - 2026-08-17
+
+The playable source at `~/Desktop/advantage-games` is authoritative for game recovery.
+APK evidence, asset, acceptance, and migration tracks may not remove or hide a playable
+game. Repository-wide process failures do not block focused APK product work.
+
+Restore and preserve playable behavior first. Standardize one working game at a time
+without taking any existing game offline.
+
 ## Objective
 
 Create Advantage Play Kit (APK) as the standard way to develop, test,

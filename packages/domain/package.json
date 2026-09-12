@@ -111,11 +111,20 @@
     "./activity": {
       "types": "./dist/activity/index.d.ts",
       "import": "./dist/activity/index.js"
+    },
+    "./rpg": {
+      "types": "./dist/rpg/index.d.ts",
+      "import": "./dist/rpg/index.js"
+    },
+    "./challenges": {
+      "types": "./dist/challenges/index.d.ts",
+      "import": "./dist/challenges/index.js"
     }
   },
   "scripts": {
     "build": "tsc",
     "lint": "eslint .",
+    "prepare:english-answer-speech": "tsx scripts/prepare-wizard-speech.ts",
     "test": "vitest run",
     "check-types": "tsc --noEmit"
   },

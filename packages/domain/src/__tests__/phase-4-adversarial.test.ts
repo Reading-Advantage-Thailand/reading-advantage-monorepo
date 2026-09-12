@@ -441,11 +441,11 @@ describe("Phase 4 adversarial: race-safe fire-once stress (live-DB)", () => {
     ).toBe(expectedXp);
   });
 
-  it("5B.3: dual-write preserves xpLogs even when the same activityId is written to xpLogs (xpLogs unique)", async () => {
+  it("5B.3: an xpLogs conflict fails and rolls back without false duplicate success", async () => {
     // Manually insert a row with the same (userId, activityId) into
     // xpLogs first, then try to call recordGameCompletion. The race-safe
-    // guard should catch the unique-violation on either table and return
-    // duplicate:true without inserting into the OTHER table.
+    // guard must surface this unrelated unique violation and roll back the
+    // completion insert.
     await seedSchoolAndUser(harness, SCHOOL_A_ID, USER_A_ID);
 
     // Pre-seed xpLogs with the exact activityId that recordGameCompletion
@@ -459,16 +459,12 @@ describe("Phase 4 adversarial: race-safe fire-once stress (live-DB)", () => {
       activityType: "GAME_COMPLETION",
     });
 
-    const r = await recordGameCompletion({
+    await expect(recordGameCompletion({
       db: harness.tenantDb(makeTenant(SCHOOL_A_ID)),
       user: makeUser(USER_A_ID, SCHOOL_A_ID),
       tenant: makeTenant(SCHOOL_A_ID),
       input: makeValidInput(),
-    });
-
-    // The function catches the unique-violation and returns duplicate:true.
-    expect(r.duplicate).toBe(true);
-    expect(r.xpEarned).toBe(0);
+    })).rejects.toThrow("xp_logs");
 
     // The xp_logs row was not duplicated (still exactly 1).
     const xpCount = await harness.db.execute(

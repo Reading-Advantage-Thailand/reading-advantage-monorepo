@@ -1,6 +1,7 @@
 import { createApkCompletionRoute } from "./completion-route";
 
 const validPayload = {
+  challengeRunId: "44444444-4444-4444-8444-444444444444",
   gameType: "astral-mage",
   difficulty: "medium",
   score: 420,

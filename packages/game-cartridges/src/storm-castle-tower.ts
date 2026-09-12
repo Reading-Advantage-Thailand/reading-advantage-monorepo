@@ -3,10 +3,9 @@ import {
   createBoundedFrameScheduler,
   createCompletionLatch,
   createInputActionNormalizer,
-  createLanguageTargetProgression,
   createResultAccountant,
-  finalizeResult,
   preloadAssetBindings,
+  resolveAssetBinding,
   validateNonEmptyContent,
   type ActorSpriteLayer,
   type ActorSpriteLike,
@@ -135,6 +134,8 @@ export interface StormCastleTowerSnapshot {
   readonly player: StormCastleTowerPosition;
   /** Every placed word window. */
   readonly windows: readonly StormCastleTowerWindow[];
+  /** Window IDs collected for each ordered English word. */
+  readonly collectedWindowIds: readonly string[];
   /** Active falling hazards. */
   readonly hazards: readonly StormCastleTowerHazard[];
   /** Remaining player lives. */
@@ -248,7 +249,16 @@ interface PhaserGraphicsLike {
 interface PhaserTextLike {
   setPosition(x: number, y: number): this;
   setText(value: string): this;
+  setFontSize?(value: number): this;
+  setBackgroundColor?(value: string): this;
+  setPadding?(left: number, top: number, right?: number, bottom?: number): this;
+  setOrigin?(x: number, y?: number): this;
+  setWordWrapWidth?(width: number, useAdvancedWrap?: boolean): this;
   destroy(): void;
+}
+
+interface PhaserTileSpriteLike extends ActorSpriteLike {
+  setTileScale?(x: number, y?: number): this;
 }
 
 /** Minimal Phaser canvas surface needed for pointer conversion. */
@@ -292,7 +302,7 @@ interface SceneResources {
   readonly lives: PhaserTextLike;
   readonly feedback: PhaserTextLike;
   readonly instructions: PhaserTextLike;
-  readonly windowLabels: readonly PhaserTextLike[];
+  readonly windowLabels: Map<string, PhaserTextLike>;
 }
 
 /** Context passed from the cartridge factory to the tower renderer. */
@@ -465,7 +475,10 @@ export function createStormCastleTowerController(
   let player = freezePosition(1, startRow);
   let hazards: StormCastleTowerHazard[] = [];
   let accountant = createResultAccountant();
-  let progression = createLanguageTargetProgression(targets.map((target) => target.id));
+  let restoredCorrectAnswers = 0;
+  let restoredTotalAttempts = 0;
+  let restoredScore = 0;
+  let collectedWindowIds: string[] = [];
   const completion = createCompletionLatch(deliver);
   let phase: StormCastleTowerPhase = "playing";
   let targetIndex = 0;
@@ -486,7 +499,8 @@ export function createStormCastleTowerController(
     currentTargetIndex: number,
   ): InputActionId => {
     if (currentTargetIndex >= targets.length) return "confirm";
-    const targetWindow = currentWindows.find((window) => window.wordIndex === currentTargetIndex);
+    const expectedWord = targets[currentTargetIndex]?.word;
+    const targetWindow = currentWindows.find((window) => window.word === expectedWord && window.state === "open");
     if (!targetWindow || (targetWindow.position.col === currentPlayer.col && targetWindow.position.row === currentPlayer.row)) {
       return "confirm";
     }
@@ -513,13 +527,14 @@ export function createStormCastleTowerController(
       availableActions: STORM_CASTLE_TOWER_ACTIONS,
       player,
       windows: Object.freeze(windows.map(cloneWindow)),
+      collectedWindowIds: Object.freeze([...collectedWindowIds]),
       hazards: Object.freeze(hazards.map(cloneHazard)),
       lives: accountantLives,
       maxLives: startingLives,
       energy: accountantLives,
-      correctAnswers: accountant.correctAnswers,
-      totalAttempts: accountant.totalAttempts,
-      score: accountant.score,
+      correctAnswers: restoredCorrectAnswers + accountant.correctAnswers,
+      totalAttempts: restoredTotalAttempts + accountant.totalAttempts,
+      score: restoredScore + accountant.score,
       ...(lastOutcome === undefined ? {} : { lastOutcome }),
       cameraY: cameraY(),
       cameraOffset: cameraY(),
@@ -536,9 +551,17 @@ export function createStormCastleTowerController(
 
   let accountantLives = startingLives;
 
-  const terminalResult = (): GameResults => gameResultsSchema.parse(
-    finalizeResult(accountant, { xpPerCorrect: 20, xpPerAccuracyPoint: 10 }),
-  );
+  const terminalResult = (): GameResults => {
+    const state = snapshot();
+    const accuracy = state.totalAttempts === 0 ? 0 : state.correctAnswers / state.totalAttempts;
+    return gameResultsSchema.parse({
+      correctAnswers: state.correctAnswers,
+      totalAttempts: state.totalAttempts,
+      accuracy,
+      score: state.score,
+      xp: Math.floor(state.correctAnswers * 20 + accuracy * 10),
+    });
+  };
 
   const finish = (nextPhase: "victory" | "defeat"): GameResults => {
     phase = nextPhase;
@@ -589,10 +612,9 @@ export function createStormCastleTowerController(
 
   const restoreAccountant = (state: StormCastleTowerSnapshot): void => {
     accountant = createResultAccountant();
-    for (let index = 0; index < state.totalAttempts; index += 1) {
-      accountant.recordAttempt({ correct: index < state.correctAnswers });
-    }
-    accountant.addScore(state.score);
+    restoredCorrectAnswers = state.correctAnswers;
+    restoredTotalAttempts = state.totalAttempts;
+    restoredScore = state.score;
   };
 
   const controller: StormCastleTowerController = {
@@ -642,9 +664,9 @@ export function createStormCastleTowerController(
         : nearby.find((window) => window.id === windowId);
       if (!selected) return actionResult(false, false, false);
 
-      const match = progression.match(selected.id);
-      accountant.recordAttempt({ correct: match.matched });
-      if (!match.matched) {
+      const matched = selected.word === currentTarget().word;
+      accountant.recordAttempt({ correct: matched });
+      if (!matched) {
         windows = windows.map((window) => window.id === selected.id
           ? { ...window, state: "closed" as const }
           : window);
@@ -657,15 +679,16 @@ export function createStormCastleTowerController(
       windows = windows.map((window) => window.id === selected.id
         ? { ...window, state: "collected" as const }
         : window);
+      collectedWindowIds = [...collectedWindowIds, selected.id];
       accountant.addScore(100);
       targetIndex += 1;
-      if (!progression.isComplete) {
-        windows = windows.map((window) => window.wordIndex === targetIndex && window.state === "closed"
+      if (targetIndex < targets.length) {
+        windows = windows.map((window) => window.word === currentTarget().word && window.state === "closed"
           ? { ...window, state: "open" as const }
           : window);
       }
       lastOutcome = "correct";
-      const result = progression.isComplete ? finish("victory") : undefined;
+      const result = targetIndex === targets.length ? finish("victory") : undefined;
       return actionResult(true, true, true, result);
     },
     tick(deltaMs): StormCastleTowerSnapshot {
@@ -766,6 +789,10 @@ export function createStormCastleTowerController(
       if (!Array.isArray(state.windows) || state.windows.length !== targets.length) {
         throw new Error("Storm Castle Tower responsive windows are invalid");
       }
+      if (!Array.isArray(state.collectedWindowIds) || state.collectedWindowIds.length !== state.targetIndex
+        || new Set(state.collectedWindowIds).size !== state.collectedWindowIds.length) {
+        throw new Error("Storm Castle Tower responsive collected window history is invalid");
+      }
       const windowIds = new Set<string>();
       for (const [index, window] of state.windows.entries()) {
         const expected = targets[index];
@@ -779,16 +806,20 @@ export function createStormCastleTowerController(
           throw new Error("Storm Castle Tower responsive window entity is invalid");
         }
         windowIds.add(window.id);
-        const expectedState = index < state.targetIndex || state.phase === "victory" ? "collected" : undefined;
-        if (expectedState !== undefined && window.state !== expectedState) {
-          throw new Error("Storm Castle Tower responsive window progress is invalid");
-        }
-        if (expectedState === undefined && window.state === "collected") {
+        const expectedCollected = state.collectedWindowIds.includes(window.id);
+        if ((window.state === "collected") !== expectedCollected) {
           throw new Error("Storm Castle Tower responsive window skips a target");
         }
       }
-      const currentWindow = state.windows[state.targetIndex];
-      if (state.phase !== "victory" && (!currentWindow || currentWindow.state !== "open")) {
+      for (const [index, id] of state.collectedWindowIds.entries()) {
+        const collectedWindow = state.windows.find((window) => window.id === id);
+        if (!collectedWindow || collectedWindow.word !== targets[index]?.word) {
+          throw new Error("Storm Castle Tower responsive collected window history is invalid");
+        }
+      }
+      const currentWindow = state.windows.find((window) =>
+        window.word === targets[state.targetIndex]?.word && window.state === "open");
+      if (state.phase !== "victory" && !currentWindow) {
         throw new Error("Storm Castle Tower responsive state current target is unwinnable");
       }
       if (state.player === null || typeof state.player !== "object"
@@ -848,14 +879,14 @@ export function createStormCastleTowerController(
       if (state.phase !== "playing") {
         if (state.result === undefined) throw new Error("Storm Castle Tower terminal result is missing");
         const restoredResult = gameResultsSchema.parse(state.result);
-        const expectedAccountant = createResultAccountant();
-        for (let index = 0; index < state.totalAttempts; index += 1) {
-          expectedAccountant.recordAttempt({ correct: index < state.correctAnswers });
-        }
-        expectedAccountant.addScore(state.score);
-        const expectedResult = gameResultsSchema.parse(
-          finalizeResult(expectedAccountant, { xpPerCorrect: 20, xpPerAccuracyPoint: 10 }),
-        );
+        const accuracy = state.totalAttempts === 0 ? 0 : state.correctAnswers / state.totalAttempts;
+        const expectedResult = gameResultsSchema.parse({
+          correctAnswers: state.correctAnswers,
+          totalAttempts: state.totalAttempts,
+          accuracy,
+          score: state.score,
+          xp: Math.floor(state.correctAnswers * 20 + accuracy * 10),
+        });
         if (restoredResult.accuracy !== expectedResult.accuracy || restoredResult.xp !== expectedResult.xp
           || restoredResult.score !== expectedResult.score || restoredResult.correctAnswers !== expectedResult.correctAnswers
           || restoredResult.totalAttempts !== expectedResult.totalAttempts) {
@@ -863,6 +894,7 @@ export function createStormCastleTowerController(
         }
       }
       windows = state.windows.map(cloneWindow);
+      collectedWindowIds = [...state.collectedWindowIds];
       hazards = state.hazards.map(cloneHazard);
       player = freezePosition(state.player.col, state.player.row);
       phase = state.phase;
@@ -875,8 +907,6 @@ export function createStormCastleTowerController(
       random.restore(state.randomState);
       restoreAccountant(state);
       terminalResultValue = state.result;
-      progression = createLanguageTargetProgression(targets.map((target) => target.id));
-      for (let index = 0; index < targetIndex; index += 1) progression.match(targets[index]!.id);
       destroyed = false;
       if (phase !== "playing") {
         completion.sealWithoutDelivery();
@@ -894,10 +924,13 @@ export function createStormCastleTowerController(
 
 function createScene(context: StormCastleTowerSceneContext): Readonly<Record<string, unknown>> {
   let resources: SceneResources | undefined;
-  let composition = context.composition;
   let animationMs = 0;
   let previousKeys = new Set<string>();
+  let heldMove: InputActionId | undefined;
+  let heldMoveMs = 0;
   let cleaned = false;
+  let towerWall: PhaserTileSpriteLike | undefined;
+  let towerWallSignature = "";
   const normalize = createInputActionNormalizer({
     keyboard: STORM_CASTLE_TOWER_KEYBOARD_BINDINGS,
     pointerTap: { action: "confirm" },
@@ -944,12 +977,29 @@ function createScene(context: StormCastleTowerSceneContext): Readonly<Record<str
     const playerY = height * 0.72;
     const pulse = Math.sin(animationMs / 420) * 2;
     const worldY = (row: number): number => playerY + (row - state.player.row) * CELL_SIZE;
+    const renderedWidth = scene.game?.canvas?.getBoundingClientRect?.().width ?? width;
+    const displayScale = Math.max(0.1, renderedWidth / width);
+    const displaySize = (pixels: number): number => Math.ceil(pixels / displayScale);
+    const visibleWindowIds = new Set<string>();
+
+    const nextWallSignature = `${towerLeft}:${towerWidth}:${height}:${displayScale}`;
+    if (nextWallSignature !== towerWallSignature) {
+      towerWall?.destroy?.();
+      towerWall = undefined;
+      towerWallSignature = nextWallSignature;
+      if (context.edition.bindings["world:tower-wall"] && scene.add.tileSprite) {
+        const resolved = resolveAssetBinding(context.edition, "world:tower-wall");
+        towerWall = scene.add.tileSprite(towerLeft, 0, towerWidth, height, resolved.textureKey) as PhaserTileSpriteLike;
+        towerWall.setOrigin?.(0, 0);
+        towerWall.setDepth?.(-5);
+        towerWall.setTileScale?.(2 / displayScale, 2 / displayScale);
+      }
+    }
 
     resources.graphics.clear();
-    if (!resources.art.ground("world:ground", width, height)) resources.graphics.fillStyle(0x07111f, 1).fillRect(0, 0, width, height);
-    resources.graphics.fillStyle(0x102b43, 0.8).fillCircle(width * 0.12, height * 0.2, 72);
-    resources.graphics.fillStyle(0x1d4260, 0.65).fillCircle(width * 0.86, height * 0.28, 96);
-    resources.graphics.fillStyle(0x3f334b, 1).fillRect(towerLeft, 0, towerWidth, height);
+    resources.graphics.fillStyle(0x07111f, 1).fillRect(0, 0, towerLeft, height);
+    resources.graphics.fillRect(towerLeft + towerWidth, 0, width - towerLeft - towerWidth, height);
+    if (!towerWall) resources.graphics.fillStyle(0x3f334b, 1).fillRect(towerLeft, 0, towerWidth, height);
     resources.graphics.lineStyle(4, 0xb58a5b, 0.8).strokeRoundedRect(towerLeft, -20, towerWidth, height + 40, 12);
     for (let column = 1; column < COLUMN_COUNT; column += 1) {
       resources.graphics.fillStyle(0x2b2639, 0.9).fillRect(towerLeft + column * columnWidth - 4, 0, 8, height);
@@ -959,19 +1009,36 @@ function createScene(context: StormCastleTowerSceneContext): Readonly<Record<str
       resources.graphics.lineStyle(2, 0x765b55, 0.7).strokeRoundedRect(towerLeft + 5, y - 25, towerWidth - 10, 50, 5);
     }
 
-    for (const [index, window] of state.windows.entries()) {
+    for (const window of state.windows) {
       const x = towerLeft + columnWidth * (window.position.col + 0.5);
       const y = worldY(window.position.row);
+      if (y < 112 || y > height - 54) continue;
+      visibleWindowIds.add(window.id);
       const open = window.state === "open";
-      const target = window.wordIndex === state.targetIndex && open;
+      const cardWidth = Math.min(displaySize(150), width - 24);
+      const labelX = Math.max(cardWidth / 2 + 6, Math.min(width - cardWidth / 2 - 6, x));
       resources.graphics.fillStyle(
-        window.state === "collected" ? 0x2f855a : window.state === "closed" ? 0x291d2e : target ? 0xd28b2d : 0x4b6685,
+        window.state === "collected" ? 0x2f855a : window.state === "closed" ? 0x291d2e : 0x4b6685,
         open ? 0.95 : 0.55,
-      ).fillRoundedRect(x - columnWidth * 0.31, y - 19, columnWidth * 0.62, 38, 8);
-      resources.graphics.lineStyle(2, target ? 0xffdc7c : 0xa8c4d8, 0.9)
-        .strokeRoundedRect(x - columnWidth * 0.31, y - 19, columnWidth * 0.62, 38, 8);
-      resources.windowLabels[index]?.setText(open ? window.word : window.state === "collected" ? "✓" : "SHUT")
-        .setPosition(x - columnWidth * 0.27, y - 8);
+      ).fillRoundedRect(labelX - cardWidth / 2, y - displaySize(20), cardWidth, displaySize(40), 8);
+      resources.graphics.lineStyle(2, 0xa8c4d8, 0.9)
+        .strokeRoundedRect(labelX - cardWidth / 2, y - displaySize(20), cardWidth, displaySize(40), 8);
+      let label = resources.windowLabels.get(window.id);
+      if (!label) {
+        label = scene.add.text(0, 0, "", { fontFamily: "Arial", color: "#f7fbff", align: "center" });
+        resources.windowLabels.set(window.id, label);
+      }
+      label.setFontSize?.(displaySize(16));
+      label.setBackgroundColor?.("rgba(15, 23, 42, 0.92)");
+      label.setPadding?.(displaySize(3), displaySize(2));
+      label.setOrigin?.(0.5, 0.5);
+      label.setWordWrapWidth?.(cardWidth - displaySize(8), true);
+      label.setText(open ? window.word : window.state === "collected" ? "✓" : "").setPosition(labelX, y);
+    }
+    for (const [id, label] of resources.windowLabels) {
+      if (visibleWindowIds.has(id)) continue;
+      label.destroy();
+      resources.windowLabels.delete(id);
     }
 
     for (const hazard of state.hazards) {
@@ -1004,24 +1071,19 @@ function createScene(context: StormCastleTowerSceneContext): Readonly<Record<str
     }
     resources.art.sweep();
 
-    resources.title.setText("STORM THE CASTLE TOWER").setPosition(26, 18);
-    resources.prompt.setText(`Climb for: ${state.prompt}`).setPosition(26, 57);
+    resources.graphics.fillStyle(0x07111f, 0.96).fillRoundedRect(12, 8, width - 24, 82, 14);
+    resources.title.setText("").setPosition(26, 18);
+    resources.prompt.setFontSize?.(displaySize(26));
+    resources.prompt.setOrigin?.(0.5, 0);
+    resources.prompt.setWordWrapWidth?.(Math.max(1, width - 40), true);
+    resources.prompt.setText(state.prompt).setPosition(width / 2, 16);
+    resources.progress.setFontSize?.(displaySize(15));
     resources.progress.setText(
-      `${composition?.profile === "compact" ? "Compact climb" : "Tower climb"}  •  Word ${Math.min(state.targetIndex + 1, context.targetCount)} of ${context.targetCount}  •  Height ${state.height}`,
-    ).setPosition(26, 91);
-    resources.lives.setText(`Lives: ${"♥".repeat(state.lives)}${"♡".repeat(Math.max(0, state.maxLives - state.lives))}`).setPosition(width - 180, 22);
-    resources.feedback.setText(
-      state.phase === "victory"
-        ? "The tower is secure!"
-        : state.phase === "defeat"
-          ? "The tower has fallen."
-          : state.lastOutcome === "incorrect"
-            ? "That window shuts. Find the next word."
-            : state.lastOutcome === "hazard"
-              ? "Watch for oil and falling rocks."
-              : "Move near a word window, then confirm.",
-    ).setPosition(26, height - 66);
-    resources.instructions.setText("WASD / arrows move  •  Space / Enter collect  •  Swipe to climb").setPosition(26, height - 34);
+      `${Math.min(state.targetIndex + 1, context.targetCount)}/${context.targetCount}  ↥${state.height}  ♥${state.lives}`,
+    ).setPosition(26, 58);
+    resources.lives.setText("").setPosition(width - 180, 22);
+    resources.feedback.setText("").setPosition(26, height - 66);
+    resources.instructions.setText("").setPosition(26, height - 34);
   };
 
   const cleanup = (): void => {
@@ -1029,6 +1091,8 @@ function createScene(context: StormCastleTowerSceneContext): Readonly<Record<str
     cleaned = true;
     frameScheduler.cancel();
     context.controller.destroy();
+    towerWall?.destroy?.();
+    towerWall = undefined;
     if (!resources) return;
     resources.graphics.destroy();
     resources.title.destroy();
@@ -1037,13 +1101,13 @@ function createScene(context: StormCastleTowerSceneContext): Readonly<Record<str
     resources.lives.destroy();
     resources.feedback.destroy();
     resources.instructions.destroy();
-    for (const label of resources.windowLabels) label.destroy();
+    for (const label of resources.windowLabels.values()) label.destroy();
     resources = undefined;
     previousKeys = new Set<string>();
   };
 
 
-  const artKeys = ["world:ground", "player:idle", "enemy:idle"] as const;
+  const artKeys = ["world:tower-wall", "player:idle"] as const;
 
   const preload = function (this: PhaserSceneLike): void {
     if (!this.load) return;
@@ -1066,11 +1130,7 @@ function createScene(context: StormCastleTowerSceneContext): Readonly<Record<str
       lives: this.add.text(0, 0, "", { ...textStyle, fontSize: "18px", color: "#ffcf77" }),
       feedback: this.add.text(26, 0, "", { ...textStyle, fontSize: "17px", color: "#ffdc7c" }),
       instructions: this.add.text(26, 0, "", { ...textStyle, fontSize: "15px", color: "#c6d3df" }),
-      windowLabels: context.controller.snapshot().windows.map((window) => this.add!.text(0, 0, window.word, {
-        ...textStyle,
-        fontSize: "15px",
-        wordWrap: { width: 80 },
-      })),
+      windowLabels: new Map(),
     };
     this.events?.once("shutdown", cleanup);
     this.events?.once("destroy", cleanup);
@@ -1084,9 +1144,18 @@ function createScene(context: StormCastleTowerSceneContext): Readonly<Record<str
       const input = context.inputController.snapshot();
       const pressed = input.pressed ?? input.keys.filter((key) => !previousKeys.has(key));
       previousKeys = new Set(input.keys);
-      for (const code of pressed) {
-        const action = normalize({ modality: "keyboard", code })[0]?.action;
-        if (action) context.controller.choose(action);
+      const pressedAction = pressed.map((code) => normalize({ modality: "keyboard", code })[0]?.action).find(Boolean);
+      if (pressedAction) context.controller.choose(pressedAction);
+      const activeMove = input.keys.map((code) => normalize({ modality: "keyboard", code })[0]?.action)
+        .find((action) => action !== undefined && directionForAction(action) !== undefined);
+      if (activeMove !== heldMove) {
+        heldMove = activeMove;
+        heldMoveMs = 0;
+      } else if (activeMove && !pressedAction) {
+        heldMoveMs += frameScheduler.lastDeltaMs;
+        const steps = Math.min(4, Math.floor(heldMoveMs / 140));
+        heldMoveMs -= steps * 140;
+        for (let step = 0; step < steps; step += 1) context.controller.choose(activeMove);
       }
       if (input.pointer.released && !input.pointer.cancelled) {
         const { width, height } = dimensions(this);
@@ -1118,9 +1187,7 @@ function createScene(context: StormCastleTowerSceneContext): Readonly<Record<str
         if (typeof state !== "object" || state === null) throw new Error("Storm Castle Tower responsive state is invalid");
         context.controller.restore(state as StormCastleTowerSnapshot);
       },
-      apkRecompose: (nextComposition: StormCastleTowerSceneContext["composition"]): void => {
-        composition = nextComposition;
-      },
+      apkRecompose: (_nextComposition: StormCastleTowerSceneContext["composition"]): void => undefined,
     },
   };
 }

@@ -12,6 +12,7 @@ import {
   createResultAccountant,
   finalizeResult,
   preloadAssetBindings,
+  resolveAssetBinding,
   validateNonEmptyContent,
   type ActorSpriteLayer,
   type ActorSpriteLike,
@@ -24,6 +25,13 @@ import {
 import type { StandardExperienceCartridge } from "@reading-advantage/advantage-play-kit/presentation";
 
 import { createCartridgeStandardExperience } from "./standard-experience.js";
+import {
+  createFlightParallax,
+  destroyFlightParallax,
+  preloadFlightParallax,
+  tickFlightParallax,
+  type FlightParallaxLayers,
+} from "./flight-parallax.js";
 
 /** Stable public identifier for the Gryphon Patrol cartridge. */
 export const GRYPHON_PATROL_ID = "gryphon-patrol" as const;
@@ -342,9 +350,9 @@ interface PhaserSceneLike {
   add?: {
     graphics(): PhaserGraphicsLike;
     text(x: number, y: number, value: string, style?: Readonly<Record<string, unknown>>): PhaserTextLike;
-    image?(x: number, y: number, key: string, frame?: number): ActorSpriteLike;
-    sprite?(x: number, y: number, key: string, frame?: number): ActorSpriteLike;
-    tileSprite?(x: number, y: number, width: number, height: number, key: string): ActorSpriteLike;
+    image?(x: number, y: number, key: string, frame?: number): ActorSpriteLike & PhaserImageLike;
+    sprite?(x: number, y: number, key: string, frame?: number): ActorSpriteLike & PhaserImageLike;
+    tileSprite?(x: number, y: number, width: number, height: number, key: string): ActorSpriteLike & PhaserImageLike;
   };
   load?: {
     image?(key: string, url: string): unknown;
@@ -354,6 +362,17 @@ interface PhaserSceneLike {
   events?: { once(event: string, listener: () => void): void };
   game?: { readonly canvas?: PhaserCanvasLike };
   scale?: { readonly width?: number; readonly height?: number };
+}
+
+interface PhaserImageLike {
+  setOrigin?(x: number, y: number): this;
+  setDisplaySize?(width: number, height: number): this;
+  setDepth?(depth: number): this;
+  setPosition?(x: number, y: number): this;
+  setAlpha?(alpha: number): this;
+  setTilePosition?(x: number, y: number): this;
+  tilePositionY?: number;
+  destroy(): void;
 }
 
 interface SceneResources {
@@ -366,6 +385,9 @@ interface SceneResources {
   readonly instructions: PhaserTextLike;
   readonly enemies: readonly PhaserTextLike[];
   readonly orbs: readonly PhaserTextLike[];
+  ground?: PhaserImageLike;
+  groundWidth: number;
+  groundHeight: number;
 }
 
 interface GryphonPatrolSceneContext {
@@ -1149,6 +1171,53 @@ export function createGryphonPatrolController(
   return Object.freeze(controller);
 }
 
+function fileForBinding(
+  edition: RuntimeEdition,
+  key: string,
+): { readonly width: number; readonly height: number; readonly grid?: { readonly frameWidth: number; readonly frameHeight: number } } | undefined {
+  const binding = (edition as unknown as { bindings?: Record<string, { file: string }> })?.bindings?.[key];
+  if (!binding) return undefined;
+  return ((edition as unknown as { pack?: { files?: Record<string, { readonly width: number; readonly height: number; readonly grid?: { readonly frameWidth: number; readonly frameHeight: number } }> } })?.pack?.files as Record<string, { readonly width: number; readonly height: number; readonly grid?: { readonly frameWidth: number; readonly frameHeight: number } }> | undefined)?.[binding.file];
+}
+
+function destroyGround(resources: SceneResources): void {
+  resources.ground?.destroy();
+  resources.ground = undefined;
+  resources.groundWidth = 0;
+  resources.groundHeight = 0;
+}
+
+function ensureGround(
+  scene: PhaserSceneLike,
+  resources: SceneResources,
+  edition: RuntimeEdition,
+  width: number,
+  height: number,
+): void {
+  if (resources.groundWidth === width && resources.groundHeight === height && resources.ground) return;
+  destroyGround(resources);
+  resources.groundWidth = width;
+  resources.groundHeight = height;
+  const binding = (edition as unknown as { bindings?: Record<string, unknown> })?.bindings?.["world:ground"];
+  if (!binding) return;
+  const resolved = resolveAssetBinding(edition, "world:ground");
+  if (scene.add?.tileSprite) {
+    const tiled = scene.add.tileSprite(0, 0, width, height, resolved.textureKey);
+    tiled.setOrigin?.(0, 0);
+    tiled.setDepth?.(-35);
+    resources.ground = tiled as unknown as PhaserImageLike;
+  } else {
+    const file = fileForBinding(edition, "world:ground");
+    const displayW = width;
+    const displayH = file ? displayW * (file.height / file.width) : height;
+    const image = scene.add?.image?.(width / 2, height / 2, resolved.textureKey);
+    image?.setOrigin?.(0.5, 0.5);
+    if (file) (image as unknown as PhaserImageLike)?.setDisplaySize?.(displayW, displayH);
+    image?.setDepth?.(-35);
+    if (image) resources.ground = image as unknown as PhaserImageLike;
+  }
+}
+
 function createScene(context: GryphonPatrolSceneContext): Readonly<Record<string, unknown>> {
   let resources: SceneResources | undefined;
   let composition = context.composition;
@@ -1156,6 +1225,7 @@ function createScene(context: GryphonPatrolSceneContext): Readonly<Record<string
   let previousKeys = new Set<string>();
   let cleaned = false;
   let animationMs = 0;
+  let parallax: FlightParallaxLayers = { sprites: [], scrollY: 0 };
   const normalize = createInputActionNormalizer({
     keyboard: GRYPHON_PATROL_KEYBOARD_BINDINGS,
     pointerTap: { action: "confirm" },
@@ -1177,15 +1247,30 @@ function createScene(context: GryphonPatrolSceneContext): Readonly<Record<string
     };
     const pulse = Math.sin(animationMs / 2_000 * Math.PI * 2) * 3;
     activeResources.graphics.clear();
-    if (!activeResources.art.ground("world:ground", width, height)) activeResources.graphics.fillStyle(0x071b36, 1).fillRect(0, 0, width, height);
-    activeResources.graphics.fillStyle(0x0d3357, 0.72).fillRect(0, height * 0.2, width, height * 0.62);
-    activeResources.graphics.lineStyle(2, 0x55b9e8, 0.35).strokeRoundedRect(10, height * 0.18, width - 20, height * 0.64, 22);
+    // Contiguous tiled ground at depth -35 behind parallax; no dark tint hiding it.
+    ensureGround(scene as unknown as Parameters<typeof ensureGround>[0], activeResources, context.edition, width, height);
+    if (parallax.sprites.length === 0) {
+      try {
+        const next = createFlightParallax(scene as unknown as Parameters<typeof createFlightParallax>[0], context.edition, width, height);
+        if (next.sprites.length > 0) parallax = next;
+      } catch {
+        // Tests use empty edition without parallax bindings.
+      }
+    }
+    if (parallax.sprites.length === 0) {
+      activeResources.graphics.fillStyle(0x6eb6e8, 0.9).fillRect(0, 0, width, height);
+    }
+    // Light sky ornament, not a full-screen opaque overlay.
+    activeResources.graphics.fillStyle(0x8cd0f0, 0.35).fillCircle(width * 0.12, height * 0.18, 42);
+    activeResources.graphics.fillStyle(0xa8ddf5, 0.28).fillCircle(width * 0.82, height * 0.22, 56);
     for (const projectile of state.projectiles) {
       activeResources.graphics.fillStyle(0xffe08a, 1).fillCircle(worldToScreen(projectile.x), projectile.y, 5);
     }
     state.enemies.forEach((enemy, enemyIndex) => {
       if (!enemy.isActive) return;
       const enemyX = worldToScreen(enemy.x);
+      // Aspect-correct enemy: file 288x336 frame 48x48 square, displayH = displayW * 1, width 41.6 preserves mount without stretch.
+      // Enemy-bat visible bbox 266x305 within 288x336 — width chosen by visible bbox.
       if (activeResources.art.place(`enemy:${enemyIndex}`, "enemy:idle", {
         x: enemyX,
         y: enemy.y,
@@ -1202,6 +1287,7 @@ function createScene(context: GryphonPatrolSceneContext): Readonly<Record<string
       activeResources.graphics.fillStyle(0xffffff, 0.88 + pulse / 30).fillCircle(orbX, orb.y, orb.size / 2);
     }
     const playerX = worldToScreen(state.player.x);
+    // Aspect-correct player: dragon-rider-idle 96x96 visible 96x69, displayW 56 (size 40*1.4) height 56 via square file preserves without stretch.
     if (!activeResources.art.place("player", "player:idle", {
       x: playerX,
       y: state.player.y,
@@ -1277,6 +1363,8 @@ function createScene(context: GryphonPatrolSceneContext): Readonly<Record<string
     cleaned = true;
     frameScheduler.cancel();
     context.controller.destroy();
+    destroyFlightParallax(parallax);
+    destroyGround(resources as unknown as SceneResources);
     previousKeys = new Set<string>();
     const activeResources = resources;
     resources = undefined;
@@ -1291,14 +1379,23 @@ function createScene(context: GryphonPatrolSceneContext): Readonly<Record<string
     for (const label of activeResources.orbs) label.destroy();
   };
 
-  const artKeys = ["world:ground", "player:idle", "enemy:idle"] as const;
+  const artKeys = [
+    "world:ground",
+    "player:idle",
+    "enemy:idle",
+    "world:parallax-far",
+    "world:parallax-mid",
+    "world:parallax-near",
+    "prop:gate",
+  ] as const;
 
   const preload = function (this: PhaserSceneLike): void {
     if (!this.load) return;
+    try { preloadFlightParallax(this as unknown as Parameters<typeof preloadFlightParallax>[0], context.edition); } catch { /* tests use empty edition */ }
     preloadAssetBindings(
       this.load,
       context.edition,
-      artKeys.filter((key) => context.edition.bindings[key]),
+      artKeys.filter((key) => (context.edition as unknown as { bindings?: Record<string, unknown> })?.bindings?.[key]),
     );
   };
 
@@ -1315,6 +1412,8 @@ function createScene(context: GryphonPatrolSceneContext): Readonly<Record<string
       instructions: this.add.text(0, 0, "", { ...style, fontSize: "14px", color: "#c3d8ea" }),
       enemies: Array.from({ length: context.enemyCount }, () => this.add!.text(0, 0, "", { ...style, fontSize: "15px" })),
       orbs: Array.from({ length: context.targetCount }, () => this.add!.text(0, 0, "", { ...style, fontSize: "15px", color: "#fff7d1" })),
+      groundWidth: 0,
+      groundHeight: 0,
     };
     this.events?.once("shutdown", cleanup);
     this.events?.once("destroy", cleanup);
@@ -1323,6 +1422,7 @@ function createScene(context: GryphonPatrolSceneContext): Readonly<Record<string
   const update = function (this: PhaserSceneLike, _time = 0, delta = 0): void {
     if (!resources || cleaned) return;
     frameScheduler.tick(delta);
+    tickFlightParallax(parallax as unknown as Parameters<typeof tickFlightParallax>[0], delta);
     processInput(this);
     if (context.sessionMode === "playing") context.controller.tick(delta);
     updateView(this);

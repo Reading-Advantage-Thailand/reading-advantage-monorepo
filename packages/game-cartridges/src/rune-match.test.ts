@@ -121,7 +121,7 @@ function mutableInput(): APKInputController & { setSnapshot(snapshot: APKInputSn
   };
 }
 
-function sceneHost() {
+function sceneHost(renderedWidth = 960, logicalWidth = 960, logicalHeight = 540) {
   const graphics = {
     clear: vi.fn(),
     fillStyle: vi.fn(),
@@ -141,11 +141,13 @@ function sceneHost() {
     graphics.lineStyle,
     graphics.strokeRoundedRect,
   ]) method.mockReturnValue(graphics);
-  const texts: Array<{ setPosition: ReturnType<typeof vi.fn>; setText: ReturnType<typeof vi.fn>; destroy: ReturnType<typeof vi.fn> }> = [];
+  const texts: Array<{ setPosition: ReturnType<typeof vi.fn>; setText: ReturnType<typeof vi.fn>; setFontSize: ReturnType<typeof vi.fn>; setWordWrapWidth: ReturnType<typeof vi.fn>; destroy: ReturnType<typeof vi.fn> }> = [];
   const createText = () => {
-    const text = { setPosition: vi.fn(), setText: vi.fn(), destroy: vi.fn() };
+    const text = { setPosition: vi.fn(), setText: vi.fn(), setFontSize: vi.fn(), setWordWrapWidth: vi.fn(), destroy: vi.fn() };
     text.setPosition.mockReturnValue(text);
     text.setText.mockReturnValue(text);
+    text.setFontSize.mockReturnValue(text);
+    text.setWordWrapWidth.mockReturnValue(text);
     texts.push(text);
     return text;
   };
@@ -153,8 +155,8 @@ function sceneHost() {
   const host = {
     add: { graphics: vi.fn(() => graphics), text: vi.fn(() => createText()) },
     events: { once: vi.fn((event: string, listener: () => void) => listeners.set(event, listener)) },
-    game: { canvas: { getBoundingClientRect: () => ({ left: 0, top: 0, width: 960, height: 540 }) } },
-    scale: { width: 960, height: 540 },
+    game: { canvas: { getBoundingClientRect: () => ({ left: 0, top: 0, width: renderedWidth, height: renderedWidth * 9 / 16 }) } },
+    scale: { width: logicalWidth, height: logicalHeight },
   };
   return {
     host,
@@ -320,6 +322,37 @@ describe("Rune Match rules", () => {
     expect(controller.snapshot().phase).toBe("victory");
   });
 
+  it("varies four seeded target placements while preserving deterministic solvability", () => {
+    const vocabulary = [
+      { term: "bridge", translation: "สะพาน" },
+      { term: "forest", translation: "ป่า" },
+      { term: "river", translation: "แม่น้ำ" },
+      { term: "lantern", translation: "โคมไฟ" },
+    ];
+    const playPlacements = (seed: number): readonly string[] => {
+      const controller = createRuneMatchController(vocabulary, vi.fn(), { seed, monsterAttack: 0 });
+      const placements: string[] = [];
+      for (let target = 0; target < vocabulary.length; target += 1) {
+        const state = controller.snapshot();
+        placements.push(state.grid.flatMap((row, rowIndex) => row.flatMap((rune, colIndex) => (
+          rune.type === "vocabulary" && rune.term === state.answer ? [`${rowIndex}:${colIndex}`] : []
+        ))).join("|"));
+        const move = controller.findValidMove();
+        expect(move).toBeDefined();
+        if (!move) throw new Error(`Missing seeded move for target ${target}`);
+        expect(selectPair(controller, move[0], move[1])).toMatchObject({ correct: true, progressed: true });
+      }
+      expect(controller.snapshot().phase).toBe("victory");
+      return placements;
+    };
+
+    const seedFour = playPlacements(4);
+    expect(playPlacements(4)).toEqual(seedFour);
+    const placementSets = [seedFour, playPlacements(9), playPlacements(17)].map((placements) => placements.join("/"));
+    expect(new Set(placementSets).size).toBeGreaterThan(1);
+    expect(new Set(seedFour).size).toBeGreaterThan(1);
+  });
+
   it("completes all 50 vocabulary targets with deterministic progression", () => {
     const deliver = vi.fn();
     const controller = createRuneMatchController(MAXIMUM_INPUT, deliver, { seed: 23, monsterAttack: 0 });
@@ -348,7 +381,7 @@ describe("Rune Match rules", () => {
     expect(deliver).toHaveBeenCalledOnce();
   });
 
-  it("keeps a nonmatching swap, damages the player, and records one incorrect attempt", () => {
+  it("keeps a nonmatching swap and damage outside language accuracy", () => {
     const controller = createRuneMatchController(INPUT, vi.fn(), {
       grid: invalidGrid(),
       monsterAttack: 0,
@@ -357,12 +390,12 @@ describe("Rune Match rules", () => {
 
     expect(result).toMatchObject({ accepted: true, correct: false, progressed: false, outcome: "invalid-swap" });
     expect(result.snapshot.player.health).toBe(99);
-    expect(result.snapshot.totalAttempts).toBe(1);
+    expect(result.snapshot.totalAttempts).toBe(0);
     expect(result.snapshot.correctAnswers).toBe(0);
     expect(findRuneMatchGroups(result.snapshot.grid)).toHaveLength(0);
   });
 
-  it("damages the player for a non-target vocabulary match without damaging the monster", () => {
+  it("counts a direct non-target English match as one incorrect language attempt", () => {
     const controller = createRuneMatchController(INPUT, vi.fn(), {
       grid: nonTargetMatchGrid(),
       monsterHealth: 100,
@@ -378,7 +411,7 @@ describe("Rune Match rules", () => {
     expect(result.snapshot.correctAnswers).toBe(0);
   });
 
-  it("applies heal and shield rune effects", () => {
+  it("applies power rune effects without recording language attempts", () => {
     const healController = createRuneMatchController(INPUT, vi.fn(), {
       grid: powerGrid("heal"),
       playerHealth: 50,
@@ -387,7 +420,7 @@ describe("Rune Match rules", () => {
     const healed = selectPair(healController, { row: 0, col: 0 }, { row: 1, col: 0 });
     expect(healed.snapshot.player.health).toBe(59);
     expect(healed.snapshot.correctAnswers).toBe(0);
-    expect(healed.snapshot.totalAttempts).toBe(1);
+    expect(healed.snapshot.totalAttempts).toBe(0);
 
     const shieldController = createRuneMatchController(INPUT, vi.fn(), {
       grid: powerGrid("shield"),
@@ -399,6 +432,7 @@ describe("Rune Match rules", () => {
     expect(shielded.snapshot.player.hasShield).toBe(true);
     expect(shielded.snapshot.lastOutcome).toBe("shield");
     expect(shielded.outcome).toBe("shield");
+    expect(shielded.snapshot.totalAttempts).toBe(0);
   });
 
   it("counterattacks after a turn and consumes a shield when it blocks", () => {
@@ -460,7 +494,7 @@ describe("Rune Match rules", () => {
     expect(second.snapshot).toMatchObject({ phase: "victory", targetIndex: INPUT.length });
   });
 
-  it("emits defeat at zero health with exact failed counters", () => {
+  it("emits defeat from an invalid swap without a language attempt", () => {
     const deliver = vi.fn();
     const controller = createRuneMatchController(INPUT, deliver, {
       grid: invalidGrid(),
@@ -470,8 +504,8 @@ describe("Rune Match rules", () => {
     const terminal = selectPair(controller, { row: 0, col: 0 }, { row: 0, col: 1 });
     const result = gameResultsSchema.parse(terminal.result);
 
-    expect(terminal.snapshot).toMatchObject({ phase: "defeat", totalAttempts: 1, correctAnswers: 0 });
-    expect(result).toMatchObject({ accuracy: 0, correctAnswers: 0, totalAttempts: 1, score: 0 });
+    expect(terminal.snapshot).toMatchObject({ phase: "defeat", totalAttempts: 0, correctAnswers: 0 });
+    expect(result).toMatchObject({ accuracy: 0, correctAnswers: 0, totalAttempts: 0, score: 0 });
     expect(deliver).toHaveBeenCalledOnce();
   });
 
@@ -616,6 +650,60 @@ describe("Rune Match rules", () => {
     expect(host.texts.every((text) => text.destroy.mock.calls.length === 1)).toBe(true);
     expect((scene.extend.apkCaptureResponsiveState() as { destroyed: boolean }).destroyed).toBe(true);
     expect(complete).not.toHaveBeenCalled();
+  });
+
+  it("renders a prominent Thai target with readable English runes and no live instructions", () => {
+    const inputController = mutableInput();
+    const config = createRuneMatchCartridge().createGameConfig({
+      input: [
+        { term: "bridge", translation: "สะพาน" },
+        { term: "forest", translation: "ป่า" },
+        { term: "river", translation: "แม่น้ำ" },
+      ],
+      edition: { id: "compact" },
+      complete: vi.fn(),
+      diagnostic: vi.fn(),
+      inputController,
+      sessionMode: "playing",
+      seed: 4,
+    } as unknown as CartridgeGameConfigContext);
+    const scene = config.scene as { create(this: unknown): void; extend: { apkCaptureResponsiveState(): { prompt: string; answer: string } } };
+    const host = sceneHost(336);
+    scene.create.call(host.host);
+
+    expect(scene.extend.apkCaptureResponsiveState()).toMatchObject({ prompt: "สะพาน", answer: "bridge" });
+    expect(host.texts[0]?.setText).toHaveBeenLastCalledWith("");
+    expect(host.texts[1]?.setText).toHaveBeenLastCalledWith("สะพาน");
+    expect(host.texts[1]?.setFontSize).toHaveBeenLastCalledWith(52);
+    expect(host.texts[1]?.setWordWrapWidth).toHaveBeenLastCalledWith(900, true);
+    const runeLabels = host.texts.slice(5).flatMap((text) => text.setText.mock.calls.map(([value]) => value));
+    expect(runeLabels.some((value) => ["bridge", "forest", "river"].includes(String(value)))).toBe(true);
+    for (const text of host.texts.slice(5)) expect(text.setFontSize).toHaveBeenLastCalledWith(35);
+    const liveText = host.texts.flatMap((text) => text.setText.mock.calls.map(([value]) => String(value))).join(" ");
+    expect(liveText).not.toMatch(/RUNE MATCH|Match the rune|Keyboard|WASD|Tap two adjacent/iu);
+    expect(host.texts[4]?.setText).toHaveBeenLastCalledWith("");
+  });
+
+  it("omits compact actor decoration when the rune board has no side reserve", () => {
+    const config = createRuneMatchCartridge().createGameConfig({
+      input: INPUT,
+      edition: { id: "compact" },
+      complete: vi.fn(),
+      diagnostic: vi.fn(),
+      inputController: mutableInput(),
+      sessionMode: "playing",
+      seed: 4,
+      composition: { profile: "compact", width: 336, height: 733 },
+    } as unknown as CartridgeGameConfigContext);
+    const scene = config.scene as { create(this: unknown): void };
+    const host = sceneHost(336, 336, 733);
+    scene.create.call(host.host);
+
+    const layout = getRuneMatchBoardLayout(336, 733, 8, 6);
+    expect(layout.x - 18).toBeLessThan(120);
+    expect(host.graphics.fillCircle).not.toHaveBeenCalled();
+    expect(host.graphics.fillRoundedRect).toHaveBeenCalled();
+    expect(host.texts[3]?.setText).toHaveBeenLastCalledWith(expect.stringContaining("♥"));
   });
 
   it("keeps tutorial actions outside production result delivery", () => {

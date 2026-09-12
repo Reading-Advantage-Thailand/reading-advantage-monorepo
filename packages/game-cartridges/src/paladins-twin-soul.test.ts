@@ -9,6 +9,7 @@ import { fileURLToPath } from "node:url";
 import { describe, expect, it, vi } from "vitest";
 
 import {
+  PALADINS_TWIN_SOUL_CANVAS,
   PALADINS_TWIN_SOUL_KEYBOARD_BINDINGS,
   PALADINS_TWIN_SOUL_RULES,
   createPaladinsTwinSoulCartridge,
@@ -69,7 +70,9 @@ function createMutableInputController(): APKInputController & {
   };
 }
 
-function createSceneHost() {
+function createSceneHost(canvasWidth = 960, sceneSize = { width: 960, height: 540 }) {
+  const loadedImages: string[] = [];
+  const loadedSheets: string[] = [];
   const graphics = {
     clear: vi.fn(),
     fillStyle: vi.fn(),
@@ -91,22 +94,41 @@ function createSceneHost() {
   const texts: Array<{
     setPosition: ReturnType<typeof vi.fn>;
     setText: ReturnType<typeof vi.fn>;
+    setFontSize: ReturnType<typeof vi.fn>;
+    setBackgroundColor: ReturnType<typeof vi.fn>;
+    setPadding: ReturnType<typeof vi.fn>;
+    setOrigin: ReturnType<typeof vi.fn>;
+    setWordWrapWidth: ReturnType<typeof vi.fn>;
     destroy: ReturnType<typeof vi.fn>;
   }> = [];
   const createText = () => {
     const text = {
       setPosition: vi.fn(),
       setText: vi.fn(),
+      setFontSize: vi.fn(),
+      setBackgroundColor: vi.fn(),
+      setPadding: vi.fn(),
+      setOrigin: vi.fn(),
+      setWordWrapWidth: vi.fn(),
       destroy: vi.fn(),
     };
     text.setPosition.mockReturnValue(text);
     text.setText.mockReturnValue(text);
+    text.setFontSize.mockReturnValue(text);
+    text.setBackgroundColor.mockReturnValue(text);
+    text.setPadding.mockReturnValue(text);
+    text.setOrigin.mockReturnValue(text);
+    text.setWordWrapWidth.mockReturnValue(text);
     texts.push(text);
     return text;
   };
 
   const listeners = new Map<string, () => void>();
   const host = {
+    load: {
+      image: vi.fn((key: string) => loadedImages.push(key)),
+      spritesheet: vi.fn((key: string) => loadedSheets.push(key)),
+    },
     add: {
       graphics: vi.fn(() => graphics),
       text: vi.fn(() => createText()),
@@ -116,15 +138,17 @@ function createSceneHost() {
     },
     game: {
       canvas: {
-        getBoundingClientRect: () => ({ left: 0, top: 0, width: 960, height: 540 }),
+        getBoundingClientRect: () => ({ left: 0, top: 0, width: canvasWidth, height: sceneSize.height }),
       },
     },
-    scale: { width: 960, height: 540 },
+    scale: sceneSize,
   };
 
   return {
     host,
     graphics,
+    loadedImages,
+    loadedSheets,
     texts,
     emit(event: string): void {
       listeners.get(event)?.();
@@ -359,20 +383,20 @@ describe("Paladin's Twin-Soul cartridge", () => {
     expect(controller.snapshot().bullets.filter((bullet) => !bullet.isPlayer)).toHaveLength(1);
   });
 
-  it("uses the target enemy identity for wrong hits in a duplicate formation", () => {
+  it("counts every enemy with the visible correct English term as correct", () => {
     const controller = createPaladinsTwinSoulController([
       { term: "ward", translation: "protect" },
       { term: "ward", translation: "protect" },
     ], vi.fn(), { seed: 23 });
     const before = controller.snapshot();
-    const wrongEnemy = before.enemies.find((enemy) => enemy.id !== before.correctAction);
-    if (!wrongEnemy) throw new Error("The formation needs a wrong enemy");
+    const matchingEnemy = before.enemies.find((enemy) => enemy.id !== before.correctAction);
+    if (!matchingEnemy) throw new Error("The formation needs another matching enemy");
 
-    expect(controller.choose(wrongEnemy.id)).toMatchObject({
+    expect(controller.choose(matchingEnemy.id)).toMatchObject({
       accepted: true,
-      correct: false,
-      progressed: false,
-      snapshot: { targetIndex: 0, correctAction: before.correctAction, totalAttempts: 1 },
+      correct: true,
+      progressed: true,
+      snapshot: { targetIndex: 1, totalAttempts: 1 },
     });
   });
 
@@ -565,7 +589,7 @@ describe("Paladin's Twin-Soul cartridge", () => {
     });
   });
 
-  it("renders every enemy term, shows only the translation prompt, and does not mark the correct enemy", () => {
+  it("shows the bare Thai prompt and readable bottom-row English choices without live prose", () => {
     const inputController = createMutableInputController();
     const config = createPaladinsTwinSoulCartridge().createGameConfig({
       input: [...VOCABULARY],
@@ -576,15 +600,67 @@ describe("Paladin's Twin-Soul cartridge", () => {
       seed: 7,
     });
     const scene = config.scene as { create: (this: unknown) => void };
-    const host = createSceneHost();
+    const host = createSceneHost(336, { width: 336, height: 733 });
     scene.create.call(host.host);
     const state = (config.scene as { extend: { apkCaptureResponsiveState: () => { game: PaladinsTwinSoulSnapshot } } }).extend.apkCaptureResponsiveState().game;
     const renderedText = host.texts.flatMap((text) => text.setText.mock.calls.map(([value]) => String(value)));
 
-    expect(renderedText).toContain(`Translation prompt: ${state.prompt}`);
-    for (const enemy of state.enemies) expect(renderedText).toContain(enemy.term);
+    expect(renderedText).toContain(state.prompt);
+    expect(renderedText).not.toContain(`Translation prompt: ${state.prompt}`);
+    for (const enemy of state.enemies.filter((candidate) => candidate.row === 3)) expect(renderedText).toContain(enemy.term);
+    expect(renderedText.join(" ")).not.toMatch(/PALADIN'S TWIN-SOUL|Compact formation|Twin-Soul formation|Move beneath|Keyboard:/);
+    const labels = host.texts.slice(5).filter((text) => text.setText.mock.calls.at(-1)?.[0]);
+    expect(labels.every((label) => label.setFontSize.mock.calls.at(-1)?.[0] === 16)).toBe(true);
+    expect(labels.every((label) => label.setBackgroundColor.mock.calls.at(-1)?.[0] === "rgba(15, 23, 42, 0.9)")).toBe(true);
     expect(renderedText.some((value) => value.startsWith("Answer:"))).toBe(false);
     expect(host.graphics.fillStyle.mock.calls.filter(([color]) => color === 0xdc2626)).toHaveLength(state.enemies.length);
+  });
+
+  it("uses the full portrait arena below the Thai HUD without tiled terrain", () => {
+    const rescuedController = createPaladinsTwinSoulController(VOCABULARY, vi.fn());
+    rescuedController.tick(1_300, 0);
+    const captor = rescuedController.snapshot().enemies.find((enemy) => enemy.hasCapturedTwin);
+    if (!captor) throw new Error("Expected the portrait fixture to capture the twin");
+    rescuedController.choose(captor.id);
+    const rescuedState = rescuedController.capture();
+    const config = createPaladinsTwinSoulCartridge().createGameConfig({
+      input: [...VOCABULARY],
+      edition: PHASE3_RUNTIME_EDITION,
+      complete: vi.fn(),
+      diagnostic: vi.fn(),
+      inputController: createMutableInputController(),
+      seed: 0,
+    });
+    const scene = config.scene as {
+      preload(this: ReturnType<typeof createSceneHost>["host"]): void;
+      create(this: ReturnType<typeof createSceneHost>["host"]): void;
+      extend: { apkRestoreResponsiveState(value: { game: PaladinsTwinSoulSnapshot }): void };
+    };
+    const host = createSceneHost(336, { width: 336, height: 733 });
+
+    scene.extend.apkRestoreResponsiveState({ game: rescuedState });
+    scene.preload.call(host.host);
+    scene.create.call(host.host);
+
+    const positionScaleY = (733 - 130 - 16) / PALADINS_TWIN_SOUL_CANVAS.height;
+    const playerY = 130 + PALADINS_TWIN_SOUL_RULES.playerY * positionScaleY;
+    const actorScale = 0.65;
+    expect(host.graphics.fillRect).toHaveBeenCalledWith(0, 0, 336, 733);
+    expect([...host.loadedImages, ...host.loadedSheets].some((key) => key.includes("ground"))).toBe(false);
+    expect(host.graphics.fillRoundedRect).toHaveBeenCalledWith(
+      expect.any(Number),
+      playerY - 22 * actorScale,
+      44 * actorScale,
+      44 * actorScale,
+      10 * actorScale,
+    );
+    expect(playerY).toBeGreaterThan(600);
+    expect(playerY + 22 * actorScale).toBeLessThan(733 - 16);
+    expect(host.graphics.fillCircle).toHaveBeenCalledWith(
+      expect.any(Number),
+      playerY,
+      16 * actorScale,
+    );
   });
 
   it("round-trips responsive state and cleans scene resources without a result", () => {
@@ -632,6 +708,24 @@ describe("Paladin's Twin-Soul cartridge", () => {
 
     expect(() => controller.restore({ ...captured, seed: 12 })).toThrow(/seed/i);
     expect(() => controller.restore({ ...captured, answer: "forged" })).toThrow(/target|answer/i);
+    expect(controller.snapshot()).toEqual(captured);
+  });
+
+  it("rejects forged formation positions and duplicate projectile identities on restore", () => {
+    const controller = createPaladinsTwinSoulController(VOCABULARY, vi.fn(), { seed: 11 });
+    controller.choose("confirm");
+    const captured = controller.capture();
+    const firstEnemy = captured.enemies[0]!;
+    const firstBullet = captured.bullets[0]!;
+
+    expect(() => controller.restore({
+      ...captured,
+      enemies: [{ ...firstEnemy, x: firstEnemy.x + 1 }, ...captured.enemies.slice(1)],
+    })).toThrow(/enemy/i);
+    expect(() => controller.restore({
+      ...captured,
+      bullets: [firstBullet, { ...firstBullet }],
+    })).toThrow(/bullet/i);
     expect(controller.snapshot()).toEqual(captured);
   });
 

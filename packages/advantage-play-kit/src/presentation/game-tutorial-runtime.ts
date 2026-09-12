@@ -41,6 +41,8 @@ export interface GameTutorialRuntimeSnapshot {
   readonly currentStepId?: string;
   /** True after the active step finishes its demonstration. */
   readonly currentStepDemonstrated: boolean;
+  /** Concise recovery guidance after the active action fails. */
+  readonly currentStepFailure?: string;
   /** The completed and total step counts. */
   readonly progress: GameTutorialProgress;
   /** The fixed run seed. */
@@ -68,7 +70,7 @@ export interface GameTutorialEffects {
 /** Describes a tutorial-local diagnostic. */
 export interface GameTutorialDiagnostic {
   /** The runtime event. */
-  readonly event: "started" | "paused" | "resumed" | "demonstrated" | "advanced" | "replayed" | "skipped" | "completed" | "exited" | "interrupted" | "destroyed" | "cleaned";
+  readonly event: "started" | "paused" | "resumed" | "demonstrated" | "failed" | "advanced" | "replayed" | "skipped" | "completed" | "exited" | "interrupted" | "destroyed" | "cleaned";
   /** The active step identifier. */
   readonly stepId?: string;
   /** The cartridge diagnostic message. */
@@ -136,6 +138,9 @@ export function createGameTutorialRuntime(options: CreateGameTutorialRuntimeOpti
   let pausedRemainingMs: number | undefined;
   let pausedContinuation: (() => void | Promise<void>) | undefined;
   let currentStepDemonstrated = false;
+  let currentStepFailure: string | undefined;
+  let actionGeneration = 0;
+  let activeAction: { readonly step: GameTutorialStep; readonly abort: AbortController } | undefined;
   let driverDestroyed = false;
   let driverDestroyOperation: Promise<void> | undefined;
 
@@ -153,6 +158,15 @@ export function createGameTutorialRuntime(options: CreateGameTutorialRuntimeOpti
     pendingContinuation = undefined;
   };
 
+  const cancelActiveAction = (): GameTutorialStep | undefined => {
+    const active = activeAction;
+    if (!active) return undefined;
+    actionGeneration += 1;
+    activeAction = undefined;
+    active.abort.abort();
+    return active.step;
+  };
+
   const releaseDriver = async (): Promise<void> => {
     if (driverDestroyed) return;
     if (driverDestroyOperation) return driverDestroyOperation;
@@ -168,6 +182,7 @@ export function createGameTutorialRuntime(options: CreateGameTutorialRuntimeOpti
 
   const clean = async (): Promise<void> => {
     cancelTimer();
+    cancelActiveAction();
     await releaseDriver();
     report("cleaned");
   };
@@ -184,11 +199,12 @@ export function createGameTutorialRuntime(options: CreateGameTutorialRuntimeOpti
     }, delayMs);
   };
 
-  const driverContext = (step: GameTutorialStep): GameTutorialActionDriverContext => ({
+  const driverContext = (step: GameTutorialStep, signal?: AbortSignal): GameTutorialActionDriverContext => ({
     tutorial,
     step,
     seed: tutorial.seed,
     mode: "tutorial",
+    ...(signal ? { signal } : {}),
     diagnostics: { report: (message) => report("demonstrated", message) },
   });
 
@@ -196,8 +212,9 @@ export function createGameTutorialRuntime(options: CreateGameTutorialRuntimeOpti
     currentStepDemonstrated = true;
     report("demonstrated");
     notify();
-    // The declared lifecycle advance policy is sequential, so the runtime advances by itself.
-    schedule(step.timing.lingerMs, advance);
+    if (tutorial.lifecycle.advance === "sequential") {
+      schedule(step.timing.lingerMs, advance);
+    }
   };
 
   const driveFrames = async (step: GameTutorialStep, elapsedMs: number): Promise<void> => {
@@ -216,8 +233,24 @@ export function createGameTutorialRuntime(options: CreateGameTutorialRuntimeOpti
   };
 
   const demonstrate = async (step: GameTutorialStep): Promise<void> => {
-    if (currentStepDemonstrated) return;
-    await actionDriver.execute(driverContext(step));
+    if (currentStepDemonstrated || activeAction) return;
+    const abort = new AbortController();
+    const generation = actionGeneration;
+    activeAction = { step, abort };
+    try {
+      await actionDriver.execute(driverContext(step, abort.signal));
+    } catch {
+      if (activeAction?.abort === abort) activeAction = undefined;
+      if (abort.signal.aborted || generation !== actionGeneration
+        || status !== "running" || phase !== "tutorial" || tutorial.steps[currentStepIndex]?.id !== step.id) return;
+      currentStepFailure = "Practice audio could not play. Replay Practice to try again.";
+      report("failed", currentStepFailure);
+      notify();
+      return;
+    }
+    if (activeAction?.abort === abort) activeAction = undefined;
+    if (abort.signal.aborted || generation !== actionGeneration
+      || status !== "running" || phase !== "tutorial" || tutorial.steps[currentStepIndex]?.id !== step.id) return;
     if (actionDriver.advanceFrame === undefined || step.timing.demonstrationMs === 0) {
       schedule(step.timing.demonstrationMs, () => finishDemonstration(step));
       return;
@@ -232,6 +265,7 @@ export function createGameTutorialRuntime(options: CreateGameTutorialRuntimeOpti
     phase = "tutorial";
     status = "running";
     currentStepDemonstrated = false;
+    currentStepFailure = undefined;
     driverDestroyed = false;
     schedule(step.timing.leadInMs, () => demonstrate(step));
     report("started");
@@ -239,8 +273,9 @@ export function createGameTutorialRuntime(options: CreateGameTutorialRuntimeOpti
 
   const pause = (): void => {
     if (status !== "running" || phase !== "tutorial") return;
-    pausedRemainingMs = deadline === undefined ? undefined : Math.max(0, deadline - clock.now());
-    pausedContinuation = pendingContinuation;
+    const interruptedStep = cancelActiveAction();
+    pausedRemainingMs = interruptedStep ? 0 : deadline === undefined ? undefined : Math.max(0, deadline - clock.now());
+    pausedContinuation = interruptedStep ? () => demonstrate(interruptedStep) : pendingContinuation;
     cancelTimer();
     status = "paused";
     report("paused");
@@ -272,6 +307,7 @@ export function createGameTutorialRuntime(options: CreateGameTutorialRuntimeOpti
     }
     currentStepIndex += 1;
     currentStepDemonstrated = false;
+    currentStepFailure = undefined;
     const nextStep = tutorial.steps[currentStepIndex];
     if (!nextStep) return;
     schedule(nextStep.timing.leadInMs, () => demonstrate(nextStep));
@@ -287,6 +323,7 @@ export function createGameTutorialRuntime(options: CreateGameTutorialRuntimeOpti
     currentStepIndex = 0;
     completed = 0;
     currentStepDemonstrated = false;
+    currentStepFailure = undefined;
     driverDestroyed = false;
     pausedRemainingMs = undefined;
     pausedContinuation = undefined;
@@ -317,6 +354,7 @@ export function createGameTutorialRuntime(options: CreateGameTutorialRuntimeOpti
       status,
       ...(phase === "tutorial" ? { currentStepId: tutorial.steps[currentStepIndex]?.id } : {}),
       currentStepDemonstrated,
+      ...(currentStepFailure === undefined ? {} : { currentStepFailure }),
       progress: { completed, total: tutorial.steps.length },
       seed: tutorial.seed,
       resources: { listeners: 0, inputHandlers: 0, phaserObjects: 0 },

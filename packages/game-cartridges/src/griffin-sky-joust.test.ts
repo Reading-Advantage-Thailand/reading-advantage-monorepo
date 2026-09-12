@@ -1,9 +1,13 @@
 import { gameResultsSchema } from "@reading-advantage/game-contracts";
+import { resolveAssetBinding } from "@reading-advantage/advantage-play-kit";
 import { describe, expect, it, vi } from "vitest";
 
+import { createCatalogStandardEdition } from "./catalog-standard-art.js";
 import {
   GRIFFIN_SKY_JOUST_CANVAS,
   GRIFFIN_SKY_JOUST_INVULNERABILITY_MS,
+  GRIFFIN_SKY_JOUST_MAX_ACTIVE_KNIGHTS,
+  GRIFFIN_SKY_JOUST_SENTENCE_TRANSITION_MS,
   classifyGriffinSkyJoustCollision,
   createGriffinSkyJoustCartridge,
   createGriffinSkyJoustController,
@@ -80,6 +84,15 @@ function advancePastInvulnerability(controller: GriffinSkyJoustController): void
   });
 }
 
+function advanceSentenceTransition(controller: GriffinSkyJoustController): void {
+  let remaining = GRIFFIN_SKY_JOUST_SENTENCE_TRANSITION_MS;
+  while (remaining > 0) {
+    const delta = Math.min(remaining, 250);
+    controller.tick(delta);
+    remaining -= delta;
+  }
+}
+
 function findKnight(state: GriffinSkyJoustSnapshot, word: string) {
   const knight = state.knights.find((candidate) => candidate.word === word);
   if (!knight) throw new Error(`Knight for ${word} was not found`);
@@ -132,8 +145,15 @@ function fakeInputController() {
   };
 }
 
-function sceneHost() {
+function sceneHost(canvasWidth = 960, sceneSize = { width: 960, height: 540 }) {
   const events = new Map<string, () => void>();
+  const tileKeys: string[] = [];
+  const tileScales: number[] = [];
+  const texts: Array<{
+    setText: ReturnType<typeof vi.fn>;
+    setFontSize: ReturnType<typeof vi.fn>;
+    setBackgroundColor: ReturnType<typeof vi.fn>;
+  }> = [];
   const graphics = {
     clear: vi.fn().mockReturnThis(),
     fillStyle: vi.fn().mockReturnThis(),
@@ -145,25 +165,50 @@ function sceneHost() {
     strokeRoundedRect: vi.fn().mockReturnThis(),
     destroy: vi.fn(),
   };
-  const text = () => ({
+  function text() {
+    const value = {
     setPosition: vi.fn().mockReturnThis(),
     setText: vi.fn().mockReturnThis(),
+    setFontSize: vi.fn().mockReturnThis(),
+    setBackgroundColor: vi.fn().mockReturnThis(),
+    setPadding: vi.fn().mockReturnThis(),
+    setOrigin: vi.fn().mockReturnThis(),
+    setVisible: vi.fn().mockReturnThis(),
+    setWordWrapWidth: vi.fn().mockReturnThis(),
+    getBounds: vi.fn(() => ({ width: 160 })),
     destroy: vi.fn(),
-  });
+    };
+    texts.push(value);
+    return value;
+  }
   const host = {
     add: {
       graphics: vi.fn(() => graphics),
       text: vi.fn(() => text()),
+      tileSprite: vi.fn((_x: number, _y: number, _width: number, _height: number, key: string) => {
+        tileKeys.push(key);
+        return {
+          setOrigin: vi.fn().mockReturnThis(),
+          setDepth: vi.fn().mockReturnThis(),
+          setAlpha: vi.fn().mockReturnThis(),
+          setTileScale: vi.fn(function (this: unknown, value: number) {
+            tileScales.push(value);
+            return this;
+          }),
+          setTilePosition: vi.fn().mockReturnThis(),
+          destroy: vi.fn(),
+        };
+      }),
     },
     events: {
       once: vi.fn((event: string, listener: () => void) => events.set(event, listener)),
     },
     game: {
-      canvas: { getBoundingClientRect: () => ({ left: 0, width: 960 }) },
+      canvas: { getBoundingClientRect: () => ({ left: 0, width: canvasWidth }) },
     },
-    scale: { width: 960, height: 540 },
+    scale: sceneSize,
   };
-  return { host, events, graphics };
+  return { host, events, graphics, texts, tileKeys, tileScales };
 }
 
 describe("Griffin Sky-Joust bespoke aerial cartridge", () => {
@@ -182,7 +227,7 @@ describe("Griffin Sky-Joust bespoke aerial cartridge", () => {
     ]));
   });
 
-  it("validates finite sentences and creates one stable knight per word", () => {
+  it("validates finite sentences and creates stable knights for only the active sentence", () => {
     const controller = createGriffinSkyJoustController(SENTENCES, vi.fn(), { seed: 17 });
     const state = controller.snapshot();
 
@@ -194,10 +239,8 @@ describe("Griffin Sky-Joust bespoke aerial cartridge", () => {
     expect(state.knights.map((knight) => knight.word)).toEqual([
       "Griffins",
       "rise",
-      "Knights",
-      "descend",
     ]);
-    expect(new Set(state.knights.map((knight) => knight.id)).size).toBe(4);
+    expect(state.knights.map((knight) => knight.id)).toEqual(["knight:0:0", "knight:0:1"]);
     expect(() => createGriffinSkyJoustController([], vi.fn())).toThrow();
   });
 
@@ -217,6 +260,108 @@ describe("Griffin Sky-Joust bespoke aerial cartridge", () => {
       energy: 3,
       result: undefined,
     });
+  });
+
+  it("clears the completed wave and starts the next sentence after a short transition", () => {
+    const controller = createGriffinSkyJoustController(SENTENCES, vi.fn(), { seed: 31 });
+
+    topStrike(controller, "knight:0:0");
+    topStrike(controller, "knight:0:1");
+
+    expect(controller.snapshot()).toMatchObject({
+      phase: "transition",
+      targetIndex: 2,
+      activeSentenceIndex: 1,
+      completedSentence: "Griffins rise",
+      knights: [],
+    });
+    expect(controller.choose("move-up").accepted).toBe(false);
+
+    advanceSentenceTransition(controller);
+
+    expect(controller.snapshot()).toMatchObject({
+      phase: "playing",
+      targetWord: "Knights",
+      completedSentence: "",
+      transitionEndsAt: 0,
+    });
+    expect(controller.snapshot().knights.map((knight) => knight.id)).toEqual([
+      "knight:1:0",
+      "knight:1:1",
+    ]);
+  });
+
+  it("keeps duplicate words distinct across sentence and word positions", () => {
+    const controller = createGriffinSkyJoustController([
+      { term: "rise rise", translation: "ascend twice" },
+      { term: "rise", translation: "ascend" },
+    ], vi.fn(), { seed: 37 });
+
+    expect(controller.snapshot().knights.map((knight) => ({
+      id: knight.id,
+      sentenceIndex: knight.sentenceIndex,
+      sentenceWordIndex: knight.sentenceWordIndex,
+    }))).toEqual([
+      { id: "knight:0:0", sentenceIndex: 0, sentenceWordIndex: 0 },
+      { id: "knight:0:1", sentenceIndex: 0, sentenceWordIndex: 1 },
+    ]);
+    topStrike(controller, "knight:0:0");
+    topStrike(controller, "knight:0:1");
+    advanceSentenceTransition(controller);
+    expect(controller.snapshot().knights[0]).toMatchObject({
+      id: "knight:1:0",
+      word: "rise",
+      sentenceIndex: 1,
+      sentenceWordIndex: 0,
+    });
+  });
+
+  it("uses a bounded moving window for one very long sentence without truncating progress", () => {
+    const words = Array.from({ length: 20 }, (_, index) => `word${index}`);
+    const controller = createGriffinSkyJoustController([
+      { term: words.join(" "), translation: "long sentence" },
+    ], vi.fn(), { seed: 43 });
+
+    expect(controller.snapshot()).toMatchObject({ targetCount: 20, targetIndex: 0 });
+    expect(controller.snapshot().knights).toHaveLength(GRIFFIN_SKY_JOUST_MAX_ACTIVE_KNIGHTS);
+    expect(controller.snapshot().knights.at(-1)?.id).toBe("knight:0:7");
+
+    topStrike(controller, "knight:0:0");
+
+    expect(controller.snapshot()).toMatchObject({ targetCount: 20, targetIndex: 1 });
+    expect(controller.snapshot().knights).toHaveLength(GRIFFIN_SKY_JOUST_MAX_ACTIVE_KNIGHTS);
+    expect(controller.snapshot().knights.at(-1)?.id).toBe("knight:0:8");
+  });
+
+  it("restores an active snapshot saved in a later sentence", () => {
+    const source = createGriffinSkyJoustController(SENTENCES, vi.fn(), { seed: 47 });
+    topStrike(source, "knight:0:0");
+    topStrike(source, "knight:0:1");
+    advanceSentenceTransition(source);
+    const saved = source.capture();
+    const restored = createGriffinSkyJoustController(SENTENCES, vi.fn(), { seed: 47 });
+
+    restored.restore(saved);
+
+    expect(restored.snapshot()).toMatchObject({
+      phase: "playing",
+      targetIndex: 2,
+      activeSentenceIndex: 1,
+      targetWord: "Knights",
+    });
+    expect(restored.snapshot().knights.map((knight) => knight.id)).toEqual(["knight:1:0", "knight:1:1"]);
+  });
+
+  it("restores a defeat snapshot with its retained active knight window", () => {
+    const source = createGriffinSkyJoustController(SENTENCES, vi.fn(), { seed: 49, maxHealth: 1 });
+    sideCollision(source, "knight:0:0");
+    const saved = source.capture();
+    const restored = createGriffinSkyJoustController(SENTENCES, vi.fn(), { seed: 49, maxHealth: 1 });
+
+    restored.restore(saved);
+
+    expect(restored.snapshot()).toMatchObject({ phase: "defeat", targetIndex: 0, lives: 0 });
+    expect(restored.snapshot().knights.map((knight) => knight.id)).toEqual(["knight:0:0", "knight:0:1"]);
   });
 
   it("applies gravity, flap impulse, horizontal drift, and moving knight velocity", () => {
@@ -302,8 +447,12 @@ describe("Griffin Sky-Joust bespoke aerial cartridge", () => {
     const deliver = vi.fn();
     const controller = createGriffinSkyJoustController(SENTENCES, deliver);
 
-    while (controller.snapshot().phase === "playing") {
+    while (controller.snapshot().phase !== "victory") {
       const state = controller.snapshot();
+      if (state.phase === "transition") {
+        advanceSentenceTransition(controller);
+        continue;
+      }
       topStrike(controller, findKnight(state, state.targetWord).id);
     }
 
@@ -601,6 +750,135 @@ describe("Griffin Sky-Joust bespoke aerial cartridge", () => {
       .extend.apkCaptureResponsiveState();
     expect(state.player.vy).toBeLessThan(0);
     expect(state.player.vx).toBeGreaterThan(0);
+  });
+
+  it("keeps compact learning text readable without live instruction prose", () => {
+    const cartridge = createGriffinSkyJoustCartridge();
+    const config = cartridge.createGameConfig({
+      input: [{ term: "Griffins rise", translation: "กริฟฟินบินขึ้น" }],
+      edition: {} as never,
+      complete: vi.fn(),
+      diagnostic: vi.fn(),
+      inputController: fakeInputController(),
+      sessionMode: "playing",
+    });
+    const scene = config.scene as { create(this: ReturnType<typeof sceneHost>["host"]): void };
+    const host = sceneHost(336);
+
+    scene.create.call(host.host);
+
+    const displayed = host.texts.flatMap((resource) => resource.setText.mock.calls.map(([value]) => String(value)));
+    expect(displayed).toContain("กริฟฟินบินขึ้น");
+    expect(displayed).toContain("1/2  ♥ 3  ★ 0");
+    expect(displayed.join(" ")).not.toMatch(/Target:|Strike the|Prepare for|Compact flight|Touch either side/);
+    expect(host.texts[0]?.setText).toHaveBeenLastCalledWith("");
+    expect(host.texts[1]?.setFontSize).toHaveBeenLastCalledWith(52);
+    expect(host.texts.slice(5).every((label) => label.setFontSize.mock.calls.at(-1)?.[0] === 46)).toBe(true);
+    expect(host.texts.slice(5).every((label) => label.setBackgroundColor.mock.calls.at(-1)?.[0] === "rgba(15, 23, 42, 0.88)")).toBe(true);
+    expect(host.graphics.fillRoundedRect).toHaveBeenCalledWith(24, 40, 912, 96, 18);
+  });
+
+  it("uses a uniform portrait camera scale and marks an off-screen target", () => {
+    const cartridge = createGriffinSkyJoustCartridge();
+    const config = cartridge.createGameConfig({
+      input: [{ term: "Griffins rise now", translation: "กริฟฟินบินขึ้นตอนนี้" }],
+      edition: {} as never,
+      complete: vi.fn(),
+      diagnostic: vi.fn(),
+      inputController: fakeInputController(),
+      seed: 17,
+      sessionMode: "playing",
+    });
+    const scene = config.scene as {
+      create(this: ReturnType<typeof sceneHost>["host"]): void;
+      extend: { apkCaptureResponsiveState(): GriffinSkyJoustSnapshot };
+    };
+    const host = sceneHost(336, { width: 336, height: 733 });
+
+    scene.create.call(host.host);
+
+    const state = scene.extend.apkCaptureResponsiveState();
+    const portraitScale = (733 - 148 - 16) / 540;
+    const playerCircle = host.graphics.fillCircle.mock.calls.at(-1);
+    expect(playerCircle).toEqual([
+      168,
+      148 + state.player.y * portraitScale,
+      state.player.radius * portraitScale,
+    ]);
+    expect(host.graphics.fillTriangle).toHaveBeenCalled();
+  });
+
+  it("hides off-screen actor labels and clamps visible labels inside the portrait viewport", () => {
+    const cartridge = createGriffinSkyJoustCartridge();
+    const config = cartridge.createGameConfig({
+      input: [{ term: "Griffins rise now now", translation: "กริฟฟินบินขึ้นตอนนี้" }],
+      edition: {} as never,
+      complete: vi.fn(),
+      diagnostic: vi.fn(),
+      inputController: fakeInputController(),
+      seed: 17,
+      sessionMode: "playing",
+    });
+    const scene = config.scene as {
+      create(this: ReturnType<typeof sceneHost>["host"]): void;
+      extend: { apkCaptureResponsiveState(): GriffinSkyJoustSnapshot };
+    };
+    const host = sceneHost(336, { width: 336, height: 733 });
+
+    scene.create.call(host.host);
+
+    const state = scene.extend.apkCaptureResponsiveState();
+    const scale = (733 - 148 - 16) / 540;
+    const visibleWorldWidth = 336 / scale;
+    const cameraX = Math.max(
+      visibleWorldWidth / 2,
+      Math.min(GRIFFIN_SKY_JOUST_CANVAS.width - visibleWorldWidth / 2, state.player.x),
+    );
+    const labels = host.texts.slice(5, 5 + state.knights.length);
+    const expectedVisibility = state.knights.map((knight) => {
+      const x = 168 + (knight.x - cameraX) * scale;
+      return x >= 0 && x <= 336;
+    });
+
+    expect(expectedVisibility).toContain(false);
+    expect(expectedVisibility).toContain(true);
+    labels.forEach((label, index) => {
+      expect(label.setVisible).toHaveBeenLastCalledWith(expectedVisibility[index]);
+      if (expectedVisibility[index]) {
+        expect(label.setText).toHaveBeenLastCalledWith(state.knights[index]?.word);
+        expect(label.setWordWrapWidth).toHaveBeenLastCalledWith(320, true);
+        const labelX = label.setPosition.mock.calls.at(-1)?.[0];
+        expect(labelX).toBeGreaterThanOrEqual(80);
+        expect(labelX).toBeLessThanOrEqual(256);
+      }
+    });
+  });
+
+  it("renders only the side-view sky and cloud parallax layers", () => {
+    const cartridge = createGriffinSkyJoustCartridge();
+    const edition = createCatalogStandardEdition(
+      ["griffin-sky-joust/player-griffin"],
+      "/assets/apk/standard-pack-qc/",
+      "griffin-sky-joust",
+    );
+    const config = cartridge.createGameConfig({
+      input: [{ term: "Griffins rise", translation: "กริฟฟินบินขึ้น" }],
+      edition,
+      complete: vi.fn(),
+      diagnostic: vi.fn(),
+      inputController: fakeInputController(),
+      sessionMode: "playing",
+    });
+    const scene = config.scene as { create(this: ReturnType<typeof sceneHost>["host"]): void };
+    const host = sceneHost();
+
+    scene.create.call(host.host);
+
+    expect(host.tileKeys).toEqual([
+      resolveAssetBinding(edition, "world:parallax-far").textureKey,
+      resolveAssetBinding(edition, "world:parallax-mid").textureKey,
+    ]);
+    expect(host.tileScales).toEqual([3, 3]);
   });
 
   it("completes through scene keyboard input, bounded ticks, and physical collision", () => {

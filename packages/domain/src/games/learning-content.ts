@@ -4,7 +4,11 @@ import {
   userSentenceRecords,
   userWordRecords,
 } from "@reading-advantage/db/schema";
-import { vocabularyItemSchema } from "@reading-advantage/game-contracts";
+import {
+  listeningSessionConfigSchema,
+  readToSelectAudioSessionConfigSchema,
+  vocabularyItemSchema,
+} from "@reading-advantage/game-contracts";
 import { z } from "zod";
 
 import type { TenantDB } from "../db-contract.js";
@@ -16,18 +20,88 @@ export const gameLearningContentModeSchema = z.enum(["vocabulary", "sentence"]);
 export const gameLearningContentLocaleSchema = z.enum(["en", "th", "cn", "tw", "vi"]);
 
 /** Validated input for a student-owned APK learning-content query. */
-export const gameLearningContentInputSchema = z.object({
-  mode: gameLearningContentModeSchema,
-  locale: gameLearningContentLocaleSchema.default("th"),
-  limit: z.number().int().min(1).max(50).default(50),
-}).strict();
+export const gameLearningContentInputSchema = z
+  .object({
+    mode: gameLearningContentModeSchema,
+    locale: gameLearningContentLocaleSchema.default("th"),
+    limit: z.number().int().min(1).max(50).default(50),
+    listeningSession: listeningSessionConfigSchema.optional(),
+    answerAudioSession: readToSelectAudioSessionConfigSchema.optional(),
+  })
+  .strict()
+  .superRefine((input, context) => {
+    if (input.listeningSession && input.answerAudioSession) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Select one audio learning modality",
+        path: ["answerAudioSession"],
+      });
+    }
+    if (input.listeningSession && input.listeningSession.targetLocale !== input.locale) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Listening target locale must match the content locale",
+        path: ["listeningSession", "targetLocale"],
+      });
+    }
+    if (input.answerAudioSession && (input.mode !== "vocabulary" || input.locale !== "th")) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Read to Select Audio requires Thai vocabulary content",
+        path: ["answerAudioSession"],
+      });
+    }
+  });
 
 /** Validated output for a student-owned APK learning-content query. */
-export const gameLearningContentResultSchema = z.object({
-  mode: gameLearningContentModeSchema,
-  source: z.literal("student-flashcards"),
-  content: z.array(vocabularyItemSchema),
-}).strict();
+export const gameLearningContentResultSchema = z
+  .object({
+    mode: gameLearningContentModeSchema,
+    source: z.literal("student-flashcards"),
+    requestedTargetLocale: gameLearningContentLocaleSchema,
+    selectedTargetLocales: z.array(gameLearningContentLocaleSchema).max(50),
+    content: z.array(vocabularyItemSchema).max(50),
+    listeningSession: listeningSessionConfigSchema.optional(),
+    answerAudioSession: readToSelectAudioSessionConfigSchema.optional(),
+  })
+  .strict()
+  .superRefine((result, context) => {
+    if (result.listeningSession && result.answerAudioSession) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Select one audio learning modality",
+        path: ["answerAudioSession"],
+      });
+    }
+    if (result.selectedTargetLocales.length !== result.content.length) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Selected target locales must align with content items",
+        path: ["selectedTargetLocales"],
+      });
+    }
+    if (
+      result.listeningSession
+      && result.listeningSession.targetLocale !== result.requestedTargetLocale
+    ) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Listening target locale must match the requested target locale",
+        path: ["listeningSession", "targetLocale"],
+      });
+    }
+    if (result.answerAudioSession && (
+      result.mode !== "vocabulary"
+      || result.requestedTargetLocale !== "th"
+      || result.selectedTargetLocales.some((locale) => locale !== "th")
+    )) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Read to Select Audio requires exact Thai target content",
+        path: ["selectedTargetLocales"],
+      });
+    }
+  });
 
 /** Input accepted by the student learning-content query. */
 export type GameLearningContentInput = z.input<typeof gameLearningContentInputSchema>;
@@ -53,15 +127,62 @@ const fallbackLocales = ["en", "th", "cn", "tw", "vi"] as const;
 function selectTranslation(
   value: unknown,
   locale: z.infer<typeof gameLearningContentLocaleSchema>,
-): string | undefined {
+): { translation: string; locale: z.infer<typeof gameLearningContentLocaleSchema> } | undefined {
   const parsed = translationRecordSchema.safeParse(value);
   if (!parsed.success) return undefined;
 
   for (const key of [locale, ...fallbackLocales]) {
     const translation = parsed.data[key]?.trim();
-    if (translation) return translation;
+    if (translation) return { translation, locale: key };
   }
   return undefined;
+}
+
+type SelectedContentItem = {
+  term: string;
+  translation: string;
+  selectedTargetLocale: z.infer<typeof gameLearningContentLocaleSchema>;
+};
+
+/**
+ * Builds a truthful content response and enforces scored listening locale policy.
+ * @param mode Selected educational content mode.
+ * @param requestedTargetLocale Target locale requested by the host.
+ * @param items Valid content with each selected translation locale.
+ * @param listeningSession Optional validated listening session configuration.
+ * @param answerAudioSession Optional validated answer-audio session configuration.
+ * @returns A validated response with strict educational items and adjacent locales.
+ * @throws When scored listening uses a fallback target locale.
+ */
+function buildLearningContentResult(
+  mode: z.infer<typeof gameLearningContentModeSchema>,
+  requestedTargetLocale: z.infer<typeof gameLearningContentLocaleSchema>,
+  items: readonly SelectedContentItem[],
+  listeningSession: z.infer<typeof listeningSessionConfigSchema> | undefined,
+  answerAudioSession: z.infer<typeof readToSelectAudioSessionConfigSchema> | undefined,
+): GameLearningContentResult {
+  const selectedTargetLocales = items.map(({ selectedTargetLocale }) => selectedTargetLocale);
+  if (
+    listeningSession?.targetLocaleFallback === "reject"
+    && selectedTargetLocales.some((locale) => locale !== requestedTargetLocale)
+  ) {
+    throw new Error("Scored listening content requires the requested target locale");
+  }
+  if (
+    answerAudioSession
+    && selectedTargetLocales.some((locale) => locale !== requestedTargetLocale)
+  ) {
+    throw new Error("Read to Select Audio requires exact Thai target content");
+  }
+  return gameLearningContentResultSchema.parse({
+    mode,
+    source: "student-flashcards",
+    requestedTargetLocale,
+    selectedTargetLocales,
+    content: items.map(({ term, translation }) => ({ term, translation })),
+    ...(listeningSession ? { listeningSession } : {}),
+    ...(answerAudioSession ? { answerAudioSession } : {}),
+  });
 }
 
 /**
@@ -104,17 +225,23 @@ export async function listGameLearningContent({
     const content = rows.flatMap(({ word }) => {
       const record = wordRecordSchema.safeParse(word);
       if (!record.success) return [];
-      const translation = selectTranslation(record.data.definition, parsed.locale);
-      return translation
-        ? [{ term: record.data.vocabulary, translation }]
+      const selected = selectTranslation(record.data.definition, parsed.locale);
+      return selected
+        ? [{
+          term: record.data.vocabulary,
+          translation: selected.translation,
+          selectedTargetLocale: selected.locale,
+        }]
         : [];
     });
 
-    return gameLearningContentResultSchema.parse({
-      mode: parsed.mode,
-      source: "student-flashcards",
+    return buildLearningContentResult(
+      parsed.mode,
+      parsed.locale,
       content,
-    });
+      parsed.listeningSession,
+      parsed.answerAudioSession,
+    );
   }
 
   const rows = await rawDb
@@ -133,13 +260,21 @@ export async function listGameLearningContent({
     .limit(parsed.limit);
   const content = rows.flatMap(({ sentence, translation: storedTranslation }) => {
     const term = typeof sentence === "string" ? sentence.trim() : "";
-    const translation = selectTranslation(storedTranslation, parsed.locale);
-    return term && translation ? [{ term, translation }] : [];
+    const selected = selectTranslation(storedTranslation, parsed.locale);
+    return term && selected
+      ? [{
+        term,
+        translation: selected.translation,
+        selectedTargetLocale: selected.locale,
+      }]
+      : [];
   });
 
-  return gameLearningContentResultSchema.parse({
-    mode: parsed.mode,
-    source: "student-flashcards",
+  return buildLearningContentResult(
+    parsed.mode,
+    parsed.locale,
     content,
-  });
+    parsed.listeningSession,
+    parsed.answerAudioSession,
+  );
 }

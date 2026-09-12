@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { completionMetadataSchema } from "@reading-advantage/game-contracts";
 
 /**
  * Canonical game-type vocabulary frozen from `apps/advantage-games/src/lib/gameCards.ts`.
@@ -76,8 +77,9 @@ export const gameCompletionInputSchema = z
     duration: z.number().int().min(0),
     victory: z.boolean(),
     idempotencyKey: z.string().uuid(),
+    challengeRunId: z.string().uuid().optional(),
     clientTimestamp: z.number().int(),
-    metadata: z.record(z.string(), z.unknown()).optional(),
+    metadata: completionMetadataSchema.optional(),
   })
   .strict();
 

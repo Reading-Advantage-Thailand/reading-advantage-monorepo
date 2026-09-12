@@ -1,5 +1,9 @@
 import { z } from "zod";
 
+import type {
+  AnswerChoiceAudioController,
+} from "../audio/contracts.js";
+
 /** Validates one resolved tutorial text value. */
 export const gameTutorialTextSchema = z.string().trim().min(1);
 
@@ -95,7 +99,7 @@ const tutorialProductionEffectsSchema = z.object({
 /** Validates the fixed safety policy that APK applies during tutorial playback. */
 export const gameTutorialLifecyclePolicySchema = z.object({
   pause: z.literal("freeze-current-step"),
-  advance: z.literal("sequential"),
+  advance: z.enum(["sequential", "learner-controlled"]),
   replay: z.literal("restart-with-same-seed"),
   skip: tutorialSkipPolicySchema,
   complete: z.object({ to: tutorialDestinationSchema }).strict(),
@@ -237,6 +241,18 @@ export interface GameTutorialActionDiagnostics {
   readonly report: (message: string) => void;
 }
 
+/** Answer audio operations available to a safe tutorial action driver. */
+export type GameTutorialAnswerAudioPort = Pick<
+  AnswerChoiceAudioController,
+  "setQuestion" | "playChoice" | "getChoiceSnapshot"
+>;
+
+/** Optional services supplied when a cartridge creates a tutorial action driver. */
+export interface CreateTutorialActionDriverContext {
+  /** Plays answer choices without submission or evidence authority. */
+  readonly answerAudio?: GameTutorialAnswerAudioPort;
+}
+
 /** Input supplied to a cartridge-owned tutorial action driver. */
 export interface GameTutorialActionDriverContext {
   /** The validated tutorial declaration. */
@@ -247,6 +263,8 @@ export interface GameTutorialActionDriverContext {
   readonly seed: number;
   /** Identifies this isolated execution as tutorial playback. */
   readonly mode: "tutorial";
+  /** Cancels the active action when tutorial ownership changes. */
+  readonly signal?: AbortSignal;
   /** Receives tutorial-local diagnostic messages. */
   readonly diagnostics: GameTutorialActionDiagnostics;
 }

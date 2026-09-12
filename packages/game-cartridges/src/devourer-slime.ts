@@ -5,6 +5,7 @@ import {
 } from "@reading-advantage/game-contracts";
 import {
   createActorSpriteLayer,
+  calculateXp,
   createBoundedFrameScheduler,
   createCompletionLatch,
   createInputActionNormalizer,
@@ -38,6 +39,9 @@ export const INITIAL_SLIME_RADIUS = 25;
 
 /** Word-orb collision radius in world units. */
 export const ORB_RADIUS = 20;
+
+/** Maximum English word orbs shown in one arena wave. */
+export const MAX_VISIBLE_SLIME_ORBS = 4;
 
 /** Knight collision radius in world units. */
 export const KNIGHT_RADIUS = 35;
@@ -118,6 +122,8 @@ export interface DevourerSlimeOrb {
   readonly radius: number;
   /** Whether the orb was already eaten. */
   readonly isEaten: boolean;
+  /** Whether the orb is active in the current bounded wave. */
+  readonly isVisible: boolean;
 }
 
 /** One moving or occupying knight hazard. */
@@ -623,16 +629,57 @@ export function createDevourerSlimeController(
     return words[Math.min(targetWordIndex, words.length - 1)]!;
   };
 
-  const currentOrb = (): MutableOrb | undefined => orbs.find(
-    (orb) => !orb.isEaten && orb.index === targetWordIndex,
-  );
+  const visibleOrbIds = (): ReadonlySet<string> => {
+    const remaining = orbs.filter((orb) => !orb.isEaten);
+    const expected = remaining.find((orb) => orb.word === currentAnswer());
+    const offset = remaining.length === 0 ? 0 : (seed + currentSentenceIndex * 31 + targetWordIndex * 17) % remaining.length;
+    const rotated = [...remaining.slice(offset), ...remaining.slice(0, offset)];
+    const selected = rotated.slice(0, MAX_VISIBLE_SLIME_ORBS);
+    if (expected && !selected.some((orb) => orb.id === expected.id)) {
+      selected[Math.max(0, selected.length - 1)] = expected;
+    }
+    const waveSalt = (seed ^ Math.imul(currentSentenceIndex + 1, 0x45d9f3b) ^ Math.imul(targetWordIndex + 1, 0x27d4eb2d)) >>> 0;
+    selected.sort((left, right) => {
+      const leftIndex = Number.parseInt(left.id.slice(left.id.lastIndexOf(":") + 1), 10);
+      const rightIndex = Number.parseInt(right.id.slice(right.id.lastIndexOf(":") + 1), 10);
+      const leftKey = Math.imul(leftIndex + 1, 0x9e3779b1) ^ waveSalt;
+      const rightKey = Math.imul(rightIndex + 1, 0x9e3779b1) ^ waveSalt;
+      return (leftKey >>> 0) - (rightKey >>> 0) || left.id.localeCompare(right.id);
+    });
+    const slotOffset = selected.length === 0 ? 0 : waveSalt % selected.length;
+    const slotted = [...selected.slice(slotOffset), ...selected.slice(0, slotOffset)];
+    return new Set(slotted.map((orb) => orb.id));
+  };
+
+  const arrangeVisibleOrbs = (): void => {
+    const visible = visibleOrbIds();
+    const positions = [
+      { x: 150, y: 210 }, { x: 650, y: 210 },
+      { x: 150, y: 590 }, { x: 650, y: 590 },
+      { x: 150, y: 400 }, { x: 650, y: 400 },
+      { x: 400, y: 210 }, { x: 400, y: 590 },
+    ].filter((position) => distance(position, slime.pos) > slime.radius + ORB_RADIUS + 80);
+    [...visible].forEach((id, index) => {
+      const orb = orbs.find((candidate) => candidate.id === id);
+      if (orb && positions[index]) orb.pos = { ...positions[index] };
+    });
+  };
+
+  arrangeVisibleOrbs();
+
+  const currentOrb = (): MutableOrb | undefined => {
+    const answer = currentAnswer();
+    return orbs.find((orb) => !orb.isEaten && orb.word === answer);
+  };
 
   const snapshot = (): DevourerSlimeSnapshot => {
     const sentence = sentences[currentSentenceIndex]!;
     const answer = currentAnswer();
     const activeOrb = currentOrb();
+    const visible = visibleOrbIds();
     const orbSnapshot = Object.freeze(orbs.map((orb) => Object.freeze({
       ...orb,
+      isVisible: visible.has(orb.id),
       pos: copyPoint(orb.pos),
     })));
     const knightSnapshot = Object.freeze(knights.map((knight) => Object.freeze({
@@ -699,9 +746,20 @@ export function createDevourerSlimeController(
 
   const relocate = (orb: MutableOrb): void => {
     const previous = orb.pos;
+    const occupied = orbs.filter((candidate) => candidate.id !== orb.id && !candidate.isEaten && visibleOrbIds().has(candidate.id));
     let next = randomPosition(random.next, ORB_RADIUS + 12);
-    if (distance(previous, next) < 1) {
-      next = clampPosition({ x: previous.x + 47, y: previous.y + 31 }, ORB_RADIUS + 12);
+    for (let attempt = 0; attempt < 8 && (distance(next, slime.pos) < slime.radius + ORB_RADIUS + 80
+      || occupied.some((candidate) => distance(next, candidate.pos) < ORB_RADIUS * 2 + 180)); attempt += 1) {
+      next = randomPosition(random.next, ORB_RADIUS + 12);
+    }
+    if (distance(previous, next) < 1 || distance(next, slime.pos) < slime.radius + ORB_RADIUS + 80
+      || occupied.some((candidate) => distance(next, candidate.pos) < ORB_RADIUS * 2 + 180)) {
+      const fallback = [
+        { x: 150, y: 210 }, { x: 650, y: 210 }, { x: 150, y: 590 }, { x: 650, y: 590 },
+        { x: 150, y: 400 }, { x: 650, y: 400 }, { x: 400, y: 210 }, { x: 400, y: 590 },
+      ].find((position) => distance(position, slime.pos) >= slime.radius + ORB_RADIUS + 80
+        && occupied.every((candidate) => distance(position, candidate.pos) >= ORB_RADIUS * 2 + 180));
+      next = fallback ?? clampPosition({ x: previous.x + 190, y: previous.y + 190 }, ORB_RADIUS + 12);
     }
     orb.pos = next;
   };
@@ -744,7 +802,7 @@ export function createDevourerSlimeController(
       });
     }
 
-    const correct = orb.index === targetWordIndex;
+    const correct = orb.word === currentAnswer();
     accountant.recordAttempt({ correct });
     if (!correct) {
       score = Math.max(0, score - 50);
@@ -763,6 +821,7 @@ export function createDevourerSlimeController(
 
     orb.isEaten = true;
     targetWordIndex += 1;
+    arrangeVisibleOrbs();
     score += 100;
     accountant.addScore(100);
     slime.radius += 5;
@@ -794,6 +853,7 @@ export function createDevourerSlimeController(
     targetWordIndex = 0;
     orbs = createOrbSet(sentences, currentSentenceIndex, random.next);
     knights = createKnightSet(slime.pos, knightCount, random.next);
+    arrangeVisibleOrbs();
     return createActionResult(snapshot(), {
       accepted: true,
       correct: true,
@@ -843,7 +903,8 @@ export function createDevourerSlimeController(
   };
 
   const resolveCurrentCollision = (): DevourerSlimeActionResult | undefined => {
-    const orb = orbs.find((candidate) => !candidate.isEaten && overlaps(
+    const visible = visibleOrbIds();
+    const orb = orbs.find((candidate) => !candidate.isEaten && visible.has(candidate.id) && overlaps(
       slime.pos,
       slime.radius,
       candidate.pos,
@@ -923,7 +984,7 @@ export function createDevourerSlimeController(
       throw new Error("Devourer Slime responsive actions are invalid");
     }
     const candidateOrbs = Array.isArray(state.orbs) ? state.orbs : [];
-    const expectedOrb = candidateOrbs.find((orb) => !orb.isEaten && orb.index === state.targetWordIndex);
+    const expectedOrb = candidateOrbs.find((orb) => !orb.isEaten && orb.isVisible && orb.word === state.answer);
     const expectedCorrectAction = state.phase === "playing" && state.slime !== null && typeof state.slime === "object"
       ? directionToward(state.slime.pos, expectedOrb?.pos)
       : "confirm";
@@ -985,15 +1046,12 @@ export function createDevourerSlimeController(
         || restoredResult.accuracy !== (state.totalAttempts === 0 ? 0 : state.correctAnswers / state.totalAttempts)) {
         throw new Error("Devourer Slime terminal result is inconsistent");
       }
-      const restoredAccountant = createResultAccountant();
-      for (let index = 0; index < state.totalAttempts; index += 1) {
-        restoredAccountant.recordAttempt({ correct: index < state.correctAnswers });
-      }
-      restoredAccountant.addScore(state.score);
-      const expectedResult = gameResultsSchema.parse(
-        finalizeResult(restoredAccountant, { xpPerCorrect: 20, xpPerAccuracyPoint: 10 }),
-      );
-      if (restoredResult.xp !== expectedResult.xp) throw new Error("Devourer Slime terminal XP is inconsistent");
+      const expectedXp = calculateXp({
+        correctAnswers: state.correctAnswers,
+        totalAttempts: state.totalAttempts,
+        accuracy: state.totalAttempts === 0 ? 0 : state.correctAnswers / state.totalAttempts,
+      }, { xpPerCorrect: 20, xpPerAccuracyPoint: 10 });
+      if (restoredResult.xp !== expectedXp) throw new Error("Devourer Slime terminal XP is inconsistent");
     }
     if (!state.world || state.world.width !== DEVOURER_SLIME_WORLD.width || state.world.height !== DEVOURER_SLIME_WORLD.height) {
       throw new Error("Devourer Slime responsive world is invalid");
@@ -1018,17 +1076,31 @@ export function createDevourerSlimeController(
       throw new Error("Devourer Slime responsive knight state is inconsistent");
     }
     const orbIds = new Set<string>();
+    const expectedEaten = new Map<string, number>();
+    for (const word of restoredWords.slice(0, state.targetWordIndex)) {
+      expectedEaten.set(word, (expectedEaten.get(word) ?? 0) + 1);
+    }
+    const actualEaten = new Map<string, number>();
+    const visibleCount = state.orbs.filter((orb) => orb.isVisible && !orb.isEaten).length;
+    if (visibleCount > MAX_VISIBLE_SLIME_ORBS
+      || (state.phase === "playing" && !state.orbs.some((orb) => orb.isVisible && !orb.isEaten && orb.word === state.answer))) {
+      throw new Error("Devourer Slime responsive orb wave is invalid");
+    }
     for (const [index, orb] of state.orbs.entries()) {
       if (!orb || orb.id !== `orb:${state.currentSentenceIndex}:${index}` || orbIds.has(orb.id)
         || orb.word !== restoredWords[index] || orb.index !== index || orb.sentenceIndex !== state.currentSentenceIndex
-        || orb.radius !== ORB_RADIUS || typeof orb.isEaten !== "boolean"
-        || orb.isEaten !== (index < state.targetWordIndex)
+        || orb.radius !== ORB_RADIUS || typeof orb.isEaten !== "boolean" || typeof orb.isVisible !== "boolean"
         || !Number.isFinite(orb.pos.x) || !Number.isFinite(orb.pos.y)
         || orb.pos.x < orb.radius || orb.pos.x > DEVOURER_SLIME_WORLD.width - orb.radius
         || orb.pos.y < orb.radius || orb.pos.y > DEVOURER_SLIME_WORLD.height - orb.radius) {
         throw new Error("Devourer Slime responsive orb actor is invalid");
       }
+      if (orb.isEaten) actualEaten.set(orb.word, (actualEaten.get(orb.word) ?? 0) + 1);
       orbIds.add(orb.id);
+    }
+    if (actualEaten.size !== expectedEaten.size
+      || [...expectedEaten].some(([word, count]) => actualEaten.get(word) !== count)) {
+      throw new Error("Devourer Slime responsive eaten words are invalid");
     }
     const knightIds = new Set<string>();
     for (const [index, knight] of state.knights.entries()) {
@@ -1053,11 +1125,19 @@ export function createDevourerSlimeController(
     if (destroyed) return;
     validateRestoredState(state);
     random.restore(state.randomState);
-    accountant = createResultAccountant();
-    for (let index = 0; index < state.totalAttempts; index += 1) {
-      accountant.recordAttempt({ correct: index < state.correctAnswers });
-    }
-    accountant.addScore(state.score);
+    let restoredCorrect = state.correctAnswers;
+    let restoredAttempts = state.totalAttempts;
+    let restoredScore = state.score;
+    accountant = Object.freeze({
+      get correctAnswers() { return restoredCorrect; },
+      get totalAttempts() { return restoredAttempts; },
+      get accuracy() { return restoredAttempts === 0 ? 0 : restoredCorrect / restoredAttempts; },
+      get score() { return restoredScore; },
+      recordAttempt({ correct }: { readonly correct: boolean }) { restoredAttempts += 1; if (correct) restoredCorrect += 1; },
+      addScore(points: number) { restoredScore += points; },
+      computeAccuracy() { return restoredAttempts === 0 ? 0 : restoredCorrect / restoredAttempts; },
+      snapshot() { return Object.freeze({ correctAnswers: restoredCorrect, totalAttempts: restoredAttempts, accuracy: restoredAttempts === 0 ? 0 : restoredCorrect / restoredAttempts, score: restoredScore }); },
+    });
     phase = state.phase;
     currentSentenceIndex = state.currentSentenceIndex;
     targetWordIndex = state.targetWordIndex;
@@ -1071,7 +1151,7 @@ export function createDevourerSlimeController(
       pos: { ...state.slime.pos },
       radius: state.slime.radius,
     };
-    orbs = state.orbs.map((orb) => ({ ...orb, pos: { ...orb.pos } }));
+    orbs = state.orbs.map(({ isVisible: _isVisible, ...orb }) => ({ ...orb, pos: { ...orb.pos } }));
     knights = state.knights.map((knight) => ({
       ...knight,
       pos: { ...knight.pos },
@@ -1310,7 +1390,7 @@ function createScene(context: DevourerSlimeSceneContext): Readonly<Record<string
 
     activeResources.graphics.clear();
     if (!activeResources.art.ground("world:ground", width, height)) activeResources.graphics.fillStyle(0x031c17, 1).fillRect(0, 0, width, height);
-    activeResources.graphics.fillStyle(0x064e3b, 1).fillRect(
+    activeResources.graphics.fillStyle(0x064e3b, 0.42).fillRect(
       transform.offsetX,
       transform.offsetY,
       DEVOURER_SLIME_WORLD.width * transform.scale,
@@ -1324,7 +1404,15 @@ function createScene(context: DevourerSlimeSceneContext): Readonly<Record<string
       18,
     );
     for (const orb of state.orbs) {
-      if (orb.isEaten) continue;
+      if (orb.isEaten || !orb.isVisible) continue;
+      const labelWidth = Math.min(width - 32, Math.max(112, orb.word.length * 22));
+      activeResources.graphics.fillStyle(0x082f49, 0.94).fillRoundedRect(
+        toX(orb.pos.x) - labelWidth / 2,
+        toY(orb.pos.y) - 30,
+        labelWidth,
+        60,
+        14,
+      );
       activeResources.graphics.fillStyle(0xfbbf24, 0.95).fillCircle(
         toX(orb.pos.x),
         toY(orb.pos.y),
@@ -1335,7 +1423,7 @@ function createScene(context: DevourerSlimeSceneContext): Readonly<Record<string
       if (activeResources.art.place(`knight:${index}`, "enemy:idle", {
         x: toX(knight.pos.x),
         y: toY(knight.pos.y),
-        width: knight.radius * 2.4 * transform.scale,
+        width: knight.radius * 6.5 * transform.scale,
         depth: 7,
       })) return;
       activeResources.graphics.fillStyle(0x94a3b8, 1).fillRoundedRect(
@@ -1354,7 +1442,7 @@ function createScene(context: DevourerSlimeSceneContext): Readonly<Record<string
     if (!activeResources.art.place("player", "player:idle", {
       x: toX(state.slime.pos.x),
       y: toY(state.slime.pos.y) + pulse,
-      width: state.slime.radius * 2.4 * transform.scale,
+      width: state.slime.radius * 6.5 * transform.scale,
       depth: 8,
     })) {
       activeResources.graphics.fillStyle(state.lastEvent === "hit" || state.lastEvent === "incorrect" ? 0xef4444 : 0x4ade80, 0.85)
@@ -1366,29 +1454,29 @@ function createScene(context: DevourerSlimeSceneContext): Readonly<Record<string
     activeResources.graphics.fillStyle(0xd9f99d, 0.95)
       .fillCircle(toX(state.slime.pos.x + state.slime.radius * 0.3), toY(state.slime.pos.y - state.slime.radius * 0.2) + pulse, Math.max(2, state.slime.radius * transform.scale * 0.12));
 
-    activeResources.title.setText("DEVOURER SLIME").setPosition(24, 18);
-    activeResources.prompt.setText(`Eat the next word: ${state.prompt}`).setPosition(24, 54);
+    activeResources.graphics.fillStyle(0x052e2b, 0.96).fillRect(0, 0, width, 112);
+    activeResources.title.setText("");
+    activeResources.prompt.setText(state.prompt).setPosition(24, 22);
     activeResources.progress.setText(
-      `${composition?.profile === "compact" ? "Compact world" : "Wide world"}  •  Sentence ${state.currentSentenceIndex + 1}  •  Word ${Math.min(state.targetWordIndex + 1, state.orbs.length)}  •  Score ${state.score}  •  Lives ${state.lives}`,
-    ).setPosition(24, 91);
+      `${tokenize(state.sentence).slice(0, state.targetWordIndex).join(" ")}  ${state.targetIndex}/${state.targetCount}  •  ${state.score}  •  ♥ ${state.lives}`,
+    ).setPosition(24, 70);
     activeResources.feedback.setText(
       state.phase === "victory"
         ? "Every sentence is complete!"
         : state.phase === "defeat"
           ? "The knights overwhelmed the slime."
           : state.lastEvent === "incorrect"
-            ? "That orb moved. Find the active word."
+            ? "×"
             : state.lastEvent === "eat-enemy"
-              ? "Knight devoured!"
-              : "Grow larger than a knight to eat it.",
+              ? "+500"
+              : "",
     ).setPosition(24, height - 65);
-    activeResources.instructions
-      .setText("Keyboard: WASD / arrows  •  Drag or tap in a direction to move")
-      .setPosition(24, height - 34);
+    activeResources.instructions.setText("");
     state.orbs.forEach((orb, index) => {
       const label = activeResources.orbLabels[index];
       if (!label) return;
-      label.setText(orb.isEaten ? "" : orb.word).setPosition(toX(orb.pos.x) - 25, toY(orb.pos.y) - 8);
+      const labelOffset = Math.min(width - 32, Math.max(112, orb.word.length * 22)) / 2 - 14;
+      label.setText(orb.isEaten || !orb.isVisible ? "" : orb.word).setPosition(toX(orb.pos.x) - labelOffset, toY(orb.pos.y) - 10);
     });
     for (let index = state.orbs.length; index < activeResources.orbLabels.length; index += 1) {
       activeResources.orbLabels[index]?.setText("");
@@ -1454,16 +1542,20 @@ function createScene(context: DevourerSlimeSceneContext): Readonly<Record<string
   const create = function (this: PhaserSceneLike): void {
     if (cleaned) return;
     if (!this.add) throw new Error("Devourer Slime requires Phaser display services");
-    const textStyle = { fontFamily: "Arial", color: "#f0fdf4", fontSize: "18px" };
+    const logicalWidth = dimensions(this).width;
+    const displayWidth = this.game?.canvas?.getBoundingClientRect?.().width ?? logicalWidth;
+    const renderedScale = Math.max(0.1, displayWidth / logicalWidth);
+    const displayFont = (pixels: number, maximum = 48): string => `${Math.min(maximum, Math.ceil(pixels / renderedScale))}px`;
+    const textStyle = { fontFamily: "Arial", color: "#f0fdf4", fontSize: displayFont(16) };
     resources = {
       graphics: this.add.graphics(),
       art: createActorSpriteLayer(this, context.edition),
       title: this.add.text(24, 18, "DEVOURER SLIME", { ...textStyle, fontSize: "29px", fontStyle: "bold" }),
-      prompt: this.add.text(24, 54, "", { ...textStyle, fontSize: "22px" }),
-      progress: this.add.text(24, 91, "", { ...textStyle, fontSize: "15px", color: "#bbf7d0" }),
+      prompt: this.add.text(24, 54, "", { ...textStyle, fontSize: displayFont(20), fontStyle: "bold", wordWrap: { width: logicalWidth - 48, useAdvancedWrap: true } }),
+      progress: this.add.text(24, 91, "", { ...textStyle, fontSize: displayFont(16), color: "#bbf7d0" }),
       feedback: this.add.text(24, 0, "", { ...textStyle, fontSize: "17px", color: "#fde68a" }),
       instructions: this.add.text(24, 0, "", { ...textStyle, fontSize: "15px", color: "#cbd5e1" }),
-      orbLabels: Array.from({ length: context.maxWords }, () => this.add!.text(0, 0, "", { ...textStyle, fontSize: "14px", fontStyle: "bold" })),
+      orbLabels: Array.from({ length: context.maxWords }, () => this.add!.text(0, 0, "", { ...textStyle, fontSize: displayFont(16, 46), fontStyle: "bold" })),
     };
     this.events?.once("shutdown", cleanup);
     this.events?.once("destroy", cleanup);

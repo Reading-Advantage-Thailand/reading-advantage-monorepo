@@ -43,6 +43,7 @@ function createQueryBuilder(val: unknown) {
  */
 export function createMockDb(overrides: {
   insertReturning?: unknown[];
+  conflictInsertReturning?: unknown[];
   updateReturning?: unknown[];
   selectResults?: unknown[];
   selectSequence?: unknown[][];
@@ -60,12 +61,19 @@ export function createMockDb(overrides: {
 
   const mockDb: MockDb = {
     insert: vi.fn().mockReturnValue({
-      values: vi.fn().mockReturnValue({
-        returning: vi.fn().mockResolvedValue(overrides.insertReturning ?? []),
-        onConflictDoNothing: vi.fn().mockResolvedValue([]),
-        onConflictDoUpdate: vi.fn().mockReturnValue({
+      values: vi.fn().mockImplementation((values: unknown) => {
+        const conflictResult = overrides.conflictInsertReturning
+          ?? (Array.isArray(values) ? values : [values]);
+        const conflictBuilder = Object.assign(Promise.resolve([]), {
+          returning: vi.fn().mockResolvedValue(conflictResult),
+        });
+        return {
           returning: vi.fn().mockResolvedValue(overrides.insertReturning ?? []),
-        }),
+          onConflictDoNothing: vi.fn().mockReturnValue(conflictBuilder),
+          onConflictDoUpdate: vi.fn().mockReturnValue({
+            returning: vi.fn().mockResolvedValue(overrides.insertReturning ?? []),
+          }),
+        };
       }),
     }),
     select: vi.fn().mockImplementation(() => {

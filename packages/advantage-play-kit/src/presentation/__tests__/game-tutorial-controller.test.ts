@@ -469,6 +469,33 @@ describe("shared tutorial controller", () => {
     expect(harness.snapshots).toHaveBeenCalledWith(expect.objectContaining({ mode: "tutorial" }));
   });
 
+  it("publishes a failed action without advancing its semantic step", async () => {
+    const harness = await createHarness();
+    harness.driver.execute.mockRejectedValueOnce(new Error("English clip failed"));
+
+    await harness.controller.start();
+    await harness.clock.runAll();
+
+    expect(harness.controller.getSnapshot()).toMatchObject({
+      currentStepId: "step:notice-answer",
+      currentTarget: { id: "control:answer-choice" },
+      currentStepDemonstrated: false,
+      currentStepFailure: "Practice audio could not play. Replay Practice to try again.",
+      progress: { completed: 0, total: 3 },
+    });
+    expect(harness.snapshots).toHaveBeenLastCalledWith(expect.objectContaining({
+      currentStepFailure: "Practice audio could not play. Replay Practice to try again.",
+    }));
+    expect(harness.diagnostics).toHaveBeenCalledWith(expect.objectContaining({
+      event: "failed",
+      message: "Practice audio could not play. Replay Practice to try again.",
+    }));
+    expect(harness.transitions).not.toHaveBeenCalled();
+
+    await harness.controller.replay();
+    expect(harness.controller.getSnapshot()).not.toHaveProperty("currentStepFailure");
+  });
+
   it("freezes the selected step on pause and resumes without changing its semantic target", async () => {
     const harness = await createHarness();
 
@@ -663,9 +690,11 @@ describe("shared tutorial controller", () => {
       "diagnostics",
       "mode",
       "seed",
+      "signal",
       "step",
       "tutorial",
     ]);
+    expect(context.signal).toBeInstanceOf(AbortSignal);
     expect(context).not.toHaveProperty("complete");
     expect(context).not.toHaveProperty("emitGameResults");
     expect(context).not.toHaveProperty("persistProgress");
@@ -739,7 +768,7 @@ describe("APKGameHost tutorial integration", () => {
       currentTarget: { id: "feedback:incorrect-choice" },
     })));
     await act(async () => clock.advanceBy(15));
-    fireEvent.click(screen.getByRole("button", { name: "Next tutorial step" }));
+    fireEvent.click(screen.getByRole("button", { name: "Begin quest" }));
 
     await waitFor(() => expect(hostFactory.base.contexts).toHaveLength(2));
     expect(hostFactory.base.contexts[0]?.sessionMode).toBe("tutorial");

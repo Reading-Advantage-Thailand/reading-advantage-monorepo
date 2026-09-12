@@ -8,6 +8,10 @@ export type {
   CatalogArtDecision,
   CatalogTitleArtDecision,
 } from "./catalog-standard-art.js";
+export {
+  CARTRIDGE_CHALLENGE_CAPABILITIES,
+  type CartridgeChallengeCapability,
+} from "./challenge-capabilities.js";
 
 /**
  * Per-title semantic-adoption candidates for the existing-core cutover

@@ -5,22 +5,27 @@ import { preloadAssetBindings, resolveAssetBinding, type RuntimeEdition } from "
  * Ground is below the dragon. Air and clouds are around the dragon.
  */
 export const FLIGHT_PARALLAX_KEYS = Object.freeze([
-  "world:parallax-near",
   "world:parallax-far",
   "world:parallax-mid",
+  "world:parallax-near",
 ]);
 
 /** Scroll speed in pixels per second. Ground is slowest. Nearby air is fastest. */
 export const FLIGHT_PARALLAX_SPEEDS = Object.freeze([18, 36, 64]);
 
-/** Ground stays solid. Air layers stay transparent so the land below remains visible. */
-const LAYER_ALPHA = Object.freeze([1, 0.35, 0.85]);
+/** The far layer stays solid. The nearer layers stay transparent. */
+const LAYER_ALPHA = Object.freeze([1, 0.45, 0.85]);
+
+function selectedKeys(includeNear: boolean): readonly string[] {
+  return includeNear ? FLIGHT_PARALLAX_KEYS : FLIGHT_PARALLAX_KEYS.slice(0, 2);
+}
 
 interface PhaserImageLike {
   setOrigin?(x: number, y: number): PhaserImageLike;
   setDepth?(depth: number): PhaserImageLike;
   setAlpha?(alpha: number): PhaserImageLike;
   setTilePosition?(x: number, y: number): PhaserImageLike;
+  setTileScale?(x: number, y?: number): PhaserImageLike;
   tilePositionY?: number;
   destroy(): void;
 }
@@ -43,31 +48,41 @@ export interface FlightParallaxLayers {
 }
 
 /**
- * Returns whether the edition includes the three flight parallax bindings.
+ * Returns whether the edition includes the selected flight parallax bindings.
  * @param edition Audience edition supplied by the host.
- * @returns True when ground, sky, and cloud layers are bound.
+ * @param options Optional layer selection.
+ * @returns True when all selected layers are bound.
  */
-export function hasFlightParallax(edition: RuntimeEdition): boolean {
-  return FLIGHT_PARALLAX_KEYS.every((key) => Boolean(edition.bindings[key]));
+export function hasFlightParallax(
+  edition: RuntimeEdition,
+  options: { readonly includeNear?: boolean } = {},
+): boolean {
+  return selectedKeys(options.includeNear !== false).every((key) => Boolean(edition.bindings[key]));
 }
 
 /**
- * Preloads the three flight parallax textures.
+ * Preloads the selected flight parallax textures.
  * @param scene Active Phaser scene.
  * @param edition Audience edition supplied by the host.
+ * @param options Optional layer selection.
  * @returns Nothing.
  */
-export function preloadFlightParallax(scene: PhaserSceneLike, edition: RuntimeEdition): void {
-  if (!scene.load || !hasFlightParallax(edition)) return;
-  preloadAssetBindings(scene.load, edition, FLIGHT_PARALLAX_KEYS);
+export function preloadFlightParallax(
+  scene: PhaserSceneLike,
+  edition: RuntimeEdition,
+  options: { readonly includeNear?: boolean } = {},
+): void {
+  if (!scene.load || !hasFlightParallax(edition, options)) return;
+  preloadAssetBindings(scene.load, edition, selectedKeys(options.includeNear !== false));
 }
 
 /**
- * Creates three full-canvas tiling layers from farthest ground to nearest air.
+ * Creates the selected full-canvas tiling layers.
  * @param scene Active Phaser scene.
  * @param edition Audience edition supplied by the host.
  * @param width Current scene width.
  * @param height Current scene height.
+ * @param options Optional layer selection.
  * @returns Layer sprites, or an empty set when tileSprite is unavailable.
  */
 export function createFlightParallax(
@@ -75,12 +90,13 @@ export function createFlightParallax(
   edition: RuntimeEdition,
   width: number,
   height: number,
+  options: { readonly includeNear?: boolean } = {},
 ): FlightParallaxLayers {
   const sprites: PhaserImageLike[] = [];
-  if (!hasFlightParallax(edition) || !scene.add?.tileSprite) {
+  if (!hasFlightParallax(edition, options) || !scene.add?.tileSprite) {
     return { sprites, scrollY: 0 };
   }
-  FLIGHT_PARALLAX_KEYS.forEach((key, index) => {
+  selectedKeys(options.includeNear !== false).forEach((key, index) => {
     const texture = resolveAssetBinding(edition, key);
     const layer = scene.add!.tileSprite!(0, 0, width, height, texture.textureKey);
     layer.setOrigin?.(0, 0);

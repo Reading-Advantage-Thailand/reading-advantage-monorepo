@@ -298,6 +298,11 @@ interface PhaserGraphicsLike {
 interface PhaserTextLike {
   setPosition(x: number, y: number): this;
   setText(value: string): this;
+  setFontSize?(value: number): this;
+  setBackgroundColor?(value: string): this;
+  setPadding?(left: number, top: number, right?: number, bottom?: number): this;
+  setOrigin?(x: number, y?: number): this;
+  setWordWrapWidth?(width: number, useAdvancedWrap?: boolean): this;
   destroy(): void;
 }
 
@@ -532,7 +537,6 @@ function resultFor(
 
 function createScene(context: PaladinsTwinSoulSceneContext): Readonly<Record<string, unknown>> {
   let resources: SceneResources | undefined;
-  let composition = context.composition;
   let previousKeys = new Set<string>();
   let currentDimensions: { width: number; height: number } = { ...PALADINS_TWIN_SOUL_CANVAS };
   let currentPointerInScene = (clientX: number, clientY: number): Readonly<{ x: number; y: number }> => ({
@@ -641,19 +645,33 @@ function createScene(context: PaladinsTwinSoulSceneContext): Readonly<Record<str
     const scaleX = width / PALADINS_TWIN_SOUL_CANVAS.width;
     const scaleY = height / PALADINS_TWIN_SOUL_CANVAS.height;
     const scale = Math.min(scaleX, scaleY);
-    const offsetX = (width - PALADINS_TWIN_SOUL_CANVAS.width * scale) / 2;
-    const offsetY = (height - PALADINS_TWIN_SOUL_CANVAS.height * scale) / 2;
-    const sceneX = (value: number) => offsetX + value * scale;
-    const sceneY = (value: number) => offsetY + value * scale;
+    const portrait = height >= 600 && height > width * 1.2;
+    const portraitArenaTop = 130;
+    const portraitArenaBottom = 16;
+    const positionScaleX = portrait ? scaleX : scale;
+    const positionScaleY = portrait
+      ? (height - portraitArenaTop - portraitArenaBottom) / PALADINS_TWIN_SOUL_CANVAS.height
+      : scale;
+    const actorScale = portrait ? Math.min(positionScaleY, Math.max(positionScaleX, 0.65)) : scale;
+    const offsetX = portrait ? 0 : (width - PALADINS_TWIN_SOUL_CANVAS.width * scale) / 2;
+    const offsetY = portrait ? portraitArenaTop : (height - PALADINS_TWIN_SOUL_CANVAS.height * scale) / 2;
+    const sceneX = (value: number) => offsetX + value * positionScaleX;
+    const sceneY = (value: number) => offsetY + value * positionScaleY;
+    const displayWidth = scene.game?.canvas?.getBoundingClientRect?.().width ?? width;
+    const displayScale = Math.max(0.1, displayWidth / width);
+    const displayFontSize = (pixels: number): number => Math.ceil(pixels / displayScale);
+    const displayPosition = (pixels: number): number => Math.ceil(pixels / displayScale);
 
     view.graphics.clear();
-    if (!art.ground("world:ground", width, height)) view.graphics.fillStyle(0x020617, 1).fillRect(0, 0, width, height);
-    view.graphics.fillStyle(0x0f1d3b, 0.95).fillRoundedRect(sceneX(80), sceneY(70), 800 * scale, 400 * scale, 24 * scale);
+    view.graphics.fillStyle(0x020617, 1).fillRect(0, 0, width, height);
+    view.graphics.fillStyle(0x0f1d3b, 0.95).fillRoundedRect(
+      sceneX(80), sceneY(70), 800 * positionScaleX, 400 * positionScaleY, 24 * actorScale,
+    );
     for (let index = 0; index < 18; index += 1) {
       view.graphics.fillStyle(index % 2 === 0 ? 0x93c5fd : 0xfef3c7, 0.45).fillCircle(
         sceneX((index * 173) % PALADINS_TWIN_SOUL_CANVAS.width),
         sceneY((index * 97) % 440),
-        Math.max(1, scale * (index % 3 + 1)),
+        Math.max(1, actorScale * (index % 3 + 1)),
       );
     }
     state.enemies.forEach((enemy, index) => {
@@ -662,68 +680,71 @@ function createScene(context: PaladinsTwinSoulSceneContext): Readonly<Record<str
       if (!art.place(`enemy:${index}`, "enemy:idle", {
         x,
         y,
-        width: 68 * scale,
-        height: 60 * scale,
+        width: 68 * actorScale,
         depth: 7,
       })) {
         view.graphics
           .fillStyle(enemy.hasCapturedTwin ? 0xfbbf24 : enemy.isCapturing ? 0xa855f7 : 0xdc2626, 1)
-          .fillRoundedRect(x - 34 * scale, y - 24 * scale, 68 * scale, 48 * scale, 8 * scale);
+          .fillRoundedRect(x - 34 * actorScale, y - 24 * actorScale, 68 * actorScale, 48 * actorScale, 8 * actorScale);
       }
       if (enemy.hasCapturedTwin) {
-        view.graphics.fillStyle(0xfef3c7, 0.9).fillCircle(x, y, 10 * scale);
+        view.graphics.fillStyle(0xfef3c7, 0.9).fillCircle(x, y, 10 * actorScale);
       }
     });
     for (const bullet of state.bullets) {
       view.graphics
         .fillStyle(bullet.isPlayer ? 0xfde047 : 0xfb7185, 1)
-        .fillRoundedRect(sceneX(bullet.x) - 3 * scale, sceneY(bullet.y) - 10 * scale, 6 * scale, 20 * scale, 3 * scale);
+        .fillRoundedRect(sceneX(bullet.x) - 3 * actorScale, sceneY(bullet.y) - 10 * actorScale, 6 * actorScale, 20 * actorScale, 3 * actorScale);
     }
     for (const [index, enemy] of state.enemies.entries()) {
-      view.enemyLabels[index]
-        ?.setText(enemy.term)
-        .setPosition(sceneX(enemy.x) - 34 * scale, sceneY(enemy.y) + 30 * scale);
+      const label = view.enemyLabels[index];
+      if (enemy.row !== targetRow()) {
+        label?.setText("");
+        continue;
+      }
+      const labelWidth = Math.max(1, Math.min(96, width / 4 - 4));
+      label?.setFontSize?.(displayFontSize(16));
+      label?.setBackgroundColor?.("rgba(15, 23, 42, 0.9)");
+      label?.setPadding?.(displayFontSize(3), displayFontSize(2));
+      label?.setOrigin?.(0.5, 0.5);
+      label?.setWordWrapWidth?.(labelWidth, true);
+      label?.setText(enemy.term)
+        .setPosition(sceneX(enemy.x), sceneY(enemy.y) + 34 * actorScale + (enemy.column % 2) * displayFontSize(24));
     }
     view.enemyLabels.slice(state.enemies.length).forEach((label) => label.setText(""));
     if (!art.place("player", "player:idle", {
       x: sceneX(state.player.x),
       y: sceneY(PALADINS_TWIN_SOUL_RULES.playerY),
-      width: 52 * scale,
+      width: 52 * actorScale,
       depth: 8,
     })) {
       view.graphics.fillStyle(0xf59e0b, 1).fillRoundedRect(
-        sceneX(state.player.x) - 22 * scale,
-        sceneY(PALADINS_TWIN_SOUL_RULES.playerY) - 22 * scale,
-        44 * scale,
-        44 * scale,
-        10 * scale,
+        sceneX(state.player.x) - 22 * actorScale,
+        sceneY(PALADINS_TWIN_SOUL_RULES.playerY) - 22 * actorScale,
+        44 * actorScale,
+        44 * actorScale,
+        10 * actorScale,
       );
     }
     art.sweep();
     if (state.player.hasTwinSoul) {
       view.graphics.fillStyle(0xfef3c7, 0.9).fillCircle(
-        sceneX(state.player.x) + 30 * scale,
+        sceneX(state.player.x) + 30 * actorScale,
         sceneY(PALADINS_TWIN_SOUL_RULES.playerY),
-        16 * scale,
+        16 * actorScale,
       );
     }
-    view.title.setText("PALADIN'S TWIN-SOUL").setPosition(28, 18);
-    view.prompt.setText(`Translation prompt: ${state.prompt}`).setPosition(28, 54);
+    view.title.setText("").setPosition(28, 18);
+    view.prompt.setFontSize?.(displayFontSize(26));
+    view.prompt.setWordWrapWidth?.(Math.max(1, width - 40), true);
+    view.prompt.setOrigin?.(0.5, 0);
+    view.prompt.setText(state.prompt).setPosition(width / 2, displayPosition(18));
+    view.progress.setFontSize?.(displayFontSize(15));
     view.progress.setText(
-      `${composition?.profile === "compact" ? "Compact formation" : "Twin-Soul formation"}  •  Wave ${Math.min(state.wave, state.targetCount)} of ${state.targetCount}  •  HP ${state.player.hp}/${state.player.maxHp}  •  Fire x${state.player.fireStrength}`,
-    ).setPosition(28, 88);
-    view.feedback.setText(
-      state.phase === "victory"
-        ? "Every target wave is clear."
-        : state.phase === "defeat"
-          ? "The formation overran the paladin."
-          : state.player.isCaptured
-            ? "The twin is captured. Keep the paladin under fire to rescue it."
-            : state.lastOutcome === "incorrect"
-            ? "Wrong enemy hit. The target remains active and counterfire is incoming."
-              : "Move beneath the matching enemy and confirm a shot.",
-    ).setPosition(28, height - 68);
-    view.instructions.setText("Keyboard: A/D or arrows move • Space confirms a shot • Touch or click to move and fire").setPosition(28, height - 36);
+      `${Math.min(state.wave, state.targetCount)}/${state.targetCount}  ♥ ${state.player.hp}/${state.player.maxHp}  ×${state.player.fireStrength}`,
+    ).setPosition(28, displayPosition(56));
+    view.feedback.setText("").setPosition(28, height - 68);
+    view.instructions.setText("").setPosition(28, height - 36);
   };
 
   const cleanup = (): void => {
@@ -745,7 +766,7 @@ function createScene(context: PaladinsTwinSoulSceneContext): Readonly<Record<str
   };
 
 
-  const artKeys = ["world:ground", "player:idle", "enemy:idle"] as const;
+  const artKeys = ["player:idle", "enemy:idle"] as const;
 
   const preload = function (this: PhaserSceneLike): void {
     if (!this.load) return;
@@ -802,7 +823,7 @@ function createScene(context: PaladinsTwinSoulSceneContext): Readonly<Record<str
         context.controller.restore(value.game);
       },
       apkRecompose: (nextComposition: PaladinsTwinSoulSceneContext["composition"]): void => {
-        composition = nextComposition;
+        void nextComposition;
       },
     },
   };
@@ -1025,7 +1046,7 @@ export function createPaladinsTwinSoulController(
   };
 
   const resolveEnemyHit = (enemy: MutableEnemy, counterfire: MutableBullet[]): { correct: boolean; result?: GameResults } => {
-    const correct = enemy.id === targetEnemyId(state.wave, state.seed, state.targetIndex);
+    const correct = enemy.term === items[state.targetIndex]!.term;
     accountant.recordAttempt({ correct });
     state.lastOutcome = correct ? "correct" : "incorrect";
     if (enemy.hasCapturedTwin) {
@@ -1136,7 +1157,7 @@ export function createPaladinsTwinSoulController(
       throw new Error("Paladin's Twin-Soul responsive defeat state is unfinished");
     }
     if (captured.phase === "playing") {
-      const correctEnemy = captured.enemies.find((enemy) => enemy.id === targetEnemyId(captured.wave, captured.seed, captured.targetIndex));
+      const correctEnemy = captured.enemies.find((enemy) => enemy.id === captured.correctAction && enemy.term === target.term);
       const expectedActions = ["move-left", "move-right", "confirm", ...captured.enemies.map((enemy) => enemy.id)];
       if (!correctEnemy || captured.correctAction !== correctEnemy.id
         || captured.availableActions.length !== expectedActions.length
@@ -1172,11 +1193,19 @@ export function createPaladinsTwinSoulController(
     const enemyPositions = new Set<string>();
     for (const enemy of captured.enemies) {
       const expectedEnemy = expectedEnemies.get(enemy.id);
+      const expectedX = formationBaseX(enemy.column) + captured.formationOffset;
+      const expectedY = enemy.isCapturing && enemy.captureStartedAt !== undefined
+        ? 132 + clamp(
+          (captured.gameTime - enemy.captureStartedAt) / PALADINS_TWIN_SOUL_RULES.captureTravelMs,
+          0,
+          1,
+        ) * PALADINS_TWIN_SOUL_RULES.captureTravelMs
+        : expectedEnemy?.y;
       if (typeof enemy.id !== "string" || typeof enemy.term !== "string" || typeof enemy.translation !== "string"
         || enemyIds.has(enemy.id) || enemyPositions.has(`${enemy.row}:${enemy.column}`)
         || !Number.isInteger(enemy.row) || enemy.row < 0 || enemy.row >= PALADINS_TWIN_SOUL_RULES.formationRows
         || !Number.isInteger(enemy.column) || enemy.column < 0 || enemy.column >= PALADINS_TWIN_SOUL_RULES.formationColumns
-        || !Number.isFinite(enemy.x) || !Number.isFinite(enemy.y)
+        || !Number.isFinite(enemy.x) || enemy.x !== expectedX || !Number.isFinite(enemy.y) || enemy.y !== expectedY
         || typeof enemy.isCapturing !== "boolean" || typeof enemy.hasCapturedTwin !== "boolean"
         || (enemy.captureStartedAt !== undefined && !Number.isFinite(enemy.captureStartedAt))
         || !expectedEnemy || enemy.term !== expectedEnemy.term || enemy.translation !== expectedEnemy.translation) {
@@ -1185,9 +1214,11 @@ export function createPaladinsTwinSoulController(
       enemyIds.add(enemy.id);
       enemyPositions.add(`${enemy.row}:${enemy.column}`);
     }
+    const bulletIds = new Set<string>();
     for (const bullet of captured.bullets) {
       if (typeof bullet.id !== "string" || !Number.isFinite(bullet.x) || !Number.isFinite(bullet.y)
-        || typeof bullet.isPlayer !== "boolean") throw new Error("Paladin's Twin-Soul responsive bullet is invalid");
+        || bulletIds.has(bullet.id) || typeof bullet.isPlayer !== "boolean") throw new Error("Paladin's Twin-Soul responsive bullet is invalid");
+      bulletIds.add(bullet.id);
     }
     if (captured.phase === "playing" && captured.result !== undefined) {
       throw new Error("Paladin's Twin-Soul active state has a terminal result");

@@ -29,6 +29,43 @@ export type {
   GameLearningContentInput,
   GameLearningContentResult,
 } from "./learning-content.js";
+export {
+  GameSpeechPreparationError,
+  createConfiguredSpeechObjectResolver,
+  createStoredSpeechClipLookup,
+  preparedGameAnswerAudioLearningContentResultSchema,
+  preparedGameLearningContentResultSchema,
+  preparedGameSpeechSchema,
+  prepareGameAnswerAudio,
+  prepareGameSpeech,
+} from "./speech-preparation.js";
+export {
+  ENGLISH_ANSWER_SPEECH_PREPARATION_SETTINGS,
+  prepareEnglishAnswerSpeechBatch,
+} from "./speech-preparation-batch.js";
+export type {
+  DraftSpeechManifest,
+  DraftSpeechManifestClip,
+  SpeechPreparationBatchResult,
+  SpeechPreparationAudioValidator,
+  SpeechPreparationFilePort,
+  SpeechPreparationProvider,
+  SpeechPreparationProviderRequest,
+} from "./speech-preparation-batch.js";
+export type {
+  ConfiguredSpeechObject,
+  ConfiguredSpeechObjectResolver,
+  GameSpeechPreparationErrorCode,
+  PreparedGameAnswerAudioLearningContentResult,
+  PreparedGameSpeech,
+  PreparedGameSpeechClip,
+  PreparedGameLearningContentResult,
+  ResolvedSpeechClip,
+  SpeechClipLookupPort,
+  SpeechClipLookupRequest,
+  SpeechObjectStoragePort,
+  StoredSpeechClipLookupOptions,
+} from "./speech-preparation.js";
 
 // Inferred types
 export type {

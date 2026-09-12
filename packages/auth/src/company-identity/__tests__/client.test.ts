@@ -2,7 +2,10 @@ import { generateKeyPairSync, sign as signBytes } from "node:crypto";
 
 import { describe, expect, it, vi } from "vitest";
 
-import { createCompanyOidcClient } from "../client.js";
+import {
+  createCompanyOidcClient,
+  parseCompanyOidcReturnTo,
+} from "../client.js";
 
 const issuer = "https://accounts.reading-advantage.com";
 const clientConfig = {
@@ -126,6 +129,15 @@ function harness(
 }
 
 describe("company OIDC client", () => {
+  it("validates return paths without starting an authorization transaction", () => {
+    expect(parseCompanyOidcReturnTo("/en/module?lesson=1")).toBe(
+      "/en/module?lesson=1",
+    );
+    expect(() =>
+      parseCompanyOidcReturnTo("https://outside.example/private"),
+    ).toThrow();
+  });
+
   it("completes PKCE callback, verified session, introspection, and local logout", async () => {
     const { client } = harness();
     const started = await client.start("/en");

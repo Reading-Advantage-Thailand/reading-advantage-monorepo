@@ -3,6 +3,28 @@ import { render, screen } from "@testing-library/react";
 import StudentGamesCatalogPage, { resolveCatalogGameHref } from "./page";
 import { gameCards } from "@/lib/gameCards";
 
+const mockCatalogSession = jest.fn();
+jest.mock("next/headers", () => ({
+  cookies: async () => ({ get: () => ({ value: "catalog-session-fixture" }) }),
+}));
+jest.mock("@reading-advantage/auth", () => ({
+  SESSION_COOKIE_NAME: "session_token",
+  validateSession: (...args: unknown[]) => mockCatalogSession(...args),
+}));
+jest.mock("@reading-advantage/db", () => ({ db: {} }));
+jest.mock("@reading-advantage/advantage-play-kit/react", () => ({
+  StudentRpgCatalogPanel: ({ ownerKey }: { ownerKey?: string }) => (
+    <div data-testid="catalog-rewards" data-owner={ownerKey ?? ""} />
+  ),
+  StudentChallengeCatalogPanel: (props: Record<string, unknown>) => (
+    <div data-testid="catalog-challenges" data-props={JSON.stringify(props)} />
+  ),
+}));
+jest.mock("@reading-advantage/game-cartridges", () => ({
+  CARTRIDGE_CHALLENGE_CAPABILITIES: { "dragon-flight": { version: "v1" } },
+  getCartridgeCatalogEntry: () => ({ title: "Dragon Flight" }),
+}));
+
 jest.mock("next/link", () => {
   const Link = ({ children, href }: { children: React.ReactNode; href: string }) => {
     return <a href={href}>{children}</a>;
@@ -25,6 +47,28 @@ async function renderCatalog(locale: string) {
 }
 
 describe("StudentGamesCatalogPage", () => {
+  beforeEach(() => mockCatalogSession.mockResolvedValue(null));
+
+  it("scopes catalog rewards to the validated student and school", async () => {
+    mockCatalogSession.mockResolvedValue({ user: { id: "student-a", schoolId: "school-a", role: "STUDENT" } });
+    await renderCatalog("en");
+    expect(screen.getByTestId("catalog-rewards")).toHaveAttribute("data-owner", "school-a:student-a");
+    expect(JSON.parse(screen.getByTestId("catalog-challenges").getAttribute("data-props") ?? "{}")).toMatchObject({
+      ownerKey: "school-a:student-a", locale: "en", games: { "dragon-flight": { title: "Dragon Flight", version: "v1" } },
+      basePath: "/", classesEndpoint: "/api/v1/apk/classes", challengesEndpoint: "/api/v1/apk/challenges",
+    });
+  });
+
+  it.each([
+    null,
+    { user: { id: "teacher-a", schoolId: "school-a", role: "TEACHER" } },
+    { user: { id: "student-a", schoolId: null, role: "STUDENT" } },
+  ])("omits catalog reward identity without an eligible student session: %j", async (session) => {
+    mockCatalogSession.mockResolvedValue(session);
+    await renderCatalog("en");
+    expect(screen.getByTestId("catalog-rewards")).toHaveAttribute("data-owner", "");
+  });
+
   it("prefixes a catalog href with the route locale", () => {
     expect(resolveCatalogGameHref("en", "/student/games/apk/castle-defense")).toBe(
       "/en/student/games/apk/castle-defense",

@@ -1,6 +1,10 @@
 import { z } from "zod";
 
 import { gameResultsSchema, type GameResults } from "./educational-io.js";
+import {
+  completionMetadataSchema,
+  getReadToSelectAudioCompletionCounts,
+} from "./listening.js";
 
 /** Canonical difficulty values accepted by authoritative game completion. */
 export const gameDifficultySchema = z.enum([
@@ -19,7 +23,7 @@ export const hostCompletionContextSchema = z
     victory: z.boolean(),
     idempotencyKey: z.string().uuid(),
     clientTimestamp: z.number().int(),
-    metadata: z.record(z.string(), z.unknown()).optional(),
+    metadata: completionMetadataSchema.optional(),
   })
   .strict();
 
@@ -36,9 +40,29 @@ export const gameCompletionInputSchema = z
     victory: z.boolean(),
     idempotencyKey: z.string().uuid(),
     clientTimestamp: z.number().int(),
-    metadata: z.record(z.string(), z.unknown()).optional(),
+    metadata: completionMetadataSchema.optional(),
   })
-  .strict();
+  .strict()
+  .superRefine((input, context) => {
+    const counts = getReadToSelectAudioCompletionCounts(
+      input.metadata?.learningEvidence,
+    );
+    if (!counts) return;
+    if (input.totalAttempts !== counts.totalAttempts) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Total attempts must match submitted answer-audio choices",
+        path: ["totalAttempts"],
+      });
+    }
+    if (input.correctAnswers !== counts.correctAnswers) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Correct answers must match completed answer-audio questions",
+        path: ["correctAnswers"],
+      });
+    }
+  });
 
 /** Host-owned context used to map display results into server completion input. */
 export type HostCompletionContext = z.infer<typeof hostCompletionContextSchema>;

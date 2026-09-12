@@ -1,3 +1,4 @@
+import { parseCompanyOidcReturnTo } from "@reading-advantage/auth";
 import { NextResponse } from "next/server";
 import { ZodError } from "zod";
 
@@ -16,7 +17,17 @@ import { getPublicOrigin, getSalesCallbackOrigin } from "@/lib/public-url";
  */
 export async function GET(request: Request): Promise<NextResponse> {
   const requestUrl = new URL(request.url);
-  const returnTo = requestUrl.searchParams.get("returnTo") ?? "/";
+  const requestedReturnTo = requestUrl.searchParams.get("returnTo") ?? "/";
+  let returnTo: string;
+  try {
+    returnTo = parseCompanyOidcReturnTo(requestedReturnTo);
+  } catch (error) {
+    if (!(error instanceof ZodError)) throw error;
+    console.warn(
+      JSON.stringify({ level: "warn", event: "sales_sso_unsafe_return_to" }),
+    );
+    returnTo = "/";
+  }
   const publicOrigin = getPublicOrigin(request);
   if (isLegacySalesAuthEnabled()) {
     const { locale } = resolveRequestLocale(request);
@@ -29,16 +40,7 @@ export async function GET(request: Request): Promise<NextResponse> {
     return NextResponse.redirect(handoffUrl);
   }
   const client = getSalesOidcClient();
-  let started;
-  try {
-    started = await client.start(returnTo);
-  } catch (error) {
-    if (!(error instanceof ZodError)) throw error;
-    console.warn(
-      JSON.stringify({ level: "warn", event: "sales_sso_unsafe_return_to" }),
-    );
-    started = await client.start("/");
-  }
+  const started = await client.start(returnTo);
   const response = NextResponse.redirect(started.authorizationUrl);
   response.cookies.set(SALES_TRANSACTION_COOKIE, started.sealedTransaction, {
     httpOnly: true,

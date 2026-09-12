@@ -676,7 +676,7 @@ Commit: `chore(db): drop the unused finance-operations persistence surface (trac
 
 Commit: `docs(measure): freeze the finance foundation and cut the ledger scope (track_id: accounting_product_simplification_20260822)`
 
-### Task 13: Full gates and track closeout
+### Task 13: Full gates and track closeout [checkpoint: 09a03cb]
 
 Run the gates for the affected packages:
 

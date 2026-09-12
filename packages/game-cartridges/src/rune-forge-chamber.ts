@@ -8,8 +8,7 @@ import {
   createBoundedFrameScheduler,
   createCompletionLatch,
   createInputActionNormalizer,
-  createResultAccountant,
-  finalizeResult,
+  calculateXp,
   preloadAssetBindings,
   validateNonEmptyContent,
   type ActorSpriteLayer,
@@ -67,6 +66,9 @@ export const RUNE_FORGE_CHAMBER_ROTATION_SPEED = 0.0005;
 
 /** Default radius of a rune orbit in the reference canvas. */
 export const RUNE_FORGE_CHAMBER_ORBIT_RADIUS = 200;
+
+/** Maximum number of readable runes shown in one orbit wave. */
+export const RUNE_FORGE_CHAMBER_MAX_VISIBLE_RUNES = 4;
 
 /** One ordered word represented by a selectable orbiting rune. */
 export interface RuneForgeChamberRune {
@@ -129,6 +131,8 @@ export interface RuneForgeChamberSnapshot {
   readonly sentenceIndex: number;
   /** Zero-based next word in the current sentence. */
   readonly wordIndex: number;
+  /** Deterministic wave number within the current sentence. */
+  readonly waveIndex: number;
   /** Flattened zero-based next word across all sentences. */
   readonly targetIndex: number;
   /** Total number of words in all sentences. */
@@ -240,6 +244,7 @@ interface PhaserGraphicsLike {
 interface PhaserTextLike {
   setPosition(x: number, y: number): this;
   setText(value: string): this;
+  setOrigin?(x: number, y?: number): this;
   destroy(): void;
 }
 
@@ -324,23 +329,29 @@ function hashUnit(seed: number, sentenceIndex: number, wordIndex: number, salt: 
 function createRoundRunes(
   sentenceIndex: number,
   words: readonly string[],
+  wordIndex: number,
+  waveIndex: number,
   seed: number,
 ): readonly RuneForgeChamberRune[] {
-  const orbitSlots = words.map((_word, index) => index);
+  const answer = words[wordIndex]!;
+  const distractors = words.filter((_word, index) => index !== wordIndex);
+  const waveWords = [answer, ...distractors].slice(0, RUNE_FORGE_CHAMBER_MAX_VISIBLE_RUNES);
+  const waveSeedIndex = sentenceIndex * 257 + waveIndex;
+  const orbitSlots = waveWords.map((_word, index) => index);
   for (let index = orbitSlots.length - 1; index > 0; index -= 1) {
-    const swapIndex = Math.floor(hashUnit(seed, sentenceIndex, index, 11) * (index + 1));
+    const swapIndex = Math.floor(hashUnit(seed, waveSeedIndex, index, 11) * (index + 1));
     [orbitSlots[index], orbitSlots[swapIndex]] = [orbitSlots[swapIndex]!, orbitSlots[index]!];
   }
-  return Object.freeze(words.map((word, orderIndex) => {
+  return Object.freeze(waveWords.map((word, orderIndex) => {
     const orbitIndex = orbitSlots[orderIndex]!;
-    const jitter = (hashUnit(seed, sentenceIndex, orderIndex, 17) - 0.5)
+    const jitter = (hashUnit(seed, waveSeedIndex, orderIndex, 17) - 0.5)
       * Math.min(0.32, (TAU / words.length) * 0.18);
     return Object.freeze({
-      id: `rune:${sentenceIndex}:${orderIndex}`,
+      id: `rune:${sentenceIndex}:${waveIndex}:${orderIndex}`,
       word,
       label: word,
       orderIndex,
-      angle: -Math.PI / 2 + (TAU * orbitIndex) / words.length + jitter,
+      angle: -Math.PI / 2 + (TAU * orbitIndex) / waveWords.length + jitter,
       orbitRadius: RUNE_FORGE_CHAMBER_ORBIT_RADIUS,
       selected: false,
     });
@@ -387,31 +398,35 @@ export function createRuneForgeChamberController(
   const targetCount = rounds.reduce((total, round) => total + round.words.length, 0);
   if (targetCount === 0) throw new Error("Rune Forge Chamber requires sentence words");
 
-  let accountant = createResultAccountant();
   const completion = createCompletionLatch(deliver);
   let phase: RuneForgeChamberPhase = "playing";
   let sentenceIndex = 0;
   let wordIndex = 0;
+  let waveIndex = 0;
   let targetIndex = 0;
-  let runes = createRoundRunes(0, rounds[0]!.words, seed);
-  let cursorRuneId: string | undefined = runes[0]?.id;
+  let runes = createRoundRunes(0, rounds[0]!.words, 0, 0, seed);
+  let cursorRuneId: string | undefined = runes[Math.floor(hashUnit(seed, 0, 0, 29) * runes.length)]?.id;
   let health = RUNE_FORGE_CHAMBER_MAX_HEALTH;
   let timer = RUNE_FORGE_CHAMBER_SENTENCE_TIMER_MS;
   let rotation = 0;
   let lastOutcome: "correct" | "incorrect" | undefined;
   let destroyed = false;
   let terminalResultValue: GameResults | undefined;
+  let correctAnswers = 0;
+  let totalAttempts = 0;
+  let score = 0;
 
   const currentRound = (): SentenceRound => rounds[Math.min(sentenceIndex, rounds.length - 1)]!;
 
   const snapshot = (): RuneForgeChamberSnapshot => {
     const round = currentRound();
-    const nextRuneId = phase === "playing" ? runes[wordIndex]?.id : undefined;
     const answer = round.words[Math.min(wordIndex, round.words.length - 1)] ?? "";
+    const nextRuneId = phase === "playing" ? runes.find((rune) => rune.word === answer)?.id : undefined;
     return Object.freeze({
       phase,
       sentenceIndex,
       wordIndex,
+      waveIndex,
       targetIndex,
       targetCount,
       sentenceCount: rounds.length,
@@ -425,10 +440,7 @@ export function createRuneForgeChamberController(
       circles: runes,
       ...(nextRuneId === undefined ? {} : { nextRuneId }),
       ...(cursorRuneId === undefined ? {} : { cursorRuneId }),
-      collectedWords: Object.freeze(runes
-        .filter((rune) => rune.selected)
-        .sort((left, right) => left.orderIndex - right.orderIndex)
-        .map((rune) => rune.word)),
+      collectedWords: freezeWords(round.words.slice(0, wordIndex)),
       health,
       forgeHealth: health,
       maxHealth: RUNE_FORGE_CHAMBER_MAX_HEALTH,
@@ -440,17 +452,24 @@ export function createRuneForgeChamberController(
       maxTimer: RUNE_FORGE_CHAMBER_SENTENCE_TIMER_MS,
       rotation,
       lastOutcome,
-      correctAnswers: accountant.correctAnswers,
-      totalAttempts: accountant.totalAttempts,
-      score: accountant.score,
+      correctAnswers,
+      totalAttempts,
+      score,
       destroyed,
       seed,
     });
   };
 
-  const resultForCounters = (): GameResults => gameResultsSchema.parse(
-    finalizeResult(accountant, { xpPerCorrect: 20, xpPerAccuracyPoint: 10 }),
-  );
+  const resultForCounters = (): GameResults => {
+    const accuracy = totalAttempts === 0 ? 0 : correctAnswers / totalAttempts;
+    return gameResultsSchema.parse({
+      correctAnswers,
+      totalAttempts,
+      accuracy,
+      score,
+      xp: calculateXp({ correctAnswers, totalAttempts, accuracy }, { xpPerCorrect: 20, xpPerAccuracyPoint: 10 }),
+    });
+  };
 
   const enterDefeat = (): GameResults => {
     phase = "defeat";
@@ -463,7 +482,7 @@ export function createRuneForgeChamberController(
   const enterVictory = (): GameResults => {
     phase = "victory";
     sentenceIndex = rounds.length;
-    wordIndex = 0;
+    wordIndex = rounds[rounds.length - 1]!.words.length;
     cursorRuneId = undefined;
     const result = resultForCounters();
     terminalResultValue = result;
@@ -509,6 +528,10 @@ export function createRuneForgeChamberController(
     }
     if (!Number.isInteger(state.wordIndex) || state.wordIndex < 0) {
       throw new Error("Rune Forge Chamber word index is invalid");
+    }
+    const expectedWaveIndex = state.phase === "victory" ? Math.max(0, state.wordIndex - 1) : state.wordIndex;
+    if (!Number.isInteger(state.waveIndex) || state.waveIndex < 0 || state.waveIndex !== expectedWaveIndex) {
+      throw new Error("Rune Forge Chamber wave index is invalid");
     }
     if (typeof state.destroyed !== "boolean") throw new Error("Rune Forge Chamber destroyed flag is invalid");
     if (state.phase !== "victory" && state.sentenceIndex >= rounds.length) {
@@ -572,7 +595,16 @@ export function createRuneForgeChamberController(
     if (state.words.length !== expectedRound.words.length || state.words.some((word, index) => word !== expectedRound.words[index])) {
       throw new Error("Rune Forge Chamber word content is invalid");
     }
-    if (state.runes.length !== expectedRound.words.length) throw new Error("Rune Forge Chamber rune count is invalid");
+    const expectedRuneWordIndex = state.phase === "victory" ? Math.max(0, state.wordIndex - 1) : state.wordIndex;
+    const expectedRunes = createRoundRunes(
+      Math.min(state.sentenceIndex, rounds.length - 1),
+      expectedRound.words,
+      expectedRuneWordIndex,
+      state.waveIndex,
+      seed,
+    );
+    if (state.runes.length === 0 || state.runes.length > RUNE_FORGE_CHAMBER_MAX_VISIBLE_RUNES
+      || state.runes.length !== expectedRunes.length) throw new Error("Rune Forge Chamber rune count is invalid");
     if (state.circles.length !== state.runes.length) throw new Error("Rune Forge Chamber circle alias is invalid");
     if (state.circles.some((circle, index) => circle.id !== state.runes[index]?.id
       || circle.word !== state.runes[index]?.word
@@ -580,21 +612,21 @@ export function createRuneForgeChamberController(
       throw new Error("Rune Forge Chamber circle alias content is invalid");
     }
     const expectedNextRuneId = state.phase === "playing"
-      ? state.runes.find((rune) => rune.orderIndex === state.wordIndex)?.id
+      ? state.runes.find((rune) => rune.word === state.answer)?.id
       : undefined;
     if (state.nextRuneId !== expectedNextRuneId) throw new Error("Rune Forge Chamber next rune is invalid");
     if (state.cursorRuneId !== undefined && !state.runes.some((rune) => rune.id === state.cursorRuneId)) {
       throw new Error("Rune Forge Chamber cursor rune is invalid");
     }
     state.runes.forEach((rune, index) => {
-      if (rune.id !== `rune:${Math.min(state.sentenceIndex, rounds.length - 1)}:${index}` || rune.word !== expectedRound.words[index]) {
+      const expected = expectedRunes[index];
+      if (!expected || rune.id !== expected.id || rune.word !== expected.word) {
         throw new Error("Rune Forge Chamber rune identity is invalid");
       }
-      if (rune.orderIndex !== index || rune.label !== rune.word || rune.orbitRadius !== RUNE_FORGE_CHAMBER_ORBIT_RADIUS) {
+      if (rune.orderIndex !== expected.orderIndex || rune.label !== rune.word || rune.orbitRadius !== RUNE_FORGE_CHAMBER_ORBIT_RADIUS) {
         throw new Error("Rune Forge Chamber rune metadata is invalid");
       }
-      const expectedSelected = state.phase === "victory" || index < state.wordIndex;
-      if (!Number.isFinite(rune.angle) || rune.selected !== expectedSelected) {
+      if (!Number.isFinite(rune.angle) || Math.abs(rune.angle - (expected.angle + state.rotation)) > 0.000001 || rune.selected) {
         throw new Error("Rune Forge Chamber rune progress is invalid");
       }
     });
@@ -608,14 +640,10 @@ export function createRuneForgeChamberController(
   const restore = (state: RuneForgeChamberSnapshot): void => {
     if (destroyed) return;
     validateRestoredState(state);
-    accountant = createResultAccountant();
-    for (let index = 0; index < state.totalAttempts; index += 1) {
-      accountant.recordAttempt({ correct: index < state.correctAnswers });
-    }
-    accountant.addScore(state.score);
     phase = state.phase;
     sentenceIndex = state.sentenceIndex;
     wordIndex = state.wordIndex;
+    waveIndex = state.waveIndex;
     targetIndex = state.targetIndex;
     runes = Object.freeze(state.runes.map((rune) => Object.freeze({ ...rune })));
     cursorRuneId = state.cursorRuneId;
@@ -623,6 +651,9 @@ export function createRuneForgeChamberController(
     timer = state.timer;
     rotation = state.rotation;
     lastOutcome = state.lastOutcome;
+    correctAnswers = state.correctAnswers;
+    totalAttempts = state.totalAttempts;
+    score = state.score;
     destroyed = state.destroyed;
     if (phase !== "playing" || destroyed) completion.sealWithoutDelivery();
   };
@@ -634,8 +665,8 @@ export function createRuneForgeChamberController(
       return inactiveAction(before);
     }
 
-    const correct = rune.id === before.nextRuneId;
-    accountant.recordAttempt({ correct });
+    const correct = rune.word === before.answer;
+    totalAttempts += 1;
     lastOutcome = correct ? "correct" : "incorrect";
     if (!correct) {
       health = Math.max(0, health - RUNE_FORGE_CHAMBER_WRONG_RUNE_DAMAGE);
@@ -652,10 +683,8 @@ export function createRuneForgeChamberController(
       });
     }
 
-    accountant.addScore(100);
-    runes = Object.freeze(runes.map((candidate) => candidate.id === rune.id
-      ? Object.freeze({ ...candidate, selected: true })
-      : candidate));
+    correctAnswers += 1;
+    score += 100;
     targetIndex += 1;
     wordIndex += 1;
     const sentenceCompleted = wordIndex >= currentRound().words.length;
@@ -665,12 +694,16 @@ export function createRuneForgeChamberController(
         return terminalAction(true, true, true, enterVictory());
       }
       wordIndex = 0;
-      runes = createRoundRunes(sentenceIndex, rounds[sentenceIndex]!.words, seed);
-      cursorRuneId = runes[0]?.id;
+      waveIndex = 0;
+      runes = createRoundRunes(sentenceIndex, rounds[sentenceIndex]!.words, wordIndex, waveIndex, seed);
+      cursorRuneId = runes[Math.floor(hashUnit(seed, sentenceIndex, wordIndex, 29) * runes.length)]?.id;
       timer = RUNE_FORGE_CHAMBER_SENTENCE_TIMER_MS;
       rotation = 0;
     } else {
-      cursorRuneId = runes.find((candidate) => !candidate.selected)?.id;
+      waveIndex = wordIndex;
+      runes = createRoundRunes(sentenceIndex, currentRound().words, wordIndex, waveIndex, seed);
+      cursorRuneId = runes[Math.floor(hashUnit(seed, sentenceIndex, wordIndex, 29) * runes.length)]?.id;
+      rotation = 0;
     }
     return createActionResult(snapshot(), {
       accepted: true,
@@ -705,7 +738,7 @@ export function createRuneForgeChamberController(
     if (destroyed || phase !== "playing") {
       return inactiveAction(before);
     }
-    accountant.recordAttempt({ correct: false });
+    totalAttempts += 1;
     lastOutcome = "incorrect";
     health = Math.max(0, health - RUNE_FORGE_CHAMBER_WRONG_RUNE_DAMAGE);
     if (health === 0) return terminalAction(false, false, false, enterDefeat());
@@ -735,14 +768,25 @@ export function createRuneForgeChamberController(
 
   const moveCursor = (action: InputActionId): RuneForgeChamberSnapshot => {
     if (destroyed || phase !== "playing") return snapshot();
-    const selectable = runes.filter((rune) => !rune.selected);
+    const selectable = runes;
     if (selectable.length === 0 || action === "confirm"
       || (action !== "move-left" && action !== "move-right" && action !== "move-up" && action !== "move-down")) {
       return snapshot();
     }
-    const currentIndex = Math.max(0, selectable.findIndex((rune) => rune.id === cursorRuneId));
-    const direction = action === "move-left" || action === "move-up" ? -1 : 1;
-    cursorRuneId = selectable[(currentIndex + direction + selectable.length) % selectable.length]!.id;
+    const current = selectable.find((rune) => rune.id === cursorRuneId) ?? selectable[0]!;
+    const direction = action === "move-left" ? { x: -1, y: 0 }
+      : action === "move-right" ? { x: 1, y: 0 }
+        : action === "move-up" ? { x: 0, y: -1 } : { x: 0, y: 1 };
+    const candidate = selectable
+      .filter((rune) => rune.id !== current.id)
+      .map((rune) => {
+        const dx = Math.cos(rune.angle) - Math.cos(current.angle);
+        const dy = Math.sin(rune.angle) - Math.sin(current.angle);
+        return { rune, projection: dx * direction.x + dy * direction.y, distance: Math.hypot(dx, dy) };
+      })
+      .filter(({ projection }) => projection > 0.001)
+      .sort((left, right) => (right.projection / right.distance) - (left.projection / left.distance))[0]?.rune;
+    if (candidate) cursorRuneId = candidate.id;
     return snapshot();
   };
 
@@ -795,15 +839,30 @@ export function getRuneForgeChamberRunePoints(
   runes: readonly RuneForgeChamberRune[],
   sceneWidth: number,
   sceneHeight: number,
+  renderedScale = 1,
 ): readonly RuneForgeChamberRunePoint[] {
   if (runes.length === 0) return Object.freeze([]);
+  if (renderedScale < 0.75) {
+    const cardWidth = Math.min(sceneWidth * 0.42, 380);
+    const halfWidth = cardWidth / 2;
+    return Object.freeze(runes.map((rune) => Object.freeze({
+      id: rune.id,
+      x: Math.max(halfWidth + 8, Math.min(sceneWidth - halfWidth - 8,
+        sceneWidth / 2 + Math.cos(rune.angle) * Math.min(sceneWidth * 0.23, 220))),
+      y: sceneHeight * 0.61 + Math.sin(rune.angle) * Math.min(sceneHeight * 0.24, 130),
+      radius: cardWidth / 2,
+    })));
+  }
   const centerX = sceneWidth / 2;
   const centerY = sceneHeight * 0.52;
   const orbitRadius = Math.min(sceneWidth * 0.36, sceneHeight * 0.38, 220);
   const runeRadius = Math.max(28, Math.min(48, Math.min(sceneWidth, sceneHeight) * 0.085));
+  const cardWidth = sceneWidth < 500 ? Math.min(124, sceneWidth * 0.36) : 150;
+  const halfWidth = cardWidth / 2;
   return Object.freeze(runes.map((rune) => Object.freeze({
     id: rune.id,
-    x: centerX + Math.cos(rune.angle) * orbitRadius * (rune.orbitRadius / RUNE_FORGE_CHAMBER_ORBIT_RADIUS),
+    x: Math.max(halfWidth + 8, Math.min(sceneWidth - halfWidth - 8,
+      centerX + Math.cos(rune.angle) * orbitRadius * (rune.orbitRadius / RUNE_FORGE_CHAMBER_ORBIT_RADIUS))),
     y: centerY + Math.sin(rune.angle) * orbitRadius * (rune.orbitRadius / RUNE_FORGE_CHAMBER_ORBIT_RADIUS),
     radius: runeRadius,
   })));
@@ -824,8 +883,9 @@ export function chooseRuneForgeChamberRuneFromPointer(
   runes: readonly RuneForgeChamberRune[],
   sceneWidth: number,
   sceneHeight: number,
+  renderedScale = 1,
 ): string | undefined {
-  const points = getRuneForgeChamberRunePoints(runes, sceneWidth, sceneHeight);
+  const points = getRuneForgeChamberRunePoints(runes, sceneWidth, sceneHeight, renderedScale);
   let nearest: RuneForgeChamberRunePoint | undefined;
   let nearestDistance = Number.POSITIVE_INFINITY;
   for (const point of points) {
@@ -842,7 +902,6 @@ function createScene(context: RuneForgeChamberSceneContext): Readonly<Record<str
   let resources: SceneResources | undefined;
   let runeLabels: PhaserTextLike[] = [];
   let runeSignature = "";
-  let composition = context.composition;
   let animationMs = 0;
   let previousKeys = new Set<string>();
   let cleaned = false;
@@ -877,23 +936,37 @@ function createScene(context: RuneForgeChamberSceneContext): Readonly<Record<str
 
   const syncRuneLabels = (scene: PhaserSceneLike, state: RuneForgeChamberSnapshot): void => {
     if (!scene.add) return;
-    const nextSignature = state.runes.map((rune) => `${rune.id}:${rune.word}`).join("|");
+    const { width } = dimensions(scene);
+    const rect = scene.game?.canvas?.getBoundingClientRect?.();
+    const renderedScale = rect && rect.width > 0 ? rect.width / width : 1;
+    const fontSize = renderedScale < 0.75 ? Math.ceil(16 / renderedScale) : width < 500 ? 16 : 20;
+    const wrapWidth = renderedScale < 0.75
+      ? Math.min(width * 0.42, 380) - Math.ceil(20 / renderedScale)
+      : width < 500 ? Math.min(124, width * 0.36) : 150;
+    const nextSignature = `${fontSize}:${wrapWidth}:` + state.runes.map((rune) => `${rune.id}:${rune.word}`).join("|");
     if (nextSignature === runeSignature) return;
     for (const label of runeLabels) label.destroy();
     runeSignature = nextSignature;
-    runeLabels = state.runes.map((rune) => scene.add!.text(0, 0, rune.word, {
+    runeLabels = state.runes.map((rune) => {
+      const label = scene.add!.text(0, 0, rune.word, {
       fontFamily: "Arial",
       color: "#f8fbff",
-      fontSize: "18px",
+      fontSize: `${fontSize}px`,
       align: "center",
-    }));
+      wordWrap: { width: wrapWidth, useAdvancedWrap: true },
+      });
+      label.setOrigin?.(0.5, 0.5);
+      return label;
+    });
   };
 
   const updateView = (scene: PhaserSceneLike): void => {
     if (!resources || !scene.add) return;
     const { width, height } = dimensions(scene);
     const state = context.controller.snapshot();
-    const points = getRuneForgeChamberRunePoints(state.runes, width, height);
+    const rect = scene.game?.canvas?.getBoundingClientRect?.();
+    const renderedScale = rect && rect.width > 0 ? rect.width / width : 1;
+    const points = getRuneForgeChamberRunePoints(state.runes, width, height, renderedScale);
     const pulse = Math.sin(animationMs / 4000 * TAU) * 3;
     syncRuneLabels(scene, state);
 
@@ -907,35 +980,28 @@ function createScene(context: RuneForgeChamberSceneContext): Readonly<Record<str
     resources.art.place("player", "player:idle", {
       x: width / 2,
       y: height * 0.52 + pulse,
-      width: Math.min(56, width * 0.11),
+      width: renderedScale < 0.75 ? Math.ceil(28 / renderedScale) : Math.min(56, width * 0.11),
       depth: 8,
     });
     resources.art.sweep();
     for (const [index, point] of points.entries()) {
       const rune = state.runes[index]!;
       const isCursor = rune.id === state.cursorRuneId;
-      resources.graphics.fillStyle(rune.selected ? 0x34d399 : rune.id === state.nextRuneId ? 0xf59e0b : 0x7c6cff, rune.selected ? 0.46 : 0.9)
-        .fillCircle(point.x, point.y, point.radius);
+      const cardWidth = renderedScale < 0.75 ? Math.min(width * 0.42, 380) : width < 500 ? Math.min(124, width * 0.36) : 150;
+      const cardHeight = renderedScale < 0.75 ? Math.ceil(52 / renderedScale) : width < 500 ? 54 : 62;
+      resources.graphics.fillStyle(0x6157c8, 0.96)
+        .fillRoundedRect(point.x - cardWidth / 2, point.y - cardHeight / 2, cardWidth, cardHeight, 14);
       resources.graphics.lineStyle(isCursor ? 5 : 2, isCursor ? 0xffffff : 0xd8d5ff, isCursor ? 1 : 0.72)
-        .strokeCircle(point.x, point.y, point.radius + (isCursor ? 5 : 0));
-      runeLabels[index]?.setPosition(point.x - point.radius, point.y - 10);
+        .strokeRoundedRect(point.x - cardWidth / 2, point.y - cardHeight / 2, cardWidth, cardHeight, 14);
+      runeLabels[index]?.setPosition(point.x, point.y);
     }
-    resources.title.setText("RUNE FORGE CHAMBER").setPosition(28, 20);
-    resources.prompt.setText(`Forge the next word for: ${state.prompt}`).setPosition(28, 61);
+    resources.title.setText("").setPosition(28, 20);
+    resources.prompt.setText(state.prompt).setPosition(28, 22);
     resources.progress.setText(
-      `${composition?.profile === "compact" ? "Compact forge" : "Orbiting forge"}  •  Sentence ${Math.min(state.sentenceIndex + 1, context.totalSentences)} of ${context.totalSentences}  •  Word ${Math.min(state.wordIndex + 1, state.words.length)}  •  Health ${state.health}  •  Time ${Math.ceil(state.timer / 1000)}s`,
-    ).setPosition(28, 99);
-    resources.feedback.setText(
-      state.phase === "victory"
-        ? "Every sentence rune is forged!"
-        : state.phase === "defeat"
-          ? "The forge has gone dark."
-          : state.lastOutcome === "incorrect"
-            ? "That rune strains the forge. Try the current word again."
-            : "Select the orbiting words in sentence order.",
-    ).setPosition(28, height - 68);
-    resources.instructions.setText("Keyboard: WASD / arrows move cursor • Enter / Space selects • Tap or click a rune")
-      .setPosition(28, height - 36);
+      `${state.collectedWords.join(" ") || "…"}  •  ${state.health} HP  •  ${Math.ceil(state.timer / 1000)}s`,
+    ).setPosition(28, 82);
+    resources.feedback.setText("").setPosition(28, height - 68);
+    resources.instructions.setText("").setPosition(28, height - 36);
   };
 
   const selectFromInput = (runeId: string | undefined): void => {
@@ -984,13 +1050,18 @@ function createScene(context: RuneForgeChamberSceneContext): Readonly<Record<str
 
   const create = function (this: PhaserSceneLike): void {
     if (!this.add) throw new Error("Rune Forge Chamber requires Phaser display services");
+    const { width } = dimensions(this);
+    const rect = this.game?.canvas?.getBoundingClientRect?.();
+    const renderedScale = rect && rect.width > 0 ? rect.width / width : 1;
+    const promptSize = renderedScale < 0.75 ? Math.ceil(20 / renderedScale) : width < 500 ? 20 : 30;
+    const statusSize = renderedScale < 0.75 ? Math.ceil(16 / renderedScale) : width < 500 ? 16 : 18;
     const style = { fontFamily: "Arial", color: "#f8fbff", fontSize: "19px" };
     resources = {
       graphics: this.add.graphics(),
       art: createActorSpriteLayer(this, context.edition),
-      title: this.add.text(28, 20, "RUNE FORGE CHAMBER", { ...style, fontSize: "30px", fontStyle: "bold" }),
-      prompt: this.add.text(28, 61, "", { ...style, fontSize: "24px", wordWrap: { width: 860 } }),
-      progress: this.add.text(28, 99, "", { ...style, fontSize: "16px", color: "#c4c8ff" }),
+      title: this.add.text(28, 20, "", { ...style, fontSize: "30px", fontStyle: "bold" }),
+      prompt: this.add.text(28, 22, "", { ...style, fontSize: `${promptSize}px`, wordWrap: { width: width - 56, useAdvancedWrap: true } }),
+      progress: this.add.text(28, 82, "", { ...style, fontSize: `${statusSize}px`, color: "#c4c8ff", wordWrap: { width: width - 56, useAdvancedWrap: true } }),
       feedback: this.add.text(28, 0, "", { ...style, fontSize: "17px", color: "#f9d477" }),
       instructions: this.add.text(28, 0, "", { ...style, fontSize: "15px", color: "#cbd5e1" }),
     };
@@ -1015,6 +1086,8 @@ function createScene(context: RuneForgeChamberSceneContext): Readonly<Record<str
         const action = normalize({ modality: "pointer", phase: "up", x: input.pointer.x, y: input.pointer.y })[0]?.action;
         if (action === "confirm") {
           const { width, height } = dimensions(this);
+          const rect = this.game?.canvas?.getBoundingClientRect?.();
+          const renderedScale = rect && rect.width > 0 ? rect.width / width : 1;
           const pointer = pointerInScene(this, input.pointer.x, input.pointer.y, width, height);
           selectFromInput(chooseRuneForgeChamberRuneFromPointer(
             pointer.x,
@@ -1022,6 +1095,7 @@ function createScene(context: RuneForgeChamberSceneContext): Readonly<Record<str
             context.controller.snapshot().runes,
             width,
             height,
+            renderedScale,
           ));
         }
       }
@@ -1041,7 +1115,7 @@ function createScene(context: RuneForgeChamberSceneContext): Readonly<Record<str
         context.controller.restore(state as RuneForgeChamberSnapshot);
       },
       apkRecompose: (nextComposition: RuneForgeChamberSceneContext["composition"]): void => {
-        composition = nextComposition;
+        void nextComposition;
       },
     },
   };

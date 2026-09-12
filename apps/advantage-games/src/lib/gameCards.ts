@@ -9,27 +9,13 @@ export type GameCard = {
   status: 'playable' | 'coming-soon'
 }
 
-const unroutableGameIds = new Set([
-  'astral-mage',
-  'sorcerer-ziggurat',
-  'dragon-rider',
-  'spellweavers-run',
-  'griffin-riders-escape',
-  'storm-castle-tower',
-  'archers-revenge',
-  'paladins-twin-soul',
-  'griffin-sky-joust',
-  'gryphon-patrol',
-  'realm-carver',
-]);
-
 const catalogCards: GameCard[] = [
   {
     id: 'castle-defense',
     title: 'Castle Defense',
     description: 'Collect words to build towers and defend your castle!',
     cover: withBasePath('/games/cover/castle-defense-cover.png'),
-    href: '/student/games/sentence/castle-defense',
+    href: '/student/games/apk/castle-defense',
     status: 'playable',
   },
   {
@@ -37,6 +23,7 @@ const catalogCards: GameCard[] = [
     title: 'Dragon Rider',
     description: 'Ride your dragon to protect your village',
     cover: withBasePath('/games/cover/cover-dragon-rider.png'),
+    href: '/student/games/apk/dragon-rider',
     status: 'playable',
   },
   {
@@ -44,7 +31,7 @@ const catalogCards: GameCard[] = [
     title: 'Magic Defense',
     description: 'Defend your castles from falling words by typing their translations.',
     cover: withBasePath('/games/cover/magic-defense-cover.png'),
-    href: '/student/games/vocabulary/magic-defense',
+    href: '/student/games/apk/magic-defense',
     status: 'playable',
   },
   {
@@ -52,7 +39,7 @@ const catalogCards: GameCard[] = [
     title: 'RPG Battle',
     description: 'Duel monsters by typing the correct translations.',
     cover: withBasePath('/games/cover/rpg-battle-cover.png'),
-    href: '/student/games/vocabulary/rpg-battle',
+    href: '/student/games/apk/rpg-battle',
     status: 'playable',
   },
   {
@@ -60,7 +47,7 @@ const catalogCards: GameCard[] = [
     title: 'Dragon Flight',
     description: 'Choose the correct gate to grow your dragon flight.',
     cover: withBasePath('/games/cover/dragon-flight-cover.png'),
-    href: '/student/games/vocabulary/dragon-flight',
+    href: '/student/games/apk/dragon-flight',
     status: 'playable',
   },
   {
@@ -68,7 +55,7 @@ const catalogCards: GameCard[] = [
     title: 'Wizard vs Zombie',
     description: 'Survive the horde by collecting vocabulary orbs.',
     cover: withBasePath('/games/cover/wizard-vs-zombie-cover.png'),
-    href: '/student/games/vocabulary/wizard-vs-zombie',
+    href: '/student/games/apk/wizard-vs-zombie',
     status: 'playable',
   },
   {
@@ -76,7 +63,7 @@ const catalogCards: GameCard[] = [
     title: 'Enchanted Library',
     description: 'Collect magic books and dodge spirits to master new words.',
     cover: withBasePath('/games/cover/enchanted-library-cover.png'),
-    href: '/student/games/vocabulary/enchanted-library',
+    href: '/student/games/apk/enchanted-library',
     status: 'playable',
   },
   {
@@ -84,7 +71,7 @@ const catalogCards: GameCard[] = [
     title: 'Rune Match',
     description: 'Match vocabulary runes to defeat monsters in this RPG puzzle battle.',
     cover: withBasePath('/games/cover/rune-match-cover.png'),
-    href: '/student/games/vocabulary/rune-match',
+    href: '/student/games/apk/rune-match',
     status: 'playable',
   },
   {
@@ -92,7 +79,7 @@ const catalogCards: GameCard[] = [
     title: "Alchemist's Synthesis",
     description: 'Master the art of alchemy by matching and merging vocabulary to synthesize powerful spells!',
     cover: withBasePath('/games/cover/cover-alchemists-synthesis.png'),
-    href: '/student/games/vocabulary/alchemists-synthesis',
+    href: '/student/games/apk/alchemists-synthesis',
     status: 'playable',
   },
   {
@@ -100,7 +87,7 @@ const catalogCards: GameCard[] = [
     title: 'Potion Rush',
     description: 'Manage a busy potion shop! Brew orders by collecting the correct ingredients from the conveyor belt.',
     cover: withBasePath('/games/cover/potion-rush-cover.png'),
-    href: '/student/games/sentence/potion-rush',
+    href: '/student/games/apk/potion-rush',
     status: 'playable',
   },
   {
@@ -108,7 +95,7 @@ const catalogCards: GameCard[] = [
     title: 'Dungeon Liberator',
     description: 'Rescue prisoners by collecting them in the correct word order and escape the dungeon!',
     cover: withBasePath('/games/cover/dungeon-liberator.png'),
-    href: '/student/games/sentence/dungeon-liberator',
+    href: '/student/games/apk/dungeon-liberator',
     status: 'playable',
   },
   {
@@ -116,6 +103,7 @@ const catalogCards: GameCard[] = [
     title: "Spellweaver's Run",
     description: 'Collect word orbs in the correct order to form sentences in this enchanted forest runner!',
     cover: withBasePath('/games/cover/cover-spellweavers-run.png'),
+    href: '/student/games/apk/spellweavers-run',
     status: 'playable',
   },
   {
@@ -123,7 +111,7 @@ const catalogCards: GameCard[] = [
     title: 'Shadow Gate Dungeon',
     description: 'Collect word crystals and escape the shadow creature in this dark dungeon survival game!',
     cover: withBasePath('/games/cover/cover-shadow-gate-dungeon.png'),
-    href: '/student/games/sentence/shadow-gate-dungeon',
+    href: '/student/games/apk/shadow-gate-dungeon',
     status: 'playable',
   },
   {
@@ -131,7 +119,7 @@ const catalogCards: GameCard[] = [
     title: 'Rune Forge Chamber',
     description: 'Tap word circles in the correct order to forge magical runes before the forge cools!',
     cover: withBasePath('/games/cover/cover-rune-forge-chamber.png'),
-    href: '/student/games/sentence/rune-forge-chamber',
+    href: '/student/games/apk/rune-forge-chamber',
     status: 'playable',
   },
   {
@@ -139,7 +127,7 @@ const catalogCards: GameCard[] = [
     title: 'Village Guardian',
     description: 'Defend the village! Rescue villagers in correct order and lead them to safety!',
     cover: withBasePath('/games/cover/cover-village-guardian.png'),
-    href: '/student/games/sentence/village-guardian',
+    href: '/student/games/apk/village-guardian',
     status: 'playable',
   },
   {
@@ -147,7 +135,15 @@ const catalogCards: GameCard[] = [
     title: 'Labyrinth of the Goblin King',
     description: 'Navigate the maze! Collect word orbs in order and become a Paladin to defeat the goblins!',
     cover: withBasePath('/games/cover/cover-labyrinth-of-the-goblin-king.png'),
-    href: '/student/games/sentence/labyrinth-goblin-king',
+    href: '/student/games/apk/labyrinth-goblin-king',
+    status: 'playable',
+  },
+  {
+    id: 'abyssal-well',
+    title: 'The Abyssal Well',
+    description: 'Defend the rim and fire at enemies carrying sentence words from the depths!',
+    cover: withBasePath('/games/cover/cover-the-abyssal-well.png'),
+    href: '/student/games/apk/abyssal-well',
     status: 'playable',
   },
   {
@@ -155,6 +151,7 @@ const catalogCards: GameCard[] = [
     title: "Archer's Revenge",
     description: "Shoot enemies matching the target translation. Don't hit shielded enemies!",
     cover: withBasePath('/games/cover/cover-archers-revenge.png'),
+    href: '/student/games/apk/archers-revenge',
     status: 'playable',
   },
   {
@@ -162,6 +159,7 @@ const catalogCards: GameCard[] = [
     title: 'Storm the Castle Tower',
     description: 'Scale the castle walls! Collect words in the correct order while dodging boiling oil and falling rocks!',
     cover: withBasePath('/games/cover/cover-storm-the-castle-tower.png'),
+    href: '/student/games/apk/storm-castle-tower',
     status: 'playable',
   },
   {
@@ -169,6 +167,7 @@ const catalogCards: GameCard[] = [
     title: 'Griffin Sky-Joust',
     description: 'Take to the skies! Strike down enemy knights from above in the correct word order!',
     cover: withBasePath('/games/cover/cover-griffin-sky-joust.png'),
+    href: '/student/games/apk/griffin-sky-joust',
     status: 'playable',
   },
   {
@@ -176,6 +175,7 @@ const catalogCards: GameCard[] = [
     title: 'Realm Carver',
     description: 'Carve a path through the wild magic! Claim territory and capture words in the correct order!',
     cover: withBasePath('/games/cover/cover-realm-carver.png'),
+    href: '/student/games/apk/realm-carver',
     status: 'playable',
   },
   {
@@ -183,6 +183,7 @@ const catalogCards: GameCard[] = [
     title: "Paladin's Twin-Soul",
     description: 'Defend the realm and rescue your twin soul! Match the magic to double your power!',
     cover: withBasePath('/games/cover/cover-paladins-twin-soul.png'),
+    href: '/student/games/apk/paladins-twin-soul',
     status: 'playable',
   },
   {
@@ -190,6 +191,7 @@ const catalogCards: GameCard[] = [
     title: "Griffin Rider's Escape",
     description: 'Fly through the magical gates in the correct order to complete the sentence!',
     cover: withBasePath('/games/cover/cover-griffin-riders-escape.png'),
+    href: '/student/games/apk/griffin-riders-escape',
     status: 'playable',
   },
   {
@@ -197,6 +199,7 @@ const catalogCards: GameCard[] = [
     title: 'Astral Mage',
     description: 'Navigate the magical void and shoot word crystals in the correct order to complete sentences!',
     cover: withBasePath('/games/cover/cover-astral-mage.png'),
+    href: '/student/games/apk/astral-mage',
     status: 'playable',
   },
   {
@@ -204,7 +207,7 @@ const catalogCards: GameCard[] = [
     title: 'Devourer Slime',
     description: 'Start small in a forest arena and eat words in the correct order to grow big enough to devour enemy knights!',
     cover: withBasePath('/games/cover/cover-devourer-slime.png'),
-    href: '/student/games/sentence/devourer-slime',
+    href: '/student/games/apk/devourer-slime',
     status: 'playable',
   },
   {
@@ -212,6 +215,7 @@ const catalogCards: GameCard[] = [
     title: "The Sorcerer's Ziggurat",
     description: 'Jump through an isometric pyramid of cubes to complete ancient rituals in the correct sentence order!',
     cover: withBasePath('/games/cover/cover-sorcerers-ziggurat.png'),
+    href: '/student/games/apk/sorcerer-ziggurat',
     status: 'playable',
   },
   {
@@ -219,7 +223,7 @@ const catalogCards: GameCard[] = [
     title: 'The Haunted Library',
     description: 'Navigate the multi-story library and open magical doors in the correct sentence order!',
     cover: withBasePath('/games/cover/cover-haunted-library.png'),
-    href: '/student/games/sentence/haunted-library',
+    href: '/student/games/apk/haunted-library',
     status: 'playable',
   },
   {
@@ -227,13 +231,10 @@ const catalogCards: GameCard[] = [
     title: 'Gryphon Patrol',
     description: 'Hunt the sentences across the sky!',
     cover: withBasePath('/games/cover/cover-gryphon-patrol.png'),
+    href: '/student/games/apk/gryphon-patrol',
     status: 'playable',
   },
 ]
 
-/** Game catalog with titles that do not have a launch route withheld. */
-export const gameCards: GameCard[] = catalogCards.map((card) =>
-  unroutableGameIds.has(card.id)
-    ? { ...card, href: undefined, status: 'coming-soon' }
-    : card
-)
+/** Public game catalog with a launch route for every listed title. */
+export const gameCards: GameCard[] = catalogCards

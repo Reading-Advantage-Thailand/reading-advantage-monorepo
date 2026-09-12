@@ -325,9 +325,14 @@ interface PhaserGraphicsLike {
 }
 
 interface PhaserTextLike {
+  readonly height?: number;
+  readonly width?: number;
   setPosition(x: number, y: number): this;
   setText(value: string): this;
   setDepth?(depth: number): this;
+  setFontSize?(size: number | string): this;
+  setVisible?(visible: boolean): this;
+  setWordWrapWidth?(width: number, useAdvancedWrap?: boolean): this;
   destroy(): void;
 }
 
@@ -1330,10 +1335,10 @@ function ensureWorldLayer(
       const tileHeight = 16 * Math.ceil(height / 16);
       const tiled = scene.add.tileSprite(0, 0, tileWidth, tileHeight, ground.textureKey);
       tiled.setOrigin?.(0, 0);
-      tiled.setDepth?.(-25);
+      tiled.setDepth?.(-35);
       resources.ground = tiled;
     } else {
-      const image = placeImage(scene, width / 2, height / 2, ground, width, height, -25, 0.5, 0.5);
+      const image = placeImage(scene, width / 2, height / 2, ground, width, height, -35, 0.5, 0.5);
       if (image) resources.ground = image;
     }
   }
@@ -1365,13 +1370,14 @@ function ensureWorldLayer(
 
   const gate = fieldTexture(edition, "prop:gate");
   if (gate) {
+    const gateScale = Math.min(scaleX, scaleY);
     const image = placeImage(
       scene,
       GATE_POSITION.x * scaleX,
       GATE_POSITION.y * scaleY,
       gate,
-      48 * scaleX,
-      64 * scaleY,
+      48 * gateScale,
+      64 * gateScale,
       -4,
     );
     if (image) resources.worldSprites.push(image);
@@ -1379,8 +1385,9 @@ function ensureWorldLayer(
 
   const keep = fieldTexture(edition, "prop:keep");
   if (keep) {
-    const keepWidth = 40 * scaleX;
-    const keepHeight = 100 * scaleY;
+    const keepScale = Math.min(scaleX, scaleY);
+    const keepWidth = 40 * keepScale;
+    const keepHeight = 100 * keepScale;
     const baseX = BASE_POSITION.x * scaleX;
     const baseY = BASE_POSITION.y * scaleY;
     for (const offset of [-22, 22]) {
@@ -1388,7 +1395,9 @@ function ensureWorldLayer(
       if (tower) resources.worldSprites.push(tower);
     }
     if (gate) {
-      const door = placeImage(scene, baseX, baseY, gate, 36 * scaleX, 48 * scaleY, -2);
+      const doorWidth = 36 * keepScale;
+      const doorHeight = 48 * keepScale;
+      const door = placeImage(scene, baseX, baseY, gate, doorWidth, doorHeight, -2);
       if (door) resources.worldSprites.push(door);
     }
   }
@@ -1476,6 +1485,15 @@ function createScene(context: CastleDefenseSceneContext): Readonly<Record<string
     const scaleX = width / CASTLE_DEFENSE_CANVAS.width;
     const scaleY = height / CASTLE_DEFENSE_CANVAS.height;
     const scale = Math.min(scaleX, scaleY);
+    const canvasRect = scene.game?.canvas?.getBoundingClientRect?.();
+    const canvasDisplayScale = canvasRect?.width && canvasRect.height
+      ? Math.max(0.01, Math.min(canvasRect.width / width, canvasRect.height / height))
+      : 1;
+    const targetFontSize = Math.max(32, Math.ceil(18 / canvasDisplayScale));
+    const wordFontSize = Math.max(16, Math.ceil(16 / canvasDisplayScale));
+    const statusFontSize = Math.max(15, Math.ceil(12 / canvasDisplayScale));
+    const inventoryFontSize = Math.max(16, Math.ceil(13 / canvasDisplayScale));
+    const headerHeight = Math.max(64, 12 + targetFontSize * 1.25);
     const point = (x: number, y: number) => ({ x: x * scaleX, y: y * scaleY });
     const state = context.controller.snapshot();
     active.graphics.clear();
@@ -1511,7 +1529,7 @@ function createScene(context: CastleDefenseSceneContext): Readonly<Record<string
       const position = point(slot.x, slot.y);
       if (!slot.occupied) {
         active.graphics.fillStyle(0x57534e, 0.85).fillCircle(position.x, position.y, slot.radius * scale);
-        active.graphics.lineStyle(2, 0xd6d3d1, 0.7).strokeRoundedRect(position.x - 30 * scaleX, position.y - 30 * scaleY, 60 * scaleX, 60 * scaleY, 8);
+        active.graphics.lineStyle(2, 0xd6d3d1, 0.7).strokeRoundedRect(position.x - 30 * scale, position.y - 30 * scale, 60 * scale, 60 * scale, 8);
       }
     }
     for (const word of state.words) {
@@ -1519,7 +1537,6 @@ function createScene(context: CastleDefenseSceneContext): Readonly<Record<string
       const position = point(word.x, word.y);
       if (fieldArt && prisonerTexture) {
         syncUnitSprite(scene, active.unitSprites, liveIds, word.id, position.x, position.y, prisonerTexture, 40 * scale, 40 * scale, 4);
-        active.graphics.fillStyle(0x1f2937, 0.82).fillRoundedRect(position.x - 32 * scaleX, position.y - 58 * scaleY, 64 * scaleX, 20 * scaleY, 6);
       } else {
         active.graphics.fillStyle(0x9b5de5, 0.9).fillRoundedRect(position.x - 36 * scaleX, position.y - 24 * scaleY, 72 * scaleX, 48 * scaleY, 10);
         active.graphics.lineStyle(2, 0xfef3c7, 0.85).strokeRoundedRect(position.x - 36 * scaleX, position.y - 24 * scaleY, 72 * scaleX, 48 * scaleY, 10);
@@ -1530,8 +1547,23 @@ function createScene(context: CastleDefenseSceneContext): Readonly<Record<string
         label?.setDepth?.(8);
         if (label) active.wordLabels.set(word.id, label);
       }
-      const labelY = fieldArt && prisonerTexture ? position.y - 56 * scaleY : position.y - 8 * scaleY;
-      label?.setText(word.term).setPosition(position.x - 30 * scaleX, labelY);
+      const maxLabelWidth = Math.min(120 / canvasDisplayScale, width / 3);
+      label?.setText(word.term).setFontSize?.(wordFontSize).setWordWrapWidth?.(maxLabelWidth, true);
+      const estimatedWidth = Math.max(wordFontSize, word.term.length * wordFontSize * 0.62);
+      const labelWidth = Math.min(maxLabelWidth, label?.width ?? estimatedWidth);
+      const lineCount = Math.max(1, Math.ceil(estimatedWidth / maxLabelWidth));
+      const labelHeight = label?.height ?? wordFontSize * 1.2 * lineCount;
+      const labelPadding = Math.max(4, 3 / canvasDisplayScale);
+      const labelX = Math.max(4, Math.min(width - labelWidth - 4, position.x - labelWidth / 2));
+      const labelY = Math.max(headerHeight + 4, position.y - 28 * scaleY - labelHeight - labelPadding);
+      active.graphics.fillStyle(0x111827, 0.9).fillRoundedRect(
+        labelX - labelPadding,
+        labelY - labelPadding,
+        labelWidth + labelPadding * 2,
+        labelHeight + labelPadding * 2,
+        6,
+      );
+      label?.setPosition(labelX, labelY);
     }
     const visibleWordIds = new Set(state.words.filter((word) => !word.collected).map((word) => word.id));
     for (const [id, label] of active.wordLabels) {
@@ -1569,19 +1601,35 @@ function createScene(context: CastleDefenseSceneContext): Readonly<Record<string
     }
     pruneUnitSprites(active.unitSprites, liveIds);
 
-    active.title.setText("CASTLE DEFENSE").setPosition(24, 18);
-    active.prompt.setText(`Prisoners: ${state.prompt}`).setPosition(24, 56);
-    active.status.setText(`${composition?.profile === "compact" ? "Compact" : "Wide"}  |  Wave ${state.wave}/${state.waveCount}  |  Words ${state.targetIndex}/${state.targetCount}  |  Base ${state.base.hp}/${state.base.maxHp}  |  Towers ${state.towers.length}`).setPosition(24, 92);
-    active.feedback.setText(state.phase === "victory"
-      ? "Every sentence wave is defended. Victory!"
+    active.graphics.fillStyle(0x090f1b, 0.96).fillRect(0, 0, width, headerHeight);
+    active.title.setText("").setVisible?.(false);
+    active.prompt.setText(state.prompt).setPosition(24, 12).setFontSize?.(targetFontSize).setWordWrapWidth?.(width - 48, true);
+    const outcome = state.phase === "victory"
+      ? "★"
       : state.phase === "defeat"
-        ? "The castle has fallen."
+        ? "×"
         : state.lastOutcome === "incorrect"
-          ? "That prisoner is out of order. The current chain resets."
+          ? "↻"
           : state.sentenceComplete
-            ? "The chain is complete. Move near a slot and confirm to build."
-            : "Collect the glowing prisoners in sentence order.").setPosition(24, height - 68);
-    active.instructions.setText("Keyboard: A/D/W/S or Arrow keys to move  |  Space or Enter to build  |  Swipe or tap").setPosition(24, height - 36);
+            ? "⚒"
+            : "";
+    const statusText = `♥ ${state.base.hp}/${state.base.maxHp}  ⚔ ${state.wave}/${state.waveCount}  ◇ ${state.targetIndex}/${state.targetCount} ${outcome}`.trim();
+    const inventoryText = state.inventory.length > 0 ? `◆ ${state.inventory.join(" ")}` : "";
+    active.status.setText(statusText).setFontSize?.(statusFontSize);
+    active.feedback
+      .setText(inventoryText)
+      .setFontSize?.(inventoryFontSize)
+      .setWordWrapWidth?.(width - 32, true);
+    const statusHeight = active.status.height ?? statusFontSize * 1.2;
+    const inventoryLineWidth = Math.max(inventoryFontSize, inventoryText.length * inventoryFontSize * 0.62);
+    const inventoryLines = inventoryText ? Math.max(1, Math.ceil(inventoryLineWidth / (width - 32))) : 0;
+    const inventoryHeight = inventoryText ? active.feedback.height ?? inventoryFontSize * 1.2 * inventoryLines : 0;
+    const bottomHeight = 16 + statusHeight + (inventoryHeight > 0 ? inventoryHeight + 4 : 0);
+    const statusY = height - bottomHeight + 8;
+    active.graphics.fillStyle(0x090f1b, 0.94).fillRect(0, height - bottomHeight, width, bottomHeight);
+    active.status.setPosition(16, statusY);
+    active.feedback.setPosition(16, statusY + statusHeight + 4);
+    active.instructions.setText("").setVisible?.(false);
   };
 
   const processInput = (scene: PhaserSceneLike): void => {

@@ -1,6 +1,9 @@
 /** Core APK runtime exports. */
 export * from "./runtime/index.js";
 
+/** Provider-neutral listening audio playback exports. */
+export * from "./audio/index.js";
+
 /** Audience edition and semantic asset exports. */
 export * from "./editions/index.js";
 /** Filesystem-first standard asset-library exports. */

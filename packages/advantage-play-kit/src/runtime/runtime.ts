@@ -1,7 +1,9 @@
 import {
   gameResultsSchema,
+  learningEvidenceSchema,
   sentenceInputSchema,
   type GameResults,
+  type LearningEvidence,
   vocabularyInputSchema,
 } from "@reading-advantage/game-contracts";
 
@@ -30,6 +32,7 @@ type PendingCompletion = {
   generation: number;
   result: GameResults;
   outcome: GameTerminalOutcome;
+  evidence?: LearningEvidence;
 };
 
 type PendingRendererCleanup = {
@@ -109,6 +112,15 @@ export async function mountCartridge(
     APK_RUNTIME_API_VERSION,
   );
 
+  if (options.listening && options.answerAudio) {
+    throw new APKRuntimeError(
+      "INVALID_AUDIO_CONFIGURATION",
+      "A session cannot use listening audio and answer audio together",
+    );
+  }
+  const listening = sessionMode === "playing" ? options.listening : undefined;
+  const answerAudio = sessionMode === "demo" ? undefined : options.answerAudio;
+  const learningAudio = answerAudio ?? listening;
   let status: APKRuntimeStatus = "mounting";
   let instance: APKGameInstance | undefined;
   let restartCount = 0;
@@ -132,9 +144,10 @@ export async function mountCartridge(
 
   const resolveComposition = (): SupportedResponsiveComposition | undefined => {
     if (!options.responsive) return undefined;
+    const safeArea = options.responsive.resolveSafeArea?.(container) ?? options.responsive.safeArea;
     const resolved = resolveResponsiveComposition({
       viewport: { width, height },
-      safeArea: options.responsive.safeArea,
+      safeArea,
       inputCapabilities: options.responsive.inputCapabilities,
       accessibility: options.responsive.accessibility,
       fullscreen: options.responsive.fullscreen ?? false,
@@ -188,6 +201,19 @@ export async function mountCartridge(
     }
   };
 
+  const pauseLearningAudio = (): void => {
+    try {
+      learningAudio?.pause();
+    } catch (error) {
+      diagnostic({
+        level: "warning",
+        code: answerAudio ? "ANSWER_AUDIO_PAUSE_FAILED" : "LISTENING_PAUSE_FAILED",
+        message: answerAudio ? "Answer audio could not stop" : "Listening audio could not stop",
+        details: { cause: error instanceof Error ? error.message : String(error) },
+      });
+    }
+  };
+
   const cleanupFailedRenderer = async (): Promise<void> => {
     const failedInstance = instance;
     if (failedInstance === undefined) {
@@ -229,11 +255,15 @@ export async function mountCartridge(
     generation: number,
     result: GameResults,
     outcome: GameTerminalOutcome,
+    evidence?: LearningEvidence,
   ): void => {
     void Promise.resolve()
       .then(() => {
         if (closeRequested || destroyed || status === "error" || generation !== rendererGeneration) return;
-        return host.complete(result, outcome);
+        pauseLearningAudio();
+        return evidence
+          ? host.complete(result, outcome, evidence)
+          : host.complete(result, outcome);
       })
       .catch((error: unknown) => {
         if (closeRequested || destroyed || generation !== rendererGeneration) return;
@@ -273,12 +303,63 @@ export async function mountCartridge(
     const terminalOutcome: GameTerminalOutcome = outcome === "victory" || outcome === "defeat" || outcome === "complete"
       ? outcome
       : "complete";
+    let evidence: LearningEvidence | undefined;
+    if (learningAudio) {
+      let candidateEvidence: unknown;
+      try {
+        candidateEvidence = learningAudio.getEvidence();
+      } catch (error) {
+        diagnostic({
+          level: "error",
+          code: answerAudio ? "INVALID_ANSWER_AUDIO_EVIDENCE" : "INVALID_LISTENING_EVIDENCE",
+          message: answerAudio ? "Answer audio evidence could not be read" : "Listening evidence could not be read",
+          details: { cause: error instanceof Error ? error.message : String(error) },
+        });
+        return;
+      }
+      const parsedEvidence = learningEvidenceSchema.safeParse(candidateEvidence);
+      if (!parsedEvidence.success) {
+        diagnostic({
+          level: "error",
+          code: answerAudio ? "INVALID_ANSWER_AUDIO_EVIDENCE" : "INVALID_LISTENING_EVIDENCE",
+          message: answerAudio ? "Answer audio evidence validation failed" : "Listening evidence validation failed",
+          details: { issues: parsedEvidence.error.issues },
+        });
+        return;
+      }
+      evidence = parsedEvidence.data;
+      if (answerAudio && evidence.declaredModality === "read-to-select-audio") {
+        const attempts = evidence.questions.flatMap((question) => question.selectionAttempts);
+        const submittedAttempts = attempts.filter((attempt) => attempt.submitted);
+        const completedQuestions = submittedAttempts.filter((attempt) => attempt.completedQuestion);
+        if (parsed.data.totalAttempts !== submittedAttempts.length
+          || parsed.data.correctAnswers !== completedQuestions.length) {
+          diagnostic({
+            level: "error",
+            code: "INVALID_ANSWER_AUDIO_EVIDENCE",
+            message: "Answer audio evidence does not match the game result counts",
+            details: {
+              evidenceAttempts: submittedAttempts.length,
+              evidenceCorrectAnswers: completedQuestions.length,
+              resultAttempts: parsed.data.totalAttempts,
+              resultCorrectAnswers: parsed.data.correctAnswers,
+            },
+          });
+          return;
+        }
+      }
+    }
     completionCount = 1;
     status = "completed";
     diagnostic({ level: "info", code: "GAME_COMPLETED", message: "Game result accepted" });
-    const completion = { generation, result: parsed.data, outcome: terminalOutcome };
+    const completion = {
+      generation,
+      result: parsed.data,
+      outcome: terminalOutcome,
+      ...(evidence ? { evidence } : {}),
+    };
     if (mountedRendererGeneration === generation) {
-      notifyHostComplete(completion.generation, completion.result, completion.outcome);
+      notifyHostComplete(completion.generation, completion.result, completion.outcome, completion.evidence);
     } else {
       pendingCompletion = completion;
     }
@@ -317,6 +398,8 @@ export async function mountCartridge(
         diagnostic: (event) => diagnostic(event),
         inputController,
         sessionMode,
+        ...(listening ? { listening } : {}),
+        ...(answerAudio ? { answerAudio } : {}),
         ...(composition ? { composition } : {}),
         ...(options.seed === undefined ? {} : { seed: options.seed }),
       });
@@ -329,7 +412,7 @@ export async function mountCartridge(
       mountedRendererGeneration = generation;
       const completion = takePendingCompletion();
       if (completion?.generation === generation && completionCount > 0) {
-        notifyHostComplete(completion.generation, completion.result, completion.outcome);
+        notifyHostComplete(completion.generation, completion.result, completion.outcome, completion.evidence);
       }
     } catch (error) {
       mountedRendererGeneration = undefined;
@@ -356,9 +439,16 @@ export async function mountCartridge(
     width = container.clientWidth;
     height = container.clientHeight;
     if (width > 0 && height > 0) {
+      let nextComposition: SupportedResponsiveComposition | undefined;
+      try {
+        nextComposition = resolveComposition();
+      } catch (error) {
+        const runtimeError = toAPKRuntimeError(error, "RESPONSIVE_COMPOSITION_FAILED", "Responsive composition failed");
+        diagnostic({ level: "error", code: runtimeError.code, message: runtimeError.message, details: runtimeError.details });
+        return;
+      }
       instance?.resize?.(width, height);
       try {
-        const nextComposition = resolveComposition();
         if (previousComposition && nextComposition
           && (previousComposition.profile !== nextComposition.profile
             || previousComposition.inputMode !== nextComposition.inputMode
@@ -397,10 +487,14 @@ export async function mountCartridge(
   };
 
   let resizeObserver: ResizeObserver | undefined;
+  const view = container.ownerDocument.defaultView;
+  const visualViewport = view?.visualViewport;
 
   const onVisibilityChange = (): void => {
     if (closeRequested || destroyed || status === "error" || explicitlyPaused) return;
+    inputController.reset?.();
     if (document.visibilityState === "hidden") {
+      pauseLearningAudio();
       try {
         instance?.pause?.();
       } catch (error) {
@@ -424,6 +518,10 @@ export async function mountCartridge(
     resizeObserver =
       typeof ResizeObserver === "undefined" ? undefined : new ResizeObserver(resize);
     resizeObserver?.observe(container);
+    view?.addEventListener("resize", resize);
+    view?.addEventListener("scroll", resize, { passive: true });
+    visualViewport?.addEventListener("resize", resize);
+    visualViewport?.addEventListener("scroll", resize);
     document.addEventListener("visibilitychange", onVisibilityChange);
     composition = resolveComposition();
     await createInstance();
@@ -431,8 +529,13 @@ export async function mountCartridge(
     if (!runtimeResourcesReleased) {
       runtimeResourcesReleased = true;
       document.removeEventListener("visibilitychange", onVisibilityChange);
+      view?.removeEventListener("resize", resize);
+      view?.removeEventListener("scroll", resize);
+      visualViewport?.removeEventListener("resize", resize);
+      visualViewport?.removeEventListener("scroll", resize);
       resizeObserver?.disconnect();
       inputController.destroy();
+      learningAudio?.destroy();
       container.style.touchAction = previousTouchAction;
     }
     throw error;
@@ -441,6 +544,8 @@ export async function mountCartridge(
   return {
     pause: () => {
       if (closeRequested || destroyed) return;
+      inputController.reset?.();
+      pauseLearningAudio();
       instance?.pause?.();
       explicitlyPaused = true;
       if (completionCount === 0) status = "paused";
@@ -448,14 +553,18 @@ export async function mountCartridge(
     },
     resume: () => {
       if (closeRequested || destroyed || completionCount > 0) return;
+      inputController.reset?.();
       instance?.resume?.();
       explicitlyPaused = false;
       status = completionCount > 0 ? "completed" : "running";
       diagnostic({ level: "info", code: "HOST_RESUMED", message: "Game resumed by host" });
     },
+    resize,
     restart: async () => {
       operation = operation.catch(() => undefined).then(async () => {
         if (closeRequested || destroyed) throw new APKRuntimeError("RUNTIME_DESTROYED", "Runtime is destroyed");
+        inputController.reset?.();
+        learningAudio?.restart();
         const previousInstance = instance;
         rendererGeneration += 1;
         mountedRendererGeneration = undefined;
@@ -475,6 +584,7 @@ export async function mountCartridge(
     setMuted: (nextMuted) => {
       if (closeRequested || destroyed) return;
       muted = nextMuted;
+      learningAudio?.setMuted(muted);
       instance?.setMuted?.(muted);
       diagnostic({
         level: "info",
@@ -491,8 +601,13 @@ export async function mountCartridge(
         if (!runtimeResourcesReleased) {
           runtimeResourcesReleased = true;
           document.removeEventListener("visibilitychange", onVisibilityChange);
+          view?.removeEventListener("resize", resize);
+          view?.removeEventListener("scroll", resize);
+          visualViewport?.removeEventListener("resize", resize);
+          visualViewport?.removeEventListener("scroll", resize);
           resizeObserver?.disconnect();
           inputController.destroy();
+          learningAudio?.destroy();
           container.style.touchAction = previousTouchAction;
         }
         await operation.catch(() => undefined);

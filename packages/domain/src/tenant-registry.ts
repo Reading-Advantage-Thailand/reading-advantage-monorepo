@@ -78,7 +78,12 @@ import {
   schoolAdmins,
   leaderboards,
   gameCompletions,
+  studentCosmeticUnlocks,
+  studentRpgProfiles,
   hostProofAttempts,
+  gameChallengeDefinitions,
+  gameChallengeRuns,
+  gameChallengeContributions,
   masteryCards,
   masteryPrincipals,
   masteryReviews,
@@ -127,10 +132,15 @@ register(leaderboards, "FLAT");
 // (schoolId, userId, activityId) is the primary fire-once guard for game
 // completions (Phase 4 Decision 4.1).
 register(gameCompletions, "FLAT");
+register(studentCosmeticUnlocks, "FLAT");
+register(studentRpgProfiles, "FLAT");
 
 // Host-proof attempts carry a required schoolId and are therefore safely
 // auto-scoped by TenantDB to the authenticated school tenant.
 register(hostProofAttempts, "FLAT");
+register(gameChallengeDefinitions, "FLAT");
+register(gameChallengeRuns, "FLAT");
+register(gameChallengeContributions, "FLAT");
 
 // Mastery Engine Phase S3 — all persistence records carry schoolId directly.
 register(masteryCards, "FLAT");

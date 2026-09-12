@@ -94,7 +94,7 @@ describe("exemplar cartridge built through public APK APIs", () => {
     });
 
     expect(compact.supported && compact.profile).toBe("compact");
-    expect(surface.semanticAssetRequirements).toEqual([
+    expect(surface.requiredAssetBindings).toEqual([
       { role: "player", state: "idle" },
       { role: "feedback", state: "correct" },
       { role: "control", state: "confirm" },

@@ -77,7 +77,10 @@ function createMutableInputController(): APKInputController & {
   };
 }
 
-function createSceneHost() {
+function createSceneHost(
+  sceneSize = RPG_BATTLE_CANVAS,
+  canvasRect: { left: number; top: number; width: number; height: number } = { left: 0, top: 0, width: 960, height: 540 },
+) {
   const graphics = {
     clear: vi.fn(),
     fillStyle: vi.fn(),
@@ -126,10 +129,10 @@ function createSceneHost() {
     },
     game: {
       canvas: {
-        getBoundingClientRect: () => ({ left: 0, top: 0, width: 960, height: 540 }),
+        getBoundingClientRect: () => canvasRect,
       },
     },
-    scale: { width: 960, height: 540 },
+    scale: sceneSize,
   };
 
   return {
@@ -167,11 +170,11 @@ describe("RPG Battle bespoke cartridge", () => {
     const controller = createRpgBattleController(VOCABULARY, vi.fn(), { rng: () => 0.25 });
 
     expect(controller.submit()).toMatchObject({ accepted: false, correct: false, terminal: false });
-    expect(controller.snapshot().feedback).toMatch(/Type a translation/u);
-    expect(controller.typeAnswer("valiente").typedAnswer).toBe("valiente");
+    expect(controller.snapshot().feedback).toMatch(/English answer required/u);
+    expect(controller.typeAnswer("brave").typedAnswer).toBe("brave");
     expect(controller.choose("cancel")).toMatchObject({ accepted: true, progressed: false });
-    expect(controller.snapshot().typedAnswer).toBe("valient");
-    expect(controller.type("e").typedAnswer).toBe("valiente");
+    expect(controller.snapshot().typedAnswer).toBe("brav");
+    expect(controller.type("e").typedAnswer).toBe("brave");
     expect(controller.choose("confirm")).toMatchObject({ accepted: true, correct: true });
     controller.tick(0);
 
@@ -205,8 +208,8 @@ describe("RPG Battle bespoke cartridge", () => {
     });
     expect(controller.snapshot()).toMatchObject({
       phase: "playing",
-      prompt: "brave",
-      answer: "valiente",
+      prompt: "valiente",
+      answer: "brave",
       targetIndex: 0,
       targetCount: 2,
       playerHealth: RPG_BATTLE_PLAYER_MAX_HEALTH,
@@ -220,10 +223,10 @@ describe("RPG Battle bespoke cartridge", () => {
   it("types a translation into a buffer and submits only on Enter-equivalent submission", () => {
     const controller = createRpgBattleController(VOCABULARY, vi.fn());
 
-    controller.type(" valiente ");
-    expect(controller.snapshot().typedAnswer).toBe(" valiente ");
+    controller.type(" brave ");
+    expect(controller.snapshot().typedAnswer).toBe(" brave ");
     controller.backspace();
-    expect(controller.snapshot().typedAnswer).toBe(" valiente");
+    expect(controller.snapshot().typedAnswer).toBe(" brave");
     expect(controller.snapshot().totalAttempts).toBe(0);
 
     const result = controller.submitAnswer();
@@ -541,7 +544,7 @@ describe("RPG Battle bespoke cartridge", () => {
     const diagnostic = vi.fn();
     const config = createRpgBattleCartridge().createGameConfig({
       input: VOCABULARY,
-      edition: PHASE3_RUNTIME_EDITION,
+      edition: createCatalogStandardEdition(["legacy-catalog/rpg-battle/arena"], "/assets/apk/standard-pack-qc/", "rpg-battle"),
       complete,
       diagnostic,
       inputController,
@@ -583,7 +586,11 @@ describe("RPG Battle bespoke cartridge", () => {
     const diagnostic = vi.fn();
     const config = createRpgBattleCartridge().createGameConfig({
       input: VOCABULARY,
-      edition: PHASE3_RUNTIME_EDITION,
+      edition: createCatalogStandardEdition(
+        ["legacy-catalog/rpg-battle/arena"],
+        "/assets/apk/standard-pack-qc/",
+        "rpg-battle",
+      ),
       complete: vi.fn(),
       diagnostic,
       inputController,
@@ -635,6 +642,70 @@ describe("RPG Battle bespoke cartridge", () => {
     const choiceBorderStyles = host.graphics.lineStyle.mock.calls.slice(-3);
     expect(new Set(choiceFillStyles.map(([color, alpha]) => `${color}:${alpha}`)).size).toBe(1);
     expect(new Set(choiceBorderStyles.map(([width, color, alpha]) => `${width}:${color}:${alpha}`)).size).toBe(1);
+  });
+
+  it("renders plain English choices and aligns readable health values with both fighters", () => {
+    const inputController = createMutableInputController();
+    const config = createRpgBattleCartridge().createGameConfig({
+      input: [
+        { term: "bridge", translation: "สะพาน" },
+        { term: "forest", translation: "ป่า" },
+      ],
+      edition: createCatalogStandardEdition(
+        ["legacy-catalog/rpg-battle/arena"],
+        "/assets/apk/standard-pack-qc/",
+        "rpg-battle",
+      ),
+      complete: vi.fn(),
+      diagnostic: vi.fn(),
+      inputController,
+      seed: 17,
+    });
+    const scene = config.scene as { create(this: ReturnType<typeof createSceneHost>["host"]): void };
+    const host = createSceneHost();
+
+    scene.create.call(host.host);
+
+    const latest = (index: number): string => String(host.texts[index]?.setText.mock.calls.at(-1)?.[0] ?? "");
+    expect(host.graphics.fillEllipse).toHaveBeenCalled();
+    expect(latest(1)).toBe("สะพาน");
+    expect(host.texts.slice(7).map((_text, index) => latest(index + 7)).join(" ")).toContain("bridge");
+    expect(host.texts.slice(7).map((_text, index) => latest(index + 7)).join(" ")).not.toMatch(/\[(?:basic|power)\]/u);
+    expect(latest(2)).toMatch(/^HP 100\/100$/u);
+    expect(latest(4)).toMatch(/^HP \d+\/\d+$/u);
+    expect(latest(3)).toBe("");
+    expect(host.texts.slice(0, 7).map((_text, index) => latest(index)).join("\n"))
+      .not.toMatch(/RPG BATTLE|Translate:|What will HERO do|Type with the keyboard|tap a translation choice/u);
+  });
+
+  it("accepts a fast native pointer release inside the visible correct card", () => {
+    const inputController = createMutableInputController();
+    const config = createRpgBattleCartridge().createGameConfig({
+      input: [{ term: "bridge", translation: "สะพาน" }, { term: "forest", translation: "ป่า" }],
+      edition: PHASE3_RUNTIME_EDITION,
+      complete: vi.fn(),
+      diagnostic: vi.fn(),
+      inputController,
+      seed: 17,
+    });
+    const scene = config.scene as {
+      create(this: ReturnType<typeof createSceneHost>["host"]): void;
+      update(this: ReturnType<typeof createSceneHost>["host"], time?: number, delta?: number): void;
+      extend: { apkCaptureResponsiveState: () => RpgBattleSnapshot };
+    };
+    const sceneSize = { width: 390, height: 733 };
+    const canvasRect = { left: 12, top: 96, width: 390, height: 733 };
+    const host = createSceneHost(sceneSize, canvasRect);
+    scene.create.call(host.host);
+    const state = scene.extend.apkCaptureResponsiveState();
+    const card = rpgBattleChoiceRect(sceneSize.width, sceneSize.height, state.correctChoiceIndex);
+    inputController.setSnapshot(inputSnapshot({
+      pointer: { released: true, x: canvasRect.left + card.x + card.width / 2, y: canvasRect.top + card.y + card.height / 2 },
+    }));
+
+    scene.update.call(host.host, 0, 0);
+
+    expect(scene.extend.apkCaptureResponsiveState()).toMatchObject({ targetIndex: 1, totalAttempts: 1, correctAnswers: 1 });
   });
 
   it("owns responsive state and cleans scene resources without a late result", () => {
@@ -700,18 +771,37 @@ describe("RPG Battle bespoke cartridge", () => {
     expect(deliver).toHaveBeenCalledWith(terminal?.result, "victory");
   });
 
-  it("fills small-deck answer choices from real translations instead of English decoy placeholders", () => {
-    const oneItem = createRpgBattleController([{ term: "brave", translation: "valiente" }], vi.fn());
+  it("shows a Thai target with English typed and choice answers", () => {
+    const oneItem = createRpgBattleController([{ term: "brave", translation: "กล้าหาญ" }], vi.fn());
     const twoItem = createRpgBattleController(VOCABULARY, vi.fn());
-    const translations = new Set(VOCABULARY.map((item) => item.translation));
+    const terms = new Set(VOCABULARY.map((item) => item.term));
 
+    expect(oneItem.snapshot()).toMatchObject({ prompt: "กล้าหาญ", answer: "brave" });
     expect(oneItem.snapshot().answerChoices).toHaveLength(3);
-    expect(oneItem.snapshot().answerChoices.every((choice) => choice === "valiente")).toBe(true);
+    expect(oneItem.snapshot().answerChoices.every((choice) => choice === "brave")).toBe(true);
     expect(oneItem.snapshot().answerChoices.join(" ")).not.toMatch(/Decoy translation/u);
     expect(twoItem.snapshot().answerChoices).toHaveLength(3);
-    expect(twoItem.snapshot().answerChoices.every((choice) => translations.has(choice))).toBe(true);
+    expect(twoItem.snapshot().answerChoices.every((choice) => terms.has(choice))).toBe(true);
     expect(twoItem.snapshot().answerChoices).not.toContain("Decoy translation 1");
     expect(twoItem.snapshot().answerChoices).not.toContain("Decoy translation 2");
+  });
+
+  it("keeps compact and CSS-scaled choice cards inside the displayed battle width", () => {
+    for (const [sceneWidth, sceneHeight, renderedScale] of [[390, 733, 1], [960, 540, 336 / 960]] as const) {
+      const cards = [0, 1, 2].map((index) => rpgBattleChoiceRect(sceneWidth, sceneHeight, index, renderedScale));
+      for (const card of cards) {
+        expect(card.x).toBeGreaterThanOrEqual(0);
+        expect((card.x + card.width) * renderedScale).toBeLessThanOrEqual(sceneWidth * renderedScale);
+        expect(card.height * renderedScale).toBeGreaterThanOrEqual(40);
+      }
+      if (renderedScale < 0.75) {
+        expect(cards[0]!.x + cards[0]!.width).toBeLessThanOrEqual(cards[1]!.x);
+        expect(cards[1]!.x + cards[1]!.width).toBeLessThanOrEqual(cards[2]!.x);
+      } else {
+        expect(cards[0]!.y + cards[0]!.height).toBeLessThanOrEqual(cards[1]!.y);
+        expect(cards[1]!.y + cards[1]!.height).toBeLessThanOrEqual(cards[2]!.y);
+      }
+    }
   });
 
   it("advances the tutorial correct step even when the previous step still holds the 900ms lock", () => {

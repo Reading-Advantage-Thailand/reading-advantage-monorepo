@@ -25,6 +25,20 @@ describe("public barrel exports (package export regression)", () => {
     expect(publicApi).toHaveProperty("mapGameResultsToCompletionInput");
   });
 
+  it("exports the Read to Select Audio contracts", () => {
+    expect(publicApi).toHaveProperty("learningEvidenceSchema");
+    expect(publicApi).toHaveProperty("readToSelectAudioEvidenceSchema");
+    expect(publicApi).toHaveProperty("readToSelectAudioSessionConfigSchema");
+    expect(publicApi).toHaveProperty("preparedReadToSelectAudioVocabularyResponseSchema");
+  });
+
+  it("exports the RPG contracts", () => {
+    expect(publicApi).toHaveProperty("studentRpgStateSchema");
+    expect(publicApi).toHaveProperty("equipRpgCosmeticInputSchema");
+    expect(publicApi).toHaveProperty("rpgQuestIdSchema");
+    expect(publicApi).toHaveProperty("rpgCosmeticIdSchema");
+  });
+
   it("exports the APK architecture scanner", () => {
     expect(publicApi).toHaveProperty("scanAPKArchitecture");
   });

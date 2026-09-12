@@ -7,6 +7,7 @@ import {
 } from "./game-briefing-contract.js";
 import {
   gameTutorialDefinitionSchema,
+  type CreateTutorialActionDriverContext,
   type GameTutorialActionDriver,
   type GameTutorialDefinition,
 } from "./game-tutorial-contract.js";
@@ -63,7 +64,7 @@ export interface StandardGameExperienceRuntime {
   /** Validated serializable experience definition. */
   readonly definition: StandardGameExperienceDefinition;
   /** Creates an isolated driver for one tutorial preview mount. */
-  readonly createTutorialActionDriver: () => GameTutorialActionDriver & {
+  readonly createTutorialActionDriver: (context?: CreateTutorialActionDriverContext) => GameTutorialActionDriver & {
     /** Releases tutorial-local cartridge resources. */
     readonly destroy?: () => void | Promise<void>;
   };

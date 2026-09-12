@@ -3,11 +3,11 @@
   "type": "feature",
   "status": "in-progress",
   "created_at": "2026-08-10T07:49:36Z",
-  "updated_at": "2026-08-11T00:30:12Z",
+  "updated_at": "2026-08-22T00:00:00Z",
   "description": "Add mandatory standardized briefing, guided tutorial, safe demo, learning debrief, and intern-ready authoring support to Advantage Play Kit.",
   "estimated_tasks": 34,
   "actual_tasks": null,
-  "deviation_notes": "Development paused at the user's request on 2026-08-11 after S1 acceptance. S2 contract decisions and recoverable RED checkpoint fa01f9b30 are documented; no unfinished S2 production code is included in the merge tree.",
+  "deviation_notes": "Owner instruction 2026-08-20 dropped S4/S5. A later owner instruction required S3 class demonstration. S2.6 root structural gates closed 2026-08-22 as owner-deferred. Owner direction 2026-08-22: catalog art is wrong across almost all titles; S2.7 waits on an art-quality rework (wizard-vs-zombie pilot, then per-title cohort). S3 reopened 2026-08-22 for demonstration repair and a skip-demonstration control.",
   "sprint": {
     "goal": "Every APK mini-game ships with a consistent briefing, guided tutorial/demo, gameplay lifecycle, and learning-focused debrief without interns rebuilding platform infrastructure.",
     "stories": [
@@ -30,21 +30,21 @@
         "title": "Safe Demonstration Mode",
         "size": "L",
         "priority": "Must",
-        "status": "pending"
+        "status": "done"
       },
       {
         "id": "S4",
         "title": "Standard Learning Debrief",
         "size": "M",
         "priority": "Must",
-        "status": "pending"
+        "status": "dropped"
       },
       {
         "id": "S5",
         "title": "Intern-Ready Game Workflow",
         "size": "L",
         "priority": "Must",
-        "status": "pending"
+        "status": "dropped"
       }
     ],
     "demo_notes": null,

@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from "vitest";
+import { beforeEach, describe, it, expect, vi } from "vitest";
 import type { DB } from "@reading-advantage/db";
 import {
   gameCompletionInputSchema,
@@ -13,11 +13,19 @@ import { recordActivity, updateLessonProgress } from "../progress/mutations.js";
 import { createMockDb } from "./mock-db.js";
 import { createTenantDB } from "../db-contract.js";
 
+const { mockRecordChallengeContribution } = vi.hoisted(() => ({
+  mockRecordChallengeContribution: vi.fn(),
+}));
+
 vi.mock("@reading-advantage/auth", () => ({
   assertCan: vi.fn(),
   AuthError: class AuthError extends Error {
     code = "FORBIDDEN";
   },
+}));
+
+vi.mock("../challenges/contributions.js", () => ({
+  recordChallengeContribution: mockRecordChallengeContribution,
 }));
 
 vi.mock("@reading-advantage/db/schema", () => ({
@@ -97,6 +105,39 @@ function makeValidInput(
   };
 }
 
+const answerAudioEvidence = {
+  schemaVersion: 1,
+  declaredModality: "read-to-select-audio",
+  effectiveModality: "read-to-select-audio",
+  promptLocale: "th-TH",
+  answerLocale: "en-US",
+  promptField: "translation",
+  answerField: "term",
+  itemCount: 2,
+  questions: [{
+    questionPosition: 0,
+    promptItemPosition: 0,
+    selectionAttempts: [
+      {
+        attemptIndex: 0,
+        clipItemPosition: 1,
+        playbackResult: "completed",
+        submitted: true,
+        completedQuestion: false,
+      },
+      {
+        attemptIndex: 1,
+        clipItemPosition: 0,
+        playbackResult: "completed",
+        submitted: true,
+        completedQuestion: true,
+      },
+    ],
+  }],
+  replayCounts: [],
+  audioFailures: [],
+} as const;
+
 describe("gameCompletionInputSchema (Group 3A)", () => {
   it("accepts a fully-valid payload", () => {
     const input = makeValidInput();
@@ -114,6 +155,53 @@ describe("gameCompletionInputSchema (Group 3A)", () => {
     expect(parsed.clientTimestamp).toBe(1_700_000_000_000);
     // A4: positive control — schema must not silently strip the payload
     expect(Object.keys(parsed).length).toBeGreaterThanOrEqual(10);
+  });
+
+  it("accepts only a UUID challenge run reference", () => {
+    const challengeRunId = "22222222-2222-4222-8222-222222222222";
+    expect(gameCompletionInputSchema.parse(makeValidInput({ challengeRunId })).challengeRunId).toBe(challengeRunId);
+    expect(gameCompletionInputSchema.safeParse(makeValidInput({ challengeRunId: "not-a-uuid" })).success).toBe(false);
+  });
+
+  it("validates reserved listening evidence inside legacy-compatible metadata", () => {
+    const validEvidence = {
+      schemaVersion: 1,
+      declaredModality: "listen-to-select",
+      effectiveModality: "listen-to-select",
+      sourceLocale: "en-US",
+      targetLocale: "th",
+      itemCount: 2,
+      assistedItemPositions: [],
+      fallbackItemPositions: [],
+      replayCounts: [{ itemPosition: 0, count: 1 }],
+      audioFailures: [],
+    };
+
+    expect(
+      gameCompletionInputSchema.safeParse(
+        makeValidInput({ metadata: { learningEvidence: validEvidence } }),
+      ).success,
+    ).toBe(true);
+    expect(
+      gameCompletionInputSchema.safeParse(
+        makeValidInput({
+          metadata: {
+            learningEvidence: {
+              ...validEvidence,
+              replayCounts: [{ itemPosition: 2, count: 1 }],
+            },
+          },
+        }),
+      ).success,
+    ).toBe(false);
+  });
+
+  it("keeps unrelated completion metadata compatible", () => {
+    expect(
+      gameCompletionInputSchema.parse(
+        makeValidInput({ metadata: { edition: "primary-chibi", custom: true } }),
+      ).metadata,
+    ).toEqual({ edition: "primary-chibi", custom: true });
   });
 
   it("rejects a client-supplied xp field (D-02)", () => {
@@ -271,6 +359,10 @@ describe("calculateGameXP (Group 3B)", () => {
 });
 
 describe("recordGameCompletion (Group 3C)", () => {
+  beforeEach(() => {
+    mockRecordChallengeContribution.mockReset();
+  });
+
   it("inserts on first call and returns duplicate: false", async () => {
     const db = createMockDb({ selectResults: [] });
     const tenantDb = createTenantDB(db as unknown as DB, mockTenant);
@@ -293,10 +385,61 @@ describe("recordGameCompletion (Group 3C)", () => {
     // XP earned: 7 = min(10, 5 + 1 + 1 + 0) for victory + accuracy=5/6 + duration < 60s
     expect(result.xpEarned).toBe(7);
     expect(result.status).toBe(200);
+    expect(mockRecordChallengeContribution).not.toHaveBeenCalled();
+  });
+
+  it("ties a supplied run to the newly saved completion row", async () => {
+    const challengeRunId = "22222222-2222-4222-8222-222222222222";
+    const createdAt = new Date("2026-09-09T09:00:00.000Z");
+    const db = createMockDb({
+      selectResults: [],
+      conflictInsertReturning: [{
+        id: "33333333-3333-4333-8333-333333333333",
+        schoolId: mockTenant.schoolId,
+        userId: mockUser.id,
+        gameType: "haunted-library",
+        difficulty: "medium",
+        correctAnswers: 5,
+        totalAttempts: 6,
+        victory: true,
+        metadata: null,
+        createdAt,
+      }],
+    });
+    mockRecordChallengeContribution.mockResolvedValueOnce({ status: "contributed", challengeId: "challenge-1" });
+    const result = await recordGameCompletion({
+      db: createTenantDB(db as unknown as DB, mockTenant),
+      user: mockUser,
+      tenant: mockTenant,
+      input: makeValidInput({ challengeRunId }),
+    });
+
+    expect(result).toMatchObject({ duplicate: false, status: 200 });
+    expect(mockRecordChallengeContribution).toHaveBeenCalledWith(expect.objectContaining({
+      user: mockUser,
+      tenant: mockTenant,
+      runId: challengeRunId,
+      completion: expect.objectContaining({
+        id: "33333333-3333-4333-8333-333333333333",
+        createdAt,
+        difficulty: "medium",
+      }),
+    }));
+  });
+
+  it("keeps a normal completion when an expired challenge run is ignored", async () => {
+    mockRecordChallengeContribution.mockResolvedValueOnce({ status: "ignored", reason: "not-active" });
+    const result = await recordGameCompletion({
+      db: createTenantDB(createMockDb({ selectResults: [] }) as unknown as DB, mockTenant),
+      user: mockUser,
+      tenant: mockTenant,
+      input: makeValidInput({ challengeRunId: "22222222-2222-4222-8222-222222222222" }),
+    });
+    expect(result).toMatchObject({ duplicate: false, status: 200 });
   });
 
   it("returns duplicate: true and xpEarned: 0 on second call without inserting", async () => {
-    const input = makeValidInput();
+    const input = makeValidInput({ challengeRunId: "22222222-2222-4222-8222-222222222222" });
     const expectedActivityId = `game:haunted-library:${input.idempotencyKey}`;
     const db = createMockDb({
       selectSequence: [[], [{ activityId: expectedActivityId }]],
@@ -326,6 +469,7 @@ describe("recordGameCompletion (Group 3C)", () => {
     expect(second.xpEarned).toBe(0);
     expect(second.activityId).toBe(expectedActivityId);
     expect(first.activityId).toBe(second.activityId);
+    expect(mockRecordChallengeContribution).toHaveBeenCalledTimes(1);
   });
 
   it("throws before any DB call when the user lacks games:complete permission", async () => {
@@ -345,6 +489,32 @@ describe("recordGameCompletion (Group 3C)", () => {
         input: makeValidInput(),
       }),
     ).rejects.toThrow("FORBIDDEN");
+    expect(db.insert).not.toHaveBeenCalled();
+  });
+
+  it("rejects answer-audio count mismatch before database access", async () => {
+    const db = createMockDb();
+    const tenantDb = createTenantDB(db as unknown as DB, mockTenant);
+    const input = makeValidInput({
+      correctAnswers: 1,
+      totalAttempts: 1,
+      accuracy: 1,
+      metadata: { learningEvidence: answerAudioEvidence },
+    });
+
+    await expect(recordGameCompletion({
+      db: tenantDb,
+      user: mockUser,
+      tenant: mockTenant,
+      input,
+    })).rejects.toThrow(/total attempts/i);
+    await expect(recordGameCompletion({
+      db: tenantDb,
+      user: mockUser,
+      tenant: mockTenant,
+      input: { ...input, totalAttempts: 2, correctAnswers: 2 },
+    })).rejects.toThrow(/correct answers/i);
+    expect(db.select).not.toHaveBeenCalled();
     expect(db.insert).not.toHaveBeenCalled();
   });
 });

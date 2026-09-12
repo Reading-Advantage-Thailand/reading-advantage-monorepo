@@ -107,3 +107,20 @@ and `totalAttempts`). The cartridge remains the gameplay owner; APK remains the
 tutorial presentation and lifecycle owner; the host remains responsible for
 navigation, persistence, authoritative XP, and forwarding a validated result
 from normal gameplay only.
+
+## Current host adoption
+
+Advantage Games publishes three APK cartridges: `dragon-flight`, `astral-mage`,
+and `sorcerer-ziggurat`. Each cartridge uses the shared briefing, tutorial,
+normal gameplay, result, attribution, and replay path.
+
+The public route `/[locale]/student/arcade/[cartridgeId]` uses sample content.
+It identifies itself as Preview mode and does not save progress. The route
+`/[locale]/student/games/apk/[cartridgeId]` requires a student session. It loads
+student flashcards and sends validated results to the authoritative completion
+endpoint. It never falls back to preview content.
+
+The other 25 Advantage Games catalog entries remain application-owned legacy
+games. Their routes, mechanics, and tests are separate from the public APK
+cartridge catalog. APK verification does not claim that those games use the
+shared cartridge lifecycle.

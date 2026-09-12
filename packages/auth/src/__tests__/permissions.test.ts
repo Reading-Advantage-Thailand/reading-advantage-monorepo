@@ -2,6 +2,12 @@ import { describe, it, expect } from "vitest";
 import { hasPermission, PERMISSIONS } from "../permissions.js";
 
 describe("permissions", () => {
+  it("allows students to read and equip their own RPG state", () => {
+    expect(hasPermission("STUDENT", "rpg:read:own")).toBe(true);
+    expect(hasPermission("STUDENT", "rpg:equip:own")).toBe(true);
+    expect(hasPermission("TEACHER", "rpg:equip:own")).toBe(false);
+  });
+
   it("defines all expected permission keys", () => {
     const keys = Object.keys(PERMISSIONS);
     expect(keys).toContain("class:create");

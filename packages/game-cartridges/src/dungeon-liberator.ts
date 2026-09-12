@@ -9,7 +9,6 @@ import {
   createCompletionLatch,
   createInputActionNormalizer,
   createResultAccountant,
-  finalizeResult,
   preloadAssetBindings,
   validateNonEmptyContent,
   type ActorSpriteLayer,
@@ -179,6 +178,8 @@ export interface DungeonLiberatorSnapshot {
   readonly totalAttempts: number;
   /** Current score. */
   readonly score: number;
+  /** Stable sentence-word positions that already granted score and XP. */
+  readonly rewardedWordIds: readonly string[];
   /** Most recent gameplay outcome. */
   readonly lastOutcome?: "correct" | "incorrect" | "hazard" | "portal";
   /** First terminal result, when the session has ended. */
@@ -414,8 +415,14 @@ interface PhaserGraphicsLike {
 }
 
 interface PhaserTextLike {
+  readonly width?: number;
   setPosition(x: number, y: number): this;
   setText(value: string): this;
+  setFontSize?(value: number): this;
+  setBackgroundColor?(value: string): this;
+  setPadding?(left: number, top: number, right?: number, bottom?: number): this;
+  setOrigin?(x: number, y?: number): this;
+  setWordWrapWidth?(width: number, useAdvancedWrap?: boolean): this;
   destroy(): void;
 }
 
@@ -620,6 +627,10 @@ export function createDungeonLiberatorController(
   let gameTime = 0;
   let destroyed = false;
   let accountant = createResultAccountant();
+  let restoredCorrectAnswers = 0;
+  let restoredTotalAttempts = 0;
+  let restoredScore = 0;
+  let rewardedWordIds = new Set<string>();
   let terminalOutcome: GameTerminalOutcome = "complete";
   const completion = createCompletionLatch<GameResults>((result) => deliver(result, terminalOutcome));
 
@@ -651,8 +662,8 @@ export function createDungeonLiberatorController(
     const sentence = sentences[displayIndex]!;
     const target = phase === "victory"
       ? undefined
-      : prisoners.find((prisoner) => prisoner.orderIndex === wordIndex && !prisoner.collected && !prisoner.fleeing);
-    const answer = target?.word ?? (phase === "victory" ? "" : sentence.words[Math.min(wordIndex, sentence.words.length - 1)]!);
+      : prisoners.find((prisoner) => prisoner.word === sentence.words[wordIndex] && !prisoner.collected && !prisoner.fleeing);
+    const answer = phase === "victory" ? "" : sentence.words[Math.min(wordIndex, sentence.words.length - 1)]!;
     return Object.freeze({
       seed,
       phase,
@@ -674,9 +685,10 @@ export function createDungeonLiberatorController(
       portal: freezePoint({ ...portal }),
       lives: player.lives,
       energy: player.lives,
-      correctAnswers: accountant.correctAnswers,
-      totalAttempts: accountant.totalAttempts,
-      score: accountant.score,
+      correctAnswers: restoredCorrectAnswers + accountant.correctAnswers,
+      totalAttempts: restoredTotalAttempts + accountant.totalAttempts,
+      score: restoredScore + accountant.score,
+      rewardedWordIds: Object.freeze([...rewardedWordIds]),
       ...(lastOutcome === undefined ? {} : { lastOutcome }),
       result: terminalResultValue,
       gameTime,
@@ -684,9 +696,17 @@ export function createDungeonLiberatorController(
     });
   };
 
-  const resultForCounters = (): GameResults => gameResultsSchema.parse(
-    finalizeResult(accountant, { xpPerCorrect: 20, xpPerAccuracyPoint: 10 }),
-  );
+  const resultForCounters = (): GameResults => {
+    const state = snapshot();
+    const accuracy = state.totalAttempts === 0 ? 0 : state.correctAnswers / state.totalAttempts;
+    return gameResultsSchema.parse({
+      correctAnswers: state.correctAnswers,
+      totalAttempts: state.totalAttempts,
+      accuracy,
+      score: state.score,
+      xp: Math.floor(accuracy * 10) + rewardedWordIds.size * 20,
+    });
+  };
 
   const terminalResult = (nextPhase: "victory" | "defeat"): GameResults => {
     phase = nextPhase;
@@ -850,7 +870,8 @@ export function createDungeonLiberatorController(
     const prisoner = prisoners.find((candidate) => candidate.id === prisonerId);
     if (!prisoner || prisoner.collected || prisoner.fleeing) return emptyAction();
 
-    const correct = prisoner.orderIndex === wordIndex;
+    const expectedWord = sentences[sentenceIndex]!.words[wordIndex];
+    const correct = prisoner.word === expectedWord;
     accountant.recordAttempt({ correct });
     if (!correct) {
       lastOutcome = "incorrect";
@@ -865,17 +886,22 @@ export function createDungeonLiberatorController(
       });
     }
 
+    const rescuedOrderIndex = wordIndex;
+    const rewardId = `sentence:${sentenceIndex}:word:${rescuedOrderIndex}`;
     prisoner.collected = true;
     wordIndex += 1;
     lastOutcome = "correct";
-    accountant.addScore(100);
+    if (!rewardedWordIds.has(rewardId)) {
+      rewardedWordIds.add(rewardId);
+      accountant.addScore(100);
+    }
     trail = [...trail, {
       id: `trail:${prisoner.id}`,
       x: player.x,
       y: player.y,
       word: prisoner.word,
       translation: prisoner.translation,
-      orderIndex: prisoner.orderIndex,
+      orderIndex: rescuedOrderIndex,
     }];
     return actionResult(snapshot(), {
       accepted: true,
@@ -990,9 +1016,6 @@ export function createDungeonLiberatorController(
       ? targetCount
       : completedWords(sentences, activeSentenceIndex) + state.wordIndex;
     if (state.targetIndex !== expectedTargetIndex) throw new Error("Dungeon Liberator responsive state target index is invalid");
-    if (state.phase === "playing" && activeSentenceIndex === sentences.length - 1 && state.targetIndex === targetCount) {
-      throw new Error("Dungeon Liberator responsive playing state is terminal");
-    }
     if (state.phase === "victory" && state.wordIndex !== 0) throw new Error("Dungeon Liberator victory word index is invalid");
     const expectedAnswer = expectedWords[Math.min(state.wordIndex, expectedWords.length - 1)]!;
     if (state.answer !== (state.phase === "victory" ? "" : expectedAnswer)) {
@@ -1003,9 +1026,19 @@ export function createDungeonLiberatorController(
     }
     if (state.phase === "playing" && state.lives === 0) throw new Error("Dungeon Liberator playing state has no lives");
     if (state.phase === "defeat" && state.lives !== 0) throw new Error("Dungeon Liberator defeat state must have zero lives");
-    if (!Number.isInteger(state.correctAnswers) || !Number.isInteger(state.totalAttempts)
+    const allRewardIds = sentences.flatMap((candidate, candidateSentenceIndex) =>
+      candidate.words.map((_word, candidateWordIndex) => `sentence:${candidateSentenceIndex}:word:${candidateWordIndex}`));
+    if (!Array.isArray(state.rewardedWordIds)
+      || state.rewardedWordIds.some((id, index) => id !== allRewardIds[index])
+      || state.rewardedWordIds.length > completedWords(sentences, activeSentenceIndex) + expectedWords.length
+      || state.rewardedWordIds.length < state.targetIndex
+      || (state.phase === "victory" && state.rewardedWordIds.length !== targetCount)) {
+      throw new Error("Dungeon Liberator responsive reward history is invalid");
+    }
+    if (!Number.isSafeInteger(state.correctAnswers) || !Number.isSafeInteger(state.totalAttempts)
       || state.correctAnswers < 0 || state.correctAnswers > state.totalAttempts
-      || state.totalAttempts < 0 || state.score !== state.correctAnswers * 100) {
+      || state.totalAttempts < 0 || state.correctAnswers < state.rewardedWordIds.length
+      || state.score !== state.rewardedWordIds.length * 100) {
       throw new Error("Dungeon Liberator responsive result counters are invalid");
     }
     if (!Number.isFinite(state.gameTime) || state.gameTime < 0 || typeof state.destroyed !== "boolean") {
@@ -1048,7 +1081,7 @@ export function createDungeonLiberatorController(
       if (prisoner.id !== `prisoner:${activeSentenceIndex}:${index}`
         || prisoner.sentenceIndex !== activeSentenceIndex || prisoner.orderIndex !== index
         || prisoner.word !== expectedWords[index] || prisoner.translation !== sentence.translation
-         || prisoner.radius !== PRISONER_RADIUS || prisoner.collected !== (index < expectedCollectedCount)
+         || prisoner.radius !== PRISONER_RADIUS
         || !Number.isFinite(prisoner.x) || !Number.isFinite(prisoner.y)
         || prisoner.x < PRISONER_RADIUS || prisoner.x > DUNGEON_LIBERATOR_CANVAS.width - PRISONER_RADIUS
         || prisoner.y < PRISONER_RADIUS || prisoner.y > DUNGEON_LIBERATOR_CANVAS.height - PRISONER_RADIUS
@@ -1057,9 +1090,12 @@ export function createDungeonLiberatorController(
         throw new Error("Dungeon Liberator responsive prisoner entity is inconsistent");
       }
     }
+    if (actualPrisoners.filter((prisoner) => prisoner.collected).length !== expectedCollectedCount) {
+      throw new Error("Dungeon Liberator responsive prisoner collection is inconsistent");
+    }
     const expectedTarget = state.phase === "victory"
       ? undefined
-      : actualPrisoners.find((prisoner) => prisoner.orderIndex === state.wordIndex && !prisoner.collected && !prisoner.fleeing);
+      : actualPrisoners.find((prisoner) => prisoner.word === expectedWords[state.wordIndex] && !prisoner.collected && !prisoner.fleeing);
     const expectedCorrectAction = expectedTarget ? directionToPoint(state.player, expectedTarget) : "move-right";
     if (state.correctAction !== expectedCorrectAction) {
       throw new Error("Dungeon Liberator responsive correct action is inconsistent");
@@ -1067,14 +1103,23 @@ export function createDungeonLiberatorController(
     if (!Array.isArray(state.trail) || state.trail.length !== expectedCollectedCount) {
       throw new Error("Dungeon Liberator responsive trail is inconsistent");
     }
+    const trailPrisonerIds = new Set<string>();
     for (let index = 0; index < state.trail.length; index += 1) {
       const segment = state.trail[index]!;
-      const prisoner = state.prisoners[index]!;
+      const prisoner = state.prisoners.find((candidate) => `trail:${candidate.id}` === segment.id);
+      if (!prisoner || !prisoner.collected || prisoner.word !== expectedWords[index]
+        || trailPrisonerIds.has(prisoner.id)) {
+        throw new Error("Dungeon Liberator responsive trail entity is inconsistent");
+      }
+      trailPrisonerIds.add(prisoner.id);
       if (segment.id !== `trail:${prisoner.id}` || segment.word !== prisoner.word
         || segment.translation !== prisoner.translation || segment.orderIndex !== index
         || !Number.isFinite(segment.x) || !Number.isFinite(segment.y)) {
         throw new Error("Dungeon Liberator responsive trail entity is inconsistent");
       }
+    }
+    if (actualPrisoners.some((prisoner) => prisoner.collected !== trailPrisonerIds.has(prisoner.id))) {
+      throw new Error("Dungeon Liberator responsive prisoner collection is inconsistent");
     }
     if (!Array.isArray(state.monsters) || state.monsters.length !== monsterCount) {
       throw new Error("Dungeon Liberator responsive monster entities are invalid");
@@ -1093,7 +1138,20 @@ export function createDungeonLiberatorController(
       || state.availableActions.join(",") !== DUNGEON_MOVEMENT_ACTIONS.join(",")) {
       throw new Error("Dungeon Liberator responsive action contract is invalid");
     }
-    if (state.result !== undefined) gameResultsSchema.parse(state.result);
+    if (state.result !== undefined) {
+      gameResultsSchema.parse(state.result);
+      const accuracy = state.totalAttempts === 0 ? 0 : state.correctAnswers / state.totalAttempts;
+      const expectedResult = {
+        correctAnswers: state.correctAnswers,
+        totalAttempts: state.totalAttempts,
+        accuracy,
+        score: state.score,
+        xp: Math.floor(accuracy * 10) + state.rewardedWordIds.length * 20,
+      };
+      if (JSON.stringify(state.result) !== JSON.stringify(expectedResult)) {
+        throw new Error("Dungeon Liberator responsive result is inconsistent");
+      }
+    }
     if (state.phase === "playing" && state.result !== undefined) {
       throw new Error("Dungeon Liberator active state has a terminal result");
     }
@@ -1118,9 +1176,11 @@ export function createDungeonLiberatorController(
     lastOutcome = state.lastOutcome;
     terminalResultValue = state.result;
     destroyed = state.destroyed;
+    rewardedWordIds = new Set(state.rewardedWordIds);
     accountant = createResultAccountant();
-    for (let index = 0; index < state.totalAttempts; index += 1) accountant.recordAttempt({ correct: index < state.correctAnswers });
-    accountant.addScore(state.score);
+    restoredCorrectAnswers = state.correctAnswers;
+    restoredTotalAttempts = state.totalAttempts;
+    restoredScore = state.score;
     if (destroyed || phase !== "playing") completion.sealWithoutDelivery();
   };
 
@@ -1169,9 +1229,10 @@ export function createDungeonLiberatorController(
       tutorialDecoy = undefined;
     }
     const state = snapshot();
+    const expectedWord = sentences[sentenceIndex]!.words[wordIndex];
     const candidate = correct
-      ? state.prisoners.find((prisoner) => prisoner.orderIndex === state.wordIndex && !prisoner.fleeing)
-      : state.prisoners.find((prisoner) => prisoner.orderIndex !== state.wordIndex && !prisoner.fleeing);
+      ? state.prisoners.find((prisoner) => prisoner.word === expectedWord && !prisoner.collected && !prisoner.fleeing)
+      : state.prisoners.find((prisoner) => prisoner.word !== expectedWord && !prisoner.collected && !prisoner.fleeing);
     if (candidate) return resolvePrisoner(candidate.id);
     if (!correct) {
       const decoy = spawnTutorialDecoy();
@@ -1277,7 +1338,6 @@ function pointerInScene(
 
 function createScene(context: SceneContext): Readonly<Record<string, unknown>> {
   let resources: SceneResources | undefined;
-  let composition = context.composition;
   let previousKeys = new Set<string>();
   let wordLabels: PhaserTextLike[] = [];
   let wordSignature = "";
@@ -1313,6 +1373,9 @@ function createScene(context: SceneContext): Readonly<Record<string, unknown>> {
     syncWordLabels(scene, state);
     const scaleX = width / DUNGEON_LIBERATOR_CANVAS.width;
     const scaleY = height / DUNGEON_LIBERATOR_CANVAS.height;
+    const renderedWidth = scene.game?.canvas?.getBoundingClientRect?.().width ?? width;
+    const displayScale = Math.max(0.1, renderedWidth / width);
+    const displayFontSize = (pixels: number): number => Math.ceil(pixels / displayScale);
     const toScene = (point: DungeonPoint): DungeonPoint => ({ x: point.x * scaleX, y: point.y * scaleY });
     const playerPoint = toScene(state.player);
     const portalPoint = toScene(state.portal);
@@ -1343,50 +1406,61 @@ function createScene(context: SceneContext): Readonly<Record<string, unknown>> {
       graphics.fillStyle(prisoner.fleeing ? 0x64748b : 0xf97316, prisoner.fleeing ? 0.45 : 0.95)
         .fillCircle(point.x, point.y, prisoner.radius * Math.min(scaleX, scaleY));
       const label = wordLabels[state.prisoners.indexOf(prisoner)];
-      label?.setPosition(point.x - 40, point.y + 24);
+      const labelWidth = Math.max(displayFontSize(72), Math.min(displayFontSize(150), width - 24));
+      const labelX = clamp(point.x, labelWidth / 2 + 6, width - labelWidth / 2 - 6);
+      const labelY = clamp(
+        point.y + 24 + (prisoner.orderIndex % 2) * displayFontSize(22),
+        displayFontSize(18),
+        height - displayFontSize(18),
+      );
+      label?.setFontSize?.(displayFontSize(16));
+      label?.setBackgroundColor?.("rgba(15, 23, 42, 0.92)");
+      label?.setPadding?.(displayFontSize(3), displayFontSize(2));
+      label?.setOrigin?.(0.5, 0.5);
+      label?.setWordWrapWidth?.(labelWidth, true);
+      label?.setPosition(labelX, labelY);
     }
-    const artScale = Math.min(scaleX, scaleY);
     state.monsters.forEach((monster, index) => {
       const point = toScene(monster);
       const drawn = art.place(`monster:${index}`, "enemy:idle", {
         x: point.x,
         y: point.y,
-        width: monster.radius * 2.6 * artScale,
+        width: 70.4 / displayScale,
         depth: 7,
+        originX: 17 / 32,
+        originY: 24 / 32,
       });
       if (drawn) return;
-      graphics.fillStyle(0xef4444, 0.9).fillCircle(point.x, point.y, monster.radius * artScale);
-      graphics.fillStyle(0xfee2e2, 0.85).fillCircle(point.x - 6, point.y - 4, 4);
-      graphics.fillStyle(0xfee2e2, 0.85).fillCircle(point.x + 6, point.y - 4, 4);
+      const fallbackRadius = 11 / displayScale;
+      graphics.fillStyle(0xef4444, 0.9).fillCircle(point.x, point.y, fallbackRadius);
+      graphics.fillStyle(0xfee2e2, 0.85).fillCircle(point.x - fallbackRadius * 0.32, point.y - fallbackRadius * 0.22, fallbackRadius * 0.2);
+      graphics.fillStyle(0xfee2e2, 0.85).fillCircle(point.x + fallbackRadius * 0.32, point.y - fallbackRadius * 0.22, fallbackRadius * 0.2);
     });
     if (!art.place("player", "player:idle", {
       x: playerPoint.x,
       y: playerPoint.y,
-      width: state.player.radius * 2.8 * artScale,
+      width: 48 / displayScale,
       depth: 8,
+      originX: 12 / 24,
+      originY: 14.5 / 24,
     })) {
-      graphics.fillStyle(0x38bdf8, 1).fillCircle(playerPoint.x, playerPoint.y, state.player.radius * artScale);
-      graphics.fillStyle(0xe0f2fe, 0.9).fillCircle(playerPoint.x, playerPoint.y - 8, 7 * artScale);
+      const fallbackRadius = 12 / displayScale;
+      graphics.fillStyle(0x38bdf8, 1).fillCircle(playerPoint.x, playerPoint.y, fallbackRadius);
+      graphics.fillStyle(0xe0f2fe, 0.9).fillCircle(playerPoint.x, playerPoint.y - fallbackRadius * 0.38, fallbackRadius * 0.34);
     }
     art.sweep();
 
-    resources.title.setText("DUNGEON LIBERATOR").setPosition(28, 18);
-    resources.prompt.setText(`Rescue in order: ${state.prompt}`).setPosition(28, 57);
+    resources.title.setText("").setPosition(28, 18);
+    resources.prompt.setFontSize?.(displayFontSize(26));
+    resources.prompt.setWordWrapWidth?.(Math.max(1, width - 40), true);
+    resources.prompt.setOrigin?.(0.5, 0);
+    resources.prompt.setText(state.prompt).setPosition(width / 2, 18);
+    resources.progress.setFontSize?.(displayFontSize(15));
     resources.progress.setText(
-      `${composition?.profile === "compact" ? "Compact dungeon" : "Torchlit dungeon"}  •  Sentence ${Math.min(state.sentenceIndex + 1, state.sentenceCount)} of ${state.sentenceCount}  •  Word ${Math.min(state.wordIndex + 1, state.words.length)} of ${state.words.length}  •  Lives ${state.lives}`,
-    ).setPosition(28, 94);
-    resources.feedback.setText(
-      state.phase === "victory"
-        ? "Every prisoner reached the final exit!"
-        : state.phase === "defeat"
-          ? "The dungeon claimed the rescue party."
-          : state.lastOutcome === "incorrect"
-            ? "That prisoner fled. Rebuild the chain from the first word."
-            : state.lastOutcome === "hazard"
-              ? "A monster broke the rescue chain."
-              : "Reach the glowing exit with the full rescue chain.",
-    ).setPosition(28, height - 116);
-    resources.instructions.setText("Keyboard: WASD / arrows  •  Tap the D-pad to move").setPosition(28, height - 88);
+      `${Math.min(state.sentenceIndex + 1, state.sentenceCount)}/${state.sentenceCount}  ${Math.min(state.wordIndex + 1, state.words.length)}/${state.words.length}  ♥ ${state.lives}`,
+    ).setPosition(28, 58);
+    resources.feedback.setText("").setPosition(28, height - 116);
+    resources.instructions.setText("").setPosition(28, height - 88);
     const labels: Readonly<Record<DungeonDirection, string>> = {
       "move-left": "◀",
       "move-right": "▶",
@@ -1522,9 +1596,7 @@ function createScene(context: SceneContext): Readonly<Record<string, unknown>> {
         if (typeof state !== "object" || state === null) throw new Error("Dungeon Liberator responsive state is invalid");
         context.controller.restore(state as DungeonLiberatorSnapshot);
       },
-      apkRecompose: (nextComposition: SceneContext["composition"]) => {
-        composition = nextComposition;
-      },
+      apkRecompose: (_nextComposition: SceneContext["composition"]) => undefined,
     },
   };
 }

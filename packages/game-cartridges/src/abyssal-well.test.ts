@@ -16,6 +16,7 @@ import {
   getCreatureSpeed,
   getDifficultyConfig,
   getLanePosition,
+  getAbyssalWellLabelLayouts,
   rotatePlayer,
   spawnEnemy,
   startGame,
@@ -70,6 +71,8 @@ function createGraphics() {
     fillRoundedRect: vi.fn(() => graphics),
     lineStyle: vi.fn(() => graphics),
     strokeRoundedRect: vi.fn(() => graphics),
+    lineBetween: vi.fn(() => graphics),
+    setDepth: vi.fn(() => graphics),
     destroy: vi.fn(),
   };
   return graphics;
@@ -817,5 +820,110 @@ describe("The Abyssal Well radial shooter", () => {
       requiredAssetBindings: ["abyssal-well/rim-and-enemies"],
     });
     expect(ABYSSAL_WELL_CANVAS).toEqual({ width: 960, height: 540 });
+  });
+
+  it("accepts an equal visible duplicate and restores direct bounded counters", () => {
+    const initial = withPlaying(createAbyssalWellState([{ term: "go go", translation: "ไป" }], { seed: 6 }));
+    const spawned = spawnEnemy(spawnEnemy(initial));
+    const later = spawned.enemies.find((enemy) => enemy.wordIndex === 1)!;
+    const resolved = advanceAbyssalWellTime({
+      ...spawned,
+      enemies: spawned.enemies.map((enemy) => enemy.id === later.id ? { ...enemy, lane: 0, depth: 0.4 } : enemy),
+      projectiles: [{ id: "projectile-duplicate", lane: 0, depth: 0.42 }],
+    }, 16);
+
+    expect(resolved).toMatchObject({ targetIndex: 1, correctWords: 1, totalAttempts: 1, score: 100 });
+    expect(resolved.enemies.some((enemy) => enemy.wordIndex === 0 && enemy.word === "go")).toBe(true);
+    const controller = createAbyssalWellController([{ term: "go go", translation: "ไป" }], vi.fn(), { seed: 6 });
+    controller.restore(resolved);
+    expect(controller.snapshot()).toEqual(resolved);
+  });
+
+  it("keeps four neutral English cards readable and separated at native and CSS sizes", () => {
+    let state = withPlaying(createAbyssalWellState([
+      { term: "environmental bridge lantern constellation", translation: "สะพานสิ่งแวดล้อม" },
+    ], { seed: 3 }));
+    for (let index = 0; index < 4; index += 1) state = spawnEnemy(state);
+
+    for (const [width, height, renderedWidth] of [[390, 704, 390], [960, 540, 336]] as const) {
+      const layouts = getAbyssalWellLabelLayouts(state.enemies, width, height, renderedWidth);
+      expect(layouts).toHaveLength(4);
+      for (const [index, layout] of layouts.entries()) {
+        const enemy = state.enemies.find((candidate) => candidate.id === layout.id)!;
+        expect({ x: layout.actorX, y: layout.actorY }).toEqual(getLanePosition(enemy.lane, enemy.depth, width, height));
+        expect(layout.x - layout.width / 2).toBeGreaterThanOrEqual(0);
+        expect(layout.x + layout.width / 2).toBeLessThanOrEqual(width);
+        expect(layout.fontSize * renderedWidth / width).toBeGreaterThanOrEqual(16);
+        for (const other of layouts.slice(0, index)) {
+          expect(Math.abs(layout.x - other.x) >= layout.width
+            || Math.abs(layout.y - other.y) >= layout.height).toBe(true);
+        }
+      }
+    }
+  });
+
+  it("draws each neutral enemy above the well mouth with its matching card leader", () => {
+    const input = createInputController();
+    const config = createAbyssalWellCartridge().createGameConfig({
+      input: [{ term: "bridge forest river lantern", translation: "ฉันเห็นสะพาน" }],
+      edition: PHASE3_RUNTIME_EDITION,
+      complete: vi.fn(),
+      diagnostic: vi.fn(),
+      inputController: input,
+      seed: 3,
+      sessionMode: "playing",
+    });
+    const scene = config.scene as {
+      create: (this: ReturnType<typeof createSceneHarness>["scene"]) => void;
+      update: (this: ReturnType<typeof createSceneHarness>["scene"], time: number, delta: number) => void;
+      extend: { apkCaptureResponsiveState: () => AbyssalWellState };
+    };
+    const harness = createSceneHarness();
+    scene.create.call(harness.scene);
+    for (let index = 0; index < 160; index += 1) scene.update.call(harness.scene, index * 50, 50);
+    const state = scene.extend.apkCaptureResponsiveState();
+    const layouts = getAbyssalWellLabelLayouts(state.enemies, 960, 540, 960);
+
+    expect(state.enemies.length).toBeGreaterThan(0);
+    expect(harness.graphics.setDepth).toHaveBeenCalledWith(6);
+    expect(harness.graphics.fillStyle.mock.calls.filter(([color, alpha]) => color === 0x312e68 && alpha === 0.96).length)
+      .toBeGreaterThanOrEqual(state.enemies.length);
+    for (const layout of layouts) {
+      expect(harness.graphics.lineBetween).toHaveBeenCalledWith(layout.actorX, layout.actorY, layout.x, layout.y);
+    }
+  });
+
+  it("shows a bare Thai target, neutral enemies, visible controls, and held rotation", () => {
+    const input = createInputController();
+    const config = createAbyssalWellCartridge().createGameConfig({
+      input: [{ term: "bridge forest", translation: "สะพานในป่า" }],
+      edition: PHASE3_RUNTIME_EDITION,
+      complete: vi.fn(),
+      diagnostic: vi.fn(),
+      inputController: input,
+      seed: 3,
+      sessionMode: "playing",
+    });
+    const scene = config.scene as {
+      create: (this: ReturnType<typeof createSceneHarness>["scene"]) => void;
+      update: (this: ReturnType<typeof createSceneHarness>["scene"], time: number, delta: number) => void;
+      extend: { apkCaptureResponsiveState: () => AbyssalWellState };
+    };
+    const harness = createSceneHarness();
+    scene.create.call(harness.scene);
+    expect(harness.texts[1]?.setText).toHaveBeenLastCalledWith("สะพานในป่า");
+    expect(harness.texts[2]?.setText).not.toHaveBeenCalledWith(expect.stringContaining("bridge"));
+
+    input.set(inputSnapshot({ keys: ["ArrowRight"], pressed: ["ArrowRight"] }));
+    scene.update.call(harness.scene, 0, 16);
+    input.set(inputSnapshot({ keys: ["ArrowRight"] }));
+    scene.update.call(harness.scene, 16, 50);
+    scene.update.call(harness.scene, 66, 50);
+    scene.update.call(harness.scene, 116, 50);
+    expect(scene.extend.apkCaptureResponsiveState().player.lane).toBe(2);
+
+    for (let index = 0; index < 40; index += 1) scene.update.call(harness.scene, 166 + index * 50, 50);
+    expect(harness.graphics.fillStyle).not.toHaveBeenCalledWith(0xf59e0b, expect.anything());
+    expect(harness.texts.slice(5, 8).every((text) => text.setText.mock.lastCall?.[0] !== "")).toBe(true);
   });
 });

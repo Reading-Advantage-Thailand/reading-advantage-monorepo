@@ -33,6 +33,7 @@ afterEach(cleanup);
 
 describe("GameBriefingScreen", () => {
   it("exposes a named briefing dialog, complete Thai and English learning content, labelled sections, and an accessible Start action", () => {
+    const focus = vi.spyOn(HTMLElement.prototype, "focus");
     const onStart = vi.fn();
     render(
       <GameBriefingScreen
@@ -46,6 +47,9 @@ describe("GameBriefingScreen", () => {
     );
 
     const dialog = screen.getByRole("dialog", { name: "Temple Word Quest" });
+    expect(dialog).toHaveAttribute("data-apk-visual-theme", "retro-arcade");
+    expect(dialog.style.borderImageSource).toContain("apk-ui-panel-square.png");
+    expect(dialog.style.borderImageSlice).toBe("16");
     expect(dialog).not.toHaveAttribute("aria-modal", "true");
     expect(screen.getByRole("heading", { name: "Temple Word Quest", level: 1 })).toBeInTheDocument();
     expect(screen.getByText("A vocabulary adventure")).toBeInTheDocument();
@@ -63,10 +67,30 @@ describe("GameBriefingScreen", () => {
 
     const start = screen.getByRole("button", { name: "Begin quest" });
     expect(start).toHaveAttribute("type", "button");
+    expect(start.style.borderImageSource).toContain("apk-ui-button-primary.png");
+    expect(start.style.borderImageSlice).toBe("4 6 fill");
+    expect(start).toHaveStyle({ minBlockSize: "48px" });
     expect(start).toHaveFocus();
+    expect(focus).toHaveBeenCalledWith({ preventScroll: true });
     fireEvent.click(start);
     fireEvent.click(start);
     expect(onStart).toHaveBeenCalledOnce();
+  });
+
+  it("keeps full instructions, words, and controls in compact expandable sections", () => {
+    render(
+      <GameBriefingScreen
+        briefing={briefing}
+        learningItems={[{ term: "แม่น้ำ", translation: "river" }]}
+        onStart={vi.fn()}
+      />,
+    );
+
+    expect(screen.getByText("How to play").closest("details")).not.toHaveAttribute("open");
+    expect(screen.getByText("Preview vocabulary").closest("details")).not.toHaveAttribute("open");
+    expect(screen.getByText("Choose your controls").closest("details")).not.toHaveAttribute("open");
+    expect(screen.getByText("แม่น้ำ")).toBeInTheDocument();
+    expect(screen.getByText("river")).toBeInTheDocument();
   });
 
   it("renders complete sentence content and only controls applicable to touch input", () => {
@@ -211,6 +235,9 @@ describe("GameBriefingScreen", () => {
     );
 
     const demonstrate = screen.getByRole("button", { name: "Demonstrate for class" });
+    expect(demonstrate.style.borderImageSource).toContain("apk-ui-button-secondary.png");
+    expect(demonstrate.style.borderImageSlice).toBe("4 6");
+    expect(demonstrate).toHaveStyle({ minBlockSize: "48px" });
     fireEvent.click(demonstrate);
     fireEvent.click(demonstrate);
     expect(onDemonstrate).toHaveBeenCalledOnce();

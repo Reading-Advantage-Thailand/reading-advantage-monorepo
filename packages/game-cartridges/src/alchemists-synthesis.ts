@@ -208,6 +208,9 @@ interface PhaserGraphicsLike {
 interface PhaserTextLike {
   setPosition(x: number, y: number): this;
   setText(value: string): this;
+  setFontSize?(value: number): this;
+  setOrigin?(x: number, y?: number): this;
+  setWordWrapWidth?(width: number, useAdvancedWrap?: boolean): this;
   destroy(): void;
 }
 
@@ -725,7 +728,6 @@ export function createAlchemistsSynthesisController(
 
 function createScene(context: AlchemistsSynthesisSceneContext): Readonly<Record<string, unknown>> {
   let resources: SceneResources | undefined;
-  let composition = context.composition;
   let previousKeys = new Set<string>();
   let animationMs = 0;
   let cleaned = false;
@@ -777,10 +779,13 @@ function createScene(context: AlchemistsSynthesisSceneContext): Readonly<Record<
     const state = context.controller.snapshot();
     const rects = optionRects(state.options, width, height);
     const pulse = Math.sin(animationMs / 2000 * Math.PI * 2) * 3;
-    const profile = composition?.profile === "compact" ? "Compact" : "Wide";
+    const displayWidth = scene.game?.canvas?.getBoundingClientRect?.().width ?? width;
+    const displayScale = Math.max(0.1, displayWidth / width);
+    const displayFontSize = (pixels: number): number => Math.ceil(pixels / displayScale);
+    const displayPosition = (pixels: number): number => Math.ceil(pixels / displayScale);
 
     activeResources.graphics.clear();
-    if (!activeResources.art.ground("world:ground", width, height)) activeResources.graphics.fillStyle(0x100b1f, 1).fillRect(0, 0, width, height);
+    activeResources.graphics.fillStyle(0x100b1f, 1).fillRect(0, 0, width, height);
     activeResources.graphics.fillStyle(0x2d1648, 0.96)
       .fillRoundedRect(width * 0.05, height * 0.08, width * 0.9, height * 0.86, 24);
     activeResources.graphics.fillStyle(0x7c3aed, 0.9).fillCircle(width / 2, height * 0.36 + pulse, Math.min(width, height) * 0.08);
@@ -792,6 +797,16 @@ function createScene(context: AlchemistsSynthesisSceneContext): Readonly<Record<
       width: Math.min(width, height) * 0.14,
       depth: 8,
     });
+    // prop-tower is 32x80 (1:2.5) — preserve aspect; depth 2 above the 0.96-alpha panel, below actors.
+    const propTowerWidth = 36;
+    activeResources.art.place("prop:0", "prop:0", {
+      x: width * 0.85,
+      y: height * 0.52,
+      width: propTowerWidth,
+      height: propTowerWidth * (80 / 32),
+      originY: 1,
+      depth: 2,
+    });
     activeResources.art.sweep();
     rects.forEach((rect, index) => {
       const selected = index === state.selectedIndex;
@@ -799,26 +814,26 @@ function createScene(context: AlchemistsSynthesisSceneContext): Readonly<Record<
         .fillRoundedRect(rect.x, rect.y, rect.width, rect.height, 14);
       activeResources.graphics.lineStyle(3, selected ? 0xf0b35b : 0x8b5cf6, 0.9)
         .strokeRoundedRect(rect.x, rect.y, rect.width, rect.height, 14);
-      activeResources.choices[index]?.setText(state.options[index]!.term).setPosition(rect.x + 14, rect.y + rect.height / 2 - 10);
+      const choice = activeResources.choices[index];
+      choice?.setFontSize?.(displayFontSize(16));
+      choice?.setWordWrapWidth?.(Math.max(1, rect.width - 24), true);
+      choice?.setOrigin?.(0.5, 0.5);
+      choice?.setText(state.options[index]!.term).setPosition(rect.x + rect.width / 2, rect.y + rect.height / 2);
     });
     for (let index = rects.length; index < activeResources.choices.length; index += 1) {
       activeResources.choices[index]?.setText("");
     }
-    activeResources.title.setText("ALCHEMIST'S SYNTHESIS").setPosition(24, 18);
-    activeResources.prompt.setText(`Translation: ${state.prompt}`).setPosition(24, height * 0.19);
+    activeResources.title.setText("").setPosition(24, 18);
+    activeResources.prompt.setFontSize?.(displayFontSize(26));
+    activeResources.prompt.setWordWrapWidth?.(Math.max(1, width - 32), true);
+    activeResources.prompt.setOrigin?.(0.5, 0);
+    activeResources.prompt.setText(state.prompt).setPosition(width / 2, displayPosition(20));
+    activeResources.progress.setFontSize?.(displayFontSize(15));
     activeResources.progress
-      .setText(`${profile}  |  Round ${state.round}/${state.roundCount}  |  Score ${state.score}  |  Time ${Math.ceil(state.timeRemainingMs / 1000)}s`)
-      .setPosition(24, height * 0.25);
-    activeResources.feedback.setText(
-      state.phase === "victory"
-        ? "The formula is stable. Victory!"
-        : state.phase === "defeat"
-          ? state.timerExpired ? "The cauldron cooled. Time expired." : "The formula failed. Keep practicing."
-          : state.lastOutcome === "incorrect" ? "That term is not the match. Try the current translation again." : "Select the term that matches the translation.",
-    ).setPosition(24, height * 0.89);
-    activeResources.instructions
-      .setText("Keyboard: A/D or arrows to move, Enter/Space to confirm  |  Tap or click a term")
-      .setPosition(24, height * 0.94);
+      .setText(`${state.round}/${state.roundCount}  ★ ${state.score}  ${Math.ceil(state.timeRemainingMs / 1000)}s`)
+      .setPosition(24, displayPosition(58));
+    activeResources.feedback.setText("").setPosition(24, height * 0.89);
+    activeResources.instructions.setText("").setPosition(24, height * 0.94);
   };
 
   const cleanup = (): void => {
@@ -841,14 +856,14 @@ function createScene(context: AlchemistsSynthesisSceneContext): Readonly<Record<
   };
 
 
-  const artKeys = ["world:ground", "player:idle", "enemy:idle"] as const;
+  const artKeys = ["player:idle", "enemy:idle", "prop:0"] as const;
 
   const preload = function (this: PhaserSceneLike): void {
     if (!this.load) return;
     preloadAssetBindings(
       this.load,
       context.edition,
-      artKeys.filter((key) => context.edition.bindings[key]),
+      artKeys.filter((key) => context.edition?.bindings?.[key]),
     );
   };
 
@@ -901,7 +916,7 @@ function createScene(context: AlchemistsSynthesisSceneContext): Readonly<Record<
         context.controller.restore(state as AlchemistsSynthesisSnapshot);
       },
       apkRecompose: (nextComposition: AlchemistsSynthesisSceneContext["composition"]): void => {
-        composition = nextComposition;
+        void nextComposition;
       },
     },
   };

@@ -164,6 +164,13 @@ export interface DeterministicSpawner {
   advance(deltaMs: number): number;
   /** Milliseconds retained toward the next spawn. */
   readonly elapsedMs: number;
+  /**
+   * Restores milliseconds retained toward the next spawn.
+   * @param elapsedMs Partial interval elapsed time.
+   * @returns Nothing.
+   * @throws When elapsedMs falls outside the finite partial interval.
+   */
+  setElapsed(elapsedMs: number): void;
   /** Clears retained elapsed time. */
   reset(): void;
 }
@@ -190,6 +197,12 @@ export function createDeterministicSpawner(config: DeterministicSpawnerConfig): 
     },
     get elapsedMs(): number {
       return elapsedMs;
+    },
+    setElapsed(nextElapsedMs: number): void {
+      if (!Number.isFinite(nextElapsedMs) || nextElapsedMs < 0 || nextElapsedMs >= config.intervalMs) {
+        throw new Error("Spawner elapsed time must be within the finite partial interval");
+      }
+      elapsedMs = nextElapsedMs;
     },
     reset(): void {
       elapsedMs = 0;

@@ -10,6 +10,7 @@ export default getRequestConfig(async ({ requestLocale }) => {
 
   return {
     locale,
+    timeZone: "Asia/Bangkok",
     messages: (await import(`./locales/${locale}`)).default,
   };
 });

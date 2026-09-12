@@ -26,24 +26,18 @@ import {
   saveInsights,
 } from "@/server/services/ai-insight-service";
 import { AIInsightScope, GoalStatus, Role } from "@/lib/enums";
+import type { DashboardAIInsightProps } from "@/components/dashboard/student-dashboard-contract";
 
 const STAFF_ROLES: string[] = [Role.TEACHER, Role.ADMIN, Role.SYSTEM];
 
-export interface DashboardAIInsight {
-  id: string;
-  type: string;
-  title: string;
-  description: string;
-  confidence: number;
-  priority: string;
-  data: Record<string, any>;
-  createdAt: string;
-}
+export type DashboardAIInsight = DashboardAIInsightProps;
 
 export interface StudentDashboardSRSHealth {
   scope: "student";
   student: NonNullable<Awaited<ReturnType<typeof getStudentSRSHealth>>>;
   quickActions: QuickActionSuggestion[];
+  /** Optional aggregate metrics; undefined mirrors the API response shape. */
+  metrics?: { avgRetentionRate: number } | null;
 }
 
 export interface StudentDashboardMetrics {
@@ -148,7 +142,7 @@ async function fetchAIInsights(
         priority: String(insight.priority).toLowerCase(),
         data: insight.data || {},
         createdAt: insight.createdAt.toISOString(),
-      })),
+      })) as DashboardAIInsight[],
     };
   } catch (error) {
     console.error("[DashboardService] AI insights fetch failed:", error);

@@ -3,7 +3,7 @@ import {
   validateSession,
 } from "@reading-advantage/auth";
 import { db } from "@reading-advantage/db";
-import { createTenantDB } from "@reading-advantage/domain";
+import { createTenantDB } from "@reading-advantage/domain/db-contract";
 import { recordGameCompletion } from "@reading-advantage/domain/games";
 import type { ApkCompletionRouteDependencies } from "./completion-route";
 

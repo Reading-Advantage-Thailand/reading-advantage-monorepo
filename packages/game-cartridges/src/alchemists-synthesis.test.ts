@@ -46,7 +46,7 @@ function createInputController() {
   };
 }
 
-function createSceneHost() {
+function createSceneHost(canvasWidth = 960, sceneSize = { width: 960, height: 540 }) {
   const graphics = {
     clear: vi.fn(),
     fillStyle: vi.fn(),
@@ -68,41 +68,60 @@ function createSceneHost() {
   const texts: Array<{
     setPosition: ReturnType<typeof vi.fn>;
     setText: ReturnType<typeof vi.fn>;
+    setFontSize: ReturnType<typeof vi.fn>;
+    setOrigin: ReturnType<typeof vi.fn>;
+    setWordWrapWidth: ReturnType<typeof vi.fn>;
     destroy: ReturnType<typeof vi.fn>;
   }> = [];
   const createText = () => {
     const text = {
       setPosition: vi.fn(),
       setText: vi.fn(),
+      setFontSize: vi.fn(),
+      setOrigin: vi.fn(),
+      setWordWrapWidth: vi.fn(),
       destroy: vi.fn(),
     };
     text.setPosition.mockReturnValue(text);
     text.setText.mockReturnValue(text);
+    text.setFontSize.mockReturnValue(text);
+    text.setOrigin.mockReturnValue(text);
+    text.setWordWrapWidth.mockReturnValue(text);
     texts.push(text);
     return text;
   };
 
   const listeners = new Map<string, () => void>();
+  const tileSprite = vi.fn(() => ({
+    setOrigin: vi.fn().mockReturnThis(),
+    setDisplaySize: vi.fn().mockReturnThis(),
+    setDepth: vi.fn().mockReturnThis(),
+    setPosition: vi.fn().mockReturnThis(),
+    setAlpha: vi.fn().mockReturnThis(),
+    destroy: vi.fn(),
+  }));
   const host = {
     add: {
       graphics: vi.fn(() => graphics),
       text: vi.fn(() => createText()),
+      tileSprite,
     },
     events: {
       once: vi.fn((event: string, listener: () => void) => listeners.set(event, listener)),
     },
     game: {
       canvas: {
-        getBoundingClientRect: () => ({ left: 0, top: 0, width: 960, height: 540 }),
+        getBoundingClientRect: () => ({ left: 0, top: 0, width: canvasWidth, height: sceneSize.height }),
       },
     },
-    scale: { width: 960, height: 540 },
+    scale: sceneSize,
   };
 
   return {
     host,
     graphics,
     texts,
+    tileSprite,
     emit(event: string): void {
       listeners.get(event)?.();
     },
@@ -432,6 +451,63 @@ describe("Alchemist's Synthesis cartridge", () => {
     expect(defeatPostChoose.result).toBe(defeatResult);
     expect(defeatPostSelect.result).toBe(defeatResult);
     expect(defeatDeliver).toHaveBeenCalledOnce();
+  });
+
+  it("keeps the Thai prompt prominent and complete English choices readable at compact widths", () => {
+    const vocabulary = [
+      { term: "constellation", translation: "กลุ่มดาว" },
+      { term: "transformation", translation: "การเปลี่ยนแปลง" },
+      { term: "illumination", translation: "การส่องสว่าง" },
+      { term: "restoration", translation: "การฟื้นฟู" },
+    ];
+    const mount = (canvasWidth: number, sceneSize: { width: number; height: number }) => {
+      const config = createAlchemistsSynthesisCartridge().createGameConfig({
+        input: vocabulary,
+        edition: PHASE3_RUNTIME_EDITION,
+        complete: vi.fn(),
+        diagnostic: vi.fn(),
+        inputController: createInputController(),
+        seed: 41,
+      });
+      const scene = config.scene as { create(this: ReturnType<typeof createSceneHost>["host"]): void };
+      const host = createSceneHost(canvasWidth, sceneSize);
+      scene.create.call(host.host);
+      return host;
+    };
+
+    const native = mount(336, { width: 336, height: 733 });
+    const cssScaled = mount(336, { width: 960, height: 540 });
+
+    for (const [host, promptSize, choiceSize] of [[native, 26, 16], [cssScaled, 75, 46]] as const) {
+      expect(host.texts[1]?.setText).toHaveBeenLastCalledWith(vocabulary[0]!.translation);
+      expect(host.texts[1]?.setFontSize).toHaveBeenLastCalledWith(promptSize);
+      const liveText = host.texts.slice(0, 5).flatMap((text) => text.setText.mock.calls.map(([value]) => String(value))).join(" ");
+      expect(liveText).not.toMatch(/ALCHEMIST'S SYNTHESIS|Translation:|Select the term|Keyboard:|Compact|Wide/);
+      const choices = host.texts.slice(5, 9);
+      expect(choices.map((choice) => choice.setText.mock.calls.at(-1)?.[0])).toEqual(expect.arrayContaining(vocabulary.map((item) => item.term)));
+      choices.forEach((choice) => {
+        expect(choice.setFontSize).toHaveBeenLastCalledWith(choiceSize);
+        expect(choice.setWordWrapWidth).toHaveBeenLastCalledWith(expect.any(Number), true);
+      });
+    }
+  });
+
+  it("uses a quiet procedural floor instead of tiling the bound furniture strip", () => {
+    const config = createAlchemistsSynthesisCartridge().createGameConfig({
+      input: [...INPUT],
+      edition: PHASE3_RUNTIME_EDITION,
+      complete: vi.fn(),
+      diagnostic: vi.fn(),
+      inputController: createInputController(),
+      seed: 41,
+    });
+    const scene = config.scene as { create(this: ReturnType<typeof createSceneHost>["host"]): void };
+    const host = createSceneHost(336, { width: 336, height: 733 });
+
+    scene.create.call(host.host);
+
+    expect(host.tileSprite).not.toHaveBeenCalled();
+    expect(host.graphics.fillRect).toHaveBeenCalledWith(0, 0, 336, 733);
   });
 
   it("supports cursor movement and pointer or touch option selection in the scene", () => {

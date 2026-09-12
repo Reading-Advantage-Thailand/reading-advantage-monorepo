@@ -13,6 +13,7 @@ import {
   STORM_CASTLE_TOWER_KEYBOARD_BINDINGS,
   getStormCastleTowerDirectionFromPointer,
 } from "./storm-castle-tower.js";
+import { createCatalogStandardEdition } from "./catalog-standard-art.js";
 import { PHASE3_RUNTIME_EDITION } from "./legacy-traversal-phase3-test-helpers.js";
 
 const SENTENCES = [
@@ -83,28 +84,80 @@ function createSceneHost() {
   ]) method.mockReturnValue(graphics);
 
   const texts: Array<{
+    value: string;
+    fontSize?: number;
+    backgroundColor?: string;
+    wrapWidth?: number;
     setPosition: ReturnType<typeof vi.fn>;
     setText: ReturnType<typeof vi.fn>;
     destroy: ReturnType<typeof vi.fn>;
   }> = [];
-  const createText = () => {
+  const createText = (_x = 0, _y = 0, initialValue = "") => {
     const text = {
+      value: initialValue,
+      fontSize: undefined as number | undefined,
+      backgroundColor: undefined as string | undefined,
+      wrapWidth: undefined as number | undefined,
       setPosition: vi.fn(),
-      setText: vi.fn(),
+      setText: vi.fn((value: string) => {
+        text.value = value;
+        return text;
+      }),
+      setFontSize: vi.fn((value: number) => {
+        text.fontSize = value;
+        return text;
+      }),
+      setBackgroundColor: vi.fn((value: string) => {
+        text.backgroundColor = value;
+        return text;
+      }),
+      setPadding: vi.fn(() => text),
+      setOrigin: vi.fn(() => text),
+      setWordWrapWidth: vi.fn((value: number) => {
+        text.wrapWidth = value;
+        return text;
+      }),
       destroy: vi.fn(),
     };
     text.setPosition.mockReturnValue(text);
-    text.setText.mockReturnValue(text);
     texts.push(text);
     return text;
   };
 
   const listeners = new Map<string, () => void>();
+  const tiles: Array<{
+    key: string;
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+    scaleX?: number;
+    scaleY?: number;
+  }> = [];
+  const createTile = (x: number, y: number, width: number, height: number, key: string) => {
+    const tile = {
+      key, x, y, width, height,
+      scaleX: undefined as number | undefined,
+      scaleY: undefined as number | undefined,
+      setOrigin: vi.fn(() => tile),
+      setDepth: vi.fn(() => tile),
+      setTileScale: vi.fn((scaleX: number, scaleY = scaleX) => {
+        tile.scaleX = scaleX;
+        tile.scaleY = scaleY;
+        return tile;
+      }),
+      destroy: vi.fn(),
+    };
+    tiles.push(tile);
+    return tile;
+  };
   const host = {
     add: {
       graphics: vi.fn(() => graphics),
-      text: vi.fn(() => createText()),
+      text: vi.fn(createText),
+      tileSprite: vi.fn(createTile),
     },
+    load: { image: vi.fn(), spritesheet: vi.fn() },
     events: {
       once: vi.fn((event: string, listener: () => void) => listeners.set(event, listener)),
     },
@@ -116,6 +169,7 @@ function createSceneHost() {
     host,
     graphics,
     texts,
+    tiles,
     emit(event: string): void {
       listeners.get(event)?.();
     },
@@ -189,6 +243,31 @@ describe("Storm the Castle Tower cartridge", () => {
     expect(collected.snapshot.windows.find((window) => window.id === target.id)?.state).toBe("collected");
     expect(collected.snapshot.cameraY).toBeGreaterThan(0);
     expect(collected.snapshot.height).toBeGreaterThan(0);
+  });
+
+  it("accepts either nearby window with the expected visible duplicate word", () => {
+    const input = [{ term: "rise rise", translation: "ปีนขึ้น" }];
+    const controller = createStormCastleTowerController(input, vi.fn(), { seed: 11 });
+    const second = controller.snapshot().windows[1]!;
+    moveToWindow(controller, second.id);
+
+    expect(controller.collect(second.id)).toMatchObject({ correct: true, progressed: true });
+    const captured = controller.capture();
+    expect(captured.collectedWindowIds).toEqual([second.id]);
+    expect(captured.windows.find(({ id }) => id === second.id)?.state).toBe("collected");
+
+    const restored = createStormCastleTowerController(input, vi.fn(), { seed: 11 });
+    restored.restore(captured);
+    const first = restored.snapshot().windows[0]!;
+    moveToWindow(restored, first.id);
+    expect(restored.collect(first.id)).toMatchObject({ correct: true, terminal: true });
+  });
+
+  it("restores large truthful attempt counters without replay loops", () => {
+    const controller = createStormCastleTowerController(SENTENCES, vi.fn(), { seed: 11 });
+    const captured = controller.capture();
+    controller.restore({ ...captured, totalAttempts: 1_000_000_000 });
+    expect(controller.snapshot()).toMatchObject({ correctAnswers: 0, totalAttempts: 1_000_000_000, score: 0 });
   });
 
   it("keeps every ordered word across multiple sentence inputs", () => {
@@ -546,6 +625,84 @@ describe("Storm the Castle Tower cartridge", () => {
     expect(host.graphics.destroy).toHaveBeenCalledOnce();
     expect(host.texts.every((text) => text.destroy.mock.calls.length === 1)).toBe(true);
     expect(complete).not.toHaveBeenCalled();
+  });
+
+  it("shows bare Thai and only readable visible windows on a CSS-scaled canvas", () => {
+    const sentence = { term: "one two three four five six seven eight nine ten eleven twelve", translation: "ปีนหอคอย" };
+    const config = createStormCastleTowerCartridge().createGameConfig({
+      input: [sentence], edition: PHASE3_RUNTIME_EDITION, complete: vi.fn(), diagnostic: vi.fn(),
+      inputController: createMutableInputController(), seed: 5,
+    });
+    const scene = config.scene as { create: (this: unknown) => void };
+    const host = createSceneHost();
+    host.host.game.canvas.getBoundingClientRect = () => ({ left: 0, top: 0, width: 336, height: 189 });
+    scene.create.call(host.host);
+
+    expect(host.texts.some(({ value, fontSize }) => value === sentence.translation && fontSize === 75)).toBe(true);
+    const words = sentence.term.split(" ");
+    const EnglishLabels = host.texts.filter(({ value }) => words.includes(value));
+    expect(EnglishLabels.length).toBeGreaterThan(0);
+    expect(EnglishLabels.length).toBeLessThan(words.length);
+    expect(EnglishLabels.every(({ fontSize, backgroundColor, wrapWidth }) =>
+      fontSize === 46 && backgroundColor === "rgba(15, 23, 42, 0.92)" && (wrapWidth ?? 0) > 0)).toBe(true);
+    expect(host.texts.map(({ value }) => value).join(" ")).not.toMatch(/STORM THE CASTLE|Climb for|Tower climb|Compact climb|Move near|WASD|Lives:/i);
+  });
+
+  it("renders the reviewed wall only inside the tower at uniform display scale", () => {
+    const edition = createCatalogStandardEdition([], "/assets/apk/standard-pack-qc/", "storm-castle-tower");
+    const config = createStormCastleTowerCartridge().createGameConfig({
+      input: SENTENCES, edition, complete: vi.fn(), diagnostic: vi.fn(), inputController: createMutableInputController(), seed: 5,
+    });
+    const scene = config.scene as { preload: (this: unknown) => void; create: (this: unknown) => void };
+    const host = createSceneHost();
+    host.host.game.canvas.getBoundingClientRect = () => ({ left: 0, top: 0, width: 336, height: 189 });
+    scene.preload.call(host.host);
+    scene.create.call(host.host);
+
+    expect(host.tiles).toEqual([expect.objectContaining({
+      key: "apk:catalog-standard-pack:storm-castle-blue-wall",
+      x: 170,
+      y: 0,
+      width: 620,
+      height: 540,
+      scaleX: 2 / (336 / 960),
+      scaleY: 2 / (336 / 960),
+    })]);
+    expect(host.graphics.fillRect).not.toHaveBeenCalledWith(0, 0, 960, 540);
+  });
+
+  it("renders an opaque quiet header above the tower playfield", () => {
+    const config = createStormCastleTowerCartridge().createGameConfig({
+      input: SENTENCES, edition: PHASE3_RUNTIME_EDITION, complete: vi.fn(), diagnostic: vi.fn(),
+      inputController: createMutableInputController(), seed: 5,
+    });
+    const scene = config.scene as { create: (this: unknown) => void };
+    const host = createSceneHost();
+    scene.create.call(host.host);
+
+    expect(host.graphics.fillStyle).toHaveBeenCalledWith(0x07111f, 0.96);
+    expect(host.graphics.fillRoundedRect).toHaveBeenCalledWith(12, 8, 936, 82, 14);
+    expect(host.texts.some(({ value }) => value === SENTENCES[0]!.translation)).toBe(true);
+  });
+
+  it("repeats held movement from bounded elapsed cell steps", () => {
+    const input = createMutableInputController();
+    const config = createStormCastleTowerCartridge().createGameConfig({
+      input: SENTENCES, edition: PHASE3_RUNTIME_EDITION, complete: vi.fn(), diagnostic: vi.fn(), inputController: input, seed: 5,
+    });
+    const scene = config.scene as {
+      create: (this: unknown) => void;
+      update: (this: unknown, time?: number, delta?: number) => void;
+      extend: { apkCaptureResponsiveState: () => StormCastleTowerTestSnapshot };
+    };
+    const host = createSceneHost();
+    scene.create.call(host.host);
+    const start = scene.extend.apkCaptureResponsiveState().player.row;
+    input.setSnapshot(inputSnapshot({ keys: ["ArrowUp"], pressed: ["ArrowUp"] }));
+    scene.update.call(host.host, 0, 16);
+    input.setSnapshot(inputSnapshot({ keys: ["ArrowUp"], pressed: [] }));
+    for (let frame = 0; frame < 6; frame += 1) scene.update.call(host.host, 16 + frame * 50, 50);
+    expect(scene.extend.apkCaptureResponsiveState().player.row).toBe(start - 3);
   });
 
   it("rejects invalid setup, movement, hazard, and timing values", () => {

@@ -21,7 +21,7 @@ export interface CartridgeCatalogEntry {
 const DRAGON_FLIGHT_CATALOG_ENTRY: CartridgeCatalogEntry = Object.freeze({
   id: "dragon-flight",
   title: "Dragon Flight",
-  description: "Choose the correct translation gate to guide a dragon through the clouds.",
+  description: "Choose English gates, grow the dragon flock, and face the guardian.",
   runtimeApiVersion: "1.0.0",
   inputMode: "vocabulary",
   requiredAssetBindings: Object.freeze([]),
@@ -32,6 +32,7 @@ const DRAGON_FLIGHT_CATALOG_ENTRY: CartridgeCatalogEntry = Object.freeze({
     "capability:nonempty-content-precondition",
     "capability:result-accounting",
     "capability:single-completion-emission",
+    "capability:time-and-frame-loop",
   ]),
 });
 
@@ -73,7 +74,7 @@ const LEGACY_TRAVERSAL_CATALOG: readonly CartridgeCatalogEntry[] = Object.freeze
   Object.freeze({
     id: "dragon-rider",
     title: "Dragon Rider",
-    description: "Choose translation gates, grow your flight, and face the final guardian.",
+    description: "Choose English gates, grow the dragon flock, and face the guardian.",
     runtimeApiVersion: "1.0.0",
     inputMode: "vocabulary",
     requiredAssetBindings: Object.freeze(["dragon-rider/player-flight"]),
@@ -201,7 +202,7 @@ const LEGACY_CATALOG_COMPLETION: readonly CartridgeCatalogEntry[] = Object.freez
   Object.freeze({
     id: "wizard-vs-zombie",
     title: "Wizard vs Zombie",
-    description: "Survive the graveyard. Collect the true soul. Hold the horde back.",
+    description: "Match Thai words to their English meanings while you avoid zombies.",
     runtimeApiVersion: "1.0.0",
     inputMode: "vocabulary",
     requiredAssetBindings: Object.freeze(["legacy-catalog/wizard-vs-zombie/zombie-orbs"]),
@@ -219,7 +220,7 @@ const LEGACY_CATALOG_COMPLETION: readonly CartridgeCatalogEntry[] = Object.freez
   Object.freeze({
     id: "enchanted-library",
     title: "Enchanted Library",
-    description: "Collect translated books, restore mana, and protect the stacks from spirits.",
+    description: "Match Thai prompts with English books, restore mana, and protect the stacks from spirits.",
     runtimeApiVersion: "1.0.0",
     inputMode: "vocabulary",
     requiredAssetBindings: Object.freeze(["enchanted-library/arcane-shelves"]),
@@ -551,13 +552,13 @@ export const cartridgeLoaders = Object.freeze({
   "sorcerer-ziggurat": async (): Promise<StandardExperienceCartridge> =>
     (await import("./sorcerer-ziggurat.js")).createSorcererZigguratCartridge(),
   "dragon-rider": async (): Promise<StandardExperienceCartridge> =>
-    (await import("./legacy-traversal-cartridges.js")).createDragonRiderCartridge(),
+    (await import("./dragon-flight.js")).createDragonRiderCartridge(),
   "spellweavers-run": async (): Promise<StandardExperienceCartridge> =>
-    (await import("./legacy-traversal-cartridges.js")).createSpellweaversRunCartridge(),
+    (await import("./spellweavers-run.js")).createSpellweaversRunCartridge(),
   "shadow-gate-dungeon": async (): Promise<StandardExperienceCartridge> =>
-    (await import("./legacy-traversal-cartridges.js")).createShadowGateDungeonCartridge(),
+    (await import("./shadow-gate-dungeon.js")).createShadowGateDungeonCartridge(),
   "labyrinth-goblin-king": async (): Promise<StandardExperienceCartridge> =>
-    (await import("./legacy-traversal-cartridges.js")).createLabyrinthGoblinKingCartridge(),
+    (await import("./labyrinth-goblin-king.js")).createLabyrinthGoblinKingCartridge(),
   "griffin-riders-escape": async (): Promise<StandardExperienceCartridge> =>
     (await import("./legacy-traversal-cartridges.js")).createGriffinRidersEscapeCartridge(),
   "castle-defense": async (): Promise<StandardExperienceCartridge> =>

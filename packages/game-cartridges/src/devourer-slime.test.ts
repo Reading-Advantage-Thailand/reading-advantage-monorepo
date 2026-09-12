@@ -14,6 +14,7 @@ import {
   DEVOURER_SLIME_WORLD,
   DEFAULT_DEVOURER_SLIME_SEED,
   INITIAL_SLIME_RADIUS,
+  MAX_VISIBLE_SLIME_ORBS,
   KNIGHT_RADIUS,
   MAX_LIVES,
   createDevourerSlimeCartridge,
@@ -341,6 +342,99 @@ describe("Devourer Slime cartridge", () => {
     controller.moveTo(wrongOrb.pos);
 
     expect(controller.tick(0).snapshot.targetWordIndex).toBe(0);
+  });
+
+  it("accepts an equivalent visible duplicate and restores its occurrence", () => {
+    const controller = createDevourerSlimeController(
+      [{ term: "go go home", translation: "ไป ไป บ้าน" }],
+      vi.fn(),
+      { seed: 31, knightCount: 0 },
+    );
+    const alternate = controller.snapshot().orbs[1];
+    if (!alternate) throw new Error("Expected a repeated word orb");
+    controller.moveTo(alternate.pos);
+    const after = controller.tick(0).snapshot;
+
+    expect(after).toMatchObject({ targetWordIndex: 1, correctAnswers: 1, totalAttempts: 1 });
+    expect(after.orbs[1]?.isEaten).toBe(true);
+    expect(after.orbs[0]?.isEaten).toBe(false);
+    controller.restore(after);
+    expect(controller.snapshot()).toEqual(after);
+  });
+
+  it("completes a long sentence through bounded physical orb waves", () => {
+    const controller = createDevourerSlimeController(
+      [{ term: "one two three four five six seven eight nine", translation: "หนึ่ง สอง สาม สี่ ห้า หก เจ็ด แปด เก้า" }],
+      vi.fn(),
+      { seed: 41, knightCount: 0 },
+    );
+    for (let step = 0; step < 9; step += 1) {
+      const state = controller.snapshot();
+      const visible = state.orbs.filter((orb) => orb.isVisible && !orb.isEaten);
+      expect(visible.length).toBeLessThanOrEqual(MAX_VISIBLE_SLIME_ORBS);
+      const target = visible.find((orb) => orb.word === state.answer);
+      if (!target) throw new Error("Expected the next word in the visible wave");
+      controller.moveTo(target.pos);
+      controller.tick(0);
+    }
+    expect(controller.snapshot()).toMatchObject({ phase: "victory", correctAnswers: 9, totalAttempts: 9 });
+  });
+
+  it("restores a long sentence at a wave transition with every occurrence", () => {
+    const input = [{ term: "go now go home and then go back", translation: "ไป ตอนนี้ ไป บ้าน และ แล้ว ไป กลับ" }];
+    const controller = createDevourerSlimeController(input, vi.fn(), { seed: 53, knightCount: 0 });
+    for (let step = 0; step < 4; step += 1) {
+      const state = controller.snapshot();
+      const target = state.orbs.find((orb) => orb.isVisible && !orb.isEaten && orb.word === state.answer);
+      if (!target) throw new Error("Expected a visible target word");
+      controller.moveTo(target.pos);
+      controller.tick(0);
+    }
+    const captured = controller.capture();
+    const restored = createDevourerSlimeController(input, vi.fn(), { seed: 53, knightCount: 0 });
+    restored.restore(captured);
+    expect(restored.snapshot()).toEqual(captured);
+    expect(restored.snapshot().orbs).toHaveLength(8);
+    expect(restored.snapshot().orbs.filter((orb) => orb.isVisible && !orb.isEaten).length).toBeLessThanOrEqual(4);
+  });
+
+  it("varies the expected orb position across deterministic waves", () => {
+    const controller = createDevourerSlimeController(
+      [{ term: "one two three four five six", translation: "หนึ่ง สอง สาม สี่ ห้า หก" }],
+      vi.fn(),
+      { seed: 67, knightCount: 0 },
+    );
+    const positions = new Set<string>();
+    for (let step = 0; step < 6; step += 1) {
+      const state = controller.snapshot();
+      const target = state.orbs.find((orb) => orb.isVisible && !orb.isEaten && orb.word === state.answer);
+      if (!target) throw new Error("Expected a visible target word");
+      positions.add(`${target.pos.x}:${target.pos.y}`);
+      controller.moveTo(target.pos);
+      controller.tick(0);
+    }
+    expect(positions.size).toBeGreaterThan(1);
+  });
+
+  it("keeps each new wave clear of the previous contact point", () => {
+    const controller = createDevourerSlimeController(
+      [{ term: "I see a bridge", translation: "ฉันเห็นสะพาน" }],
+      vi.fn(),
+      { seed: 29, knightCount: 0 },
+    );
+    collectNextWord(controller);
+    const state = controller.snapshot();
+    const visible = state.orbs.filter((orb) => orb.isVisible && !orb.isEaten);
+    for (const orb of visible) {
+      expect(Math.hypot(orb.pos.x - state.slime.pos.x, orb.pos.y - state.slime.pos.y))
+        .toBeGreaterThan(state.slime.radius + orb.radius + 79);
+    }
+    for (const [index, orb] of visible.entries()) {
+      for (const other of visible.slice(index + 1)) {
+        expect(Math.hypot(orb.pos.x - other.pos.x, orb.pos.y - other.pos.y)).toBeGreaterThan(180);
+      }
+    }
+    expect(state).toMatchObject({ score: 100, lives: MAX_LIVES, totalAttempts: 1 });
   });
 
   it("moves knights and loses a life when the slime is smaller", () => {

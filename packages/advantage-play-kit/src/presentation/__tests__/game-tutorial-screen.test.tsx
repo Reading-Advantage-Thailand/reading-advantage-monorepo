@@ -160,6 +160,59 @@ describe("GameTutorialScreen", () => {
     expect(screen.getByRole("status")).toHaveTextContent("No score changes in tutorial mode");
   });
 
+  it("keeps compact practice guidance brief and hides raw or duplicate labels", () => {
+    const snapshot = createSnapshot();
+    const { container } = render(
+      <GameTutorialScreen
+        tutorial={tutorial}
+        snapshot={snapshot}
+        controller={createController(snapshot)}
+        targetLabel={snapshot.currentStep?.title}
+        actionLabel={snapshot.currentAction?.id}
+        consequenceFeedback={snapshot.currentStep?.explanation}
+        compactLandmarks
+        showControls={false}
+      />,
+    );
+
+    expect(screen.queryByText(thaiTitle)).not.toBeInTheDocument();
+    expect(screen.getAllByText("สังเกตตัวเลือกคำตอบ")).toHaveLength(1);
+    expect(screen.getAllByText(thaiExplanation)).toHaveLength(1);
+    expect(screen.getByText("1 of 3")).toHaveStyle({ fontSize: "0.75rem" });
+    expect(screen.queryByText("action:highlight-answer")).not.toBeInTheDocument();
+    expect(screen.queryByRole("region", { name: "Demonstrated tutorial action" })).not.toBeInTheDocument();
+    expect(screen.getByRole("region", { name: "Highlighted tutorial target" })).toHaveTextContent("Tutorial example");
+    expect(screen.getByRole("status")).toHaveTextContent("Step 1 of 3");
+    expect(container.querySelector("header")).toBeNull();
+    expect(container.querySelector("[data-apk-tutorial-region='body']")).toHaveStyle({
+      flex: "0 0 auto",
+      gap: "0.35rem",
+      overflowY: "visible",
+      padding: "0.5rem",
+    });
+  });
+
+  it("shows concise replay guidance after a practice action fails", () => {
+    const snapshot = createSnapshot({
+      currentStepDemonstrated: false,
+      currentStepFailure: "Practice audio could not play. Replay Practice to try again.",
+    });
+    render(
+      <GameTutorialScreen
+        tutorial={tutorial}
+        snapshot={snapshot}
+        controller={createController(snapshot)}
+        compactLandmarks
+        showControls={false}
+      />,
+    );
+
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "Practice audio could not play. Replay Practice to try again.",
+    );
+    expect(screen.queryByText("English clip failed")).not.toBeInTheDocument();
+  });
+
   it("exposes semantic target and highlight state without raw selectors, coordinates, or geometry claims", () => {
     render(
       <GameTutorialScreen
@@ -182,6 +235,7 @@ describe("GameTutorialScreen", () => {
   });
 
   it("announces step changes through a live region and moves focus to the step heading without stealing focus from the mechanic", () => {
+    const focus = vi.spyOn(HTMLElement.prototype, "focus");
     const snapshot = createSnapshot();
     const { rerender } = render(
       <GameTutorialScreen
@@ -214,7 +268,9 @@ describe("GameTutorialScreen", () => {
     );
 
     expect(screen.getByRole("heading", { name: "Choose the matching word", level: 2 })).toHaveFocus();
+    expect(focus).toHaveBeenLastCalledWith({ preventScroll: true });
     expect(screen.getByRole("status")).toHaveTextContent("Step 2 of 3");
+    focus.mockRestore();
   });
 
   it("routes keyboard, pointer, and touch navigation to host-neutral controller commands", () => {

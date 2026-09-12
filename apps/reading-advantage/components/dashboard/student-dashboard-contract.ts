@@ -11,8 +11,18 @@ import type {
   StudentDashboardSRSHealth,
 } from "@/server/services/metrics/student-dashboard-service";
 
-export const dashboardGoalSchema = z.object({
-  id: z.string(),
+export interface DashboardAIInsightProps {
+  id: string;
+  type: "trend" | "alert" | "recommendation" | "achievement";
+  title: string;
+  description: string;
+  confidence: number;
+  priority: "high" | "medium" | "low";
+  data: Record<string, any>;
+  createdAt: string;
+}
+
+export const dashboardGoalSchema = z.object({  id: z.string(),
   title: z.string(),
   currentValue: z.number(),
   targetValue: z.number(),

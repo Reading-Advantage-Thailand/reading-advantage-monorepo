@@ -68,9 +68,9 @@ export interface MagicDefenseMissile {
   readonly id: string;
   /** Castle that receives damage when this missile reaches the ground. */
   readonly targetCastleId: MagicDefenseCastleId;
-  /** Source-language vocabulary prompt carried by the missile. */
+  /** Thai vocabulary target carried by the missile. */
   readonly prompt: string;
-  /** Translation required to destroy the missile. */
+  /** English answer required to destroy the missile. */
   readonly answer: string;
   /** Vocabulary index represented by this missile. */
   readonly targetIndex: number;
@@ -98,15 +98,15 @@ export interface MagicDefenseSnapshot {
   readonly targetIndex: number;
   /** Number of vocabulary targets in the session. */
   readonly targetCount: number;
-  /** Source-language term shown by the current target. */
+  /** Thai translation shown as the current target. */
   readonly prompt: string;
-  /** Translation accepted for the current target. */
+  /** English term accepted for the current target. */
   readonly answer: string;
   /** Correct semantic answer action for the current target. */
   readonly correctAction: string;
   /** Available pointer and touch answer actions. */
   readonly availableActions: readonly string[];
-  /** Current typed translation buffer. */
+  /** Current typed English answer buffer. */
   readonly typingBuffer: string;
   /** Pointer and touch answer choices for the current target. */
   readonly answerChoices: readonly string[];
@@ -132,7 +132,7 @@ export interface MagicDefenseSnapshot {
   readonly energy: number;
   /** Number of correct translations. */
   readonly correctAnswers: number;
-  /** Number of submitted translations and missed missiles. */
+  /** Number of submitted English answers. */
   readonly totalAttempts: number;
   /** Seconds remaining before the timer defeat. */
   readonly timeRemaining: number;
@@ -186,7 +186,7 @@ export interface MagicDefenseControllerOptions {
 export interface MagicDefenseController {
   /** Returns the current immutable session state. */
   snapshot(): MagicDefenseSnapshot;
-  /** Chooses a pointer or touch translation answer. */
+  /** Chooses a pointer or touch English answer. */
   choose(answer: string): MagicDefenseActionResult;
   /** Adds one printable character to the translation buffer. */
   typeCharacter(character: string): MagicDefenseActionResult;
@@ -194,7 +194,7 @@ export interface MagicDefenseController {
   type(character: string): MagicDefenseActionResult;
   /** Removes the last character from the translation buffer. */
   backspace(): MagicDefenseActionResult;
-  /** Submits the typed or supplied translation for the current missile. */
+  /** Submits the typed or supplied English answer for the current missile. */
   submitAnswer(answer?: string): MagicDefenseActionResult;
   /** Alias for submitting the typed translation. */
   submit(answer?: string): MagicDefenseActionResult;
@@ -247,8 +247,11 @@ interface PhaserGraphicsLike {
 }
 
 interface PhaserTextLike {
+  readonly height?: number;
   setPosition(x: number, y: number): this;
   setText(value: string): this;
+  setFontSize?(size: number | string): this;
+  setWordWrapWidth?(width: number, useAdvancedWrap?: boolean): this;
   setDepth?(depth: number): this;
   destroy(): void;
 }
@@ -370,8 +373,6 @@ const MID_TREE_POSITIONS = Object.freeze([
   Object.freeze({ x: 0.84, y: 0.5 }),
   Object.freeze({ x: 0.92, y: 0.46 }),
 ]);
-
-const DISTRACTOR_FALLBACKS = Object.freeze(["arcane ward", "moon shield", "storm light"]);
 
 /**
  * Returns the 2.5D screen pose of one approaching enemy.
@@ -539,10 +540,10 @@ function ensureWorldLayer(
       const tileHeight = 16 * Math.ceil(fieldHeight / 16);
       const tiled = scene.add.tileSprite(0, horizonY, tileWidth, tileHeight, ground.textureKey);
       tiled.setOrigin?.(0, 0);
-      tiled.setDepth?.(-25);
+      tiled.setDepth?.(-35);
       resources.ground = tiled;
     } else {
-      const image = placeImage(scene, width / 2, horizonY, ground, width, fieldHeight, -25, 0.5, 0);
+      const image = placeImage(scene, width / 2, horizonY, ground, width, fieldHeight, -35, 0.5, 0);
       if (image) resources.ground = image;
     }
   }
@@ -688,17 +689,13 @@ function freezeHealth(health: Readonly<Record<MagicDefenseCastleId, number>>): R
 }
 
 function choicesFor(
-  translations: readonly string[],
+  answers: readonly string[],
   targetIndex: number,
 ): readonly string[] {
-  const expected = translations[targetIndex]!;
+  const expected = answers[targetIndex]!;
   const choices = [expected];
-  for (let offset = 1; choices.length < 3 && offset <= translations.length; offset += 1) {
-    const candidate = translations[(targetIndex + offset) % translations.length]!;
-    if (!choices.some((choice) => normalizeAnswer(choice) === normalizeAnswer(candidate))) choices.push(candidate);
-  }
-  for (const candidate of DISTRACTOR_FALLBACKS) {
-    if (choices.length >= 3) break;
+  for (let offset = 1; choices.length < 3 && offset <= answers.length; offset += 1) {
+    const candidate = answers[(targetIndex + offset) % answers.length]!;
     if (!choices.some((choice) => normalizeAnswer(choice) === normalizeAnswer(candidate))) choices.push(candidate);
   }
   const rotation = (targetIndex + 1) % choices.length;
@@ -763,7 +760,7 @@ export function createMagicDefenseController(
   const parsedInput = vocabularyInputSchema.parse(input);
   const content = validateNonEmptyContent(parsedInput, "vocabulary");
   const items = content.items;
-  const translations = items.map((item) => item.translation);
+  const answers = items.map((item) => item.term);
   const normalizedOptions = typeof options === "number" ? { seed: options } : options;
   const timerLimit = positiveTimer(normalizedOptions.timerSeconds, items.length);
   const seed = normalizeSeed(normalizedOptions.seed);
@@ -807,15 +804,15 @@ export function createMagicDefenseController(
       maxHealth: MAGIC_DEFENSE_MAX_CASTLE_HEALTH,
     })));
     const missiles = Object.freeze(activeMissiles.map((missile) => Object.freeze({ ...missile })));
-    const answerChoices = choicesFor(translations, currentIndex());
+    const answerChoices = choicesFor(answers, currentIndex());
     return Object.freeze({
       seed,
       phase,
       targetIndex,
       targetCount: items.length,
-      prompt: currentItem().term,
-      answer: currentItem().translation,
-      correctAction: currentItem().translation,
+      prompt: currentItem().translation,
+      answer: currentItem().term,
+      correctAction: currentItem().term,
       availableActions: answerChoices,
       typingBuffer,
       answerChoices,
@@ -870,8 +867,8 @@ export function createMagicDefenseController(
     const missile = Object.freeze({
       id: `missile:${spawnCursor}`,
       targetCastleId: castleId,
-      prompt: item.term,
-      answer: item.translation,
+      prompt: item.translation,
+      answer: item.term,
       targetIndex: itemIndex,
       progress: 0,
     });
@@ -924,7 +921,7 @@ export function createMagicDefenseController(
     const before = snapshot();
     if (destroyed || phase !== "playing" || typeof answer !== "string") return actionResult(before);
     spawnCurrent();
-    const correct = normalizeAnswer(answer) === normalizeAnswer(currentItem().translation);
+    const correct = normalizeAnswer(answer) === normalizeAnswer(currentItem().term);
     accountant.recordAttempt({ correct });
     typingBuffer = "";
     lastOutcome = correct ? "correct" : "incorrect";
@@ -965,7 +962,6 @@ export function createMagicDefenseController(
     activeMissiles = activeMissiles.filter((candidate) => candidate.id !== missile.id);
     const targetCastleId = health[missile.targetCastleId] > 0 ? missile.targetCastleId : castleForCursor();
     health = { ...health, [targetCastleId]: Math.max(0, health[targetCastleId] - 1) };
-    accountant.recordAttempt({ correct: false });
     combo = 0;
     lastOutcome = "missed";
     const allCastlesFallen = MAGIC_DEFENSE_CASTLES.every((castleId) => health[castleId] === 0);
@@ -998,13 +994,13 @@ export function createMagicDefenseController(
       throw new Error("Magic Defense responsive target progress is invalid");
     }
     const expectedItem = items[Math.min(state.targetIndex, items.length - 1)]!;
-    if (state.prompt !== expectedItem.term || state.answer !== expectedItem.translation || state.correctAction !== expectedItem.translation) {
+    if (state.prompt !== expectedItem.translation || state.answer !== expectedItem.term || state.correctAction !== expectedItem.term) {
       throw new Error("Magic Defense responsive target content is invalid");
     }
     if (!Array.isArray(state.availableActions) || !Array.isArray(state.answerChoices) || state.availableActions.length !== state.answerChoices.length || state.availableActions.some((action, index) => action !== state.answerChoices[index])) {
       throw new Error("Magic Defense responsive answer actions are invalid");
     }
-    const expectedActions = choicesFor(translations, Math.min(state.targetIndex, items.length - 1));
+    const expectedActions = choicesFor(answers, Math.min(state.targetIndex, items.length - 1));
     if (state.availableActions.length !== expectedActions.length || state.availableActions.some((action, index) => action !== expectedActions[index])) {
       throw new Error("Magic Defense responsive answer choices are invalid");
     }
@@ -1059,7 +1055,7 @@ export function createMagicDefenseController(
     const missileIds = new Set<string>();
     for (const missile of state.activeMissiles) {
       const missileItem = items[missile.targetIndex];
-      if (typeof missile.id !== "string" || missileIds.has(missile.id) || !MAGIC_DEFENSE_CASTLES.includes(missile.targetCastleId) || !Number.isInteger(missile.targetIndex) || missile.targetIndex < 0 || missile.targetIndex >= items.length || typeof missile.prompt !== "string" || typeof missile.answer !== "string" || missile.prompt !== missileItem?.term || missile.answer !== missileItem?.translation || !Number.isFinite(missile.progress) || missile.progress < 0 || missile.progress > 1) {
+      if (typeof missile.id !== "string" || missileIds.has(missile.id) || !MAGIC_DEFENSE_CASTLES.includes(missile.targetCastleId) || !Number.isInteger(missile.targetIndex) || missile.targetIndex < 0 || missile.targetIndex >= items.length || typeof missile.prompt !== "string" || typeof missile.answer !== "string" || missile.prompt !== missileItem?.translation || missile.answer !== missileItem?.term || !Number.isFinite(missile.progress) || missile.progress < 0 || missile.progress > 1) {
         throw new Error("Magic Defense responsive missile is invalid");
       }
       missileIds.add(missile.id);
@@ -1126,8 +1122,8 @@ export function createMagicDefenseController(
         return Object.freeze({
           id: `sealed:${spawnCursor}`,
           targetCastleId: "center",
-          prompt: item.term,
-          answer: item.translation,
+          prompt: item.translation,
+          answer: item.term,
           targetIndex: currentIndex(),
           progress: 1,
         });
@@ -1218,7 +1214,7 @@ function sceneDimensions(scene: PhaserSceneLike): { width: number; height: numbe
 
 function createScene(context: MagicDefenseSceneContext): Readonly<Record<string, unknown>> {
   let resources: SceneResources | undefined;
-  let composition = context.composition;
+  let _composition = context.composition;
   let previousKeys = new Set<string>();
   let animationMs = 0;
   const fieldArt = usesFieldArt(context.edition);
@@ -1235,14 +1231,28 @@ function createScene(context: MagicDefenseSceneContext): Readonly<Record<string,
     const { width, height } = sceneDimensions(scene);
     const state = context.controller.snapshot();
     const active = resources;
+    const renderedWidth = scene.game?.canvas?.getBoundingClientRect?.().width ?? width;
+    const renderedScale = renderedWidth > 0 ? Math.min(1, renderedWidth / width) : 1;
+    const compactDisplay = renderedScale < 0.75 || width < 600 || _composition?.profile === "compact";
+    const choiceCount = state.answerChoices.length;
+    const promptFontSize = Math.max(22, Math.ceil(18 / renderedScale));
+    const choiceFontSize = Math.max(16, Math.ceil(16 / renderedScale));
     const horizonY = height * MAGIC_DEFENSE_HORIZON_Y_RATIO;
     const towerY = height * MAGIC_DEFENSE_TOWER_Y_RATIO;
     const vanishX = width * 0.5;
-    const choiceY = height * MAGIC_DEFENSE_CHOICE_Y_RATIO;
-    const choiceWidth = Math.min(250, width * 0.27);
-    const choiceGap = Math.min(24, width * 0.035);
-    const choicesWidth = choiceWidth * 3 + choiceGap * 2;
+    const choiceGap = compactDisplay ? 6 : Math.min(24, width * 0.035);
+    const choiceWidth = compactDisplay
+      ? (width - 24 - choiceGap * (choiceCount - 1)) / choiceCount
+      : Math.min(250, width * 0.27);
+    const choicesWidth = choiceWidth * choiceCount + choiceGap * (choiceCount - 1);
     const choiceStart = (width - choicesWidth) / 2;
+    const choiceWrapWidth = choiceWidth - 16;
+    for (let index = 0; index < active.choices.length; index += 1) {
+      active.choices[index]?.setFontSize?.(choiceFontSize).setWordWrapWidth?.(choiceWrapWidth).setText(state.answerChoices[index] ?? "");
+    }
+    const wrappedChoiceHeight = Math.max(0, ...active.choices.slice(0, choiceCount).map((choice) => choice.height ?? 0));
+    const choiceHeight = compactDisplay ? Math.max(76, Math.ceil(wrappedChoiceHeight + 16)) : 56;
+    const choiceY = compactDisplay ? height - choiceHeight - 8 : height * MAGIC_DEFENSE_CHOICE_Y_RATIO;
     const pulse = Math.sin(animationMs / 2_000 * Math.PI * 2) * 2;
     const enemyTexture = fieldTexture(context.edition, "enemy:idle");
 
@@ -1296,7 +1306,7 @@ function createScene(context: MagicDefenseSceneContext): Readonly<Record<string,
         active.worldGraphics.fillStyle(0x38bdf8, 0.95).fillCircle(pose.x, pose.y - size / 2, size / 2);
       }
       const label = active.missiles.get(missile.id);
-      label?.setText(missile.prompt).setPosition(pose.x - 40, pose.y - size - 18);
+      label?.setFontSize?.(Math.max(14, Math.ceil(12 / renderedScale))).setText(missile.prompt).setPosition(pose.x - 40, pose.y - size - 18);
       label?.setDepth?.(20);
     }
     pruneUnitSprites(active.unitSprites, liveIds);
@@ -1321,29 +1331,21 @@ function createScene(context: MagicDefenseSceneContext): Readonly<Record<string,
       active.graphics.fillStyle(castle.health > 0 ? 0x4ade80 : 0x64748b, 1)
         .fillRect(x - 28, barY, 56 * castle.health / castle.maxHealth, 8);
     }
-    for (let index = 0; index < 3; index += 1) {
+    for (let index = 0; index < choiceCount; index += 1) {
       const x = choiceStart + index * (choiceWidth + choiceGap);
-      active.graphics.fillStyle(0xf8fafc, 0.92).fillRoundedRect(x, choiceY, choiceWidth, 56, 10);
-      active.graphics.lineStyle(2, 0x1e3a5f, 0.85).strokeRoundedRect(x, choiceY, choiceWidth, 56, 10);
-      active.choices[index]?.setText(state.answerChoices[index] ?? "").setPosition(x + 14, choiceY + 18);
+      active.graphics.fillStyle(0xf8fafc, 0.92).fillRoundedRect(x, choiceY, choiceWidth, choiceHeight, 10);
+      active.graphics.lineStyle(2, 0x1e3a5f, 0.85).strokeRoundedRect(x, choiceY, choiceWidth, choiceHeight, 10);
+      active.choices[index]?.setPosition(x + 8, choiceY + 8);
     }
     active.graphics.fillStyle(state.mana >= MAGIC_DEFENSE_MAX_MANA ? 0xfacc15 : 0x64748b, 0.95)
       .fillRoundedRect(width * 0.74, 28, width * 0.22, 38, 10);
-    active.title.setText("MAGIC DEFENSE").setPosition(24, 16);
-    active.prompt.setText(`Type the translation for: ${state.prompt}`).setPosition(24, 52);
-    active.hud.setText(
-      `${composition?.profile === "compact" ? "Compact ward" : "Arcane ward"}  •  ${state.targetIndex}/${state.targetCount}  •  Score ${state.score}  •  Combo ${state.combo}  •  Mana ${state.mana}/${MAGIC_DEFENSE_MAX_MANA}  •  Time ${Math.ceil(state.timeRemaining)}`,
-    ).setPosition(24, 86);
-    active.buffer.setText(`Spell: ${state.typingBuffer || "_"}`).setPosition(24, choiceY - 32);
+    active.title.setText("").setPosition(24, 16);
+    active.prompt.setFontSize?.(promptFontSize).setWordWrapWidth?.(width - 48).setText(state.prompt).setPosition(24, 42);
+    active.hud.setText(`${state.targetIndex + 1}/${state.targetCount}  •  ♥ ${state.lives}  •  ⚡ ${state.mana}/${MAGIC_DEFENSE_MAX_MANA}  •  ${Math.ceil(state.timeRemaining)}s`).setPosition(24, 96);
+    active.buffer.setFontSize?.(Math.max(22, Math.ceil(14 / renderedScale))).setText(`⌨ ${state.typingBuffer || "_"}`).setPosition(24, choiceY - 40);
     active.storm.setText(state.mana >= MAGIC_DEFENSE_MAX_MANA ? "STORM READY" : "STORM").setPosition(width * 0.77, 39);
-    active.feedback.setText(
-      state.phase === "victory"
-        ? "Every vocabulary threat is destroyed!"
-        : state.phase === "defeat"
-          ? state.defeatReason === "timer" ? "Time has run out." : "All castles have fallen."
-          : state.lastOutcome === "incorrect" ? "That translation misses. Try again." : state.lastOutcome === "missed" ? "A spirit reached a tower." : "Defend the towers. Enemies grow as they approach.",
-    ).setPosition(24, height - 48);
-    active.instructions.setText("Type + Enter  •  Backspace erases  •  Tap a choice  •  Space uses storm").setPosition(24, height - 26);
+    active.feedback.setText(state.phase === "victory" ? "VICTORY" : state.phase === "defeat" ? "DEFEAT" : state.lastOutcome === "correct" ? "CORRECT" : state.lastOutcome === "incorrect" ? "TRY AGAIN" : state.lastOutcome === "missed" ? "TOWER HIT" : "").setPosition(24, choiceY - 68);
+    active.instructions.setText("").setPosition(24, height - 26);
   };
 
   const choosePointer = (scene: PhaserSceneLike, input: APKInputSnapshot): void => {
@@ -1354,14 +1356,23 @@ function createScene(context: MagicDefenseSceneContext): Readonly<Record<string,
       context.controller.activateStorm();
       return;
     }
-    if (pointer.y < height * MAGIC_DEFENSE_CHOICE_Y_RATIO || pointer.y > height * MAGIC_DEFENSE_CHOICE_Y_RATIO + 56) return;
-    const choiceWidth = Math.min(250, width * 0.27);
-    const choiceGap = Math.min(24, width * 0.035);
-    const choicesWidth = choiceWidth * 3 + choiceGap * 2;
+    const renderedWidth = scene.game?.canvas?.getBoundingClientRect?.().width ?? width;
+    const renderedScale = renderedWidth > 0 ? Math.min(1, renderedWidth / width) : 1;
+    const compactDisplay = renderedScale < 0.75 || width < 600 || _composition?.profile === "compact";
+    const state = context.controller.snapshot();
+    const choiceCount = state.answerChoices.length;
+    const choiceGap = compactDisplay ? 6 : Math.min(24, width * 0.035);
+    const choiceWidth = compactDisplay
+      ? (width - 24 - choiceGap * (choiceCount - 1)) / choiceCount
+      : Math.min(250, width * 0.27);
+    const wrappedChoiceHeight = Math.max(0, ...(resources?.choices.slice(0, choiceCount).map((choice) => choice.height ?? 0) ?? []));
+    const choiceHeight = compactDisplay ? Math.max(76, Math.ceil(wrappedChoiceHeight + 16)) : 56;
+    const choiceY = compactDisplay ? height - choiceHeight - 8 : height * MAGIC_DEFENSE_CHOICE_Y_RATIO;
+    if (pointer.y < choiceY || pointer.y > choiceY + choiceHeight) return;
+    const choicesWidth = choiceWidth * choiceCount + choiceGap * (choiceCount - 1);
     const choiceStart = (width - choicesWidth) / 2;
     const index = Math.floor((pointer.x - choiceStart) / (choiceWidth + choiceGap));
-    if (index < 0 || index > 2) return;
-    const state = context.controller.snapshot();
+    if (index < 0 || index >= choiceCount) return;
     const choiceX = choiceStart + index * (choiceWidth + choiceGap);
     if (pointer.x < choiceX || pointer.x > choiceX + choiceWidth) return;
     const action = normalize({ modality: "pointer", phase: "up", x: pointer.x, y: pointer.y })[0]?.action;
@@ -1483,7 +1494,7 @@ function createScene(context: MagicDefenseSceneContext): Readonly<Record<string,
         context.controller.restore(state as MagicDefenseSnapshot);
       },
       apkRecompose: (nextComposition: MagicDefenseSceneContext["composition"]) => {
-        composition = nextComposition;
+        _composition = nextComposition;
       },
     },
   };
@@ -1498,10 +1509,10 @@ export function createMagicDefenseCartridge(): StandardExperienceCartridge {
   const standardExperience = createCartridgeStandardExperience({
     id: MAGIC_DEFENSE_ID,
     title: "Magic Defense",
-    description: "Choose translation lanes to protect the castle from incoming magic.",
+    description: "Choose English answers for Thai targets to protect the castle.",
     inputMode: "vocabulary",
-    objective: "Defend all castles by selecting the translation for every word.",
-    mechanicInstruction: "Type each translation before its missile reaches the targeted castle.",
+    objective: "Defend all castles by selecting each English answer.",
+    mechanicInstruction: "Type the English answer before its missile reaches the castle.",
     keyboardKeys: ["Letters", "Enter", "Backspace", "Space"],
     executeTutorialAction: (actionId) => {
       const controller = activeController;
@@ -1515,7 +1526,7 @@ export function createMagicDefenseCartridge(): StandardExperienceCartridge {
     manifest: {
       id: MAGIC_DEFENSE_ID,
       title: "Magic Defense",
-      description: "Choose translation lanes to protect the castle from incoming magic.",
+      description: "Choose English answers for Thai targets to protect the castle.",
       runtimeApiVersion: "1.0.0",
       inputMode: "vocabulary",
       requiredAssetBindings: ["legacy-catalog/magic-defense/arcane-castle"],

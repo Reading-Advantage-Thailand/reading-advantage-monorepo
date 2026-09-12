@@ -301,7 +301,7 @@ export function createCompanyOidcClient(input: {
 
   return Object.freeze({
     async start(returnTo = "/") {
-      const safeReturnTo = transactionSchema.shape.returnTo.parse(returnTo);
+      const safeReturnTo = parseCompanyOidcReturnTo(returnTo);
       const metadata = await discovery();
       const codeVerifier = createValue();
       const transaction = transactionSchema.parse({

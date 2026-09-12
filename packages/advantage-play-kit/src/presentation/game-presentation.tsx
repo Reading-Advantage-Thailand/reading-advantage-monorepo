@@ -1,6 +1,11 @@
 "use client";
 
-import { useId, type ComponentProps, type ReactNode } from "react";
+import { useEffect, useId, useRef, type ComponentProps, type ReactNode } from "react";
+
+import {
+  getRetroArcadeButtonStyle,
+  RETRO_ARCADE_PANEL_STYLE,
+} from "./retro-arcade-theme.js";
 
 /** Public briefing and lifecycle contracts exposed beside the presentation primitives. */
 export {
@@ -268,6 +273,13 @@ export function GameNavigationControls({
   );
 }
 
+/** Describes the host persistence state for a completed game. */
+export type GamePersistenceState =
+  | { readonly status: "not-applicable" }
+  | { readonly status: "pending" }
+  | { readonly status: "confirmed"; readonly xpEarned: number; readonly duplicate: boolean }
+  | { readonly status: "failed"; readonly message: string };
+
 /** Props for a terminal game result panel. */
 export type GameResultPanelProps = Omit<ComponentProps<"section">, "children"> & {
   /** Terminal outcome text. */
@@ -282,10 +294,14 @@ export type GameResultPanelProps = Omit<ComponentProps<"section">, "children"> &
   readonly totalAttempts: number;
   /** Display XP; authoritative persistence remains host-owned. */
   readonly xp: number;
+  /** Current host persistence state for the completed result. */
+  readonly persistence?: GamePersistenceState;
   /** Attribution shown only when the session loaded credited art. */
   readonly requiredCredit: string;
   /** Requests a replay. */
   readonly onReplay: () => void;
+  /** Retries host persistence for the same completed result. */
+  readonly onRetrySave?: () => void;
   /** Requests host-owned exit navigation. */
   readonly onExit: () => void;
 };
@@ -303,28 +319,70 @@ export function GameResultPanel({
   correctAnswers,
   totalAttempts,
   xp,
+  persistence = { status: "not-applicable" },
   requiredCredit,
   onReplay,
+  onRetrySave,
   onExit,
+  style,
   ...props
 }: GameResultPanelProps) {
+  const headingRef = useRef<HTMLHeadingElement>(null);
+
+  useEffect(() => {
+    headingRef.current?.focus({ preventScroll: true });
+  }, []);
+
   if (![score, accuracy, correctAnswers, totalAttempts, xp].every(Number.isFinite)
     || accuracy < 0 || accuracy > 1 || correctAnswers < 0 || totalAttempts < correctAnswers || xp < 0) {
     throw new Error("Game result presentation received invalid result values");
   }
+  if (persistence.status === "confirmed"
+    && (!Number.isInteger(persistence.xpEarned) || persistence.xpEarned < 0)) {
+    throw new Error("Game result presentation received invalid confirmed XP");
+  }
   return (
-    <section aria-label="Game result" data-apk-region="modal" {...props}>
-      <h2>{outcome === "victory" ? "Victory" : outcome === "defeat" ? "Try again" : "Complete"}</h2>
-      <dl>
-        <div><dt>Score</dt><dd>{score}</dd></div>
-        <div><dt>Accuracy</dt><dd>{Math.round(accuracy * 100)}%</dd></div>
-        <div><dt>Correct answers</dt><dd>{correctAnswers}</dd></div>
-        <div><dt>Total attempts</dt><dd>{totalAttempts}</dd></div>
-        <div><dt>Display XP</dt><dd>{xp}</dd></div>
+    <section
+      aria-label="Game result"
+      data-apk-region="modal"
+      data-apk-visual-theme="retro-arcade"
+      {...props}
+      style={{
+        ...RETRO_ARCADE_PANEL_STYLE,
+        background: "linear-gradient(180deg, #122443 0%, #060b18 100%)",
+        boxShadow: "6px 6px 0 #030712, inset 0 0 0 2px #1e3a5f",
+        color: "var(--apk-result-text, #f7f2d0)",
+        fontFamily: "var(--apk-result-body-font, Tahoma, 'Noto Sans Thai', sans-serif)",
+        margin: "clamp(0.75rem, 3vw, 1.5rem)",
+        padding: "clamp(1rem, 4vw, 2rem)",
+        textAlign: "center",
+        ...style,
+      }}
+    >
+      <p style={{ color: "#67e8f9", fontFamily: "monospace", letterSpacing: "0.18em", margin: 0 }}>SESSION COMPLETE</p>
+      <h2 ref={headingRef} tabIndex={-1} style={{ fontFamily: "'Courier New', 'Noto Sans Thai', Tahoma, monospace", fontSize: "clamp(2rem, 8vw, 4rem)", margin: "0.35rem 0 1rem", textShadow: "3px 3px 0 #030712" }}>{outcome === "victory" ? "Victory" : outcome === "defeat" ? "Try again" : "Complete"}</h2>
+      <dl style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(8rem, 1fr))", gap: "0.5rem", margin: "0 0 1rem" }}>
+        <div style={{ border: "1px solid #31577d", padding: "0.7rem" }}><dt>Score</dt><dd style={{ color: "#fbbf24", fontFamily: "monospace", fontSize: "1.4rem", fontWeight: 800, margin: 0 }}>{score}</dd></div>
+        <div style={{ border: "1px solid #31577d", padding: "0.7rem" }}><dt>Accuracy</dt><dd style={{ color: "#fbbf24", fontFamily: "monospace", fontSize: "1.4rem", fontWeight: 800, margin: 0 }}>{Math.round(accuracy * 100)}%</dd></div>
+        <div style={{ border: "1px solid #31577d", padding: "0.7rem" }}><dt>Correct</dt><dd style={{ color: "#fbbf24", fontFamily: "monospace", fontSize: "1.4rem", fontWeight: 800, margin: 0 }}>{correctAnswers}/{totalAttempts}</dd></div>
+        {persistence.status === "not-applicable" ? <div style={{ border: "1px solid #31577d", padding: "0.7rem" }}><dt>XP preview</dt><dd style={{ color: "#fbbf24", fontFamily: "monospace", fontSize: "1.4rem", fontWeight: 800, margin: 0 }}>{xp}</dd></div> : null}
+        {persistence.status === "confirmed" && !persistence.duplicate ? <div style={{ border: "1px solid #31577d", padding: "0.7rem" }}><dt>Confirmed XP</dt><dd style={{ color: "#fbbf24", fontFamily: "monospace", fontSize: "1.4rem", fontWeight: 800, margin: 0 }}>{persistence.xpEarned}</dd></div> : null}
       </dl>
+      {persistence.status === "pending" ? <p role="status">Saving progress…</p> : null}
+      {persistence.status === "confirmed" && persistence.duplicate ? <p role="status">Progress already saved</p> : null}
+      {persistence.status === "failed" ? <p role="alert">{persistence.message}</p> : null}
+      {persistence.status === "failed" && onRetrySave ? (
+        <button type="button" onClick={onRetrySave} style={{ minBlockSize: "48px", border: "2px solid #f87171", borderRadius: "2px", background: "#3f121d", color: "#fff", font: "inherit", fontWeight: 800, padding: "0.7rem 1rem" }}>Retry save</button>
+      ) : null}
       {requiredCredit ? <p data-apk-attribution="true">{requiredCredit}</p> : null}
-      <button type="button" onClick={onReplay}>Play again</button>
-      <button type="button" onClick={onExit}>Exit</button>
+      <button
+        type="button"
+        onClick={onReplay}
+        style={{ ...getRetroArcadeButtonStyle("primary"), boxShadow: "4px 4px 0 #030712", font: "inherit", fontWeight: 900, margin: "0.5rem", padding: "0.35rem 1rem" }}
+      >
+        {persistence.status === "failed" ? "Play again without saving" : "Play again"}
+      </button>
+      <button type="button" onClick={onExit} style={{ ...getRetroArcadeButtonStyle("secondary"), font: "inherit", fontWeight: 800, margin: "0.5rem", padding: "0.35rem 1rem" }}>Exit</button>
     </section>
   );
 }

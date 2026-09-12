@@ -12,6 +12,7 @@ import {
   type DungeonDirection,
   type DungeonLiberatorSnapshot,
 } from "./dungeon-liberator.js";
+import { createCatalogStandardEdition } from "./catalog-standard-art.js";
 
 const SENTENCES = [
   { term: "silver doors open", translation: "quiet doors" },
@@ -105,11 +106,28 @@ function createFakeInputController() {
   };
 }
 
-function createFakeScene() {
+function createFakeScene(width = 960, height = 540, renderedWidth = width) {
   const destroyedGraphics: ReturnType<typeof vi.fn>[] = [];
   const destroyedText: ReturnType<typeof vi.fn>[] = [];
-  const textObjects: Array<{ value: string }> = [];
+  const textObjects: Array<{
+    value: string;
+    x: number;
+    y: number;
+    fontSize?: number;
+    backgroundColor?: string;
+    wrapWidth?: number;
+    originX?: number;
+  }> = [];
   const listeners = new Map<string, () => void>();
+  const spriteObjects: Array<{
+    key: string;
+    x: number;
+    y: number;
+    displayWidth?: number;
+    displayHeight?: number;
+    originX?: number;
+    originY?: number;
+  }> = [];
   const graphics = {
     clear: () => graphics,
     fillStyle: () => graphics,
@@ -120,12 +138,70 @@ function createFakeScene() {
     strokeRoundedRect: () => graphics,
     destroy: vi.fn(),
   };
-  const text = () => {
+  const sprite = (x: number, y: number, key: string) => {
     const resource = {
-      value: "",
-      setPosition: () => resource,
+      key,
+      x,
+      y,
+      displayWidth: undefined as number | undefined,
+      displayHeight: undefined as number | undefined,
+      originX: undefined as number | undefined,
+      originY: undefined as number | undefined,
+      setOrigin: (originX: number, originY: number) => {
+        resource.originX = originX;
+        resource.originY = originY;
+        return resource;
+      },
+      setPosition: (nextX: number, nextY: number) => {
+        resource.x = nextX;
+        resource.y = nextY;
+        return resource;
+      },
+      setDisplaySize: (nextWidth: number, nextHeight: number) => {
+        resource.displayWidth = nextWidth;
+        resource.displayHeight = nextHeight;
+        return resource;
+      },
+      setDepth: () => resource,
+      setVisible: () => resource,
+      destroy: vi.fn(),
+    };
+    spriteObjects.push(resource);
+    return resource;
+  };
+  const text = (initialX = 0, initialY = 0, initialValue = "") => {
+    const resource = {
+      value: initialValue,
+      x: initialX,
+      y: initialY,
+      fontSize: undefined as number | undefined,
+      backgroundColor: undefined as string | undefined,
+      wrapWidth: undefined as number | undefined,
+      originX: undefined as number | undefined,
+      setPosition: (x: number, y: number) => {
+        resource.x = x;
+        resource.y = y;
+        return resource;
+      },
       setText: (value: string) => {
         resource.value = value;
+        return resource;
+      },
+      setFontSize: (value: number) => {
+        resource.fontSize = value;
+        return resource;
+      },
+      setBackgroundColor: (value: string) => {
+        resource.backgroundColor = value;
+        return resource;
+      },
+      setPadding: () => resource,
+      setOrigin: (x: number) => {
+        resource.originX = x;
+        return resource;
+      },
+      setWordWrapWidth: (value: number) => {
+        resource.wrapWidth = value;
         return resource;
       },
       destroy: vi.fn(),
@@ -136,22 +212,27 @@ function createFakeScene() {
   };
   destroyedGraphics.push(graphics.destroy);
   return {
-    scale: { width: 960, height: 540 },
-    game: { canvas: { getBoundingClientRect: () => ({ left: 0, top: 0, width: 960, height: 540 }) } },
-    add: { graphics: () => graphics, text },
+    scale: { width, height },
+    game: { canvas: { getBoundingClientRect: () => ({ left: 0, top: 0, width: renderedWidth, height }) } },
+    add: { graphics: () => graphics, text, image: sprite, sprite, tileSprite: (x: number, y: number, _width: number, _height: number, key: string) => sprite(x, y, key) },
+    load: { image: vi.fn(), spritesheet: vi.fn() },
     events: { once: (event: string, listener: () => void) => listeners.set(event, listener) },
     shutdown: () => listeners.get("shutdown")?.(),
     destroy: () => listeners.get("destroy")?.(),
     destroyedGraphics,
     destroyedText,
     textObjects,
+    spriteObjects,
   };
 }
 
-function createSceneInputHarness() {
+function createSceneInputHarness(
+  sentences: readonly { readonly term: string; readonly translation: string }[] = SENTENCES,
+  fakeScene = createFakeScene(),
+) {
   const input = createFakeInputController();
   const config = createDungeonLiberatorCartridge().createGameConfig({
-    input: [...SENTENCES],
+    input: [...sentences],
     edition: PHASE3_RUNTIME_EDITION,
     complete: vi.fn(),
     diagnostic: vi.fn(),
@@ -167,12 +248,112 @@ function createSceneInputHarness() {
       apkRestoreResponsiveState: (state: unknown) => void;
     };
   };
-  const fakeScene = createFakeScene();
   scene.create.call(fakeScene);
   return { input, scene, fakeScene };
 }
 
 describe("Dungeon Liberator bespoke rescue cartridge", () => {
+  it("counts any reachable prisoner with the visible expected English word as correct", () => {
+    const controller = createDungeonLiberatorController(
+      [{ term: "echo echo opens", translation: "เสียงสะท้อนเปิด" }],
+      vi.fn(),
+      { monsterCount: 0, seed: 17 },
+    );
+    const duplicate = controller.snapshot().prisoners[1];
+    if (!duplicate) throw new Error("The test needs the second duplicate prisoner");
+
+    const first = controller.collidePrisoner(duplicate.id);
+    expect(first).toMatchObject({ accepted: true, correct: true, progressed: true });
+    expect(first.snapshot).toMatchObject({ wordIndex: 1, correctAnswers: 1, totalAttempts: 1 });
+    expect(first.snapshot.trail).toEqual([
+      expect.objectContaining({ id: `trail:${duplicate.id}`, word: "echo", orderIndex: 0 }),
+    ]);
+
+    const restored = createDungeonLiberatorController(
+      [{ term: "echo echo opens", translation: "เสียงสะท้อนเปิด" }],
+      vi.fn(),
+      { monsterCount: 0, seed: 17 },
+    );
+    restored.restore(first.snapshot);
+    expect(restored.snapshot()).toEqual(first.snapshot);
+    const remainingDuplicate = restored.snapshot().prisoners.find((prisoner) => prisoner.word === "echo" && !prisoner.collected);
+    if (!remainingDuplicate) throw new Error("The test needs the remaining duplicate prisoner");
+    expect(restored.collidePrisoner(remainingDuplicate.id)).toMatchObject({ correct: true, progressed: true });
+  });
+
+  it("shows the bare Thai target and concise numeric state without live prose", () => {
+    const sentences = [{ term: "silver doors open", translation: "ประตูสีเงินเปิด" }];
+    const { fakeScene } = createSceneInputHarness(sentences, createFakeScene(336, 733));
+    const values = fakeScene.textObjects.map(({ value }) => value);
+    const prompt = fakeScene.textObjects.find(({ value }) => value === sentences[0]!.translation);
+
+    expect(prompt).toMatchObject({ fontSize: 26, x: 168, originX: 0.5 });
+    expect(values).toContain("1/1  1/3  ♥ 3");
+    expect(values.join(" ")).not.toMatch(/DUNGEON LIBERATOR|Rescue in order|Sentence|Word|Lives|Keyboard|Reach the glowing|dungeon/i);
+  });
+
+  it("keeps complete English prisoner labels inside the compact viewport", () => {
+    const words = ["environmental", "conservation", "guides", "travelers"];
+    const { fakeScene } = createSceneInputHarness(
+      [{ term: words.join(" "), translation: "การอนุรักษ์สิ่งแวดล้อมนำทางนักเดินทาง" }],
+      createFakeScene(336, 733),
+    );
+
+    for (const word of words) {
+      const label = fakeScene.textObjects.find(({ value }) => value === word);
+      expect(label).toMatchObject({
+        value: word,
+        fontSize: 16,
+        backgroundColor: "rgba(15, 23, 42, 0.92)",
+        originX: 0.5,
+      });
+      expect(label?.wrapWidth).toBeGreaterThanOrEqual(72);
+      expect(label?.x).toBeGreaterThanOrEqual((label?.wrapWidth ?? 0) / 2);
+      expect(label?.x).toBeLessThanOrEqual(336 - (label?.wrapWidth ?? 0) / 2);
+      expect(label?.y).toBeGreaterThanOrEqual(18);
+      expect(label?.y).toBeLessThanOrEqual(733 - 18);
+    }
+  });
+
+  it("keeps catalog player and goblin footprints visible on a CSS-scaled canvas", () => {
+    const displayScale = 336 / 960;
+    const edition = createCatalogStandardEdition([], "/assets/apk/standard-pack-qc/", "dungeon-liberator");
+    const config = createDungeonLiberatorCartridge().createGameConfig({
+      input: [...PUBLIC_SENTENCES],
+      edition,
+      complete: vi.fn(),
+      diagnostic: vi.fn(),
+      inputController: createFakeInputController(),
+      sessionMode: "playing",
+      seed: 31,
+    });
+    const scene = config.scene as {
+      preload: (this: ReturnType<typeof createFakeScene>) => void;
+      create: (this: ReturnType<typeof createFakeScene>) => void;
+    };
+    const fakeScene = createFakeScene(960, 540, 336);
+
+    scene.preload.call(fakeScene);
+    scene.create.call(fakeScene);
+
+    const player = fakeScene.spriteObjects.find(({ key }) => key.includes("labyrinth-player-idle"));
+    const goblin = fakeScene.spriteObjects.find(({ key }) => key.includes("labyrinth-goblin-static"));
+    expect(player).toMatchObject({
+      displayWidth: 48 / displayScale,
+      displayHeight: 48 / displayScale,
+      originX: 12 / 24,
+      originY: 14.5 / 24,
+    });
+    expect((player?.displayWidth ?? 0) * displayScale * 12 / 24).toBeCloseTo(24);
+    expect(goblin).toMatchObject({
+      displayWidth: 70.4 / displayScale,
+      displayHeight: 70.4 / displayScale,
+      originX: 17 / 32,
+      originY: 24 / 32,
+    });
+    expect((goblin?.displayWidth ?? 0) * displayScale * 10 / 32).toBeCloseTo(22);
+  });
+
   it("uses deterministic four-way movement and positioned prisoner collisions", () => {
     const first = createDungeonLiberatorController(SENTENCES, vi.fn(), { seed: 17 });
     const second = createDungeonLiberatorController(SENTENCES, vi.fn(), { seed: 17 });
@@ -270,6 +451,43 @@ describe("Dungeon Liberator bespoke rescue cartridge", () => {
     const lifeHit = controller.collideMonster(monster.id);
     expect(lifeHit.snapshot.lives).toBe(2);
     expect(lifeHit.snapshot.phase).toBe("playing");
+  });
+
+  it("does not grant score or XP again after chain loss and responsive restore", () => {
+    const sentence = [{ term: "silver doors open", translation: "ประตูสีเงินเปิด" }];
+    const finish = (controller: ReturnType<typeof createDungeonLiberatorController>) => {
+      for (const prisoner of controller.snapshot().prisoners) controller.collidePrisoner(prisoner.id);
+      controller.moveTo(controller.snapshot().portal);
+      return controller.snapshot().result;
+    };
+    const clean = createDungeonLiberatorController(sentence, vi.fn(), { monsterCount: 1, seed: 41 });
+    const cleanResult = finish(clean);
+
+    const farmed = createDungeonLiberatorController(sentence, vi.fn(), { monsterCount: 1, seed: 41 });
+    for (const prisoner of farmed.snapshot().prisoners) farmed.collidePrisoner(prisoner.id);
+    expect(farmed.snapshot()).toMatchObject({ correctAnswers: 3, totalAttempts: 3, score: 300 });
+    const completeChain = farmed.capture();
+    const beforePortal = createDungeonLiberatorController(sentence, vi.fn(), { monsterCount: 1, seed: 41 });
+    beforePortal.restore(completeChain);
+    expect(beforePortal.snapshot()).toEqual(completeChain);
+    expect(beforePortal.snapshot().phase).toBe("playing");
+
+    beforePortal.collideMonster(beforePortal.snapshot().monsters[0]!.id);
+    const disrupted = beforePortal.capture();
+    expect(disrupted).toMatchObject({ wordIndex: 0, trail: [], rewardedWordIds: [
+      "sentence:0:word:0",
+      "sentence:0:word:1",
+      "sentence:0:word:2",
+    ] });
+
+    const restored = createDungeonLiberatorController(sentence, vi.fn(), { monsterCount: 1, seed: 41 });
+    expect(() => restored.restore({ ...disrupted, totalAttempts: Number.MAX_SAFE_INTEGER + 1 })).toThrow("result counters are invalid");
+    restored.restore(disrupted);
+    const repeatedResult = finish(restored);
+
+    expect(restored.snapshot()).toMatchObject({ correctAnswers: 6, totalAttempts: 6, score: 300 });
+    expect(cleanResult).toMatchObject({ correctAnswers: 3, totalAttempts: 3, score: 300, xp: 70 });
+    expect(repeatedResult).toMatchObject({ correctAnswers: 6, totalAttempts: 6, score: 300, xp: 70 });
   });
 
   it("rescatter every rescued word from the trail segment hit by a monster", () => {

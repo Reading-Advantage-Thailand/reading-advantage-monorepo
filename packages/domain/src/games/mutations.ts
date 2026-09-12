@@ -4,10 +4,13 @@ import {
   type UserContext,
   type Tenant,
 } from "@reading-advantage/auth";
+import { getReadToSelectAudioCompletionCounts } from "@reading-advantage/game-contracts";
 import type { TenantDB } from "../db-contract.js";
 import { gameCompletions, xpLogs } from "@reading-advantage/db/schema";
 import { gameCompletionInputSchema } from "./schema.js";
 import { calculateGameXP } from "./xp.js";
+import { grantCompletionCosmetics } from "../rpg/mutations.js";
+import { recordChallengeContribution } from "../challenges/contributions.js";
 import type {
   GameCompletionInput,
   GameCompletionResult,
@@ -17,31 +20,6 @@ import type {
 // db-contract.ts), but the existing signature types it as DB. Cast
 // here so we can call `.unscoped()` for the REFERENTIAL xpLogs insert.
 type TenantTx = TenantDB;
-
-/**
- * Postgres error code for a unique-violation. The dual-write in
- * `recordGameCompletion` catches this as the race-safe fire-once signal
- * (Phase 4 Decision 4.5).
- */
-const PG_UNIQUE_VIOLATION = "23505";
-
-interface PgError {
-  code?: string;
-  cause?: { code?: string };
-}
-
-/**
- * Returns true if the supplied error is a Postgres unique-violation. We
- * match the SQLSTATE code at any level (drizzle throws the underlying PG
- * error directly; PGlite nests it under `.cause`).
- */
-function isUniqueViolation(err: unknown): boolean {
-  if (!err || typeof err !== "object") return false;
-  const candidate = err as PgError;
-  if (candidate.code === PG_UNIQUE_VIOLATION) return true;
-  if (candidate.cause?.code === PG_UNIQUE_VIOLATION) return true;
-  return false;
-}
 
 /**
  * Records a single game completion with race-safe fire-once idempotency.
@@ -64,10 +42,9 @@ function isUniqueViolation(err: unknown): boolean {
  *          `(schoolId, userId, activityId)`.
  *        - `xpLogs` (REFERENTIAL, XP ledger) — preserves the
  *          `getStudentProgress#xpTotal` read path (Decision 4.1 §3).
- *      If the `gameCompletions` insert throws a unique-violation (concurrent
- *      caller raced past the SELECT), the catch returns
- *      `{ duplicate: true, xpEarned: 0 }` and rolls the transaction back;
- *      no `xpLogs` row is written either (atomic).
+ *        - eligible cosmetic unlocks from the saved completion facts.
+ *      The completion insert targets its idempotency constraint with
+ *      `onConflictDoNothing()`. A concurrent retry returns no saved row.
  *   6. Return `{ duplicate: false, xpEarned, activityId, status: 200 }`.
  *
  * Phase 4 closes the Phase 3 Tier 2 item (Decision 3.4): the previous
@@ -100,6 +77,15 @@ export async function recordGameCompletion({
 
   // Re-validate so a typed input is still hardened by `.strict()`.
   const parsed = gameCompletionInputSchema.parse(input);
+  const answerAudioCounts = getReadToSelectAudioCompletionCounts(
+    parsed.metadata?.learningEvidence,
+  );
+  if (answerAudioCounts && parsed.totalAttempts !== answerAudioCounts.totalAttempts) {
+    throw new Error("Total attempts must match submitted answer-audio choices");
+  }
+  if (answerAudioCounts && parsed.correctAnswers !== answerAudioCounts.correctAnswers) {
+    throw new Error("Correct answers must match completed answer-audio questions");
+  }
 
   const xpEarned = calculateGameXP(parsed);
   const activityId = `game:${parsed.gameType}:${parsed.idempotencyKey}`;
@@ -134,12 +120,11 @@ export async function recordGameCompletion({
     );
   }
   const schoolId = tenant.schoolId;
-  try {
-    await db.transaction(async (rawTx) => {
+  const inserted = await db.transaction(async (rawTx) => {
       // rawTx is a TenantDB at runtime (see db-contract.ts) — cast so
       // we can call `.unscoped()` for the REFERENTIAL xpLogs insert.
       const tx = rawTx as unknown as TenantTx;
-      await tx.insert(gameCompletions).values({
+      const [savedCompletion] = await tx.insert(gameCompletions).values({
         schoolId,
         userId: user.id,
         gameType: parsed.gameType,
@@ -156,7 +141,25 @@ export async function recordGameCompletion({
         // Spread metadata only when present so the column's nullable
         // contract is preserved by Drizzle's insert type inference.
         ...(parsed.metadata ? { metadata: parsed.metadata } : {}),
+      }).onConflictDoNothing({
+        target: [
+          gameCompletions.schoolId,
+          gameCompletions.userId,
+          gameCompletions.activityId,
+        ],
+      }).returning({
+        id: gameCompletions.id,
+        schoolId: gameCompletions.schoolId,
+        userId: gameCompletions.userId,
+        gameType: gameCompletions.gameType,
+        difficulty: gameCompletions.difficulty,
+        correctAnswers: gameCompletions.correctAnswers,
+        totalAttempts: gameCompletions.totalAttempts,
+        victory: gameCompletions.victory,
+        metadata: gameCompletions.metadata,
+        createdAt: gameCompletions.createdAt,
       });
+      if (!savedCompletion) return false;
       // xpLogs is REFERENTIAL (no schoolId) — bypass TenantDB scoping for
       // this single insert. The unique constraint on (userId, activityId)
       // catches the race even though the table is unscoped.
@@ -169,14 +172,45 @@ export async function recordGameCompletion({
         activityId,
         activityType: "GAME_COMPLETION",
       });
+      await grantCompletionCosmetics(tx, {
+        id: savedCompletion.id,
+        schoolId: savedCompletion.schoolId,
+        userId: savedCompletion.userId,
+        gameType: savedCompletion.gameType,
+        correctAnswers: savedCompletion.correctAnswers,
+        totalAttempts: savedCompletion.totalAttempts,
+        victory: savedCompletion.victory,
+        ...(savedCompletion.metadata && typeof savedCompletion.metadata === "object"
+          ? { metadata: savedCompletion.metadata as Record<string, unknown> }
+          : {}),
+      });
+      if (parsed.challengeRunId) {
+        await recordChallengeContribution({
+          tx,
+          user,
+          tenant,
+          runId: parsed.challengeRunId,
+          completion: {
+            id: savedCompletion.id,
+            schoolId: savedCompletion.schoolId,
+            userId: savedCompletion.userId,
+            gameType: savedCompletion.gameType,
+            difficulty: savedCompletion.difficulty,
+            correctAnswers: savedCompletion.correctAnswers,
+            totalAttempts: savedCompletion.totalAttempts,
+            victory: savedCompletion.victory,
+            createdAt: savedCompletion.createdAt,
+            ...(savedCompletion.metadata && typeof savedCompletion.metadata === "object"
+              ? { metadata: savedCompletion.metadata as Record<string, unknown> }
+              : {}),
+          },
+        });
+      }
+      return true;
     });
-  } catch (err) {
-    if (isUniqueViolation(err)) {
-      // Race-safe fire-once: a concurrent caller beat us to the insert.
-      // Roll back (transaction aborted) and report duplicate.
-      return { xpEarned: 0, activityId, duplicate: true, status: 200 };
-    }
-    throw err;
+
+  if (!inserted) {
+    return { xpEarned: 0, activityId, duplicate: true, status: 200 };
   }
 
   return { xpEarned, activityId, duplicate: false, status: 200 };

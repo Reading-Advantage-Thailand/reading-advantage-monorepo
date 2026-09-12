@@ -1,7 +1,7 @@
 {
   "track_id": "apk_existing_core_cutover_20260727",
   "type": "feature",
-  "status": "in_progress",
+  "status": "complete",
   "created_at": "2026-07-27T00:00:00Z",
   "updated_at": "2026-07-31T14:00:00Z",
   "description": "Vertical revalidation and cutover of five already-built core APK cartridges.",

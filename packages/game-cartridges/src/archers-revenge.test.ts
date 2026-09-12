@@ -7,6 +7,7 @@ import { describe, expect, it, vi } from "vitest";
 
 import {
   ARCHERS_REVENGE_CANVAS,
+  clampArchersRevengeLabelX,
   createArchersRevengeCartridge,
   createArchersRevengeController,
   getArchersRevengeColumnFromPointer,
@@ -90,16 +91,31 @@ function createSceneHost() {
   const texts: Array<{
     setPosition: ReturnType<typeof vi.fn>;
     setText: ReturnType<typeof vi.fn>;
+    setFontSize: ReturnType<typeof vi.fn>;
+    setBackgroundColor: ReturnType<typeof vi.fn>;
+    setPadding: ReturnType<typeof vi.fn>;
+    setOrigin: ReturnType<typeof vi.fn>;
+    setWordWrapWidth: ReturnType<typeof vi.fn>;
     destroy: ReturnType<typeof vi.fn>;
   }> = [];
   const createText = () => {
     const text = {
       setPosition: vi.fn(),
       setText: vi.fn(),
+      setFontSize: vi.fn(),
+      setBackgroundColor: vi.fn(),
+      setPadding: vi.fn(),
+      setOrigin: vi.fn(),
+      setWordWrapWidth: vi.fn(),
       destroy: vi.fn(),
     };
     text.setPosition.mockReturnValue(text);
     text.setText.mockReturnValue(text);
+    text.setFontSize.mockReturnValue(text);
+    text.setBackgroundColor.mockReturnValue(text);
+    text.setPadding.mockReturnValue(text);
+    text.setOrigin.mockReturnValue(text);
+    text.setWordWrapWidth.mockReturnValue(text);
     texts.push(text);
     return text;
   };
@@ -155,6 +171,15 @@ function clearFormation(controller: ReturnType<typeof createArchersRevengeContro
 }
 
 describe("Archer's Revenge cartridge", () => {
+  it("keeps measured frontline labels inside their lanes at formation edges", () => {
+    const laneWidth = ARCHERS_REVENGE_CANVAS.width / 5;
+    const labelWidth = laneWidth - 12;
+
+    expect(clampArchersRevengeLabelX(-40, 0, labelWidth, ARCHERS_REVENGE_CANVAS.width)).toBe(laneWidth / 2);
+    expect(clampArchersRevengeLabelX(ARCHERS_REVENGE_CANVAS.width + 40, 4, labelWidth, ARCHERS_REVENGE_CANVAS.width))
+      .toBe(ARCHERS_REVENGE_CANVAS.width - laneWidth / 2);
+  });
+
   it("exposes a bespoke three-row formation and deterministic target", () => {
     const first = createArchersRevengeController(INPUT, vi.fn(), { seed: 7 });
     const second = createArchersRevengeController(INPUT, vi.fn(), { seed: 7 });
@@ -179,7 +204,8 @@ describe("Archer's Revenge cartridge", () => {
       arrows: [],
       enemyProjectiles: [],
       destroyed: false,
-      answer: INPUT[0].translation,
+      prompt: INPUT[0].translation,
+      answer: INPUT[0].term,
       correctAction: "confirm",
       availableActions: ["move-left", "move-right", "confirm"],
       lives: 3,
@@ -641,7 +667,7 @@ describe("Archer's Revenge cartridge", () => {
     expect(complete).not.toHaveBeenCalled();
   });
 
-  it("keeps the current target translation off shielded enemies", () => {
+  it("keeps the English target choice distinct from shielded distractors", () => {
     const controller = createArchersRevengeController(INPUT, vi.fn(), {
       seed: 29,
       formationDescendSpeed: 0,
@@ -682,6 +708,14 @@ describe("Archer's Revenge cartridge", () => {
     };
     const host = createSceneHost();
     scene.create.call(host.host);
+    const initial = scene.extend.apkCaptureResponsiveState();
+    expect(host.texts[1]?.setText).toHaveBeenLastCalledWith(initial.target.translation);
+    const frontlineTerms = initial.enemies.filter((enemy) =>
+      !initial.enemies.some((candidate) => candidate.column === enemy.column && candidate.row > enemy.row))
+      .map((enemy) => enemy.term);
+    expect(frontlineTerms).toContain(initial.target.term);
+    expect(host.texts.slice(5).map((label) => label.setText.mock.calls.at(-1)?.[0]).filter(Boolean))
+      .toEqual(expect.arrayContaining(frontlineTerms));
 
     inputController.setSnapshot(inputSnapshot({ pressed: ["ArrowRight"] }));
     scene.update.call(host.host, 0, 16);

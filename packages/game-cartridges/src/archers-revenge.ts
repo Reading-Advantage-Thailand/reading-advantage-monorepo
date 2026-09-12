@@ -112,9 +112,9 @@ export interface ArchersRevengeProjectile {
 
 /** Current vocabulary target shown above the formation. */
 export interface ArchersRevengeTarget {
-  /** Source-language prompt. */
+  /** English source term for the active Thai target. */
   readonly term: string;
-  /** Translation matched by the unshielded enemy. */
+  /** Thai translation shown as the learning target. */
   readonly translation: string;
   /** Column containing the unshielded enemy. */
   readonly column: number;
@@ -138,9 +138,9 @@ export interface ArchersRevengeSnapshot {
   readonly targetCount: number;
   /** Current prompt and vulnerable column. */
   readonly target: ArchersRevengeTarget;
-  /** Source-language prompt retained as a compact renderer field. */
+  /** Thai learning prompt retained as a compact renderer field. */
   readonly prompt: string;
-  /** Translation required by the current unshielded enemy. */
+  /** English answer required by the current target. */
   readonly answer: string;
   /** Semantic action used to fire at the selected target. */
   readonly correctAction: InputActionId;
@@ -347,9 +347,36 @@ interface PhaserGraphicsLike {
 }
 
 interface PhaserTextLike {
+  readonly width?: number;
   setPosition(x: number, y: number): this;
   setText(value: string): this;
+  setFontSize?(value: number): this;
+  setBackgroundColor?(value: string): this;
+  setPadding?(left: number, top: number, right?: number, bottom?: number): this;
+  setOrigin?(x: number, y?: number): this;
+  setWordWrapWidth?(width: number, useAdvancedWrap?: boolean): this;
   destroy(): void;
+}
+
+/**
+ * Keeps one measured frontline label inside its visible aim lane.
+ * @param enemyX Current rendered enemy center.
+ * @param column Stable aim column for the enemy.
+ * @param labelWidth Measured wrapped label width.
+ * @param sceneWidth Current scene width.
+ * @returns A visible label center that cannot overlap an adjacent lane.
+ */
+export function clampArchersRevengeLabelX(
+  enemyX: number,
+  column: number,
+  labelWidth: number,
+  sceneWidth: number,
+): number {
+  const laneWidth = sceneWidth / ARCHERS_REVENGE_COLUMNS;
+  const halfWidth = Math.min(Math.max(0, labelWidth) / 2, laneWidth / 2 - 6);
+  const laneLeft = column * laneWidth + 6;
+  const laneRight = (column + 1) * laneWidth - 6;
+  return clamp(enemyX, laneLeft + halfWidth, laneRight - halfWidth);
 }
 
 interface PhaserCanvasLike {
@@ -532,8 +559,8 @@ function freezeSnapshot(
     targetIndex: state.targetIndex,
     targetCount: state.targetCount,
     target: Object.freeze({ ...state.target }),
-    prompt: state.target.term,
-    answer: state.target.translation,
+    prompt: state.target.translation,
+    answer: state.target.term,
     correctAction: "confirm" as const,
     availableActions: ARCHERS_REVENGE_AVAILABLE_ACTIONS,
     targetWord: Object.freeze({ term: state.target.term, translation: state.target.translation }),
@@ -625,7 +652,7 @@ function distractorItem(
   return pool[((salt % pool.length) + pool.length) % pool.length]!;
 }
 
-function frontlineEnemies(enemies: readonly MutableEnemy[]): MutableEnemy[] {
+function frontlineEnemies<T extends { readonly column: number; readonly row: number }>(enemies: readonly T[]): T[] {
   return enemies
     .filter((enemy) => !enemies.some((candidate) => candidate.column === enemy.column && candidate.row > enemy.row))
     .sort((first, second) => first.column - second.column || second.row - first.row);
@@ -653,7 +680,7 @@ function validateRestoredSnapshot(
     throw new Error("Archer's Revenge state phase is invalid");
   }
   if (state.seed !== options.seed || state.status !== state.phase || state.correctAction !== "confirm"
-    || state.prompt !== state.target.term || state.answer !== state.target.translation
+    || state.prompt !== state.target.translation || state.answer !== state.target.term
     || state.targetWord.term !== state.target.term
     || state.targetWord.translation !== state.target.translation
     || state.playerX !== columnX(state.aimColumn)
@@ -1341,7 +1368,6 @@ function pointerInScene(
 
 function createScene(context: SceneContext): Readonly<Record<string, unknown>> {
   let resources: SceneResources | undefined;
-  let composition = context.composition;
   let previousKeys = new Set<string>();
   let animationMs = 0;
   let cleaned = false;
@@ -1363,7 +1389,14 @@ function createScene(context: SceneContext): Readonly<Record<string, unknown>> {
     const state = context.controller.snapshot();
     const scaleX = width / ARCHERS_REVENGE_CANVAS.width;
     const scaleY = height / ARCHERS_REVENGE_CANVAS.height;
+    const renderedWidth = scene.game?.canvas?.getBoundingClientRect?.().width ?? width;
+    const renderedScale = Math.max(0.1, renderedWidth / width);
+    const promptFontSize = Math.ceil(18 / renderedScale);
+    const choiceFontSize = Math.ceil(16 / renderedScale);
+    const statusFontSize = Math.ceil(14 / renderedScale);
     const pulse = Math.sin(animationMs / 2_000 * Math.PI * 2) * 3;
+    const frontlineIds = new Set(frontlineEnemies(state.enemies).map((enemy) => enemy.id));
+    let labelIndex = 0;
 
     activeResources.graphics.clear();
     if (!activeResources.art.ground("world:ground", width, height)) activeResources.graphics.fillStyle(0x07131f, 1).fillRect(0, 0, width, height);
@@ -1383,18 +1416,31 @@ function createScene(context: SceneContext): Readonly<Record<string, unknown>> {
         width: enemyWidth * 0.8,
         height: enemyHeight * 1.4,
         depth: 7,
-        alpha: enemy.shielded ? 0.7 : 1,
+        alpha: 1,
       })) {
-        activeResources.graphics.fillStyle(enemy.shielded ? 0x273849 : 0x147d6e, 1)
+        activeResources.graphics.fillStyle(0x244b57, 1)
           .fillRoundedRect(x - enemyWidth / 2, y - enemyHeight / 2, enemyWidth, enemyHeight, 12);
-        activeResources.graphics.lineStyle(3, enemy.shielded ? 0x6d8190 : 0xf9d65c, 0.95)
+        activeResources.graphics.lineStyle(3, 0x8fb8c2, 0.95)
           .strokeRoundedRect(x - enemyWidth / 2, y - enemyHeight / 2, enemyWidth, enemyHeight, 12);
       }
-      activeResources.enemyLabels[index]
-        ?.setText(enemy.translation)
-        .setPosition(x - enemyWidth / 2 + 8, y + enemyHeight / 2 + 7);
+      if (frontlineIds.has(enemy.id)) {
+        const label = activeResources.enemyLabels[labelIndex];
+        const labelPadding = Math.ceil(4 / renderedScale);
+        label
+          ?.setFontSize?.(choiceFontSize)
+          .setBackgroundColor?.("rgba(8, 28, 38, 0.9)")
+          .setPadding?.(labelPadding, Math.ceil(2 / renderedScale))
+          .setOrigin?.(0.5, 0)
+          .setWordWrapWidth?.(Math.max(1, width / ARCHERS_REVENGE_COLUMNS - 12 - labelPadding * 2), true)
+          .setText(enemy.term);
+        label?.setPosition(
+          clampArchersRevengeLabelX(x, enemy.column, label.width ?? 0, width),
+          y + enemyHeight / 2 + 7,
+        );
+        labelIndex += 1;
+      }
     }
-    activeResources.enemyLabels.slice(state.enemies.length).forEach((label) => label.setText(""));
+    activeResources.enemyLabels.slice(labelIndex).forEach((label) => label.setText(""));
     for (const arrow of state.arrows) {
       activeResources.graphics.fillStyle(0xf9d65c, 1)
         .fillRect(arrow.x * scaleX - 3, arrow.y * scaleY, 6, 24 * scaleY);
@@ -1424,28 +1470,23 @@ function createScene(context: SceneContext): Readonly<Record<string, unknown>> {
     activeResources.graphics.fillStyle(0xffe7a3, 0.35)
       .fillRect(0, BREACH_Y * scaleY, width, 3 * scaleY);
 
-    activeResources.title.setText("ARCHER'S REVENGE").setPosition(28, 20);
+    activeResources.title.setText("").setPosition(28, 20);
     activeResources.prompt
-      .setText(`Target word: ${state.target.term}`)
-      .setPosition(28, 62);
+      .setFontSize?.(promptFontSize)
+      .setWordWrapWidth?.(width - 56, true)
+      .setText(state.target.translation)
+      .setPosition(28, 24);
     activeResources.progress
+      .setFontSize?.(statusFontSize)
       .setText(
-        `${composition?.profile === "compact" ? "Compact range" : "Wide range"}  •  Wave ${state.wave}/${state.maxWaves}  •  HP ${state.hp}/${state.maxHp}  •  Score ${state.score}  •  Combo x${state.combo}`,
+        `${state.wave}/${state.maxWaves}  ♥ ${state.hp}/${state.maxHp}  •  ${state.score}  •  x${state.combo}`,
       )
-      .setPosition(28, 103);
+      .setPosition(28, 82);
     activeResources.feedback
-      .setText(
-        state.phase === "victory"
-          ? "Every learning target is clear. The realm is safe."
-          : state.phase === "defeat"
-            ? "The defensive line has fallen."
-            : state.lastOutcome === "incorrect"
-              ? "Shielded target hit. Enemy fire incoming."
-              : "Aim at the glowing translation and fire.",
-      )
+      .setText(state.phase === "victory" ? "VICTORY" : state.phase === "defeat" ? "DEFEAT" : "")
       .setPosition(28, height - 70);
     activeResources.instructions
-      .setText("Keyboard: A / ← and D / → aim • Space fires • Click or tap a column")
+      .setText("")
       .setPosition(28, height - 36);
   };
 
@@ -1553,7 +1594,7 @@ function createScene(context: SceneContext): Readonly<Record<string, unknown>> {
         context.controller.restore(state as ArchersRevengeSnapshot);
       },
       apkRecompose: (nextComposition: SceneContext["composition"]): void => {
-        composition = nextComposition;
+        void nextComposition;
       },
     },
   };
@@ -1565,10 +1606,10 @@ export function createArchersRevengeCartridge(): StandardExperienceCartridge {
   const standardExperience = createCartridgeStandardExperience({
     id: ARCHERS_REVENGE_ID,
     title: "Archer's Revenge",
-    description: "Aim a precision archer at the translation target and break enemy formations.",
+    description: "Aim an archer at the English word that matches each Thai target.",
     inputMode: "vocabulary",
-     objective: "Clear every input target by hitting only the unshielded translation target.",
-    mechanicInstruction: "Aim left or right, then fire at the unshielded enemy matching the target word.",
+     objective: "Clear every Thai target by hitting its matching English word.",
+    mechanicInstruction: "Aim left or right, then fire at the English word that matches the Thai target.",
     keyboardKeys: ["A", "Left Arrow", "D", "Right Arrow", "Space"],
     executeTutorialAction: (actionId) => {
       const controller = activeController;
