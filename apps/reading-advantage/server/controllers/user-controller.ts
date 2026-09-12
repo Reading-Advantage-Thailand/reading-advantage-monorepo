@@ -171,6 +171,7 @@ export function xpForActivityType(
 // Reserved target owned by the level-test chat handler. Activity-log writes
 // to this target would let a client plant the stored placement assessment.
 const LEVEL_TEST_PENDING_TARGET_ID = "pending-level-test-assessment";
+const ADMIN_ASSIGNABLE_ROLES = [Role.STUDENT, Role.TEACHER, Role.ADMIN] as const;
 
 /**
  * Resolves a nonempty activity target from the supported caller fields.
@@ -268,6 +269,15 @@ export async function updateUser(
       sessionRole === Role.ADMIN || sessionRole === Role.SYSTEM;
     if (canUpdateStaffFields) {
       if (Object.prototype.hasOwnProperty.call(data, "role")) {
+        if (
+          sessionRole === Role.ADMIN &&
+          !ADMIN_ASSIGNABLE_ROLES.includes(data.role)
+        ) {
+          return NextResponse.json(
+            { message: "Forbidden - Role exceeds administrator authority" },
+            { status: 403 },
+          );
+        }
         updateValues.role = data.role;
       }
       if (Object.prototype.hasOwnProperty.call(data, "license_id")) {
@@ -1036,6 +1046,16 @@ export async function updateUserData(req: ExtendedNextRequest) {
         { message: "User not found" },
         { status: 404 },
       );
+    }
+
+    if (sessionRole === Role.ADMIN) {
+      const callerSchoolId = req.session?.user.school_id;
+      if (!callerSchoolId || user.schoolId !== callerSchoolId) {
+        return NextResponse.json(
+          { message: "Forbidden - Access denied to this resource" },
+          { status: 403 },
+        );
+      }
     }
 
     const [license] = await db

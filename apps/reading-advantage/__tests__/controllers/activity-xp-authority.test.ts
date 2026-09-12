@@ -228,11 +228,12 @@ describe("putActivityLog XP authority", () => {
 describe("updateUser PATCH authority", () => {
   beforeEach(resetDbDefaults);
 
-  it("strips role, XP, level, and CEFR from a self PATCH", async () => {
+  it("persists self email but strips role, XP, level, and CEFR", async () => {
     const res = await updateUser(
       makeRequest(
         "user-1",
         {
+          email: "new@example.com",
           role: "SYSTEM",
           xp: 999999,
           level: 18,
@@ -249,7 +250,7 @@ describe("updateUser PATCH authority", () => {
     expect(res.status).toBe(200);
     expect(setMock).toHaveBeenCalledTimes(1);
     const payload = setMock.mock.calls[0][0] as Record<string, unknown>;
-    expect(payload).toMatchObject({ name: "New" });
+    expect(payload).toMatchObject({ name: "New", email: "new@example.com" });
     expect(payload).not.toHaveProperty("role");
     expect(payload).not.toHaveProperty("xp");
     expect(payload).not.toHaveProperty("level");
@@ -280,6 +281,46 @@ describe("updateUser PATCH authority", () => {
     expect(res.status).toBe(200);
     expect(setMock).toHaveBeenCalledWith(expect.objectContaining({ role: "TEACHER" }));
   });
+
+  it("rejects an ADMIN assigning the SYSTEM role", async () => {
+    limitMock.mockResolvedValueOnce([{ schoolId: "school-a" }]);
+
+    const res = await updateUser(
+      makeRequest(
+        "user-1",
+        { role: "SYSTEM" },
+        {
+          method: "PATCH",
+          sessionUser: {
+            id: "admin-1",
+            role: "ADMIN",
+            school_id: "school-a",
+          },
+        },
+      ),
+      makeContext("user-1"),
+    );
+
+    expect(res.status).toBe(403);
+    expect(setMock).not.toHaveBeenCalled();
+  });
+
+  it("allows a SYSTEM session to assign the SYSTEM role", async () => {
+    const res = await updateUser(
+      makeRequest(
+        "user-1",
+        { role: "SYSTEM" },
+        {
+          method: "PATCH",
+          sessionUser: { id: "system-1", role: "SYSTEM" },
+        },
+      ),
+      makeContext("user-1"),
+    );
+
+    expect(res.status).toBe(200);
+    expect(setMock).toHaveBeenCalledWith(expect.objectContaining({ role: "SYSTEM" }));
+  });
 });
 
 describe("updateUserData staff authority", () => {
@@ -307,7 +348,9 @@ describe("updateUserData staff authority", () => {
 
   it("allows a SYSTEM session to update a user by email", async () => {
     limitMock
-      .mockResolvedValueOnce([{ id: "user-2", email: "student@example.com" }])
+      .mockResolvedValueOnce([
+        { id: "user-2", email: "student@example.com", schoolId: "school-b" },
+      ])
       .mockResolvedValueOnce([{ id: "license-1", maxUsers: 10 }]);
     whereMock
       .mockImplementationOnce(() => ({ limit: limitMock }))
@@ -325,6 +368,70 @@ describe("updateUserData staff authority", () => {
         {
           method: "PATCH",
           sessionUser: { id: "system-1", role: "SYSTEM" },
+        },
+      ),
+    );
+
+    expect(res.status).toBe(200);
+    expect(setMock).toHaveBeenCalledWith(
+      expect.objectContaining({ role: "TEACHER", licenseId: "license-1" }),
+    );
+  });
+
+  it("rejects an ADMIN updating a user at another school", async () => {
+    limitMock.mockResolvedValueOnce([
+      { id: "user-2", email: "student@example.com", schoolId: "school-b" },
+    ]);
+
+    const res = await updateUserData(
+      makeRequest(
+        "user-1",
+        {
+          email: "student@example.com",
+          role: "TEACHER",
+          license_id: "license-1",
+        },
+        {
+          method: "PATCH",
+          sessionUser: {
+            id: "admin-1",
+            role: "ADMIN",
+            school_id: "school-a",
+          },
+        },
+      ),
+    );
+
+    expect(res.status).toBe(403);
+    expect(insertMock).not.toHaveBeenCalled();
+  });
+
+  it("allows an ADMIN to update a user at the same school", async () => {
+    limitMock
+      .mockResolvedValueOnce([
+        { id: "user-2", email: "student@example.com", schoolId: "school-a" },
+      ])
+      .mockResolvedValueOnce([{ id: "license-1", maxUsers: 10 }]);
+    whereMock
+      .mockImplementationOnce(() => ({ limit: limitMock }))
+      .mockImplementationOnce(() => ({ limit: limitMock }))
+      .mockImplementationOnce(() => Promise.resolve([{ licenseUserCount: 0 }]));
+
+    const res = await updateUserData(
+      makeRequest(
+        "user-1",
+        {
+          email: "student@example.com",
+          role: "TEACHER",
+          license_id: "license-1",
+        },
+        {
+          method: "PATCH",
+          sessionUser: {
+            id: "admin-1",
+            role: "ADMIN",
+            school_id: "school-a",
+          },
         },
       ),
     );
