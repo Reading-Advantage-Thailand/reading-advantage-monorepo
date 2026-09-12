@@ -51,7 +51,16 @@ function placementRequest(
 function pendingRow(level: string, sublevel: string) {
   return {
     id: "pending-1",
-    details: { assessment: { level, sublevel } },
+    details: {
+      assessment: {
+        level,
+        sublevel,
+        explanation: "Consistent performance across tasks.",
+        strengths: ["Vocabulary"],
+        improvements: ["Past tense"],
+        nextSteps: "Keep reading daily.",
+      },
+    },
   };
 }
 
@@ -143,5 +152,28 @@ describe("level-test placement endpoint", () => {
       placementRequest({ sublevel: "+" }, { id: "student-1" }),
     );
     expect(res.status).toBe(400);
+  });
+
+  it("rejects a stored assessment that fails the contract schema with zero inserts", async () => {
+    // A row planted through a now-blocked path: a valid CEFR level pair
+    // without the remaining required assessment fields.
+    (dbMock.select as jest.Mock).mockReset();
+    (dbMock.select as jest.Mock).mockReturnValue(
+      selectLimit([
+        {
+          id: "pending-1",
+          details: { assessment: { level: "B1", sublevel: "+" } },
+        },
+      ]),
+    );
+
+    const res = await handleLevelTestPlacement(
+      placementRequest({}, { id: "student-1" }),
+    );
+
+    expect(res.status).toBe(400);
+    expect(insertValues).not.toHaveBeenCalled();
+    expect(updateSet).not.toHaveBeenCalled();
+    expect(dbMock.delete as jest.Mock).not.toHaveBeenCalled();
   });
 });

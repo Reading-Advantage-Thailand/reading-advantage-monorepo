@@ -1,5 +1,6 @@
 /**
- * Server XP authority for postActivityLog.
+ * Server XP authority for postActivityLog, putActivityLog, and updateUser.
+ * Also pins the staff scope on the student data endpoints.
  *
  * @jest-environment node
  */
@@ -15,6 +16,8 @@ var insertMock: jest.Mock;
 var valuesMock: jest.Mock;
 var returningMock: jest.Mock;
 var updateMock: jest.Mock;
+var setMock: jest.Mock;
+var deleteMock: jest.Mock;
 
 jest.mock("@reading-advantage/db", () => {
   const actual = jest.requireActual("@reading-advantage/db");
@@ -27,17 +30,26 @@ jest.mock("@reading-advantage/db", () => {
   valuesMock = jest.fn();
   returningMock = jest.fn();
   updateMock = jest.fn();
+  setMock = jest.fn();
+  deleteMock = jest.fn();
 
   const mockDb: any = {};
   mockDb.select = selectMock.mockImplementation(() => mockDb);
   mockDb.from = fromMock.mockImplementation(() => mockDb);
   mockDb.where = whereMock.mockImplementation(() => mockDb);
   mockDb.limit = limitMock.mockResolvedValue([]);
+  mockDb.innerJoin = jest.fn().mockImplementation(() => mockDb);
   mockDb.insert = insertMock.mockImplementation(() => mockDb);
   mockDb.values = valuesMock.mockImplementation(() => mockDb);
   mockDb.returning = returningMock.mockImplementation(() => mockDb);
   mockDb.update = updateMock.mockImplementation(() => mockDb);
-  mockDb.set = jest.fn().mockImplementation(() => mockDb);
+  mockDb.set = setMock.mockImplementation(() => mockDb);
+  mockDb.delete = deleteMock.mockImplementation(() => mockDb);
+  mockDb.transaction = jest
+    .fn()
+    .mockImplementation(async (fn: (tx: unknown) => Promise<unknown>) =>
+      fn(mockDb),
+    );
 
   return {
     ...actual,
@@ -49,29 +61,61 @@ jest.mock("@/lib/session", () => ({
   getCurrentUser: jest.fn(),
 }));
 
-import { postActivityLog, xpForActivityType } from "@/server/controllers/user-controller";
+import {
+  getStudentData,
+  postActivityLog,
+  putActivityLog,
+  resetUserProgress,
+  updateUser,
+  xpForActivityType,
+} from "@/server/controllers/user-controller";
 import { ActivityType } from "@/lib/enums";
 
-function makeRequest(userId: string, body: object): ExtendedNextRequest {
+interface SessionUser {
+  id: string;
+  role: string;
+  school_id?: string;
+}
+
+function makeRequest(
+  userId: string,
+  body: object,
+  options: { method?: string; sessionUser?: SessionUser } = {},
+): ExtendedNextRequest {
+  const method = options.method ?? "POST";
   const req = new NextRequest(
     `http://localhost:3000/api/v1/users/${userId}/activitylog`,
     {
-      method: "POST",
-      body: JSON.stringify(body),
+      method,
+      ...(method === "GET" ? {} : { body: JSON.stringify(body) }),
     },
   ) as ExtendedNextRequest;
   req.session = {
-    user: {
-      id: userId,
-      role: "STUDENT",
-      school_id: "school-a",
-    },
+    user:
+      options.sessionUser ?? {
+        id: userId,
+        role: "STUDENT",
+        school_id: "school-a",
+      },
   } as any;
   return req;
 }
 
 function makeContext(userId: string) {
   return { params: Promise.resolve({ id: userId }) };
+}
+
+function resetDbDefaults() {
+  jest.clearAllMocks();
+  limitMock.mockResolvedValue([]);
+  returningMock.mockResolvedValue([{ id: "activity-1" }]);
+}
+
+function findXpLogInsert(): [Record<string, unknown>] | undefined {
+  return valuesMock.mock.calls.find(
+    ([values]: [Record<string, unknown>]) =>
+      values && typeof values === "object" && "activityId" in values,
+  );
 }
 
 describe("xpForActivityType", () => {
@@ -85,11 +129,7 @@ describe("xpForActivityType", () => {
 });
 
 describe("postActivityLog XP authority", () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-    limitMock.mockResolvedValue([]);
-    returningMock.mockResolvedValue([{ id: "activity-1" }]);
-  });
+  beforeEach(resetDbDefaults);
 
   it("ignores a client-sent xpEarned and isInitialLevelTest payload", async () => {
     const res = await postActivityLog(
@@ -104,11 +144,151 @@ describe("postActivityLog XP authority", () => {
     );
 
     expect(res.status).toBe(200);
-    const xpInsert = valuesMock.mock.calls.find(
-      ([values]: [Record<string, unknown>]) =>
-        values && typeof values === "object" && "activityId" in values,
-    );
+    const xpInsert = findXpLogInsert();
     expect(xpInsert).toBeDefined();
     expect(xpInsert![0].xpEarned).toBe(5);
+  });
+
+  it("rejects the reserved pending level-test assessment target", async () => {
+    const res = await postActivityLog(
+      makeRequest("user-1", {
+        activityType: "level_test",
+        contentId: "pending-level-test-assessment",
+        completed: true,
+        details: { assessment: { level: "C2", sublevel: "+" } },
+      }),
+      makeContext("user-1"),
+    );
+
+    expect(res.status).toBe(400);
+    expect(insertMock).not.toHaveBeenCalled();
+    expect(valuesMock).not.toHaveBeenCalled();
+  });
+});
+
+describe("putActivityLog XP authority", () => {
+  beforeEach(resetDbDefaults);
+
+  it("ignores a client-sent xpEarned and awards the catalog value", async () => {
+    const res = await putActivityLog(
+      makeRequest(
+        "user-1",
+        {
+          activityType: "sentence_matching",
+          articleId: "article-1",
+          activityStatus: "completed",
+          xpEarned: 221000,
+          isInitialLevelTest: true,
+        },
+        { method: "PUT" },
+      ),
+      makeContext("user-1"),
+    );
+
+    expect(res.status).toBe(200);
+    const xpInsert = findXpLogInsert();
+    expect(xpInsert).toBeDefined();
+    expect(xpInsert![0].xpEarned).toBe(5);
+    expect(
+      valuesMock.mock.calls.some(
+        ([values]: [Record<string, unknown>]) =>
+          values && typeof values === "object" && values.xpEarned === 221000,
+      ),
+    ).toBe(false);
+    const userUpdate = setMock.mock.calls.find(
+      ([values]: [Record<string, unknown>]) =>
+        values && typeof values === "object" && "cefrLevel" in values,
+    );
+    expect(userUpdate).toBeDefined();
+    expect(userUpdate![0].xp).toBe(5);
+  });
+
+  it("rejects the reserved pending level-test assessment target", async () => {
+    const res = await putActivityLog(
+      makeRequest(
+        "user-1",
+        {
+          activityType: "level_test",
+          contentId: "pending-level-test-assessment",
+          activityStatus: "completed",
+          details: { assessment: { level: "C2", sublevel: "+" } },
+        },
+        { method: "PUT" },
+      ),
+      makeContext("user-1"),
+    );
+
+    expect(res.status).toBe(400);
+    expect(insertMock).not.toHaveBeenCalled();
+    expect(valuesMock).not.toHaveBeenCalled();
+  });
+});
+
+describe("updateUser PATCH xp authority", () => {
+  beforeEach(resetDbDefaults);
+
+  it("strips xp from the accepted PATCH fields", async () => {
+    const res = await updateUser(
+      makeRequest("user-1", { xp: 999999 }, { method: "PATCH" }),
+      makeContext("user-1"),
+    );
+
+    expect(res.status).toBe(200);
+    expect(setMock).toHaveBeenCalledTimes(1);
+    expect(setMock.mock.calls[0][0]).not.toHaveProperty("xp");
+  });
+});
+
+describe("student data staff scope", () => {
+  const crossSchoolTeacher: SessionUser = {
+    id: "teacher-1",
+    role: "TEACHER",
+    school_id: "school-a",
+  };
+  const sameSchoolAdmin: SessionUser = {
+    id: "admin-1",
+    role: "ADMIN",
+    school_id: "school-a",
+  };
+
+  beforeEach(resetDbDefaults);
+
+  it("returns 403 for a cross-school teacher on getStudentData", async () => {
+    const res = await getStudentData(
+      makeRequest("student-1", {}, { method: "GET", sessionUser: crossSchoolTeacher }),
+      makeContext("student-1"),
+    );
+    expect(res.status).toBe(403);
+  });
+
+  it("returns 200 for a same-school admin on getStudentData", async () => {
+    limitMock.mockResolvedValue([
+      { schoolId: "school-a", id: "student-1", name: "Student One" },
+    ]);
+    const res = await getStudentData(
+      makeRequest("student-1", {}, { method: "GET", sessionUser: sameSchoolAdmin }),
+      makeContext("student-1"),
+    );
+    expect(res.status).toBe(200);
+  });
+
+  it("returns 403 for a cross-school teacher on resetUserProgress", async () => {
+    const res = await resetUserProgress(
+      makeRequest("student-1", {}, { method: "POST", sessionUser: crossSchoolTeacher }),
+      makeContext("student-1"),
+    );
+    expect(res.status).toBe(403);
+    expect(deleteMock).not.toHaveBeenCalled();
+  });
+
+  it("returns 200 for a same-school admin on resetUserProgress", async () => {
+    limitMock.mockResolvedValue([
+      { schoolId: "school-a", id: "student-1", name: "Student One" },
+    ]);
+    const res = await resetUserProgress(
+      makeRequest("student-1", {}, { method: "POST", sessionUser: sameSchoolAdmin }),
+      makeContext("student-1"),
+    );
+    expect(res.status).toBe(200);
   });
 });
