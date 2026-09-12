@@ -36,7 +36,9 @@ All file paths are relative to `apps/reading-advantage/`. Run after `component_d
 - [x] Task: FR-9 hotfix `parseActivityType` case-mismatch regression with a regression test (amendment; discovered during FR-4) `22f3dc292`
 - [x] Task: Review repairs round 1 — close plan-review findings: POST XP authority, async staff-scope helper, page ADMIN school scope, placement server-owned XP `d275693`-range plus working-tree repairs committed as `89dda10d`
 - [x] Task: Review repairs round 2 — close review-b F-B1..F-B4: PUT XP authority, placement assessment planting block + schema re-validation, staff scope on user GET/DELETE handlers, PATCH xp removal `14605390d` `01e63f659` (9 tests, TDD Red first)
-- [ ] Task: Re-run independent review on the security repairs (workflow Step 4.2) **IN PROGRESS**
+- [x] Task: Review repairs round 3 — close review-c F-C1..F-C4: self role promotion block, client level/cefr/expired_date/license_id drop, `updateUserData` staff gate, reset flows rerouted to `/reset-all-progress` with classroom-teacher scope `a7d7ba4b` (22 targeted tests)
+- [x] Task: Review repairs round 4 — close review-d F-D1/F-D6/F-D8: ADMIN role ceiling (no SYSTEM grant), `updateUserData` same-school scope for ADMIN, self-email persistence test `bf40558da` (26 targeted tests)
+- [x] Task: Re-run independent review on the security repairs (workflow Step 4.2) — Reviews B/C/D run; F-B1..F-B4, F-C1..F-C4, F-D1/F-D6/F-D8 all CLOSED. Remaining findings (client-derived XP in game/flashcard/question controllers, fake-target farming, license scope, getAllUsers exposure) are pre-existing platform-wide trust issues recorded in `measure/tech-debt.md` and planned in `docs/reading-advantage-deferred-items-plan.md` — outside this track's scope
 - [x] Task: Run `build-graph update ./graph.db` on all structurally edited files `bf2f528` `efc941c` `3614844`
 - [x] Task: Run new tests until green (984 passed, 2 known pre-existing failures; zero new tsc errors)
 - [ ] Task: Measure - User Manual Verification 'Phase 3: Implement' (Protocol in workflow.md) **PENDING owner verification**
