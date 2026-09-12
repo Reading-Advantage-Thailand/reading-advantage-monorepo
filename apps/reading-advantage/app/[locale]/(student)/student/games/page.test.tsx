@@ -5,6 +5,11 @@ import GamesPage from "./page";
 const mockGetCurrentUser = jest.fn();
 const mockToUserContext = jest.fn();
 
+jest.mock("next/navigation", () => ({
+  redirect: (url: string) => {
+    throw new Error(`NEXT_REDIRECT: ${url}`);
+  },
+}));
 jest.mock("@/lib/session", () => ({
   getCurrentUser: (...args: unknown[]) => mockGetCurrentUser(...args),
 }));
@@ -46,10 +51,10 @@ describe("Reading student games page", () => {
     expect(screen.getByTestId("student-games-catalog")).toHaveTextContent("owner=none");
   });
 
-  it("renders the catalog without an owner for an unauthenticated request", async () => {
-    render(await GamesPage());
+  it("redirects an unauthenticated request to sign-in before rendering the catalog", async () => {
+    await expect(GamesPage()).rejects.toThrow("NEXT_REDIRECT: /auth/signin");
 
     expect(mockToUserContext).not.toHaveBeenCalled();
-    expect(screen.getByTestId("student-games-catalog")).toHaveTextContent("owner=none");
+    expect(screen.queryByTestId("student-games-catalog")).not.toBeInTheDocument();
   });
 });
