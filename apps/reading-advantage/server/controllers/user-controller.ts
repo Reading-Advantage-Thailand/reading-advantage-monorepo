@@ -168,6 +168,10 @@ export function xpForActivityType(
   return ACTIVITY_XP[activityType] ?? 0;
 }
 
+// Reserved target owned by the level-test chat handler. Activity-log writes
+// to this target would let a client plant the stored placement assessment.
+const LEVEL_TEST_PENDING_TARGET_ID = "pending-level-test-assessment";
+
 /**
  * Resolves a nonempty activity target from the supported caller fields.
  * @param data The submitted activity data.
@@ -251,13 +255,14 @@ export async function updateUser(
     const id = routeId;
     const data = await req.json();
 
+    // XP is server-owned: it is earned through activity logs and placement,
+    // never set directly through this PATCH contract.
     const [user] = await db
       .update(users)
       .set({
         name: data.name,
         email: data.email,
         role: data.role,
-        xp: data.xp,
         level: data.level,
         cefrLevel: data.cefr_level,
         expiredDate: data.expired_date,
@@ -315,6 +320,16 @@ export async function postActivityLog(
     if (!finalTargetId) {
       return NextResponse.json(
         { message: "Target ID is required" },
+        { status: 400 },
+      );
+    }
+
+    // The pending level-test assessment is written only by the server-side
+    // chat handler. Client activity-log writes to the reserved target are
+    // rejected so the stored assessment cannot be planted.
+    if (finalTargetId === LEVEL_TEST_PENDING_TARGET_ID) {
+      return NextResponse.json(
+        { message: "Reserved activity target" },
         { status: 400 },
       );
     }
@@ -507,6 +522,15 @@ export async function putActivityLog(
       );
     }
 
+    // Same reserved-target guard as POST: the pending level-test assessment
+    // is server-owned and cannot be written through the activity log.
+    if (finalTargetId === LEVEL_TEST_PENDING_TARGET_ID) {
+      return NextResponse.json(
+        { message: "Reserved activity target" },
+        { status: 400 },
+      );
+    }
+
     let articleMetadata = {};
     if (
       data.articleId &&
@@ -584,16 +608,27 @@ export async function putActivityLog(
       hasExistingXpLog = !!existingXpLog;
     }
 
-    if (!hasExistingXpLog && data.xpEarned && data.xpEarned > 0) {
+    // XP is computed on the server from the activity type, mirroring POST.
+    // Client xpEarned and isInitialLevelTest values are ignored.
+    const completed =
+      Boolean(data.completed) || data.activityStatus === "completed";
+    const xpEarned = xpForActivityType(activityType, completed);
+
+    if (!hasExistingXpLog && xpEarned > 0) {
       await db.insert(xpLogs).values({
         userId: id,
-        xpEarned: data.xpEarned,
+        xpEarned,
         activityId: activity!.id,
         activityType: activityType,
       });
 
-      const currentUser = req.session?.user;
-      const finalXp = (currentUser?.xp || 0) + data.xpEarned;
+      const [currentUser] = await db
+        .select({ xp: users.xp, level: users.level, cefrLevel: users.cefrLevel })
+        .from(users)
+        .where(eq(users.id, id))
+        .limit(1);
+
+      const finalXp = (currentUser?.xp || 0) + xpEarned;
       const levelData = levelCalculation(finalXp);
 
       await db
@@ -1047,7 +1082,12 @@ export async function getUserActivityData(
   req: ExtendedNextRequest,
   ctx: RequestContext,
 ) {
-  const { id } = await ctx.params;
+  const { id: routeId } = await ctx.params;
+
+  if (!(await assertSelfOrAllowedStaff(req, routeId))) {
+    return NextResponse.json({ message: "Forbidden - Access denied to this resource" }, { status: 403 });
+  }
+  const id = routeId;
   try {
     const [user] = await db
       .select({ xp: users.xp, level: users.level })
@@ -1169,7 +1209,12 @@ export async function getStudentData(
   req: ExtendedNextRequest,
   ctx: RequestContext,
 ) {
-  const { id } = await ctx.params;
+  const { id: routeId } = await ctx.params;
+
+  if (!(await assertSelfOrAllowedStaff(req, routeId))) {
+    return NextResponse.json({ message: "Forbidden - Access denied to this resource" }, { status: 403 });
+  }
+  const id = routeId;
   try {
     const [user] = await db
       .select({
@@ -1217,7 +1262,12 @@ export async function resetUserProgress(
   req: ExtendedNextRequest,
   ctx: RequestContext,
 ) {
-  const { id } = await ctx.params;
+  const { id: routeId } = await ctx.params;
+
+  if (!(await assertSelfOrAllowedStaff(req, routeId))) {
+    return NextResponse.json({ message: "Forbidden - Access denied to this resource" }, { status: 403 });
+  }
+  const id = routeId;
   try {
     const [user] = await db.select().from(users).where(eq(users.id, id)).limit(1);
 
@@ -1260,7 +1310,12 @@ export async function getUserXpLogs(
   req: ExtendedNextRequest,
   ctx: RequestContext,
 ) {
-  const { id } = await ctx.params;
+  const { id: routeId } = await ctx.params;
+
+  if (!(await assertSelfOrAllowedStaff(req, routeId))) {
+    return NextResponse.json({ message: "Forbidden - Access denied to this resource" }, { status: 403 });
+  }
+  const id = routeId;
   try {
     const allXpLogs = await db
       .select()

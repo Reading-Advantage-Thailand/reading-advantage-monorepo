@@ -191,9 +191,22 @@ export async function handleLevelTestPlacement(req: ExtendedNextRequest) {
     );
   }
 
+  // The stored row is re-validated: only a chat handler assessment that
+  // passes the contract schema can drive placement XP.
+  const storedAssessment = assessmentSchema.safeParse(pendingAssessment);
+  if (!storedAssessment.success) {
+    return NextResponse.json(
+      {
+        code: "BAD_REQUEST",
+        message: "Stored level-test assessment failed validation",
+      },
+      { status: 400 },
+    );
+  }
+
   const { messageCount, strengths, improvements, aiXp } = parsed.data;
-  const level = pendingAssessment.level;
-  const sublevel = pendingAssessment.sublevel;
+  const level = storedAssessment.data.level;
+  const sublevel = storedAssessment.data.sublevel;
 
   // The server owns placement authority: derive XP from the stored assessment.
   const systemXp = cefrToSystemXp(level, sublevel);
