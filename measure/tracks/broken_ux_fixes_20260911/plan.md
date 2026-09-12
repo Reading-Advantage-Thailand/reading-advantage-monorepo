@@ -15,11 +15,11 @@ These fixes change no data contracts. This phase pins the invariants as greppabl
 
 ## Phase 2: Test
 
-- [ ] Task: Write failing regression tests for behavioral fixes
-  - [ ] Test FR-1: `handleGenreClick` navigates to `/student/read` (assert the pushed URL in `student-dashboard-content.tsx`).
-  - [ ] Test FR-7: `flashcard-game.tsx` calls `speechSynthesis.cancel()` before `speak()` and on unmount (mock `speechSynthesis`).
-  - [ ] Test FR-9: opening `chatbot-floating-button.tsx` does not clear existing messages.
-  - [ ] Run and confirm all new tests fail (Red).
+- [x] Task: Write failing regression tests for behavioral fixes
+  - [x] Test FR-1: `handleGenreClick` navigates to `/student/read` (assert the pushed URL in `student-dashboard-content.tsx`).
+  - [x] Test FR-7: `flashcard-game.tsx` calls `speechSynthesis.cancel()` before `speak()` and on unmount (mock `speechSynthesis`).
+  - [x] Test FR-9: opening `chatbot-floating-button.tsx` does not clear existing messages.
+  - [x] Run and confirm all new tests fail (Red).
 
 ## Phase 3: Implement
 
@@ -32,7 +32,7 @@ These fixes change no data contracts. This phase pins the invariants as greppabl
 - [x] Task: FR-7 `speechSynthesis.cancel()` in `flashcard-game.tsx` `b65503f`
 - [x] Task: FR-8 fix `max-w-[400px]]` and delete `console` imports `7708d3c`
 - [x] Task: FR-9 chatbot history preservation and `" : "` prefix removal `2a6c13e`
-- [ ] Task: FR-10 enforce the owner-approved games auth policy **BLOCKED on owner decision**
+- [x] Task: FR-10 enforce the owner-approved games auth policy
 - [x] Task: Run new tests until green; run test suite and `check-types` (13/13 new tests; 122/124 suites pass, 2 pre-existing APK failures; 17 pre-existing tsc errors in unrelated files)
 - [ ] Task: Measure - User Manual Verification 'Phase 3: Implement' (Protocol in workflow.md)
 

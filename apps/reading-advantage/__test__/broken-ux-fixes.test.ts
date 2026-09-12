@@ -148,4 +148,9 @@ describe("broken-ux-fixes — static source invariants", () => {
     expect(source).not.toContain("setMessages([])");
     expect(source).not.toContain("` : ${");
   });
+
+  test("FR-10: games page redirects unauthenticated users to sign-in", () => {
+    const source = readSource("app/[locale]/(student)/student/games/page.tsx");
+    expect(source).toContain('redirect("/auth/signin")');
+  });
 });
