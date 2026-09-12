@@ -32,7 +32,7 @@ These fixes change no data contracts. This phase pins the invariants as greppabl
 - [x] Task: FR-7 `speechSynthesis.cancel()` in `flashcard-game.tsx` `b65503f`
 - [x] Task: FR-8 fix `max-w-[400px]]` and delete `console` imports `7708d3c`
 - [x] Task: FR-9 chatbot history preservation and `" : "` prefix removal `2a6c13e`
-- [x] Task: FR-10 enforce the owner-approved games auth policy
+- [x] Task: FR-10 enforce the owner-approved games auth policy `08bd3ac1` `71d4236d` (gate on page; test updated to expect the redirect per owner decision 2026-09-11)
 - [x] Task: Run new tests until green; run test suite and `check-types` (13/13 new tests; 122/124 suites pass, 2 pre-existing APK failures; 17 pre-existing tsc errors in unrelated files)
 - [ ] Task: Measure - User Manual Verification 'Phase 3: Implement' (Protocol in workflow.md)
 

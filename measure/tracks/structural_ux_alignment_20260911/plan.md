@@ -34,6 +34,9 @@ All file paths are relative to `apps/reading-advantage/`. Run after `component_d
 - [x] Task: FR-8 shell cleanup part 2: theme-wrapper rename, delete dead context/imports, auth layout min-height, i18n routing links, index layout collapse, `user-account-nav` fixes `f95125d` `58746bb`
 - [x] Task: FR-8 page cleanup: workbook-generator decision (added to sidebar; owner review pending), `router.refresh()` replacements, per-group `error.tsx`, `Promise.all` fetches, license page ordering, admin guard dedup `58746bb`
 - [x] Task: FR-9 hotfix `parseActivityType` case-mismatch regression with a regression test (amendment; discovered during FR-4) `22f3dc292`
+- [x] Task: Review repairs round 1 — close plan-review findings: POST XP authority, async staff-scope helper, page ADMIN school scope, placement server-owned XP `d275693`-range plus working-tree repairs committed as `89dda10d`
+- [x] Task: Review repairs round 2 — close review-b F-B1..F-B4: PUT XP authority, placement assessment planting block + schema re-validation, staff scope on user GET/DELETE handlers, PATCH xp removal `14605390d` `01e63f659` (9 tests, TDD Red first)
+- [ ] Task: Re-run independent review on the security repairs (workflow Step 4.2) **IN PROGRESS**
 - [x] Task: Run `build-graph update ./graph.db` on all structurally edited files `bf2f528` `efc941c` `3614844`
 - [x] Task: Run new tests until green (984 passed, 2 known pre-existing failures; zero new tsc errors)
 - [ ] Task: Measure - User Manual Verification 'Phase 3: Implement' (Protocol in workflow.md) **PENDING owner verification**
