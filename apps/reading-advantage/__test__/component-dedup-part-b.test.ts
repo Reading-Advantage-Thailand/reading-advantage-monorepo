@@ -77,6 +77,13 @@ describe("component-dedup part B — static source invariants", () => {
     expect(source).toContain("loadState");
   });
 
+  test("FR-3: vocabulary matching hides the sentence-only hero images", () => {
+    const matching = readSource("components/matching.tsx");
+    const vocab = readSource("components/vocabulary/tabs-vocabulary.tsx");
+    expect(matching).toContain("showHeroImages");
+    expect(vocab).toContain("showHeroImages={false}");
+  });
+
   test("FR-3: the vocabulary tab renders the shared matching component", () => {
     const source = readSource("components/vocabulary/tabs-vocabulary.tsx");
     expect(source).not.toContain("tab-matching-words");

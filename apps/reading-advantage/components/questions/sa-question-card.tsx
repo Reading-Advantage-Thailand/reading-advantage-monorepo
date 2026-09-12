@@ -132,7 +132,7 @@ export default function SAQuestionCard({
   }, [state, onCompleteChange, page]);
 
   useEffect(() => {
-    if (state === QuestionState.COMPLETED && page === "article") {
+    if (state === QuestionState.COMPLETED && page === "article" && !isStory) {
       const checkCompletion = async () => {
         try {
           await checkAndNotifyCompletion(userId, articleId);

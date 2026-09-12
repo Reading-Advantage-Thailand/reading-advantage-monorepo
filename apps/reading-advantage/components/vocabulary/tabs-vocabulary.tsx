@@ -54,6 +54,7 @@ export default function TabsVocabulary({ userId }: Props) {
             activityType={ActivityType.VocabularyMatching}
             xpEarned={UserXpEarned.Vocabulary_Matching}
             showAudio={false}
+            showHeroImages={false}
           />
         )}
       </TabsContent>

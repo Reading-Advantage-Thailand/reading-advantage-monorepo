@@ -34,11 +34,16 @@ jest.mock("@/components/ui/use-toast", () => ({
   toast: jest.fn(),
 }));
 
-jest.mock("@/lib/use-article-completion", () => ({
-  useArticleCompletion: () => ({
-    checkAndNotifyCompletion: jest.fn().mockResolvedValue({}),
-  }),
-}));
+var checkArticleCompletion: jest.Mock;
+
+jest.mock("@/lib/use-article-completion", () => {
+  checkArticleCompletion = jest.fn().mockResolvedValue({});
+  return {
+    useArticleCompletion: () => ({
+      checkAndNotifyCompletion: checkArticleCompletion,
+    }),
+  };
+});
 
 jest.mock("@/lib/use-story-completion", () => ({
   useStoryCompletion: () => ({
@@ -177,5 +182,26 @@ describe("MCQuestionCard — story variant", () => {
       ),
     );
     expect(sessionStorage.getItem("quiz_started_story-1_2")).toBe("true");
+  });
+
+  it("does not call the article completion checker for a story chapter", async () => {
+    checkArticleCompletion.mockClear();
+    render(
+      <MCQuestionCard
+        userId="user-1"
+        articleId="story-1"
+        articleTitle="Chapter Two"
+        articleLevel={3}
+        page="article"
+        variant="story"
+        chapterNumber="2"
+      />,
+    );
+
+    await startQuizAndAnswerFirstOption();
+    await waitFor(() =>
+      expect(sessionStorage.getItem("quiz_progress_story-1_2")).toBeTruthy(),
+    );
+    expect(checkArticleCompletion).not.toHaveBeenCalled();
   });
 });

@@ -141,7 +141,7 @@ export default function LAQuestionCard({
   };
 
   useEffect(() => {
-    if (state === QuestionState.COMPLETED) {
+    if (state === QuestionState.COMPLETED && !isStory) {
       const checkCompletion = async () => {
         try {
           await checkAndNotifyCompletion(userId, articleId);
@@ -152,7 +152,7 @@ export default function LAQuestionCard({
 
       checkCompletion();
     }
-  }, [state, userId, articleId, checkAndNotifyCompletion]);
+  }, [state, isStory, userId, articleId, checkAndNotifyCompletion]);
 
   switch (state) {
     case QuestionState.LOADING:
