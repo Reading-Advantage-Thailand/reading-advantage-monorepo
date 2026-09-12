@@ -10,7 +10,6 @@ import {
   ActivityStatus,
   ActivityType,
 } from "./models/user-activity-log-model";
-import { useRouter } from "next/navigation";
 import { submitRating } from "@/actions/rating";
 import { Button } from "./ui/button";
 import {
@@ -57,7 +56,6 @@ export default function RatingPopup({
   const [localInitialRating, setLocalInitialRating] =
     React.useState(initialRating);
   const [isMounted, setIsMounted] = React.useState(false);
-  const router = useRouter();
 
   React.useEffect(() => {
     setIsMounted(true);
@@ -150,9 +148,10 @@ export default function RatingPopup({
 
     const story = target.story;
     if (value !== 0 && oldRating === 0) {
-      const ratingActivity = await fetch(
-        `/api/v1/users/${userId}/activitylog`,
-        {
+      // The three calls share no data dependency: the PUT payload carries the
+      // locally chosen rating, not a value read from either POST response.
+      const [ratingActivity, , readActivity] = await Promise.all([
+        fetch(`/api/v1/users/${userId}/activitylog`, {
           method: "POST",
           body: JSON.stringify({
             storyId: target.storyId,
@@ -167,37 +166,32 @@ export default function RatingPopup({
               rating: value,
             },
           }),
-        }
-      );
-
-      const updateAverageRating = await fetch(
-        `/api/v1/stories/${target.storyId}/${target.chapterId}`,
-        {
+        }),
+        fetch(`/api/v1/stories/${target.storyId}/${target.chapterId}`, {
           method: "PUT",
           body: JSON.stringify({
             rating: value,
             chapterNumber: target.chapterId,
           }),
-        }
-      );
-
-      const readActivity = await fetch(`/api/v1/users/${userId}/activitylog`, {
-        method: "POST",
-        body: JSON.stringify({
-          storyId: target.storyId,
-          chapterNumber: target.chapterId,
-          activityType: ActivityType.ChapterRead,
-          activityStatus: ActivityStatus.Completed,
-          details: {
-            title: story.chapter.title,
-            raLevel: story.ra_Level,
-            cefr_level: story.cefr_level,
-            type: story.type,
-            genre: story.genre,
-            subgenre: story.subgenre,
-          },
         }),
-      });
+        fetch(`/api/v1/users/${userId}/activitylog`, {
+          method: "POST",
+          body: JSON.stringify({
+            storyId: target.storyId,
+            chapterNumber: target.chapterId,
+            activityType: ActivityType.ChapterRead,
+            activityStatus: ActivityStatus.Completed,
+            details: {
+              title: story.chapter.title,
+              raLevel: story.ra_Level,
+              cefr_level: story.cefr_level,
+              type: story.type,
+              genre: story.genre,
+              subgenre: story.subgenre,
+            },
+          }),
+        }),
+      ]);
 
       const resRatingActivity = await ratingActivity.json();
       const resReadActivity = await readActivity.json();
@@ -206,12 +200,12 @@ export default function RatingPopup({
         setLocalAverageRating(
           (localAverageRating * count + value) / (count + 1)
         );
+        setOldRating(value);
         toast({
           title: t("toast.success"),
           imgSrc: true,
           description: `Congratulations!, You received ${UserXpEarned.Chapter_Rating} XP for completing this activity.`,
         });
-        router.refresh();
         setModalIsOpen(false);
       }
       setLoading(false);
@@ -237,6 +231,7 @@ export default function RatingPopup({
           (localAverageRating * count + value - oldRating) / count
         );
       }
+      setOldRating(value);
       toast({
         title: t("toast.success"),
         imgSrc: true,
