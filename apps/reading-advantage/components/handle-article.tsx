@@ -58,6 +58,7 @@ function HandleArticle() {
   const [loading, setLoading] = React.useState(false);
   const loadingRef = React.useRef(false);
   const hasMoreRef = React.useRef(true);
+  const fetchGenerationRef = React.useRef(0);
   const [page, setPage] = React.useState(1);
   const observer = React.useRef<IntersectionObserver | null>(null);
 
@@ -124,6 +125,7 @@ function HandleArticle() {
     if (loadingRef.current) return;
     loadingRef.current = true;
     setLoading(true);
+    const generation = ++fetchGenerationRef.current;
     try {
       const pageToLoad = options?.pageOverride ?? page;
       const res = await fetch(
@@ -136,6 +138,8 @@ function HandleArticle() {
       );
 
       const data = await res.json();
+      // A newer request superseded this one; drop the stale page.
+      if (generation !== fetchGenerationRef.current) return;
       const rows = Array.isArray(data) ? data : [];
       if (rows.length === 0) {
         hasMoreRef.current = false;
@@ -146,8 +150,11 @@ function HandleArticle() {
     } catch (error) {
       console.error(error);
     } finally {
-      loadingRef.current = false;
-      setLoading(false);
+      // Only the newest request owns the in-flight flag.
+      if (generation === fetchGenerationRef.current) {
+        loadingRef.current = false;
+        setLoading(false);
+      }
     }
   };
 
@@ -155,6 +162,11 @@ function HandleArticle() {
   const handleApplyFilters = () => {
     hasMoreRef.current = true;
     setArticles([]);
+    // Supersede any in-flight fetch so its stale page cannot append, then
+    // let the fresh page-1 request below take over the in-flight flag.
+    fetchGenerationRef.current += 1;
+    loadingRef.current = false;
+    setLoading(false);
     if (page !== 1) {
       setPage(1);
       return;

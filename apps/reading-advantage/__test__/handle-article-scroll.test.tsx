@@ -6,7 +6,7 @@
  */
 
 import * as React from "react";
-import { act, render, waitFor } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 
 import HandleArticle from "@/components/handle-article";
 
@@ -148,5 +148,62 @@ describe("HandleArticle infinite scroll", () => {
     const settledObserver = latestObserver();
     triggerIntersection(settledObserver);
     await waitFor(() => expect(globalThis.fetch).toHaveBeenCalledTimes(3));
+  });
+
+  it("Apply supersedes an in-flight fetch so a fresh page-1 loads", async () => {
+    const responses = [
+      [passage("a"), passage("b")], // initial page 1
+      [passage("c"), passage("d")], // stale page 2
+      [passage("e"), passage("f")], // fresh page 1 after Apply
+    ];
+    const pending = responses.map(() => deferred());
+    const urls: string[] = [];
+    (globalThis.fetch as jest.Mock) = jest.fn((url: string) => {
+      const index = urls.length;
+      urls.push(url);
+      return pending[index].promise.then(() => ({
+        ok: true,
+        json: () => Promise.resolve(responses[index]),
+      }));
+    });
+
+    render(<HandleArticle />);
+
+    // The initial page-1 fetch resolves and the sentinel observes the last card.
+    await waitFor(() => expect(globalThis.fetch).toHaveBeenCalledTimes(1));
+    await act(async () => {
+      pending[0].resolve(undefined);
+    });
+    await waitFor(() =>
+      expect(MockIntersectionObserver.instances.length).toBeGreaterThan(0),
+    );
+    const observer = latestObserver();
+
+    // A page-2 fetch is now in flight.
+    triggerIntersection(observer);
+    await waitFor(() => expect(globalThis.fetch).toHaveBeenCalledTimes(2));
+    expect(urls[1]).toContain("page=2");
+
+    // Apply while page 2 is in flight must supersede the stale request.
+    fireEvent.click(screen.getByRole("button", { name: "Apply" }));
+    await waitFor(() => expect(globalThis.fetch).toHaveBeenCalledTimes(3));
+    expect(urls[2]).toContain("page=1");
+
+    // The stale page-2 response resolves late and must not append.
+    await act(async () => {
+      pending[1].resolve(undefined);
+    });
+    expect(screen.queryByText("Article c")).not.toBeInTheDocument();
+    expect(screen.queryByText("Article d")).not.toBeInTheDocument();
+
+    // The fresh page-1 response replaces the list.
+    await act(async () => {
+      pending[2].resolve(undefined);
+    });
+    await waitFor(() => {
+      expect(screen.getByText("Article e")).toBeInTheDocument();
+      expect(screen.getByText("Article f")).toBeInTheDocument();
+    });
+    expect(screen.queryByText("Article a")).not.toBeInTheDocument();
   });
 });
