@@ -1,0 +1,11 @@
+{
+  "track_id": "primary_structural_alignment_20260912",
+  "type": "chore",
+  "status": "new",
+  "created_at": "2026-09-12T00:00:00Z",
+  "updated_at": "2026-09-12T00:00:00Z",
+  "description": "Optional long-tail structural alignment of primary-advantage: migrate 33 API routes onto createTenantDB and assertCan, add error.tsx boundaries, and close remaining i18n and a11y gaps.",
+  "estimated_tasks": 14,
+  "actual_tasks": null,
+  "deviation_notes": "Optional. Run after primary_component_deduplication_20260912."
+}

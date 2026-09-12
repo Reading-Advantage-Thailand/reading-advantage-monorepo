@@ -1,0 +1,11 @@
+{
+  "track_id": "primary_loading_state_correctness_20260912",
+  "type": "bug",
+  "status": "new",
+  "created_at": "2026-09-12T00:00:00Z",
+  "updated_at": "2026-09-12T00:00:00Z",
+  "description": "Fix loading and state defects in primary-advantage: stuck skeletons, hydration mismatch on games, unbounded article scroll, admin search storm, render-body components, and hardcoded Thai lookups.",
+  "estimated_tasks": 17,
+  "actual_tasks": null,
+  "deviation_notes": ""
+}

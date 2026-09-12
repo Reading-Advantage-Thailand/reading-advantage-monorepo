@@ -449,6 +449,37 @@ Multiple programs are in flight. Use this portfolio order when selecting work:
 
 ---
 
+## Primary Advantage UX and Security Refactor Program (created 2026-09-12)
+
+> Six implementation tracks derived from the 2026-09-12 five-theme audit of
+> `apps/primary-advantage`. Source plan:
+> `docs/primary-advantage-ux-refactor-plan.md`. The issue mix is not the same
+> as reading-advantage: authorization is the dominant problem and has no
+> counterpart in the reading tracks. Execute in listed order. Track 1 blocks
+> everything else. Tracks 2 and 3 may run in parallel after track 1. Track 4
+> may run in parallel with 2 and 3. Track 5 is sequential after 1-4. Track 6
+> is optional long tail after 5.
+>
+> Corrections baked into the specs: `/api/students` and `/api/teachers` look
+> unguarded at the route but their controllers enforce roles; `class-roster.tsx`
+> and `reports.tsx` have zero importers — delete them rather than fix them.
+> Do not redo `primary_proxy_role_normalization_20260728` casing work.
+
+- [ ] **Track: Primary Authorization Hardening** *Link: [./tracks/primary_authorization_hardening_20260912/](./tracks/primary_authorization_hardening_20260912/)*
+  Close the write-path holes: privilege escalation on `PATCH /api/users/[id]`, five unauthenticated API routes (including unbounded AI spend and path-join `unlink`), ten unguarded server actions including `deleteAllArticles`, client-authoritative XP, and cross-tenant student reads. Blocks tracks 2-6.
+- [ ] **Track: Primary Broken UX Fixes** *Link: [./tracks/primary_broken_ux_fixes_20260912/](./tracks/primary_broken_ux_fixes_20260912/)*
+  Fix Chinese message scopes, the blank `/admin` landing page, dead admin and footer links, `captoliza` typos in live files, the stray `act` import, and two `console` module imports. One-line and small fixes only.
+- [ ] **Track: Primary Audio and Highlighting Correctness** *Link: [./tracks/primary_audio_highlight_correctness_20260912/](./tracks/primary_audio_highlight_correctness_20260912/)*
+  No shared audio hook exists here. Extract one `useAudioSegment` hook, cancel the highlight `setTimeout` chain, fix `AudioButton` `load()` and zero end time, align lesson audio field names, and stop leaked clips.
+- [ ] **Track: Primary Loading and State Correctness** *Link: [./tracks/primary_loading_state_correctness_20260912/](./tracks/primary_loading_state_correctness_20260912/)*
+  Fix stuck skeletons, the games-page hydration mismatch, unbounded article scroll, the admin search storm, components declared inside a render body, and hardcoded Thai lookups.
+- [ ] **Track: Primary Component Deduplication** *Link: [./tracks/primary_component_deduplication_20260912/](./tracks/primary_component_deduplication_20260912/)*
+  Delete nine dead files first (including `class-roster.tsx` and `reports.tsx`), then merge nine fork pairs (6,082 identical lines). About 13,900 lines are removable.
+- [ ] **Track: Primary Structural Alignment (optional)** *Link: [./tracks/primary_structural_alignment_20260912/](./tracks/primary_structural_alignment_20260912/)*
+  Long tail: migrate 33 API routes onto `createTenantDB` and `assertCan`, add `error.tsx` per route group, and close remaining i18n and a11y gaps. Optional. Run after track 5.
+
+---
+
 - [ ] **Track: Standard Play Maps** *Link: [./tracks/apk_standard_play_maps_20260910/](./tracks/apk_standard_play_maps_20260910/)*
   Generalize the existing Wizard graveyard map into one shared typed layout contract, then author nine top-down play maps (PNG plus typed layout) for the Advantage games. Rebuild Wizard vs. Zombie from scratch as the reference map. Keep collision rules stable and leave composed art outside the pinned standard pack.
   *Status: Implementation complete 2026-09-10 — shared `StandardPlayMap` contract, nine typed layouts, nine composed PNGs, and focused tests (48 map tests + 64 Wizard engine tests green). Documented deviation: only Wizard renders its authored map in-engine; the other eight cartridges keep procedural layouts pending a wiring follow-up. 53 pre-existing check-types errors remain in untouched files.*

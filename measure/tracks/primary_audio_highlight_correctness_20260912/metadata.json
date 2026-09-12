@@ -1,0 +1,11 @@
+{
+  "track_id": "primary_audio_highlight_correctness_20260912",
+  "type": "bug",
+  "status": "new",
+  "created_at": "2026-09-12T00:00:00Z",
+  "updated_at": "2026-09-12T00:00:00Z",
+  "description": "Give primary-advantage one shared audio-segment hook, cancel the highlight timer chain, fix AudioButton load and endTimestamp, align lesson audio field names, and stop leaked clips.",
+  "estimated_tasks": 17,
+  "actual_tasks": null,
+  "deviation_notes": ""
+}

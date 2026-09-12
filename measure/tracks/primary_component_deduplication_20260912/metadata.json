@@ -1,0 +1,11 @@
+{
+  "track_id": "primary_component_deduplication_20260912",
+  "type": "chore",
+  "status": "new",
+  "created_at": "2026-09-12T00:00:00Z",
+  "updated_at": "2026-09-12T00:00:00Z",
+  "description": "Delete dead primary-advantage files first, then merge nine fork pairs (~6,082 identical lines), extract shared helpers, and remove about 13,900 removable lines.",
+  "estimated_tasks": 20,
+  "actual_tasks": null,
+  "deviation_notes": ""
+}
