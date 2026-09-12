@@ -13,6 +13,9 @@ import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import MCQuestionCard from "@/components/questions/mc-question-card";
+import SAQuestionCard from "@/components/questions/sa-question-card";
+import LAQuestionCard from "@/components/questions/laq-question-card";
+import { QuestionState } from "@/components/models/questions-model";
 
 jest.mock("@/locales/client", () => ({
   useScopedI18n: () => (key: string) => key,
@@ -34,16 +37,17 @@ jest.mock("@/components/ui/use-toast", () => ({
   toast: jest.fn(),
 }));
 
-var checkArticleCompletion: jest.Mock;
+const mockArticleCompletion = {
+  checkArticleCompletion: jest.fn().mockResolvedValue({}),
+};
 
-jest.mock("@/lib/use-article-completion", () => {
-  checkArticleCompletion = jest.fn().mockResolvedValue({});
-  return {
-    useArticleCompletion: () => ({
-      checkAndNotifyCompletion: checkArticleCompletion,
-    }),
-  };
-});
+jest.mock("@/lib/use-article-completion", () => ({
+  useArticleCompletion: () => ({
+    checkAndNotifyCompletion: mockArticleCompletion.checkArticleCompletion,
+  }),
+}));
+
+const checkArticleCompletion = mockArticleCompletion.checkArticleCompletion;
 
 jest.mock("@/lib/use-story-completion", () => ({
   useStoryCompletion: () => ({
@@ -103,6 +107,32 @@ function mockFetchRoutes(mode: "article" | "story") {
   });
 }
 
+/** Serves the given payload for every GET the card makes. */
+function mockCompletedFetch(payload: unknown) {
+  (globalThis.fetch as jest.Mock) = jest.fn(() =>
+    Promise.resolve({
+      ok: true,
+      json: () => Promise.resolve(payload),
+    }),
+  );
+}
+
+function makeSaPayload(state: QuestionState) {
+  return {
+    result: { id: "q1", question: "Summarize the chapter." },
+    suggested_answer: "A summary.",
+    answer: "The student answer.",
+    state,
+  };
+}
+
+function makeLaqPayload(state: QuestionState) {
+  return {
+    result: { id: "q1", question: "Write about the chapter." },
+    state,
+  };
+}
+
 async function startQuizAndAnswerFirstOption() {
   const user = userEvent.setup();
   const startButton = await screen.findByRole("button", { name: "startButton" });
@@ -146,6 +176,29 @@ describe("MCQuestionCard — article variant", () => {
     );
     expect(sessionStorage.getItem("quiz_started_article-1")).toBe("true");
   });
+
+  it("calls the article completion checker once the article quiz reaches COMPLETED", async () => {
+    checkArticleCompletion.mockClear();
+    mockCompletedFetch(makeMcqPayload({ state: QuestionState.COMPLETED }));
+
+    render(
+      <MCQuestionCard
+        userId="user-1"
+        articleId="article-1"
+        articleTitle="The River"
+        articleLevel={3}
+        page="article"
+      />,
+    );
+
+    // The retake button only renders on the COMPLETED card.
+    expect(
+      await screen.findByRole("button", { name: "retakeButton" }),
+    ).toBeInTheDocument();
+    await waitFor(() =>
+      expect(checkArticleCompletion).toHaveBeenCalledWith("user-1", "article-1"),
+    );
+  });
 });
 
 describe("MCQuestionCard — story variant", () => {
@@ -184,8 +237,10 @@ describe("MCQuestionCard — story variant", () => {
     expect(sessionStorage.getItem("quiz_started_story-1_2")).toBe("true");
   });
 
-  it("does not call the article completion checker for a story chapter", async () => {
+  it("does not call the article completion checker for a story chapter that reaches COMPLETED", async () => {
     checkArticleCompletion.mockClear();
+    mockCompletedFetch(makeMcqPayload({ state: QuestionState.COMPLETED }));
+
     render(
       <MCQuestionCard
         userId="user-1"
@@ -198,10 +253,103 @@ describe("MCQuestionCard — story variant", () => {
       />,
     );
 
-    await startQuizAndAnswerFirstOption();
-    await waitFor(() =>
-      expect(sessionStorage.getItem("quiz_progress_story-1_2")).toBeTruthy(),
-    );
+    // The card must reach QuestionState.COMPLETED before the assertion.
+    expect(
+      await screen.findByRole("button", { name: "retakeButton" }),
+    ).toBeInTheDocument();
     expect(checkArticleCompletion).not.toHaveBeenCalled();
+  });
+});
+
+describe("SAQuestionCard — completed story versus article", () => {
+  beforeEach(() => {
+    sessionStorage.clear();
+  });
+
+  it("does not call the article completion checker for a completed story SA card", async () => {
+    checkArticleCompletion.mockClear();
+    mockCompletedFetch(makeSaPayload(QuestionState.COMPLETED));
+
+    render(
+      <SAQuestionCard
+        userId="user-1"
+        articleId="story-1"
+        articleTitle="Chapter Two"
+        articleLevel={3}
+        page="article"
+        variant="story"
+        chapterNumber="2"
+      />,
+    );
+
+    // The success copy only renders on the COMPLETED card.
+    expect(await screen.findByText("descriptionSuccess")).toBeInTheDocument();
+    expect(checkArticleCompletion).not.toHaveBeenCalled();
+  });
+
+  it("calls the article completion checker for a completed article SA card", async () => {
+    checkArticleCompletion.mockClear();
+    mockCompletedFetch(makeSaPayload(QuestionState.COMPLETED));
+
+    render(
+      <SAQuestionCard
+        userId="user-1"
+        articleId="article-1"
+        articleTitle="The River"
+        articleLevel={3}
+        page="article"
+      />,
+    );
+
+    expect(await screen.findByText("descriptionSuccess")).toBeInTheDocument();
+    await waitFor(() =>
+      expect(checkArticleCompletion).toHaveBeenCalledWith("user-1", "article-1"),
+    );
+  });
+});
+
+describe("LAQuestionCard — completed story versus article", () => {
+  beforeEach(() => {
+    sessionStorage.clear();
+  });
+
+  it("does not call the article completion checker for a completed story LAQ card", async () => {
+    checkArticleCompletion.mockClear();
+    mockCompletedFetch(makeLaqPayload(QuestionState.COMPLETED));
+
+    render(
+      <LAQuestionCard
+        userId="user-1"
+        userLevel={3}
+        articleId="story-1"
+        articleTitle="Chapter Two"
+        articleLevel={3}
+        variant="story"
+        chapterNumber="2"
+      />,
+    );
+
+    expect(await screen.findByText("descriptionSuccess")).toBeInTheDocument();
+    expect(checkArticleCompletion).not.toHaveBeenCalled();
+  });
+
+  it("calls the article completion checker for a completed article LAQ card", async () => {
+    checkArticleCompletion.mockClear();
+    mockCompletedFetch(makeLaqPayload(QuestionState.COMPLETED));
+
+    render(
+      <LAQuestionCard
+        userId="user-1"
+        userLevel={3}
+        articleId="article-1"
+        articleTitle="The River"
+        articleLevel={3}
+      />,
+    );
+
+    expect(await screen.findByText("descriptionSuccess")).toBeInTheDocument();
+    await waitFor(() =>
+      expect(checkArticleCompletion).toHaveBeenCalledWith("user-1", "article-1"),
+    );
   });
 });
