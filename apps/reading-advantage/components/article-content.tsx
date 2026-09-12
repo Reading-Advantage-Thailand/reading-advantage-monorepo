@@ -66,8 +66,10 @@ export default function ArticleContent({
   userId,
 }: Props) {
   const t = useScopedI18n("components.articleContent");
-  // Always split passage into sentences
-  const sentences = splitTextIntoSentences(article.passage, true);
+  const sentences = useMemo(
+    () => splitTextIntoSentences(article.passage, true),
+    [article.passage],
+  );
   const [selectedSentence, setSelectedSentence] = React.useState<number>(-1);
   const [loading, setLoading] = React.useState(false);
   const [translate, setTranslate] = React.useState<string[]>([]);

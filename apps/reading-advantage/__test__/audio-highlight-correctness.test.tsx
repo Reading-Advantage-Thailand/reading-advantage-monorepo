@@ -142,15 +142,37 @@ describe("useAudio speed switching", () => {
   });
 });
 
+const COMBINED_SENTENCES: Sentence[] = SENTENCES.map((sentence) => ({
+  ...sentence,
+  audioUrl: "https://x/article.mp3",
+}));
+
+/** Renders useAudio with a caller-supplied sentence list. */
+function renderUseAudioWithList(
+  list: Sentence[],
+  options?: { hasTimepoints?: boolean },
+) {
+  const rendered = renderHook(
+    ({ sentences }: { sentences: Sentence[] }) => useAudio(sentences, options),
+    { initialProps: { sentences: list } },
+  );
+  const fake = createFakeAudio();
+  act(() => {
+    (rendered.result.current.audioRef as React.MutableRefObject<HTMLAudioElement | null>).current =
+      fake as unknown as HTMLAudioElement;
+  });
+  return { ...rendered, fake };
+}
+
 describe("useAudio single sentence-advance path", () => {
-  it("advances only via onEnded when timepoints exist", () => {
+  it("advances only via onEnded when each sentence is a separate clip", () => {
     const { result, fake } = renderUseAudio({ hasTimepoints: true });
 
     act(() => {
       result.current.setCurrentAudioIndex(1);
     });
 
-    // timeupdate past the sentence end must not advance.
+    // Separate clips: timeupdate past the sentence end must not advance.
     fake.currentTime = 4.6;
     act(() => {
       result.current.handleTimeUpdate();
@@ -162,6 +184,43 @@ describe("useAudio single sentence-advance path", () => {
       result.current.handleAudioEnded();
     });
     expect(result.current.currentAudioIndex).toBe(2);
+  });
+
+  it("advances via timeupdate on a combined clip and does not skip on ended", () => {
+    const { result, fake } = renderUseAudioWithList(COMBINED_SENTENCES, {
+      hasTimepoints: true,
+    });
+
+    act(() => {
+      result.current.setCurrentAudioIndex(0);
+    });
+    fake.currentTime = 2.1;
+    act(() => {
+      result.current.handleTimeUpdate();
+    });
+    expect(result.current.currentAudioIndex).toBe(1);
+
+    act(() => {
+      result.current.handleAudioEnded();
+    });
+    expect(result.current.currentAudioIndex).toBe(1);
+  });
+
+  it("does not reload when the sentence list identity changes", () => {
+    const { result, fake, rerender } = renderUseAudioWithList(SENTENCES, {
+      hasTimepoints: true,
+    });
+
+    act(() => {
+      result.current.setCurrentAudioIndex(1);
+    });
+    const loads = fake.load.mock.calls.length;
+    const srcAssignments = fake._calls.filter((call) => call === "src:set").length;
+
+    rerender({ sentences: SENTENCES.map((sentence) => ({ ...sentence })) });
+
+    expect(fake.load.mock.calls.length).toBe(loads);
+    expect(fake._calls.filter((call) => call === "src:set")).toHaveLength(srcAssignments);
   });
 
   it("advances only via timeupdate in fallback timing mode", () => {
@@ -211,6 +270,37 @@ describe("useAudio playFromIndex", () => {
     expect(fake.currentTime).toBe(2.5);
     expect(fake.play).toHaveBeenCalled();
     expect(fake._listeners.get("canplaythrough")).toHaveLength(0);
+  });
+
+  it("restores the selected playback speed after load", () => {
+    const { result, fake } = renderUseAudio({ hasTimepoints: true });
+
+    act(() => {
+      result.current.handleSpeedTime("2");
+      result.current.playFromIndex(1);
+    });
+    fake.playbackRate = 1;
+    fireAudioEvent(fake, "canplaythrough");
+
+    expect(fake.playbackRate).toBe(2);
+  });
+
+  it("does not load twice when playFromIndex and the index effect share a URL", () => {
+    const { result, fake } = renderUseAudioWithList(COMBINED_SENTENCES, {
+      hasTimepoints: true,
+    });
+
+    act(() => {
+      result.current.setCurrentAudioIndex(1);
+    });
+    const loadsAfterIndex = fake.load.mock.calls.length;
+
+    act(() => {
+      result.current.playFromIndex(2);
+    });
+
+    expect(fake.load.mock.calls.length).toBe(loadsAfterIndex);
+    expect(fake.currentTime).toBe(5);
   });
 });
 

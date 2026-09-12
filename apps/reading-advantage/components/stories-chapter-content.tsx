@@ -75,7 +75,10 @@ export default function ChapterContent({
   const [translate, setTranslate] = useState<string[]>([]);
   const [isTranslate, setIsTranslate] = useState(false);
   const [isTranslateOpen, setIsTranslateOpen] = useState(false);
-  const sentences = splitTextIntoSentences(story.chapter.passage, true);
+  const sentences = useMemo(
+    () => splitTextIntoSentences(story.chapter.passage, true),
+    [story.chapter.passage],
+  );
   const router = useRouter();
   const chapter = Number(chapterNumber);
   const [isTranslateClicked, setIsTranslateClicked] = useState(false);
