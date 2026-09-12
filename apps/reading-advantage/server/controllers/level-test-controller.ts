@@ -29,8 +29,8 @@ export type LevelTestChatRequest = z.infer<typeof levelTestChatSchema>;
 // malformed/missing fields at the boundary rather than forward a 200 with
 // `assessment: null`.
 const assessmentSchema = z.object({
-  level: z.string().min(1),
-  sublevel: z.string().min(1),
+  level: z.enum(["A1", "A2", "B1", "B2", "C1", "C2"]),
+  sublevel: z.enum(["+", "-"]),
   explanation: z.string().min(1),
   strengths: z.array(z.string()),
   improvements: z.array(z.string()),
@@ -104,9 +104,10 @@ const languageNames: Record<string, string> = {
 // ---------------------------------------------------------------------------
 
 const LEVEL_TEST_TARGET_ID = "initial-level-test";
+const LEVEL_TEST_PENDING_TARGET_ID = "pending-level-test-assessment";
 
 const levelTestPlacementSchema = z.object({
-  level: z.string().min(1).max(10),
+  level: z.string().min(1).max(10).optional(),
   sublevel: z.string().max(3).optional(),
   messageCount: z.number().int().min(0).optional(),
   strengths: z.array(z.string()).optional(),
@@ -162,18 +163,55 @@ export async function handleLevelTestPlacement(req: ExtendedNextRequest) {
     );
   }
 
-  const { level, sublevel, messageCount, strengths, improvements, aiXp } =
-    parsed.data;
+  const userId = session.user.id;
 
-  // The server owns placement authority: derive XP from the CEFR level only.
+  const [pending] = await db
+    .select({ id: userActivity.id, details: userActivity.details })
+    .from(userActivity)
+    .where(
+      and(
+        eq(userActivity.userId, userId),
+        eq(userActivity.activityType, ActivityType.LEVEL_TEST),
+        eq(userActivity.targetId, LEVEL_TEST_PENDING_TARGET_ID),
+      ),
+    )
+    .limit(1);
+
+  const pendingAssessment = (
+    pending?.details as { assessment?: LevelTestAssessment } | null
+  )?.assessment;
+
+  if (!pendingAssessment) {
+    return NextResponse.json(
+      {
+        code: "BAD_REQUEST",
+        message: "No server-side level-test assessment is stored for this user",
+      },
+      { status: 400 },
+    );
+  }
+
+  const { messageCount, strengths, improvements, aiXp } = parsed.data;
+  const level = pendingAssessment.level;
+  const sublevel = pendingAssessment.sublevel;
+
+  // The server owns placement authority: derive XP from the stored assessment.
   const systemXp = cefrToSystemXp(level, sublevel);
+  if (systemXp <= 0) {
+    return NextResponse.json(
+      {
+        code: "BAD_REQUEST",
+        message: "Unrecognized CEFR level in the stored assessment",
+      },
+      { status: 400 },
+    );
+  }
   const placement: LevelTestPlacement = {
     systemXp,
     ...levelCalculation(systemXp),
     level: `${level}${sublevel || ""}`,
   };
 
-  const userId = session.user.id;
   const existingConditions = [
     eq(userActivity.userId, userId),
     eq(userActivity.activityType, ActivityType.LEVEL_TEST),
@@ -240,6 +278,10 @@ export async function handleLevelTestPlacement(req: ExtendedNextRequest) {
       })
       .where(eq(users.id, userId));
   }
+
+  await db
+    .delete(userActivity)
+    .where(eq(userActivity.id, pending.id));
 
   return NextResponse.json({ message: "Success", placement }, { status: 200 });
 }
@@ -388,6 +430,39 @@ export async function handleLevelTestChat(req: ExtendedNextRequest) {
         },
         { status: 200 }
       );
+    }
+
+    const userId = session.user?.id;
+    if (userId) {
+      const pendingDetails = {
+        assessment: validation.assessment,
+        messageCount: messages.length,
+      };
+      const [existingPending] = await db
+        .select({ id: userActivity.id })
+        .from(userActivity)
+        .where(
+          and(
+            eq(userActivity.userId, userId),
+            eq(userActivity.activityType, ActivityType.LEVEL_TEST),
+            eq(userActivity.targetId, LEVEL_TEST_PENDING_TARGET_ID),
+          ),
+        )
+        .limit(1);
+      if (existingPending) {
+        await db
+          .update(userActivity)
+          .set({ details: pendingDetails, updatedAt: new Date() })
+          .where(eq(userActivity.id, existingPending.id));
+      } else {
+        await db.insert(userActivity).values({
+          userId,
+          activityType: ActivityType.LEVEL_TEST,
+          targetId: LEVEL_TEST_PENDING_TARGET_ID,
+          completed: false,
+          details: pendingDetails,
+        });
+      }
     }
 
     return NextResponse.json({

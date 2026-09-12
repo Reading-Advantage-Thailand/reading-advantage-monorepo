@@ -22,6 +22,7 @@ jest.mock("@reading-advantage/db", () => ({
     select: jest.fn(),
     insert: jest.fn(),
     update: jest.fn(),
+    delete: jest.fn(),
   },
   and: jest.fn((...args: unknown[]) => ({ and: args })),
   eq: jest.fn((...args: unknown[]) => ({ eq: args })),
@@ -47,6 +48,23 @@ function placementRequest(
   return req;
 }
 
+function pendingRow(level: string, sublevel: string) {
+  return {
+    id: "pending-1",
+    details: { assessment: { level, sublevel } },
+  };
+}
+
+function selectLimit(rows: unknown[]) {
+  return {
+    from: () => ({
+      where: () => ({
+        limit: () => Promise.resolve(rows),
+      }),
+    }),
+  };
+}
+
 describe("level-test placement endpoint", () => {
   const insertValues = jest.fn();
   const updateSet = jest.fn();
@@ -63,20 +81,19 @@ describe("level-test placement endpoint", () => {
       where: () => Promise.resolve(undefined),
     });
     (dbMock.update as jest.Mock).mockReturnValue({ set: updateSet });
-    (dbMock.select as jest.Mock).mockReturnValue({
-      from: () => ({
-        where: () => ({
-          limit: () => Promise.resolve([]),
-        }),
-      }),
+    (dbMock.delete as jest.Mock).mockReturnValue({
+      where: () => Promise.resolve(undefined),
     });
+    (dbMock.select as jest.Mock)
+      .mockReturnValueOnce(selectLimit([pendingRow("B1", "+")]))
+      .mockReturnValue(selectLimit([]));
   });
 
-  it("computes placement from posted answers and ignores client-sent XP", async () => {
+  it("computes placement from the stored assessment and ignores client-sent XP", async () => {
     const res = await handleLevelTestPlacement(
       placementRequest(
         {
-          level: "B1",
+          level: "C2",
           sublevel: "+",
           messageCount: 12,
           xpEarned: 999999, // a forged client value that must be ignored
@@ -87,7 +104,7 @@ describe("level-test placement endpoint", () => {
 
     expect(res.status).toBe(200);
     const body = await res.json();
-    // B1+ maps to 68000 XP per the CEFR table, never the forged value.
+    // Stored B1+ maps to 68000 XP per the CEFR table, never the forged value.
     expect(body.placement.systemXp).toBe(68000);
     expect(body.placement.raLevel).toBe(9);
 
@@ -100,20 +117,16 @@ describe("level-test placement endpoint", () => {
     expect(xpLogValues![0].xpEarned).toBe(68000);
   });
 
-  it("does not award XP for an unrecognized level", async () => {
+  it("rejects placement when no server assessment is stored", async () => {
+    (dbMock.select as jest.Mock).mockReset();
+    (dbMock.select as jest.Mock).mockReturnValue(selectLimit([]));
+
     const res = await handleLevelTestPlacement(
-      placementRequest({ level: "Z9", sublevel: "" }, { id: "student-1" }),
+      placementRequest({ level: "C2", sublevel: "+" }, { id: "student-1" }),
     );
 
-    expect(res.status).toBe(200);
-    const body = await res.json();
-    expect(body.placement.systemXp).toBe(0);
-
-    const xpLogValues = insertValues.mock.calls.find(
-      ([values]: [Record<string, unknown>]) =>
-        values && typeof values === "object" && "activityId" in values,
-    );
-    expect(xpLogValues).toBeUndefined();
+    expect(res.status).toBe(400);
+    expect(insertValues).not.toHaveBeenCalled();
   });
 
   it("rejects an unauthenticated request", async () => {
@@ -124,6 +137,8 @@ describe("level-test placement endpoint", () => {
   });
 
   it("rejects an invalid assessment payload", async () => {
+    (dbMock.select as jest.Mock).mockReset();
+    (dbMock.select as jest.Mock).mockReturnValue(selectLimit([]));
     const res = await handleLevelTestPlacement(
       placementRequest({ sublevel: "+" }, { id: "student-1" }),
     );

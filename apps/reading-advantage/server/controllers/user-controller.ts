@@ -16,7 +16,7 @@ import {
   licenseOnUsers,
 } from "@reading-advantage/db/schema";
 import { ActivityType, LicenseType } from "@/lib/enums";
-import { ActivityType as ModelActivityType } from "@/components/models/user-activity-log-model";
+import { ActivityType as ModelActivityType, UserXpEarned } from "@/components/models/user-activity-log-model";
 import { getCurrentUser } from "@/lib/session";
 import { recordAuditEventSafe } from "@/server/utils/audit-recorder";
 
@@ -136,6 +136,38 @@ export function parseActivityType(value: unknown): ActivityType | null {
   return isKnown ? (normalized as ActivityType) : null;
 }
 
+const ACTIVITY_XP: Partial<Record<ActivityType, number>> = {
+  [ActivityType.MC_QUESTION]: UserXpEarned.MC_Question,
+  [ActivityType.SA_QUESTION]: UserXpEarned.SA_Question,
+  [ActivityType.LA_QUESTION]: UserXpEarned.LA_Question,
+  [ActivityType.ARTICLE_RATING]: UserXpEarned.Article_Rating,
+  [ActivityType.CHAPTER_RATING]: UserXpEarned.Chapter_Rating,
+  [ActivityType.VOCABULARY_FLASHCARDS]: UserXpEarned.Vocabulary_Flashcards,
+  [ActivityType.VOCABULARY_MATCHING]: UserXpEarned.Vocabulary_Matching,
+  [ActivityType.SENTENCE_FLASHCARDS]: UserXpEarned.Sentence_Flashcards,
+  [ActivityType.SENTENCE_MATCHING]: UserXpEarned.Sentence_Matching,
+  [ActivityType.SENTENCE_CLOZE_TEST]: UserXpEarned.Sentence_Cloze_Test,
+  [ActivityType.SENTENCE_ORDERING]: UserXpEarned.Sentence_Ordering,
+  [ActivityType.SENTENCE_WORD_ORDERING]: UserXpEarned.Sentence_Word_Ordering,
+  [ActivityType.LESSON_FLASHCARD]: UserXpEarned.Lesson_Flashcard,
+  [ActivityType.LESSON_SENTENCE_FLASHCARDS]: UserXpEarned.Lesson_Sentence_Flashcards,
+};
+
+/**
+ * Returns the server-owned XP award for an activity type.
+ * Clients cannot choose this value.
+ * @param activityType The canonical activity type.
+ * @param completed True when the activity is complete.
+ * @returns The XP to award, or 0 when the type awards none.
+ */
+export function xpForActivityType(
+  activityType: ActivityType,
+  completed: boolean,
+): number {
+  if (!completed) return 0;
+  return ACTIVITY_XP[activityType] ?? 0;
+}
+
 /**
  * Resolves a nonempty activity target from the supported caller fields.
  * @param data The submitted activity data.
@@ -167,7 +199,7 @@ export async function getUser(req: ExtendedNextRequest, ctx: RequestContext) {
   try {
     const { id: routeId } = await ctx.params;
 
-    if (!assertSelfOrAllowedStaff(req, routeId)) {
+    if (!(await assertSelfOrAllowedStaff(req, routeId))) {
       return NextResponse.json({ message: "Forbidden - Access denied to this resource" }, { status: 403 });
     }
     const id = routeId;
@@ -213,7 +245,7 @@ export async function updateUser(
   try {
     const { id: routeId } = await ctx.params;
 
-    if (!assertSelfOrAllowedStaff(req, routeId)) {
+    if (!(await assertSelfOrAllowedStaff(req, routeId))) {
       return NextResponse.json({ message: "Forbidden - Access denied to this resource" }, { status: 403 });
     }
     const id = routeId;
@@ -264,7 +296,7 @@ export async function postActivityLog(
   try {
     const { id: routeId } = await ctx.params;
 
-    if (!assertSelfOrAllowedStaff(req, routeId)) {
+    if (!(await assertSelfOrAllowedStaff(req, routeId))) {
       return NextResponse.json({ message: "Forbidden - Access denied to this resource" }, { status: 403 });
     }
     const id = routeId;
@@ -391,20 +423,25 @@ export async function postActivityLog(
       hasExistingXpLog = !!existingXpLog;
     }
 
+    const completed =
+      Boolean(data.completed) || data.activityStatus === "completed";
+    const xpEarned = xpForActivityType(activityType, completed);
+
     // Only the primary path may insert an xp_log; concurrent peers and
     // pre-existing rows take the skip branch. This is the domain guard that
     // makes XP awards atomic per (userId, activityType, targetId).
+    // XP is computed on the server from the activity type. Client xpEarned
+    // and isInitialLevelTest values are ignored.
     const shouldInsertXpLog =
       !!activityId &&
       isPrimaryRequest &&
       !hasExistingXpLog &&
-      ((data.xpEarned && data.xpEarned > 0) ||
-        (data.isInitialLevelTest && typeof data.xpEarned === "number"));
+      xpEarned > 0;
 
     if (shouldInsertXpLog) {
       await db.insert(xpLogs).values({
         userId: id,
-        xpEarned: data.xpEarned,
+        xpEarned,
         activityId: activityId!,
         activityType: activityType,
       });
@@ -415,9 +452,7 @@ export async function postActivityLog(
         .where(eq(users.id, id))
         .limit(1);
 
-      const finalXp = data.isInitialLevelTest
-        ? data.xpEarned
-        : (currentUser?.xp || 0) + data.xpEarned;
+      const finalXp = (currentUser?.xp || 0) + xpEarned;
 
       const levelData = levelCalculation(finalXp);
 
@@ -449,7 +484,7 @@ export async function putActivityLog(
   try {
     const { id: routeId } = await ctx.params;
 
-    if (!assertSelfOrAllowedStaff(req, routeId)) {
+    if (!(await assertSelfOrAllowedStaff(req, routeId))) {
       return NextResponse.json({ message: "Forbidden - Access denied to this resource" }, { status: 403 });
     }
     const id = routeId;
@@ -594,7 +629,7 @@ export async function getActivityLog(
 ) {
   const { id: routeId } = await ctx.params;
 
-  if (!assertSelfOrAllowedStaff(req, routeId)) {
+  if (!(await assertSelfOrAllowedStaff(req, routeId))) {
     return NextResponse.json({ message: "Forbidden - Access denied to this resource" }, { status: 403 });
   }
   const id = routeId;
@@ -735,7 +770,7 @@ export async function getUserRecords(
 ) {
   const { id: routeId } = await ctx.params;
 
-  if (!assertSelfOrAllowedStaff(req, routeId)) {
+  if (!(await assertSelfOrAllowedStaff(req, routeId))) {
     return NextResponse.json({ message: "Forbidden - Access denied to this resource" }, { status: 403 });
   }
   const id = routeId;

@@ -25,6 +25,31 @@ jest.mock("@/utils/openai", () => ({
   openaiModel5: "mock-model-5",
 }));
 
+jest.mock("@reading-advantage/db", () => ({
+  db: {
+    select: jest.fn(() => ({
+      from: () => ({
+        where: () => ({
+          limit: () => Promise.resolve([]),
+        }),
+      }),
+    })),
+    insert: jest.fn(() => ({
+      values: () => Promise.resolve(undefined),
+    })),
+    update: jest.fn(() => ({
+      set: () => ({
+        where: () => Promise.resolve(undefined),
+      }),
+    })),
+    delete: jest.fn(() => ({
+      where: () => Promise.resolve(undefined),
+    })),
+  },
+  and: jest.fn((...args: unknown[]) => args),
+  eq: jest.fn((...args: unknown[]) => args),
+}));
+
 import { handleLevelTestChat } from "@/server/controllers/level-test-controller";
 
 function makeRequest(body: object): ExtendedNextRequest {

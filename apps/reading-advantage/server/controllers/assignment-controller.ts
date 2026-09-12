@@ -761,7 +761,7 @@ export async function getStudentAssignments(req: ExtendedNextRequest) {
     }
 
     let targetStudentId = studentId;
-    if (!targetStudentId || !assertSelfOrAllowedStaff(req, targetStudentId)) {
+    if (!targetStudentId || !(await assertSelfOrAllowedStaff(req, targetStudentId))) {
       targetStudentId = sessionUser.id;
     }
 

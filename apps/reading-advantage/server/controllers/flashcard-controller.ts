@@ -41,7 +41,7 @@ export async function getFlashcardStats(
   ctx: RequestContext
 ) {
   const { id: routeId } = await ctx.params;
-  if (!assertSelfOrAllowedStaff(req, routeId)) {
+  if (!(await assertSelfOrAllowedStaff(req, routeId))) {
     return NextResponse.json({ message: "Forbidden - Access denied to this resource" }, { status: 403 });
   }
   const id = routeId;
@@ -152,7 +152,7 @@ export async function updateFlashcardProgress(
   ctx: RequestContext
 ) {
   const { id: routeId } = await ctx.params;
-  if (!assertSelfOrAllowedStaff(req, routeId)) {
+  if (!(await assertSelfOrAllowedStaff(req, routeId))) {
     return NextResponse.json({ message: "Forbidden - Access denied to this resource" }, { status: 403 });
   }
   const id = routeId;
@@ -268,7 +268,7 @@ export async function postSaveWordList(
   ctx: RequestContext
 ) {
   const { id: routeId } = await ctx.params;
-  if (!assertSelfOrAllowedStaff(req, routeId)) {
+  if (!(await assertSelfOrAllowedStaff(req, routeId))) {
     return NextResponse.json({ message: "Forbidden - Access denied to this resource" }, { status: 403 });
   }
   const id = routeId;
@@ -365,7 +365,7 @@ export async function getWordList(
   ctx: RequestContext
 ) {
   const { id: routeId } = await ctx.params;
-  if (!assertSelfOrAllowedStaff(req as ExtendedNextRequest, routeId)) {
+  if (!(await assertSelfOrAllowedStaff(req as ExtendedNextRequest, routeId))) {
     return NextResponse.json({ message: "Forbidden - Access denied to this resource" }, { status: 403 });
   }
   const id = routeId;
@@ -406,7 +406,7 @@ export async function deleteWordlist(
   try {
     const { id: routeId } = await ctx.params;
 
-    if (!assertSelfOrAllowedStaff(req, routeId)) {
+    if (!(await assertSelfOrAllowedStaff(req, routeId))) {
       return NextResponse.json({ message: "Forbidden - Access denied to this resource" }, { status: 403 });
     }
     const id = routeId;
@@ -443,7 +443,7 @@ export async function postSentendcesFlashcard(
   ctx: RequestContext
 ) {
   const { id: routeId } = await ctx.params;
-  if (!assertSelfOrAllowedStaff(req, routeId)) {
+  if (!(await assertSelfOrAllowedStaff(req, routeId))) {
     return NextResponse.json({ message: "Forbidden - Access denied to this resource" }, { status: 403 });
   }
   const id = routeId;
@@ -586,7 +586,7 @@ export async function getSentencesFlashcard(
 ) {
   const { id: routeId } = await ctx.params;
 
-  if (!assertSelfOrAllowedStaff(req, routeId)) {
+  if (!(await assertSelfOrAllowedStaff(req, routeId))) {
     return NextResponse.json({ message: "Forbidden - Access denied to this resource" }, { status: 403 });
   }
   const id = routeId;
@@ -624,7 +624,7 @@ export async function deleteSentencesFlashcard(
   try {
     const { id: routeId } = await ctx.params;
 
-    if (!assertSelfOrAllowedStaff(req, routeId)) {
+    if (!(await assertSelfOrAllowedStaff(req, routeId))) {
       return NextResponse.json({ message: "Forbidden - Access denied to this resource" }, { status: 403 });
     }
     const id = routeId;
@@ -661,7 +661,7 @@ export async function getVocabulariesFlashcard(
   ctx: RequestContext
 ) {
   const { id: routeId } = await ctx.params;
-  if (!assertSelfOrAllowedStaff(req, routeId)) {
+  if (!(await assertSelfOrAllowedStaff(req, routeId))) {
     return NextResponse.json({ message: "Forbidden - Access denied to this resource" }, { status: 403 });
   }
   const id = routeId;
@@ -692,7 +692,7 @@ export async function postVocabulariesFlashcard(
   ctx: RequestContext
 ) {
   const { id: routeId } = await ctx.params;
-  if (!assertSelfOrAllowedStaff(req, routeId)) {
+  if (!(await assertSelfOrAllowedStaff(req, routeId))) {
     return NextResponse.json({ message: "Forbidden - Access denied to this resource" }, { status: 403 });
   }
   const id = routeId;
@@ -781,7 +781,7 @@ export async function deleteVocabulariesFlashcard(
   try {
     const { id: routeId } = await ctx.params;
 
-    if (!assertSelfOrAllowedStaff(req, routeId)) {
+    if (!(await assertSelfOrAllowedStaff(req, routeId))) {
       return NextResponse.json({ message: "Forbidden - Access denied to this resource" }, { status: 403 });
     }
     const id = routeId;

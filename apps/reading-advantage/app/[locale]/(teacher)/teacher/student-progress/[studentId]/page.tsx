@@ -10,7 +10,7 @@ import ReadingStatsChart from "@/components/dashboard/user-reading-chart";
 import CEFRLevels from "@/components/dashboard/user-level-indicator";
 import { fetchData } from "@/utils/fetch-data";
 import { db, and, eq } from "@reading-advantage/db";
-import { classroomStudents, classroomTeachers } from "@reading-advantage/db/schema";
+import { classroomStudents, classroomTeachers, users } from "@reading-advantage/db/schema";
 import { Role } from "@/lib/enums";
 
 async function getUserActivityData(userId: string) {
@@ -30,10 +30,18 @@ export default async function ProgressPage({
   const user = await getCurrentUser();
   if (!user) return redirect("/auth/signin");
 
-  // Verify access: staff roles proceed; everyone else must teach a classroom
-  // that contains this student. Mirrors the check in
-  // teacher/reports/[classroomId]/page.tsx.
-  if (user.role !== Role.SYSTEM && user.role !== Role.ADMIN) {
+  // Verify access: SYSTEM is global; ADMIN must share the student's school;
+  // teachers must teach a classroom that contains this student.
+  if (user.role === Role.ADMIN) {
+    const [student] = await db
+      .select({ schoolId: users.schoolId })
+      .from(users)
+      .where(eq(users.id, studentId))
+      .limit(1);
+    if (!student || !user.school_id || student.schoolId !== user.school_id) {
+      return redirect("/teacher/dashboard");
+    }
+  } else if (user.role !== Role.SYSTEM) {
     const [classroomLink] = await db
       .select({ id: classroomStudents.id })
       .from(classroomStudents)

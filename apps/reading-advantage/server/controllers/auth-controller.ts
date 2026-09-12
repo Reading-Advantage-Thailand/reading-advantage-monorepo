@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { getCurrentUser, type SessionUser } from "@/lib/session";
 import { env } from "@/lib/env";
 import { sendDiscordWebhook } from "../utils/send-discord-webhook";
+import { db, and, eq } from "@reading-advantage/db";
+import { users, classroomStudents, classroomTeachers } from "@reading-advantage/db/schema";
+import { Role } from "@/lib/enums";
 
 // Middleware to protect routes
 export interface ExtendedNextRequest extends NextRequest {
@@ -109,21 +112,53 @@ export const restrictAccessKey = async (
   return next();
 };
 
-// Check if user is accessing their own resource or is an allowed staff member
-export const assertSelfOrAllowedStaff = (
+/**
+ * Returns true when the session user may read or write the given user id.
+ * Self access always passes. Teachers must teach the student. Admins must
+ * share the student's school. System operators keep global access.
+ * @param req The request that carries the session user.
+ * @param routeUserId The user id in the route.
+ * @returns True when the caller is in scope.
+ */
+export const assertSelfOrAllowedStaff = async (
   req: ExtendedNextRequest,
   routeUserId: string
-): boolean => {
+): Promise<boolean> => {
   const sessionUser = req.session?.user;
   if (!sessionUser) return false;
-  
+
   if (sessionUser.id === routeUserId) return true;
-  
-  const allowedRoles: string[] = ["ADMIN", "TEACHER"];
-  if (allowedRoles.includes(sessionUser.role)) {
-    // Optionally validate if the requested user is in the caller's allowed scope
-    return true;
+
+  if (sessionUser.role === Role.SYSTEM) return true;
+
+  if (sessionUser.role === Role.ADMIN) {
+    const callerSchoolId = sessionUser.school_id;
+    if (!callerSchoolId) return false;
+    const [target] = await db
+      .select({ schoolId: users.schoolId })
+      .from(users)
+      .where(eq(users.id, routeUserId))
+      .limit(1);
+    return Boolean(target?.schoolId) && target.schoolId === callerSchoolId;
   }
-  
+
+  if (sessionUser.role === Role.TEACHER) {
+    const [link] = await db
+      .select({ id: classroomStudents.id })
+      .from(classroomStudents)
+      .innerJoin(
+        classroomTeachers,
+        eq(classroomTeachers.classroomId, classroomStudents.classroomId),
+      )
+      .where(
+        and(
+          eq(classroomStudents.studentId, routeUserId),
+          eq(classroomTeachers.teacherId, sessionUser.id),
+        ),
+      )
+      .limit(1);
+    return Boolean(link);
+  }
+
   return false;
 };
