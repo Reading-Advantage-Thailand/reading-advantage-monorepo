@@ -1,0 +1,350 @@
+{
+  "lesson_number": "Lesson 1",
+  "lesson_title": "Pip the Curious Puppy Feels",
+  "level_name": "Level 2",
+  "cefr_level": "CEFR A0",
+  "article_type": "fiction",
+  "genre": "Materials & Science",
+  "vocabulary": [
+    {
+      "word": "puppy",
+      "phonetic": "",
+      "definition": "A young dog.",
+      "thai_definition": "ลูกสุนัข"
+    },
+    {
+      "word": "curious",
+      "phonetic": "",
+      "definition": "Eager to know or learn something.",
+      "thai_definition": "อยากรู้อยากเห็น"
+    },
+    {
+      "word": "blanket",
+      "phonetic": "",
+      "definition": "A large piece of fabric used for warmth.",
+      "thai_definition": "ผ้าห่ม"
+    },
+    {
+      "word": "feels",
+      "phonetic": "",
+      "definition": "To experience a sensation through touch.",
+      "thai_definition": "รู้สึกสัมผัส"
+    },
+    {
+      "word": "soft",
+      "phonetic": "",
+      "definition": "Smooth and pleasant to touch; not hard.",
+      "thai_definition": "นุ่ม"
+    },
+    {
+      "word": "rug",
+      "phonetic": "",
+      "definition": "A floor covering that does not cover the entire floor.",
+      "thai_definition": "พรม"
+    },
+    {
+      "word": "rough",
+      "phonetic": "",
+      "definition": "Having an uneven or irregular surface; not smooth.",
+      "thai_definition": "ขรุขระ"
+    },
+    {
+      "word": "yellow",
+      "phonetic": "",
+      "definition": "A bright color like the sun.",
+      "thai_definition": "สีเหลือง"
+    },
+    {
+      "word": "small",
+      "phonetic": "",
+      "definition": "Little in size.",
+      "thai_definition": "เล็ก"
+    },
+    {
+      "word": "smooth",
+      "phonetic": "",
+      "definition": "Having an even and regular surface.",
+      "thai_definition": "เรียบ"
+    },
+    {
+      "word": "things",
+      "phonetic": "",
+      "definition": "Objects that one need not name specifically.",
+      "thai_definition": "สิ่งของ"
+    },
+    {
+      "word": "walks",
+      "phonetic": "",
+      "definition": "To move on foot at a regular pace.",
+      "thai_definition": "เดิน"
+    }
+  ],
+  "article_image_url": [
+    "https://storage.googleapis.com/primary-app-storage/images/cmgqx8v6602p3t79btatvfjuw_1.png",
+    "https://storage.googleapis.com/primary-app-storage/images/cmgqx8v6602p3t79btatvfjuw_2.png",
+    "https://storage.googleapis.com/primary-app-storage/images/cmgqx8v6602p3t79btatvfjuw_3.png"
+  ],
+  "article_caption": "Pip the curious puppy feels a soft blanket, a rough rug, and a smooth ball, and Pip is happy.",
+  "article_url": "https://primary.reading-advantage.com/student/read/cmgqx8v6602p3t79btatvfjuw",
+  "article_paragraphs": [
+    {
+      "number": 1,
+      "text": "This is Pip. Pip is a puppy. Pip is a good puppy. Pip is a happy puppy. Pip is curious. Pip sees a blue blanket. This blanket is big. Pip walks on the blanket. Pip feels the blanket. It is soft. This blanket is soft. Pip likes soft. Pip is very happy."
+    },
+    {
+      "number": 2,
+      "text": "Pip sees a red rug. This rug is big. Pip walks on the rug. Pip feels the rug. It is rough. This rug is rough. Pip likes rough. Pip sees a yellow ball. This ball is small. Pip feels the ball. It is smooth. This ball is smooth. Pip likes smooth."
+    },
+    {
+      "number": 3,
+      "text": "Pip feels all things. Pip likes to feel. Pip feels soft things. Pip feels rough things. Pip feels smooth things. This is very good. Pip is a curious puppy. Pip is a good puppy. Pip is very happy. This is fun. My puppy is happy."
+    }
+  ],
+  "comprehension_questions": [
+    {
+      "number": 1,
+      "question": "What is Pip?",
+      "options": [
+        "A cat",
+        "A puppy",
+        "A bird",
+        "A fish"
+      ]
+    },
+    {
+      "number": 2,
+      "question": "What color is the blanket?",
+      "options": [
+        "Red",
+        "Yellow",
+        "Blue",
+        "Green"
+      ]
+    },
+    {
+      "number": 3,
+      "question": "How does the blanket feel?",
+      "options": [
+        "Rough",
+        "Smooth",
+        "Hard",
+        "Soft"
+      ]
+    },
+    {
+      "number": 4,
+      "question": "What color is the rug?",
+      "options": [
+        "Blue",
+        "Red",
+        "Yellow",
+        "White"
+      ]
+    }
+  ],
+  "short_answer_question": "What is the puppy's name?",
+  "sentence_starters": [
+    "I think...",
+    "The article says...",
+    "In my opinion..."
+  ],
+  "vocab_match": [
+    {
+      "number": 1,
+      "word": "puppy",
+      "letter": "a",
+      "definition": "Having an uneven or irregular surface; not smooth.",
+      "thai_definition": "ขรุขระ"
+    },
+    {
+      "number": 2,
+      "word": "curious",
+      "letter": "b",
+      "definition": "Smooth and pleasant to touch; not hard.",
+      "thai_definition": "นุ่ม"
+    },
+    {
+      "number": 3,
+      "word": "blanket",
+      "letter": "c",
+      "definition": "Eager to know or learn something.",
+      "thai_definition": "อยากรู้อยากเห็น"
+    },
+    {
+      "number": 4,
+      "word": "feels",
+      "letter": "d",
+      "definition": "To experience a sensation through touch.",
+      "thai_definition": "รู้สึกสัมผัส"
+    },
+    {
+      "number": 5,
+      "word": "soft",
+      "letter": "e",
+      "definition": "A floor covering that does not cover the entire floor.",
+      "thai_definition": "พรม"
+    },
+    {
+      "number": 6,
+      "word": "rug",
+      "letter": "f",
+      "definition": "A bright color like the sun.",
+      "thai_definition": "สีเหลือง"
+    },
+    {
+      "number": 7,
+      "word": "rough",
+      "letter": "g",
+      "definition": "A young dog.",
+      "thai_definition": "ลูกสุนัข"
+    },
+    {
+      "number": 8,
+      "word": "yellow",
+      "letter": "h",
+      "definition": "Having an even and regular surface.",
+      "thai_definition": "เรียบ"
+    },
+    {
+      "number": 9,
+      "word": "small",
+      "letter": "i",
+      "definition": "A large piece of fabric used for warmth.",
+      "thai_definition": "ผ้าห่ม"
+    },
+    {
+      "number": 10,
+      "word": "smooth",
+      "letter": "j",
+      "definition": "Little in size.",
+      "thai_definition": "เล็ก"
+    },
+    {
+      "number": 11,
+      "word": "things",
+      "letter": "k",
+      "definition": "Objects that one need not name specifically.",
+      "thai_definition": "สิ่งของ"
+    },
+    {
+      "number": 12,
+      "word": "walks",
+      "letter": "l",
+      "definition": "To move on foot at a regular pace.",
+      "thai_definition": "เดิน"
+    }
+  ],
+  "vocab_fill": [
+    {
+      "number": 1,
+      "sentence": "Pip is a <span class=\"blank\"></span>."
+    },
+    {
+      "number": 2,
+      "sentence": "Pip is <span class=\"blank\"></span>."
+    },
+    {
+      "number": 3,
+      "sentence": "Pip sees a blue <span class=\"blank\"></span>."
+    },
+    {
+      "number": 4,
+      "sentence": "Pip <span class=\"blank\"></span> the blanket."
+    }
+  ],
+  "vocab_word_bank": [
+    "puppy",
+    "curious",
+    "blanket",
+    "feels",
+    "soft",
+    "rug",
+    "rough",
+    "yellow",
+    "small",
+    "smooth",
+    "things",
+    "walks"
+  ],
+  "sentence_order_questions": [
+    {
+      "words": [
+        "is",
+        "Pip",
+        "This"
+      ]
+    },
+    {
+      "words": [
+        "a",
+        "sees",
+        "rug",
+        "Pip",
+        "red"
+      ]
+    }
+  ],
+  "sentence_completion_prompts": [
+    {
+      "number": 1,
+      "prompt": "This is Pip"
+    },
+    {
+      "number": 2,
+      "prompt": "This rug is"
+    },
+    {
+      "number": 3,
+      "prompt": "Pip feels soft"
+    }
+  ],
+  "writing_prompt": "Describe Pip the puppy in two sentences. What is Pip like?",
+  "mc_answers": [
+    {
+      "number": 1,
+      "letter": "b",
+      "text": "A puppy"
+    },
+    {
+      "number": 2,
+      "letter": "c",
+      "text": "Blue"
+    },
+    {
+      "number": 3,
+      "letter": "d",
+      "text": "Soft"
+    },
+    {
+      "number": 4,
+      "letter": "b",
+      "text": "Red"
+    }
+  ],
+  "vocab_match_answer_string": "1-g, 2-c, 3-i, 4-d, 5-b, 6-e, 7-a, 8-f, 9-j, 10-h, 11-k, 12-l",
+  "vocab_fill_answer_string": "1. puppy, 2. curious, 3. blanket, 4. feels",
+  "sentence_order_answers": [
+    {
+      "number": 1,
+      "sentence": "This is Pip."
+    },
+    {
+      "number": 2,
+      "sentence": "Pip sees a red rug."
+    }
+  ],
+  "translation_paragraphs": [
+    {
+      "label": "Paragraph 1",
+      "text": "นี่คือปิ๊ป ปิ๊ปเป็นลูกสุนัข ปิ๊ปเป็นลูกสุนัขที่ดี ปิ๊ปเป็นลูกสุนัขที่มีความสุข ปิ๊ปอยากรู้อยากเห็น ปิ๊ปเห็นผ้าห่มสีฟ้า ผ้าห่มนี้ใหญ่ ปิ๊ปเดินบนผ้าห่ม ปิ๊ปรู้สึกถึงผ้าห่ม มันนุ่ม ผ้าห่มนี้มันนุ่ม ปิ๊ปชอบความนุ่ม ปิ๊ปมีความสุขมาก"
+    },
+    {
+      "label": "Paragraph 2",
+      "text": "ปิ๊ปเห็นพรมสีแดง พรมนี้ใหญ่ ปิ๊ปเดินบนพรม ปิ๊ปรู้สึกถึงพรม มันหยาบ พรมนี้มันหยาบ ปิ๊ปชอบความหยาบ ปิ๊ปเห็นลูกบอลสีเหลือง ลูกบอลนี้เล็ก ปิ๊ปรู้สึกถึงลูกบอล มันเรียบ ลูกบอลนี้มันเรียบ ปิ๊ปชอบความเรียบ"
+    },
+    {
+      "label": "Paragraph 3",
+      "text": "ปิ๊ปรู้สึกถึงทุกสิ่ง ปิ๊ปชอบที่จะรู้สึก ปิ๊ปรู้สึกถึงสิ่งที่นุ่ม ปิ๊ปรู้สึกถึงสิ่งที่หยาบ ปิ๊ปรู้สึกถึงสิ่งที่เรียบ นี่เป็นสิ่งที่ดีมาก ปิ๊ปเป็นลูกสุนัขที่อยากรู้อยากเห็น ปิ๊ปเป็นลูกสุนัขที่ดี ปิ๊ปมีความสุขมาก นี่คือความสนุก ลูกสุนัขของฉันมีความสุข"
+    }
+  ]
+}

@@ -1,0 +1,324 @@
+{
+  "schema_version": "apk-legacy-traversal-task1-source-readiness-manifest.v1",
+  "track_id": "apk_legacy_traversal_cutover_20260727",
+  "task": "Task 1: source/readiness manifest preparation",
+  "status": "evidence-only",
+  "archive_resolution_rule": "For each predecessor, archive_preferred_path is the only consumable local path after archival. receipt_declared_path remains solely to reconcile immutable receipt text and is not a fallback.",
+  "source_bindings": {
+    "accepted_readiness_receipt": {
+      "archive_preferred_path": "measure/archive/apk_denominator_readiness_t11_integrity_20260727/accepted-readiness-receipt-v1.json",
+      "receipt_declared_path": "measure/tracks/apk_denominator_readiness_t11_integrity_20260727/accepted-readiness-receipt-v1.json",
+      "sha256": "d371fc5df05922d5f1bbb50b837c0fd5314d8f136e2c699510c84186447f1720"
+    },
+    "phase1_crosswalk": {
+      "archive_preferred_path": "measure/archive/apk_denominator_readiness_t11_integrity_20260727/phase1-denominator-crosswalk.json",
+      "receipt_declared_path": "measure/tracks/apk_denominator_readiness_t11_integrity_20260727/phase1-denominator-crosswalk.json",
+      "sha256": "eb395d3d365115696fc31359406a4e9f126604ca159ea8358a0eb8931c8c5f57"
+    },
+    "identity_ledger": {
+      "archive_preferred_path": "measure/archive/apk_source_denominator_inventory_20260712/game-identity-ledger.json",
+      "sha256": "a31c99650bf1abd6623e64b2e9a23c4c481ce970036b52cfbe08c74b1c09c407"
+    }
+  },
+  "readiness_boundary": {
+    "receipt_status": "accepted-active",
+    "authorized_child_work_only": true,
+    "cohort_currently_ready": false,
+    "cartridge_cutover_authorized": false,
+    "meaning": "The receipt removes only the denominator/readiness predecessor block for this five-title child track. It does not satisfy Task 1 or any downstream task."
+  },
+  "titles": [
+    {
+      "title_id": "dragon-rider",
+      "title": "Dragon Rider",
+      "assignment_index": 11,
+      "source_identity_id": "vocabulary/dragon-rider",
+      "identity_record_index": 21,
+      "cohort": "Traversal and exploration",
+      "classification": "source_identity",
+      "crosswalk_locator": {
+        "assignment_index": 11,
+        "assignment_locator": { "artifact": "accepted_partition", "json_pointer": "/assignments/11" },
+        "source_locator": { "artifact": "identity_ledger", "json_pointer": "/identity_records/21" }
+      },
+      "legacy_source_records": {
+        "aliases": [
+          {
+            "alias": "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/dragon-rider/page.tsx",
+            "evidence": {
+              "blob_sha256": "9a8ad3e447ef36a8212cba933b5bfce326ed8ce7d3a09a3e09a82d06a4034f98",
+              "path": "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/dragon-rider/page.tsx",
+              "range": { "start_line": 1, "end_line": 119, "sha256": "9a8ad3e447ef36a8212cba933b5bfce326ed8ce7d3a09a3e09a82d06a4034f98" },
+              "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+            }
+          }
+        ],
+        "routes": [
+          {
+            "route": "/apps/reading-advantage/app/student/games/vocabulary/dragon-rider",
+            "evidence": {
+              "blob_sha256": "9a8ad3e447ef36a8212cba933b5bfce326ed8ce7d3a09a3e09a82d06a4034f98",
+              "path": "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/dragon-rider/page.tsx",
+              "range": { "start_line": 1, "end_line": 119, "sha256": "9a8ad3e447ef36a8212cba933b5bfce326ed8ce7d3a09a3e09a82d06a4034f98" },
+              "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+            }
+          }
+        ],
+        "behavior_sources": [
+          {
+            "path": "apps/reading-advantage/components/games/vocabulary/dragon-rider/DragonRiderGame.tsx",
+            "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+            "git_blob_sha1": "b1febf0d3fa8654ed86d93ae1559c08aec8b858f",
+            "observation": "Two gates carry the correct and decoy translations; a correct choice grows the dragon army and the timed run transitions to a boss resolution."
+          }
+        ],
+        "source_states": [
+          {
+            "source_class": "current-page-source",
+            "evidence": {
+              "blob_sha256": "9a8ad3e447ef36a8212cba933b5bfce326ed8ce7d3a09a3e09a82d06a4034f98",
+              "path": "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/dragon-rider/page.tsx",
+              "range": { "start_line": 1, "end_line": 119, "sha256": "9a8ad3e447ef36a8212cba933b5bfce326ed8ce7d3a09a3e09a82d06a4034f98" },
+              "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+            }
+          }
+        ]
+      },
+      "legacy_source_records_status": "observation-only-not-adoption-or-approval"
+    },
+    {
+      "title_id": "spellweavers-run",
+      "title": "Spellweaver's Run",
+      "assignment_index": 13,
+      "source_identity_id": "catalog/spellweavers-run",
+      "identity_record_index": 8,
+      "cohort": "Traversal and exploration",
+      "classification": "source_identity",
+      "crosswalk_locator": {
+        "assignment_index": 13,
+        "assignment_locator": { "artifact": "accepted_partition", "json_pointer": "/assignments/13" },
+        "source_locator": { "artifact": "identity_ledger", "json_pointer": "/identity_records/8" }
+      },
+      "legacy_source_records": {
+        "aliases": [
+          {
+            "alias": "spellweavers-run",
+            "evidence": {
+              "blob_sha256": "4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c",
+              "path": "apps/advantage-games/src/lib/gameCards.ts",
+              "range": { "start_line": 115, "end_line": 115, "sha256": "67e99177cc077b7739b46f99e66f97e62ba2b567b1af55688c285440ef6de2d7" },
+              "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+            }
+          }
+        ],
+        "routes": [],
+        "behavior_sources": [
+          {
+            "path": "apps/advantage-games/measure/archive/spellweavers-run-20260319/spec.md",
+            "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+            "git_blob_sha1": "841b86f8ad540b7576efbf12380109d6ed31ce63",
+            "classification": "historical-design-context-not-asset-approval",
+            "observation": "Three lane word orbs construct sentence words in order; a wrong collection costs 20 mana and terminal states are complete session or zero mana."
+          }
+        ],
+        "source_states": [
+          {
+            "source_class": "catalog-withdrawn-registration",
+            "evidence": {
+              "blob_sha256": "4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c",
+              "path": "apps/advantage-games/src/lib/gameCards.ts",
+              "range": { "start_line": 19, "end_line": 19, "sha256": "a720c50bee06a899bdf3a7e221ff9a3c624d32847ac77098784cbb549aa75b1a" },
+              "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+            }
+          }
+        ]
+      },
+      "legacy_source_records_status": "observation-only-not-adoption-or-approval"
+    },
+    {
+      "title_id": "shadow-gate-dungeon",
+      "title": "Shadow Gate Dungeon",
+      "assignment_index": 14,
+      "source_identity_id": "sentence/shadow-gate-dungeon",
+      "identity_record_index": 17,
+      "cohort": "Traversal and exploration",
+      "classification": "source_identity",
+      "crosswalk_locator": {
+        "assignment_index": 14,
+        "assignment_locator": { "artifact": "accepted_partition", "json_pointer": "/assignments/14" },
+        "source_locator": { "artifact": "identity_ledger", "json_pointer": "/identity_records/17" }
+      },
+      "legacy_source_records": {
+        "aliases": [
+          {
+            "alias": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/shadow-gate-dungeon/page.tsx",
+            "evidence": {
+              "blob_sha256": "759a587f3409885a32d418ee8c46763b204361f84569b47ec0012d7275f09ac6",
+              "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/shadow-gate-dungeon/page.tsx",
+              "range": { "start_line": 1, "end_line": 216, "sha256": "759a587f3409885a32d418ee8c46763b204361f84569b47ec0012d7275f09ac6" },
+              "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+            }
+          }
+        ],
+        "routes": [
+          {
+            "route": "/student/games/sentence/shadow-gate-dungeon",
+            "evidence": {
+              "blob_sha256": "759a587f3409885a32d418ee8c46763b204361f84569b47ec0012d7275f09ac6",
+              "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/shadow-gate-dungeon/page.tsx",
+              "range": { "start_line": 1, "end_line": 216, "sha256": "759a587f3409885a32d418ee8c46763b204361f84569b47ec0012d7275f09ac6" },
+              "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+            }
+          }
+        ],
+        "behavior_sources": [
+          {
+            "path": "apps/advantage-games/src/components/games/sentence/shadow-gate-dungeon/ShadowGateDungeonGame.tsx",
+            "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+            "git_blob_sha1": "da9c739fb81d9af78bc03c1f0df106b9216b465b",
+            "observation": "Collect sentence word crystals in order to unlock the gate while wrong crystals and creature contact reduce health."
+          }
+        ],
+        "source_states": [
+          {
+            "source_class": "current-page-source",
+            "evidence": {
+              "blob_sha256": "759a587f3409885a32d418ee8c46763b204361f84569b47ec0012d7275f09ac6",
+              "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/shadow-gate-dungeon/page.tsx",
+              "range": { "start_line": 1, "end_line": 216, "sha256": "759a587f3409885a32d418ee8c46763b204361f84569b47ec0012d7275f09ac6" },
+              "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+            }
+          }
+        ]
+      },
+      "legacy_source_records_status": "observation-only-not-adoption-or-approval"
+    },
+    {
+      "title_id": "labyrinth-goblin-king",
+      "title": "Labyrinth of the Goblin King",
+      "assignment_index": 15,
+      "source_identity_id": "sentence/labyrinth-goblin-king",
+      "identity_record_index": 14,
+      "cohort": "Traversal and exploration",
+      "classification": "source_identity",
+      "crosswalk_locator": {
+        "assignment_index": 15,
+        "assignment_locator": { "artifact": "accepted_partition", "json_pointer": "/assignments/15" },
+        "source_locator": { "artifact": "identity_ledger", "json_pointer": "/identity_records/14" }
+      },
+      "legacy_source_records": {
+        "aliases": [
+          {
+            "alias": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/labyrinth-goblin-king/page.tsx",
+            "evidence": {
+              "blob_sha256": "900abccf446802b2c2038f4ce1ffd976703d67a0730f171225e2f631e2864afa",
+              "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/labyrinth-goblin-king/page.tsx",
+              "range": { "start_line": 1, "end_line": 218, "sha256": "900abccf446802b2c2038f4ce1ffd976703d67a0730f171225e2f631e2864afa" },
+              "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+            }
+          }
+        ],
+        "routes": [
+          {
+            "route": "/student/games/sentence/labyrinth-goblin-king",
+            "evidence": {
+              "blob_sha256": "900abccf446802b2c2038f4ce1ffd976703d67a0730f171225e2f631e2864afa",
+              "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/labyrinth-goblin-king/page.tsx",
+              "range": { "start_line": 1, "end_line": 218, "sha256": "900abccf446802b2c2038f4ce1ffd976703d67a0730f171225e2f631e2864afa" },
+              "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+            }
+          }
+        ],
+        "behavior_sources": [
+          {
+            "path": "apps/advantage-games/src/components/games/sentence/labyrinth-goblin-king/LabyrinthGoblinKingGame.tsx",
+            "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+            "git_blob_sha1": "ae5df38fdb4da861cdc3b6146fd7ab360050e803",
+            "observation": "Navigate the maze and collect word orbs in order; wrong orbs or goblins cost lives, and full sentence order triggers heroic aura causing goblins to flee."
+          }
+        ],
+        "source_states": [
+          {
+            "source_class": "current-page-source",
+            "evidence": {
+              "blob_sha256": "900abccf446802b2c2038f4ce1ffd976703d67a0730f171225e2f631e2864afa",
+              "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/labyrinth-goblin-king/page.tsx",
+              "range": { "start_line": 1, "end_line": 218, "sha256": "900abccf446802b2c2038f4ce1ffd976703d67a0730f171225e2f631e2864afa" },
+              "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+            }
+          }
+        ]
+      },
+      "legacy_source_records_status": "observation-only-not-adoption-or-approval"
+    },
+    {
+      "title_id": "griffin-riders-escape",
+      "title": "Griffin Rider's Escape",
+      "assignment_index": 16,
+      "source_identity_id": "catalog/griffin-riders-escape",
+      "identity_record_index": 2,
+      "cohort": "Traversal and exploration",
+      "classification": "source_identity",
+      "crosswalk_locator": {
+        "assignment_index": 16,
+        "assignment_locator": { "artifact": "accepted_partition", "json_pointer": "/assignments/16" },
+        "source_locator": { "artifact": "identity_ledger", "json_pointer": "/identity_records/2" }
+      },
+      "legacy_source_records": {
+        "aliases": [
+          {
+            "alias": "griffin-riders-escape",
+            "evidence": {
+              "blob_sha256": "4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c",
+              "path": "apps/advantage-games/src/lib/gameCards.ts",
+              "range": { "start_line": 189, "end_line": 189, "sha256": "81c8c39eef5d67f141706663fdf98fe7a960b9b59838a39086000e71c45ffaa2" },
+              "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+            }
+          }
+        ],
+        "routes": [],
+        "behavior_sources": [
+          {
+            "path": "apps/advantage-games/measure/archive/griffin-riders-escape/spec.md",
+            "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286",
+            "git_blob_sha1": "3b75b9df697712fd29b44261f8809355cba53e91",
+            "classification": "historical-design-context-not-asset-approval",
+            "observation": "A three-lane griffin flies through the next correct word gate; wrong gates and obstacles cost hearts until escape or defeat."
+          }
+        ],
+        "source_states": [
+          {
+            "source_class": "catalog-withdrawn-registration",
+            "evidence": {
+              "blob_sha256": "4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c",
+              "path": "apps/advantage-games/src/lib/gameCards.ts",
+              "range": { "start_line": 20, "end_line": 20, "sha256": "92c5f557c11148bc6432b7b6e95e7c1d63eff296f730311f47eef61889e87d7" },
+              "revision": "23bb5ad578c01fb29f9e8bb76a7d934d24a4b286"
+            }
+          }
+        ]
+      },
+      "legacy_source_records_status": "observation-only-not-adoption-or-approval"
+    }
+  ],
+  "claims": {
+    "semantic_adoption_claimed": false,
+    "selected_assets_claimed": false,
+    "asset_suitability_claimed": false,
+    "asset_adoption_claimed": false,
+    "implementation_claimed": false,
+    "advantage_games_qc_claimed": false,
+    "reading_host_proof_claimed": false,
+    "primary_host_proof_claimed": false,
+    "retirement_claimed": false,
+    "cutover_claimed": false,
+    "release_authority_granted": false
+  },
+  "required_before_any_adoption_or_cutover": [
+    "accepted per-title canonical suitability record",
+    "deterministic cartridge revalidation and selected-output proof",
+    "Advantage Games, Reading, and Primary host proof with authoritative completion persistence",
+    "exact legacy retirement disposition plus independent review and product-owner acceptance"
+  ],
+  "revocation_rule": "Any bound-byte, roster, title-identity, locator, source-observation, or authority-boundary drift invalidates this Task 1 evidence-only manifest; remediation must publish a successor record rather than mutate an accepted predecessor."
+}

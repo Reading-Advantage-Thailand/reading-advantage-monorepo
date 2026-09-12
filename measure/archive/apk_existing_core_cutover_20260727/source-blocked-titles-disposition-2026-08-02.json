@@ -1,0 +1,32 @@
+{
+  "schema_version": "apk-existing-core-source-blocked-disposition.v1",
+  "track_id": "apk_existing_core_cutover_20260727",
+  "decided_at": "2026-08-02",
+  "decision": "source-blocked-host-proof",
+  "titles": [
+    {
+      "id": "sorcerer-ziggurat",
+      "title": "The Sorcerer's Ziggurat",
+      "temporal_scope": "historical-source-only",
+      "host_proof_loadable": false,
+      "reason": "No accepted current implementation or asset package exists; QC remains historical-source-only.",
+      "retirement_authorized": false,
+      "production_exposure_authorized": false
+    },
+    {
+      "id": "astral-mage",
+      "title": "Astral Mage",
+      "temporal_scope": "historical-source-only",
+      "host_proof_loadable": false,
+      "reason": "No accepted current implementation or asset package exists; QC remains historical-source-only.",
+      "retirement_authorized": false,
+      "production_exposure_authorized": false
+    }
+  ],
+  "does_not_authorize": [
+    "Production catalog exposure",
+    "Legacy retirement of either title",
+    "Cohort completeness claims for Existing Core",
+    "Any rebuild without a separately accepted bounded child track"
+  ]
+}

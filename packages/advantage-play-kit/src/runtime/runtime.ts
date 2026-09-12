@@ -16,6 +16,14 @@ import {
   type SupportedResponsiveComposition,
 } from "../responsive/responsive-composition.js";
 import {
+  createBoundedFrameScheduler,
+  type BoundedFrameScheduler,
+} from "../systems/bounded-frame-loop.js";
+import {
+  createMultiplayerSession,
+  type MultiplayerSession,
+} from "../systems/multiplayer-session.js";
+import {
   APK_RUNTIME_API_VERSION,
   type APKDiagnosticEvent,
   type APKGameHandle,
@@ -141,6 +149,52 @@ export async function mountCartridge(
   let pendingCompletion: PendingCompletion | undefined;
   const previousTouchAction = container.style.touchAction;
   const inputController = createInputController(container);
+  let multiplayerSession: MultiplayerSession | undefined;
+  let multiplayerScheduler: BoundedFrameScheduler | undefined;
+  let multiplayerFrameRequest: number | undefined;
+  let multiplayerLastFrameTime: number | undefined;
+
+  const stopMultiplayerFrameLoop = (): void => {
+    if (multiplayerFrameRequest !== undefined && typeof cancelAnimationFrame === "function") {
+      cancelAnimationFrame(multiplayerFrameRequest);
+    }
+    multiplayerFrameRequest = undefined;
+    multiplayerLastFrameTime = undefined;
+  };
+
+  const destroyMultiplayer = (): void => {
+    stopMultiplayerFrameLoop();
+    multiplayerSession?.destroy();
+    multiplayerSession = undefined;
+    multiplayerScheduler = undefined;
+  };
+
+  const constructMultiplayer = (): void => {
+    if (!options.multiplayer) return;
+    const sessionRef: { current: MultiplayerSession | undefined } = { current: undefined };
+    const scheduler = createBoundedFrameScheduler((deltaMs) => sessionRef.current?.tick(deltaMs));
+    const createSession = options.multiplayer.sessionFactory ?? createMultiplayerSession;
+    sessionRef.current = createSession({
+      transport: options.multiplayer.transport,
+      scheduler,
+    });
+    multiplayerSession = sessionRef.current;
+    multiplayerScheduler = scheduler;
+  };
+
+  const startMultiplayerFrameLoop = (): void => {
+    if (multiplayerScheduler === undefined || typeof requestAnimationFrame !== "function") return;
+    const pump = (timestamp: number): void => {
+      if (destroyed || multiplayerScheduler === undefined || multiplayerScheduler.cancelled) return;
+      if (multiplayerLastFrameTime !== undefined) {
+        const delta = timestamp - multiplayerLastFrameTime;
+        if (delta >= 0) multiplayerScheduler.tick(delta);
+      }
+      multiplayerLastFrameTime = timestamp;
+      multiplayerFrameRequest = requestAnimationFrame(pump);
+    };
+    multiplayerFrameRequest = requestAnimationFrame(pump);
+  };
 
   const resolveComposition = (): SupportedResponsiveComposition | undefined => {
     if (!options.responsive) return undefined;
@@ -525,7 +579,10 @@ export async function mountCartridge(
     document.addEventListener("visibilitychange", onVisibilityChange);
     composition = resolveComposition();
     await createInstance();
+    constructMultiplayer();
+    startMultiplayerFrameLoop();
   } catch (error) {
+    destroyMultiplayer();
     if (!runtimeResourcesReleased) {
       runtimeResourcesReleased = true;
       document.removeEventListener("visibilitychange", onVisibilityChange);
@@ -577,7 +634,10 @@ export async function mountCartridge(
         container.replaceChildren();
         completionCount = 0;
         restartCount += 1;
+        destroyMultiplayer();
         await createInstance();
+        constructMultiplayer();
+        startMultiplayerFrameLoop();
       });
       return operation;
     },
@@ -600,6 +660,7 @@ export async function mountCartridge(
       const cleanup = (async (): Promise<void> => {
         if (!runtimeResourcesReleased) {
           runtimeResourcesReleased = true;
+          destroyMultiplayer();
           document.removeEventListener("visibilitychange", onVisibilityChange);
           view?.removeEventListener("resize", resize);
           view?.removeEventListener("scroll", resize);

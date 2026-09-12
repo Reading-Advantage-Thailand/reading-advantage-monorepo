@@ -1,0 +1,13 @@
+{
+  "schema_version": "apk-cohort-cross-host-cutover-handoff-candidate.v1",
+  "status": "awaiting-independent-review-and-owner-acceptance",
+  "track_id": "apk_legacy_defense_cutover_20260727",
+  "cohort": "legacy-defense",
+  "title_ids": ["castle-defense","wizard-vs-zombie","village-guardian","storm-castle-tower"],
+  "host_task": 6,
+  "retirement_task": 7,
+  "shared_candidate": {"path":"measure/apk-cross-host-cutover-candidate-v1.json","sha256":"4ee52e76eaefc2d752c4d980b28627f7d040f0b5514ab6c6095670fa5a805346"},
+  "retirement_manifest": {"path":"measure/archive/apk_legacy_defense_cutover_20260727/task7-legacy-retirement-manifest-v1.json","sha256":"a2797583a67dffdaaa1548bfaa690e842e18e0a4f658dd9a23d52ea6b153455d"},
+  "review_scope": "Verify four root loaders, selected-union-only delivery, both 32-case cohort matrices, authoritative duplicate-safe persistence, and retained live route/asset ownership.",
+  "authorization": {"independent_review_complete":false,"product_owner_acceptance_recorded":false,"cutover_accepted":false,"deployment_authorized":false,"archival_authorized":false}
+}

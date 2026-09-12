@@ -23,3 +23,5 @@ export type {
 export * from "./service.js";
 export * from "./finance-attestation.js";
 export * from "./finance-thb-policy-approval.js";
+export * from "./dev-local-product-access.js";
+export * from "./postgres-dev-local-product-access.js";

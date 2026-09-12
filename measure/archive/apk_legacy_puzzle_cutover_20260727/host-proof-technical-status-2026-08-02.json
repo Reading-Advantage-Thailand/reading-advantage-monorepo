@@ -1,0 +1,31 @@
+{
+  "schema_version": "apk-legacy-puzzle-host-proof-technical.v1",
+  "track_id": "apk_legacy_puzzle_cutover_20260727",
+  "status": "technical-dual-host-loaders-and-signed-attempt-completion",
+  "updated_at": "2026-08-03T01:00:00Z",
+  "package": "packages/game-cartridges/src/legacy-puzzle-host-proof.ts",
+  "titles": [
+    "enchanted-library",
+    "rune-match",
+    "alchemists-synthesis",
+    "potion-rush",
+    "rune-forge-chamber"
+  ],
+  "history_client_accepts_puzzle_game_types": true,
+  "retirement_authorized": false,
+  "retirement_zero_deletion_is_not_completion": true,
+  "production_catalog_exposure_authorized": false,
+  "signed_attempt_completion": {
+    "domain_suite": "packages/domain/src/__tests__/host-proof-multi-title-completion.test.ts",
+    "game_types": [
+      "enchanted-library",
+      "rune-match",
+      "alchemists-synthesis",
+      "potion-rush",
+      "rune-forge-chamber"
+    ],
+    "host_history_allowlist": true,
+    "host_issue_route_multi_title": true,
+    "production_catalog_exposure_authorized": false
+  }
+}

@@ -13,6 +13,11 @@ import type {
   SafeAreaInsets,
   SupportedResponsiveComposition,
 } from "../responsive/responsive-composition.js";
+import type {
+  MultiplayerSession,
+  MultiplayerSessionOptions,
+  MultiplayerTransport,
+} from "../systems/multiplayer-session.js";
 
 /** Current browser runtime contract understood by the APK package. */
 export const APK_RUNTIME_API_VERSION = "1.0.0";
@@ -404,6 +409,14 @@ export interface ResponsiveRuntimeOptions {
   readonly fullscreen?: boolean;
 }
 
+/** Host values enabling APK-owned multiplayer session ownership. */
+export interface MultiplayerRuntimeOptions {
+  /** The `multiplayer.v1` transport the runtime owns and closes with the session. */
+  readonly transport: MultiplayerTransport;
+  /** Optional session factory seam; defaults to `createMultiplayerSession`. */
+  readonly sessionFactory?: (options: MultiplayerSessionOptions) => MultiplayerSession;
+}
+
 /** Options required to mount one cartridge session. */
 export interface MountCartridgeOptions {
   /** Optional listening controller owned by the current playing session. */
@@ -426,6 +439,8 @@ export interface MountCartridgeOptions {
   seed?: number;
   /** Optional responsive runtime ownership; omitted for legacy fixed-composition cartridges. */
   responsive?: ResponsiveRuntimeOptions;
+  /** Optional multiplayer runtime ownership; omitted for single-player cartridges. */
+  multiplayer?: MultiplayerRuntimeOptions;
 }
 
 /** Imperative lifecycle and diagnostics API returned to a host. */

@@ -1,0 +1,16 @@
+node_modules
+.next
+.turbo
+dist
+coverage
+*.tsbuildinfo
+.env
+.env.*
+.git
+.gitignore
+.vscode
+.idea
+*.log
+.DS_Store
+*.swp
+*.swo
