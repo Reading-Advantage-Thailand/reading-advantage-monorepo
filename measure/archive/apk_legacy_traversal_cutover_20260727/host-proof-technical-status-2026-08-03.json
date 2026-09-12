@@ -1,0 +1,40 @@
+{
+  "schema_version": "apk-legacy-traversal-host-proof-technical.v1",
+  "track_id": "apk_legacy_traversal_cutover_20260727",
+  "status": "technical-dual-host-all-five-titles-signed-attempt-completion",
+  "updated_at": "2026-08-03T01:00:00Z",
+  "titles": {
+    "dragon-rider": {
+      "package": "packages/game-cartridges/src/dragon-rider-host-proof.ts",
+      "dual_host_dedicated": true
+    },
+    "spellweavers-run": {
+      "package": "packages/game-cartridges/src/legacy-traversal-host-proof.ts"
+    },
+    "shadow-gate-dungeon": {
+      "package": "packages/game-cartridges/src/legacy-traversal-host-proof.ts"
+    },
+    "labyrinth-goblin-king": {
+      "package": "packages/game-cartridges/src/legacy-traversal-host-proof.ts"
+    },
+    "griffin-riders-escape": {
+      "package": "packages/game-cartridges/src/legacy-traversal-host-proof.ts"
+    }
+  },
+  "retirement_authorized": false,
+  "retirement_zero_deletion_is_not_completion": true,
+  "production_catalog_exposure_authorized": false,
+  "signed_attempt_completion": {
+    "domain_suite": "packages/domain/src/__tests__/host-proof-multi-title-completion.test.ts",
+    "game_types": [
+      "spellweavers-run",
+      "shadow-gate-dungeon",
+      "labyrinth-goblin-king",
+      "griffin-riders-escape"
+    ],
+    "dragon_rider_dedicated": true,
+    "host_history_allowlist": true,
+    "host_issue_route_multi_title": true,
+    "production_catalog_exposure_authorized": false
+  }
+}

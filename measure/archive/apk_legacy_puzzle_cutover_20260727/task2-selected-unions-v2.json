@@ -1,0 +1,16 @@
+{
+  "schema_version": "apk-legacy-puzzle-task2-selected-unions.v2",
+  "track_id": "apk_legacy_puzzle_cutover_20260727",
+  "status": "accepted-for-advantage-games-qc-only",
+  "materialization": "accepted-cartridge-selected-union-only",
+  "unions": [
+    {"title_id": "enchanted-library", "semantic_keys": ["side-view/native/platformer-world/heroes/hero-001/hero-001-walk-source-0c1cbfb7e747"], "descriptor_ids": ["enchanted-library-player-walk-v1"]},
+    {"title_id": "rune-match", "semantic_keys": ["ui/20x20/inventory/slot"], "descriptor_ids": ["rune-match-panel-default-v2"]},
+    {"title_id": "alchemists-synthesis", "semantic_keys": ["effects/32x32/combat/hit-01"], "descriptor_ids": ["alchemists-synthesis-correct-feedback-v2"]},
+    {"title_id": "potion-rush", "semantic_keys": ["ui/16x16/controls/gamepad-buttons"], "descriptor_ids": ["potion-rush-confirm-control-v2"]},
+    {"title_id": "rune-forge-chamber", "semantic_keys": ["top-down/32x32/characters/hero-01"], "descriptor_ids": ["rune-forge-chamber-player-idle-v2"]}
+  ],
+  "full_pack_materialized": false,
+  "physical_paths_persisted": false,
+  "production_loader_registered": false
+}

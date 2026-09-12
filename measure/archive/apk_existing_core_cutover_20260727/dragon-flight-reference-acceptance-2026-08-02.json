@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0",
+  "record_type": "project_owner_technical_reference_acceptance",
+  "decision_id": "dragon-flight-reference-acceptance-2026-08-02",
+  "decided_at": "2026-08-02",
+  "decision_authority": {
+    "role": "project_owner",
+    "delegation": "The user explicitly delegated all APK project-gating decisions to Codex.",
+    "durable_message_id": null,
+    "durable_event_id": null
+  },
+  "accepted_commit": "06d6f4107",
+  "accepted_scope": "bounded_dragon_flight_technical_reference",
+  "evidence": {
+    "current_source_receipt": "dragon-flight-host-proof-current-source-verification-2026-08-02.md",
+    "focused_measure_guard": {
+      "command": "python3 -m unittest measure.tests.test_apk_existing_core_task5_task6_acceptance measure.tests.test_apk_existing_core_cutover_task5_host_proof_evidence measure.tests.test_apk_existing_core_cutover_task5_host_proof_remediation measure.tests.test_apk_existing_core_dragon_flight_scope_quarantine",
+      "result": "17 passed"
+    },
+    "independent_technical_disposition": "Terra passed the bounded technical corrective phase and Sol accepted the current-source browser evidence without a Critical or High finding."
+  },
+  "authorizes": [
+    "Use the accepted commit as the Dragon Flight technical reference.",
+    "Begin the Reading and Primary host-proof phases for Existing Action, Legacy Defense, Legacy Traversal, and Legacy Puzzle."
+  ],
+  "does_not_authorize": [
+    "Automatic acceptance of any later cohort host proof.",
+    "Production deployment or production catalog exposure.",
+    "Legacy retirement, cutover, or cohort closeout.",
+    "Claims of human play, anti-bot resistance, comprehension, mastery, anti-cheat efficacy, or broader XP integrity."
+  ],
+  "status": "accepted_as_technical_reference"
+}

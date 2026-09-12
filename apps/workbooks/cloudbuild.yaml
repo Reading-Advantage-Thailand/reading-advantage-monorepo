@@ -1,0 +1,52 @@
+# Cloud Build pipeline for apps/workbooks: build, push, deploy to Cloud Run.
+# Mirrors apps/codecamp-advantage/cloudbuild.yaml (the closest Company-SSO
+# sibling) minus its DB migrate/doctor steps, which are run separately for this
+# app.
+#
+# NFR-1: no secret is passed as a --build-arg or baked into the image. The
+# COMPANY_AUTH_* runtime values arrive via --set-env-vars and the OIDC client
+# secret + DATABASE_URL arrive via --set-secrets from Secret Manager.
+#
+# SSO gating is active (deny-by-default proxy.ts from Phase S3), so the deploy
+# intentionally omits --allow-unauthenticated and the public-invoker IAM
+# binding used by the other apps.
+steps:
+  - name: "gcr.io/cloud-builders/docker"
+    id: "build-image"
+    args:
+      - "build"
+      - "-f"
+      - "apps/workbooks/Dockerfile"
+      - "-t"
+      - "asia-southeast1-docker.pkg.dev/$PROJECT_ID/workbooks/workbooks:$BUILD_ID"
+      - "."
+
+  - name: "gcr.io/cloud-builders/docker"
+    id: "push-image"
+    args:
+      - "push"
+      - "asia-southeast1-docker.pkg.dev/$PROJECT_ID/workbooks/workbooks:$BUILD_ID"
+
+  - name: "gcr.io/cloud-builders/gcloud"
+    id: "deploy-cloudrun"
+    args:
+      - "run"
+      - "deploy"
+      - "workbooks"
+      - "--image=asia-southeast1-docker.pkg.dev/$PROJECT_ID/workbooks/workbooks:$BUILD_ID"
+      - "--region=asia-southeast1"
+      - "--platform=managed"
+      - "--service-account=workbooks-cloud-run@$PROJECT_ID.iam.gserviceaccount.com"
+      - "--add-cloudsql-instances=reading-advantage:asia-southeast1:cloud-sql"
+      - "--set-env-vars=NODE_ENV=production,COMPANY_AUTH_ISSUER_URL=https://accounts.reading-advantage.com,COMPANY_AUTH_OIDC_CLIENT_ID=workbooks-web,COMPANY_AUTH_OIDC_REDIRECT_URI=https://workbooks.reading-advantage.com/api/auth/callback,COMPANY_AUTH_EXPECTED_AUDIENCE=workbooks,COMPANY_AUTH_CLOCK_SKEW_SECONDS=30"
+      - "--min-instances=0"
+      - "--max-instances=10"
+      - "--concurrency=80"
+      - "--set-secrets=DATABASE_URL=WORKBOOKS_DATABASE_URL:latest,COMPANY_AUTH_OIDC_CLIENT_SECRET=WORKBOOKS_COMPANY_AUTH_OIDC_CLIENT_SECRET:latest"
+
+images:
+  - "asia-southeast1-docker.pkg.dev/$PROJECT_ID/workbooks/workbooks:$BUILD_ID"
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+  machineType: E2_HIGHCPU_8

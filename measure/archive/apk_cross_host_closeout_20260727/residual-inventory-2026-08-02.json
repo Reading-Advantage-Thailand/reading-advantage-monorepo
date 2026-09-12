@@ -1,0 +1,47 @@
+{
+  "schema_version": "apk-cross-host-residual-inventory.v1",
+  "track_id": "apk_cross_host_closeout_20260727",
+  "status": "inventory-only-not-started-execution",
+  "decided_at": "2026-08-02",
+  "rule": "Reject every item with a vertical cohort owner; residual-only work after cohort terminals.",
+  "items": [
+    {
+      "item": "Dragon Flight dual-host signed-attempt surface",
+      "owner": "apk_existing_core_cutover_20260727",
+      "disposition": "rejected-cohort-owned"
+    },
+    {
+      "item": "Magic Defense / Dungeon Liberator host-proof loaders",
+      "owner": "apk_existing_core_cutover_20260727",
+      "disposition": "rejected-cohort-owned"
+    },
+    {
+      "item": "Legacy Defense host-proof loaders",
+      "owner": "apk_legacy_defense_cutover_20260727",
+      "disposition": "rejected-cohort-owned"
+    },
+    {
+      "item": "Dragon Rider host-proof routes",
+      "owner": "apk_legacy_traversal_cutover_20260727",
+      "disposition": "rejected-cohort-owned"
+    },
+    {
+      "item": "Existing Action host-proof",
+      "owner": "apk_existing_action_cutover_20260727",
+      "disposition": "rejected-cohort-owned-open"
+    },
+    {
+      "item": "Legacy Puzzle host-proof",
+      "owner": "apk_legacy_puzzle_cutover_20260727",
+      "disposition": "rejected-cohort-owned-open"
+    },
+    {
+      "item": "Standard-pack Phase 7 real-asset ingestion",
+      "owner": "apk_standard_pack_suitability_ingestion_20260728",
+      "disposition": "optional-deferred-licensed-pack-preferred",
+      "note": "ElvGames pack (43075 assets) is purchased/licensed; credit 'Pixel art assets by ElvGames' completes licensing. Phase 7 is only optional legacy-ingest when the pack has no suitable asset — not a licensing or cutover blocker."
+    }
+  ],
+  "residual_work_authorized": false,
+  "note": "No residual cross-host retirement is executable until cohort host-proof and retirement terminals exist. Prefer reuse-canonical selected unions from packages/advantage-play-kit/assets/standard; do not invent Phase 7 licensing blockers."
+}

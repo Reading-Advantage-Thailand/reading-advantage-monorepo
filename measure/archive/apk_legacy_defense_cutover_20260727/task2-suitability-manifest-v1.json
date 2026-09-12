@@ -1,0 +1,102 @@
+{
+  "schema_version": "apk-legacy-defense-task2-suitability.v1",
+  "track_id": "apk_legacy_defense_cutover_20260727",
+  "task": "Task 2: title-scoped canonical suitability freeze",
+  "status": "canonical-reuse-suitable-for-task3-to-task5-qc",
+  "scope": "advantage-games-qc-only",
+  "authority_boundary": {
+    "asset_contract": "Asset Contract v2, packages/advantage-play-kit/src/assets/asset-contract-v2.ts",
+    "semantic_binding": "OWNER_APPROVED_CANONICAL_BINDINGS, t11-owner-authorized-extension-v1",
+    "predecessor_release": {
+      "version": "2026.07.23",
+      "catalog_digest": "ac801baee31d3b410050d03f8e9cb672940e3bf24a917df7233a7785f90a8087",
+      "source_receipt_digest": "93562cc3070a4907d06d6196a2c5d917a07c4b487cf4be031805d60fdc75eea9"
+    },
+    "production_use_authorized": false,
+    "catalog_exposure_authorized": false,
+    "host_integration_authorized": false,
+    "legacy_ingestion_authorized": false
+  },
+  "canonical_descriptor_set": [
+    { "descriptor_id": "legacy-defense-hero-01-static-v1", "semantic_key": "top-down/32x32/characters/hero-01", "media_kind": "image", "geometry": "192x384; 32x32 cells; 6x12", "decision": "reuse-canonical" },
+    { "descriptor_id": "legacy-defense-enemy-001-idle-static-v1", "semantic_key": "side-view/32x32/characters/enemy-001-idle", "media_kind": "image", "geometry": "192x32; 32x32 cells; 6x1", "decision": "reuse-canonical" },
+    { "descriptor_id": "legacy-defense-hit-01-static-v1", "semantic_key": "effects/32x32/combat/hit-01", "media_kind": "image", "geometry": "192x128; 32x32 cells; 6x4", "decision": "reuse-canonical" },
+    { "descriptor_id": "legacy-defense-gamepad-buttons-static-v1", "semantic_key": "ui/16x16/controls/gamepad-buttons", "media_kind": "image", "geometry": "352x160; 16x16 cells; 22x10", "decision": "reuse-canonical" },
+    { "descriptor_id": "legacy-defense-hit-01-audio-v1", "semantic_key": "audio/native/combat/hit-01", "media_kind": "audio", "duration_ms": 1667, "decision": "reuse-canonical" }
+  ],
+  "titles": [
+    {
+      "title_id": "castle-defense",
+      "title": "Castle Defense",
+      "input_mode": "sentence",
+      "legacy_source_manifest": [
+        { "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/castle-defense/page.tsx", "sha256": "eb70ba245a4a7a1ee7637c679afe2a64dc94a883ed17d09d152687a2ad1f3a67", "temporal_scope": "current-source" },
+        { "path": "apps/reading-advantage/app/[locale]/(student)/student/games/sentence/castle-defense/page.tsx", "sha256": "fc6ead3439a8118004f48420e8fa94eb316b74ac8f186fb27c1e9c024fd9a653", "temporal_scope": "current-source" }
+      ],
+      "canonical_role_decisions": [
+        { "role": "player", "state": "idle", "descriptor_id": "legacy-defense-hero-01-static-v1", "decision": "reuse-canonical" },
+        { "role": "enemy", "state": "idle", "descriptor_id": "legacy-defense-enemy-001-idle-static-v1", "decision": "reuse-canonical" },
+        { "role": "feedback", "state": "correct", "descriptor_id": "legacy-defense-hit-01-static-v1", "decision": "reuse-canonical" },
+        { "role": "control", "state": "confirm", "descriptor_id": "legacy-defense-gamepad-buttons-static-v1", "decision": "reuse-canonical" }
+      ],
+      "selected_semantic_keys": ["effects/32x32/combat/hit-01", "side-view/32x32/characters/enemy-001-idle", "top-down/32x32/characters/hero-01", "ui/16x16/controls/gamepad-buttons"],
+      "blocked_physical_roles": ["tower", "castle", "ground"],
+      "legacy_asset_disposition": "blocked"
+    },
+    {
+      "title_id": "wizard-vs-zombie",
+      "title": "Wizard vs Zombie",
+      "input_mode": "vocabulary",
+      "legacy_source_manifest": [
+        { "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/vocabulary/wizard-vs-zombie/page.tsx", "sha256": "813c3330de1bb46686c23aa819839e43fe15a16266cac1cbe7330053125216f7", "temporal_scope": "current-source" },
+        { "path": "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/wizard-vs-zombie/page.tsx", "sha256": "eb2c97ed11dd23d42c37cede903d314203e925ec269632f5fa40b21399fe2766", "temporal_scope": "current-source" }
+      ],
+      "canonical_role_decisions": [
+        { "role": "player", "state": "idle", "descriptor_id": "legacy-defense-hero-01-static-v1", "decision": "reuse-canonical" },
+        { "role": "enemy", "state": "idle", "descriptor_id": "legacy-defense-enemy-001-idle-static-v1", "decision": "reuse-canonical" },
+        { "role": "feedback", "state": "correct", "descriptor_id": "legacy-defense-hit-01-static-v1", "decision": "reuse-canonical" },
+        { "role": "control", "state": "confirm", "descriptor_id": "legacy-defense-gamepad-buttons-static-v1", "decision": "reuse-canonical" },
+        { "role": "audio-feedback", "state": "correct", "descriptor_id": "legacy-defense-hit-01-audio-v1", "decision": "reuse-canonical" }
+      ],
+      "selected_semantic_keys": ["audio/native/combat/hit-01", "effects/32x32/combat/hit-01", "side-view/32x32/characters/enemy-001-idle", "top-down/32x32/characters/hero-01", "ui/16x16/controls/gamepad-buttons"],
+      "blocked_physical_roles": ["orb", "floor", "zombie-sprite"],
+      "legacy_asset_disposition": "blocked"
+    },
+    {
+      "title_id": "village-guardian",
+      "title": "Village Guardian",
+      "input_mode": "sentence",
+      "legacy_source_manifest": [
+        { "path": "apps/advantage-games/src/app/[locale]/(student)/student/games/sentence/village-guardian/page.tsx", "sha256": "1d30def299d97d0531c1b24c9aa9374e995baa8f256fe86ac7956171e49de16e", "temporal_scope": "current-source" }
+      ],
+      "canonical_role_decisions": [
+        { "role": "player", "state": "idle", "descriptor_id": "legacy-defense-hero-01-static-v1", "decision": "reuse-canonical" },
+        { "role": "enemy", "state": "idle", "descriptor_id": "legacy-defense-enemy-001-idle-static-v1", "decision": "reuse-canonical" },
+        { "role": "feedback", "state": "correct", "descriptor_id": "legacy-defense-hit-01-static-v1", "decision": "reuse-canonical" },
+        { "role": "control", "state": "confirm", "descriptor_id": "legacy-defense-gamepad-buttons-static-v1", "decision": "reuse-canonical" }
+      ],
+      "selected_semantic_keys": ["effects/32x32/combat/hit-01", "side-view/32x32/characters/enemy-001-idle", "top-down/32x32/characters/hero-01", "ui/16x16/controls/gamepad-buttons"],
+      "blocked_physical_roles": ["villager", "sanctuary", "monster"],
+      "legacy_asset_disposition": "blocked"
+    },
+    {
+      "title_id": "storm-castle-tower",
+      "title": "Storm the Castle Tower",
+      "input_mode": "sentence",
+      "legacy_source_manifest": [
+        { "path": "apps/advantage-games/src/lib/gameCards.ts", "sha256": "4dbc3d6eea30313ffad502c5da00026654dd552bce1a44cee70a7e834ff60b2c", "temporal_scope": "current-source-catalog-withdrawn" },
+        { "path": "packages/game-cartridges/src/cartridges/storm-castle-tower/systems.ts", "sha256": "dea6cee4b7fcb90ca336e67044f8cb5b6d10d55560753533e854b08744faff9e", "temporal_scope": "historical-source-only" }
+      ],
+      "canonical_role_decisions": [
+        { "role": "player", "state": "idle", "descriptor_id": "legacy-defense-hero-01-static-v1", "decision": "reuse-canonical" },
+        { "role": "feedback", "state": "correct", "descriptor_id": "legacy-defense-hit-01-static-v1", "decision": "reuse-canonical" },
+        { "role": "control", "state": "confirm", "descriptor_id": "legacy-defense-gamepad-buttons-static-v1", "decision": "reuse-canonical" }
+      ],
+      "selected_semantic_keys": ["effects/32x32/combat/hit-01", "top-down/32x32/characters/hero-01", "ui/16x16/controls/gamepad-buttons"],
+      "blocked_physical_roles": ["castle-wall", "oil-hazard", "rock-hazard"],
+      "legacy_asset_disposition": "blocked"
+    }
+  ],
+  "decision_rule": "Only role/state records in OWNER_APPROVED_CANONICAL_BINDINGS may enter a selected union. Every legacy asset remains blocked until a title-specific lawful ingestion receipt and accepted suitability decision exist. This freeze authorizes neither title adoption nor production exposure.",
+  "revocation_rule": "Any release, owner-binding, descriptor, title identity, source hash, or disposition drift invalidates this QC-only suitability freeze."
+}

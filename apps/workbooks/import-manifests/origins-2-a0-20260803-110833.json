@@ -1,0 +1,211 @@
+{
+  "manifestVersion": 1,
+  "generatedAt": "2026-08-03T11:08:33.181Z",
+  "project": {
+    "projectId": "origins-2-a0",
+    "sourceRoot": "/home/daniel-bo/Desktop/advantage-workbooks/primary/origins-2-a0",
+    "type": "primary",
+    "seriesName": "Origins",
+    "levelNumber": "2",
+    "cefrLevel": "A0"
+  },
+  "counts": {
+    "lessons": 14,
+    "parseOk": 14,
+    "parseError": 0,
+    "exceptions": 13
+  },
+  "entries": [
+    {
+      "sourcePath": "01-Pip the Curious Puppy Feels _workbook.json",
+      "sourceId": "cmgqx8v6602p3t79btatvfjuw",
+      "fileHash": "sha256:90357f9035948a94cc75b666717e84ebd7219277df9f282ebddd599cdf2a1066",
+      "objectKey": "workbooks/imports/origins-2-a0/01-Pip the Curious Puppy Feels _workbook.json/90357f9035948a94cc75b666717e84ebd7219277df9f282ebddd599cdf2a1066/01-Pip the Curious Puppy Feels _workbook.json",
+      "parseStatus": "ok",
+      "contentHash": "sha256:07405991957a97e763bca4d3edcceefc969a8220a42cf0fde35aeb004598d783",
+      "exceptions": [
+        {
+          "code": "ASSET_REFERENCE_NOT_PORTABLE",
+          "message": "3 remote asset URL(s) were not mapped to canonical asset keys."
+        }
+      ]
+    },
+    {
+      "sourcePath": "02-Pip Sees Food _workbook.json",
+      "sourceId": "cmgqx5orz02mjt79bwvfnndan",
+      "fileHash": "sha256:d5dfe0f6465c65d9ce0e2ebf0f26f74224b774b716be763615d520b9ecb608f8",
+      "objectKey": "workbooks/imports/origins-2-a0/02-Pip Sees Food _workbook.json/d5dfe0f6465c65d9ce0e2ebf0f26f74224b774b716be763615d520b9ecb608f8/02-Pip Sees Food _workbook.json",
+      "parseStatus": "ok",
+      "contentHash": "sha256:defc2d41c03c50cfd707bb199a443a94163a56d535ee138b1af16f7810f235d0",
+      "exceptions": [
+        {
+          "code": "ASSET_REFERENCE_NOT_PORTABLE",
+          "message": "3 remote asset URL(s) were not mapped to canonical asset keys."
+        }
+      ]
+    },
+    {
+      "sourcePath": "03-Pip's Happy Place _workbook.json",
+      "sourceId": "cmgqx869w02ogt79bw2io9h8x",
+      "fileHash": "sha256:5a578eb6dcef66e5d8b9ce19a6b38c068e9a2044fa62ae8415e000d94a767d96",
+      "objectKey": "workbooks/imports/origins-2-a0/03-Pip's Happy Place _workbook.json/5a578eb6dcef66e5d8b9ce19a6b38c068e9a2044fa62ae8415e000d94a767d96/03-Pip's Happy Place _workbook.json",
+      "parseStatus": "ok",
+      "contentHash": "sha256:c12f0bec9820a6857fb48c193a6ead4b4bc5dad59ed47c966940870bd3f4034d",
+      "exceptions": [
+        {
+          "code": "ASSET_REFERENCE_NOT_PORTABLE",
+          "message": "3 remote asset URL(s) were not mapped to canonical asset keys."
+        }
+      ]
+    },
+    {
+      "sourcePath": "04-Fun Day at the Beach _workbook.json",
+      "sourceId": "cmgqx6jsj02n6t79bndt5dfz3",
+      "fileHash": "sha256:2682ed97ea48ec55d8054fcc260067f0d0fc5e79d6cdaa1dd4a5924df4e62c9a",
+      "objectKey": "workbooks/imports/origins-2-a0/04-Fun Day at the Beach _workbook.json/2682ed97ea48ec55d8054fcc260067f0d0fc5e79d6cdaa1dd4a5924df4e62c9a/04-Fun Day at the Beach _workbook.json",
+      "parseStatus": "ok",
+      "contentHash": "sha256:6570468d8a4ab1e87e88111b1fc8b3ae1e07c6f04b2e8c932955ba3d8da44c8a",
+      "exceptions": [
+        {
+          "code": "ASSET_REFERENCE_NOT_PORTABLE",
+          "message": "3 remote asset URL(s) were not mapped to canonical asset keys."
+        }
+      ]
+    },
+    {
+      "sourcePath": "05-A New Ball Game _workbook.json",
+      "sourceId": "cmgqx3ase02kmt79bokadq5kq",
+      "fileHash": "sha256:f8e727d5e8b8e2b1c3ecc95bae1ea0a83a0c5b715b262464488118749f21070f",
+      "objectKey": "workbooks/imports/origins-2-a0/05-A New Ball Game _workbook.json/f8e727d5e8b8e2b1c3ecc95bae1ea0a83a0c5b715b262464488118749f21070f/05-A New Ball Game _workbook.json",
+      "parseStatus": "ok",
+      "contentHash": "sha256:312b13b332c5f7c7d1673b1702288670a68ff7b986daea3afb0571b314e530cc",
+      "exceptions": [
+        {
+          "code": "ASSET_REFERENCE_NOT_PORTABLE",
+          "message": "3 remote asset URL(s) were not mapped to canonical asset keys."
+        }
+      ]
+    },
+    {
+      "sourcePath": "06-Pip and the Book House _workbook.json",
+      "sourceId": "cmgqx2jpn02jzt79b3vddpbqg",
+      "fileHash": "sha256:0dfd415a14f52f26b9a97c5255ba66e05d23251ed7b212756473754565ebd4da",
+      "objectKey": "workbooks/imports/origins-2-a0/06-Pip and the Book House _workbook.json/0dfd415a14f52f26b9a97c5255ba66e05d23251ed7b212756473754565ebd4da/06-Pip and the Book House _workbook.json",
+      "parseStatus": "ok",
+      "contentHash": "sha256:84ec62f944b967a4d81b63ac4e422d0dedb42468d61e71284ff0924fe25b9bfa",
+      "exceptions": [
+        {
+          "code": "ASSET_REFERENCE_NOT_PORTABLE",
+          "message": "3 remote asset URL(s) were not mapped to canonical asset keys."
+        }
+      ]
+    },
+    {
+      "sourcePath": "07-Lily Goes to School _workbook.json",
+      "sourceId": "cmgqwqttc02agt79bu70tnn77",
+      "fileHash": "sha256:81f4cd84572f0079c16d19a40a20cef750c5c9bb834eb398362283f8edc436c5",
+      "objectKey": "workbooks/imports/origins-2-a0/07-Lily Goes to School _workbook.json/81f4cd84572f0079c16d19a40a20cef750c5c9bb834eb398362283f8edc436c5/07-Lily Goes to School _workbook.json",
+      "parseStatus": "ok",
+      "contentHash": "sha256:9b0180f7b21115b445e0b68c72c2f5085bfe2af9f08fd2317195e585a055efbc",
+      "exceptions": [
+        {
+          "code": "ASSET_REFERENCE_NOT_PORTABLE",
+          "message": "3 remote asset URL(s) were not mapped to canonical asset keys."
+        }
+      ]
+    },
+    {
+      "sourcePath": "08-Pip at the Big Zoo _workbook.json",
+      "sourceId": "cmgqwjryb025ct79b7sk7eniv",
+      "fileHash": "sha256:790c02f7b3368ab7b7caa5d44d17fe94400066a0aa958c5fc912a5377abed7db",
+      "objectKey": "workbooks/imports/origins-2-a0/08-Pip at the Big Zoo _workbook.json/790c02f7b3368ab7b7caa5d44d17fe94400066a0aa958c5fc912a5377abed7db/08-Pip at the Big Zoo _workbook.json",
+      "parseStatus": "ok",
+      "contentHash": "sha256:dfe2f302e7590c5f852a44c23be50b3cc497586a1e6ff0daeaff45f84d953632",
+      "exceptions": [
+        {
+          "code": "ASSET_REFERENCE_NOT_PORTABLE",
+          "message": "3 remote asset URL(s) were not mapped to canonical asset keys."
+        }
+      ]
+    },
+    {
+      "sourcePath": "09-Pip and Farm Food _workbook.json",
+      "sourceId": "cmgqw4k3e01v8t79bvnxhviym",
+      "fileHash": "sha256:cefa8773faf9b0074c0c4cefe592a332aad5bde0c447bd5efeb29b0db89e3220",
+      "objectKey": "workbooks/imports/origins-2-a0/09-Pip and Farm Food _workbook.json/cefa8773faf9b0074c0c4cefe592a332aad5bde0c447bd5efeb29b0db89e3220/09-Pip and Farm Food _workbook.json",
+      "parseStatus": "ok",
+      "contentHash": "sha256:0489522a91491a877d4125d4b366e954bff5bd715d81cf9a7ffd0a10282a8cce",
+      "exceptions": [
+        {
+          "code": "ASSET_REFERENCE_NOT_PORTABLE",
+          "message": "3 remote asset URL(s) were not mapped to canonical asset keys."
+        }
+      ]
+    },
+    {
+      "sourcePath": "10-Pip and the Dark Night _workbook.json",
+      "sourceId": "cmgqw2xjt01tyt79bpr10b65a",
+      "fileHash": "sha256:c1fbbd08164de66f3bd0b82b26188348f9b96e32aca7509ef971479752f9eafe",
+      "objectKey": "workbooks/imports/origins-2-a0/10-Pip and the Dark Night _workbook.json/c1fbbd08164de66f3bd0b82b26188348f9b96e32aca7509ef971479752f9eafe/10-Pip and the Dark Night _workbook.json",
+      "parseStatus": "ok",
+      "contentHash": "sha256:53ab78c4012bd7e67ca3cebf26924867c358e1eebb0c9707eb18ab603c7ec767",
+      "exceptions": [
+        {
+          "code": "ASSET_REFERENCE_NOT_PORTABLE",
+          "message": "3 remote asset URL(s) were not mapped to canonical asset keys."
+        }
+      ]
+    },
+    {
+      "sourcePath": "11-Pip and the Mud _workbook.json",
+      "sourceId": "cmgqw5grp01vvt79bhrv8p6wo",
+      "fileHash": "sha256:67b555da5197dae2bb31308f38e16a47ae7f978269023e5940a8d0f5ed416249",
+      "objectKey": "workbooks/imports/origins-2-a0/11-Pip and the Mud _workbook.json/67b555da5197dae2bb31308f38e16a47ae7f978269023e5940a8d0f5ed416249/11-Pip and the Mud _workbook.json",
+      "parseStatus": "ok",
+      "contentHash": "sha256:5a5fd7525547d492dd570df997ae9e23d513269c16fa6d36f611fc0c40490497",
+      "exceptions": [
+        {
+          "code": "ASSET_REFERENCE_NOT_PORTABLE",
+          "message": "3 remote asset URL(s) were not mapped to canonical asset keys."
+        }
+      ]
+    },
+    {
+      "sourcePath": "12-Pip is Brave _workbook.json",
+      "sourceId": "cmgqwi2v60242t79bum2yj76o",
+      "fileHash": "sha256:cd191d868d05d38b57af7f69981b4e47954f3a06733225adc593a156e3a414e0",
+      "objectKey": "workbooks/imports/origins-2-a0/12-Pip is Brave _workbook.json/cd191d868d05d38b57af7f69981b4e47954f3a06733225adc593a156e3a414e0/12-Pip is Brave _workbook.json",
+      "parseStatus": "ok",
+      "contentHash": "sha256:05298f0b7dcca26ab065bdbce5ce9b7a5545aa7e054d5f450ec5008162c5bf2a",
+      "exceptions": [
+        {
+          "code": "ASSET_REFERENCE_NOT_PORTABLE",
+          "message": "3 remote asset URL(s) were not mapped to canonical asset keys."
+        }
+      ]
+    },
+    {
+      "sourcePath": "13-Pip's Fun Art Day _workbook.json",
+      "sourceId": "cmgqw91v601ybt79bqg631j6n",
+      "fileHash": "sha256:cc0254100d3c0044de01900f0b26eb93bd2e2c5987816446dd388b1e33530628",
+      "objectKey": "workbooks/imports/origins-2-a0/13-Pip's Fun Art Day _workbook.json/cc0254100d3c0044de01900f0b26eb93bd2e2c5987816446dd388b1e33530628/13-Pip's Fun Art Day _workbook.json",
+      "parseStatus": "ok",
+      "contentHash": "sha256:8c0c818952c1ed3ea9323092fed8013beac9e2b84672fe8933bf2632d6351e6a",
+      "exceptions": [
+        {
+          "code": "ASSET_REFERENCE_NOT_PORTABLE",
+          "message": "3 remote asset URL(s) were not mapped to canonical asset keys."
+        }
+      ]
+    },
+    {
+      "sourcePath": "14-Pip Feels Many Materials _workbook.json",
+      "sourceId": "cmgqw3mmi01ult79bgi4ilosw",
+      "fileHash": "sha256:acfa865277185f4ee1b204a05b48f7d2876daa0d849eb2b29d2b1e4df464f509",
+      "objectKey": "workbooks/imports/origins-2-a0/14-Pip Feels Many Materials _workbook.json/acfa865277185f4ee1b204a05b48f7d2876daa0d849eb2b29d2b1e4df464f509/14-Pip Feels Many Materials _workbook.json",
+      "parseStatus": "ok",
+      "contentHash": "sha256:64a678fed8d7bdf491828d473aafee0ab3933f8a1c54c9972ad6f138c1ddcec8",
+      "exceptions": []
+    }
+  ]
+}

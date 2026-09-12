@@ -1,0 +1,34 @@
+{
+  "schema_version": "apk-phase7-external-blocker.v1",
+  "track_id": "apk_standard_pack_suitability_ingestion_20260728",
+  "recorded_at": "2026-08-02T15:57:06Z",
+  "status": "blocked-external-no-lawful-real-asset-packet",
+  "search_result": "no_lawful_real_asset_packet_in_repository",
+  "found": {
+    "intake_contract": "packages/advantage-play-kit/src/assets/standard-pack-legacy-source-packet.ts",
+    "synthetic_test_fixture_only": "packages/advantage-play-kit/src/assets/standard-pack-legacy-source-packet.test.ts",
+    "persisted_packet_count": 0
+  },
+  "required_for_phase7_close": [
+    "concrete real asset bound to Task-5 inventory row",
+    "provenance document (locator + sha256)",
+    "license document (locator + sha256)",
+    "credit document (locator + sha256)",
+    "concrete-title behavior-suitability review",
+    "real additive release + independent review + owner acceptance"
+  ],
+  "authorization": {
+    "real_asset_ingestion_authorized": false,
+    "title_adoption_authorized": false,
+    "production_exposure_authorized": false,
+    "packet_invented": false
+  },
+  "user_input_required": {
+    "phase7_lawful_real_asset_packet_path": "repository path to a packet validating against standardPackLegacySourcePacketSchema with real documents"
+  },
+  "completed_non_phase7_work": {
+    "evidence_only_governance": true,
+    "existing_core_canonical_reuse_package": true,
+    "phase4_additive_release_infrastructure_with_synthetic_fixtures": true
+  }
+}

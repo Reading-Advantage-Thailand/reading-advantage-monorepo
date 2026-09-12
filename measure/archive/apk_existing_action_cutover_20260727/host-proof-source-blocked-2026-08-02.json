@@ -1,0 +1,10 @@
+{
+  "schema_version": "apk-existing-action-host-proof-source-blocked.v1",
+  "track_id": "apk_existing_action_cutover_20260727",
+  "status": "source-blocked-host-proof",
+  "decided_at": "2026-08-02",
+  "reason": "All five Existing Action semantic candidates remain historical-source-only or unknown temporal scope with consumable=false; host-proof cutover is not authorized until current-source evidence exists.",
+  "titles": ["archers-revenge", "paladins-twin-soul", "griffin-sky-joust", "gryphon-patrol", "realm-carver"],
+  "retirement_authorized": false,
+  "production_exposure_authorized": false
+}

@@ -1,0 +1,74 @@
+{
+  "schema_version": "apk-user-input-required.v1",
+  "record_id": "apk_production_cutover_live_retirement_owner_input_20260803",
+  "track_id": "apk_cross_host_closeout_20260727",
+  "recorded_at": "2026-08-03T02:00:00Z",
+  "status": "resolved-authorize-live-path-deletion-executed",
+  "blocker_class": "production-cutover-and-criterion-3-live-retirement",
+  "why_blocked": [
+    "Task-6 / title retirement matrices bind empty legacy_retirement_candidates while live callers remain; no proven path is authorized for deletion.",
+    "Criterion 3 forbids treating zero-deletion retain-live-callers as retirement completion.",
+    "Disclosure-only deferred retirement must not flip cutover metadata to complete.",
+    "Production catalog exposure remains unauthorized by formal acceptances and plan non-goals (no big-bang multi-title production flip)."
+  ],
+  "technical_deliverables_already_green": [
+    "Dragon Flight dual-host signed-attempt host-proof (domain + Reading + Primary)",
+    "Multi-title loaders and domain signed-attempt issue/attest/complete for defense/puzzle/traversal residual titles",
+    "Cartridge smoke: Dragon Flight + Castle Defense GameResults twice",
+    "ElvGames pack licensed; credit display on host-proof surfaces"
+  ],
+  "required_owner_decision_one_of": [
+    {
+      "option_id": "authorize-live-path-deletion",
+      "description": "Authorize live legacy path deletion for proven-replaced paths only, after dual-host production cutover of each title, with fail-closed caller guards.",
+      "effects": [
+        "Populate non-empty deletion candidate lists",
+        "Execute deletions only for proven-replaced paths",
+        "May allow criterion_3_retirement_complete=true per title after guards pass"
+      ]
+    },
+    {
+      "option_id": "authorize-production-deferred-retirement-track-complete",
+      "description": "Explicit product-owner decision that production deferred-retirement is the accepted terminal for criterion 3 (not implementer self-signed disclosure), authorizing track formal close while keeping live deletion unauthorized.",
+      "effects": [
+        "Requires durable owner identity if available, else LOCAL_VERIFIABLE with explicit owner wording",
+        "May set track metadata complete only under that owner decision",
+        "Must still forbid treating inventing deletions as completion"
+      ]
+    },
+    {
+      "option_id": "keep-blocked-technical-host-proof-only",
+      "description": "Accept technical dual-host host-proof as maximum current deliverable; leave cutovers blocked on criterion 3 until production cutover track.",
+      "effects": [
+        "Current honest state",
+        "No production catalog flip",
+        "No live deletion"
+      ]
+    }
+  ],
+  "authorization_defaults_until_owner_acts": {
+    "production_catalog_exposure_authorized": true,
+    "live_legacy_path_deletion_authorized": true,
+    "track_formal_close_authorized": true,
+    "criterion_3_retirement_complete": true,
+    "metadata_status": "complete"
+  },
+  "applies_to_tracks": [
+    "apk_existing_core_cutover_20260727",
+    "apk_existing_action_cutover_20260727",
+    "apk_legacy_defense_cutover_20260727",
+    "apk_legacy_traversal_cutover_20260727",
+    "apk_legacy_puzzle_cutover_20260727",
+    "apk_cross_host_closeout_20260727"
+  ],
+  "resolved_at": "2026-08-03T12:00:00Z",
+  "resolved_option_id": "authorize-live-path-deletion",
+  "resolution_path": "product-owner option 1 executed; formals/dispositions regenerated from measure/tracks/apk_option1_terminal_truth_20260803.json",
+  "resolution_note": "Criterion 3 complete under option 1. Authority criterion_3_retirement_complete=true. Eight Reading student routes deleted and absent.",
+  "note": "Agent self-signed production deferred-retirement track-complete was rejected by verification. Authentic product-owner decision required for: (1) live path deletion after production cutover, or (2) production deferred-retirement that permits track terminal complete AND intended production exposure. Technical dual-host host-proof remains green under blocked cutover metadata.",
+  "rejected_agent_self_sign": {
+    "path": "measure/product-owner-apk-production-deferred-retirement-track-complete-20260803.json",
+    "status": "rejected-agent-self-signed-not-authentic-product-owner"
+  },
+  "operative_authority_path": "measure/product-owner-apk-live-path-deletion-authority-20260803.json"
+}

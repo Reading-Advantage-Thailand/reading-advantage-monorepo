@@ -1,0 +1,23 @@
+{
+  "track_id": "workbooks_sso_onboarding_20260803",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-08-03T00:00:00Z",
+  "updated_at": "2026-08-03T00:00:00Z",
+  "description": "Register apps/workbooks as the fourth Company SSO client, add the WORKBOOK_ADMIN role, gate the app behind an Accounts-issued session, and produce Cloud Run build and deploy artifacts.",
+  "estimated_tasks": 15,
+  "actual_tasks": null,
+  "depends_on": [],
+  "deviation_notes": "Takes the identity and deployability slice of workbook_content_versioning_20260711 S0/S4 so it can ship ahead of S0-S3. company_identity_sso_20260715 owns the client registry but is ARCHIVE-PENDING and scoped to Marketing/Sales/Codecamp.",
+  "sprint": {
+    "goal": "Make apps/workbooks a deployable Company-SSO application that only WORKBOOK_ADMIN employees can reach.",
+    "stories": [
+      {"id":"S1","title":"Register workbooks as an Accounts OIDC client","size":"S","priority":"Must","status":"pending"},
+      {"id":"S2","title":"Introduce the WORKBOOK_ADMIN role","size":"S","priority":"Must","status":"pending"},
+      {"id":"S3","title":"Gate the workbooks app with Company SSO","size":"M","priority":"Must","status":"pending"},
+      {"id":"S4","title":"Make apps/workbooks deployable to Cloud Run","size":"M","priority":"Must","status":"pending"}
+    ],
+    "demo_notes": null,
+    "retro_ref": null
+  }
+}

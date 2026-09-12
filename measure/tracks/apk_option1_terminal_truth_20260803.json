@@ -1,0 +1,295 @@
+{
+  "schema_version": "apk-option1-terminal-truth.v1",
+  "record_id": "apk_option1_terminal_truth_20260803",
+  "issued_at": "2026-08-03T12:00:00Z",
+  "decision": "AUTHORIZE_LIVE_PATH_DELETION_AFTER_PRODUCTION_CUTOVER",
+  "option_id": "authorize-live-path-deletion",
+  "authority_path": "measure/product-owner-apk-live-path-deletion-authority-20260803.json",
+  "criterion_3_retirement_complete": true,
+  "production_catalog_exposure_authorized": true,
+  "production_cutover_authorized": true,
+  "live_legacy_path_deletion_authorized": true,
+  "track_formal_close_authorized": true,
+  "all_deleted_paths_must_be_absent": [
+    "apps/reading-advantage/app/[locale]/(student)/student/games/sentence/castle-defense",
+    "apps/reading-advantage/app/[locale]/(student)/student/games/sentence/potion-rush",
+    "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/dragon-flight",
+    "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/dragon-rider",
+    "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/enchanted-library",
+    "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/magic-defense",
+    "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/rune-match",
+    "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/wizard-vs-zombie"
+  ],
+  "tracks": {
+    "apk_existing_core_cutover_20260727": {
+      "metadata_status": "complete",
+      "package_status": "live-deletion-after-production-cutover-complete",
+      "titles": {
+        "dragon-flight": {
+          "dual_host_proven": true,
+          "disposition": "deleted-after-production-cutover",
+          "deleted_paths": [
+            "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/dragon-flight"
+          ],
+          "retained_paths": [],
+          "reason": "Reading student route replaced by dual-host host-proof production cutover (option 1); path absent."
+        },
+        "magic-defense": {
+          "dual_host_proven": true,
+          "disposition": "deleted-after-production-cutover",
+          "deleted_paths": [
+            "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/magic-defense"
+          ],
+          "retained_paths": [],
+          "reason": "Reading student route replaced by dual-host host-proof production cutover (option 1); path absent."
+        },
+        "dungeon-liberator": {
+          "dual_host_proven": true,
+          "disposition": "production-cutover-host-proof-no-reading-student-route-to-delete",
+          "deleted_paths": [],
+          "retained_paths": [],
+          "reason": "Dual-host host-proof is production path under option 1; no Reading student route existed to delete."
+        },
+        "sorcerer-ziggurat": {
+          "dual_host_proven": false,
+          "disposition": "source-blocked-no-retirement",
+          "deleted_paths": [],
+          "retained_paths": [],
+          "reason": "Source-blocked / historical-only; no playable host-proof cutover; no Reading student route to delete."
+        },
+        "astral-mage": {
+          "dual_host_proven": false,
+          "disposition": "source-blocked-no-retirement",
+          "deleted_paths": [],
+          "retained_paths": [],
+          "reason": "Source-blocked / historical-only; no playable host-proof cutover; no Reading student route to delete."
+        }
+      },
+      "deleted_paths": [
+        "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/dragon-flight",
+        "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/magic-defense"
+      ],
+      "deleted_path_count": 2
+    },
+    "apk_existing_action_cutover_20260727": {
+      "metadata_status": "complete",
+      "package_status": "source-blocked-cohort-no-playable-routes-option-1-terminal",
+      "titles": {
+        "archers-revenge": {
+          "dual_host_proven": false,
+          "disposition": "source-blocked-no-retirement",
+          "deleted_paths": [],
+          "retained_paths": [],
+          "reason": "Source-blocked / historical-only; no playable host-proof cutover; no Reading student route to delete."
+        },
+        "paladins-twin-soul": {
+          "dual_host_proven": false,
+          "disposition": "source-blocked-no-retirement",
+          "deleted_paths": [],
+          "retained_paths": [],
+          "reason": "Source-blocked / historical-only; no playable host-proof cutover; no Reading student route to delete."
+        },
+        "griffin-sky-joust": {
+          "dual_host_proven": false,
+          "disposition": "source-blocked-no-retirement",
+          "deleted_paths": [],
+          "retained_paths": [],
+          "reason": "Source-blocked / historical-only; no playable host-proof cutover; no Reading student route to delete."
+        },
+        "gryphon-patrol": {
+          "dual_host_proven": false,
+          "disposition": "source-blocked-no-retirement",
+          "deleted_paths": [],
+          "retained_paths": [],
+          "reason": "Source-blocked / historical-only; no playable host-proof cutover; no Reading student route to delete."
+        },
+        "realm-carver": {
+          "dual_host_proven": false,
+          "disposition": "source-blocked-no-retirement",
+          "deleted_paths": [],
+          "retained_paths": [],
+          "reason": "Source-blocked / historical-only; no playable host-proof cutover; no Reading student route to delete."
+        }
+      },
+      "deleted_paths": [],
+      "deleted_path_count": 0
+    },
+    "apk_legacy_defense_cutover_20260727": {
+      "metadata_status": "complete",
+      "package_status": "live-deletion-after-production-cutover-complete",
+      "titles": {
+        "castle-defense": {
+          "dual_host_proven": true,
+          "disposition": "deleted-after-production-cutover",
+          "deleted_paths": [
+            "apps/reading-advantage/app/[locale]/(student)/student/games/sentence/castle-defense"
+          ],
+          "retained_paths": [],
+          "reason": "Reading student route replaced by dual-host host-proof production cutover (option 1); path absent."
+        },
+        "wizard-vs-zombie": {
+          "dual_host_proven": true,
+          "disposition": "deleted-after-production-cutover",
+          "deleted_paths": [
+            "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/wizard-vs-zombie"
+          ],
+          "retained_paths": [],
+          "reason": "Reading student route replaced by dual-host host-proof production cutover (option 1); path absent."
+        },
+        "village-guardian": {
+          "dual_host_proven": true,
+          "disposition": "production-cutover-host-proof-no-reading-student-route-to-delete",
+          "deleted_paths": [],
+          "retained_paths": [],
+          "reason": "Dual-host host-proof is production path under option 1; no Reading student route existed to delete."
+        },
+        "storm-castle-tower": {
+          "dual_host_proven": false,
+          "disposition": "source-blocked-no-retirement",
+          "deleted_paths": [],
+          "retained_paths": [],
+          "reason": "Source-blocked / historical-only; no playable host-proof cutover; no Reading student route to delete."
+        }
+      },
+      "deleted_paths": [
+        "apps/reading-advantage/app/[locale]/(student)/student/games/sentence/castle-defense",
+        "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/wizard-vs-zombie"
+      ],
+      "deleted_path_count": 2
+    },
+    "apk_legacy_traversal_cutover_20260727": {
+      "metadata_status": "complete",
+      "package_status": "live-deletion-after-production-cutover-complete",
+      "titles": {
+        "dragon-rider": {
+          "dual_host_proven": true,
+          "disposition": "deleted-after-production-cutover",
+          "deleted_paths": [
+            "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/dragon-rider"
+          ],
+          "retained_paths": [],
+          "reason": "Reading student route replaced by dual-host host-proof production cutover (option 1); path absent."
+        },
+        "spellweavers-run": {
+          "dual_host_proven": true,
+          "disposition": "production-cutover-host-proof-no-reading-student-route-to-delete",
+          "deleted_paths": [],
+          "retained_paths": [],
+          "reason": "Dual-host host-proof is production path under option 1; no Reading student route existed to delete."
+        },
+        "shadow-gate-dungeon": {
+          "dual_host_proven": true,
+          "disposition": "production-cutover-host-proof-no-reading-student-route-to-delete",
+          "deleted_paths": [],
+          "retained_paths": [],
+          "reason": "Dual-host host-proof is production path under option 1; no Reading student route existed to delete."
+        },
+        "labyrinth-of-the-goblin-king": {
+          "dual_host_proven": true,
+          "disposition": "production-cutover-host-proof-no-reading-student-route-to-delete",
+          "deleted_paths": [],
+          "retained_paths": [],
+          "reason": "Dual-host host-proof is production path under option 1; no Reading student route existed to delete."
+        },
+        "labyrinth-goblin-king": {
+          "dual_host_proven": true,
+          "disposition": "production-cutover-host-proof-no-reading-student-route-to-delete",
+          "deleted_paths": [],
+          "retained_paths": [],
+          "reason": "Dual-host host-proof is production path under option 1; no Reading student route existed to delete."
+        },
+        "griffin-riders-escape": {
+          "dual_host_proven": true,
+          "disposition": "production-cutover-host-proof-no-reading-student-route-to-delete",
+          "deleted_paths": [],
+          "retained_paths": [],
+          "reason": "Dual-host host-proof is production path under option 1; no Reading student route existed to delete."
+        }
+      },
+      "deleted_paths": [
+        "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/dragon-rider"
+      ],
+      "deleted_path_count": 1
+    },
+    "apk_legacy_puzzle_cutover_20260727": {
+      "metadata_status": "complete",
+      "package_status": "live-deletion-after-production-cutover-complete",
+      "titles": {
+        "enchanted-library": {
+          "dual_host_proven": true,
+          "disposition": "deleted-after-production-cutover",
+          "deleted_paths": [
+            "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/enchanted-library"
+          ],
+          "retained_paths": [],
+          "reason": "Reading student route replaced by dual-host host-proof production cutover (option 1); path absent."
+        },
+        "rune-match": {
+          "dual_host_proven": true,
+          "disposition": "deleted-after-production-cutover",
+          "deleted_paths": [
+            "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/rune-match"
+          ],
+          "retained_paths": [],
+          "reason": "Reading student route replaced by dual-host host-proof production cutover (option 1); path absent."
+        },
+        "alchemists-synthesis": {
+          "dual_host_proven": true,
+          "disposition": "production-cutover-host-proof-no-reading-student-route-to-delete",
+          "deleted_paths": [],
+          "retained_paths": [],
+          "reason": "Dual-host host-proof is production path under option 1; no Reading student route existed to delete."
+        },
+        "potion-rush": {
+          "dual_host_proven": true,
+          "disposition": "deleted-after-production-cutover",
+          "deleted_paths": [
+            "apps/reading-advantage/app/[locale]/(student)/student/games/sentence/potion-rush"
+          ],
+          "retained_paths": [],
+          "reason": "Reading student route replaced by dual-host host-proof production cutover (option 1); path absent."
+        },
+        "rune-forge-chamber": {
+          "dual_host_proven": true,
+          "disposition": "production-cutover-host-proof-no-reading-student-route-to-delete",
+          "deleted_paths": [],
+          "retained_paths": [],
+          "reason": "Dual-host host-proof is production path under option 1; no Reading student route existed to delete."
+        }
+      },
+      "deleted_paths": [
+        "apps/reading-advantage/app/[locale]/(student)/student/games/sentence/potion-rush",
+        "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/enchanted-library",
+        "apps/reading-advantage/app/[locale]/(student)/student/games/vocabulary/rune-match"
+      ],
+      "deleted_path_count": 3
+    },
+    "apk_cross_host_closeout_20260727": {
+      "metadata_status": "complete",
+      "package_status": "residual-closeout-after-cohort-option-1-terminals",
+      "titles": {},
+      "deleted_paths": [],
+      "deleted_path_count": 0
+    }
+  },
+  "disclosures": [
+    "Product owner selected option 1 (authorize-live-path-deletion) in durable goal decision UI.",
+    "LOCAL_VERIFIABLE receipts; durable message/event IDs null/unavailable (never fabricated).",
+    "Eight Reading student routes deleted after dual-host host-proof production cutover; paths must be absent.",
+    "Titles without Reading student routes: disposition production-cutover-host-proof-no-reading-student-route-to-delete.",
+    "Source-blocked titles: source-blocked-no-retirement (no inventing deletions).",
+    "Action cohort: all source-blocked; criterion-3 terminal is source-blocked disposition.",
+    "Cross-host residual: cohort-owned; no residual-only deletions.",
+    "Agent self-signed deferred track-complete remains rejected and non-operative."
+  ],
+  "forbidden_when_c3_complete": [
+    "Criterion 3 incomplete",
+    "zero-deletion is not completion",
+    "zero-deletion-retain-live-callers",
+    "retain-live-callers-zero-deletion",
+    "Authentic product-owner authorization required for production catalog exposure and/or live path deletion",
+    "Technical host-proof only \u2014 not production catalog exposure or criterion-3 retirement",
+    "production cutover unauthorized",
+    "keep-blocked-technical-host-proof-only"
+  ]
+}

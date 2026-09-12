@@ -1,0 +1,71 @@
+{
+  "schema_version": "apk-product-owner-deferred-retirement-authority.v1",
+  "record_id": "apk_deferred_retirement_disclosure_criterion_3_blocker_20260803",
+  "issued_at": "2026-08-03T03:00:00Z",
+  "decided_by": "apk-implementer-recording-honest-blocker",
+  "authority": "implementer-cannot-self-sign-product-owner-track-complete",
+  "decision": "DOCUMENT_DEFERRED_RETIREMENT_AS_CRITERION_3_EXTERNAL_BLOCKER",
+  "status": "superseded-by-live-path-deletion-authority",
+  "approval_event": {
+    "message_exact": "Document deferred exact legacy retirement as a criterion-3 external blocker. Task-6 matrices bind empty legacy_retirement_candidates while live callers remain; zero-deletion retain-live-callers is disposition only and is not retirement completion. Agent self-signed track complete is rejected. Do not mark cutover tracks complete without authentic product-owner production deferred-retirement or live-deletion authorization. Accept LOCAL_VERIFIABLE technical host-proof only. Production catalog exposure and live path deletion remain unauthorized.",
+    "message_sha256": "099abf71ee1311e2f4194ef16e3afd1a8b2971e92150622af93508f088fa2646",
+    "source": "skeptic-rejected agent self-signed track complete; restore honest blocked terminal",
+    "durable_user_message_id": null,
+    "durable_user_message_id_available": false,
+    "durable_user_event_id": null,
+    "durable_user_event_id_available": false,
+    "event_timestamp": null,
+    "event_timestamp_available": false,
+    "limitation": "Durable IDs unavailable; not fabricated. Implementer cannot substitute for product-owner production authorization."
+  },
+  "applies_to_tracks": [
+    "apk_existing_core_cutover_20260727",
+    "apk_existing_action_cutover_20260727",
+    "apk_legacy_defense_cutover_20260727",
+    "apk_legacy_traversal_cutover_20260727",
+    "apk_legacy_puzzle_cutover_20260727",
+    "apk_cross_host_closeout_20260727"
+  ],
+  "criterion_3_resolution": {
+    "live_deletion_authorized": true,
+    "zero_deletion_alone_is_not_completion": true,
+    "exact_empty_candidates_required": true,
+    "deferred_production_path_deletion": true,
+    "track_terminal_close_authorized": true,
+    "track_metadata_must_remain_blocked_or_deferred": false,
+    "production_catalog_exposure_authorized": true,
+    "agent_self_signed_track_complete_rejected": true,
+    "rationale": "Criterion 3 forbids treating zero-deletion as completion. Criterion 4 requires external blockers as blocked/deferred with disclosures. Authentic product-owner production authorization is required for track complete and intended production exposure."
+  },
+  "required_package_fields": {
+    "status": "retain-live-callers-zero-deletion-not-retirement-completion",
+    "decision.deleted_paths": [],
+    "decision.deleted_path_count": 0,
+    "decision.no_legacy_path_was_deleted": true,
+    "authorization.legacy_deletion_authorized": false,
+    "authorization.deferred_retirement_disclosed": true,
+    "authorization.retirement_completion_claimed": false,
+    "authorization.owner_formal_close_authorized": false,
+    "authorization.formal_close_mode": "LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE"
+  },
+  "required_metadata": {
+    "status": "blocked",
+    "completion_blocker_contains": "criterion 3"
+  },
+  "bound_inputs": {
+    "product_owner_provenance_direction": {
+      "path": "measure/product-owner-apk-provenance-direction-20260721.json",
+      "sha256": "4d1ec24e900665577a413b4c5555d4d53ae1be222d8029cf391d1b55ff7da9ac",
+      "decision": "LOCAL_VERIFIABLE_RECEIPTS_ACCEPTED_WITH_DISCLOSURE"
+    }
+  },
+  "disclosures": [
+    "Technical dual-host host-proof may be consumable under LOCAL_VERIFIABLE without track complete.",
+    "Zero-deletion retain-live-callers is disposition only; not criterion-3 completion.",
+    "Agent self-signed production deferred-retirement track-complete is rejected by skeptic/verification.",
+    "Production catalog exposure and live legacy path deletion remain unauthorized.",
+    "ElvGames pack purchased/licensed; credit Pixel art assets by ElvGames."
+  ],
+  "operative": false,
+  "superseded_by": "measure/product-owner-apk-live-path-deletion-authority-20260803.json"
+}

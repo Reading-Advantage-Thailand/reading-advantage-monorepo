@@ -1,0 +1,14 @@
+{
+  "schema_version": "apk-legacy-puzzle-task2-accepted-decisions.v2",
+  "track_id": "apk_legacy_puzzle_cutover_20260727",
+  "status": "accepted-for-advantage-games-qc-only",
+  "dossier_source": "task2-standard-pack-suitability-dossiers-v2.json",
+  "decisions": [
+    {"title_id": "enchanted-library", "decision_id": "puzzle-enchanted-library-player-walk-v2", "descriptor_id": "enchanted-library-player-walk-v1", "disposition": "reuse-canonical", "selected_semantic_keys": ["side-view/native/platformer-world/heroes/hero-001/hero-001-walk-source-0c1cbfb7e747"]},
+    {"title_id": "rune-match", "decision_id": "puzzle-rune-match-panel-default-v2", "descriptor_id": "rune-match-panel-default-v2", "disposition": "reuse-canonical", "selected_semantic_keys": ["ui/20x20/inventory/slot"]},
+    {"title_id": "alchemists-synthesis", "decision_id": "puzzle-alchemists-synthesis-feedback-correct-v2", "descriptor_id": "alchemists-synthesis-correct-feedback-v2", "disposition": "reuse-canonical", "selected_semantic_keys": ["effects/32x32/combat/hit-01"]},
+    {"title_id": "potion-rush", "decision_id": "puzzle-potion-rush-control-confirm-v2", "descriptor_id": "potion-rush-confirm-control-v2", "disposition": "reuse-canonical", "selected_semantic_keys": ["ui/16x16/controls/gamepad-buttons"]},
+    {"title_id": "rune-forge-chamber", "decision_id": "puzzle-rune-forge-chamber-player-idle-v2", "descriptor_id": "rune-forge-chamber-player-idle-v2", "disposition": "reuse-canonical", "selected_semantic_keys": ["top-down/32x32/characters/hero-01"]}
+  ],
+  "prohibited_authority": {"production_catalog": false, "reading_host": false, "primary_host": false, "legacy_reuse": false, "legacy_ingestion": false, "retirement": false, "cutover": false}
+}

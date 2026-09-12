@@ -1,0 +1,36 @@
+{
+  "schema_version": "apk-existing-action-task5-advantage-games-qc-native-input-evidence.v2",
+  "track_id": "apk_existing_action_cutover_20260727",
+  "captured_at": "2026-08-01T00:00:00Z",
+  "scope": "Local Chromium proof of the isolated Advantage Games /qc action surface only.",
+  "source": {
+    "playwright_spec": {
+      "path": "apps/advantage-games/tests/e2e/qc/existing-action-cartridges.spec.ts",
+      "sha256": "13cd254c12b87a378f733e770337cd5cb3d0f8867c0cc347a43a8183ed8f88dc"
+    },
+    "qc_component": {
+      "path": "apps/advantage-games/src/components/apk/ExistingActionCartridgeQc.tsx",
+      "sha256": "498e20b87450515c733ca4316f71ec50e59950237136c2aac051d77fd7a78960"
+    }
+  },
+  "command": "CI=true pnpm --filter vocabulary-games exec playwright test tests/e2e/qc/existing-action-cartridges.spec.ts --project=chromium --workers=1",
+  "result": {
+    "status": "passed",
+    "tests": 2,
+    "browser": "Chromium",
+    "native_input": ["keyboard", "pointer", "touch"],
+    "profiles": ["compact", "wide"],
+    "titles": ["archers-revenge", "paladins-twin-soul", "griffin-sky-joust", "gryphon-patrol", "realm-carver"],
+    "assertions": [
+      "Each title loads only from the Advantage Games /qc registry.",
+      "Keyboard, pointer, and touch events increment only native-input evidence counters.",
+      "Responsive compact and wide profiles preserve the persistent canvas and report no geometry issues.",
+      "Every interaction leaves progression at zero and completion emissions at zero."
+    ]
+  },
+  "disclosures": [
+    "This is not a production catalog, Reading host, Primary host, completion persistence, migration, cutover, retirement, or deployment proof.",
+    "Historical and unknown source claims are intentionally rejected as progression rules; the test does not claim that historical mechanics currently run.",
+    "The evidence records browser-native input wiring only and does not validate real gameplay completion."
+  ]
+}
