@@ -166,7 +166,7 @@ export default {
             errorRate: "Tỷ lệ lỗi",
             uptime: "Thời gian hoạt động hệ thống",
             status: {
-                excellent: "Tuyệt vờI",
+                excellent: "Tuyệt vời",
                 good: "Tốt",
                 low: "Thấp",
                 unknown: "Không xác định",
