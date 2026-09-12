@@ -132,6 +132,14 @@ export default function SystemDashboardClient() {
       return HEALTH_BADGE_CLASSES.red;
     } else if (statusLower.includes("low")) {
       return HEALTH_BADGE_CLASSES.emerald;
+    } else if (statusLower.includes("healthy")) {
+      return HEALTH_BADGE_CLASSES.emerald;
+    } else if (statusLower.includes("%")) {
+      // Uptime arrives as a percent such as "99.9%"; a high percent is healthy.
+      const percent = parseFloat(statusLower);
+      return percent >= 90
+        ? HEALTH_BADGE_CLASSES.emerald
+        : HEALTH_BADGE_CLASSES.amber;
     }
     return HEALTH_BADGE_CLASSES.unknown;
   };
