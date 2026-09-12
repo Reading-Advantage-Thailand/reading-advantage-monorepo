@@ -1,0 +1,25 @@
+{
+  "track_id": "apk_standard_play_maps_20260910",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-09-10T09:13:29Z",
+  "updated_at": "2026-09-10T09:13:29Z",
+  "description": "Author reusable standard play maps for the top-down Advantage games and rebuild the Wizard vs. Zombie graveyard as the reference map.",
+  "estimated_tasks": 35,
+  "actual_tasks": 35,
+  "deviation_notes": "Nine typed StandardPlayMap layouts and nine composed PNGs shipped. Only Wizard vs. Zombie renders its authored map in-engine; the other eight cartridges keep their existing procedural layouts because each has bespoke motion and engine tests. Wiring those games to the maps is deferred to a follow-up. The in-crypt live enemy spawn is represented as a decor coffin; actual enemySpawns stay at the perimeter gates to preserve the 64 existing Wizard engine tests. check-types reports 53 pre-existing errors in untouched files; no error is in src/maps.",
+  "sprint": {
+    "goal": "Give every top-down Advantage game a reusable authored play map, and rebuild the Wizard vs. Zombie graveyard as the reference map.",
+    "stories": [
+      { "id": "S1", "title": "Shared play-map contract", "size": "M", "priority": "Must", "status": "pending" },
+      { "id": "S2", "title": "Wizard graveyard rework", "size": "L", "priority": "Must", "status": "pending" },
+      { "id": "S3", "title": "Dungeon maps", "size": "L", "priority": "Must", "status": "pending" },
+      { "id": "S4", "title": "Library and village maps", "size": "M", "priority": "Must", "status": "pending" },
+      { "id": "S5", "title": "Open-field maps", "size": "M", "priority": "Should", "status": "pending" },
+      { "id": "S6", "title": "Maze map art", "size": "M", "priority": "Should", "status": "pending" },
+      { "id": "S7", "title": "Verification and provenance", "size": "M", "priority": "Must", "status": "pending" }
+    ],
+    "demo_notes": null,
+    "retro_ref": null
+  }
+}
