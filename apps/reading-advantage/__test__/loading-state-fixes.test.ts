@@ -39,6 +39,13 @@ describe("loading-state-fixes — static source invariants", () => {
     const source = readSource("components/student-assignment-dashboard.tsx");
     expect(source).not.toContain("window.location.href");
     expect(source).toContain("router.push(`/student/lesson/");
+    expect(source).not.toContain('redirect("/auth/signin")');
+  });
+
+  test("FR-5: the assignments page owns the signin redirect server-side", () => {
+    const source = readSource(
+      "app/[locale]/(student)/student/assignments/page.tsx",
+    );
     expect(source).toContain('redirect("/auth/signin")');
   });
 
@@ -65,7 +72,7 @@ describe("loading-state-fixes — static source invariants", () => {
 
   test("FR-6: the reading-session KPI is not labeled as Total XP", () => {
     const en = readSource("locales/en.ts");
-    const block = en.match(/totalXp: \{[\s\S]*?\n            \},/);
+    const block = en.match(/totalXp: \{[\s\S]*?\n {12}\},/);
     expect(block).not.toBeNull();
     expect(block![0]).not.toContain("Total XP");
     expect(block![0]).not.toContain("XP");

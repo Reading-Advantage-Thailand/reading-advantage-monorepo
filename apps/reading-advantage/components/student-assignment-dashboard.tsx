@@ -1,6 +1,5 @@
 "use client";
 import React, { useCallback, useEffect, useState } from "react";
-import { redirect } from "next/navigation";
 import {
   Table,
   TableBody,
@@ -254,10 +253,6 @@ function AssignmentDetailDialog({
 }
 
 export default function StudentAssignmentTable({ userId }: AssignmentProps) {
-  if (!userId) {
-    redirect("/auth/signin");
-  }
-
   const [sorting, setSorting] = React.useState<SortingState>([
     {
       id: "createdAt",
