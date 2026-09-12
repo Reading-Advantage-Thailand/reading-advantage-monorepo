@@ -39,6 +39,7 @@ type Passage = {
   summary: string;
   average_rating: number;
   created_at: string;
+  translatedSummary?: Record<string, string[]> | null;
 };
 
 function HandleArticle() {
@@ -56,6 +57,7 @@ function HandleArticle() {
   const scrollRef = React.useRef<HTMLDivElement>(null);
   const [loading, setLoading] = React.useState(false);
   const loadingRef = React.useRef(false);
+  const hasMoreRef = React.useRef(true);
   const [page, setPage] = React.useState(1);
   const observer = React.useRef<IntersectionObserver | null>(null);
 
@@ -115,21 +117,32 @@ function HandleArticle() {
     fecthData();
   }, [page]);
 
-  const fecthData = async () => {
+  const fecthData = async (options?: {
+    replace?: boolean;
+    pageOverride?: number;
+  }) => {
+    if (loadingRef.current) return;
     loadingRef.current = true;
     setLoading(true);
     try {
+      const pageToLoad = options?.pageOverride ?? page;
       const res = await fetch(
         `${
           process.env.NEXT_PUBLIC_BASE_URL
-        }/api/v1/passage?${params.toString()}&page=${page}`,
+        }/api/v1/passage?${params.toString()}&page=${pageToLoad}`,
         {
           method: "GET",
         }
       );
 
       const data = await res.json();
-      setArticles((prev) => [...prev, ...data]);
+      const rows = Array.isArray(data) ? data : [];
+      if (rows.length === 0) {
+        hasMoreRef.current = false;
+        if (options?.replace) setArticles([]);
+        return;
+      }
+      setArticles((prev) => (options?.replace ? rows : [...prev, ...rows]));
     } catch (error) {
       console.error(error);
     } finally {
@@ -140,9 +153,13 @@ function HandleArticle() {
 
   // Event handler for the Apply button
   const handleApplyFilters = () => {
+    hasMoreRef.current = true;
     setArticles([]);
-    setPage(1);
-    fecthData();
+    if (page !== 1) {
+      setPage(1);
+      return;
+    }
+    void fecthData({ replace: true, pageOverride: 1 });
   };
 
   const lastArticleRef = React.useCallback(
@@ -151,7 +168,11 @@ function HandleArticle() {
       if (observer.current) observer.current.disconnect();
 
       observer.current = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting && !loadingRef.current) {
+        if (
+          entries[0].isIntersecting &&
+          !loadingRef.current &&
+          hasMoreRef.current
+        ) {
           setPage((prevPage) => prevPage + 1);
         }
       });

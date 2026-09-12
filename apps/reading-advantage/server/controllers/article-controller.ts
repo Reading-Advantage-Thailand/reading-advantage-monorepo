@@ -263,6 +263,7 @@ export async function getArticles(req: ExtendedNextRequest) {
         audioUrl: articles.audioUrl,
         createdAt: articles.createdAt,
         updatedAt: articles.updatedAt,
+        translatedSummary: articles.translatedSummary,
       })
       .from(articles)
       .where(

@@ -21,6 +21,7 @@ import {
   ActivityType,
 } from "./models/user-activity-log-model";
 import { levelCalculation } from "@/lib/utils";
+import { normalizeTranslateLocale } from "@/lib/translate-sentence";
 dayjs.extend(utc);
 dayjs.extend(dayjs_plugin_isSameOrBefore);
 dayjs.extend(dayjs_plugin_isSameOrAfter);
@@ -45,6 +46,7 @@ type MatchingProps = {
   activityType?: ActivityType;
   xpEarned?: UserXpEarned;
   showAudio?: boolean;
+  showHeroImages?: boolean;
 };
 
 /**
@@ -69,7 +71,7 @@ export async function fetchSentenceMatchingWords(
     words.push({
       text: article?.sentence,
       match:
-        article?.translation?.[currentLocale] ??
+        article?.translation?.[normalizeTranslateLocale(currentLocale)] ??
         article?.translation?.["th"],
       timepoint: article?.timepoint,
       endTimepoint: article?.endTimepoint,
@@ -115,6 +117,7 @@ export default function Matching({
   activityType = ActivityType.SentenceMatching,
   xpEarned = UserXpEarned.Sentence_Matching,
   showAudio = true,
+  showHeroImages = true,
 }: MatchingProps) {
   const t = useScopedI18n("pages.student.practicePage");
   const tUpdateScore = useScopedI18n(
@@ -256,7 +259,7 @@ export default function Matching({
           text={description ?? t("matchingPractice.matchingDescription")}
         />
       </div>
-      {correctMatches.length !== 10 && (
+      {showHeroImages && correctMatches.length !== 10 && (
         <div className="flex">
           <div className="w-1/2">
             <Image

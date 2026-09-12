@@ -71,3 +71,7 @@ In `components/student-assignment-dashboard.tsx`:
 
 - Server-side migration of metric and goals fetches. Track `structural_ux_alignment_20260911` owns that.
 - Matching-game component merge. Track `component_deduplication_20260911` owns that.
+
+## Review amendment 2026-09-12
+
+FR-7 commit `45becfb2c` also landed class-challenge, RPG reward, and cartridge-list work in `StudentCartridgeHost.tsx`. That extra APK scope stays in the committed file. A successor APK track owns tests and further change for that code. This track only removed the dead `transition.from !== "paused"` clause.

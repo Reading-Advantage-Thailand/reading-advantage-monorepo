@@ -28,11 +28,11 @@ describe("loading-state-fixes — static source invariants", () => {
     expect(source).not.toContain("window.location.search");
   });
 
-  test("FR-8: matching.tsx indexes translations by the current locale with a Thai fallback", () => {
+  test("FR-8: matching.tsx indexes translations by the normalized locale with a Thai fallback", () => {
     const source = readSource("components/matching.tsx");
     expect(source).not.toContain("translation?.th");
     expect(source).not.toContain("translation.th;");
-    expect(source).toContain("translation?.[currentLocale]");
+    expect(source).toContain("normalizeTranslateLocale(currentLocale)");
   });
 
   test("FR-5: student-assignment-dashboard navigates client-side with router.push", () => {
