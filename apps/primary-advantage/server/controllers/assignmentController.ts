@@ -35,7 +35,6 @@ export async function fetchAssignments(req: NextRequest) {
 
     if (articleId || assignmentId) {
       // Get assignment for specific article and classroom
-      console.log("Do we get here?");
 
       // Build the where clause incrementally so we keep parity with the
       // Prisma `where: { classroomId: ? , articleId: ?, id: ? }` semantics.

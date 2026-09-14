@@ -1,13 +1,14 @@
 import { NextRequest } from "next/server";
 import {
   getUserActivity,
+  getUserById,
   updateUserActivity,
   getUserArticleRecords,
   getUserReminderReread,
 } from "../models/userModel";
 import { ActivityType, UserXpEarned } from "@/types/enum";
-import { error } from "console";
 import { currentUser } from "@/lib/session";
+import { canReadUserResource } from "@/lib/authorization";
 
 export const handleUpdateUserActivity = async (
   body: {
@@ -43,10 +44,24 @@ export const fetchUserActivity = async (id: string) => {
       throw new Error("User not found");
     }
 
+    const target = await getUserById(id);
+
+    if (!target) {
+      throw new Error("User not found");
+    }
+
+    if (
+      !canReadUserResource(
+        { id: user.id, role: user.role, schoolId: user.schoolId },
+        { id: target.id, schoolId: target.schoolId },
+      )
+    ) {
+      throw new Error("Forbidden");
+    }
+
     const result = await getUserActivity(id);
     return result;
   } catch (error) {
-    console.log(error);
   }
 };
 

@@ -6,6 +6,7 @@ import {
   asc,
   inArray,
 } from '@reading-advantage/db';
+import { shuffle } from "@/lib/shuffle";
 import {
   articles,
   userActivity,
@@ -16,26 +17,26 @@ import {
   flashcardCards,
   sentencsAndWordsForFlashcards,
 } from '@reading-advantage/db';
-import { randomSelectGenre } from "../utils/genaretors/random-select-genre";
+import { randomSelectGenre } from "../utils/generators/random-select-genre";
 import {
   ActivityType,
   ArticleBaseCefrLevel,
   ArticleType,
   QuestionState,
 } from "@/types/enum";
-import { generateTopic } from "../utils/genaretors/topic-generator";
-import { generateArticle } from "../utils/genaretors/article-generator";
-import { evaluateRating } from "../utils/genaretors/evaluate-rating-generator";
-import { generateImage } from "../utils/genaretors/image-generator";
-import { generateMCQuestion } from "../utils/genaretors/mc-question-generator";
-import { generateSAQuestion } from "../utils/genaretors/sa-question-generator";
-import { generateLAQuestion } from "../utils/genaretors/la-question-generator";
+import { generateTopic } from "../utils/generators/topic-generator";
+import { generateArticle } from "../utils/generators/article-generator";
+import { evaluateRating } from "../utils/generators/evaluate-rating-generator";
+import { generateImage } from "../utils/generators/image-generator";
+import { generateMCQuestion } from "../utils/generators/mc-question-generator";
+import { generateSAQuestion } from "../utils/generators/sa-question-generator";
+import { generateLAQuestion } from "../utils/generators/la-question-generator";
 import {
   generateWordList,
   WordListResponse,
-} from "../utils/genaretors/wordlist-generator";
-import { generateAudio } from "../utils/genaretors/audio-generator";
-import { generateWordLists } from "../utils/genaretors/audio-word-generator";
+} from "../utils/generators/wordlist-generator";
+import { generateAudio } from "../utils/generators/audio-generator";
+import { generateWordLists } from "../utils/generators/audio-word-generator";
 import {
   LAQuestion,
   MCQuestion,
@@ -505,8 +506,7 @@ export const getQuestionsByArticleId = async (
       case ActivityType.MC_QUESTION: {
         const mcQuestions = await db.select().from(multipleChoiceQuestions)
           .where(eq(multipleChoiceQuestions.articleId, articleId));
-        questions = mcQuestions
-          .sort(() => Math.random() - 0.5)
+        questions = shuffle(mcQuestions)
           .slice(0, 5)
           .map((q) => ({
             ...q,

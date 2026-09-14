@@ -14,6 +14,7 @@ import {
   articleActivityLogs,
 } from '@reading-advantage/db';
 import { currentUser } from "@/lib/session";
+import { normalizeRole } from "@/lib/authorization";
 
 interface createAssignmentData {
   classroomId: string;
@@ -71,7 +72,6 @@ export async function createAssignment(data: createAssignmentData) {
       .limit(1);
 
     if (existingAssignment) {
-      console.log("Assignment already exists");
       throw new Error("Assignment already exists");
     }
 
@@ -296,6 +296,31 @@ export default async function getAssignmentById(id: string) {
         ),
       ),
     ]);
+
+    // Enforce tenancy: SYSTEM reads across schools; staff stay in their
+    // school; students additionally need an enrollment row.
+    const callerRole = normalizeRole(user.role);
+    const classroomRow = classroom[0] as { schoolId?: string | null } | undefined;
+    const callerSchool = user.schoolId as string | null | undefined;
+    if (callerRole !== "SYSTEM") {
+      if (
+        callerSchool == null ||
+        classroomRow?.schoolId == null ||
+        classroomRow.schoolId !== callerSchool
+      ) {
+        throw new Error("Forbidden");
+      }
+      if (callerRole === "STUDENT" && saRows.length === 0) {
+        throw new Error("Forbidden");
+      }
+      if (
+        callerRole !== "STUDENT" &&
+        callerRole !== "TEACHER" &&
+        callerRole !== "ADMIN"
+      ) {
+        throw new Error("Forbidden");
+      }
+    }
 
     // Compose `article` with its sentence/word + question children — same
     // shape the Prisma include produced.

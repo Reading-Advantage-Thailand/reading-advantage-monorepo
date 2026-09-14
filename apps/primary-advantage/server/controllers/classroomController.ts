@@ -15,7 +15,9 @@ import {
 } from "@/server/models/classroomModel";
 import { currentUser } from "@/lib/session";
 
-const ALLOWED_CLASSROOM_ROLES = ["TEACHER", "ADMIN", "SYSTEM"] as const;
+import { STAFF_ROLES } from "@/lib/permissions";
+
+const ALLOWED_CLASSROOM_ROLES = STAFF_ROLES;
 
 function canManageClassrooms(role: string): boolean {
   return ALLOWED_CLASSROOM_ROLES.some((allowedRole) => allowedRole === role);

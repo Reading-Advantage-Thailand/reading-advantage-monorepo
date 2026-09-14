@@ -230,3 +230,18 @@ export function canAccessRoute(
   // Default to allowing access if no specific permission required
   return true;
 }
+
+/**
+ * Roles allowed to manage classrooms and students.
+ */
+export const STAFF_ROLES: readonly string[] = ["TEACHER", "ADMIN", "SYSTEM"];
+
+/**
+ * Checks whether a role belongs to classroom staff.
+ * @param role Role string to check.
+ * @returns True for teacher, admin, and system roles.
+ */
+export function isStaffRole(role: string | null | undefined): boolean {
+  if (!role) return false;
+  return STAFF_ROLES.includes(role);
+}

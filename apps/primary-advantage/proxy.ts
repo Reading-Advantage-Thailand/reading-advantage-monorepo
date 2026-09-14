@@ -3,24 +3,8 @@ import type { NextRequest } from "next/server";
 import createIntlMiddleware from "next-intl/middleware";
 import { routing } from "./i18n/routing";
 import { currentUser } from "./lib/session";
-
-// Define protected routes and their required roles
-const protectedRoutes = {
-  "/admin": ["admin", "system"],
-  "/teacher": ["teacher", "admin", "system"],
-  "/student": ["student", "teacher", "admin", "system"],
-  "/system": ["system"],
-  "/settings": ["user", "student", "teacher", "admin", "system"],
-};
-
-// Define role-based default redirects after login
-const roleDefaultRedirects = {
-  user: "/",
-  student: "/student/read",
-  teacher: "/teacher/my-classes",
-  admin: "/admin/dashboard",
-  system: "/system/dashboard",
-};
+import { normalizeRole } from "./lib/authorization";
+import { protectedRoutes, roleDefaultRedirects } from "./lib/route-policies";
 
 // Create the intl middleware
 const intlMiddleware = createIntlMiddleware(routing);
@@ -38,7 +22,7 @@ export default async function middleware(request: NextRequest) {
     const token = session;
 
     if (token) {
-      const userRole = (token.role as string).toLowerCase();
+      const userRole = normalizeRole(token.role).toLowerCase();
       const callbackUrl = request.nextUrl.searchParams.get("callbackUrl");
 
       if (callbackUrl) {
@@ -49,7 +33,7 @@ export default async function middleware(request: NextRequest) {
           callbackPathWithoutLocale.startsWith(route),
         )?.[1];
 
-        if (requiredRoles && requiredRoles.includes(userRole)) {
+        if (requiredRoles && requiredRoles.includes(normalizeRole(token.role))) {
           // If user has access to callback URL, redirect there
           return NextResponse.redirect(new URL(callbackUrl, request.url));
         }
@@ -88,7 +72,7 @@ export default async function middleware(request: NextRequest) {
     }
 
     // Check if user has required role for the route
-    const userRole = (token.role as string).toLowerCase();
+    const userRole = normalizeRole(token.role);
     const requiredRoles = Object.entries(protectedRoutes).find(([route]) =>
       pathWithoutLocale.startsWith(route),
     )?.[1];

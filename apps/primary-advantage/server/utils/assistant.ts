@@ -30,8 +30,7 @@ export async function getSaqFeedback(req: {
   };
   activityType: ActivityType;
 }): Promise<SAQFeedbackResponse> {
-  try {
-    let prompt: string | undefined;
+  let prompt: string | undefined;
 
     const articleRows = await db.select({
       passage: articles.passage,
@@ -82,10 +81,6 @@ export async function getSaqFeedback(req: {
     });
 
     return object as SAQFeedbackResponse;
-  } catch (error) {
-    console.log(error);
-    throw error;
-  }
 }
 
 /**
@@ -102,8 +97,7 @@ export async function getLaqFeedback(req: {
     preferredLanguage: string;
   };
 }) {
-  try {
-    let prompt: string | undefined;
+  let prompt: string | undefined;
 
     const articleRows = await db.select({
       passage: articles.passage,
@@ -156,8 +150,4 @@ export async function getLaqFeedback(req: {
     } else {
       return object.feedback;
     }
-  } catch (error) {
-    console.log(error);
-    throw error;
-  }
 }

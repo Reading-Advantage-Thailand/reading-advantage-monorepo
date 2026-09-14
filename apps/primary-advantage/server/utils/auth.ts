@@ -31,7 +31,6 @@ export const validateUser = async (
   userId: string,
 ): Promise<UserWithRoles | null> => {
   try {
-    // console.log("Auth Utils: Validating user:", userId);
 
     const userRows = await db.select({
       id: users.id,
@@ -45,7 +44,6 @@ export const validateUser = async (
 
     const userRow = userRows[0];
     if (!userRow) {
-      // console.log("Auth Utils: User not found:", userId);
       return null;
     }
 
@@ -80,13 +78,6 @@ export const validateUser = async (
       SchoolAdmins: schoolAdminRows,
     };
 
-    // console.log("Auth Utils: User validated:", {
-    //   id: userWithRoles.id,
-    //   email: userWithRoles.email,
-    //   roles: userWithRoles.roles.map((r) => r.role.name),
-    //   schoolAdmins: userWithRoles.SchoolAdmins.length,
-    //   schoolId: userWithRoles.schoolId,
-    // });
 
     return userWithRoles;
   } catch (error) {

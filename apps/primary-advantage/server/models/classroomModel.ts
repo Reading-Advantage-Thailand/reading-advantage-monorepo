@@ -1,3 +1,4 @@
+import { STAFF_ROLES } from "@/lib/permissions";
 import {
   db,
   eq,
@@ -36,7 +37,7 @@ type AccessibleClassroom = {
   teacherId: string;
 };
 
-const CLASSROOM_ROLES: readonly Role[] = ["TEACHER", "ADMIN", "SYSTEM"];
+const CLASSROOM_ROLES: readonly Role[] = [...STAFF_ROLES] as Role[];
 
 /**
  * Loads a classroom only when the actor can access it.

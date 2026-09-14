@@ -113,7 +113,6 @@ export const updateUserActivity = async (
 
     return activity;
   } catch (error) {
-    console.log(error);
   }
 };
 
@@ -187,7 +186,6 @@ export const getUserByEmail = async (email: string) => {
 
     return userWithRoles;
   } catch (error) {
-    console.log(error);
   }
 };
 
@@ -198,7 +196,6 @@ export const getUserById = async (id: string) => {
       .limit(1);
     return user;
   } catch (error) {
-    console.log(error);
   }
 };
 
@@ -219,7 +216,6 @@ export const getUserActivity = async (id: string) => {
 
     return { activity, xpLogs: xpLogRows, user };
   } catch (error) {
-    console.log(error);
   }
 };
 

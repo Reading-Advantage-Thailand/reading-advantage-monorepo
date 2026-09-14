@@ -14,17 +14,17 @@ import {
 } from "../models/articleModel";
 import { NextRequest, NextResponse } from "next/server";
 import { currentUser } from "@/lib/session";
-import { generateArticle } from "../utils/genaretors/article-generator";
-import { evaluateRating } from "../utils/genaretors/evaluate-rating-generator";
-import { generateMCQuestion } from "../utils/genaretors/mc-question-generator";
-import { generateLAQuestion } from "../utils/genaretors/la-question-generator";
-import { generateSAQuestion } from "../utils/genaretors/sa-question-generator";
+import { generateArticle } from "../utils/generators/article-generator";
+import { evaluateRating } from "../utils/generators/evaluate-rating-generator";
+import { generateMCQuestion } from "../utils/generators/mc-question-generator";
+import { generateLAQuestion } from "../utils/generators/la-question-generator";
+import { generateSAQuestion } from "../utils/generators/sa-question-generator";
 import {
   saveArticleContent,
   generateQuestions,
   saveArticleAsDraftModel,
 } from "../models/articleModel";
-import { generateArticleNew } from "../utils/genaretors/new-generator";
+import { generateArticleNew } from "../utils/generators/new-generator";
 
 export const generateAllArticleNew = async (amountPerGenre: number) => {
   const types: ArticleType[] = [ArticleType.FICTION];
@@ -41,12 +41,9 @@ export const generateAllArticleNew = async (amountPerGenre: number) => {
   const completedArticles = 0;
 
   try {
-    console.log(`Starting generation of ${amountPerGenre} articles...`);
     for (let i = 0; i < amountPerGenre; i++) {
-      console.log(`Generating article number ${i + 1}`);
       await generateArticleNew(ArticleBaseCefrLevel.A0);
     }
-    console.log(`Successfully generated ${amountPerGenre} articles`);
   } catch (error) {
     console.error("Error in generateAllArticleNew:", error);
     throw new Error(`Failed to generate all articles: ${error}`);
@@ -66,7 +63,6 @@ export const generateAllArticle = async (amountPerGenre: number) => {
   const articles: any[] = [];
   let completedArticles = 0;
 
-  console.log(`Starting generation of ${totalArticles} articles...`);
 
   try {
     for (let i = 0; i < amountPerGenre; i++) {
@@ -75,9 +71,6 @@ export const generateAllArticle = async (amountPerGenre: number) => {
           try {
             await generateArticles({ type, level });
             completedArticles++;
-            console.log(
-              `Progress: ${completedArticles}/${totalArticles} articles generated (Type: ${type}, Level: ${level})`,
-            );
           } catch (error: any) {
             console.error(
               `Failed to generate article (Type: ${type}, Level: ${level}):`,
@@ -89,7 +82,6 @@ export const generateAllArticle = async (amountPerGenre: number) => {
       }
     }
 
-    console.log(`Successfully generated ${completedArticles} articles`);
     return articles;
   } catch (error: any) {
     console.error("Error in generateAllArticle:", error);
@@ -127,18 +119,6 @@ export const fetchArticleById = async (req: URLSearchParams) => {
   return getArticleById(articleId);
 };
 
-// export const fetchQuestionFeedback = async (req: {
-//   data: {
-//     articleId: string;
-//     question: string;
-//     answer: string;
-//     suggestedResponse?: string;
-//     preferredLanguage: string;
-//   };
-//   activityType: ActivityType;
-// }) => {
-//   return getQuestionFeedback(req);
-// };
 
 // export const fetchQuestionsByArticleId = async (req: URLSearchParams) => {
 //   const articleId = req.get("articleId") ?? undefined;

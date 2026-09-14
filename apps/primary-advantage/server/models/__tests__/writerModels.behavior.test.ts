@@ -30,10 +30,10 @@ vi.mock("@reading-advantage/db", async (importOriginal) => {
   return { ...actual, db: dbProxy };
 });
 
-vi.mock("../../utils/genaretors/image-generator", () => ({
+vi.mock("../../utils/generators/image-generator", () => ({
   generateImage: vi.fn().mockResolvedValue(undefined),
 }));
-vi.mock("../../utils/genaretors/audio-word-generator", () => ({
+vi.mock("../../utils/generators/audio-word-generator", () => ({
   generateWordLists: vi.fn().mockResolvedValue(undefined),
 }));
 vi.mock("bcryptjs", () => ({

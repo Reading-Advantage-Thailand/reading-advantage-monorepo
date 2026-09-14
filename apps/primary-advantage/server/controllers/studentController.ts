@@ -103,7 +103,6 @@ export const createStudentController = async (
   NextResponse<{ success: boolean; student?: StudentData } | { error: string }>
 > => {
   try {
-    console.log("Student Controller: Starting POST request...");
 
     const user = await currentUser();
     if (!user) {
@@ -164,10 +163,6 @@ export const createStudentController = async (
       );
     }
 
-    console.log(
-      "Student Controller: Successfully created student:",
-      result.student?.id,
-    );
     return NextResponse.json(
       { success: true, student: result.student },
       { status: 201 },
@@ -191,7 +186,6 @@ export const getStudentByIdController = async (
 ): Promise<NextResponse<{ student: StudentData } | { error: string }>> => {
   try {
     const { id } = await params;
-    console.log("Student Controller: Getting student by ID:", id);
 
     const user = await currentUser();
     if (!user) {
@@ -218,10 +212,6 @@ export const getStudentByIdController = async (
       return NextResponse.json({ error: "Student not found" }, { status: 404 });
     }
 
-    console.log(
-      "Student Controller: Successfully fetched student:",
-      student.id,
-    );
     return NextResponse.json({ student }, { status: 200 });
   } catch (error) {
     console.error(
@@ -244,7 +234,6 @@ export const updateStudentController = async (
 > => {
   try {
     const { id } = await params;
-    console.log("Student Controller: Updating student:", id);
 
     const user = await currentUser();
     if (!user) {
@@ -278,10 +267,6 @@ export const updateStudentController = async (
       );
     }
 
-    console.log(
-      "Student Controller: Successfully updated student:",
-      result.student?.id,
-    );
     return NextResponse.json(
       { success: true, student: result.student },
       { status: 200 },
@@ -305,7 +290,6 @@ export const deleteStudentController = async (
 ): Promise<NextResponse<{ success: boolean } | { error: string }>> => {
   try {
     const { id } = await params;
-    console.log("Student Controller: Deleting student:", id);
 
     const user = await currentUser();
     if (!user) {
@@ -336,7 +320,6 @@ export const deleteStudentController = async (
       );
     }
 
-    console.log("Student Controller: Successfully deleted student:", id);
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (error) {
     console.error(

@@ -18,6 +18,7 @@ import {
   classroomStudents,
   classrooms,
   schoolAdmins,
+  licenses,
 } from '@reading-advantage/db';
 
 /** A ranked student entry in a school leaderboard. */
@@ -47,6 +48,149 @@ async function getStudentRoleId(): Promise<string | null> {
     .where(eq(roles.name, "student"))
     .limit(1);
   return role?.id ?? null;
+}
+
+/** License detail shown on the school profile settings page. */
+export interface SchoolProfileLicense {
+  id: string;
+  key: string;
+  name: string;
+  description?: string;
+  maxUsers: number;
+  startDate: Date;
+  expiryDate?: Date;
+  status: string;
+}
+
+/** School detail shown on the school profile settings page. */
+export interface SchoolProfile {
+  id: string;
+  name: string;
+  contactName?: string;
+  contactEmail?: string;
+  createdAt: Date;
+  updatedAt: Date;
+  ownerId?: string;
+  _count: {
+    users: number;
+    admins: number;
+  };
+  admins: {
+    id: string;
+    user: {
+      id: string;
+      name: string;
+      email: string;
+    };
+  }[];
+  owner?: {
+    id: string;
+    name: string;
+    email: string;
+  };
+  license?: SchoolProfileLicense;
+}
+
+/**
+ * Loads a school with its admins, owner, license, and member counts.
+ * @param schoolId The school identifier.
+ * @returns The school detail, or null when the school does not exist.
+ */
+export async function getSchoolDetail(
+  schoolId: string,
+): Promise<SchoolProfile | null> {
+  const [school] = await db
+    .select()
+    .from(schools)
+    .where(eq(schools.id, schoolId))
+    .limit(1);
+
+  if (!school) {
+    return null;
+  }
+
+  const adminRows = await db
+    .select({
+      userId: schoolAdmins.userId,
+      userName: users.name,
+      userEmail: users.email,
+    })
+    .from(schoolAdmins)
+    .innerJoin(users, eq(users.id, schoolAdmins.userId))
+    .where(eq(schoolAdmins.schoolId, school.id));
+
+  const admins = adminRows.map((a) => ({
+    id: a.userId,
+    user: {
+      id: a.userId,
+      name: a.userName ?? "",
+      email: a.userEmail ?? "",
+    },
+  }));
+
+  const schoolLicenses = await db
+    .select({
+      id: licenses.id,
+      key: licenses.key,
+      name: licenses.name,
+      description: licenses.description,
+      maxUsers: licenses.maxUsers,
+      startDate: licenses.startDate,
+      expiryDate: licenses.expiryDate,
+      status: licenses.status,
+    })
+    .from(licenses)
+    .where(eq(licenses.schoolId, school.id))
+    .orderBy(desc(licenses.createdAt));
+
+  const userCountRows = await db
+    .select({ id: users.id })
+    .from(users)
+    .where(eq(users.schoolId, school.id));
+
+  const [owner] = school.ownerId
+    ? await db
+        .select({ id: users.id, name: users.name, email: users.email })
+        .from(users)
+        .where(eq(users.id, school.ownerId))
+        .limit(1)
+    : [];
+
+  const [license] = schoolLicenses;
+
+  return {
+    id: school.id,
+    name: school.name,
+    contactName: school.contactName ?? undefined,
+    contactEmail: school.contactEmail ?? undefined,
+    createdAt: school.createdAt,
+    updatedAt: school.updatedAt,
+    ownerId: school.ownerId ?? undefined,
+    _count: {
+      users: userCountRows.length,
+      admins: admins.length,
+    },
+    admins,
+    owner: owner
+      ? {
+          id: owner.id,
+          name: owner.name ?? "",
+          email: owner.email ?? "",
+        }
+      : undefined,
+    license: license
+      ? {
+          id: license.id,
+          key: license.key,
+          name: license.name ?? "",
+          description: license.description ?? undefined,
+          maxUsers: license.maxUsers,
+          startDate: license.startDate ?? new Date(0),
+          expiryDate: license.expiryDate ?? undefined,
+          status: license.status,
+        }
+      : undefined,
+  };
 }
 
 export const updateSchoolRankingModel = async () => {

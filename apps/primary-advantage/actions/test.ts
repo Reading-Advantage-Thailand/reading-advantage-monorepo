@@ -6,10 +6,23 @@ import {
 } from '@reading-advantage/db';
 import { articles } from '@reading-advantage/db';
 import { getArticleById } from "@/server/models/articleModel";
-import { generateAudio } from "@/server/utils/genaretors/audio-generator";
-import { generateWordLists } from "@/server/utils/genaretors/audio-word-generator";
+import { generateAudio } from "@/server/utils/generators/audio-generator";
+import { generateWordLists } from "@/server/utils/generators/audio-word-generator";
 import { deleteFile, uploadToBucket } from "@/utils/storage";
-import { generateImage } from "@/server/utils/genaretors/image-generator";
+import { generateImage } from "@/server/utils/generators/image-generator";
+import { currentUser } from "@/lib/session";
+import { canRunContentTooling } from "@/lib/authorization";
+
+/**
+ * Rejects callers without bulk content-tooling rights.
+ * @returns An error result, or null when the caller may proceed.
+ */
+async function requireToolingAccess(): Promise<{ success: false; error: string } | null> {
+  const user = await currentUser();
+  if (!user) return { success: false, error: "Unauthorized" };
+  if (!canRunContentTooling(user)) return { success: false, error: "Forbidden" };
+  return null;
+}
 
 /**
  * Generates passage and sentence audio for an article.
@@ -17,6 +30,8 @@ import { generateImage } from "@/server/utils/genaretors/image-generator";
  * @returns The generation result.
  */
 export async function generateAudios(articleId: string) {
+  const denied = await requireToolingAccess();
+  if (denied) return denied;
   try {
     const article = await getArticleById(articleId);
     const passage = article.article.passage;
@@ -30,12 +45,18 @@ export async function generateAudios(articleId: string) {
 
     return { success: true };
   } catch (error) {
-    console.log("error", error);
     return { error: true };
   }
 }
 
+/**
+ * Generates word-list audio for an article.
+ * @param articleId The source article identifier.
+ * @returns The generation result.
+ */
 export async function generateWordAudios(articleId: string) {
+  const denied = await requireToolingAccess();
+  if (denied) return denied;
   try {
     // const article = await getArticleById(articleId);
 
@@ -43,11 +64,17 @@ export async function generateWordAudios(articleId: string) {
 
     return { success: true };
   } catch (error) {
-    console.log("error", error);
     return { error: true };
   }
 }
+/**
+ * Uploads the generated image for an article to storage.
+ * @param articleId The source article identifier.
+ * @returns The upload result.
+ */
 export async function uploadArticleImages(articleId: string) {
+  const denied = await requireToolingAccess();
+  if (denied) return denied;
   const result = await uploadToBucket(
     `${process.cwd()}/public/images/${articleId}.png`,
     `images/${articleId}.png`,
@@ -55,12 +82,25 @@ export async function uploadArticleImages(articleId: string) {
   return result;
 }
 
+/**
+ * Deletes the stored file for an article.
+ * @param articleId The source article identifier.
+ * @returns The deletion result.
+ */
 export async function deleteArticleFile(articleId: string) {
+  const denied = await requireToolingAccess();
+  if (denied) return denied;
   const result = await deleteFile(articleId);
   return result;
 }
 
+/**
+ * Deletes every article row and its stored files.
+ * @returns The deletion summary.
+ */
 export async function deleteAllArticles() {
+  const denied = await requireToolingAccess();
+  if (denied) return denied;
   try {
     // Get all article IDs first (we need them to delete associated files)
     const articleRows = await db.select({ id: articles.id }).from(articles);
@@ -69,9 +109,6 @@ export async function deleteAllArticles() {
       return { success: true, message: "No articles to delete" };
     }
 
-    console.log(
-      `Deleting ${articleRows.length} articles and their associated files...`,
-    );
 
     // Delete all associated files in parallel
     const fileDeletePromises = articleRows.map((article) =>
@@ -87,15 +124,11 @@ export async function deleteAllArticles() {
       (result) => result.status === "rejected",
     ).length;
 
-    console.log(
-      `File deletions - Success: ${successfulFileDeletions}, Failed: ${failedFileDeletions}`,
-    );
 
     // Delete all article records (replaces Prisma deleteMany). Returning rows
     // gives us the deleted count.
     const deletedRows = await db.delete(articles).returning({ id: articles.id });
 
-    console.log(`Successfully deleted ${deletedRows.length} article records`);
 
     return {
       success: true,
@@ -106,7 +139,6 @@ export async function deleteAllArticles() {
       },
     };
   } catch (error) {
-    console.log("error", error);
     return { error: true };
   }
 }
@@ -117,6 +149,8 @@ export async function deleteAllArticles() {
  * @returns The generation result.
  */
 export async function generateImages(articleId: string) {
+  const denied = await requireToolingAccess();
+  if (denied) return denied;
   try {
     const [article] = await db.select({
       id: articles.id,
@@ -142,7 +176,6 @@ export async function generateImages(articleId: string) {
       return { error: true, message: "Failed to generate images" };
     }
   } catch (error) {
-    console.log("error", error);
     return { error: true };
   }
 }

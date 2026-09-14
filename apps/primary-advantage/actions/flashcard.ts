@@ -38,6 +38,8 @@ type CardState = (typeof cardState.enumValues)[number];
 import { redirect } from "next/navigation";
 import { NextResponse } from "next/server";
 import { getAudioUrl } from "@/lib/storage-config";
+import { mapOrderingSentenceFields, resolveClozeSegment } from "@/lib/audio-highlight";
+import { shuffle } from "@/lib/shuffle";
 
 function tokenizeSentence(input: string) {
   // Split by spaces and filter out empty strings, while preserving punctuation
@@ -1109,15 +1111,17 @@ export async function getLessonOrderingSentences(sourceArticleId: string) {
         return {
           id: `${article.id}-${globalIndex}-${Date.now()}-${Math.random()}`, // Unique ID
           text: sentence.sentence,
-          translationMap: {
-            th: (article.translatedPassage as unknown as Record<string, string[]> | undefined)?.th?.[globalIndex],
-            cn: (article.translatedPassage as unknown as Record<string, string[]> | undefined)?.cn?.[globalIndex],
-            tw: (article.translatedPassage as unknown as Record<string, string[]> | undefined)?.tw?.[globalIndex],
-            vi: (article.translatedPassage as unknown as Record<string, string[]> | undefined)?.vi?.[globalIndex],
-          },
-          audio_url: getAudioUrl(article.audio_url || ""),
-          start_time: sentence.startTime,
-          end_time: sentence.endTime,
+          ...mapOrderingSentenceFields({
+            translationMap: {
+              th: (article.translatedPassage as unknown as Record<string, string[]> | undefined)?.th?.[globalIndex],
+              cn: (article.translatedPassage as unknown as Record<string, string[]> | undefined)?.cn?.[globalIndex],
+              tw: (article.translatedPassage as unknown as Record<string, string[]> | undefined)?.tw?.[globalIndex],
+              vi: (article.translatedPassage as unknown as Record<string, string[]> | undefined)?.vi?.[globalIndex],
+            },
+            audio_url: getAudioUrl(article.audio_url || ""),
+            start_time: sentence.startTime,
+            end_time: sentence.endTime,
+          }),
           isFromFlashcard,
         };
       });
@@ -1143,7 +1147,7 @@ export async function getLessonOrderingSentences(sourceArticleId: string) {
     }
 
     // Shuffle the sentence groups
-    const shuffledGroups = sentenceGroups.sort(() => Math.random() - 0.5);
+    const shuffledGroups = shuffle(sentenceGroups);
 
     return {
       sentenceGroups: shuffledGroups,
@@ -1197,17 +1201,19 @@ export async function getLessonClozeTestSentences(
     for (const flashcardCard of flashcards) {
       const snapshot = await loadArticleSnapshot(flashcardCard.sourceId as string);
       if (!snapshot) continue;
-      const { article, sentRows } = snapshot;
+      const { article } = snapshot;
 
       if (!article) continue;
 
-      // Recover per-sentence audio timing + translation from the article
-      // snapshot rather than from a shared-partial card column.
-      const sentencsAndWords = sentRows;
-      const snapshotSentence = sentencsAndWords[0];
-      const audioUrl = getAudioUrl(snapshotSentence?.audioSentencesUrl ?? "");
-      const startTime = 0;
-      const endTime = 0;
+      // Recover per-sentence audio timing from the article snapshot
+      // rather than from a shared-partial card column.
+      const clipUrl = getAudioUrl(article.audio_url || "");
+      const articleSentences = article.sentences as SentenceTimepoint[];
+      const segment = resolveClozeSegment(
+        articleSentences,
+        flashcardCard.front,
+        clipUrl,
+      );
 
       clozeTests.push({
         id: `${article.id}-${flashcardCard.id}-${Date.now()}-${Math.random()}`,
@@ -1217,15 +1223,17 @@ export async function getLessonClozeTestSentences(
         // words: matchingSentence.words,
         blanks: [],
         translation_text: undefined,
-        audio_url: audioUrl,
-        start_time: startTime,
-        end_time: endTime,
+        ...mapOrderingSentenceFields({
+          audio_url: segment.url,
+          start_time: segment.start,
+          end_time: segment.end,
+        }),
         difficulty_level: difficultyLevel,
       });
     }
 
     // Shuffle the cloze tests
-    const shuffledTests = clozeTests.sort(() => Math.random() - 0.5);
+    const shuffledTests = shuffle(clozeTests);
 
     return {
       clozeTests: shuffledTests,
@@ -1332,13 +1340,15 @@ export async function getLessonOrderingWords(sourceArticleId: string) {
         return {
           id: `${article.id}-${flashcardCard.id}-word-${index}-${Date.now()}`,
           text: word,
-          translationMap: {
-            // For individual words, we don't have word-level translations
-            // Could be enhanced with a dictionary API later
-          },
-          audio_url: sentenceAudioUrl,
-          start_time: sentenceData?.startTime,
-          end_time: sentenceData?.endTime,
+          ...mapOrderingSentenceFields({
+            translationMap: {
+              // For individual words, we don't have word-level translations
+              // Could be enhanced with a dictionary API later
+            },
+            audio_url: sentenceAudioUrl,
+            start_time: wordStart ?? sentenceData?.startTime,
+            end_time: wordEnd ?? sentenceData?.endTime,
+          }),
           partOfSpeech: getPartOfSpeech(word, index, words.length),
         };
       });
@@ -1376,7 +1386,7 @@ export async function getLessonOrderingWords(sourceArticleId: string) {
     }
 
     // Shuffle the sentences
-    const shuffledSentences = sentences.sort(() => Math.random() - 0.5);
+    const shuffledSentences = shuffle(sentences);
 
     // Limit to reasonable number for game session
     const limitedSentences = shuffledSentences.slice(0, 20);

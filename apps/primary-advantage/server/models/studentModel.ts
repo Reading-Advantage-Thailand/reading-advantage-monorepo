@@ -184,7 +184,6 @@ export const getStudentById = async (
   userWithRoles: UserWithRoles,
 ): Promise<StudentData | null> => {
   try {
-    console.log("Student Model: Fetching student by ID:", id);
 
     // Build where clause based on user's permissions
     const whereConditions: any[] = [
@@ -223,7 +222,6 @@ export const getStudentById = async (
     const student = rows[0];
 
     if (!student) {
-      console.log("Student Model: Student not found:", id);
       return null;
     }
 
@@ -240,7 +238,6 @@ export const getStudentById = async (
       classroomId: student.classroomId || null,
     };
 
-    console.log("Student Model: Successfully fetched student:", studentData.id);
     return studentData;
   } catch (error) {
     console.error("Student Model: Error fetching student by ID:", error);
@@ -266,7 +263,6 @@ export const createStudent = async (params: {
     params;
 
   try {
-    console.log("Student Model: Creating student with email:", email);
 
     // Check if user already exists
     const [existingUser] = await db.select({ id: users.id })
@@ -275,7 +271,6 @@ export const createStudent = async (params: {
       .limit(1);
 
     if (existingUser) {
-      console.log("Student Model: User already exists with email:", email);
       return { success: false, error: "User with this email already exists" };
     }
 
@@ -286,7 +281,6 @@ export const createStudent = async (params: {
       .limit(1);
 
     if (!roleRecord) {
-      console.log("Student Model: Student role not found");
       return { success: false, error: "Student role not found" };
     }
 
@@ -307,7 +301,6 @@ export const createStudent = async (params: {
         .limit(1);
 
       if (!classroom) {
-        console.log("Student Model: Invalid classroom specified:", classroomId);
         return { success: false, error: "Invalid classroom specified" };
       }
     }
@@ -382,7 +375,6 @@ export const createStudent = async (params: {
       classroomId: newStudent.classroomId || null,
     };
 
-    console.log("Student Model: Successfully created student:", studentData.id);
     return { success: true, student: studentData };
   } catch (error) {
     console.error("Student Model: Error creating student:", error);
@@ -397,7 +389,6 @@ export const updateStudent = async (
   userWithRoles: UserWithRoles,
 ): Promise<{ success: boolean; student?: StudentData; error?: string }> => {
   try {
-    console.log("Student Model: Updating student:", id);
 
     // Build where clause based on user's permissions
     const whereConditions: any[] = [
@@ -427,7 +418,6 @@ export const updateStudent = async (
       .limit(1);
 
     if (!existingStudent) {
-      console.log("Student Model: Student not found or no permission:", id);
       return { success: false, error: "Student not found" };
     }
 
@@ -439,7 +429,6 @@ export const updateStudent = async (
         .limit(1);
 
       if (emailExists) {
-        console.log("Student Model: Email already in use:", updateData.email);
         return { success: false, error: "Email already in use" };
       }
     }
@@ -460,10 +449,6 @@ export const updateStudent = async (
         .limit(1);
 
       if (!classroom) {
-        console.log(
-          "Student Model: Invalid classroom specified:",
-          updateData.classroomId,
-        );
         return { success: false, error: "Invalid classroom specified" };
       }
     }
@@ -532,10 +517,6 @@ export const updateStudent = async (
       classroomId: finalStudent.classroomId || null,
     };
 
-    console.log(
-      "Student Model: Successfully updated student:",
-      studentData.id,
-    );
     return { success: true, student: studentData };
   } catch (error) {
     console.error("Student Model: Error updating student:", error);
@@ -549,7 +530,6 @@ export const deleteStudent = async (
   userWithRoles: UserWithRoles,
 ): Promise<{ success: boolean; error?: string }> => {
   try {
-    console.log("Student Model: Deleting student:", id);
 
     // Build where clause based on user's permissions
     const whereConditions: any[] = [
@@ -575,7 +555,6 @@ export const deleteStudent = async (
       .limit(1);
 
     if (!existingStudent) {
-      console.log("Student Model: Student not found or no permission:", id);
       return { success: false, error: "Student not found" };
     }
 
@@ -588,7 +567,6 @@ export const deleteStudent = async (
     // Delete the student
     await db.delete(users).where(eq(users.id, id));
 
-    console.log("Student Model: Successfully deleted student:", id);
     return { success: true };
   } catch (error) {
     console.error("Student Model: Error deleting student:", error);

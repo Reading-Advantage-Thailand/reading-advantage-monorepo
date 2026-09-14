@@ -13,8 +13,9 @@ import {
 } from '@reading-advantage/db';
 import { currentUser } from "@/lib/session";
 import { calculateLevelAndCefrLevel } from "@/lib/utils";
+import { resolveQuestionXpAward } from "@/lib/authorization";
 import { getLaqFeedback, getSaqFeedback } from "@/server/utils/assistant";
-import { ActivityType, UserXpEarned } from "@/types/enum";
+import { ActivityType } from "@/types/enum";
 
 export async function retakeQuiz(articleId: string, type: ActivityType) {
   try {
@@ -82,9 +83,6 @@ export async function finishQuiz(
     return { error: "User not found" };
   }
 
-  let xpEarned = 0;
-  let isCompleted = {};
-
   // Create user activity first
   const [userActivityRow] = await db.insert(userActivity).values({
     userId: user.id as string,
@@ -102,22 +100,24 @@ export async function finishQuiz(
     completed: true,
   }).returning();
 
-  // Calculate XP based on activity type
+  // The award is derived server-side from the submission; callers cannot set XP.
+  const xpEarned = resolveQuestionXpAward(type, data);
+
+  let isCompleted = {};
+
+  // Mark the completed question type on the article activity log.
   switch (type) {
     case ActivityType.SA_QUESTION:
-      xpEarned = data.score ?? 0;
       isCompleted = { isShortAnswerQuestionCompleted: true };
       break;
     case ActivityType.LA_QUESTION:
-      xpEarned = data.score ?? 0;
       isCompleted = { isLongAnswerQuestionCompleted: true };
       break;
     case ActivityType.MC_QUESTION:
-      xpEarned = data.score ?? 0 * UserXpEarned.MCQuestion;
       isCompleted = { isMultipleChoiceQuestionCompleted: true };
       break;
     default:
-      xpEarned = 0;
+      isCompleted = {};
   }
 
   const { newXp, raLevel, cefrLevel } = calculateLevelAndCefrLevel(

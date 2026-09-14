@@ -14,11 +14,19 @@ import {
 } from '@reading-advantage/db';
 import { ActivityType } from "@/types/enum";
 import { calculateLevelAndCefrLevel } from "@/lib/utils";
+import { resolveXpAward } from "@/lib/authorization";
 
+/**
+ * Records one completed activity with a server-derived XP award.
+ * @param articleId The article the activity belongs to.
+ * @param type The completed activity type driving the award.
+ * @param timer The elapsed study time in seconds.
+ * @param data The optional score and details payload.
+ * @returns The write result.
+ */
 export async function updateUserActivity(
   articleId: string,
   type: ActivityType,
-  xpEarned: number,
   timer: number,
   data: {
     score?: number;
@@ -41,6 +49,9 @@ export async function updateUserActivity(
   }
 
   const isCompleted = {};
+
+  // The award comes from the server XP table; callers cannot set XP.
+  const xpEarned = resolveXpAward(type);
 
   // Create user activity first
   const [userActivityRow] = await db.insert(userActivity).values({

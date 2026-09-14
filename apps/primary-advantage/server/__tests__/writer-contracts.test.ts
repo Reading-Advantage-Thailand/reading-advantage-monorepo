@@ -8,8 +8,8 @@ const readSource = (path: string) =>
 
 describe("Primary writer contracts", () => {
   it("uses the internal AI adapter and current token option", () => {
-    const image = readSource("utils/genaretors/image-generator.ts");
-    const story = readSource("utils/genaretors/story-generator.ts");
+    const image = readSource("utils/generators/image-generator.ts");
+    const story = readSource("utils/generators/story-generator.ts");
     const imports = image.slice(0, image.indexOf("interface GenerateImageParams"));
     expect(image).toContain('@reading-advantage/ai/internal-sdk');
     expect(imports).not.toMatch(/\bvertex\b|NoImageGeneratedError|APICallError/);
