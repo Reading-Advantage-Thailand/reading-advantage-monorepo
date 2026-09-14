@@ -25,13 +25,10 @@
  *   state on the same article id.
  */
 import "@testing-library/jest-dom/vitest";
-import {
-  cleanup,
-  fireEvent,
-  screen,
-  waitFor,
-} from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { NextIntlClientProvider } from "next-intl";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import viMessages from "../../messages/vi.json";
 
 const {
   pushMock,
@@ -260,6 +257,8 @@ describe("FR-7 locale-aware content lookups", () => {
             sentence: "Hello world",
             translation: { th: "สวัสดีชาวโลก", cn: "你好", tw: "你好", vi: "xin chào" },
             timeSeconds: 0,
+            startTime: 0,
+            endTime: 10,
             audioUrl: "/audio/sentences.mp3",
           },
         ]}
@@ -285,9 +284,14 @@ describe("FR-7 locale-aware content lookups", () => {
         },
       ],
     } as unknown as Article;
-    renderWithMessages(<TaskVocabularyCollection article={article} />, {
-      locale: "vi",
-    });
+    render(
+      <NextIntlClientProvider
+        locale="vi"
+        messages={viMessages as unknown as Record<string, unknown> as never}
+      >
+        <TaskVocabularyCollection article={article} />
+      </NextIntlClientProvider>,
+    );
     expect(await screen.findByText("con mèo")).toBeInTheDocument();
   });
 
