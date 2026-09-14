@@ -1,0 +1,11 @@
+{
+  "track_id": "primary_test_hygiene_upload_fixes_20260914",
+  "type": "chore",
+  "status": "new",
+  "created_at": "2026-09-14T06:40:00Z",
+  "updated_at": "2026-09-14T06:40:00Z",
+  "description": "Convert the 97 static source-grep tests to behavioral tests in per-domain batches, make upload writes session-authoritative for school scoping, and stop upload/csv from returning 500 on duplicate emails.",
+  "estimated_tasks": 17,
+  "actual_tasks": null,
+  "deviation_notes": ""
+}
