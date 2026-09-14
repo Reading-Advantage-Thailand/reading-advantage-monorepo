@@ -570,7 +570,9 @@ export async function POST(request: NextRequest) {
           name: validatedRow.name.trim(),
           role: validatedRow.role,
           password: null,
-          schoolId: currentUser.schoolId,
+          // FR-2.1: the session school is the sole stamp source. The stored
+          // user row can lag the session after a school change.
+          schoolId: authUser.schoolId ?? null,
           classroomNames:
             validatedRow.role !== "admin"
               ? parseClassroomNames(validatedRow.classroom_name)
@@ -684,7 +686,8 @@ export async function POST(request: NextRequest) {
         const classroomData = {
           name: validatedRow.classroom_name.trim(),
           classCode: generateRandomClassCode(),
-          schoolId: currentUser.schoolId,
+          // FR-2.1: the session school is the sole stamp source.
+          schoolId: authUser.schoolId ?? null,
           teacherId: currentUser.id,
           createdBy: currentUser.id,
         };

@@ -168,7 +168,9 @@ describe("classes upload session school scoping", () => {
       teacherId: "admin-1",
       createdBy: "admin-1",
     });
-    expect(classroomWrite!.values[0].classCode).toEqual(expect.any(String));
+    expect(classroomWrite!.values[0]).toMatchObject({
+      classCode: expect.any(String),
+    });
   });
 
   it("keeps the 400 rejection when the session has no school context", async () => {

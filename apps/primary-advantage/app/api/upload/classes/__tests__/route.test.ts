@@ -2,62 +2,16 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { NextRequest } from "next/server";
 
-const mocks = vi.hoisted(() => {
-  // Inert stubs for every other @reading-advantage/db table export. Some
-  // transitively loaded @reading-advantage/auth modules import table exports
-  // from this barrel at load time; the route never queries through them.
-  const inertTables = Object.fromEntries(
-    [
-      "accounts", "achievements", "activitySessionEvents", "activitySessions", "activityTutorialCaptureLeases",
-      "activityTutorialReports", "activityTutorialRepositoryStates", "aiInsightCache", "aiInsights", "articleActivityLogs",
-      "articles", "assignmentNotifications", "assignments", "auditEvents", "campaigns",
-      "capabilityIdempotencyRecords", "cardReviews", "chapterTrackings", "chapters", "clozeTestGames",
-      "codecampChatConversations", "codecampChatMessages", "codecampCurriculumAssignments", "codecampExerciseRepos", "codecampExercises",
-      "codecampLessons", "codecampModules", "codecampPrReviewAttempts", "codecampPrReviewObjectiveEvidence", "codecampPrReviews",
-      "codecampQuizQuestions", "codecampTutorEvidenceJoins", "codecampTutorInterventions", "codecampTutorResourceUses", "codecampUserProgress",
-      "codecampWebhookEvents", "companyProductPrincipals", "durableJobAuditEvents", "durableJobs", "flashcardCards",
-      "flashcardDecks", "flashcardProgress", "gameChallengeContributions", "gameChallengeDefinitions", "gameChallengeRuns",
-      "gameCompletions", "gameRankings", "gamificationProfiles", "genreAdjacencies", "goalMilestones",
-      "goalProgressLogs", "hostProofAttempts", "leaderboards", "learningGoals", "lessonProgress",
-      "lessonRecords", "lessons", "licenseOnUsers", "licenses", "loginAttempts",
-      "longAnswerQuestions", "masteryCalibrations", "masteryCards", "masteryCommits", "masteryEvidence",
-      "masteryPlacements", "masteryPrincipals", "masteryReviews", "masteryStates", "multipleChoiceQuestions",
-      "pastTopics", "raCefrMappings", "reviewJobAdoptionAuditEvents", "reviewJobDurableAdoption", "reviewJobDurableBindings",
-      "reviewJobMigrationIssues", "reviewJobs", "salesChatMessages", "salesConversations", "salesLessons",
-      "salesMasteryProjectionOutbox", "salesMasteryProjectionReceipts", "salesMasteryTenantMappings", "salesModules", "salesProgress",
-      "salesQuizQuestions", "salesRoleplayAttempts", "salesRoleplayScenarios", "salesRubrics", "schoolAdmins",
-      "scienceAssignments", "scienceAttempts", "scienceClassStudents", "scienceClasses", "scienceCurriculumUnits",
-      "scienceLessonCompletions", "scienceLessonStandards", "scienceLessons", "scienceMasteryRuns", "scienceQuestionResponses",
-      "scienceQuestionStandards", "scienceQuizQuestions", "scienceStandardMastery", "scienceStandards", "scienceUnitLessons",
-      "sentencsAndWordsForFlashcards", "sessions", "settings", "shortAnswerQuestions", "standardPackSuccessorAdmissionReceipts",
-      "standardPackSuccessorCommitments", "stories", "storyAssignments", "storyRecords", "storyTimepoints",
-      "studentAnswers", "studentAssignments", "studentCosmeticUnlocks", "studentRpgProfiles", "userActivity",
-      "userSentenceRecords", "userWordRecords", "verificationTokens", "videoAssets", "videoProjects",
-      "workbookDrafts", "workbookEditions", "workbookPublicationEvents", "xpLogs",
-    ].map((name) => [name, {}]),
-  );
-  const tables = {
-    ...inertTables,
-    users: { id: "users.id", email: "users.email" },
-    schools: { id: "schools.id", name: "schools.name" },
-    roles: { id: "roles.id", name: "roles.name" },
-    classrooms: { id: "classrooms.id", name: "classrooms.name", schoolId: "classrooms.schoolId" },
-    classroomStudents: { classroomId: "classroomStudents.classroomId", studentId: "classroomStudents.studentId" },
-    classroomTeachers: { classroomId: "classroomTeachers.classroomId", teacherId: "classroomTeachers.teacherId" },
-    userRoles: { userId: "userRoles.userId", roleId: "userRoles.roleId" },
-  };
-  return {
-    currentUser: vi.fn(),
-    select: vi.fn(),
-    insert: vi.fn(),
-    parse: vi.fn(),
-    writeFile: vi.fn(),
-    mkdir: vi.fn(),
-    existsSync: vi.fn(() => true),
-    unlink: vi.fn(),
-    tables,
-  };
-});
+const mocks = vi.hoisted(() => ({
+  currentUser: vi.fn(),
+  select: vi.fn(),
+  insert: vi.fn(),
+  parse: vi.fn(),
+  writeFile: vi.fn(),
+  mkdir: vi.fn(),
+  existsSync: vi.fn(() => true),
+  unlink: vi.fn(),
+}));
 
 vi.mock("@/lib/session", () => ({ getCurrentUser: mocks.currentUser }));
 vi.mock("csv/sync", () => ({ parse: mocks.parse }));
@@ -71,21 +25,25 @@ vi.mock("fs", async (importOriginal) => ({
   unlink: mocks.unlink,
 }));
 // The route reads its db handle from getTenantDB/getUnscopedDB in
-// @reading-advantage/domain, which import the shared client from this barrel;
-// the `db` export below is that client. Tables come from
-// @reading-advantage/db/schema and operators from drizzle-orm (both real), so
-// identity assertions target the real schema exports.
-vi.mock("@reading-advantage/db", () => ({
-  db: { select: mocks.select, insert: mocks.insert },
-  ...mocks.tables,
-  eq: vi.fn(() => ({})),
-  and: vi.fn(() => ({})),
-  inArray: vi.fn(() => ({})),
-  or: vi.fn(() => ({})),
-  ilike: vi.fn(() => ({})),
-  gt: vi.fn(() => ({})),
-  count: vi.fn(() => ({})),
-}));
+// @reading-advantage/domain, which import the shared client from this barrel.
+// The factory spreads the real schema so the tenant registry (which imports
+// its tables from this barrel) and the route (which imports from the /schema
+// submodule) share one table identity. The session mocks carry a schoolId,
+// so the TenantDB path with school enforcement is the one under test.
+vi.mock("@reading-advantage/db", async () => {
+  const schema = await import("@reading-advantage/db/schema");
+  return {
+    db: { select: mocks.select, insert: mocks.insert },
+    ...schema,
+    eq: vi.fn(() => ({})),
+    and: vi.fn(() => ({})),
+    inArray: vi.fn(() => ({})),
+    or: vi.fn(() => ({})),
+    ilike: vi.fn(() => ({})),
+    gt: vi.fn(() => ({})),
+    count: vi.fn(() => ({})),
+  };
+});
 
 import { classrooms, schools, users } from "@reading-advantage/db/schema";
 import { POST } from "../route";
@@ -138,7 +96,9 @@ describe("combined classroom and user CSV upload", () => {
 
   it("imports a student with required account fields and a school-scoped role", async () => {
     const schoolId = "00000000-0000-0000-0000-000000000001";
-    mocks.currentUser.mockResolvedValue({ id: "teacher-1", role: "TEACHER" });
+    // The session school is the sole schoolId source for upload writes, so
+    // the session mock must carry it.
+    mocks.currentUser.mockResolvedValue({ id: "teacher-1", role: "TEACHER", schoolId });
     mocks.parse.mockReturnValue([
       {
         name: "Student One",
@@ -211,7 +171,9 @@ describe("combined classroom and user CSV upload", () => {
 
   it("writes required classroom ownership fields", async () => {
     const schoolId = "00000000-0000-0000-0000-000000000001";
-    mocks.currentUser.mockResolvedValue({ id: "admin-1", role: "ADMIN" });
+    // The session school is the sole schoolId source for upload writes, so
+    // the session mock must carry it.
+    mocks.currentUser.mockResolvedValue({ id: "admin-1", role: "ADMIN", schoolId });
     mocks.parse.mockReturnValue([{ classroom_name: "Class A" }]);
     const results = [
       [{ id: "admin-1", schoolId }],

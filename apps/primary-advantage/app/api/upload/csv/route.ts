@@ -9,6 +9,7 @@ import { users, schools, roles, classrooms, classroomStudents, classroomTeachers
 import { getTenantDB, getUnscopedDB } from '@reading-advantage/domain';
 import { assertCan, AuthError } from '@reading-advantage/auth';
 import { getCurrentUser } from "@/lib/session";
+import { CsvUploadSummary } from "./schema";
 /**
  * CSV Upload API Route
  *
@@ -210,6 +211,8 @@ export async function POST(request: NextRequest) {
       email: string;
     }[] = [];
     const errors: string[] = [];
+    const seenEmails = new Set<string>();
+    let skippedDuplicate = 0;
 
     // Get all roles from database (replaces Prisma `role.findMany`).
     const allRoles = await globalDb.select().from(roles);
@@ -286,31 +289,43 @@ export async function POST(request: NextRequest) {
         continue;
       }
 
+      // FR-3.1: the first valid row wins. Later rows repeating an email in
+      // this file are skipped and counted, not rejected.
+      const email = row.email.trim().toLowerCase();
+      if (seenEmails.has(email)) {
+        skippedDuplicate += 1;
+        continue;
+      }
+      seenEmails.add(email);
+
       // Prepare user data with default values and school assignment
       const userData = {
         id: crypto.randomUUID(),
-        username: row.email.trim().toLowerCase(),
-        displayUsername: row.email.trim().toLowerCase(),
-        email: row.email.trim().toLowerCase(),
+        username: email,
+        displayUsername: email,
+        email: email,
         name: row.name.trim(),
         role: role.toUpperCase(),
         password: null, // No password from CSV, will need to be set later
         cefrLevel: "A0-", // Default CEFR level
         level: 1, // Default level
         xp: 0, // Default XP
-        schoolId: currentUser.schoolId, // Assign to current user's school (null for system users)
+        // FR-2.1: the session school is the sole stamp source. The stored
+        // user row can lag the session after a school change.
+        schoolId: authUser.schoolId ?? null,
       };
 
       processedUsers.push(userData);
       userRoleAssignments.push({ userId: "", roleName: role }); // userId will be filled after user creation
 
-      // Store classroom assignment for non-Admin roles
+      // Store classroom assignment for non-Admin roles. The email is
+      // lowercased so the later id mapping matches the inserted rows.
       if ((role === "student" || role === "teacher") && classroomName) {
         classroomAssignments.push({
           userId: "",
           classroomName,
           role,
-          email: row.email.trim(), // Store email for later mapping
+          email: email,
         });
       }
     }
@@ -328,39 +343,54 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // FR-3.2: skip rows whose email already exists in the database so a
+    // re-upload of the same file succeeds instead of failing the batch.
+    // This pre-filter avoids doomed inserts; the authoritative counts come
+    // from returning() below, which also covers rows that lost a race.
+    const uploadEmails = processedUsers.map((userData) => userData.email);
+    const existingEmailRows = uploadEmails.length > 0
+      ? await staffDb.select({ email: users.email }).from(users)
+          .where(inArray(users.email, uploadEmails))
+      : [];
+    const existingEmails = new Set(
+      existingEmailRows
+        .filter((row) => row.email !== null)
+        .map((row) => row.email!.toLowerCase()),
+    );
+    const rowsToInsert = processedUsers.filter(
+      (userData) => !existingEmails.has(userData.email),
+    );
+
     // Process users in batches
     const max = 500;
     let batch: any[] = [];
     const createdUsers: any[] = [];
 
-    for (const userData of processedUsers) {
+    for (const userData of rowsToInsert) {
       batch.push(userData);
       if (batch.length >= max) {
-        // `createMany` → `db.insert(users).values([...])` (no skipDuplicates equivalent
-        // here; we use a single insert per batch). Per-row .returning() not available
-        // for batched inserts so we re-fetch the rows that match by email.
-        await staffDb.insert(users).values(batch as any);
-
-        // Get the created users to assign roles
-        const emails = batch.map((u) => u.email);
-        const insertedUsers = await staffDb.select({ id: users.id, email: users.email })
-          .from(users)
-          .where(inArray(users.email, emails));
+        // FR-3.2: onConflictDoNothing skips rows that lost a race with an
+        // existing email. returning reports only the rows actually written,
+        // which also supplies the ids for role and classroom assignment.
+        const insertedUsers = await staffDb.insert(users).values(batch as any)
+          .onConflictDoNothing()
+          .returning({ id: users.id, email: users.email });
         createdUsers.push(...insertedUsers);
         batch = [];
       }
     }
 
     if (batch.length > 0) {
-      await staffDb.insert(users).values(batch as any);
-
-      // Get the created users to assign roles
-      const emails = batch.map((u) => u.email);
-      const insertedUsers = await staffDb.select({ id: users.id, email: users.email })
-        .from(users)
-        .where(inArray(users.email, emails));
+      const insertedUsers = await staffDb.insert(users).values(batch as any)
+        .onConflictDoNothing()
+        .returning({ id: users.id, email: users.email });
       createdUsers.push(...insertedUsers);
     }
+
+    // FR-3.2: rows that lost the pre-filter or the insert race are both
+    // existing; only the written rows count as inserted. This keeps
+    // inserted + skippedExisting + skippedDuplicate equal to the valid rows.
+    const skippedExisting = processedUsers.length - createdUsers.length;
 
     // Create user-email to user-id mapping
     const emailToUserId = new Map(
@@ -442,7 +472,8 @@ export async function POST(request: NextRequest) {
           // Create new classroom (replaces Prisma `classroom.create`).
           const [created] = await staffDb.insert(classrooms).values({
             name: classroomName,
-            schoolId: currentUser.schoolId as string,
+            // FR-2.1: the session school is the sole stamp source.
+            schoolId: authUser.schoolId ?? null,
             teacherId: ownerId,
             createdBy: currentUser.id,
           }).returning();
@@ -489,8 +520,17 @@ export async function POST(request: NextRequest) {
       }
     });
 
+    // FR-3.3: per-upload summary validated against the response contract.
+    // Duplicates and existing rows are reported, never fatal.
+    const summary = CsvUploadSummary.parse({
+      inserted: createdUsers.length,
+      skippedDuplicate,
+      skippedExisting,
+    });
+
     return NextResponse.json({
       success: true,
+      ...summary,
       message: "File uploaded and users created successfully",
       fileName: fileName,
       filePath: filePath,
