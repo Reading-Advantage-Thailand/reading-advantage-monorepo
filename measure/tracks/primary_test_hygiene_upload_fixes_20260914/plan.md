@@ -66,6 +66,10 @@ _(Adapted: `measure/generate.sh` and `measure/doctor.sh` do not exist in this re
     - [x] ESLint 0 errors (821 warnings; baseline was 819, +2 in new test files)
     - [x] FR-1.4 grep gate: 12 remaining `readFileSync` files all justified (4 comment-only, 2 config pins, 1 architecture ratchet, 3 fixture readers, 2 data pins)
     - [x] `build-graph update ./graph.db <edited files>` for structural edits
+    - Review follow-up 2026-09-14: 4 findings (3 Medium, 1 Low) fixed — lint gate
+      installed, i18n-Link tests made two-property discriminative, mixed-case CSV
+      email pinned. Gates after: 93 files / 574 tests, tsc 17 APK errors, lint
+      0 errors / 821 warnings.
 - [x] Task 17: Registry updates
     - [x] Rewrite the three resolved bullets in `docs/primary-advantage-ux-refactor-plan.md` "Known limitations"
     - [x] Mark inventory file complete; update `metadata.json` (`actual_tasks`, deviation notes if any)

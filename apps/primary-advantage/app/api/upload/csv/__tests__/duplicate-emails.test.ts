@@ -46,7 +46,7 @@ vi.mock("@reading-advantage/db", async () => {
   };
 });
 
-import { classrooms, users } from "@reading-advantage/db/schema";
+import { classrooms, classroomStudents, users } from "@reading-advantage/db/schema";
 import { CsvUploadSummary } from "../schema";
 import { POST } from "../route";
 
@@ -193,5 +193,67 @@ describe("CSV upload duplicate email handling", () => {
     const summary = CsvUploadSummary.parse(await response.json());
     expect(summary).toEqual({ inserted: 0, skippedDuplicate: 0, skippedExisting: 1 });
     expect(writes.find((write) => write.table === users)).toBeUndefined();
+  });
+
+  it("returns 200 and inserts a lowercased user with the classroom assignment for a mixed-case email", async () => {
+    mocks.currentUser.mockResolvedValue({
+      id: "teacher-1",
+      role: "TEACHER",
+      schoolId: SESSION_SCHOOL,
+    });
+    mocks.parse.mockReturnValue([
+      {
+        name: "Mixed Case Student",
+        email: "MixedCase@Example.COM",
+        role: "student",
+        classroom_name: "Class A",
+      },
+    ]);
+    const results = [
+      [{ id: "teacher-1", schoolId: SESSION_SCHOOL }],
+      [{ id: SESSION_SCHOOL, name: "School A" }],
+      [{ id: "role-student", name: "student" }],
+      [],
+      [{ id: "class-1", name: "Class A", schoolId: SESSION_SCHOOL }],
+    ];
+    for (const rows of results) mocks.select.mockReturnValueOnce(selectResult(rows));
+
+    const writes = recordingInserts((table) =>
+      table === users
+        ? [{ id: "user-1", email: "mixedcase@example.com" }]
+        : table === classrooms
+          ? [{ id: "class-1", name: "Class A", schoolId: SESSION_SCHOOL }]
+          : [],
+    );
+
+    const response = await POST(uploadRequest("students.csv"));
+
+    expect(response.status).toBe(200);
+    const body = await response.json();
+    const summary = CsvUploadSummary.parse(body);
+    expect(summary).toEqual({ inserted: 1, skippedDuplicate: 0, skippedExisting: 0 });
+    expect(body.stats.studentAssignments).toBe(1);
+
+    const userWrite = writes.find((write) => write.table === users);
+    expect(userWrite).toBeDefined();
+    expect(userWrite!.values).toHaveLength(1);
+    expect(userWrite!.values[0]).toMatchObject({
+      name: "Mixed Case Student",
+      email: "mixedcase@example.com",
+      username: "mixedcase@example.com",
+      schoolId: SESSION_SCHOOL,
+    });
+
+    // The classroom assignment must survive the lowercasing: the insert
+    // reports the lowercased email, and the id mapping built from it
+    // resolves so the membership write is issued.
+    const membershipWrite = writes.find(
+      (write) => write.table === classroomStudents,
+    );
+    expect(membershipWrite).toBeDefined();
+    expect(membershipWrite!.values[0]).toMatchObject({
+      classroomId: "class-1",
+      studentId: "user-1",
+    });
   });
 });

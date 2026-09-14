@@ -279,11 +279,10 @@ describe("FR-8 header spelling", () => {
 
 describe("FR-9 act warnings", () => {
   it("renders the assignment table with no React act warnings", async () => {
-    // The legacy "no console module import" rows collapse into this render:
-    // the client component loads in jsdom (a browser-like module graph with
-    // no node:console loader), and the server files use only the console
-    // global. No runtime signal can distinguish a global from an import, so
-    // import hygiene there stays a lint concern.
+    // The legacy "no console module import" rows are enforced by the
+    // ESLint `no-restricted-imports` rule in eslint.config.mjs, which bans
+    // importing the `console` module across this app. This test keeps only
+    // the runtime signal: the render itself must stay free of act warnings.
     mockFetch.mockResolvedValue({
       ok: true,
       json: async () => ({

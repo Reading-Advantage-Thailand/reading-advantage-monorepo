@@ -22,11 +22,16 @@ const mocks = vi.hoisted(() => ({
 }));
 
 vi.mock("@/i18n/navigation", () => ({
+  // The marker data attribute distinguishes this mock from a swap to
+  // next/link: the page tests below assert the marker on every navigation
+  // element, so a plain next/link <a> fails them.
   Link: ({
     children,
     ...props
   }: { children?: React.ReactNode } & Record<string, unknown>) => (
-    <a {...props}>{children}</a>
+    <a data-test-id="i18n-link" {...props}>
+      {children}
+    </a>
   ),
   usePathname: () => "/",
   useRouter: () => ({
@@ -46,6 +51,15 @@ vi.mock("next/navigation", () => ({
   useParams: () => ({ locale: "en" }),
   notFound: () => {
     throw new Error("notFound");
+  },
+  // The real i18n navigation module (loaded via importActual below) needs
+  // these at init or render time to wrap or read the current path.
+  usePathname: () => "/en",
+  redirect: (args: unknown) => {
+    throw new Error(`redirect:${JSON.stringify(args)}`);
+  },
+  permanentRedirect: (args: unknown) => {
+    throw new Error(`permanentRedirect:${JSON.stringify(args)}`);
   },
 }));
 
@@ -169,6 +183,12 @@ import {
 } from "./helpers/render-with-messages";
 import enMessages from "../../messages/en.json";
 import thMessages from "../../messages/th.json";
+
+// The suite-level vi.mock replaces @/i18n/navigation, so the real Link is
+// loaded lazily where it is rendered against locale prefixing.
+const { Link: RealLink } = await vi.importActual<
+  typeof import("@/i18n/navigation")
+>("@/i18n/navigation");
 
 const en = testMessages.en;
 const th = testMessages.th;
@@ -406,17 +426,23 @@ describe("FR-5 locale-aware sign-in redirects, links, and logout", () => {
       params: Promise.resolve({ locale: "en" }),
     });
     const { unmount } = render(games);
-    expect(
-      screen.getByRole("link", { name: /Wizard vs Zombie/ }),
-    ).toHaveAttribute("href", "/student/games/apk/wizard-vs-zombie");
+    // The mock Link stamps the marker attribute, so a page that swaps to
+    // next/link renders a plain <a> without it and fails here.
+    const gamesLink = screen.getByRole("link", { name: /Wizard vs Zombie/ });
+    expect(gamesLink).toHaveAttribute("data-test-id", "i18n-link");
+    expect(gamesLink).toHaveAttribute(
+      "href",
+      "/student/games/apk/wizard-vs-zombie",
+    );
     unmount();
 
     const classes = await MyClassesPage();
     render(classes);
-    expect(screen.getByRole("link", { name: "Class challenges" })).toHaveAttribute(
-      "href",
-      "../game-challenges",
-    );
+    const challengesLink = screen.getByRole("link", {
+      name: "Class challenges",
+    });
+    expect(challengesLink).toHaveAttribute("data-test-id", "i18n-link");
+    expect(challengesLink).toHaveAttribute("href", "../game-challenges");
     cleanup();
 
     mocks.getCurrentUser.mockResolvedValue({
@@ -428,9 +454,42 @@ describe("FR-5 locale-aware sign-in redirects, links, and logout", () => {
       params: Promise.resolve({ locale: "en" }),
     });
     render(challenges);
+    const backLink = screen.getByRole("link", { name: "Back to classes" });
+    expect(backLink).toHaveAttribute("data-test-id", "i18n-link");
+    expect(backLink).toHaveAttribute("href", "/teacher/my-classes");
+  });
+
+  it("renders locale-prefixed hrefs through the real i18n Link", () => {
+    // The mock above carries the marker but cannot prove locale prefixing.
+    // This renders the real Link (createNavigation in @/i18n/navigation)
+    // inside the real-messages provider and pins the prefixed hrefs the
+    // three pages rely on.
+    renderWithMessages(
+      <>
+        <RealLink href="/student/games/apk/wizard-vs-zombie">
+          Wizard vs Zombie
+        </RealLink>
+        <RealLink href="../game-challenges">Class challenges</RealLink>
+        <RealLink href="/teacher/my-classes">Back to classes</RealLink>
+        <RealLink href="/" locale="th">
+          Home
+        </RealLink>
+      </>,
+    );
+    expect(
+      screen.getByRole("link", { name: "Wizard vs Zombie" }),
+    ).toHaveAttribute("href", "/en/student/games/apk/wizard-vs-zombie");
+    expect(
+      screen.getByRole("link", { name: "Class challenges" }),
+    ).toHaveAttribute("href", "../game-challenges");
     expect(
       screen.getByRole("link", { name: "Back to classes" }),
-    ).toHaveAttribute("href", "/teacher/my-classes");
+    ).toHaveAttribute("href", "/en/teacher/my-classes");
+    // Explicit locale switches always carry the prefix.
+    expect(screen.getByRole("link", { name: "Home" })).toHaveAttribute(
+      "href",
+      "/th",
+    );
   });
 });
 
