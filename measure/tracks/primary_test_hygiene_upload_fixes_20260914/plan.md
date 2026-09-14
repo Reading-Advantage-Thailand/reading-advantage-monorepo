@@ -30,9 +30,9 @@ radius is the HTTP surface, covered by the new route-level tests._
     - [ ] File with duplicate emails → 200, first row wins, `skippedDuplicate` correct
     - [ ] Email already in DB → 200, `skippedExisting` correct, no 500
     - [ ] Response validates against `CsvUploadSummary`
-- [ ] Task 6: FR-1 batch 1 replacements — `authorization-hardening-static`
-    - [ ] Write behavioral replacements (route-level handler invocation per lessons-learned 2026-06-24)
-    - [ ] Old grep assertions still green alongside (no deletion in Phase 2)
+- [x] Task 6: FR-1 batch 1 replacements — `authorization-hardening-static`
+    - [x] Write behavioral replacements (route-level handler invocation per lessons-learned 2026-06-24)
+    - [x] Old grep assertions still green alongside (no deletion in Phase 2)
 
 ## Phase 3: Implement (Green + per-batch conversion)
 
@@ -45,8 +45,8 @@ radius is the HTTP surface, covered by the new route-level tests._
     - [ ] Conflict-safe insert with per-row skip
     - [ ] Return `CsvUploadSummary` with 200
     - [ ] Task 5 tests green
-- [ ] Task 9: FR-1 batch 1 conversion — `authorization-hardening-static`
-    - [ ] Replacements green; delete old grep assertions in the same commit
+- [x] Task 9: FR-1 batch 1 conversion — `authorization-hardening-static`
+    - [x] Replacements green; delete old grep assertions in the same commit
 - [ ] Task 10: FR-1 batch 2 — `broken-ux-fixes`
 - [ ] Task 11: FR-1 batch 3 — `loading-state-invariants`
 - [ ] Task 12: FR-1 batch 4 — `structural-alignment`
