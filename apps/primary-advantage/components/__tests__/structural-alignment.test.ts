@@ -168,22 +168,9 @@ describe("FR-4 clickable elements are keyboard-reachable", () => {
 });
 
 describe("FR-5 APK learning-mode labels are translated", () => {
-  it("reads both labels from messages", () => {
-    const source = read("components/apk/StudentCartridgeHost.tsx");
-    expect(source).toContain('useTranslations("ApkHost")');
-    expect(source).toContain('{t("readMode")}');
-    expect(source).toContain('{t("listenMode")}');
-    expect(source).not.toContain("Read Thai");
-    expect(source).not.toContain("Listen to English");
-  });
-
-  it("keeps the locale prefix on sign-in links and catalog navigation", () => {
-    const source = read("components/apk/StudentCartridgeHost.tsx");
-    expect(source).toContain("`/${locale}/auth/signin?redirect=");
-    expect(source).toContain('router.push("/student/games")');
-    expect(source).not.toContain("window.location.assign");
-  });
-
+  // KEEP-WITH-JUSTIFICATION: locale data pin, not a source-structure
+  // assertion. It validates message-file content used by the behavioral
+  // ApkHost render tests in structural-alignment-i18n.test.tsx.
   it("defines ApkHost keys in every locale", () => {
     for (const locale of ["en", "th", "vi", "cn", "tw"]) {
       const apk = messages(locale).ApkHost as Record<string, string>;
@@ -195,113 +182,10 @@ describe("FR-5 APK learning-mode labels are translated", () => {
   });
 });
 
-describe("FR-5 locale-aware sign-in redirects, links, and logout", () => {
-  it("logs out through the i18n router", () => {
-    const source = read("components/nav/user-account-nav.tsx");
-    expect(source).toContain("useRouter");
-    expect(source).toContain('router.push("/")');
-    expect(source).not.toContain("window.location.href");
-  });
-
-  it("redirects student sign-in through the i18n router", () => {
-    const source = read("components/auth/student-signin-form.tsx");
-    expect(source).toContain('from "@/i18n/navigation"');
-    expect(source).toContain("router.push(");
-    expect(source).not.toContain("window.location.href");
-  });
-
-  it("routes teacher sign-in through the i18n router", () => {
-    const source = read("components/auth/teacher-signin-form.tsx");
-    expect(source).toContain('useRouter } from "@/i18n/navigation"');
-  });
-
-  it("redirects anonymous users with the locale-aware redirect", () => {
-    for (const file of [
-      "app/[locale]/(student)/student/lesson/[id]/page.tsx",
-      "app/[locale]/(student)/settings/user-profile/page.tsx",
-      "app/[locale]/(student)/student/read/[articleId]/page.tsx",
-    ]) {
-      const source = read(file);
-      expect(source).toContain('redirect } from "@/i18n/navigation"');
-      expect(source).toContain('redirect({ href: "/auth/signin", locale })');
-      expect(source).not.toContain('from "next/navigation"');
-    }
-  });
-
-  it("links through the i18n Link", () => {
-    for (const file of [
-      "app/[locale]/(student)/student/games/page.tsx",
-      "app/[locale]/teacher/my-classes/page.tsx",
-      "app/[locale]/unauthorized/page.tsx",
-      "app/[locale]/teacher/game-challenges/page.tsx",
-    ]) {
-      const source = read(file);
-      expect(source).toMatch(/Link.*from "@\/i18n\/navigation"/);
-      expect(source).not.toContain('from "next/link"');
-    }
-  });
-});
-
-describe("FR-5 teacher dashboard placeholder", () => {
-  it("redirects to the classroom list", () => {
-    const source = read("app/[locale]/teacher/dashboard/page.tsx");
-    expect(source).toContain('redirect({ href: "/teacher/my-classes", locale');
-    expect(source).not.toContain("currentUser");
-    expect(source).not.toContain("TeacherDashboard</div>");
-  });
-});
-
-describe("FR-5 marketing and auth metadata", () => {
-  it("exports metadata from marketing and auth pages", () => {
-    for (const file of [
-      "app/[locale]/(index)/page.tsx",
-      "app/[locale]/(index)/about/page.tsx",
-      "app/[locale]/(index)/contact/page.tsx",
-      "app/[locale]/(index)/terms/page.tsx",
-      "app/[locale]/(index)/privacy-policy/page.tsx",
-      "app/[locale]/auth/signin/page.tsx",
-      "app/[locale]/auth/signup/page.tsx",
-      "app/[locale]/auth/forgot-password/page.tsx",
-      "app/[locale]/(student)/student/games/page.tsx",
-    ]) {
-      const source = read(file);
-      expect(source).toMatch(/export (const metadata|async function generateMetadata)/);
-    }
-  });
-});
-
 describe("FR-5 footer, games, licence, and school strings", () => {
-  it("translates the footer through messages", () => {
-    const source = read("components/index/footer.tsx");
-    expect(source).toContain('useTranslations("Footer")');
-    expect(source).toContain('t("tagline")');
-    expect(source).toContain('t("aboutUs")');
-    expect(source).toContain('t("privacyPolicy")');
-  });
-
-  it("translates the games catalogue heading", () => {
-    const source = read("app/[locale]/(student)/student/games/page.tsx");
-    expect(source).toContain('namespace: "StudentGames"');
-    expect(source).toContain('{t("title")}');
-    expect(source).not.toContain(">Student games<");
-  });
-
-  it("translates licence form labels", () => {
-    const source = read("components/system/edit-license-form.tsx");
-    expect(source).toContain('useTranslations("LicenseForm")');
-    expect(source).toContain('t("name")');
-    expect(source).toContain('t("status")');
-    expect(source).not.toContain("<FormLabel>License Name</FormLabel>");
-    expect(source).not.toContain("<FormLabel>Status</FormLabel>");
-  });
-
-  it("translates school form labels", () => {
-    const source = read("components/system/create-school-form.tsx");
-    expect(source).toContain('useTranslations("SchoolForm")');
-    expect(source).toContain('t("name")');
-    expect(source).not.toContain("School Name");
-  });
-
+  // KEEP-WITH-JUSTIFICATION: locale data pin, not a source-structure
+  // assertion. It validates message-file key parity used by the behavioral
+  // render tests in structural-alignment-i18n.test.tsx.
   it("keeps the new namespaces in key parity across locales", () => {
     const en = messages("en");
     for (const locale of ["th", "vi", "cn", "tw"]) {
