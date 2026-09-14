@@ -56,7 +56,6 @@ export async function generateQuestion<T>(
       question,
     };
   } catch (error) {
-    console.log(error);
     throw `failed to generate ${params.promptFile
       .replace(".json", "")
       .replace("prompts-combined-", "")} question: ${error}`;

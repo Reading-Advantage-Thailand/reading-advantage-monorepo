@@ -12,6 +12,12 @@
     "goBack": "Go Back",
     "returnToWebsite": "Return to website"
   },
+  "Error": {
+    "title": "Something went wrong",
+    "description": "Sorry, an unexpected error occurred. Please try again.",
+    "retry": "Try again",
+    "goHome": "Go home"
+  },
   "MainNav": {
     "home": "Home",
     "about": "About",
@@ -354,7 +360,8 @@
       "articles": "Articles",
       "articlesDesc": "Available reading materials",
       "growth": "Monthly Growth",
-      "growthDesc": "Student enrollment growth"
+      "growthDesc": "Student enrollment growth",
+      "loadError": "Failed to load statistics"
     },
     "quickActions": {
       "title": "Quick Actions",
@@ -374,7 +381,8 @@
     "recentActivity": {
       "title": "Recent Activity",
       "empty": "No recent activity to display",
-      "viewAll": "View all activity"
+      "viewAll": "View all activity",
+      "loadError": "Failed to load recent activity"
     },
     "systemStatus": {
       "title": "System Status",
@@ -422,6 +430,16 @@
     "startQuiz": "Start Quiz",
     "getFeedback": "Get Feedback",
     "audioButton": "Listen and read along",
+    "playAudio": "Play audio",
+    "stopAudio": "Stop audio",
+    "backToTop": "Back to top",
+    "seekBack": "Seek back",
+    "seekForward": "Seek forward",
+    "playbackSpeed": "Playback speed",
+    "openActionsMenu": "Open actions menu",
+    "showNotifications": "Show notifications",
+    "toggleDetails": "Toggle details",
+    "selectStudent": "Select student",
     "saveToFlashcard": "Save to flashcard",
     "translate": "Translate",
     "timer": "{elapsed} seconds elapsed",
@@ -430,6 +448,8 @@
     "sentences": "Sentences",
     "confirmRetake": "Confirm Retake",
     "areYouSureYouWantToRetakeThisQuiz": "Are you sure you want to retake this quiz? Your previous answers will be cleared.",
+    "loadError": "Failed to load",
+    "emptyList": "No sentences yet",
     "AdminArticleCreation": {
       "tabs": {
         "createArticle": "Create Article",
@@ -558,7 +578,9 @@
   "WordList": {
     "title": "Word List",
     "description": "Select words to save to your flashcards",
-    "selectedWords": "{count} words selected"
+    "selectedWords": "{count} words selected",
+    "loadError": "Failed to load words",
+    "empty": "No words saved yet"
   },
   "Article": {
     "title": "Article",
@@ -576,6 +598,8 @@
     "saveToFlashcard": "Flashcard: Saved",
     "notSaved": "Flashcard: Not Saved",
     "studyAsLesson": "Study as 45-min Lesson",
+    "hideLessonOption": "Hide lesson option",
+    "showLessonOption": "Show lesson option",
     "selection": {
       "title": "Article Selection",
       "description": "Please choose the {selection} you want to read",
@@ -844,6 +868,7 @@
       "overdue": "Overdue",
       "dueToday": "Due Today",
       "upcoming": "Upcoming",
+      "daysLeft": "{daysDiff} days left",
       "allStatus": "All Status",
       "notFinished": "Not Finished",
       "inProgress": "In Progress",
@@ -1187,6 +1212,7 @@
       "perfectCorrectOrder": "Perfect! Correct order! 🎉",
       "notQuiteRight": "Not quite right 💪",
       "correctOrder": "Correct Order",
+      "reorderAriaLabel": "{sentence}. Position {position} of {total}. Use arrow keys to reorder.",
       "hints": {
         "title": "Hints",
         "description": "Use hints to help you complete the challenge",
@@ -1735,6 +1761,8 @@
       "title": "Sentence Activities",
       "description": "Practice sentence activities to improve your skills.",
       "loading": "Loading activities...",
+      "loadError": "Failed to load activities",
+      "retry": "Try again",
       "completed": "Completed",
       "review": "Review",
       "orderSentences": {
@@ -2653,5 +2681,85 @@
       "next": "Next",
       "pageOf": "Page {page} of {totalPages}"
     }
+  },
+  "ApkHost": {
+    "readMode": "Read Thai",
+    "listenMode": "Listen to English",
+    "signInToPlayChallenge": "Sign in to play this challenge",
+    "signInToPlayGame": "Sign in to play this game"
+  },
+  "StudentGames": {
+    "title": "Student games",
+    "description": "Play the live Advantage Play Kit catalog. Each card opens the authenticated APK route."
+  },
+  "Footer": {
+    "tagline": "Providing the best English learning experience.",
+    "about": "About",
+    "aboutUs": "About Us",
+    "features": "Features",
+    "support": "Support",
+    "legal": "Legal",
+    "privacyPolicy": "Privacy Policy",
+    "terms": "Terms & Conditions",
+    "contact": "Contact",
+    "rights": "All Rights Reserved."
+  },
+  "LicenseForm": {
+    "name": "License Name",
+    "namePlaceholder": "Enter license name",
+    "nameDescription": "A descriptive name for this license",
+    "status": "Status",
+    "statusPlaceholder": "Select license status",
+    "statusDescription": "Current status of the license",
+    "statusActive": "Active",
+    "statusInactive": "Inactive",
+    "statusExpired": "Expired",
+    "school": "School",
+    "schoolPlaceholder": "Select a School",
+    "noSchool": "No School (General License)",
+    "schoolDescription": "The school that this license is assigned to",
+    "subscriptionType": "Subscription Type",
+    "subscriptionPlaceholder": "Select subscription type",
+    "subscriptionDescription": "The subscription type for this license",
+    "subBasic": "Basic",
+    "subPremium": "Premium",
+    "subEnterprise": "Enterprise",
+    "maxUsers": "Maximum Users",
+    "maxUsersDescription": "Maximum number of users allowed for this license",
+    "startDate": "Start Date",
+    "pickDate": "Pick a date",
+    "startDateDescription": "When this license becomes active",
+    "expiryDuration": "Expiry Duration",
+    "expiryPlaceholder": "Select expiry duration",
+    "noExpiry": "No expiry",
+    "days": "{count} days",
+    "months6": "180 days (6 months)",
+    "year1": "365 days (1 year)",
+    "years2": "730 days (2 years)",
+    "years3": "1095 days (3 years)",
+    "expiryDescription": "License will expire after this many days from start date.",
+    "update": "Update License",
+    "cancel": "Cancel",
+    "updateSuccess": "License updated successfully!",
+    "updateSuccessDescription": "License \"{name}\" has been updated.",
+    "updateError": "Failed to update license",
+    "fallbackError": "Please try again or contact support if the problem persists."
+  },
+  "SchoolForm": {
+    "name": "School Name",
+    "namePlaceholder": "Enter school name",
+    "nameDescription": "The official name of the school or institution.",
+    "contactName": "Contact Name",
+    "contactNamePlaceholder": "Enter contact person's name (optional)",
+    "contactNameDescription": "The name of the primary contact person for this school.",
+    "contactEmail": "Contact Email",
+    "contactEmailPlaceholder": "Enter contact email (optional)",
+    "contactEmailDescription": "The email address of the primary contact person.",
+    "cancel": "Cancel",
+    "create": "Create School",
+    "createSuccess": "School created successfully!",
+    "createSuccessDescription": "{name} has been added to the system.",
+    "createError": "Failed to create school",
+    "fallbackError": "An unexpected error occurred."
   }
 }

@@ -49,9 +49,6 @@ export async function generateImage(
 
   while (attempts < maxRetries) {
     try {
-      console.log(
-        `Attempt ${attempts + 1}/${maxRetries} to generate 3 images for article ${articleId}`,
-      );
 
       const { object: storyParts } = await generateObject({
         model: openai("gpt-4o-mini"),
@@ -92,7 +89,6 @@ export async function generateImage(
         // Add delay before retry
         if (attempts < maxRetries) {
           const delay = Math.pow(2, attempts) * 1000; // Exponential backoff
-          console.log(`Waiting ${delay}ms before retry...`);
           await new Promise((resolve) => setTimeout(resolve, delay));
         }
         continue;
@@ -124,9 +120,6 @@ export async function generateImage(
         }
       }
 
-      console.log(
-        `Successfully generated and saved 3 images for article ${articleId}`,
-      );
       break; // Success - exit retry loop
     } catch (error) {
       const errorMsg = `Attempt ${attempts + 1} failed: ${error}`;
@@ -136,7 +129,6 @@ export async function generateImage(
 
       if (attempts < maxRetries) {
         const delay = Math.pow(2, attempts) * 1000; // Exponential backoff
-        console.log(`Waiting ${delay}ms before retry...`);
         await new Promise((resolve) => setTimeout(resolve, delay));
       }
     }
@@ -195,17 +187,6 @@ export async function generateImage(
   //     type: "image/png",
   //   });
 
-  //   const edit = await openaiClient.images.edit({
-  //     model: "dall-e-2",
-  //     prompt: `
-  //       Use ${characterDescription} as the main character.
-  //       Scene: ${storyParts.prompt[i]}
-  //       Same cartoon storybook style as the base character sheet.
-  //     `,
-  //     size: "1024x1024",
-  //     image: imageFile,
-  //     response_format: "b64_json",
-  //   });
 
   //   const img = Buffer.from(edit.data?.[0]?.b64_json!, "base64");
   //   const filePath = path.join(outDir, `scene${i + 1}.png`);
@@ -276,27 +257,6 @@ export async function generateImage(
   //     await uploadToBucket(localPath, `images/${articleId}_${index + 1}.png`);
   //     generatedImages.push(localPath);
 
-  //     try {
-  //       fs.unlinkSync(localPath);
-  //     } catch (cleanupError) {
-  //       console.warn(
-  //         `Failed to clean up local file ${localPath}:`,
-  //         cleanupError,
-  //       );
-  //     }
-  //   }
-  // } catch (error) {
-  //   if (APICallError.isInstance(error)) {
-  //     console.log("APICallError");
-  //     console.log("Cause:", error.cause);
-  //     console.log("Responses:", error);
-  //   }
-  //   console.error("Error generating image:", error);
-  //   return {
-  //     success: false,
-  //     error: "Failed to generate image",
-  //   };
-  // }
 
   // try {
   //   const { images } = await generateImages({
@@ -316,39 +276,7 @@ export async function generateImage(
   //     await uploadToBucket(localPath, `images/${articleId}_${index + 1}.png`);
   //     generatedImages.push(localPath);
 
-  //     try {
-  //       fs.unlinkSync(localPath);
-  //     } catch (cleanupError) {
-  //       console.warn(
-  //         `Failed to clean up local file ${localPath}:`,
-  //         cleanupError,
-  //       );
-  //     }
-  //   }
-  // } catch (error) {
-  //   console.error("Error generating image:", error);
-  //   if (NoImageGeneratedError.isInstance(error)) {
-  //     console.log("NoImageGeneratedError");
-  //     console.log("Cause:", error.cause);
-  //     console.log("Responses:", error.responses);
-  //   }
-  //   return {
-  //     success: false,
-  //     error: "Failed to generate image",
-  //   };
-  // }
 
-  // const base64 = image.base64;
-  // const base64Image: Buffer = Buffer.from(base64, "base64");
-  // const localPath = path.join(imagesDir, `${articleId}.png`);
-  // fs.writeFileSync(localPath, base64Image as Uint8Array);
-  // await uploadToBucket(localPath, `images/${articleId}.png`);
-  // generatedImages.push(localPath);
-  // try {
-  //   fs.unlinkSync(localPath);
-  // } catch (cleanupError) {
-  //   console.warn(`Failed to clean up local file ${localPath}:`, cleanupError);
-  // }
 
   return {
     success: true,
@@ -366,9 +294,6 @@ export async function generateImage(
 
   //   while (attempts < maxRetries && !imageGenerated) {
   //     try {
-  //       console.log(
-  //         `Generating image ${imageNumber}/3 for article ${articleId}...`,
-  //       );
 
   //       const { image } = await generateImages({
   //         model: openai.image(openaiImages),
@@ -402,20 +327,7 @@ export async function generateImage(
   //       generatedImages.push(cloudPath);
   //       imageGenerated = true;
 
-  //       console.log(
-  //         `Successfully generated image ${imageNumber}/3: ${filename}`,
-  //       );
 
-  //       // Add delay between requests to avoid rate limits
-  //       if (i < imageDesc.length - 1) {
-  //         await new Promise((resolve) => setTimeout(resolve, 1000));
-  //       }
-  //     } catch (error) {
-  //       console.error(
-  //         `Failed to generate image ${imageNumber} (Attempt ${attempts + 1}):`,
-  //         error,
-  //       );
-  //       attempts++;
 
   //       if (attempts >= maxRetries) {
   //         const errorMessage = `Failed to generate image ${imageNumber} after ${maxRetries} attempts: ${error}`;
@@ -449,8 +361,5 @@ export async function generateImage(
   // };
 
   // if (NoImageGeneratedError.isInstance(error)) {
-  //   console.log('NoImageGeneratedError');
-  //   console.log('Cause:', error.cause);
-  //   console.log('Responses:', error.responses);
   // }
 }

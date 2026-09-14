@@ -38,7 +38,6 @@ export async function generateWordList(
 
     return object;
   } catch (error) {
-    console.log(error);
     throw `failed to generate audio: ${
       error as unknown
     } \n\n error: ${JSON.stringify((error as any).response.data)}`;

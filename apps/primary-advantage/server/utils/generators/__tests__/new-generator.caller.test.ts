@@ -48,7 +48,7 @@ vi.mock("@reading-advantage/ai/internal-sdk", () => ({
 }));
 
 // NOTE: relative mock paths resolve from THIS test file's directory
-// (server/utils/genaretors/__tests__), so the source's `./x` imports are `../x`.
+// (server/utils/generators/__tests__), so the source's `./x` imports are `../x`.
 vi.mock("../evaluate-rating-generator", () => ({
   evaluateRating: vi.fn().mockResolvedValue({ rating: 3, cefrLevel: "A1" }),
 }));

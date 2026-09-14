@@ -32,6 +32,21 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { getTranslations } from "next-intl/server";
 
+/**
+ * Localizes the marketing home page metadata.
+ * @param params Route parameters carrying the locale.
+ * @returns Title and description metadata.
+ */
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "HomePage" });
+  return { title: t("hero.title"), description: t("hero.subtitle") };
+}
+
 export default async function Home() {
   const t = await getTranslations("HomePage");
 
@@ -273,8 +288,6 @@ export default async function Home() {
             {t("cta.description")}{" "}
             <Link
               href="/auth/signin"
-              target="_blank"
-              rel="noreferrer"
               className="underline underline-offset-4"
             >
               {t("hero.getStarted")}

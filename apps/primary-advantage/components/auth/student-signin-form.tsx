@@ -29,6 +29,7 @@ import {
 } from "@/components/ui/form";
 import { FormError } from "../form-error";
 import { useSearchParams } from "next/navigation";
+import { useRouter } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 
 export function StudentSignInForm({
@@ -36,6 +37,7 @@ export function StudentSignInForm({
   ...props
 }: React.ComponentPropsWithoutRef<"form">) {
   const params = useSearchParams();
+  const router = useRouter();
   const classCode = params.get("classroom_code");
   const callbackUrl = params.get("callbackUrl");
   const [step, setStep] = useState<"code" | "select">("code");
@@ -105,7 +107,7 @@ export function StudentSignInForm({
       const data = await response.json();
       if (response.ok) {
         const redirectUrl = callbackUrl || "/student/read";
-        window.location.href = redirectUrl;
+        router.push(redirectUrl as "/student/read");
       } else {
         setError(data.error || "Login failed");
         toast.error(data.error || "Login failed");

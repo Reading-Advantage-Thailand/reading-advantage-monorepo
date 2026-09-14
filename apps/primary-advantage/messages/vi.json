@@ -9,6 +9,12 @@
     "goBack": "Quay lại",
     "returnToWebsite": "Quay lại trang web"
   },
+  "Error": {
+    "title": "Đã xảy ra lỗi",
+    "description": "Xin lỗi, đã xảy ra lỗi không mong đợi. Vui lòng thử lại.",
+    "retry": "Thử lại",
+    "goHome": "Về trang chủ"
+  },
   "common": {
     "tryAgain": "Thử lại"
   },
@@ -354,7 +360,8 @@
       "articles": "Bài viết",
       "articlesDesc": "Tài liệu đọc có sẵn",
       "growth": "Tăng trưởng hàng tháng",
-      "growthDesc": "Tăng trưởng học sinh đăng ký"
+      "growthDesc": "Tăng trưởng học sinh đăng ký",
+      "loadError": "Không tải được số liệu thống kê"
     },
     "quickActions": {
       "title": "Hành động nhanh",
@@ -374,7 +381,8 @@
     "recentActivity": {
       "title": "Hoạt động gần đây",
       "empty": "Không có hoạt động gần đây để hiển thị",
-      "viewAll": "Xem tất cả hoạt động"
+      "viewAll": "Xem tất cả hoạt động",
+      "loadError": "Không tải được hoạt động gần đây"
     },
     "systemStatus": {
       "title": "Trạng thái hệ thống",
@@ -422,6 +430,16 @@
     "startQuiz": "Bắt đầu làm bài",
     "getFeedback": "Nhận phản hồi",
     "audioButton": "Nghe và đọc cùng",
+    "playAudio": "Phát âm thanh",
+    "stopAudio": "Dừng âm thanh",
+    "backToTop": "Quay lại đầu trang",
+    "seekBack": "Lùi lại",
+    "seekForward": "Tiến tới",
+    "playbackSpeed": "Tốc độ phát",
+    "openActionsMenu": "Mở menu hành động",
+    "showNotifications": "Hiển thị thông báo",
+    "toggleDetails": "Bật/tắt chi tiết",
+    "selectStudent": "Chọn học sinh",
     "saveToFlashcard": "Lưu vào flashcard",
     "translate": "Dịch",
     "timer": "Đã sử dụng {elapsed} giây",
@@ -430,6 +448,8 @@
     "sentences": "Câu",
     "confirmRetake": "Xác nhận làm lại",
     "areYouSureYouWantToRetakeThisQuiz": "Bạn có chắc chắn muốn làm lại bài kiểm tra này? Các câu trả lời của bạn sẽ bị xóa.",
+    "loadError": "Không thể tải",
+    "emptyList": "Chưa có câu nào",
     "AdminArticleCreation": {
       "tabs": {
         "createArticle": "Tạo Bài Viết",
@@ -558,7 +578,9 @@
   "WordList": {
     "title": "Danh sách từ",
     "description": "Chọn từ để lưu vào flashcard",
-    "selectedWords": "{count} từ đã chọn"
+    "selectedWords": "{count} từ đã chọn",
+    "loadError": "Không thể tải từ",
+    "empty": "Chưa có từ nào được lưu"
   },
   "Article": {
     "title": "Bài viết",
@@ -576,6 +598,8 @@
     "saveToFlashcard": "Flashcard: Đã lưu",
     "notSaved": "Flashcard: Chưa lưu",
     "studyAsLesson": "Học thành bài viết 45 phút",
+    "hideLessonOption": "Ẩn tùy chọn bài học",
+    "showLessonOption": "Hiện tùy chọn bài học",
     "selection": {
       "title": "Lựa chọn bài viết",
       "description": "Vui lòng chọn {selection} bạn muốn đọc",
@@ -844,6 +868,7 @@
       "overdue": "Quá hạn",
       "dueToday": "Đến hạn hôm nay",
       "upcoming": "Sắp tới",
+      "daysLeft": "Còn {daysDiff} ngày",
       "allStatus": "Tất cả trạng thái",
       "notFinished": "Chưa hoàn thành",
       "inProgress": "Đang tiến hành",
@@ -1187,6 +1212,7 @@
       "perfectCorrectOrder": "Hoàn hảo! Thứ tự đúng! 🎉",
       "notQuiteRight": "Không chính xác!",
       "correctOrder": "Thứ tự đúng",
+      "reorderAriaLabel": "{sentence}. Vị trí {position} trên {total}. Dùng phím mũi tên để sắp xếp lại.",
       "hints": {
         "title": "Gợi ý",
         "description": "Sử dụng gợi ý để giúp bạn hoàn thành thử thách",
@@ -1735,6 +1761,8 @@
       "title": "Hoạt động câu",
       "description": "Luyện tập các hoạt động về câu để cải thiện kỹ năng.",
       "loading": "Đang tải hoạt động...",
+      "loadError": "Không thể tải hoạt động",
+      "retry": "Thử lại",
       "completed": "Hoàn thành",
       "review": "Xem lại",
       "orderSentences": {
@@ -2653,5 +2681,85 @@
       "next": "Tiếp",
       "pageOf": "Trang {page} trên {totalPages}"
     }
+  },
+  "ApkHost": {
+    "readMode": "Đọc tiếng Thái",
+    "listenMode": "Nghe tiếng Anh",
+    "signInToPlayChallenge": "Đăng nhập để chơi thử thách này",
+    "signInToPlayGame": "Đăng nhập để chơi trò này"
+  },
+  "StudentGames": {
+    "title": "Trò chơi học sinh",
+    "description": "Chơi danh mục Advantage Play Kit trực tiếp. Mỗi thẻ mở tuyến APK đã xác thực."
+  },
+  "Footer": {
+    "tagline": "Mang lại trải nghiệm học tiếng Anh tốt nhất.",
+    "about": "Giới thiệu",
+    "aboutUs": "Về chúng tôi",
+    "features": "Tính năng",
+    "support": "Hỗ trợ",
+    "legal": "Pháp lý",
+    "privacyPolicy": "Chính sách bảo mật",
+    "terms": "Điều khoản & Điều kiện",
+    "contact": "Liên hệ",
+    "rights": "Đã đăng ký bản quyền."
+  },
+  "LicenseForm": {
+    "name": "Tên giấy phép",
+    "namePlaceholder": "Nhập tên giấy phép",
+    "nameDescription": "Tên mô tả cho giấy phép này",
+    "status": "Trạng thái",
+    "statusPlaceholder": "Chọn trạng thái giấy phép",
+    "statusDescription": "Trạng thái hiện tại của giấy phép",
+    "statusActive": "Đang hoạt động",
+    "statusInactive": "Không hoạt động",
+    "statusExpired": "Hết hạn",
+    "school": "Trường",
+    "schoolPlaceholder": "Chọn trường",
+    "noSchool": "Không có trường (giấy phép chung)",
+    "schoolDescription": "Trường được gán giấy phép này",
+    "subscriptionType": "Loại gói",
+    "subscriptionPlaceholder": "Chọn loại gói",
+    "subscriptionDescription": "Loại gói của giấy phép này",
+    "subBasic": "Cơ bản",
+    "subPremium": "Cao cấp",
+    "subEnterprise": "Doanh nghiệp",
+    "maxUsers": "Số người dùng tối đa",
+    "maxUsersDescription": "Số người dùng tối đa được phép cho giấy phép này",
+    "startDate": "Ngày bắt đầu",
+    "pickDate": "Chọn ngày",
+    "startDateDescription": "Ngày giấy phép này có hiệu lực",
+    "expiryDuration": "Thời hạn hiệu lực",
+    "expiryPlaceholder": "Chọn thời hạn hiệu lực",
+    "noExpiry": "Không hết hạn",
+    "days": "{count} ngày",
+    "months6": "180 ngày (6 tháng)",
+    "year1": "365 ngày (1 năm)",
+    "years2": "730 ngày (2 năm)",
+    "years3": "1095 ngày (3 năm)",
+    "expiryDescription": "Giấy phép sẽ hết hạn sau số ngày này kể từ ngày bắt đầu.",
+    "update": "Cập nhật giấy phép",
+    "cancel": "Hủy",
+    "updateSuccess": "Cập nhật giấy phép thành công!",
+    "updateSuccessDescription": "Đã cập nhật giấy phép \"{name}\".",
+    "updateError": "Cập nhật giấy phép thất bại",
+    "fallbackError": "Vui lòng thử lại hoặc liên hệ hỗ trợ nếu sự cố vẫn tiếp diễn."
+  },
+  "SchoolForm": {
+    "name": "Tên trường",
+    "namePlaceholder": "Nhập tên trường",
+    "nameDescription": "Tên chính thức của trường hoặc cơ sở giáo dục.",
+    "contactName": "Tên người liên hệ",
+    "contactNamePlaceholder": "Nhập tên người liên hệ (không bắt buộc)",
+    "contactNameDescription": "Tên của người liên hệ chính của trường này.",
+    "contactEmail": "Email liên hệ",
+    "contactEmailPlaceholder": "Nhập email liên hệ (không bắt buộc)",
+    "contactEmailDescription": "Địa chỉ email của người liên hệ chính.",
+    "cancel": "Hủy",
+    "create": "Tạo trường",
+    "createSuccess": "Tạo trường thành công!",
+    "createSuccessDescription": "Đã thêm {name} vào hệ thống.",
+    "createError": "Tạo trường thất bại",
+    "fallbackError": "Đã xảy ra lỗi không mong đợi."
   }
 }

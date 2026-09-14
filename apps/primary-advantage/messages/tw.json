@@ -9,6 +9,12 @@
     "goBack": "返回",
     "returnToWebsite": "返回網站"
   },
+  "Error": {
+    "title": "發生錯誤",
+    "description": "抱歉，發生了未預期的錯誤。請重試。",
+    "retry": "重試",
+    "goHome": "返回首頁"
+  },
   "common": {
     "tryAgain": "再試一次"
   },
@@ -354,7 +360,8 @@
       "articles": "文章",
       "articlesDesc": "可用的閱讀材料",
       "growth": "每月增長",
-      "growthDesc": "學生入學增長"
+      "growthDesc": "學生入學增長",
+      "loadError": "載入統計資料失敗"
     },
     "quickActions": {
       "title": "快速操作",
@@ -374,7 +381,8 @@
     "recentActivity": {
       "title": "最近活動",
       "empty": "沒有最近的活动要显示",
-      "viewAll": "查看所有活动"
+      "viewAll": "查看所有活动",
+      "loadError": "載入最近活動失敗"
     },
     "systemStatus": {
       "title": "系統狀態",
@@ -422,6 +430,16 @@
     "startQuiz": "開始測試",
     "getFeedback": "獲取反饋",
     "audioButton": "聽和讀",
+    "playAudio": "播放音訊",
+    "stopAudio": "停止音訊",
+    "backToTop": "返回頂部",
+    "seekBack": "後退",
+    "seekForward": "前進",
+    "playbackSpeed": "播放速度",
+    "openActionsMenu": "開啟操作選單",
+    "showNotifications": "顯示通知",
+    "toggleDetails": "切換詳情",
+    "selectStudent": "選擇學生",
     "saveToFlashcard": "儲存到閃卡",
     "translate": "翻譯",
     "timer": "已用時 {elapsed} 秒",
@@ -430,6 +448,8 @@
     "sentences": "句子",
     "confirmRetake": "確認重新測試",
     "areYouSureYouWantToRetakeThisQuiz": "您確定要重新測試嗎？您的答案將被清除。",
+    "loadError": "載入失敗",
+    "emptyList": "還沒有句子",
     "AdminArticleCreation": {
       "tabs": {
         "createArticle": "建立文章",
@@ -558,7 +578,9 @@
   "WordList": {
     "title": "單字列表",
     "description": "選擇單字儲存到閃卡",
-    "selectedWords": "{count} 個單字已選擇"
+    "selectedWords": "{count} 個單字已選擇",
+    "loadError": "無法載入單字",
+    "empty": "還沒有儲存的單字"
   },
   "Article": {
     "title": "文章",
@@ -576,6 +598,8 @@
     "saveToFlashcard": "閃卡: 已保存",
     "notSaved": "閃卡: 未保存",
     "studyAsLesson": "學習為 45 分鐘課程",
+    "hideLessonOption": "隱藏課程選項",
+    "showLessonOption": "顯示課程選項",
     "selection": {
       "title": "文章選擇",
       "description": "請選擇您想要閱讀的 {selection}",
@@ -844,6 +868,7 @@
       "overdue": "逾期",
       "dueToday": "今日截止",
       "upcoming": "即將到來",
+      "daysLeft": "還剩 {daysDiff} 天",
       "allStatus": "所有狀態",
       "notFinished": "未完成",
       "inProgress": "進行中",
@@ -1187,6 +1212,7 @@
       "perfectCorrectOrder": "完美！正確順序！🎉",
       "notQuiteRight": "不正確！💪",
       "correctOrder": "正確順序",
+      "reorderAriaLabel": "{sentence}。第 {position} 個，共 {total} 個。使用方向鍵重新排序。",
       "hints": {
         "title": "提示",
         "description": "使用提示幫助你完成挑戰",
@@ -1612,6 +1638,8 @@
       "title": "句子活動",
       "description": "練習句子活動以提升你的能力。",
       "loading": "正在載入活動...",
+      "loadError": "無法載入活動",
+      "retry": "重試",
       "completed": "已完成",
       "review": "複習",
       "orderSentences": {
@@ -1733,6 +1761,74 @@
         "timeTaken": "花費時間",
         "completed": "已完成"
       }
+    },
+    "VocabularyMatching": {
+      "loading": {
+        "title": "正在載入閃卡",
+        "description": "正在準備您的詞彙練習..."
+      },
+      "noCards": {
+        "title": "無可用詞彙",
+        "description": "此文章尚無可用的詞彙閃卡"
+      },
+      "error": {
+        "title": "載入失敗",
+        "description": "載入詞彙時發生錯誤，請再試一次"
+      },
+      "buttons": {
+        "tryAgain": "再試一次",
+        "showAnswers": "顯示答案",
+        "completeActivity": "完成活動"
+      },
+      "start": {
+        "title": "開始詞彙配對",
+        "subtitle": "選擇您喜歡的定義語言",
+        "languageLabel": "定義語言",
+        "languageHint": "單詞定義將以此語言顯示",
+        "startButton": "開始配對遊戲"
+      },
+      "completed": {
+        "title": "詞彙練習完成！",
+        "subtitle": "您的詞彙練習做得很好",
+        "xpEarned": "獲得 XP",
+        "completed": "已完成"
+      },
+      "game": {
+        "title": "📚 將單詞與定義配對",
+        "instruction": "點擊左側的單詞，然後點擊右側的定義",
+        "columns": {
+          "words": "單詞",
+          "definitions": "定義"
+        }
+      },
+      "progress": {
+        "matched": "{matched}/{total}已配對",
+        "correct": "{correct}/{total}正確"
+      },
+      "results": {
+        "perfect": "完美！所有配對都正確！🎉",
+        "partialCorrect": "{correct}/{total}正確 💪",
+        "correctMatches": "正確配對：",
+        "showAnswers": "已顯示正確配對！📖",
+        "correctMatch": "配對正確！✅",
+        "incorrectMatch": "配對不正確，再試一次！❌",
+        "tryAgain": "{correct}/{total}正確，再試一次！💪"
+      },
+      "toast": {
+        "failedToLoad": "無法載入詞彙"
+      }
+    },
+    "Introduction": {
+      "phase1Title": "導言",
+      "phase1Description": "在本課程中，你將閱讀一篇關於「{title}」的文章",
+      "cefrLevel": "CEFR 等級：{level}",
+      "raLevel": "RA 等級：{level}",
+      "estimatedReadTime": "預估閱讀時間：{time}",
+      "articleSummary": "文章摘要",
+      "learningObjectives": "學習目標",
+      "understandMainIdeas": "理解重點：",
+      "learnVocabulary": "學習詞彙：",
+      "improveComprehension": "提升閱讀理解："
     }
   },
   "LessonLanguageQuestion": {
@@ -1941,74 +2037,6 @@
       "timeTaken": "花費時間",
       "completedLabel": "已完成"
     }
-  },
-  "VocabularyMatching": {
-    "loading": {
-      "title": "正在載入閃卡",
-      "description": "正在準備您的詞彙練習..."
-    },
-    "noCards": {
-      "title": "無可用詞彙",
-      "description": "此文章尚無可用的詞彙閃卡"
-    },
-    "error": {
-      "title": "載入失敗",
-      "description": "載入詞彙時發生錯誤，請再試一次"
-    },
-    "buttons": {
-      "tryAgain": "再試一次",
-      "showAnswers": "顯示答案",
-      "completeActivity": "完成活動"
-    },
-    "start": {
-      "title": "開始詞彙配對",
-      "subtitle": "選擇您喜歡的定義語言",
-      "languageLabel": "定義語言",
-      "languageHint": "單詞定義將以此語言顯示",
-      "startButton": "開始配對遊戲"
-    },
-    "completed": {
-      "title": "詞彙練習完成！",
-      "subtitle": "您的詞彙練習做得很好",
-      "xpEarned": "獲得 XP",
-      "completed": "已完成"
-    },
-    "game": {
-      "title": "📚 將單詞與定義配對",
-      "instruction": "點擊左側的單詞，然後點擊右側的定義",
-      "columns": {
-        "words": "單詞",
-        "definitions": "定義"
-      }
-    },
-    "progress": {
-      "matched": "{matched}/{total}已配對",
-      "correct": "{correct}/{total}正確"
-    },
-    "results": {
-      "perfect": "完美！所有配對都正確！🎉",
-      "partialCorrect": "{correct}/{total}正確 💪",
-      "correctMatches": "正確配對：",
-      "showAnswers": "已顯示正確配對！📖",
-      "correctMatch": "配對正確！✅",
-      "incorrectMatch": "配對不正確，再試一次！❌",
-      "tryAgain": "{correct}/{total}正確，再試一次！💪"
-    },
-    "toast": {
-      "failedToLoad": "無法載入詞彙"
-    }
-  },
-  "Introduction": {
-    "phase1Title": "導言",
-    "phase1Description": "在本課程中，你將閱讀一篇關於「{title}」的文章",
-    "cefrLevel": "CEFR 等級：{level}",
-    "raLevel": "RA 等級：{level}",
-    "estimatedReadTime": "預估閱讀時間：{time}",
-    "articleSummary": "文章摘要",
-    "learningObjectives": "學習目標",
-    "understandMainIdeas": "理解重點：",
-    "learnVocabulary": "學習詞彙：",
-    "improveComprehension": "提升閱讀理解："
   },
   "TaskLanguageQuestions": {
     "title": "語言問題",
@@ -2651,5 +2679,85 @@
       "next": "下一頁",
       "pageOf": "第 {page} 頁，共 {totalPages} 頁"
     }
+  },
+  "ApkHost": {
+    "readMode": "閱讀泰語",
+    "listenMode": "聽英語",
+    "signInToPlayChallenge": "登入以參與此挑戰",
+    "signInToPlayGame": "登入以玩此遊戲"
+  },
+  "StudentGames": {
+    "title": "學生遊戲",
+    "description": "暢玩即時 Advantage Play Kit 目錄。每張卡片都會開啟已驗證的 APK 路線。"
+  },
+  "Footer": {
+    "tagline": "提供最佳英語學習體驗。",
+    "about": "關於",
+    "aboutUs": "關於我們",
+    "features": "功能",
+    "support": "支援",
+    "legal": "法律",
+    "privacyPolicy": "隱私政策",
+    "terms": "條款與條件",
+    "contact": "聯絡",
+    "rights": "版權所有。"
+  },
+  "LicenseForm": {
+    "name": "授權名稱",
+    "namePlaceholder": "輸入授權名稱",
+    "nameDescription": "此授權的描述性名稱",
+    "status": "狀態",
+    "statusPlaceholder": "選擇授權狀態",
+    "statusDescription": "授權的目前狀態",
+    "statusActive": "有效",
+    "statusInactive": "未啟用",
+    "statusExpired": "已過期",
+    "school": "學校",
+    "schoolPlaceholder": "選擇學校",
+    "noSchool": "無學校（通用授權）",
+    "schoolDescription": "此授權指派到的學校",
+    "subscriptionType": "訂閱類型",
+    "subscriptionPlaceholder": "選擇訂閱類型",
+    "subscriptionDescription": "此授權的訂閱類型",
+    "subBasic": "基礎版",
+    "subPremium": "進階版",
+    "subEnterprise": "企業版",
+    "maxUsers": "使用者上限",
+    "maxUsersDescription": "此授權允許的使用者上限",
+    "startDate": "開始日期",
+    "pickDate": "選擇日期",
+    "startDateDescription": "此授權生效的日期",
+    "expiryDuration": "有效期限",
+    "expiryPlaceholder": "選擇有效期限",
+    "noExpiry": "永不過期",
+    "days": "{count} 天",
+    "months6": "180 天（6 個月）",
+    "year1": "365 天（1 年）",
+    "years2": "730 天（2 年）",
+    "years3": "1095 天（3 年）",
+    "expiryDescription": "授權將在開始日期起這些天後過期。",
+    "update": "更新授權",
+    "cancel": "取消",
+    "updateSuccess": "授權更新成功！",
+    "updateSuccessDescription": "已更新授權「{name}」。",
+    "updateError": "授權更新失敗",
+    "fallbackError": "請重試，若問題仍然存在請聯絡支援人員。"
+  },
+  "SchoolForm": {
+    "name": "學校名稱",
+    "namePlaceholder": "輸入學校名稱",
+    "nameDescription": "學校或機構的正式名稱。",
+    "contactName": "聯絡人姓名",
+    "contactNamePlaceholder": "輸入聯絡人姓名（選填）",
+    "contactNameDescription": "該學校主要聯絡人的姓名。",
+    "contactEmail": "聯絡人電子郵件",
+    "contactEmailPlaceholder": "輸入聯絡人電子郵件（選填）",
+    "contactEmailDescription": "主要聯絡人的電子郵件地址。",
+    "cancel": "取消",
+    "create": "建立學校",
+    "createSuccess": "學校建立成功！",
+    "createSuccessDescription": "已將 {name} 加入系統。",
+    "createError": "學校建立失敗",
+    "fallbackError": "發生未預期的錯誤。"
   }
 }

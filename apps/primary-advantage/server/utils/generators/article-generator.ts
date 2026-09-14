@@ -68,9 +68,6 @@ export async function generateArticle(
 
   // generate article
   try {
-    console.log(
-      `${params.cefrLevel} generating article model ID: ${googleModel} type: ${params.type}`,
-    );
 
     const { object: article } = await generateObject({
       model: google(googleModel),

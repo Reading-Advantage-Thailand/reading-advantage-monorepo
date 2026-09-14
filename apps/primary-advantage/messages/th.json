@@ -9,6 +9,12 @@
     "goBack": "กลับไป",
     "returnToWebsite": "กลับสู่เว็บไซต์"
   },
+  "Error": {
+    "title": "เกิดข้อผิดพลาด",
+    "description": "ขออภัย เกิดข้อผิดพลาดที่ไม่คาดคิด กรุณาลองอีกครั้ง",
+    "retry": "ลองอีกครั้ง",
+    "goHome": "กลับหน้าหลัก"
+  },
   "common": {
     "tryAgain": "ลองอีกครั้ง"
   },
@@ -354,7 +360,8 @@
       "articles": "บทความ",
       "articlesDesc": "บทความที่ใช้งาน",
       "growth": "การเติบโต",
-      "growthDesc": "การเติบโตของนักเรียน"
+      "growthDesc": "การเติบโตของนักเรียน",
+      "loadError": "โหลดสถิติไม่สำเร็จ"
     },
     "quickActions": {
       "title": "การดำเนินการที่รวดเร็ว",
@@ -374,7 +381,8 @@
     "recentActivity": {
       "title": "กิจกรรมล่าสุด",
       "empty": "ไม่มีกิจกรรมล่าสุด",
-      "viewAll": "ดูกิจกรรมทั้งหมด"
+      "viewAll": "ดูกิจกรรมทั้งหมด",
+      "loadError": "โหลดกิจกรรมล่าสุดไม่สำเร็จ"
     },
     "systemStatus": {
       "title": "สถานะระบบ",
@@ -422,6 +430,16 @@
     "startQuiz": "เริ่มทำแบบทดสอบ",
     "getFeedback": "รับคำแนะนำ",
     "audioButton": "ฟังและอ่านพร้อม",
+    "playAudio": "เล่นเสียง",
+    "stopAudio": "หยุดเสียง",
+    "backToTop": "กลับไปด้านบน",
+    "seekBack": "ถอยกลับ",
+    "seekForward": "ไปข้างหน้า",
+    "playbackSpeed": "ความเร็วในการเล่น",
+    "openActionsMenu": "เปิดเมนูการดำเนินการ",
+    "showNotifications": "แสดงการแจ้งเตือน",
+    "toggleDetails": "สลับรายละเอียด",
+    "selectStudent": "เลือกนักเรียน",
     "saveToFlashcard": "บันทึกไปยังแฟลชการ์ด",
     "translate": "แปล",
     "timer": "ใช้เวลา {elapsed} วินาที",
@@ -430,6 +448,8 @@
     "sentences": "ประโยค",
     "confirmRetake": "ยืนยันทำแบบทดสอบใหม่",
     "areYouSureYouWantToRetakeThisQuiz": "คุณแน่ใจหรือไม่ที่จะทำแบบทดสอบใหม่? คำตอบของคุณจะถูกลบออก",
+    "loadError": "ไม่สามารถโหลดได้",
+    "emptyList": "ยังไม่มีประโยค",
     "AdminArticleCreation": {
       "tabs": {
         "createArticle": "สร้างบทความ",
@@ -558,7 +578,9 @@
   "WordList": {
     "title": "รายการคำศัพท์",
     "description": "เลือกคำศัพท์เพื่อบันทึกไปยังแฟลชการ์ด",
-    "selectedWords": "{count} คำศัพท์ที่เลือก"
+    "selectedWords": "{count} คำศัพท์ที่เลือก",
+    "loadError": "ไม่สามารถโหลดคำศัพท์ได้",
+    "empty": "ยังไม่มีคำศัพท์ที่บันทึก"
   },
   "Article": {
     "title": "บทความ",
@@ -576,6 +598,8 @@
     "saveToFlashcard": "แฟลชการ์ด: บันทึกแล้ว",
     "notSaved": "แฟลชการ์ด: ไม่บันทึก",
     "studyAsLesson": "ศึกษาเป็นบทความ 45 นาที",
+    "hideLessonOption": "ซ่อนตัวเลือกบทเรียน",
+    "showLessonOption": "แสดงตัวเลือกบทเรียน",
     "selection": {
       "title": "การเลือกบทความ",
       "description": "กรุณาเลือก {selection} ที่คุณต้องการอ่าน",
@@ -844,6 +868,7 @@
       "overdue": "หมดอายุ",
       "dueToday": "กำหนดวันนี้",
       "upcoming": "กำหนดในอนาคต",
+      "daysLeft": "เหลืออีก {daysDiff} วัน",
       "allStatus": "สถานะทั้งหมด",
       "notFinished": "ไม่เสร็จสิ้น",
       "inProgress": "กำลังดำเนินการ",
@@ -1186,6 +1211,7 @@
       "perfectCorrectOrder": "ยอดเยี่ยม! การเรียงประโยคที่ถูกต้ออีกครั้ง!",
       "notQuiteRight": "ไม่ถูกต้องมากพอ! 💪",
       "correctOrder": "การเรียงประโยคที่ถูกต้อง",
+      "reorderAriaLabel": "{sentence} ตำแหน่งที่ {position} จากทั้งหมด {total} ใช้ปุ่มลูกศรเพื่อจัดเรียงใหม่",
       "hints": {
         "title": "คำช่วยเหลือ",
         "description": "ใช้คำช่วยเหลือเพื่อช่วยคุณเสร็จสิ้นการทดสอบ",
@@ -1734,6 +1760,8 @@
       "title": "กิจกรรมประโยค",
       "description": "ฝึกกิจกรรมประโยคเพื่อพัฒนาทักษะของคุณ",
       "loading": "กำลังโหลดกิจกรรม...",
+      "loadError": "ไม่สามารถโหลดกิจกรรมได้",
+      "retry": "ลองอีกครั้ง",
       "completed": "เสร็จสิ้น",
       "review": "ทบทวน",
       "orderSentences": {
@@ -2655,5 +2683,85 @@
       "next": "ถัดไป",
       "pageOf": "หน้า {page} จาก {totalPages}"
     }
+  },
+  "ApkHost": {
+    "readMode": "อ่านภาษาไทย",
+    "listenMode": "ฟังภาษาอังกฤษ",
+    "signInToPlayChallenge": "เข้าสู่ระบบเพื่อเล่นชาเลนจ์นี้",
+    "signInToPlayGame": "เข้าสู่ระบบเพื่อเล่นเกมนี้"
+  },
+  "StudentGames": {
+    "title": "เกมนักเรียน",
+    "description": "เล่นแค็ตตาล็อก Advantage Play Kit สด แต่ละการ์ดจะเปิดเส้นทาง APK ที่ยืนยันตัวตนแล้ว"
+  },
+  "Footer": {
+    "tagline": "มอบประสบการณ์การเรียนภาษาอังกฤษที่ดีที่สุด",
+    "about": "เกี่ยวกับ",
+    "aboutUs": "เกี่ยวกับเรา",
+    "features": "คุณสมบัติ",
+    "support": "ช่วยเหลือ",
+    "legal": "กฎหมาย",
+    "privacyPolicy": "นโยบายความเป็นส่วนตัว",
+    "terms": "ข้อกำหนดและเงื่อนไข",
+    "contact": "ติดต่อ",
+    "rights": "สงวนลิขสิทธิ์"
+  },
+  "LicenseForm": {
+    "name": "ชื่อไลเซนส์",
+    "namePlaceholder": "กรอกชื่อไลเซนส์",
+    "nameDescription": "ชื่ออธิบายสำหรับไลเซนส์นี้",
+    "status": "สถานะ",
+    "statusPlaceholder": "เลือกสถานะไลเซนส์",
+    "statusDescription": "สถานะปัจจุบันของไลเซนส์",
+    "statusActive": "ใช้งาน",
+    "statusInactive": "ไม่ใช้งาน",
+    "statusExpired": "หมดอายุ",
+    "school": "โรงเรียน",
+    "schoolPlaceholder": "เลือกโรงเรียน",
+    "noSchool": "ไม่มีโรงเรียน (ไลเซนส์ทั่วไป)",
+    "schoolDescription": "โรงเรียนที่ไลเซนส์นี้มอบหมายให้",
+    "subscriptionType": "ประเภทสมาชิก",
+    "subscriptionPlaceholder": "เลือกประเภทสมาชิก",
+    "subscriptionDescription": "ประเภทสมาชิกของไลเซนส์นี้",
+    "subBasic": "พื้นฐาน",
+    "subPremium": "พรีเมียม",
+    "subEnterprise": "องค์กร",
+    "maxUsers": "จำนวนผู้ใช้สูงสุด",
+    "maxUsersDescription": "จำนวนผู้ใช้สูงสุดที่ไลเซนส์นี้อนุญาต",
+    "startDate": "วันที่เริ่ม",
+    "pickDate": "เลือกวันที่",
+    "startDateDescription": "วันที่ไลเซนส์นี้เริ่มมีผล",
+    "expiryDuration": "ระยะเวลาหมดอายุ",
+    "expiryPlaceholder": "เลือกระยะเวลาหมดอายุ",
+    "noExpiry": "ไม่หมดอายุ",
+    "days": "{count} วัน",
+    "months6": "180 วัน (6 เดือน)",
+    "year1": "365 วัน (1 ปี)",
+    "years2": "730 วัน (2 ปี)",
+    "years3": "1095 วัน (3 ปี)",
+    "expiryDescription": "ไลเซนส์จะหมดอายุหลังจากจำนวนวันนี้จากวันเริ่ม",
+    "update": "อัปเดตไลเซนส์",
+    "cancel": "ยกเลิก",
+    "updateSuccess": "อัปเดตไลเซนส์สำเร็จ!",
+    "updateSuccessDescription": "อัปเดตไลเซนส์ \"{name}\" แล้ว",
+    "updateError": "อัปเดตไลเซนส์ไม่สำเร็จ",
+    "fallbackError": "โปรดลองอีกครั้งหรือติดต่อฝ่ายสนับสนุนหากปัญหายังคงอยู่"
+  },
+  "SchoolForm": {
+    "name": "ชื่อโรงเรียน",
+    "namePlaceholder": "กรอกชื่อโรงเรียน",
+    "nameDescription": "ชื่อทางการของโรงเรียนหรือสถาบัน",
+    "contactName": "ชื่อผู้ติดต่อ",
+    "contactNamePlaceholder": "กรอกชื่อผู้ติดต่อ (ไม่บังคับ)",
+    "contactNameDescription": "ชื่อของผู้ติดต่อหลักของโรงเรียนนี้",
+    "contactEmail": "อีเมลผู้ติดต่อ",
+    "contactEmailPlaceholder": "กรอกอีเมลผู้ติดต่อ (ไม่บังคับ)",
+    "contactEmailDescription": "ที่อยู่อีเมลของผู้ติดต่อหลัก",
+    "cancel": "ยกเลิก",
+    "create": "สร้างโรงเรียน",
+    "createSuccess": "สร้างโรงเรียนสำเร็จ!",
+    "createSuccessDescription": "เพิ่ม {name} เข้าสู่ระบบแล้ว",
+    "createError": "สร้างโรงเรียนไม่สำเร็จ",
+    "fallbackError": "เกิดข้อผิดพลาดที่ไม่คาดคิด"
   }
 }

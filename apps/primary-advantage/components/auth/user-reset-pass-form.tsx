@@ -38,17 +38,6 @@ export function UserResetPassForm({ className, ...props }: UserAuthFormProps) {
     } finally {
       setIsLoading(false);
     }
-    // sendPasswordResetEmail(firebaseAuth, email, {
-    //     url: `${process.env.NEXT_PUBLIC_BASE_URL}/auth/signin`,
-    //     handleCodeInApp: true,
-    // }).then(() => {
-    //     // Password reset email sent!
-    //     setIsEmailSent(true)
-    // }).catch((error) => {
-    //     setError('Something went wrong');
-    // }).finally(() => {
-    //     setIsLoading(false)
-    // });
   }
   return (
     <>

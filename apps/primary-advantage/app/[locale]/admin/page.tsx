@@ -16,7 +16,7 @@ import {
   Clock,
   AlertCircle,
 } from "lucide-react";
-import { Link } from "@/i18n/navigation";
+import { Link, redirect } from "@/i18n/navigation";
 import { AdminStatsCards } from "@/components/admin/admin-stats-cards";
 import { AdminRecentActivity } from "@/components/admin/admin-recent-activity";
 import { AdminQuickActions } from "@/components/admin/admin-quick-actions";
@@ -29,11 +29,9 @@ interface AdminPageProps {
 
 export default async function AdminPage({ params }: AdminPageProps) {
   const { locale } = await params;
-  const t = await getTranslations("AdminDashboard");
 
-  return (
-    <div></div>
-    // <div className="space-y-8">
+  return redirect({ href: "/admin/dashboard", locale });
+  // <div className="space-y-8">
     //   {/* Header */}
     //   <AdminDashboardHeader />
 
@@ -42,42 +40,7 @@ export default async function AdminPage({ params }: AdminPageProps) {
     //     <AdminStatsCards />
     //   </Suspense>
 
-    //   {/* Main Content Grid */}
-    //   <div className="grid gap-6 lg:grid-cols-3 xl:grid-cols-4">
-    //     {/* Quick Actions */}
-    //     <div className="lg:col-span-1 xl:col-span-1">
-    //       <Card>
-    //         <CardHeader>
-    //           <CardTitle className="flex items-center gap-2">
-    //             <Settings className="h-5 w-5" />
-    //             {t("quickActions.title")}
-    //           </CardTitle>
-    //         </CardHeader>
-    //         <CardContent>
-    //           <Suspense fallback={<QuickActionsSkeleton />}>
-    //             <AdminQuickActions />
-    //           </Suspense>
-    //         </CardContent>
-    //       </Card>
-    //     </div>
 
-    //     {/* Recent Activity */}
-    //     <div className="lg:col-span-2 xl:col-span-3">
-    //       <Card>
-    //         <CardHeader>
-    //           <CardTitle className="flex items-center gap-2">
-    //             <Clock className="h-5 w-5" />
-    //             {t("recentActivity.title")}
-    //           </CardTitle>
-    //         </CardHeader>
-    //         <CardContent>
-    //           <Suspense fallback={<RecentActivitySkeleton />}>
-    //             <AdminRecentActivity />
-    //           </Suspense>
-    //         </CardContent>
-    //       </Card>
-    //     </div>
-    //   </div>
 
     //   {/* Overview Charts */}
     //   <div className="space-y-6">
@@ -85,91 +48,7 @@ export default async function AdminPage({ params }: AdminPageProps) {
     //     <AdminOverviewCharts />
     //   </div>
 
-    //   {/* System Status */}
-    //   <div className="grid gap-6 md:grid-cols-2">
-    //     <Card>
-    //       <CardHeader>
-    //         <CardTitle className="flex items-center gap-2">
-    //           <BarChart3 className="h-5 w-5" />
-    //           {t("systemStatus.title")}
-    //         </CardTitle>
-    //       </CardHeader>
-    //       <CardContent>
-    //         <div className="space-y-4">
-    //           <div className="flex items-center justify-between">
-    //             <span className="text-sm font-medium">
-    //               {t("systemStatus.serverHealth")}
-    //             </span>
-    //             <Badge
-    //               variant="secondary"
-    //               className="bg-green-100 text-green-800"
-    //             >
-    //               {t("systemStatus.healthy")}
-    //             </Badge>
-    //           </div>
-    //           <div className="flex items-center justify-between">
-    //             <span className="text-sm font-medium">
-    //               {t("systemStatus.database")}
-    //             </span>
-    //             <Badge
-    //               variant="secondary"
-    //               className="bg-green-100 text-green-800"
-    //             >
-    //               {t("systemStatus.connected")}
-    //             </Badge>
-    //           </div>
-    //           <div className="flex items-center justify-between">
-    //             <span className="text-sm font-medium">
-    //               {t("systemStatus.aiServices")}
-    //             </span>
-    //             <Badge
-    //               variant="secondary"
-    //               className="bg-green-100 text-green-800"
-    //             >
-    //               {t("systemStatus.operational")}
-    //             </Badge>
-    //           </div>
-    //         </div>
-    //       </CardContent>
-    //     </Card>
 
-    //     <Card>
-    //       <CardHeader>
-    //         <CardTitle className="flex items-center gap-2">
-    //           <AlertCircle className="h-5 w-5" />
-    //           {t("alerts.title")}
-    //         </CardTitle>
-    //       </CardHeader>
-    //       <CardContent>
-    //         <div className="space-y-3">
-    //           <div className="flex items-start gap-3 rounded-lg border p-3">
-    //             <AlertCircle className="mt-0.5 h-4 w-4 text-amber-500" />
-    //             <div className="space-y-1">
-    //               <p className="text-sm font-medium">
-    //                 {t("alerts.lowStorage.title")}
-    //               </p>
-    //               <p className="text-muted-foreground text-xs">
-    //                 {t("alerts.lowStorage.description")}
-    //               </p>
-    //             </div>
-    //           </div>
-    //           <div className="flex items-start gap-3 rounded-lg border p-3">
-    //             <UserCheck className="mt-0.5 h-4 w-4 text-blue-500" />
-    //             <div className="space-y-1">
-    //               <p className="text-sm font-medium">
-    //                 {t("alerts.newRegistrations.title")}
-    //               </p>
-    //               <p className="text-muted-foreground text-xs">
-    //                 {t("alerts.newRegistrations.description")}
-    //               </p>
-    //             </div>
-    //           </div>
-    //         </div>
-    //       </CardContent>
-    //     </Card>
-    //   </div>
-    // </div>
-  );
 }
 
 // Loading Skeletons

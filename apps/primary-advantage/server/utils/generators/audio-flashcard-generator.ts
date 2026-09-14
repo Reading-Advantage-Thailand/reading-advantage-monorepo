@@ -10,6 +10,7 @@ import fs from "fs";
 import path from "path";
 import { generateWordList } from "./wordlist-generator";
 import { uploadToBucket } from "@/utils/storage";
+import type { TimePoint } from "@/types";
 
 export type SentencesResponse = {
   sentence: string;
@@ -46,11 +47,6 @@ export type GenerateAudioParams = {
 //   storyId: string;
 //   chapterNumber: string;
 // };
-
-interface TimePoint {
-  timeSeconds: number;
-  markName: string;
-}
 
 function contentToSSML(content: string[]): string {
   let ssml = "<speak>";
@@ -238,26 +234,6 @@ export async function generateAudioForFlashcard({
 
 //         let allTimePoints: TimePoint[] = [];
 
-//         const response = await fetch(
-//           `${BASE_TEXT_TO_SPEECH_URL}/v1beta1/text:synthesize?key=${process.env.GOOGLE_TEXT_TO_SPEECH_API_KEY}`,
-//           {
-//             method: "POST",
-//             headers: {
-//               "Content-Type": "application/json",
-//             },
-//             body: JSON.stringify({
-//               input: { ssml: contentToSSML(vocabulary) },
-//               voice: {
-//                 languageCode: "en-US",
-//                 name: voice,
-//               },
-//               audioConfig: {
-//                 audioEncoding: "MP3",
-//               },
-//               enableTimePointing: ["SSML_MARK"],
-//             }),
-//           }
-//         );
 
 //         if (!response.ok) {
 //           throw new Error(`Error: ${response.statusText}`);
@@ -276,39 +252,4 @@ export async function generateAudioForFlashcard({
 //           `${AUDIO_WORDS_URL}/${storyId}-${chapterNumber}.mp3`
 //         );
 
-//         await db
-//           .collection("stories-word-list")
-//           .doc(`${storyId}-${chapterNumber}`)
-//           .update({
-//             timepoints: allTimePoints,
-//             id: storyId,
-//             chapterNumber: chapterNumber,
-//           });
-//       } catch (error: any) {
-//         throw `failed to generate audio: ${error} \n\n error: ${JSON.stringify(
-//           error.response.data
-//         )}`;
-//       }
-//     }
-//   }
 
-//   export async function saveWordList({
-//     wordList,
-//     storyId,
-//     chapterNumber,
-//   }: GenerateChapterAudioParams): Promise<void> {
-//     {
-//       try {
-//         const wordListRef = db
-//           .collection("stories-word-list")
-//           .doc(`${storyId}-${chapterNumber}`);
-//         await wordListRef.set({
-//           word_list: wordList,
-//         });
-//       } catch (error: any) {
-//         throw `failed to save word list: ${error} \n\n error: ${JSON.stringify(
-//           error.response.data
-//         )}`;
-//       }
-//     }
-//   }

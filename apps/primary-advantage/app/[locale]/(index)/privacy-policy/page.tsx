@@ -1,6 +1,13 @@
 import React from "react";
+import type { Metadata } from "next";
 
 type Props = {};
+
+/** Static metadata for the privacy policy page. */
+export const metadata: Metadata = {
+  title: "Privacy Policy",
+  description: "Primary Advantage privacy policy.",
+};
 
 export default function PrivacyPolicy({}: Props) {
   return (

@@ -1,6 +1,13 @@
 import React from 'react'
+import type { Metadata } from "next";
 
 type Props = {}
+
+/** Static metadata for the contact page. */
+export const metadata: Metadata = {
+  title: "Contact",
+  description: "Contact Primary Advantage.",
+};
 
 export default function ContactPage({ }: Props) {
     return (

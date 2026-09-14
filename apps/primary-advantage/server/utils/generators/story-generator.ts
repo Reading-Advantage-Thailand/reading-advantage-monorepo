@@ -36,9 +36,6 @@ export async function generateStoryContent(
   params: GenerateStoryParams,
 ): Promise<GenerateStoryResponse> {
   try {
-    console.log(
-      `${params.cefrLevel} generating story model ID: ${googleModel}`,
-    );
 
     const userPrompt = `Create a story for English learners at CEFR level ${
       params.cefrLevel

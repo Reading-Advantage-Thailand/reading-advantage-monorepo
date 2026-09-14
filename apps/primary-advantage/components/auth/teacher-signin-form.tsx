@@ -19,7 +19,8 @@ import { signInSchema } from "@/lib/zod";
 import { useState } from "react";
 import { useAuth } from "@reading-advantage/auth-client";
 import { FormError } from "../form-error";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import { useRouter } from "@/i18n/navigation";
 import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 

@@ -26,7 +26,7 @@ export function SignUpForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"form">) {
-  const [isPanding, startTransition] = useTransition();
+  const [isPending, startTransition] = useTransition();
   const [loading, setLoading] = useState<boolean>(false);
   const [accepted, setAccepted] = useState<boolean>(false);
   const [error, setError] = useState<string | undefined>("");
@@ -83,7 +83,7 @@ export function SignUpForm({
                 <Input
                   type="name"
                   placeholder="John Doe"
-                  disabled={isPanding}
+                  disabled={isPending}
                   {...field}
                 />
               </FormControl>
@@ -102,7 +102,7 @@ export function SignUpForm({
                 <Input
                   type="email"
                   placeholder="name@example.com"
-                  disabled={isPanding}
+                  disabled={isPending}
                   {...field}
                 />
               </FormControl>
@@ -118,7 +118,7 @@ export function SignUpForm({
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input type="password" disabled={isPanding} {...field} />
+                <Input type="password" disabled={isPending} {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -132,7 +132,7 @@ export function SignUpForm({
             <FormItem>
               <FormLabel>Confirm Password</FormLabel>
               <FormControl>
-                <Input type="password" disabled={isPanding} {...field} />
+                <Input type="password" disabled={isPending} {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -158,11 +158,11 @@ export function SignUpForm({
           </div>
           <div>
             By signing up, you agree to our{" "}
-            <a href="#" className="underline underline-offset-2">
+            <a href="/terms" className="underline underline-offset-2">
               Terms of Service
             </a>{" "}
             and{" "}
-            <a href="#" className="underline underline-offset-2">
+            <a href="/privacy-policy" className="underline underline-offset-2">
               Privacy Policy
             </a>
             .
@@ -172,7 +172,7 @@ export function SignUpForm({
         <Button
           type="submit"
           className="w-full"
-          disabled={!accepted || isPanding}
+          disabled={!accepted || isPending}
         >
           {loading ? "Creating account..." : "Sign up"}
         </Button>

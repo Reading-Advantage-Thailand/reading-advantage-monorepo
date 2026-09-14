@@ -242,7 +242,6 @@ export async function persistGeneratedArticle(
 export const generateArticleNew = async (
   levels: ArticleBaseCefrLevel,
 ): Promise<void> => {
-  console.log("Generating article for level:", levels);
 
   const rawData = fs.readFileSync(
     path.join(process.cwd(), "data", "new-article-prompts.json"),
@@ -267,7 +266,6 @@ export const generateArticleNew = async (
     (level: any) => level.level === levels,
   );
 
-  // console.log("Filtered prompts:", filteredPrompts);
 
   const userPrompt = filteredPrompts.userPromptTemplate
     .replace("{genre}", data.genre)
@@ -309,7 +307,6 @@ export const generateArticleNew = async (
               ArticleType,
             });
           });
-          console.log("Article generated successfully");
           return;
         }
       } catch (error) {
@@ -364,16 +361,6 @@ export const generateArticleNew = async (
 
 //     const topics = await generateBatchTopics(type, genres, amount);
 
-//     // 2. Create generation jobs
-//     const jobs: GenerationJob[] = topics.map((topic, index) => ({
-//       id: `${type}-${level}-${Date.now()}-${index}`,
-//       type,
-//       level,
-//       genre: genres[index].genre,
-//       subgenre: genres[index].subgenre,
-//       topic,
-//       status: "pending",
-//     }));
 
 //     // 3. Process jobs in batches
 //     for (let i = 0; i < jobs.length; i += BATCH_SIZE) {
@@ -387,9 +374,6 @@ export const generateArticleNew = async (
 //       }
 //     }
 
-//     console.log(
-//       `Completed batch generation: ${amount} articles for ${type}/${level}`,
-//     );
 //   } catch (error) {
 //     console.error("Batch generation failed:", error);
 //     throw error;
@@ -417,38 +401,6 @@ export const generateArticleNew = async (
 //   }
 // }
 
-// // Combine multiple AI calls into single optimized call
-// async function generateContentOptimized(
-//   job: GenerationJob,
-// ): Promise<GeneratedContent> {
-//   // Use a single AI call to generate article + initial questions
-//   const combinedSchema = z.object({
-//     article: articleGeneratorSchema,
-//     questions: z.object({
-//       multipleChoice: z
-//         .array(
-//           z.object({
-//             question: z.string(),
-//             options: z.array(z.string()),
-//             answer: z.string(),
-//           }),
-//         )
-//         .min(5)
-//         .max(8),
-//       shortAnswer: z
-//         .array(
-//           z.object({
-//             question: z.string(),
-//             answer: z.string(),
-//           }),
-//         )
-//         .min(3)
-//         .max(5),
-//       longAnswer: z.object({
-//         question: z.string(),
-//       }),
-//     }),
-//   });
 
 //   const combinedPrompt = `
 //   Create a complete ${job.type} article for ${job.level} level about "${job.topic}" in the ${job.genre}/${job.subgenre} genre.
@@ -474,32 +426,7 @@ export const generateArticleNew = async (
 //   // Quick rating evaluation (optional - can be skipped for speed)
 //   const rating = await evaluateRatingFast(combined.article.passage, job.level);
 
-//   return {
-//     article: {
-//       ...combined.article,
-//       rating: rating.rating,
-//       cefrLevel: rating.cefrLevel,
-//     },
-//     mcq: { questions: combined.questions.multipleChoice },
-//     saq: { questions: combined.questions.shortAnswer },
-//     laq: combined.questions.longAnswer,
-//   };
-// }
 
-// // Faster rating evaluation with smaller model
-// async function evaluateRatingFast(
-//   passage: string,
-//   level: ArticleBaseCefrLevel,
-// ): Promise<{ rating: number; cefrLevel: string }> {
-//   const { object } = await generateObject({
-//     model: google("gemini-1.5-flash"), // Use faster, cheaper model
-//     schema: z.object({
-//       rating: z.number().min(1).max(5),
-//       cefrLevel: z.string(),
-//     }),
-//     prompt: `Rate this passage for ${level} level (1-5 scale) and confirm CEFR level: ${passage.substring(0, 500)}...`,
-//     maxTokens: 100, // Limit tokens for speed
-//   });
 
 //   return object;
 // }
@@ -536,47 +463,9 @@ export const generateArticleNew = async (
 //     this.processing = false;
 //   }
 
-//   private async executeTask(task: BackgroundTask) {
-//     try {
-//       switch (task.type) {
-//         case "image":
-//           await generateImage({
-//             imageDesc: task.data.imageDesc,
-//             articleId: task.articleId,
-//           });
-//           break;
-//         case "audio":
-//           await generateAudio({
-//             passage: task.data.passage,
-//             articleId: task.articleId,
-//           });
-//           break;
-//         case "wordlist":
-//           await generateWordLists(task.articleId);
-//           break;
-//       }
-//     } catch (error) {
-//       console.error(
-//         `Background task ${task.type} failed for ${task.articleId}:`,
-//         error,
-//       );
-//     }
-//   }
-// }
 
 // const backgroundQueue = new BackgroundTaskQueue();
 
-// export function queueBackgroundTasks(
-//   articleId: string,
-//   content: GeneratedContent,
-// ) {
-//   // Queue tasks with priorities (higher = more important)
-//   backgroundQueue.addTask({
-//     type: "image",
-//     articleId,
-//     data: { imageDesc: content.article.imageDesc },
-//     priority: 3,
-//   });
 
 //   backgroundQueue.addTask({
 //     type: "audio",
@@ -593,40 +482,7 @@ export const generateArticleNew = async (
 //   });
 // }
 
-// // Save core article data immediately, update with media later
-// async function saveArticleCore(
-//   content: GeneratedContent,
-//   job: GenerationJob,
-// ): Promise<string> {
-//   const transaction = await db.$transaction(async (tx) => {
-//     // Create article
-//     const article = await tx.article.create({
-//       data: {
-//         title: content.article.title,
-//         passage: content.article.passage,
-//         summary: content.article.summary,
-//         translatedSummary: content.article.translatedSummary,
-//         imageDescription: content.article.imageDesc,
-//         genre: cleanGenre(job.genre),
-//         subGenre: cleanGenre(job.subgenre),
-//         type: job.type,
-//         rating: content.article.rating,
-//         raLevel: convertCefrLevel(content.article.cefrLevel),
-//         cefrLevel: content.article.cefrLevel,
-//       },
-//     });
 
-//     // Create all questions in parallel
-//     await Promise.all([
-//       // Multiple choice questions
-//       tx.multipleChoiceQuestion.createMany({
-//         data: content.mcq.questions.map((q) => ({
-//           question: q.question,
-//           options: q.options,
-//           answer: q.answer,
-//           articleId: article.id,
-//         })),
-//       }),
 
 //       // Short answer questions
 //       tx.shortAnswerQuestion.createMany({
@@ -691,9 +547,6 @@ export const generateArticleNew = async (
 //     ArticleBaseCefrLevel.B2,
 //   ];
 
-//   console.log(
-//     `Starting optimized generation of ${types.length * levels.length * amountPerGenre} articles...`,
-//   );
 
 //   try {
 //     // Process all combinations in parallel with controlled concurrency
@@ -719,7 +572,6 @@ export const generateArticleNew = async (
 //       }
 //     }
 
-//     console.log("Optimized article generation completed!");
 //   } catch (error) {
 //     console.error("Optimized generation failed:", error);
 //     throw error;

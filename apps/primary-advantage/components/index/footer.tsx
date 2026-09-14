@@ -4,45 +4,53 @@ import { ThemeToggle } from "@/components/switchers/theme-switcher-toggle";
 import { LocaleSwitcher } from "@/components/switchers/locale-switcher";
 import { Link } from "@/i18n/navigation";
 import { Palette } from "lucide-react";
+import { useTranslations } from "next-intl";
 // import { ThemeCustomizer } from "./theme-customizer";
 
 interface FooterProps {
   className?: string;
 }
 
-const info = [
-  {
-    title: "About",
-    links: [
-      { title: "About Us", href: "/about" },
-      { title: "Features", href: "/#features" },
-      { title: "Pricing", href: "/pricing" },
-      {
-        title: "Support",
-        href: "https://docs.google.com/forms/d/e/1FAIpQLSe_Ew100kef6j4O4IuiHm4ZeGhOj5FN6JRyJ7-0gvZV9eFgjQ/viewform?usp=sf_link",
-      },
-    ],
-  },
-  {
-    title: "Legal",
-    links: [
-      { title: "Privacy Policy", href: "/privacy-policy" },
-      { title: "Terms & Conditions", href: "/terms" },
-    ],
-  },
-  {
-    title: "Contact",
-    links: [
-      {
-        title: "Email: info@primaryadvantage.com",
-        href: "mailto:info@primaryadvantage.com",
-      },
-      { title: "Phone: +1 (123) 456-7890", href: "tel:+11234567890" },
-    ],
-  },
-];
+/**
+ * Builds the footer link groups from translated labels.
+ * @param t Translation function for the Footer namespace.
+ * @returns About, legal, and contact link groups.
+ */
+function footerLinkGroups(t: (key: string) => string) {
+  return [
+    {
+      title: t("about"),
+      links: [
+        { title: t("aboutUs"), href: "/about" },
+        { title: t("features"), href: "/#features" },
+        {
+          title: t("support"),
+          href: "https://docs.google.com/forms/d/e/1FAIpQLSe_Ew100kef6j4O4IuiHm4ZeGhOj5FN6JRyJ7-0gvZV9eFgjQ/viewform?usp=sf_link",
+        },
+      ],
+    },
+    {
+      title: t("legal"),
+      links: [
+        { title: t("privacyPolicy"), href: "/privacy-policy" },
+        { title: t("terms"), href: "/terms" },
+      ],
+    },
+    {
+      title: t("contact"),
+      links: [
+        {
+          title: "Email: admin@reading-advantage.com",
+          href: "mailto:admin@reading-advantage.com",
+        },
+      ],
+    },
+  ];
+}
 
 export function Footer({ className }: FooterProps) {
+  const t = useTranslations("Footer");
+  const info = footerLinkGroups(t);
   return (
     <footer className="text-white">
       <svg viewBox="0 0 800 23" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -64,7 +72,8 @@ export function Footer({ className }: FooterProps) {
                 </span>
               </a>
               <p className="mt-2 text-gray-400">
-                Provinding the best English learning experience.
+                {t("tagline") ||
+                  "Providing the best English learning experience."}
               </p>
             </div>
             <div className="grid grid-cols-2 gap-8 sm:grid-cols-2 sm:gap-6">
@@ -89,12 +98,11 @@ export function Footer({ className }: FooterProps) {
           <hr className="my-6 border-gray-700 sm:mx-auto lg:my-8" />
           <div className="sm:flex sm:items-center sm:justify-between">
             <span className="text-sm text-gray-400 sm:text-center">
-              © 2024{" "}
-              <a href="" className="hover:underline">
+              © {new Date().getFullYear()}{" "}
+              <Link href="/" className="hover:underline">
                 Primary Advantage™
-              </a>
-              . All Rights Reserved.
-            </span>
+              </Link>{" "}{" "}
+              {t("rights")}            </span>
             <div className="flex items-center justify-center gap-2">
               <Link href={siteConfig.link.github} className="mr-2">
                 <svg

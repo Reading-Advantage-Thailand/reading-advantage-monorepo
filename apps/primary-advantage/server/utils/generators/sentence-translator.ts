@@ -131,9 +131,6 @@ export async function translateAndStoreSentences({
 
     // Check if translations already exist and forceRetranslate is false
     if (article.translatedPassage && !forceRetranslate) {
-      console.log(
-        `Translations already exist for article ${articleId}. Use forceRetranslate=true to retranslate.`,
-      );
       return;
     }
 
@@ -146,9 +143,6 @@ export async function translateAndStoreSentences({
       throw new Error(`No sentences to translate for article ${articleId}`);
     }
 
-    console.log(
-      `Translating ${sentences.length} sentences for article ${articleId}...`,
-    );
 
     // Translate sentences
     const translatedSentences = await translateSentencesWithAI(
@@ -184,9 +178,6 @@ export async function translateAndStoreSentences({
       })
       .where(eq(articles.id, articleId));
 
-    console.log(
-      `Successfully translated and stored sentences for article ${articleId}`,
-    );
   } catch (error: any) {
     console.error(
       `Failed to translate sentences for article ${articleId}:`,
@@ -220,9 +211,6 @@ export async function translateAndStoreSentences({
 //   articleIds: string[],
 //   options?: Omit<TranslateSentencesParams, "articleId">,
 // ): Promise<void> {
-//   console.log(
-//     `Starting batch translation for ${articleIds.length} articles...`,
-//   );
 
 //   const results = await Promise.allSettled(
 //     articleIds.map((articleId) =>
@@ -237,9 +225,6 @@ export async function translateAndStoreSentences({
 //     (result) => result.status === "rejected",
 //   ).length;
 
-//   console.log(
-//     `Batch translation completed: ${successful} successful, ${failed} failed`,
-//   );
 
 //   if (failed > 0) {
 //     const errors = results

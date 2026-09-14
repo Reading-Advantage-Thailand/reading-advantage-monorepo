@@ -9,6 +9,12 @@
     "goBack": "返回",
     "returnToWebsite": "返回网站"
   },
+  "Error": {
+    "title": "出现错误",
+    "description": "抱歉，发生了意外错误。请重试。",
+    "retry": "重试",
+    "goHome": "返回首页"
+  },
   "common": {
     "tryAgain": "再试一次"
   },
@@ -354,7 +360,8 @@
       "articles": "文章",
       "articlesDesc": "可用的阅读材料",
       "growth": "每月增长",
-      "growthDesc": "学生入学增长"
+      "growthDesc": "学生入学增长",
+      "loadError": "加载统计数据失败"
     },
     "quickActions": {
       "title": "快速操作",
@@ -374,7 +381,8 @@
     "recentActivity": {
       "title": "最近活动",
       "empty": "没有最近的活动要显示",
-      "viewAll": "查看所有活动"
+      "viewAll": "查看所有活动",
+      "loadError": "加载最近活动失败"
     },
     "systemStatus": {
       "title": "系统状态",
@@ -422,6 +430,16 @@
     "startQuiz": "开始测试",
     "getFeedback": "获取反馈",
     "audioButton": "听和读",
+    "playAudio": "播放音频",
+    "stopAudio": "停止音频",
+    "backToTop": "返回顶部",
+    "seekBack": "后退",
+    "seekForward": "前进",
+    "playbackSpeed": "播放速度",
+    "openActionsMenu": "打开操作菜单",
+    "showNotifications": "显示通知",
+    "toggleDetails": "切换详情",
+    "selectStudent": "选择学生",
     "saveToFlashcard": "保存到闪卡",
     "translate": "翻译",
     "timer": "已用时 {elapsed} 秒",
@@ -430,6 +448,8 @@
     "sentences": "句子",
     "confirmRetake": "确认重新测试",
     "areYouSureYouWantToRetakeThisQuiz": "您确定要重新测试吗？您的答案将被清除。",
+    "loadError": "加载失败",
+    "emptyList": "还没有句子",
     "AdminArticleCreation": {
       "tabs": {
         "createArticle": "创建文章",
@@ -558,7 +578,9 @@
   "WordList": {
     "title": "单词列表",
     "description": "选择单词保存到闪卡",
-    "selectedWords": "{count} 个单词已选择"
+    "selectedWords": "{count} 个单词已选择",
+    "loadError": "无法加载单词",
+    "empty": "还没有保存的单词"
   },
   "Article": {
     "title": "文章",
@@ -576,6 +598,8 @@
     "saveToFlashcard": "闪卡: 已保存",
     "notSaved": "闪卡: 未保存",
     "studyAsLesson": "学习为 45 分钟课程",
+    "hideLessonOption": "隐藏课程选项",
+    "showLessonOption": "显示课程选项",
     "selection": {
       "title": "文章选择",
       "description": "请选择您想要阅读的 {selection}",
@@ -844,6 +868,7 @@
       "overdue": "逾期",
       "dueToday": "今日截止",
       "upcoming": "即将到来",
+      "daysLeft": "还剩 {daysDiff} 天",
       "allStatus": "所有状态",
       "notFinished": "未完成",
       "inProgress": "进行中",
@@ -1187,6 +1212,7 @@
       "perfectCorrectOrder": "完美！正确顺序！🎉",
       "notQuiteRight": "不正确！💪",
       "correctOrder": "正确顺序",
+      "reorderAriaLabel": "{sentence}。第 {position} 个，共 {total} 个。使用方向键重新排序。",
       "hints": {
         "title": "提示",
         "description": "使用提示帮助你完成挑战",
@@ -1612,6 +1638,8 @@
       "title": "句子活动",
       "description": "练习句子活动以提高你的技能。",
       "loading": "正在加载活动...",
+      "loadError": "无法加载活动",
+      "retry": "重试",
       "completed": "已完成",
       "review": "复习",
       "orderSentences": {
@@ -1733,6 +1761,74 @@
         "timeTaken": "花费时间",
         "completed": "已完成"
       }
+    },
+    "VocabularyMatching": {
+      "loading": {
+        "title": "正在加载闪卡",
+        "description": "正在准备您的词汇练习..."
+      },
+      "noCards": {
+        "title": "无可用词汇",
+        "description": "此文章尚无可用的词汇闪卡。"
+      },
+      "error": {
+        "title": "加载失败",
+        "description": "加载词汇时出错。请再试一次。"
+      },
+      "buttons": {
+        "tryAgain": "再试一次",
+        "showAnswers": "显示答案",
+        "completeActivity": "完成活动"
+      },
+      "start": {
+        "title": "开始词汇配对",
+        "subtitle": "选择您喜欢的定义语言",
+        "languageLabel": "定义语言",
+        "languageHint": "单词定义将以此语言显示",
+        "startButton": "开始配对游戏"
+      },
+      "completed": {
+        "title": "词汇练习完成！",
+        "subtitle": "您的词汇练习做得很好",
+        "xpEarned": "获得 XP",
+        "completed": "已完成"
+      },
+      "game": {
+        "title": "📚 将单词与定义配对",
+        "instruction": "点击左侧的单词，然后点击右侧的定义",
+        "columns": {
+          "words": "单词",
+          "definitions": "定义"
+        }
+      },
+      "progress": {
+        "matched": "{matched}/{total} 已配对",
+        "correct": "{correct}/{total} 正确"
+      },
+      "results": {
+        "perfect": "完美！所有配对都正确！🎉",
+        "partialCorrect": "{correct}/{total} 正确 💪",
+        "correctMatches": "正确的配对：",
+        "showAnswers": "已显示正确配对！📖",
+        "correctMatch": "配对正确！✅",
+        "incorrectMatch": "配对不正确。再试一次！❌",
+        "tryAgain": "{correct}/{total} 正确。再试一次！💪"
+      },
+      "toast": {
+        "failedToLoad": "无法加载词汇"
+      }
+    },
+    "Introduction": {
+      "phase1Title": "课程介绍",
+      "phase1Description": "在本课中，您将阅读一篇关于「{title}」的文章",
+      "cefrLevel": "CEFR 等级：{level}",
+      "raLevel": "RA 等级：{level}",
+      "estimatedReadTime": "预计阅读时间：{time}",
+      "articleSummary": "文章摘要",
+      "learningObjectives": "学习目标",
+      "understandMainIdeas": "理解主要思想：",
+      "learnVocabulary": "学习词汇：",
+      "improveComprehension": "提高阅读理解："
     }
   },
   "LessonLanguageQuestion": {
@@ -1941,74 +2037,6 @@
       "timeTaken": "花费时间",
       "completedLabel": "已完成"
     }
-  },
-  "VocabularyMatching": {
-    "loading": {
-      "title": "正在加载闪卡",
-      "description": "正在准备您的词汇练习..."
-    },
-    "noCards": {
-      "title": "无可用词汇",
-      "description": "此文章尚无可用的词汇闪卡。"
-    },
-    "error": {
-      "title": "加载失败",
-      "description": "加载词汇时出错。请再试一次。"
-    },
-    "buttons": {
-      "tryAgain": "再试一次",
-      "showAnswers": "显示答案",
-      "completeActivity": "完成活动"
-    },
-    "start": {
-      "title": "开始词汇配对",
-      "subtitle": "选择您喜欢的定义语言",
-      "languageLabel": "定义语言",
-      "languageHint": "单词定义将以此语言显示",
-      "startButton": "开始配对游戏"
-    },
-    "completed": {
-      "title": "词汇练习完成！",
-      "subtitle": "您的词汇练习做得很好",
-      "xpEarned": "获得 XP",
-      "completed": "已完成"
-    },
-    "game": {
-      "title": "📚 将单词与定义配对",
-      "instruction": "点击左侧的单词，然后点击右侧的定义",
-      "columns": {
-        "words": "单词",
-        "definitions": "定义"
-      }
-    },
-    "progress": {
-      "matched": "{matched}/{total} 已配对",
-      "correct": "{correct}/{total} 正确"
-    },
-    "results": {
-      "perfect": "完美！所有配对都正确！🎉",
-      "partialCorrect": "{correct}/{total} 正确 💪",
-      "correctMatches": "正确的配对：",
-      "showAnswers": "已显示正确配对！📖",
-      "correctMatch": "配对正确！✅",
-      "incorrectMatch": "配对不正确。再试一次！❌",
-      "tryAgain": "{correct}/{total} 正确。再试一次！💪"
-    },
-    "toast": {
-      "failedToLoad": "无法加载词汇"
-    }
-  },
-  "Introduction": {
-    "phase1Title": "课程介绍",
-    "phase1Description": "在本课中，您将阅读一篇关于「{title}」的文章",
-    "cefrLevel": "CEFR 等级：{level}",
-    "raLevel": "RA 等级：{level}",
-    "estimatedReadTime": "预计阅读时间：{time}",
-    "articleSummary": "文章摘要",
-    "learningObjectives": "学习目标",
-    "understandMainIdeas": "理解主要思想：",
-    "learnVocabulary": "学习词汇：",
-    "improveComprehension": "提高阅读理解："
   },
   "TaskLanguageQuestions": {
     "title": "语言问题",
@@ -2651,5 +2679,85 @@
       "next": "下一页",
       "pageOf": "第 {page} 页，共 {totalPages} 页"
     }
+  },
+  "ApkHost": {
+    "readMode": "阅读泰语",
+    "listenMode": "听英语",
+    "signInToPlayChallenge": "登录以参与此挑战",
+    "signInToPlayGame": "登录以玩此游戏"
+  },
+  "StudentGames": {
+    "title": "学生游戏",
+    "description": "畅玩实时 Advantage Play Kit 目录。每张卡片都会打开已验证的 APK 路线。"
+  },
+  "Footer": {
+    "tagline": "提供最佳英语学习体验。",
+    "about": "关于",
+    "aboutUs": "关于我们",
+    "features": "功能",
+    "support": "支持",
+    "legal": "法律",
+    "privacyPolicy": "隐私政策",
+    "terms": "条款与条件",
+    "contact": "联系",
+    "rights": "版权所有。"
+  },
+  "LicenseForm": {
+    "name": "许可证名称",
+    "namePlaceholder": "输入许可证名称",
+    "nameDescription": "此许可证的描述性名称",
+    "status": "状态",
+    "statusPlaceholder": "选择许可证状态",
+    "statusDescription": "许可证的当前状态",
+    "statusActive": "有效",
+    "statusInactive": "未激活",
+    "statusExpired": "已过期",
+    "school": "学校",
+    "schoolPlaceholder": "选择学校",
+    "noSchool": "无学校（通用许可证）",
+    "schoolDescription": "此许可证分配到的学校",
+    "subscriptionType": "订阅类型",
+    "subscriptionPlaceholder": "选择订阅类型",
+    "subscriptionDescription": "此许可证的订阅类型",
+    "subBasic": "基础版",
+    "subPremium": "高级版",
+    "subEnterprise": "企业版",
+    "maxUsers": "最大用户数",
+    "maxUsersDescription": "此许可证允许的最大用户数",
+    "startDate": "开始日期",
+    "pickDate": "选择日期",
+    "startDateDescription": "此许可证生效的日期",
+    "expiryDuration": "有效期限",
+    "expiryPlaceholder": "选择有效期限",
+    "noExpiry": "永不过期",
+    "days": "{count} 天",
+    "months6": "180 天（6 个月）",
+    "year1": "365 天（1 年）",
+    "years2": "730 天（2 年）",
+    "years3": "1095 天（3 年）",
+    "expiryDescription": "许可证将在开始日期起这些天后过期。",
+    "update": "更新许可证",
+    "cancel": "取消",
+    "updateSuccess": "许可证更新成功！",
+    "updateSuccessDescription": "已更新许可证“{name}”。",
+    "updateError": "许可证更新失败",
+    "fallbackError": "请重试，若问题仍然存在请联系支持人员。"
+  },
+  "SchoolForm": {
+    "name": "学校名称",
+    "namePlaceholder": "输入学校名称",
+    "nameDescription": "学校或机构的正式名称。",
+    "contactName": "联系人姓名",
+    "contactNamePlaceholder": "输入联系人姓名（选填）",
+    "contactNameDescription": "该学校主要联系人的姓名。",
+    "contactEmail": "联系人邮箱",
+    "contactEmailPlaceholder": "输入联系人邮箱（选填）",
+    "contactEmailDescription": "主要联系人的电子邮箱地址。",
+    "cancel": "取消",
+    "create": "创建学校",
+    "createSuccess": "学校创建成功！",
+    "createSuccessDescription": "已将 {name} 添加到系统。",
+    "createError": "学校创建失败",
+    "fallbackError": "发生意外错误。"
   }
 }

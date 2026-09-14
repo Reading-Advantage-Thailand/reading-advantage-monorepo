@@ -1,6 +1,13 @@
 import React from "react";
+import type { Metadata } from "next";
 
 type Props = {};
+
+/** Static metadata for the terms of service page. */
+export const metadata: Metadata = {
+  title: "Terms of Service",
+  description: "Primary Advantage terms of service.",
+};
 
 export default function TermsPage({}: Props) {
   return (

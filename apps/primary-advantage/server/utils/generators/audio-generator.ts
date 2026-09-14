@@ -16,7 +16,6 @@ import { eq, sql } from "drizzle-orm";
 import { articles } from "@reading-advantage/db";
 import { SentenceTimepoint, WordTimestamp } from "@/types";
 import { translateAndStoreSentences } from "./sentence-translator";
-import { log } from "console";
 import { createLogFile } from "../logging";
 import { SENTENCE_SPLITTER_SYSTEM_PROMPT } from "@/data/prompts-ai";
 import winkNLP from "wink-nlp";
@@ -35,42 +34,6 @@ interface GenerateChapterAudioParams {
   chapterNumber: string;
 }
 
-// Simple and reliable sentence splitting that handles abbreviations AND quotes
-// function splitSentencesCorrectly(text: string): string[] {
-//   // Common abbreviations that should not trigger sentence breaks
-//   const abbreviations = [
-//     "Mr",
-//     "Mrs",
-//     "Ms",
-//     "Miss",
-//     "Dr",
-//     "Prof",
-//     "Sr",
-//     "Jr",
-//     "vs",
-//     "etc",
-//     "Inc",
-//     "Corp",
-//     "Ltd",
-//     "Co",
-//     "Ave",
-//     "St",
-//     "Rd",
-//     "Blvd",
-//     "Apt",
-//     "No",
-//     "Vol",
-//     "pp",
-//     "Ph",
-//     "M.D",
-//     "B.A",
-//     "M.A",
-//     "Ph.D",
-//     "U.S",
-//     "U.K",
-//     "i.e",
-//     "e.g",
-//   ];
 
 //   const sentences: string[] = [];
 //   let currentSentence = "";
@@ -274,7 +237,6 @@ async function splitIntoSentences(passage: string): Promise<string[]> {
       temperature: 0.2,
     });
 
-    console.log(object.output.sentences);
 
     return object.output.sentences;
   } catch (error: any) {
@@ -363,10 +325,6 @@ function processWordTimestampsIntoSentences(
         wordsFound,
         totalWords: sentenceWordsList.length,
       });
-      // console.log(`Missing words from timestamps:`, missingWords);
-      // console.log(
-      //   `Found ${wordsFound}/${sentenceWordsList.length} words for sentence`,
-      // );
     }
 
     // Create sentence timepoint even if some words are missing
@@ -408,9 +366,6 @@ function processWordTimestampsIntoSentences(
       "problems",
     );
 
-    console.log(
-      `⚠️  Processing completed with problems. Log file created for article: ${articleId}`,
-    );
   }
 
   return sentenceTimepoints;
@@ -500,23 +455,12 @@ export async function generateAudio({
 
     return;
   } catch (error: any) {
-    console.log(error);
     throw `failed to generate audio: ${error} \n\n error: ${JSON.stringify(
       error.response.data,
     )}`;
   }
 }
 
-// export async function generateChapterAudio({
-//   content,
-//   storyId,
-//   chapterNumber,
-// }: GenerateChapterAudioParams): Promise<void> {
-//   try {
-//     const voice =
-//       AVAILABLE_VOICES[Math.floor(Math.random() * AVAILABLE_VOICES.length)];
-//     const newVoice =
-//       NEW_MODEL_VOICES[Math.floor(Math.random() * NEW_MODEL_VOICES.length)];
 
 //     const { sentences, chunks } = await splitTextIntoChunks(content, 5000);
 //     let currentIndex = 0;
@@ -532,30 +476,6 @@ export async function generateAudio({
 //     [];
 //     const audioPaths: string[] = [];
 
-//     for (let i = 0; i < chunks.length; i++) {
-//       const ssml = chunks[i];
-//       const response = await fetch(
-//         `${BASE_TEXT_TO_SPEECH_URL}/v1beta1/text:synthesize?key=${process.env.GOOGLE_TEXT_TO_SPEECH_API_KEY}`,
-//         {
-//           method: "POST",
-//           headers: {
-//             "Content-Type": "application/json",
-//           },
-//           body: JSON.stringify({
-//             input: {
-//               ssml: ssml,
-//             },
-//             voice: {
-//               languageCode: "en-US",
-//               name: voice,
-//             },
-//             audioConfig: {
-//               audioEncoding: "MP3",
-//             },
-//             enableTimePointing: ["SSML_MARK"],
-//           }),
-//         }
-//       );
 
 //       if (!response.ok) {
 //         throw new Error(`Error: ${response.statusText}`);
@@ -600,20 +520,3 @@ export async function generateAudio({
 
 //     // Update the database with all timepoints
 
-//     await db
-//       .collection("stories")
-//       .doc(storyId)
-//       .collection("timepoints")
-//       .doc(chapterNumber)
-//       .set({
-//         timepoints: result,
-//         id: storyId,
-//         chapterNumber: chapterNumber,
-//       });
-//   } catch (error: any) {
-//     console.log(error);
-//     // throw `failed to generate audio: ${error} \n\n error: ${JSON.stringify(
-//     //   error.response.data
-//     // )}`;
-//   }
-// }
