@@ -40,11 +40,11 @@ Fix the year, the phone number, the empty `href`, the address conflict, and the 
 
 ### FR-6: Restore commented `t()` calls
 
-Six strings in `student-assignment-table.tsx` comment out a working `t()` call and write English next to it. The keys exist in `messages/en.json`. Restore the `t()` calls.
+Eight call sites in `student-assignment-table.tsx:170,177,184,191,330,333,336,339` comment out a working `t()` call and write English next to it. They cover six distinct strings. The keys exist in `messages/en.json`. Restore the `t()` calls.
 
 ### FR-7: Point signup legal links at real routes
 
-Point the two signup legal links at `/terms` and `/privacy-policy`. Remove `target="_blank"` from the internal "Get Started" link.
+Point the two signup legal links at `/terms` and `/privacy-policy`. Remove `target="_blank"` from the internal "Get Started" link. Rename the internal `isPanding` state to `isPending` in `user-signup-form.tsx:29,86,105`.
 
 ### FR-8: Replace `captoliza` in live files
 

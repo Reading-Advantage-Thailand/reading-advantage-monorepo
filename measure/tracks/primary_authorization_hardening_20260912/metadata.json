@@ -1,11 +1,11 @@
 {
   "track_id": "primary_authorization_hardening_20260912",
   "type": "bug",
-  "status": "new",
+  "status": "implemented_pending_manual_verification",
   "created_at": "2026-09-12T00:00:00Z",
-  "updated_at": "2026-09-12T00:00:00Z",
+  "updated_at": "2026-09-13T23:59:00Z",
   "description": "Close the primary-advantage write-path authorization holes: privilege escalation on PATCH /api/users/[id], unauthenticated AI and file-delete routes, unguarded server actions, client-authoritative XP, and cross-tenant student reads.",
   "estimated_tasks": 15,
-  "actual_tasks": null,
-  "deviation_notes": ""
+  "actual_tasks": 27,
+  "deviation_notes": "All 8 FRs plus residuals closed. Second pass 2026-09-13 after independent re-verification: role-assignment rank check wired into users/[id] PATCH (roleAtLeast from @reading-advantage/auth; ADMIN cannot assign SYSTEM; only SYSTEM assigns SYSTEM); sales_rep/sales_admin redirect entries removed from roleDefaultRedirects (they were added by the enum derivation and landed on denied/nonexistent routes); XP proportionality restored server-side (MC = server-derived correct count x 1; SA clamped 0-5; LA clamped 0-25; four flashcard deck routes restored to clamp(score, 0, deckSize) x 2 with server-counted deck size). Verified: 548/548 tests, tsc 17 pre-existing APK, eslint 0 errors, build exit 0."
 }

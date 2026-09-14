@@ -46,6 +46,8 @@ Stage only the `mode` hunk. This file carries uncommitted APK work.
 
 `articles/article-select.tsx:57-60` advances the page only when the response has new rows. A page of duplicates leaves the page number unchanged, the observer rebuilds and fires at once, and the same request repeats without bound. Track the article offset in a ref so a duplicate page still advances it.
 
+Replace the `key={index}` grid keys at `article-select.tsx:113` with a stable article id. Index keys defeat reconciliation when the dedupe filter drops rows.
+
 ### FR-5: Debounce admin student search and drop the duplicate mount fetch
 
 `app/[locale]/admin/students/page.tsx:207,212,616` sends one `/api/students` request per keystroke. The comment claims a debounce that the code does not implement. `teacher/assignments.tsx:112` already has the correct pattern. Reuse it.
@@ -61,6 +63,8 @@ Hoist:
 - `standalone-lesson-progress-bar.tsx:384` and `lesson-progress-bar.tsx:534` (`LessonTimer`)
 
 Each parent render currently creates a new component type, so the dialog remounts, loses focus, and restarts its animation.
+
+Also hoist the `useDebounce` hook defined inside the component body at `student-assignment-table.tsx:142-158` to module scope. It works only because the call order is stable.
 
 ### FR-7: Replace hardcoded Thai lookups
 
@@ -80,6 +84,14 @@ Hardcoded Thai keys in data lookups: `articles/sentence.tsx:136`, `task-vocabula
 
 `teacher/assignment-dashboard.tsx:216-219` checks no `response.ok`, so an error body becomes the assignment state and line 429 throws. Check `response.ok` before parsing.
 
+### FR-11: Stop fabricated admin fallbacks
+
+`admin-stats-cards.tsx:44` ships a hardcoded `monthlyGrowth: 12.5` on the success path. Lines 46-52 render fabricated fallback KPIs (25 teachers, 340 students, 156 articles, 8.2 percent growth) when the fetch fails, with no error indication. `admin-recent-activity.tsx:60-97` renders mock names, emails, and timestamps on failure. Render an explicit error state in both components. Remove the hardcoded growth number or compute it.
+
+### FR-12: Replace full-reload navigation
+
+`student-assignment-table.tsx:380,643` navigates with `window.location.href`. `flashcards/deck-view.tsx:161,480` and `flashcards/flashcard-dashboard.tsx:82` call `window.location.reload()`. Use `router.push` and `router.refresh` from the i18n routing instead.
+
 ## Non-Functional Requirements
 
 - NFR-1: No new dependencies.
@@ -95,6 +107,8 @@ Hardcoded Thai keys in data lookups: `articles/sentence.tsx:136`, `task-vocabula
 - AC-6: Vietnamese and Chinese users do not see Thai text from the three `.th` lookups.
 - AC-7: Assignment sort buttons move rows. A deep link to a classroom preselects it.
 - AC-8: `pnpm turbo run test --filter=primary-advantage` passes, except the known pre-existing APK failure.
+- AC-9: A failed admin stats or activity fetch renders an error state, never fabricated numbers or mock names.
+- AC-10: No `window.location.href` or `window.location.reload()` remains in the listed components.
 
 ## Out of Scope
 

@@ -1,11 +1,11 @@
 {
   "track_id": "primary_component_deduplication_20260912",
   "type": "chore",
-  "status": "new",
+  "status": "implemented_pending_manual_verification",
   "created_at": "2026-09-12T00:00:00Z",
-  "updated_at": "2026-09-12T00:00:00Z",
-  "description": "Delete dead primary-advantage files first, then merge nine fork pairs (~6,082 identical lines), extract shared helpers, and remove about 13,900 removable lines.",
+  "updated_at": "2026-09-13T23:59:00Z",
+  "description": "Delete dead primary-advantage files first, then merge nine fork pairs (~6,107 identical lines) plus five new fork families, extract shared helpers, and remove about 14,400 removable lines.",
   "estimated_tasks": 20,
-  "actual_tasks": null,
-  "deviation_notes": ""
+  "actual_tasks": 31,
+  "deviation_notes": "All FRs done. Line target partially met: ~9,220 of ~14,400 lines removed (64 percent) after six true merges. First-pass deviation note falsely claimed no identical lines remained; independent measurement found order-word (~900 shared) and matching (~590 shared) still concatenated. Both rebuilt 2026-09-13 behind variant configs, gated by 32 pre-written characterization tests (32/32 unchanged). Matching finished 13 lines over target: 22 distinct label keys plus JSDoc kept over line golf. Fallback-timer unmount cleanup landed inside the order-word merge."
 }

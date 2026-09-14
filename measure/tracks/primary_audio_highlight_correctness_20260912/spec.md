@@ -36,7 +36,9 @@ Line 46 tests `currentTime + 0.5 >= endTimestamp`. Two flashcard callers pass `e
 
 `actions/flashcard.ts:1112-1120` and `:1213-1223` return `audio_url`, `start_time`, `end_time`. `lesson-sentence-order.tsx:58-60` and `lesson-sentence-cloze-test.tsx:57-59` declare `audioUrl`, `startTime`, `endTime` as optional, so TypeScript reports nothing and the values are always `undefined`.
 
-Align the field names so both lesson audio hints play.
+`actions/flashcard.ts:1112-1117` also returns `translationMap` while the client interface at `lesson-sentence-order.tsx:52-57` declares `translation`. The ordering hint translation is dead for the same reason.
+
+Align all four field names so both lesson audio hints and the ordering translation hint play.
 
 ### FR-5: Fix the word-order index
 
@@ -45,6 +47,8 @@ Align the field names so both lesson audio hints play.
 ### FR-6: Pause audio in sentence-order cleanup
 
 `lesson-sentence-order.tsx:509` and `order-sentences-game.tsx:496` call `cleanup()` without `audio.pause()`. A sentence group longer than 10 seconds plays on through the rest of the article. Call `audio.pause()` inside `cleanup()`.
+
+Move the success toast at `lesson-sentence-order.tsx:415-416` behind the audio-data validation. Users currently see a success toast followed by an error toast on every hint.
 
 ### FR-7: Hold detached `Audio` objects and pause them on unmount
 
@@ -64,7 +68,25 @@ Uncomment or restore `setIsAudioLoaded(true)` in `task-first-reading.tsx` and `t
 
 ### FR-10: Distinct highlight colours
 
-Give the playing, hover, and selected states three distinct colours in both themes. In dark theme the hover colour and the playing-sentence colour must not be the same value.
+Give the playing, hover, and selected states three distinct colours in both themes. In dark theme the playing sentence uses `dark:bg-blue-900/70` and word hover uses `dark:hover:bg-blue-900/50`. The hue is the same; only the opacity differs. Give each state a distinct hue or a clearly distinct treatment.
+
+### FR-11: Restore cloze hint timing data
+
+The cloze hint is dead twice over. `actions/flashcard.ts:1209-1210` hardcodes `startTime = 0; endTime = 0`. The client at `lesson-sentence-cloze-test.tsx:610-629` sets `currentTime = startTime` on `loadeddata` and waits for `seeked`. When `startTime` is 0 and the element already sits at 0, no `seeked` event fires and `play()` never runs.
+
+Serve real segment times from the server. Do not wait for `seeked` when the element already sits at the target time. The deck cloze route has the same defect through a different mechanism: `app/api/flashcard/decks/[deckId]/sentences-for-cloze/route.ts:99-101` reads `audioUrl` through an `any` cast that card rows do not carry. Fix both pipelines.
+
+### FR-12: Cancel the word-click playback timer and clear the chain on close
+
+`article-content.tsx:323-332` schedules an uncancelled 50 ms `setTimeout` that calls `play()` and `setIsPlaying(true)`. It fires after pause and after unmount. Hold it in the same timer ref as FR-1. `handleTogglePlayer` at `article-content.tsx:170-184` closes the player without clearing the in-flight highlight chain. Clear the chain on close.
+
+### FR-13: Pause `AudioButton` on unmount
+
+`audio-button.tsx:63-69` clears its interval on unmount but never pauses the element. A playing clip survives unmount. Pause the element in the same cleanup. The FR-2 hook must own this behavior.
+
+### FR-14: Remove the article dump and rename the misnamed export
+
+`task-deep-reading.tsx:194` logs the entire article object on every render. Remove it. Line 23 default-exports a component named `TaskFirstReading`. Rename it to `TaskDeepReading`.
 
 ## Non-Functional Requirements
 
@@ -77,11 +99,12 @@ Give the playing, hover, and selected states three distinct colours in both them
 - AC-1: The highlight tracks the audio within one sentence at 1x and 2x. Pause, seek, and word click cancel the previous timer chain.
 - AC-2: No `setInterval` remains in an audio component.
 - AC-3: Unmounting stops every timer and every clip.
-- AC-4: Both lesson audio hints play. Cloze-test no longer does nothing. Sentence-order no longer always shows "Audio data not available".
+- AC-4: Both lesson audio hints play with real segment times. Cloze-test no longer does nothing in the lesson or the deck pipeline. Sentence-order no longer always shows "Audio data not available".
 - AC-5: `AudioButton` plays the current card's audio, not the first card's audio. A missing end timestamp does not stop playback at once.
 - AC-6: Word-order hints play the current word.
 - AC-7: Playing, hover, and selected sentences have three distinct background colours in light and dark themes.
 - AC-8: `pnpm turbo run test --filter=primary-advantage` passes, except the known pre-existing APK failure.
+- AC-9: No playback or highlight `setTimeout` fires after pause, player close, or unmount.
 
 ## Out of Scope
 

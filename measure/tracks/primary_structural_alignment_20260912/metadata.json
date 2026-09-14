@@ -1,11 +1,11 @@
 {
   "track_id": "primary_structural_alignment_20260912",
   "type": "chore",
-  "status": "new",
+  "status": "implemented_pending_manual_verification",
   "created_at": "2026-09-12T00:00:00Z",
-  "updated_at": "2026-09-12T00:00:00Z",
+  "updated_at": "2026-09-13T23:59:00Z",
   "description": "Optional long-tail structural alignment of primary-advantage: migrate 33 API routes onto createTenantDB and assertCan, add error.tsx boundaries, and close remaining i18n and a11y gaps.",
   "estimated_tasks": 14,
-  "actual_tasks": null,
-  "deviation_notes": "Optional. Run after primary_component_deduplication_20260912."
+  "actual_tasks": 21,
+  "deviation_notes": "FR-1 first pass was a rename: barrel imports remained and assertCan was wired in only 2 routes. Second pass 2026-09-13 completed the migration: 24 routes import schemas from /schema and the live handle from domain getTenantDB/getUnscopedDB; assertCan codifies each route's existing gate; DIRECT_DB_BASELINE is empty; the invariant regex covers /client. Exception: schools/ranking POST (x-access-key, no user context). FR-2: 3 of 4 converted with justifications. FR-3/4/5/6 done; FR-6 took the DELETE branch with owner note. Rank check and sales-redirect repair recorded under track 1."
 }

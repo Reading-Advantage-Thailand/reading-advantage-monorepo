@@ -1,11 +1,11 @@
 {
   "track_id": "primary_broken_ux_fixes_20260912",
   "type": "bug",
-  "status": "new",
+  "status": "implemented_pending_manual_verification",
   "created_at": "2026-09-12T00:00:00Z",
-  "updated_at": "2026-09-12T00:00:00Z",
+  "updated_at": "2026-09-13T00:00:00Z",
   "description": "Fix broken user-facing behavior in primary-advantage from the 2026-09-12 UX audit: Chinese message scopes, blank /admin landing, dead admin and footer links, captoliza typos, stray act and console imports.",
   "estimated_tasks": 16,
-  "actual_tasks": null,
-  "deviation_notes": ""
+  "actual_tasks": 24,
+  "deviation_notes": "All 9 FRs done. FR-6 completed 2026-09-13: daysLeft/assignedBy keys exist in all five locales and six t() sites restored, with a message-tree behavioral test. No deviation."
 }

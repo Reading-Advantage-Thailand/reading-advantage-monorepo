@@ -4,7 +4,7 @@ Track ID: `primary_component_deduplication_20260912`. Type: chore (refactor). Ap
 
 ## Overview
 
-The 2026-09-12 Primary UX audit found that duplication is the dominant code pattern. Nine measured fork pairs share 6,082 identical lines. About 13,900 lines are removable, or 18.5 percent of the 75,196 non-test lines. Evidence: `docs/primary-advantage-ux-refactor-plan.md` section 5. This track deletes dead code first, then merges each pair into one parameterized component. Behavior stays identical. No new dependencies.
+The 2026-09-12 Primary UX audit found that duplication is the dominant code pattern. Nine measured fork pairs share 6,107 identical lines. About 14,400 lines are removable, near 19 percent of the 75,906 non-test lines. Evidence: `docs/primary-advantage-ux-refactor-plan.md` section 5 and section 9. This track deletes dead code first, then merges each pair into one parameterized component. Behavior stays identical. No new dependencies.
 
 Do the deletions first. They shrink the surface of every merge.
 
@@ -62,17 +62,21 @@ Merge `article-records-table` / `reminder-reread-table` (210 common) behind a `v
 
 Ten files repeat the same react-table boilerplate: 654 lines. One `<DataTable>` shell of about 90 lines replaces it for the eight live tables.
 
+Two live table pairs share fetch-and-map logic beyond boilerplate. `admin/classrooms-table.tsx` and `admin/teachers-table.tsx` share 243 identical lines. `student-assignment-table.tsx` and `teacher/assignments.tsx` share 223 identical lines. Cover their shared logic in the shell, or extract one shared data hook.
+
 ### FR-8: Extract shared helpers
 
 Extract `shuffle`, `formatTime`, the CEFR colour maps, `useDebounce`, and the role check into `lib/`.
 
-`sort(() => Math.random() - 0.5)` appears 22 times. `shuffleArray` is declared twice with an identical body. Replace both with one `shuffle`.
+`sort(() => Math.random() - 0.5)` appears 23 times. `shuffleArray` is declared twice with an identical body. Replace both with one `shuffle`.
 
-The role triple `["TEACHER","ADMIN","SYSTEM"]` repeats in 8 places. `lib/permissions.ts` already exists and is the correct home.
+The role triple `["TEACHER","ADMIN","SYSTEM"]` repeats in 9 places, including an inline chain at `components/teacher/my-students.tsx:192`. `lib/permissions.ts` already exists and is the correct home.
 
 ### FR-9: Export one `sharedMainNav`
 
-Four of the five nav configs hold a byte-identical four-item `mainNav` array. `configs/site-config.ts` holds a sixth copy that has already drifted in order. Export one `sharedMainNav` and spread it in the other four configs.
+Five page configs hold a byte-identical four-item `mainNav` array. `configs/site-config.ts` and `configs/index-page-config.ts` hold two more copies that have drifted in order. Export one `sharedMainNav` and spread it in the other configs.
+
+Eight commented nav entries sit across the configs. Six point at missing routes. Two (`/system/test`, `/teacher/student-progress`) exist. Delete or restore each commented entry as part of the consolidation.
 
 ### FR-10: Move duplicated type declarations
 
@@ -80,11 +84,25 @@ Four of the five nav configs hold a byte-identical four-item `mainNav` array. `c
 
 ### FR-11: Remove `console.log` calls
 
-128 `console.log` calls in 36 files: 14 in client components, 114 in server code. `task-deep-reading.tsx:191` logs the whole article object on every render. Remove them.
+119 `console.log` calls in 34 files. `task-deep-reading.tsx:194` logs the whole article object on every render. Remove them. Track `primary_audio_highlight_correctness_20260912` FR-14 removes the line-194 dump first; this FR owns the rest.
 
 ### FR-12: Rename misspelled directories and files
 
 Rename `pratice` to `practice`, `genaretors` to `generators`, and `singinAction` to `signinAction`. 15 files import through them. Update every import.
+
+### FR-13: Merge the school forms
+
+`components/school/edit-school-form.tsx` (235 lines) and `components/school/school-profile-form.tsx` (239 lines) share 201 identical lines. Both render in `settings/school-profile/page.tsx`. Merge behind an editing-mode prop.
+
+### FR-14: Merge the question-content forks
+
+`la-question-content.tsx` (369 lines) and `sa-question-content.tsx` (208 lines) share 139 identical lines. `mc-question-content.tsx` (251 lines) and `lesson/pratice/lesson-task-mcq.tsx` (548 lines) share 127 identical lines. Parameterize one question-content component per question kind. The question cards above them are thin wrappers; leave them.
+
+### FR-15: Merge the collection tasks and extract one clipboard path
+
+`task-preview-vocabulary.tsx` (186 lines) and `task-sentence-collection.tsx` (194 lines) share 143 identical lines. Both render in both lesson progress bars. Merge behind a `kind` prop.
+
+Copy-to-clipboard logic repeats four times at `class-code-generator.tsx:82,106` and `classroom-navigation.tsx:87,99`. Route all four through the existing `components/ui/copy-button.tsx`.
 
 ## Non-Functional Requirements
 
@@ -96,10 +114,11 @@ Rename `pratice` to `practice`, `genaretors` to `generators`, and `singinAction`
 
 - AC-1: The nine dead files in FR-1 are deleted. `class-roster.tsx` and `reports.tsx` no longer exist.
 - AC-2: One cloze component, one word-order component, one sentence-order component, one flashcard component, one matching component, one reading-task component, one progress bar, one lesson card, and one history table exist.
-- AC-3: One `<DataTable>` shell serves the eight live tables.
+- AC-3: One `<DataTable>` shell serves the eight live tables. The admin table pair and the assignment table pair share one data path.
 - AC-4: One `shuffle`, one `formatTime`, one CEFR colour map, one `useDebounce`, and one role-check helper are imported everywhere those were copied.
-- AC-5: About 13,900 lines are removed, or a documented deviation explains the remainder.
+- AC-5: About 14,400 lines are removed, or a documented deviation explains the remainder.
 - AC-6: `pnpm turbo run build --filter=primary-advantage`, `check-types`, and `test` pass, except the known pre-existing APK failure.
+- AC-7: One school form, one question-content component per question kind, one collection task, and one clipboard path exist.
 
 ## Out of Scope
 

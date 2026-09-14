@@ -1,11 +1,11 @@
 {
   "track_id": "primary_audio_highlight_correctness_20260912",
   "type": "bug",
-  "status": "new",
+  "status": "implemented_pending_manual_verification",
   "created_at": "2026-09-12T00:00:00Z",
-  "updated_at": "2026-09-12T00:00:00Z",
+  "updated_at": "2026-09-13T23:59:00Z",
   "description": "Give primary-advantage one shared audio-segment hook, cancel the highlight timer chain, fix AudioButton load and endTimestamp, align lesson audio field names, and stop leaked clips.",
   "estimated_tasks": 17,
-  "actual_tasks": null,
-  "deviation_notes": ""
+  "actual_tasks": 31,
+  "deviation_notes": "All 14 FRs done plus residuals. Second pass 2026-09-13: NEXT_PUBLIC_STORAGE_BUCKET_NAME now passed as a Docker build ARG/ENV and a cloudbuild build-arg with a substitutions default (was documented in .env.example but never supplied to the production build); fallback audio timers in cloze and both order-word bodies now settle through a ref stop-hook with unmount cleanup (cloze directly, order-word via the track-5 merge); deck prefetch wipe in SentenceClozeGame fixed (sync effect no longer writes empty state before raw data loads)."
 }

@@ -32,10 +32,10 @@ Add one `error.tsx` per route group and one `global-error.tsx`. The existing `st
 
 Baseline: 12 `aria-label` uses, 7 `role="alert"` uses, and 0 `aria-live` uses across 149 client components. All 7 `role="alert"` uses sit in new APK and host-proof code. The legacy surface has none.
 
-- Make the 17 clickable elements real buttons or links. They include the history table rows, the classroom selector card, the article showcase cards, the flashcard faces, and three lesson collection panels.
-- Give the 13 icon-only buttons an `aria-label`.
+- Make the 22 clickable elements real buttons or links. They include the history table rows, the classroom selector card, the article showcase cards, the flashcard faces, and three lesson collection panels.
+- Give the icon-only buttons an `aria-label`. Ten live candidates exist; two more sit in dead files that Track 5 deletes.
 - Put the `AudioButton` `onClick` on a real `<button>` with an accessible name. Today the handler sits on the SVG.
-- Add `role="alert"` to `components/form-error.tsx` and `components/ui/form.tsx` `FormMessage`.
+- Add `role="alert"` to `components/form-error.tsx` and `components/ui/form.tsx` `FormMessage`. `form-error.tsx` reaches only the three auth form files.
 - Add `aria-live` to the game result panels.
 - Add a keyboard path to the two sentence-ordering games. They currently use a `draggable` `div` with drag handlers only. The word-ordering variants already use real `<button>` elements; copy that pattern.
 
@@ -44,6 +44,9 @@ Baseline: 12 `aria-label` uses, 7 `role="alert"` uses, and 0 `aria-live` uses ac
 - Replace hardcoded English in the licence forms, the school form, the games catalogue, the APK surface, and the footer. `components/index/footer.tsx` has no `useTranslations` call.
 - Four pages call `redirect("/auth/signin")` from `next/navigation` with no locale. Four files import `Link` from `next/link`. Two sign-in forms set `window.location.href`. Use the i18n `Link` and `useRouter`.
 - Only 2 of 51 pages export `metadata`. Add per-page `metadata` to marketing and auth pages.
+- `student-rpg-catalog-panel.tsx:380-381` hardcodes the button labels "Read Thai" and "Listen to English". The labels are wrong for Vietnamese and Chinese users. Translate both.
+- `user-account-nav.tsx:159` sets `window.location.href = "/"` on logout. Use the i18n router so the locale prefix survives.
+- `teacher/dashboard/page.tsx` renders `<div>TeacherDashboard</div>` and imports `currentUser` without using it. Render the dashboard or redirect it, and remove the dead import.
 
 Footer content defects (year, phone, empty href, `/pricing`, address, spelling) belong to `primary_broken_ux_fixes_20260912`. Do not redo them here.
 
@@ -67,7 +70,7 @@ Render `ProgressBar` with real XP and fix the level lookup, or delete the dead i
 - AC-1: The 33 named API routes import `createTenantDB` and `assertCan`. A new direct `@reading-advantage/db` import in `app/api` fails a static test, except the APK and host-proof files that already use TenantDB.
 - AC-2: The four listed pages render server-fetched data. No matching client fetch fires on load.
 - AC-3: A throw on a teacher or admin page renders the route-group `error.tsx` with a retry, not the Next.js default white page.
-- AC-4: The 17 clickable elements and the 13 icon-only buttons are keyboard-reachable. `AudioButton` is a real button. Form errors expose `role="alert"`. Game results expose `aria-live`.
+- AC-4: The 22 clickable elements and the icon-only buttons are keyboard-reachable. `AudioButton` is a real button. Form errors expose `role="alert"`. Game results expose `aria-live`.
 - AC-5: The two sentence-ordering games have a click or arrow-key path.
 - AC-6: `pnpm turbo run test --filter=primary-advantage`, `check-types`, and `build` pass, except the known pre-existing APK failure.
 

@@ -1,11 +1,11 @@
 {
   "track_id": "primary_loading_state_correctness_20260912",
   "type": "bug",
-  "status": "new",
+  "status": "implemented_pending_manual_verification",
   "created_at": "2026-09-12T00:00:00Z",
-  "updated_at": "2026-09-12T00:00:00Z",
+  "updated_at": "2026-09-13T23:59:00Z",
   "description": "Fix loading and state defects in primary-advantage: stuck skeletons, hydration mismatch on games, unbounded article scroll, admin search storm, render-body components, and hardcoded Thai lookups.",
   "estimated_tasks": 17,
-  "actual_tasks": null,
-  "deviation_notes": ""
+  "actual_tasks": 26,
+  "deviation_notes": "All 12 FRs done plus residuals. Second pass 2026-09-13: six message keys used by FR-2 error/empty states were missing in all five locales (WordList.loadError, WordList.empty, Components.loadError, Components.emptyList, Lesson.SentenceActivities.loadError, Lesson.SentenceActivities.retry) \u2014 added to en/th/cn/tw/vi; nine render tests that mocked next-intl as identity were converted to a shared real-messages provider (render-with-messages helper), so missing keys now fail tests. Characterization tests keep identity mocks deliberately to pin keys during merges."
 }

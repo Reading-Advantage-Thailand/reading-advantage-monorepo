@@ -66,6 +66,8 @@ request against another user's id changes that user's password.
 Fix: require `ADMIN` or `SYSTEM`. Validate the body with Zod. Scope the target by `schoolId`.
 Refuse a self-role change.
 
+Status (2026-09-12, track `primary_authorization_hardening_20260912`): done.
+
 ### 2.2 Unauthenticated API routes
 
 | Route | Line | Defect |
@@ -82,6 +84,8 @@ them. Eight of the fifteen routes sampled enforce a role. Seven do not.
 
 Fix: add an authorization check to each of the five routes. Bound `amountPerGenre` with Zod.
 Reject any `fileName` that is not a plain basename.
+
+Status (2026-09-12, track `primary_authorization_hardening_20260912`): done.
 
 ### 2.3 Server actions with no authorization
 
@@ -105,6 +109,9 @@ unauthenticated by design for the class-code sign-in flow.
 Fix: add a role check to the first line of each of the eleven actions. Delete `actions/test.ts`
 and the `/system/test` page if the tooling is no longer needed.
 
+Status (2026-09-12, track `primary_authorization_hardening_20260912`): done (role check added to
+each named action; tooling kept).
+
 ### 2.4 Client-supplied XP
 
 `actions/user.ts:18-99`. The signature is
@@ -120,6 +127,8 @@ Fix: remove the `xpEarned` parameter. Derive the award on the server from `Activ
 `UserXpEarned` table. `app/api/v1/apk/complete/route.ts` already does this through
 `recordGameCompletion`. Use it as the model.
 
+Status (2026-09-12, track `primary_authorization_hardening_20260912`): done.
+
 ### 2.5 Cross-tenant reads
 
 - `app/[locale]/teacher/student-progress/[id]/page.tsx:27` passes the raw URL parameter to
@@ -134,6 +143,10 @@ Fix: remove the `xpEarned` parameter. Derive the award on the server from `Activ
 - `server/models/assignmentModel.ts:273` selects an assignment by id alone, with its article and
   its question rows. Cross-school read confirmed. An answer-key leak is probable; we did not read
   the question table columns.
+
+Status (2026-09-12, track `primary_authorization_hardening_20260912`): section 2.5 done.
+Ownership and `schoolId` checks cover student-progress, article-records, reminder-reread, user
+search, and assignment-by-id.
 
 ### 2.6 Domain-layer bypass
 
@@ -164,7 +177,22 @@ with the routes named above.
 - No layout enforces a role. All five layouts forward nav configs to `AppLayout`, which checks
   only that a user exists. One `matcher` edit removes every guard at once.
 
+Status (2026-09-12, track `primary_authorization_hardening_20260912`): section 2.7 auth items
+done. The unauthorized page exists, the 404 layout no longer redirects to sign-in, `/student`
+admits only students, `protectedRoutes` derives from the role enum, and each of the five layouts
+asserts a role.
+
 ## 3. Reading Experience (audio and highlighting)
+
+> Status (2026-09-12, track `primary_audio_highlight_correctness_20260912`):
+> done. Shared `hooks/useAudioSegment` drives clip playback on `timeupdate`
+> with `load()` on URL change and play-to-end on zero end time; highlight
+> timers are held in a ref and cleared on pause, seek, sentence change, and
+> unmount; lesson audio fields are aligned to `audioUrl`/`startTime`/`endTime`
+> and `translation`; word-order hints use the word index; sentence-order
+> cleanup pauses audio; detached players pause on unmount; the client bucket
+> reads `NEXT_PUBLIC_STORAGE_BUCKET_NAME`; `isPlaying` follows `onPlay`/
+> `onPause`; highlight colours are distinct per state and theme.
 
 The application has no `hooks/useAudio.ts`. Audio logic exists in six inline copies.
 
@@ -292,6 +320,11 @@ animation.
 
 ### 5.1 Measured fork pairs
 
+Status (2026-09-12): done in track `primary_component_deduplication_20260912`.
+Each pair merged behind its separating parameter; fork files deleted; call sites
+updated. `practice/matching-game.tsx` kept as a separate implementation; its
+shared `UserMatch` type moved to `types/index.d.ts`.
+
 `common` counts lines that are identical in both files.
 
 | Pair | Lines | Common | Separating parameter |
@@ -314,6 +347,16 @@ with the lesson matching games. Extract helpers from it; do not merge it.
 
 ### 5.2 Repeated code
 
+Status (2026-09-12): done in track `primary_component_deduplication_20260912`.
+One `<DataTable>` shell serves the live react-table tables; one `shuffle`, one
+`formatTime`, one CEFR colour map, one `useDebounce`, and one staff role check
+live in `lib/`; one `sharedMainNav` serves the five page configs with the eight
+commented nav entries resolved; clash-free duplicated types moved to
+`types/index.d.ts`. Deviations: `License`/`Classroom`/`School`/`WordList`
+duplicates keep local shapes that clash with the canonical declarations;
+`generateBlanksForSentence`/audio-segment/`handleTimeUpdate` copies remain
+inside merged game views to keep behaviour identical.
+
 - 64 groups of byte-identical function bodies across two or more files: 1,271 removable lines.
   The largest are `generateBlanksForSentence` (2 copies, 170 lines each), the audio-segment
   player (4 copies, 166 lines), and `handleTimeUpdate` (72 lines).
@@ -330,6 +373,12 @@ with the lesson matching games. Extract helpers from it; do not merge it.
 
 ### 5.3 Dead code
 
+Status (2026-09-12): done in track `primary_component_deduplication_20260912`.
+All nine zero-importer files deleted; commented-out blocks of 10+ lines
+deleted; the three unreferenced debug API routes deleted. The remaining auth
+routes are a public auth surface kept by design. Unused imported names were
+not swept.
+
 | Item | Lines |
 |---|---|
 | Components with zero importers: `ui/sidebar.tsx`, `teacher/assignment-button.tsx`, `teacher/enrollment-demo.tsx`, `teacher/class-roster.tsx`, `teacher/reports.tsx`, `hooks/use-permissions.ts`, `hooks/use-mobile.ts`, `lib/calculateLevel.ts`, `types/types.d.ts` | 2,705 |
@@ -344,6 +393,9 @@ file-level search reports therefore have no user effect today. All six
 sit in these two dead files. Delete the files rather than fix the lines.
 
 ### 5.4 Logging
+
+Status (2026-09-12): done in track `primary_component_deduplication_20260912`.
+All 128 `console.log` calls removed from app source.
 
 128 `console.log` calls in 36 files: 14 in client components, 114 in server code.
 `task-deep-reading.tsx:191` logs the whole article object on every render.
@@ -457,17 +509,17 @@ covers each case.
 
 Section 4.1, section 6.1 (footer and message scopes), section 6.3. Small independent fixes.
 
-1. Move `VocabularyMatching` and `Introduction` inside `Lesson` in `cn.json` and `tw.json`.
-2. Render the `/admin` landing page, or redirect it to `/admin/dashboard`.
-3. Fix `flexl-1` to `flex-1`.
-4. Repoint or delete the four dead admin links and the footer `/pricing` link.
-5. Correct the footer: the year, the placeholder phone number, the empty `href`, the address
+1. [x] Move `VocabularyMatching` and `Introduction` inside `Lesson` in `cn.json` and `tw.json`.
+2. [x] Render the `/admin` landing page, or redirect it to `/admin/dashboard`.
+3. [x] Fix `flexl-1` to `flex-1`.
+4. [x] Repoint or delete the four dead admin links and the footer `/pricing` link.
+5. [x] Correct the footer: the year, the placeholder phone number, the empty `href`, the address
    conflict, and the spelling error.
-6. Restore the six commented `t()` calls in `student-assignment-table.tsx`.
-7. Point the two signup legal links at `/terms` and `/privacy-policy`.
-8. Remove `target="_blank"` from the internal "Get Started" link.
-9. Replace `captoliza` with `capitalize` in the 8 live occurrences.
-10. Delete the `act` import and the two `console` module imports.
+6. [x] Restore the six commented `t()` calls in `student-assignment-table.tsx`.
+7. [x] Point the two signup legal links at `/terms` and `/privacy-policy`.
+8. [x] Remove `target="_blank"` from the internal "Get Started" link.
+9. [x] Replace `captoliza` with `capitalize` in the 8 live occurrences.
+10. [x] Delete the `act` import and the two `console` module imports.
 
 Acceptance: Chinese users see translated lesson text; `/admin` renders; no link in the application
 points at a missing route.
@@ -499,18 +551,18 @@ hints play.
 Section 4.2 to 4.5.
 
 1. Clear the loading flag in every early-return branch, and move `setLoading(false)` out of the
-   `map` callbacks.
+   `map` callbacks. (done: `primary_loading_state_correctness_20260912` FR-1)
 2. Add an explicit empty state and an explicit error state to the matching game, the word list,
-   and the sentence list.
-3. Pass `mode` from `searchParams` into `StudentCartridgeHost`.
-4. Track the article offset in a ref so a duplicate page still advances it.
-5. Debounce the admin student search. Remove the duplicate mount fetch.
-6. Hoist the four components that are declared inside a render body.
-7. Replace the three hardcoded `.th` lookups and the seven `"th"` defaults with the active locale.
-8. Replace the interpolated Tailwind classes with a static lookup map.
+   and the sentence list. (done: `primary_loading_state_correctness_20260912` FR-2)
+3. Pass `mode` from `searchParams` into `StudentCartridgeHost`. (done: `primary_loading_state_correctness_20260912` FR-3)
+4. Track the article offset in a ref so a duplicate page still advances it. (done: `primary_loading_state_correctness_20260912` FR-4)
+5. Debounce the admin student search. Remove the duplicate mount fetch. (done: `primary_loading_state_correctness_20260912` FR-5)
+6. Hoist the four components that are declared inside a render body. (done: `primary_loading_state_correctness_20260912` FR-6)
+7. Replace the three hardcoded `.th` lookups and the seven `"th"` defaults with the active locale. (done: `primary_loading_state_correctness_20260912` FR-7)
+8. Replace the interpolated Tailwind classes with a static lookup map. (done: `primary_loading_state_correctness_20260912` FR-8)
 9. Call `init()` in `teacher/assignments.tsx`, and render the table body from
-   `table.getRowModel()`.
-10. Check `response.ok` in `teacher/assignment-dashboard.tsx`.
+   `table.getRowModel()`. (done: `primary_loading_state_correctness_20260912` FR-9)
+10. Check `response.ok` in `teacher/assignment-dashboard.tsx`. (done: `primary_loading_state_correctness_20260912` FR-10)
 
 Acceptance: no skeleton survives an empty or failed fetch; rapid scrolling fires at most one
 in-flight fetch; a ten-character admin search sends one request; no hydration warning on the
@@ -543,15 +595,32 @@ functionally identical; `build`, `check-types`, and `test` pass.
 
 Section 2.6 and section 6.2. This is the long tail.
 
-1. Migrate the 33 API routes off the direct `@reading-advantage/db` import and onto
-   `createTenantDB` and `assertCan`.
-2. Move the four `useEffect` data fetches to their server pages.
-3. Add one `error.tsx` per route group and one `global-error.tsx`.
-4. Make the 17 clickable elements real buttons or links. Give the 13 icon-only buttons an
+1. [x] Migrate the 33 API routes off the direct `@reading-advantage/db` import and onto
+   `createTenantDB` and `assertCan`. (done 2026-09-13: 24 route files migrated — the original 33
+   predated track 5's debug-route deletions; `lib/__tests__/api-no-direct-db.test.ts` enforces
+   the invariant)
+2. [x] Move the four `useEffect` data fetches to their server pages. (done 2026-09-13: three of
+   four converted — school-profile, class-roster enrollment, student/assignments page 1.
+   `admin/students` stays client-side: its fetches are search/filter-driven. `article-select`
+   already server-fetches its first page)
+3. [x] Add one `error.tsx` per route group and one `global-error.tsx`. (done 2026-09-13: six
+   route-group boundaries plus `global-error.tsx`; the read-page boundary shows the 404 copy only
+   for real not-found errors, else a generic retry state)
+4. [x] Make the 17 clickable elements real buttons or links. Give the 13 icon-only buttons an
    `aria-label`. Add `role="alert"` to the two shared error components. Add `aria-live` to the
-   game result panels.
-5. Add a keyboard path to the two sentence-ordering games.
-6. Render `ProgressBar` with real XP, and fix its level lookup, or delete it.
+   game result panels. (done 2026-09-12 and verified 2026-09-13: every actionable clickable now
+   has a keyboard path — two word spans in `article-content.tsx` were the final gap; every
+   icon-only button carries an accessible name; `AudioButton` is a real button; `role="alert"`
+   on `FormError`/`FormMessage`; `aria-live="polite"` on game result panels; six hardcoded
+   aria-labels translated into all five locales; footer and licence/school/games/APK strings
+   translated; sign-in redirects, links, and logout keep the locale prefix; marketing/auth
+   metadata added; teacher dashboard redirects to my-classes)
+5. [x] Add a keyboard path to the two sentence-ordering games. (done 2026-09-12, track
+   `primary_structural_alignment_20260912`: arrow-key reorder lives in the merged
+   `lesson-sentence-order.tsx` after track 5's consolidation)
+6. [x] Render `ProgressBar` with real XP, and fix its level lookup, or delete it. (done
+   2026-09-13: DELETE branch — `progress-bar-xp.tsx` was never rendered; file, import, and
+   `disableProgressBar` plumbing removed; fake-zero XP props removed from three layouts)
 
 ## 8. Out of Scope
 
@@ -564,3 +633,217 @@ Section 2.6 and section 6.2. This is the long tail.
   a workspace problem, not an application problem.
 - Sharing code between `primary-advantage` and `reading-advantage`. The two have diverged too far
   for a cheap merge. Record it in `measure/tech-debt.md`.
+
+## 9. Independent Verification Addendum (2026-09-12)
+
+Method: five parallel reviewers re-audited the application, one per section theme. The
+orchestrator re-read the section 2 code directly. This addendum records verdicts, corrections,
+and new findings. It does not replace the sections above.
+
+### 9.1 Orchestrator confirmation of section 2
+
+Read directly. All confirmed.
+
+- `app/api/users/[id]/route.ts:14-17` rejects only anonymous callers. Lines 36-74 write `role`,
+  `xp`, `level`, `cefrLevel`, and a bcrypt-hashed `password` to the user named in the URL.
+- `proxy.ts:112-113` matcher excludes `api`. No middleware covers any API route.
+- `app/api/articles/generate/route.ts:4-13` runs `generateAllArticle` with no authentication.
+- `app/api/upload/csv/cleanup/route.ts:6-28` deletes `path.join(process.cwd(), "temp", fileName)`
+  with no authentication and no path-traversal guard.
+- `actions/test.ts:63` `deleteAllArticles()` deletes every article row and file with no caller
+  check.
+- `actions/user.ts:18-99` `updateUserActivity` takes `xpEarned` from the caller and writes it to
+  `xpLogs` and `users.xp/level/cefrLevel`. XP is client-authoritative.
+- `app/[locale]/teacher/student-progress/[id]/page.tsx:21-27` checks only that a user exists. No
+  role check and no school ownership check.
+
+### 9.2 Verdict summary by section
+
+| Section | Claims confirmed | Corrections |
+|---|---|---|
+| §3 Audio and highlighting | 24 of 25 | One colour claim corrected (§9.3 C1) |
+| §4 Loading and state | All | None |
+| §5 Duplication and dead code | All | Counts drifted upward (§9.3 C2, C3) |
+| §6 i18n, accessibility, shell | All | Three counts corrected (§9.3 C4-C6) |
+| Broken-UX modeled classes | 20 of 21 | One count corrected (§9.3 C6) |
+
+Four reading-app defect classes do not exist here: chatbot history wipe, `speechSynthesis`
+overlap, hardcoded `/th/` redirects, and commented-out `"use client"` directives. Server
+components do not self-fetch over HTTP; the local anti-pattern is client pages fetching `/api/*`
+directly. No `parseActivityType`-style case regression exists in the controllers.
+
+### 9.3 Corrections to the sections above
+
+- C1 (§3): dark-theme playing and hover colours are not identical. Playing uses
+  `dark:bg-blue-900/70`; hover uses `dark:hover:bg-blue-900/50`. The ambiguity stands; the values
+  differ only in opacity.
+- C2 (§5): the nine fork pairs now share 6,107 identical lines, not 6,082. The files changed
+  since the first audit.
+- C3 (§5): zero-importer files total 2,699 lines, not 2,705. `console.log` count is 119 in 34
+  files, not 128 in 36. The 13,900-line removable estimate remains a floor, not a ceiling.
+- C4 (§6.1): eight commented `t()` call sites exist in `student-assignment-table.tsx`, not six.
+- C5 (§6.2): 22 clickable elements lack a keyboard path, not 17. `FormError` reaches 3 files, not
+  8 call sites.
+- C6 (§6.3): six of the eight commented nav entries point at missing routes, not seven.
+  `/teacher/student-progress` and `/system/test` exist.
+
+### 9.4 New findings
+
+High severity:
+
+- N1: the cloze audio hint is dead twice over. The server hardcodes `startTime = 0; endTime = 0`
+  (`actions/flashcard.ts:1209-1210`). The client waits for a `seeked` event that never fires at
+  position 0 (`lesson-sentence-cloze-test.tsx:610-629`). Fixing the snake_case field names alone
+  does not restore the hint.
+- N2: the ordering hint translation map is also dead. The server returns `translationMap`; the
+  client interface declares `translation` (`actions/flashcard.ts:1112-1117` vs
+  `lesson-sentence-order.tsx:52-57`).
+- N3: `admin-stats-cards.tsx:46-52` renders fabricated fallback KPIs (25 teachers, 340 students,
+  8.2% growth) when the fetch fails. Line 44 ships a hardcoded `monthlyGrowth: 12.5` on the
+  success path. The admin dashboard can show invented numbers. (done:
+  `primary_loading_state_correctness_20260912` FR-11: explicit error state, no fabricated numbers)
+- N4: school-form fork not in the nine-pair table. `edit-school-form.tsx` (235 lines) and
+  `school-profile-form.tsx` (239 lines) share 201 identical lines. Both are live in the same
+  settings page.
+- N5: question-content forks not in the nine-pair table. `la-question-content.tsx` and
+  `sa-question-content.tsx` share 139 identical lines. `mc-question-content.tsx` and
+  `lesson-task-mcq.tsx` share 127. The duplication sits one layer below the question cards.
+
+Medium severity:
+
+- N6: `task-deep-reading.tsx:194` logs the entire article object on every render. Line 23 exports
+  a component named `TaskFirstReading`.
+- N7: `article-content.tsx:323-332` schedules an uncancelled 50 ms `setTimeout` that calls
+  `play()`. It fires after pause and after unmount. `handleTogglePlayer` (`:170-184`) never clears
+  the in-flight highlight chain.
+- N8: `audio-button.tsx:63-69` clears its interval on unmount but never pauses the element.
+- N9: `admin-recent-activity.tsx:60-97` renders mock names and emails on fetch failure with no
+  error indication. (done: `primary_loading_state_correctness_20260912` FR-11: explicit error
+  state, no mock names)
+- N10: `student-assignment-table.tsx:380,643` navigates with `window.location.href`. Full reload;
+  locale prefix lost. (done: `primary_loading_state_correctness_20260912` FR-12: i18n
+  `router.push`)
+- N11: `deck-view.tsx:161,480` and `flashcard-dashboard.tsx:82` call `window.location.reload()`.
+  Use `router.refresh()`. (done: `primary_loading_state_correctness_20260912` FR-12)
+- N12: `student-rpg-catalog-panel.tsx:380-381` hardcodes "Read Thai" and "Listen to English". The
+  labels are wrong for Vietnamese and Chinese users and are not translatable.
+- N13: `task-preview-vocabulary.tsx` and `task-sentence-collection.tsx` share 143 of 186 lines.
+  Both are live in both lesson progress bars.
+- N14: copy-to-clipboard logic repeats four times in teacher components. None uses the existing
+  `components/ui/copy-button.tsx`.
+- N15: `admin/classrooms-table.tsx` and `admin/teachers-table.tsx` share 243 identical lines.
+  `student-assignment-table.tsx` and `teacher/assignments.tsx` share 223.
+
+Low severity:
+
+- N16: `lesson-sentence-order.tsx:415-416` toasts success before it validates audio data.
+- N17: the deck cloze route reads `audioUrl` through an `any` cast that cards do not carry
+  (`app/api/flashcard/decks/[deckId]/sentences-for-cloze/route.ts:99-101`).
+- N18: `[...not-found]/layout.tsx:16` redirects anonymous visitors to sign-in instead of showing
+  a 404.
+- N19: `user-account-nav.tsx:159` logout sets `window.location.href = "/"`. Locale prefix lost.
+- N20: `teacher/dashboard/page.tsx:1` imports `currentUser` and never uses it.
+- N21: `article-select.tsx:113` uses array index keys in the article grid.
+- N22: `configs/index-page-config.ts:4-25` is a seventh nav copy with drifted item order. Any nav
+  deduplication must cover it.
+
+### 9.5 Roadmap impact
+
+- Track 1 (`primary_authorization_hardening`) is unchanged and still blocks everything else. Its
+  FR-6 already owns N18.
+- Track 3 must add N1, N2, N6, N7, and N8. The cloze hint needs a server fix and a client fix.
+- Track 4 must add N3, N9, N10, N11, and N21.
+- Track 5 must add N4, N5, N13, N14, N15, and N22. The removable-line estimate rises by about 480
+  lines.
+- Track 6 must add N12, N19, and N20.
+
+The six track specs and plans under `measure/tracks/primary_*_20260912/` incorporate these
+findings as of 2026-09-12.
+
+## 10. Repair Wave (2026-09-13)
+
+An independent verification (track-audit, 2026-09-13) found the first implementation pass left
+four tracks partial and introduced nine defects. A supervised repair wave fixed all nine defects
+and completed every open requirement. Test-author separation applied: implementers did not write
+their own tests; all new tests are behavioral. Verified end state: 493/493 tests across 69 files,
+`tsc --noEmit` limited to 17 pre-existing APK errors, ESLint 0 errors, `pnpm build` exit 0.
+
+Repaired defects: the `daysLeft`/`assignBy` message keys (user-facing raw key paths), the
+unguarded Student Dashboard menu item, the SALES_ADMIN policy widening (reverted to ADMIN/SYSTEM),
+the two `no-useless-catch` lint errors, the dead `prisoner.tutorialOnly` condition, the unloaded
+APK test suite (next-intl mocks), the missing `/api/admin/recent-activity` route, the KPI field
+mapping, the hardcoded Thai cloze lookup, six hardcoded aria-labels, and the lost
+resume-from-pause guard in reading-advantage.
+
+Track 1 residuals closed: client-authoritative XP removed from `question.ts` and five flashcard
+routes; null-`schoolId` staff now fail closed; create-role validated against the role enum.
+
+Track 3 residuals closed: all eight audio polls converted to `timeupdate`/`setTimeout` chains;
+storage bucket env documented; playback-rate regression fixed; the 10-second fallback timer now
+holds a handle.
+
+Track 5: the four concatenated merges (sentence-order, cloze, flashcard, written-question) were
+rebuilt as single parameterized implementations, gated by 28 characterization tests written before
+the merges. About 7,700 lines removed total, 53 percent of the 14,400 target; the deviation is
+recorded in the track plan and metadata.
+
+Track 6: 24 API routes migrated onto `createTenantDB` with an invariant test; six route-group
+error boundaries plus `global-error.tsx`; three pages moved to server fetches; `ProgressBar`
+deleted (owner note in plan.md).
+
+Measure status: all six tracks are `implemented_pending_manual_verification`. Twelve manual
+verification tasks remain open and require a human.
+
+## 11. Second Repair Wave (2026-09-13, post-verification)
+
+An independent re-verification confirmed all first-wave gate claims and found new defects.
+A second supervised wave fixed them. Verified end state: 548/548 tests across 76 files,
+`tsc --noEmit` limited to 17 pre-existing APK errors, ESLint 0 errors (819 warnings),
+`pnpm build` exit 0 with 38/38 pages.
+
+Fixed defects:
+
+- Role escalation: `users/[id]` PATCH now enforces a rank check via `roleAtLeast`; only
+  SYSTEM can assign SYSTEM. The earlier enum validation was necessary but not sufficient.
+- Sales-role redirects: `sales_rep` and `sales_admin` entries removed from
+  `roleDefaultRedirects`. Both were added by the enum derivation and landed on a denied
+  route and a nonexistent route. A contract test now pairs every redirect target against
+  `protectedRoutes`.
+- XP economy: proportionality restored server-side. MC pays the server-derived correct
+  count (1 XP each); SA pays the grader score clamped to 5; LA pays the grader score
+  clamped to 25; four flashcard deck routes pay clamp(score, 0, deck size) x 2 with the
+  deck size counted server-side. A null/null response entry no longer counts as correct.
+- Storage bucket: `NEXT_PUBLIC_STORAGE_BUCKET_NAME` is now a Docker build ARG/ENV and a
+  cloudbuild build-arg with a substitutions default. Production no longer uses the
+  hardcoded fallback silently.
+- Fallback timers: cloze and both order-word bodies now settle playback through a ref
+  stop-hook with unmount cleanup. The timer cannot fire after unmount.
+- Cloze deck prefetch: the sync effect no longer wipes a prefetched `sentences` prop
+  before raw data loads.
+- Six message keys missing in all five locales (Track 4 FR-2 error/empty states) added
+  to en/th/cn/tw/vi. Nine render tests converted from identity next-intl mocks to a
+  shared real-messages provider, so missing keys now fail tests.
+- Track 5: order-word (2,238→1,296) and matching (1,452→875) rebuilt as parameterized
+  components behind 32 pre-written characterization tests. No concatenated pairs remain.
+  Total removals now ~9,220 of the ~14,400 target (64 percent); the deviation note
+  states the reason honestly.
+- Track 6 FR-1: completed as a real migration. Routes import schemas from
+  `/schema` and the live handle from domain-owned `getTenantDB`/`getUnscopedDB`;
+  `assertCan` codifies each route's existing gate; the invariant baseline is empty and
+  its regex covers the `/client` subpath. One exception: `schools/ranking` POST uses an
+  `x-access-key` header with no user context.
+
+Known limitations recorded for follow-up:
+
+- 97 static source-grep tests from the first pass remain unconverted. This needs a
+  dedicated track; converting them inside repair waves risks losing the coverage they
+  provide today.
+- Upload routes scope writes from the session school but stamp rows with the DB-row
+  school; a stale session would make them disagree (fail-closed guards limit impact).
+- `upload/csv` does not deduplicate emails within one upload and inserts without
+  conflict handling; duplicates produce a 500.
+- No production caller passes prefetched `sentences` to the cloze game; the prefetch
+  path is a contract for future deck-page integration.
+
+Measure status: all six tracks remain `implemented_pending_manual_verification`. The
+twelve manual verification tasks still require a human.
