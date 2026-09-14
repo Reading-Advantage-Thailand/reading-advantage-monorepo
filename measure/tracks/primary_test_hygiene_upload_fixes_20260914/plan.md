@@ -47,24 +47,25 @@ radius is the HTTP surface, covered by the new route-level tests._
     - [x] Task 5 tests green
 - [x] Task 9: FR-1 batch 1 conversion — `authorization-hardening-static`
     - [x] Replacements green; delete old grep assertions in the same commit
-- [ ] Task 10: FR-1 batch 2 — `broken-ux-fixes`
-- [ ] Task 11: FR-1 batch 3 — `loading-state-invariants`
-- [ ] Task 12: FR-1 batch 4 — `structural-alignment`
-- [ ] Task 13: FR-1 batch 5 — `component-deduplication`
-- [ ] Task 14: FR-1 batch 6 — `audio-highlight`
-- [ ] Task 15: FR-1 batch 7 — `aria-labels-i18n` + stragglers
+- [x] Task 10: FR-1 batch 2 — `broken-ux-fixes`
+- [x] Task 11: FR-1 batch 3 — `loading-state-invariants`
+- [x] Task 12: FR-1 batch 4 — `structural-alignment`
+- [x] Task 13: FR-1 batch 5 — `component-deduplication`
+- [x] Task 14: FR-1 batch 6 — `audio-highlight`
+- [x] Task 15: FR-1 batch 7 — `aria-labels-i18n` + stragglers
     - (Tasks 10–15 follow the Task 9 pattern: replacements written and green first, old grep assertions deleted in the same commit; split further if the Phase 1 inventory shows a batch over ~25 assertions)
+    - Done 2026-09-14: batches 2 and 6 converted together (`e3ed99a3a`); batch 4 in two commits (`f12f435c9`, `ee9f801cd`); batch 5 in three (`c25a2ae51`, `49fd26502`, `aef2c2150`); stragglers in one (`8ea30e0ff`); batch 3 in three (`24abcc138`, `815a1e97d`, `cb96ebadd`). aria-labels needed zero cases (already behavioral).
 
 ## Phase 4: Verification & Closeout
 
 _(Adapted: `measure/generate.sh` and `measure/doctor.sh` do not exist in this repo.)_
 
-- [ ] Task 16: Full gates
-    - [ ] `pnpm --filter primary-advantage test` green
-    - [ ] `tsc --noEmit` — no new errors beyond the 17 pre-existing APK errors
-    - [ ] ESLint 0 errors
-    - [ ] FR-1.4 grep gate: no unjustified `readFileSync`-on-source in test files
-    - [ ] `build-graph update ./graph.db <edited files>` for structural edits
-- [ ] Task 17: Registry updates
-    - [ ] Rewrite the three resolved bullets in `docs/primary-advantage-ux-refactor-plan.md` "Known limitations"
-    - [ ] Mark inventory file complete; update `metadata.json` (`actual_tasks`, deviation notes if any)
+- [x] Task 16: Full gates
+    - [x] `pnpm --filter primary-advantage test` green — 93 files, 571 tests, exit 0
+    - [x] `tsc --noEmit` — exactly the 17 pre-existing APK errors
+    - [x] ESLint 0 errors (821 warnings; baseline was 819, +2 in new test files)
+    - [x] FR-1.4 grep gate: 12 remaining `readFileSync` files all justified (4 comment-only, 2 config pins, 1 architecture ratchet, 3 fixture readers, 2 data pins)
+    - [x] `build-graph update ./graph.db <edited files>` for structural edits
+- [x] Task 17: Registry updates
+    - [x] Rewrite the three resolved bullets in `docs/primary-advantage-ux-refactor-plan.md` "Known limitations"
+    - [x] Mark inventory file complete; update `metadata.json` (`actual_tasks`, deviation notes if any)

@@ -1,11 +1,11 @@
 {
   "track_id": "primary_test_hygiene_upload_fixes_20260914",
   "type": "chore",
-  "status": "new",
+  "status": "implemented_pending_manual_verification",
   "created_at": "2026-09-14T06:40:00Z",
-  "updated_at": "2026-09-14T06:40:00Z",
+  "updated_at": "2026-09-14T19:30:00Z",
   "description": "Convert the 97 static source-grep tests to behavioral tests in per-domain batches, make upload writes session-authoritative for school scoping, and stop upload/csv from returning 500 on duplicate emails.",
   "estimated_tasks": 17,
-  "actual_tasks": null,
-  "deviation_notes": ""
+  "actual_tasks": 17,
+  "deviation_notes": "Spec FR-1 said 97 static source-grep tests; the Phase 1 inventory measured 149 cases (+54%) under one-case-per-it counting. All 149 resolved: converted to behavioral, kept with justification (2 locale data pins, 2 message-JSON pins, 2 config pins, 1 architecture ratchet), or deleted as duplicates of existing behavioral coverage. Upload Green landed via two agents after a provider quota cut: the second agent fixed three defects in the first's partial work (skippedExisting undercount, classroom-assignment email case bug, Red-test TS2571). One production defect found and fixed during conversion: task-lesson-summary crashed on lessons without flashcard rows."
 }
