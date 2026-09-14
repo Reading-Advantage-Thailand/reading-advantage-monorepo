@@ -835,15 +835,20 @@ Fixed defects:
 
 Known limitations recorded for follow-up:
 
-- 97 static source-grep tests from the first pass remain unconverted. This needs a
-  dedicated track; converting them inside repair waves risks losing the coverage they
-  provide today.
-- Upload routes scope writes from the session school but stamp rows with the DB-row
-  school; a stale session would make them disagree (fail-closed guards limit impact).
-- `upload/csv` does not deduplicate emails within one upload and inserts without
-  conflict handling; duplicates produce a 500.
-- No production caller passes prefetched `sentences` to the cloze game; the prefetch
-  path is a contract for future deck-page integration.
+- The static source-grep tests are converted. Track
+  `primary_test_hygiene_upload_fixes_20260914` measured 149 cases (the 97 figure
+  undercounted) and resolved all of them: behavioral replacements, justified
+  keeps (one architecture ratchet, six data or config pins), or duplicate
+  deletions. Twelve remaining `readFileSync` test files are all justified.
+- Upload writes are session-authoritative. The csv and classes routes stamp
+  `schoolId` from the verified session only. The 400 fail-closed guard for
+  sessions without school context is unchanged. The cleanup route never had
+  the divergence.
+- `upload/csv` deduplicates emails within one file (first row wins) and skips
+  existing emails with conflict-safe inserts. The 200 response carries a
+  validated summary: `inserted`, `skippedDuplicate`, `skippedExisting`.
+- No production caller passes prefetched `sentences` to the cloze game; the
+  prefetch path is a contract for future deck-page integration.
 
 Measure status: all six tracks remain `implemented_pending_manual_verification`. The
 twelve manual verification tasks still require a human.
