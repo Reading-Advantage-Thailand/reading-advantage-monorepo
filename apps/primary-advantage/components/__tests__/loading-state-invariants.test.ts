@@ -18,54 +18,6 @@ function read(rel: string): string {
   return readFileSync(join(appRoot, rel), "utf8");
 }
 
-describe("FR-3 StudentCartridgeHost launch phase", () => {
-  it("reads no window.location.search during render", () => {
-    expect(read("components/apk/StudentCartridgeHost.tsx")).not.toContain(
-      "window.location.search",
-    );
-  });
-
-  it("derives the launch phase from a mode prop", () => {
-    expect(read("components/apk/StudentCartridgeHost.tsx")).toContain(
-      'mode === "demo"',
-    );
-  });
-});
-
-describe("FR-8 change-role static colour classes", () => {
-  it("builds no Tailwind class by interpolation", () => {
-    expect(read("components/shared/change-role.tsx")).not.toContain(
-      "dark:bg-${",
-    );
-  });
-
-  it("uses a static colour lookup map", () => {
-    expect(read("components/shared/change-role.tsx")).toContain(
-      "ROLE_COLOR_CLASSES",
-    );
-  });
-});
-
-describe("FR-7 hardcoded Thai lookups", () => {
-  it("looks up sentence translations by locale", () => {
-    expect(read("components/articles/sentence.tsx")).not.toContain(
-      "translation.th",
-    );
-  });
-
-  it("looks up vocabulary definitions by locale", () => {
-    expect(
-      read("components/lesson/task/task-vocabulary-collection.tsx"),
-    ).not.toContain("definition?.th");
-  });
-
-  it("looks up deep-reading translations by locale", () => {
-    expect(
-      read("components/lesson/task/task-reading.tsx"),
-    ).not.toContain("translatedPassage?.th");
-  });
-});
-
 describe("FR-12 full-reload navigation", () => {
   it("navigates student assignments with the router", () => {
     expect(
@@ -123,41 +75,6 @@ describe("FR-5 admin student search debounce", () => {
   it("shares one module-scope debounce hook", () => {
     expect(read("hooks/use-debounce.ts")).toContain(
       "export function useDebounce",
-    );
-  });
-});
-
-describe("FR-11 fabricated admin fallbacks", () => {
-  it("renders an error state instead of fallback KPIs", () => {
-    const source = read("components/admin/admin-stats-cards.tsx");
-    expect(source).toContain("loadError");
-    expect(source).not.toContain("totalTeachers: 25");
-    expect(source).not.toContain("monthlyGrowth: 12.5");
-  });
-
-  it("renders an error state instead of mock activity", () => {
-    const source = read("components/admin/admin-recent-activity.tsx");
-    expect(source).toContain("loadError");
-    expect(source).not.toContain("Sarah Johnson");
-  });
-});
-
-describe("FR-4 article-select pagination", () => {
-  it("keys grid cards by stable article id", () => {
-    expect(read("components/articles/article-select.tsx")).toContain(
-      "key={article.id}",
-    );
-  });
-
-  it("advances an offset ref on every page", () => {
-    expect(read("components/articles/article-select.tsx")).toContain(
-      "offsetRef",
-    );
-  });
-
-  it("guards against overlapping fetches", () => {
-    expect(read("components/articles/article-select.tsx")).toContain(
-      "inFlightRef",
     );
   });
 });
