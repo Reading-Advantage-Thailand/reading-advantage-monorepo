@@ -1,51 +1,57 @@
 // @vitest-environment node
-import { existsSync } from "node:fs";
-import { resolve } from "node:path";
+/**
+ * Component deduplication import-resolution pins. The dead forks stay
+ * deleted: nothing in the app may import these modules, so each deleted
+ * module gets one test asserting its path no longer resolves. A repo-wide
+ * reference scan backs this file; the last scan found zero module imports
+ * of any deleted path (remaining hits are route hrefs, similarly named
+ * live modules, comments, and docs).
+ */
+import { createRequire } from "node:module";
 import { describe, expect, it } from "vitest";
 
-const root = (...parts: string[]) =>
-  resolve(import.meta.dirname, "..", "..", ...parts);
-const missing = (rel: string) => !existsSync(root(rel));
+const require = createRequire(import.meta.url);
+const unresolvable = (rel: string) => require.resolve(rel);
 
 describe("component deduplication FR-1 dead files", () => {
   it.each([
-    "components/ui/sidebar.tsx",
-    "components/teacher/assignment-button.tsx",
-    "components/teacher/enrollment-demo.tsx",
-    "components/teacher/class-roster.tsx",
-    "components/teacher/reports.tsx",
-    "hooks/use-permissions.ts",
-    "hooks/use-mobile.ts",
-    "lib/calculateLevel.ts",
-    "types/types.d.ts",
+    "../ui/sidebar.tsx",
+    "../teacher/assignment-button.tsx",
+    "../teacher/enrollment-demo.tsx",
+    "../teacher/class-roster.tsx",
+    "../teacher/reports.tsx",
+    "../../hooks/use-permissions.ts",
+    "../../hooks/use-mobile.ts",
+    "../../lib/calculateLevel.ts",
+    "../../types/types.d.ts",
   ])("deletes %s", (file) => {
-    expect(missing(file)).toBe(true);
+    expect(() => unresolvable(file)).toThrow();
   });
 });
 
 describe("component deduplication merged forks", () => {
   it.each([
-    "components/practice/cloze-test-game.tsx",
-    "components/practice/order-words-game.tsx",
-    "components/practice/order-sentences-game.tsx",
-    "components/lesson/games/lesson-sentence-flashcard.tsx",
-    "components/lesson/games/lesson-vocabulary-flashcard-card.tsx",
-    "components/lesson/games/lesson-sentence-matching.tsx",
-    "components/lesson/games/lesson-vocabulary-matching.tsx",
-    "components/lesson/task/task-first-reading.tsx",
-    "components/lesson/task/task-deep-reading.tsx",
-    "components/lesson/standalone-lesson-progress-bar.tsx",
-    "components/lesson/standalone-lesson-card.tsx",
-    "components/dashboard/article-records-table.tsx",
-    "components/dashboard/reminder-reread-table.tsx",
-    "components/lesson/task/task-preview-vocabulary.tsx",
-    "components/lesson/task/task-sentence-collection.tsx",
-    "components/lesson/practice/lesson-task-mcq.tsx",
-    "components/school/edit-school-form.tsx",
-    "components/school/school-profile-form.tsx",
-    "components/articles/questions/la-question-content.tsx",
-    "components/articles/questions/sa-question-content.tsx",
+    "../practice/cloze-test-game.tsx",
+    "../practice/order-words-game.tsx",
+    "../practice/order-sentences-game.tsx",
+    "../lesson/games/lesson-sentence-flashcard.tsx",
+    "../lesson/games/lesson-vocabulary-flashcard-card.tsx",
+    "../lesson/games/lesson-sentence-matching.tsx",
+    "../lesson/games/lesson-vocabulary-matching.tsx",
+    "../lesson/task/task-first-reading.tsx",
+    "../lesson/task/task-deep-reading.tsx",
+    "../lesson/standalone-lesson-progress-bar.tsx",
+    "../lesson/standalone-lesson-card.tsx",
+    "../dashboard/article-records-table.tsx",
+    "../dashboard/reminder-reread-table.tsx",
+    "../lesson/task/task-preview-vocabulary.tsx",
+    "../lesson/task/task-sentence-collection.tsx",
+    "../lesson/practice/lesson-task-mcq.tsx",
+    "../school/edit-school-form.tsx",
+    "../school/school-profile-form.tsx",
+    "../articles/questions/la-question-content.tsx",
+    "../articles/questions/sa-question-content.tsx",
   ])("merges away %s", (file) => {
-    expect(missing(file)).toBe(true);
+    expect(() => unresolvable(file)).toThrow();
   });
 });
